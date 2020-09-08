@@ -24,14 +24,16 @@ steps:
 - task: PowerPlatformPublishCustomizations@0
   inputs:
     authenticationType: 'PowerPlatformSPN'
-    PowerPlatformSPN: 'TSIS 2.0 Dev'
+    PowerPlatformSPN: 'ROM Dev'
 
 - task: PowerPlatformExportSolution@0
   inputs:
     authenticationType: 'PowerPlatformSPN'
-    PowerPlatformSPN: 'TSIS 2.0 Dev'
+    PowerPlatformSPN: 'ROM Dev'
     SolutionName: '$(SolutionName)'
     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName).zip'
+    AsyncOperation: true
+    MaxAsyncWaitTime: '60'
     ExportRelationshipRoles: true
 
 - task: PowerPlatformUnpackSolution@0
