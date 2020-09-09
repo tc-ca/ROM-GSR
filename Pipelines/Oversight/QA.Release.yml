@@ -1,0 +1,63 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+    - development
+
+    exclude:
+    - releases/old*
+    - feature/*-working
+  paths:
+    include:
+    - PassengerProtectProgram/*
+    exclude:
+    - Plugin/*
+    - WebResources/*
+
+pool:
+  vmImage:  'vs2017-win2016'
+
+steps:
+
+- task: PowerPlatformToolInstaller@0
+  inputs:
+    DefaultVersion: true
+
+- task: PowerPlatformPackSolution@0
+  inputs:
+    SolutionSourceFolder: '$(Build.SourcesDirectory)\$(SolutionName)'
+    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName).zip'
+
+- task: PowerPlatformImportSolution@0
+  inputs:
+    authenticationType: 'PowerPlatformSPN'
+    PowerPlatformSPN: 'ROM QA'
+    SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName).zip'
+    AsyncOperation: true
+    MaxAsyncWaitTime: '240'
+    OverwriteUnmanagedCustomizations: true
+    SkipProductUpdateDependencies: true
+
+- task: PowerPlatformPublishCustomizations@0
+  inputs:
+    authenticationType: 'PowerPlatformSPN'
+    PowerPlatformSPN: 'ROM QA'
+
+- task: PowerPlatformExportSolution@0
+  inputs:
+    authenticationType: 'PowerPlatformSPN'
+    PowerPlatformSPN: 'ROM Dev'
+    SolutionName: '$(SolutionName)'
+    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_managed.zip'
+    Managed: true
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_managed.zip'
+    artifact: 'drop'
+    publishLocation: 'pipeline'
+
