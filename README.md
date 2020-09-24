@@ -24,4 +24,6 @@ __Do__ create your own custom/copy of "standard" form or view to keep the defaul
 
 __DO NOT__ customize the Standard/default forms.  
   > Why? Allows to have a reference to an original copy and avoids cascading changes.
-
+  
+## Additional Resources
+- [MS Power Platform Application Lifecycle Management Video](https://www.youtube.com/watch?v=xwCUJmrRI9E&t=1159s) In this session, you'll learn how to use Solutions and Azure DevOps to ensure your apps are protected in source control and your apps can be automatically deployed to other environments like test and production
