@@ -111,6 +111,14 @@ steps:
   inputs:
     authenticationType: 'PowerPlatformSPN'
     PowerPlatformSPN: 'ROM JIT'
+    SolutionName: '$(TCSolutionName)_Base'
+    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base_managed.zip'
+    Managed: true
+
+- task: PowerPlatformExportSolution@0
+  inputs:
+    authenticationType: 'PowerPlatformSPN'
+    PowerPlatformSPN: 'ROM JIT'
     SolutionName: '$(SolutionName)_Base'
     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Base_managed.zip'
     Managed: true
@@ -138,6 +146,12 @@ steps:
     SolutionName: '$(SolutionName)_Code'
     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Code_managed.zip'
     Managed: true
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base_managed.zip'
+    artifact: 'drop_tcbase'
+    publishLocation: 'pipeline'
 
 - task: PublishPipelineArtifact@1
   inputs:
