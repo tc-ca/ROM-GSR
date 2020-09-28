@@ -31,15 +31,60 @@ steps:
     authenticationType: 'PowerPlatformSPN'
     PowerPlatformSPN: 'ROM Dev'
     SolutionName: '$(SolutionName)'
-    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName).zip'
+    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Base.zip'
     AsyncOperation: true
     MaxAsyncWaitTime: '60'
     ExportRelationshipRoles: true
 
 - task: PowerPlatformUnpackSolution@0
   inputs:
-    SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName).zip'
-    SolutionTargetFolder: '$(Build.SourcesDirectory)\$(SolutionName)'
+    SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Base.zip'
+    SolutionTargetFolder: '$(Build.SourcesDirectory)\$(SolutionName)_Base'
+    
+- task: PowerPlatformExportSolution@0
+  inputs:
+    authenticationType: 'PowerPlatformSPN'
+    PowerPlatformSPN: 'ROM Dev'
+    SolutionName: '$(SolutionName)'
+    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Conf.zip'
+    AsyncOperation: true
+    MaxAsyncWaitTime: '60'
+    ExportRelationshipRoles: true
+
+- task: PowerPlatformUnpackSolution@0
+  inputs:
+    SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Conf.zip'
+    SolutionTargetFolder: '$(Build.SourcesDirectory)\$(SolutionName)_Conf'
+    
+- task: PowerPlatformExportSolution@0
+  inputs:
+    authenticationType: 'PowerPlatformSPN'
+    PowerPlatformSPN: 'ROM Dev'
+    SolutionName: '$(SolutionName)'
+    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Proc.zip'
+    AsyncOperation: true
+    MaxAsyncWaitTime: '60'
+    ExportRelationshipRoles: true
+
+- task: PowerPlatformUnpackSolution@0
+  inputs:
+    SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Proc.zip'
+    SolutionTargetFolder: '$(Build.SourcesDirectory)\$(SolutionName)_Proc'
+    
+- task: PowerPlatformExportSolution@0
+  inputs:
+    authenticationType: 'PowerPlatformSPN'
+    PowerPlatformSPN: 'ROM Dev'
+    SolutionName: '$(SolutionName)'
+    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Code.zip'
+    AsyncOperation: true
+    MaxAsyncWaitTime: '60'
+    ExportRelationshipRoles: true
+
+- task: PowerPlatformUnpackSolution@0
+  inputs:
+    SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Code.zip'
+    SolutionTargetFolder: '$(Build.SourcesDirectory)\$(SolutionName)_Code'
 
 - powershell: |
    echo "Committing all CDS solution changes"
