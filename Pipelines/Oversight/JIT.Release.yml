@@ -29,6 +29,21 @@ steps:
 
 - task: PowerPlatformPackSolution@0
   inputs:
+    SolutionSourceFolder: '$(Build.SourcesDirectory)\$(TCSolutionName)_Base'
+    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base.zip'
+
+- task: PowerPlatformImportSolution@0
+  inputs:
+    authenticationType: 'PowerPlatformSPN'
+    PowerPlatformSPN: 'ROM JIT'
+    SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base.zip'
+    AsyncOperation: true
+    MaxAsyncWaitTime: '240'
+    OverwriteUnmanagedCustomizations: true
+    SkipProductUpdateDependencies: true
+
+- task: PowerPlatformPackSolution@0
+  inputs:
     SolutionSourceFolder: '$(Build.SourcesDirectory)\$(SolutionName)_Base'
     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Base.zip'
 
@@ -127,24 +142,24 @@ steps:
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Base_managed.zip'
-    artifact: 'drop'
+    artifact: 'drop_base'
     publishLocation: 'pipeline'
 
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Conf_managed.zip'
-    artifact: 'drop'
+    artifact: 'drop_conf'
     publishLocation: 'pipeline'
 
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Proc_managed.zip'
-    artifact: 'drop'
+    artifact: 'drop_proc'
     publishLocation: 'pipeline'
 
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Code_managed.zip'
-    artifact: 'drop'
+    artifact: 'drop_code'
     publishLocation: 'pipeline'
 
