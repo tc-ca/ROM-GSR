@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{71989f37-f934-4341-8488-a941b6e6e537}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="tc_name" select="1" icon="1" preview="1">
+        <row name="result" id="tc_acfacilitycontactsid">
+          <cell name="a_6d4b8fef3e17466889637afdfcae8ba5.fullname" width="181" />
+          <cell name="a_6d4b8fef3e17466889637afdfcae8ba5.telephone1" width="148" />
+          <cell name="a_d9d56ee752084ee8a4a4ea9d4db48dfe.tc_name" width="243" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="tc_acfacilitycontacts">
+          <attribute name="tc_acfacilitycontactsid" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <link-entity alias="a_d9d56ee752084ee8a4a4ea9d4db48dfe" name="tc_acfacility" to="tc_acfacilityid" from="tc_acfacilityid" link-type="outer" visible="false">
+            <attribute name="tc_name" />
+          </link-entity>
+          <link-entity alias="a_6d4b8fef3e17466889637afdfcae8ba5" name="contact" to="tc_contactid" from="contactid" link-type="outer" visible="false">
+            <attribute name="fullname" />
+            <attribute name="telephone1" />
+          </link-entity>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Active Facility Contacts" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
