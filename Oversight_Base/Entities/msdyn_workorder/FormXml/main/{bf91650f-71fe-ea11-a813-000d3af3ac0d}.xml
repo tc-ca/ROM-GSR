@@ -78,7 +78,7 @@
                         <labels>
                           <label description="Fiscal Quarter" languagecode="1033" />
                         </labels>
-                        <control id="ovs_fiscalquarter" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ovs_fiscalquarter" disabled="false" />
+                        <control disabled="false" id="ovs_fiscalquarter" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ovs_fiscalquarter" />
                       </cell>
                     </row>
                     <row>
@@ -126,13 +126,21 @@
                         <control disabled="false" id="msdyn_workhourtemplate" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="msdyn_workhourtemplate" />
                       </cell>
                     </row>
-                    <row>
+                    <row height="auto">
                       <cell id="{a8119cab-a939-4805-39ac-e2ab0a638d33}" locklevel="0" showlabel="true" labelid="{c82efcec-89ed-466a-9bbf-4d8192f76a59}" colspan="1" rowspan="1" auto="true">
                         <labels>
                           <label description="Work Order Summary" languagecode="1033" />
                           <label description="Résumé de l'ordre de travail" languagecode="1036" />
                         </labels>
                         <control disabled="false" id="msdyn_workordersummary" classid="{E0DECE4B-6FC8-4a8f-A065-082708572369}" datafieldname="msdyn_workordersummary" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{86a95e7d-94e0-02b1-9960-51a470dc7914}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="TYRational" languagecode="1033" />
+                        </labels>
+                        <control id="ovs_tyrational" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ovs_tyrational" disabled="false" />
                       </cell>
                     </row>
                   </rows>
@@ -517,7 +525,7 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{c28987d1-c07a-d0d4-73c7-6d777b7ee504}" showlabel="true" labelid="{b71b4198-600a-44d5-a5ac-10120f02a759}" visible="false" colspan="1" rowspan="1" auto="false">
+                      <cell id="{c28987d1-c07a-d0d4-73c7-6d777b7ee504}" showlabel="true" labelid="{b71b4198-600a-44d5-a5ac-10120f02a759}" colspan="1" rowspan="1" auto="false" visible="false">
                         <labels>
                           <label description="Time Window Start" languagecode="1033" />
                         </labels>
@@ -541,7 +549,7 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{08a25cdc-1be2-71ac-596c-34d06740499b}" showlabel="true" labelid="{1f08c6b0-76dc-45da-af0d-4fd46efc5736}" visible="false" colspan="1" rowspan="1" auto="false">
+                      <cell id="{08a25cdc-1be2-71ac-596c-34d06740499b}" showlabel="true" labelid="{1f08c6b0-76dc-45da-af0d-4fd46efc5736}" colspan="1" rowspan="1" auto="false" visible="false">
                         <labels>
                           <label description="Time Window End" languagecode="1033" />
                         </labels>
@@ -865,7 +873,7 @@
                           <label description="Street 2 " languagecode="1033" />
                           <label description="Rue 2" languagecode="1036" />
                         </labels>
-                        <control disabled="false" id="msdyn_address2" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="msdyn_address2" />
+                        <control id="msdyn_address2" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="msdyn_address2" />
                       </cell>
                       <cell id="{c0dcdb78-e7c2-3903-b5a2-a59412449c95}" locklevel="0" showlabel="true" labelid="{fb53acea-f5de-48b8-bcc1-6c03835576a4}">
                         <labels>
@@ -2503,6 +2511,8 @@
         <Library name="msdyn_/WorkOrder/WorkOrder.Library.js" libraryUniqueId="{17dd260c-4613-be64-6de8-3e20e7931c70}" />
         <Library name="msdyn_/Utils/FieldServiceTrial.js" libraryUniqueId="{c8daeb2a-4593-8c82-1b0c-83be5e6acc94}" />
         <Library name="msdyn_/CFS/WorkOrder/WorkOrderForm.js" libraryUniqueId="{66c75878-8967-ee9a-4dae-5d4142dbb309}" />
+        <Library name="ovs_OversightScript" libraryUniqueId="{04e1ce47-032c-66dc-aa55-e6ae8b89081c}" />
+        <Library name="ovs_mytest.js" libraryUniqueId="{50b22da1-ab2d-c423-399e-484ebddb9b94}" />
       </formLibraries>
       <events>
         <event name="onload" application="false" active="false">
@@ -2510,6 +2520,7 @@
             <Handler functionName="msdyn.workOrderForm.onLoad" libraryName="msdyn_/CFS/WorkOrder/WorkOrderForm.js" handlerUniqueId="{02393ea8-ee1e-d6c2-6507-70d9c3731041}" enabled="true" parameters="" passExecutionContext="true" />
             <Handler functionName="WorkOrders.Library.Load" libraryName="msdyn_/WorkOrder/WorkOrder.Library.js" handlerUniqueId="{d007ce3e-717d-706b-83d2-a41e4b6aa50a}" enabled="true" parameters="" passExecutionContext="true" />
             <Handler functionName="FieldServiceTrial.Library.Load" libraryName="msdyn_/Utils/FieldServiceTrial.js" handlerUniqueId="{8a748511-45ae-9991-76ad-253800974873}" enabled="true" parameters="" passExecutionContext="true" />
+            <Handler functionName="ROM.onLoad" libraryName="ovs_mytest.js" handlerUniqueId="{60dbadb2-2540-5be0-18b6-6b4cce35687b}" enabled="true" parameters="" passExecutionContext="true" />
           </Handlers>
         </event>
         <event name="onchange" application="false" active="false" attribute="msdyn_iotalert">
