@@ -1,8 +1,10 @@
 # Steps to run this project on your desktop
 
-1. Get latest code
-2. Open PPPScripts folder using VS Code
-3. Create XrmDefinitelyTyped.exe.config in \XrmDefinitelyTyped folder and add your usename and password.
+1. Download VS Code
+2. Install ES Lint Extension
+3. Install Prettier Extension
+2. Open OversightScripts folder using VS Code
+3. Create XrmDefinitelyTyped.exe.config in \XrmDefinitelyTyped folder and add your username and password.
 4. Run XrmDefinitelyTyped.exe (skip if no form change nor entity change)
 5. npm install
 6. npm run build
@@ -28,3 +30,6 @@
   </appSettings>
 </configuration>
 ```
+# Additional Resources
+- https://reenhanced.com/2019/how-to-get-started-with-form-scripts-in-dynamics-365/
+- https://dyncrmexp.com/2020/06/16/modern-web-resource-workspace-in-dynamics-365-part-1-typescript/
