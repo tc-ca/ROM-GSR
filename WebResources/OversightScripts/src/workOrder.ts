@@ -2,8 +2,6 @@
 /// <reference path='../typings/XRM/dg.xrmquery.web.d.ts' />
 /// <reference path='../typings/XRM/Form/msdyn_workorder/Main/OversightActivity.d.ts' />
 
-
-
 namespace ROM {
 
   // EVENTS
@@ -27,21 +25,27 @@ namespace ROM {
 // FUNCTIONS
 
   function setDefaultFiscalYear(eContext: Xrm.ExecutionContext<any, any>): void {
-    let Form = <Form.msdyn_workorder.Main.OversightActivity>eContext.getFormContext();
+    let form = <Form.msdyn_workorder.Main.OversightActivity>eContext.getFormContext();
 
-    XrmQuery.retrieveMultiple((x) => x.tc_tcfiscalyears) // Tells XrmQuery to retrieve accounts
-      .select((x) => [x.tc_name]) // Select which attributes to retrieve, in this case just accountnumber
-      .filter((x) => Filter.equals(x.tc_iscurrentfiscalyear, true)) // Only get accounts which have a name equal to "Contoso"
+    
+    XrmQuery.retrieveMultiple((x) => x.tc_tcfiscalyears) 
+      .select((x) => [x.tc_name]) 
+      .filter((x) => Filter.equals(x.tc_iscurrentfiscalyear, true))
       .execute((fiscalYears) => {
+        //should only return one fiscal year record as the current
         if (fiscalYears.length === 1) {
-          var targetedFiscalYear = fiscalYears[0];
-          var lookup = new Array();
+          let targetedFiscalYear = fiscalYears[0];
+          let lookup = new Array();
           lookup[0] = new Object();
           lookup[0].id = targetedFiscalYear.tc_tcfiscalyearid;
           lookup[0].name = targetedFiscalYear.tc_name;
           lookup[0].entityType = 'tc_tcfiscalyear';
 
-          Form.getAttribute('ovs_fiscalyear').setValue(lookup);
+          form.getAttribute('ovs_fiscalyear').setValue(lookup);
+         
+        }
+        else{
+          // do not set a default if multiple records are found, error.
         }
       });
   }
@@ -49,10 +53,11 @@ namespace ROM {
 
   function removeSelectedFiscalQuarter(eContext: Xrm.ExecutionContext<any, any>): void {
     {
-      let Form = <Form.msdyn_workorder.Main.OversightActivity>eContext.getFormContext();
-      Form.getAttribute('ovs_fiscalquarter').setValue(null);
+      let form = <Form.msdyn_workorder.Main.OversightActivity>eContext.getFormContext();
+      form.getAttribute('ovs_fiscalquarter').setValue(null);
     }
   }
+  
 
 
 }
