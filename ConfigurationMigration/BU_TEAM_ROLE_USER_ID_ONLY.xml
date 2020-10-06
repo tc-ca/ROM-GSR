@@ -1,0 +1,38 @@
+<entities >
+  <entity name="businessunit" displayname="Business Unit" etc="10" primaryidfield="businessunitid" primarynamefield="name" disableplugins="false">
+    <fields>
+      <field updateCompare="true" displayname="Name" name="name" type="string" />
+      <field updateCompare="true" displayname="Parent Business" name="parentbusinessunitid" type="entityreference" lookupType="businessunit" />
+    </fields>
+    <filter>    &lt;filter type="and" &gt;
+      &lt;condition attribute="businessunitid" operator="eq" value="4e122e0c-73f3-ea11-a815-000d3af3ac0d" /&gt;
+    &lt;/filter&gt;</filter>
+  </entity>
+  <entity name="systemuser" displayname="User" etc="8" primaryidfield="systemuserid" primarynamefield="fullname" disableplugins="true">
+    <fields>
+      <field updateCompare="true" displayname="User" name="systemuserid" type="guid" primaryKey="true" />
+      <field updateCompare="true" displayname="First Name" name="firstname" type="string" />
+      <field updateCompare="true" displayname="Full Name" name="fullname" type="string" />
+      <field updateCompare="true" displayname="User Name" name="domainname" type="string" />
+      <field updateCompare="true" displayname="Last Name" name="lastname" type="string" />
+    </fields>
+    <filter>    &lt;filter type="and" &gt;
+      &lt;condition attribute="businessunitid" operator="eq" value="4e122e0c-73f3-ea11-a815-000d3af3ac0d" /&gt;
+    &lt;/filter&gt;</filter>
+  </entity>
+  <entity name="role" displayname="Security Role" etc="1036" primaryidfield="roleid" primarynamefield="name" disableplugins="false">
+    <fields>
+      <field displayname="Role" name="roleid" type="guid" primaryKey="true" />
+      <field displayname="Name" name="name" type="string" />
+      <field displayname="Parent Role" name="parentroleid" type="entityreference" lookupType="role" />
+      <field displayname="Parent Root Role" name="parentrootroleid" type="entityreference" lookupType="role" />
+    </fields>
+  </entity>
+  <entity name="team" displayname="Team" etc="9" primaryidfield="teamid" primarynamefield="name" disableplugins="false">
+    <fields>
+      <field displayname="Team" name="teamid" type="guid" primaryKey="true" />
+      <field displayname="Team Name" name="name" type="string" />
+      <field displayname="Team Type" name="teamtype" type="optionsetvalue" />
+    </fields>
+  </entity>
+</entities>
