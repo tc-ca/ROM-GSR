@@ -1,4 +1,5 @@
 "use strict";
+/* eslint-disable @typescript-eslint/triple-slash-reference */
 /// <reference path='../typings/XRM/xrm.d.ts' />
 /// <reference path='../typings/XRM/dg.xrmquery.web.d.ts' />
 /// <reference path='../typings/XRM/Form/msdyn_workorder/Main/OversightActivity.d.ts' />
@@ -12,12 +13,10 @@ var ROM;
     }
     ROM.onLoad = onLoad;
     function fiscalYearOnchange(eContext) {
-        {
-            console.log('fiscalYearOnChange has been called');
-            console.log('Xrm execution context: ', eContext);
-            //if new fiscal year is selected, then previous selection of quarter no longer corresponds
-            removeSelectedFiscalQuarter(eContext);
-        }
+        console.log('fiscalYearOnChange has been called');
+        console.log('Xrm execution context: ', eContext);
+        //if new fiscal year is selected, then previous selection of quarter no longer corresponds
+        removeSelectedFiscalQuarter(eContext);
     }
     ROM.fiscalYearOnchange = fiscalYearOnchange;
     // FUNCTIONS
@@ -43,9 +42,7 @@ var ROM;
         });
     }
     function removeSelectedFiscalQuarter(eContext) {
-        {
-            var form = eContext.getFormContext();
-            form.getAttribute('ovs_fiscalquarter').setValue(null);
-        }
+        var form = eContext.getFormContext();
+        form.getAttribute('ovs_fiscalquarter').setValue(null);
     }
 })(ROM || (ROM = {}));
