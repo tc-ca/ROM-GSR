@@ -33,3 +33,6 @@
 # Additional Resources
 - https://reenhanced.com/2019/how-to-get-started-with-form-scripts-in-dynamics-365/
 - https://dyncrmexp.com/2020/06/16/modern-web-resource-workspace-in-dynamics-365-part-1-typescript/
+- https://www.oliverflint.co.uk/2020/03/07/D365-Typescript-Webresources-Part-1/
+- https://github.com/delegateas/XrmFramework
+- https://docs.microsoft.com/en-us/dynamics365/customerengagement/on-premises/developer/streamline-javascript-development-fiddler-autoresponder

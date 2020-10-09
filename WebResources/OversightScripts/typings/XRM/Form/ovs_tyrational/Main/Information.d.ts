@@ -4,6 +4,8 @@ declare namespace Form.ovs_tyrational.Main {
     }
     interface Attributes extends Xrm.AttributeCollectionBase {
       get(name: "ovs_name"): Xrm.Attribute<string>;
+      get(name: "ovs_rationalelbl"): Xrm.Attribute<string>;
+      get(name: "ovs_rationalflbl"): Xrm.Attribute<string>;
       get(name: "ownerid"): Xrm.LookupAttribute<"systemuser" | "team">;
       get(name: string): undefined;
       get(): Xrm.Attribute<any>[];
@@ -12,6 +14,8 @@ declare namespace Form.ovs_tyrational.Main {
     }
     interface Controls extends Xrm.ControlCollectionBase {
       get(name: "ovs_name"): Xrm.StringControl;
+      get(name: "ovs_rationalelbl"): Xrm.StringControl;
+      get(name: "ovs_rationalflbl"): Xrm.StringControl;
       get(name: "ownerid"): Xrm.LookupControl<"systemuser" | "team">;
       get(name: string): undefined;
       get(): Xrm.BaseControl[];
@@ -27,9 +31,13 @@ declare namespace Form.ovs_tyrational.Main {
   }
   interface Information extends Xrm.PageBase<Information.Attributes,Information.Tabs,Information.Controls> {
     getAttribute(attributeName: "ovs_name"): Xrm.Attribute<string>;
+    getAttribute(attributeName: "ovs_rationalelbl"): Xrm.Attribute<string>;
+    getAttribute(attributeName: "ovs_rationalflbl"): Xrm.Attribute<string>;
     getAttribute(attributeName: "ownerid"): Xrm.LookupAttribute<"systemuser" | "team">;
     getAttribute(attributeName: string): undefined;
     getControl(controlName: "ovs_name"): Xrm.StringControl;
+    getControl(controlName: "ovs_rationalelbl"): Xrm.StringControl;
+    getControl(controlName: "ovs_rationalflbl"): Xrm.StringControl;
     getControl(controlName: "ownerid"): Xrm.LookupControl<"systemuser" | "team">;
     getControl(controlName: string): undefined;
   }

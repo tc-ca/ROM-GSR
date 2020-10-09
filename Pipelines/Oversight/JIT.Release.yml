@@ -27,20 +27,20 @@ steps:
   inputs:
     DefaultVersion: true
 
-- task: PowerPlatformPackSolution@0
-  inputs:
-    SolutionSourceFolder: '$(Build.SourcesDirectory)\$(TCSolutionName)_Base'
-    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base.zip'
+# - task: PowerPlatformPackSolution@0
+#   inputs:
+#     SolutionSourceFolder: '$(Build.SourcesDirectory)\$(TCSolutionName)_Base'
+#     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base.zip'
 
-- task: PowerPlatformImportSolution@0
-  inputs:
-    authenticationType: 'PowerPlatformSPN'
-    PowerPlatformSPN: 'ROM JIT'
-    SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base.zip'
-    AsyncOperation: true
-    MaxAsyncWaitTime: '240'
-    OverwriteUnmanagedCustomizations: true
-    SkipProductUpdateDependencies: true
+# - task: PowerPlatformImportSolution@0
+#   inputs:
+#     authenticationType: 'PowerPlatformSPN'
+#     PowerPlatformSPN: 'ROM JIT'
+#     SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base.zip'
+#     AsyncOperation: true
+#     MaxAsyncWaitTime: '240'
+#     OverwriteUnmanagedCustomizations: true
+#     SkipProductUpdateDependencies: true
 
 - task: PowerPlatformPackSolution@0
   inputs:
@@ -57,63 +57,18 @@ steps:
     OverwriteUnmanagedCustomizations: true
     SkipProductUpdateDependencies: true
 
-- task: PowerPlatformPackSolution@0
-  inputs:
-    SolutionSourceFolder: '$(Build.SourcesDirectory)\$(SolutionName)_Conf'
-    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Conf.zip'
+# - task: PowerPlatformPublishCustomizations@0
+#   inputs:
+#     authenticationType: 'PowerPlatformSPN'
+#     PowerPlatformSPN: 'ROM JIT'
 
-- task: PowerPlatformImportSolution@0
-  inputs:
-    authenticationType: 'PowerPlatformSPN'
-    PowerPlatformSPN: 'ROM JIT'
-    SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Conf.zip'
-    AsyncOperation: true
-    MaxAsyncWaitTime: '240'
-    OverwriteUnmanagedCustomizations: true
-    SkipProductUpdateDependencies: true
-
-- task: PowerPlatformPackSolution@0
-  inputs:
-    SolutionSourceFolder: '$(Build.SourcesDirectory)\$(SolutionName)_Proc'
-    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Proc.zip'
-
-- task: PowerPlatformImportSolution@0
-  inputs:
-    authenticationType: 'PowerPlatformSPN'
-    PowerPlatformSPN: 'ROM JIT'
-    SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Proc.zip'
-    AsyncOperation: true
-    MaxAsyncWaitTime: '240'
-    OverwriteUnmanagedCustomizations: true
-    SkipProductUpdateDependencies: true
-
-- task: PowerPlatformPackSolution@0
-  inputs:
-    SolutionSourceFolder: '$(Build.SourcesDirectory)\$(SolutionName)_Code'
-    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Code.zip'
-
-- task: PowerPlatformImportSolution@0
-  inputs:
-    authenticationType: 'PowerPlatformSPN'
-    PowerPlatformSPN: 'ROM JIT'
-    SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Code.zip'
-    AsyncOperation: true
-    MaxAsyncWaitTime: '240'
-    OverwriteUnmanagedCustomizations: true
-    SkipProductUpdateDependencies: true
-
-- task: PowerPlatformPublishCustomizations@0
-  inputs:
-    authenticationType: 'PowerPlatformSPN'
-    PowerPlatformSPN: 'ROM JIT'
-
-- task: PowerPlatformExportSolution@0
-  inputs:
-    authenticationType: 'PowerPlatformSPN'
-    PowerPlatformSPN: 'ROM JIT'
-    SolutionName: '$(TCSolutionName)_Base'
-    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base_managed.zip'
-    Managed: true
+# - task: PowerPlatformExportSolution@0
+#   inputs:
+#     authenticationType: 'PowerPlatformSPN'
+#     PowerPlatformSPN: 'ROM JIT'
+#     SolutionName: '$(TCSolutionName)_Base'
+#     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base_managed.zip'
+#     Managed: true
 
 - task: PowerPlatformExportSolution@0
   inputs:
@@ -123,57 +78,14 @@ steps:
     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Base_managed.zip'
     Managed: true
 
-- task: PowerPlatformExportSolution@0
-  inputs:
-    authenticationType: 'PowerPlatformSPN'
-    PowerPlatformSPN: 'ROM JIT'
-    SolutionName: '$(SolutionName)_Conf'
-    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Conf_managed.zip'
-    Managed: true
-
-- task: PowerPlatformExportSolution@0
-  inputs:
-    authenticationType: 'PowerPlatformSPN'
-    PowerPlatformSPN: 'ROM JIT'
-    SolutionName: '$(SolutionName)_Proc'
-    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Proc_managed.zip'
-    Managed: true
-
-- task: PowerPlatformExportSolution@0
-  inputs:
-    authenticationType: 'PowerPlatformSPN'
-    PowerPlatformSPN: 'ROM JIT'
-    SolutionName: '$(SolutionName)_Code'
-    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Code_managed.zip'
-    Managed: true
-
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base_managed.zip'
-    artifact: 'drop_tcbase'
-    publishLocation: 'pipeline'
+# - task: PublishPipelineArtifact@1
+#   inputs:
+#     targetPath: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base_managed.zip'
+#     artifact: 'drop_tcbase'
+#     publishLocation: 'pipeline'
 
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Base_managed.zip'
     artifact: 'drop_base'
     publishLocation: 'pipeline'
-
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Conf_managed.zip'
-    artifact: 'drop_conf'
-    publishLocation: 'pipeline'
-
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Proc_managed.zip'
-    artifact: 'drop_proc'
-    publishLocation: 'pipeline'
-
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Code_managed.zip'
-    artifact: 'drop_code'
-    publishLocation: 'pipeline'
-
