@@ -26,21 +26,21 @@ steps:
      authenticationType: 'PowerPlatformSPN'
      PowerPlatformSPN: 'ROM Dev'
 
-- task: PowerPlatformExportSolution@0
-  inputs:
-     authenticationType: 'PowerPlatformSPN'
-     PowerPlatformSPN: 'ROM Dev'
-     SolutionName: '$(TCSolutionName)_Base'
-     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base.zip'
-     AsyncOperation: true
-     MaxAsyncWaitTime: '60'
-     ExportRelationshipRoles: true
+#- task: PowerPlatformExportSolution@0
+#  inputs:
+#     authenticationType: 'PowerPlatformSPN'
+#     PowerPlatformSPN: 'ROM Dev'
+#     SolutionName: '$(TCSolutionName)_Base'
+#     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base.zip'
+#     AsyncOperation: true
+#     MaxAsyncWaitTime: '60'
+#     ExportRelationshipRoles: true
 
-- task: PowerPlatformUnpackSolution@0
-  inputs:
-     SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base.zip'
-     SolutionTargetFolder: '$(Build.SourcesDirectory)\$(TCSolutionName)_Base'
-     
+#- task: PowerPlatformUnpackSolution@0
+#  inputs:
+#     SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base.zip'
+#     SolutionTargetFolder: '$(Build.SourcesDirectory)\$(TCSolutionName)_Base'
+
 - task: PowerPlatformExportSolution@0
   inputs:
     authenticationType: 'PowerPlatformSPN'
