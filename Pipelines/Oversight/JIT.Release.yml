@@ -27,20 +27,20 @@ steps:
   inputs:
     DefaultVersion: true
 
-- task: PowerPlatformPackSolution@0
-  inputs:
-     SolutionSourceFolder: '$(Build.SourcesDirectory)\$(TCSolutionName)_Base'
-     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base.zip'
+#- task: PowerPlatformPackSolution@0
+#  inputs:
+#     SolutionSourceFolder: '$(Build.SourcesDirectory)\$(TCSolutionName)_Base'
+#     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base.zip'
 
-- task: PowerPlatformImportSolution@0
-  inputs:
-     authenticationType: 'PowerPlatformSPN'
-     PowerPlatformSPN: 'ROM JIT'
-     SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base.zip'
-     AsyncOperation: true
-     MaxAsyncWaitTime: '240'
-     OverwriteUnmanagedCustomizations: true
-     SkipProductUpdateDependencies: true
+#- task: PowerPlatformImportSolution@0
+#  inputs:
+#     authenticationType: 'PowerPlatformSPN'
+#     PowerPlatformSPN: 'ROM JIT'
+#     SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base.zip'
+#     AsyncOperation: true
+#     MaxAsyncWaitTime: '240'
+#     OverwriteUnmanagedCustomizations: true
+#     SkipProductUpdateDependencies: true
 
 - task: PowerPlatformPackSolution@0
   inputs:
