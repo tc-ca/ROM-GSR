@@ -10,8 +10,10 @@
     <layoutxml>
       <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
         <row name="result" id="ovs_unplannedforecastid">
-          <cell name="ovs_name" width="300" />
-          <cell name="createdon" width="125" />
+          <cell name="ovs_region" width="100" />
+          <cell name="ovs_fiscalyear" width="100" />
+          <cell name="ovs_quarter" width="100" />
+          <cell name="ovs_capacity" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -20,12 +22,16 @@
       <fetch version="1.0" mapping="logical">
         <entity name="ovs_unplannedforecast">
           <attribute name="ovs_unplannedforecastid" />
-          <attribute name="ovs_name" />
-          <attribute name="createdon" />
-          <order attribute="ovs_name" descending="false" />
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="1" />
           </filter>
+          <attribute name="ovs_region" />
+          <attribute name="ovs_fiscalyear" />
+          <attribute name="ovs_quarter" />
+          <attribute name="ovs_capacity" />
+          <order attribute="ovs_region" descending="false" />
+          <order attribute="ovs_fiscalyear" descending="false" />
+          <order attribute="ovs_quarter" descending="false" />
         </entity>
       </fetch>
     </fetchxml>
