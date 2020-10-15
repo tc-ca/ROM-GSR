@@ -1,0 +1,46 @@
+<entities >
+  <entity name="bookableresource" displayname="Bookable Resource" etc="1150" primaryidfield="bookableresourceid" primarynamefield="name" disableplugins="false">
+    <fields>
+      <field displayname="Enable for Availability Search" name="msdyn_displayonscheduleassistant" type="bool" customfield="true" />
+      <field displayname="Display On Schedule Board" name="msdyn_displayonscheduleboard" type="bool" customfield="true" />
+      <field displayname="Bookable Resource" name="bookableresourceid" type="guid" primaryKey="true" />
+      <field displayname="Enabled for Field Service Mobile" name="msdyn_enabledforfieldservicemobile" type="bool" customfield="true" />
+      <field displayname="Name" name="name" type="string" />
+      <field displayname="Primary Email" name="msdyn_primaryemail" type="string" customfield="true" />
+      <field displayname="Resource Type" name="resourcetype" type="optionsetvalue" />
+      <field displayname="User" name="userid" type="entityreference" lookupType="systemuser" />
+    </fields>
+  </entity>
+  <entity name="bookableresourcecategory" displayname="Bookable Resource Category" etc="1147" primaryidfield="bookableresourcecategoryid" primarynamefield="name" disableplugins="false">
+    <fields>
+      <field displayname="Description" name="description" type="string" />
+      <field displayname="Name" name="name" type="string" />
+      <field displayname="Resource Category" name="bookableresourcecategoryid" type="guid" primaryKey="true" />
+    </fields>
+  </entity>
+  <entity name="bookableresourcecategoryassn" displayname="Bookable Resource Category Assn" etc="1149" primaryidfield="bookableresourcecategoryassnid" primarynamefield="name" disableplugins="false">
+    <fields>
+      <field displayname="Name" name="name" type="string" />
+      <field displayname="Resource" name="resource" type="entityreference" lookupType="bookableresource" />
+      <field displayname="Resource Category" name="resourcecategory" type="entityreference" lookupType="bookableresourcecategory" />
+      <field displayname="Resource Category Assn" name="bookableresourcecategoryassnid" type="guid" primaryKey="true" />
+    </fields>
+  </entity>
+  <entity name="bookableresourcecharacteristic" displayname="Bookable Resource Characteristic" etc="1148" primaryidfield="bookableresourcecharacteristicid" primarynamefield="name" disableplugins="false">
+    <fields>
+      <field displayname="Characteristic" name="characteristic" type="entityreference" lookupType="characteristic" />
+      <field displayname="Bookable Resource Characteristic" name="bookableresourcecharacteristicid" type="guid" primaryKey="true" />
+      <field displayname="Name" name="name" type="string" />
+      <field displayname="Rating Value" name="ratingvalue" type="entityreference" lookupType="ratingvalue" />
+      <field displayname="Resource" name="resource" type="entityreference" lookupType="bookableresource" />
+    </fields>
+  </entity>
+  <entity name="characteristic" displayname="Characteristic" etc="1141" primaryidfield="characteristicid" primarynamefield="name" disableplugins="false">
+    <fields>
+      <field displayname="Characteristic" name="characteristicid" type="guid" primaryKey="true" />
+      <field displayname="Characteristic Type" name="characteristictype" type="optionsetvalue" />
+      <field displayname="Description" name="description" type="string" />
+      <field displayname="Name" name="name" type="string" />
+    </fields>
+  </entity>
+</entities>
