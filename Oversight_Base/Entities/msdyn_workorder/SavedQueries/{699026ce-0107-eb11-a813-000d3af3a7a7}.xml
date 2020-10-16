@@ -9,15 +9,20 @@
     <savedqueryid>{699026ce-0107-eb11-a813-000d3af3a7a7}</savedqueryid>
     <layoutxml>
       <grid name="resultset" jump="msdyn_name" select="1" icon="1" preview="1">
-        <row name="result" id="msdyn_workorderid">
-          <cell name="msdyn_name" width="121" />
+        <row id="msdyn_workorderid" name="result">
+          <cell name="msdyn_name" width="86" />
+          <cell name="ovs_mocid" width="69" />
+          <cell name="ovs_rational" width="100" />
+          <cell name="msdyn_country" width="85" />
+          <cell name="msdyn_billingaccount" width="100" />
           <cell name="msdyn_serviceaccount" width="66" />
-          <cell name="msdyn_functionallocation" width="100" />
-          <cell name="msdyn_substatus" width="100" />
-          <cell name="msdyn_systemstatus" width="100" />
-          <cell name="msdyn_workordertype" width="90" />
-          <cell name="msdyn_primaryincidenttype" width="100" />
-          <cell name="msdyn_primaryincidentdescription" width="100" />
+          <cell name="a_cf908f2ede284ef2ae2909ded853fd58.address1_line1" width="100" />
+          <cell name="msdyn_city" width="85" />
+          <cell name="a_cf908f2ede284ef2ae2909ded853fd58.address1_stateorprovince" width="100" />
+          <cell name="msdyn_postalcode" width="100" />
+          <cell name="ovs_primaryinspector" width="100" />
+          <cell name="ovs_fiscalyear" width="100" />
+          <cell name="ovs_fiscalquarter" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -26,22 +31,29 @@
       <fetch version="1.0" output-format="xml-platform" mapping="logical">
         <entity name="msdyn_workorder">
           <attribute name="msdyn_name" />
-          <attribute name="msdyn_workorderid" />
           <attribute name="msdyn_serviceaccount" />
           <filter type="and">
-            <condition attribute="ovs_rational" operator="eq" value="{994c3ec1-c104-eb11-a813-000d3af3a7a7}" uiname="Planned" uitype="ovs_tyrational" />
+            <condition value="{994c3ec1-c104-eb11-a813-000d3af3a7a7}" attribute="ovs_rational" operator="eq" uiname="Planned" uitype="ovs_tyrational" />
           </filter>
           <link-entity name="tc_tcfiscalyear" alias="aa" link-type="inner" from="tc_tcfiscalyearid" to="ovs_fiscalyear">
             <filter type="and">
-              <condition attribute="tc_iscurrentfiscalyear" operator="eq" value="1" />
+              <condition value="1" attribute="tc_iscurrentfiscalyear" operator="eq" />
             </filter>
           </link-entity>
-          <attribute name="msdyn_functionallocation" />
-          <attribute name="msdyn_substatus" />
-          <attribute name="msdyn_systemstatus" />
-          <attribute name="msdyn_workordertype" />
-          <attribute name="msdyn_primaryincidenttype" />
-          <attribute name="msdyn_primaryincidentdescription" />
+          <attribute name="msdyn_workorderid" />
+          <attribute name="ovs_mocid" />
+          <attribute name="ovs_rational" />
+          <attribute name="msdyn_billingaccount" />
+          <attribute name="ovs_primaryinspector" />
+          <attribute name="ovs_fiscalquarter" />
+          <attribute name="msdyn_country" />
+          <attribute name="msdyn_city" />
+          <attribute name="msdyn_postalcode" />
+          <link-entity alias="a_cf908f2ede284ef2ae2909ded853fd58" name="account" to="msdyn_serviceaccount" from="accountid" link-type="outer" visible="false">
+            <attribute name="address1_line1" />
+            <attribute name="address1_stateorprovince" />
+          </link-entity>
+          <attribute name="ovs_fiscalyear" />
         </entity>
       </fetch>
     </fetchxml>
