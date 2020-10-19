@@ -9,11 +9,11 @@
     <savedqueryid>{699026ce-0107-eb11-a813-000d3af3a7a7}</savedqueryid>
     <layoutxml>
       <grid name="resultset" jump="msdyn_name" select="1" icon="1" preview="1">
-        <row id="msdyn_workorderid" name="result">
+        <row name="result" id="msdyn_workorderid">
           <cell name="msdyn_name" width="89" />
           <cell name="ovs_oversighttype" width="109" />
           <cell name="ovs_rational" width="91" />
-          <cell name="msdyn_country" width="91" />
+          <cell name="msdyn_serviceterritory" width="150" />
           <cell name="msdyn_billingaccount" width="100" />
           <cell name="msdyn_serviceaccount" width="66" />
           <cell name="msdyn_address1" width="100" />
@@ -30,14 +30,6 @@
       <fetch version="1.0" output-format="xml-platform" mapping="logical">
         <entity name="msdyn_workorder">
           <attribute name="msdyn_serviceaccount" />
-          <filter type="and">
-            <condition value="{994c3ec1-c104-eb11-a813-000d3af3a7a7}" attribute="ovs_rational" operator="eq" uiname="Planned" uitype="ovs_tyrational" />
-          </filter>
-          <link-entity name="tc_tcfiscalyear" alias="aa" link-type="inner" from="tc_tcfiscalyearid" to="ovs_fiscalyear">
-            <filter type="and">
-              <condition value="1" attribute="tc_iscurrentfiscalyear" operator="eq" />
-            </filter>
-          </link-entity>
           <attribute name="msdyn_workorderid" />
           <attribute name="ovs_rational" />
           <attribute name="msdyn_billingaccount" />
@@ -47,9 +39,17 @@
           <attribute name="msdyn_postalcode" />
           <attribute name="msdyn_stateorprovince" />
           <attribute name="msdyn_address1" />
-          <attribute name="msdyn_country" />
           <attribute name="ovs_oversighttype" />
           <attribute name="msdyn_name" />
+          <attribute name="msdyn_serviceterritory" />
+          <filter type="and">
+            <condition attribute="ovs_rational" operator="eq" value="{994c3ec1-c104-eb11-a813-000d3af3a7a7}" />
+          </filter>
+          <link-entity name="tc_tcfiscalyear" to="ovs_fiscalyear" from="tc_tcfiscalyearid" link-type="inner" alias="aa">
+            <filter type="and">
+              <condition attribute="tc_iscurrentfiscalyear" operator="eq" value="1" />
+            </filter>
+          </link-entity>
         </entity>
       </fetch>
     </fetchxml>
