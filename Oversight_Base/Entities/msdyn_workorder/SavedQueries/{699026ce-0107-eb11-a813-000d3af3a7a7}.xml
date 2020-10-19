@@ -10,18 +10,17 @@
     <layoutxml>
       <grid name="resultset" jump="msdyn_name" select="1" icon="1" preview="1">
         <row id="msdyn_workorderid" name="result">
-          <cell name="msdyn_name" width="86" />
-          <cell name="ovs_mocid" width="69" />
-          <cell name="ovs_rational" width="100" />
-          <cell name="msdyn_country" width="85" />
+          <cell name="msdyn_name" width="89" />
+          <cell name="ovs_oversighttype" width="109" />
+          <cell name="ovs_rational" width="91" />
+          <cell name="msdyn_country" width="91" />
           <cell name="msdyn_billingaccount" width="100" />
           <cell name="msdyn_serviceaccount" width="66" />
-          <cell name="a_cf908f2ede284ef2ae2909ded853fd58.address1_line1" width="100" />
+          <cell name="msdyn_address1" width="100" />
           <cell name="msdyn_city" width="85" />
-          <cell name="a_cf908f2ede284ef2ae2909ded853fd58.address1_stateorprovince" width="100" />
+          <cell name="msdyn_stateorprovince" width="91" />
           <cell name="msdyn_postalcode" width="100" />
           <cell name="ovs_primaryinspector" width="100" />
-          <cell name="ovs_fiscalyear" width="100" />
           <cell name="ovs_fiscalquarter" width="100" />
         </row>
       </grid>
@@ -30,7 +29,6 @@
     <fetchxml>
       <fetch version="1.0" output-format="xml-platform" mapping="logical">
         <entity name="msdyn_workorder">
-          <attribute name="msdyn_name" />
           <attribute name="msdyn_serviceaccount" />
           <filter type="and">
             <condition value="{994c3ec1-c104-eb11-a813-000d3af3a7a7}" attribute="ovs_rational" operator="eq" uiname="Planned" uitype="ovs_tyrational" />
@@ -41,19 +39,17 @@
             </filter>
           </link-entity>
           <attribute name="msdyn_workorderid" />
-          <attribute name="ovs_mocid" />
           <attribute name="ovs_rational" />
           <attribute name="msdyn_billingaccount" />
           <attribute name="ovs_primaryinspector" />
           <attribute name="ovs_fiscalquarter" />
-          <attribute name="msdyn_country" />
           <attribute name="msdyn_city" />
           <attribute name="msdyn_postalcode" />
-          <link-entity alias="a_cf908f2ede284ef2ae2909ded853fd58" name="account" to="msdyn_serviceaccount" from="accountid" link-type="outer" visible="false">
-            <attribute name="address1_line1" />
-            <attribute name="address1_stateorprovince" />
-          </link-entity>
-          <attribute name="ovs_fiscalyear" />
+          <attribute name="msdyn_stateorprovince" />
+          <attribute name="msdyn_address1" />
+          <attribute name="msdyn_country" />
+          <attribute name="ovs_oversighttype" />
+          <attribute name="msdyn_name" />
         </entity>
       </fetch>
     </fetchxml>
