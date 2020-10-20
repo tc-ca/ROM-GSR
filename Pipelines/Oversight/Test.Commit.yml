@@ -64,3 +64,23 @@ steps:
    
    echo "Push solution changes to the remote repository"
    git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
+
+- task: PowerPlatformImportSolution@0
+  inputs:
+    authenticationType: 'PowerPlatformSPN'
+    PowerPlatformSPN: 'ROM TEST'
+    SolutionInputFile: '$(Build.ArtifactStagingDirectory)\Managed\$(LatestPatchName).zip'
+    AsyncOperation: true
+    MaxAsyncWaitTime: '240'
+    OverwriteUnmanagedCustomizations: true
+
+- task: PowerPlatformPublishCustomizations@0
+  inputs:
+    authenticationType: 'PowerPlatformSPN'
+    PowerPlatformSPN: 'ROM TEST'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)\managed\$(LatestPatchName).zip'
+    artifact: 'drop_base'
+    publishLocation: 'pipeline'
