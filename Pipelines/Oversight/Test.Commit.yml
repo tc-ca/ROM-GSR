@@ -53,7 +53,7 @@ steps:
     authenticationType: 'PowerPlatformSPN'
     PowerPlatformSPN: 'ROM Dev'
     SolutionName: '$(LatestPatchName)'
-    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\Managed\$(LatestPatchName).zip'
+    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\Managed\$(LatestPatchName)_managed.zip'
     AsyncOperation: true
     MaxAsyncWaitTime: '60'
     ExportRelationshipRoles: true
@@ -74,7 +74,7 @@ steps:
   inputs:
     authenticationType: 'PowerPlatformSPN'
     PowerPlatformSPN: 'ROM Test'
-    SolutionInputFile: '$(Build.ArtifactStagingDirectory)\Managed\$(LatestPatchName).zip'
+    SolutionInputFile: '$(Build.ArtifactStagingDirectory)\Managed\$(LatestPatchName)_managed.zip'
     AsyncOperation: true
     MaxAsyncWaitTime: '240'
     OverwriteUnmanagedCustomizations: true
@@ -84,8 +84,8 @@ steps:
     authenticationType: 'PowerPlatformSPN'
     PowerPlatformSPN: 'ROM Test'
 
-# - task: PublishPipelineArtifact@1
-#   inputs:
-#     targetPath: '$(Build.ArtifactStagingDirectory)\managed\$(LatestPatchName).zip'
-#     artifact: 'drop_base'
-#     publishLocation: 'pipeline'
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)\Managed\$(LatestPatchName)_managed.zip'
+    artifact: 'drop_base'
+    publishLocation: 'pipeline'
