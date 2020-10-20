@@ -40,9 +40,12 @@
                             <DisableMru>false</DisableMru>
                             <DisableQuickFind>false</DisableQuickFind>
                             <DisableViewPicker>false</DisableViewPicker>
-                            <DefaultViewId>{A9AF0AB8-861D-4CFA-92A5-C6281FED7FAB}</DefaultViewId>
+                            <DefaultViewId>{8965DC8D-460A-EB11-A813-000D3AF3A7A7}</DefaultViewId>
                             <AllowFilterOff>false</AllowFilterOff>
-                            <AvailableViewIds>{A9AF0AB8-861D-4CFA-92A5-C6281FED7FAB},{FDBC939A-2403-EB11-A813-000D3AF3AC0D}</AvailableViewIds>
+                            <AvailableViewIds>{8965DC8D-460A-EB11-A813-000D3AF3A7A7}</AvailableViewIds>
+                            <FilterRelationshipName>ovs_account_accountRE_Site</FilterRelationshipName>
+                            <DependentAttributeName>msdyn_workorder.msdyn_serviceaccount</DependentAttributeName>
+                            <DependentAttributeType>account</DependentAttributeType>
                           </parameters>
                         </control>
                       </cell>
@@ -59,9 +62,12 @@
                             <DisableMru>false</DisableMru>
                             <DisableQuickFind>false</DisableQuickFind>
                             <DisableViewPicker>false</DisableViewPicker>
-                            <DefaultViewId>{A9AF0AB8-861D-4CFA-92A5-C6281FED7FAB}</DefaultViewId>
-                            <AvailableViewIds>{A9AF0AB8-861D-4CFA-92A5-C6281FED7FAB},{0F928982-20D3-E811-815B-000D3AFD1036}</AvailableViewIds>
+                            <DefaultViewId>{E7BA8BD8-440A-EB11-A813-000D3AF3A7A7}</DefaultViewId>
+                            <AvailableViewIds>{E7BA8BD8-440A-EB11-A813-000D3AF3A7A7}</AvailableViewIds>
                             <AllowFilterOff>false</AllowFilterOff>
+                            <FilterRelationshipName>ovs_account_accountRE_Site</FilterRelationshipName>
+                            <DependentAttributeName>msdyn_workorder.msdyn_billingaccount</DependentAttributeName>
+                            <DependentAttributeType>account</DependentAttributeType>
                           </parameters>
                         </control>
                       </cell>
@@ -71,14 +77,14 @@
                         <labels>
                           <label description="Site of Violation" languagecode="1033" />
                         </labels>
-                        <control id="ovs_siteofviolation" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ovs_siteofviolation" disabled="false" uniqueid="{3dc59504-641d-5d0c-bd5b-23976b62b78c}">
+                        <control disabled="false" id="ovs_siteofviolation" datafieldname="ovs_siteofviolation" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" uniqueid="{3dc59504-641d-5d0c-bd5b-23976b62b78c}">
                           <parameters>
                             <AutoResolve>true</AutoResolve>
                             <DisableMru>false</DisableMru>
                             <DisableQuickFind>false</DisableQuickFind>
                             <DisableViewPicker>false</DisableViewPicker>
-                            <DefaultViewId>{A9AF0AB8-861D-4CFA-92A5-C6281FED7FAB}</DefaultViewId>
-                            <AvailableViewIds>{A9AF0AB8-861D-4CFA-92A5-C6281FED7FAB},{0F928982-20D3-E811-815B-000D3AFD1036}</AvailableViewIds>
+                            <DefaultViewId>{E7BA8BD8-440A-EB11-A813-000D3AF3A7A7}</DefaultViewId>
+                            <AvailableViewIds>{E7BA8BD8-440A-EB11-A813-000D3AF3A7A7}</AvailableViewIds>
                             <AllowFilterOff>false</AllowFilterOff>
                           </parameters>
                         </control>
@@ -175,6 +181,15 @@
                       </cell>
                     </row>
                     <row>
+                      <cell id="{c37d0026-6488-4286-b181-fceeb6c6aa16}" locklevel="0">
+                        <labels>
+                          <label description="Owner" languagecode="1033" />
+                          <label description="Propriétaire" languagecode="1036" />
+                        </labels>
+                        <control id="ownerid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ownerid" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
                       <cell id="{f05e038e-d2ba-406d-82eb-666aa55f5d20}" labelid="{04469dd3-39c3-41e8-bfd9-3cf5b6de9d01}" showlabel="true" locklevel="0">
                         <labels>
                           <label description="Secondary Inspector" languagecode="1033" />
@@ -219,7 +234,7 @@
                         <control disabled="false" id="msdyn_workhourtemplate" datafieldname="msdyn_workhourtemplate" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" />
                       </cell>
                     </row>
-                    <row height="auto">
+                    <row>
                       <cell id="{a8119cab-a939-4805-39ac-e2ab0a638d33}" labelid="{c82efcec-89ed-466a-9bbf-4d8192f76a59}" showlabel="true" locklevel="0" auto="true" rowspan="1" colspan="1">
                         <labels>
                           <label description="Work Order Summary" languagecode="1033" />
@@ -233,7 +248,7 @@
                         <labels>
                           <label description="Rational" languagecode="1033" />
                         </labels>
-                        <control id="ovs_rational" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ovs_rational" disabled="false" />
+                        <control disabled="false" id="ovs_rational" datafieldname="ovs_rational" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" />
                       </cell>
                     </row>
                   </rows>
@@ -249,7 +264,7 @@
                           <label description="Taxable" languagecode="1033" />
                           <label description="Imposable" languagecode="1036" />
                         </labels>
-                        <control disabled="false" id="msdyn_taxable" datafieldname="msdyn_taxable" classid="{67FAC785-CD58-4f9f-ABB3-4B7DDC6ED5ED}" />
+                        <control id="msdyn_taxable" datafieldname="msdyn_taxable" classid="{67FAC785-CD58-4f9f-ABB3-4B7DDC6ED5ED}" />
                       </cell>
                     </row>
                     <row>
@@ -661,7 +676,7 @@
                           <label description="Time Window End" languagecode="1033" />
                           <label description="Fin de la fenêtre de temps" languagecode="1036" />
                         </labels>
-                        <control disabled="false" id="msdyn_timewindowend" datafieldname="msdyn_timewindowend" classid="{F9A8A302-114E-466A-B582-6771B2AE0D92}" uniqueid="{a28dc272-8532-c9de-9014-c926c5ce4539}" />
+                        <control id="msdyn_timewindowend" datafieldname="msdyn_timewindowend" classid="{F9A8A302-114E-466A-B582-6771B2AE0D92}" uniqueid="{a28dc272-8532-c9de-9014-c926c5ce4539}" />
                       </cell>
                     </row>
                     <row>
@@ -1126,12 +1141,10 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{9fb3fffc-5c32-4348-b672-7e1f468e4a23}" labelid="{3be93710-a4ff-4a9e-8f0a-578b788ab26b}">
+                      <cell locklevel="0" id="{0ddec5d2-b93c-4f01-bdbe-3a95dbb8c720}">
                         <labels>
-                          <label description="Owner" languagecode="1033" />
-                          <label description="Propriétaire" languagecode="1036" />
+                          <label description="" languagecode="1033" />
                         </labels>
-                        <control id="ownerid" datafieldname="ownerid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" />
                       </cell>
                       <cell id="{d0809058-9a77-5601-1ec0-1e5d698b9a9b}" labelid="{6f32aca6-2d09-406a-91ef-afb5cf73a090}" showlabel="false">
                         <labels>
@@ -2605,7 +2618,7 @@
         </event>
         <event name="onchange" application="false" active="false" attribute="ovs_fiscalyear">
           <Handlers>
-            <Handler functionName="ROM.fiscalYearOnchange" libraryName="ovs_workOrder.js" handlerUniqueId="{472a5423-7d60-2ad8-9a38-43bd066c5093}" enabled="true" parameters="" passExecutionContext="true" />
+            <Handler passExecutionContext="true" parameters="" enabled="true" handlerUniqueId="{472a5423-7d60-2ad8-9a38-43bd066c5093}" libraryName="ovs_workOrder.js" functionName="ROM.fiscalYearOnchange" />
           </Handlers>
         </event>
       </events>
