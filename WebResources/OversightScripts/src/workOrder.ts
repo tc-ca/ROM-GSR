@@ -7,8 +7,15 @@ namespace ROM {
   export function onLoad(eContext: Xrm.ExecutionContext<any, any>): void {
     console.log('Onload has been called');
     console.log('Xrm execution context: ', eContext);
+    const form = <Form.msdyn_workorder.Main.OversightActivity>eContext.getFormContext();
 
-    setDefaultFiscalYear(eContext);
+    switch (form.ui.getFormType()) {
+      //Create
+      case 1:
+        setDefaultFiscalYear(form);
+      default:
+        break;
+    }
   }
 
   export function fiscalYearOnchange(eContext: Xrm.ExecutionContext<any, any>): void {
@@ -20,9 +27,7 @@ namespace ROM {
 
   // FUNCTIONS
 
-  function setDefaultFiscalYear(eContext: Xrm.ExecutionContext<any, any>): void {
-    const form = <Form.msdyn_workorder.Main.OversightActivity>eContext.getFormContext();
-
+  function setDefaultFiscalYear(form: Form.msdyn_workorder.Main.OversightActivity): void {
     XrmQuery.retrieveMultiple((x) => x.tc_tcfiscalyears)
       .select((x) => [x.tc_name])
       .filter((x) => Filter.equals(x.tc_iscurrentfiscalyear, true))
