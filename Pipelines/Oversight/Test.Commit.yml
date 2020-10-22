@@ -36,7 +36,27 @@ steps:
     crmConnectionString: '$(ConnectionStringDev)'
     solutionName: 'TC_GlobalCore'
     existsVariableName: 'PatchExists'
-    patchVariableName: 'LatestPatchName' 
+    patchVariableName: 'LatestPatchName'
+
+- task: PowerPlatformExportSolution@0
+  inputs:
+    authenticationType: 'PowerPlatformSPN'
+    PowerPlatformSPN: 'ROM Dev'
+    SolutionName: '$(QMPluginsSolution)'
+    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(QMPluginsSolution).zip'
+    AsyncOperation: true
+    MaxAsyncWaitTime: '60'
+    ExportRelationshipRoles: true
+
+- task: PowerPlatformExportSolution@0
+  inputs:
+    authenticationType: 'PowerPlatformSPN'
+    PowerPlatformSPN: 'ROM Dev'
+    SolutionName: '$(QMPluginsSolution)'
+    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(QMPluginsSolution)_managed.zip'
+    AsyncOperation: true
+    MaxAsyncWaitTime: '60'
+    ExportRelationshipRoles: true
 
 - task: PowerPlatformExportSolution@0
   inputs:
@@ -75,6 +95,15 @@ steps:
     authenticationType: 'PowerPlatformSPN'
     PowerPlatformSPN: 'ROM Test'
     SolutionInputFile: '$(Build.ArtifactStagingDirectory)\Managed\$(LatestPatchName)_managed.zip'
+    AsyncOperation: true
+    MaxAsyncWaitTime: '240'
+    OverwriteUnmanagedCustomizations: true
+
+- task: PowerPlatformImportSolution@0
+  inputs:
+    authenticationType: 'PowerPlatformSPN'
+    PowerPlatformSPN: 'ROM Test'
+    SolutionInputFile: '$(Build.ArtifactStagingDirectory)\Managed\$(QMPluginsSolution)_managed.zip'
     AsyncOperation: true
     MaxAsyncWaitTime: '240'
     OverwriteUnmanagedCustomizations: true
