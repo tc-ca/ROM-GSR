@@ -33,7 +33,8 @@ stages:
         inputs:
           nugetFeed: 'official'
           psFeed: 'official'
-
+  - job: PublishAllCustomizations
+    steps:
       - task: PowerPlatformPublishCustomizations@0
         inputs:
           authenticationType: 'PowerPlatformSPN'
@@ -55,25 +56,19 @@ stages:
           echo "Product Version $ProductVersion"
           echo "Patch Exists = $PatchExists"
           echo "Latest Patch Name = $LatestPatchName"
-
-  - job: CreatePatchIfNotExist
-    condition: eq($[variables.PatchExists], false)
-    steps:
       - task: MSCRMCreatePatch@12
+        condition: eq(variables['GetLatestPatchTask.PatchExists'], false)
         inputs:
           crmConnectionString: '$(ConnectionStringDev)'
           uniqueName: '$(CoreSolutionName)'
           displayName: '$(CoreSolutionName)_$(ProductVersion)'
           versionNumber: '$(ProductVersion)'
-
-  - job: SetPatchVersion
-    steps:
-    - task: PowerPlatformSetSolutionVersion@0
-      inputs:
-        authenticationType: 'PowerPlatformSPN'
-        PowerPlatformSPN: 'ROM Dev'
-        SolutionName: '$(QMPluginsSolution)'
-        SolutionVersionNumber: '$(ProductVersion)'
+      - task: PowerPlatformSetSolutionVersion@0
+        inputs:
+          authenticationType: 'PowerPlatformSPN'
+          PowerPlatformSPN: 'ROM Dev'
+          SolutionName: '$(QMPluginsSolution)'
+          SolutionVersionNumber: '$(ProductVersion)'
       
 - stage: Export
   jobs:
