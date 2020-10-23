@@ -57,7 +57,7 @@ stages:
           echo "Latest Patch Name = $LatestPatchName"
 
   - job: CreatePatchIfNotExist
-    condition: eq($(GetLatestPatchTask.PatchExists), false)
+    condition: eq($GetLatestPatchTask.PatchExists, false)
     steps:
       - task: MSCRMCreatePatch@12
         inputs:
