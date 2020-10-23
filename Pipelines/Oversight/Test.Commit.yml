@@ -42,11 +42,11 @@ stages:
           solutionName: '$(CoreSolutionName)'
           existsVariableName: 'PatchExists'
           patchVariableName: 'LatestPatchName'
-      - script: |
-          echo Patch Version $(LatestPatchName)
-          echo Product Version $(ProductVersion)
-          echo Patch Exists = $(PatchExists)
-          echo Latest Patch Name = $(LatestPatchName)
+      - bash: |
+          echo "Patch Version $LatestPatchName"
+          echo "Product Version $ProductVersion"
+          echo "Patch Exists = $PatchExists"
+          echo "Latest Patch Name = $LatestPatchName"
 
 - stage: B
   condition: eq($(PatchExists), false)
