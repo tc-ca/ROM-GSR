@@ -17,8 +17,8 @@ variables:
   # if you change the major or minor version either at definition or at build time it causes a different counter 
   # to tick that is based on the format expression so you always get a uniquely rotating counter output based on those first two parts. 
   # This makes major and minor user definable but keeps the patch and final version numbers incrementing on a per build PER MAJOR+MINOR basis.
-  PatchVersion: $[counter(format('{0}.{1}',variables['MajorVersion'],variables['MinorVersion']),0)]
-  ProductVersion: $[format('{0}.{1}.{2}', variables['MajorVersion'],variables['MinorVersion'],variables['PatchVersion'])]
+  PatchVersion: $[counter(format('{0}.{1}',$('MajorVersion'),$('MinorVersion')),0)]
+  ProductVersion: $[format('{0}.{1}.{2}', $('MajorVersion'),$('MinorVersion'),$('PatchVersion'))]
 
 stages:
 - stage: A
@@ -42,9 +42,14 @@ stages:
           solutionName: '$(CoreSolutionName)'
           existsVariableName: 'PatchExists'
           patchVariableName: 'LatestPatchName'
+      - script: |
+          echo Patch Version $(LatestPatchName)
+          echo Product Version $(ProductVersion)
+          echo Patch Exists = $(PatchExists)
+          echo Latest Patch Name = $(LatestPatchName)
 
 - stage: B
-  condition: eq(variables.PatchExists, false)
+  condition: eq($(PatchExists), false)
   jobs: 
   - job:
     steps:
