@@ -44,38 +44,41 @@ stages:
           existsVariableName: 'PatchExists'
           patchVariableName: 'LatestPatchName'
       - bash: |
-          echo "Patch Version = " $(LatestPatchName)
+          echo "Patch Version = " $(PatchVersion)
           echo "Product Version = " $(ProductVersion)
           echo "Patch Exists = " $(PatchExists)
           echo "Latest Patch Name = " $(LatestPatchName)
       - task: MSCRMCreatePatch@12
-        condition: ${{ eq(variables['PatchExists'], false) }} 
+        condition: ${{ eq(variables['PatchExists'], true) }} 
         inputs:
           crmConnectionString: '$(ConnectionStringDev)'
           uniqueName: '$(CoreSolutionName)'
           displayName: '$(CoreSolutionName)_$(ProductVersion)'
           versionNumber: '$(ProductVersion)'
+      - task: MSCRMGetLatestPatch@12
+        name: GetLatestPatchTask
+        inputs:
+          crmConnectionString: '$(ConnectionStringDev)'
+          solutionName: '$(CoreSolutionName)'
+          existsVariableName: 'PatchExists'
+          patchVariableName: 'LatestPatchName'
+      - bash: |
+          echo "Patch Version = " $(PatchVersion)
+          echo "Product Version = " $(ProductVersion)
+          echo "Patch Exists = " $(PatchExists)
+          echo "Latest Patch Name = " $(LatestPatchName)
       - task: PowerPlatformSetSolutionVersion@0
         inputs:
           authenticationType: 'PowerPlatformSPN'
           PowerPlatformSPN: 'ROM Dev'
-          SolutionName: '$(QMPluginsSolution)'
+          SolutionName: '$(LatestPatchName)'
           SolutionVersionNumber: '$(ProductVersion)'
       - task: PowerPlatformExportSolution@0
         inputs:
           authenticationType: 'PowerPlatformSPN'
           PowerPlatformSPN: 'ROM Dev'
-          SolutionName: '$(QMPluginsSolution)'
-          SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(QMPluginsSolution)_$(ProductVersion).zip'
-          AsyncOperation: true
-          MaxAsyncWaitTime: '60'
-          ExportRelationshipRoles: true
-      - task: PowerPlatformExportSolution@0
-        inputs:
-          authenticationType: 'PowerPlatformSPN'
-          PowerPlatformSPN: 'ROM Dev'
-          SolutionName: '$(QMPluginsSolution)'
-          SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(QMPluginsSolution)_$(ProductVersion)_managed.zip'
+          SolutionName: '$(LatestPatchName)'
+          SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)_$(ProductVersion).zip'
           AsyncOperation: true
           MaxAsyncWaitTime: '60'
           ExportRelationshipRoles: true
@@ -84,7 +87,7 @@ stages:
           authenticationType: 'PowerPlatformSPN'
           PowerPlatformSPN: 'ROM Dev'
           SolutionName: '$(LatestPatchName)'
-          SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName).zip'
+          SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)_$(ProductVersion)_managed.zip'
           AsyncOperation: true
           MaxAsyncWaitTime: '60'
           ExportRelationshipRoles: true
@@ -93,7 +96,16 @@ stages:
           authenticationType: 'PowerPlatformSPN'
           PowerPlatformSPN: 'ROM Dev'
           SolutionName: '$(LatestPatchName)'
-          SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\Managed\$(LatestPatchName)_managed.zip'
+          SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(QMPluginsSolution).zip'
+          AsyncOperation: true
+          MaxAsyncWaitTime: '60'
+          ExportRelationshipRoles: true
+      - task: PowerPlatformExportSolution@0
+        inputs:
+          authenticationType: 'PowerPlatformSPN'
+          PowerPlatformSPN: 'ROM Dev'
+          SolutionName: '$(LatestPatchName)'
+          SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\Managed\$(QMPluginsSolution)_managed.zip'
           AsyncOperation: true
           MaxAsyncWaitTime: '60'
           ExportRelationshipRoles: true
@@ -102,7 +114,7 @@ stages:
         inputs:
           authenticationType: 'PowerPlatformSPN'
           PowerPlatformSPN: 'ROM Test'
-          SolutionInputFile: '$(Build.ArtifactStagingDirectory)\Managed\$(LatestPatchName)_managed.zip'
+          SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)_$(ProductVersion)_managed.zip'
           AsyncOperation: true
           MaxAsyncWaitTime: '240'
           OverwriteUnmanagedCustomizations: true
@@ -110,7 +122,7 @@ stages:
         inputs:
           authenticationType: 'PowerPlatformSPN'
           PowerPlatformSPN: 'ROM Test'
-          SolutionInputFile: '$(Build.ArtifactStagingDirectory)\Managed\$(QMPluginsSolution)_managed.zip'
+          SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(QMPluginsSolution)_managed.zip'
           AsyncOperation: true
           MaxAsyncWaitTime: '240'
           OverwriteUnmanagedCustomizations: true
@@ -120,7 +132,7 @@ stages:
           PowerPlatformSPN: 'ROM Test'
       - task: PublishPipelineArtifact@1
         inputs:
-          targetPath: '$(Build.ArtifactStagingDirectory)\Managed\$(LatestPatchName)_managed.zip'
+          targetPath: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)_managed.zip'
           artifact: 'drop_base'
           publishLocation: 'pipeline'
 
