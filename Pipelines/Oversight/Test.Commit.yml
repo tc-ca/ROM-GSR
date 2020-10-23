@@ -21,22 +21,30 @@ variables:
   ProductVersion: $[format('{0}.{1}.{2}', variables['MajorVersion'],variables['MinorVersion'],variables['PatchVersion'])]
 
 stages:
-- stage: A
+- stage: Initialize
   jobs:
-  - job: A1
+  - job: InstallDependencies
     steps:
       - task: PowerPlatformToolInstaller@0
         inputs:
           DefaultVersion: true
+
       - task: MSCRMToolInstaller@12
         inputs:
           nugetFeed: 'official'
           psFeed: 'official'
+
       - task: PowerPlatformPublishCustomizations@0
         inputs:
           authenticationType: 'PowerPlatformSPN'
           PowerPlatformSPN: 'ROM Dev'
+
+- stage: Patch
+  jobs: 
+  - job: GetLatestPatch
+    steps:
       - task: MSCRMGetLatestPatch@12
+        name: GetLatestPatchTask
         inputs:
           crmConnectionString: '$(ConnectionStringDev)'
           solutionName: '$(CoreSolutionName)'
@@ -48,10 +56,8 @@ stages:
           echo "Patch Exists = $PatchExists"
           echo "Latest Patch Name = $LatestPatchName"
 
-- stage: B
-  condition: eq(variables['PatchExists'], false)
-  jobs: 
-  - job:
+  - job: CreatePatchIfNotExist
+    condition: eq($(GetLatestPatchTask.PatchExists), false)
     steps:
       - task: MSCRMCreatePatch@12
         inputs:
@@ -60,10 +66,7 @@ stages:
           displayName: '$(CoreSolutionName)_$(ProductVersion)'
           versionNumber: '$(ProductVersion)'
 
-- stage: C
-  dependsOn: A
-  jobs:
-  - job: 
+  - job: SetPatchVersion
     steps:
     - task: PowerPlatformSetSolutionVersion@0
       inputs:
@@ -71,7 +74,11 @@ stages:
         PowerPlatformSPN: 'ROM Dev'
         SolutionName: '$(QMPluginsSolution)'
         SolutionVersionNumber: '$(ProductVersion)'
-
+      
+- stage: Export
+  jobs:
+  - job: ExportSolution
+    steps:
     - task: PowerPlatformExportSolution@0
       inputs:
         authenticationType: 'PowerPlatformSPN'
@@ -92,6 +99,8 @@ stages:
         MaxAsyncWaitTime: '60'
         ExportRelationshipRoles: true
 
+  - job: ExportPatch
+    steps:
     - task: PowerPlatformExportSolution@0
       inputs:
         authenticationType: 'PowerPlatformSPN'
@@ -124,6 +133,10 @@ stages:
     #    echo "Push solution changes to the remote repository"
     #    git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
 
+- stage: Import
+  jobs:
+  - job: ImportPatchAndSolution
+    steps:
     - task: PowerPlatformImportSolution@0
       inputs:
         authenticationType: 'PowerPlatformSPN'
