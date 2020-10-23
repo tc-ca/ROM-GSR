@@ -36,9 +36,6 @@ stages:
         inputs:
           authenticationType: 'PowerPlatformSPN'
           PowerPlatformSPN: 'ROM Dev'
-
-- stage: Patch
-  jobs: 
   - job: GetLatestPatch
     steps:
       - task: MSCRMGetLatestPatch@12
@@ -66,9 +63,6 @@ stages:
           PowerPlatformSPN: 'ROM Dev'
           SolutionName: '$(QMPluginsSolution)'
           SolutionVersionNumber: '$(ProductVersion)'
-      
-- stage: Export
-  jobs:
   - job: ExportSolution
     steps:
     - task: PowerPlatformExportSolution@0
@@ -80,7 +74,6 @@ stages:
         AsyncOperation: true
         MaxAsyncWaitTime: '60'
         ExportRelationshipRoles: true
-
     - task: PowerPlatformExportSolution@0
       inputs:
         authenticationType: 'PowerPlatformSPN'
@@ -90,7 +83,6 @@ stages:
         AsyncOperation: true
         MaxAsyncWaitTime: '60'
         ExportRelationshipRoles: true
-
   - job: ExportPatch
     steps:
     - task: PowerPlatformExportSolution@0
@@ -102,7 +94,6 @@ stages:
         AsyncOperation: true
         MaxAsyncWaitTime: '60'
         ExportRelationshipRoles: true
-
     - task: PowerPlatformExportSolution@0
       inputs:
         authenticationType: 'PowerPlatformSPN'
@@ -113,6 +104,33 @@ stages:
         MaxAsyncWaitTime: '60'
         ExportRelationshipRoles: true
         Managed: true
+  - job: ImportPatchAndSolution
+    steps:
+    - task: PowerPlatformImportSolution@0
+      inputs:
+        authenticationType: 'PowerPlatformSPN'
+        PowerPlatformSPN: 'ROM Test'
+        SolutionInputFile: '$(Build.ArtifactStagingDirectory)\Managed\$(LatestPatchName)_managed.zip'
+        AsyncOperation: true
+        MaxAsyncWaitTime: '240'
+        OverwriteUnmanagedCustomizations: true
+    - task: PowerPlatformImportSolution@0
+      inputs:
+        authenticationType: 'PowerPlatformSPN'
+        PowerPlatformSPN: 'ROM Test'
+        SolutionInputFile: '$(Build.ArtifactStagingDirectory)\Managed\$(QMPluginsSolution)_managed.zip'
+        AsyncOperation: true
+        MaxAsyncWaitTime: '240'
+        OverwriteUnmanagedCustomizations: true
+    - task: PowerPlatformPublishCustomizations@0
+      inputs:
+        authenticationType: 'PowerPlatformSPN'
+        PowerPlatformSPN: 'ROM Test'
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)\Managed\$(LatestPatchName)_managed.zip'
+        artifact: 'drop_base'
+        publishLocation: 'pipeline'
 
     # - powershell: |
     #    echo "Committing all CDS solution changes"
@@ -124,37 +142,3 @@ stages:
       
     #    echo "Push solution changes to the remote repository"
     #    git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
-
-- stage: Import
-  jobs:
-  - job: ImportPatchAndSolution
-    steps:
-    - task: PowerPlatformImportSolution@0
-      inputs:
-        authenticationType: 'PowerPlatformSPN'
-        PowerPlatformSPN: 'ROM Test'
-        SolutionInputFile: '$(Build.ArtifactStagingDirectory)\Managed\$(LatestPatchName)_managed.zip'
-        AsyncOperation: true
-        MaxAsyncWaitTime: '240'
-        OverwriteUnmanagedCustomizations: true
-
-    - task: PowerPlatformImportSolution@0
-      inputs:
-        authenticationType: 'PowerPlatformSPN'
-        PowerPlatformSPN: 'ROM Test'
-        SolutionInputFile: '$(Build.ArtifactStagingDirectory)\Managed\$(QMPluginsSolution)_managed.zip'
-        AsyncOperation: true
-        MaxAsyncWaitTime: '240'
-        OverwriteUnmanagedCustomizations: true
-
-    - task: PowerPlatformPublishCustomizations@0
-      inputs:
-        authenticationType: 'PowerPlatformSPN'
-        PowerPlatformSPN: 'ROM Test'
-
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)\Managed\$(LatestPatchName)_managed.zip'
-        artifact: 'drop_base'
-        publishLocation: 'pipeline'
-
