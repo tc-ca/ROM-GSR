@@ -9,7 +9,14 @@ var ROM;
     function onLoad(eContext) {
         console.log('Onload has been called');
         console.log('Xrm execution context: ', eContext);
-        setDefaultFiscalYear(eContext);
+        var form = eContext.getFormContext();
+        switch (form.ui.getFormType()) {
+            //Create
+            case 1:
+                setDefaultFiscalYear(form);
+            default:
+                break;
+        }
     }
     ROM.onLoad = onLoad;
     function fiscalYearOnchange(eContext) {
@@ -20,8 +27,7 @@ var ROM;
     }
     ROM.fiscalYearOnchange = fiscalYearOnchange;
     // FUNCTIONS
-    function setDefaultFiscalYear(eContext) {
-        var form = eContext.getFormContext();
+    function setDefaultFiscalYear(form) {
         XrmQuery.retrieveMultiple(function (x) { return x.tc_tcfiscalyears; })
             .select(function (x) { return [x.tc_name]; })
             .filter(function (x) { return Filter.equals(x.tc_iscurrentfiscalyear, true); })
