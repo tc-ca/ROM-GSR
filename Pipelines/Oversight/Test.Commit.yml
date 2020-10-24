@@ -48,7 +48,6 @@ steps:
       echo "Latest Patch Name =  $(LatestPatchName)"
       echo "${{ eq('$(PatchExists)', false) }}"
       echo "${{ eq('$(LatestPatchName)', '') }}"
-      echo "${ eq('$(LatestPatchName)', '') }"
 
   - task: MSCRMCreatePatch@12
     condition: ${{ eq('$(PatchExists)', false) }}  
