@@ -46,8 +46,9 @@ steps:
       echo "Product Version =  $(ProductVersion)"
       echo "Patch Exists =  $(PatchExists)"
       echo "Latest Patch Name =  $(LatestPatchName)"
+      echo ${{ eq($(PatchExists),false) }} 
   - task: MSCRMCreatePatch@12
-    condition: ${{ eq('$(LatestPatchName)',False) }}  
+    condition: ${{ eq($(PatchExists),false) }}  
     inputs:
       crmConnectionString: '$(ConnectionStringDev)'
       uniqueName: '$(CoreSolutionName)'
