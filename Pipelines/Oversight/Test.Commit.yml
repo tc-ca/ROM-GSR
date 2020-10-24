@@ -44,7 +44,7 @@ steps:
       echo "Product Version = " $(ProductVersion)
       echo "Patch Exists = " $(PatchExists)
       echo "Latest Patch Name = " $(LatestPatchName)
-      echo "Patch Exists output = " '${{ PatchExists }}'
+      echo "Patch Exists output = '${{ PatchExists }}'" 
   - task: MSCRMCreatePatch@12
     condition: ${{ eq('${{ PatchExists }}',False) }}  
     inputs:
