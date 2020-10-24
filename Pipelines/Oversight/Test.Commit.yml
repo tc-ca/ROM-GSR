@@ -39,19 +39,18 @@ steps:
       solutionName: '$(CoreSolutionName)'
       existsVariableName: 'PatchExists'
       patchVariableName: 'LatestPatchName'
-  - bash: |
-      echo "##vso[task.setvariable variable=PatchExists]$(PatchExists)"
-      echo "##vso[task.setvariable variable=LatestPatchName]$(LatestPatchName)"
-      echo "Patch Version =  $(PatchVersion)"
-      echo "Product Version =  $(ProductVersion)"
-      echo "Patch Exists =  $(PatchExists)"
-      echo "Latest Patch Name =  $(LatestPatchName)"
-      echo "${{ eq('$(PatchExists)', 'False') }}"
-      echo "$ eq('{{$(LatestPatchName)}}', '')"
-      echo "eq('${ variables.PatchExists }', 'False')"
+  - powershell: |
+      Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.PatchExists]$(PatchExists)"
+      Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.LatestPatchName]$(LatestPatchName)"
+      Write-Host "Patch Version =  $(PatchVersion)"
+      Write-Host "Product Version =  $(ProductVersion)"
+      Write-Host "Patch Exists =  $(PatchExists)"
+      Write-Host "Latest Patch Name =  $(LatestPatchName)"
+      Write-Host "${{ eq('$(PatchExists)', 'False') }}"
+      Write-Host variables['task.GetLatestPatchTask.PatchExists']
 
   - task: MSCRMCreatePatch@12 
-    condition: eq('${ variables.PatchExists }', 'False')
+    condition: eq(variables['task.GetLatestPatchTask.PatchExists'], false)
     inputs:
       crmConnectionString: '$(ConnectionStringDev)'
       uniqueName: '$(CoreSolutionName)'
