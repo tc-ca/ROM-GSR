@@ -46,13 +46,13 @@ steps:
       echo "Product Version =  $(ProductVersion)"
       echo "Patch Exists =  $(PatchExists)"
       echo "Latest Patch Name =  $(LatestPatchName)"
-  # - task: MSCRMCreatePatch@12
-  #   condition: ${{ eq('${{ PatchExists }}',False) }}  
-  #   inputs:
-  #     crmConnectionString: '$(ConnectionStringDev)'
-  #     uniqueName: '$(CoreSolutionName)'
-  #     displayName: '$(CoreSolutionName)_$(ProductVersion)'
-  #     versionNumber: '$(ProductVersion)'
+  - task: MSCRMCreatePatch@12
+    condition: ${{ eq('$(LatestPatchName)',False) }}  
+    inputs:
+      crmConnectionString: '$(ConnectionStringDev)'
+      uniqueName: '$(CoreSolutionName)'
+      displayName: '$(CoreSolutionName)_$(ProductVersion)'
+      versionNumber: '$(ProductVersion)'
   # - task: MSCRMGetLatestPatch@12
   #   name: GetLatestPatchTaskAgain
   #   inputs:
