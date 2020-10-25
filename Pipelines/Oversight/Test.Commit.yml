@@ -73,12 +73,12 @@ steps:
       Write-Host "${{ eq('$(PatchExists)', 'False') }}"
       Write-Host variables['task.GetLatestPatchTask.PatchExists']
 
-  # - task: PowerPlatformSetSolutionVersion@0
-  #   inputs:
-  #     authenticationType: 'PowerPlatformSPN'
-  #     PowerPlatformSPN: 'ROM Dev'
-  #     SolutionName: '$(LatestPatchName)'
-  #     SolutionVersionNumber: '$(ProductVersion)'
+  - task: PowerPlatformSetSolutionVersion@0
+    inputs:
+      authenticationType: 'PowerPlatformSPN'
+      PowerPlatformSPN: 'ROM Dev'
+      SolutionName: '$(CoreSolutionName)'
+      SolutionVersionNumber: '$(ProductVersion)'
   - task: PowerPlatformExportSolution@0
     inputs:
       authenticationType: 'PowerPlatformSPN'
