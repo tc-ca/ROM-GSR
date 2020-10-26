@@ -77,7 +77,7 @@ steps:
     inputs:
       authenticationType: 'PowerPlatformSPN'
       PowerPlatformSPN: 'ROM Dev'
-      SolutionName: '$(CoreSolutionName)'
+      SolutionName: '$(LatestPatchName)'
       SolutionVersionNumber: '$(ProductVersion)'
   - task: PowerPlatformExportSolution@0
     inputs:
@@ -98,25 +98,25 @@ steps:
       MaxAsyncWaitTime: '60'
       ExportRelationshipRoles: true
       Managed: true
-  - task: PowerPlatformExportSolution@0
-    inputs:
-      authenticationType: 'PowerPlatformSPN'
-      PowerPlatformSPN: 'ROM Dev'
-      SolutionName: '$(LatestPatchName)'
-      SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(QMPluginsSolution).zip'
-      AsyncOperation: true
-      MaxAsyncWaitTime: '60'
-      ExportRelationshipRoles: true
-  - task: PowerPlatformExportSolution@0
-    inputs:
-      authenticationType: 'PowerPlatformSPN'
-      PowerPlatformSPN: 'ROM Dev'
-      SolutionName: '$(LatestPatchName)'
-      SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(QMPluginsSolution)_managed.zip'
-      AsyncOperation: true
-      MaxAsyncWaitTime: '60'
-      ExportRelationshipRoles: true
-      Managed: true
+  # - task: PowerPlatformExportSolution@0
+  #   inputs:
+  #     authenticationType: 'PowerPlatformSPN'
+  #     PowerPlatformSPN: 'ROM Dev'
+  #     SolutionName: '$(LatestPatchName)'
+  #     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(QMPluginsSolution).zip'
+  #     AsyncOperation: true
+  #     MaxAsyncWaitTime: '60'
+  #     ExportRelationshipRoles: true
+  # - task: PowerPlatformExportSolution@0
+  #   inputs:
+  #     authenticationType: 'PowerPlatformSPN'
+  #     PowerPlatformSPN: 'ROM Dev'
+  #     SolutionName: '$(LatestPatchName)'
+  #     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(QMPluginsSolution)_managed.zip'
+  #     AsyncOperation: true
+  #     MaxAsyncWaitTime: '60'
+  #     ExportRelationshipRoles: true
+  #     Managed: true
   - task: PowerPlatformImportSolution@0
     inputs:
       authenticationType: 'PowerPlatformSPN'
@@ -124,15 +124,14 @@ steps:
       SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)_$(ProductVersion)_managed.zip'
       AsyncOperation: true
       MaxAsyncWaitTime: '240'
-      OverwriteUnmanagedCustomizations: true
-  - task: PowerPlatformImportSolution@0
-    inputs:
-      authenticationType: 'PowerPlatformSPN'
-      PowerPlatformSPN: 'ROM Test'
-      SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(QMPluginsSolution)_managed.zip'
-      AsyncOperation: true
-      MaxAsyncWaitTime: '240'
-      OverwriteUnmanagedCustomizations: true
+  # - task: PowerPlatformImportSolution@0
+  #   inputs:
+  #     authenticationType: 'PowerPlatformSPN'
+  #     PowerPlatformSPN: 'ROM Test'
+  #     SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(QMPluginsSolution)_managed.zip'
+  #     AsyncOperation: true
+  #     MaxAsyncWaitTime: '240'
+  #     OverwriteUnmanagedCustomizations: true
   - task: PowerPlatformPublishCustomizations@0
     inputs:
       authenticationType: 'PowerPlatformSPN'
