@@ -29,16 +29,16 @@ steps:
 - task: MSCRMExportSolution@12
   inputs:
     crmConnectionString: '$(ConnectionDev)'
-    solutionName: '$(SolutionName)'
+    solutionName: '$(LatestPatchName)'
     exportManaged: false
     exportUnmanaged: true
-    outputPath: '$(Build.ArtifactStagingDirectory)\$(SolutionName).zip'
+    outputPath: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_patch.zip'
     exportAutoNumberingSettings: true
     exportRelationshipRoles: true
 - task: MSCRMExtractSolution@12
   inputs:
     unpackedFilesFolder: '$(Build.SourcesDirectory)\$(SolutionName)'
-    solutionFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName).zip'
+    solutionFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_patch.zip'
     sourceLoc: '$(Build.SourcesDirectory)\$(SolutionName)'
     localize: true
 - powershell: |
