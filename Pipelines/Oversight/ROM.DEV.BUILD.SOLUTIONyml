@@ -1,0 +1,154 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- none
+
+pr:
+- none
+
+pool:
+  vmImage: 'vs2017-win2016'
+
+variables:
+  major: 1
+  # if you change the major or minor version either at definition or at build time it causes a different counter 
+  # to tick that is based on the format expression so you always get a uniquely rotating counter output based on those first two parts. 
+  # This makes major and minor user definable but keeps the patch and final version numbers incrementing on a per build PER MAJOR+MINOR basis.
+  PatchVersion: $[counter(format('{0}.{1}.{2}',variables['MajorVersion'],variables['MinorVersion'],variables['BuildVersion']),0)]
+  ProductVersion: $[format('{0}.{1}.{2}.{3}', variables['MajorVersion'],variables['MinorVersion'],variables['BuildVersion'],variables['PatchVersion'])]
+
+steps:
+  - task: PowerPlatformToolInstaller@0
+    inputs:
+      DefaultVersion: true
+  - task: MSCRMToolInstaller@12
+    inputs:
+      nugetFeed: 'official'
+      psFeed: 'official'
+  - task: PowerPlatformPublishCustomizations@0
+    inputs:
+      authenticationType: 'PowerPlatformSPN'
+      PowerPlatformSPN: 'ROM Dev'
+  - task: MSCRMGetLatestPatch@12
+    name: GetLatestPatchTask
+    inputs:
+      crmConnectionString: '$(ConnectionStringDev)'
+      solutionName: '$(CoreSolutionName)'
+      existsVariableName: 'PatchExists'
+      patchVariableName: 'LatestPatchName'
+  - powershell: |
+      Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.PatchExists]$(PatchExists)"
+      Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.LatestPatchName]$(LatestPatchName)"
+      Write-Host "Patch Version =  $(PatchVersion)"
+      Write-Host "Product Version =  $(ProductVersion)"
+      Write-Host "Patch Exists =  $(PatchExists)"
+      Write-Host "Latest Patch Name =  $(LatestPatchName)"
+      Write-Host "${{ eq('$(PatchExists)', 'False') }}"
+      Write-Host variables['task.GetLatestPatchTask.PatchExists']
+
+  - task: MSCRMCreatePatch@12 
+    condition: eq(variables['task.GetLatestPatchTask.PatchExists'], false)
+    inputs:
+      crmConnectionString: '$(ConnectionStringDev)'
+      uniqueName: '$(CoreSolutionName)'
+      displayName: '$(CoreSolutionName)_$(ProductVersion)'
+      versionNumber: '$(ProductVersion)'
+  - task: MSCRMGetLatestPatch@12
+    name: GetLatestPatchTaskAgain
+    inputs:
+      crmConnectionString: '$(ConnectionStringDev)'
+      solutionName: '$(CoreSolutionName)'
+      existsVariableName: 'PatchExists'
+      patchVariableName: 'LatestPatchName'
+  - powershell: |
+      Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.PatchExists]$(PatchExists)"
+      Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.LatestPatchName]$(LatestPatchName)"
+      Write-Host "Patch Version =  $(PatchVersion)"
+      Write-Host "Product Version =  $(ProductVersion)"
+      Write-Host "Patch Exists =  $(PatchExists)"
+      Write-Host "Latest Patch Name =  $(LatestPatchName)"
+      Write-Host "${{ eq('$(PatchExists)', 'False') }}"
+      Write-Host variables['task.GetLatestPatchTask.PatchExists']
+
+  - task: PowerPlatformSetSolutionVersion@0
+    inputs:
+      authenticationType: 'PowerPlatformSPN'
+      PowerPlatformSPN: 'ROM Dev'
+      SolutionName: '$(LatestPatchName)'
+      SolutionVersionNumber: '$(ProductVersion)'
+  - task: PowerPlatformExportSolution@0
+    inputs:
+      authenticationType: 'PowerPlatformSPN'
+      PowerPlatformSPN: 'ROM Dev'
+      SolutionName: '$(LatestPatchName)'
+      SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)_$(ProductVersion).zip'
+      AsyncOperation: true
+      MaxAsyncWaitTime: '60'
+      ExportRelationshipRoles: true
+  - task: PowerPlatformExportSolution@0
+    inputs:
+      authenticationType: 'PowerPlatformSPN'
+      PowerPlatformSPN: 'ROM Dev'
+      SolutionName: '$(LatestPatchName)'
+      SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)_$(ProductVersion)_managed.zip'
+      AsyncOperation: true
+      MaxAsyncWaitTime: '60'
+      ExportRelationshipRoles: true
+      Managed: true
+  # - task: PowerPlatformExportSolution@0
+  #   inputs:
+  #     authenticationType: 'PowerPlatformSPN'
+  #     PowerPlatformSPN: 'ROM Dev'
+  #     SolutionName: '$(LatestPatchName)'
+  #     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(QMPluginsSolution).zip'
+  #     AsyncOperation: true
+  #     MaxAsyncWaitTime: '60'
+  #     ExportRelationshipRoles: true
+  # - task: PowerPlatformExportSolution@0
+  #   inputs:
+  #     authenticationType: 'PowerPlatformSPN'
+  #     PowerPlatformSPN: 'ROM Dev'
+  #     SolutionName: '$(LatestPatchName)'
+  #     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(QMPluginsSolution)_managed.zip'
+  #     AsyncOperation: true
+  #     MaxAsyncWaitTime: '60'
+  #     ExportRelationshipRoles: true
+  #     Managed: true
+  - task: PowerPlatformImportSolution@0
+    inputs:
+      authenticationType: 'PowerPlatformSPN'
+      PowerPlatformSPN: 'ROM Test'
+      SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)_$(ProductVersion)_managed.zip'
+      AsyncOperation: true
+      MaxAsyncWaitTime: '240'
+  # - task: PowerPlatformImportSolution@0
+  #   inputs:
+  #     authenticationType: 'PowerPlatformSPN'
+  #     PowerPlatformSPN: 'ROM Test'
+  #     SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(QMPluginsSolution)_managed.zip'
+  #     AsyncOperation: true
+  #     MaxAsyncWaitTime: '240'
+  #     OverwriteUnmanagedCustomizations: true
+  - task: PowerPlatformPublishCustomizations@0
+    inputs:
+      authenticationType: 'PowerPlatformSPN'
+      PowerPlatformSPN: 'ROM Test'
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)_$(ProductVersion)_managed.zip'
+      artifact: 'drop_base'
+      publishLocation: 'pipeline'
+
+  # - powershell: |
+  #    echo "Committing all CDS solution changes"
+  #    git config user.email "nepasrepondre-noreply@tc.gc.ca"
+  #    git config user.name "tc-buildbot"
+  #    git checkout development
+  #    git add --all
+  #    git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
+    
+  #    echo "Push solution changes to the remote repository"
+  #    git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
