@@ -16,10 +16,6 @@ steps:
   - task: PowerPlatformToolInstaller@0
     inputs:
       DefaultVersion: true
-  - task: MSCRMToolInstaller@12
-    inputs:
-      nugetFeed: 'official'
-      psFeed: 'official'
   - task: PowerPlatformPublishCustomizations@0
     inputs:
       authenticationType: 'PowerPlatformSPN'
@@ -50,14 +46,3 @@ steps:
       targetPath: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_managed.zip'
       artifact: 'drop_base'
       publishLocation: 'pipeline'
-
-  # - powershell: |
-  #    echo "Committing all CDS solution changes"
-  #    git config user.email "nepasrepondre-noreply@tc.gc.ca"
-  #    git config user.name "tc-buildbot"
-  #    git checkout development
-  #    git add --all
-  #    git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
-    
-  #    echo "Push solution changes to the remote repository"
-  #    git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
