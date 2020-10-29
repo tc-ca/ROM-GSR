@@ -17,7 +17,7 @@ variables:
   # to tick that is based on the format expression so you always get a uniquely rotating counter output based on those first two parts. 
   # This makes major and minor user definable but keeps the patch and final version numbers incrementing on a per build PER MAJOR+MINOR basis.
   PatchVersion: $[counter(format('{0}.{1}.{2}',variables['MajorVersion'],variables['MinorVersion'],variables['BuildVersion']),0)]
-  ProductVersion: $[format('{0}.{1}.{2}', variables['MajorVersion'],variables['MinorVersion'],variables['BuildVersion'],variables['PatchVersion'])]
+  ProductVersion: $[format('{0}.{1}.{2}.{3}', variables['MajorVersion'],variables['MinorVersion'],variables['BuildVersion'],variables['PatchVersion'])]
 
 steps:
   - task: PowerPlatformToolInstaller@0
@@ -33,14 +33,3 @@ steps:
     inputs:
       authenticationType: 'PowerPlatformSPN'
       PowerPlatformSPN: 'ROM Dev'
-
-  # - powershell: |
-  #    echo "Committing all CDS solution changes"
-  #    git config user.email "nepasrepondre-noreply@tc.gc.ca"
-  #    git config user.name "tc-buildbot"
-  #    git checkout development
-  #    git add --all
-  #    git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
-    
-  #    echo "Push solution changes to the remote repository"
-  #    git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
