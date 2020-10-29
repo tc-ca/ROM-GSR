@@ -29,35 +29,21 @@ steps:
       authenticationType: 'PowerPlatformSPN'
       PowerPlatformSPN: 'ROM Dev'
       SolutionName: '$(SolutionName)'
-      SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_managed.zip'
+      SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName).zip'
       AsyncOperation: true
       MaxAsyncWaitTime: '60'
       ExportRelationshipRoles: true
-      Managed: true
-  - task: PowerPlatformImportSolution@0
+      Managed: false
+  - task: PowerPlatformUnpackSolution@0
     inputs:
-      authenticationType: 'PowerPlatformSPN'
-      PowerPlatformSPN: 'ROM Test'
-      SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_managed.zip'
-      AsyncOperation: true
-      MaxAsyncWaitTime: '240'
-  - task: PowerPlatformPublishCustomizations@0
-    inputs:
-      authenticationType: 'PowerPlatformSPN'
-      PowerPlatformSPN: 'ROM Test'
-  - task: PublishPipelineArtifact@1
-    inputs:
-      targetPath: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_managed.zip'
-      artifact: 'drop_base'
-      publishLocation: 'pipeline'
-
-  # - powershell: |
-  #    echo "Committing all CDS solution changes"
-  #    git config user.email "nepasrepondre-noreply@tc.gc.ca"
-  #    git config user.name "tc-buildbot"
-  #    git checkout development
-  #    git add --all
-  #    git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
-    
-  #    echo "Push solution changes to the remote repository"
-  #    git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
+      SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName).zip'
+      SolutionTargetFolder: '$(Build.ArtifactStagingDirectory)\TC_GlobalCore'
+  - powershell: |
+     echo "Committing TC GlobalCore solution changes"
+     git config user.email "nepasrepondre-noreply@tc.gc.ca"
+     git config user.name "tc-buildbot"
+     git checkout development
+     git add --all
+     git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
+     echo "Push solution changes to the remote repository"
+     git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
