@@ -3,7 +3,6 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-
 trigger:
   - none
 
@@ -14,27 +13,34 @@ steps:
 - checkout: self
   persistCredentials: true
   clean: true
-- task: PowerPlatformToolInstaller@0
+- task: MSCRMToolInstaller@12
   inputs:
-    DefaultVersion: true
-- task: PowerPlatformPublishCustomizations@0
+    nugetFeed: 'official'
+    psFeed: 'official'
+- task: MSCRMPublishCustomizations@12
   inputs:
-    authenticationType: 'PowerPlatformSPN'
-    PowerPlatformSPN: 'ROM Dev'
-- task: PowerPlatformExportSolution@0
+    crmConnectionString: '$(ConnectionDev)'
+- task: MSCRMExportSolution@12
   inputs:
-    authenticationType: 'PowerPlatformSPN'
-    PowerPlatformSPN: 'ROM Dev'
-    SolutionName: '$(SolutionName)'
-    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName).zip'
-    AsyncOperation: true
-    MaxAsyncWaitTime: '60'
-    ExportRelationshipRoles: true
-    Managed: false
-- task: PowerPlatformUnpackSolution@0
+    crmConnectionString: '$(ConnectionDev)'
+    solutionName: '$(SolutionName)'
+    exportManaged: false
+    exportUnmanaged: true
+    outputPath: '$(Build.ArtifactStagingDirectory)'
+    exportAutoNumberingSettings: true
+    exportRelationshipRoles: true
+- powershell: |
+    If(!(test-path '$(Build.SourcesDirectory)\$(SolutionName)'))
+    {
+      Write-Host "$(Build.SourcesDirectory)\$(SolutionName) folder does not exists."
+      New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\$(SolutionName)'
+      Write-Host "$(Build.SourcesDirectory)\$(SolutionName) folder created."
+    }
+- task: MSCRMExtractSolution@12
   inputs:
-    SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName).zip'
-    SolutionTargetFolder: '$(Build.ArtifactStagingDirectory)\$(SolutionName)'
+    unpackedFilesFolder: '$(Build.SourcesDirectory)\$(SolutionName)'
+    solutionFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName).zip'
+    localize: true
 - powershell: |
     echo "Committing TC GlobalCore solution changes"
     git config user.email "nepasrepondre-noreply@tc.gc.ca"
