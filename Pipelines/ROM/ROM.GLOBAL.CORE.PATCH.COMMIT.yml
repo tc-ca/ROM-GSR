@@ -39,9 +39,16 @@ steps:
     solutionName: '$(LatestPatchName)'
     exportManaged: false
     exportUnmanaged: true
-    outputPath: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName).zip'
+    outputPath: '$(Build.ArtifactStagingDirectory)'
     exportAutoNumberingSettings: true
     exportRelationshipRoles: true
+- powershell: |
+    If(!(test-path '$(Build.SourcesDirectory)\$(SolutionName)'))
+    {
+      Write-Host "$(Build.SourcesDirectory)\$(SolutionName) folder does not exists."
+      New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\$(SolutionName)'
+      Write-Host "$(Build.SourcesDirectory)\$(SolutionName) folder created."
+    }
 - task: MSCRMExtractSolution@12
   inputs:
     unpackedFilesFolder: '$(Build.SourcesDirectory)\$(SolutionName)'
