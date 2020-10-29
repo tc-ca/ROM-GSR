@@ -21,12 +21,17 @@ steps:
   inputs:
     authenticationType: 'PowerPlatformSPN'
     PowerPlatformSPN: 'ROM Dev'
+- task: MSCRMGetLatestPatch@12
+  inputs:
+    crmConnectionString: '$(ConnectionDev)'
+    solutionName: '$(SolutionName)'
+    patchVariableName: '$(LatestPatchName)'
 - task: PowerPlatformExportSolution@0
   inputs:
     authenticationType: 'PowerPlatformSPN'
     PowerPlatformSPN: 'ROM Dev'
-    SolutionName: '$(SolutionName)'
-    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName).zip'
+    SolutionName: '$(LatestPatchName)'
+    SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName).zip'
     AsyncOperation: true
     MaxAsyncWaitTime: '60'
     ExportRelationshipRoles: true
@@ -34,7 +39,7 @@ steps:
 - task: PowerPlatformUnpackSolution@0
   inputs:
     SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName).zip'
-    SolutionTargetFolder: '$(Build.ArtifactStagingDirectory)\$(SolutionName)'
+    SolutionTargetFolder: '$(Build.SourcesDirectory)\$(SolutionName)'
 - powershell: |
     echo "Committing TC GlobalCore solution changes"
     git config user.email "nepasrepondre-noreply@tc.gc.ca"
