@@ -15,7 +15,7 @@ declare const enum connection_record2objecttypecode {
   Quote = 1084,
   Order = 1088,
   Invoice = 1090,
-  Territory = 2013,
+  Region = 2013,
   FacilityEquipment = 4000,
   SchedulingGroup = 4005,
   ResourceGroup = 4007,
