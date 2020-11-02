@@ -18,7 +18,7 @@ variables:
   # to tick that is based on the format expression so you always get a uniquely rotating counter output based on those first two parts. 
   # This makes major and minor user definable but keeps the patch and final version numbers incrementing on a per build PER MAJOR+MINOR basis.
   PatchVersion: $[counter(format('{0}.{1}',variables['MajorVersion'],variables['MinorVersion']),0)]
-  ProductVersion: $[format('{0}.{1}.{2}', variables['MajorVersion'],variables['MinorVersion'],variables['PatchVersion'])]
+  ProductVersion: $[format('{0}.{1}.{2}', variables['MajorVersion'],variables['MinorVersion'],variables['BuildVersion'],variables['PatchVersion'])]
 
 steps:
   - task: PowerPlatformToolInstaller@0
@@ -48,31 +48,6 @@ steps:
       Write-Host "Latest Patch Name =  $(LatestPatchName)"
       Write-Host "${{ eq('$(PatchExists)', 'False') }}"
       Write-Host variables['task.GetLatestPatchTask.PatchExists']
-
-  - task: MSCRMCreatePatch@12 
-    condition: eq(variables['task.GetLatestPatchTask.PatchExists'], false)
-    inputs:
-      crmConnectionString: '$(ConnectionStringDev)'
-      uniqueName: '$(CoreSolutionName)'
-      displayName: '$(CoreSolutionName)_$(ProductVersion)'
-      versionNumber: '$(ProductVersion)'
-  - task: MSCRMGetLatestPatch@12
-    name: GetLatestPatchTaskAgain
-    inputs:
-      crmConnectionString: '$(ConnectionStringDev)'
-      solutionName: '$(CoreSolutionName)'
-      existsVariableName: 'PatchExists'
-      patchVariableName: 'LatestPatchName'
-  - powershell: |
-      Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.PatchExists]$(PatchExists)"
-      Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.LatestPatchName]$(LatestPatchName)"
-      Write-Host "Patch Version =  $(PatchVersion)"
-      Write-Host "Product Version =  $(ProductVersion)"
-      Write-Host "Patch Exists =  $(PatchExists)"
-      Write-Host "Latest Patch Name =  $(LatestPatchName)"
-      Write-Host "${{ eq('$(PatchExists)', 'False') }}"
-      Write-Host variables['task.GetLatestPatchTask.PatchExists']
-
   - task: PowerPlatformSetSolutionVersion@0
     inputs:
       authenticationType: 'PowerPlatformSPN'

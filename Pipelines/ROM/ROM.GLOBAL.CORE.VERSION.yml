@@ -1,0 +1,35 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- none
+
+pr:
+- none
+
+pool:
+  vmImage: 'vs2017-win2016'
+
+variables:
+  # if you change the major or minor version either at definition or at build time it causes a different counter 
+  # to tick that is based on the format expression so you always get a uniquely rotating counter output based on those first two parts. 
+  # This makes major and minor user definable but keeps the patch and final version numbers incrementing on a per build PER MAJOR+MINOR basis.
+  PatchVersion: $[counter(format('{0}.{1}.{2}',variables['MajorVersion'],variables['MinorVersion'],variables['BuildVersion']),0)]
+  ProductVersion: $[format('{0}.{1}.{2}.{3}', variables['MajorVersion'],variables['MinorVersion'],variables['BuildVersion'],variables['PatchVersion'])]
+
+steps:
+  - task: PowerPlatformToolInstaller@0
+    inputs:
+      DefaultVersion: true
+  - task: PowerPlatformSetSolutionVersion@0
+    inputs:
+      authenticationType: 'PowerPlatformSPN'
+      PowerPlatformSPN: 'ROM Dev'
+      SolutionName: '$(SolutionName)'
+      SolutionVersionNumber: '$(ProductVersion)'
+  - task: PowerPlatformPublishCustomizations@0
+    inputs:
+      authenticationType: 'PowerPlatformSPN'
+      PowerPlatformSPN: 'ROM Dev'
