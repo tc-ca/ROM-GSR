@@ -75,9 +75,7 @@ steps:
     inputs:
       crmConnectionString: '$(ConnectionStringTest)'
       solutionName: '$(LatestPatchName)'
-- task: MSCRMPublishCustomizations@12
-  inputs:
-    crmConnectionString: '$(ConnectionStringTest)'
+
   - task: PublishPipelineArtifact@1
     inputs:
       targetPath: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName).zip'
