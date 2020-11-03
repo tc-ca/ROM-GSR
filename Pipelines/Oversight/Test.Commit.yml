@@ -17,9 +17,6 @@ steps:
     inputs:
       nugetFeed: 'official'
       psFeed: 'official'
-  - task: MSCRMPublishCustomizations@12
-    inputs:
-      crmConnectionString: '$(ConnectionStringDev)'
   - task: MSCRMGetLatestPatch@12
     name: GetLatestPatchTask
     inputs:
@@ -36,7 +33,8 @@ steps:
       Write-Host variables['task.GetLatestPatchTask.PatchExists']
   - task: MSCRMPackSolution@12
     inputs:
-      unpackedFilesFolder: '/TC_GlobalCore'
+      unpackedFilesFolder: '\\$(LatestPatchName)'
+      packageType: 'Managed'
       outputPath: '$(Build.ArtifactStagingDirectory)'
   - powershell: |
       Write-Host 'Build.ArtifactStagingDirectory=$(Build.ArtifactStagingDirectory)'
@@ -68,22 +66,22 @@ steps:
   #     SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)_$(ProductVersion)_managed.zip'
   #     AsyncOperation: true
   #     MaxAsyncWaitTime: '240'
-  # - task: PowerPlatformImportSolution@0
-  #   inputs:
-  #     authenticationType: 'PowerPlatformSPN'
-  #     PowerPlatformSPN: 'ROM Test'
-  #     SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(QMPluginsSolution)_managed.zip'
-  #     AsyncOperation: true
-  #     MaxAsyncWaitTime: '240'
-  #     OverwriteUnmanagedCustomizations: true
+  - task: PowerPlatformImportSolution@0
+    inputs:
+      authenticationType: 'PowerPlatformSPN'
+      PowerPlatformSPN: 'ROM Test'
+      SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName).zip'
+      AsyncOperation: true
+      MaxAsyncWaitTime: '240'
+      OverwriteUnmanagedCustomizations: true
   - task: PowerPlatformPublishCustomizations@0
     inputs:
       authenticationType: 'PowerPlatformSPN'
       PowerPlatformSPN: 'ROM Test'
   - task: PublishPipelineArtifact@1
     inputs:
-      targetPath: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)_$(ProductVersion)_managed.zip'
-      artifact: 'drop_base'
+      targetPath: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)_managed.zip'
+      artifact: 'rom core patch'
       publishLocation: 'pipeline'
 
   # - powershell: |
