@@ -34,7 +34,6 @@ steps:
   - task: MSCRMPackSolution@12
     inputs:
       unpackedFilesFolder: '$(LatestPatchName)'
-      packageType: 'Managed'
       outputPath: '$(Build.ArtifactStagingDirectory)'
   - powershell: |
       Write-Host 'Build.ArtifactStagingDirectory=$(Build.ArtifactStagingDirectory)'
@@ -80,7 +79,7 @@ steps:
       PowerPlatformSPN: 'ROM Test'
   - task: PublishPipelineArtifact@1
     inputs:
-      targetPath: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)_managed.zip'
+      targetPath: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName).zip'
       artifact: 'rom core patch'
       publishLocation: 'pipeline'
 
