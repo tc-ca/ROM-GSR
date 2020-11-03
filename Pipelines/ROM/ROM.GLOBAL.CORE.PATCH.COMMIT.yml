@@ -19,9 +19,6 @@ steps:
   inputs:
     nugetFeed: 'official'
     psFeed: 'official'
-- task: MSCRMPublishCustomizations@12
-  inputs:
-    crmConnectionString: '$(ConnectionDev)'
 - task: MSCRMGetLatestPatch@12
   name: GetLatestPatchTask
   inputs:
@@ -67,6 +64,6 @@ steps:
     git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    PathtoPublish: '$(Build.SourcesDirectory)\$(LatestPatchName)'
     ArtifactName: 'ROM.CORE.PATCH.COMMIT'
     publishLocation: 'Container'
