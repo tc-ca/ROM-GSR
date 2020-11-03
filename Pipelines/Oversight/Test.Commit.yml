@@ -33,7 +33,7 @@ steps:
       Write-Host variables['task.GetLatestPatchTask.PatchExists']
   - task: MSCRMPackSolution@12
     inputs:
-      unpackedFilesFolder: '\\$(LatestPatchName)'
+      unpackedFilesFolder: '$(LatestPatchName)'
       packageType: 'Managed'
       outputPath: '$(Build.ArtifactStagingDirectory)'
   - powershell: |
