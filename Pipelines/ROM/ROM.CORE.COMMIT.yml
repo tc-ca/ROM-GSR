@@ -3,6 +3,7 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
+
 trigger:
   - none
 
@@ -36,11 +37,12 @@ steps:
       New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\$(SolutionName)'
       Write-Host "$(Build.SourcesDirectory)\$(SolutionName) folder created."
     }
+    Remove-Item $(Build.SourcesDirectory)\$(SolutionName)\* -Recurse -Force
+    dir
 - task: MSCRMExtractSolution@12
   inputs:
     unpackedFilesFolder: '$(Build.SourcesDirectory)\$(SolutionName)'
     solutionFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName).zip'
-    localize: true
 - powershell: |
     echo "Committing TC GlobalCore solution changes"
     git config user.email "nepasrepondre-noreply@tc.gc.ca"
