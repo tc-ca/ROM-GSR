@@ -40,7 +40,7 @@ steps:
       Get-ChildItem -Path $(Build.ArtifactStagingDirectory)
   - task: MSCRMGetSolutionMissingDependencies@12
     inputs:
-      crmConnectionString: '$(ConnectionStringTest)'
+      crmConnectionString: '$(ConnectionStringDev)'
       solutionName: '$(LatestPatchName)'
       warnIfMissing: true
   - task: MSCRMImportSolution@12
