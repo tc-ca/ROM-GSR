@@ -38,34 +38,11 @@ steps:
   - powershell: |
       Write-Host 'Build.ArtifactStagingDirectory=$(Build.ArtifactStagingDirectory)'
       Get-ChildItem -Path $(Build.ArtifactStagingDirectory)
-
-  # - task: PowerPlatformExportSolution@0
-  #   inputs:
-  #     authenticationType: 'PowerPlatformSPN'
-  #     PowerPlatformSPN: 'ROM Dev'
-  #     SolutionName: '$(LatestPatchName)'
-  #     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)_$(ProductVersion).zip'
-  #     AsyncOperation: true
-  #     MaxAsyncWaitTime: '60'
-  #     ExportRelationshipRoles: true
-  # - task: PowerPlatformExportSolution@0
-  #   inputs:
-  #     authenticationType: 'PowerPlatformSPN'
-  #     PowerPlatformSPN: 'ROM Dev'
-  #     SolutionName: '$(LatestPatchName)'
-  #     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)_$(ProductVersion)_managed.zip'
-  #     AsyncOperation: true
-  #     MaxAsyncWaitTime: '60'
-  #     ExportRelationshipRoles: true
-  #     Managed: true
-  # - task: PowerPlatformImportSolution@0
-  #   inputs:
-  #     authenticationType: 'PowerPlatformSPN'
-  #     PowerPlatformSPN: 'ROM Test'
-  #     SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)_$(ProductVersion)_managed.zip'
-  #     AsyncOperation: true
-  #     MaxAsyncWaitTime: '240'
-
+  - task: MSCRMGetSolutionMissingDependencies@12
+    inputs:
+      crmConnectionString: '$(ConnectionStringTest)'
+      solutionName: '$(LatestPatchName)'
+      warnIfMissing: true
   - task: MSCRMImportSolution@12
     inputs:
       crmConnectionString: '$(ConnectionStringTest)'
