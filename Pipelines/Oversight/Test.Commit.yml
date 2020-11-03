@@ -65,14 +65,16 @@ steps:
   #     SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)_$(ProductVersion)_managed.zip'
   #     AsyncOperation: true
   #     MaxAsyncWaitTime: '240'
-  - task: PowerPlatformImportSolution@0
+
+  - task: MSCRMImportSolution@12
     inputs:
-      authenticationType: 'PowerPlatformSPN'
-      PowerPlatformSPN: 'ROM Test'
-      SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName).zip'
-      AsyncOperation: true
-      MaxAsyncWaitTime: '240'
-      OverwriteUnmanagedCustomizations: true
+      crmConnectionString: '$(ConnectionStringTest)'
+      publishWorkflows: true
+      holdingSolution: true
+  - task: MSCRMApplySolution@12
+    inputs:
+      crmConnectionString: '$(ConnectionStringTest)'
+      solutionName: '$(LatestPatchName)'
   - task: PowerPlatformPublishCustomizations@0
     inputs:
       authenticationType: 'PowerPlatformSPN'
