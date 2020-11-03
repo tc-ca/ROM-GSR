@@ -75,10 +75,9 @@ steps:
     inputs:
       crmConnectionString: '$(ConnectionStringTest)'
       solutionName: '$(LatestPatchName)'
-  - task: PowerPlatformPublishCustomizations@0
-    inputs:
-      authenticationType: 'PowerPlatformSPN'
-      PowerPlatformSPN: 'ROM Test'
+- task: MSCRMPublishCustomizations@12
+  inputs:
+    crmConnectionString: '$(ConnectionStringTest)'
   - task: PublishPipelineArtifact@1
     inputs:
       targetPath: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName).zip'
