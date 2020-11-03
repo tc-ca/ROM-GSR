@@ -14,6 +14,7 @@ steps:
 - checkout: self
   persistCredentials: true
   clean: true
+
 - task: MSCRMToolInstaller@12
   inputs:
     nugetFeed: 'official'
@@ -49,11 +50,12 @@ steps:
       New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\$(LatestPatchName)'
       Write-Host "$(Build.SourcesDirectory)\$(LatestPatchName) folder created."
     }
+    Remove-Item $(Build.SourcesDirectory)\$(LatestPatchName)\* -Recurse -Force
+    dir
 - task: MSCRMExtractSolution@12
   inputs:
     unpackedFilesFolder: '$(Build.SourcesDirectory)\$(LatestPatchName)'
     solutionFile: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName).zip'
-    localize: true
 - powershell: |
     echo "Committing TC GlobalCore solution changes"
     git config user.email "nepasrepondre-noreply@tc.gc.ca"
