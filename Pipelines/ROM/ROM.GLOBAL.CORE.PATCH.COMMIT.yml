@@ -65,3 +65,8 @@ steps:
     git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
     Write-Host "Push solution changes to the remote repository"
     git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'ROM.CORE.PATCH.COMMIT'
+    publishLocation: 'Container'
