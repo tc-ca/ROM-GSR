@@ -69,6 +69,7 @@ steps:
   - task: MSCRMImportSolution@12
     inputs:
       crmConnectionString: '$(ConnectionStringTest)'
+      solutionFile: '$(Build.ArtifactStagingDirectory)/$(LatestPatchName).zip'
       publishWorkflows: true
       holdingSolution: true
   - task: MSCRMApplySolution@12
