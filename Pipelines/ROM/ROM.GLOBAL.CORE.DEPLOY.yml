@@ -21,6 +21,7 @@ steps:
       authenticationType: 'PowerPlatformSPN'
       PowerPlatformSPN: 'ROM Dev'
   - task: PowerPlatformExportSolution@0
+    timeoutInMinutes: 60
     inputs:
       authenticationType: 'PowerPlatformSPN'
       PowerPlatformSPN: 'ROM Dev'
@@ -30,6 +31,7 @@ steps:
       AsyncOperation: false
       ExportRelationshipRoles: true
   - task: PowerPlatformImportSolution@0
+    timeoutInMinutes: 60
     inputs:
       authenticationType: 'PowerPlatformSPN'
       PowerPlatformSPN: 'ROM Test'
@@ -43,5 +45,10 @@ steps:
   - task: PublishPipelineArtifact@1
     inputs:
       targetPath: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_managed.zip'
+      artifact: 'drop_base'
+      publishLocation: 'pipeline'
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)\$(SolutionName).zip'
       artifact: 'drop_base'
       publishLocation: 'pipeline'
