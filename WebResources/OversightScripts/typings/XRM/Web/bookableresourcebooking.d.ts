@@ -53,7 +53,10 @@ interface BookableResourceBooking_Relationships {
   bookableresourcebooking_ServiceAppointments?: ServiceAppointment_Result[] | null;
   msdyn_AppointmentBookingId?: Appointment_Result | null;
   msdyn_Crew?: BookableResource_Result | null;
+<<<<<<< HEAD
   msdyn_bookableresourcebooking_msdyn_workorderservicetask_Booking?: msdyn_workorderservicetask_Result[] | null;
+=======
+>>>>>>> 53681a51be8068139a23c22879d3b99dd51be182
 }
 interface BookableResourceBooking extends BookableResourceBooking_Base, BookableResourceBooking_Relationships {
   BookingStatus_bind$bookingstatuses?: string | null;
@@ -223,7 +226,10 @@ interface BookableResourceBooking_Expand {
   bookableresourcebooking_ServiceAppointments: WebExpand<BookableResourceBooking_Expand, ServiceAppointment_Select, ServiceAppointment_Filter, { bookableresourcebooking_ServiceAppointments: ServiceAppointment_Result[] }>;
   msdyn_AppointmentBookingId: WebExpand<BookableResourceBooking_Expand, Appointment_Select, Appointment_Filter, { msdyn_AppointmentBookingId: Appointment_Result }>;
   msdyn_Crew: WebExpand<BookableResourceBooking_Expand, BookableResource_Select, BookableResource_Filter, { msdyn_Crew: BookableResource_Result }>;
+<<<<<<< HEAD
   msdyn_bookableresourcebooking_msdyn_workorderservicetask_Booking: WebExpand<BookableResourceBooking_Expand, msdyn_workorderservicetask_Select, msdyn_workorderservicetask_Filter, { msdyn_bookableresourcebooking_msdyn_workorderservicetask_Booking: msdyn_workorderservicetask_Result[] }>;
+=======
+>>>>>>> 53681a51be8068139a23c22879d3b99dd51be182
   msdyn_resourcegroup: WebExpand<BookableResourceBooking_Expand, BookableResource_Select, BookableResource_Filter, { msdyn_resourcegroup: BookableResource_Result }>;
   msdyn_serviceappointment: WebExpand<BookableResourceBooking_Expand, ServiceAppointment_Select, ServiceAppointment_Filter, { msdyn_serviceappointment: ServiceAppointment_Result }>;
   msdyn_workorder: WebExpand<BookableResourceBooking_Expand, msdyn_workorder_Select, msdyn_workorder_Filter, { msdyn_workorder: msdyn_workorder_Result }>;
@@ -309,7 +315,10 @@ interface BookableResourceBooking_RelatedOne {
 interface BookableResourceBooking_RelatedMany {
   bookableresourcebooking_Appointments: WebMappingRetrieve<Appointment_Select,Appointment_Expand,Appointment_Filter,Appointment_Fixed,Appointment_Result,Appointment_FormattedResult>;
   bookableresourcebooking_ServiceAppointments: WebMappingRetrieve<ServiceAppointment_Select,ServiceAppointment_Expand,ServiceAppointment_Filter,ServiceAppointment_Fixed,ServiceAppointment_Result,ServiceAppointment_FormattedResult>;
+<<<<<<< HEAD
   msdyn_bookableresourcebooking_msdyn_workorderservicetask_Booking: WebMappingRetrieve<msdyn_workorderservicetask_Select,msdyn_workorderservicetask_Expand,msdyn_workorderservicetask_Filter,msdyn_workorderservicetask_Fixed,msdyn_workorderservicetask_Result,msdyn_workorderservicetask_FormattedResult>;
+=======
+>>>>>>> 53681a51be8068139a23c22879d3b99dd51be182
 }
 interface WebEntitiesRetrieve {
   bookableresourcebookings: WebMappingRetrieve<BookableResourceBooking_Select,BookableResourceBooking_Expand,BookableResourceBooking_Filter,BookableResourceBooking_Fixed,BookableResourceBooking_Result,BookableResourceBooking_FormattedResult>;
