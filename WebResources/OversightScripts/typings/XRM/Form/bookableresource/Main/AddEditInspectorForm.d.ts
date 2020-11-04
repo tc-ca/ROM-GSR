@@ -58,6 +58,8 @@ declare namespace Form.bookableresource.Main {
       get(name: "msdyn_timeoffapprovalrequired"): Xrm.OptionSetAttribute<boolean>;
       get(name: "msdyn_warehouse"): Xrm.LookupAttribute<"msdyn_warehouse">;
       get(name: "name"): Xrm.Attribute<string>;
+      get(name: "ovs_badgenumber"): Xrm.Attribute<string>;
+      get(name: "ovs_registeredinspectornumberrin"): Xrm.Attribute<string>;
       get(name: "resourcetype"): Xrm.OptionSetAttribute<bookableresource_resourcetype>;
       get(name: "timezone"): Xrm.Attribute<any>;
       get(name: "userid"): Xrm.LookupAttribute<"systemuser">;
@@ -92,6 +94,8 @@ declare namespace Form.bookableresource.Main {
       get(name: "msdyn_warehouse"): Xrm.LookupControl<"msdyn_warehouse">;
       get(name: "name"): Xrm.StringControl;
       get(name: "notescontrol"): Xrm.BaseControl;
+      get(name: "ovs_badgenumber"): Xrm.StringControl;
+      get(name: "ovs_registeredinspectornumberrin"): Xrm.StringControl;
       get(name: "resourcetype"): Xrm.OptionSetControl<bookableresource_resourcetype>;
       get(name: "timezone"): Xrm.Control<Xrm.Attribute<any>>;
       get(name: "userid"): Xrm.LookupControl<"systemuser">;
@@ -132,6 +136,8 @@ declare namespace Form.bookableresource.Main {
     getAttribute(attributeName: "msdyn_timeoffapprovalrequired"): Xrm.OptionSetAttribute<boolean>;
     getAttribute(attributeName: "msdyn_warehouse"): Xrm.LookupAttribute<"msdyn_warehouse">;
     getAttribute(attributeName: "name"): Xrm.Attribute<string>;
+    getAttribute(attributeName: "ovs_badgenumber"): Xrm.Attribute<string>;
+    getAttribute(attributeName: "ovs_registeredinspectornumberrin"): Xrm.Attribute<string>;
     getAttribute(attributeName: "resourcetype"): Xrm.OptionSetAttribute<bookableresource_resourcetype>;
     getAttribute(attributeName: "timezone"): Xrm.Attribute<any>;
     getAttribute(attributeName: "userid"): Xrm.LookupAttribute<"systemuser">;
@@ -161,6 +167,8 @@ declare namespace Form.bookableresource.Main {
     getControl(controlName: "msdyn_warehouse"): Xrm.LookupControl<"msdyn_warehouse">;
     getControl(controlName: "name"): Xrm.StringControl;
     getControl(controlName: "notescontrol"): Xrm.BaseControl;
+    getControl(controlName: "ovs_badgenumber"): Xrm.StringControl;
+    getControl(controlName: "ovs_registeredinspectornumberrin"): Xrm.StringControl;
     getControl(controlName: "resourcetype"): Xrm.OptionSetControl<bookableresource_resourcetype>;
     getControl(controlName: "timezone"): Xrm.Control<Xrm.Attribute<any>>;
     getControl(controlName: "userid"): Xrm.LookupControl<"systemuser">;

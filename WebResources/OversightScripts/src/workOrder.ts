@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/triple-slash-reference */
-/// <reference path='../typings/XRM/xrm.d.ts' />
-/// <reference path='../typings/XRM/dg.xrmquery.web.d.ts' />
-/// <reference path='../typings/XRM/Form/msdyn_workorder/Main/OversightActivity.d.ts' />
-namespace ROM {
+namespace ROM.WorkOrder {
   // EVENTS
   export function onLoad(eContext: Xrm.ExecutionContext<any, any>): void {
     console.log('Onload has been called');

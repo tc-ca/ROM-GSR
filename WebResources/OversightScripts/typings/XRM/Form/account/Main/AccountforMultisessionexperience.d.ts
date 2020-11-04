@@ -13,13 +13,6 @@ declare namespace Form.account.Main {
         get(index: number): Xrm.PageSection;
         get(chooser: (item: Xrm.PageSection, index: number) => boolean): Xrm.PageSection[];
       }
-      interface Devices_Tab extends Xrm.SectionCollectionBase {
-        get(name: "Devices_Tab_Section_1"): Xrm.PageSection;
-        get(name: string): undefined;
-        get(): Xrm.PageSection[];
-        get(index: number): Xrm.PageSection;
-        get(chooser: (item: Xrm.PageSection, index: number) => boolean): Xrm.PageSection[];
-      }
       interface SUMMARY_TAB extends Xrm.SectionCollectionBase {
         get(name: "ACCOUNT_INFORMATION"): Xrm.PageSection;
         get(name: "SUMMARY_TAB_section_4"): Xrm.PageSection;
@@ -74,7 +67,6 @@ declare namespace Form.account.Main {
       get(chooser: (item: Xrm.Attribute<any>, index: number) => boolean): Xrm.Attribute<any>[];
     }
     interface Controls extends Xrm.ControlCollectionBase {
-      get(name: "Devices_Associated_View"): Xrm.SubGridControl<"msdyn_customerasset">;
       get(name: "RelatedCases"): Xrm.SubGridControl<"incident">;
       get(name: "address1_composite"): Xrm.StringControl | null;
       get(name: "address1_composite_compositionLinkControl_address1_city"): Xrm.StringControl | null;
@@ -121,7 +113,6 @@ declare namespace Form.account.Main {
     }
     interface Tabs extends Xrm.TabCollectionBase {
       get(name: "DETAILS_TAB"): Xrm.PageTab<Tabs.DETAILS_TAB>;
-      get(name: "Devices_Tab"): Xrm.PageTab<Tabs.Devices_Tab>;
       get(name: "SUMMARY_TAB"): Xrm.PageTab<Tabs.SUMMARY_TAB>;
       get(name: string): undefined;
       get(): Xrm.PageTab<Xrm.Collection<Xrm.PageSection>>[];
@@ -168,7 +159,6 @@ declare namespace Form.account.Main {
     getAttribute(attributeName: "transactioncurrencyid"): Xrm.LookupAttribute<"transactioncurrency">;
     getAttribute(attributeName: "websiteurl"): Xrm.Attribute<string>;
     getAttribute(attributeName: string): undefined;
-    getControl(controlName: "Devices_Associated_View"): Xrm.SubGridControl<"msdyn_customerasset">;
     getControl(controlName: "RelatedCases"): Xrm.SubGridControl<"incident">;
     getControl(controlName: "address1_composite"): Xrm.StringControl | null;
     getControl(controlName: "address1_composite_compositionLinkControl_address1_city"): Xrm.StringControl | null;

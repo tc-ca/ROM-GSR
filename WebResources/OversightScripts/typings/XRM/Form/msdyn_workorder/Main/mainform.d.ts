@@ -90,6 +90,7 @@ declare namespace Form.msdyn_workorder.Main {
       get(name: "msdyn_datewindowend"): Xrm.DateAttribute;
       get(name: "msdyn_datewindowstart"): Xrm.DateAttribute;
       get(name: "msdyn_estimatesubtotalamount"): Xrm.NumberAttribute;
+      get(name: "msdyn_functionallocation"): Xrm.LookupAttribute<"msdyn_functionallocation">;
       get(name: "msdyn_instructions"): Xrm.Attribute<string>;
       get(name: "msdyn_iotalert"): Xrm.LookupAttribute<"msdyn_iotalert">;
       get(name: "msdyn_latitude"): Xrm.NumberAttribute;
@@ -181,6 +182,7 @@ declare namespace Form.msdyn_workorder.Main {
       get(name: "msdyn_datewindowend"): Xrm.DateControl;
       get(name: "msdyn_datewindowstart"): Xrm.DateControl;
       get(name: "msdyn_estimatesubtotalamount"): Xrm.NumberControl;
+      get(name: "msdyn_functionallocation"): Xrm.LookupControl<"msdyn_functionallocation">;
       get(name: "msdyn_instructions"): Xrm.StringControl;
       get(name: "msdyn_iotalert"): Xrm.LookupControl<"msdyn_iotalert">;
       get(name: "msdyn_iotalert1"): Xrm.Control<Xrm.Attribute<any>>;
@@ -266,6 +268,7 @@ declare namespace Form.msdyn_workorder.Main {
     getAttribute(attributeName: "msdyn_datewindowend"): Xrm.DateAttribute;
     getAttribute(attributeName: "msdyn_datewindowstart"): Xrm.DateAttribute;
     getAttribute(attributeName: "msdyn_estimatesubtotalamount"): Xrm.NumberAttribute;
+    getAttribute(attributeName: "msdyn_functionallocation"): Xrm.LookupAttribute<"msdyn_functionallocation">;
     getAttribute(attributeName: "msdyn_instructions"): Xrm.Attribute<string>;
     getAttribute(attributeName: "msdyn_iotalert"): Xrm.LookupAttribute<"msdyn_iotalert">;
     getAttribute(attributeName: "msdyn_latitude"): Xrm.NumberAttribute;
@@ -352,6 +355,7 @@ declare namespace Form.msdyn_workorder.Main {
     getControl(controlName: "msdyn_datewindowend"): Xrm.DateControl;
     getControl(controlName: "msdyn_datewindowstart"): Xrm.DateControl;
     getControl(controlName: "msdyn_estimatesubtotalamount"): Xrm.NumberControl;
+    getControl(controlName: "msdyn_functionallocation"): Xrm.LookupControl<"msdyn_functionallocation">;
     getControl(controlName: "msdyn_instructions"): Xrm.StringControl;
     getControl(controlName: "msdyn_iotalert"): Xrm.LookupControl<"msdyn_iotalert">;
     getControl(controlName: "msdyn_iotalert1"): Xrm.Control<Xrm.Attribute<any>>;
