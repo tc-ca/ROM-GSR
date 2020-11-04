@@ -26,17 +26,16 @@ steps:
       PowerPlatformSPN: 'ROM Dev'
       SolutionName: '$(SolutionName)'
       SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_managed.zip'
-      AsyncOperation: true
-      MaxAsyncWaitTime: '60'
-      ExportRelationshipRoles: true
       Managed: true
+      AsyncOperation: false
+      ExportRelationshipRoles: true
   - task: PowerPlatformImportSolution@0
     inputs:
       authenticationType: 'PowerPlatformSPN'
       PowerPlatformSPN: 'ROM Test'
       SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_managed.zip'
-      AsyncOperation: true
-      MaxAsyncWaitTime: '240'
+      AsyncOperation: false
+      HoldingSolution: false
   - task: PowerPlatformPublishCustomizations@0
     inputs:
       authenticationType: 'PowerPlatformSPN'
