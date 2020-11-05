@@ -15,6 +15,7 @@ interface msdyn_workorderservicetask_Base extends WebEntity {
   msdyn_surveyboundedoutput?: string | null;
   msdyn_workorderservicetaskid?: string | null;
   overriddencreatedon?: Date | null;
+  ovs_questionnairedefinition?: string | null;
   ovs_questionnairereponse?: string | null;
   statecode?: msdyn_workorderservicetask_statecode | null;
   statuscode?: msdyn_workorderservicetask_statuscode | null;
@@ -78,6 +79,7 @@ interface msdyn_workorderservicetask_Select {
   msdyn_workorderservicetaskid: WebAttribute<msdyn_workorderservicetask_Select, { msdyn_workorderservicetaskid: string | null }, {  }>;
   overriddencreatedon: WebAttribute<msdyn_workorderservicetask_Select, { overriddencreatedon: Date | null }, { overriddencreatedon_formatted?: string }>;
   ovs_questionnaire_guid: WebAttribute<msdyn_workorderservicetask_Select, { ovs_questionnaire_guid: string | null }, { ovs_questionnaire_formatted?: string }>;
+  ovs_questionnairedefinition: WebAttribute<msdyn_workorderservicetask_Select, { ovs_questionnairedefinition: string | null }, {  }>;
   ovs_questionnairereponse: WebAttribute<msdyn_workorderservicetask_Select, { ovs_questionnairereponse: string | null }, {  }>;
   ownerid_guid: WebAttribute<msdyn_workorderservicetask_Select, { ownerid_guid: string | null }, { ownerid_formatted?: string }>;
   owningbusinessunit_guid: WebAttribute<msdyn_workorderservicetask_Select, { owningbusinessunit_guid: string | null }, { owningbusinessunit_formatted?: string }>;
@@ -120,6 +122,7 @@ interface msdyn_workorderservicetask_Filter {
   msdyn_workorderservicetaskid: XQW.Guid;
   overriddencreatedon: Date;
   ovs_questionnaire_guid: XQW.Guid;
+  ovs_questionnairedefinition: string;
   ovs_questionnairereponse: string;
   ownerid_guid: XQW.Guid;
   owningbusinessunit_guid: XQW.Guid;

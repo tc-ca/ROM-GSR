@@ -1,19 +1,83 @@
+'use strict';
+window.parentExecutionContext = null;
+window.parentFormContext = null;
 Survey.StylesManager.applyTheme('modern');
 
-function InitializeSurveyRender(surveyDefinition, surveyLocale, mode) {
-  if (surveyDefinition !== null && surveyDefinition !== undefined) {
-    const questionnaireDefinition = JSON.parse(surveyDefinition);
-    window.survey = new Survey.Model(questionnaireDefinition);
-    survey.locale = surveyLocale;
-    survey.mode = mode;
-    $('#surveyElement').Survey({ model: survey });
+function InitialContext(executionContext) {
+  window.parentExecutionContext = executionContext;
+  window.parentFormContext = executionContext.getFormContext();
+}
+
+function InitializeSurveyRender(surveyDefinition, surveyResponse, surveyLocale, mode) {
+  var questionnaireDefinition = JSON.parse(surveyDefinition);
+  window.survey = new Survey.Model(questionnaireDefinition);
+  survey.locale = surveyLocale;
+  survey.mode = mode;
+
+  if (surveyResponse != null) {
+    survey.data = JSON.parse(surveyResponse);
+  }
+
+  survey.onComplete.add(function (result) {
+    SaveAnswers(result);
+
+    // const surveyPDF = new SurveyPDF.SurveyPDF(json);
+    // surveyPDF.data = survey.data;
+    // surveyPDF.raw('dataurlstring').then(function (dataurl) {
+    //   SavePDF(dataurl);
+    // });
+  });
+
+  $('#surveyElement').Survey({
+    model: survey,
+    onValueChanged: surveyValueChanged,
+  });
+
+  //Hide the complete button if the cat is from the template
+  if (surveyDefinition == null) {
+    $('.sv-btn.sv-footer__complete-btn').hide();
   }
 }
 
-function GetSurveyResponse() {
-  return JSON.stringify(result.data, null, 3);
+function SaveAnswers(userInput) {
+  var data = JSON.stringify(userInput.data, null, 3);
+  window.parentFormContext.getAttribute('ovs_questionnairereponse').setValue(data);
 }
 
-// survey.onComplete.add(function (result) {
-//   document.querySelector('#surveyResult').textContent = 'Result JSON:\n' + JSON.stringify(result.data, null, 3);
-// });
+const surveyValueChanged = function (sender, options) {
+  const el = document.getElementById(options.name);
+  if (el) {
+    el.value = options.value;
+  }
+};
+// const createAnnotation = function (regarding, fileInfo, documentBody) {
+//   /// <param name='regrding' type='MobileCRM.Refernce'/>
+//   /// <param name='fileInfo' type='MobileCRM.Settings._fileInfo'/>
+//   /// <param name='documentBody' type='base64'>File base 64 string.<param>
+
+//   var note = {
+//     filename: 'PDFReport.pdf',
+//     mimetype: 'application/pdf',
+//     isdocument: true,
+//     documentbody: documentBody.slice(documentBody.indexOf(',') + 1) || ' ',
+//     subject: 'PDF report doucment',
+//     notetext: 'Survey JS questionnaire PDF report',
+//     'objectid_tc_tcinspection@odata.bind': '/tc_tcinspections(' + regarding + ')',
+//   };
+
+//   parent.Xrm.WebApi.createRecord('annotation', note).then(
+//     function success(result) {
+//       console.log('Document saved: ' + result.id);
+//       // perform operations on record creation
+//     },
+//     function (error) {
+//       console.log(error.message);
+//       // handle error conditions
+//     }
+//   );
+// };
+
+// function SavePDF(text) {
+//   createAnnotation(tc_tcinspectionid.replace(/[{}]/g, ''), 'PDFReport.pdf', text);
+//   return true;
+// }

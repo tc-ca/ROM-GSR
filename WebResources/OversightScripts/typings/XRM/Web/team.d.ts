@@ -31,7 +31,6 @@ interface Team_Relationships {
   team_connections1?: Connection_Result[] | null;
   team_connections2?: Connection_Result[] | null;
   team_contacts?: Contact_Result[] | null;
-<<<<<<< HEAD
   team_msdyn_incidenttypeservicetask?: msdyn_incidenttypeservicetask_Result[] | null;
   team_msdyn_servicetasktype?: msdyn_servicetasktype_Result[] | null;
   team_msdyn_workorder?: msdyn_workorder_Result[] | null;
@@ -41,14 +40,6 @@ interface Team_Relationships {
   team_ovs_oversighttype?: ovs_OversightType_Result[] | null;
   team_ovs_questionnaire?: ovs_Questionnaire_Result[] | null;
   team_ovs_sitetype?: ovs_SiteType_Result[] | null;
-=======
-  team_msdyn_servicetasktype?: msdyn_servicetasktype_Result[] | null;
-  team_msdyn_workorder?: msdyn_workorder_Result[] | null;
-  team_ovs_operation?: ovs_operation_Result[] | null;
-  team_ovs_oversighttype?: ovs_OversightType_Result[] | null;
-  team_ovs_sitetype?: ovs_SiteType_Result[] | null;
-  team_ovs_survey?: ovs_Survey_Result[] | null;
->>>>>>> 53681a51be8068139a23c22879d3b99dd51be182
   team_ovs_tyrational?: ovs_TYRational_Result[] | null;
   team_ovs_unplannedforecast?: ovs_UnplannedForecast_Result[] | null;
   team_service_appointments?: ServiceAppointment_Result[] | null;
@@ -155,7 +146,6 @@ interface Team_Expand {
   team_connections1: WebExpand<Team_Expand, Connection_Select, Connection_Filter, { team_connections1: Connection_Result[] }>;
   team_connections2: WebExpand<Team_Expand, Connection_Select, Connection_Filter, { team_connections2: Connection_Result[] }>;
   team_contacts: WebExpand<Team_Expand, Contact_Select, Contact_Filter, { team_contacts: Contact_Result[] }>;
-<<<<<<< HEAD
   team_msdyn_incidenttypeservicetask: WebExpand<Team_Expand, msdyn_incidenttypeservicetask_Select, msdyn_incidenttypeservicetask_Filter, { team_msdyn_incidenttypeservicetask: msdyn_incidenttypeservicetask_Result[] }>;
   team_msdyn_servicetasktype: WebExpand<Team_Expand, msdyn_servicetasktype_Select, msdyn_servicetasktype_Filter, { team_msdyn_servicetasktype: msdyn_servicetasktype_Result[] }>;
   team_msdyn_workorder: WebExpand<Team_Expand, msdyn_workorder_Select, msdyn_workorder_Filter, { team_msdyn_workorder: msdyn_workorder_Result[] }>;
@@ -165,14 +155,6 @@ interface Team_Expand {
   team_ovs_oversighttype: WebExpand<Team_Expand, ovs_OversightType_Select, ovs_OversightType_Filter, { team_ovs_oversighttype: ovs_OversightType_Result[] }>;
   team_ovs_questionnaire: WebExpand<Team_Expand, ovs_Questionnaire_Select, ovs_Questionnaire_Filter, { team_ovs_questionnaire: ovs_Questionnaire_Result[] }>;
   team_ovs_sitetype: WebExpand<Team_Expand, ovs_SiteType_Select, ovs_SiteType_Filter, { team_ovs_sitetype: ovs_SiteType_Result[] }>;
-=======
-  team_msdyn_servicetasktype: WebExpand<Team_Expand, msdyn_servicetasktype_Select, msdyn_servicetasktype_Filter, { team_msdyn_servicetasktype: msdyn_servicetasktype_Result[] }>;
-  team_msdyn_workorder: WebExpand<Team_Expand, msdyn_workorder_Select, msdyn_workorder_Filter, { team_msdyn_workorder: msdyn_workorder_Result[] }>;
-  team_ovs_operation: WebExpand<Team_Expand, ovs_operation_Select, ovs_operation_Filter, { team_ovs_operation: ovs_operation_Result[] }>;
-  team_ovs_oversighttype: WebExpand<Team_Expand, ovs_OversightType_Select, ovs_OversightType_Filter, { team_ovs_oversighttype: ovs_OversightType_Result[] }>;
-  team_ovs_sitetype: WebExpand<Team_Expand, ovs_SiteType_Select, ovs_SiteType_Filter, { team_ovs_sitetype: ovs_SiteType_Result[] }>;
-  team_ovs_survey: WebExpand<Team_Expand, ovs_Survey_Select, ovs_Survey_Filter, { team_ovs_survey: ovs_Survey_Result[] }>;
->>>>>>> 53681a51be8068139a23c22879d3b99dd51be182
   team_ovs_tyrational: WebExpand<Team_Expand, ovs_TYRational_Select, ovs_TYRational_Filter, { team_ovs_tyrational: ovs_TYRational_Result[] }>;
   team_ovs_unplannedforecast: WebExpand<Team_Expand, ovs_UnplannedForecast_Select, ovs_UnplannedForecast_Filter, { team_ovs_unplannedforecast: ovs_UnplannedForecast_Result[] }>;
   team_service_appointments: WebExpand<Team_Expand, ServiceAppointment_Select, ServiceAppointment_Filter, { team_service_appointments: ServiceAppointment_Result[] }>;
@@ -235,7 +217,6 @@ interface Team_RelatedMany {
   team_connections1: WebMappingRetrieve<Connection_Select,Connection_Expand,Connection_Filter,Connection_Fixed,Connection_Result,Connection_FormattedResult>;
   team_connections2: WebMappingRetrieve<Connection_Select,Connection_Expand,Connection_Filter,Connection_Fixed,Connection_Result,Connection_FormattedResult>;
   team_contacts: WebMappingRetrieve<Contact_Select,Contact_Expand,Contact_Filter,Contact_Fixed,Contact_Result,Contact_FormattedResult>;
-<<<<<<< HEAD
   team_msdyn_incidenttypeservicetask: WebMappingRetrieve<msdyn_incidenttypeservicetask_Select,msdyn_incidenttypeservicetask_Expand,msdyn_incidenttypeservicetask_Filter,msdyn_incidenttypeservicetask_Fixed,msdyn_incidenttypeservicetask_Result,msdyn_incidenttypeservicetask_FormattedResult>;
   team_msdyn_servicetasktype: WebMappingRetrieve<msdyn_servicetasktype_Select,msdyn_servicetasktype_Expand,msdyn_servicetasktype_Filter,msdyn_servicetasktype_Fixed,msdyn_servicetasktype_Result,msdyn_servicetasktype_FormattedResult>;
   team_msdyn_workorder: WebMappingRetrieve<msdyn_workorder_Select,msdyn_workorder_Expand,msdyn_workorder_Filter,msdyn_workorder_Fixed,msdyn_workorder_Result,msdyn_workorder_FormattedResult>;
@@ -245,14 +226,6 @@ interface Team_RelatedMany {
   team_ovs_oversighttype: WebMappingRetrieve<ovs_OversightType_Select,ovs_OversightType_Expand,ovs_OversightType_Filter,ovs_OversightType_Fixed,ovs_OversightType_Result,ovs_OversightType_FormattedResult>;
   team_ovs_questionnaire: WebMappingRetrieve<ovs_Questionnaire_Select,ovs_Questionnaire_Expand,ovs_Questionnaire_Filter,ovs_Questionnaire_Fixed,ovs_Questionnaire_Result,ovs_Questionnaire_FormattedResult>;
   team_ovs_sitetype: WebMappingRetrieve<ovs_SiteType_Select,ovs_SiteType_Expand,ovs_SiteType_Filter,ovs_SiteType_Fixed,ovs_SiteType_Result,ovs_SiteType_FormattedResult>;
-=======
-  team_msdyn_servicetasktype: WebMappingRetrieve<msdyn_servicetasktype_Select,msdyn_servicetasktype_Expand,msdyn_servicetasktype_Filter,msdyn_servicetasktype_Fixed,msdyn_servicetasktype_Result,msdyn_servicetasktype_FormattedResult>;
-  team_msdyn_workorder: WebMappingRetrieve<msdyn_workorder_Select,msdyn_workorder_Expand,msdyn_workorder_Filter,msdyn_workorder_Fixed,msdyn_workorder_Result,msdyn_workorder_FormattedResult>;
-  team_ovs_operation: WebMappingRetrieve<ovs_operation_Select,ovs_operation_Expand,ovs_operation_Filter,ovs_operation_Fixed,ovs_operation_Result,ovs_operation_FormattedResult>;
-  team_ovs_oversighttype: WebMappingRetrieve<ovs_OversightType_Select,ovs_OversightType_Expand,ovs_OversightType_Filter,ovs_OversightType_Fixed,ovs_OversightType_Result,ovs_OversightType_FormattedResult>;
-  team_ovs_sitetype: WebMappingRetrieve<ovs_SiteType_Select,ovs_SiteType_Expand,ovs_SiteType_Filter,ovs_SiteType_Fixed,ovs_SiteType_Result,ovs_SiteType_FormattedResult>;
-  team_ovs_survey: WebMappingRetrieve<ovs_Survey_Select,ovs_Survey_Expand,ovs_Survey_Filter,ovs_Survey_Fixed,ovs_Survey_Result,ovs_Survey_FormattedResult>;
->>>>>>> 53681a51be8068139a23c22879d3b99dd51be182
   team_ovs_tyrational: WebMappingRetrieve<ovs_TYRational_Select,ovs_TYRational_Expand,ovs_TYRational_Filter,ovs_TYRational_Fixed,ovs_TYRational_Result,ovs_TYRational_FormattedResult>;
   team_ovs_unplannedforecast: WebMappingRetrieve<ovs_UnplannedForecast_Select,ovs_UnplannedForecast_Expand,ovs_UnplannedForecast_Filter,ovs_UnplannedForecast_Fixed,ovs_UnplannedForecast_Result,ovs_UnplannedForecast_FormattedResult>;
   team_service_appointments: WebMappingRetrieve<ServiceAppointment_Select,ServiceAppointment_Expand,ServiceAppointment_Filter,ServiceAppointment_Fixed,ServiceAppointment_Result,ServiceAppointment_FormattedResult>;

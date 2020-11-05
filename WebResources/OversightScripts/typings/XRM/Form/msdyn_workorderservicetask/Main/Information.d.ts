@@ -34,6 +34,8 @@ declare namespace Form.msdyn_workorderservicetask.Main {
       get(name: "msdyn_tasktype"): Xrm.LookupAttribute<"msdyn_servicetasktype">;
       get(name: "msdyn_workorder"): Xrm.LookupAttribute<"msdyn_workorder">;
       get(name: "msdyn_workorderincident"): Xrm.LookupAttribute<"msdyn_workorderincident">;
+      get(name: "ovs_questionnairedefinition"): Xrm.Attribute<string>;
+      get(name: "ovs_questionnairereponse"): Xrm.Attribute<string>;
       get(name: "ownerid"): Xrm.LookupAttribute<"systemuser" | "team">;
       get(name: "statecode"): Xrm.OptionSetAttribute<msdyn_workorderservicetask_statecode>;
       get(name: string): undefined;
@@ -42,6 +44,7 @@ declare namespace Form.msdyn_workorderservicetask.Main {
       get(chooser: (item: Xrm.Attribute<any>, index: number) => boolean): Xrm.Attribute<any>[];
     }
     interface Controls extends Xrm.ControlCollectionBase {
+      get(name: "WebResource_QuestionnaireRender"): Xrm.WebResourceControl;
       get(name: "footer_statecode"): Xrm.OptionSetControl<msdyn_workorderservicetask_statecode>;
       get(name: "msdyn_actualduration"): Xrm.NumberControl;
       get(name: "msdyn_agreementbookingservicetask"): Xrm.LookupControl<"msdyn_agreementbookingservicetask">;
@@ -66,6 +69,8 @@ declare namespace Form.msdyn_workorderservicetask.Main {
       get(name: "msdyn_workorderincident"): Xrm.LookupControl<"msdyn_workorderincident">;
       get(name: "msdyn_workorderincident1"): Xrm.LookupControl<"msdyn_workorderincident">;
       get(name: "notescontrol"): Xrm.BaseControl;
+      get(name: "ovs_questionnairedefinition"): Xrm.StringControl;
+      get(name: "ovs_questionnairereponse"): Xrm.StringControl;
       get(name: "ownerid"): Xrm.LookupControl<"systemuser" | "team">;
       get(name: string): undefined;
       get(): Xrm.BaseControl[];
@@ -99,9 +104,12 @@ declare namespace Form.msdyn_workorderservicetask.Main {
     getAttribute(attributeName: "msdyn_tasktype"): Xrm.LookupAttribute<"msdyn_servicetasktype">;
     getAttribute(attributeName: "msdyn_workorder"): Xrm.LookupAttribute<"msdyn_workorder">;
     getAttribute(attributeName: "msdyn_workorderincident"): Xrm.LookupAttribute<"msdyn_workorderincident">;
+    getAttribute(attributeName: "ovs_questionnairedefinition"): Xrm.Attribute<string>;
+    getAttribute(attributeName: "ovs_questionnairereponse"): Xrm.Attribute<string>;
     getAttribute(attributeName: "ownerid"): Xrm.LookupAttribute<"systemuser" | "team">;
     getAttribute(attributeName: "statecode"): Xrm.OptionSetAttribute<msdyn_workorderservicetask_statecode>;
     getAttribute(attributeName: string): undefined;
+    getControl(controlName: "WebResource_QuestionnaireRender"): Xrm.WebResourceControl;
     getControl(controlName: "footer_statecode"): Xrm.OptionSetControl<msdyn_workorderservicetask_statecode>;
     getControl(controlName: "msdyn_actualduration"): Xrm.NumberControl;
     getControl(controlName: "msdyn_agreementbookingservicetask"): Xrm.LookupControl<"msdyn_agreementbookingservicetask">;
@@ -126,6 +134,8 @@ declare namespace Form.msdyn_workorderservicetask.Main {
     getControl(controlName: "msdyn_workorderincident"): Xrm.LookupControl<"msdyn_workorderincident">;
     getControl(controlName: "msdyn_workorderincident1"): Xrm.LookupControl<"msdyn_workorderincident">;
     getControl(controlName: "notescontrol"): Xrm.BaseControl;
+    getControl(controlName: "ovs_questionnairedefinition"): Xrm.StringControl;
+    getControl(controlName: "ovs_questionnairereponse"): Xrm.StringControl;
     getControl(controlName: "ownerid"): Xrm.LookupControl<"systemuser" | "team">;
     getControl(controlName: string): undefined;
   }
