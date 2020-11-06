@@ -27,48 +27,27 @@ namespace ROM.ServiceTaskType {
     }
 
     // Get Questionnaire definition
-    let surveyDefinition = null;
+    const surveyDefinition = null;
     Xrm.WebApi.retrieveRecord(
       'ovs_questionnaire',
       questionnaireId[0].id.substr(1, questionnaireId[0].id.length - 2),
       '$select=ovs_questionnairedefinition'
     ).then(
       function success(result) {
-        surveyDefinition = result.ovs_questionnairedefinition;
-        wrCtrl.setVisible(true);
-        wrCtrl.getContentWindow().then(function (win) {
-          const surveyLocale = getSurveyLocal();
-          win.InitializeSurveyRender(surveyDefinition, surveyLocale, mode);
-        });
+        InitiateSurvey(wrCtrl, result.ovs_questionnairedefinition, mode);
       },
       function error(error) {
         Xrm.Navigation.openAlertDialog({ text: error.message });
       }
     );
+  }
 
-    // XrmQuery.retrieve(
-    //   (x) => x.ovs_questionnaire,
-    //   questionnaireId[0].id.substr(1, questionnaireId[0].id.length - 2).replace(/-/g, '') //Trim the {} outside the id
-    // )
-    //   .select((x) => [x.ovs_questionnairedefinition])
-    //   .execute(function (x) {
-    //     //should only return one fiscal year record as the current
-    //     if (x !== null) {
-    //       surveyDefinition = x.ovs_questionnairedefinition;
-    //       wrCtrl.setVisible(true);
-    //     } else {
-    //       // do not set a default if multiple records are found, error.
-    //       wrCtrl.setVisible(false);
-    //     }
-    //   });
-
-    // Call the SurveyJS Creator to render
-    // if (wrCtrl !== null && wrCtrl !== undefined) {
-    //   wrCtrl.getContentWindow().then(function (win) {
-    //     const surveyLocale = getSurveyLocal();
-    //     win.InitializeSurveyCreator(surveyDefinition, surveyLocale);
-    //   });
-    // }
+  function InitiateSurvey(wrCtrl, surveyDefinition, mode) {
+    wrCtrl.setVisible(true);
+    wrCtrl.getContentWindow().then(function (win) {
+      const surveyLocale = getSurveyLocal();
+      win.InitializeSurveyRender(surveyDefinition, null, surveyLocale, mode);
+    });
   }
   // Get surveyJS locale
   function getSurveyLocal(): string {

@@ -9,6 +9,7 @@ function InitialContext(executionContext) {
 }
 
 function InitializeSurveyRender(surveyDefinition, surveyResponse, surveyLocale, mode) {
+  if(surveyDefinition==null) {return};
   var questionnaireDefinition = JSON.parse(surveyDefinition);
   window.survey = new Survey.Model(questionnaireDefinition);
   survey.locale = surveyLocale;

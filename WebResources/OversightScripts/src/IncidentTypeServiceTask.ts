@@ -48,11 +48,10 @@ namespace ROM.IncidentTypeServiceTask {
   }
 
   function InitiateSurvey(wrCtrl, surveyDefinition, mode) {
-    surveyDefinition = surveyDefinition;
     wrCtrl.setVisible(true);
     wrCtrl.getContentWindow().then(function (win) {
       const surveyLocale = getSurveyLocal();
-      win.InitializeSurveyRender(surveyDefinition, surveyLocale, mode);
+      win.InitializeSurveyRender(surveyDefinition, null, surveyLocale, mode);
     });
   }
 
