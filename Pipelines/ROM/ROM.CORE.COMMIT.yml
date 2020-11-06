@@ -24,8 +24,6 @@ steps:
     exportManaged: false
     exportUnmanaged: true
     outputPath: '$(Build.ArtifactStagingDirectory)'
-    exportAutoNumberingSettings: true
-    exportRelationshipRoles: true
 - powershell: |
     If(!(test-path '$(Build.SourcesDirectory)\$(SolutionName)'))
     {
@@ -39,6 +37,12 @@ steps:
   inputs:
     unpackedFilesFolder: '$(Build.SourcesDirectory)\$(SolutionName)'
     solutionFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName).zip'
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.ArtifactStagingDirectory)'
+    Contents: '\(SolutionName).zip'
+    TargetFolder: '$(Build.SourcesDirectory)\$(SolutionName)'
+    OverWrite: true
 - powershell: |
     echo "Committing TC GlobalCore solution changes"
     git config user.email "nepasrepondre-noreply@tc.gc.ca"
