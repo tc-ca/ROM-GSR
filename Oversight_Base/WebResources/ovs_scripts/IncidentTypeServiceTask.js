@@ -45,7 +45,7 @@ var ROM;
             wrCtrl.setVisible(true);
             wrCtrl.getContentWindow().then(function (win) {
                 var surveyLocale = getSurveyLocal();
-                win.InitializeSurveyRender(surveyDefinition, surveyLocale, mode);
+                win.InitializeSurveyRender(surveyDefinition, null, surveyLocale, mode);
             });
         }
         function OnTaskTypeChange(eContext) {
