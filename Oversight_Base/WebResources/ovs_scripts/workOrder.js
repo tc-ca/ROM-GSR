@@ -16,12 +16,13 @@ var ROM;
                 default:
                     break;
             }
-            if (!userHasRole("ROM Manager") && !userHasRole("ROM Planner")) {
-                form.getControl("ovs_revisedquarterid").setDisabled(true);
-            }
-            else {
-                form.getControl("ovs_revisedquarterid").setDisabled(false);
-            }
+            //if (!userHasRole("ROM Manager") && !userHasRole("ROM Planner")){
+            //  form.getControl("ovs_revisedquarterid").setDisabled(true);
+            //}
+            //else
+            //{
+            //  form.getControl("ovs_revisedquarterid").setDisabled(false);
+            //}
         }
         WorkOrder.onLoad = onLoad;
         function fiscalYearOnchange(eContext) {
