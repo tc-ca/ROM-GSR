@@ -9,7 +9,9 @@ function InitialContext(executionContext) {
 }
 
 function InitializeSurveyRender(surveyDefinition, surveyResponse, surveyLocale, mode) {
-  if(surveyDefinition==null) {return};
+  if (surveyDefinition == null) {
+    return;
+  }
   var questionnaireDefinition = JSON.parse(surveyDefinition);
   window.survey = new Survey.Model(questionnaireDefinition);
   survey.locale = surveyLocale;
@@ -34,10 +36,7 @@ function InitializeSurveyRender(surveyDefinition, surveyResponse, surveyLocale, 
     onValueChanged: surveyValueChanged,
   });
 
-  //Hide the complete button if the cat is from the template
-  if (surveyDefinition == null) {
-    $('.sv-btn.sv-footer__complete-btn').hide();
-  }
+  $('.sv-btn.sv-footer__complete-btn').hide();
 }
 
 function SaveAnswers(userInput) {
@@ -51,6 +50,10 @@ const surveyValueChanged = function (sender, options) {
     el.value = options.value;
   }
 };
+
+function DoComplete() {
+  window.survey.doComplete();
+}
 // const createAnnotation = function (regarding, fileInfo, documentBody) {
 //   /// <param name='regrding' type='MobileCRM.Refernce'/>
 //   /// <param name='fileInfo' type='MobileCRM.Settings._fileInfo'/>
