@@ -41,7 +41,7 @@ stages:
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'TC_GlobalCore Managed Patch'
+        ArtifactName: 'drop'
         publishLocation: 'Container'
     - powershell: |
         If(!(test-path '$(Build.SourcesDirectory)\solutions'))
@@ -124,7 +124,7 @@ stages:
           - task: MSCRMImportSolution@12
             inputs:
               crmConnectionString: '$(ConnectionStringQa)'
-              solutionFile: '$(LatestPatchName)_$(PatchMajor)_$(PatchMinor)_$(PatchBuild)_$(PatchRevision)_managed.zip'
+              solutionFile: '$(Agent.BuildDirectory)\drop\$(LatestPatchName)_$(PatchMajor)_$(PatchMinor)_$(PatchBuild)_$(PatchRevision)_managed.zip'
               publishWorkflows: true
               holdingSolution: false
           - task: MSCRMCreatePatch@12
