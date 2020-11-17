@@ -97,12 +97,12 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: DownloadBuildArtifacts@0
-            inputs:
-              buildType: 'current'
-              downloadType: 'specific'
-              itemPattern: '**/*'
-              downloadPath: '$(Build.ArtifactStagingDirectory)'
+          # - task: DownloadBuildArtifacts@0
+          #   inputs:
+          #     buildType: 'current'
+          #     downloadType: 'specific'
+          #     itemPattern: '**/*'
+          #     downloadPath: '$(Build.ArtifactStagingDirectory)'
           - task: MSCRMToolInstaller@12
             inputs:
               nugetFeed: 'official'
@@ -124,7 +124,7 @@ stages:
           - task: MSCRMImportSolution@12
             inputs:
               crmConnectionString: '$(ConnectionStringQa)'
-              solutionFile: '$(Build.ArtifactStagingDirectory)/$(LatestPatchName)_$(PatchMajor)_$(PatchMinor)_$(PatchBuild)_$(PatchRevision)_managed.zip'
+              solutionFile: '$(LatestPatchName)_$(PatchMajor)_$(PatchMinor)_$(PatchBuild)_$(PatchRevision)_managed.zip'
               publishWorkflows: true
               holdingSolution: false
           - task: MSCRMCreatePatch@12
