@@ -123,7 +123,7 @@ stages:
               Write-Host variables['task.GetLatestPatchTask.PatchExists']
           - task: MSCRMImportSolution@12
             inputs:
-              crmConnectionString: '$(ConnectionStringTest)'
+              crmConnectionString: '$(ConnectionStringQa)'
               solutionFile: '$(Build.ArtifactStagingDirectory)/$(LatestPatchName)_$(PatchMajor)_$(PatchMinor)_$(PatchBuild)_$(PatchRevision)_managed.zip'
               publishWorkflows: true
               holdingSolution: false
