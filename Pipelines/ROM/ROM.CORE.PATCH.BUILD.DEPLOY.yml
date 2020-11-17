@@ -38,11 +38,11 @@ stages:
         includeVersionInSolutionFile: true
         outputPath: '$(Build.ArtifactStagingDirectory)'
         crmConnectionTimeout: '960'
-    - task: PublishPipelineArtifact@1
+    - task: PublishBuildArtifacts@1
       inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)'
-        artifact: 'TC_GlobalCore Managed Patch'
-        publishLocation: 'pipeline'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'TC_GlobalCore Managed Patch'
+        publishLocation: 'Container'
     - powershell: |
         If(!(test-path '$(Build.SourcesDirectory)\solutions'))
         {
@@ -97,10 +97,12 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: DownloadPipelineArtifact@2
+          - task: DownloadBuildArtifacts@0
             inputs:
               buildType: 'current'
-              targetPath: '$(System.ArtifactsDirectory)'
+              downloadType: 'specific'
+              itemPattern: '**/*'
+              downloadPath: '$(Build.ArtifactStagingDirectory)'
           - task: MSCRMToolInstaller@12
             inputs:
               nugetFeed: 'official'
