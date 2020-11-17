@@ -38,11 +38,6 @@ stages:
         includeVersionInSolutionFile: true
         outputPath: '$(Build.ArtifactStagingDirectory)'
         crmConnectionTimeout: '960'
-    - task: MSCRMGetSolutionMissingDependencies@12
-      inputs:
-        crmConnectionString: '$(ConnectionStringDev)'
-        solutionName: '$(LatestPatchName)'
-        warnIfMissing: true
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: '$(Build.ArtifactStagingDirectory)'
@@ -126,17 +121,16 @@ stages:
               Write-Host "Latest Patch Name =  $(LatestPatchName)"
               Write-Host "${{ eq('$(PatchExists)', 'False') }}"
               Write-Host variables['task.GetLatestPatchTask.PatchExists']
-          # - task: MSCRMImportSolution@12
-          #   inputs:
-          #     crmConnectionString: '$(ConnectionStringTest)'
-          #     solutionFile: '$(Build.ArtifactStagingDirectory)/$(LatestPatchName)_managed.zip'
-          #     publishWorkflows: true
-          #     holdingSolution: false
-          # - task: MSCRMCreatePatch@12
-          #   inputs:
-          #     crmConnectionString: '''$(ConnectionStringDev)'''
-          #     uniqueName: '''$(CoreSolutionName)'''
-          #     versionNumber: '1.0.0.5'
+          - task: MSCRMImportSolution@12
+            inputs:
+              crmConnectionString: '$(ConnectionStringTest)'
+              solutionFile: '$(Build.ArtifactStagingDirectory)/$(LatestPatchName)_$(PatchMajor)_$(PatchMinor)_$(PatchBuild)_$(PatchRevision)_managed.zip'
+              publishWorkflows: true
+              holdingSolution: false
+          - task: MSCRMCreatePatch@12
+            inputs:
+              crmConnectionString: '$(ConnectionStringDev)'
+              uniqueName: '$(CoreSolutionName)'
 
 
 
