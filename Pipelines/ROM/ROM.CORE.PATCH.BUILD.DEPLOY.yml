@@ -6,10 +6,10 @@ pr:
 
 stages:
 - stage: BuildAndPublishArtifact
+  pool:
+      vmImage: 'vs2017-win2016'
   jobs:
   - job: BuildAndPublishArtifact
-  pool:
-    vmImage: 'vs2017-win2016'
     steps:
     - task: MSCRMToolInstaller@12
       inputs:
