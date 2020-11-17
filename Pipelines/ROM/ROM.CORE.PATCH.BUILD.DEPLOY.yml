@@ -88,6 +88,7 @@ stages:
         git checkout development
         git add --all
         git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
+        
         echo "Push solution changes to the remote repository"
         git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
 - stage: QA
