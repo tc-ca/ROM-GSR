@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 declare namespace Form.ovs_questionnaire.Main {
+=======
+<<<<<<< HEAD:WebResources/OversightScripts/typings/XRM/Form/ovs_questionnaire/Quick/Information.d.ts
+declare namespace Form.ovs_questionnaire.Quick {
+=======
+declare namespace Form.ovs_questionnaire.Main {
+>>>>>>> 3da507a36dbc174e4e3c9d0346dc626b1b899de8:WebResources/OversightScripts/typings/XRM/Form/ovs_questionnaire/Main/Information.d.ts
+>>>>>>> 3da507a36dbc174e4e3c9d0346dc626b1b899de8
   namespace Information {
     namespace Tabs {
     }

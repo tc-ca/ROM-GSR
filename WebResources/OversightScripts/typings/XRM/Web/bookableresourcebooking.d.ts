@@ -54,7 +54,6 @@ interface BookableResourceBooking_Relationships {
   msdyn_AppointmentBookingId?: Appointment_Result | null;
   msdyn_Crew?: BookableResource_Result | null;
   msdyn_bookableresourcebooking_msdyn_workorderservicetask_Booking?: msdyn_workorderservicetask_Result[] | null;
-  ovs_PlannedFiscalYearId?: tc_TCFiscalYear_Result | null;
 }
 interface BookableResourceBooking extends BookableResourceBooking_Base, BookableResourceBooking_Relationships {
   BookingStatus_bind$bookingstatuses?: string | null;
@@ -70,7 +69,6 @@ interface BookableResourceBooking extends BookableResourceBooking_Base, Bookable
   msdyn_serviceappointment_bind$serviceappointments?: string | null;
   msdyn_timegroupdetailselected_bind$msdyn_timegroupdetails?: string | null;
   msdyn_workorder_bind$msdyn_workorders?: string | null;
-  ovs_PlannedFiscalYearId_bind$tc_tcfiscalyears?: string | null;
   ownerid_bind$systemusers?: string | null;
   ownerid_bind$teams?: string | null;
   stageid_bind$processstages?: string | null;
@@ -133,7 +131,6 @@ interface BookableResourceBooking_Select {
   msdyn_workorder_guid: WebAttribute<BookableResourceBooking_Select, { msdyn_workorder_guid: string | null }, { msdyn_workorder_formatted?: string }>;
   name: WebAttribute<BookableResourceBooking_Select, { name: string | null }, {  }>;
   overriddencreatedon: WebAttribute<BookableResourceBooking_Select, { overriddencreatedon: Date | null }, { overriddencreatedon_formatted?: string }>;
-  ovs_plannedfiscalyearid_guid: WebAttribute<BookableResourceBooking_Select, { ovs_plannedfiscalyearid_guid: string | null }, { ovs_plannedfiscalyearid_formatted?: string }>;
   ownerid_guid: WebAttribute<BookableResourceBooking_Select, { ownerid_guid: string | null }, { ownerid_formatted?: string }>;
   owningbusinessunit_guid: WebAttribute<BookableResourceBooking_Select, { owningbusinessunit_guid: string | null }, { owningbusinessunit_formatted?: string }>;
   owningteam_guid: WebAttribute<BookableResourceBooking_Select, { owningteam_guid: string | null }, { owningteam_formatted?: string }>;
@@ -203,7 +200,6 @@ interface BookableResourceBooking_Filter {
   msdyn_workorder_guid: XQW.Guid;
   name: string;
   overriddencreatedon: Date;
-  ovs_plannedfiscalyearid_guid: XQW.Guid;
   ownerid_guid: XQW.Guid;
   owningbusinessunit_guid: XQW.Guid;
   owningteam_guid: XQW.Guid;
@@ -231,7 +227,6 @@ interface BookableResourceBooking_Expand {
   msdyn_resourcegroup: WebExpand<BookableResourceBooking_Expand, BookableResource_Select, BookableResource_Filter, { msdyn_resourcegroup: BookableResource_Result }>;
   msdyn_serviceappointment: WebExpand<BookableResourceBooking_Expand, ServiceAppointment_Select, ServiceAppointment_Filter, { msdyn_serviceappointment: ServiceAppointment_Result }>;
   msdyn_workorder: WebExpand<BookableResourceBooking_Expand, msdyn_workorder_Select, msdyn_workorder_Filter, { msdyn_workorder: msdyn_workorder_Result }>;
-  ovs_PlannedFiscalYearId: WebExpand<BookableResourceBooking_Expand, tc_TCFiscalYear_Select, tc_TCFiscalYear_Filter, { ovs_PlannedFiscalYearId: tc_TCFiscalYear_Result }>;
   ownerid: WebExpand<BookableResourceBooking_Expand, Team_Select, Team_Filter, { ownerid: Team_Result }>;
   owningteam: WebExpand<BookableResourceBooking_Expand, Team_Select, Team_Filter, { owningteam: Team_Result }>;
 }
@@ -265,7 +260,6 @@ interface BookableResourceBooking_FormattedResult {
   msdyn_worklocation_formatted?: string;
   msdyn_workorder_formatted?: string;
   overriddencreatedon_formatted?: string;
-  ovs_plannedfiscalyearid_formatted?: string;
   ownerid_formatted?: string;
   owningbusinessunit_formatted?: string;
   owningteam_formatted?: string;
@@ -294,7 +288,6 @@ interface BookableResourceBooking_Result extends BookableResourceBooking_Base, B
   msdyn_serviceappointment_guid: string | null;
   msdyn_timegroupdetailselected_guid: string | null;
   msdyn_workorder_guid: string | null;
-  ovs_plannedfiscalyearid_guid: string | null;
   ownerid_guid: string | null;
   owningbusinessunit_guid: string | null;
   owningteam_guid: string | null;
@@ -310,7 +303,6 @@ interface BookableResourceBooking_RelatedOne {
   msdyn_resourcegroup: WebMappingRetrieve<BookableResource_Select,BookableResource_Expand,BookableResource_Filter,BookableResource_Fixed,BookableResource_Result,BookableResource_FormattedResult>;
   msdyn_serviceappointment: WebMappingRetrieve<ServiceAppointment_Select,ServiceAppointment_Expand,ServiceAppointment_Filter,ServiceAppointment_Fixed,ServiceAppointment_Result,ServiceAppointment_FormattedResult>;
   msdyn_workorder: WebMappingRetrieve<msdyn_workorder_Select,msdyn_workorder_Expand,msdyn_workorder_Filter,msdyn_workorder_Fixed,msdyn_workorder_Result,msdyn_workorder_FormattedResult>;
-  ovs_PlannedFiscalYearId: WebMappingRetrieve<tc_TCFiscalYear_Select,tc_TCFiscalYear_Expand,tc_TCFiscalYear_Filter,tc_TCFiscalYear_Fixed,tc_TCFiscalYear_Result,tc_TCFiscalYear_FormattedResult>;
   ownerid: WebMappingRetrieve<Team_Select,Team_Expand,Team_Filter,Team_Fixed,Team_Result,Team_FormattedResult>;
   owningteam: WebMappingRetrieve<Team_Select,Team_Expand,Team_Filter,Team_Fixed,Team_Result,Team_FormattedResult>;
 }

@@ -133,17 +133,26 @@
                     <row>
                       <cell id="{47753d31-3159-84c3-132d-a2d6ae255c52}" showlabel="true" locklevel="0">
                         <labels>
-                          <label description="Fiscal Year" languagecode="1033" />
+                          <label description="Planned Fiscal Year" languagecode="1033" />
                         </labels>
-                        <control disabled="false" id="ovs_fiscalyear" datafieldname="ovs_fiscalyear" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" />
+                        <control disabled="true" id="ovs_fiscalyear" datafieldname="ovs_fiscalyear" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" uniqueid="{a985bc3b-acab-4971-c82b-d096ba383240}">
+                          <parameters>
+                            <AutoResolve>true</AutoResolve>
+                            <DisableMru>false</DisableMru>
+                            <DisableQuickFind>false</DisableQuickFind>
+                            <DisableViewPicker>false</DisableViewPicker>
+                            <DefaultViewId>{C2B848E9-8D49-4972-8E80-06A8B98802A1}</DefaultViewId>
+                            <AllowFilterOff>false</AllowFilterOff>
+                          </parameters>
+                        </control>
                       </cell>
                     </row>
                     <row>
                       <cell id="{d65b3ed2-fa6f-4958-acee-c0430d857aa3}" showlabel="true" locklevel="0">
                         <labels>
-                          <label description="Fiscal Quarter" languagecode="1033" />
+                          <label description="Planned Fiscal Quarter" languagecode="1033" />
                         </labels>
-                        <control disabled="false" id="ovs_fiscalquarter" datafieldname="ovs_fiscalquarter" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" uniqueid="{4ae9703a-1c2a-c21e-7dc7-a53db8cc0ba3}">
+                        <control disabled="true" id="ovs_fiscalquarter" datafieldname="ovs_fiscalquarter" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" uniqueid="{4ae9703a-1c2a-c21e-7dc7-a53db8cc0ba3}">
                           <parameters>
                             <AutoResolve>true</AutoResolve>
                             <DisableMru>true</DisableMru>
@@ -154,6 +163,26 @@
                             <DependentAttributeName>msdyn_workorder.ovs_fiscalyear</DependentAttributeName>
                             <DependentAttributeType>tc_tcfiscalyear</DependentAttributeType>
                             <AllowFilterOff>false</AllowFilterOff>
+                          </parameters>
+                        </control>
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{5ba6db41-ece1-3b07-1117-dad5ba96551e}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="Revised Quarter" languagecode="1033" />
+                        </labels>
+                        <control id="ovs_revisedquarterid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ovs_revisedquarterid" disabled="false" uniqueid="{0c07ddee-79be-53db-d4a9-a6bd7571c249}">
+                          <parameters>
+                            <AutoResolve>true</AutoResolve>
+                            <DisableMru>false</DisableMru>
+                            <DisableQuickFind>false</DisableQuickFind>
+                            <DisableViewPicker>false</DisableViewPicker>
+                            <DefaultViewId>{72CCA668-4E5D-4AB1-AFEF-9B00703A5C41}</DefaultViewId>
+                            <AllowFilterOff>false</AllowFilterOff>
+                            <FilterRelationshipName>tc_TCFiscalQuarter_TCFiscalYear</FilterRelationshipName>
+                            <DependentAttributeName>msdyn_workorder.ovs_fiscalyear</DependentAttributeName>
+                            <DependentAttributeType>tc_tcfiscalyear</DependentAttributeType>
                           </parameters>
                         </control>
                       </cell>
@@ -417,6 +446,29 @@
                     <row />
                     <row />
                     <row />
+                  </rows>
+                </section>
+                <section name="{b8e326ee-5c21-4a18-ba55-e3b56966c249}_section_7" showlabel="true" showbar="false" locklevel="0" id="{c96c4dc8-2820-8a6c-e6cd-930c1347ca5e}" IsUserDefined="0" layout="varwidth" columns="1" labelwidth="115" celllabelalignment="Left" celllabelposition="Left">
+                  <labels>
+                    <label description="CANCELLATION REQUEST" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{a7daaa19-aefd-4e2b-85cf-f0b9c110b23e}" locklevel="0" showlabel="true">
+                        <labels>
+                          <label description="Reason" languagecode="1033" />
+                        </labels>
+                        <control id="ovs_requestcancellation" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="ovs_requestcancellation" disabled="false" uniqueid="{c1bbc857-e744-774d-b259-2c2d0b7c2cd5}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{6b713991-b970-1729-9a45-7c833c46c497}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="Comment" languagecode="1033" />
+                        </labels>
+                        <control id="ovs_requestcancellationcomment" classid="{E0DECE4B-6FC8-4a8f-A065-082708572369}" datafieldname="ovs_requestcancellationcomment" disabled="false" uniqueid="{964ade7b-d04d-5286-4b12-5be4b66536ed}" />
+                      </cell>
+                    </row>
                   </rows>
                 </section>
               </sections>
@@ -2596,6 +2648,7 @@
         <Library name="msdyn_/CFS/WorkOrder/WorkOrderForm.js" libraryUniqueId="{66c75878-8967-ee9a-4dae-5d4142dbb309}" />
         <Library name="ovs_dg.xrmquery.web.js" libraryUniqueId="{01829518-9269-0d02-8850-5361de52e167}" />
         <Library name="ovs_workOrder.js" libraryUniqueId="{01c7e891-31e6-d319-e46b-21b051969471}" />
+        <Library name="ovs_scripts/workOrder.js" libraryUniqueId="{3b76b474-ce80-d9b6-dd94-6922b730c031}" />
       </formLibraries>
       <events>
         <event name="onload" application="false" active="false">
@@ -2603,7 +2656,8 @@
             <Handler passExecutionContext="true" parameters="" enabled="true" handlerUniqueId="{02393ea8-ee1e-d6c2-6507-70d9c3731041}" libraryName="msdyn_/CFS/WorkOrder/WorkOrderForm.js" functionName="msdyn.workOrderForm.onLoad" />
             <Handler passExecutionContext="true" parameters="" enabled="true" handlerUniqueId="{d007ce3e-717d-706b-83d2-a41e4b6aa50a}" libraryName="msdyn_/WorkOrder/WorkOrder.Library.js" functionName="WorkOrders.Library.Load" />
             <Handler passExecutionContext="true" parameters="" enabled="true" handlerUniqueId="{8a748511-45ae-9991-76ad-253800974873}" libraryName="msdyn_/Utils/FieldServiceTrial.js" functionName="FieldServiceTrial.Library.Load" />
-            <Handler passExecutionContext="true" parameters="" enabled="true" handlerUniqueId="{60dbadb2-2540-5be0-18b6-6b4cce35687b}" libraryName="ovs_workOrder.js" functionName="ROM.onLoad" />
+            <Handler passExecutionContext="true" parameters="" enabled="false" handlerUniqueId="{60dbadb2-2540-5be0-18b6-6b4cce35687b}" libraryName="ovs_workOrder.js" functionName="ROM.onLoad" />
+            <Handler functionName="ROM.WorkOrder.onLoad" libraryName="ovs_scripts/workOrder.js" handlerUniqueId="{5b1eb5e2-332b-2896-ac43-4d44dd518859}" enabled="true" parameters="" passExecutionContext="true" />
           </Handlers>
         </event>
         <event name="onchange" application="false" active="false" attribute="msdyn_iotalert">

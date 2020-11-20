@@ -50,7 +50,7 @@ steps:
 - task: PowerPlatformImportSolution@0
   inputs:
     authenticationType: 'PowerPlatformSPN'
-    PowerPlatformSPN: 'ROM JIT'
+    PowerPlatformSPN: 'ROM QA'
     SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Base.zip'
     AsyncOperation: true
     MaxAsyncWaitTime: '240'
@@ -60,12 +60,12 @@ steps:
 - task: PowerPlatformPublishCustomizations@0
   inputs:
     authenticationType: 'PowerPlatformSPN'
-    PowerPlatformSPN: 'ROM JIT'
+    PowerPlatformSPN: 'ROM QA'
 
 # - task: PowerPlatformExportSolution@0
 #   inputs:
 #     authenticationType: 'PowerPlatformSPN'
-#     PowerPlatformSPN: 'ROM JIT'
+#     PowerPlatformSPN: 'ROM QA'
 #     SolutionName: '$(TCSolutionName)_Base'
 #     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(TCSolutionName)_Base_managed.zip'
 #     Managed: true
@@ -73,7 +73,7 @@ steps:
 - task: PowerPlatformExportSolution@0
   inputs:
     authenticationType: 'PowerPlatformSPN'
-    PowerPlatformSPN: 'ROM JIT'
+    PowerPlatformSPN: 'ROM QA'
     SolutionName: '$(SolutionName)_Base'
     SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_Base_managed.zip'
     Managed: true
