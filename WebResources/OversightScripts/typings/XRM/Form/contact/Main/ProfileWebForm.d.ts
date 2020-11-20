@@ -3,8 +3,6 @@ declare namespace Form.contact.Main {
     namespace Tabs {
     }
     interface Attributes extends Xrm.AttributeCollectionBase {
-      get(name: "adx_confirmremovepassword"): Xrm.OptionSetAttribute<boolean> | null;
-      get(name: "adx_identity_newpassword"): Xrm.Attribute<string> | null;
       get(name: "adx_organizationname"): Xrm.Attribute<string>;
       get(name: "adx_preferredlanguageid"): Xrm.LookupAttribute<"adx_portallanguage">;
       get(name: "adx_publicprofilecopy"): Xrm.Attribute<string>;
@@ -37,8 +35,6 @@ declare namespace Form.contact.Main {
       get(name: "emailaddress1"): Xrm.StringControl;
       get(name: "firstname"): Xrm.StringControl;
       get(name: "footer_statecode"): Xrm.OptionSetControl<contact_statecode>;
-      get(name: "header_process_adx_confirmremovepassword"): Xrm.OptionSetControl<boolean> | null;
-      get(name: "header_process_adx_identity_newpassword"): Xrm.StringControl | null;
       get(name: "header_process_birthdate"): Xrm.DateControl | null;
       get(name: "header_process_emailaddress1"): Xrm.StringControl | null;
       get(name: "header_process_familystatuscode"): Xrm.OptionSetControl<contact_familystatuscode> | null;
@@ -71,8 +67,6 @@ declare namespace Form.contact.Main {
     }
   }
   interface ProfileWebForm extends Xrm.PageBase<ProfileWebForm.Attributes,ProfileWebForm.Tabs,ProfileWebForm.Controls> {
-    getAttribute(attributeName: "adx_confirmremovepassword"): Xrm.OptionSetAttribute<boolean> | null;
-    getAttribute(attributeName: "adx_identity_newpassword"): Xrm.Attribute<string> | null;
     getAttribute(attributeName: "adx_organizationname"): Xrm.Attribute<string>;
     getAttribute(attributeName: "adx_preferredlanguageid"): Xrm.LookupAttribute<"adx_portallanguage">;
     getAttribute(attributeName: "adx_publicprofilecopy"): Xrm.Attribute<string>;
@@ -100,8 +94,6 @@ declare namespace Form.contact.Main {
     getControl(controlName: "emailaddress1"): Xrm.StringControl;
     getControl(controlName: "firstname"): Xrm.StringControl;
     getControl(controlName: "footer_statecode"): Xrm.OptionSetControl<contact_statecode>;
-    getControl(controlName: "header_process_adx_confirmremovepassword"): Xrm.OptionSetControl<boolean> | null;
-    getControl(controlName: "header_process_adx_identity_newpassword"): Xrm.StringControl | null;
     getControl(controlName: "header_process_birthdate"): Xrm.DateControl | null;
     getControl(controlName: "header_process_emailaddress1"): Xrm.StringControl | null;
     getControl(controlName: "header_process_familystatuscode"): Xrm.OptionSetControl<contact_familystatuscode> | null;

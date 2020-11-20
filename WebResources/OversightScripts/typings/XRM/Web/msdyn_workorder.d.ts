@@ -52,6 +52,7 @@ interface msdyn_workorder_Base extends WebEntity {
   overriddencreatedon?: Date | null;
   ovs_iisid?: string | null;
   ovs_mocid?: string | null;
+  ovs_requestcancellation?: ovs_requestcancellation | null;
   ovs_rolluptestdeletemeafter?: Date | null;
   ovs_rolluptestdeletemeafter_date?: Date | null;
   ovs_rolluptestdeletemeafter_state?: number | null;
@@ -69,6 +70,8 @@ interface msdyn_workorder_Relationships {
   msdyn_SupportContact?: BookableResource_Result | null;
   msdyn_msdyn_workorder_bookableresourcebooking_WorkOrder?: BookableResourceBooking_Result[] | null;
   msdyn_msdyn_workorder_msdyn_workorder_ParentWorkOrder?: msdyn_workorder_Result[] | null;
+  msdyn_msdyn_workorder_msdyn_workorderincident_WorkOrder?: msdyn_workorderincident_Result[] | null;
+  msdyn_msdyn_workorder_msdyn_workorderservicetask_WorkOrder?: msdyn_workorderservicetask_Result[] | null;
   msdyn_parentworkorder_msdyn_workorder?: msdyn_workorder_Result | null;
   msdyn_workorder_Appointments?: Appointment_Result[] | null;
   msdyn_workorder_ServiceAppointments?: ServiceAppointment_Result[] | null;
@@ -79,6 +82,7 @@ interface msdyn_workorder_Relationships {
   ovs_OversightType?: ovs_OversightType_Result | null;
   ovs_PrimaryInspector?: BookableResource_Result | null;
   ovs_Rational?: ovs_TYRational_Result | null;
+  ovs_RevisedQuarterId?: tc_TCFiscalQuarter_Result | null;
   ovs_SecondaryInspector?: BookableResource_Result | null;
   ovs_SiteofViolation?: Account_Result | null;
   ovs_TYRational?: ovs_TYRational_Result | null;
@@ -114,6 +118,7 @@ interface msdyn_workorder extends msdyn_workorder_Base, msdyn_workorder_Relation
   ovs_OversightType_bind$ovs_oversighttypes?: string | null;
   ovs_PrimaryInspector_bind$bookableresources?: string | null;
   ovs_Rational_bind$ovs_tyrationals?: string | null;
+  ovs_RevisedQuarterId_bind$tc_tcfiscalquarters?: string | null;
   ovs_SecondaryInspector_bind$bookableresources?: string | null;
   ovs_SiteofViolation_bind$accounts?: string | null;
   ovs_TYRational_bind$ovs_tyrationals?: string | null;
@@ -214,6 +219,8 @@ interface msdyn_workorder_Select {
   ovs_oversighttype_guid: WebAttribute<msdyn_workorder_Select, { ovs_oversighttype_guid: string | null }, { ovs_oversighttype_formatted?: string }>;
   ovs_primaryinspector_guid: WebAttribute<msdyn_workorder_Select, { ovs_primaryinspector_guid: string | null }, { ovs_primaryinspector_formatted?: string }>;
   ovs_rational_guid: WebAttribute<msdyn_workorder_Select, { ovs_rational_guid: string | null }, { ovs_rational_formatted?: string }>;
+  ovs_requestcancellation: WebAttribute<msdyn_workorder_Select, { ovs_requestcancellation: ovs_requestcancellation | null }, { ovs_requestcancellation_formatted?: string }>;
+  ovs_revisedquarterid_guid: WebAttribute<msdyn_workorder_Select, { ovs_revisedquarterid_guid: string | null }, { ovs_revisedquarterid_formatted?: string }>;
   ovs_rolluptestdeletemeafter: WebAttribute<msdyn_workorder_Select, { ovs_rolluptestdeletemeafter: Date | null }, { ovs_rolluptestdeletemeafter_formatted?: string }>;
   ovs_rolluptestdeletemeafter_date: WebAttribute<msdyn_workorder_Select, { ovs_rolluptestdeletemeafter_date: Date | null }, { ovs_rolluptestdeletemeafter_date_formatted?: string }>;
   ovs_rolluptestdeletemeafter_state: WebAttribute<msdyn_workorder_Select, { ovs_rolluptestdeletemeafter_state: number | null }, {  }>;
@@ -322,6 +329,8 @@ interface msdyn_workorder_Filter {
   ovs_oversighttype_guid: XQW.Guid;
   ovs_primaryinspector_guid: XQW.Guid;
   ovs_rational_guid: XQW.Guid;
+  ovs_requestcancellation: ovs_requestcancellation;
+  ovs_revisedquarterid_guid: XQW.Guid;
   ovs_rolluptestdeletemeafter: Date;
   ovs_rolluptestdeletemeafter_date: Date;
   ovs_rolluptestdeletemeafter_state: number;
@@ -347,6 +356,8 @@ interface msdyn_workorder_Expand {
   msdyn_billingaccount: WebExpand<msdyn_workorder_Expand, Account_Select, Account_Filter, { msdyn_billingaccount: Account_Result }>;
   msdyn_msdyn_workorder_bookableresourcebooking_WorkOrder: WebExpand<msdyn_workorder_Expand, BookableResourceBooking_Select, BookableResourceBooking_Filter, { msdyn_msdyn_workorder_bookableresourcebooking_WorkOrder: BookableResourceBooking_Result[] }>;
   msdyn_msdyn_workorder_msdyn_workorder_ParentWorkOrder: WebExpand<msdyn_workorder_Expand, msdyn_workorder_Select, msdyn_workorder_Filter, { msdyn_msdyn_workorder_msdyn_workorder_ParentWorkOrder: msdyn_workorder_Result[] }>;
+  msdyn_msdyn_workorder_msdyn_workorderincident_WorkOrder: WebExpand<msdyn_workorder_Expand, msdyn_workorderincident_Select, msdyn_workorderincident_Filter, { msdyn_msdyn_workorder_msdyn_workorderincident_WorkOrder: msdyn_workorderincident_Result[] }>;
+  msdyn_msdyn_workorder_msdyn_workorderservicetask_WorkOrder: WebExpand<msdyn_workorder_Expand, msdyn_workorderservicetask_Select, msdyn_workorderservicetask_Filter, { msdyn_msdyn_workorder_msdyn_workorderservicetask_WorkOrder: msdyn_workorderservicetask_Result[] }>;
   msdyn_parentworkorder_msdyn_workorder: WebExpand<msdyn_workorder_Expand, msdyn_workorder_Select, msdyn_workorder_Filter, { msdyn_parentworkorder_msdyn_workorder: msdyn_workorder_Result }>;
   msdyn_preferredresource: WebExpand<msdyn_workorder_Expand, BookableResource_Select, BookableResource_Filter, { msdyn_preferredresource: BookableResource_Result }>;
   msdyn_reportedbycontact: WebExpand<msdyn_workorder_Expand, Contact_Select, Contact_Filter, { msdyn_reportedbycontact: Contact_Result }>;
@@ -361,6 +372,7 @@ interface msdyn_workorder_Expand {
   ovs_OversightType: WebExpand<msdyn_workorder_Expand, ovs_OversightType_Select, ovs_OversightType_Filter, { ovs_OversightType: ovs_OversightType_Result }>;
   ovs_PrimaryInspector: WebExpand<msdyn_workorder_Expand, BookableResource_Select, BookableResource_Filter, { ovs_PrimaryInspector: BookableResource_Result }>;
   ovs_Rational: WebExpand<msdyn_workorder_Expand, ovs_TYRational_Select, ovs_TYRational_Filter, { ovs_Rational: ovs_TYRational_Result }>;
+  ovs_RevisedQuarterId: WebExpand<msdyn_workorder_Expand, tc_TCFiscalQuarter_Select, tc_TCFiscalQuarter_Filter, { ovs_RevisedQuarterId: tc_TCFiscalQuarter_Result }>;
   ovs_SecondaryInspector: WebExpand<msdyn_workorder_Expand, BookableResource_Select, BookableResource_Filter, { ovs_SecondaryInspector: BookableResource_Result }>;
   ovs_SiteofViolation: WebExpand<msdyn_workorder_Expand, Account_Select, Account_Filter, { ovs_SiteofViolation: Account_Result }>;
   ovs_TYRational: WebExpand<msdyn_workorder_Expand, ovs_TYRational_Select, ovs_TYRational_Filter, { ovs_TYRational: ovs_TYRational_Result }>;
@@ -424,6 +436,8 @@ interface msdyn_workorder_FormattedResult {
   ovs_oversighttype_formatted?: string;
   ovs_primaryinspector_formatted?: string;
   ovs_rational_formatted?: string;
+  ovs_requestcancellation_formatted?: string;
+  ovs_revisedquarterid_formatted?: string;
   ovs_rolluptestdeletemeafter_date_formatted?: string;
   ovs_rolluptestdeletemeafter_formatted?: string;
   ovs_secondaryinspector_formatted?: string;
@@ -473,6 +487,7 @@ interface msdyn_workorder_Result extends msdyn_workorder_Base, msdyn_workorder_R
   ovs_oversighttype_guid: string | null;
   ovs_primaryinspector_guid: string | null;
   ovs_rational_guid: string | null;
+  ovs_revisedquarterid_guid: string | null;
   ovs_secondaryinspector_guid: string | null;
   ovs_siteofviolation_guid: string | null;
   ovs_tyrational_guid: string | null;
@@ -495,6 +510,7 @@ interface msdyn_workorder_RelatedOne {
   ovs_OversightType: WebMappingRetrieve<ovs_OversightType_Select,ovs_OversightType_Expand,ovs_OversightType_Filter,ovs_OversightType_Fixed,ovs_OversightType_Result,ovs_OversightType_FormattedResult>;
   ovs_PrimaryInspector: WebMappingRetrieve<BookableResource_Select,BookableResource_Expand,BookableResource_Filter,BookableResource_Fixed,BookableResource_Result,BookableResource_FormattedResult>;
   ovs_Rational: WebMappingRetrieve<ovs_TYRational_Select,ovs_TYRational_Expand,ovs_TYRational_Filter,ovs_TYRational_Fixed,ovs_TYRational_Result,ovs_TYRational_FormattedResult>;
+  ovs_RevisedQuarterId: WebMappingRetrieve<tc_TCFiscalQuarter_Select,tc_TCFiscalQuarter_Expand,tc_TCFiscalQuarter_Filter,tc_TCFiscalQuarter_Fixed,tc_TCFiscalQuarter_Result,tc_TCFiscalQuarter_FormattedResult>;
   ovs_SecondaryInspector: WebMappingRetrieve<BookableResource_Select,BookableResource_Expand,BookableResource_Filter,BookableResource_Fixed,BookableResource_Result,BookableResource_FormattedResult>;
   ovs_SiteofViolation: WebMappingRetrieve<Account_Select,Account_Expand,Account_Filter,Account_Fixed,Account_Result,Account_FormattedResult>;
   ovs_TYRational: WebMappingRetrieve<ovs_TYRational_Select,ovs_TYRational_Expand,ovs_TYRational_Filter,ovs_TYRational_Fixed,ovs_TYRational_Result,ovs_TYRational_FormattedResult>;
@@ -504,6 +520,8 @@ interface msdyn_workorder_RelatedOne {
 interface msdyn_workorder_RelatedMany {
   msdyn_msdyn_workorder_bookableresourcebooking_WorkOrder: WebMappingRetrieve<BookableResourceBooking_Select,BookableResourceBooking_Expand,BookableResourceBooking_Filter,BookableResourceBooking_Fixed,BookableResourceBooking_Result,BookableResourceBooking_FormattedResult>;
   msdyn_msdyn_workorder_msdyn_workorder_ParentWorkOrder: WebMappingRetrieve<msdyn_workorder_Select,msdyn_workorder_Expand,msdyn_workorder_Filter,msdyn_workorder_Fixed,msdyn_workorder_Result,msdyn_workorder_FormattedResult>;
+  msdyn_msdyn_workorder_msdyn_workorderincident_WorkOrder: WebMappingRetrieve<msdyn_workorderincident_Select,msdyn_workorderincident_Expand,msdyn_workorderincident_Filter,msdyn_workorderincident_Fixed,msdyn_workorderincident_Result,msdyn_workorderincident_FormattedResult>;
+  msdyn_msdyn_workorder_msdyn_workorderservicetask_WorkOrder: WebMappingRetrieve<msdyn_workorderservicetask_Select,msdyn_workorderservicetask_Expand,msdyn_workorderservicetask_Filter,msdyn_workorderservicetask_Fixed,msdyn_workorderservicetask_Result,msdyn_workorderservicetask_FormattedResult>;
   msdyn_workorder_Appointments: WebMappingRetrieve<Appointment_Select,Appointment_Expand,Appointment_Filter,Appointment_Fixed,Appointment_Result,Appointment_FormattedResult>;
   msdyn_workorder_ServiceAppointments: WebMappingRetrieve<ServiceAppointment_Select,ServiceAppointment_Expand,ServiceAppointment_Filter,ServiceAppointment_Fixed,ServiceAppointment_Result,ServiceAppointment_FormattedResult>;
   msdyn_workorder_connections1: WebMappingRetrieve<Connection_Select,Connection_Expand,Connection_Filter,Connection_Fixed,Connection_Result,Connection_FormattedResult>;

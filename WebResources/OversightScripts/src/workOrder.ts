@@ -13,6 +13,14 @@ namespace ROM.WorkOrder {
       default:
         break;
     }
+
+    if (!userHasRole("ROM Manager") && !userHasRole("ROM Planner")){
+      form.getControl("ovs_revisedquarterid").setDisabled(true);
+    }
+    else
+    {
+      form.getControl("ovs_revisedquarterid").setDisabled(false);
+    }
   }
 
   export function fiscalYearOnchange(eContext: Xrm.ExecutionContext<any, any>): void {
@@ -48,5 +56,17 @@ namespace ROM.WorkOrder {
   function removeSelectedFiscalQuarter(eContext: Xrm.ExecutionContext<any, any>): void {
     const form = <Form.msdyn_workorder.Main.OversightActivity>eContext.getFormContext();
     form.getAttribute('ovs_fiscalquarter').setValue(null);
+  }
+
+  function userHasRole(roleName): boolean {
+    var currentUserRoles = Xrm.Utility.getGlobalContext().userSettings.roles.get();
+            for (var i = 0; i < currentUserRoles.length; i++) {
+                var userRoleName = currentUserRoles[i].name;
+                if (userRoleName == roleName)
+                {
+                    return true;
+                }
+            }
+            return false;
   }
 }

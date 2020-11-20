@@ -63,6 +63,8 @@ interface Appointment_Relationships {
   regardingobjectid_bookableresourcebooking_appointment?: BookableResourceBooking_Result | null;
   regardingobjectid_contact_appointment?: Contact_Result | null;
   regardingobjectid_msdyn_workorder_appointment?: msdyn_workorder_Result | null;
+  regardingobjectid_msdyn_workorderincident_appointment?: msdyn_workorderincident_Result | null;
+  regardingobjectid_msdyn_workorderservicetask_appointment?: msdyn_workorderservicetask_Result | null;
 }
 interface Appointment extends Appointment_Base, Appointment_Relationships {
   ownerid_appointment_bind$systemusers?: string | null;
@@ -321,6 +323,8 @@ interface Appointment_Expand {
   regardingobjectid_bookableresourcebooking_appointment: WebExpand<Appointment_Expand, BookableResourceBooking_Select, BookableResourceBooking_Filter, { regardingobjectid_bookableresourcebooking_appointment: BookableResourceBooking_Result }>;
   regardingobjectid_contact_appointment: WebExpand<Appointment_Expand, Contact_Select, Contact_Filter, { regardingobjectid_contact_appointment: Contact_Result }>;
   regardingobjectid_msdyn_workorder_appointment: WebExpand<Appointment_Expand, msdyn_workorder_Select, msdyn_workorder_Filter, { regardingobjectid_msdyn_workorder_appointment: msdyn_workorder_Result }>;
+  regardingobjectid_msdyn_workorderincident_appointment: WebExpand<Appointment_Expand, msdyn_workorderincident_Select, msdyn_workorderincident_Filter, { regardingobjectid_msdyn_workorderincident_appointment: msdyn_workorderincident_Result }>;
+  regardingobjectid_msdyn_workorderservicetask_appointment: WebExpand<Appointment_Expand, msdyn_workorderservicetask_Select, msdyn_workorderservicetask_Filter, { regardingobjectid_msdyn_workorderservicetask_appointment: msdyn_workorderservicetask_Result }>;
 }
 interface Appointment_FormattedResult {
   actualend_formatted?: string;
@@ -382,6 +386,8 @@ interface Appointment_RelatedOne {
   regardingobjectid_bookableresourcebooking_appointment: WebMappingRetrieve<BookableResourceBooking_Select,BookableResourceBooking_Expand,BookableResourceBooking_Filter,BookableResourceBooking_Fixed,BookableResourceBooking_Result,BookableResourceBooking_FormattedResult>;
   regardingobjectid_contact_appointment: WebMappingRetrieve<Contact_Select,Contact_Expand,Contact_Filter,Contact_Fixed,Contact_Result,Contact_FormattedResult>;
   regardingobjectid_msdyn_workorder_appointment: WebMappingRetrieve<msdyn_workorder_Select,msdyn_workorder_Expand,msdyn_workorder_Filter,msdyn_workorder_Fixed,msdyn_workorder_Result,msdyn_workorder_FormattedResult>;
+  regardingobjectid_msdyn_workorderincident_appointment: WebMappingRetrieve<msdyn_workorderincident_Select,msdyn_workorderincident_Expand,msdyn_workorderincident_Filter,msdyn_workorderincident_Fixed,msdyn_workorderincident_Result,msdyn_workorderincident_FormattedResult>;
+  regardingobjectid_msdyn_workorderservicetask_appointment: WebMappingRetrieve<msdyn_workorderservicetask_Select,msdyn_workorderservicetask_Expand,msdyn_workorderservicetask_Filter,msdyn_workorderservicetask_Fixed,msdyn_workorderservicetask_Result,msdyn_workorderservicetask_FormattedResult>;
 }
 interface Appointment_RelatedMany {
   appointment_PostFollows: WebMappingRetrieve<PostFollow_Select,PostFollow_Expand,PostFollow_Filter,PostFollow_Fixed,PostFollow_Result,PostFollow_FormattedResult>;

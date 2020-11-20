@@ -1,4 +1,4 @@
-declare namespace Form.ovs_survey.Quick {
+declare namespace Form.ovs_questionnaire.Quick {
   namespace Information {
     namespace Tabs {
     }

@@ -131,6 +131,8 @@ declare namespace Form.msdyn_workorder.Main {
       get(name: "ovs_oversighttype"): Xrm.LookupAttribute<"ovs_oversighttype">;
       get(name: "ovs_primaryinspector"): Xrm.LookupAttribute<"bookableresource">;
       get(name: "ovs_rational"): Xrm.LookupAttribute<"ovs_tyrational">;
+      get(name: "ovs_requestcancellation"): Xrm.OptionSetAttribute<ovs_requestcancellation>;
+      get(name: "ovs_revisedquarterid"): Xrm.LookupAttribute<"tc_tcfiscalquarter">;
       get(name: "ovs_secondaryinspector"): Xrm.LookupAttribute<"bookableresource">;
       get(name: "ovs_siteofviolation"): Xrm.LookupAttribute<"account">;
       get(name: "ownerid"): Xrm.LookupAttribute<"systemuser" | "team">;
@@ -232,6 +234,8 @@ declare namespace Form.msdyn_workorder.Main {
       get(name: "ovs_oversighttype"): Xrm.LookupControl<"ovs_oversighttype">;
       get(name: "ovs_primaryinspector"): Xrm.LookupControl<"bookableresource">;
       get(name: "ovs_rational"): Xrm.LookupControl<"ovs_tyrational">;
+      get(name: "ovs_requestcancellation"): Xrm.OptionSetControl<ovs_requestcancellation>;
+      get(name: "ovs_revisedquarterid"): Xrm.LookupControl<"tc_tcfiscalquarter">;
       get(name: "ovs_secondaryinspector"): Xrm.LookupControl<"bookableresource">;
       get(name: "ovs_siteofviolation"): Xrm.LookupControl<"account">;
       get(name: "ownerid"): Xrm.LookupControl<"systemuser" | "team">;
@@ -319,6 +323,8 @@ declare namespace Form.msdyn_workorder.Main {
     getAttribute(attributeName: "ovs_oversighttype"): Xrm.LookupAttribute<"ovs_oversighttype">;
     getAttribute(attributeName: "ovs_primaryinspector"): Xrm.LookupAttribute<"bookableresource">;
     getAttribute(attributeName: "ovs_rational"): Xrm.LookupAttribute<"ovs_tyrational">;
+    getAttribute(attributeName: "ovs_requestcancellation"): Xrm.OptionSetAttribute<ovs_requestcancellation>;
+    getAttribute(attributeName: "ovs_revisedquarterid"): Xrm.LookupAttribute<"tc_tcfiscalquarter">;
     getAttribute(attributeName: "ovs_secondaryinspector"): Xrm.LookupAttribute<"bookableresource">;
     getAttribute(attributeName: "ovs_siteofviolation"): Xrm.LookupAttribute<"account">;
     getAttribute(attributeName: "ownerid"): Xrm.LookupAttribute<"systemuser" | "team">;
@@ -415,6 +421,8 @@ declare namespace Form.msdyn_workorder.Main {
     getControl(controlName: "ovs_oversighttype"): Xrm.LookupControl<"ovs_oversighttype">;
     getControl(controlName: "ovs_primaryinspector"): Xrm.LookupControl<"bookableresource">;
     getControl(controlName: "ovs_rational"): Xrm.LookupControl<"ovs_tyrational">;
+    getControl(controlName: "ovs_requestcancellation"): Xrm.OptionSetControl<ovs_requestcancellation>;
+    getControl(controlName: "ovs_revisedquarterid"): Xrm.LookupControl<"tc_tcfiscalquarter">;
     getControl(controlName: "ovs_secondaryinspector"): Xrm.LookupControl<"bookableresource">;
     getControl(controlName: "ovs_siteofviolation"): Xrm.LookupControl<"account">;
     getControl(controlName: "ownerid"): Xrm.LookupControl<"systemuser" | "team">;

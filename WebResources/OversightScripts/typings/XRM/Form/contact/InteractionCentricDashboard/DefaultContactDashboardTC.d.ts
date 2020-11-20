@@ -10,8 +10,6 @@ declare namespace Form.contact.InteractionCentricDashboard {
       }
     }
     interface Attributes extends Xrm.AttributeCollectionBase {
-      get(name: "adx_confirmremovepassword"): Xrm.OptionSetAttribute<boolean> | null;
-      get(name: "adx_identity_newpassword"): Xrm.Attribute<string> | null;
       get(name: "birthdate"): Xrm.DateAttribute | null;
       get(name: "emailaddress1"): Xrm.Attribute<string> | null;
       get(name: "familystatuscode"): Xrm.OptionSetAttribute<contact_familystatuscode> | null;
@@ -33,8 +31,6 @@ declare namespace Form.contact.InteractionCentricDashboard {
     interface Controls extends Xrm.ControlCollectionBase {
       get(name: "Component60a1ddc"): Xrm.SubGridControl<"contact">;
       get(name: "Component{9391e347-dd75-2dad-5e0a-b5de1076c718}"): Xrm.BaseControl;
-      get(name: "header_process_adx_confirmremovepassword"): Xrm.OptionSetControl<boolean> | null;
-      get(name: "header_process_adx_identity_newpassword"): Xrm.StringControl | null;
       get(name: "header_process_birthdate"): Xrm.DateControl | null;
       get(name: "header_process_emailaddress1"): Xrm.StringControl | null;
       get(name: "header_process_familystatuscode"): Xrm.OptionSetControl<contact_familystatuscode> | null;
@@ -62,8 +58,6 @@ declare namespace Form.contact.InteractionCentricDashboard {
     }
   }
   interface DefaultContactDashboardTC extends Xrm.PageBase<DefaultContactDashboardTC.Attributes,DefaultContactDashboardTC.Tabs,DefaultContactDashboardTC.Controls> {
-    getAttribute(attributeName: "adx_confirmremovepassword"): Xrm.OptionSetAttribute<boolean> | null;
-    getAttribute(attributeName: "adx_identity_newpassword"): Xrm.Attribute<string> | null;
     getAttribute(attributeName: "birthdate"): Xrm.DateAttribute | null;
     getAttribute(attributeName: "emailaddress1"): Xrm.Attribute<string> | null;
     getAttribute(attributeName: "familystatuscode"): Xrm.OptionSetAttribute<contact_familystatuscode> | null;
@@ -80,8 +74,6 @@ declare namespace Form.contact.InteractionCentricDashboard {
     getAttribute(attributeName: string): undefined;
     getControl(controlName: "Component60a1ddc"): Xrm.SubGridControl<"contact">;
     getControl(controlName: "Component{9391e347-dd75-2dad-5e0a-b5de1076c718}"): Xrm.BaseControl;
-    getControl(controlName: "header_process_adx_confirmremovepassword"): Xrm.OptionSetControl<boolean> | null;
-    getControl(controlName: "header_process_adx_identity_newpassword"): Xrm.StringControl | null;
     getControl(controlName: "header_process_birthdate"): Xrm.DateControl | null;
     getControl(controlName: "header_process_emailaddress1"): Xrm.StringControl | null;
     getControl(controlName: "header_process_familystatuscode"): Xrm.OptionSetControl<contact_familystatuscode> | null;

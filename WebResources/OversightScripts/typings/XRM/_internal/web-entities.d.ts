@@ -101,6 +101,29 @@ interface Contact_Create extends Contact {
 }
 interface Contact_Update extends Contact {
 }
+interface msdyn_incidenttypeservicetask_Base extends WebEntity {
+}
+interface msdyn_incidenttypeservicetask_Fixed extends WebEntity_Fixed {
+  msdyn_incidenttypeservicetaskid: string;
+}
+interface msdyn_incidenttypeservicetask extends msdyn_incidenttypeservicetask_Base, msdyn_incidenttypeservicetask_Relationships {
+}
+interface msdyn_incidenttypeservicetask_Relationships {
+}
+interface msdyn_incidenttypeservicetask_Result extends msdyn_incidenttypeservicetask_Base, msdyn_incidenttypeservicetask_Relationships {
+}
+interface msdyn_incidenttypeservicetask_FormattedResult {
+}
+interface msdyn_incidenttypeservicetask_Select {
+}
+interface msdyn_incidenttypeservicetask_Expand {
+}
+interface msdyn_incidenttypeservicetask_Filter {
+}
+interface msdyn_incidenttypeservicetask_Create extends msdyn_incidenttypeservicetask {
+}
+interface msdyn_incidenttypeservicetask_Update extends msdyn_incidenttypeservicetask {
+}
 interface msdyn_servicetasktype_Base extends WebEntity {
 }
 interface msdyn_servicetasktype_Fixed extends WebEntity_Fixed {
@@ -146,6 +169,29 @@ interface msdyn_workorder_Filter {
 interface msdyn_workorder_Create extends msdyn_workorder {
 }
 interface msdyn_workorder_Update extends msdyn_workorder {
+}
+interface msdyn_workorderservicetask_Base extends WebEntity {
+}
+interface msdyn_workorderservicetask_Fixed extends WebEntity_Fixed {
+  msdyn_workorderservicetaskid: string;
+}
+interface msdyn_workorderservicetask extends msdyn_workorderservicetask_Base, msdyn_workorderservicetask_Relationships {
+}
+interface msdyn_workorderservicetask_Relationships {
+}
+interface msdyn_workorderservicetask_Result extends msdyn_workorderservicetask_Base, msdyn_workorderservicetask_Relationships {
+}
+interface msdyn_workorderservicetask_FormattedResult {
+}
+interface msdyn_workorderservicetask_Select {
+}
+interface msdyn_workorderservicetask_Expand {
+}
+interface msdyn_workorderservicetask_Filter {
+}
+interface msdyn_workorderservicetask_Create extends msdyn_workorderservicetask {
+}
+interface msdyn_workorderservicetask_Update extends msdyn_workorderservicetask {
 }
 interface ovs_operation_Base extends WebEntity {
 }
@@ -193,6 +239,29 @@ interface ovs_OversightType_Create extends ovs_OversightType {
 }
 interface ovs_OversightType_Update extends ovs_OversightType {
 }
+interface ovs_Questionnaire_Base extends WebEntity {
+}
+interface ovs_Questionnaire_Fixed extends WebEntity_Fixed {
+  ovs_questionnaireid: string;
+}
+interface ovs_Questionnaire extends ovs_Questionnaire_Base, ovs_Questionnaire_Relationships {
+}
+interface ovs_Questionnaire_Relationships {
+}
+interface ovs_Questionnaire_Result extends ovs_Questionnaire_Base, ovs_Questionnaire_Relationships {
+}
+interface ovs_Questionnaire_FormattedResult {
+}
+interface ovs_Questionnaire_Select {
+}
+interface ovs_Questionnaire_Expand {
+}
+interface ovs_Questionnaire_Filter {
+}
+interface ovs_Questionnaire_Create extends ovs_Questionnaire {
+}
+interface ovs_Questionnaire_Update extends ovs_Questionnaire {
+}
 interface ovs_SiteType_Base extends WebEntity {
 }
 interface ovs_SiteType_Fixed extends WebEntity_Fixed {
@@ -215,29 +284,6 @@ interface ovs_SiteType_Filter {
 interface ovs_SiteType_Create extends ovs_SiteType {
 }
 interface ovs_SiteType_Update extends ovs_SiteType {
-}
-interface ovs_Survey_Base extends WebEntity {
-}
-interface ovs_Survey_Fixed extends WebEntity_Fixed {
-  ovs_surveyid: string;
-}
-interface ovs_Survey extends ovs_Survey_Base, ovs_Survey_Relationships {
-}
-interface ovs_Survey_Relationships {
-}
-interface ovs_Survey_Result extends ovs_Survey_Base, ovs_Survey_Relationships {
-}
-interface ovs_Survey_FormattedResult {
-}
-interface ovs_Survey_Select {
-}
-interface ovs_Survey_Expand {
-}
-interface ovs_Survey_Filter {
-}
-interface ovs_Survey_Create extends ovs_Survey {
-}
-interface ovs_Survey_Update extends ovs_Survey {
 }
 interface ovs_TYRational_Base extends WebEntity {
 }
@@ -675,6 +721,29 @@ interface BulkOperationLog_Filter {
 interface BulkOperationLog_Create extends BulkOperationLog {
 }
 interface BulkOperationLog_Update extends BulkOperationLog {
+}
+interface msdyn_workorderincident_Base extends WebEntity {
+}
+interface msdyn_workorderincident_Fixed extends WebEntity_Fixed {
+  msdyn_workorderincidentid: string;
+}
+interface msdyn_workorderincident extends msdyn_workorderincident_Base, msdyn_workorderincident_Relationships {
+}
+interface msdyn_workorderincident_Relationships {
+}
+interface msdyn_workorderincident_Result extends msdyn_workorderincident_Base, msdyn_workorderincident_Relationships {
+}
+interface msdyn_workorderincident_FormattedResult {
+}
+interface msdyn_workorderincident_Select {
+}
+interface msdyn_workorderincident_Expand {
+}
+interface msdyn_workorderincident_Filter {
+}
+interface msdyn_workorderincident_Create extends msdyn_workorderincident {
+}
+interface msdyn_workorderincident_Update extends msdyn_workorderincident {
 }
 interface ActivityParty_Base extends WebEntity {
 }

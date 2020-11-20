@@ -17,6 +17,7 @@ interface tc_TCFiscalQuarter_Base extends WebEntity {
 interface tc_TCFiscalQuarter_Relationships {
   ovs_UnplannedForecast_Quarter_tc_TCFiscal?: ovs_UnplannedForecast_Result[] | null;
   ovs_msdyn_workorder_FiscalQuarter_tc_TCFiscal?: msdyn_workorder_Result[] | null;
+  ovs_tc_tcfiscalquarter_msdyn_workorder?: msdyn_workorder_Result[] | null;
   tc_TCFiscalPeriod_TCFiscalQuarter?: tc_TCFiscalPeriod_Result[] | null;
   tc_TCFiscalYearId?: tc_TCFiscalYear_Result | null;
 }
@@ -82,6 +83,7 @@ interface tc_TCFiscalQuarter_Filter {
 interface tc_TCFiscalQuarter_Expand {
   ovs_UnplannedForecast_Quarter_tc_TCFiscal: WebExpand<tc_TCFiscalQuarter_Expand, ovs_UnplannedForecast_Select, ovs_UnplannedForecast_Filter, { ovs_UnplannedForecast_Quarter_tc_TCFiscal: ovs_UnplannedForecast_Result[] }>;
   ovs_msdyn_workorder_FiscalQuarter_tc_TCFiscal: WebExpand<tc_TCFiscalQuarter_Expand, msdyn_workorder_Select, msdyn_workorder_Filter, { ovs_msdyn_workorder_FiscalQuarter_tc_TCFiscal: msdyn_workorder_Result[] }>;
+  ovs_tc_tcfiscalquarter_msdyn_workorder: WebExpand<tc_TCFiscalQuarter_Expand, msdyn_workorder_Select, msdyn_workorder_Filter, { ovs_tc_tcfiscalquarter_msdyn_workorder: msdyn_workorder_Result[] }>;
   ownerid: WebExpand<tc_TCFiscalQuarter_Expand, Team_Select, Team_Filter, { ownerid: Team_Result }>;
   owningteam: WebExpand<tc_TCFiscalQuarter_Expand, Team_Select, Team_Filter, { owningteam: Team_Result }>;
   tc_TCFiscalPeriod_TCFiscalQuarter: WebExpand<tc_TCFiscalQuarter_Expand, tc_TCFiscalPeriod_Select, tc_TCFiscalPeriod_Filter, { tc_TCFiscalPeriod_TCFiscalQuarter: tc_TCFiscalPeriod_Result[] }>;
@@ -123,6 +125,7 @@ interface tc_TCFiscalQuarter_RelatedOne {
 interface tc_TCFiscalQuarter_RelatedMany {
   ovs_UnplannedForecast_Quarter_tc_TCFiscal: WebMappingRetrieve<ovs_UnplannedForecast_Select,ovs_UnplannedForecast_Expand,ovs_UnplannedForecast_Filter,ovs_UnplannedForecast_Fixed,ovs_UnplannedForecast_Result,ovs_UnplannedForecast_FormattedResult>;
   ovs_msdyn_workorder_FiscalQuarter_tc_TCFiscal: WebMappingRetrieve<msdyn_workorder_Select,msdyn_workorder_Expand,msdyn_workorder_Filter,msdyn_workorder_Fixed,msdyn_workorder_Result,msdyn_workorder_FormattedResult>;
+  ovs_tc_tcfiscalquarter_msdyn_workorder: WebMappingRetrieve<msdyn_workorder_Select,msdyn_workorder_Expand,msdyn_workorder_Filter,msdyn_workorder_Fixed,msdyn_workorder_Result,msdyn_workorder_FormattedResult>;
   tc_TCFiscalPeriod_TCFiscalQuarter: WebMappingRetrieve<tc_TCFiscalPeriod_Select,tc_TCFiscalPeriod_Expand,tc_TCFiscalPeriod_Filter,tc_TCFiscalPeriod_Fixed,tc_TCFiscalPeriod_Result,tc_TCFiscalPeriod_FormattedResult>;
 }
 interface WebEntitiesRetrieve {

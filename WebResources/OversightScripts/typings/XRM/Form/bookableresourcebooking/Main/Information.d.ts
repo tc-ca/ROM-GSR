@@ -55,6 +55,7 @@ declare namespace Form.bookableresourcebooking.Main {
       get(name: "msdyn_worklocation"): Xrm.OptionSetAttribute<msdyn_worklocation>;
       get(name: "msdyn_workorder"): Xrm.LookupAttribute<"msdyn_workorder">;
       get(name: "name"): Xrm.Attribute<string>;
+      get(name: "ovs_plannedfiscalyearid"): Xrm.LookupAttribute<"tc_tcfiscalyear">;
       get(name: "resource"): Xrm.LookupAttribute<"bookableresource">;
       get(name: "starttime"): Xrm.DateAttribute;
       get(name: string): undefined;
@@ -97,6 +98,7 @@ declare namespace Form.bookableresourcebooking.Main {
       get(name: "msdyn_workorder"): Xrm.LookupControl<"msdyn_workorder">;
       get(name: "name"): Xrm.StringControl;
       get(name: "notescontrol"): Xrm.BaseControl;
+      get(name: "ovs_plannedfiscalyearid"): Xrm.LookupControl<"tc_tcfiscalyear">;
       get(name: "resource"): Xrm.LookupControl<"bookableresource">;
       get(name: "starttime"): Xrm.DateControl;
       get(name: string): undefined;
@@ -145,6 +147,7 @@ declare namespace Form.bookableresourcebooking.Main {
     getAttribute(attributeName: "msdyn_worklocation"): Xrm.OptionSetAttribute<msdyn_worklocation>;
     getAttribute(attributeName: "msdyn_workorder"): Xrm.LookupAttribute<"msdyn_workorder">;
     getAttribute(attributeName: "name"): Xrm.Attribute<string>;
+    getAttribute(attributeName: "ovs_plannedfiscalyearid"): Xrm.LookupAttribute<"tc_tcfiscalyear">;
     getAttribute(attributeName: "resource"): Xrm.LookupAttribute<"bookableresource">;
     getAttribute(attributeName: "starttime"): Xrm.DateAttribute;
     getAttribute(attributeName: string): undefined;
@@ -182,6 +185,7 @@ declare namespace Form.bookableresourcebooking.Main {
     getControl(controlName: "msdyn_workorder"): Xrm.LookupControl<"msdyn_workorder">;
     getControl(controlName: "name"): Xrm.StringControl;
     getControl(controlName: "notescontrol"): Xrm.BaseControl;
+    getControl(controlName: "ovs_plannedfiscalyearid"): Xrm.LookupControl<"tc_tcfiscalyear">;
     getControl(controlName: "resource"): Xrm.LookupControl<"bookableresource">;
     getControl(controlName: "starttime"): Xrm.DateControl;
     getControl(controlName: string): undefined;

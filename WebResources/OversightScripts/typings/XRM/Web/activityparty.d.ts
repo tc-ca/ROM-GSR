@@ -27,7 +27,6 @@ interface ActivityParty extends ActivityParty_Base, ActivityParty_Relationships 
   activityid_activitypointer_bind$activitypointers?: string | null;
   activityid_adx_alertsubscription_activityparty_bind$adx_alertsubscriptions?: string | null;
   activityid_adx_inviteredemption_activityparty_bind$adx_inviteredemptions?: string | null;
-  activityid_adx_portalcomment_activityparty_bind$adx_portalcomments?: string | null;
   activityid_appointment_bind$appointments?: string | null;
   activityid_campaignactivity_bind$campaignactivities?: string | null;
   activityid_campaignresponse_bind$campaignresponses?: string | null;

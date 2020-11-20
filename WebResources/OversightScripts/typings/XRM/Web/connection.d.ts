@@ -23,6 +23,8 @@ interface Connection_Relationships {
   record1id_appointment?: Appointment_Result | null;
   record1id_contact?: Contact_Result | null;
   record1id_msdyn_workorder?: msdyn_workorder_Result | null;
+  record1id_msdyn_workorderincident?: msdyn_workorderincident_Result | null;
+  record1id_msdyn_workorderservicetask?: msdyn_workorderservicetask_Result | null;
   record1id_serviceappointment?: ServiceAppointment_Result | null;
   record1id_team?: Team_Result | null;
   record1id_territory?: Territory_Result | null;
@@ -30,6 +32,8 @@ interface Connection_Relationships {
   record2id_appointment?: Appointment_Result | null;
   record2id_contact?: Contact_Result | null;
   record2id_msdyn_workorder?: msdyn_workorder_Result | null;
+  record2id_msdyn_workorderincident?: msdyn_workorderincident_Result | null;
+  record2id_msdyn_workorderservicetask?: msdyn_workorderservicetask_Result | null;
   record2id_serviceappointment?: ServiceAppointment_Result | null;
   record2id_team?: Team_Result | null;
   record2id_territory?: Territory_Result | null;
@@ -356,6 +360,8 @@ interface Connection_Expand {
   record1id_appointment: WebExpand<Connection_Expand, Appointment_Select, Appointment_Filter, { record1id_appointment: Appointment_Result }>;
   record1id_contact: WebExpand<Connection_Expand, Contact_Select, Contact_Filter, { record1id_contact: Contact_Result }>;
   record1id_msdyn_workorder: WebExpand<Connection_Expand, msdyn_workorder_Select, msdyn_workorder_Filter, { record1id_msdyn_workorder: msdyn_workorder_Result }>;
+  record1id_msdyn_workorderincident: WebExpand<Connection_Expand, msdyn_workorderincident_Select, msdyn_workorderincident_Filter, { record1id_msdyn_workorderincident: msdyn_workorderincident_Result }>;
+  record1id_msdyn_workorderservicetask: WebExpand<Connection_Expand, msdyn_workorderservicetask_Select, msdyn_workorderservicetask_Filter, { record1id_msdyn_workorderservicetask: msdyn_workorderservicetask_Result }>;
   record1id_serviceappointment: WebExpand<Connection_Expand, ServiceAppointment_Select, ServiceAppointment_Filter, { record1id_serviceappointment: ServiceAppointment_Result }>;
   record1id_team: WebExpand<Connection_Expand, Team_Select, Team_Filter, { record1id_team: Team_Result }>;
   record1id_territory: WebExpand<Connection_Expand, Territory_Select, Territory_Filter, { record1id_territory: Territory_Result }>;
@@ -363,6 +369,8 @@ interface Connection_Expand {
   record2id_appointment: WebExpand<Connection_Expand, Appointment_Select, Appointment_Filter, { record2id_appointment: Appointment_Result }>;
   record2id_contact: WebExpand<Connection_Expand, Contact_Select, Contact_Filter, { record2id_contact: Contact_Result }>;
   record2id_msdyn_workorder: WebExpand<Connection_Expand, msdyn_workorder_Select, msdyn_workorder_Filter, { record2id_msdyn_workorder: msdyn_workorder_Result }>;
+  record2id_msdyn_workorderincident: WebExpand<Connection_Expand, msdyn_workorderincident_Select, msdyn_workorderincident_Filter, { record2id_msdyn_workorderincident: msdyn_workorderincident_Result }>;
+  record2id_msdyn_workorderservicetask: WebExpand<Connection_Expand, msdyn_workorderservicetask_Select, msdyn_workorderservicetask_Filter, { record2id_msdyn_workorderservicetask: msdyn_workorderservicetask_Result }>;
   record2id_serviceappointment: WebExpand<Connection_Expand, ServiceAppointment_Select, ServiceAppointment_Filter, { record2id_serviceappointment: ServiceAppointment_Result }>;
   record2id_team: WebExpand<Connection_Expand, Team_Select, Team_Filter, { record2id_team: Team_Result }>;
   record2id_territory: WebExpand<Connection_Expand, Territory_Select, Territory_Filter, { record2id_territory: Territory_Result }>;
@@ -416,6 +424,8 @@ interface Connection_RelatedOne {
   record1id_appointment: WebMappingRetrieve<Appointment_Select,Appointment_Expand,Appointment_Filter,Appointment_Fixed,Appointment_Result,Appointment_FormattedResult>;
   record1id_contact: WebMappingRetrieve<Contact_Select,Contact_Expand,Contact_Filter,Contact_Fixed,Contact_Result,Contact_FormattedResult>;
   record1id_msdyn_workorder: WebMappingRetrieve<msdyn_workorder_Select,msdyn_workorder_Expand,msdyn_workorder_Filter,msdyn_workorder_Fixed,msdyn_workorder_Result,msdyn_workorder_FormattedResult>;
+  record1id_msdyn_workorderincident: WebMappingRetrieve<msdyn_workorderincident_Select,msdyn_workorderincident_Expand,msdyn_workorderincident_Filter,msdyn_workorderincident_Fixed,msdyn_workorderincident_Result,msdyn_workorderincident_FormattedResult>;
+  record1id_msdyn_workorderservicetask: WebMappingRetrieve<msdyn_workorderservicetask_Select,msdyn_workorderservicetask_Expand,msdyn_workorderservicetask_Filter,msdyn_workorderservicetask_Fixed,msdyn_workorderservicetask_Result,msdyn_workorderservicetask_FormattedResult>;
   record1id_serviceappointment: WebMappingRetrieve<ServiceAppointment_Select,ServiceAppointment_Expand,ServiceAppointment_Filter,ServiceAppointment_Fixed,ServiceAppointment_Result,ServiceAppointment_FormattedResult>;
   record1id_team: WebMappingRetrieve<Team_Select,Team_Expand,Team_Filter,Team_Fixed,Team_Result,Team_FormattedResult>;
   record1id_territory: WebMappingRetrieve<Territory_Select,Territory_Expand,Territory_Filter,Territory_Fixed,Territory_Result,Territory_FormattedResult>;
@@ -423,6 +433,8 @@ interface Connection_RelatedOne {
   record2id_appointment: WebMappingRetrieve<Appointment_Select,Appointment_Expand,Appointment_Filter,Appointment_Fixed,Appointment_Result,Appointment_FormattedResult>;
   record2id_contact: WebMappingRetrieve<Contact_Select,Contact_Expand,Contact_Filter,Contact_Fixed,Contact_Result,Contact_FormattedResult>;
   record2id_msdyn_workorder: WebMappingRetrieve<msdyn_workorder_Select,msdyn_workorder_Expand,msdyn_workorder_Filter,msdyn_workorder_Fixed,msdyn_workorder_Result,msdyn_workorder_FormattedResult>;
+  record2id_msdyn_workorderincident: WebMappingRetrieve<msdyn_workorderincident_Select,msdyn_workorderincident_Expand,msdyn_workorderincident_Filter,msdyn_workorderincident_Fixed,msdyn_workorderincident_Result,msdyn_workorderincident_FormattedResult>;
+  record2id_msdyn_workorderservicetask: WebMappingRetrieve<msdyn_workorderservicetask_Select,msdyn_workorderservicetask_Expand,msdyn_workorderservicetask_Filter,msdyn_workorderservicetask_Fixed,msdyn_workorderservicetask_Result,msdyn_workorderservicetask_FormattedResult>;
   record2id_serviceappointment: WebMappingRetrieve<ServiceAppointment_Select,ServiceAppointment_Expand,ServiceAppointment_Filter,ServiceAppointment_Fixed,ServiceAppointment_Result,ServiceAppointment_FormattedResult>;
   record2id_team: WebMappingRetrieve<Team_Select,Team_Expand,Team_Filter,Team_Fixed,Team_Result,Team_FormattedResult>;
   record2id_territory: WebMappingRetrieve<Territory_Select,Territory_Expand,Territory_Filter,Territory_Fixed,Territory_Result,Territory_FormattedResult>;
