@@ -4,6 +4,13 @@ trigger:
 pr:
 - none
 
+variables:
+  # if you change the major or minor version either at definition or at build time it causes a different counter 
+  # to tick that is based on the format expression so you always get a uniquely rotating counter output based on those first two parts. 
+  # This makes major and minor user definable but keeps the patch and final version numbers incrementing on a per build PER MAJOR+MINOR basis.
+  PatchVersion: $[counter(format('{0}.{1}.{2}',variables['PatchMajor'],variables['PatchMinor'],variables['PatchBuild']),0)]
+  ProductVersion: $[format('{0}.{1}.{2}.{3}', variables['PatchMajor'],variables['PatchMinor'],variables['PatchBuild'],variables['PatchVersion'])]
+
 stages:
 - stage: BuildAndPublishArtifact
   pool:
@@ -35,6 +42,7 @@ stages:
         solutionName: '$(LatestPatchName)'
         exportManaged: true
         exportUnmanaged: true
+        targetVersion: '$(ProductVersion)'
         includeVersionInSolutionFile: true
         outputPath: '$(Build.ArtifactStagingDirectory)'
         crmConnectionTimeout: '960'
@@ -124,7 +132,7 @@ stages:
           - task: MSCRMImportSolution@12
             inputs:
               crmConnectionString: '$(ConnectionStringQa)'
-              solutionFile: '$(Agent.BuildDirectory)\drop\$(LatestPatchName)_$(PatchMajor)_$(PatchMinor)_$(PatchBuild)_$(PatchRevision)_managed.zip'
+              solutionFile: '$(Agent.BuildDirectory)\drop\$(LatestPatchName)_$(ProductVersion)_managed.zip'
               publishWorkflows: true
               holdingSolution: false
           - task: MSCRMCreatePatch@12
