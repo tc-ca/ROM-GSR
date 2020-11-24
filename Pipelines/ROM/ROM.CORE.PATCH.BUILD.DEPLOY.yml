@@ -82,16 +82,16 @@ stages:
           Get-ChildItem -Path "$(Build.SourcesDirectory)"
           Write-Host "============================================"
         errorActionPreference: 'continue'
-    - powershell: |
-        echo "Committing all CDS solution changes"
-        git config user.email "nepasrepondre-noreply@tc.gc.ca"
-        git config user.name "tc-buildbot"
-        git checkout development
-        git add --all
-        git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
+    # - powershell: |
+    #     echo "Committing all CDS solution changes"
+    #     git config user.email "nepasrepondre-noreply@tc.gc.ca"
+    #     git config user.name "tc-buildbot"
+    #     git checkout development
+    #     git add --all
+    #     git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
         
-        echo "Push solution changes to the remote repository"
-        git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
+    #     echo "Push solution changes to the remote repository"
+    #     git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
 - stage: QA
   jobs:
   - deployment: Deploy
