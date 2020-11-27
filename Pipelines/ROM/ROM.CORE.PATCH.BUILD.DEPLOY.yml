@@ -18,6 +18,9 @@ stages:
   jobs:
   - job: BuildAndPublishArtifact
     steps:
+    - checkout: self
+      persistCredentials: true
+      clean: false
     - task: MSCRMToolInstaller@12
       inputs:
         nugetFeed: 'official'
@@ -50,13 +53,13 @@ stages:
         ArtifactName: 'drop'
         publishLocation: 'Container'
     - powershell: |
-        If(!(test-path '$(Build.SourcesDirectory)\$(ProductVersion)\solutions'))
+        If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\$(ProductVersion)'))
         {
-          Write-Host "$(Build.SourcesDirectory)\$(ProductVersion)\solutions folder does not exists."
-          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\$(ProductVersion)\solutions'
-          Write-Host "$(Build.SourcesDirectory)\$(ProductVersion)\solutions folder created."
+          Write-Host "$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\$(ProductVersion) folder does not exists."
+          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\$(ProductVersion)'
+          Write-Host "$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\$(ProductVersion) folder created."
         }
-        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory) -Destination $(Build.SourcesDirectory)\$(ProductVersion)\solutions
+        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory) -Destination $(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\$(ProductVersion)
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
@@ -82,16 +85,16 @@ stages:
           Get-ChildItem -Path "$(Build.SourcesDirectory)"
           Write-Host "============================================"
         errorActionPreference: 'continue'
-    # - powershell: |
-    #     echo "Committing all CDS solution changes"
-    #     git config user.email "nepasrepondre-noreply@tc.gc.ca"
-    #     git config user.name "tc-buildbot"
-    #     git checkout development
-    #     git add --all
-    #     git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
+    - powershell: |
+        echo "Committing all CDS solution changes"
+        git config user.email "nepasrepondre-noreply@tc.gc.ca"
+        git config user.name "tc-buildbot"
+        git checkout development
+        git add --all
+        git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
         
-    #     echo "Push solution changes to the remote repository"
-    #     git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
+        echo "Push solution changes to the remote repository"
+        git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
 - stage: QA
   jobs:
   - deployment: Deploy
