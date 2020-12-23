@@ -8,7 +8,7 @@ variables:
   # if you change the major or minor version either at definition or at build time it causes a different counter 
   # to tick that is based on the format expression so you always get a uniquely rotating counter output based on those first two parts. 
   # This makes major and minor user definable but keeps the patch and final version numbers incrementing on a per build PER MAJOR+MINOR basis.
-  SolutionVersion: $[counter(format('{0}.{1}.{2}',variables['VersionMajor'],variables['VersionMinor'],variables['VersionBuild']),2)]
+  SolutionVersion: $[counter(format('{0}.{1}.{2}',variables['VersionMajor'],variables['VersionMinor'],variables['VersionBuild']),3)]
   ProductVersion: $[format('{0}.{1}.{2}.{3}', variables['VersionMajor'],variables['VersionMinor'],variables['VersionBuild'],variables['SolutionVersion'],0)]
 
 stages:
@@ -25,12 +25,19 @@ stages:
       inputs:
         nugetFeed: 'official'
         psFeed: 'official'
+    - task: MSCRMSetVersion@12
+      inputs:
+        target: 'crm'
+        crmConnectionString: '$(ConnectionStringDev)'
+        solutionName: '$(SolutionName)'
+        versionNumber: '$(ProductVersion)'
     - task: MSCRMExportSolution@12
       inputs:
         crmConnectionString: '$(ConnectionStringDev)'
         solutionName: '$(SolutionName)'
         exportManaged: true
         exportUnmanaged: true
+        includeVersionInSolutionFile: true
         outputPath: '$(Build.ArtifactStagingDirectory)'
         crmConnectionTimeout: '960'
     - task: PublishBuildArtifacts@1
@@ -109,17 +116,17 @@ stages:
           - task: MSCRMImportSolution@12
             inputs:
               crmConnectionString: '$(ConnectionStringQa)'
-              solutionFile: '$(Agent.BuildDirectory)\drop\$(SolutionName)_managed.zip'
+              solutionFile: '$(Agent.BuildDirectory)\drop\$(SolutionName)_$(ProductVersion)_managed.zip'
               publishWorkflows: false
               holdingSolution: false
           - powershell: |
-              If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(SolutionName)\$(ProductVersion)'))
+              If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(SolutionName)'))
               {
-                Write-Host "$(Build.SourcesDirectory)\Solutions\$(SolutionName)\$(ProductVersion) folder does not exists."
-                New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(SolutionName)\$(ProductVersion)'
-                Write-Host "$(Build.SourcesDirectory)\Solutions\$(SolutionName)\$(ProductVersion) folder created."
+                Write-Host "$(Build.SourcesDirectory)\Solutions\$(SolutionName) folder does not exists."
+                New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(SolutionName)'
+                Write-Host "$(Build.SourcesDirectory)\Solutions\$(SolutionName) folder created."
               }
-              Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory) -Destination $(Build.SourcesDirectory)\Solutions\$(SolutionName)\$(ProductVersion)
+              Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory) -Destination $(Build.SourcesDirectory)\Solutions\$(SolutionName)
           - powershell: |
               echo "Committing all CDS solution changes"
               git config user.email "nepasrepondre-noreply@tc.gc.ca"
