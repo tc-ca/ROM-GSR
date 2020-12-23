@@ -4,13 +4,6 @@ trigger:
 pr:
 - none
 
-variables:
-  # if you change the major or minor version either at definition or at build time it causes a different counter 
-  # to tick that is based on the format expression so you always get a uniquely rotating counter output based on those first two parts. 
-  # This makes major and minor user definable but keeps the patch and final version numbers incrementing on a per build PER MAJOR+MINOR basis.
-  PatchVersion: $[counter(format('{0}.{1}',variables['PatchMajor'],variables['PatchMinor']),1)]
-  ProductVersion: $[format('{0}.{1}.{2}.{3}', variables['PatchMajor'],variables['PatchMinor'],variables['PatchVersion'],0)]
-
 stages:
 - stage: BuildAndPublishArtifact
   pool:
@@ -45,6 +38,7 @@ stages:
         solutionName: '$(LatestPatchName)'
         exportManaged: true
         exportUnmanaged: true
+        includeVersionInSolutionFile: true
         outputPath: '$(Build.ArtifactStagingDirectory)'
         crmConnectionTimeout: '960'
     - task: PublishBuildArtifacts@1
@@ -53,13 +47,13 @@ stages:
         ArtifactName: 'drop'
         publishLocation: 'Container'
     - powershell: |
-        If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\$(ProductVersion)'))
+        If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)'))
         {
-          Write-Host "$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\$(ProductVersion) folder does not exists."
-          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\$(ProductVersion)'
-          Write-Host "$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\$(ProductVersion) folder created."
+          Write-Host "$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName) folder does not exists."
+          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)'
+          Write-Host "$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName) folder created."
         }
-        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory) -Destination $(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\$(ProductVersion)
+        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory) -Destination $(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
@@ -124,10 +118,24 @@ stages:
               Write-Host "Latest Patch Name =  $(LatestPatchName)"
               Write-Host "${{ eq('$(PatchExists)', 'False') }}"
               Write-Host variables['task.GetLatestPatchTask.PatchExists']
+          - task: PowerShell@2
+            inputs:
+              targetType: 'inline'
+              script: |
+                $managedFile = Get-ChildItem -Recurse -File -Filter "$(LatestPatchName)*managed*" | Sort-Object -Descending | Select-Object -first 1
+                Write-Output "file = $managedFile"
+                $Inputstring = $managedFile.BaseName + $managedFile.Extension
+                Write-Output "input string = $Inputstring"
+                $CharArray =$InputString.Split("_")[2]
+                Write-Output "CharArray = $CharArray"
+                $Inputstring -match "([0-9].[0-9].[0-9].[0-9])"
+                $version = "$($matches[1])"
+                Write-Output "version= $version"
+                Write-Host "##vso[task.setvariable variable=SolutionVersion]$version"
           - task: MSCRMImportSolution@12
             inputs:
               crmConnectionString: '$(ConnectionStringQa)'
-              solutionFile: '$(Agent.BuildDirectory)\drop\$(LatestPatchName)_managed.zip'
+              solutionFile: '$(Agent.BuildDirectory)\drop\$(LatestPatchName)_$(SolutionVersion)_managed.zip'
               publishWorkflows: true
               holdingSolution: false
           - task: MSCRMCreatePatch@12
