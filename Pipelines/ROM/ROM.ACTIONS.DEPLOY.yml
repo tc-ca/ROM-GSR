@@ -8,15 +8,15 @@ variables:
   # if you change the major or minor version either at definition or at build time it causes a different counter 
   # to tick that is based on the format expression so you always get a uniquely rotating counter output based on those first two parts. 
   # This makes major and minor user definable but keeps the patch and final version numbers incrementing on a per build PER MAJOR+MINOR basis.
-  PatchVersion: $[counter(format('{0}.{1}',variables['VersionMajor'],variables['VersionMinor']),0)]
-  ProductVersion: $[format('{0}.{1}.{2}.{3}', variables['VersionMajor'],variables['VersionMinor'],variables['PatchVersion'], 0)]
+  SolutionVersion: $[counter(format('{0}.{1}.{2}',variables['VersionMajor'],variables['VersionMinor'],variables['VersionBuild']),2)]
+  ProductVersion: $[format('{0}.{1}.{2}.{3}', variables['VersionMajor'],variables['VersionMinor'],variables['VersionBuild'],variables['SolutionVersion'],0)]
 
 stages:
-- stage: BuildAndPublishArtifact
+- stage: ExportAndPublishArtifact
   pool:
       vmImage: 'vs2017-win2016'
   jobs:
-  - job: BuildAndPublishArtifact
+  - job: ExportAndPublishArtifact
     steps:
     - checkout: self
       persistCredentials: true
@@ -38,14 +38,6 @@ stages:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
         publishLocation: 'Container'
-    - powershell: |
-        If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(SolutionName)\$(ProductVersion)'))
-        {
-          Write-Host "$(Build.SourcesDirectory)\Solutions\$(SolutionName)\$(ProductVersion) folder does not exists."
-          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(SolutionName)\$(ProductVersion)'
-          Write-Host "$(Build.SourcesDirectory)\Solutions\$(SolutionName)\$(ProductVersion) folder created."
-        }
-        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory) -Destination $(Build.SourcesDirectory)\Solutions\$(SolutionName)\$(ProductVersion)
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
@@ -71,16 +63,6 @@ stages:
           Get-ChildItem -Path "$(Build.SourcesDirectory)"
           Write-Host "============================================"
         errorActionPreference: 'continue'
-    - powershell: |
-        echo "Committing all CDS solution changes"
-        git config user.email "nepasrepondre-noreply@tc.gc.ca"
-        git config user.name "tc-buildbot"
-        git checkout development
-        git add --all
-        git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
-        
-        echo "Push solution changes to the remote repository"
-        git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
 - stage: QA
   jobs:
   - deployment: Deploy
@@ -92,20 +74,61 @@ stages:
       runOnce:
         deploy:
           steps:
+          - checkout: self
+            persistCredentials: true
+            clean: false
           - task: MSCRMToolInstaller@12
             inputs:
               nugetFeed: 'official'
               psFeed: 'official'
+          - task: PowerShell@2
+            inputs:
+              targetType: 'inline'
+              script: |
+                Write-Host "============================================"
+                Write-Host "System.DefaultWorkingDirectory"
+                Get-ChildItem -Path "$(System.DefaultWorkingDirectory)"
+                Write-Host "============================================"
+                Write-Host "Agent.BuildDirectory"
+                Get-ChildItem -Path "$(Agent.BuildDirectory)"
+                Write-Host "============================================"
+                Write-Host ""
+                Write-Host "============================================"
+                Write-Host "Build.ArtifactStagingDirectory"
+                Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)"
+                Write-Host "============================================"
+                Write-Host "============================================"
+                Write-Host "Build.BinariesDirectory"
+                Get-ChildItem -Path "$(Build.BinariesDirectory)"
+                Write-Host "============================================"
+                Write-Host "============================================"
+                Write-Host "Build.SourcesDirectory"
+                Get-ChildItem -Path "$(Build.SourcesDirectory)"
+                Write-Host "============================================"
+              errorActionPreference: 'continue'
           - task: MSCRMImportSolution@12
             inputs:
               crmConnectionString: '$(ConnectionStringQa)'
-              solutionFile: '$(Agent.BuildDirectory)\drop\$(LatestPatchName)_managed.zip'
-              publishWorkflows: true
+              solutionFile: '$(Agent.BuildDirectory)\drop\$(SolutionName)_managed.zip'
+              publishWorkflows: false
               holdingSolution: false
-          - task: MSCRMCreatePatch@12
-            inputs:
-              crmConnectionString: '$(ConnectionStringDev)'
-              uniqueName: '$(SolutionName)'
-
+          - powershell: |
+              If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(SolutionName)\$(ProductVersion)'))
+              {
+                Write-Host "$(Build.SourcesDirectory)\Solutions\$(SolutionName)\$(ProductVersion) folder does not exists."
+                New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(SolutionName)\$(ProductVersion)'
+                Write-Host "$(Build.SourcesDirectory)\Solutions\$(SolutionName)\$(ProductVersion) folder created."
+              }
+              Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory) -Destination $(Build.SourcesDirectory)\Solutions\$(SolutionName)\$(ProductVersion)
+          - powershell: |
+              echo "Committing all CDS solution changes"
+              git config user.email "nepasrepondre-noreply@tc.gc.ca"
+              git config user.name "tc-buildbot"
+              git checkout development
+              git add --all
+              git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
+              
+              echo "Push solution changes to the remote repository"
+              git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
 
 
