@@ -122,13 +122,15 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                $managedFile = Get-ChildItem -Recurse -File -Filter "$(LatestPatchName)*managed*" | Sort-Object -Descending | Select-Object -first 1
+                $solutionPath = "$(Agent.BuildDirectory)\drop"
+                Write-Output "solutionpath = $solutionPath"
+                $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "$(LatestPatchName)*managed*" | Sort-Object -Descending | Select-Object -first 1
                 Write-Output "file = $managedFile"
                 $Inputstring = $managedFile.BaseName + $managedFile.Extension
                 Write-Output "input string = $Inputstring"
                 $Inputstring -match "([0-9].[0-9].[0-9].[0-9])"
                 $version = "$($matches[1])"
-                Write-Output "version= $version"
+                Write-Output "version = $version"
                 Write-Host "##vso[task.setvariable variable=SolutionVersion]$version"
           - task: MSCRMImportSolution@12
             inputs:
