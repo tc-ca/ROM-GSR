@@ -138,6 +138,9 @@ stages:
               solutionFile: '$(Agent.BuildDirectory)\drop\$(LatestPatchName)_$(SolutionVersion)_managed.zip'
               publishWorkflows: true
               holdingSolution: false
+          - task: MSCRMPublishCustomizations@12
+            inputs:
+              crmConnectionString: '$(ConnectionStringQa)'
           - task: MSCRMCreatePatch@12
             inputs:
               crmConnectionString: '$(ConnectionStringDev)'
