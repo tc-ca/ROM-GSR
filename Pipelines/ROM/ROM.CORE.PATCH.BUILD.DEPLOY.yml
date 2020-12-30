@@ -49,6 +49,10 @@ stages:
       inputs:
         nugetFeed: 'official'
         psFeed: 'official'
+    - task: MSCRMPublishCustomizations@12
+      inputs:
+        crmConnectionString: '$(ConnectionStringDev)'
+        crmConnectionTimeout: '999'
     - task: MSCRMGetLatestPatch@12
       name: GetLatestPatchTask
       inputs:
