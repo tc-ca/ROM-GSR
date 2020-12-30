@@ -1,0 +1,113 @@
+# Variable 'ConnectionStringDev' was defined in the Variables tab
+# Variable 'ConnectionStringQa' was defined in the Variables tab
+# Variable 'CoreSolutionName' was defined in the Variables tab
+
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: development
+jobs:
+- job: Job_1
+  displayName: Step 1
+  pool:
+    vmImage: vs2017-win2016
+  steps:
+  - checkout: self
+    clean: true 
+    persistCredentials: True
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        Write-Host "============================================"
+        Write-Host "System.DefaultWorkingDirectory"
+        Get-ChildItem -Path "$(System.DefaultWorkingDirectory)"
+        Write-Host "============================================"
+        Write-Host "Agent.BuildDirectory"
+        Get-ChildItem -Path "$(Agent.BuildDirectory)"
+        Write-Host "============================================"
+        Write-Host ""
+        Write-Host "============================================"
+        Write-Host "Build.ArtifactStagingDirectory"
+        Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)"
+        Write-Host "============================================"
+        Write-Host "============================================"
+        Write-Host "Build.BinariesDirectory"
+        Get-ChildItem -Path "$(Build.BinariesDirectory)"
+        Write-Host "============================================"
+        Write-Host "============================================"
+        Write-Host "Build.SourcesDirectory"
+        Get-ChildItem -Path "$(Build.SourcesDirectory)"
+        Write-Host "============================================"
+      errorActionPreference: 'continue'
+  - task: MSCRMToolInstaller@12
+    displayName: Power DevOps Tool Installer
+  - task: MSCRMPublishCustomizations@12
+    displayName: Publish Customizations
+    inputs:
+      crmConnectionString: $(ConnectionStringDev)
+  - task: MSCRMExportSolution@12
+    displayName: 'Export Manged Solution: $(CoreSolutionName)'
+    timeoutInMinutes: 1900
+    inputs:
+      crmConnectionString: '$(ConnectionStringDev)'
+      solutionName: '$(CoreSolutionName)'
+      exportManaged: true
+      exportUnmanaged: true
+      includeVersionInSolutionFile: true
+      outputPath: '$(Build.ArtifactStagingDirectory)'
+      crmConnectionTimeout: '1900'
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        $solutionPath = "$(Agent.ArtifactStagingDirectory)"
+        Write-Output "solutionpath = $solutionPath"
+        $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "$(CoreSolutionName)*managed*" | Sort-Object -Descending | Select-Object -first 1
+        Write-Output "file = $managedFile"
+        $Inputstring = $managedFile.BaseName + $managedFile.Extension
+        Write-Output "input string = $Inputstring"
+        $Inputstring -match "([0-9]+_[0-9]+_[0-9]+_[0-9]+)"
+        $version = "$($matches[1])"
+        Write-Output "version = $version"
+        Write-Host "##vso[task.setvariable variable=SolutionVersion]$version"
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: $(CoreSolutionName)_$(SolutionVersion)_managed.zip'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'Rollup'
+      publishLocation: 'Container'
+  - task: MSCRMImportSolution@12
+    displayName: Import Managed Solution
+    inputs:
+      crmConnectionString: $(ConnectionStringQa)
+      solutionFile: $(Build.ArtifactStagingDirectory)\$(CoreSolutionName)_$(SolutionVersion)_managed.zip
+      publishWorkflows: true
+      holdingSolution: true
+      asyncWaitTimeout: 4000
+      crmConnectionTimeout: 4000
+  - task: MSCRMApplySolution@12
+    displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
+    inputs:
+      crmConnectionString: $(ConnectionStringQa)
+      solutionName: $(CoreSolutionName)
+      useAsyncMode: true
+      asyncWaitTimeout: 4000
+      crmConnectionTimeout: 4000
+  - powershell: |
+      echo "Committing all CDS solution changes"
+      git config user.email "nepasrepondre-noreply@tc.gc.ca"
+      git config user.name "tc-buildbot"
+      git checkout development
+      git add --all
+      git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
+      
+      echo "Push solution changes to the remote repository"
+      git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
+  - task: MSCRMCreatePatch@12
+    displayName: 'Create Patch: $(CoreSolutionName)'
+    inputs:
+      crmConnectionString: $(ConnectionStringDev)
+      uniqueName: $(CoreSolutionName)
+      crmConnectionTimeout: 900
