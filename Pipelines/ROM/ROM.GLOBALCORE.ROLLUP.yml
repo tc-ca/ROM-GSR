@@ -47,6 +47,16 @@ jobs:
     displayName: Publish Customizations
     inputs:
       crmConnectionString: $(ConnectionStringDev)
+  - task: MSCRMBackupOnlineInstance@12
+    inputs:
+      apiUrl: 'https://admin.services.crm3.dynamics.com'
+      username: '$(BackupUsername)'
+      Password: '$(BackupPassword)'
+      instanceName: 'rom-dev-tcd365'
+      backupLabel: '$(CoreSolutionName)_$(SolutionVersion)'
+      notes: 'backup taken from devops rolloup pipeline'
+      backupExistsAction: 'Skip'
+      waitForCompletion: true
   - task: MSCRMExportSolution@12
     displayName: 'Export Manged Solution: $(CoreSolutionName)'
     timeoutInMinutes: 1900
