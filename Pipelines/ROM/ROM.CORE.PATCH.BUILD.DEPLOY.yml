@@ -182,6 +182,7 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
+                #extract version number from filename
                 $solutionPath = "$(Agent.BuildDirectory)\drop"
                 Write-Output "solutionpath = $solutionPath"
                 $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "$(LatestPatchName)*managed*" | Sort-Object -Descending | Select-Object -first 1
@@ -192,12 +193,33 @@ stages:
                 $version = "$($matches[1])"
                 Write-Output "version = $version"
                 Write-Host "##vso[task.setvariable variable=SolutionVersion]$version"
+                
+                #create next version
+                $versionParts = $version.Split("_")
+                
+                $major = "$($versionParts[0])"
+                $minor = "$($versionParts[1])"
+                $build = "$($versionParts[2])"
+                $revision = "$($versionParts[3])"
+                
+                [int]$nextRevision = 0
+                [bool]$result = [int]::TryParse($revision, [ref]$nextRevision)
+                $nextRevision = $nextRevision + 1
+                [string]$nextVersion = "$major.$minor.$build.$nextRevision"
+                
+                Write-Output  "major = $major"
+                Write-Output  "minor = $minor"
+                Write-Output  "build = $build"
+                Write-Output  "revision = $revision"
+                Write-Output  "nextVersion = $nextVersion"
+                Write-Host "##vso[task.setvariable variable=NextSolutionVersion]$nextVersion"
           - task: MSCRMImportSolution@12
             inputs:
               crmConnectionString: '$(ConnectionStringQa)'
               solutionFile: '$(Agent.BuildDirectory)\drop\$(LatestPatchName)_$(SolutionVersion)_managed.zip'
               publishWorkflows: true
-              holdingSolution: false
+              overwriteUnmanagedCustomizations: true
+              override: true
           - task: MSCRMPublishCustomizations@12
             inputs:
               crmConnectionString: '$(ConnectionStringQa)'
@@ -205,6 +227,7 @@ stages:
             inputs:
               crmConnectionString: '$(ConnectionStringDev)'
               uniqueName: '$(CoreSolutionName)'
+              versionNumber: '$(NextSolutionVersion)'
 
 
 
