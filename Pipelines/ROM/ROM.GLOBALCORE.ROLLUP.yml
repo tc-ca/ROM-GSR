@@ -19,7 +19,7 @@ jobs:
   - task: PowerPlatformBackupEnvironment@0
     inputs:
       authenticationType: 'PowerPlatformSPN'
-      PowerPlatformSPN: 'ROM Dev'
+      PowerPlatformSPN: 'TDG CORE DEV'
       BackupLabel: 'Full Backup - $(Build.BuildNumber)'
 - job: Backup_Qa
   displayName: Backup Qa
@@ -32,7 +32,7 @@ jobs:
   - task: PowerPlatformBackupEnvironment@0
     inputs:
       authenticationType: 'PowerPlatformSPN'
-      PowerPlatformSPN: 'ROM QA'
+      PowerPlatformSPN: 'TDG CORE QA'
       BackupLabel: 'Full Backup - $(Build.BuildNumber)'
 - job: Rollup_Export_Dev_Import_Qa
   displayName: Rollup_Export_Dev_Import_Qa
@@ -160,7 +160,7 @@ jobs:
   - task: PowerPlatformRestoreEnvironment@0
     inputs:
       authenticationType: 'PowerPlatformSPN'
-      PowerPlatformSPN: 'ROM Dev'
+      PowerPlatformSPN: 'TDG CORE DEV'
       TargetEnvironmentUrl: 'http://rom-dev-tcd365.crm3.dynamics.com/'
 - job: Restore_Qa
   displayName: Restore Qa
@@ -176,5 +176,5 @@ jobs:
   - task: PowerPlatformRestoreEnvironment@0
     inputs:
       authenticationType: 'PowerPlatformSPN'
-      PowerPlatformSPN: 'ROM QA'
+      PowerPlatformSPN: 'TDG CORE QA'
       TargetEnvironmentUrl: 'http://rom-qa-tcd365.crm3.dynamics.com/'
