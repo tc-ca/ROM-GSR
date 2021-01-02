@@ -8,8 +8,38 @@ resources:
     type: git
     ref: development
 jobs:
-- job: Job_1
-  displayName: Step 1
+- job: Backup_Dev
+  displayName: Backup Dev
+  pool:
+    vmImage: vs2017-win2016
+  steps:
+  - task: PowerPlatformToolInstaller@0
+    inputs:
+      DefaultVersion: true
+  - task: PowerPlatformBackupEnvironment@0
+    inputs:
+      authenticationType: 'PowerPlatformSPN'
+      PowerPlatformSPN: 'ROM Dev'
+      BackupLabel: 'Full Backup - $(Build.BuildNumber)'
+- job: Backup_Qa
+  displayName: Backup Qa
+  pool:
+    vmImage: vs2017-win2016
+  steps:
+  - task: PowerPlatformToolInstaller@0
+    inputs:
+      DefaultVersion: true
+  - task: PowerPlatformBackupEnvironment@0
+    inputs:
+      authenticationType: 'PowerPlatformSPN'
+      PowerPlatformSPN: 'ROM QA'
+      BackupLabel: 'Full Backup - $(Build.BuildNumber)'
+- job: Rollup_Export_Dev_Import_Qa
+  displayName: Rollup_Export_Dev_Import_Qa
+  dependsOn:
+  - Backup_Dev
+  - Backup_Qa
+  condition: and(succeeded('Backup_Dev'),succeeded('Backup_Qa'))
   pool:
     vmImage: vs2017-win2016
   steps:
@@ -47,6 +77,11 @@ jobs:
     displayName: Publish Customizations
     inputs:
       crmConnectionString: $(ConnectionStringDev)
+  - task: MSCRMCloneSolution@12
+    inputs:
+      crmConnectionString: '$(ConnectionStringDev)'
+      uniqueName: '$(CoreSolutionName)'
+      crmConnectionTimeout: '999'
   - task: MSCRMExportSolution@12
     displayName: 'Export Manged Solution: $(CoreSolutionName)'
     timeoutInMinutes: 1900
@@ -111,3 +146,35 @@ jobs:
       crmConnectionString: $(ConnectionStringDev)
       uniqueName: $(CoreSolutionName)
       crmConnectionTimeout: 900
+- job: Restore_Dev
+  displayName: Restore Dev
+  dependsOn:
+  - Rollup_Export_Dev_Import_Qa
+  condition: failed('Rollup_Export_Dev_Import_Qa')
+  pool:
+    vmImage: vs2017-win2016
+  steps:
+  - task: PowerPlatformToolInstaller@0
+    inputs:
+      DefaultVersion: true
+  - task: PowerPlatformRestoreEnvironment@0
+    inputs:
+      authenticationType: 'PowerPlatformSPN'
+      PowerPlatformSPN: 'ROM Dev'
+      TargetEnvironmentUrl: 'http://rom-dev-tcd365.crm3.dynamics.com/'
+- job: Restore_Qa
+  displayName: Restore Qa
+  dependsOn:
+  - Rollup_Export_Dev_Import_Qa
+  condition: failed('Rollup_Export_Dev_Import_Qa')
+  pool:
+    vmImage: vs2017-win2016
+  steps:
+  - task: PowerPlatformToolInstaller@0
+    inputs:
+      DefaultVersion: true
+  - task: PowerPlatformRestoreEnvironment@0
+    inputs:
+      authenticationType: 'PowerPlatformSPN'
+      PowerPlatformSPN: 'ROM QA'
+      TargetEnvironmentUrl: 'http://rom-qa-tcd365.crm3.dynamics.com/'
