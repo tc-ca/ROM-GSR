@@ -88,7 +88,7 @@ stages:
           New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)'
           Write-Host "$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName) folder created."
         }
-        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory) -Destination $(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)
+        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\* -Destination $(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
