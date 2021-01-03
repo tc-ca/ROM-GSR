@@ -1,6 +1,11 @@
 # Variable 'ConnectionStringDev' was defined in the Variables tab
 # Variable 'ConnectionStringQa' was defined in the Variables tab
 # Variable 'CoreSolutionName' was defined in the Variables tab
+trigger:
+- none
+
+pr:
+- none
 
 resources:
   repositories:
@@ -67,9 +72,10 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        $solutionPath = "$(Agent.ArtifactStagingDirectory)"
+        #extract version number from filename
+        $solutionPath = "$(Agent.BuildDirectory)\drop"
         Write-Output "solutionpath = $solutionPath"
-        $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "$(CoreSolutionName)*managed*" | Sort-Object -Descending | Select-Object -first 1
+        $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "$(LatestPatchName)*managed*" | Sort-Object -Descending | Select-Object -first 1
         Write-Output "file = $managedFile"
         $Inputstring = $managedFile.BaseName + $managedFile.Extension
         Write-Output "input string = $Inputstring"
@@ -77,12 +83,40 @@ jobs:
         $version = "$($matches[1])"
         Write-Output "version = $version"
         Write-Host "##vso[task.setvariable variable=SolutionVersion]$version"
+        
+        #create next version
+        $versionParts = $version.Split("_")
+        
+        $major = "$($versionParts[0])"
+        $minor = "$($versionParts[1])"
+        $build = "$($versionParts[2])"
+        $revision = "$($versionParts[3])"
+        
+        [int]$nextMinor = 0
+        [bool]$result = [int]::TryParse($minor, [ref]$nextMinor)
+        $nextMinor = $nextMinor + 1
+        [string]$nextVersion = "$major.$nextMinor.$build.$revision"
+        
+        Write-Output  "major = $major"
+        Write-Output  "minor = $minor"
+        Write-Output  "build = $build"
+        Write-Output  "revision = $revision"
+        Write-Output  "nextVersion = $nextVersion"
+        Write-Host "##vso[task.setvariable variable=NextSolutionVersion]$nextVersion"
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: $(CoreSolutionName)_$(SolutionVersion)_managed.zip'
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: 'Rollup'
       publishLocation: 'Container'
+  - powershell: |
+      If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)'))
+      {
+        Write-Host "$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName) folder does not exists."
+        New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)'
+        Write-Host "$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName) folder created."
+      }
+      Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory) -Destination $(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)
   - task: MSCRMImportSolution@12
     displayName: Import Managed Solution
     inputs:
@@ -113,6 +147,7 @@ jobs:
   - task: MSCRMCreatePatch@12
     displayName: 'Create Patch: $(CoreSolutionName)'
     inputs:
-      crmConnectionString: $(ConnectionStringDev)
-      uniqueName: $(CoreSolutionName)
-      crmConnectionTimeout: 900
+      crmConnectionString: '$(ConnectionStringDev)'
+      uniqueName: '$(CoreSolutionName)'
+      versionNumber: '$(NextSolutionVersion)'
+      crmConnectionTimeout: '900'
