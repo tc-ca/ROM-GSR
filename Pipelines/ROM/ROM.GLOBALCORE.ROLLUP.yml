@@ -59,7 +59,7 @@ jobs:
       crmConnectionTimeout: '999'
   - task: MSCRMExportSolution@12
     displayName: 'Export Manged Solution: $(CoreSolutionName)'
-    timeoutInMinutes: 1900
+    timeoutInMinutes: 4000
     inputs:
       crmConnectionString: '$(ConnectionStringDev)'
       solutionName: '$(CoreSolutionName)'
@@ -67,7 +67,9 @@ jobs:
       exportUnmanaged: true
       includeVersionInSolutionFile: true
       outputPath: '$(Build.ArtifactStagingDirectory)'
-      crmConnectionTimeout: '1900'
+      crmConnectionTimeout: '4000'
+      useAsyncMode: true
+      asyncWaitTimeout: '4000'
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
