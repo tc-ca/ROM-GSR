@@ -241,6 +241,27 @@ stages:
               publish: true
               solutionName: '$(LatestPatchName)'
               crmConnectionTimeout: 360
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'specific'
+              project: '0e26be07-8156-4953-b64e-80a4ed8a33f3'
+              pipeline: '461'
+              buildVersionToDownload: 'latest'
+              allowPartiallySucceededBuilds: true
+              downloadType: 'single'
+              artifactName: 'WebResources'
+              itemPattern: 'WebResources/**'
+              downloadPath: '$(Agent.BuildDirectory)'
+          - task: MSCRMUpdateWebResource@12
+            inputs:
+              crmConnectionString: '$(ConnectionStringQa)'
+              webResourceDeploymentType: 'jsonMapping'
+              webResourceFolderPath: '$(Agent.BuildDirectory)\WebResources'
+              webResourceJsonMappingPath: '$(Agent.BuildDirectory)\WebResources\webresourceMapping.json'
+              failIfWebResourceNotFound: true
+              publish: true
+              solutionName: '$(LatestPatchName)'
+              crmConnectionTimeout: 360
           - task: MSCRMPublishCustomizations@12
             inputs:
               crmConnectionString: '$(ConnectionStringQa)'
