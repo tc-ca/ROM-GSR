@@ -34,7 +34,17 @@ stages:
         crmConnectionString: '$(ConnectionStringDev)'
         solutionName: '$(LatestPatchName)'
         exportManaged: true
-        exportUnmanaged: true
-        includeVersionInSolutionFile: true
+        exportUnmanaged: false
         outputPath: '$(Build.ArtifactStagingDirectory)'
         crmConnectionTimeout: '1960'
+    - task: MSCRMGetSolutionMissingDependencies@12
+      inputs:
+        crmConnectionString: '$(ConnectionStringDev)'
+        solutionName: '$(LatestPatchName)'
+        warnIfMissing: true
+    - task: MSCRMGetSolutionMissingComponents@12
+      inputs:
+        crmConnectionString: '$(ConnectionStringQA)'
+        solutionFile: '$(Build.ArtifactStagingDirectory)/($LatestPatchName)_managed.zip'
+        errorIfMissing: true
+        crmConnectionTimeout: '200'
