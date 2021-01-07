@@ -1,6 +1,21 @@
 trigger:
 - none
 
+resources:
+  pipelines:
+  - pipeline: QM
+    source: QM.BUILD
+    trigger:
+      branches:
+        include:
+          - development
+  - pipeline: TC_POWERAPPS
+    source: ROM.POWERAPPS.WEBRESOURCES.BUILD
+    trigger:
+      branches:
+        include:
+          - development
+
 pr:
 - none
 
