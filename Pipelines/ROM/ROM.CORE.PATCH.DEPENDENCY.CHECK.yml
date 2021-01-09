@@ -4,6 +4,20 @@ trigger:
 pr:
 - none
 
+# this is being defined in app-ci pipeline
+resources:
+  pipelines:
+  - pipeline: QM            # Name of the pipeline resource
+    source: QM.BUILD        # Name of the pipeline referenced by the pipeline resource
+    trigger: 
+      branches:
+      - development
+  - pipeline: POWERAPPS_WEBRESOURCES            # Name of the pipeline resource
+    source: ROM.POWERAPPS.WEBRESOURCES.BUILD    # Name of the pipeline referenced by the pipeline resource
+    trigger: 
+      branches:
+      - development
+
 stages:
 - stage: CheckForMissingDependencies
   pool:
