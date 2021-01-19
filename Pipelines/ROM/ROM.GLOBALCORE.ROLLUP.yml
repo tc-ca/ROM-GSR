@@ -51,7 +51,8 @@ jobs:
   - task: MSCRMPublishCustomizations@12
     displayName: Publish Customizations
     inputs:
-      crmConnectionString: $(ConnectionStringDev)
+      crmConnectionString: '$(ConnectionStringDev)'
+      crmConnectionTimeout: '360'
   - task: MSCRMCloneSolution@12
     inputs:
       crmConnectionString: '$(ConnectionStringDev)'
