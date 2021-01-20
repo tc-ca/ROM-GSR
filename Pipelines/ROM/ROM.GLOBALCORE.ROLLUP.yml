@@ -1,6 +1,10 @@
 # Variable 'ConnectionStringDev' was defined in the Variables tab
 # Variable 'ConnectionStringQa' was defined in the Variables tab
 # Variable 'CoreSolutionName' was defined in the Variables tab
+variables:
+  mavenVersion: '1.0'
+  buildVersion: $(Build.SourceBranch)
+
 trigger:
 - none
 
@@ -86,7 +90,7 @@ jobs:
       Write-Host "${{ eq('$(PatchExists)', 'False') }}"
       Write-Host variables['task.GetLatestPatchTask.PatchExists']
   - task: MSCRMCloneSolution@12
-    condition: and(succeeded(), ne(task.GetLatestPatchTask.LatestPatchName, ''))
+    condition: and(succeeded(), ne('$(LatestPatchName)', ''))
     inputs:
       crmConnectionString: '$(ConnectionStringDev)'
       uniqueName: '$(CoreSolutionName)'
