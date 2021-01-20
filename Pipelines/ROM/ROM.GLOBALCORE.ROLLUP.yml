@@ -26,6 +26,24 @@ jobs:
       targetType: 'inline'
       script: |
         Write-Host "============================================"
+        $CoreSolutionName = "${env:CORESOLUTIONNAME}"
+        $solutionPath = "$(Agent.BuildDirectory)\drop"
+        $solutionSearchString = "$CoreSolutionName*managed*"
+
+        Write-Output "CoreSolutionName = $CoreSolutionName"
+        Write-Output "solutionpath = $solutionPath"
+        Write-Output "solutionSearchString = $solutionSearchString"
+
+        if ([string]::IsNullOrEmpty($CoreSolutionName) -or [string]::IsNullOrEmpty($solutionPath) -or [string]::IsNullOrEmpty($solutionSearchString))
+        {
+            throw "Variable check failed."
+        }
+      failOnStderr: true
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        Write-Host "============================================"
         Write-Host "System.DefaultWorkingDirectory"
         Get-ChildItem -Path "$(System.DefaultWorkingDirectory)"
         Write-Host "============================================"
@@ -76,9 +94,15 @@ jobs:
       targetType: 'inline'
       script: |
         #extract version number from filename
+        $CoreSolutionName = "${env:CORESOLUTIONNAME}"
         $solutionPath = "$(Agent.BuildDirectory)\drop"
+        $solutionSearchString = "$CoreSolutionName*managed*"
+
+        Write-Output "CoreSolutionName = $CoreSolutionName"
         Write-Output "solutionpath = $solutionPath"
-        $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "$(CoreSolutionName)*managed*" | Sort-Object -Descending | Select-Object -first 1
+        Write-Output "solutionSearchString = $solutionSearchString"
+
+        $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter $solutionSearchString | Sort-Object -Descending | Select-Object -first 1
         Write-Output "file = $managedFile"
         $Inputstring = $managedFile.BaseName + $managedFile.Extension
         Write-Output "input string = $Inputstring"
