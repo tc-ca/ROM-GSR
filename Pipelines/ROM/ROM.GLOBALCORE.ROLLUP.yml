@@ -95,10 +95,10 @@ jobs:
       targetType: 'inline'
       script: |
         Write-Host "============================================"
-        $patchExists = ${env:PatchExists}
+        $patchExists = "${env:PatchExists}"
         $type = $patchExists.GetType().Name
         Write-Output "precheck: type = $type"
-        Write-Output "precheck: type=String: $($type.Equals("String"))"
+        Write-Output "precheck: type=String: $($type.Equals('String'))"
         if ($type = "String")
         {
             switch -regex ($patchExists)
