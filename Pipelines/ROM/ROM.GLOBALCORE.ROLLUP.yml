@@ -87,9 +87,7 @@ jobs:
       Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.LatestPatchName]$(LatestPatchName)"
       Write-Host "Patch Exists =  $(PatchExists)"
       Write-Host "Latest Patch Name =  $(LatestPatchName)"
-      Write-Host "PatchExists ${{ $(PatchExists) }}"
       Write-Host "${{ eq('$(PatchExists)', 'False') }}"
-      Write-Host variables['task.GetLatestPatchTask.PatchExists']
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
