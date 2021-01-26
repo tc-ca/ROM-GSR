@@ -87,8 +87,37 @@ jobs:
       Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.LatestPatchName]$(LatestPatchName)"
       Write-Host "Patch Exists =  $(PatchExists)"
       Write-Host "Latest Patch Name =  $(LatestPatchName)"
+      Write-Host "PatchExists ${{ $(PatchExists) }}"
       Write-Host "${{ eq('$(PatchExists)', 'False') }}"
       Write-Host variables['task.GetLatestPatchTask.PatchExists']
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        Write-Host "============================================"
+        $patchExists = ${env:PatchExists}
+        $type = $patchExists.GetType().Name
+        Write-Output "precheck: type = $type"
+        Write-Output "precheck: type=String: $($type.Equals("String"))"
+        if ($type = "String")
+        {
+            switch -regex ($patchExists)
+            {
+                "^(1|true|yes|on|enabled)$" { $patchExistsBool = $true }
+
+                default { $patchExistsBool = $false }
+            }
+        }
+        else
+        {
+            $patchExistsBool = $patchExists
+        }
+        Write-Output "postCheck: patchExistsBool = $patchExistsBool"
+        if ($patchExistsBool -eq $false)
+        {
+            throw "No patch currently exists no need to rollup."
+        }
+      failOnStderr: true
   - task: MSCRMCloneSolution@12
     inputs:
       crmConnectionString: '$(ConnectionStringDev)'
@@ -162,23 +191,6 @@ jobs:
         Write-Host "$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName) folder created."
       }
       Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory) -Destination $(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)
-  - task: MSCRMImportSolution@12
-    displayName: Import Managed Solution
-    inputs:
-      crmConnectionString: $(ConnectionStringQa)
-      solutionFile: $(Build.ArtifactStagingDirectory)\$(CoreSolutionName)_$(SolutionVersion)_managed.zip
-      publishWorkflows: true
-      holdingSolution: true
-      asyncWaitTimeout: 4000
-      crmConnectionTimeout: 4000
-  - task: MSCRMApplySolution@12
-    displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
-    inputs:
-      crmConnectionString: $(ConnectionStringQa)
-      solutionName: $(CoreSolutionName)
-      useAsyncMode: true
-      asyncWaitTimeout: 4000
-      crmConnectionTimeout: 4000
   - powershell: |
       echo "Committing all CDS solution changes"
       git config user.email "nepasrepondre-noreply@tc.gc.ca"
@@ -189,10 +201,37 @@ jobs:
       
       echo "Push solution changes to the remote repository"
       git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
-  - task: MSCRMCreatePatch@12
-    displayName: 'Create Patch: $(CoreSolutionName)'
-    inputs:
-      crmConnectionString: '$(ConnectionStringDev)'
-      uniqueName: '$(CoreSolutionName)'
-      versionNumber: '$(NextSolutionVersion)'
-      crmConnectionTimeout: '900'
+  # - task: MSCRMImportSolution@12
+  #   displayName: Import Managed Solution
+  #   inputs:
+  #     crmConnectionString: $(ConnectionStringQa)
+  #     solutionFile: $(Build.ArtifactStagingDirectory)\$(CoreSolutionName)_$(SolutionVersion)_managed.zip
+  #     publishWorkflows: true
+  #     holdingSolution: true
+  #     asyncWaitTimeout: 4000
+  #     crmConnectionTimeout: 4000
+  # - task: MSCRMApplySolution@12
+  #   displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
+  #   inputs:
+  #     crmConnectionString: $(ConnectionStringQa)
+  #     solutionName: $(CoreSolutionName)
+  #     useAsyncMode: true
+  #     asyncWaitTimeout: 4000
+  #     crmConnectionTimeout: 4000
+  # - powershell: |
+  #     echo "Committing all CDS solution changes"
+  #     git config user.email "nepasrepondre-noreply@tc.gc.ca"
+  #     git config user.name "tc-buildbot"
+  #     git checkout development
+  #     git add --all
+  #     git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
+      
+  #     echo "Push solution changes to the remote repository"
+  #     git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
+  # - task: MSCRMCreatePatch@12
+  #   displayName: 'Create Patch: $(CoreSolutionName)'
+  #   inputs:
+  #     crmConnectionString: '$(ConnectionStringDev)'
+  #     uniqueName: '$(CoreSolutionName)'
+  #     versionNumber: '$(NextSolutionVersion)'
+  #     crmConnectionTimeout: '900'
