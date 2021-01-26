@@ -1,0 +1,230 @@
+# Variable 'ConnectionStringDev' was defined in the Variables tab
+# Variable 'ConnectionStringQa' was defined in the Variables tab
+# Variable 'CoreSolutionName' was defined in the Variables tab
+variables:
+  mavenVersion: '1.0'
+  buildVersion: $(Build.SourceBranch)
+
+trigger:
+- none
+
+pr:
+- none
+
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: development
+jobs:
+- job: Export_Dev_Import_Qa
+  displayName: Export_Dev_Import_Qa
+  pool:
+    vmImage: vs2017-win2016
+  steps:
+  - checkout: self
+    clean: true 
+    persistCredentials: True
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        Write-Host "============================================"
+        $CoreSolutionName = "${env:CORESOLUTIONNAME}"
+        $solutionPath = "$(Build.ArtifactStagingDirectory)"
+        $solutionSearchString = "$CoreSolutionName*managed*"
+
+        Write-Output "CoreSolutionName = $CoreSolutionName"
+        Write-Output "solutionpath = $solutionPath"
+        Write-Output "solutionSearchString = $solutionSearchString"
+
+        if ([string]::IsNullOrEmpty($CoreSolutionName) -or [string]::IsNullOrEmpty($solutionPath) -or [string]::IsNullOrEmpty($solutionSearchString))
+        {
+            throw "Variable check failed."
+        }
+      failOnStderr: true
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        Write-Host "============================================"
+        Write-Host "System.DefaultWorkingDirectory"
+        Get-ChildItem -Path "$(System.DefaultWorkingDirectory)"
+        Write-Host "============================================"
+        Write-Host "Agent.BuildDirectory"
+        Get-ChildItem -Path "$(Agent.BuildDirectory)"
+        Write-Host "============================================"
+        Write-Host ""
+        Write-Host "============================================"
+        Write-Host "Build.ArtifactStagingDirectory"
+        Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)"
+        Write-Host "============================================"
+        Write-Host "============================================"
+        Write-Host "Build.BinariesDirectory"
+        Get-ChildItem -Path "$(Build.BinariesDirectory)"
+        Write-Host "============================================"
+        Write-Host "============================================"
+        Write-Host "Build.SourcesDirectory"
+        Get-ChildItem -Path "$(Build.SourcesDirectory)"
+        Write-Host "============================================"
+      errorActionPreference: 'continue'
+  - task: MSCRMToolInstaller@12
+    displayName: Power DevOps Tool Installer
+  - task: MSCRMPublishCustomizations@12
+    displayName: Publish Customizations
+    inputs:
+      crmConnectionString: '$(ConnectionStringDev)'
+      crmConnectionTimeout: '360'
+  - task: MSCRMGetLatestPatch@12
+    name: GetLatestPatchTask
+    inputs:
+      crmConnectionString: '$(ConnectionStringDev)'
+      solutionName: '$(CoreSolutionName)'
+      existsVariableName: 'PatchExists'
+      patchVariableName: 'LatestPatchName'
+  - powershell: |
+      Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.PatchExists]$(PatchExists)"
+      Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.LatestPatchName]$(LatestPatchName)"
+      Write-Host "Patch Exists =  $(PatchExists)"
+      Write-Host "Latest Patch Name =  $(LatestPatchName)"
+      Write-Host "${{ eq('$(PatchExists)', 'False') }}"
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        Write-Host "============================================"
+        $patchExists = "${env:PatchExists}"
+        $type = $patchExists.GetType().Name
+        Write-Output "precheck: type = $type"
+        Write-Output "precheck: type=String: $($type.Equals('String'))"
+        if ($type = "String")
+        {
+            switch -regex ($patchExists)
+            {
+                "^(1|true|yes|on|enabled)$" { $patchExistsBool = $true }
+        
+                default { $patchExistsBool = $false }
+            }
+        }
+        else
+        {
+            $patchExistsBool = $patchExists
+        }
+        Write-Output "postCheck: patchExistsBool = $patchExistsBool"
+        if ($patchExistsBool -eq $true)
+        {
+            throw "There exists a patch for current solution. Must Rollup solution before running this pipeline."
+        }
+      failOnStderr: true
+  - task: MSCRMExportSolution@12
+    displayName: 'Export Manged Solution: $(CoreSolutionName)'
+    timeoutInMinutes: 4000
+    inputs:
+      crmConnectionString: '$(ConnectionStringDev)'
+      solutionName: '$(CoreSolutionName)'
+      exportManaged: true
+      exportUnmanaged: true
+      includeVersionInSolutionFile: true
+      outputPath: '$(Build.ArtifactStagingDirectory)'
+      crmConnectionTimeout: '4000'
+      useAsyncMode: true
+      asyncWaitTimeout: '4000'
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        #extract version number from filename
+        $CoreSolutionName = "${env:CORESOLUTIONNAME}"
+        $solutionPath = "$(Build.ArtifactStagingDirectory)"
+        $solutionSearchString = "$CoreSolutionName*managed*"
+
+        Write-Output "CoreSolutionName = $CoreSolutionName"
+        Write-Output "solutionpath = $solutionPath"
+        Write-Output "solutionSearchString = $solutionSearchString"
+
+        $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter $solutionSearchString | Sort-Object -Descending | Select-Object -first 1
+        Write-Output "file = $managedFile"
+        $Inputstring = $managedFile.BaseName + $managedFile.Extension
+        Write-Output "input string = $Inputstring"
+        $Inputstring -match "([0-9]+_[0-9]+_[0-9]+_[0-9]+)"
+        $version = "$($matches[1])"
+        Write-Output "version = $version"
+        Write-Host "##vso[task.setvariable variable=SolutionVersion]$version"
+        
+        #create next version
+        $versionParts = $version.Split("_")
+        
+        $major = "$($versionParts[0])"
+        $minor = "$($versionParts[1])"
+        $build = "$($versionParts[2])"
+        $revision = "$($versionParts[3])"
+        
+        [int]$nextBuild = 0
+        [bool]$result = [int]::TryParse($build, [ref]$nextBuild)
+        $nextBuild = $nextBuild + 1
+        [string]$nextVersion = "$major.$minor.$nextBuild.$revision"
+        
+        Write-Output  "major = $major"
+        Write-Output  "minor = $minor"
+        Write-Output  "build = $build"
+        Write-Output  "revision = $revision"
+        Write-Output  "nextVersion = $nextVersion"
+        Write-Host "##vso[task.setvariable variable=NextSolutionVersion]$nextVersion"
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: $(CoreSolutionName)_$(SolutionVersion)_managed.zip'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'TC_GlobalCore_Base'
+      publishLocation: 'Container'
+  - powershell: |
+      If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)'))
+      {
+        Write-Host "$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName) folder does not exists."
+        New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)'
+        Write-Host "$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName) folder created."
+      }
+      Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory) -Destination $(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)
+  - powershell: |
+      echo "Committing all CDS solution changes"
+      git config user.email "nepasrepondre-noreply@tc.gc.ca"
+      git config user.name "tc-buildbot"
+      git checkout development
+      git add --all
+      git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
+      
+      echo "Push solution changes to the remote repository"
+      git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
+   - task: MSCRMImportSolution@12
+     displayName: Import Managed Solution
+     inputs:
+       crmConnectionString: $(ConnectionStringQa)
+       solutionFile: $(Build.ArtifactStagingDirectory)\$(CoreSolutionName)_$(SolutionVersion)_managed.zip
+       publishWorkflows: true
+       holdingSolution: true
+       asyncWaitTimeout: 4000
+       crmConnectionTimeout: 4000
+   - task: MSCRMApplySolution@12
+     displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
+     inputs:
+       crmConnectionString: $(ConnectionStringQa)
+       solutionName: $(CoreSolutionName)
+       useAsyncMode: true
+       asyncWaitTimeout: 4000
+       crmConnectionTimeout: 4000
+   - powershell: |
+       echo "Committing all CDS solution changes"
+       git config user.email "nepasrepondre-noreply@tc.gc.ca"
+       git config user.name "tc-buildbot"
+       git checkout development
+       git add --all
+       git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
+     
+       echo "Push solution changes to the remote repository"
+       git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
+   - task: MSCRMCreatePatch@12
+     displayName: 'Create Patch: $(CoreSolutionName)'
+     inputs:
+       crmConnectionString: '$(ConnectionStringDev)'
+       uniqueName: '$(CoreSolutionName)'
+       versionNumber: '$(NextSolutionVersion)'
+       crmConnectionTimeout: '900'
