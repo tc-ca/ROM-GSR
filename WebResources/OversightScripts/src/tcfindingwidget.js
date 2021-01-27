@@ -25,7 +25,8 @@ var widget = {
   activatedByChanged: function(activatedBy) {
     //we do not need to check acticatedBy parameter, since we will use our widget for customType only
     //We are creating a new class and derived it from text question type. It means that text model (properties and fuctions) will be available to us
-    Survey.JsonObject.metaData.addClass("finding", [], null, "text");
+    //Added comments and file as properties to save the values
+    Survey.JsonObject.metaData.addClass("finding", [{name: "reference", default: ""}, {name: "comments", default: ""},{name: "file", default: ""}], null, "text");
   },
   //If you want to use the default question rendering then set this property to true. We do not need any default rendering, we will use our our htmlTemplate
   isDefaultRender: false,
@@ -36,37 +37,60 @@ var widget = {
   afterRender: function(question, el) {
     //el is our root element in htmlTemplate, is "div" in our case
     //get the text element
-    //var reference = el.getElementsByClassName("reference")[0];
     var comments = el.getElementsByClassName("comments")[0];
     var file = el.getElementsByClassName("file")[0];
 
-    findingData = {
-      reference: "",
-      text: "",
-      comments: "",
-      file: ""
-    }
-    question.value = findingData;
-
     comments.onchange = function () {
-      //question.value.comments = comments.value;
+      question.comments = comments.value;
+      question.value = {
+        provisionReference: question.reference,
+        provisionText: question.description,
+        comments: question.comments,
+        documentaryEvidence: question.file
+      }
     }
 
     file.onchange = function () {
-      //question.value.file = file.value;
+      question.file = file.value;
+      question.value = {
+        provisionReference: question.reference,
+        provisionText: question.description,
+        comments: question.comments,
+        documentaryEvidence: question.file
+      }
     }
 
 
     //set the changed value into question value
     onValueChangedCallback = function() {
-      parent.Xrm.WebApi.retrieveMultipleRecords("qm_rclegislation", `?$select=qm_name,qm_legislationlbl,qm_legislationetxt&$filter=qm_name eq '${question.title}'`).then(
+      parent.Xrm.WebApi.retrieveMultipleRecords("qm_rclegislation", `?$select=qm_name,qm_legislationlbl,qm_legislationetxt,_qm_tylegislationtypeid_value,_qm_rcparentlegislationid_value&$filter=qm_name eq '${question.title}'`).then(
         function success(result) {
-          //question.value.reference = result.entities[0].qm_legislationlbl;
-          //question.value.text = result.entities[0].qm_legislationetxt;
-
           question.name = `finding-${result.entities[0].qm_name}`;
-          question.description = result.entities[0].qm_legislationetxt;
-          question.value = "test";
+          //question.description = result.entities[0].qm_legislationetxt;
+          question.reference = result.entities[0].qm_legislationlbl;
+
+          question.description = "";
+          if (result.entities.length > 0) {
+            parent.Xrm.WebApi.retrieveMultipleRecords("qm_rclegislation", `?$select=qm_name,qm_legislationlbl,qm_legislationetxt,_qm_tylegislationtypeid_value,_qm_rcparentlegislationid_value&$filter=_qm_rcparentlegislationid_value eq '${result.entities[0]._qm_rcparentlegislationid_value}'`).then(
+              function success(result) {
+                let siblings =  result.entities;
+                for (var i in siblings) {
+                  question.description += `${siblings[i].qm_legislationlbl} ${siblings[i].qm_legislationetxt}<br/>`;
+                }
+              },
+              function (error) {
+                  console.log(error.message);
+                  // handle error conditions
+              }
+            );
+          }
+
+          question.value = {
+            provisionReference: question.reference,
+            provisionText: question.description,
+            comments: question.comments,
+            documentaryEvidence: question.file
+          }
             // perform additional operations on retrieved records
         },
         function (error) {
@@ -74,6 +98,8 @@ var widget = {
             // handle error conditions
         }
       );
+
+
     };
     onReadOnlyChangedCallback = function() {
       if (question.isReadOnly) {
@@ -103,3 +129,5 @@ var widget = {
 
 //Register our widget in singleton custom widget collection
 Survey.CustomWidgetCollection.Instance.addCustomWidget(widget, "customtype");
+
+
