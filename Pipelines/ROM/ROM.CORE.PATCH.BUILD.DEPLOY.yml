@@ -189,7 +189,7 @@ stages:
                 Write-Output "file = $managedFile"
                 $Inputstring = $managedFile.BaseName + $managedFile.Extension
                 Write-Output "input string = $Inputstring"
-                $Inputstring -match "([0-9]+_[0-9]+_[0-9]+_[0-9]+)"
+                $Inputstring -match "_([0-9]+_[0-9]+_[0-9]+_[0-9]+)_"
                 $version = "$($matches[1])"
                 Write-Output "version = $version"
                 Write-Host "##vso[task.setvariable variable=SolutionVersion]$version"
@@ -220,6 +220,48 @@ stages:
               publishWorkflows: true
               overwriteUnmanagedCustomizations: true
               override: true
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'specific'
+              project: '0e26be07-8156-4953-b64e-80a4ed8a33f3'
+              pipeline: '409'
+              buildVersionToDownload: 'latest'
+              allowPartiallySucceededBuilds: true
+              downloadType: 'single'
+              artifactName: 'WebResources'
+              itemPattern: 'WebResources/**'
+              downloadPath: '$(Agent.BuildDirectory)'
+          - task: MSCRMUpdateWebResource@12
+            inputs:
+              crmConnectionString: '$(ConnectionStringQa)'
+              webResourceDeploymentType: 'jsonMapping'
+              webResourceFolderPath: '$(Agent.BuildDirectory)\WebResources\dist'
+              webResourceJsonMappingPath: '$(Agent.BuildDirectory)\WebResources\dist\webresourceMapping.json'
+              failIfWebResourceNotFound: true
+              publish: true
+              solutionName: '$(LatestPatchName)'
+              crmConnectionTimeout: 360
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'specific'
+              project: '0e26be07-8156-4953-b64e-80a4ed8a33f3'
+              pipeline: '461'
+              buildVersionToDownload: 'latest'
+              allowPartiallySucceededBuilds: true
+              downloadType: 'single'
+              artifactName: 'WebResources'
+              itemPattern: 'WebResources/**'
+              downloadPath: '$(Agent.BuildDirectory)'
+          - task: MSCRMUpdateWebResource@12
+            inputs:
+              crmConnectionString: '$(ConnectionStringQa)'
+              webResourceDeploymentType: 'jsonMapping'
+              webResourceFolderPath: '$(Agent.BuildDirectory)\WebResources'
+              webResourceJsonMappingPath: '$(Agent.BuildDirectory)\WebResources\webresourceMapping.json'
+              failIfWebResourceNotFound: true
+              publish: true
+              solutionName: '$(LatestPatchName)'
+              crmConnectionTimeout: 360
           - task: MSCRMPublishCustomizations@12
             inputs:
               crmConnectionString: '$(ConnectionStringQa)'

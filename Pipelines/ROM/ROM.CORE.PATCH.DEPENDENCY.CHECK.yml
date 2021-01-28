@@ -1,0 +1,65 @@
+trigger:
+- none
+
+pr:
+- none
+
+# this is being defined in app-ci pipeline
+resources:
+  pipelines:
+  - pipeline: QM            # Name of the pipeline resource
+    source: QM.BUILD        # Name of the pipeline referenced by the pipeline resource
+    trigger: 
+      branches:
+      - development
+  - pipeline: POWERAPPS_WEBRESOURCES            # Name of the pipeline resource
+    source: ROM.POWERAPPS.WEBRESOURCES.BUILD    # Name of the pipeline referenced by the pipeline resource
+    trigger: 
+      branches:
+      - development
+
+stages:
+- stage: CheckForMissingDependencies
+  pool:
+      vmImage: 'vs2017-win2016'
+  jobs:
+  - job: CheckForMissingDependencies
+    steps:
+    - task: MSCRMToolInstaller@12
+      inputs:
+        nugetFeed: 'official'
+        psFeed: 'official'
+    - task: MSCRMGetLatestPatch@12
+      name: GetLatestPatchTask
+      inputs:
+        crmConnectionString: '$(ConnectionStringDev)'
+        solutionName: '$(CoreSolutionName)'
+        existsVariableName: 'PatchExists'
+        patchVariableName: 'LatestPatchName'
+    - powershell: |
+        Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.PatchExists]$(PatchExists)"
+        Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.LatestPatchName]$(LatestPatchName)"
+        Write-Host "Patch Exists =  $(PatchExists)"
+        Write-Host "Latest Patch Name =  $(LatestPatchName)"
+        Write-Host "${{ eq('$(PatchExists)', 'False') }}"
+        Write-Host variables['task.GetLatestPatchTask.PatchExists']
+    - task: MSCRMExportSolution@12
+      inputs:
+        crmConnectionString: '$(ConnectionStringDev)'
+        solutionName: '$(LatestPatchName)'
+        exportManaged: true
+        exportUnmanaged: false
+        outputPath: '$(Build.ArtifactStagingDirectory)'
+        crmConnectionTimeout: '1960'
+        useAsyncMode: true
+    - task: MSCRMGetSolutionMissingDependencies@12
+      inputs:
+        crmConnectionString: '$(ConnectionStringDev)'
+        solutionName: '$(LatestPatchName)'
+        warnIfMissing: true
+    - task: MSCRMGetSolutionMissingComponents@12
+      inputs:
+        crmConnectionString: '$(ConnectionStringQA)'
+        solutionFile: '$(Build.ArtifactStagingDirectory)/$(LatestPatchName)_managed.zip'
+        errorIfMissing: true
+        crmConnectionTimeout: '200'

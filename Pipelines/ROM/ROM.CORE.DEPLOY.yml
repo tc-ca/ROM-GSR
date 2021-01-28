@@ -1,9 +1,10 @@
 # Variable 'ConnectionStringDev' was defined in the Variables tab
 # Variable 'ConnectionStringQa' was defined in the Variables tab
 # Variable 'CoreSolutionName' was defined in the Variables tab
-variables:
-  mavenVersion: '1.0'
-  buildVersion: $(Build.SourceBranch)
+# Variable 'LatestPatchName' was defined in the Variables tab
+# Variable 'NextSolutionVersion' was defined in the Variables tab
+# Variable 'PatchExists' was defined in the Variables tab
+# Variable 'SolutionVersion' was defined in the Variables tab
 
 trigger:
 - none
@@ -17,8 +18,8 @@ resources:
     type: git
     ref: development
 jobs:
-- job: Rollup_Export_Dev_Import_Qa
-  displayName: Rollup_Export_Dev_Import_Qa
+- job: Export_Dev_Import_Qa
+  displayName: Export_Dev_Import_Qa
   pool:
     vmImage: vs2017-win2016
   steps:
@@ -111,16 +112,11 @@ jobs:
             $patchExistsBool = $patchExists
         }
         Write-Output "postCheck: patchExistsBool = $patchExistsBool"
-        if ($patchExistsBool -eq $false)
+        if ($patchExistsBool -eq $true)
         {
-            throw "No patch currently exists no need to rollup."
+            throw "There exists a patch for current solution. Must Rollup solution before running this pipeline."
         }
       failOnStderr: true
-  - task: MSCRMCloneSolution@12
-    inputs:
-      crmConnectionString: '$(ConnectionStringDev)'
-      uniqueName: '$(CoreSolutionName)'
-      crmConnectionTimeout: '999'
   - task: MSCRMExportSolution@12
     displayName: 'Export Manged Solution: $(CoreSolutionName)'
     timeoutInMinutes: 4000
@@ -164,10 +160,10 @@ jobs:
         $build = "$($versionParts[2])"
         $revision = "$($versionParts[3])"
         
-        [int]$nextMinor = 0
-        [bool]$result = [int]::TryParse($minor, [ref]$nextMinor)
-        $nextMinor = $nextMinor + 1
-        [string]$nextVersion = "$major.$nextMinor.$build.$revision"
+        [int]$nextBuild = 0
+        [bool]$result = [int]::TryParse($build, [ref]$nextBuild)
+        $nextBuild = $nextBuild + 1
+        [string]$nextVersion = "$major.$minor.$nextBuild.$revision"
         
         Write-Output  "major = $major"
         Write-Output  "minor = $minor"
@@ -179,7 +175,7 @@ jobs:
     displayName: 'Publish Artifact: $(CoreSolutionName)_$(SolutionVersion)_managed.zip'
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'Rollup'
+      ArtifactName: 'TC_GlobalCore_Base'
       publishLocation: 'Container'
   - powershell: |
       If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)'))
@@ -199,37 +195,27 @@ jobs:
       
       echo "Push solution changes to the remote repository"
       git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
-  # - task: MSCRMImportSolution@12
-  #   displayName: Import Managed Solution
-  #   inputs:
-  #     crmConnectionString: $(ConnectionStringQa)
-  #     solutionFile: $(Build.ArtifactStagingDirectory)\$(CoreSolutionName)_$(SolutionVersion)_managed.zip
-  #     publishWorkflows: true
-  #     holdingSolution: true
-  #     asyncWaitTimeout: 4000
-  #     crmConnectionTimeout: 4000
-  # - task: MSCRMApplySolution@12
-  #   displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
-  #   inputs:
-  #     crmConnectionString: $(ConnectionStringQa)
-  #     solutionName: $(CoreSolutionName)
-  #     useAsyncMode: true
-  #     asyncWaitTimeout: 4000
-  #     crmConnectionTimeout: 4000
-  # - powershell: |
-  #     echo "Committing all CDS solution changes"
-  #     git config user.email "nepasrepondre-noreply@tc.gc.ca"
-  #     git config user.name "tc-buildbot"
-  #     git checkout development
-  #     git add --all
-  #     git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
-      
-  #     echo "Push solution changes to the remote repository"
-  #     git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
-  # - task: MSCRMCreatePatch@12
-  #   displayName: 'Create Patch: $(CoreSolutionName)'
-  #   inputs:
-  #     crmConnectionString: '$(ConnectionStringDev)'
-  #     uniqueName: '$(CoreSolutionName)'
-  #     versionNumber: '$(NextSolutionVersion)'
-  #     crmConnectionTimeout: '900'
+  - task: MSCRMImportSolution@12
+    displayName: Import Managed Solution
+    inputs:
+      crmConnectionString: $(ConnectionStringQa)
+      solutionFile: $(Build.ArtifactStagingDirectory)\$(CoreSolutionName)_$(SolutionVersion)_managed.zip
+      publishWorkflows: true
+      holdingSolution: true
+      asyncWaitTimeout: 4000
+      crmConnectionTimeout: 4000
+  - task: MSCRMApplySolution@12
+    displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
+    inputs:
+      crmConnectionString: $(ConnectionStringQa)
+      solutionName: $(CoreSolutionName)
+      useAsyncMode: true
+      asyncWaitTimeout: 4000
+      crmConnectionTimeout: 4000
+  - task: MSCRMCreatePatch@12
+    displayName: 'Create Patch: $(CoreSolutionName)'
+    inputs:
+      crmConnectionString: '$(ConnectionStringDev)'
+      uniqueName: '$(CoreSolutionName)'
+      versionNumber: '$(NextSolutionVersion)'
+      crmConnectionTimeout: '900'
