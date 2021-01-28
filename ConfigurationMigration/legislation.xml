@@ -1,47 +1,4 @@
 <entities >
-  <entity name="qm_tyvalidationruletype" displayname="Validation Rule Type" etc="10574" primaryidfield="qm_tyvalidationruletypeid" primarynamefield="qm_name" disableplugins="false">
-    <fields>
-      <field updateCompare="true" displayname="Validation Rule Type" name="qm_tyvalidationruletypeid" type="guid" primaryKey="true" />
-      <field displayname="Validation Rule Type EN" name="qm_validationruletypeen" type="string" customfield="true" />
-      <field displayname="Validation Rule Type FR" name="qm_validationruletypefr" type="string" customfield="true" />
-    </fields>
-  </entity>
-  <entity name="qm_syresponse" displayname="Response" etc="10532" primaryidfield="qm_syresponseid" primarynamefield="qm_name" disableplugins="false">
-    <fields>
-      <field displayname="Response Text English" name="qm_responseetxt" type="string" customfield="true" />
-      <field displayname="Response Text French" name="qm_responseftxt" type="string" customfield="true" />
-      <field displayname="Response Type" name="qm_questionresponsetypecd" type="optionsetvalue" customfield="true" />
-      <field displayname="Question" name="qm_syquestionid" type="entityreference" lookupType="qm_syquestion" customfield="true" />
-      <field updateCompare="true" displayname="Question Response" name="qm_syresponseid" type="guid" primaryKey="true" />
-      <field displayname="Name" name="qm_name" type="string" customfield="true" />
-      <field displayname="Order" name="qm_ordernbr" type="number" customfield="true" />
-      <field displayname="Is Safety Concern" name="qm_issafetyconcern" type="bool" customfield="true" />
-      <field displayname="Is Problem" name="qm_isproblemind" type="bool" customfield="true" />
-    </fields>
-  </entity>
-  <entity name="qm_syquestionvalidationrule" displayname="Question Validation Rule" etc="10531" primaryidfield="qm_syquestionvalidationruleid" primarynamefield="qm_name" disableplugins="false">
-    <fields>
-      <field displayname="Is Enabled" name="qm_isenabledind" type="bool" customfield="true" />
-      <field displayname="Name" name="qm_name" type="string" customfield="true" />
-      <field displayname="Question" name="qm_syquestionid" type="entityreference" lookupType="qm_syquestion" customfield="true" />
-      <field updateCompare="true" displayname="Question Validation Rule" name="qm_syquestionvalidationruleid" type="guid" primaryKey="true" />
-      <field displayname="Validation Rule Type" name="qm_tyvalidationruletypeid" type="entityreference" lookupType="qm_tyvalidationruletype" customfield="true" />
-      <field displayname="validationvaluetxt" name="qm_validationvaluetxt" type="string" customfield="true" />
-    </fields>
-  </entity>
-  <entity name="qm_syquestion" displayname="Question" etc="10530" primaryidfield="qm_syquestionid" primarynamefield="qm_name" disableplugins="false">
-    <fields>
-      <field displayname="Group" name="qm_sygroupid" type="entityreference" lookupType="qm_sygroup" customfield="true" />
-      <field displayname="Is Visible" name="qm_isvisibleind" type="bool" customfield="true" />
-      <field displayname="Name" name="qm_name" type="string" customfield="true" />
-      <field displayname="Order Number" name="qm_ordernbr" type="number" customfield="true" />
-      <field displayname="Parent Question" name="qm_syquestionid_self" type="entityreference" lookupType="qm_syquestion" customfield="true" />
-      <field updateCompare="true" displayname="Question" name="qm_syquestionid" type="guid" primaryKey="true" />
-      <field displayname="Question E" name="qm_questione" type="string" customfield="true" />
-      <field displayname="Question F" name="qm_questionf" type="string" customfield="true" />
-      <field displayname="Question Response Type" name="qm_questionresponsetypecd" type="optionsetvalue" customfield="true" />
-    </fields>
-  </entity>
   <entity name="qm_tylegislationsource" displayname="Legislation Source" etc="10545" primaryidfield="qm_tylegislationsourceid" primarynamefield="qm_name" disableplugins="false">
     <fields>
       <field displayname="Name" name="qm_name" type="string" customfield="true" />
@@ -81,35 +38,6 @@
     <relationships>
       <relationship name="qm_rclegislation_tylegislationcharacterist" manyToMany="true" relatedEntityName="qm_rclegislation_tylegislationcharacterist" m2mTargetEntity="qm_tylegislationcharacteristic" m2mTargetEntityPrimaryKey="qm_tylegislationcharacteristicid" />
     </relationships>
-  </entity>
-  <entity name="qm_sygroup" displayname="Group" etc="10527" primaryidfield="qm_sygroupid" primarynamefield="qm_name" disableplugins="false">
-    <fields>
-      <field updateCompare="true" displayname="Group" name="qm_sygroupid" type="guid" primaryKey="true" />
-      <field displayname="Group E" name="qm_groupe" type="string" customfield="true" />
-      <field displayname="Group F" name="qm_groupf" type="string" customfield="true" />
-      <field displayname="Order Number" name="qm_ordernbr" type="number" customfield="true" />
-      <field displayname="Name" name="qm_name" type="string" customfield="true" />
-      <field displayname="Is Visible" name="qm_isvisibleind" type="bool" customfield="true" />
-    </fields>
-  </entity>
-  <entity name="qm_sydependencygroupitem" displayname="Dependency Group Item" etc="10525" primaryidfield="qm_sydependencygroupitemid" primarynamefield="qm_name" disableplugins="false">
-    <fields>
-      <field updateCompare="true" displayname="Dependency Group" name="qm_sydependencygroupid" type="entityreference" lookupType="qm_sydependencygroup" customfield="true" />
-      <field displayname="Dependency Group Item" name="qm_sydependencygroupitemid" type="guid" primaryKey="true" />
-      <field displayname="Dependency Value" name="qm_dependencyvaluetxt" type="string" customfield="true" />
-      <field displayname="Name" name="qm_name" type="string" customfield="true" />
-      <field displayname="Operator" name="qm_operatorcd" type="optionsetvaluecollection" customfield="true" />
-      <field displayname="Question" name="qm_syquestionid" type="entityreference" lookupType="qm_syquestion" customfield="true" />
-    </fields>
-  </entity>
-  <entity name="qm_sydependencygroup" displayname="Dependency Group" etc="10522" primaryidfield="qm_sydependencygroupid" primarynamefield="qm_name" disableplugins="false">
-    <fields>
-      <field updateCompare="true" displayname="Dependency Group" name="qm_sydependencygroupid" type="guid" primaryKey="true" />
-      <field displayname="Dependency Group Rule Type" name="qm_dependencygroupruletypecd" type="optionsetvaluecollection" customfield="true" />
-      <field displayname="Name" name="qm_name" type="string" customfield="true" />
-      <field displayname="Question" name="qm_syquestionid" type="entityreference" lookupType="qm_syquestion" customfield="true" />
-      <field displayname="Validation Rule" name="qm_syquestionvalidationruleid" type="entityreference" lookupType="qm_syquestionvalidationrule" customfield="true" />
-    </fields>
   </entity>
   <entity name="qm_tylegislationcharacteristic" displayname="Legislation Characteristic" etc="10547" primaryidfield="qm_tylegislationcharacteristicid" primarynamefield="qm_name" disableplugins="false">
     <fields>
