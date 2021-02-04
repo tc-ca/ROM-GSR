@@ -381,8 +381,8 @@ stages:
               failOnStderr: true
           - task: MSCRMImportSolution@12
             inputs:
-              crmConnectionString: '$(ConnectionStringQa)'
-              solutionFile: '$(Agent.BuildDirectory)\drop\$(CoreSolutionName)_$(SolutionVersion)_managed.zip'
+              crmConnectionString: '$(ConnectionStringAccTdg)'
+              solutionFile: '$(Agent.BuildDirectory)\drop\$(LatestPatchName)_$(SolutionVersion)_managed.zip'
               publishWorkflows: true
               overwriteUnmanagedCustomizations: true
               override: true
@@ -399,7 +399,7 @@ stages:
               downloadPath: '$(Agent.BuildDirectory)'
           - task: MSCRMUpdateWebResource@12
             inputs:
-              crmConnectionString: '$(ConnectionStringQa)'
+              crmConnectionString: '$(ConnectionStringAccTdg)'
               webResourceDeploymentType: 'jsonMapping'
               webResourceFolderPath: '$(Agent.BuildDirectory)\WebResources\dist'
               webResourceJsonMappingPath: '$(Agent.BuildDirectory)\WebResources\dist\webresourceMapping.json'
@@ -420,7 +420,7 @@ stages:
               downloadPath: '$(Agent.BuildDirectory)'
           - task: MSCRMUpdateWebResource@12
             inputs:
-              crmConnectionString: '$(ConnectionStringQa)'
+              crmConnectionString: '$(ConnectionStringAccTdg)'
               webResourceDeploymentType: 'jsonMapping'
               webResourceFolderPath: '$(Agent.BuildDirectory)\WebResources'
               webResourceJsonMappingPath: '$(Agent.BuildDirectory)\WebResources\webresourceMapping.json'
@@ -430,12 +430,7 @@ stages:
               crmConnectionTimeout: 360
           - task: MSCRMPublishCustomizations@12
             inputs:
-              crmConnectionString: '$(ConnectionStringQa)'
-          - task: MSCRMCreatePatch@12
-            inputs:
-              crmConnectionString: '$(ConnectionStringDev)'
-              uniqueName: '$(CoreSolutionName)'
-              versionNumber: '$(NextSolutionVersion)'
+              crmConnectionString: '$(ConnectionStringAccTdg)'
 
 
 
