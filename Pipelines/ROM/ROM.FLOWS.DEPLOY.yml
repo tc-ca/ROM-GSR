@@ -251,6 +251,7 @@ stages:
           - task: MSCRMPublishCustomizations@12
             inputs:
               crmConnectionString: '$(ConnectionStringDev2)'
+              crmConnectionTimeout: '999'
 - stage: QA
   jobs:
   - deployment: Deploy
@@ -360,6 +361,7 @@ stages:
           - task: MSCRMPublishCustomizations@12
             inputs:
               crmConnectionString: '$(ConnectionStringQa)'
+              crmConnectionTimeout: '999'
 - stage: ACCTDG
   jobs:
   - deployment: Deploy
@@ -469,3 +471,4 @@ stages:
           - task: MSCRMPublishCustomizations@12
             inputs:
               crmConnectionString: '$(ConnectionStringAccTdg)'
+              crmConnectionTimeout: '999'
