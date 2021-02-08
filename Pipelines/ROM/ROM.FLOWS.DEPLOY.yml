@@ -244,10 +244,8 @@ stages:
           - task: MSCRMImportSolution@12
             inputs:
               crmConnectionString: '$(ConnectionStringDev2)'
-              solutionFile: '$(Agent.BuildDirectory)\drop\$(SolutionFileName)_$(SolutionVersion)_managed.zip'
+              solutionFile: '$(Agent.BuildDirectory)\drop\$(SolutionFileName)_$(SolutionVersion).zip'
               publishWorkflows: true
-              overwriteUnmanagedCustomizations: true
-              override: true
           - task: MSCRMPublishCustomizations@12
             inputs:
               crmConnectionString: '$(ConnectionStringDev2)'
