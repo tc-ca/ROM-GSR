@@ -4,6 +4,9 @@ trigger:
 pr:
 - none
 
+variables:
+- group: ROMPipelineBaseVariables
+
 stages:
 - stage: BuildAndPublishArtifact
   pool:
@@ -14,6 +17,32 @@ stages:
     - checkout: self
       persistCredentials: true
       clean: true
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host $(job_name)
+          Write-Host $CONNECTIONSTRINGACCTDG
+          Write-Host $CONNECTIONSTRINGDEV
+          Write-Host $CONNECTIONSTRINGQA
+          Write-Host $CORESOLUTIONNAME
+          Write-Host $FLOWSSOLUTIONNAME
+          Write-Host $TCCUSTOMACTIONSSOLUTIONNAME
+          Write-Host $TDGPLUGINSSOLUTIONNAME
+          Write-Host $TDGPOWERAPPSSOLUTIONNAME
+
+          if (-not ([string]::IsNullOrEmpty($ConnectionStringAccTdg)) -and 
+              -not ([string]::IsNullOrEmpty($ConnectionStringDev)) -and
+              -not ([string]::IsNullOrEmpty($ConnectionStringQa)) -and
+              -not ([string]::IsNullOrEmpty($CoreSolutionName)) -and
+              -not ([string]::IsNullOrEmpty($FlowsSolutionName)) -and
+              -not ([string]::IsNullOrEmpty($TCCustomActionsSolutionName)) -and
+              -not ([string]::IsNullOrEmpty($TdgPluginsSolutionName)) -and
+              -not ([string]::IsNullOrEmpty($TDGPowerAppsSolutionName)))
+          {
+            throw "Variable check failed."
+          }
+        failOnStderr: true
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
@@ -56,7 +85,7 @@ stages:
     - task: MSCRMExportSolution@12
       inputs:
         crmConnectionString: '$(ConnectionStringDev)'
-        solutionName: '$(SolutionName)'
+        solutionName: '$(FlowsSolutionName)'
         exportManaged: true
         exportUnmanaged: true
         includeVersionInSolutionFile: true
@@ -68,13 +97,13 @@ stages:
         ArtifactName: 'drop'
         publishLocation: 'Container'
     - powershell: |
-        If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(SolutionName)'))
+        If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(FlowsSolutionName)'))
         {
-          Write-Host "$(Build.SourcesDirectory)\Solutions\$(SolutionName) folder does not exists."
-          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(SolutionName)'
-          Write-Host "$(Build.SourcesDirectory)\Solutions\$(SolutionName) folder created."
+          Write-Host "$(Build.SourcesDirectory)\Solutions\$(FlowsSolutionName) folder does not exists."
+          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(FlowsSolutionName)'
+          Write-Host "$(Build.SourcesDirectory)\Solutions\$(FlowsSolutionName) folder created."
         }
-        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\* -Destination $(Build.SourcesDirectory)\Solutions\$(SolutionName)
+        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\* -Destination $(Build.SourcesDirectory)\Solutions\$(FlowsSolutionName)
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
@@ -106,7 +135,7 @@ stages:
         git config user.name "tc-buildbot"
         git checkout development
         git add --all
-        git commit -m "Update Solution - $env:SOLUTIONNAME: $env:COMMITMESSAGE"
+        git commit -m "Update Solution - $env:FLOWSSOLUTIONNAME: $env:COMMITMESSAGE"
         
         echo "Push solution changes to the remote repository"
         git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
@@ -157,7 +186,7 @@ stages:
                 #extract version number from filename and create new devops variable with an incremented version
                 $solutionPath = "$(Agent.BuildDirectory)\drop"
                 Write-Output "solutionpath = $solutionPath"
-                $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "*${env:SOLUTIONNAME}*managed*" | Sort-Object LastWriteTime -Descending | Select-Object -first 1
+                $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "*${env:FLOWSSOLUTIONNAME}*managed*" | Sort-Object LastWriteTime -Descending | Select-Object -first 1
                 Write-Output "file = $managedFile"
                 $Inputstring = $managedFile.BaseName + $managedFile.Extension
                 Write-Output "input string = $Inputstring"
@@ -196,7 +225,7 @@ stages:
               targetType: 'inline'
               script: |
                 Write-Host "============================================"
-                $CoreSolutionName = "${env:SOLUTIONNAME}"
+                $CoreSolutionName = "${env:FLOWSSOLUTIONNAME}"
                 $NextSolutionVersion = "$(NextSolutionVersion)"
                 $SolutionFileName = "$(SolutionFileName)"
 
@@ -266,7 +295,7 @@ stages:
                 #extract version number from filename and create new devops variable with an incremented version
                 $solutionPath = "$(Agent.BuildDirectory)\drop"
                 Write-Output "solutionpath = $solutionPath"
-                $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "*${env:SOLUTIONNAME}*managed*" | Sort-Object LastWriteTime -Descending | Select-Object -first 1
+                $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "*${env:FLOWSSOLUTIONNAME}*managed*" | Sort-Object LastWriteTime -Descending | Select-Object -first 1
                 Write-Output "file = $managedFile"
                 $Inputstring = $managedFile.BaseName + $managedFile.Extension
                 Write-Output "input string = $Inputstring"
@@ -305,7 +334,7 @@ stages:
               targetType: 'inline'
               script: |
                 Write-Host "============================================"
-                $CoreSolutionName = "${env:SOLUTIONNAME}"
+                $CoreSolutionName = "${env:FLOWSSOLUTIONNAME}"
                 $NextSolutionVersion = "$(NextSolutionVersion)"
                 $SolutionFileName = "$(SolutionFileName)"
 
