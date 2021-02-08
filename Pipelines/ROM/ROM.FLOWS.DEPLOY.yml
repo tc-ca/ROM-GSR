@@ -22,25 +22,28 @@ stages:
         targetType: 'inline'
         script: |
           Write-Host $(Agent.JobName)
-          Write-Host $CONNECTIONSTRINGACCTDG
-          Write-Host $CONNECTIONSTRINGDEV
-          Write-Host $CONNECTIONSTRINGQA
-          Write-Host $CORESOLUTIONNAME
-          Write-Host $FLOWSSOLUTIONNAME
-          Write-Host $TCCUSTOMACTIONSSOLUTIONNAME
-          Write-Host $TDGPLUGINSSOLUTIONNAME
-          Write-Host $TDGPOWERAPPSSOLUTIONNAME
+          Write-Host ${env:CONNECTIONSTRINGACCTDG}
+          Write-Host ${env:CONNECTIONSTRINGDEV}
+          Write-Host ${env:CONNECTIONSTRINGQA}
+          Write-Host ${env:CORESOLUTIONNAME}
+          Write-Host ${env:FLOWSSOLUTIONNAME}
+          Write-Host ${env:TCCUSTOMACTIONSSOLUTIONNAME}
+          Write-Host ${env:TDGPLUGINSSOLUTIONNAME}
+          Write-Host ${env:TDGPOWERAPPSSOLUTIONNAME}
 
-          if (-not ([string]::IsNullOrEmpty($ConnectionStringAccTdg)) -and 
-              -not ([string]::IsNullOrEmpty($ConnectionStringDev)) -and
-              -not ([string]::IsNullOrEmpty($ConnectionStringQa)) -and
-              -not ([string]::IsNullOrEmpty($CoreSolutionName)) -and
-              -not ([string]::IsNullOrEmpty($FlowsSolutionName)) -and
-              -not ([string]::IsNullOrEmpty($TCCustomActionsSolutionName)) -and
-              -not ([string]::IsNullOrEmpty($TdgPluginsSolutionName)) -and
-              -not ([string]::IsNullOrEmpty($TDGPowerAppsSolutionName)))
+          if (([string]::IsNullOrEmpty(${env:CONNECTIONSTRINGACCTDG})) -and 
+              ([string]::IsNullOrEmpty(${env:CONNECTIONSTRINGDEV})) -and
+              ([string]::IsNullOrEmpty(${env:CONNECTIONSTRINGQA})) -and
+              ([string]::IsNullOrEmpty(${env:CORESOLUTIONNAME})) -and
+              ([string]::IsNullOrEmpty(${env:FLOWSSOLUTIONNAME})) -and
+              ([string]::IsNullOrEmpty(${env:TCCUSTOMACTIONSSOLUTIONNAME})) -and
+              ([string]::IsNullOrEmpty(${env:TDGPLUGINSSOLUTIONNAME})) -and
+              ([string]::IsNullOrEmpty(${env:TDGPOWERAPPSSOLUTIONNAME})))
           {
-            throw "Variable check failed."
+              throw "Variable check failed."
+          }
+          else {
+              Write-Host "Variable check succeeded"
           }
         failOnStderr: true
     - task: PowerShell@2
