@@ -432,10 +432,10 @@ stages:
             inputs:
               crmConnectionString: '$(ConnectionStringAccTdg)'
 - stage: ACCTSIS
+  dependsOn: QA
+  condition: succeeded()
   jobs:
   - deployment: Deploy
-    condition: succeeded()
-    dependsOn: QA
     pool:
       vmImage: 'vs2017-win2016'
     environment: ACC-TSIS
