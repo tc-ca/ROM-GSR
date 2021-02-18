@@ -63,6 +63,12 @@ stages:
         solutionFile: '$(Build.ArtifactStagingDirectory)/$(LatestPatchName)_managed.zip'
         errorIfMissing: true
         crmConnectionTimeout: '200'
+    - task: MSCRMGetSolutionMissingComponents@12
+      inputs:
+        crmConnectionString: '$(ConnectionStringACCTDG)'
+        solutionFile: '$(Build.ArtifactStagingDirectory)/$(LatestPatchName)_managed.zip'
+        errorIfMissing: true
+        crmConnectionTimeout: '200'
   - job: CheckForMissingDependenciesDev2
     steps:
     - task: MSCRMToolInstaller@12
@@ -100,6 +106,12 @@ stages:
     - task: MSCRMGetSolutionMissingComponents@12
       inputs:
         crmConnectionString: '$(ConnectionStringQA)'
+        solutionFile: '$(Build.ArtifactStagingDirectory)/$(LatestPatchName)_managed.zip'
+        errorIfMissing: true
+        crmConnectionTimeout: '200'
+    - task: MSCRMGetSolutionMissingComponents@12
+      inputs:
+        crmConnectionString: '$(ConnectionStringACCTDG)'
         solutionFile: '$(Build.ArtifactStagingDirectory)/$(LatestPatchName)_managed.zip'
         errorIfMissing: true
         crmConnectionTimeout: '200'
