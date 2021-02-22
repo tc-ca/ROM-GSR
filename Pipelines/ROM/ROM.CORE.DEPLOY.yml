@@ -300,29 +300,14 @@ stages:
                 }
               failOnStderr: true
           - task: MSCRMImportSolution@12
-            displayName: Import Managed Solution
+            displayName: Import Solution
             inputs:
               crmConnectionString: '$(ConnectionStringDev2)'
-              solutionFile: '$(Agent.BuildDirectory)\TC_GlobalCore_Base\$(SolutionFileName)_$(SolutionVersion)_managed.zip'
+              solutionFile: '$(Agent.BuildDirectory)\TC_GlobalCore_Base\$(SolutionFileName)_$(SolutionVersion).zip'
               publishWorkflows: true
               holdingSolution: true
               asyncWaitTimeout: 4000
               crmConnectionTimeout: 4000
-          - task: MSCRMApplySolution@12
-            displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
-            inputs:
-              crmConnectionString: $(ConnectionStringDev2)
-              solutionName: $(CoreSolutionName)
-              useAsyncMode: true
-              asyncWaitTimeout: 4000
-              crmConnectionTimeout: 4000
-          - task: MSCRMCreatePatch@12
-            displayName: 'Create Patch: $(CoreSolutionName)'
-            inputs:
-              crmConnectionString: '$(ConnectionStringDev2)'
-              uniqueName: '$(CoreSolutionName)'
-              versionNumber: '$(NextSolutionVersion)'
-              crmConnectionTimeout: '900'
 - stage: QA
   jobs:
   - deployment: Deploy
