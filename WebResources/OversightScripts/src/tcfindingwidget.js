@@ -64,26 +64,11 @@ var widget = {
     //set the changed value into question value
     onValueChangedCallback = function() {
       parent.Xrm.WebApi.retrieveMultipleRecords("qm_rclegislation", `?$select=qm_name,qm_legislationlbl,qm_legislationetxt,_qm_tylegislationtypeid_value,_qm_rcparentlegislationid_value&$filter=qm_name eq '${question.title}'`).then(
-        function success(result) {
+        async function success(result) {
           question.name = `finding-${result.entities[0].qm_name}`;
-          //question.description = result.entities[0].qm_legislationetxt;
           question.reference = result.entities[0].qm_legislationlbl;
 
-          question.description = "";
-          if (result.entities.length > 0) {
-            parent.Xrm.WebApi.retrieveMultipleRecords("qm_rclegislation", `?$select=qm_name,qm_legislationlbl,qm_legislationetxt,_qm_tylegislationtypeid_value,_qm_rcparentlegislationid_value&$filter=_qm_rcparentlegislationid_value eq '${result.entities[0]._qm_rcparentlegislationid_value}'`).then(
-              function success(result) {
-                let siblings =  result.entities;
-                for (var i in siblings) {
-                  question.description += `${siblings[i].qm_legislationlbl} ${siblings[i].qm_legislationetxt}<br/>`;
-                }
-              },
-              function (error) {
-                  console.log(error.message);
-                  // handle error conditions
-              }
-            );
-          }
+          question.description = await buildProvisionText(result.entities[0]);
 
           question.value = {
             provisionReference: question.reference,
@@ -130,4 +115,36 @@ var widget = {
 //Register our widget in singleton custom widget collection
 Survey.CustomWidgetCollection.Instance.addCustomWidget(widget, "customtype");
 
+
+async function buildProvisionText(provision) {
+  let provisionText = "";
+  let parent = await getParentProvision(provision);
+  provisionText += `**${parent.qm_legislationlbl.substr(1)}** ${parent.qm_legislationetxt}<br/>`
+  let siblings = await getSiblingProvisions(provision);
+  for (var i in siblings) {
+    provisionText += `&#160;&#160;&#160;&#160;**${siblings[i].qm_legislationlbl.substr(siblings[i].qm_legislationlbl.length - 3)}** ${siblings[i].qm_legislationetxt}<br/>`;
+    let children = await getChildrenProvisions(siblings[i]);
+    for (var j in children) {
+      provisionText += `&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;**${children[j].qm_legislationlbl.substr(children[j].qm_legislationlbl.length - 3)}** ${children[j].qm_legislationetxt}<br/>`;
+    }
+  }
+  return provisionText;
+}
+
+async function getParentProvision(provision) {
+  var result = await parent.Xrm.WebApi.retrieveRecord("qm_rclegislation", provision._qm_rcparentlegislationid_value, `?$select=qm_name,qm_legislationlbl,qm_legislationetxt,_qm_tylegislationtypeid_value,_qm_rcparentlegislationid_value`);
+  return result;
+}
+
+async function getSiblingProvisions(provision) {
+  var results = await parent.Xrm.WebApi.retrieveMultipleRecords("qm_rclegislation", `?$select=qm_name,qm_legislationlbl,qm_legislationetxt,_qm_tylegislationtypeid_value,_qm_rcparentlegislationid_value,qm_ordernbr&$filter=_qm_rcparentlegislationid_value eq '${provision._qm_rcparentlegislationid_value}'`);
+  results.entities.sort(function(a,b){return a.qm_ordernbr - b.qm_ordernbr});
+  return results.entities;
+}
+
+async function getChildrenProvisions(provision) {
+  var results = await parent.Xrm.WebApi.retrieveMultipleRecords("qm_rclegislation", `?$select=qm_name,qm_legislationlbl,qm_legislationetxt,_qm_tylegislationtypeid_value,_qm_rcparentlegislationid_value,qm_ordernbr&$filter=_qm_rcparentlegislationid_value eq '${provision.qm_rclegislationid}'`);
+  results.entities.sort(function(a,b){return a.qm_ordernbr - b.qm_ordernbr});
+  return results.entities;
+}
 
