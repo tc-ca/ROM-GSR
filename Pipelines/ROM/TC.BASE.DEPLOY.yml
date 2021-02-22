@@ -31,6 +31,7 @@ stages:
           Write-Host ${env:TCCUSTOMACTIONSSOLUTIONNAME}
           Write-Host ${env:TDGPLUGINSSOLUTIONNAME}
           Write-Host ${env:TDGPOWERAPPSSOLUTIONNAME}
+          Write-Host ${env:TCCRMBASESOLUTIONNAME}
 
           if (([string]::IsNullOrEmpty(${env:CONNECTIONSTRINGACCTDG})) -and 
               ([string]::IsNullOrEmpty(${env:CONNECTIONSTRINGDEV})) -and
@@ -40,7 +41,8 @@ stages:
               ([string]::IsNullOrEmpty(${env:TDGFLOWSSOLUTIONNAME})) -and
               ([string]::IsNullOrEmpty(${env:TCCUSTOMACTIONSSOLUTIONNAME})) -and
               ([string]::IsNullOrEmpty(${env:TDGPLUGINSSOLUTIONNAME})) -and
-              ([string]::IsNullOrEmpty(${env:TDGPOWERAPPSSOLUTIONNAME})))
+              ([string]::IsNullOrEmpty(${env:TDGPOWERAPPSSOLUTIONNAME})) -and
+              ([string]::IsNullOrEmpty(${env:TCCRMBASESOLUTIONNAME})))
           {
               throw "Variable check failed."
           }
@@ -90,7 +92,7 @@ stages:
     - task: MSCRMExportSolution@12
       inputs:
         crmConnectionString: '$(ConnectionStringDev)'
-        solutionName: '$(TDGFlowsSolutionName)'
+        solutionName: '$(TCCRMBaseSolutionName)'
         exportManaged: true
         exportUnmanaged: true
         includeVersionInSolutionFile: true
@@ -102,13 +104,13 @@ stages:
         ArtifactName: 'drop'
         publishLocation: 'Container'
     - powershell: |
-        If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(TDGFlowsSolutionName)'))
+        If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(TCCRMBaseSolutionName)'))
         {
-          Write-Host "$(Build.SourcesDirectory)\Solutions\$(TDGFlowsSolutionName) folder does not exists."
-          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(TDGFlowsSolutionName)'
-          Write-Host "$(Build.SourcesDirectory)\Solutions\$(TDGFlowsSolutionName) folder created."
+          Write-Host "$(Build.SourcesDirectory)\Solutions\$(TCCRMBaseSolutionName) folder does not exists."
+          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(TCCRMBaseSolutionName)'
+          Write-Host "$(Build.SourcesDirectory)\Solutions\$(TCCRMBaseSolutionName) folder created."
         }
-        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\* -Destination $(Build.SourcesDirectory)\Solutions\$(TDGFlowsSolutionName)
+        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\* -Destination $(Build.SourcesDirectory)\Solutions\$(TCCRMBaseSolutionName)
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
@@ -140,7 +142,7 @@ stages:
         git config user.name "tc-buildbot"
         git checkout development
         git add --all
-        git commit -m "Update Solution - $env:TDGFLOWSSOLUTIONNAME: $env:COMMITMESSAGE"
+        git commit -m "Update Solution - $env:TCCRMBASESOLUTIONNAME: $env:COMMITMESSAGE"
         
         echo "Push solution changes to the remote repository"
         git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
@@ -191,7 +193,7 @@ stages:
                 #extract version number from filename and create new devops variable with an incremented version
                 $solutionPath = "$(Agent.BuildDirectory)\drop"
                 Write-Output "solutionpath = $solutionPath"
-                $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "*${env:TDGFLOWSSOLUTIONNAME}*managed*" | Sort-Object LastWriteTime -Descending | Select-Object -first 1
+                $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "*${env:TCCRMBASESOLUTIONNAME}*managed*" | Sort-Object LastWriteTime -Descending | Select-Object -first 1
                 Write-Output "file = $managedFile"
                 $Inputstring = $managedFile.BaseName + $managedFile.Extension
                 Write-Output "input string = $Inputstring"
@@ -230,7 +232,7 @@ stages:
               targetType: 'inline'
               script: |
                 Write-Host "============================================"
-                $CoreSolutionName = "${env:TDGFLOWSSOLUTIONNAME}"
+                $CoreSolutionName = "${env:TCCRMBASESOLUTIONNAME}"
                 $NextSolutionVersion = "$(NextSolutionVersion)"
                 $SolutionFileName = "$(SolutionFileName)"
 
@@ -299,7 +301,7 @@ stages:
                 #extract version number from filename and create new devops variable with an incremented version
                 $solutionPath = "$(Agent.BuildDirectory)\drop"
                 Write-Output "solutionpath = $solutionPath"
-                $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "*${env:TDGFLOWSSOLUTIONNAME}*managed*" | Sort-Object LastWriteTime -Descending | Select-Object -first 1
+                $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "*${env:TCCRMBASESOLUTIONNAME}*managed*" | Sort-Object LastWriteTime -Descending | Select-Object -first 1
                 Write-Output "file = $managedFile"
                 $Inputstring = $managedFile.BaseName + $managedFile.Extension
                 Write-Output "input string = $Inputstring"
@@ -338,7 +340,7 @@ stages:
               targetType: 'inline'
               script: |
                 Write-Host "============================================"
-                $CoreSolutionName = "${env:TDGFLOWSSOLUTIONNAME}"
+                $CoreSolutionName = "${env:TCCRMBASESOLUTIONNAME}"
                 $NextSolutionVersion = "$(NextSolutionVersion)"
                 $SolutionFileName = "$(SolutionFileName)"
 
@@ -409,7 +411,7 @@ stages:
                 #extract version number from filename and create new devops variable with an incremented version
                 $solutionPath = "$(Agent.BuildDirectory)\drop"
                 Write-Output "solutionpath = $solutionPath"
-                $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "*${env:TDGFLOWSSOLUTIONNAME}*managed*" | Sort-Object LastWriteTime -Descending | Select-Object -first 1
+                $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "*${env:TCCRMBASESOLUTIONNAME}*managed*" | Sort-Object LastWriteTime -Descending | Select-Object -first 1
                 Write-Output "file = $managedFile"
                 $Inputstring = $managedFile.BaseName + $managedFile.Extension
                 Write-Output "input string = $Inputstring"
@@ -448,7 +450,7 @@ stages:
               targetType: 'inline'
               script: |
                 Write-Host "============================================"
-                $CoreSolutionName = "${env:TDGFLOWSSOLUTIONNAME}"
+                $CoreSolutionName = "${env:TCCRMBASESOLUTIONNAME}"
                 $NextSolutionVersion = "$(NextSolutionVersion)"
                 $SolutionFileName = "$(SolutionFileName)"
 
