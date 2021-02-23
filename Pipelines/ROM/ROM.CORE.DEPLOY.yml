@@ -427,7 +427,7 @@ stages:
           - task: MSCRMCreatePatch@12
             displayName: 'Create Patch: $(CoreSolutionName)'
             inputs:
-              crmConnectionString: '$(ConnectionStringQa)'
+              crmConnectionString: '$(ConnectionStringDev)'
               uniqueName: '$(CoreSolutionName)'
               versionNumber: '$(NextSolutionVersion)'
               crmConnectionTimeout: '900'
@@ -547,10 +547,3 @@ stages:
               useAsyncMode: true
               asyncWaitTimeout: 4000
               crmConnectionTimeout: 4000
-          - task: MSCRMCreatePatch@12
-            displayName: 'Create Patch: $(CoreSolutionName)'
-            inputs:
-              crmConnectionString: '$(ConnectionStringAccTdg)'
-              uniqueName: '$(CoreSolutionName)'
-              versionNumber: '$(NextSolutionVersion)'
-              crmConnectionTimeout: '900'
