@@ -277,6 +277,7 @@ stages:
           - task: MSCRMPublishCustomizations@12
             inputs:
               crmConnectionString: '$(ConnectionStringQa)'
+              crmConnectionTimeout: '500'
           - task: MSCRMCreatePatch@12
             inputs:
               crmConnectionString: '$(ConnectionStringDev)'
@@ -433,6 +434,7 @@ stages:
           - task: MSCRMPublishCustomizations@12
             inputs:
               crmConnectionString: '$(ConnectionStringAccTdg)'
+              crmConnectionTimeout: '500'
 - stage: ACCTDGDATA
   dependsOn: QA
   condition: succeeded()
@@ -585,6 +587,7 @@ stages:
           - task: MSCRMPublishCustomizations@12
             inputs:
               crmConnectionString: '$(ConnectionStringAccTdgData)'
+              crmConnectionTimeout: '500'
 - stage: ACCTSIS
   dependsOn: QA
   condition: succeeded()
