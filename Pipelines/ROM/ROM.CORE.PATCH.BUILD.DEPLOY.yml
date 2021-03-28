@@ -434,10 +434,10 @@ stages:
             inputs:
               crmConnectionString: '$(ConnectionStringAccTdg)'
 - stage: ACCTDGDATA
+  dependsOn: QA
+  condition: succeeded()
   jobs:
   - deployment: Deploy
-    dependsOn: QA
-    condition: succeeded()
     pool:
       vmImage: 'vs2017-win2016'
     environment: ACC-TDG-DATA
