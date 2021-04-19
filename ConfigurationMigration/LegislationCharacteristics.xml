@@ -1,15 +1,11 @@
 <entities >
   <entity name="qm_tylegislationcharacteristic" displayname="Legislation Characteristic" etc="10547" primaryidfield="qm_tylegislationcharacteristicid" primarynamefield="qm_name" disableplugins="false">
     <fields>
-      <field displayname="tylegislationcharacteristic" name="qm_tylegislationcharacteristicid" type="guid" primaryKey="true" />
-      <field displayname="French Label" name="qm_legislationcharacteristicflbl" type="string" customfield="true" />
       <field displayname="English Label" name="qm_legislationcharacteristicelbl" type="string" customfield="true" />
+      <field displayname="French Label" name="qm_legislationcharacteristicflbl" type="string" customfield="true" />
       <field displayname="Name" name="qm_name" type="string" customfield="true" />
+      <field displayname="Parent Category" name="qm_categoryid" type="entityreference" lookupType="qm_tylegislationcharacteristic" customfield="true" />
+      <field displayname="tylegislationcharacteristic" name="qm_tylegislationcharacteristicid" type="guid" primaryKey="true" />
     </fields>
-  </entity>
-  <entity name="qm_rclegislation" displayname="Legislation" etc="10528" primaryidfield="qm_rclegislationid" primarynamefield="qm_name" disableplugins="false">
-    <relationships>
-      <relationship name="qm_rclegislation_tylegislationcharacterist" manyToMany="true" relatedEntityName="qm_rclegislation_tylegislationcharacterist" m2mTargetEntity="qm_tylegislationcharacteristic" m2mTargetEntityPrimaryKey="qm_tylegislationcharacteristicid" />
-    </relationships>
   </entity>
 </entities>
