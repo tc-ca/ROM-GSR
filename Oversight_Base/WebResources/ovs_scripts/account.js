@@ -8,7 +8,7 @@ var ROM;
         function onLoad(eContext) {
             console.log('Onload has been called');
             console.log('Xrm execution context: ', eContext);
-            hideShowOperations(eContext);
+            // hideShowOperations(eContext);
         }
         Account.onLoad = onLoad;
         function hideShowOperations(eContext) {
