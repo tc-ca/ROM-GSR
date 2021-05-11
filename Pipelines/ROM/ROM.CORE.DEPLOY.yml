@@ -305,17 +305,19 @@ stages:
               crmConnectionString: '$(ConnectionStringQa)'
               solutionFile: '$(Agent.BuildDirectory)\TC_GlobalCore_Base\$(SolutionFileName)_$(SolutionVersion)_managed.zip'
               publishWorkflows: true
+              overwriteUnmanagedCustomizations: true
               holdingSolution: true
-              asyncWaitTimeout: 4000
-              crmConnectionTimeout: 4000
+              override: true
+              asyncWaitTimeout: '99999'
+              crmConnectionTimeout: '99999'
           - task: MSCRMApplySolution@12
             displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
             inputs:
-              crmConnectionString: $(ConnectionStringQa)
-              solutionName: $(CoreSolutionName)
+              crmConnectionString: '$(ConnectionStringQa)'
+              solutionName: '$(CoreSolutionName)'
               useAsyncMode: true
-              asyncWaitTimeout: 4000
-              crmConnectionTimeout: 4000
+              asyncWaitTimeout: '99999'
+              crmConnectionTimeout: '99999'
           - task: MSCRMCreatePatch@12
             displayName: 'Create Patch: $(CoreSolutionName)'
             inputs:
@@ -428,14 +430,16 @@ stages:
               crmConnectionString: '$(ConnectionStringAccTdg)'
               solutionFile: '$(Agent.BuildDirectory)\TC_GlobalCore_Base\$(SolutionFileName)_$(SolutionVersion)_managed.zip'
               publishWorkflows: true
+              overwriteUnmanagedCustomizations: true
               holdingSolution: true
-              asyncWaitTimeout: 4000
-              crmConnectionTimeout: 4000
+              override: true
+              asyncWaitTimeout: '99999'
+              crmConnectionTimeout: '99999'
           - task: MSCRMApplySolution@12
             displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
             inputs:
-              crmConnectionString: $(ConnectionStringAccTdg)
-              solutionName: $(CoreSolutionName)
+              crmConnectionString: '$(ConnectionStringAccTdg)'
+              solutionName: '$(CoreSolutionName)'
               useAsyncMode: true
-              asyncWaitTimeout: 4000
-              crmConnectionTimeout: 4000
+              asyncWaitTimeout: '99999'
+              crmConnectionTimeout: '99999'
