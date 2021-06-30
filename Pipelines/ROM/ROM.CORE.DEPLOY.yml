@@ -309,22 +309,22 @@ stages:
               overwriteUnmanagedCustomizations: true
               holdingSolution: true
               useAsyncMode: false
-              asyncWaitTimeout: 
-              crmConnectionTimeout: '9999'
+              asyncWaitTimeout: '3600'
+              crmConnectionTimeout: '3600'
           - task: MSCRMApplySolution@12
             displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
             inputs:
               crmConnectionString: '$(ConnectionStringQa)'
               solutionName: '$(CoreSolutionName)'
-              asyncWaitTimeout: 
-              crmConnectionTimeout: '9999'
+              asyncWaitTimeout: '3600'
+              crmConnectionTimeout: '3600'
           - task: MSCRMCreatePatch@12
             displayName: 'Create Patch: $(CoreSolutionName)'
             inputs:
               crmConnectionString: '$(ConnectionStringDev)'
               uniqueName: '$(CoreSolutionName)'
               versionNumber: '$(NextSolutionVersion)'
-              crmConnectionTimeout: '900'
+              crmConnectionTimeout: '3600'
 - stage: ACC
   jobs:
   - deployment: Deploy
@@ -433,15 +433,15 @@ stages:
               overwriteUnmanagedCustomizations: true
               holdingSolution: true
               useAsyncMode: false
-              asyncWaitTimeout: 
-              crmConnectionTimeout: '9999'
+              asyncWaitTimeout: '3600'
+              crmConnectionTimeout: '3600'
           - task: MSCRMApplySolution@12
             displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
             inputs:
               crmConnectionString: '$(ConnectionStringAccTdg)'
               solutionName: '$(CoreSolutionName)'
-              asyncWaitTimeout: 
-              crmConnectionTimeout: '9999'
+              asyncWaitTimeout: '3600'
+              crmConnectionTimeout: '3600'
 - stage: ACCDATA
   condition: succeeded()
   dependsOn: QA
@@ -551,12 +551,12 @@ stages:
               overwriteUnmanagedCustomizations: true
               holdingSolution: true
               useAsyncMode: false
-              asyncWaitTimeout: 
-              crmConnectionTimeout: '99999'
+              asyncWaitTimeout: '3600'
+              crmConnectionTimeout: '3600'
           - task: MSCRMApplySolution@12
             displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
             inputs:
               crmConnectionString: '$(ConnectionStringAccTdgData)'
               solutionName: '$(CoreSolutionName)'
-              asyncWaitTimeout: 
-              crmConnectionTimeout: '99999'
+              asyncWaitTimeout: '3600'
+              crmConnectionTimeout: '3600'
