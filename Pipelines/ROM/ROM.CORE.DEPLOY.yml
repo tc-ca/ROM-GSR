@@ -307,18 +307,17 @@ stages:
               solutionFile: '$(Agent.BuildDirectory)\TC_GlobalCore_Base\$(SolutionFileName)_$(SolutionVersion)_managed.zip'
               publishWorkflows: true
               overwriteUnmanagedCustomizations: true
-              skipProductUpdateDependencies: true
               holdingSolution: true
-              asyncWaitTimeout: '99999'
-              crmConnectionTimeout: '99999'
+              useAsyncMode: false
+              asyncWaitTimeout: 
+              crmConnectionTimeout: '9999'
           - task: MSCRMApplySolution@12
             displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
             inputs:
               crmConnectionString: '$(ConnectionStringQa)'
               solutionName: '$(CoreSolutionName)'
-              useAsyncMode: true
-              asyncWaitTimeout: '99999'
-              crmConnectionTimeout: '99999'
+              asyncWaitTimeout: 
+              crmConnectionTimeout: '9999'
           - task: MSCRMCreatePatch@12
             displayName: 'Create Patch: $(CoreSolutionName)'
             inputs:
@@ -432,23 +431,22 @@ stages:
               solutionFile: '$(Agent.BuildDirectory)\TC_GlobalCore_Base\$(SolutionFileName)_$(SolutionVersion)_managed.zip'
               publishWorkflows: true
               overwriteUnmanagedCustomizations: true
-              skipProductUpdateDependencies: true
               holdingSolution: true
-              override: true
-              asyncWaitTimeout: '99999'
-              crmConnectionTimeout: '99999'
+              useAsyncMode: false
+              asyncWaitTimeout: 
+              crmConnectionTimeout: '9999'
           - task: MSCRMApplySolution@12
             displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
             inputs:
               crmConnectionString: '$(ConnectionStringAccTdg)'
               solutionName: '$(CoreSolutionName)'
-              useAsyncMode: true
-              asyncWaitTimeout: '99999'
-              crmConnectionTimeout: '99999'
+              asyncWaitTimeout: 
+              crmConnectionTimeout: '9999'
 - stage: ACCDATA
   jobs:
   - deployment: Deploy
     condition: succeeded()
+    dependsOn: QA
     pool:
       vmImage: 'vs2017-win2016'
     environment: ACC-TDG-DATA
@@ -551,16 +549,14 @@ stages:
               solutionFile: '$(Agent.BuildDirectory)\TC_GlobalCore_Base\$(SolutionFileName)_$(SolutionVersion)_managed.zip'
               publishWorkflows: true
               overwriteUnmanagedCustomizations: true
-              skipProductUpdateDependencies: true
               holdingSolution: true
-              override: true
-              asyncWaitTimeout: '99999'
+              useAsyncMode: false
+              asyncWaitTimeout: 
               crmConnectionTimeout: '99999'
           - task: MSCRMApplySolution@12
             displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
             inputs:
               crmConnectionString: '$(ConnectionStringAccTdgData)'
               solutionName: '$(CoreSolutionName)'
-              useAsyncMode: true
-              asyncWaitTimeout: '99999'
+              asyncWaitTimeout: 
               crmConnectionTimeout: '99999'
