@@ -443,10 +443,10 @@ stages:
               asyncWaitTimeout: 
               crmConnectionTimeout: '9999'
 - stage: ACCDATA
+  condition: succeeded()
+  dependsOn: QA
   jobs:
   - deployment: Deploy
-    condition: succeeded()
-    dependsOn: QA
     pool:
       vmImage: 'vs2017-win2016'
     environment: ACC-TDG-DATA
