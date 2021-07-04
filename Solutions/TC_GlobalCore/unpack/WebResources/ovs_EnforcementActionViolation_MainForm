@@ -1,0 +1,69 @@
+///<reference path="../../Utilities/GlobalHelper.js"/>
+
+var globalFormContext;
+
+const FIELD_VIOLATION = "ovs_syresultid";
+const FIELD_ENFORCEMENT_ACTION = "ovs_cyactionid";
+
+var filterXML = "";
+
+function OnLoad(executionContext)
+{
+    //get context
+    globalContext = glHelper.getGlobalContext();
+    var formContext = executionContext.getFormContext();
+    globalFormContext = formContext;
+
+    getRelatedSafetyAssessment(executionContext);
+}
+
+
+function getRelatedSafetyAssessment(executionContext)
+{
+    //Get SEAT Id from the Action
+
+    //get context
+    globalContext = glHelper.getGlobalContext();
+    var formContext = executionContext.getFormContext();
+    globalFormContext = formContext;
+
+    var enforcementAction = glHelper.GetLookupAttrId(formContext, FIELD_ENFORCEMENT_ACTION);
+    var enforcementActionId = enforcementAction.replace("{", "").replace("}", "");
+
+    
+    if (glHelper.GetValue(formContext, FIELD_ENFORCEMENT_ACTION))
+    {
+        Xrm.WebApi.online
+            .retrieveRecord("ovs_cyaction", enforcementAction, "?$select=_regardingobjectid_value")
+            .then(
+                function success(result)
+                {
+                    //We have SEAT Id, makeup pre-filter and set it to variable out of scope then call filter setting code.
+
+                    formContext.getControl("ovs_syresultid").addPreSearch(enforcementAction_PreSearchFilter);
+
+                    var workOrder = result["_regardingobjectid_value"];
+
+                    filterXML = "<filter type='and'><condition attribute='qm_workorderid' operator='eq' value='" + workOrder + "' /></filter>";
+
+                },
+                function (error)
+                {
+                    Xrm.Utility.alertDialog(error.message);
+                }
+            );    
+        
+
+        
+    }
+    
+}
+
+function enforcementAction_PreSearchFilter(executionContext)
+{
+    //Apply pre-filter
+
+    var formContext = executionContext.getFormContext();
+
+    formContext.getControl("ovs_syresultid").addCustomFilter(filterXML, "qm_syresult");
+}

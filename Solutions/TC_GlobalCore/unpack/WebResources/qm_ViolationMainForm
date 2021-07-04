@@ -1,0 +1,225 @@
+﻿var globalFormContext;
+//var provisionIdField;
+var enablingRegulationField;
+
+
+const TabNames = {
+    TAB_VIOLATION_DETAILS: "ViolationDetailsTab",
+    TAB_RECORD_LOG: "RecordLogTab"
+}
+
+const TabViolationDetailsSections = {
+    VIOLATION_DETAIL_SECTION: "ViolationDetailsSection"
+};
+
+const TabRecordLogSections = {
+    RECORD_LOG_SECTION: "RecordLogSection"
+};
+
+const FIELD_PROVISION_ID = "qm_rclegislationid";
+const FIELD_ENABLING_ACT = "qm_enablingact";
+const FIELD_ENABLING_REGULATION = "qm_enablingregulation";
+const FIELD_DUE_DATE = "ovs_duedate";
+
+async function OnLoad(executionContext) {
+  //get context
+  globalContext = glHelper.getGlobalContext();
+  var formContext = executionContext.getFormContext();
+  globalFormContext = formContext;
+
+  // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+  let formType = glHelper.GetFormType(formContext);
+
+  //hide all sections on load, required section to be determined
+  hideAllActionTypeSections(formContext);
+
+  // This was linked on the form (PowerApps)
+  //provisionIdField = formContext.getAttribute(FIELD_PROVISION_ID);
+  //provisionIdField.removeOnChange(provisionIdField_OnChange); // avoid binding multiple event handlers
+  //provisionIdField.addOnChange(provisionIdField_OnChange);
+
+  enablingRegulationField = formContext.getAttribute(FIELD_ENABLING_REGULATION);
+  enablingRegulationField.removeOnChange(enablingRegulationField_OnChange); // avoid binding multiple event handlers
+  enablingRegulationField.addOnChange(enablingRegulationField_OnChange);
+
+    if (formType == 1) {
+      //If form is new, set the Action Date to today.
+      var currentDate = new Date();
+      glHelper.SetValue(formContext, FIELD_DUE_DATE, currentDate);
+    }
+    
+    let violationRecordId = glHelper.GetCurrentRecordId(formContext);
+    //blank on new records
+    if(violationRecordId)
+    {
+      let WorkOrderStateCode = await GetWorkOrderStateCode(violationRecordId);
+      // inactive = 1
+      // active = 0
+      if (WorkOrderStateCode !== null && WorkOrderStateCode === 1) {
+        // if work order state is inactive disable all fields on form
+        glHelper.disableAllFields(formContext);
+      }
+    }
+
+    //Load lookup view based on user's language preference
+    var userSettings = Xrm.Utility.getGlobalContext().userSettings;
+    var LCID = userSettings.languageId;
+
+    if (LCID == 1033)
+    {
+        //Load English view
+        formContext.getControl("qm_rclegislationid").setDefaultView("3544CA89-0B3B-4456-8918-494DF3B1CD1C");
+    }
+    else if (LCID == 1036)
+    {
+        //Load French view
+        formContext.getControl("qm_rclegislationid").setDefaultView("6858FAEA-B2CE-EB11-BACC-0022483C0387");
+    }
+  
+}
+
+function OnSave(executionContext) {
+    // let formContext = executionContext.getFormContext();
+}
+
+function hideAllActionTypeSections(formContext) {
+    glHelper.SetTabVisibility(formContext, TabNames.TAB_VIOLATION_DETAILS, true);
+    glHelper.SetTabVisibility(formContext, TabNames.TAB_RECORD_LOG, true);
+
+    glHelper.SetSectionVisibility(formContext, TabNames.TAB_RECORD_LOG, TabRecordLogSections.RECORD_LOG_SECTION, true);
+    //glHelper.SetSectionVisibility(formContext, TabNames.TAB_VIOLATION_DETAILS, TabViolationDetailsSections.VIOLATION_DETAIL_SECTION, true);
+
+    //glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, false);
+    //glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, false);
+
+    glHelper.SetRequiredLevel(formContext, "qm_rclegislationid", true);
+    glHelper.SetRequiredLevel(formContext, "qm_externalcomments", true);
+
+}
+
+function provisionIdField_OnChange(executionContext) {
+
+    let value = glHelper.GetValue(globalFormContext, FIELD_PROVISION_ID);
+    if (value) {
+        let recordId = value[0].id; // glHelper.GetValue(globalFormContext, FIELD_PROVISION_ID)[0].id; 
+
+        Xrm.WebApi.online.retrieveRecord("qm_rclegislation", recordId, "?$select=_qm_enablingprovision_value,_qm_enablingregulation_value").then(
+            function success(result) {
+                let enablingActId = result["_qm_enablingprovision_value"];
+                let enablingActName = result["_qm_enablingprovision_value@OData.Community.Display.V1.FormattedValue"];
+                let enablingAct_lookuplogicalname = result["_qm_enablingprovision_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                if (enablingActId) {
+                    glHelper.SetLookup(globalFormContext, FIELD_ENABLING_ACT, enablingAct_lookuplogicalname, enablingActId, enablingActName);
+                } else {
+                    glHelper.ResetField(globalFormContext, FIELD_ENABLING_ACT);
+                }
+
+                let enablingRegulationId = result["_qm_enablingregulation_value"];
+                let enablingRegulationName = result["_qm_enablingregulation_value@OData.Community.Display.V1.FormattedValue"];
+                let enablingRegulation_lookuplogicalname = result["_qm_enablingregulation_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                if (enablingRegulationId) {
+                    glHelper.SetLookup(globalFormContext, FIELD_ENABLING_REGULATION, enablingRegulation_lookuplogicalname, enablingRegulationId, enablingRegulationName);
+
+                    if (!enablingActId) {
+                        enablingRegulationField_OnChange(executionContext);
+                    }
+
+                } else {
+                    glHelper.ResetField(globalFormContext, FIELD_ENABLING_REGULATION);
+                }
+
+            },
+            function (error) {
+                Xrm.Utility.alertDialog(error.message);
+            }
+        );
+    } else {
+        glHelper.ResetField(globalFormContext, FIELD_ENABLING_ACT);
+        glHelper.ResetField(globalFormContext, FIELD_ENABLING_REGULATION);
+    }
+
+}
+
+function enablingRegulationField_OnChange(executionContext) {
+    let enablingActValue = glHelper.GetValue(globalFormContext, FIELD_ENABLING_ACT);
+    if (!enablingActValue) {
+        let enablingRegulationValue = glHelper.GetValue(globalFormContext, FIELD_ENABLING_REGULATION);
+        if (enablingRegulationValue) {
+            let recordId = enablingRegulationValue[0].id;  //globalFormContext.getAttribute(FIELD_PROVISION_ID).getValue()[0].id;
+
+            Xrm.WebApi.online.retrieveRecord("qm_rclegislation", recordId, "?$select=_qm_enablingprovision_value").then(
+                function success(result) {
+                    let enablingActId = result["_qm_enablingprovision_value"];
+                    let enablingActName = result["_qm_enablingprovision_value@OData.Community.Display.V1.FormattedValue"];
+                    let enablingAct_lookuplogicalname = result["_qm_enablingprovision_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                    if (enablingActId) {
+                        glHelper.SetLookup(globalFormContext, FIELD_ENABLING_ACT, enablingAct_lookuplogicalname, enablingActId, enablingActName);
+                    } else {
+                        glHelper.ResetField(globalFormContext, FIELD_ENABLING_ACT);
+                    }
+                },
+                function (error) {
+                    Xrm.Utility.alertDialog(error.message);
+                }
+            );
+
+        }
+    }
+}
+
+
+async function GetWorkOrderStateCode(violationRecordId)
+{
+
+ const workOrderRecordId = await Xrm.WebApi.online
+   .retrieveRecord(
+     "qm_syresult",
+     violationRecordId,
+     "?$select=qm_syresultid,_qm_workorderid_value"
+   )
+   .then(
+     function success(result) {
+       var qm_syresultid = result["qm_syresultid"];
+       var _qm_workorderid_value = result["_qm_workorderid_value"];
+       var _qm_workorderid_value_formatted =
+         result[
+           "_qm_workorderid_value@OData.Community.Display.V1.FormattedValue"
+         ];
+       var _qm_workorderid_value_lookuplogicalname =
+         result[
+           "_qm_workorderid_value@Microsoft.Dynamics.CRM.lookuplogicalname"
+         ];
+         return _qm_workorderid_value;
+     },
+     function (error) {
+       Xrm.Utility.alertDialog(error.message);
+     }
+   )
+
+
+   if(workOrderRecordId)
+   {
+   const workOrderStateCode = await Xrm.WebApi.online
+     .retrieveRecord("msdyn_workorder", workOrderRecordId, "?$select=statecode")
+     .then(
+       function success(result) {
+         var statecode = result["statecode"];
+         var statecode_formatted =
+           result["statecode@OData.Community.Display.V1.FormattedValue"];
+         return statecode;
+       },
+       function (error) {
+         Xrm.Utility.alertDialog(error.message);
+       }
+     );
+
+    return workOrderStateCode;
+   }
+
+
+
+   return null
+}
+
+
+

@@ -1,0 +1,707 @@
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+
+var globalFormContext;
+var provisionIdField;
+var statusField;
+var subStatusField;
+var dgField;
+var mocField;
+
+var userSettings;
+var LCID;
+
+
+var originalStatusValues = null;
+var originalSubStatusValues = null;
+
+const TAB_GENERAL_NAME = "generalTab";
+
+const Sections = {
+    NoticeToRemedy:     "sectionNoticeToRemedy",
+    NotToImport:        "sectionNotToImport",
+    Intervention:       "sectionIntervention",
+    Ticket:             "sectionTicket",
+    DetentionNotice:    "sectionDetentionNotice",
+    Investigation:      "sectionInvestigation",
+    DGMOCDetails:       "sectionDGMOCDetails"
+};
+
+const ActionTypes =
+{
+    DetentionNotice:                    918640000,
+    NoticeOfDirectionToRemedy:          918640001,
+    NoticeOfDirectionNotToImport:       918640002,
+    DirectionIssuedUnderSubsection19:   918640003,
+    NoticeOfInfraction:                 918640004,
+    Ticket:                             918640005,
+    Investigation:                      918640006
+}
+
+const ActionSubStatus =
+{
+    Draft:                                      1,
+    Closed:                                     2,
+    Canceled:                                   3,
+    Active:                                     4,
+    ConfirmationReceivedOnTime:                 918640000,
+    ConfirmationReceivedLate:                   918640001,
+    ExpiredOverdue:                             918640002,
+    AlternativeMeasuresTaken:                   918640003,
+    Unresolved:                                 918640004,
+    Escalated:                                  918640005,
+    ConclusionOfCaseReportCompleted:            918640006,
+    InvestigationDeclinedInsufficientEvidence:  918640007,
+    RecommendationForProsecutionCompleted:      918640008,
+    InvestigationInProgress:                    918640009,
+    InvestigationDeclinedNotInPublicInterest:   918640010,
+    CloseDuplicate:                             918640011
+};
+
+const StateCodes = {
+    Draft:      0,
+    Closed:     1,
+    Canceled:   2,
+    Active:     3
+}
+
+
+const ACTION_TYPE = "ovs_actiontype";
+//status = statecode
+//sub-status = statuscode
+const STATUS_CODE = "statecode";
+const SUBSTATUS_CODE = "statuscode";
+
+const FIELD_ACTION_DATE = "ovs_actiondate";
+const FIELD_STATUS_JUSTIFICATION = "ovs_statusjustification";
+const FIELD_REVOCATION_JUSTIFICATION = "ovs_revocationjustificationtxt";
+const FIELD_RELEASE_DATE = "ovs_releasedate";
+const FIELD_DIRECTION = "ovs_directiontxt";
+const FIELD_REASON_HOTI = "ovs_reasonhoti";
+const FIELD_REASON_MOC = "ovs_reasonmoc";
+const FIELD_REGARDING_OBJECT_ID = "regardingobjectid";
+const FIELD_DG_DESCRIPTION = "ovs_dgdescription";
+const FIELD_MOC_DESCRIPTION = "ovs_mocdescription";
+const FIELD_ACTION_NUMBER = "ovs_actionnumber";
+const FIELD_INTERVENTION_SUMMARY = "ovs_interventionsummarytxt";
+const FIELD_VIOLATION_TABLE = "ovs_syresults";
+const FIELD_TICKET_ID = "ovs_ticketid";
+const FIELD_FINE = "ovs_fineamt";
+const FIELD_NON_COMPLIANCE_DETAILS = "ovs_noncompliancedetailstxt";
+const FIELD_CASE_REPORT_JUDGE = "ovs_casereportjudgetxt";
+const FIELD_CASE_REPORT_NUMBER = "ovs_casereportnbr";
+const FIELD_DATE_RESOLVED = "actualend";
+const FIELD_DG_PDF_TEXT_EN = "ovs_dg_text_en";
+const FIELD_DG_PDF_TEXT_FR = "ovs_dg_text_fr";
+const FIELD_MOC_PDF_TEXT_EN = "ovs_moc_text_en";
+const FIELD_MOC_PDF_TEXT_FR = "ovs_moc_text_fr";
+
+const FIELD_COURT_ORDER = "ovs_casereportcourtorderind";
+const FIELD_EVIDENCE_DOCUMENTS = "ovs_evidencedocuments";
+const FIELD_JUDGE_COMMENTS_ATTACHED = "ovs_casereportjudgecommentsind";
+const FIELD_PHOTOGRAPHS = "ovs_evidencephotos";
+const FIELD_SAMPLES = "ovs_evidencesaamples";
+const FIELD_STATEMENTS = "ovs_evidencestatements";
+const FIELD_SYNOPSIS = "ovs_investigationsynopsis";
+const FIELD_TRIAL_DATE = "ovs_casereporttrialdate";
+const FIELD_LOCAL_USER_TIME = "ovs_localtime";
+const FIELD_DESIGNATED_PERSON_NAME = "ovs_designatedperson";
+const FIELD_DESIGNATED_PERSON_TITLE = "ovs_designatedpersontitle";
+
+
+
+function OnLoad(executionContext) {
+
+    //get context
+    globalContext = glHelper.getGlobalContext();
+    var formContext = executionContext.getFormContext();
+    globalFormContext = formContext;
+
+    //record id
+    var id = glHelper.GetCurrentRecordId(formContext);
+
+    // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+    let formType = glHelper.GetFormType(formContext);
+
+    userSettings = Xrm.Utility.getGlobalContext().userSettings;
+    //Load up resources for English/French labels
+    LCID = userSettings.languageId;
+
+
+    //add event handlers
+    provisionIdField = formContext.getAttribute(ACTION_TYPE);
+    provisionIdField.removeOnChange(ActionType_OnChange); // avoid binding multiple event handlers
+    provisionIdField.addOnChange(ActionType_OnChange);
+
+    //add event handler for state change event
+     statusField = formContext.getAttribute(STATUS_CODE);
+     statusField.removeOnChange(Status_OnChange);
+     statusField.addOnChange(Status_OnChange);
+
+    //add event handler for status change event
+    subStatusField = formContext.getAttribute(SUBSTATUS_CODE);
+    subStatusField.removeOnChange(SubStatus_OnChange);
+    subStatusField.addOnChange(SubStatus_OnChange);
+
+    if (originalStatusValues === null) {
+        originalStatusValues = formContext.getControl(STATUS_CODE).getOptions();
+        originalSubStatusValues = formContext.getControl(SUBSTATUS_CODE).getOptions();
+    }
+
+    //hide all sections on load, required section to be determined
+    hideAllActionTypeSections(formContext);
+
+    glHelper.SetControlVisibility(formContext, SUBSTATUS_CODE, true);
+    glHelper.SetRequiredLevel(formContext, SUBSTATUS_CODE, true);
+
+    glHelper.SetControlVisibility(formContext, FIELD_ACTION_DATE, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_ACTION_DATE, true);
+
+    glHelper.SetControlVisibility(formContext, FIELD_DESIGNATED_PERSON_NAME, false);
+    glHelper.SetControlVisibility(formContext, FIELD_DESIGNATED_PERSON_TITLE, false);
+
+    if (formType == 1) {
+        //If form is new, set the Action Date to today.
+        var currentDate = new Date();
+        glHelper.SetValue(formContext, "ovs_actiondate",  currentDate);
+    }
+    else {
+        //action type should not be editable once the user has selected the type and saved
+        //glHelper.SetDisabled(formContext, "ovs_actiontype", true);
+
+        ActionProcess(globalFormContext);
+    }
+}
+
+function OnSave(executionContext)
+{
+    let formContext = executionContext.getFormContext();
+
+    let actionType = glHelper.GetValue(formContext, ACTION_TYPE);
+    let subStatus = glHelper.GetValue(formContext, SUBSTATUS_CODE);
+
+    switch (actionType)
+    {
+        case ActionTypes.NoticeOfDirectionToRemedy:
+            //Save the local date time as per user's local settings.
+            glHelper.SetValue(formContext, FIELD_LOCAL_USER_TIME, new Date().toLocaleTimeString());
+            break;
+        case ActionTypes.NoticeOfDirectionNotToImport:
+            //Save the local date time as per user's local settings.
+            glHelper.SetValue(formContext, FIELD_LOCAL_USER_TIME, new Date().toLocaleTimeString());
+            break;
+        default:
+            break;
+
+    }
+
+}
+
+function ActionProcess(formContext) {
+    //get statuscode and statecode (Status and Sub-Status)
+    //statecode = status
+    //statuscode = sub-status
+    let actionType = glHelper.GetValue(formContext, ACTION_TYPE);
+    let status = glHelper.GetValue(formContext, STATUS_CODE);
+    let subStatus = glHelper.GetValue(formContext, SUBSTATUS_CODE);
+
+    switch (actionType) {
+        case ActionTypes.NoticeOfDirectionToRemedy:
+            manageNoticeToRemedyForm(formContext, status, subStatus);
+            break;
+        case ActionTypes.DetentionNotice:
+            manageDetentionNoticeForm(formContext, status, subStatus);
+            break;
+        case ActionTypes.DirectionIssuedUnderSubsection19:
+            //Intervention
+            manageDirectionIssuedUnderSubsection19Form(formContext, status, subStatus);
+            break;
+        case ActionTypes.Investigation:
+            manageInvestigation(formContext, status, subStatus);
+            break;
+        case ActionTypes.NoticeOfDirectionNotToImport:
+            manageNoticeOfDirectionNotToImport(formContext, status, subStatus);
+            break;
+        case ActionTypes.NoticeOfInfraction:
+            manageNoticeOfInfractionForm(formContext, status, subStatus);
+            break;
+        case ActionTypes.Ticket:
+            manageTicketForm(formContext, status, subStatus);
+            break;
+        default:
+            break;
+
+    }
+
+}
+
+function hideAllActionTypeSections(formContext)
+{
+    glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.Intervention, false);
+    glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.Investigation, false);
+    glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.NotToImport, false);
+    glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.NoticeToRemedy, false);
+    glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.Ticket, false);
+    glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.DetentionNotice, false);
+    glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.DGMOCDetails, false);
+
+    glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, false);
+
+    glHelper.SetControlVisibility(formContext, FIELD_REVOCATION_JUSTIFICATION, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_REVOCATION_JUSTIFICATION, false);
+
+    glHelper.SetControlVisibility(formContext, FIELD_RELEASE_DATE, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, false);
+
+    glHelper.SetControlVisibility(formContext, FIELD_DIRECTION, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_DIRECTION, false);
+
+    glHelper.SetControlVisibility(formContext, FIELD_REASON_HOTI, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_REASON_HOTI, false);
+
+    glHelper.SetControlVisibility(formContext, FIELD_REASON_MOC, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_REASON_MOC, false);
+
+    glHelper.SetControlVisibility(formContext, FIELD_MOC_DESCRIPTION, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_MOC_DESCRIPTION, false);
+
+    glHelper.SetControlVisibility(formContext, FIELD_DG_DESCRIPTION, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_DG_DESCRIPTION, false);
+
+    glHelper.SetControlVisibility(formContext, FIELD_NON_COMPLIANCE_DETAILS, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_NON_COMPLIANCE_DETAILS, false);
+
+    glHelper.SetControlVisibility(formContext, FIELD_CASE_REPORT_JUDGE, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_CASE_REPORT_JUDGE, false);
+
+    glHelper.SetControlVisibility(formContext, FIELD_CASE_REPORT_NUMBER, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_CASE_REPORT_NUMBER, false);
+
+    glHelper.SetControlVisibility(formContext, FIELD_DATE_RESOLVED, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_DATE_RESOLVED, false);
+
+    glHelper.SetControlVisibility(formContext, FIELD_TICKET_ID, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_TICKET_ID, false);
+
+    glHelper.SetControlVisibility(formContext, FIELD_FINE, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_FINE, false);
+
+    glHelper.SetControlVisibility(formContext, FIELD_INTERVENTION_SUMMARY, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_INTERVENTION_SUMMARY, false);
+
+    glHelper.SetRequiredLevel(formContext, FIELD_DG_PDF_TEXT_EN, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_DG_PDF_TEXT_FR, false);
+
+    //Fields on Investigation that are not going to be shown for now
+    glHelper.SetControlVisibility(formContext, FIELD_COURT_ORDER, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_COURT_ORDER, false);
+    glHelper.SetControlVisibility(formContext, FIELD_EVIDENCE_DOCUMENTS, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_EVIDENCE_DOCUMENTS, false);
+    glHelper.SetControlVisibility(formContext, FIELD_JUDGE_COMMENTS_ATTACHED, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_JUDGE_COMMENTS_ATTACHED, false);
+    glHelper.SetControlVisibility(formContext, FIELD_PHOTOGRAPHS, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_PHOTOGRAPHS, false);
+    glHelper.SetControlVisibility(formContext, FIELD_SAMPLES, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_SAMPLES, false);
+    glHelper.SetControlVisibility(formContext, FIELD_STATEMENTS, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_STATEMENTS, false);
+    glHelper.SetControlVisibility(formContext, FIELD_SYNOPSIS, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_SYNOPSIS, false);
+    glHelper.SetControlVisibility(formContext, FIELD_TRIAL_DATE, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_TRIAL_DATE, false);
+
+}
+
+function manageNoticeOfDirectionNotToImport(formContext, status, subStatus) {
+
+    // Set Status options
+    glHelper.filterOptionSet(formContext, STATUS_CODE, [StateCodes.Canceled], false);
+
+    //Set Substatus options
+    if (status === StateCodes.Draft) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Draft], true);
+    } else if (status === StateCodes.Active) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Active], true);
+    } else if (status === StateCodes.Closed) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE,
+            [ActionSubStatus.ConfirmationReceivedOnTime,
+                ActionSubStatus.ConfirmationReceivedLate,
+                ActionSubStatus.AlternativeMeasuresTaken,
+                ActionSubStatus.ExpiredOverdue,
+                ActionSubStatus.CloseDuplicate
+            ],
+            true);
+    }
+
+    //Set Section Visibility
+    glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.NotToImport, true);
+    glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.DGMOCDetails, true);
+
+    // Set Control Visibility
+    glHelper.SetControlVisibility(formContext, FIELD_MOC_DESCRIPTION, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_MOC_DESCRIPTION, true);
+
+    glHelper.SetControlVisibility(formContext, FIELD_DG_DESCRIPTION, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_DG_DESCRIPTION, true);
+
+    glHelper.SetControlVisibility(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
+
+
+    if (subStatus === ActionSubStatus.ConfirmationReceivedLate || subStatus === ActionSubStatus.ConfirmationReceivedOnTime) {
+        glHelper.SetControlVisibility(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
+
+        glHelper.SetControlVisibility(formContext, FIELD_RELEASE_DATE, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, true);
+
+    } else if (subStatus === ActionSubStatus.AlternativeMeasuresTaken) {
+        glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
+
+        glHelper.SetControlVisibility(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
+
+        glHelper.SetControlVisibility(formContext, FIELD_RELEASE_DATE, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, true);
+    } else if (subStatus === ActionSubStatus.ExpiredOverdue) {
+        glHelper.SetControlVisibility(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
+
+        glHelper.SetControlVisibility(formContext, FIELD_RELEASE_DATE, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, true);
+    } else if (subStatus === ActionSubStatus.CloseDuplicate) {
+        glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
+    } else {
+        glHelper.SetControlVisibility(formContext, FIELD_REVOCATION_JUSTIFICATION, false);
+        glHelper.SetRequiredLevel(formContext, FIELD_REVOCATION_JUSTIFICATION, false);
+
+        glHelper.SetControlVisibility(formContext, FIELD_RELEASE_DATE, false);
+        glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, false);
+
+        glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, false);
+        glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, false);
+    }
+}
+
+function manageNoticeToRemedyForm(formContext, status, subStatus)
+{
+    // Set Status options
+    glHelper.filterOptionSet(formContext, STATUS_CODE, [StateCodes.Canceled], false); 
+
+    //Set Substatus options
+    if (status === StateCodes.Draft) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Draft], true);
+    } else if (status === StateCodes.Active) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Active], true);
+    } else if (status === StateCodes.Closed) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE,
+            [ActionSubStatus.ConfirmationReceivedOnTime,
+                ActionSubStatus.ConfirmationReceivedLate,
+                ActionSubStatus.ExpiredOverdue,
+                ActionSubStatus.CloseDuplicate
+            ],
+            true);
+    }
+
+    //Set Section Visibility
+    glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.NoticeToRemedy, true);
+
+    //Set mandatory fields
+    glHelper.SetControlVisibility(formContext, FIELD_DIRECTION, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_DIRECTION, true);
+
+    glHelper.SetControlVisibility(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
+
+    glHelper.SetRequiredLevel(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, true);
+
+    glHelper.SetControlVisibility(formContext, FIELD_DESIGNATED_PERSON_NAME, true);
+    glHelper.SetControlVisibility(formContext, FIELD_DESIGNATED_PERSON_TITLE, true);
+
+    glHelper.SetRequiredLevel(formContext, FIELD_DESIGNATED_PERSON_NAME, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_DESIGNATED_PERSON_TITLE, true);
+
+
+    if (status == StateCodes.Draft)
+    {
+        glHelper.SetDisabled(formContext, FIELD_DIRECTION, false);
+
+        glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, false);
+        glHelper.SetControlVisibility(formContext, FIELD_REVOCATION_JUSTIFICATION, false);
+        glHelper.SetControlVisibility(formContext, FIELD_RELEASE_DATE, false);
+    }
+    else if (status == StateCodes.Active) {
+        glHelper.SetDisabled(formContext, FIELD_DIRECTION, false);
+    }
+    else if (status = StateCodes.Closed)
+    {
+        glHelper.SetControlVisibility(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
+        glHelper.SetControlVisibility(formContext, FIELD_RELEASE_DATE, true);
+
+        glHelper.SetDisabled(formContext, FIELD_REVOCATION_JUSTIFICATION, false);
+        glHelper.SetDisabled(formContext, FIELD_RELEASE_DATE, false);
+        glHelper.SetDisabled(formContext, FIELD_DIRECTION, true);
+
+        glHelper.SetRequiredLevel(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, true);
+
+        if (subStatus === ActionSubStatus.CloseDuplicate) {
+            glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
+            glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
+        }
+    }
+    else
+    {
+        glHelper.SetDisabled(formContext, FIELD_DIRECTION, true);
+    }
+}
+
+function manageDetentionNoticeForm(formContext, status, subStatus)
+{
+    // Set Status options
+    glHelper.filterOptionSet(formContext, STATUS_CODE, [StateCodes.Canceled], false);
+
+    //Set Substatus options
+    if (status === StateCodes.Draft) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Draft], true);
+    } else if (status === StateCodes.Active) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Active], true);
+    } else if (status === StateCodes.Closed) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE,
+            [ActionSubStatus.ConfirmationReceivedOnTime,
+                ActionSubStatus.ConfirmationReceivedLate,
+                ActionSubStatus.Unresolved,
+                ActionSubStatus.Escalated,
+                ActionSubStatus.CloseDuplicate
+            ],
+            true);
+    }
+
+    glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.DetentionNotice, true);
+    glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.DGMOCDetails, true);
+
+    glHelper.SetControlVisibility(formContext, FIELD_REASON_HOTI, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_REASON_HOTI, true);
+
+    glHelper.SetControlVisibility(formContext, FIELD_REASON_MOC, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_REASON_MOC, true);
+
+    glHelper.SetControlVisibility(formContext, FIELD_MOC_DESCRIPTION, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_MOC_DESCRIPTION, true);
+
+    glHelper.SetControlVisibility(formContext, FIELD_DG_DESCRIPTION, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_DG_DESCRIPTION, true);
+
+    glHelper.SetRequiredLevel(formContext, FIELD_DG_PDF_TEXT_EN, false);
+    glHelper.SetRequiredLevel(formContext, FIELD_DG_PDF_TEXT_FR, false);
+
+    glHelper.SetControlVisibility(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
+
+    if (subStatus === ActionSubStatus.Unresolved || subStatus === ActionSubStatus.Escalated) {
+        glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
+    } else if (subStatus === ActionSubStatus.CloseDuplicate) {
+        glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
+    } else {
+      glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, false);
+      glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, false);
+    }
+
+    glHelper.SetControlVisibility(formContext, FIELD_RELEASE_DATE, subStatus == ActionSubStatus.ConfirmationReceivedOnTime);
+    glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, subStatus == ActionSubStatus.ConfirmationReceivedOnTime);
+    
+    //Load up RESX
+    var resexResourceName = "";
+    var reasonHOT = "";
+    var reasonMOC = "";
+
+
+    if (LCID == 1033) {
+        resexResourceName = "ovs_Labels.1033.resx";
+        reasonHOT = Xrm.Utility.getResourceString(resexResourceName, "ovs_enforcementaction.reasonHOTI.EN.Text");
+        glHelper.SetValue(formContext, FIELD_DG_PDF_TEXT_EN, reasonHOT);
+        reasonMOC = Xrm.Utility.getResourceString(resexResourceName, "ovs_enforcementaction.reasonMOC.EN.Text");
+        glHelper.SetValue(formContext, FIELD_MOC_PDF_TEXT_EN, reasonMOC);
+    }
+    else if (LCID == 1036) {
+        resexResourceName = "ovs_Labels.1036.resx";
+        reasonHOT = Xrm.Utility.getResourceString(resexResourceName, "ovs_enforcementaction.reasonHOTI.FR.Text");
+        glHelper.SetValue(formContext, FIELD_DG_PDF_TEXT_FR, reasonHOT);
+        reasonMOC = Xrm.Utility.getResourceString(resexResourceName, "ovs_enforcementaction.reasonMOC.FR.Text");
+        glHelper.SetValue(formContext, FIELD_MOC_PDF_TEXT_FR, reasonMOC);
+    }
+    glHelper.SetControlVisibility(formContext, FIELD_DG_PDF_TEXT_EN, LCID == 1033);
+    glHelper.SetControlVisibility(formContext, FIELD_DG_PDF_TEXT_FR, LCID == 1036);
+    glHelper.SetControlVisibility(formContext, FIELD_MOC_PDF_TEXT_EN, LCID == 1033);
+    glHelper.SetControlVisibility(formContext, FIELD_MOC_PDF_TEXT_FR, LCID == 1036);
+
+
+    //var reasonHOT_EN = Xrm.Utility.getResourceString(resexResourceName, "ovs_enforcementaction.reasonHOTI.EN.Text");
+    //var reasonHOT_FR = Xrm.Utility.getResourceString(resexResourceName, "ovs_enforcementaction.reasonHOTI.FR.Text");
+
+    //glHelper.SetValue(formContext, FIELD_DG_PDF_TEXT_EN, reasonHOT_EN);
+    //glHelper.SetValue(formContext, FIELD_DG_PDF_TEXT_FR, reasonHOT_FR);
+
+    //var reasonMOC_EN = Xrm.Utility.getResourceString(resexResourceName, "ovs_enforcementaction.reasonMOC.EN.Text");
+    //var reasonMOC_FR = Xrm.Utility.getResourceString(resexResourceName, "ovs_enforcementaction.reasonMOC.FR.Text");
+
+    //glHelper.SetValue(formContext, FIELD_MOC_PDF_TEXT_EN, reasonMOC_EN);
+    //glHelper.SetValue(formContext, FIELD_MOC_PDF_TEXT_FR, reasonMOC_FR);
+    
+}
+
+function manageDirectionIssuedUnderSubsection19Form(formContext, status, subStatus) {
+    // Set Status options
+    glHelper.filterOptionSet(formContext, STATUS_CODE, [StateCodes.Canceled, StateCodes.Active], false);
+
+    //Set Substatus options
+    if (status === StateCodes.Draft) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Draft], true);
+    } else if (status === StateCodes.Closed) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Closed, ActionSubStatus.CloseDuplicate], true);
+    }
+
+    glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.Intervention, true);
+
+    glHelper.SetControlVisibility(formContext, FIELD_INTERVENTION_SUMMARY, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_INTERVENTION_SUMMARY, true);
+
+    if (subStatus === ActionSubStatus.CloseDuplicate) {
+        glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
+    }
+}
+
+function manageTicketForm(formContext, status, subStatus) {
+    // Set Status options
+    glHelper.filterOptionSet(formContext, STATUS_CODE, [StateCodes.Canceled, StateCodes.Active], false);
+
+    //Set Substatus options
+    if (status === StateCodes.Draft) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Draft], true);
+    } else if (status === StateCodes.Closed) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Closed, ActionSubStatus.CloseDuplicate], true);
+    }
+
+    glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.Ticket, true);
+
+    glHelper.SetControlVisibility(formContext, FIELD_TICKET_ID, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_TICKET_ID, true);
+
+    glHelper.SetControlVisibility(formContext, FIELD_FINE, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_FINE, true);
+
+    if (subStatus === ActionSubStatus.CloseDuplicate) {
+        glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
+    }
+}
+
+function manageNoticeOfInfractionForm(formContext, status, subStatus) {
+    // Set Status options
+    glHelper.filterOptionSet(formContext, STATUS_CODE, [StateCodes.Canceled, StateCodes.Active], false);
+
+    glHelper.SetControlVisibility(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
+
+    //Set Substatus options
+    if (status === StateCodes.Draft) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Draft], true);
+    } else if (status === StateCodes.Closed) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Closed, ActionSubStatus.CloseDuplicate], true);
+    }
+
+    if (subStatus === ActionSubStatus.CloseDuplicate) {
+        glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
+    }
+}
+
+function manageInvestigation(formContext, status, subStatus) {
+    // Set Status options
+    glHelper.filterOptionSet(formContext, STATUS_CODE, [StateCodes.Canceled], false);
+
+    //Set Substatus options
+    if (status === StateCodes.Draft) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Draft], true);
+    } else if (status === StateCodes.Active) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE,
+            [ActionSubStatus.RecommendationForProsecutionCompleted,
+                ActionSubStatus.InvestigationInProgress],
+            true);
+    } else if (status === StateCodes.Closed) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE,
+            [ActionSubStatus.ConclusionOfCaseReportCompleted,
+                ActionSubStatus.InvestigationDeclinedInsufficientEvidence,
+                ActionSubStatus.InvestigationDeclinedNotInPublicInterest,
+                ActionSubStatus.CloseDuplicate
+            ],
+            true);
+    }
+
+    //Set Section Visibility
+    glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.Investigation, true);
+
+    glHelper.SetControlVisibility(formContext, FIELD_CASE_REPORT_JUDGE, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_CASE_REPORT_JUDGE, false);
+    glHelper.SetControlVisibility(formContext, FIELD_CASE_REPORT_NUMBER, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_CASE_REPORT_NUMBER, false);
+    glHelper.SetControlVisibility(formContext, FIELD_DATE_RESOLVED, true);
+    if (status === StateCodes.Closed) {
+        glHelper.SetRequiredLevel(formContext, FIELD_DATE_RESOLVED, true);
+    } else {
+        glHelper.SetRequiredLevel(formContext, FIELD_DATE_RESOLVED, false);
+    }
+    if (subStatus === ActionSubStatus.CloseDuplicate) {
+        glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
+    }
+}
+
+function ActionType_OnChange() {
+    hideAllActionTypeSections(globalFormContext);
+
+    //Restored all the status and substatus
+    let statusCtrl = globalFormContext.getControl(STATUS_CODE);
+    statusCtrl.clearOptions();
+    //The first one is an empty one that Dynamic put automatically
+    for (let i = 1; i < originalStatusValues.length; i++) {
+        statusCtrl.addOption(originalStatusValues[i]);
+    }
+
+    let subStatusCtrl = globalFormContext.getControl(SUBSTATUS_CODE);
+    subStatusCtrl.clearOptions();
+    //The first one is an empty one that Dynamic put automatically
+    for (let i = 1; i < originalSubStatusValues.length; i++) {
+        subStatusCtrl.addOption(originalSubStatusValues[i]);
+    }
+
+    glHelper.SetValue(globalFormContext, STATUS_CODE, StateCodes.Draft);
+    glHelper.SetValue(globalFormContext, SUBSTATUS_CODE, ActionSubStatus.Draft);
+
+    ActionProcess(globalFormContext);
+}
+
+function Status_OnChange() {
+    hideAllActionTypeSections(globalFormContext);
+
+    let subStatusCtrl = globalFormContext.getControl(SUBSTATUS_CODE);
+    subStatusCtrl.clearOptions();
+    //The first one is an empty one that Dynamic put automatically
+    for (let i = 1; i < originalSubStatusValues.length; i++) {
+        subStatusCtrl.addOption(originalSubStatusValues[i]);
+    }
+
+    ActionProcess(globalFormContext);
+}
+
+function SubStatus_OnChange() {
+    hideAllActionTypeSections(globalFormContext);
+
+    ActionProcess(globalFormContext);
+}

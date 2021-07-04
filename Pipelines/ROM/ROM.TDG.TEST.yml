@@ -5,7 +5,7 @@ pr:
 - none
 
 variables:
-  Version.Revision: $[counter(format('{0:yyyyMMdd}', pipeline.startTime), 0)]
+  RevisionVersion: $[counter(format('{0:yyyyMMdd}', pipeline.startTime), 0)]
   BuildPlatform: 'Any CPU'
   BuildConfiguration: 'Release'
   MajorVersion: $(Pipeline_MajorVersion)
@@ -14,9 +14,33 @@ variables:
   SolutionName: $(Pipeline_SolutionName)
   PowerPlatformSPN: $(Pipeline_PowerPlatformSPN)
 
-name: '$(Build.DefinitionName) $(MajorVersion).$(MinorVersion).$(PatchVersion).$(Date:yy)$(DayOfYear)$(Version.Revision)'
+name: '$(SolutionName)_$(MajorVersion).$(MinorVersion).$(PatchVersion).$(RevisionVersion)'
 
 stages:
+- stage: PrintPipelineVariables
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: PrintPipelineVariables
+    steps:
+    - checkout: self
+      persistCredentials: true
+      clean: true
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "============================================"
+          Write-Host "Echoing *Variable* Values"
+          Write-Host "RevisionVersion:    $(env:REVISIONVERSION)"
+          Write-Host "BuildPlatform:      $(env:BUILDPLATFORM)"
+          Write-Host "BuildConfiguration: $(env:BUILDCONFIGURATION)"
+          Write-Host "MajorVersion:       $(env:MAJORVERSION)"
+          Write-Host "MinorVersion:       $(env:MINORVERSION)"
+          Write-Host "PatchVersion:       $(env:PATCHVERSION)"
+          Write-Host "SolutionName:       $(env:SOLUTIONNAME)"
+          Write-Host "PowerPlatformSPN:   $(env:POWERPLATFORMSPN)"
+          Write-Host "============================================"
 - template: templates/Template_CommitSolution.yml  # Template reference
   parameters:
     MajorVersion: $(MajorVersion)

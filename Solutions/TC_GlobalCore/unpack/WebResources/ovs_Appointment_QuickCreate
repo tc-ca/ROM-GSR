@@ -1,0 +1,18 @@
+///<reference path="../../Utilities/GlobalHelper.js"/>
+///<reference path="../../Utilities/questionnaireFunctions.js"/>
+
+var Appointment_QC = (function (window, document) {
+
+
+    return {
+
+        OnLoad: function (executionContext) {
+
+
+            var formContext = executionContext.getFormContext();
+            formContext.getControl("requiredattendees").setEntityTypes(["contact", "systemuser"]);
+            formContext.getControl("optionalattendees").setEntityTypes(["contact", "systemuser"]);
+        },
+    }
+
+})(window, document)

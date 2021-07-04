@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{98594812-9561-eb11-a81d-000d3a6da03b}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="name" select="1" preview="1" icon="1">
+        <row name="result" id="bookableresourceid">
+          <cell name="name" width="150" />
+          <cell name="a_24b494717860eb11a81a000d3a6da03b.internalemailaddress" width="100" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="msdyn_organizationalunit" width="100" />
+          <cell name="a_24b494717860eb11a81a000d3a6da03b.address1_composite" width="100" disableSorting="1" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+        <entity name="bookableresource">
+          <attribute name="name" />
+          <attribute name="msdyn_organizationalunit" />
+          <order attribute="name" descending="false" />
+          <filter type="and">
+            <condition attribute="userid" operator="not-null" />
+          </filter>
+          <link-entity name="systemuser" from="systemuserid" to="userid" visible="false" link-type="outer" alias="a_24b494717860eb11a81a000d3a6da03b">
+            <attribute name="address1_composite" />
+            <attribute name="internalemailaddress" />
+          </link-entity>
+          <attribute name="bookableresourceid" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Frontline workers" languagecode="1033" />
+      <LocalizedName description="Collaborateurs de première ligne" languagecode="1036" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

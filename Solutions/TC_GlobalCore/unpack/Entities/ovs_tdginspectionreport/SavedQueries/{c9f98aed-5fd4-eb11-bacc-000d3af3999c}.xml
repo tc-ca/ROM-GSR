@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{c9f98aed-5fd4-eb11-bacc-000d3af3999c}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
+        <row name="result" id="ovs_tdginspectionreportid">
+          <cell name="ovs_name" width="134" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_workorderid" width="115" />
+          <cell name="a_c0a57826484a4b6fbae8355b6d1eba6b.msdyn_serviceaccount" width="213" />
+          <cell name="a_c0a57826484a4b6fbae8355b6d1eba6b.msdyn_serviceterritory" width="195" />
+          <cell name="statuscode" width="124" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_reportlanguage" width="153" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="modifiedon" width="142" />
+          <cell name="createdon" width="190" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+        <entity name="ovs_tdginspectionreport">
+          <attribute name="createdon" />
+          <attribute name="ovs_reportlanguage" />
+          <attribute name="statuscode" />
+          <attribute name="ovs_name" />
+          <attribute name="modifiedon" />
+          <attribute name="ovs_tdginspectionreportid" />
+          <link-entity alias="a_c0a57826484a4b6fbae8355b6d1eba6b" name="msdyn_workorder" to="ovs_workorderid" from="msdyn_workorderid" link-type="outer" visible="false">
+            <attribute name="msdyn_serviceaccount" />
+            <attribute name="msdyn_serviceterritory" />
+          </link-entity>
+          <attribute name="ovs_workorderid" />
+          <order attribute="createdon" descending="true" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.25.1.1</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="All Inspection Reports" languagecode="1033" />
+      <LocalizedName description="Tous les rapports d’inspection+E109" languagecode="1036" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="All reports for WO reports grid" languagecode="1033" />
+      <Description description="Tous les rapports pour la grille des rapports OT (WO)" languagecode="1036" />
+    </Descriptions>
+  </savedquery>
+</savedqueries>
