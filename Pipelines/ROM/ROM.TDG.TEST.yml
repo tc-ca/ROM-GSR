@@ -14,7 +14,7 @@ variables:
   SolutionName: $(Pipeline_SolutionName)
   PowerPlatformSPN: $(Pipeline_PowerPlatformSPN)
 
-name: '$(Build.DefinitionName) $(MajorVersion).$(MinorVersion).$(PatchVersion).$(Date:yy)$(DayOfYear)$(Version.Revision)'
+name: '$(Pipeline_SolutionName)_$(MajorVersion).$(MinorVersion).$(PatchVersion).$(Version.Revision)'
 
 stages:
 - template: templates/Template_CommitSolution.yml  # Template reference
