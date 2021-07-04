@@ -1,5 +1,5 @@
 parameters:
-  Version.Revision: $[counter(format('{0:yyyyMMdd}', pipeline.startTime), 0)]
+  RevisionVersion: $[counter(format('{0:yyyyMMdd}', pipeline.startTime), 0)]
   BuildPlatform: 'Any CPU'
   BuildConfiguration: 'Release'
   MajorVersion: 1
@@ -75,43 +75,43 @@ stages:
       inputs:
         authenticationType: 'PowerPlatformSPN'
         PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
-        SolutionName: '${{SolutionName}}'
-        SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\${{SolutionName}}_$(Build.BuildNumber).zip'
+        SolutionName: '${{Parameters.SolutionName}}'
+        SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\${{Parameters.SolutionName}}_$(Build.BuildNumber).zip'
         AsyncOperation: true
         MaxAsyncWaitTime: '360'
         ExportAutoNumberingSettings: true
     - task: PowerPlatformUnpackSolution@0
       inputs:
-        SolutionInputFile: '$(Build.ArtifactStagingDirectory)\${{SolutionName}}_$(Build.BuildNumber).zip'
-        SolutionTargetFolder: '$(Build.ArtifactStagingDirectory)\${{SolutionName}}'
+        SolutionInputFile: '$(Build.ArtifactStagingDirectory)\${{Parameters.SolutionName}}_$(Build.BuildNumber).zip'
+        SolutionTargetFolder: '$(Build.ArtifactStagingDirectory)\${{Parameters.SolutionName}}'
     - task: PublishBuildArtifacts@1
       displayName: publish unpacked files
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)\${{SolutionName}}'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\${{Parameters.SolutionName}}'
         ArtifactName: 'unpacked'
         publishLocation: 'Container'
     - powershell: |
-        If(!(test-path '$(Build.SourcesDirectory)\Solutions\${{SolutionName}}\unpack'))
+        If(!(test-path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\unpack'))
         {
-          Write-Host "$(Build.SourcesDirectory)\Solutions\${{SolutionName}}\unpack folder does not exists."
-          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\${{SolutionName}}\unpack'
-          Write-Host "$(Build.SourcesDirectory)\Solutions\${{SolutionName}}\unpack folder created."
+          Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\unpack folder does not exists."
+          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\unpack'
+          Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\unpack folder created."
         }
-        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\${{SolutionName}}\* -Destination $(Build.SourcesDirectory)\Solutions\${{SolutionName}}\unpack
+        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\${{Parameters.SolutionName}}\* -Destination $(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\unpack
     - task: PublishBuildArtifacts@1
       displayName: publish solution zip
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)\${{SolutionName}}_$(Build.BuildNumber).zip'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\${{Parameters.SolutionName}}_$(Build.BuildNumber).zip'
         ArtifactName: 'zip'
         publishLocation: 'Container'
     - powershell: |
-        If(!(test-path '$(Build.SourcesDirectory)\Solutions\${{SolutionName}}\zip'))
+        If(!(test-path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\zip'))
         {
-          Write-Host "$(Build.SourcesDirectory)\Solutions\${{SolutionName}}\zip folder does not exists."
-          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\${{SolutionName}}\zip'
-          Write-Host "$(Build.SourcesDirectory)\Solutions\${{SolutionName}}\zip folder created."
+          Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\zip folder does not exists."
+          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\zip'
+          Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\zip folder created."
         }
-        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\${{SolutionName}}_$(Build.BuildNumber).zip -Destination $(Build.SourcesDirectory)\Solutions\${{SolutionName}}\zip
+        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\${{Parameters.SolutionName}}_$(Build.BuildNumber).zip -Destination $(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\zip
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
@@ -143,7 +143,7 @@ stages:
         git config user.name "tc-buildbot"
         git checkout development
         git add --all
-        git commit -m "Update Solution - $env:SolutionName: $env:COMMITMESSAGE"
+        git commit -m "Update Solution - ${{Parameters.SolutionName}}: $env:COMMITMESSAGE"
         
         echo "Push solution changes to the remote repository"
         git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
