@@ -131,11 +131,23 @@ stages:
         crmConnectionString: '$(ConnectionStringDev)'
         solutionName: '$(CoreSolutionName)'
         exportManaged: true
+        exportUnmanaged: false
+        includeVersionInSolutionFile: true
+        outputPath: '$(Build.ArtifactStagingDirectory)'
+        crmConnectionTimeout: '4000'
+        asyncWaitTimeout: '4000'
+        exportAutoNumberingSettings: true
+    - task: MSCRMExportSolution@12
+      displayName: 'Export UnManged Solution: $(CoreSolutionName)'
+      timeoutInMinutes: 4000
+      inputs:
+        crmConnectionString: '$(ConnectionStringDev)'
+        solutionName: '$(CoreSolutionName)'
+        exportManaged: false
         exportUnmanaged: true
         includeVersionInSolutionFile: true
         outputPath: '$(Build.ArtifactStagingDirectory)'
         crmConnectionTimeout: '4000'
-        useAsyncMode: true
         asyncWaitTimeout: '4000'
         exportAutoNumberingSettings: true
     - task: PowerShell@2
