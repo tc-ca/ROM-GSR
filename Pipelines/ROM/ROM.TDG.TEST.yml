@@ -8,134 +8,19 @@ variables:
   Version.Revision: $[counter(format('{0:yyyyMMdd}', pipeline.startTime), 0)]
   BuildPlatform: 'Any CPU'
   BuildConfiguration: 'Release'
-  MajorVersion: 1
-  MinorVersion: 33
-  PatchVersion: 1
-  CoreSolutionName: TC_GlobalCore
+  MajorVersion: $(Pipeline_MajorVersion)
+  MinorVersion: $(Pipeline_MinorVersion)
+  PatchVersion: $(Pipeline_PatchVersion)
+  SolutionName: $(Pipeline_SolutionName)
+  PowerPlatformSPN: $(Pipeline_PowerPlatformSPN)
 
 name: '$(Build.DefinitionName) $(MajorVersion).$(MinorVersion).$(PatchVersion).$(Date:yy)$(DayOfYear)$(Version.Revision)'
 
 stages:
-- stage: BuildAndPublishArtifact
-  pool:
-      vmImage: 'windows-latest'
-  jobs:
-  - job: BuildAndPublishArtifact
-    steps:
-    - checkout: self
-      persistCredentials: true
-      clean: true
-    - task: PowerShell@2
-      inputs:
-        targetType: 'inline'
-        script: |
-          Write-Host "============================================"
-          Write-Host "System.DefaultWorkingDirectory"
-          Get-ChildItem -Path "$(System.DefaultWorkingDirectory)"
-          Write-Host "============================================"
-          Write-Host "Agent.BuildDirectory"
-          Get-ChildItem -Path "$(Agent.BuildDirectory)"
-          Write-Host "============================================"
-          Write-Host ""
-          Write-Host "============================================"
-          Write-Host "Build.ArtifactStagingDirectory"
-          Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)"
-          Write-Host "============================================"
-          Write-Host "============================================"
-          Write-Host "Build.BinariesDirectory"
-          Get-ChildItem -Path "$(Build.BinariesDirectory)"
-          Write-Host "============================================"
-          Write-Host "============================================"
-          Write-Host "Build.SourcesDirectory"
-          Get-ChildItem -Path "$(Build.SourcesDirectory)"
-          Write-Host "============================================"
-        errorActionPreference: 'continue'
-    - task: DeleteFiles@1
-      inputs:
-        SourceFolder: '$(Build.ArtifactStagingDirectory)'
-        Contents: |
-          **
-          **/*
-    - task: PowerPlatformToolInstaller@0
-      inputs:
-        DefaultVersion: true
-    - task: PowerPlatformPublishCustomizations@0
-      inputs:
-        authenticationType: 'PowerPlatformSPN'
-        PowerPlatformSPN: 'ROM Dev'
-    - task: PowerPlatformExportSolution@0
-      inputs:
-        authenticationType: 'PowerPlatformSPN'
-        PowerPlatformSPN: 'ROM Dev'
-        SolutionName: '$(CoreSolutionName)'
-        SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(CoreSolutionName)_$(Build.BuildNumber).zip'
-        AsyncOperation: true
-        MaxAsyncWaitTime: '360'
-        ExportAutoNumberingSettings: true
-    - task: PowerPlatformUnpackSolution@0
-      inputs:
-        SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(CoreSolutionName)_$(Build.BuildNumber).zip'
-        SolutionTargetFolder: '$(Build.ArtifactStagingDirectory)\$(CoreSolutionName)'
-    - task: PublishBuildArtifacts@1
-      displayName: publish unpacked files
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)\$(CoreSolutionName)'
-        ArtifactName: 'unpacked'
-        publishLocation: 'Container'
-    - powershell: |
-        If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\unpack'))
-        {
-          Write-Host "$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\unpack folder does not exists."
-          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\unpack'
-          Write-Host "$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\unpack folder created."
-        }
-        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\$(CoreSolutionName)\* -Destination $(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\unpack
-    - task: PublishBuildArtifacts@1
-      displayName: publish solution zip
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)\$(CoreSolutionName)_$(Build.BuildNumber).zip'
-        ArtifactName: 'zip'
-        publishLocation: 'Container'
-    - powershell: |
-        If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\zip'))
-        {
-          Write-Host "$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\zip folder does not exists."
-          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\zip'
-          Write-Host "$(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\zip folder created."
-        }
-        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\$(CoreSolutionName)_$(Build.BuildNumber).zip -Destination $(Build.SourcesDirectory)\Solutions\$(CoreSolutionName)\zip
-    - task: PowerShell@2
-      inputs:
-        targetType: 'inline'
-        script: |
-          Write-Host "============================================"
-          Write-Host "System.DefaultWorkingDirectory"
-          Get-ChildItem -Path "$(System.DefaultWorkingDirectory)"
-          Write-Host "============================================"
-          Write-Host "Agent.BuildDirectory"
-          Get-ChildItem -Path "$(Agent.BuildDirectory)"
-          Write-Host "============================================"
-          Write-Host ""
-          Write-Host "============================================"
-          Write-Host "Build.ArtifactStagingDirectory"
-          Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)"
-          Write-Host "============================================"
-          Write-Host "============================================"
-          Write-Host "Build.BinariesDirectory"
-          Get-ChildItem -Path "$(Build.BinariesDirectory)"
-          Write-Host "============================================"
-          Write-Host "============================================"
-          Write-Host "Build.SourcesDirectory"
-          Get-ChildItem -Path "$(Build.SourcesDirectory)"
-          Write-Host "============================================"
-        errorActionPreference: 'continue'
-    - powershell: |
-        echo "Committing all CDS solution changes"
-        git config user.email "nepasrepondre-noreply@tc.gc.ca"
-        git config user.name "tc-buildbot"
-        git checkout development
-        git add --all
-        git commit -m "Update Solution - $env:CORESOLUTIONNAME: $env:COMMITMESSAGE"
-        
-        echo "Push solution changes to the remote repository"
-        git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
+- template: Pipelines/ROM/templates/Template_CommitSolution.yml  # Template reference
+  parameters:
+    MajorVersion: $(MajorVersion)
+    MinorVersion: $(MinorVersion)
+    PatchVersion: $(PatchVersion)
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN)
