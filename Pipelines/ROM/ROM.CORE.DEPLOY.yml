@@ -126,7 +126,6 @@ stages:
         failOnStderr: true
     - task: MSCRMExportSolution@12
       displayName: 'Export Manged Solution: $(CoreSolutionName)'
-      timeoutInMinutes: 4000
       inputs:
         crmConnectionString: '$(ConnectionStringDev)'
         solutionName: '$(CoreSolutionName)'
@@ -134,12 +133,11 @@ stages:
         exportUnmanaged: false
         includeVersionInSolutionFile: true
         outputPath: '$(Build.ArtifactStagingDirectory)'
-        crmConnectionTimeout: '4000'
-        asyncWaitTimeout: '4000'
+        crmConnectionTimeout: '21600'
+        asyncWaitTimeout: '21600'
         exportAutoNumberingSettings: true
     - task: MSCRMExportSolution@12
       displayName: 'Export UnManged Solution: $(CoreSolutionName)'
-      timeoutInMinutes: 4000
       inputs:
         crmConnectionString: '$(ConnectionStringDev)'
         solutionName: '$(CoreSolutionName)'
@@ -147,8 +145,8 @@ stages:
         exportUnmanaged: true
         includeVersionInSolutionFile: true
         outputPath: '$(Build.ArtifactStagingDirectory)'
-        crmConnectionTimeout: '4000'
-        asyncWaitTimeout: '4000'
+        crmConnectionTimeout: '21600'
+        asyncWaitTimeout: '21600'
         exportAutoNumberingSettings: true
     - task: PowerShell@2
       inputs:
@@ -325,22 +323,22 @@ stages:
               overwriteUnmanagedCustomizations: true
               holdingSolution: true
               useAsyncMode: false
-              asyncWaitTimeout: '3600'
-              crmConnectionTimeout: '3600'
+              asyncWaitTimeout: '21600'
+              crmConnectionTimeout: '21600'
           - task: MSCRMApplySolution@12
             displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
             inputs:
               crmConnectionString: '$(ConnectionStringQa)'
               solutionName: '$(CoreSolutionName)'
-              asyncWaitTimeout: '3600'
-              crmConnectionTimeout: '3600'
+              asyncWaitTimeout: '21600'
+              crmConnectionTimeout: '21600'
           - task: MSCRMCreatePatch@12
             displayName: 'Create Patch: $(CoreSolutionName)'
             inputs:
               crmConnectionString: '$(ConnectionStringDev)'
               uniqueName: '$(CoreSolutionName)'
               versionNumber: '$(NextSolutionVersion)'
-              crmConnectionTimeout: '3600'
+              crmConnectionTimeout: '21600'
 - stage: ACC
   jobs:
   - deployment: Deploy
@@ -451,15 +449,15 @@ stages:
               overwriteUnmanagedCustomizations: true
               holdingSolution: true
               useAsyncMode: false
-              asyncWaitTimeout: '3600'
-              crmConnectionTimeout: '3600'
+              asyncWaitTimeout: '21600'
+              crmConnectionTimeout: '21600'
           - task: MSCRMApplySolution@12
             displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
             inputs:
               crmConnectionString: '$(ConnectionStringAccTdg)'
               solutionName: '$(CoreSolutionName)'
-              asyncWaitTimeout: '3600'
-              crmConnectionTimeout: '3600'
+              asyncWaitTimeout: '21600'
+              crmConnectionTimeout: '21600'
 - stage: ACCDATA
   condition: succeeded()
   dependsOn: QA
@@ -571,12 +569,12 @@ stages:
               overwriteUnmanagedCustomizations: true
               holdingSolution: true
               useAsyncMode: false
-              asyncWaitTimeout: '3600'
-              crmConnectionTimeout: '3600'
+              asyncWaitTimeout: '21600'
+              crmConnectionTimeout: '21600'
           - task: MSCRMApplySolution@12
             displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
             inputs:
               crmConnectionString: '$(ConnectionStringAccTdgData)'
               solutionName: '$(CoreSolutionName)'
-              asyncWaitTimeout: '3600'
-              crmConnectionTimeout: '3600'
+              asyncWaitTimeout: '21600'
+              crmConnectionTimeout: '21600'
