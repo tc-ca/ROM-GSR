@@ -23,6 +23,21 @@ stages:
         targetType: 'inline'
         script: |
           Write-Host "============================================"
+          Write-Host "Echoing Parameter Values"
+          Write-Host "Parameters.RevisionVersion: ${{Parameters.RevisionVersion}}"
+          Write-Host "Parameters.BuildPlatform: ${{Parameters.BuildPlatform}}"
+          Write-Host "Parameters.BuildConfiguration: ${{Parameters.BuildConfiguration}}"
+          Write-Host "Parameters.MajorVersion: ${{Parameters.MajorVersion}}"
+          Write-Host "Parameters.MinorVersion: ${{Parameters.MinorVersion}}"
+          Write-Host "Parameters.PatchVersion: ${{Parameters.PatchVersion}}"
+          Write-Host "Parameters.SolutionName: ${{Parameters.SolutionName}}"
+          Write-Host "Parameters.PowerPlatformSPN: ${{Parameters.PowerPlatformSPN}}"
+          Write-Host "============================================"
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "============================================"
           Write-Host "System.DefaultWorkingDirectory"
           Get-ChildItem -Path "$(System.DefaultWorkingDirectory)"
           Write-Host "============================================"
@@ -55,48 +70,48 @@ stages:
     - task: PowerPlatformPublishCustomizations@0
       inputs:
         authenticationType: 'PowerPlatformSPN'
-        PowerPlatformSPN: '$(PowerPlatformSPN)'
+        PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
     - task: PowerPlatformExportSolution@0
       inputs:
         authenticationType: 'PowerPlatformSPN'
-        PowerPlatformSPN: '$(PowerPlatformSPN)'
-        SolutionName: '$(SolutionName)'
-        SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_$(Build.BuildNumber).zip'
+        PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
+        SolutionName: '${{SolutionName}}'
+        SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\${{SolutionName}}_$(Build.BuildNumber).zip'
         AsyncOperation: true
         MaxAsyncWaitTime: '360'
         ExportAutoNumberingSettings: true
     - task: PowerPlatformUnpackSolution@0
       inputs:
-        SolutionInputFile: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_$(Build.BuildNumber).zip'
-        SolutionTargetFolder: '$(Build.ArtifactStagingDirectory)\$(SolutionName)'
+        SolutionInputFile: '$(Build.ArtifactStagingDirectory)\${{SolutionName}}_$(Build.BuildNumber).zip'
+        SolutionTargetFolder: '$(Build.ArtifactStagingDirectory)\${{SolutionName}}'
     - task: PublishBuildArtifacts@1
       displayName: publish unpacked files
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)\$(SolutionName)'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\${{SolutionName}}'
         ArtifactName: 'unpacked'
         publishLocation: 'Container'
     - powershell: |
-        If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(SolutionName)\unpack'))
+        If(!(test-path '$(Build.SourcesDirectory)\Solutions\${{SolutionName}}\unpack'))
         {
-          Write-Host "$(Build.SourcesDirectory)\Solutions\$(SolutionName)\unpack folder does not exists."
-          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(SolutionName)\unpack'
-          Write-Host "$(Build.SourcesDirectory)\Solutions\$(SolutionName)\unpack folder created."
+          Write-Host "$(Build.SourcesDirectory)\Solutions\${{SolutionName}}\unpack folder does not exists."
+          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\${{SolutionName}}\unpack'
+          Write-Host "$(Build.SourcesDirectory)\Solutions\${{SolutionName}}\unpack folder created."
         }
-        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\$(SolutionName)\* -Destination $(Build.SourcesDirectory)\Solutions\$(SolutionName)\unpack
+        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\${{SolutionName}}\* -Destination $(Build.SourcesDirectory)\Solutions\${{SolutionName}}\unpack
     - task: PublishBuildArtifacts@1
       displayName: publish solution zip
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)\$(SolutionName)_$(Build.BuildNumber).zip'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\${{SolutionName}}_$(Build.BuildNumber).zip'
         ArtifactName: 'zip'
         publishLocation: 'Container'
     - powershell: |
-        If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(SolutionName)\zip'))
+        If(!(test-path '$(Build.SourcesDirectory)\Solutions\${{SolutionName}}\zip'))
         {
-          Write-Host "$(Build.SourcesDirectory)\Solutions\$(SolutionName)\zip folder does not exists."
-          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(SolutionName)\zip'
-          Write-Host "$(Build.SourcesDirectory)\Solutions\$(SolutionName)\zip folder created."
+          Write-Host "$(Build.SourcesDirectory)\Solutions\${{SolutionName}}\zip folder does not exists."
+          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\${{SolutionName}}\zip'
+          Write-Host "$(Build.SourcesDirectory)\Solutions\${{SolutionName}}\zip folder created."
         }
-        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\$(SolutionName)_$(Build.BuildNumber).zip -Destination $(Build.SourcesDirectory)\Solutions\$(SolutionName)\zip
+        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\${{SolutionName}}_$(Build.BuildNumber).zip -Destination $(Build.SourcesDirectory)\Solutions\${{SolutionName}}\zip
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
