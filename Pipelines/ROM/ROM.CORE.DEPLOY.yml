@@ -24,6 +24,8 @@ stages:
       vmImage: 'vs2017-win2016'
   jobs:
   - job: Export_Dev
+    timeoutInMinutes: 360 # how long to run the job before automatically cancelling
+    cancelTimeoutInMinutes: 2 # how much time to give 'run always even if cancelled tasks' before stopping them
     displayName: Export_Dev
     pool:
       vmImage: vs2017-win2016
@@ -204,6 +206,8 @@ stages:
 - stage: QA
   jobs:
   - deployment: Deploy
+    timeoutInMinutes: 360 # how long to run the job before automatically cancelling
+    cancelTimeoutInMinutes: 2 # how much time to give 'run always even if cancelled tasks' before stopping them
     condition: succeeded()
     pool:
       vmImage: 'vs2017-win2016'
@@ -328,6 +332,8 @@ stages:
 - stage: ACC
   jobs:
   - deployment: Deploy
+    timeoutInMinutes: 360 # how long to run the job before automatically cancelling
+    cancelTimeoutInMinutes: 2 # how much time to give 'run always even if cancelled tasks' before stopping them
     condition: succeeded()
     pool:
       vmImage: 'vs2017-win2016'
@@ -447,6 +453,8 @@ stages:
   dependsOn: QA
   jobs:
   - deployment: Deploy
+    timeoutInMinutes: 360 # how long to run the job before automatically cancelling
+    cancelTimeoutInMinutes: 2 # how much time to give 'run always even if cancelled tasks' before stopping them
     pool:
       vmImage: 'vs2017-win2016'
     environment: ACC-TDG-DATA
