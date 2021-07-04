@@ -14,7 +14,7 @@ variables:
   SolutionName: $(Pipeline_SolutionName)
   PowerPlatformSPN: $(Pipeline_PowerPlatformSPN)
 
-name: '$(Pipeline_SolutionName)_$(Pipeline_MajorVersion).$(Pipeline_MinorVersion).$(Pipeline_PatchVersion).$(RevisionVersion)'
+name: '$(SolutionName)_$(MajorVersion).$(MinorVersion).$(PatchVersion).$(RevisionVersion)'
 
 stages:
 - stage: PrintPipelineVariables
@@ -32,19 +32,19 @@ stages:
         script: |
           Write-Host "============================================"
           Write-Host "Echoing *Variable* Values"
-          Write-Host "RevisionVersion:    $(env:PIPELINE_REVISIONVERSION)"
-          Write-Host "BuildPlatform:      $(env:PIPELINE_BuildPlatform)"
-          Write-Host "BuildConfiguration: $(env:PIPELINE_BuildConfiguration)"
-          Write-Host "MajorVersion:       $(env:PIPELINE_MAJORVERSION)"
-          Write-Host "MinorVersion:       $(env:PIPELINE_MINORVERSION)"
-          Write-Host "PatchVersion:       $(env:PIPELINE_PATCHVERSION)"
-          Write-Host "SolutionName:       $(env:PIPELINE_SOLUTIONNAME)"
-          Write-Host "PowerPlatformSPN:   $(env:PIPELINE_POWERPLATFORMSPN)"
+          Write-Host "RevisionVersion:    $(env:REVISIONVERSION)"
+          Write-Host "BuildPlatform:      $(env:BUILDPLATFORM)"
+          Write-Host "BuildConfiguration: $(env:BUILDCONFIGURATION)"
+          Write-Host "MajorVersion:       $(env:MAJORVERSION)"
+          Write-Host "MinorVersion:       $(env:MINORVERSION)"
+          Write-Host "PatchVersion:       $(env:PATCHVERSION)"
+          Write-Host "SolutionName:       $(env:SOLUTIONNAME)"
+          Write-Host "PowerPlatformSPN:   $(env:POWERPLATFORMSPN)"
           Write-Host "============================================"
 - template: templates/Template_CommitSolution.yml  # Template reference
   parameters:
-    MajorVersion: $(Pipeline_MajorVersion)
-    MinorVersion: $(Pipeline_MinorVersion)
-    PatchVersion: $(Pipeline_PatchVersion)
-    SolutionName: $(Pipeline_SolutionName)
-    PowerPlatformSPN: $(Pipeline_PowerPlatformSPN)
+    MajorVersion: $(MajorVersion)
+    MinorVersion: $(MinorVersion)
+    PatchVersion: $(PatchVersion)
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN)
