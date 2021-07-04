@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{7060d0f9-20d5-eb11-bacc-000d3af3999c}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="subject" select="1" preview="1" icon="1">
+        <row name="result" id="activityid">
+          <cell name="subject" width="150" />
+          <cell name="regardingobjectid" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="aa.ovs_primaryinspector" width="100" disableSorting="1" />
+          <cell name="aa.msdyn_serviceaccount" width="125" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="scheduledend" width="100" />
+          <cell name="ovs_violation" width="100" />
+          <cell name="a_0b3882dd4b92eb11b1ac000d3ae985db.qm_externalcomments" width="200" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="statecode" width="100" />
+          <cell name="createdon" width="100" />
+          <cell name="modifiedon" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+        <entity name="ovs_confirmationofcompliance">
+          <attribute name="subject" />
+          <order attribute="subject" descending="false" />
+          <attribute name="regardingobjectid" />
+          <attribute name="ovs_violation" />
+          <attribute name="modifiedon" />
+          <attribute name="scheduledend" />
+          <attribute name="createdon" />
+          <attribute name="statecode" />
+          <link-entity name="msdyn_workorder" from="msdyn_workorderid" to="regardingobjectid" alias="aa">
+            <link-entity name="systemuser" from="systemuserid" to="owninguser" alias="ab">
+              <filter type="and">
+                <condition attribute="businessunitid" operator="eq-businessid" />
+              </filter>
+            </link-entity>
+            <attribute name="msdyn_serviceaccount" />
+            <attribute name="ovs_primaryinspector" />
+          </link-entity>
+          <link-entity alias="a_0b3882dd4b92eb11b1ac000d3ae985db" name="qm_syresult" from="qm_syresultid" to="ovs_violation" link-type="outer" visible="false">
+            <attribute name="qm_externalcomments" />
+          </link-entity>
+          <attribute name="activityid" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="My Region's Confirmation of Compliances" languagecode="1033" />
+      <LocalizedName description="Confirmation des conformités de ma région" languagecode="1036" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

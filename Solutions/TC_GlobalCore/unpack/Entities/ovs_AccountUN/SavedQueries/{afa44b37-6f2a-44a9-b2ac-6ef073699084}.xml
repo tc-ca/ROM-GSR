@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{afa44b37-6f2a-44a9-b2ac-6ef073699084}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
+        <row name="result" id="ovs_accountunid">
+          <cell name="ovs_unnumber" width="100" />
+          <cell name="a_f2969ed1e4954f2a8e2051167aa4faa3.tdg_shippingnamedescriptiontxt" width="160" />
+          <cell name="ovs_supplychaindirection" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="ovs_accountun">
+          <attribute name="ovs_accountunid" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="ovs_unnumber" />
+          <attribute name="ovs_supplychaindirection" />
+          <link-entity alias="a_f2969ed1e4954f2a8e2051167aa4faa3" name="tdg_unnumber" to="ovs_unnumber" from="tdg_unnumberid" link-type="outer" visible="false">
+            <attribute name="tdg_shippingnamedescriptiontxt" />
+          </link-entity>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="UN NUMBER (Active)" languagecode="1033" />
+      <LocalizedName description="Numéros UN (actif)" languagecode="1036" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

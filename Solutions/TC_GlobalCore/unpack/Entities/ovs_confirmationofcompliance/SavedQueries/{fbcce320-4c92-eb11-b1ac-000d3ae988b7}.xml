@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{fbcce320-4c92-eb11-b1ac-000d3ae988b7}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="subject" select="1" icon="1" preview="1">
+        <row name="result" id="activityid">
+          <cell name="violations.qm_rclegislationid" width="182" disableSorting="1" />
+          <cell name="violations.qm_externalcomments" width="100" disableSorting="1" />
+          <cell name="violations.qm_referenceid" width="100" disableSorting="1" />
+          <cell name="violations.qm_violationcount" width="100" disableSorting="1" />
+          <cell name="ovs_justificationtxt" width="100" disableSorting="1" />
+          <cell name="statecode" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch count="50">
+        <entity name="ovs_confirmationofcompliance">
+          <link-entity name="qm_syresult" from="qm_syresultid" to="ovs_violation" link-type="outer" alias="violations">
+            <attribute name="qm_referenceid" />
+            <attribute name="qm_externalcomments" />
+            <attribute name="qm_violationcount" />
+            <link-entity name="qm_rclegislation" from="qm_rclegislationid" to="qm_rclegislationid" link-type="outer" alias="legislation">
+              <attribute name="qm_legislationftxt" />
+              <attribute name="qm_tylegislationtypeid" />
+              <attribute name="qm_legislationetxt" />
+              <attribute name="qm_legislationlbl" />
+            </link-entity>
+            <attribute name="qm_violationcount" />
+            <attribute name="qm_rclegislationid" />
+            <attribute name="qm_referenceid" />
+            <attribute name="qm_externalcomments" />
+          </link-entity>
+          <attribute name="ovs_justificationtxt" />
+          <order attribute="statecode" descending="false" />
+          <attribute name="statecode" />
+          <attribute name="activityid" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Confirmation of Compliances" languagecode="1033" />
+      <LocalizedName description="Confirmations de conformités" languagecode="1036" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="For Works Orders" languagecode="1033" />
+      <Description description="Pour Ordre de travail" languagecode="1036" />
+    </Descriptions>
+  </savedquery>
+</savedqueries>

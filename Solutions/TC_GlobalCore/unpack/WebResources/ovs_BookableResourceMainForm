@@ -1,0 +1,127 @@
+﻿var globalFormContext;
+
+//const AppModuleId = {
+//    TDGManagement: "3b7932a3-ef80-eb11-a812-000d3a84b97d",
+//    TDGAnalytics: "27685cb1-de89-eb11-b1ac-000d3ae92dbf",
+//    TDGPlanner: "5cf3b8c0-8d86-eb11-a812-000d3af37425",
+//    TDGInspections: "692b6903-2003-eb11-a813-000d3af3a7a7"
+//};
+
+const AppModuleName = {
+    TDGAnalytics: "ovs_TDGAnalytics",
+    TDGInspections: "ovs_OversightPlanning",
+    TDGManagement: "ovs_TDGManagement",
+    TDGPlanner: "ovs_TDGPlanner"
+};
+
+const TabNames = {
+    TAB_GENERAL: "GENERAL_TAB",
+    TAB_SCHEDULING: "SCHEDULING_TAB",
+    TAB_FIELD_SERVICE: "FIELD_SERVICE_TAB",
+    TAB_WORK_HOURS: "WORK_HOURS_TAB"
+};
+
+const GeneralSections = {
+    GeneralSection: "GENERAL_SECTION",
+    AssociationSection: "CATEGORY_ASSOCIATIONS",
+    Notes: "NOTES",
+    ResourceTerritories: "RESOURCE_TERRITORIES",
+    Characteristics: "CHARACTERISTICS",
+    CrewManagement: "CREW_MANAGEMENT"
+};
+
+const FIELD_FACILITY_EQUIPMENT = "msdyn_facilityequipmentid";
+const FIELD_ANNUAL_INSPECTION = "ovs_inspectioncapacitynbr";
+
+async function OnLoad(executionContext) {
+
+    //get context
+    globalContext = glHelper.getGlobalContext();
+    var formContext = executionContext.getFormContext();
+    globalFormContext = formContext;
+
+    let appProp = await globalContext.getCurrentAppProperties();
+
+    //record id
+    var id = glHelper.GetCurrentRecordId(formContext);
+
+    // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+    let formType = glHelper.GetFormType(formContext);
+
+    let roles = glHelper.GetCurrentUserRoles();
+
+    //hide all sections on load, required section to be determined
+    hideAllActionTypeSections(formContext, appProp, roles);
+
+    //ActionProcess(globalFormContext);
+}
+
+function OnSave(executionContext) {
+    // let formContext = executionContext.getFormContext();
+}
+
+function hideAllActionTypeSections(formContext, appProp, roles) {
+    //Tab Visibility
+    glHelper.SetTabVisibility(formContext, TabNames.TAB_GENERAL, true);
+    glHelper.SetTabVisibility(formContext, TabNames.TAB_WORK_HOURS, false);
+
+    //TAB_GENERAL
+    //Sections Visibility
+    glHelper.SetSectionVisibility(formContext, TabNames.TAB_GENERAL, GeneralSections.GeneralSection, true);
+
+    let isInspector = false;
+    if (roles && roles.find(r => r.name.includes("Inspector"))) {
+        isInspector = true;
+    }
+
+    if (appProp.uniqueName === AppModuleName.TDGPlanner) {
+        // System Admin
+        //Tab Visibility
+        glHelper.SetTabVisibility(formContext, TabNames.TAB_SCHEDULING, true);
+        glHelper.SetTabVisibility(formContext, TabNames.TAB_FIELD_SERVICE, true);
+
+        //Sections Visibility
+        glHelper.SetSectionVisibility(formContext, TabNames.TAB_GENERAL, GeneralSections.Characteristics, true);
+        glHelper.SetSectionVisibility(formContext, TabNames.TAB_GENERAL, GeneralSections.AssociationSection, !isInspector);
+        glHelper.SetSectionVisibility(formContext, TabNames.TAB_GENERAL, GeneralSections.ResourceTerritories, true);
+
+        //Control Visibility and Requirement
+        glHelper.SetControlVisibility(formContext, FIELD_FACILITY_EQUIPMENT, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_FACILITY_EQUIPMENT, true);
+
+        glHelper.SetControlVisibility(formContext, FIELD_ANNUAL_INSPECTION, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_ANNUAL_INSPECTION, false);
+
+    } else {
+        //Tab Visibility
+        glHelper.SetTabVisibility(formContext, TabNames.TAB_SCHEDULING, false);
+        glHelper.SetTabVisibility(formContext, TabNames.TAB_FIELD_SERVICE, false);
+
+        //Sections Visibility
+        glHelper.SetSectionVisibility(formContext, TabNames.TAB_GENERAL, GeneralSections.Characteristics, false);
+        if (appProp.uniqueName === AppModuleName.TDGManagement) {
+            glHelper.SetSectionVisibility(formContext, TabNames.TAB_GENERAL, GeneralSections.AssociationSection, !isInspector);
+        } else {
+            glHelper.SetSectionVisibility(formContext, TabNames.TAB_GENERAL, GeneralSections.AssociationSection, false);
+        }
+
+        glHelper.SetSectionVisibility(formContext, TabNames.TAB_GENERAL, GeneralSections.ResourceTerritories, false);
+
+        //Control Visibility and Requirement
+        glHelper.SetControlVisibility(formContext, FIELD_FACILITY_EQUIPMENT, false);
+        glHelper.SetRequiredLevel(formContext, FIELD_FACILITY_EQUIPMENT, false);
+
+        if (appProp.uniqueName === AppModuleName.TDGInspections) {
+            glHelper.SetControlVisibility(formContext, FIELD_ANNUAL_INSPECTION, false);
+        } else {
+            glHelper.SetControlVisibility(formContext, FIELD_ANNUAL_INSPECTION, true);
+        }
+        glHelper.SetRequiredLevel(formContext, FIELD_ANNUAL_INSPECTION, false);
+    }
+
+}
+
+function ActionProcess(formContext) {
+    // alert('Banana');
+}
+

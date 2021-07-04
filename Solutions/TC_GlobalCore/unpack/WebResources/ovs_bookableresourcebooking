@@ -1,0 +1,76 @@
+﻿var globalFormContext;
+
+const TabNames = {
+    TAB_GENERAL: "TAB_GENERAL",
+    TAB_TIMELINE: "TAB_TIMELINE",
+    TAB_FIELD_SERVICE: "TAB_FIELDSERVICE",
+    TAB_SCHEDULING: "TAB_SCHEDULING",
+};
+
+const GeneralControls = {
+    NAME: "name",
+    PLANNED_FISCAL_QUARTER: "ovs_plannedfiscalquarter",
+    PLANNED_FISCAL_YEAR_ID: "ovs_plannedfiscalyearid",
+    REVISED_QUARTER: "ovs_revisedquarter",
+    EFFORT: "msdyn_effort",
+    RESOURCE_REQUIREMENT: "msdyn_resourcerequirement",
+    BOOKING_TYPE: "bookingtype",
+    START_TIME: "starttime",
+    END_TIME: "endtime",
+    BOOKING_STATUS: "bookingstatus"
+};
+
+async function OnLoad(executionContext) {
+    //get context
+    globalContext = glHelper.getGlobalContext();
+    var formContext = executionContext.getFormContext();
+    globalFormContext = formContext;
+
+    let appProp = await globalContext.getCurrentAppProperties();
+
+    //record id
+    var id = glHelper.GetCurrentRecordId(formContext);
+
+    // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+    let formType = glHelper.GetFormType(formContext);
+
+    //hide all sections on load, required section to be determined
+    hideAllActionTypeSections(formContext, appProp);
+}
+
+function OnSave(executionContext) {
+    // let formContext = executionContext.getFormContext();
+}
+
+function hideAllActionTypeSections(formContext, appProp) {
+    glHelper.SetTabVisibility(formContext, TabNames.TAB_TIMELINE, false);
+    glHelper.SetTabVisibility(formContext, TabNames.TAB_FIELD_SERVICE, false);
+    glHelper.SetTabVisibility(formContext, TabNames.TAB_SCHEDULING, false);
+
+
+    //TAB_GENERAL
+    glHelper.SetControlVisibility(formContext, GeneralControls.NAME, false);
+    glHelper.SetControlVisibility(formContext, GeneralControls.PLANNED_FISCAL_QUARTER, false);
+    glHelper.SetControlVisibility(formContext, GeneralControls.PLANNED_FISCAL_YEAR_ID, false);
+    glHelper.SetControlVisibility(formContext, GeneralControls.REVISED_QUARTER, false);
+    glHelper.SetControlVisibility(formContext, GeneralControls.EFFORT, false);
+    glHelper.SetControlVisibility(formContext, GeneralControls.RESOURCE_REQUIREMENT, false);
+    glHelper.SetControlVisibility(formContext, GeneralControls.BOOKING_TYPE, false);
+    glHelper.SetControlVisibility(formContext, GeneralControls.BOOKING_STATUS, true);
+
+    glHelper.SetControlReadOnly(formContext, GeneralControls.BOOKING_STATUS, true);
+
+    //add event handler for status change event
+    var startTimeField = formContext.getAttribute(GeneralControls.START_TIME);
+    startTimeField.removeOnChange(DateTime_OnChange);
+    startTimeField.addOnChange(DateTime_OnChange);
+}
+
+function DateTime_OnChange(context) {
+    globalContext = glHelper.getGlobalContext();
+    var formContext = context.getFormContext();
+    var startTime = glHelper.GetValue(formContext, GeneralControls.START_TIME);
+    if (startTime) {
+        glHelper.SetValue(formContext, GeneralControls.END_TIME, startTime);
+    }
+}
