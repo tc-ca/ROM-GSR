@@ -48,11 +48,18 @@ stages:
           Write-Host "PowerPlatformSPN_PREPROD:   $(PowerPlatformSPN_PREPROD)"
           Write-Host "PowerPlatformSPN_PROD:      $(PowerPlatformSPN_PROD)"
           Write-Host "============================================"
+- template: templates/Template_RollupSolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    ConnectionString: $(Pipeline_ConnectionStringDev)
+    StageName: 'RollupSolutionOnDev'
 - template: templates/Template_CommitSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_Dev)
     StageName: 'BuildAndPublishArtifacts'
+    dependsOn: 
+    - 'RollupSolutionOnDev'
 - template: templates/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
