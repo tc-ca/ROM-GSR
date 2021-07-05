@@ -21,10 +21,8 @@ variables:
     value: 'ROM PROD TDG'
   - name: SolutionName
     value: 'TDGPlugins'
-  - name: RevisionVersion
-    value: $[counter(format('{0:yyyyMMdd}', pipeline.startTime), 0)]
 
-name: 'TDG Plugins Pipeline'
+name: variables['Build.SourceBranch']_Pipeline
 
 stages:
 - stage: PrintPipelineVariables
