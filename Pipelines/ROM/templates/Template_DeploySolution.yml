@@ -1,17 +1,20 @@
-parameters:
+Parameters:
   - name: PowerPlatformSPN
     type: string
   - name: SolutionName
     type: string
-
+  - name: Environment
+    type: string
+  - name: StageName
+    type: string
 stages:
-- stage: DeployManaged${{Parameters.SolutionName}}To${{Parameters.PowerPlatformSPN}}
+- stage: ${{Parameters.StageName}}
   pool:
       vmImage: 'windows-latest'
   jobs:
   - deployment: Deploy
-    displayName: DeployManagedSolutionToQA
-    environment: QA
+    displayName:  ${{Parameters.StageName}}
+    environment: ${{Parameters.Environment}}
     timeoutInMinutes: 360
     cancelTimeoutInMinutes: 2
     strategy:
