@@ -68,16 +68,29 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_ACC)
     Environment: 'ACC'
     StageName: 'DeployManagedSolutionToACC'
+    dependsOn: 
+    - 'DeployManagedSolutionToQA'
+- template: templates/Template_DeploySolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_ACCDATA)
+    Environment: 'ACCDATA'
+    StageName: 'DeployManagedSolutionToACCDATA'
+    dependsOn: 
+    - 'DeployManagedSolutionToQA'
 - template: templates/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
     Environment: 'PREPROD'
     StageName: 'DeployManagedSolutionToPREPROD'
+    dependsOn: 
+    - 'DeployManagedSolutionToACC'
 - template: templates/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_PROD)
     Environment: 'PROD'
     StageName: 'DeployManagedSolutionToPROD'
-
+    dependsOn: 
+    - 'DeployManagedSolutionToPREPROD'
