@@ -1,0 +1,25 @@
+parameters:
+  ConnectionString: ''
+  SolutionName: 'TC_GlobalCore'
+ 
+variables:
+  PatchExists: false
+  LatestPatchName: ''
+
+jobs:
+- job: CreatePatchOnDev
+    pool: 'windows-latest'
+    steps:
+    - task: MSCRMToolInstaller@12
+      displayName: Power DevOps Tool Installer
+    - task: MSCRMPublishCustomizations@12
+      displayName: Publish Customizations
+      inputs:
+        crmConnectionString: '${{ConnectionString}}'
+        crmConnectionTimeout: '3600'
+    - task: MSCRMCreatePatch@12
+      displayName: 'Create Patch: ${{SolutionName}}'
+      inputs:
+        crmConnectionString: '${{ConnectionString}}'
+        uniqueName: '${{SolutionName}}'
+        crmConnectionTimeout: '21600'

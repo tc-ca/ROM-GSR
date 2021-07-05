@@ -1,5 +1,4 @@
 parameters:
-  RevisionVersion: $[counter(format('{0:yyyyMMdd}', pipeline.startTime), 0)]
   BuildPlatform: 'Any CPU'
   BuildConfiguration: 'Release'
   MajorVersion: 1
@@ -24,7 +23,6 @@ stages:
         script: |
           Write-Host "============================================"
           Write-Host "Echoing Parameter Values"
-          Write-Host "Parameters.RevisionVersion: ${{Parameters.RevisionVersion}}"
           Write-Host "Parameters.BuildPlatform: ${{Parameters.BuildPlatform}}"
           Write-Host "Parameters.BuildConfiguration: ${{Parameters.BuildConfiguration}}"
           Write-Host "Parameters.MajorVersion: ${{Parameters.MajorVersion}}"
