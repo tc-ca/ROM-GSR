@@ -16,8 +16,6 @@ parameters:
     default: []
     
 stages:
-  # Versioning master branch builds
-  
 - stage: ${{Parameters.StageName}}
   dependsOn:
   - ${{ each stage in parameters.dependsOn }}:
@@ -25,21 +23,35 @@ stages:
   pool:
       vmImage: 'windows-latest'
   jobs:
+  
+  #Revision Versioning
   - job: ${{Parameters.StageName}}_Revision
     condition: eq(${{Parameters.IncrementRevisionOrPatchNumber}}, 'Revision')
     variables:
       -name: VersionRevision
        value: $[counter(${{Parameters.VersionMajor}}${{Parameters.VersionMinor}}${{Parameters.VersionPatch}}, 0)]
     steps:
-      - bash: |
-           echo "##vso[build.updatebuildnumber]$(VersionMajor).$(VersionMinor).$(VersionPatch).$(VersionRevision)"
-        name: ${{Parameters.StageName}}_Revision
+      - task: PowerShell@2
+        displayName: Set the name of the build by Revision (i.e. the Build.BuildNumber)
+        inputs:
+          targetType: 'inline'
+          script: |
+            [string] $buildName = "$(VersionMajor).$(VersionMinor).$(VersionPatch).$(VersionRevision)"
+            Write-Host "Setting the name of the build to '$buildName'."
+            Write-Host "##vso[build.updatebuildnumber]$buildName"
+
+  #Patch Versioning            
   - job: ${{Parameters.StageName}}_Patch
     condition: eq(${{Parameters.IncrementRevisionOrPatchNumber}}, 'Patch')
     variables:
       - name: VersionPatch
         value: $[counter(${{Parameters.VersionMajor}}${{Parameters.VersionMinor}}, 0)]
     steps:
-      - bash: |
-           echo "##vso[build.updatebuildnumber]$(VersionMajor).$(VersionMinor).$(VersionPatch).0"
-        name: ${{Parameters.StageName}}_Patch
+      - task: PowerShell@2
+        displayName: Set the name of the build by Patch (i.e. the Build.BuildNumber)
+        inputs:
+          targetType: 'inline'
+          script: |
+            [string] $buildName = "$(VersionMajor).$(VersionMinor).$(VersionPatch).0"
+            Write-Host "Setting the name of the build to '$buildName'."
+            Write-Host "##vso[build.updatebuildnumber]$buildName"
