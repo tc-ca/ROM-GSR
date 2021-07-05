@@ -13,8 +13,9 @@ variables:
   PatchVersion: $(Pipeline_PatchVersion)
   SolutionName: $(Pipeline_SolutionName)
   PowerPlatformSPN: $(Pipeline_PowerPlatformSPN)
+  ConnectionStringDev: $(Pipeline_ConnectionStringDev)
 
-name: '$(SolutionName)_$(MajorVersion).$(MinorVersion).$(PatchVersion).$(RevisionVersion)'
+name: 'Release Pipeline'
 
 stages:
 - stage: PrintPipelineVariables
@@ -48,3 +49,9 @@ stages:
     PatchVersion: $(PatchVersion)
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN)
+- template: templates/Template_PatchSolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    ConnectionString: $(ConnectionStringDev)
+
+
