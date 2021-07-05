@@ -1,0 +1,42 @@
+parameters:
+  - name: StageName
+    type: string
+  - name: VersionMajor
+    type: string
+  - name: VersionMinor
+    type: string
+  - name: VersionPatch
+    type: string
+  - name: IncrementRevisionOrPatchNumber
+    type: string
+    default: 'Revision'
+  - name: dependsOn
+    type: object
+    default: []
+    
+stages:
+  # Versioning master branch builds
+  
+- stage: ${{Parameters.StageName}}
+  dependsOn:
+  - ${{ each stage in parameters.dependsOn }}:
+    - ${{ stage }}
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: ${{Parameters.StageName}}_Revision
+    condition: eq(${{Parameters.IncrementRevisionOrPatchNumber}}, 'Revision')
+    variables:
+       VersionRevision: $[counter(${{Parameters.VersionMajor}}${{Parameters.VersionMinor}}${{Parameters.VersionPatch}}, 0)]
+    steps:
+      - bash: |
+           echo "##vso[build.updatebuildnumber]$(VersionMajor).$(VersionMinor).$(VersionPatch).$(VersionRevision)"
+        name: ${{Parameters.StageName}}_Revision
+  - job: ${{Parameters.StageName}}_Patch
+    condition: eq(${{Parameters.IncrementRevisionOrPatchNumber}}, 'Patch')
+    variables:
+       VersionPatch: $[counter(${{Parameters.VersionMajor}}${{Parameters.VersionMinor}}, 0)]
+    steps:
+      - bash: |
+           echo "##vso[build.updatebuildnumber]$(VersionMajor).$(VersionMinor).$(VersionPatch).0"
+        name: ${{Parameters.StageName}}_Patch

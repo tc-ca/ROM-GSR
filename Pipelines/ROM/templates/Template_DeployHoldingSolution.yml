@@ -7,8 +7,6 @@ parameters:
     type: string
   - name: StageName
     type: string
-  - name: VersionNumber
-    type: string
   - name: dependsOn
     type: object
     default: []
@@ -74,11 +72,12 @@ stages:
               SolutionInputFile: '$(Agent.BuildDirectory)\zip\${{Parameters.SolutionName}}_Managed.zip'
               AsyncOperation: true
               MaxAsyncWaitTime: '360'
-              HoldingSolution: false
+              HoldingSolution: true
               OverwriteUnmanagedCustomizations: true
-          - task: PowerPlatformSetSolutionVersion@0
+          - task: PowerPlatformApplySolutionUpgrade@0
             inputs:
               authenticationType: 'PowerPlatformSPN'
               PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
               SolutionName: '${{Parameters.SolutionName}}'
-              SolutionVersionNumber: '${{Parameters.VersionNumber}}'
+              AsyncOperation: true
+              MaxAsyncWaitTime: '360'

@@ -19,6 +19,15 @@ stages:
   jobs:
   - job: CreatePatchOnDev
     steps:
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "============================================"
+          Write-Host "Echoing Parameter Values"
+          Write-Host "Parameters.SolutionName: ${{Parameters.SolutionName}}"
+          Write-Host "Parameters.StageName: ${{Parameters.StageName}}"
+          Write-Host "============================================"
     - task: MSCRMToolInstaller@12
       displayName: Power DevOps Tool Installer
     - task: MSCRMPublishCustomizations@12
