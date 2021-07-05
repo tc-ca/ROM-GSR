@@ -3,9 +3,15 @@ parameters:
     type: string
   - name: ConnectionString
     type: string
-
+  - name: dependsOn
+    type: object
+    default: []
+    
 stages:
 - stage: CreatePatchOnDev
+  dependsOn:
+  - ${{ each stage in parameters.dependsOn }}:
+    - ${{ stage }}
   pool:
       vmImage: 'windows-latest'
   jobs:
