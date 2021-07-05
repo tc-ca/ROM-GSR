@@ -74,12 +74,49 @@ stages:
     StageName: 'BuildAndPublishArtifacts'
     dependsOn: 
     - 'UpdateBuildVersion'
+#QA
 - template: templates/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_QA)
-    PowerPlatformSPN_Dev: $(PowerPlatformSPN_Dev)
+    PowerPlatformSPN_Dev: $(PowerPlatformSPN_Dev) #used to update solution version after successful deployment to QA
     Environment: 'QA'
     StageName: 'DeployManagedSolutionToQA'
+    dependsOn: 
+    - 'BuildAndPublishArtifacts'
+#ACC
+- template: templates/Template_DeploySolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_ACC)
+    Environment: 'ACC'
+    StageName: 'DeployManagedSolutionToACC'
+    dependsOn: 
+    - 'DeployManagedSolutionToQA'
+#ACCDATA
+- template: templates/Template_DeploySolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_ACCDATA)
+    Environment: 'ACC-TDG-DATA'
+    StageName: 'DeployManagedSolutionToACCDATA'
+    dependsOn: 
+    - 'DeployManagedSolutionToQA'
+#PREPROD
+- template: templates/Template_DeploySolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
+    Environment: 'PREPROD'
+    StageName: 'DeployManagedSolutionToPREPROD'
+    dependsOn: 
+    - 'BuildAndPublishArtifacts'
+#PROD
+- template: templates/Template_DeploySolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_PROD)
+    Environment: 'PROD'
+    StageName: 'DeployManagedSolutionToPROD'
     dependsOn: 
     - 'BuildAndPublishArtifacts'
