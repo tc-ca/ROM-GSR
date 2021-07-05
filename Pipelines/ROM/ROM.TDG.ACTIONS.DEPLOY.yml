@@ -80,7 +80,7 @@ stages:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_QA)
     PowerPlatformSPN_Dev: $(PowerPlatformSPN_Dev) #used to update solution version after successful deployment to QA
-    Environment: 'QA'
+    Environment: 'QA-TDG'
     StageName: 'DeployManagedSolutionToQA'
     dependsOn: 
     - 'BuildAndPublishArtifacts'
@@ -89,7 +89,7 @@ stages:
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_ACC)
-    Environment: 'ACC'
+    Environment: 'ACC-TDG'
     StageName: 'DeployManagedSolutionToACC'
     dependsOn: 
     - 'DeployManagedSolutionToQA'
@@ -107,7 +107,7 @@ stages:
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
-    Environment: 'PREPROD'
+    Environment: 'PREPROD-TDG'
     StageName: 'DeployManagedSolutionToPREPROD'
     dependsOn: 
     - 'DeployManagedSolutionToACC'
@@ -116,7 +116,7 @@ stages:
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_PROD)
-    Environment: 'PROD'
+    Environment: 'PROD-TDG'
     StageName: 'DeployManagedSolutionToPROD'
     dependsOn: 
     - 'DeployManagedSolutionToPREPROD'
