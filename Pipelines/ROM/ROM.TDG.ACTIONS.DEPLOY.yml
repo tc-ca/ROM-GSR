@@ -34,7 +34,7 @@ variables:
   - name: VersionNumber
     value: variables['StableVersionNumber'].variables['VersionRevision']
 
-name: $(Build.SourceBranch)_Pipeline #can be overwritten by UpdateBuildVersion Stage
+name: variables['Build.SourceBranch']_Pipeline #can be overwritten by UpdateBuildVersion Stage
 
 stages:
 - stage: PrintPipelineVariables
@@ -63,7 +63,7 @@ stages:
 - template: templates/Template_UpdateBuildVersion.yml  # Template reference
   parameters:
     StageName: 'UpdateBuildVersion'
-    VersionNumber: $(VersionNumber)
+    VersionNumber: variables['VersionNumber']
 - template: templates/Template_CommitSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
