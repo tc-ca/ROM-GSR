@@ -6,7 +6,8 @@ parameters:
   - name: VersionMinor
     type: string
   - name: VersionPatch
-    type: string
+    type: int
+    default: 0
   - name: IncrementRevisionOrPatchNumber
     type: string
     default: 'Revision'
@@ -27,7 +28,8 @@ stages:
   - job: ${{Parameters.StageName}}_Revision
     condition: eq(${{Parameters.IncrementRevisionOrPatchNumber}}, 'Revision')
     variables:
-       VersionRevision: $[counter(${{Parameters.VersionMajor}}${{Parameters.VersionMinor}}${{Parameters.VersionPatch}}, 0)]
+      -name: VersionRevision
+       value: $[counter(${{Parameters.VersionMajor}}${{Parameters.VersionMinor}}${{Parameters.VersionPatch}}, 0)]
     steps:
       - bash: |
            echo "##vso[build.updatebuildnumber]$(VersionMajor).$(VersionMinor).$(VersionPatch).$(VersionRevision)"
@@ -35,7 +37,8 @@ stages:
   - job: ${{Parameters.StageName}}_Patch
     condition: eq(${{Parameters.IncrementRevisionOrPatchNumber}}, 'Patch')
     variables:
-       VersionPatch: $[counter(${{Parameters.VersionMajor}}${{Parameters.VersionMinor}}, 0)]
+      - name: VersionPatch
+        value: $[counter(${{Parameters.VersionMajor}}${{Parameters.VersionMinor}}, 0)]
     steps:
       - bash: |
            echo "##vso[build.updatebuildnumber]$(VersionMajor).$(VersionMinor).$(VersionPatch).0"
