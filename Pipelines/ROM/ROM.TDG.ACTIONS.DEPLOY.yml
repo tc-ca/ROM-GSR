@@ -28,13 +28,13 @@ variables:
   - name: VersionPatch
     value: 0
   - name: StableVersionNumber
-    value: variables['VersionMajor'].variables['VersionMinor'].variables['VersionPatch']
+    value: $[variables.VersionMajor]$[variables.VersionMinor]$[variables.VersionPatch]
   - name: VersionRevision
-    value: $[counter(variables['StableVersionNumber'], 0)]
+    value: $[counter($[variables.StableVersionNumber], 0)]
   - name: VersionNumber
-    value: variables['StableVersionNumber'].variables['VersionRevision']
+    value: $[variables.StableVersionNumber].$[variables.VersionRevision]
 
-name: variables['Build.SourceBranch']_Pipeline #can be overwritten by UpdateBuildVersion Stage
+name: $(Build.SourceBranch)_Pipeline #can be overwritten by UpdateBuildVersion Stage
 
 stages:
 - stage: PrintPipelineVariables
