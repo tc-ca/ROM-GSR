@@ -4,19 +4,6 @@ trigger:
 pr:
 - none
 
-variables:
-  RevisionVersion: $[counter(format('{0:yyyyMMdd}', pipeline.startTime), 0)]
-  BuildPlatform: 'Any CPU'
-  BuildConfiguration: 'Release'
-  MajorVersion: $(Pipeline_MajorVersion)
-  MinorVersion: $(Pipeline_MinorVersion)
-  PatchVersion: $(Pipeline_PatchVersion)
-  SolutionName: $(Pipeline_SolutionName)
-  PowerPlatformSPN: $(Pipeline_PowerPlatformSPN)
-  ConnectionStringDev: $(Pipeline_ConnectionStringDev)
-  PatchExists: false
-  LatestPatchName: ''
-  
 name: 'Release Pipeline'
 
 stages:
@@ -50,7 +37,7 @@ stages:
     MinorVersion: $(MinorVersion)
     PatchVersion: $(PatchVersion)
     SolutionName: $(SolutionName)
-    PowerPlatformSPN: $(PowerPlatformSPN)
+    PowerPlatformSPN: $(Variables.PowerPlatformSPN)
 - template: templates/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
