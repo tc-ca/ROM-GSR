@@ -52,12 +52,15 @@ stages:
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_Dev)
+    StageName: 'BuildAndPublishArtifacts'
 - template: templates/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_QA)
     Environment: 'QA'
     StageName: 'DeployManagedSolutionToQA'
+    dependsOn: 
+    - 'BuildAndPublishArtifacts'
 - template: templates/Template_PatchSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
