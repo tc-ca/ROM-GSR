@@ -71,20 +71,6 @@ stages:
           Write-Host "PowerPlatformSPN_PREPROD:   $(PowerPlatformSPN_PREPROD)"
           Write-Host "PowerPlatformSPN_PROD:      $(PowerPlatformSPN_PROD)"
           Write-Host "============================================"
-- stage: UpdateBuildNumber
-  pool:
-      vmImage: 'windows-latest'
-  jobs:
-  - job: PrintPipelineVariables
-    steps:
-    - task: PowerShell@2
-      displayName: Set the name of the build (i.e. the Build.BuildNumber)
-      inputs:
-        targetType: 'inline'
-        script: |
-          [string] $buildName = "$(VersionMajor).$(VersionMinor)."
-          Write-Host "Setting the name of the build to '$buildName'."
-          Write-Host "##vso[build.updatebuildnumber]$buildName"
 - template: templates/Template_UpdateBuildVersion.yml  # Template reference
   parameters:
     StageName: 'UpdateBuildVersion'
