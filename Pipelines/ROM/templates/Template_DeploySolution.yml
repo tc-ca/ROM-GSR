@@ -1,6 +1,8 @@
 parameters:
   - name: PowerPlatformSPN
     type: string
+  - name: PowerPlatformSPN_Dev
+    type: string
   - name: SolutionName
     type: string
   - name: Environment
@@ -74,9 +76,10 @@ stages:
               MaxAsyncWaitTime: '360'
               HoldingSolution: false
               OverwriteUnmanagedCustomizations: true
+        - ${{ if eq(Parameters.Environment, 'QA') }}:
           - task: PowerPlatformSetSolutionVersion@0
             inputs:
               authenticationType: 'PowerPlatformSPN'
-              PowerPlatformSPN: 'ROM Dev'
+              PowerPlatformSPN: '${{Parameters.PowerPlatformSPN_DEV}}'
               SolutionName: '${{Parameters.SolutionName}}'
               SolutionVersionNumber: '$(Build.BuildNumber)'
