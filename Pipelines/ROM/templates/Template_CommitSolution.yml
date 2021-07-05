@@ -1,12 +1,11 @@
 parameters:
-  BuildPlatform: 'Any CPU'
-  BuildConfiguration: 'Release'
-  MajorVersion: 1
-  MinorVersion: 33
-  PatchVersion: 1
-  SolutionName: 'TC_GlobalCore'
-  PowerPlatformSPN: ''
-
+  - name: PowerPlatformSPN
+    type: string
+    value: 'ROM Dev'
+  - name: SolutionName
+    type: string
+    value: 'TC_GlobalCore'
+  
 stages:
 - stage: BuildAndPublishArtifact
   pool:
@@ -23,11 +22,6 @@ stages:
         script: |
           Write-Host "============================================"
           Write-Host "Echoing Parameter Values"
-          Write-Host "Parameters.BuildPlatform: ${{Parameters.BuildPlatform}}"
-          Write-Host "Parameters.BuildConfiguration: ${{Parameters.BuildConfiguration}}"
-          Write-Host "Parameters.MajorVersion: ${{Parameters.MajorVersion}}"
-          Write-Host "Parameters.MinorVersion: ${{Parameters.MinorVersion}}"
-          Write-Host "Parameters.PatchVersion: ${{Parameters.PatchVersion}}"
           Write-Host "Parameters.SolutionName: ${{Parameters.SolutionName}}"
           Write-Host "Parameters.PowerPlatformSPN: ${{Parameters.PowerPlatformSPN}}"
           Write-Host "============================================"
