@@ -76,10 +76,10 @@ stages:
               MaxAsyncWaitTime: '360'
               HoldingSolution: false
               OverwriteUnmanagedCustomizations: true
-        - ${{ if eq(Parameters.Environment, 'QA') }}:
-          - task: PowerPlatformSetSolutionVersion@0
-            inputs:
-              authenticationType: 'PowerPlatformSPN'
-              PowerPlatformSPN: '${{Parameters.PowerPlatformSPN_DEV}}'
-              SolutionName: '${{Parameters.SolutionName}}'
-              SolutionVersionNumber: '$(Build.BuildNumber)'
+          - ${{ if eq(Parameters.Environment, 'QA') }}:
+            - task: PowerPlatformSetSolutionVersion@0
+              inputs:
+                authenticationType: 'PowerPlatformSPN'
+                PowerPlatformSPN: '${{Parameters.PowerPlatformSPN_DEV}}'
+                SolutionName: '${{Parameters.SolutionName}}'
+                SolutionVersionNumber: '$(Build.BuildNumber)'
