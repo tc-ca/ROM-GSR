@@ -5,468 +5,103 @@ pr:
 - none
 
 variables:
-- group: ROMPipelineBaseVariables
+  - name: PowerPlatformSPN_Dev
+    value: 'ROM DEV TDG'
+  - name: PowerPlatformSPN_QA
+    value: 'ROM QA TDG'
+  - name: PowerPlatformSPN_ACC
+    value: 'ROM ACC TDG'
+  - name: PowerPlatformSPN_ACCDATA
+    value: 'ROM ACC TDG DATA'
+  - name: PowerPlatformSPN_PREPROD
+    value: 'ROM PREPROD TDG'
+  - name: PowerPlatformSPN_PROD
+    value: 'ROM PROD TDG'
+  - name: SolutionName
+    value: 'TDGFlow'
+  - name: VersionMajor
+    value: 1
+  - name: VersionMinor
+    value: 1
+  - name: VersionPatch
+    value: 0
+  - name: StableVersionNumber
+    value: '$(VersionMajor).$(VersionMinor).$(VersionPatch)'
+  - name: CounterVariable
+    value: '$(SolutionName)_$(VersionMajor).$(VersionMinor).$(VersionPatch)'
+  - name: VersionRevision
+    value: $[counter(variables['CounterVariable'], 0)]
+  - name: VersionNumber
+    value: '$(StableVersionNumber).$(VersionRevision)'
+
+name: #Set Dynamically in Pipeline
 
 stages:
-- stage: BuildAndPublishArtifact
+- stage: PrintPipelineVariables
   pool:
-      vmImage: 'vs2017-win2016'
+      vmImage: 'windows-latest'
   jobs:
-  - job: BuildAndPublishArtifact
+  - job: PrintPipelineVariables
     steps:
-    - checkout: self
-      persistCredentials: true
-      clean: true
-    - task: PowerShell@2
+    - task: Bash@3
       inputs:
         targetType: 'inline'
-        script: |
-          Write-Host $(Agent.JobName)
-          Write-Host ${env:CONNECTIONSTRINGACCTDG}
-          Write-Host ${env:CONNECTIONSTRINGDEV}
-          Write-Host ${env:CONNECTIONSTRINGQA}
-          Write-Host ${env:CORESOLUTIONNAME}
-          Write-Host ${env:FLOWSSOLUTIONNAME}
-          Write-Host ${env:TCCUSTOMACTIONSSOLUTIONNAME}
-          Write-Host ${env:TDGPLUGINSSOLUTIONNAME}
-          Write-Host ${env:TDGPOWERAPPSSOLUTIONNAME}
-
-          if (([string]::IsNullOrEmpty(${env:CONNECTIONSTRINGACCTDG})) -and 
-              ([string]::IsNullOrEmpty(${env:CONNECTIONSTRINGDEV})) -and
-              ([string]::IsNullOrEmpty(${env:CONNECTIONSTRINGQA})) -and
-              ([string]::IsNullOrEmpty(${env:CORESOLUTIONNAME})) -and
-              ([string]::IsNullOrEmpty(${env:FLOWSSOLUTIONNAME})) -and
-              ([string]::IsNullOrEmpty(${env:TCCUSTOMACTIONSSOLUTIONNAME})) -and
-              ([string]::IsNullOrEmpty(${env:TDGPLUGINSSOLUTIONNAME})) -and
-              ([string]::IsNullOrEmpty(${env:TDGPOWERAPPSSOLUTIONNAME})))
-          {
-              throw "Variable check failed."
-          }
-          else {
-              Write-Host "Variable check succeeded"
-          }
-        failOnStderr: true
-    - task: PowerShell@2
-      inputs:
-        targetType: 'inline'
-        script: |
-          Write-Host "============================================"
-          Write-Host "System.DefaultWorkingDirectory"
-          Get-ChildItem -Path "$(System.DefaultWorkingDirectory)"
-          Write-Host "============================================"
-          Write-Host "Agent.BuildDirectory"
-          Get-ChildItem -Path "$(Agent.BuildDirectory)"
-          Write-Host "============================================"
-          Write-Host ""
-          Write-Host "============================================"
-          Write-Host "Build.ArtifactStagingDirectory"
-          Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)"
-          Write-Host "============================================"
-          Write-Host "============================================"
-          Write-Host "Build.BinariesDirectory"
-          Get-ChildItem -Path "$(Build.BinariesDirectory)"
-          Write-Host "============================================"
-          Write-Host "============================================"
-          Write-Host "Build.SourcesDirectory"
-          Get-ChildItem -Path "$(Build.SourcesDirectory)"
-          Write-Host "============================================"
-        errorActionPreference: 'continue'
-    - task: DeleteFiles@1
-      inputs:
-        SourceFolder: '$(Build.ArtifactStagingDirectory)'
-        Contents: |
-          **
-          **/*
-    - task: MSCRMToolInstaller@12
-      inputs:
-        nugetFeed: 'official'
-        psFeed: 'official'
-    - task: MSCRMPublishCustomizations@12
-      inputs:
-        crmConnectionString: '$(ConnectionStringDev)'
-        crmConnectionTimeout: '999'
-    - task: MSCRMExportSolution@12
-      inputs:
-        crmConnectionString: '$(ConnectionStringDev)'
-        solutionName: '$(FlowsSolutionName)'
-        exportManaged: true
-        exportUnmanaged: true
-        includeVersionInSolutionFile: true
-        outputPath: '$(Build.ArtifactStagingDirectory)'
-        crmConnectionTimeout: '1960'
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
-    - powershell: |
-        If(!(test-path '$(Build.SourcesDirectory)\Solutions\$(FlowsSolutionName)'))
-        {
-          Write-Host "$(Build.SourcesDirectory)\Solutions\$(FlowsSolutionName) folder does not exists."
-          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\$(FlowsSolutionName)'
-          Write-Host "$(Build.SourcesDirectory)\Solutions\$(FlowsSolutionName) folder created."
-        }
-        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\* -Destination $(Build.SourcesDirectory)\Solutions\$(FlowsSolutionName)
-    - task: PowerShell@2
-      inputs:
-        targetType: 'inline'
-        script: |
-          Write-Host "============================================"
-          Write-Host "System.DefaultWorkingDirectory"
-          Get-ChildItem -Path "$(System.DefaultWorkingDirectory)"
-          Write-Host "============================================"
-          Write-Host "Agent.BuildDirectory"
-          Get-ChildItem -Path "$(Agent.BuildDirectory)"
-          Write-Host "============================================"
-          Write-Host ""
-          Write-Host "============================================"
-          Write-Host "Build.ArtifactStagingDirectory"
-          Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)"
-          Write-Host "============================================"
-          Write-Host "============================================"
-          Write-Host "Build.BinariesDirectory"
-          Get-ChildItem -Path "$(Build.BinariesDirectory)"
-          Write-Host "============================================"
-          Write-Host "============================================"
-          Write-Host "Build.SourcesDirectory"
-          Get-ChildItem -Path "$(Build.SourcesDirectory)"
-          Write-Host "============================================"
-        errorActionPreference: 'continue'
-    - powershell: |
-        echo "Committing all CDS solution changes"
-        git config user.email "nepasrepondre-noreply@tc.gc.ca"
-        git config user.name "tc-buildbot"
-        git checkout development
-        git add --all
-        git commit -m "Update Solution - $env:FLOWSSOLUTIONNAME: $env:COMMITMESSAGE"
-        
-        echo "Push solution changes to the remote repository"
-        git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
-- stage: Dev2
-  jobs:
-  - deployment: Deploy
-    condition: succeeded()
-    pool:
-      vmImage: 'vs2017-win2016'
-    environment: Dev2
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: PowerShell@2
-            inputs:
-              targetType: 'inline'
-              script: |
-                Write-Host "============================================"
-                Write-Host "System.DefaultWorkingDirectory"
-                Get-ChildItem -Path "$(System.DefaultWorkingDirectory)"
-                Write-Host "============================================"
-                Write-Host "Agent.BuildDirectory"
-                Get-ChildItem -Path "$(Agent.BuildDirectory)"
-                Write-Host "============================================"
-                Write-Host ""
-                Write-Host "============================================"
-                Write-Host "Build.ArtifactStagingDirectory"
-                Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)"
-                Write-Host "============================================"
-                Write-Host "============================================"
-                Write-Host "Build.BinariesDirectory"
-                Get-ChildItem -Path "$(Build.BinariesDirectory)"
-                Write-Host "============================================"
-                Write-Host "============================================"
-                Write-Host "Build.SourcesDirectory"
-                Get-ChildItem -Path "$(Build.SourcesDirectory)"
-                Write-Host "============================================"
-              errorActionPreference: 'continue'
-          - task: MSCRMToolInstaller@12
-            inputs:
-              nugetFeed: 'official'
-              psFeed: 'official'
-          - task: PowerShell@2
-            inputs:
-              targetType: 'inline'
-              script: |
-                #extract version number from filename and create new devops variable with an incremented version
-                $solutionPath = "$(Agent.BuildDirectory)\drop"
-                Write-Output "solutionpath = $solutionPath"
-                $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "*${env:FLOWSSOLUTIONNAME}*managed*" | Sort-Object LastWriteTime -Descending | Select-Object -first 1
-                Write-Output "file = $managedFile"
-                $Inputstring = $managedFile.BaseName + $managedFile.Extension
-                Write-Output "input string = $Inputstring"
-                $Inputstring -match "_([0-9]_[0-9]_[0-9]_[0-9]+)_"
-                $version = "$($matches[1])"
-                Write-Output "version = $version"
-                Write-Host "##vso[task.setvariable variable=SolutionVersion]$version"
-                                                
-                #create next version
-                $versionParts = $version.Split("_")
-                                                
-                $major = "$($versionParts[0])"
-                $minor = "$($versionParts[1])"
-                $build = "$($versionParts[2])"
-                $revision = "$($versionParts[3])"
-                                                
-                [int]$nextRevision = 0
-                [bool]$result = [int]::TryParse($revision, [ref]$nextRevision)
-                $nextRevision = $nextRevision + 1
-                [string]$nextVersion = "$major.$minor.$build.$nextRevision"
-                                                
-                Write-Output  "major = $major"
-                Write-Output  "minor = $minor"
-                Write-Output  "build = $build"
-                Write-Output  "revision = $revision"
-                Write-Output  "nextVersion = $nextVersion"
-                Write-Host "##vso[task.setvariable variable=NextSolutionVersion]$nextVersion"
-
-                #get the patch name from the solution zip file
-                $managedFile -match "(?<content>.*)_$version"
-                $SolutionFileName = $matches['content']
-                Write-Output  "SolutionFileName = $SolutionFileName"
-                Write-Host "##vso[task.setvariable variable=SolutionFileName]$SolutionFileName"
-          - task: PowerShell@2
-            inputs:
-              targetType: 'inline'
-              script: |
-                Write-Host "============================================"
-                $CoreSolutionName = "${env:FLOWSSOLUTIONNAME}"
-                $NextSolutionVersion = "$(NextSolutionVersion)"
-                $SolutionFileName = "$(SolutionFileName)"
-
-                Write-Output "CoreSolutionName = $CoreSolutionName"
-                Write-Output "NextSolutionVersion = $NextSolutionVersion"
-                Write-Output "SolutionFileName = $SolutionFileName"
-
-                if ([string]::IsNullOrEmpty($CoreSolutionName) -or [string]::IsNullOrEmpty($NextSolutionVersion) -or [string]::IsNullOrEmpty($SolutionFileName))
-                {
-                    throw "Variable check failed."
-                }
-              failOnStderr: true
-          - task: MSCRMImportSolution@12
-            inputs:
-              crmConnectionString: '$(ConnectionStringDev2)'
-              solutionFile: '$(Agent.BuildDirectory)\drop\$(SolutionFileName)_$(SolutionVersion).zip'
-              publishWorkflows: true
-          - task: MSCRMPublishCustomizations@12
-            inputs:
-              crmConnectionString: '$(ConnectionStringDev2)'
-              crmConnectionTimeout: '999'
-- stage: QA
-  jobs:
-  - deployment: Deploy
-    condition: succeeded()
-    pool:
-      vmImage: 'vs2017-win2016'
-    environment: QA
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: PowerShell@2
-            inputs:
-              targetType: 'inline'
-              script: |
-                Write-Host "============================================"
-                Write-Host "System.DefaultWorkingDirectory"
-                Get-ChildItem -Path "$(System.DefaultWorkingDirectory)"
-                Write-Host "============================================"
-                Write-Host "Agent.BuildDirectory"
-                Get-ChildItem -Path "$(Agent.BuildDirectory)"
-                Write-Host "============================================"
-                Write-Host ""
-                Write-Host "============================================"
-                Write-Host "Build.ArtifactStagingDirectory"
-                Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)"
-                Write-Host "============================================"
-                Write-Host "============================================"
-                Write-Host "Build.BinariesDirectory"
-                Get-ChildItem -Path "$(Build.BinariesDirectory)"
-                Write-Host "============================================"
-                Write-Host "============================================"
-                Write-Host "Build.SourcesDirectory"
-                Get-ChildItem -Path "$(Build.SourcesDirectory)"
-                Write-Host "============================================"
-              errorActionPreference: 'continue'
-          - task: MSCRMToolInstaller@12
-            inputs:
-              nugetFeed: 'official'
-              psFeed: 'official'
-          - task: PowerShell@2
-            inputs:
-              targetType: 'inline'
-              script: |
-                #extract version number from filename and create new devops variable with an incremented version
-                $solutionPath = "$(Agent.BuildDirectory)\drop"
-                Write-Output "solutionpath = $solutionPath"
-                $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "*${env:FLOWSSOLUTIONNAME}*managed*" | Sort-Object LastWriteTime -Descending | Select-Object -first 1
-                Write-Output "file = $managedFile"
-                $Inputstring = $managedFile.BaseName + $managedFile.Extension
-                Write-Output "input string = $Inputstring"
-                $Inputstring -match "_([0-9]_[0-9]_[0-9]_[0-9]+)_"
-                $version = "$($matches[1])"
-                Write-Output "version = $version"
-                Write-Host "##vso[task.setvariable variable=SolutionVersion]$version"
-                                                
-                #create next version
-                $versionParts = $version.Split("_")
-                                                
-                $major = "$($versionParts[0])"
-                $minor = "$($versionParts[1])"
-                $build = "$($versionParts[2])"
-                $revision = "$($versionParts[3])"
-                                                
-                [int]$nextRevision = 0
-                [bool]$result = [int]::TryParse($revision, [ref]$nextRevision)
-                $nextRevision = $nextRevision + 1
-                [string]$nextVersion = "$major.$minor.$build.$nextRevision"
-                                                
-                Write-Output  "major = $major"
-                Write-Output  "minor = $minor"
-                Write-Output  "build = $build"
-                Write-Output  "revision = $revision"
-                Write-Output  "nextVersion = $nextVersion"
-                Write-Host "##vso[task.setvariable variable=NextSolutionVersion]$nextVersion"
-
-                #get the patch name from the solution zip file
-                $managedFile -match "(?<content>.*)_$version"
-                $SolutionFileName = $matches['content']
-                Write-Output  "SolutionFileName = $SolutionFileName"
-                Write-Host "##vso[task.setvariable variable=SolutionFileName]$SolutionFileName"
-          - task: PowerShell@2
-            inputs:
-              targetType: 'inline'
-              script: |
-                Write-Host "============================================"
-                $CoreSolutionName = "${env:FLOWSSOLUTIONNAME}"
-                $NextSolutionVersion = "$(NextSolutionVersion)"
-                $SolutionFileName = "$(SolutionFileName)"
-
-                Write-Output "CoreSolutionName = $CoreSolutionName"
-                Write-Output "NextSolutionVersion = $NextSolutionVersion"
-                Write-Output "SolutionFileName = $SolutionFileName"
-
-                if ([string]::IsNullOrEmpty($CoreSolutionName) -or [string]::IsNullOrEmpty($NextSolutionVersion) -or [string]::IsNullOrEmpty($SolutionFileName))
-                {
-                    throw "Variable check failed."
-                }
-              failOnStderr: true
-          - task: MSCRMImportSolution@12
-            inputs:
-              crmConnectionString: '$(ConnectionStringQa)'
-              solutionFile: '$(Agent.BuildDirectory)\drop\$(SolutionFileName)_$(SolutionVersion)_managed.zip'
-              publishWorkflows: true
-              overwriteUnmanagedCustomizations: true
-              override: true
-          - task: MSCRMPublishCustomizations@12
-            inputs:
-              crmConnectionString: '$(ConnectionStringQa)'
-              crmConnectionTimeout: '999'
-- stage: ACCTDG
-  jobs:
-  - deployment: Deploy
-    condition: succeeded()
-    pool:
-      vmImage: 'vs2017-win2016'
-    environment: ACC-TDG
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: PowerShell@2
-            inputs:
-              targetType: 'inline'
-              script: |
-                Write-Host "============================================"
-                Write-Host "System.DefaultWorkingDirectory"
-                Get-ChildItem -Path "$(System.DefaultWorkingDirectory)"
-                Write-Host "============================================"
-                Write-Host "Agent.BuildDirectory"
-                Get-ChildItem -Path "$(Agent.BuildDirectory)"
-                Write-Host "============================================"
-                Write-Host ""
-                Write-Host "============================================"
-                Write-Host "Build.ArtifactStagingDirectory"
-                Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)"
-                Write-Host "============================================"
-                Write-Host "============================================"
-                Write-Host "Build.BinariesDirectory"
-                Get-ChildItem -Path "$(Build.BinariesDirectory)"
-                Write-Host "============================================"
-                Write-Host "============================================"
-                Write-Host "Build.SourcesDirectory"
-                Get-ChildItem -Path "$(Build.SourcesDirectory)"
-                Write-Host "============================================"
-              errorActionPreference: 'continue'
-          - task: MSCRMToolInstaller@12
-            inputs:
-              nugetFeed: 'official'
-              psFeed: 'official'
-          - task: PowerShell@2
-            inputs:
-              targetType: 'inline'
-              script: |
-                #extract version number from filename and create new devops variable with an incremented version
-                $solutionPath = "$(Agent.BuildDirectory)\drop"
-                Write-Output "solutionpath = $solutionPath"
-                $managedFile = Get-ChildItem -Path $solutionPath -Recurse -File -Filter "*${env:FLOWSSOLUTIONNAME}*managed*" | Sort-Object LastWriteTime -Descending | Select-Object -first 1
-                Write-Output "file = $managedFile"
-                $Inputstring = $managedFile.BaseName + $managedFile.Extension
-                Write-Output "input string = $Inputstring"
-                $Inputstring -match "_([0-9]_[0-9]_[0-9]_[0-9]+)_"
-                $version = "$($matches[1])"
-                Write-Output "version = $version"
-                Write-Host "##vso[task.setvariable variable=SolutionVersion]$version"
-                                                
-                #create next version
-                $versionParts = $version.Split("_")
-                                                
-                $major = "$($versionParts[0])"
-                $minor = "$($versionParts[1])"
-                $build = "$($versionParts[2])"
-                $revision = "$($versionParts[3])"
-                                                
-                [int]$nextRevision = 0
-                [bool]$result = [int]::TryParse($revision, [ref]$nextRevision)
-                $nextRevision = $nextRevision + 1
-                [string]$nextVersion = "$major.$minor.$build.$nextRevision"
-                                                
-                Write-Output  "major = $major"
-                Write-Output  "minor = $minor"
-                Write-Output  "build = $build"
-                Write-Output  "revision = $revision"
-                Write-Output  "nextVersion = $nextVersion"
-                Write-Host "##vso[task.setvariable variable=NextSolutionVersion]$nextVersion"
-
-                #get the patch name from the solution zip file
-                $managedFile -match "(?<content>.*)_$version"
-                $SolutionFileName = $matches['content']
-                Write-Output  "SolutionFileName = $SolutionFileName"
-                Write-Host "##vso[task.setvariable variable=SolutionFileName]$SolutionFileName"
-          - task: PowerShell@2
-            inputs:
-              targetType: 'inline'
-              script: |
-                Write-Host "============================================"
-                $CoreSolutionName = "${env:FLOWSSOLUTIONNAME}"
-                $NextSolutionVersion = "$(NextSolutionVersion)"
-                $SolutionFileName = "$(SolutionFileName)"
-
-                Write-Output "CoreSolutionName = $CoreSolutionName"
-                Write-Output "NextSolutionVersion = $NextSolutionVersion"
-                Write-Output "SolutionFileName = $SolutionFileName"
-
-                if ([string]::IsNullOrEmpty($CoreSolutionName) -or [string]::IsNullOrEmpty($NextSolutionVersion) -or [string]::IsNullOrEmpty($SolutionFileName))
-                {
-                    throw "Variable check failed."
-                }
-              failOnStderr: true
-          - task: MSCRMImportSolution@12
-            inputs:
-              crmConnectionString: '$(ConnectionStringAccTdg)'
-              solutionFile: '$(Agent.BuildDirectory)\drop\$(SolutionFileName)_$(SolutionVersion)_managed.zip'
-              publishWorkflows: true
-              overwriteUnmanagedCustomizations: true
-              override: true
-          - task: MSCRMPublishCustomizations@12
-            inputs:
-              crmConnectionString: '$(ConnectionStringAccTdg)'
-              crmConnectionTimeout: '999'
+        script: 'env | sort'
+- template: templates/Template_UpdateBuildVersion.yml  # Template reference
+  parameters:
+    StageName: 'UpdateBuildVersion'
+    VersionNumber: variables['VersionNumber']
+- template: templates/Template_CommitSolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_Dev)
+    StageName: 'BuildAndPublishArtifacts'
+    dependsOn: 
+    - 'UpdateBuildVersion'
+#QA
+- template: templates/Template_DeploySolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_QA)
+    PowerPlatformSPN_Dev: $(PowerPlatformSPN_Dev) #used to update solution version after successful deployment to QA
+    Environment: 'QA-TDG'
+    StageName: 'DeployManagedSolutionToQA'
+    dependsOn: 
+    - 'BuildAndPublishArtifacts'
+#ACC
+- template: templates/Template_DeploySolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_ACC)
+    Environment: 'ACC-TDG'
+    StageName: 'DeployManagedSolutionToACC'
+    dependsOn: 
+    - 'DeployManagedSolutionToQA'
+#ACCDATA
+- template: templates/Template_DeploySolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_ACCDATA)
+    Environment: 'ACC-TDG-DATA'
+    StageName: 'DeployUnmanagedSolutionToACCDATA'
+    DeployUnmanagedSolution: true
+    dependsOn: 
+    - 'DeployManagedSolutionToQA'
+#PREPROD
+- template: templates/Template_DeploySolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
+    Environment: 'PREPROD-TDG'
+    StageName: 'DeployManagedSolutionToPREPROD'
+    dependsOn: 
+    - 'DeployManagedSolutionToACC'
+#PROD
+- template: templates/Template_DeploySolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_PROD)
+    Environment: 'PROD-TDG'
+    StageName: 'DeployManagedSolutionToPROD'
+    dependsOn: 
+    - 'DeployManagedSolutionToPREPROD'
