@@ -99,7 +99,7 @@ stages:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_ACCDATA)
     Environment: 'ACC-TDG-DATA'
-    StageName: 'DeployManagedSolutionToACCDATA'
+    StageName: 'DeployUnmanagedSolutionToACCDATA'
     dependsOn: 
     - 'DeployManagedSolutionToQA'
 #PREPROD
@@ -110,7 +110,7 @@ stages:
     Environment: 'PREPROD'
     StageName: 'DeployManagedSolutionToPREPROD'
     dependsOn: 
-    - 'BuildAndPublishArtifacts'
+    - 'DeployManagedSolutionToACC'
 #PROD
 - template: templates/Template_DeploySolution.yml  # Template reference
   parameters:
@@ -119,4 +119,4 @@ stages:
     Environment: 'PROD'
     StageName: 'DeployManagedSolutionToPROD'
     dependsOn: 
-    - 'BuildAndPublishArtifacts'
+    - 'DeployManagedSolutionToPREPROD'
