@@ -3,18 +3,20 @@ parameters:
     type: string
   - name: SolutionName
     type: string
+  - name: StageName
+    type: string
   - name: dependsOn
     type: object
     default: []
 stages:
-- stage: BuildAndPublishArtifact
+- stage: ${{Parameters.StageName}}
   dependsOn:
   - ${{ each stage in parameters.dependsOn }}:
     - ${{ stage }}
   pool:
       vmImage: 'windows-latest'
   jobs:
-  - job: BuildAndPublishArtifact
+  - job: ${{Parameters.StageName}}
     steps:
     - checkout: self
       persistCredentials: true
