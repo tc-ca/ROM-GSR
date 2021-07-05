@@ -37,11 +37,11 @@ variables:
 name: #Set Dynamically in Pipeline
 
 stages:
-- stage: PrintPipelineVariables
+- stage: UpdateBuildNumber
   pool:
       vmImage: 'windows-latest'
   jobs:
-  - job: PrintPipelineVariables
+  - job: UpdateBuildNumber
     steps:
     - task: PowerShell@2
       displayName: Set the name of the build (i.e. the Build.BuildNumber)
