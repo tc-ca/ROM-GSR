@@ -1,16 +1,17 @@
 parameters:
   SolutionName: 'TC_GlobalCore'
   PowerPlatformSPN: ''
-  
+
 stages:
-- stage: QA
+- stage: DeployManagedSolutionToDev
+  pool:
+      vmImage: 'windows-latest'
   jobs:
   - deployment: Deploy
-    timeoutInMinutes: 360 # how long to run the job before automatically cancelling
-    cancelTimeoutInMinutes: 2 # how much time to give 'run always even if cancelled tasks' before stopping them
-    pool:
-      vmImage: 'windows-latest'
+    dispayName: DeployManagedSolutionToDev
     environment: QA
+    timeoutInMinutes: 360
+    cancelTimeoutInMinutes: 2
     strategy:
       runOnce:
         deploy:
