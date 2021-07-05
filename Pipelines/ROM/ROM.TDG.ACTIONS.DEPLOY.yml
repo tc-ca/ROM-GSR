@@ -28,13 +28,13 @@ variables:
   - name: VersionPatch
     value: 0
   - name: StableVersionNumber
-    value: variables['VersionMajor'].variables['VersionMinor'].variables['Build.VersionPatch']
+    value: '$(VersionMajor).$(VersionMinor).$(VersionPatch)'
   - name: VersionRevision
     value: $[counter(variables['StableVersionNumber'], 0)]
   - name: VersionNumber
-    value: variables['StableVersionNumber'].variables['VersionRevision']
-
-name: variables['Build.SourceBranch']_Pipeline #can be overwritten by UpdateBuildVersion Stage
+    value: '$(StableVersionNumber).$(VersionRevision)'
+  
+name: #Set Dynamically in Pipeline
 
 stages:
 - stage: PrintPipelineVariables
@@ -43,9 +43,20 @@ stages:
   jobs:
   - job: PrintPipelineVariables
     steps:
-    - checkout: self
-      persistCredentials: true
-      clean: true
+    - task: PowerShell@2
+      displayName: Set the name of the build (i.e. the Build.BuildNumber)
+      inputs:
+        targetType: 'inline'
+        script: |
+          [string] $buildName = "$(VersionNumber)"
+          Write-Host "Setting the name of the build to '$buildName'."
+          Write-Host "##vso[build.updatebuildnumber]$buildName"
+- stage: PrintPipelineVariables
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: PrintPipelineVariables
+    steps:
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
@@ -60,6 +71,20 @@ stages:
           Write-Host "PowerPlatformSPN_PREPROD:   $(PowerPlatformSPN_PREPROD)"
           Write-Host "PowerPlatformSPN_PROD:      $(PowerPlatformSPN_PROD)"
           Write-Host "============================================"
+- stage: UpdateBuildNumber
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: PrintPipelineVariables
+    steps:
+    - task: PowerShell@2
+      displayName: Set the name of the build (i.e. the Build.BuildNumber)
+      inputs:
+        targetType: 'inline'
+        script: |
+          [string] $buildName = "$(VersionMajor).$(VersionMinor)."
+          Write-Host "Setting the name of the build to '$buildName'."
+          Write-Host "##vso[build.updatebuildnumber]$buildName"
 - template: templates/Template_UpdateBuildVersion.yml  # Template reference
   parameters:
     StageName: 'UpdateBuildVersion'
