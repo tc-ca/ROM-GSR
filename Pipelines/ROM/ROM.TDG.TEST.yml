@@ -64,12 +64,18 @@ stages:
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_ACC)
+    Environment: 'ACC'
+    StageName: 'DeployManagedSolutionToACC'
 - template: templates/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
+    Environment: 'PREPROD'
+    StageName: 'DeployManagedSolutionToPREPROD'
 - template: templates/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_PROD)
+    Environment: 'PROD'
+    StageName: 'DeployManagedSolutionToPROD'
 
