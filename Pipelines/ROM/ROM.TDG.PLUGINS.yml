@@ -21,6 +21,14 @@ variables:
     value: 'ROM PROD TDG'
   - name: SolutionName
     value: 'TDGPlugins'
+  - name: VersionMajor
+    value: 1
+  - name: VersionMinor
+    value: 1
+  - name: VersionPatch
+    value: 0
+  - name: VersionRevision
+    value: $[counter(${{Parameters.VersionMajor}}${{Parameters.VersionMinor}}${{Parameters.VersionPatch}}, 0)]
 
 name: variables['Build.SourceBranch']_Pipeline
 
