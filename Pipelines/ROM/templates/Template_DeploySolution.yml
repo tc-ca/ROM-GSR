@@ -70,26 +70,26 @@ stages:
           - task: PowerPlatformToolInstaller@0
             inputs:
               DefaultVersion: true
-        - ${{ if eq(parameters.DeployUnmanagedSolution, false) }}:
-          - task: PowerPlatformImportSolution@0
-            inputs:
-              authenticationType: 'PowerPlatformSPN'
-              PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
-              SolutionInputFile: '$(Agent.BuildDirectory)\zip\${{Parameters.SolutionName}}_Managed.zip'
-              AsyncOperation: true
-              MaxAsyncWaitTime: '360'
-              HoldingSolution: false
-              OverwriteUnmanagedCustomizations: true
-        - ${{ if eq(parameters.DeployUnmanagedSolution, true) }}:
-          - task: PowerPlatformImportSolution@0
-            inputs:
-              authenticationType: 'PowerPlatformSPN'
-              PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
-              SolutionInputFile: '$(Agent.BuildDirectory)\zip\${{Parameters.SolutionName}}.zip'
-              AsyncOperation: true
-              MaxAsyncWaitTime: '360'
-              HoldingSolution: false
-              OverwriteUnmanagedCustomizations: false
+          - ${{ if eq(parameters.DeployUnmanagedSolution, false) }}:
+            - task: PowerPlatformImportSolution@0
+              inputs:
+                authenticationType: 'PowerPlatformSPN'
+                PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
+                SolutionInputFile: '$(Agent.BuildDirectory)\zip\${{Parameters.SolutionName}}_Managed.zip'
+                AsyncOperation: true
+                MaxAsyncWaitTime: '360'
+                HoldingSolution: false
+                OverwriteUnmanagedCustomizations: true
+          - ${{ if eq(parameters.DeployUnmanagedSolution, true) }}:
+            - task: PowerPlatformImportSolution@0
+              inputs:
+                authenticationType: 'PowerPlatformSPN'
+                PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
+                SolutionInputFile: '$(Agent.BuildDirectory)\zip\${{Parameters.SolutionName}}.zip'
+                AsyncOperation: true
+                MaxAsyncWaitTime: '360'
+                HoldingSolution: false
+                OverwriteUnmanagedCustomizations: false
           - ${{ if eq(Parameters.Environment, 'QA') }}:
             - task: PowerPlatformSetSolutionVersion@0
               inputs:
