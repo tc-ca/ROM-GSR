@@ -1,16 +1,8 @@
 parameters:
   - name: StageName
     type: string
-  - name: VersionMajor
-    type: number
-  - name: VersionMinor
-    type: number
-  - name: VersionPatch
-    type: number
-    default: 0
-  - name: IncrementRevisionOrPatchNumber
+  - name: VersionNumber
     type: string
-    default: 'Revision'
   - name: dependsOn
     type: object
     default: []
@@ -26,32 +18,12 @@ stages:
   
   #Revision Versioning
   - job: ${{Parameters.StageName}}_Revision
-    condition: eq(${{Parameters.IncrementRevisionOrPatchNumber}}, 'Revision')
-    variables:
-      -name: VersionRevision
-       value: $[counter(${{Parameters.VersionMajor}}${{Parameters.VersionMinor}}${{Parameters.VersionPatch}}, 0)]
     steps:
       - task: PowerShell@2
-        displayName: Set the name of the build by Revision (i.e. the Build.BuildNumber)
+        displayName: Set the name of the build (i.e. the Build.BuildNumber)
         inputs:
           targetType: 'inline'
           script: |
-            [string] $buildName = "$(VersionMajor).$(VersionMinor).$(VersionPatch).$(VersionRevision)"
-            Write-Host "Setting the name of the build to '$buildName'."
-            Write-Host "##vso[build.updatebuildnumber]$buildName"
-
-  #Patch Versioning            
-  - job: ${{Parameters.StageName}}_Patch
-    condition: eq(${{Parameters.IncrementRevisionOrPatchNumber}}, 'Patch')
-    variables:
-      - name: VersionPatch
-        value: $[counter(${{Parameters.VersionMajor}}${{Parameters.VersionMinor}}, 0)]
-    steps:
-      - task: PowerShell@2
-        displayName: Set the name of the build by Patch (i.e. the Build.BuildNumber)
-        inputs:
-          targetType: 'inline'
-          script: |
-            [string] $buildName = "$(VersionMajor).$(VersionMinor).$(VersionPatch).0"
+            [string] $buildName = "$(VersionNumber)"
             Write-Host "Setting the name of the build to '$buildName'."
             Write-Host "##vso[build.updatebuildnumber]$buildName"
