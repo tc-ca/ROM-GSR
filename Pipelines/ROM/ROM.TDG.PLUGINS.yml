@@ -4,6 +4,8 @@ trigger:
 pr:
 - none
 
+#variable 'Pipeline_ConnectionStringDev' defined in devops
+
 variables:
   - name: PowerPlatformSPN_Dev
     value: 'ROM DEV TDG'
@@ -19,8 +21,8 @@ variables:
     value: 'ROM PROD TDG'
   - name: SolutionName
     value: 'TDGPlugins'
-  - name: VersionNumber
-    value: 1.0.1$(Rev:.r)
+  - name: RevisionVersion
+    value: $[counter(format('{0:yyyyMMdd}', pipeline.startTime), 0)]
 
 name: 'TDG Plugins Pipeline'
 
@@ -48,6 +50,13 @@ stages:
           Write-Host "PowerPlatformSPN_PREPROD:   $(PowerPlatformSPN_PREPROD)"
           Write-Host "PowerPlatformSPN_PROD:      $(PowerPlatformSPN_PROD)"
           Write-Host "============================================"
+- template: templates/Template_UpdateBuildVersion.yml  # Template reference
+  parameters:
+    StageName: 'UpdateBuildVersion'
+    VersionMajor: 1
+    VersionMinor: 0
+    VersionPatch: 1
+    IncrementRevisionOrPatchNumber: 'Revision'
 - template: templates/Template_CommitSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
