@@ -1,0 +1,61 @@
+trigger:
+- none
+
+pr:
+- none
+
+variables:
+  - name: PowerPlatformSPN_Dev
+    value: 'ROM DEV TDG'
+  - name: PowerPlatformSPN_QA
+    value: 'ROM QA TDG'
+  - name: PowerPlatformSPN_ACC
+    value: 'ROM ACC TDG'
+  - name: PowerPlatformSPN_ACCDATA
+    value: 'ROM ACC TDG DATA'
+  - name: PowerPlatformSPN_PREPROD
+    value: 'ROM PREPROD TDG'
+  - name: PowerPlatformSPN_PROD
+    value: 'ROM PROD TDG'
+  - name: SolutionName
+    value: 'TDGPlugins'
+
+name: 'TDG Plugins Pipeline'
+
+stages:
+- stage: PrintPipelineVariables
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: PrintPipelineVariables
+    steps:
+    - checkout: self
+      persistCredentials: true
+      clean: true
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "============================================"
+          Write-Host "Echoing *Variable* Values"
+          Write-Host "SolutionName:               $(SolutionName)"
+          Write-Host "PowerPlatformSPN_Dev:       $(PowerPlatformSPN_Dev)"
+          Write-Host "PowerPlatformSPN_QA:        $(PowerPlatformSPN_QA)"
+          Write-Host "PowerPlatformSPN_ACC:       $(PowerPlatformSPN_ACC)"
+          Write-Host "PowerPlatformSPN_ACCDATA:   $(PowerPlatformSPN_ACCDATA)"
+          Write-Host "PowerPlatformSPN_PREPROD:   $(PowerPlatformSPN_PREPROD)"
+          Write-Host "PowerPlatformSPN_PROD:      $(PowerPlatformSPN_PROD)"
+          Write-Host "============================================"
+- template: templates/Template_CommitSolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_Dev)
+    StageName: 'BuildAndPublishArtifacts'
+- template: templates/Template_DeploySolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_QA)
+    Environment: 'QA'
+    StageName: 'DeployManagedSolutionToQA'
+    dependsOn: 
+    - 'BuildAndPublishArtifacts'
