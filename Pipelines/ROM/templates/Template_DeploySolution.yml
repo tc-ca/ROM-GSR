@@ -50,23 +50,23 @@ stages:
                 Get-ChildItem -Path "$(Build.SourcesDirectory)"
                 Write-Host "============================================"
               errorActionPreference: 'continue'
-         - task: PowerPlatformToolInstaller@0
-           inputs:
-             DefaultVersion: true
-         - task: PowerPlatformImportSolution@0
-           inputs:
-             authenticationType: 'PowerPlatformSPN'
-             PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
-             SolutionInputFile: 'zip\${{Parameters.SolutionName}}_Managed.zip'
-             AsyncOperation: true
-             MaxAsyncWaitTime: '360'
-             HoldingSolution: true
-             OverwriteUnmanagedCustomizations: true
-             ConvertToManaged: true
-         - task: PowerPlatformApplySolutionUpgrade@0
-           inputs:
-             authenticationType: 'PowerPlatformSPN'
-             PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
-             SolutionName: '${{Parameters.SolutionName}}'
-             AsyncOperation: true
-             MaxAsyncWaitTime: '360'
+          - task: PowerPlatformToolInstaller@0
+            inputs:
+              DefaultVersion: true
+          - task: PowerPlatformImportSolution@0
+            inputs:
+              authenticationType: 'PowerPlatformSPN'
+              PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
+              SolutionInputFile: 'zip\${{Parameters.SolutionName}}_Managed.zip'
+              AsyncOperation: true
+              MaxAsyncWaitTime: '360'
+              HoldingSolution: true
+              OverwriteUnmanagedCustomizations: true
+              ConvertToManaged: true
+          - task: PowerPlatformApplySolutionUpgrade@0
+            inputs:
+              authenticationType: 'PowerPlatformSPN'
+              PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
+              SolutionName: '${{Parameters.SolutionName}}'
+              AsyncOperation: true
+              MaxAsyncWaitTime: '360'
