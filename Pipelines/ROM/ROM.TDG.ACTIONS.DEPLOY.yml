@@ -33,7 +33,9 @@ variables:
     value: $[counter(variables['StableVersionNumber'], 0)]
   - name: VersionNumber
     value: '$(StableVersionNumber).$(VersionRevision)'
-  
+  - name:  buildNumber
+    value: ${{ format('{0}.{1}.{2}.{3}',  variables['VersionMajor'], variables['VersionMinor'], variables['VersionPatch'], variables['VersionRevision']) }}
+
 name: #Set Dynamically in Pipeline
 
 stages:
@@ -49,6 +51,8 @@ stages:
         targetType: 'inline'
         script: |
           [string] $buildName = "$(VersionNumber)"
+          [string] $buildNumber = "$(buildNumber)"
+          Write-Host "buildNumber = '$buildNumber'."
           Write-Host "Setting the name of the build to '$buildName'."
           Write-Host "##vso[build.updatebuildnumber]$buildName"
 - stage: PrintPipelineVariables
@@ -57,24 +61,16 @@ stages:
   jobs:
   - job: PrintPipelineVariables
     steps:
-    - task: PowerShell@2
+    - task: Bash@3
       inputs:
         targetType: 'inline'
-        script: |
-          Write-Host "============================================"
-          Write-Host "Echoing *Variable* Values"
-          Write-Host "SolutionName:               $(SolutionName)"
-          Write-Host "PowerPlatformSPN_Dev:       $(PowerPlatformSPN_Dev)"
-          Write-Host "PowerPlatformSPN_QA:        $(PowerPlatformSPN_QA)"
-          Write-Host "PowerPlatformSPN_ACC:       $(PowerPlatformSPN_ACC)"
-          Write-Host "PowerPlatformSPN_ACCDATA:   $(PowerPlatformSPN_ACCDATA)"
-          Write-Host "PowerPlatformSPN_PREPROD:   $(PowerPlatformSPN_PREPROD)"
-          Write-Host "PowerPlatformSPN_PROD:      $(PowerPlatformSPN_PROD)"
-          Write-Host "============================================"
+        script: 'env | sort'
 - template: templates/Template_UpdateBuildVersion.yml  # Template reference
   parameters:
     StageName: 'UpdateBuildVersion'
     VersionNumber: variables['VersionNumber']
+    dependsOn: 
+    - 'UpdateBuildNumber'
 - template: templates/Template_CommitSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
