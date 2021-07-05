@@ -62,6 +62,8 @@ stages:
   parameters:
     SolutionName: $(SolutionName)
     ConnectionString: $(Pipeline_ConnectionStringDev)
+    dependsOn: 
+    - 'DeployManagedSolutionToQA'
 - template: templates/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
