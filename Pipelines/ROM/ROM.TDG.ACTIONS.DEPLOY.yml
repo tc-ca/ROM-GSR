@@ -33,8 +33,6 @@ variables:
     value: $[counter(variables['StableVersionNumber'], 0)]
   - name: VersionNumber
     value: '$(StableVersionNumber).$(VersionRevision)'
-  - name:  buildNumber
-    value: ${{ format('{0}.{1}.{2}.{3}',  variables['VersionMajor'], variables['VersionMinor'], variables['VersionPatch'], variables['VersionRevision']) }}
 
 name: #Set Dynamically in Pipeline
 
@@ -51,8 +49,6 @@ stages:
         targetType: 'inline'
         script: |
           [string] $buildName = "$(VersionNumber)"
-          [string] $buildNumber = "$(buildNumber)"
-          Write-Host "buildNumber = '$buildNumber'."
           Write-Host "Setting the name of the build to '$buildName'."
           Write-Host "##vso[build.updatebuildnumber]$buildName"
 - stage: PrintPipelineVariables
@@ -82,6 +78,7 @@ stages:
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_QA)
+    PowerPlatformSPN_Dev: $(PowerPlatformSPN_Dev)
     Environment: 'QA'
     StageName: 'DeployManagedSolutionToQA'
     dependsOn: 
