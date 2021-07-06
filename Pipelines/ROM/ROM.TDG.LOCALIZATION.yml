@@ -84,16 +84,6 @@ stages:
     StageName: 'DeployManagedSolutionToACC'
     dependsOn: 
     - 'DeployManagedSolutionToQA'
-#ACCDATA
-- template: templates/Template_DeploySolution.yml  # Template reference
-  parameters:
-    SolutionName: $(SolutionName)
-    PowerPlatformSPN: $(PowerPlatformSPN_ACCDATA)
-    Environment: 'ACC-TDG-DATA'
-    StageName: 'DeployUnmanagedSolutionToACCDATA'
-    DeployUnmanagedSolution: true
-    dependsOn: 
-    - 'DeployManagedSolutionToQA'
 #PREPROD
 - template: templates/Template_DeploySolution.yml  # Template reference
   parameters:
