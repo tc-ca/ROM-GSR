@@ -73,6 +73,7 @@ stages:
         Write-Host "Latest Patch Name =  $(LatestPatchName)"
         Write-Host "${{ eq('$(PatchExists)', 'False') }}"
     - task: PowerShell@2
+      name: PatchCheck
       inputs:
         targetType: 'inline'
         script: |
@@ -95,12 +96,15 @@ stages:
               $patchExistsBool = $patchExists
           }
           Write-Output "postCheck: patchExistsBool = $patchExistsBool"
+          $RollupSolution=1
           if ($patchExistsBool -eq $false)
           {
-              throw "No patch currently exists no need to rollup."
+              $RollupSolution=0
+              Write-Output "No patch currently exists no need to rollup."
           }
-        failOnStderr: true
+          echo "##vso[task.setvariable variable=RollupSolution;isOutput=true]$RollupSolution"
     - task: MSCRMCloneSolution@12
+      condition: eq(dependencies.PatchCheck.outputs['PatchCheck.RollupSolution'], 1)
       inputs:
         crmConnectionString: ${{Parameters.ConnectionString}}
         uniqueName: ${{Parameters.SolutionName}}
