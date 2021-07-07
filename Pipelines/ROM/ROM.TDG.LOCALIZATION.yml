@@ -1,10 +1,15 @@
-trigger:
-- none
-
-pr:
-- none
-
-#variable 'Pipeline_ConnectionStringDev' defined in devops
+trigger: none
+pr: none
+resources:
+  pipelines:
+  - pipeline: aUniqueNameHereForLocalReferenceCanBeAnything
+    project: Inspection Solution Architecture WG
+    source: Deploy TDG Custom Actions
+    trigger:
+      branches:
+        include:
+        - master
+        - development
 
 variables:
   - name: PowerPlatformSPN_Dev
@@ -20,9 +25,23 @@ variables:
   - name: PowerPlatformSPN_PROD
     value: 'ROM PROD TDG'
   - name: SolutionName
-    value: 'TC_GlobalCore'
+    value: 'CoreLocalization'
+  - name: VersionMajor
+    value: 1
+  - name: VersionMinor
+    value: 1
+  - name: VersionPatch
+    value: 0
+  - name: StableVersionNumber
+    value: '$(VersionMajor).$(VersionMinor).$(VersionPatch)'
+  - name: CounterVariable
+    value: '$(SolutionName)_$(VersionMajor).$(VersionMinor).$(VersionPatch)'
+  - name: VersionRevision
+    value: $[counter(variables['CounterVariable'], 0)]
+  - name: VersionNumber
+    value: '$(StableVersionNumber).$(VersionRevision)'
 
-name: 'Release Pipeline'
+name: #Set Dynamically in Pipeline
 
 stages:
 - stage: PrintPipelineVariables
@@ -31,58 +50,32 @@ stages:
   jobs:
   - job: PrintPipelineVariables
     steps:
-    - checkout: self
-      persistCredentials: true
-      clean: true
-    - task: PowerShell@2
+    - task: Bash@3
       inputs:
         targetType: 'inline'
-        script: |
-          Write-Host "============================================"
-          Write-Host "Echoing *Variable* Values"
-          Write-Host "SolutionName:               $(SolutionName)"
-          Write-Host "PowerPlatformSPN_Dev:       $(PowerPlatformSPN_Dev)"
-          Write-Host "PowerPlatformSPN_QA:        $(PowerPlatformSPN_QA)"
-          Write-Host "PowerPlatformSPN_ACC:       $(PowerPlatformSPN_ACC)"
-          Write-Host "PowerPlatformSPN_ACCDATA:   $(PowerPlatformSPN_ACCDATA)"
-          Write-Host "PowerPlatformSPN_PREPROD:   $(PowerPlatformSPN_PREPROD)"
-          Write-Host "PowerPlatformSPN_PROD:      $(PowerPlatformSPN_PROD)"
-          Write-Host "============================================"
-- template: templates/Template_RollupSolution.yml  # Template reference
+        script: 'env | sort'
+- template: templates/Template_UpdateBuildVersion.yml  # Template reference
   parameters:
-    SolutionName: $(SolutionName)
-    ConnectionString: $(Pipeline_ConnectionStringDev)
-    StageName: 'RollupSolutionOnDev'
+    StageName: 'UpdateBuildVersion'
+    VersionNumber: variables['VersionNumber']
 - template: templates/Template_CommitSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_Dev)
     StageName: 'BuildAndPublishArtifacts'
     dependsOn: 
-    - 'RollupSolutionOnDev'
+    - 'UpdateBuildVersion'
+#QA
 - template: templates/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_QA)
-    Environment: 'QA'
+    PowerPlatformSPN_Dev: $(PowerPlatformSPN_Dev) #used to update solution version after successful deployment to QA
+    Environment: 'QA-TDG'
     StageName: 'DeployManagedSolutionToQA'
     dependsOn: 
     - 'BuildAndPublishArtifacts'
-- template: templates/Template_PatchSolution.yml  # Template reference
-  parameters:
-    SolutionName: $(SolutionName)
-    ConnectionString: $(Pipeline_ConnectionStringDev)
-    StageName: 'CreatePatchOnDev'
-    dependsOn: 
-    - 'DeployManagedSolutionToQA'
-- template: templates/Template_DeploySolution.yml  # Template reference
-  parameters:
-    SolutionName: $(SolutionName)
-    PowerPlatformSPN: $(PowerPlatformSPN_ACCDATA)
-    Environment: 'ACC-TDG-DATA'
-    StageName: 'DeployManagedSolutionToACCDATA'
-    dependsOn: 
-    - 'DeployManagedSolutionToQA'
+#ACC
 - template: templates/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
@@ -91,19 +84,21 @@ stages:
     StageName: 'DeployManagedSolutionToACC'
     dependsOn: 
     - 'DeployManagedSolutionToQA'
+#PREPROD
 - template: templates/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
-    Environment: 'PREPROD'
+    Environment: 'PREPROD-TDG'
     StageName: 'DeployManagedSolutionToPREPROD'
     dependsOn: 
     - 'DeployManagedSolutionToACC'
+#PROD
 - template: templates/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_PROD)
-    Environment: 'PROD'
+    Environment: 'PROD-TDG'
     StageName: 'DeployManagedSolutionToPROD'
     dependsOn: 
     - 'DeployManagedSolutionToPREPROD'

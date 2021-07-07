@@ -1,10 +1,15 @@
-trigger:
-- none
-
-pr:
-- none
-
-#variable 'Pipeline_ConnectionStringDev' defined in devops
+trigger: none
+pr: none
+resources:
+  pipelines:
+  - pipeline: aUniqueNameHereForLocalReferenceCanBeAnything
+    project: Inspection Solution Architecture WG
+    source: Deploy GlobalCore Solution
+    trigger:
+      branches:
+        include:
+        - master
+        - development
 
 variables:
   - name: PowerPlatformSPN_Dev
@@ -86,6 +91,7 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_ACCDATA)
     Environment: 'ACC-TDG-DATA'
     StageName: 'DeployUnmanagedSolutionToACCDATA'
+    DeployUnmanagedSolution: true
     dependsOn: 
     - 'DeployManagedSolutionToQA'
 #PREPROD
