@@ -60,7 +60,7 @@ stages:
     StageName: 'BuildAndPublishArtifacts'
     dependsOn: 
     - 'RollupSolutionOnDev'
-- template: templates/Template_DeploySolution.yml  # Template reference
+- template: templates/Template_DeployHoldingSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_QA)
@@ -81,9 +81,10 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_ACCDATA)
     Environment: 'ACC-TDG-DATA'
     StageName: 'DeployManagedSolutionToACCDATA'
+    DeployUnmanagedSolution: true
     dependsOn: 
     - 'DeployManagedSolutionToQA'
-- template: templates/Template_DeploySolution.yml  # Template reference
+- template: templates/Template_DeployHoldingSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_ACC)
@@ -91,7 +92,7 @@ stages:
     StageName: 'DeployManagedSolutionToACC'
     dependsOn: 
     - 'DeployManagedSolutionToQA'
-- template: templates/Template_DeploySolution.yml  # Template reference
+- template: templates/Template_DeployHoldingSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
@@ -99,7 +100,7 @@ stages:
     StageName: 'DeployManagedSolutionToPREPROD'
     dependsOn: 
     - 'DeployManagedSolutionToACC'
-- template: templates/Template_DeploySolution.yml  # Template reference
+- template: templates/Template_DeployHoldingSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_PROD)
