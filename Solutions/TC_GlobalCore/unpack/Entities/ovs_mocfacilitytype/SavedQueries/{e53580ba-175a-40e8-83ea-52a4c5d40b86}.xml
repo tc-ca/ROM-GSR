@@ -10,8 +10,8 @@
     <layoutxml>
       <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
         <row name="result" id="ovs_mocfacilitytypeid">
-          <cell name="ovs_name" width="300" />
-          <cell name="createdon" width="125" />
+          <cell name="ovs_englishlabel" width="100" />
+          <cell name="ovs_frenchlabel" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -20,15 +20,15 @@
       <fetch version="1.0" mapping="logical">
         <entity name="ovs_mocfacilitytype">
           <attribute name="ovs_mocfacilitytypeid" />
-          <attribute name="ovs_name" />
-          <attribute name="createdon" />
-          <order attribute="ovs_name" descending="false" />
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="0" />
           </filter>
           <filter type="or" isquickfindfields="1">
-            <condition attribute="ovs_name" operator="like" value="{0}" />
+            <condition attribute="ovs_frenchlabel" operator="like" value="{0}" />
+            <condition attribute="ovs_englishlabel" operator="like" value="{0}" />
           </filter>
+          <attribute name="ovs_frenchlabel" />
+          <attribute name="ovs_englishlabel" />
         </entity>
       </fetch>
     </fetchxml>

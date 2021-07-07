@@ -10,7 +10,7 @@
       <Description description="Upgrade of TC.GlobalCore" languagecode="1033" />
       <Description description="Mise à niveau de TC.GlobalCore" languagecode="1036" />
     </Descriptions>
-    <Version>1.34.0.0</Version>
+    <Version>1.35.0.0</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>oversightpublisher</UniqueName>
@@ -1350,7 +1350,7 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="FieldService (8.8.0.88)" />
-        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_PreferredResource" displayName="msdyn_bookableresource_msdyn_workorder_PreferredResource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="FieldService (8.8.0.88)" />
@@ -2822,11 +2822,11 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="bookableresourceid" displayName="Bookable Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdynce_Scheduling (9.0.0.0)" />
-        <Dependent type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_Crew" displayName="msdyn_bookableresource_bookableresourcebooking_Crew" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" displayName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="bookableresourceid" displayName="Bookable Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdynce_Scheduling (9.0.0.0)" />
-        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_PreferredResource" displayName="msdyn_bookableresource_msdyn_workorder_PreferredResource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="bookableresourceid" displayName="Bookable Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdynce_Scheduling (9.0.0.0)" />
@@ -3285,12 +3285,24 @@
         <Dependent type="2" schemaName="transactioncurrencyid" displayName="Currency" parentSchemaName="bookableresourcebooking" parentDisplayName="Booking" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="2" schemaName="bookableresourcecategoryid" displayName="Resource Category" parentSchemaName="bookableresourcecategory" parentDisplayName="Bookable Resource Category" solution="msdynce_Scheduling (9.0.0.0)" />
+        <Dependent type="26" schemaName="Recherche rapide de catégories de ressources actives" displayName="Recherche rapide de catégories de ressources actives" parentSchemaName="bookableresourcecategory" parentDisplayName="Bookable Resource Category" id="{fd230910-e2d2-4ae1-812e-1ed01a83bd81}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="createdon" displayName="Created On" parentSchemaName="bookableresourcecategory" parentDisplayName="Bookable Resource Category" solution="msdynce_Scheduling (9.0.0.0)" />
+        <Dependent type="2" schemaName="createdon" displayName="Created On" parentSchemaName="bookableresourcecategory" parentDisplayName="Bookable Resource Category" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="2" schemaName="description" displayName="Description" parentSchemaName="bookableresourcecategory" parentDisplayName="Bookable Resource Category" solution="msdynce_Scheduling (9.0.0.0)" />
-        <Dependent type="60" displayName="Informations" parentDisplayName="Bookable Resource Category" id="{5f07ead5-c98f-4a37-aca4-89a7aab2f681}" />
+        <Dependent type="2" schemaName="description" displayName="Description" parentSchemaName="bookableresourcecategory" parentDisplayName="Bookable Resource Category" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="name" displayName="Name" parentSchemaName="bookableresourcecategory" parentDisplayName="Bookable Resource Category" solution="msdynce_Scheduling (9.0.0.0)" />
         <Dependent type="2" schemaName="name" displayName="Name" parentSchemaName="bookableresourcecategory" parentDisplayName="Bookable Resource Category" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="statecode" displayName="Status" parentSchemaName="bookableresourcecategory" parentDisplayName="Bookable Resource Category" solution="msdynce_Scheduling (9.0.0.0)" />
+        <Dependent type="2" schemaName="statecode" displayName="Status" parentSchemaName="bookableresourcecategory" parentDisplayName="Bookable Resource Category" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="bookingstatusid" displayName="Booking Status" parentSchemaName="bookingstatus" parentDisplayName="Booking Status" solution="msdynce_Scheduling (9.0.0.0)" />
@@ -4110,7 +4122,7 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_supportcontact" displayName="Support Contact" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)" />
-        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_PreferredResource" displayName="msdyn_bookableresource_msdyn_workorder_PreferredResource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_supportcontact" displayName="Support Contact" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)" />
@@ -4266,6 +4278,10 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_workorderid" displayName="WO Number" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)" />
+        <Dependent type="26" schemaName="Mes demandes d’annulation ouvertes" displayName="Mes demandes d’annulation ouvertes" parentSchemaName="ovs_cancellationrequest" parentDisplayName="Cancellation Request" id="{26c04cd4-de4d-41f6-b3e7-a6ab09498b3a}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="msdyn_workorderid" displayName="WO Number" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)" />
         <Dependent type="26" schemaName="Exercice précédent" displayName="Exercice précédent" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" id="{271f479b-fac3-eb11-bacc-000d3ae868f0}" />
       </MissingDependency>
       <MissingDependency>
@@ -4354,6 +4370,10 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_workorderid" displayName="WO Number" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)" />
+        <Dependent type="26" schemaName="Demandes d’annulation fermées" displayName="Demandes d’annulation fermées" parentSchemaName="ovs_cancellationrequest" parentDisplayName="Cancellation Request" id="{7c520575-3acb-4655-9926-ac92bdea1ef0}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="msdyn_workorderid" displayName="WO Number" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)" />
         <Dependent type="26" schemaName="Mes ordres de travail – en retard" displayName="Mes ordres de travail – en retard" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" id="{83e8d5e6-dec3-eb11-bacc-000d3ae868f0}" />
       </MissingDependency>
       <MissingDependency>
@@ -4435,6 +4455,10 @@
       <MissingDependency>
         <Required type="2" schemaName="msdyn_workorderid" displayName="WO Number" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)" />
         <Dependent type="26" schemaName="Exercice en cours" displayName="Exercice en cours" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" id="{d9cf55af-f9c3-eb11-bacc-000d3ae864fc}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="msdyn_workorderid" displayName="WO Number" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)" />
+        <Dependent type="26" schemaName="Toutes les demandes d’annulation" displayName="Toutes les demandes d’annulation" parentSchemaName="ovs_cancellationrequest" parentDisplayName="Cancellation Request" id="{dc1ba6bd-aa88-44da-b6b8-2fd5462a2c5d}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_workorderid" displayName="WO Number" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)" />
@@ -6281,6 +6305,10 @@
         <Dependent type="26" schemaName="Ordres de travail actifs" displayName="Ordres de travail actifs" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" id="{fce37246-eba1-4e92-bb9d-f8cb3ec38e3f}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="26" schemaName="Recherche rapide de catégories de ressources actives" displayName="Recherche rapide de catégories de ressources actives" parentSchemaName="bookableresourcecategory" parentDisplayName="Bookable Resource Category" solution="msdynce_Scheduling (9.0.0.0)" id="{fd230910-e2d2-4ae1-812e-1ed01a83bd81}" />
+        <Dependent type="26" schemaName="Recherche rapide de catégories de ressources actives" displayName="Recherche rapide de catégories de ressources actives" parentSchemaName="bookableresourcecategory" parentDisplayName="Bookable Resource Category" id="{fd230910-e2d2-4ae1-812e-1ed01a83bd81}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="29" displayName="Facility/Equipment Display" solution="msdynce_CoreServiceScheduling (9.0.20113.1005)" id="{8d1aeb93-5305-e811-8130-000d3af93042}" />
         <Dependent type="29" displayName="Facility/Equipment Display" id="{8d1aeb93-5305-e811-8130-000d3af93042}" />
       </MissingDependency>
@@ -6702,6 +6730,10 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="AppCommon/Contact/Contact_main_system_library.js" displayName="AppCommon/Contact/Contact_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)" />
+        <Dependent type="60" displayName="AI for Sales" parentDisplayName="Contact" id="{293c878f-f068-40a0-ae48-4297e060871c}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="61" schemaName="AppCommon/Contact/Contact_main_system_library.js" displayName="AppCommon/Contact/Contact_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)" />
         <Dependent type="60" displayName="Formulaire principal du contact" parentDisplayName="Contact" id="{2c961780-b9f9-ea11-a815-000d3af3ac0d}" />
       </MissingDependency>
       <MissingDependency>
@@ -6715,10 +6747,6 @@
       <MissingDependency>
         <Required type="61" schemaName="AppCommon/Contact/Contact_main_system_library.js" displayName="AppCommon/Contact/Contact_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)" />
         <Dependent type="60" displayName="Contact pour l’expérience multisession" parentDisplayName="Contact" id="{e06af4d1-2812-45c7-a9c2-9fb73fee7bec}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="61" schemaName="AppCommon/Contact/Contact_main_system_library.js" displayName="AppCommon/Contact/Contact_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)" />
-        <Dependent type="60" displayName="Contact TMD" parentDisplayName="Contact" id="{ec7b5b17-85b9-eb11-8236-0022483bc67c}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="cc_MscrmControls.FieldControls.QuickNotesControl/bundle.js" displayName="cc_MscrmControls.FieldControls.QuickNotesControl/bundle.js" solution="msdyn_FieldService_patch_update (8.8.44.45)" />
@@ -7246,7 +7274,7 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="Sales/ClientCommon/Sales_ClientCommon.js" displayName="Sales/ClientCommon/Sales_ClientCommon.js" solution="msdynce_Sales (9.0.4.0076)" />
-        <Dependent type="60" displayName="Contact TMD" parentDisplayName="Contact" id="{ec7b5b17-85b9-eb11-8236-0022483bc67c}" />
+        <Dependent type="60" displayName="Profil du site de TMD" parentDisplayName="Account" id="{db5d5927-e1b5-440f-b55b-e0a95e1b053b}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="Sales/Contact/Contact_main_system_library.js" displayName="Sales/Contact/Contact_main_system_library.js" solution="msdynce_SalesPatch201904 (9.0.1912.1007)" />
@@ -7258,7 +7286,7 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="Sales/Contact/Contact_main_system_library.js" displayName="Sales/Contact/Contact_main_system_library.js" solution="msdynce_SalesPatch201904 (9.0.1912.1007)" />
-        <Dependent type="60" displayName="Contact TMD" parentDisplayName="Contact" id="{ec7b5b17-85b9-eb11-8236-0022483bc67c}" />
+        <Dependent type="60" displayName="Création rapide Contact" parentDisplayName="Contact" id="{661157fe-2fc9-4eaa-835f-5bfa2f7b64f7}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="Scheduling/BookableResource/BookableResource_main_system_library.js" displayName="Scheduling/BookableResource/BookableResource_main_system_library.js" solution="msdynce_Scheduling (9.0.0.0)" />

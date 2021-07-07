@@ -10,7 +10,7 @@
     <layoutxml>
       <grid name="resultset" jump="subject" select="1" icon="1" preview="1">
         <row name="result" id="activityid">
-          <cell name="subject" width="300" />
+          <cell name="a_1395dc3c6f314c59b8e9b780899b5f32.msdyn_name" width="168" />
           <cell name="regardingobjectid" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="statecode" width="100" />
           <cell name="a_22aa3e35602beb11a813000d3af3a7a7.msdyn_serviceaccount" width="150" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
@@ -23,12 +23,10 @@
     <fetchxml>
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
         <entity name="ovs_cancellationrequest">
-          <attribute name="subject" />
           <attribute name="createdon" />
           <attribute name="statecode" />
           <attribute name="modifiedon" />
           <attribute name="regardingobjectid" />
-          <order attribute="subject" descending="false" />
           <filter type="and">
             <condition attribute="statecode" operator="not-null" />
           </filter>
@@ -41,6 +39,9 @@
             </filter>
           </link-entity>
           <attribute name="activityid" />
+          <link-entity alias="a_1395dc3c6f314c59b8e9b780899b5f32" name="msdyn_workorder" to="regardingobjectid" from="msdyn_workorderid" link-type="outer" visible="false">
+            <attribute name="msdyn_name" />
+          </link-entity>
         </entity>
       </fetch>
     </fetchxml>
