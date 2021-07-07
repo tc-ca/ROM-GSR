@@ -10,7 +10,7 @@
       <Description description="Upgrade of TC.GlobalCore" languagecode="1033" />
       <Description description="Mise à niveau de TC.GlobalCore" languagecode="1036" />
     </Descriptions>
-    <Version>1.33.0.0</Version>
+    <Version>1.34.0.0</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>oversightpublisher</UniqueName>
@@ -1238,7 +1238,7 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_Crew" displayName="msdyn_bookableresource_bookableresourcebooking_Crew" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdyn_FieldService_patch_update (8.8.44.45)" />
-        <Dependent type="10" schemaName="bookableresource_bookableresourcebooking_Resource" displayName="bookableresource_bookableresourcebooking_Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" displayName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_Crew" displayName="msdyn_bookableresource_bookableresourcebooking_Crew" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdyn_FieldService_patch_update (8.8.44.45)" />
@@ -1258,7 +1258,7 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" displayName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="MicrosoftDynamicsScheduling (3.12.0.448)" />
-        <Dependent type="10" schemaName="bookableresource_bookableresourcebooking_Resource" displayName="bookableresource_bookableresourcebooking_Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" displayName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" displayName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="MicrosoftDynamicsScheduling (3.12.0.448)" />
@@ -2822,11 +2822,11 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="bookableresourceid" displayName="Bookable Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdynce_Scheduling (9.0.0.0)" />
-        <Dependent type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" displayName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_Crew" displayName="msdyn_bookableresource_bookableresourcebooking_Crew" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="bookableresourceid" displayName="Bookable Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdynce_Scheduling (9.0.0.0)" />
-        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_PreferredResource" displayName="msdyn_bookableresource_msdyn_workorder_PreferredResource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="bookableresourceid" displayName="Bookable Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdynce_Scheduling (9.0.0.0)" />
@@ -4110,7 +4110,7 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_supportcontact" displayName="Support Contact" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)" />
-        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_PreferredResource" displayName="msdyn_bookableresource_msdyn_workorder_PreferredResource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_supportcontact" displayName="Support Contact" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)" />
@@ -6670,6 +6670,10 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="AppCommon/Account/Account_main_system_library.js" displayName="AppCommon/Account/Account_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)" />
+        <Dependent type="60" displayName="Compte - Mobile" parentDisplayName="Account" id="{74da4947-5d1d-4400-9f99-c6ed578211bb}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="61" schemaName="AppCommon/Account/Account_main_system_library.js" displayName="AppCommon/Account/Account_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)" />
         <Dependent type="60" displayName="Compte" parentDisplayName="Account" id="{8448b78f-8f42-454e-8e2a-f8196b0419af}" />
       </MissingDependency>
       <MissingDependency>
@@ -6683,10 +6687,6 @@
       <MissingDependency>
         <Required type="61" schemaName="AppCommon/Account/Account_main_system_library.js" displayName="AppCommon/Account/Account_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)" />
         <Dependent type="60" displayName="Sales Insights" parentDisplayName="Account" id="{cb430327-bcc1-416d-959d-db7592e685af}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="61" schemaName="AppCommon/Account/Account_main_system_library.js" displayName="AppCommon/Account/Account_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)" />
-        <Dependent type="60" displayName="Profil du site de TMD" parentDisplayName="Account" id="{db5d5927-e1b5-440f-b55b-e0a95e1b053b}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="AppCommon/Account/Account_main_system_library.js" displayName="AppCommon/Account/Account_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)" />
@@ -7258,7 +7258,7 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="Sales/Contact/Contact_main_system_library.js" displayName="Sales/Contact/Contact_main_system_library.js" solution="msdynce_SalesPatch201904 (9.0.1912.1007)" />
-        <Dependent type="60" displayName="Création rapide Contact" parentDisplayName="Contact" id="{661157fe-2fc9-4eaa-835f-5bfa2f7b64f7}" />
+        <Dependent type="60" displayName="Contact TMD" parentDisplayName="Contact" id="{ec7b5b17-85b9-eb11-8236-0022483bc67c}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="Scheduling/BookableResource/BookableResource_main_system_library.js" displayName="Scheduling/BookableResource/BookableResource_main_system_library.js" solution="msdynce_Scheduling (9.0.0.0)" />
