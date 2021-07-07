@@ -104,7 +104,7 @@ stages:
           }
           echo "##vso[task.setvariable variable=RollupSolution;isOutput=true]$RollupSolution"
     - task: MSCRMCloneSolution@12
-      condition: eq(dependencies.PatchCheck.outputs['PatchCheck.RollupSolution'], 1)
+      condition: eq(PatchCheck.outputs['RollupSolution'], 1)
       inputs:
         crmConnectionString: ${{Parameters.ConnectionString}}
         uniqueName: ${{Parameters.SolutionName}}
