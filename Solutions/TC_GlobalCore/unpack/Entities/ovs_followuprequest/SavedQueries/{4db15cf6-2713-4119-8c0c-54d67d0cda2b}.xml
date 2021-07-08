@@ -10,7 +10,7 @@
     <layoutxml>
       <grid name="resultset" jump="subject" select="1" icon="1" preview="1">
         <row name="result" id="activityid">
-          <cell name="subject" width="300" />
+          <cell name="a_066d660f1db54c7d978723193a114e32.msdyn_name" width="100" />
           <cell name="createdon" width="125" />
         </row>
       </grid>
@@ -20,15 +20,16 @@
       <fetch version="1.0" mapping="logical">
         <entity name="ovs_followuprequest">
           <attribute name="activityid" />
-          <attribute name="subject" />
           <attribute name="createdon" />
-          <order attribute="subject" descending="false" />
           <filter type="and">
             <condition attribute="statecode" operator="in">
               <value>1</value>
               <value>2</value>
             </condition>
           </filter>
+          <link-entity alias="a_066d660f1db54c7d978723193a114e32" name="msdyn_workorder" to="regardingobjectid" from="msdyn_workorderid" link-type="outer" visible="false">
+            <attribute name="msdyn_name" />
+          </link-entity>
         </entity>
       </fetch>
     </fetchxml>
