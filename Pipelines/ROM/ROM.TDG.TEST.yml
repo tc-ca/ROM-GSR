@@ -99,7 +99,7 @@ stages:
     Environment: 'PREPROD-TDG'
     StageName: 'DeployManagedSolutionToPREPROD'
     dependsOn: 
-    - 'DeployManagedSolutionToACC'
+    - 'DeployManagedSolutionToQA'
 - template: templates/Template_DeployHoldingSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
@@ -107,4 +107,4 @@ stages:
     Environment: 'PROD-TDG'
     StageName: 'DeployManagedSolutionToPROD'
     dependsOn: 
-    - 'DeployManagedSolutionToPREPROD'
+    - 'DeployManagedSolutionToQA'
