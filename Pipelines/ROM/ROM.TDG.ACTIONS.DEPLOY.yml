@@ -1,15 +1,5 @@
 trigger: none
 pr: none
-resources:
-  pipelines:
-  - pipeline: aUniqueNameHereForLocalReferenceCanBeAnything
-    project: Inspection Solution Architecture WG
-    source: Deploy TDG Plugins
-    trigger:
-      branches:
-        include:
-        - master
-        - development
 
 #variable 'Pipeline_ConnectionStringDev' defined in devops
 
@@ -118,7 +108,7 @@ stages:
     Environment: 'PREPROD-TDG'
     StageName: 'DeployManagedSolutionToPREPROD'
     dependsOn: 
-    - 'DeployManagedSolutionToACC'
+    - 'DeployManagedSolutionToQA'
 #PROD
 - template: templates/Template_DeploySolution.yml  # Template reference
   parameters:
@@ -127,4 +117,4 @@ stages:
     Environment: 'PROD-TDG'
     StageName: 'DeployManagedSolutionToPROD'
     dependsOn: 
-    - 'DeployManagedSolutionToPREPROD'
+    - 'DeployManagedSolutionToQA'
