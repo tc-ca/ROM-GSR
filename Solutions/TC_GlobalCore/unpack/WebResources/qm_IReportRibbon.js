@@ -71,12 +71,16 @@ var IReportRibbon = (function (window, document) {
 
             if (!WO_TDG_main.ReportDataValidate(formContext)) {
 
-                Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Cannot generate inspection report. \n" + WO_TDG_main.errorObject.errorMessage.join("\n"), title: "Required data is missing" }, { height: 300, width: 500 });
+                Xrm.Navigation.openAlertDialog({
+                    confirmButtonLabel: "OK",
+                    text: glHelper.GetLocalizedStrings().ValidationInspectionReport + "\n" + WO_TDG_main.errorObject.errorMessage.join("\n"),
+                    title: glHelper.GetLocalizedStrings().TitleValidationInspectionReport
+                }, { height: 300, width: 500 });
                 return false;
             }
         }
         else {
-            Xrm.Navigation.openErrorDialog({ message: "Something went wrong. Impossible to validate report requirments." });
+            Xrm.Navigation.openErrorDialog({ message: glHelper.GetLocalizedStrings().GeneralError });
             return false;
         }
 
