@@ -1,14 +1,54 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RibbonDiffXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <CustomActions />
+  <CustomActions>
+    <CustomAction Id="ovs.Mscrm.SubGrid.bookableresourcebooking.AddNewStandard.CustomAction" Location="Mscrm.SubGrid.bookableresourcebooking.MainTab.Management.Controls._children" Sequence="20">
+      <CommandUIDefinition>
+        <Button Alt="$LocLabels:Mscrm.SubGrid.bookableresourcebooking.AddNewStandard.Alt" Command="Mscrm.AddNewRecordFromSubGridStandard" Id="Mscrm.SubGrid.bookableresourcebooking.AddNewStandard" Image32by32="/_imgs/ribbon/newrecord32.png" Image16by16="/_imgs/ribbon/New_16.png" LabelText="$LocLabels:Mscrm.SubGrid.bookableresourcebooking.AddNewStandard.LabelText" Sequence="20" TemplateAlias="o1" ToolTipTitle="$LocLabels:Mscrm.SubGrid.bookableresourcebooking.AddNewStandard.ToolTipTitle" ToolTipDescription="$LocLabels:Mscrm.SubGrid.bookableresourcebooking.AddNewStandard.ToolTipDescription" ModernImage="New" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <HideCustomAction HideActionId="tc.Mscrm.Form.bookableresourcebooking.Activate.Hide" Location="Mscrm.Form.bookableresourcebooking.Activate" />
+    <HideCustomAction HideActionId="tc.Mscrm.Form.bookableresourcebooking.Deactivate.Hide" Location="Mscrm.Form.bookableresourcebooking.Deactivate" />
+    <HideCustomAction HideActionId="tc.Mscrm.Form.bookableresourcebooking.NewRecord.Hide" Location="Mscrm.Form.bookableresourcebooking.NewRecord" />
+    <HideCustomAction HideActionId="tc.Mscrm.SubGrid.bookableresourcebooking.Activate.Hide" Location="Mscrm.SubGrid.bookableresourcebooking.Activate" />
+    <HideCustomAction HideActionId="tc.Mscrm.SubGrid.bookableresourcebooking.Deactivate.Hide" Location="Mscrm.SubGrid.bookableresourcebooking.Deactivate" />
+  </CustomActions>
   <Templates>
     <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
   </Templates>
-  <CommandDefinitions />
+  <CommandDefinitions>
+    <CommandDefinition Id="Mscrm.EditSelectedRecord">
+      <EnableRules>
+        <EnableRule Id="Mscrm.CheckBulkEditSupportForEntity" />
+        <EnableRule Id="Mscrm.VisualizationPaneNotMaximized" />
+        <EnableRule Id="Mscrm.IsValidForHierarchyView" />
+        <EnableRule Id="Mscrm.ShowOnNonModernAndModernIfAllowed" />
+        <EnableRule Id="tc.bookableresourcebooking.EnableRule0.HideButtonIfFormIsReadOnly" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.BulkEditPrivilege" />
+        <DisplayRule Id="Mscrm.WriteSelectedEntityPermission" />
+        <DisplayRule Id="Mscrm.HybridDialogBulkEditEnabled" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="FieldService.OpenMainFormDialog.Library.OpenExistingRecordForm" Library="$webresource:msdyn_/MainFormDialog/FieldService.OpenMainFormDialog.js">
+          <CrmParameter Value="SelectedEntityTypeName" />
+          <CrmParameter Value="SelectedControl" />
+          <CrmParameter Value="SelectedControlSelectedItemReferences" />
+          <CrmParameter Value="PrimaryControl" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+  </CommandDefinitions>
   <RuleDefinitions>
     <TabDisplayRules />
     <DisplayRules />
-    <EnableRules />
+    <EnableRules>
+      <EnableRule Id="tc.bookableresourcebooking.EnableRule0.HideButtonIfFormIsReadOnly">
+        <CustomRule FunctionName="HideButtonIfFormIsReadOnly" Library="$webresource:ovs_ROMCommonFunctions">
+          <CrmParameter Value="PrimaryControl" />
+        </CustomRule>
+      </EnableRule>
+    </EnableRules>
   </RuleDefinitions>
   <LocLabels>
     <LocLabel Id="Mscrm.Form.bookableresourcebooking.RemoteAssistContactSearch.LabelText">
@@ -107,6 +147,30 @@
         <Title description="Remote Assist" languagecode="2052" />
         <Title description="Remote Assist" languagecode="3076" />
         <Title description="Remote Assist" languagecode="1028" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.SubGrid.bookableresourcebooking.AddNewStandard.Alt">
+      <Titles>
+        <Title description="Add New {0}" languagecode="1033" />
+        <Title description="Nouvelle {0}" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.SubGrid.bookableresourcebooking.AddNewStandard.LabelText">
+      <Titles>
+        <Title description="Add New {0}" languagecode="1033" />
+        <Title description="Nouvelle {0}" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.SubGrid.bookableresourcebooking.AddNewStandard.ToolTipDescription">
+      <Titles>
+        <Title description="Add a related {0} to this record." languagecode="1033" />
+        <Title description="Nouvelle {0}." languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.SubGrid.bookableresourcebooking.AddNewStandard.ToolTipTitle">
+      <Titles>
+        <Title description="Add New {0}" languagecode="1033" />
+        <Title description="Nouvelle {0}" languagecode="1036" />
       </Titles>
     </LocLabel>
   </LocLabels>

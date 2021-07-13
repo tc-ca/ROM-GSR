@@ -1,163 +1,235 @@
-<html><head><script type="text/javascript">
-    (function() {
-      var container = document.querySelector('#_tcx-mms5vilefl');
-      if (!container) {
-        return;
-      }
-
-      function addToContainer(url, text) {
-        const wrapper = document.createElement('div');
-        wrapper.setAttribute('data-tcx-url', url);
-        wrapper.innerText = text;
-        container.appendChild(wrapper);
-      }
-
-      const fetch = window.fetch
-      window.fetch = function() {
-        return Promise.resolve(fetch.apply(window, arguments))
-            .then(async response => {
-              if (response.ok) {
-                try {
-                  const clone = response.clone();
-                  const json = await clone.json();
-                  addToContainer(clone.url, JSON.stringify(json));
-                } catch (err) {}
-              }
-              return response;
-            });
-      };
-
-      var XHR = XMLHttpRequest.prototype;
-      var send = XHR.send;
-      var open = XHR.open;
-      XHR.open = function(method, url) {
-        this.url = url;
-        return open.apply(this, arguments);
-      };
-      XHR.send = function() {
-        this.addEventListener('load', function() {
-          try {
-alert('1');
-            const response = this.response;
-            if (response && response.length) {
-              const firstChar = response[0];
-              if (firstChar === '[' || firstChar === '{') {
-                addToContainer(this.url, response);
-              }
+<html>
+<head>
+    <script type="text/javascript">
+        (function () {
+            var container = document.querySelector('#_tcx-pifl34jdrzc');
+            if (!container) {
+                return;
             }
-          } catch (err) {
-            // No-op.
-          }
-        });
-        return send.apply(this, arguments);
-      };
-    })();
-  </script><script type="text/javascript">
-    (function() {
-      var container = document.querySelector('#_tcx-wyu38kdexa');
-      if (!container) {
-        return;
-      }
 
-      function addToContainer(url, text) {
-        const wrapper = document.createElement('div');
-        wrapper.setAttribute('data-tcx-url', url);
-        wrapper.innerText = text;
-        container.appendChild(wrapper);
-      }
-
-      const fetch = window.fetch
-      window.fetch = function() {
-        return Promise.resolve(fetch.apply(window, arguments))
-            .then(async response => {
-              if (response.ok) {
-                try {
-                  const clone = response.clone();
-                  const json = await clone.json();
-                  addToContainer(clone.url, JSON.stringify(json));
-                } catch (err) {}
-              }
-              return response;
-            });
-      };
-
-      var XHR = XMLHttpRequest.prototype;
-      var send = XHR.send;
-      var open = XHR.open;
-      XHR.open = function(method, url) {
-        this.url = url;
-        return open.apply(this, arguments);
-      };
-      XHR.send = function() {
-        this.addEventListener('load', function() {
-          try {
-alert('1');
-            const response = this.response;
-            if (response && response.length) {
-              const firstChar = response[0];
-              if (firstChar === '[' || firstChar === '{') {
-                addToContainer(this.url, response);
-              }
+            function addToContainer(url, text) {
+                const wrapper = document.createElement('div');
+                wrapper.setAttribute('data-tcx-url', url);
+                wrapper.innerText = text;
+                container.appendChild(wrapper);
             }
-          } catch (err) {
-            // No-op.
-          }
-        });
-        return send.apply(this, arguments);
-      };
-    })();
-  </script><script type="text/javascript">
-    (function() {
-      var container = document.querySelector('#_tcx-dxk1jnb1oop');
-      if (!container) {
-        return;
-      }
 
-      function addToContainer(url, text) {
-        const wrapper = document.createElement('div');
-        wrapper.setAttribute('data-tcx-url', url);
-        wrapper.innerText = text;
-        container.appendChild(wrapper);
-      }
+            const fetch = window.fetch
+            window.fetch = function () {
+                return Promise.resolve(fetch.apply(window, arguments))
+                    .then(async response => {
+                        if (response.ok) {
+                            try {
+                                const clone = response.clone();
+                                const json = await clone.json();
+                                addToContainer(clone.url, JSON.stringify(json));
+                            } catch (err) { }
+                        }
+                        return response;
+                    });
+            };
 
-      const fetch = window.fetch
-      window.fetch = function() {
-        return Promise.resolve(fetch.apply(window, arguments))
-            .then(async response => {
-              if (response.ok) {
-                try {
-                  const clone = response.clone();
-                  const json = await clone.json();
-                  addToContainer(clone.url, JSON.stringify(json));
-                } catch (err) {}
-              }
-              return response;
-            });
-      };
-
-      var XHR = XMLHttpRequest.prototype;
-      var send = XHR.send;
-      var open = XHR.open;
-      XHR.open = function(method, url) {
-        this.url = url;
-        return open.apply(this, arguments);
-      };
-      XHR.send = function() {
-        this.addEventListener('load', function() {
-          try {
-alert('1');
-            const response = this.response;
-            if (response && response.length) {
-              const firstChar = response[0];
-              if (firstChar === '[' || firstChar === '{') {
-                addToContainer(this.url, response);
-              }
+            var XHR = XMLHttpRequest.prototype;
+            var send = XHR.send;
+            var open = XHR.open;
+            XHR.open = function (method, url) {
+                this.url = url;
+                return open.apply(this, arguments);
+            };
+            XHR.send = function () {
+                this.addEventListener('load', function () {
+                    try {
+                        const response = this.response;
+                        if (response && response.length) {
+                            const firstChar = response[0];
+                            if (firstChar === '[' || firstChar === '{') {
+                                addToContainer(this.url, response);
+                            }
+                        }
+                    } catch (err) {
+                        // No-op.
+                    }
+                });
+                return send.apply(this, arguments);
+            };
+        })();
+    </script>
+    <script type="text/javascript">
+        (function () {
+            var container = document.querySelector('#_tcx-mms5vilefl');
+            if (!container) {
+                return;
             }
-          } catch (err) {
-            // No-op.
-          }
-        });
-        return send.apply(this, arguments);
-      };
-    })();
-  </script><meta><meta><meta><meta><meta></head><body onfocusout="parent.setEmailRange();" style="overflow-wrap: break-word;"><h2 style="text-align: center; background-color: yellow; color: black;"><font face="Arial">MEDIUM</font></h2></body></html>
+
+            function addToContainer(url, text) {
+                const wrapper = document.createElement('div');
+                wrapper.setAttribute('data-tcx-url', url);
+                wrapper.innerText = text;
+                container.appendChild(wrapper);
+            }
+
+            const fetch = window.fetch
+            window.fetch = function () {
+                return Promise.resolve(fetch.apply(window, arguments))
+                    .then(async response => {
+                        if (response.ok) {
+                            try {
+                                const clone = response.clone();
+                                const json = await clone.json();
+                                addToContainer(clone.url, JSON.stringify(json));
+                            } catch (err) { }
+                        }
+                        return response;
+                    });
+            };
+
+            var XHR = XMLHttpRequest.prototype;
+            var send = XHR.send;
+            var open = XHR.open;
+            XHR.open = function (method, url) {
+                this.url = url;
+                return open.apply(this, arguments);
+            };
+            XHR.send = function () {
+                this.addEventListener('load', function () {
+                    try {
+                        const response = this.response;
+                        if (response && response.length) {
+                            const firstChar = response[0];
+                            if (firstChar === '[' || firstChar === '{') {
+                                addToContainer(this.url, response);
+                            }
+                        }
+                    } catch (err) {
+                        // No-op.
+                    }
+                });
+                return send.apply(this, arguments);
+            };
+        })();
+    </script>
+    <script type="text/javascript">
+        (function () {
+            var container = document.querySelector('#_tcx-wyu38kdexa');
+            if (!container) {
+                return;
+            }
+
+            function addToContainer(url, text) {
+                const wrapper = document.createElement('div');
+                wrapper.setAttribute('data-tcx-url', url);
+                wrapper.innerText = 'Hello'; //text;
+                container.appendChild(wrapper);
+            }
+
+            const fetch = window.fetch
+            window.fetch = function () {
+                return Promise.resolve(fetch.apply(window, arguments))
+                    .then(async response => {
+                        if (response.ok) {
+                            try {
+                                const clone = response.clone();
+                                const json = await clone.json();
+                                addToContainer(clone.url, JSON.stringify(json));
+                            } catch (err) { }
+                        }
+                        return response;
+                    });
+            };
+
+            var XHR = XMLHttpRequest.prototype;
+            var send = XHR.send;
+            var open = XHR.open;
+            XHR.open = function (method, url) {
+                this.url = url;
+                return open.apply(this, arguments);
+            };
+            XHR.send = function () {
+                this.addEventListener('load', function () {
+                    try {
+                        const response = this.response;
+                        if (response && response.length) {
+                            const firstChar = response[0];
+                            if (firstChar === '[' || firstChar === '{') {
+                                addToContainer(this.url, response);
+                            }
+                        }
+                    } catch (err) {
+                        // No-op.
+                    }
+                });
+                return send.apply(this, arguments);
+            };
+        })();
+    </script>
+    <script type="text/javascript">
+        (function () {
+            var container = document.querySelector('#_tcx-dxk1jnb1oop');
+            if (!container) {
+                return;
+            }
+
+            function addToContainer(url, text) {
+                const wrapper = document.createElement('div');
+                wrapper.setAttribute('data-tcx-url', url);
+                wrapper.innerText = text;
+                container.appendChild(wrapper);
+            }
+
+            const fetch = window.fetch
+            window.fetch = function () {
+                return Promise.resolve(fetch.apply(window, arguments))
+                    .then(async response => {
+                        if (response.ok) {
+                            try {
+                                const clone = response.clone();
+                                const json = await clone.json();
+                                addToContainer(clone.url, JSON.stringify(json));
+                            } catch (err) { }
+                        }
+                        return response;
+                    });
+            };
+
+            var XHR = XMLHttpRequest.prototype;
+            var send = XHR.send;
+            var open = XHR.open;
+            XHR.open = function (method, url) {
+                this.url = url;
+                return open.apply(this, arguments);
+            };
+            XHR.send = function () {
+                this.addEventListener('load', function () {
+                    try {
+                        const response = this.response;
+                        if (response && response.length) {
+                            const firstChar = response[0];
+                            if (firstChar === '[' || firstChar === '{') {
+                                addToContainer(this.url, response);
+                            }
+                        }
+                    } catch (err) {
+                        // No-op.
+                    }
+                });
+                return send.apply(this, arguments);
+            };
+        })();
+
+    </script>
+    <meta>
+    <meta>
+    <meta>
+    <meta>
+    <meta>
+</head>
+<body onfocusout="parent.setEmailRange();" style="overflow-wrap: break-word;">
+    <h2 style="text-align: center; background-color: yellow; color: black;"><font face="Arial"><span id="msg" /></font></h2>
+</body>
+</html>
+
+<script>
+    var userSettings = parent.Xrm.Utility.getGlobalContext().userSettings;
+    langId = userSettings.languageId;
+    document.querySelector("#msg").innerText = langId === 1033 ? "MEDIUM" : "MOYEN";
+</script>
