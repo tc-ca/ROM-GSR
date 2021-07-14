@@ -6,7 +6,7 @@
     <isquickfindquery>0</isquickfindquery>
     <isprivate>0</isprivate>
     <isdefault>0</isdefault>
-    <savedqueryid>{2f1530ca-72d0-eb11-bacc-0022483c0d29}</savedqueryid>
+    <savedqueryid>{4f3d8167-eae3-eb11-bacb-0022483c5173}</savedqueryid>
     <layoutxml>
       <grid name="resultset" jump="msdyn_name" select="1" icon="1" preview="1">
         <row name="result" id="msdyn_workorderid">
@@ -47,6 +47,10 @@
               <value>690970002</value>
               <value>690970003</value>
             </condition>
+            <condition attribute="ovs_oversighttype" operator="in">
+              <value uiname="GC Follow-up" uitype="ovs_oversighttype">{1cd7bd09-279e-eb11-b1ac-000d3ae924d1}</value>
+              <value uiname="MOC Facility Follow-up" uitype="ovs_oversighttype">{c1e09a33-279e-eb11-b1ac-000d3ae924d1}</value>
+            </condition>
           </filter>
           <link-entity name="systemuser" alias="aa" link-type="inner" from="systemuserid" to="owninguser">
             <filter type="and">
@@ -55,20 +59,20 @@
           </link-entity>
           <link-entity name="tc_tcfiscalquarter" alias="ab" link-type="inner" from="tc_tcfiscalquarterid" to="ovs_currentfiscalquarter">
             <filter type="and">
-              <condition attribute="tc_quarterstart" operator="this-fiscal-year" />
+              <condition attribute="tc_quarterstart" operator="next-fiscal-year" />
             </filter>
           </link-entity>
         </entity>
       </fetch>
     </fetchxml>
-    <IntroducedVersion>1.22.1.1</IntroducedVersion>
+    <IntroducedVersion>1.0.0.2</IntroducedVersion>
     <LocalizedNames>
-      <LocalizedName description="My Active Work Orders Current Fiscal Year" languagecode="1033" />
-      <LocalizedName description="Mes ordres de travail actifs de l'exercice en cours" languagecode="1036" />
+      <LocalizedName description="My Follow Up Work Orders" languagecode="1033" />
+      <LocalizedName description="Mes ordres de travail d'inspection de suivi attribués à un inspecteur qui ne sont pas fermés-publiés ou fermés-annulés" languagecode="1036" />
     </LocalizedNames>
     <Descriptions>
-      <Description description="Active Work Orders assigned to an Inspector that are not closed-posted or closed-cancelled " languagecode="1033" />
-      <Description description="Ordres de travail actifs attribués à un inspecteur qui ne sont pas fermés-publiés ou fermés-annulés" languagecode="1036" />
+      <Description description="Follow up Work Orders assigned to an Inspector that are not closed-posted or closed-cancelled " languagecode="1033" />
+      <Description description="Ordres de travail d'inspection de suivi" languagecode="1036" />
     </Descriptions>
   </savedquery>
 </savedqueries>

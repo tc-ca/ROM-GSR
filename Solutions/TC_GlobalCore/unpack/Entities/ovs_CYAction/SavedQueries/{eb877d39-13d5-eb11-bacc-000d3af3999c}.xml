@@ -10,9 +10,8 @@
     <layoutxml>
       <grid name="resultset" jump="subject" select="1" icon="1" preview="1">
         <row name="result" id="activityid">
-          <cell name="regardingobjectid" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
-          <cell name="ovs_actiontype" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
-          <cell name="ovs_actionnumber" width="200" />
+          <cell name="subject" width="200" />
+          <cell name="ovs_actiontype" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="ovs_provisiontxt" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="statecode" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="createdon" width="125" />
@@ -25,9 +24,7 @@
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="ovs_cyaction">
           <attribute name="createdon" />
-          <attribute name="ovs_actionnumber" />
           <attribute name="statecode" />
-          <attribute name="regardingobjectid" />
           <attribute name="ovs_provisiontxt" />
           <attribute name="ovs_actiontype" />
           <attribute name="modifiedon" />
@@ -36,6 +33,7 @@
           </filter>
           <link-entity name="msdyn_workorder" from="msdyn_workorderid" to="regardingobjectid" alias="aa" />
           <attribute name="activityid" />
+          <attribute name="subject" />
         </entity>
       </fetch>
     </fetchxml>

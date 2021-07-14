@@ -10,7 +10,7 @@
       <Description description="Upgrade of TC.GlobalCore" languagecode="1033" />
       <Description description="Mise à niveau de TC.GlobalCore" languagecode="1036" />
     </Descriptions>
-    <Version>1.43.0.0</Version>
+    <Version>1.44.0.0</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>oversightpublisher</UniqueName>
@@ -163,6 +163,7 @@
       <RootComponent type="1" schemaName="qm_tylegislationsource" behavior="0" />
       <RootComponent type="1" schemaName="qm_tylegislationtype" behavior="0" />
       <RootComponent type="1" schemaName="qm_tyvalidationruletype" behavior="0" />
+      <RootComponent type="1" schemaName="systemuser" behavior="2" />
       <RootComponent type="1" schemaName="tc_tcfiscalperiod" behavior="0" />
       <RootComponent type="1" schemaName="tc_tcfiscalquarter" behavior="0" />
       <RootComponent type="1" schemaName="tc_tcfiscalyear" behavior="0" />
@@ -1518,7 +1519,7 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="FieldService (8.8.0.88)" />
-        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_PreferredResource" displayName="msdyn_bookableresource_msdyn_workorder_PreferredResource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="FieldService (8.8.0.88)" />
@@ -4458,7 +4459,7 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_workorderid" displayName="WO Number" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)" />
-        <Dependent type="26" schemaName="Mes ordres travail actifs" displayName="Mes ordres travail actifs" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" id="{2f1530ca-72d0-eb11-bacc-0022483c0d29}" />
+        <Dependent type="26" schemaName="Mes ordres de travail actifs de l'exercice en cours" displayName="Mes ordres de travail actifs de l'exercice en cours" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" id="{2f1530ca-72d0-eb11-bacc-0022483c0d29}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_workorderid" displayName="WO Number" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)" />
@@ -4495,6 +4496,10 @@
       <MissingDependency>
         <Required type="2" schemaName="msdyn_workorderid" displayName="WO Number" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)" />
         <Dependent type="26" schemaName="Demandes d’inspection de suivi fermées" displayName="Demandes d’inspection de suivi fermées" parentSchemaName="ovs_followuprequest" parentDisplayName="Follow Up Inspection Request" id="{4db15cf6-2713-4119-8c0c-54d67d0cda2b}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="msdyn_workorderid" displayName="WO Number" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)" />
+        <Dependent type="26" schemaName="Mes ordres de travail d'inspection de suivi attribués à un inspecteur qui ne sont pas fermés-publiés ou fermés-annulés" displayName="Mes ordres de travail d'inspection de suivi attribués à un inspecteur qui ne sont pas fermés-publiés ou fermés-annulés" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" id="{4f3d8167-eae3-eb11-bacb-0022483c5173}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_workorderid" displayName="WO Number" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)" />
@@ -6914,15 +6919,15 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="AppCommon/Contact/Contact_main_system_library.js" displayName="AppCommon/Contact/Contact_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)" />
+        <Dependent type="60" displayName="Formulaire principal du contact" parentDisplayName="Contact" id="{2c961780-b9f9-ea11-a815-000d3af3ac0d}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="61" schemaName="AppCommon/Contact/Contact_main_system_library.js" displayName="AppCommon/Contact/Contact_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)" />
         <Dependent type="60" displayName="Information" parentDisplayName="Contact" id="{894cc46a-b0cb-4ab0-8bf6-200544e46a2d}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="AppCommon/Contact/Contact_main_system_library.js" displayName="AppCommon/Contact/Contact_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)" />
         <Dependent type="60" displayName="Contact pour l'expérience interactive" parentDisplayName="Contact" id="{cc760212-3eab-4009-b5c3-ea9cf6f3e141}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="61" schemaName="AppCommon/Contact/Contact_main_system_library.js" displayName="AppCommon/Contact/Contact_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)" />
-        <Dependent type="60" displayName="Contact pour l’expérience multisession" parentDisplayName="Contact" id="{e06af4d1-2812-45c7-a9c2-9fb73fee7bec}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="AppCommon/Contact/Contact_main_system_library.js" displayName="AppCommon/Contact/Contact_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)" />

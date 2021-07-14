@@ -12,12 +12,14 @@ var Contact_QC_TC= (function (window, document) {
 
             // Set Account as Required field.
             glHelper.SetRequiredLevel(formContext, "parentcustomerid", true);
-
+            
             if (window.top.QuickCreateHelper != null && window.top.QuickCreateHelper != undefined
                 && window.top.QuickCreateHelper.site != null && window.top.QuickCreateHelper != undefined) {
 
-                glHelper.SetLookup(formContext, "parentcustomerid", window.top.QuickCreateHelper.site.et, window.top.QuickCreateHelper.site.id, window.top.QuickCreateHelper.site.name);
-                glHelper.SetDisabled(formContext, "parentcustomerid", true);
+                try {
+                    glHelper.SetLookup(formContext, "parentcustomerid", window.top.QuickCreateHelper.site.et, window.top.QuickCreateHelper.site.id, window.top.QuickCreateHelper.site.name);
+                    glHelper.SetDisabled(formContext, "parentcustomerid", true);
+                } catch {}
             }
         },
     }
