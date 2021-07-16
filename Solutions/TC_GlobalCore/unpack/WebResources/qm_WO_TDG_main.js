@@ -300,13 +300,14 @@ var WO_TDG_main = (function (window, document) {
                 else {
                     switch (appName)
                     {
-
-
+                        case "TDG Planner":
+                            editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
+                            break;
                         case "TDG Management":
                             if (isPlanned)
                             {
-                                readOnlyArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
-                                editableArray = new Array();
+                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
+                                editableArray = new Array("qm_remote");
                             }
                             else
                             {
@@ -316,7 +317,8 @@ var WO_TDG_main = (function (window, document) {
                         case "TDG Inspections":
                             if (isPlanned && formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED)
                             {
-                                readOnlyArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
+                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
+                                editableArray = new Array("qm_remote");
                                 //msdyn_systemstatus - filter OptionSet (exclude Closed - Cancelled)
                                 var options = new Array(); options[0] = 690970005;
                                 glHelper.filterOptionSet(formContext, "msdyn_systemstatus", options, false);
@@ -332,6 +334,8 @@ var WO_TDG_main = (function (window, document) {
 
                             break;
                         default:
+                            readOnlyArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
+                            break;
                     }
 
                 }
