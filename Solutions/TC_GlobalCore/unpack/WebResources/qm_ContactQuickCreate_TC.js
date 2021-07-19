@@ -11,6 +11,12 @@ var Contact_QC_TC= (function (window, document) {
             var formContext = executionContext.getFormContext();
 
             // Set Account as Required field.
+            glHelper.SetRequiredLevel(formContext, "firstname", true);
+            glHelper.SetRequiredLevel(formContext, "lastname", true);
+            glHelper.SetRequiredLevel(formContext, "parentcustomerid", true);
+            glHelper.SetRequiredLevel(formContext, "emailaddress1", true);
+            glHelper.SetRequiredLevel(formContext, "jobtitle", true);
+            glHelper.SetRequiredLevel(formContext, "telephone1", true);
             glHelper.SetRequiredLevel(formContext, "parentcustomerid", true);
             
             if (window.top.QuickCreateHelper != null && window.top.QuickCreateHelper != undefined
