@@ -258,7 +258,7 @@ var WO_TDG_main = (function (window, document) {
             var formContext = executionContext.getFormContext();
             //get current rational
             var rational = glHelper.GetLookupName(formContext, "ovs_rational");
-            var isPlanned = rational == "Planned";
+            var isPlanned = (rational == "Planned" || rational == "Planifié") ;
 
             //set fields based on app
             globalContext.getCurrentAppName().then(function (appName) {
