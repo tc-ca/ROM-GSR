@@ -340,19 +340,21 @@ function manageNoticeOfDirectionNotToImport(formContext, status, subStatus) {
             true);
     }
 
+    let isClosedDuplicated = (subStatus === ActionSubStatus.CloseDuplicate);
+
     //Set Section Visibility
     glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.NotToImport, true);
     glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.DGMOCDetails, true);
 
     // Set Control Visibility
     glHelper.SetControlVisibility(formContext, FIELD_MOC_DESCRIPTION, true);
-    glHelper.SetRequiredLevel(formContext, FIELD_MOC_DESCRIPTION, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_MOC_DESCRIPTION, !isClosedDuplicated);
 
     glHelper.SetControlVisibility(formContext, FIELD_DG_DESCRIPTION, true);
-    glHelper.SetRequiredLevel(formContext, FIELD_DG_DESCRIPTION, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_DG_DESCRIPTION, !isClosedDuplicated);
 
     glHelper.SetControlVisibility(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
-    glHelper.SetRequiredLevel(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_NON_COMPLIANCE_DETAILS, !isClosedDuplicated);
 
 
     if (subStatus === ActionSubStatus.ConfirmationReceivedLate || subStatus === ActionSubStatus.ConfirmationReceivedOnTime) {
@@ -412,24 +414,26 @@ function manageNoticeToRemedyForm(formContext, status, subStatus)
             true);
     }
 
+    let isClosedDuplicated = (subStatus === ActionSubStatus.CloseDuplicate);
+
     //Set Section Visibility
     glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.NoticeToRemedy, true);
 
     //Set mandatory fields
     glHelper.SetControlVisibility(formContext, FIELD_DIRECTION, true);
-    glHelper.SetRequiredLevel(formContext, FIELD_DIRECTION, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_DIRECTION, !isClosedDuplicated);
 
     glHelper.SetControlVisibility(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
-    glHelper.SetRequiredLevel(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_NON_COMPLIANCE_DETAILS, !isClosedDuplicated);
 
     glHelper.SetRequiredLevel(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
-    glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, !isClosedDuplicated);
 
     glHelper.SetControlVisibility(formContext, FIELD_DESIGNATED_PERSON_NAME, true);
     glHelper.SetControlVisibility(formContext, FIELD_DESIGNATED_PERSON_TITLE, true);
 
-    glHelper.SetRequiredLevel(formContext, FIELD_DESIGNATED_PERSON_NAME, true);
-    glHelper.SetRequiredLevel(formContext, FIELD_DESIGNATED_PERSON_TITLE, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_DESIGNATED_PERSON_NAME, !isClosedDuplicated);
+    glHelper.SetRequiredLevel(formContext, FIELD_DESIGNATED_PERSON_TITLE, !isClosedDuplicated);
 
 
     if (status == StateCodes.Draft)
@@ -452,12 +456,15 @@ function manageNoticeToRemedyForm(formContext, status, subStatus)
         glHelper.SetDisabled(formContext, FIELD_RELEASE_DATE, false);
         glHelper.SetDisabled(formContext, FIELD_DIRECTION, true);
 
-        glHelper.SetRequiredLevel(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
-        glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_REVOCATION_JUSTIFICATION, !isClosedDuplicated);
+        glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, !isClosedDuplicated);
 
         if (subStatus === ActionSubStatus.CloseDuplicate) {
             glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
             glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
+            glHelper.SetRequiredLevel(formContext, FIELD_DESIGNATED_PERSON_NAME, false);
+            glHelper.SetRequiredLevel(formContext, FIELD_DESIGNATED_PERSON_TITLE, false);
+            glHelper.SetControlVisibility(formContext, FIELD_RELEASE_DATE, false);
         }
     }
     else
@@ -487,26 +494,28 @@ function manageDetentionNoticeForm(formContext, status, subStatus)
             true);
     }
 
+    let isClosedDuplicated = (subStatus === ActionSubStatus.CloseDuplicate);
+
     glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.DetentionNotice, true);
     glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.DGMOCDetails, true);
 
     glHelper.SetControlVisibility(formContext, FIELD_REASON_HOTI, true);
-    glHelper.SetRequiredLevel(formContext, FIELD_REASON_HOTI, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_REASON_HOTI, !isClosedDuplicated);
 
     glHelper.SetControlVisibility(formContext, FIELD_REASON_MOC, true);
-    glHelper.SetRequiredLevel(formContext, FIELD_REASON_MOC, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_REASON_MOC, !isClosedDuplicated);
 
     glHelper.SetControlVisibility(formContext, FIELD_MOC_DESCRIPTION, true);
-    glHelper.SetRequiredLevel(formContext, FIELD_MOC_DESCRIPTION, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_MOC_DESCRIPTION, !isClosedDuplicated);
 
     glHelper.SetControlVisibility(formContext, FIELD_DG_DESCRIPTION, true);
-    glHelper.SetRequiredLevel(formContext, FIELD_DG_DESCRIPTION, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_DG_DESCRIPTION, !isClosedDuplicated);
 
     glHelper.SetRequiredLevel(formContext, FIELD_DG_PDF_TEXT_EN, false);
     glHelper.SetRequiredLevel(formContext, FIELD_DG_PDF_TEXT_FR, false);
 
     glHelper.SetControlVisibility(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
-    glHelper.SetRequiredLevel(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_NON_COMPLIANCE_DETAILS, !isClosedDuplicated);
 
     if (subStatus === ActionSubStatus.Unresolved || subStatus === ActionSubStatus.Escalated) {
         glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
@@ -573,10 +582,12 @@ function manageDirectionIssuedUnderSubsection19Form(formContext, status, subStat
         glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Closed, ActionSubStatus.CloseDuplicate], true);
     }
 
+    let isClosedDuplicated = (subStatus === ActionSubStatus.CloseDuplicate);
+
     glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.Intervention, true);
 
     glHelper.SetControlVisibility(formContext, FIELD_INTERVENTION_SUMMARY, true);
-    glHelper.SetRequiredLevel(formContext, FIELD_INTERVENTION_SUMMARY, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_INTERVENTION_SUMMARY, !isClosedDuplicated);
 
     if (subStatus === ActionSubStatus.CloseDuplicate) {
         glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
@@ -595,13 +606,15 @@ function manageTicketForm(formContext, status, subStatus) {
         glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Closed, ActionSubStatus.CloseDuplicate], true);
     }
 
+    let isClosedDuplicated = (subStatus === ActionSubStatus.CloseDuplicate);
+
     glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.Ticket, true);
 
     glHelper.SetControlVisibility(formContext, FIELD_TICKET_ID, true);
-    glHelper.SetRequiredLevel(formContext, FIELD_TICKET_ID, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_TICKET_ID, !isClosedDuplicated);
 
     glHelper.SetControlVisibility(formContext, FIELD_FINE, true);
-    glHelper.SetRequiredLevel(formContext, FIELD_FINE, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_FINE, !isClosedDuplicated);
 
     if (subStatus === ActionSubStatus.CloseDuplicate) {
         glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
@@ -613,8 +626,10 @@ function manageNoticeOfInfractionForm(formContext, status, subStatus) {
     // Set Status options
     glHelper.filterOptionSet(formContext, STATUS_CODE, [StateCodes.Canceled, StateCodes.Active], false);
 
+    let isClosedDuplicated = (subStatus === ActionSubStatus.CloseDuplicate);
+
     glHelper.SetControlVisibility(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
-    glHelper.SetRequiredLevel(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_NON_COMPLIANCE_DETAILS, !isClosedDuplicated);
 
     //Set Substatus options
     if (status === StateCodes.Draft) {

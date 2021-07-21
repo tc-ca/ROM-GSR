@@ -351,10 +351,96 @@ var IReportRibbon = (function (window, document) {
 
     }
 
+    function cloneInspectionReport(selectedItems, LCID, gridControl) {
+
+        var globalContext = Xrm.Utility.getGlobalContext();
+        var clientUrl = globalContext.getClientUrl();
+
+        if (LCID == 1033)
+            resexResourceName = "ovs_Labels.1033.resx";
+        else if (LCID == 1036)
+            resexResourceName = "ovs_Labels.1036.resx";
+
+        var promptMessage = Xrm.Utility.getResourceString(resexResourceName, "tdgReport.Clone.PromptMessage");
+        var successMessage = Xrm.Utility.getResourceString(resexResourceName, "tdgReport.Clone.SuccessMessage");
+        //prompt
+        var confirmStrings = { text: promptMessage, title: "Clone/Cloner" };
+        var confirmOptions = { height: 200, width: 450 };
+        Xrm.Navigation.openConfirmDialog(confirmStrings, confirmOptions).then(
+            function (success) {
+                if (success.confirmed) {
+
+                    //get Report then clone with draft status:
+
+                    var req = new XMLHttpRequest();
+                    req.open("GET", clientUrl + "/api/data/v9.1/ovs_tdginspectionreports(" + selectedItems[0] + ")?$select=ovs_generalcomments,ovs_reportlanguage,_ovs_workorderid_value", false);
+                    req.setRequestHeader("OData-MaxVersion", "4.0");
+                    req.setRequestHeader("OData-Version", "4.0");
+                    req.setRequestHeader("Accept", "application/json");
+                    req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+                    req.setRequestHeader("Prefer", "odata.include-annotations=\"*\"");
+                    req.onreadystatechange = function () {
+                        if (this.readyState === 4) {
+                            req.onreadystatechange = null;
+                            if (this.status === 200) {
+                                var result = JSON.parse(this.response);
+
+
+                                var entity = {};
+                                entity.ovs_generalcomments = result["ovs_generalcomments"];
+                                entity.ovs_reportlanguage = result["ovs_reportlanguage"];
+                                entity["ovs_WorkOrderId@odata.bind"] = "/msdyn_workorders(" + result["_ovs_workorderid_value"] + ")";
+                                entity.statuscode = 918640000;
+
+                                var reqCreate = new XMLHttpRequest();
+                                reqCreate.open("POST", clientUrl + "/api/data/v9.1/ovs_tdginspectionreports", false);
+                                reqCreate.setRequestHeader("OData-MaxVersion", "4.0");
+                                reqCreate.setRequestHeader("OData-Version", "4.0");
+                                reqCreate.setRequestHeader("Accept", "application/json");
+                                reqCreate.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+                                reqCreate.onreadystatechange = function () {
+                                    if (this.readyState === 4) {
+                                        reqCreate.onreadystatechange = null;
+                                        if (this.status === 204) {
+                                            var uri = this.getResponseHeader("OData-EntityId");
+                                            var regExp = /\(([^)]+)\)/;
+                                            var matches = regExp.exec(uri);
+                                            var newEntityId = matches[1];
+
+                                            gridControl.refresh();
+                                            Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: successMessage });
+
+                                        } else {
+                                            Xrm.Navigation.openErrorDialog({ message: this.statusText });
+                                        }
+                                    }
+                                };
+                                reqCreate.send(JSON.stringify(entity));
+
+                                //    var ovs_generalcomments = result["ovs_generalcomments"];
+                                //    var ovs_reportlanguage = result["ovs_reportlanguage"];
+                                //    var ovs_reportlanguage_formatted = result["ovs_reportlanguage@OData.Community.Display.V1.FormattedValue"];
+                                //    var _ovs_workorderid_value = result["_ovs_workorderid_value"];
+                                //    var _ovs_workorderid_value_formatted = result["_ovs_workorderid_value@OData.Community.Display.V1.FormattedValue"];
+                                //    var _ovs_workorderid_value_lookuplogicalname = result["_ovs_workorderid_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                            } else {
+                                Xrm.Navigation.openErrorDialog({ message: this.statusText });
+                            }
+                        }
+                    };
+                    req.send();
+
+                }
+                else return;
+            }
+        );
+    }
+
     return {
 
         startInspectionReport: startInspectionReport,
         updateInspectionReport: updateInspectionReport,
+        cloneInspectionReport: cloneInspectionReport,
     };
 
 })(window, document);

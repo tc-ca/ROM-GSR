@@ -9,6 +9,7 @@ var WO_TDG_main = (function (window, document) {
     var formType;
     var userSettings;
     var LCID;
+    var clientUrl;
     var resexResourceName;
     var globalObj = window.top.QuickCreateHelper;
 
@@ -60,11 +61,14 @@ var WO_TDG_main = (function (window, document) {
 
         OnLoad: function (executionContext) {
 
+            var globalContext = Xrm.Utility.getGlobalContext();
+
             var formContext = executionContext.getFormContext();
             globalObj.formContext = formContext;
+            clientUrl = globalContext.getClientUrl();
 
             getQuickFormAttributeValue(executionContext, "service_account_details", "primarycontactid");
-            userSettings = Xrm.Utility.getGlobalContext().userSettings;
+            userSettings = globalContext.userSettings;
 
             // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
             formType = glHelper.GetFormType(formContext);
@@ -130,31 +134,6 @@ var WO_TDG_main = (function (window, document) {
                 postInspectionTab.removeTabStateChange(WO_TDG_main.OnPostInspection_StateChange);
                 postInspectionTab.addTabStateChange(WO_TDG_main.OnPostInspection_StateChange);
             }
-
-            var globalContext = Xrm.Utility.getGlobalContext();
-
-            globalContext.getCurrentAppName().then(function (appName)
-            {
-                //Readonly for "Change Log" Fields.
-                if (appName == "TDG Analytics" || appName == "TDG Inspections" || appName == "TDG Management")
-                {
-                    glHelper.SetDisabled(formContext, "msdyn_closedby", true);
-                    glHelper.SetDisabled(formContext, "msdyn_timeclosed", true);
-                }
-
-                //Readonly for "QC Review" Fields.
-                if (appName == "TDG Analytics" || appName == "TDG Inspections")
-                {
-                    glHelper.SetDisabled(formContext, "ovs_qcreviewcompletedind", true);
-                    glHelper.SetDisabled(formContext, "ovs_qcreviewcomments", true);
-                }
-
-            }, function (error)
-            {
-
-                console.log("Get current app name error: " + error.message);
-                Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Fetch current app name failed. Error :" + error.message });
-            });
             
             // Set Oversight Activity field as Mandatory
             glHelper.SetRequiredLevel(formContext, "ovs_oversighttype", true);
@@ -258,7 +237,12 @@ var WO_TDG_main = (function (window, document) {
             var formContext = executionContext.getFormContext();
             //get current rational
             var rational = glHelper.GetLookupName(formContext, "ovs_rational");
-            var isPlanned = (rational == "Planned" || rational == "Planifié") ;
+            var isPlanned = (rational == "Planned" || rational == "Planifié");
+
+            var isPlanner = false;
+            var isManager = false;
+            var isInspector = false;
+            var isAnalytic = false;
 
             //set fields based on app
             globalContext.getCurrentAppName().then(function (appName) {
@@ -266,14 +250,18 @@ var WO_TDG_main = (function (window, document) {
                 var readOnlyArray = new Array();
                 var editableArray = new Array();
                 var hiddenArray = new Array()
+                isPlanner = appName.indexOf("Planner")!= -1;
+                isManager = appName.indexOf("Management ") != -1;
+                isInspector = appName.indexOf("Inspections") != -1;
+                isAnalytic = appName.indexOf("Analytics") != -1;
 
-                if (appName == "TDG Analytics" || appName == "TDG Planner") return;
+                if (isAnalytic || isPlanner) return;
 
                 if (formType == 1) {
                     //set Rational to default "Unplanned" for Manager or Inspector  and lock readonly!
 
                     //get rational "ovs_rational" , check it it has french option
-                    if (appName == "TDG Management" || appName == "TDG Inspections") {
+                    if (isManager || isInspector) {
 
                         Xrm.WebApi.online.retrieveMultipleRecords("ovs_tyrational", "?$select=ovs_name,ovs_rationalelbl,ovs_rationalflbl,ovs_tyrationalid&$filter=startswith(ovs_name,'Unplanned')").then(
                             function success(results) {
@@ -287,7 +275,8 @@ var WO_TDG_main = (function (window, document) {
                                 if (userSettings.languageId == 1033)
                                     glHelper.SetLookup(formContext, "ovs_rational", "ovs_tyrational", ovs_tyrationalid, ovs_rationalelbl);
 
-                                glHelper.SetDisabled(formContext, "ovs_rational", true);
+                                readOnlyArray = new Array( "ovs_rational", "msdyn_closedby", "msdyn_timeclosed", "ovs_qcreviewcomments", "ovs_qcreviewcompletedind");
+
                             },
                             function (error) {
                                 console.log("Fetch rational Unplanned failed. error: " + error.message);
@@ -300,13 +289,13 @@ var WO_TDG_main = (function (window, document) {
                 else {
                     switch (appName)
                     {
-                        case "TDG Planner":
+                        case "TDG Planner / Planificateur TMD":
                             editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
                             break;
-                        case "TDG Management":
+                        case "TDG Management / Gestion TMD":
                             if (isPlanned)
                             {
-                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
+                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory", "msdyn_closedby", "msdyn_timeclosed");
                                 editableArray = new Array("qm_remote");
                             }
                             else
@@ -314,23 +303,25 @@ var WO_TDG_main = (function (window, document) {
                                 editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
                             }
                             break;
-                        case "TDG Inspections":
+                        case "TDG Inspections / Inspections TMD":
                             if (isPlanned && formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED)
                             {
-                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
-                                editableArray = new Array("qm_remote");
-                                //msdyn_systemstatus - filter OptionSet (exclude Closed - Cancelled)
-                                var options = new Array(); options[0] = 690970005;
-                                glHelper.filterOptionSet(formContext, "msdyn_systemstatus", options, false);
+                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory", "msdyn_closedby", "msdyn_timeclosed", "ovs_qcreviewcomments", "ovs_qcreviewcompletedind");
+                                editableArray = new Array("qm_remote");                               
                             }
                             else
                             {
                                 editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_workordertype", "msdyn_serviceterritory"); //"ovs_rational" - cannot set editable => will set all fields editable
-                                //msdyn_systemstatus - remove filter OptionSet (exclude Closed - Cancelled)
-                                glHelper.filterOptionSet(formContext, "msdyn_systemstatus");
+                                
                             }
 
                             hiddenArray = new Array("msdyn_serviceterritory", "msdyn_workordertype");
+                             //msdyn_systemstatus - filter OptionSet (exclude Closed - Cancelled)
+                            if (formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
+
+                                var options = new Array(); options[0] = 690970005;
+                                glHelper.filterOptionSet(formContext, "msdyn_systemstatus", options, false);
+                            }
 
                             break;
                         default:
@@ -594,7 +585,7 @@ var WO_TDG_main = (function (window, document) {
             //check primary contact
             var site = formContext.getAttribute("msdyn_serviceaccount").getValue()[0];
             var req = new XMLHttpRequest();
-            req.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/accounts(" + site.id.replace("{", "").replace("}", "") + ")?$select=_primarycontactid_value&$expand=primarycontactid($select=telephone1,emailaddress1,fullname,lastname,jobtitle)", false);
+            req.open("GET", clientUrl + "/api/data/v9.1/accounts(" + site.id.replace("{", "").replace("}", "") + ")?$select=_primarycontactid_value&$expand=primarycontactid($select=telephone1,emailaddress1,fullname,lastname,jobtitle)", false);
             req.setRequestHeader("OData-MaxVersion", "4.0");
             req.setRequestHeader("OData-Version", "4.0");
             req.setRequestHeader("Accept", "application/json");
@@ -644,7 +635,7 @@ var WO_TDG_main = (function (window, document) {
             //check primary inspector            
             var prmInspector = formContext.getAttribute("ovs_primaryinspector").getValue()[0];
             var req = new XMLHttpRequest();
-            req.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/bookableresources(" + prmInspector.id.replace("{", "").replace("}", "") + ")?$select=ovs_registeredinspectornumberrin,ovs_badgenumber&$expand=UserId($select=address1_telephone1,domainname,internalemailaddress,fullname)", false);
+            req.open("GET", clientUrl + "/api/data/v9.1/bookableresources(" + prmInspector.id.replace("{", "").replace("}", "") + ")?$select=ovs_registeredinspectornumberrin,ovs_badgenumber&$expand=UserId($select=address1_telephone1,domainname,internalemailaddress,fullname)", false);
             req.setRequestHeader("OData-MaxVersion", "4.0");
             req.setRequestHeader("OData-Version", "4.0");
             req.setRequestHeader("Accept", "application/json");
@@ -692,7 +683,7 @@ var WO_TDG_main = (function (window, document) {
 
             //check booking
             var req = new XMLHttpRequest();
-            req.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/bookableresourcebookings?$select=starttime&$filter=starttime ne null and  _msdyn_workorder_value eq " + formContext.data.entity.getId().replace("{", "").replace("}", ""), false);
+            req.open("GET", clientUrl + "/api/data/v9.1/bookableresourcebookings?$select=starttime&$filter=starttime ne null and  _msdyn_workorder_value eq " + formContext.data.entity.getId().replace("{", "").replace("}", ""), false);
             req.setRequestHeader("OData-MaxVersion", "4.0");
             req.setRequestHeader("OData-Version", "4.0");
             req.setRequestHeader("Accept", "application/json");
