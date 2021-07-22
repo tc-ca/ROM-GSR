@@ -1,4 +1,4 @@
-﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+///<reference path="../../Utilities/GlobalHelper.js"/>
 ///<reference path="../../Utilities/questionnaireFunctions.js"/>
 var QuickCreateHelper = QuickCreateHelper || {};
 window.top.QuickCreateHelper = QuickCreateHelper;
@@ -180,7 +180,7 @@ var WO_TDG_main = (function (window, document) {
             var sActivityName = glHelper.GetLookupName(formContext, "ovs_oversighttype");
 
             //Set WO Type based on Activity Type
-            if (sActivityName == "Civil Aviation Document Review")
+            if (sActivityName == "Civil Aviation Document Review" || sActivityName =="Examen des documents de l'aviation civile")
             {
                 Xrm.WebApi.online.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=startswith(msdyn_name,'Regulatory Authorization')").then(
                     function success(results)

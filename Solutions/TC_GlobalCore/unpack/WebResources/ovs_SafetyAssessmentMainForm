@@ -101,6 +101,8 @@ function OverrideRecommendation_OnChange(executionContext)
 
 function submitSafetyAssessment(executionContext,primaryIds)
 {
+    Xrm.Page.data.entity.save();
+
     var errorNoViolations = Xrm.Utility.getResourceString(resexResourceName, "ovs_safetyassessment.Violations.Error");
     var errorSEATSaveWarning = Xrm.Utility.getResourceString(resexResourceName, "ovs_safetyassessment.Save.Warning");
     var messageSEATConfirmation = Xrm.Utility.getResourceString(resexResourceName, "ovs_safetyassessment.Save.Confirmation");
@@ -355,4 +357,46 @@ function associateAddExistingResults(relationshipName, primaryEntitySetName, rel
         }
     };
     req.send(JSON.stringify(association));
+}
+
+function DisassociateViolation(selectedControl,selectedRows)
+{
+    var formContext = selectedControl.formContext;
+
+    if (selectedRows != null)
+    {
+        for (let i = 0; i < selectedRows.length; i++)
+        {
+            var violation = {};
+            violation.qm_cysafetyassessmentid = null;
+
+            var selectedRowId = selectedRows[i];
+            var recordId = glHelper.GetCurrentRecordId(formContext).replace("{", "").replace("}","");
+
+            var req = new XMLHttpRequest();
+            req.open("DELETE", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/ovs_cysafetyassessments(" + recordId + ")/qm_cysafetyassessment_syresult(" + selectedRowId + ")/$ref", true);
+            req.setRequestHeader("Accept", "application/json");
+            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+            req.setRequestHeader("OData-MaxVersion", "4.0");
+            req.setRequestHeader("OData-Version", "4.0");
+            req.onreadystatechange = function ()
+            {
+                if (this.readyState === 4)
+                {
+                    req.onreadystatechange = null;
+                    if (this.status === 204 || this.status === 1223)
+                    {
+                        //Success - No Return Data - Do Something
+                        selectedControl.refresh();
+                    } else
+                    {
+                        Xrm.Utility.alertDialog(this.statusText);
+                    }
+                }
+            };
+            req.send();
+
+        }
+    }
+
 }

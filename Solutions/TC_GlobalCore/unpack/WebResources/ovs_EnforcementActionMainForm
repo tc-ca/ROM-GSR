@@ -356,6 +356,7 @@ function manageNoticeOfDirectionNotToImport(formContext, status, subStatus) {
     glHelper.SetControlVisibility(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
     glHelper.SetRequiredLevel(formContext, FIELD_NON_COMPLIANCE_DETAILS, !isClosedDuplicated);
 
+    glHelper.SetRequiredLevel(formContext, FIELD_ACTION_DATE, !isClosedDuplicated);
 
     if (subStatus === ActionSubStatus.ConfirmationReceivedLate || subStatus === ActionSubStatus.ConfirmationReceivedOnTime) {
         glHelper.SetControlVisibility(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
@@ -415,6 +416,8 @@ function manageNoticeToRemedyForm(formContext, status, subStatus)
     }
 
     let isClosedDuplicated = (subStatus === ActionSubStatus.CloseDuplicate);
+
+    glHelper.SetRequiredLevel(formContext, FIELD_ACTION_DATE, !isClosedDuplicated);
 
     //Set Section Visibility
     glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.NoticeToRemedy, true);
@@ -495,6 +498,7 @@ function manageDetentionNoticeForm(formContext, status, subStatus)
     }
 
     let isClosedDuplicated = (subStatus === ActionSubStatus.CloseDuplicate);
+    glHelper.SetRequiredLevel(formContext, FIELD_ACTION_DATE, !isClosedDuplicated);
 
     glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.DetentionNotice, true);
     glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.DGMOCDetails, true);
@@ -523,6 +527,7 @@ function manageDetentionNoticeForm(formContext, status, subStatus)
     } else if (subStatus === ActionSubStatus.CloseDuplicate) {
         glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
         glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
+
     } else {
       glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, false);
       glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, false);
@@ -583,6 +588,7 @@ function manageDirectionIssuedUnderSubsection19Form(formContext, status, subStat
     }
 
     let isClosedDuplicated = (subStatus === ActionSubStatus.CloseDuplicate);
+    glHelper.SetRequiredLevel(formContext, FIELD_ACTION_DATE, !isClosedDuplicated);
 
     glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.Intervention, true);
 
@@ -607,6 +613,7 @@ function manageTicketForm(formContext, status, subStatus) {
     }
 
     let isClosedDuplicated = (subStatus === ActionSubStatus.CloseDuplicate);
+    glHelper.SetRequiredLevel(formContext, FIELD_ACTION_DATE, !isClosedDuplicated);
 
     glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.Ticket, true);
 
@@ -627,6 +634,7 @@ function manageNoticeOfInfractionForm(formContext, status, subStatus) {
     glHelper.filterOptionSet(formContext, STATUS_CODE, [StateCodes.Canceled, StateCodes.Active], false);
 
     let isClosedDuplicated = (subStatus === ActionSubStatus.CloseDuplicate);
+    glHelper.SetRequiredLevel(formContext, FIELD_ACTION_DATE, !isClosedDuplicated);
 
     glHelper.SetControlVisibility(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
     glHelper.SetRequiredLevel(formContext, FIELD_NON_COMPLIANCE_DETAILS, !isClosedDuplicated);
@@ -666,6 +674,9 @@ function manageInvestigation(formContext, status, subStatus) {
             true);
     }
 
+    let isClosedDuplicated = (subStatus === ActionSubStatus.CloseDuplicate);
+    glHelper.SetRequiredLevel(formContext, FIELD_ACTION_DATE, !isClosedDuplicated);
+
     //Set Section Visibility
     glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.Investigation, true);
 
@@ -675,7 +686,7 @@ function manageInvestigation(formContext, status, subStatus) {
     glHelper.SetRequiredLevel(formContext, FIELD_CASE_REPORT_NUMBER, false);
     glHelper.SetControlVisibility(formContext, FIELD_DATE_RESOLVED, true);
     if (status === StateCodes.Closed) {
-        glHelper.SetRequiredLevel(formContext, FIELD_DATE_RESOLVED, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_DATE_RESOLVED, !isClosedDuplicated);
     } else {
         glHelper.SetRequiredLevel(formContext, FIELD_DATE_RESOLVED, false);
     }
