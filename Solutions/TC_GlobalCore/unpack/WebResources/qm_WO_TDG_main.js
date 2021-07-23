@@ -1,4 +1,4 @@
-///<reference path="../../Utilities/GlobalHelper.js"/>
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
 ///<reference path="../../Utilities/questionnaireFunctions.js"/>
 var QuickCreateHelper = QuickCreateHelper || {};
 window.top.QuickCreateHelper = QuickCreateHelper;
@@ -180,13 +180,13 @@ var WO_TDG_main = (function (window, document) {
             var sActivityName = glHelper.GetLookupName(formContext, "ovs_oversighttype");
 
             //Set WO Type based on Activity Type
-            if (sActivityName == "Civil Aviation Document Review" || sActivityName =="Examen des documents de l'aviation civile")
+            if (sActivityName == "Civil Aviation Document Review" || sActivityName == "Examen des documents de l'aviation civile" || sActivityName == "Examen documentation de l'aviation civile")
             {
-                Xrm.WebApi.online.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=startswith(msdyn_name,'Regulatory Authorization')").then(
+                Xrm.WebApi.online.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=startswith(ovs_workordertypenameenglish,'Regulatory Authorization')").then(
                     function success(results)
                     {
                         var englishName = results.entities[0]["ovs_workordertypenameenglish"];
-                        var frenchName = results.entities[0]["ovs_workordertypenameenglish"];
+                        var frenchName = results.entities[0]["ovs_workordertypenamefrench"];
                         var workOrderTypeId = results.entities[0]["msdyn_workordertypeid"];
 
                         if (userSettings.languageId == 1036)
@@ -205,11 +205,11 @@ var WO_TDG_main = (function (window, document) {
             }
             else
             {
-                Xrm.WebApi.online.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=startswith(msdyn_name,'Inspection')").then(
+                Xrm.WebApi.online.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=startswith(ovs_workordertypenameenglish,'Inspection')").then(
                     function success(results)
                     {
                         var englishName = results.entities[0]["ovs_workordertypenameenglish"];
-                        var frenchName = results.entities[0]["ovs_workordertypenameenglish"];
+                        var frenchName = results.entities[0]["ovs_workordertypenamefrench"];
                         var workOrderTypeId = results.entities[0]["msdyn_workordertypeid"];
 
                         if (userSettings.languageId == 1036)

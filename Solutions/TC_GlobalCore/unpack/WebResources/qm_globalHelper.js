@@ -479,6 +479,7 @@
             // english
             return {
                 MarkCompleteErrors: "There are errors on the Questionnaire, please fix them before Marking as Complete",
+                MarkComplete: "Mark As Complete",
                 LoadingQuestionnaire: "Loading Questionnaire...",
                 QuestionnaireSaveSuccessful: "Questionnaire Saved Successfully",
                 SavingQuestionnaire: "Saving Questionnaire...",
@@ -495,6 +496,7 @@
             // french
             return {
                 MarkCompleteErrors: "Il y a des erreurs dans le questionnaire, veuillez les corriger avant de marquer comme terminé",
+                MarkComplete: "Marquer comme terminé",
                 LoadingQuestionnaire: "Chargement du questionnaire...",
                 QuestionnaireSaveSuccessful: "Questionnaire enregistré avec succès",
                 SavingQuestionnaire: "Questionnaire de sauvegarde...",
