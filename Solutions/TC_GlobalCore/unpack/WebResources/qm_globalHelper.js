@@ -490,7 +490,8 @@
                 EnforceAction_DetentionNoticeSaveError: "At least one of the reason (HOTI or MOC) must be Yes in order to Save.",
                 ValidationInspectionReport: "Cannot generate inspection report.",
                 TitleValidationInspectionReport: "Required data is missing",
-                GeneralError: "Something went wrong. Impossible to validate report requirements."
+                GeneralError: "Something went wrong. Impossible to validate report requirements.",
+                SafetyAssessmentAlreadyCompleted: "Safety Assessment Already Completed"
             }
         } else {
             // french
@@ -507,7 +508,8 @@
                 EnforceAction_DetentionNoticeSaveError: "Au moins une des raisons (HOTI ou MOC) doit être Oui pour enregistrer.",
                 ValidationInspectionReport: "Impossible de créer un rapport d’inspection.",
                 TitleValidationInspectionReport: "Les données requises sont manquantes.",
-                GeneralError: "Quelque chose s'est mal passé. Impossible de valider les exigences du rapport."
+                GeneralError: "Quelque chose s'est mal passé. Impossible de valider les exigences du rapport.",
+                SafetyAssessmentAlreadyCompleted: "Évaluation de la sécurité déjà terminée"
             }
         }
     }   
