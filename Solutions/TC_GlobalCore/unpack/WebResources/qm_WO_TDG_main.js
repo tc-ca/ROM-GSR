@@ -275,7 +275,13 @@ var WO_TDG_main = (function (window, document) {
                                 if (userSettings.languageId == 1033)
                                     glHelper.SetLookup(formContext, "ovs_rational", "ovs_tyrational", ovs_tyrationalid, ovs_rationalelbl);
 
-                                readOnlyArray = new Array( "ovs_rational", "msdyn_closedby", "msdyn_timeclosed", "ovs_qcreviewcomments", "ovs_qcreviewcompletedind");
+                                readOnlyArray = new Array("ovs_rational", "msdyn_closedby", "msdyn_timeclosed", "ovs_qcreviewcomments", "ovs_qcreviewcompletedind", "msdyn_workordertype");
+
+                                if (readOnlyArray.length > 0)
+                                    for (var i = 0; i < readOnlyArray.length; i++) {
+                                        glHelper.SetDisabled(formContext, readOnlyArray[i], true);
+                                    }
+
 
                             },
                             function (error) {
@@ -289,33 +295,35 @@ var WO_TDG_main = (function (window, document) {
                 else {
                     switch (appName)
                     {
-                        case "TDG Planner / Planificateur TMD":
-                            editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
-                            break;
+                        //case "TDG Planner / Planificateur TMD":
+                        //    editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
+                        //    break;
                         case "TDG Management / Gestion TMD":
                             if (isPlanned)
                             {
-                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory", "msdyn_closedby", "msdyn_timeclosed");
+                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed"); //"ovs_fiscalquarter", "msdyn_serviceterritory",
                                 editableArray = new Array("qm_remote");
                             }
                             else
                             {
-                                editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
+                                readOnlyArray = new Array("msdyn_workordertype", "ovs_rational");
+                                editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_serviceterritory");
                             }
                             break;
                         case "TDG Inspections / Inspections TMD":
                             if (isPlanned && formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED)
                             {
-                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory", "msdyn_closedby", "msdyn_timeclosed", "ovs_qcreviewcomments", "ovs_qcreviewcompletedind");
+                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed", "ovs_qcreviewcomments", "ovs_qcreviewcompletedind", "ovs_primaryinspector",); //"msdyn_serviceterritory",
                                 editableArray = new Array("qm_remote");                               
                             }
                             else
                             {
-                                editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_workordertype", "msdyn_serviceterritory"); //"ovs_rational" - cannot set editable => will set all fields editable
+                                readOnlyArray = new Array( "msdyn_workordertype", "ovs_rational");
+                                editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_serviceterritory"); //"ovs_rational" - cannot set editable => will set all fields editable
                                 
                             }
 
-                            hiddenArray = new Array("msdyn_serviceterritory", "msdyn_workordertype");
+                            //hiddenArray = new Array("msdyn_serviceterritory", "msdyn_workordertype");
                              //msdyn_systemstatus - filter OptionSet (exclude Closed - Cancelled)
                             if (formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
 
@@ -325,7 +333,7 @@ var WO_TDG_main = (function (window, document) {
 
                             break;
                         default:
-                            readOnlyArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
+                    //        readOnlyArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
                             break;
                     }
 
@@ -337,7 +345,7 @@ var WO_TDG_main = (function (window, document) {
                     }
 
                 if (editableArray.length > 0)
-                    for (var i = 0; i < readOnlyArray.length; i++) {
+                    for (var i = 0; i < editableArray.length; i++) {
                         glHelper.SetDisabled(formContext, editableArray[i], false);
                     }
 
