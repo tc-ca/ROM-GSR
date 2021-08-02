@@ -1,4 +1,4 @@
-﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+///<reference path="../../Utilities/GlobalHelper.js"/>
 ///<reference path="../../Utilities/questionnaireFunctions.js"/>
 var QuickCreateHelper = QuickCreateHelper || {};
 window.top.QuickCreateHelper = QuickCreateHelper;
@@ -691,7 +691,7 @@ var WO_TDG_main = (function (window, document) {
 
             //check booking
             var req = new XMLHttpRequest();
-            req.open("GET", clientUrl + "/api/data/v9.1/bookableresourcebookings?$select=starttime&$filter=starttime ne null and  _msdyn_workorder_value eq " + formContext.data.entity.getId().replace("{", "").replace("}", ""), false);
+            req.open("GET", clientUrl + "/api/data/v9.1/bookableresourcebookings?$select=starttime&$filter=starttime ne null and statecode eq 0 and _msdyn_workorder_value eq " + formContext.data.entity.getId().replace("{", "").replace("}", ""), false);
             req.setRequestHeader("OData-MaxVersion", "4.0");
             req.setRequestHeader("OData-Version", "4.0");
             req.setRequestHeader("Accept", "application/json");
