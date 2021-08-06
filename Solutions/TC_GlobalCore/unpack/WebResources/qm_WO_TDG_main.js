@@ -1,4 +1,4 @@
-///<reference path="../../Utilities/GlobalHelper.js"/>
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
 ///<reference path="../../Utilities/questionnaireFunctions.js"/>
 var QuickCreateHelper = QuickCreateHelper || {};
 window.top.QuickCreateHelper = QuickCreateHelper;

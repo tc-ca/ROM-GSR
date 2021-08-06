@@ -1,4 +1,4 @@
-﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+///<reference path="../../Utilities/GlobalHelper.js"/>
 ///<reference path="../../Utilities/questionnaireFunctions.js"/>
 
 var AccountTDGmain = (function (window, document) {
@@ -82,10 +82,19 @@ var AccountTDGmain = (function (window, document) {
         );
 
     }
+        
+    function filter_customertypecode(formContext) {
 
+        var options = new Array("948010000","948010001");
+        glHelper.filterOptionSet(formContext, "customertypecode", options, true);
+        
+    }
+
+    //TO DO: reengineer
+    //remove the method and set fields prperties with form designer
     function hideAllActionTypeSections(formContext) {
         
-        glHelper.SetRequiredLevel(formContext, FIELD_OPERATING_NAME, false);
+        glHelper.SetRequiredLevel(formContext, FIELD_OPERATING_NAME, true);
         glHelper.SetRequiredLevel(formContext, FIELD_LEGAL_NAME, true);
 
         glHelper.SetRequiredLevel(formContext, STREET1, true);
@@ -106,9 +115,12 @@ var AccountTDGmain = (function (window, document) {
 
             var formContext = executionContext.getFormContext();
 
+            //filter Relationship Type
+            filter_customertypecode(formContext);
+
             // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
             formType = glHelper.GetFormType(formContext);
-            
+
             var rTypeCode = formContext.getAttribute("customertypecode");
             rTypeCode.removeOnChange(AccountTDGmain.relationShip_OnChange); // avoid binding multiple event handlers
             rTypeCode.addOnChange(AccountTDGmain.relationShip_OnChange);
@@ -121,7 +133,6 @@ var AccountTDGmain = (function (window, document) {
                 getViolationHistory(formContext);
             }
 
-            var formContext = executionContext.getFormContext();
             hideAllActionTypeSections(formContext);
 
             // This info needed for Contact-Quick create form i.e. Contact_QuickCreate.js
