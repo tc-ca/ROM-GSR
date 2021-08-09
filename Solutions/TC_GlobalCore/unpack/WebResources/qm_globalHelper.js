@@ -491,7 +491,9 @@
                 ValidationInspectionReport: "Cannot generate inspection report.",
                 TitleValidationInspectionReport: "Required data is missing",
                 GeneralError: "Something went wrong. Impossible to validate report requirements.",
-                SafetyAssessmentAlreadyCompleted: "Safety Assessment Already Completed"
+                SafetyAssessmentAlreadyCompleted: "Safety Assessment Already Completed",
+                RevisedQuarterRequested: "Revised Quarter Requested",
+                CancellationRequested: "Cancellation Requested"
             }
         } else {
             // french
@@ -509,7 +511,9 @@
                 ValidationInspectionReport: "Impossible de créer un rapport d’inspection.",
                 TitleValidationInspectionReport: "Les données requises sont manquantes.",
                 GeneralError: "Quelque chose s'est mal passé. Impossible de valider les exigences du rapport.",
-                SafetyAssessmentAlreadyCompleted: "Évaluation de la sécurité déjà terminée"
+                SafetyAssessmentAlreadyCompleted: "Évaluation de la sécurité déjà terminée",
+                RevisedQuarterRequested: "Demande de révision de trimestre",
+                CancellationRequested: "Annulation demandée"
             }
         }
     }   

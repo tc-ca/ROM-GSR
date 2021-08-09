@@ -110,6 +110,9 @@ var WO_TDG_main = (function (window, document) {
             activityType.removeOnChange(WO_TDG_main.ActivityType_OnChange);
             activityType.addOnChange(WO_TDG_main.ActivityType_OnChange);
 
+            //Substatus Type
+            WO_TDG_main.Update_WO_Substatus(formContext);
+            
             var primaryInspector = formContext.getAttribute("ovs_primaryinspector");
             primaryInspector.removeOnChange(WO_TDG_main.PrimaryInspector_OnChange);
             primaryInspector.addOnChange(WO_TDG_main.PrimaryInspector_OnChange);
@@ -494,6 +497,20 @@ var WO_TDG_main = (function (window, document) {
 
             var formContext = executionContext.getFormContext();
             formContext.getAttribute('ovs_fiscalquarter').setValue(null);
+        },
+
+        Update_WO_Substatus: function (formContext) {
+            var options = new Array();
+            var obj = new Object();
+            var substatus = formContext.getAttribute("msdyn_substatus");
+            
+            obj.entityType = substatus.getValue()[0].entityType;
+            obj.id = substatus.getValue()[0].id;
+            var key = substatus.getValue()[0].name.replace(/\s/g, '');
+            obj.name = glHelper.GetLocalizedStrings()[key];
+            options.push(obj);
+
+            glHelper.SetValue(formContext, "msdyn_substatus", options);
         },
 
         WO_SystemStatus_OnChange: function (executionContext) {
