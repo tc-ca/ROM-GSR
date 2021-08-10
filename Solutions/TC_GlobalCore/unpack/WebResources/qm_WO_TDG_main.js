@@ -503,14 +503,17 @@ var WO_TDG_main = (function (window, document) {
             var options = new Array();
             var obj = new Object();
             var substatus = formContext.getAttribute("msdyn_substatus");
-            
-            obj.entityType = substatus.getValue()[0].entityType;
-            obj.id = substatus.getValue()[0].id;
-            var key = substatus.getValue()[0].name.replace(/\s/g, '');
-            obj.name = glHelper.GetLocalizedStrings()[key];
-            options.push(obj);
 
-            glHelper.SetValue(formContext, "msdyn_substatus", options);
+            if (substatus.getValue() !== null) {
+                obj.entityType = substatus.getValue()[0].entityType;
+                obj.id = substatus.getValue()[0].id;
+                var key = substatus.getValue()[0].name.replace(/\s/g, '');
+                
+                obj.name = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.substatus." + key);
+                options.push(obj);
+
+                glHelper.SetValue(formContext, "msdyn_substatus", options);
+            }
         },
 
         WO_SystemStatus_OnChange: function (executionContext) {

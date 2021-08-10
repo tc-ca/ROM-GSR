@@ -6,9 +6,7 @@
     var FORMSTAGE_RO = 3;
     var FORMSTAGE_Disabled = 4;
 
-
-    //********************methods***************
-       
+    //********************methods***************       
 
     function getGlobalContext() {
         return Xrm.Utility.getGlobalContext();
@@ -79,117 +77,9 @@
         return val ? val : "";
     }
 
-    function GetLookupAttrId(formContext, attr) {
-        var lu = formContext.getAttribute(attr);
-        if (lu != null) {
-            if (lu.getValue() != null && lu.getValue().length > 0) {
-                var luValue = lu.getValue();
-                if (luValue != null) {
-                    return luValue[0].id;
-                }
-            }
-            else {
-                return null;
-            }
-        }
-        return null;
-    }
-
-    function GetLookupName(formContext, attr) {
-        var lu = formContext.getAttribute(attr);
-        if (lu != null) {
-            if (lu.getValue() != null && lu.getValue().length > 0) {
-                var luValue = lu.getValue();
-                if (luValue != null) {
-                    return luValue[0].name;
-                }
-            }
-            else {
-                return "";
-            }
-        }
-        return "";
-    }
-
-    function GetLookupEntityType(formContext, attr) {
-        var lu = formContext.getAttribute(attr);
-        if (lu != null) {
-            var luValue = lu.getValue();
-            if (luValue != null) {
-                return luValue[0].entityType;
-            }
-        }
-        return null;
-    }
-
     function SetValue(formContext, attr, val) {
         formContext.getAttribute(attr).setValue(val);
         formContext.getAttribute(attr).setSubmitMode("always");
-    }
-
-    function SetLookup(formContext, attr, entityType, id, name) {
-        var setLookupValue = new Array();
-        setLookupValue[0] = new Object();
-        setLookupValue[0].id = id;
-        setLookupValue[0].entityType = entityType;
-        if (name) setLookupValue[0].name = name;
-        formContext.getAttribute(attr).setValue(setLookupValue);
-        formContext.getAttribute(attr).setSubmitMode("always");
-    }
-
-    function SetOptionsetByText(formContext, attr, text) {
-        var options = formContext.getAttribute(attr).getOptions();
-        for (var i = 0; i < options.length; i++) {
-            if (options[i].text == text) {
-                formContext.getAttribute(attr).setValue(options[i].value);
-                formContext.getAttribute(attr).setSubmitMode("always");
-            }
-        }
-    }
-
-    function SetOptionsetByValue(formContext, attr, intValue) {
-
-        var oSet = formContext.getAttribute(attr);
-        var options = oSet.getOptions();
-        for (var i = 0; i < options.length; i++) {
-            if (options[i].value == intValue) {
-                oSet.setValue(options[i].value);
-                oSet.setSubmitMode("always");
-            }
-        }
-    }
-
-    ///to restore option set to default send arrayOfIntValues as null
-    function filterOptionSet(formContext, attr, arrayOfIntValues = null, isValuesToKeep = true) {
-        var oSet = formContext.getControl(attr);
-        if (!oSet) return;
-
-        var options = oSet.getOptions();
-        if (isValuesToKeep) {
-            var optionsToKeep = new Array();
-            for (var i = 0; i < options.length; i++) {
-
-                var toKeep = false;
-                for (var j = 0; j < arrayOfIntValues.length; j++) {
-                    if (options[i].value == arrayOfIntValues[j]) {
-                        toKeep = true;
-                        break;
-                    }
-                }
-                if (toKeep) optionsToKeep.push(options[i]);
-            }
-
-            oSet.clearOptions();
-            for (var i = 0; i < optionsToKeep.length; i++) {
-                oSet.addOption(optionsToKeep[i]);
-            }
-        }
-        else {
-            for (var i = 0; i < arrayOfIntValues.length; i++) {
-
-                oSet.removeOption(arrayOfIntValues[i]);
-            }
-        }
     }
 
     function SetRequiredLevel(formContext, attr, required) {
@@ -251,8 +141,18 @@
         }
     }
 
+    function GetCurrentRecordId(formContext) {
+
+        return formContext.data.entity.getId();
+    }
+
+    function GetCurrentRecordName(formContext) {
+        return formContext.data.entity.getPrimaryAttributeValue();
+    }
+
+
     /****************************************************************************************
-    VISIBILITY
+    VISIBILITY AND AVAILABILITY
     ****************************************************************************************/
 
     function SetControlVisibility(formContext, controlname, visible) {
@@ -276,12 +176,17 @@
             formContext.getControl(controlname).controlDescriptor.Disabled = readonly;
         }
     }
+
     function disableAllFields(formContext) {
       formContext.ui.controls.forEach(function (control, i) {
         if (control && control.getDisabled && !control.getDisabled()) {
           control.setDisabled(true);
         }
       });
+    }
+
+    function SetDisabled(formContext, attr, disabled) {
+        formContext.getControl(attr).setDisabled(disabled);
     }
 
     function SetTabDisplayState(formContext, tabname, expand) {
@@ -298,9 +203,11 @@
         if (ctrl != null) { ctrl.getParent().setVisible(visible); }
     }
 
+
     /****************************************************************************************
     CURRENT USER FUNCTIONS
     ****************************************************************************************/
+
     function GetCurrentUserSettings() {
         return getGlobalContext().userSettings;
     }
@@ -339,43 +246,10 @@
         }
     }
 
+
     /****************************************************************************************
-    MISCELLANEOUS
+    Notifications
     ****************************************************************************************/
-
-    function SetDisabled(formContext, attr, disabled) {
-        formContext.getControl(attr).setDisabled(disabled);
-    }
-
-    function RemoveOptionSetOption(formContext, attr, optionSetValue) {
-        var current = formContext.getControl(attr);
-        if (current)
-            formContext.getControl(attr).removeOption(optionSetValue);
-    }
-
-    function GetCurrentRecordId(formContext) {
-
-        return formContext.data.entity.getId();
-    }
-
-    function GetCurrentRecordName(formContext) {
-        return formContext.data.entity.getPrimaryAttributeValue();
-    }
-
-    function setNotificationWithPhoneNumberFormat(executionContext) {
-        var phoneNumber = executionContext.getEventSource();
-        if (typeof (phoneNumber) != "undefined") {
-            var formatedNumber = FormatPhoneNumber2(phoneNumber.getValue());
-            var formContext = executionContext.getFormContext();
-            var attributeName = phoneNumber.getName();
-            if (formatedNumber && formatedNumber.length >= 10)  // fix for auto adjust
-                phoneNumber.setValue(formatedNumber);
-            if (!checkPhoneNumber(formatedNumber)) {
-                formContext.getControl(attributeName).setNotification("Phone field requires 10 digit number", attributeName + "_ID");
-            }
-            else formContext.getControl(attributeName).clearNotification(attributeName + "_ID");
-        }
-    }
 
     function alertDialogText(messeageText, confirmaionText) {
         var mt = (messeageText != null && messeageText != undefined && messeageText.length > 0) ? messeageText : "A message from form";
@@ -397,126 +271,236 @@
     }
 
     /**
-   * 
-   * @param {MESSAGE TO THE USER} message 
-   * @param {TYPE OF NOTIFICATION ["INFO", "WARNING", "ERROR"]} type 
-   * @param {TIME IN MS TO CLEAR NOTIFICATION [DEFAULT 5 SECONDS]} timeout 
-   */
-  function DisplayFormNotification(message, type, timeout=3000) {
-    //UNIQUE ID FOR THIS NOTIFICATION. 
-    //ID IS USED TO LATER CLOSE THIS SPECIFIC NOTIFICATION
-    var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-    var id = randLetter + Date.now();
+        * 
+        * @param {MESSAGE TO THE USER} message 
+        * @param {TYPE OF NOTIFICATION ["INFO", "WARNING", "ERROR"]} type 
+        * @param {TIME IN MS TO CLEAR NOTIFICATION [DEFAULT 5 SECONDS]} timeout 
+    */
+    function DisplayFormNotification(message, type, timeout = 3000) {
+        //UNIQUE ID FOR THIS NOTIFICATION. 
+        //ID IS USED TO LATER CLOSE THIS SPECIFIC NOTIFICATION
+        var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+        var id = randLetter + Date.now();
 
-    //DISPLAY THE NOTIFICATION
-    Xrm.Page.ui.setFormNotification(message, type, id);
+        //DISPLAY THE NOTIFICATION
+        Xrm.Page.ui.setFormNotification(message, type, id);
 
-    //WAIT, AND CLEAR
-    setTimeout(
-        function () {
-            Xrm.Page.ui.clearFormNotification(id);
-        },
-        timeout
-    );
-  }
+        //WAIT, AND CLEAR
+        setTimeout(
+            function () {
+                Xrm.Page.ui.clearFormNotification(id);
+            },
+            timeout
+        );
+    }
 
-
-
-  /**
-   * 
-   * @param {MESSAGE TO THE USER} message 
-   * @param {TYPE OF NOTIFICATION [1: SUCCESS, 2: ERROR, 3: WARNING, 4: INFORMATION ]} type 
-   * @param {TIME IN MS TO CLEAR NOTIFICATION [DEFAULT 5 SECONDS]} timeout 
-   * @param {ACTION FUNCTION TO PERFORM WHEN NOTIFICATION CLICKED 
-   * var myAction = 
-   * {
-   *    actionLabel: "Click here to Submit", 
-   *    eventHandler: function () {
-   *      Xrm.Navigation.openUrl("https://soundharyasubhash.wordpress.com");
-   *      // perform other operations as required on clicking
-   *    }
-   * }
-   *} action
-  */
-  function DisplayGlobalNotification(message, type, timeout=3000, action=null){
-      // DEFINE NOTIFICATION OBJECT
-      var notification = 
-      {
-        type: 2,
-        level: type, // Information
-        message: message
-      }
-
-      //ADD ACTION IF DEFINED
-      if (!action) notification.action = action;
-
-      //SHOW GLOBAL NOTIFICATION
-      Xrm.App.addGlobalNotification(notification).then(
-
-        function success(result) {
-          console.log("Notification created with ID: " + result);
-
-          // Wait for 5 seconds and then clear the notification
-          window.setTimeout(function () { 
-            Xrm.App.clearGlobalNotification(result); 
-          }, timeout);
-
-        },
-
-        function (error) {
-          console.log(error.message);
-          // handle error conditions
+    /**
+       * 
+       * @param {MESSAGE TO THE USER} message 
+       * @param {TYPE OF NOTIFICATION [1: SUCCESS, 2: ERROR, 3: WARNING, 4: INFORMATION ]} type 
+       * @param {TIME IN MS TO CLEAR NOTIFICATION [DEFAULT 5 SECONDS]} timeout 
+       * @param {ACTION FUNCTION TO PERFORM WHEN NOTIFICATION CLICKED 
+       * var myAction = 
+       * {
+       *    actionLabel: "Click here to Submit", 
+       *    eventHandler: function () {
+       *      Xrm.Navigation.openUrl("https://soundharyasubhash.wordpress.com");
+       *      // perform other operations as required on clicking
+       *    }
+       * }
+       *} action
+    */
+    function DisplayGlobalNotification(message, type, timeout = 3000, action = null) {
+        // DEFINE NOTIFICATION OBJECT
+        var notification =
+        {
+            type: 2,
+            level: type, // Information
+            message: message
         }
-    );
-  }
 
-    function GetLocalizedStrings() {
-        // TODO Replace with resx Web Resource
+        //ADD ACTION IF DEFINED
+        if (!action) notification.action = action;
 
-        let lang = GetCurrentUserLanguage();
+        //SHOW GLOBAL NOTIFICATION
+        Xrm.App.addGlobalNotification(notification).then(
 
-        if (lang === "en") {
-            // english
-            return {
-                MarkCompleteErrors: "There are errors on the Questionnaire, please fix them before Marking as Complete",
-                MarkComplete: "Mark As Complete",
-                LoadingQuestionnaire: "Loading Questionnaire...",
-                QuestionnaireSaveSuccessful: "Questionnaire Saved Successfully",
-                SavingQuestionnaire: "Saving Questionnaire...",
-                SavingQuestionnaireCompletionStatus: "Saving Questionnaire Completion Status...",
-                TaskTypeChange: "If Task Type is changed, Questionnaire progress will be lost. Proceed?",
-                ConfirmationDiaglog: "Confirmation Dialog",
-                NoQuestionnaireForTaskType: "No questionnaire associated with service task type {0}. Please open the Service Task Type and associate a valid Questionnaire Template",
-                EnforceAction_DetentionNoticeSaveError: "At least one of the reason (HOTI or MOC) must be Yes in order to Save.",
-                ValidationInspectionReport: "Cannot generate inspection report.",
-                TitleValidationInspectionReport: "Required data is missing",
-                GeneralError: "Something went wrong. Impossible to validate report requirements.",
-                SafetyAssessmentAlreadyCompleted: "Safety Assessment Already Completed",
-                RevisedQuarterRequested: "Revised Quarter Requested",
-                CancellationRequested: "Cancellation Requested"
+            function success(result) {
+                console.log("Notification created with ID: " + result);
+
+                // Wait for 5 seconds and then clear the notification
+                window.setTimeout(function () {
+                    Xrm.App.clearGlobalNotification(result);
+                }, timeout);
+
+            },
+
+            function (error) {
+                console.log(error.message);
+                // handle error conditions
             }
-        } else {
-            // french
-            return {
-                MarkCompleteErrors: "Il y a des erreurs dans le questionnaire, veuillez les corriger avant de marquer comme terminé",
-                MarkComplete: "Marquer comme terminé",
-                LoadingQuestionnaire: "Chargement du questionnaire...",
-                QuestionnaireSaveSuccessful: "Questionnaire enregistré avec succès",
-                SavingQuestionnaire: "Questionnaire de sauvegarde...",
-                SavingQuestionnaireCompletionStatus: "Enregistrement de l'état d'achèvement du questionnaire...",
-                TaskTypeChange: "Si le type de tâche est modifié, la progression du questionnaire sera perdue. Procéder?",
-                ConfirmationDiaglog: "Boîte de dialogue de confirmation",
-                NoQuestionnaireForTaskType: "Aucun questionnaire associé au type de tâche de service {0}. Veuillez ouvrir le type de tâche de service et associer un modèle de questionnaire valide",
-                EnforceAction_DetentionNoticeSaveError: "Au moins une des raisons (HOTI ou MOC) doit être Oui pour enregistrer.",
-                ValidationInspectionReport: "Impossible de créer un rapport d’inspection.",
-                TitleValidationInspectionReport: "Les données requises sont manquantes.",
-                GeneralError: "Quelque chose s'est mal passé. Impossible de valider les exigences du rapport.",
-                SafetyAssessmentAlreadyCompleted: "Évaluation de la sécurité déjà terminée",
-                RevisedQuarterRequested: "Demande de révision de trimestre",
-                CancellationRequested: "Annulation demandée"
+        );
+    }
+
+    /****************************************************************************************
+   LOOKUPS
+   ****************************************************************************************/
+
+    function GetLookupAttrId(formContext, attr) {
+        var lu = formContext.getAttribute(attr);
+        if (lu != null) {
+            if (lu.getValue() != null && lu.getValue().length > 0) {
+                var luValue = lu.getValue();
+                if (luValue != null) {
+                    return luValue[0].id;
+                }
+            }
+            else {
+                return null;
             }
         }
-    }   
+        return null;
+    }
+
+    function GetLookupName(formContext, attr) {
+        var lu = formContext.getAttribute(attr);
+        if (lu != null) {
+            if (lu.getValue() != null && lu.getValue().length > 0) {
+                var luValue = lu.getValue();
+                if (luValue != null) {
+                    return luValue[0].name;
+                }
+            }
+            else {
+                return "";
+            }
+        }
+        return "";
+    }
+
+    function GetLookupEntityType(formContext, attr) {
+        var lu = formContext.getAttribute(attr);
+        if (lu != null) {
+            var luValue = lu.getValue();
+            if (luValue != null) {
+                return luValue[0].entityType;
+            }
+        }
+        return null;
+    }
+
+    function SetLookup(formContext, attr, entityType, id, name) {
+        var setLookupValue = new Array();
+        setLookupValue[0] = new Object();
+        setLookupValue[0].id = id;
+        setLookupValue[0].entityType = entityType;
+        if (name) setLookupValue[0].name = name;
+        formContext.getAttribute(attr).setValue(setLookupValue);
+        formContext.getAttribute(attr).setSubmitMode("always");
+    }
+
+
+    /****************************************************************************************
+    CHOICE
+    ****************************************************************************************/
+
+    function RemoveOptionSetOption(formContext, attr, optionSetValue) {
+        var current = formContext.getControl(attr);
+        if (current)
+            formContext.getControl(attr).removeOption(optionSetValue);
+    }
+
+    function SetOptionsetByText(formContext, attr, text) {
+        var options = formContext.getAttribute(attr).getOptions();
+        for (var i = 0; i < options.length; i++) {
+            if (options[i].text == text) {
+                formContext.getAttribute(attr).setValue(options[i].value);
+                formContext.getAttribute(attr).setSubmitMode("always");
+            }
+        }
+    }
+
+    function SetOptionsetByValue(formContext, attr, intValue) {
+
+        var oSet = formContext.getAttribute(attr);
+        var options = oSet.getOptions();
+        for (var i = 0; i < options.length; i++) {
+            if (options[i].value == intValue) {
+                oSet.setValue(options[i].value);
+                oSet.setSubmitMode("always");
+            }
+        }
+    }
+
+    ///to restore option set to default send arrayOfIntValues as null
+    function filterOptionSet(formContext, attr, arrayOfIntValues = null, isValuesToKeep = true) {
+        var oSet = formContext.getControl(attr);
+        if (!oSet) return;
+
+        var options = oSet.getOptions();
+        if (isValuesToKeep) {
+            var optionsToKeep = new Array();
+            for (var i = 0; i < options.length; i++) {
+
+                var toKeep = false;
+                for (var j = 0; j < arrayOfIntValues.length; j++) {
+                    if (options[i].value == arrayOfIntValues[j]) {
+                        toKeep = true;
+                        break;
+                    }
+                }
+                if (toKeep) optionsToKeep.push(options[i]);
+            }
+
+            oSet.clearOptions();
+            for (var i = 0; i < optionsToKeep.length; i++) {
+                oSet.addOption(optionsToKeep[i]);
+            }
+        }
+        else {
+            for (var i = 0; i < arrayOfIntValues.length; i++) {
+
+                oSet.removeOption(arrayOfIntValues[i]);
+            }
+        }
+    }
+
+
+    /****************************************************************************************
+    MISCELLANEOUS
+    ****************************************************************************************/
+
+    function quarterByDate(formContext, attrDateName) {
+
+        var quarter = 0;
+
+        var selectedDate = GetValue(formContext, attrDateName);
+        var date = new Date(selectedDate);
+        var month = date.getMonth().toString();
+
+        switch (month) {
+
+            case "0":
+            case "1":
+            case "2":
+                quarter = "Q1"; break;
+            case "3":
+            case "4":
+            case "5":
+                quarter = "Q2"; break;
+            case "6":
+            case "7":
+            case "8":
+                quarter = "Q3"; break;
+            case "9":
+            case "10":
+            case "11":
+                quarter = "Q4"; break;
+
+        }
+        return quarter;
+    }
+
 
     //Public  properties and methods
     return {
@@ -556,7 +540,6 @@
       GetCurrentUserName: GetCurrentUserName,
       GetCurrentRecordId: GetCurrentRecordId,
       GetCurrentUserLanguage: GetCurrentUserLanguage,
-      GetLocalizedStrings: GetLocalizedStrings,
       GetCurrentUserRoles: GetCurrentUserRoles,
       GetCurrentUserSettings: GetCurrentUserSettings,
       isCurrentUserSystemAdministrator: isCurrentUserSystemAdministrator,
