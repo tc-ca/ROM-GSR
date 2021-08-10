@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" ?><xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"><xsl:output method="text" indent="no"/><xsl:template match="/data"><![CDATA[<div data-wrapper="true" style="font-size:9pt;font-family:'Segoe UI','Helvetica Neue',sans-serif;"><span style="font-size:11pt"><span style="line-height:107%"><span style="font-family:Calibri,sans-serif"><span lang="FR-CA" style="line-height:107%"><span style="font-family:&quot;Arial&quot;,sans-serif">Bonjour,</span></span></span></span></span><br>
+&nbsp;</div>
+
+<div data-wrapper="true" style="font-size:9pt;font-family:'Segoe UI','Helvetica Neue',sans-serif;"><span style="font-size:11pt"><span style="line-height:107%"><span style="font-family:Calibri,sans-serif"><span lang="FR-CA" style="line-height:107%"><span style="font-family:&quot;Arial&quot;,sans-serif">Veuillez trouver ci-joint un [<a><i><span style="background:yellow">Insérer le nom de l’outil d’application de la loi</span></i></a></span></span><span lang="FR-CA" style="line-height:107%"><span style="font-family:&quot;Arial&quot;,sans-serif">] émis à [<a><i><span style="background:yellow">Insérer le nom de la compagnie</span></i></a></span></span><span lang="FR-CA" style="line-height:107%"><span style="font-family:&quot;Arial&quot;,sans-serif">] relatif à une inspection qui a eu lieu le [<a><i><span style="background:yellow">Insérer la date</span></i></a></span></span><span lang="FR-CA" style="line-height:107%"><span style="font-family:&quot;Arial&quot;,sans-serif">].</span></span></span></span></span><br>
+&nbsp;</div>
+
+<div data-wrapper="true" style="font-size:9pt;font-family:'Segoe UI','Helvetica Neue',sans-serif;"><span style="font-size:11pt"><span style="line-height:107%"><span style="font-family:Calibri,sans-serif"><span lang="FR-CA" style="line-height:107%"><span style="font-family:&quot;Arial&quot;,sans-serif">Si vous avez des questions ou des préoccupations, veuillez contacter l'Inspecteur [<a><i><span style="background:yellow">insérer le nom de l'inspecteur</span></i></a></span></span><span lang="FR-CA" style="line-height:107%"><span style="font-family:&quot;Arial&quot;,sans-serif">] aux coordonnées ci-dessous.</span></span></span></span></span><br>
+&nbsp;</div>
+
+<div data-wrapper="true" style="font-size:9pt;font-family:'Segoe UI','Helvetica Neue',sans-serif;"><span style="font-size:11pt"><span style="line-height:107%"><span style="font-family:Calibri,sans-serif"><span lang="FR-CA" style="line-height:107%"><span style="font-family:&quot;Arial&quot;,sans-serif">Cordialement,</span></span></span></span></span></div>
+
+
+]]></xsl:template></xsl:stylesheet>
