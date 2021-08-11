@@ -11,6 +11,34 @@ var BookingTDG_main = (function (window, document) {
     var startTime;
     var plannedYear = {};
 
+    function updateWO(tc_tcfiscalquarterid, woId) {
+
+        //update work order
+        var entity = {};
+        entity["ovs_revisedquarterid@odata.bind"] = "/tc_tcfiscalquarters(" + tc_tcfiscalquarterid + ")";
+
+        var req = new XMLHttpRequest();
+        req.open("PATCH", clientUrl + "/api/data/v9.2/msdyn_workorders(" + woId + ")", false);
+        req.setRequestHeader("OData-MaxVersion", "4.0");
+        req.setRequestHeader("OData-Version", "4.0");
+        req.setRequestHeader("Accept", "application/json");
+        req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+        req.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                req.onreadystatechange = null;
+                if (this.status === 204) {
+
+                    //return true;
+                } else {
+                    Xrm.Navigation.openErrorDialog({ message: this.statusText });
+                    //return false;
+                }
+            }
+        };
+        req.send(JSON.stringify(entity));
+
+    }
+
     function processRevisedQuorter(formContext, woId, starttimeOther) {
 
 
@@ -26,7 +54,7 @@ var BookingTDG_main = (function (window, document) {
         var st = new Date(startTime).setHours(0, 0, 0);
         var sto = new Date(starttimeOther).setHours(0, 0, 0);
        //Latest booking takes over => update WO
-        if (st < sto) {
+        if (st > sto) {
 
             //get revised quarter by name and id
             var req = new XMLHttpRequest();
@@ -42,46 +70,21 @@ var BookingTDG_main = (function (window, document) {
                         var results = JSON.parse(this.response);
                         var tc_tcfiscalquarterid = results.value[0]["tc_tcfiscalquarterid"];
 
-                        //update revised qoarter
-                        glHelper.SetLookup(formContext, "ovs_revisedquarter", "tc_tcfiscalquarter", thisQuarter);
-                        //update work order
-                        var entity = {};
-                        entity["ovs_revisedquarterid@odata.bind"] = "/tc_tcfiscalquarters(" + tc_tcfiscalquarterid + ")";
+                        //update revised quarter
+                        glHelper.SetLookup(formContext, "ovs_revisedquarter", "tc_tcfiscalquarter", tc_tcfiscalquarterid, thisQuarter);
 
-                        var req = new XMLHttpRequest();
-                        req.open("PATCH", clientUrl + "/api/data/v9.2/msdyn_workorders(" + woId + ")", false);
-                        req.setRequestHeader("OData-MaxVersion", "4.0");
-                        req.setRequestHeader("OData-Version", "4.0");
-                        req.setRequestHeader("Accept", "application/json");
-                        req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-                        req.onreadystatechange = function () {
-                            if (this.readyState === 4) {
-                                req.onreadystatechange = null;
-                                if (this.status === 204) {
-
-                                    return true;
-                                } else {
-                                    Xrm.Navigation.openErrorDialog({ message: this.statusText });
-                                    return false;
-                                }
-                            }
-                        };
-                        req.send(JSON.stringify(entity));
-                    } else {
+                        updateWO(tc_tcfiscalquarterid, woId);
+                    }
+                    else {
                         Xrm.Navigation.openErrorDialog({ message: this.statusText });
-                        return false;
                     }
                 }
             };
             req.send();
 
+            var test = 0;
         }
-
-
-
         // Booking deactivated:  wipe out the value in revised quarter if no other booking exists  => PLUGIN
-
-
 
     }
 
@@ -100,7 +103,7 @@ var BookingTDG_main = (function (window, document) {
                 if (this.status === 200) {
                     var results = JSON.parse(this.response);
 
-                    return(callbackfunction(formContext, results.value[0]["bookableresourcebookingid"], results.value[0]["starttime"]));
+                    callbackfunction(formContext, results.value[0]["bookableresourcebookingid"], results.value[0]["starttime"]);
 
                     //    for (var i = 0; i < results.value.length; i++) {
                     //        var starttime = results.value[i]["starttime"];
@@ -196,10 +199,9 @@ var BookingTDG_main = (function (window, document) {
 
             //revised quarter update 
             //Latest booking takes over
-            if (!getLatestBookingUpdateWo(formContext, processRevisedQuorter)) {
+            getLatestBookingUpdateWo(formContext, processRevisedQuorter);
 
-                //prevent save;
-            }          
+            //    executionContext.getEventArgs().preventDefault();                    
 
         },
 
