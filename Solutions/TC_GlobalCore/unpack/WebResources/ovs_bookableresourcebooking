@@ -90,8 +90,9 @@ var BookingTDG_main = (function (window, document) {
 
     function getLatestBookingUpdateWo(formContext, callbackfunction) {
 
+        var wo = glHelper.GetLookupAttrId(formContext, "msdyn_workorder").replace('{', '').replace('}', '');
         var req = new XMLHttpRequest();
-        req.open("GET", clientUrl + "/api/data/v9.2/bookableresourcebookings?$select=starttime,statecode&$filter=_msdyn_workorder_value eq " + glHelper.GetLookupAttrId(formContext, "msdyn_workorder").replace('{', '').replace('}', '') + " and statecode eq 0&$orderby=starttime asc", false);
+        req.open("GET", clientUrl + "/api/data/v9.2/bookableresourcebookings?$select=starttime,statecode&$filter=_msdyn_workorder_value eq " + wo + " and statecode eq 0&$orderby=starttime asc", false);
         req.setRequestHeader("OData-MaxVersion", "4.0");
         req.setRequestHeader("OData-Version", "4.0");
         req.setRequestHeader("Accept", "application/json");
@@ -103,7 +104,7 @@ var BookingTDG_main = (function (window, document) {
                 if (this.status === 200) {
                     var results = JSON.parse(this.response);
 
-                    callbackfunction(formContext, results.value[0]["bookableresourcebookingid"], results.value[0]["starttime"]);
+                    callbackfunction(formContext, wo, results.value[0]["starttime"]);
 
                     //    for (var i = 0; i < results.value.length; i++) {
                     //        var starttime = results.value[i]["starttime"];
