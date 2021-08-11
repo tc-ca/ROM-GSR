@@ -6,19 +6,115 @@ var BookingTDG_main = (function (window, document) {
     var userSettings;
     var pageInput;
     var LCID;
+    var clientUrl;
+    //current start date
+    var startTime;
     var plannedYear = {};
 
-    function processRevisedQuorter() {
+    function processRevisedQuorter(formContext, woId, starttimeOther) {
+
+
+        //If booking is outside planned fiscal quarter then revised quarte will be populated with new booking value.
+        //Latest booking takes over
+        //get the latest booking quarter
+
+        var thisQuarter = glHelper.quarterByDate(startTime);
+        var otherQuarter = glHelper.quarterByDate(starttimeOther);
+        //same quarter
+        if (thisQuarter == otherQuarter) return true;
+
+        var st = new Date(startTime).setHours(0, 0, 0);
+        var sto = new Date(starttimeOther).setHours(0, 0, 0);
+       //Latest booking takes over => update WO
+        if (st < sto) {
+
+            //get revised quarter by name and id
+            var req = new XMLHttpRequest();
+            req.open("GET", clientUrl + "/api/data/v9.2/tc_tcfiscalquarters?$select=tc_tcfiscalquarterid&$filter=_tc_tcfiscalyearid_value eq " + glHelper.GetLookupAttrId(formContext, "ovs_plannedfiscalyearid").replace('{', '').replace('}', '') + " and  tc_name eq '" + thisQuarter + "'", false);
+            req.setRequestHeader("OData-MaxVersion", "4.0");
+            req.setRequestHeader("OData-Version", "4.0");
+            req.setRequestHeader("Accept", "application/json");
+            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+            req.onreadystatechange = function () {
+                if (this.readyState === 4) {
+                    req.onreadystatechange = null;
+                    if (this.status === 200) {
+                        var results = JSON.parse(this.response);
+                        var tc_tcfiscalquarterid = results.value[0]["tc_tcfiscalquarterid"];
+
+                        //update revised qoarter
+                        glHelper.SetLookup(formContext, "ovs_revisedquarter", "tc_tcfiscalquarter", thisQuarter);
+                        //update work order
+                        var entity = {};
+                        entity["ovs_revisedquarterid@odata.bind"] = "/tc_tcfiscalquarters(" + tc_tcfiscalquarterid + ")";
+
+                        var req = new XMLHttpRequest();
+                        req.open("PATCH", clientUrl + "/api/data/v9.2/msdyn_workorders(" + woId + ")", false);
+                        req.setRequestHeader("OData-MaxVersion", "4.0");
+                        req.setRequestHeader("OData-Version", "4.0");
+                        req.setRequestHeader("Accept", "application/json");
+                        req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+                        req.onreadystatechange = function () {
+                            if (this.readyState === 4) {
+                                req.onreadystatechange = null;
+                                if (this.status === 204) {
+
+                                    return true;
+                                } else {
+                                    Xrm.Navigation.openErrorDialog({ message: this.statusText });
+                                    return false;
+                                }
+                            }
+                        };
+                        req.send(JSON.stringify(entity));
+                    } else {
+                        Xrm.Navigation.openErrorDialog({ message: this.statusText });
+                        return false;
+                    }
+                }
+            };
+            req.send();
+
+        }
 
 
 
+        // Booking deactivated:  wipe out the value in revised quarter if no other booking exists  => PLUGIN
 
-                //If booking is outside planned fiscal quarter then revised quarte will be populated with new booking value.
-                //Latest booking takes over
-                //get the latest booking quarter
 
-                // Booking deactivated:  wipe out the value in revised quarter if no other booking exists  => PLUGIN
 
+    }
+
+    function getLatestBookingUpdateWo(formContext, callbackfunction) {
+
+        var req = new XMLHttpRequest();
+        req.open("GET", clientUrl + "/api/data/v9.2/bookableresourcebookings?$select=starttime,statecode&$filter=_msdyn_workorder_value eq " + glHelper.GetLookupAttrId(formContext, "msdyn_workorder").replace('{', '').replace('}', '') + " and statecode eq 0&$orderby=starttime asc", false);
+        req.setRequestHeader("OData-MaxVersion", "4.0");
+        req.setRequestHeader("OData-Version", "4.0");
+        req.setRequestHeader("Accept", "application/json");
+        req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+        req.setRequestHeader("Prefer", "odata.include-annotations=\"*\"");
+        req.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                req.onreadystatechange = null;
+                if (this.status === 200) {
+                    var results = JSON.parse(this.response);
+
+                    return(callbackfunction(formContext, results.value[0]["bookableresourcebookingid"], results.value[0]["starttime"]));
+
+                    //    for (var i = 0; i < results.value.length; i++) {
+                    //        var starttime = results.value[i]["starttime"];
+                    //        var statecode = results.value[i]["statecode"];
+                    //        var statecode_formatted = results.value[i]["statecode@OData.Community.Display.V1.FormattedValue"];
+                    //    }
+
+
+                } else {
+                    Xrm.Navigation.openErrorDialog({ message: this.statusText });
+                }
+            }
+        };
+        req.send();
     }
 
     function getFiscalYear(id) {
@@ -55,6 +151,8 @@ var BookingTDG_main = (function (window, document) {
             var globalContext = Xrm.Utility.getGlobalContext();
             userSettings = globalContext.userSettings;
             pageInput = Xrm.Utility.getPageContext().input;
+            clientUrl = globalContext.getClientUrl();
+
 
             var formContext = executionContext.getFormContext();
             // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
@@ -80,6 +178,8 @@ var BookingTDG_main = (function (window, document) {
                 }
             }
 
+            //on save
+            formContext.data.entity.addOnSave(BookingTDG_main.OnSave);
 
             //populate planedYear object
             getFiscalYear(glHelper.GetLookupAttrId(formContext, "ovs_plannedfiscalyearid"));
@@ -96,10 +196,12 @@ var BookingTDG_main = (function (window, document) {
 
             //revised quarter update 
             //Latest booking takes over
-            
+            if (!getLatestBookingUpdateWo(formContext, processRevisedQuorter)) {
+
+                //prevent save;
+            }          
 
         },
-
 
         DateTime_OnChange: function (executionContext) {
 
@@ -107,7 +209,7 @@ var BookingTDG_main = (function (window, document) {
 
             //set up start date filter based on fiscal year
             //check if start time is in fiscal year boundaries
-            var startTime = glHelper.GetValue(formContext, "starttime");
+            startTime = glHelper.GetValue(formContext, "starttime");
             var st = new Date(startTime).setHours(0, 0, 0);
             if (st >= plannedYear.tc_fiscalend
                 || st <= plannedYear.tc_fiscalstart) {
@@ -124,10 +226,8 @@ var BookingTDG_main = (function (window, document) {
             //update endtime on create
             if (startTime && formType == glHelper.FORMTYPE_CREATE)
                 glHelper.SetValue(formContext, "endtime", startTime);
-
-            //calculate
+            
         },
-
     }
 
 })(window, document)

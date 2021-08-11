@@ -1,4 +1,4 @@
-﻿var glHelper = (function (window, document) {
+var glHelper = (function (window, document) {
 
     //********************global vars*******************
     var FORMSTAGE_Create = 1;
@@ -70,11 +70,6 @@
             }
         }
         return result;
-    }
-
-    function GetOptionsetText(formContext, attr) {
-        var val = formContext.getAttribute(attr).getText();
-        return val ? val : "";
     }
 
     function SetValue(formContext, attr, val) {
@@ -250,7 +245,7 @@
     /****************************************************************************************
     Notifications
     ****************************************************************************************/
-
+    
     function alertDialogText(messeageText, confirmaionText) {
         var mt = (messeageText != null && messeageText != undefined && messeageText.length > 0) ? messeageText : "A message from form";
         var cbl = (confirmaionText != null && confirmaionText != undefined && confirmaionText.length > 0) ? confirmaionText : "OK";
@@ -404,6 +399,11 @@
     CHOICE
     ****************************************************************************************/
 
+    function GetOptionsetText(formContext, attr) {
+        var val = formContext.getAttribute(attr).getText();
+        return val ? val : "";
+    }
+
     function RemoveOptionSetOption(formContext, attr, optionSetValue) {
         var current = formContext.getControl(attr);
         if (current)
@@ -470,11 +470,9 @@
     MISCELLANEOUS
     ****************************************************************************************/
 
-    function quarterByDate(formContext, attrDateName) {
+    function quarterByDate(selectedDate) {
 
         var quarter = 0;
-
-        var selectedDate = GetValue(formContext, attrDateName);
         var date = new Date(selectedDate);
         var month = date.getMonth().toString();
 
@@ -483,19 +481,19 @@
             case "0":
             case "1":
             case "2":
-                quarter = "Q1"; break;
+                quarter = "Q4"; break;
             case "3":
             case "4":
             case "5":
-                quarter = "Q2"; break;
+                quarter = "Q1"; break;
             case "6":
             case "7":
             case "8":
-                quarter = "Q3"; break;
+                quarter = "Q2"; break;
             case "9":
             case "10":
             case "11":
-                quarter = "Q4"; break;
+                quarter = "Q3"; break;
 
         }
         return quarter;
@@ -551,47 +549,49 @@
 
     //Public  properties and methods
     return {
-      FORMTYPE_CREATE: FORMSTAGE_Create,
-      FORMTYPE_EDIT: FORMSTAGE_Update,
-      FORMTYPE_READONLY: FORMSTAGE_RO,
-      FORMTYPE_DISABLED: FORMSTAGE_Disabled,
+        FORMTYPE_CREATE: FORMSTAGE_Create,
+        FORMTYPE_EDIT: FORMSTAGE_Update,
+        FORMTYPE_READONLY: FORMSTAGE_RO,
+        FORMTYPE_DISABLED: FORMSTAGE_Disabled,
 
-      DisplayFormNotification: DisplayFormNotification,
-      DisplayGlobalNotification: DisplayGlobalNotification,
+        DisplayFormNotification: DisplayFormNotification,
+        DisplayGlobalNotification: DisplayGlobalNotification,
 
-      alertDialogText: alertDialogText,
-      alertDialogWindow: alertDialogWindow,
+        alertDialogText: alertDialogText,
+        alertDialogWindow: alertDialogWindow,
 
-      getGlobalContext: getGlobalContext,
-      GetFormName: GetFormName,
-      GetFormType: GetFormType,
-      GetLookupAttrId: GetLookupAttrId,
-      GetLookupName: GetLookupName,
-      GetOptionsetText: GetOptionsetText,
-      GetValue: GetValue,
-      ResetField: ResetField,
-      SetTabVisibility: SetTabVisibility,
-      SetValue: SetValue,
-      SetDisabled: SetDisabled,
-      SetSectionVisibility: SetSectionVisibility,
-      SetControlVisibility: SetControlVisibility,
-      isAttributeRequired: isAttributeRequired,
-      SetRequiredLevel: SetRequiredLevel,
-      SetOptionsetByText: SetOptionsetByText,
-      SetOptionsetByValue: SetOptionsetByValue,
-      filterOptionSet: filterOptionSet,
-      SwitchFormByName: SwitchFormByName,
-      RemoveOptionSetOption: RemoveOptionSetOption,
-      SetLookup: SetLookup,
-      GetCurrentUserId: GetCurrentUserId,
-      GetCurrentUserName: GetCurrentUserName,
-      GetCurrentRecordId: GetCurrentRecordId,
-      GetCurrentUserLanguage: GetCurrentUserLanguage,
-      GetCurrentUserRoles: GetCurrentUserRoles,
-      GetCurrentUserSettings: GetCurrentUserSettings,
-      isCurrentUserSystemAdministrator: isCurrentUserSystemAdministrator,
-      SetControlReadOnly: SetControlReadOnly,
-      disableAllFields: disableAllFields
+        getGlobalContext: getGlobalContext,
+        GetFormName: GetFormName,
+        GetFormType: GetFormType,
+        GetLookupAttrId: GetLookupAttrId,
+        GetLookupName: GetLookupName,
+        GetOptionsetText: GetOptionsetText,
+        GetValue: GetValue,
+        ResetField: ResetField,
+        SetTabVisibility: SetTabVisibility,
+        SetValue: SetValue,
+        SetDisabled: SetDisabled,
+        SetSectionVisibility: SetSectionVisibility,
+        SetControlVisibility: SetControlVisibility,
+        isAttributeRequired: isAttributeRequired,
+        SetRequiredLevel: SetRequiredLevel,
+        SetOptionsetByText: SetOptionsetByText,
+        SetOptionsetByValue: SetOptionsetByValue,
+        filterOptionSet: filterOptionSet,
+        SwitchFormByName: SwitchFormByName,
+        RemoveOptionSetOption: RemoveOptionSetOption,
+        SetLookup: SetLookup,
+        GetCurrentUserId: GetCurrentUserId,
+        GetCurrentUserName: GetCurrentUserName,
+        GetCurrentRecordId: GetCurrentRecordId,
+        GetCurrentUserLanguage: GetCurrentUserLanguage,
+        GetCurrentUserRoles: GetCurrentUserRoles,
+        GetCurrentUserSettings: GetCurrentUserSettings,
+        isCurrentUserSystemAdministrator: isCurrentUserSystemAdministrator,
+        SetControlReadOnly: SetControlReadOnly,
+        disableAllFields: disableAllFields,
+        quarterByDate: quarterByDate,
+        GetLocalizedStrings: GetLocalizedStrings
     };
 
     //********************public methods end***************
