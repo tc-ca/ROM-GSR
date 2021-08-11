@@ -1,67 +1,133 @@
-﻿var globalFormContext;
+var BookingTDG_main = (function (window, document) {
 
-const TabNames = {
-    TAB_GENERAL: "TAB_GENERAL",
-    TAB_TIMELINE: "TAB_TIMELINE",
-    TAB_FIELD_SERVICE: "TAB_FIELDSERVICE",
-    TAB_SCHEDULING: "TAB_SCHEDULING",
-};
+    //********************private methods*******************
+    //variables
+    var formType;
+    var userSettings;
+    var pageInput;
+    var LCID;
+    var plannedYear = {};
 
-const GeneralControls = {
-    NAME: "name",
-    PLANNED_FISCAL_QUARTER: "ovs_plannedfiscalquarter",
-    PLANNED_FISCAL_YEAR_ID: "ovs_plannedfiscalyearid",
-    REVISED_QUARTER: "ovs_revisedquarter",
-    EFFORT: "msdyn_effort",
-    RESOURCE_REQUIREMENT: "msdyn_resourcerequirement",
-    BOOKING_TYPE: "bookingtype",
-    START_TIME: "starttime",
-    END_TIME: "endtime",
-    BOOKING_STATUS: "bookingstatus"
-};
-
-async function OnLoad(executionContext) {
-    //get context
-    globalContext = glHelper.getGlobalContext();
-    var formContext = executionContext.getFormContext();
-    globalFormContext = formContext;
-
-    //hide all sections on load, required section to be determined
-    hideAllActionTypeSections(formContext);
-}
-
-function OnSave(executionContext) {
-    // let formContext = executionContext.getFormContext();
-}
-
-function hideAllActionTypeSections(formContext) {
-    glHelper.SetTabVisibility(formContext, TabNames.TAB_TIMELINE, false);
-    glHelper.SetTabVisibility(formContext, TabNames.TAB_FIELD_SERVICE, false);
-    glHelper.SetTabVisibility(formContext, TabNames.TAB_SCHEDULING, false);
+    function processRevisedQuorter() {
 
 
-    //TAB_GENERAL
-    glHelper.SetControlVisibility(formContext, GeneralControls.NAME, false);
-    glHelper.SetControlVisibility(formContext, GeneralControls.PLANNED_FISCAL_QUARTER, false);
-    glHelper.SetControlVisibility(formContext, GeneralControls.PLANNED_FISCAL_YEAR_ID, false);
-    glHelper.SetControlVisibility(formContext, GeneralControls.REVISED_QUARTER, false);
-    glHelper.SetControlVisibility(formContext, GeneralControls.EFFORT, false);
-    glHelper.SetControlVisibility(formContext, GeneralControls.RESOURCE_REQUIREMENT, false);
-    glHelper.SetControlVisibility(formContext, GeneralControls.BOOKING_TYPE, false);
-    glHelper.SetControlVisibility(formContext, GeneralControls.BOOKING_STATUS, false);
-    glHelper.SetControlReadOnly(formContext, GeneralControls.BOOKING_STATUS, true);
 
-    //add event handler for status change event
-    var startTimeField = formContext.getAttribute(GeneralControls.START_TIME);
-    startTimeField.removeOnChange(DateTime_OnChange);
-    startTimeField.addOnChange(DateTime_OnChange);
-}
 
-function DateTime_OnChange(context) {
-    globalContext = glHelper.getGlobalContext();
-    var formContext = context.getFormContext();
-    var startTime = glHelper.GetValue(formContext, GeneralControls.START_TIME);
-    if (startTime) {
-        glHelper.SetValue(formContext, GeneralControls.END_TIME, startTime);
+                //If booking is outside planned fiscal quarter then revised quarte will be populated with new booking value.
+                //Latest booking takes over
+                //get the latest booking quarter
+
+                // Booking deactivated:  wipe out the value in revised quarter if no other booking exists  => PLUGIN
+
     }
-}
+
+    function getFiscalYear(id) {
+
+        Xrm.WebApi.online.retrieveRecord("tc_tcfiscalyear", id.replace('{','').replace('}',''), "?$select=tc_fiscalend,tc_fiscalstart,tc_fiscalyearnum,tc_iscurrentfiscalyear,tc_tcfiscalyearid").then(
+            function success(result) {
+                plannedYear.tc_fiscalend = new Date(result["tc_fiscalend"]).setHours(0,0,0);
+                plannedYear.tc_fiscalstart = new Date(result["tc_fiscalstart"]).setHours(0, 0, 0);
+                plannedYear.tc_fiscalendFormated = new Date(result["tc_fiscalend@OData.Community.Display.V1.FormattedValue"]);
+                plannedYear.tc_fiscalstartFormated = new Date(result["tc_fiscalstart@OData.Community.Display.V1.FormattedValue"]);
+
+                plannedYear.tc_fiscalyearnum = result["tc_fiscalyearnum"];
+                plannedYear.tc_iscurrentfiscalyear = result["tc_iscurrentfiscalyear"];
+                plannedYear.tc_iscurrentfiscalyear_formatted = result["tc_iscurrentfiscalyear@OData.Community.Display.V1.FormattedValue"];
+                plannedYear.tc_tcfiscalyearid = result["tc_tcfiscalyearid"];
+
+            },
+            function (error) {
+
+                plannedYear = {};
+                Xrm.Navigation.openErrorDialog({ message: error.message });
+            }
+        );
+    }
+
+
+    //********************public methods***************
+
+    return {
+
+
+        OnLoad: function (executionContext) {
+
+            var globalContext = Xrm.Utility.getGlobalContext();
+            userSettings = globalContext.userSettings;
+            pageInput = Xrm.Utility.getPageContext().input;
+
+            var formContext = executionContext.getFormContext();
+            // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+            formType = glHelper.GetFormType(formContext);
+
+
+            if (formType == glHelper.FORMTYPE_CREATE) {
+
+                //add Fiscal year and fiscal quarter (mapped from WO) existance validation, cause they are not mandatory in WO
+                var fiscalYear = glHelper.GetLookupName(formContext, "ovs_plannedfiscalyearid");
+                if (fiscalYear == "") {
+                    //show alert
+                    //block all fields
+                    return;
+                }
+
+                //add Fiscal year and fiscal quarter (mapped from WO) existance validation, cause they are not mandatory in WO
+                var fiscalQuarter = glHelper.GetLookupName(formContext, "ovs_plannedfiscalquarter");
+                if (fiscalQuarter == "") {
+                    //show alert
+                    //block all fields
+                    return;
+                }
+            }
+
+
+            //populate planedYear object
+            getFiscalYear(glHelper.GetLookupAttrId(formContext, "ovs_plannedfiscalyearid"));
+
+            var startTimeField = formContext.getAttribute("starttime");
+            startTimeField.removeOnChange(BookingTDG_main.DateTime_OnChange);
+            startTimeField.addOnChange(BookingTDG_main.DateTime_OnChange);
+
+        },
+
+        OnSave: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+
+            //revised quarter update 
+            //Latest booking takes over
+            
+
+        },
+
+
+        DateTime_OnChange: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+
+            //set up start date filter based on fiscal year
+            //check if start time is in fiscal year boundaries
+            var startTime = glHelper.GetValue(formContext, "starttime");
+            var st = new Date(startTime).setHours(0, 0, 0);
+            if (st >= plannedYear.tc_fiscalend
+                || st <= plannedYear.tc_fiscalstart) {
+
+                glHelper.SetValue(formContext, "starttime", null);
+                //formContext.getControl("starttime").setNotification("The selected time '" + st + "' was outside of Planned Fiscal Year", "_startTime");
+                Xrm.Navigation.openErrorDialog({ message: "The selected time '" + startTime + "' was outside of Planned Fiscal Year" });
+
+            } else {
+
+                //formContext.getControl("starttime").clearNotification("_startTime");
+            }
+
+            //update endtime on create
+            if (startTime && formType == glHelper.FORMTYPE_CREATE)
+                glHelper.SetValue(formContext, "endtime", startTime);
+
+            //calculate
+        },
+
+    }
+
+})(window, document)
