@@ -145,6 +145,7 @@
       <RootComponent type="1" schemaName="ovs_revisedquarterrequest" behavior="0" />
       <RootComponent type="1" schemaName="ovs_sitetype" behavior="0" />
       <RootComponent type="1" schemaName="ovs_tdginspectionreport" behavior="0" />
+      <RootComponent type="1" schemaName="ovs_timetrackingconfiguration" behavior="0" />
       <RootComponent type="1" schemaName="ovs_tyohsequipmenttype" behavior="0" />
       <RootComponent type="1" schemaName="ovs_tyohsnote" behavior="0" />
       <RootComponent type="1" schemaName="ovs_tyrational" behavior="0" />
@@ -245,6 +246,7 @@
       <RootComponent type="61" schemaName="ovs_MagnitudeAndLikelihoodMessage_medium" behavior="0" />
       <RootComponent type="61" schemaName="ovs_ROMCommonFunctions" behavior="0" />
       <RootComponent type="61" schemaName="ovs_SafetyAssessmentMainForm" behavior="0" />
+      <RootComponent type="61" schemaName="ovs_workOrderTimeTrackingPOC" behavior="0" />
       <RootComponent type="61" schemaName="qm_/Bootstrap/css/bootstrap.min.css" behavior="0" />
       <RootComponent type="61" schemaName="qm_/Bootstrap/js/bootstrap.min.js" behavior="0" />
       <RootComponent type="61" schemaName="qm_/bootstrapTable/bootstrap-table-locale-all.js" behavior="0" />
@@ -1754,7 +1756,7 @@
         <Required type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_Crew" displayName="msdyn_bookableresource_bookableresourcebooking_Crew" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdyn_FieldService_patch_update (8.8.47.21)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
-        <Dependent type="10" schemaName="bookableresource_bookableresourcebooking_Resource" displayName="bookableresource_bookableresourcebooking_Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" displayName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_Crew" displayName="msdyn_bookableresource_bookableresourcebooking_Crew" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdyn_FieldService_patch_update (8.8.47.21)">
@@ -1785,7 +1787,7 @@
           <package>FieldService_Anchor (8.8.29.256)</package>
           <package>msdynce_CoreServiceSchedulingAnchor (9.0.20082.1006)</package>
         </Required>
-        <Dependent type="10" schemaName="bookableresource_bookableresourcebooking_Resource" displayName="bookableresource_bookableresourcebooking_Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" displayName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" displayName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="MicrosoftDynamicsScheduling (3.12.0.448)">
@@ -1939,7 +1941,7 @@
         <Required type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
-        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_PreferredResource" displayName="msdyn_bookableresource_msdyn_workorder_PreferredResource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="FieldService (8.8.0.88)">
@@ -10031,6 +10033,12 @@
         <Required type="61" schemaName="AppCommon/Account/Account_main_system_library.js" displayName="AppCommon/Account/Account_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
           <package>msdynce_AppCommonAnchor (9.0.21041.10002)</package>
         </Required>
+        <Dependent type="60" displayName="Organisations TMD" parentDisplayName="Account" id="{444fd031-7381-4a73-a520-2b2fd7ebe013}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="61" schemaName="AppCommon/Account/Account_main_system_library.js" displayName="AppCommon/Account/Account_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
+          <package>msdynce_AppCommonAnchor (9.0.21041.10002)</package>
+        </Required>
         <Dependent type="60" displayName="Compte - Mobile" parentDisplayName="Account" id="{74da4947-5d1d-4400-9f99-c6ed578211bb}" />
       </MissingDependency>
       <MissingDependency>
@@ -10044,12 +10052,6 @@
           <package>msdynce_AppCommonAnchor (9.0.21041.10002)</package>
         </Required>
         <Dependent type="60" displayName="Compte pour l'expérience interactive" parentDisplayName="Account" id="{a72c7955-442b-4ea4-9499-b10cd18b4256}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="61" schemaName="AppCommon/Account/Account_main_system_library.js" displayName="AppCommon/Account/Account_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
-          <package>msdynce_AppCommonAnchor (9.0.21041.10002)</package>
-        </Required>
-        <Dependent type="60" displayName="Information" parentDisplayName="Account" id="{b053a39a-041a-4356-acef-ddf00182762b}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="AppCommon/Account/Account_main_system_library.js" displayName="AppCommon/Account/Account_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
@@ -10091,12 +10093,6 @@
         <Required type="61" schemaName="AppCommon/Contact/Contact_main_system_library.js" displayName="AppCommon/Contact/Contact_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
           <package>msdynce_AppCommonAnchor (9.0.21041.10002)</package>
         </Required>
-        <Dependent type="60" displayName="Formulaire principal du contact" parentDisplayName="Contact" id="{2c961780-b9f9-ea11-a815-000d3af3ac0d}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="61" schemaName="AppCommon/Contact/Contact_main_system_library.js" displayName="AppCommon/Contact/Contact_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
-          <package>msdynce_AppCommonAnchor (9.0.21041.10002)</package>
-        </Required>
         <Dependent type="60" displayName="Information" parentDisplayName="Contact" id="{894cc46a-b0cb-4ab0-8bf6-200544e46a2d}" />
       </MissingDependency>
       <MissingDependency>
@@ -10110,6 +10106,12 @@
           <package>msdynce_AppCommonAnchor (9.0.21041.10002)</package>
         </Required>
         <Dependent type="60" displayName="Contact pour l’expérience multisession" parentDisplayName="Contact" id="{e06af4d1-2812-45c7-a9c2-9fb73fee7bec}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="61" schemaName="AppCommon/Contact/Contact_main_system_library.js" displayName="AppCommon/Contact/Contact_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
+          <package>msdynce_AppCommonAnchor (9.0.21041.10002)</package>
+        </Required>
+        <Dependent type="60" displayName="Contact TMD" parentDisplayName="Contact" id="{ec7b5b17-85b9-eb11-8236-0022483bc67c}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="cc_MscrmControls.FieldControls.QuickNotesControl/bundle.js" displayName="cc_MscrmControls.FieldControls.QuickNotesControl/bundle.js" solution="msdyn_FieldService_patch_update (8.8.47.21)">
@@ -10894,10 +10896,6 @@
         <Dependent type="60" displayName="Contact TMD" parentDisplayName="Contact" id="{ec7b5b17-85b9-eb11-8236-0022483bc67c}" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="61" schemaName="ovs_workOrderTimeTrackingPOC" displayName="ovs_workOrderTimeTrackingPOC" solution="Active" />
-        <Dependent type="60" displayName="Time Tracking POC" parentDisplayName="Work Order" id="{9db1e70b-1961-4893-a204-84d495dbd918}" />
-      </MissingDependency>
-      <MissingDependency>
         <Required type="61" schemaName="Sales/ClientCommon/Sales_ClientCommon.js" displayName="Sales/ClientCommon/Sales_ClientCommon.js" solution="msdynce_Sales (9.0.4.0076)">
           <package>msdynce_SalesAnchor (9.0.21041.10003)</package>
         </Required>
@@ -11128,6 +11126,10 @@
       <MissingDependency>
         <Required type="66" schemaName="MscrmControls.FieldControls.ToggleControl" displayName="MscrmControls.FieldControls.ToggleControl" solution="BaseCustomControlsCore (9.0.2107.4011)" />
         <Dependent type="60" displayName="Ordre de travail - Mobile" parentDisplayName="Work Order" id="{f25cecf6-2f00-4eab-aeef-d773af32e027}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="66" schemaName="MscrmControls.Grid.GridControl" displayName="MscrmControls.Grid.GridControl" solution="BaseCustomControlsCore (9.0.2107.4011)" />
+        <Dependent type="68" id="{3c047f6d-161c-48a1-8958-9cd857dceb39}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="66" schemaName="MscrmControls.Grid.GridControl" displayName="MscrmControls.Grid.GridControl" solution="BaseCustomControlsCore (9.0.2107.4011)" />
@@ -11471,6 +11473,10 @@
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
         <Dependent type="2" schemaName="msdyn_systemstatus" displayName="System Status" parentSchemaName="msdyn_workordersubstatus" parentDisplayName="Work Order Substatus" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="9" schemaName="ovs_inspectionphase" displayName="Inspection Phase" solution="Active" />
+        <Dependent type="2" schemaName="ovs_aggregateestimatefor" displayName="Aggregate Estimate For" parentSchemaName="ovs_timetrackingconfiguration" parentDisplayName="Time Tracking Configuration" />
       </MissingDependency>
     </MissingDependencies>
   </SolutionManifest>
