@@ -1,4 +1,4 @@
-var BookingTDG_main = (function (window, document) {
+﻿var BookingTDG_main = (function (window, document) {
 
     //********************private methods*******************
     //variables
@@ -6,6 +6,8 @@ var BookingTDG_main = (function (window, document) {
     var userSettings;
     var pageInput;
     var LCID;
+    var resexResourceName;
+
     var clientUrl;
     //current start date
     var startTime;
@@ -15,7 +17,7 @@ var BookingTDG_main = (function (window, document) {
 
         //update work order
         var entity = {};
-        entity["ovs_revisedquarterid@odata.bind"] = "/tc_tcfiscalquarters(" + tc_tcfiscalquarterid + ")";
+        entity["ovs_RevisedQuarterId@odata.bind"] = "/tc_tcfiscalquarters(" + tc_tcfiscalquarterid + ")";
 
         var req = new XMLHttpRequest();
         req.open("PATCH", clientUrl + "/api/data/v9.2/msdyn_workorders(" + woId + ")", false);
@@ -157,6 +159,13 @@ var BookingTDG_main = (function (window, document) {
             pageInput = Xrm.Utility.getPageContext().input;
             clientUrl = globalContext.getClientUrl();
 
+            LCID = userSettings.languageId;
+
+            if (LCID == 1033)
+                resexResourceName = "ovs_Labels.1033.resx";
+            else if (LCID == 1036)
+                resexResourceName = "ovs_Labels.1036.resx";
+
 
             var formContext = executionContext.getFormContext();
             // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
@@ -219,7 +228,9 @@ var BookingTDG_main = (function (window, document) {
 
                 glHelper.SetValue(formContext, "starttime", null);
                 //formContext.getControl("starttime").setNotification("The selected time '" + st + "' was outside of Planned Fiscal Year", "_startTime");
-                Xrm.Navigation.openErrorDialog({ message: "The selected time '" + startTime + "' was outside of Planned Fiscal Year" });
+                var startTimeOurOfFiscalYearMessage = Xrm.Utility.getResourceString(resexResourceName, "Booking.starttime.OutOfPlanedFiscalYear").replace("{0}", startTime);
+
+                Xrm.Navigation.openErrorDialog({ message: startTimeOurOfFiscalYearMessage });
 
             } else {
 
