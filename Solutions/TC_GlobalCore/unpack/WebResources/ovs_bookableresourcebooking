@@ -186,10 +186,12 @@
 
                 if (formType == glHelper.FORMTYPE_CREATE) {
                     //show alert
-                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Planned Fiscal Year is a mandatory information. Please close current Booking to fix  Planned Fiscal Year in the  in WorkOrder form." });                    
+                    var mandatoryMessage = Xrm.Utility.getResourceString(resexResourceName, "Booking.FiscalYearIsMandatory.Close");
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: mandatoryMessage});
                 }
                 if (formType == glHelper.FORMTYPE_EDIT) {
-                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Planned Fiscal Year is a mandatory information. We recomend delete this booking and start a new one." });                   
+                    var mandatoryMessage = Xrm.Utility.getResourceString(resexResourceName, "Booking.FiscalYearIsMandatory.Delete");
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: mandatoryMessage});
                 }
                 return;
             }
@@ -199,10 +201,12 @@
                 glHelper.disableAllFields(formContext);
 
                 if (formType == glHelper.FORMTYPE_CREATE) {
-                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Planned Fiscal Quarter is a mandatory information. Please close current Booking to fix Planned Fiscal Quarter in the WorkOrder form." });                    
+                    var mandatoryMessage = Xrm.Utility.getResourceString(resexResourceName, "Booking.FiscalQuarterIsMandatory.Close");
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: mandatoryMessage });
                 }
                 if (formType == glHelper.FORMTYPE_EDIT) {
-                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Planned Fiscal Quarter is a mandatory information. We recomend delete this booking and start a new one." });                   
+                    var mandatoryMessage = Xrm.Utility.getResourceString(resexResourceName, "Booking.FiscalQuarterIsMandatory.Delete");
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: mandatoryMessage });
                 }
                 return;
             }
