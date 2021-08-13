@@ -41,22 +41,27 @@
 
     }
 
-    function processRevisedQuorter(formContext, woId, starttimeOther) {
+    function processRevisedQuorter(formContext, woId, starttimeOther, numberOfBookings) {
 
 
         //If booking is outside planned fiscal quarter then revised quarte will be populated with new booking value.
         //Latest booking takes over
         //get the latest booking quarter
 
+        var fiscalQuarter = glHelper.GetLookupName(formContext, "ovs_plannedfiscalquarter");
         var thisQuarter = glHelper.quarterByDate(startTime);
-        var otherQuarter = glHelper.quarterByDate(starttimeOther);
+        var otherQuarter = starttimeOther == "" ? starttimeOther : glHelper.quarterByDate(starttimeOther);
+
+        //single booking, create 
+        //single booking, update=> compare with Planned Fiscal Quarter
+        if (thisQuarter == fiscalQuarter) return;
         //same quarter
-        if (thisQuarter == otherQuarter) return true;
+        if (numberOfBookings > 1 && thisQuarter == otherQuarter) return;
 
         var st = new Date(startTime).setHours(0, 0, 0);
-        var sto = new Date(starttimeOther).setHours(0, 0, 0);
+        var sto = starttimeOther == "" ? 0 :new Date(starttimeOther).setHours(0, 0, 0);
        //Latest booking takes over => update WO
-        if (st > sto) {
+        if (st > sto || numberOfBookings <= 1) {
 
             //get revised quarter by name and id
             var req = new XMLHttpRequest();
@@ -106,7 +111,7 @@
                 if (this.status === 200) {
                     var results = JSON.parse(this.response);
 
-                    callbackfunction(formContext, wo, results.value[0]["starttime"]);
+                    callbackfunction(formContext, wo, (results.value.length != 0 ? results.value[0]["starttime"] : ""), results.value.length);
 
                     //    for (var i = 0; i < results.value.length; i++) {
                     //        var starttime = results.value[i]["starttime"];
@@ -171,25 +176,37 @@
             // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
             formType = glHelper.GetFormType(formContext);
 
+            var fiscalYear = glHelper.GetLookupName(formContext, "ovs_plannedfiscalyearid");
+            var fiscalQuarter = glHelper.GetLookupName(formContext, "ovs_plannedfiscalquarter");
 
-            if (formType == glHelper.FORMTYPE_CREATE) {
+            //add Fiscal year and fiscal quarter (mapped from WO) existance validation, cause they are not mandatory in WO
+            if (fiscalYear == "") {
+                //block all fields
+                glHelper.disableAllFields(formContext);
 
-                //add Fiscal year and fiscal quarter (mapped from WO) existance validation, cause they are not mandatory in WO
-                var fiscalYear = glHelper.GetLookupName(formContext, "ovs_plannedfiscalyearid");
-                if (fiscalYear == "") {
+                if (formType == glHelper.FORMTYPE_CREATE) {
                     //show alert
-                    //block all fields
-                    return;
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Planned Fiscal Year is a mandatory information. Please close current Booking to fix  Planned Fiscal Year in the  in WorkOrder form." });                    
                 }
-
-                //add Fiscal year and fiscal quarter (mapped from WO) existance validation, cause they are not mandatory in WO
-                var fiscalQuarter = glHelper.GetLookupName(formContext, "ovs_plannedfiscalquarter");
-                if (fiscalQuarter == "") {
-                    //show alert
-                    //block all fields
-                    return;
+                if (formType == glHelper.FORMTYPE_EDIT) {
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Planned Fiscal Year is a mandatory information. We recomend delete this booking and start a new one." });                   
                 }
+                return;
             }
+
+            //add Fiscal year and fiscal quarter (mapped from WO) existance validation, cause they are not mandatory in WO
+            if (fiscalQuarter == "") {
+                glHelper.disableAllFields(formContext);
+
+                if (formType == glHelper.FORMTYPE_CREATE) {
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Planned Fiscal Quarter is a mandatory information. Please close current Booking to fix Planned Fiscal Quarter in the WorkOrder form." });                    
+                }
+                if (formType == glHelper.FORMTYPE_EDIT) {
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Planned Fiscal Quarter is a mandatory information. We recomend delete this booking and start a new one." });                   
+                }
+                return;
+            }
+
 
             //on save
             formContext.data.entity.addOnSave(BookingTDG_main.OnSave);
@@ -223,8 +240,8 @@
             //check if start time is in fiscal year boundaries
             startTime = glHelper.GetValue(formContext, "starttime");
             var st = new Date(startTime).setHours(0, 0, 0);
-            if (st >= plannedYear.tc_fiscalend
-                || st <= plannedYear.tc_fiscalstart) {
+            if (st > plannedYear.tc_fiscalend
+                || st < plannedYear.tc_fiscalstart) {
 
                 glHelper.SetValue(formContext, "starttime", null);
                 //formContext.getControl("starttime").setNotification("The selected time '" + st + "' was outside of Planned Fiscal Year", "_startTime");
