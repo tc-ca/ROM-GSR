@@ -6,7 +6,9 @@
     var FORMSTAGE_RO = 3;
     var FORMSTAGE_Disabled = 4;
 
-    //********************methods***************       
+    /****************************************************************************************
+    Context, form, client
+    ****************************************************************************************/
 
     function getGlobalContext() {
         return Xrm.Utility.getGlobalContext();
@@ -15,6 +17,40 @@
     function getFormContext(executionContext) {
         return executionContext.getFormContext();
     }
+
+    /**
+    *
+    * @param {context} executionContext
+    * 0 -	Web application, Unified Interface
+    * 1 -   Mobile app
+    * 2	-   Dynamics 365 for Outlook client (COM add-in)	
+    */
+    function getClientType(executionContext) {
+
+        var result = 0;
+        var client = getGlobalContext(executionContext).client.getClient();
+
+        switch (client) {
+
+            case "Mobile": result = 1; break;
+            case "Outlook": result = 2; break;
+        }
+
+        return result;
+    }
+
+
+    function isOffline() {
+
+        return getGlobalContext(executionContext).client.isOffline();
+        clientContext.isNetworkAvailable()
+    }
+
+    function isNetworkAvailable() {
+
+        return getGlobalContext(executionContext).isNetworkAvailable();
+    }
+
 
     function GetFormType(formContext) {
         if (formContext != null)
@@ -50,6 +86,7 @@
     function SwitchFormById(formContext, formId) {
         formContext.ui.formSelector.items.get(formId).navigate();
     }
+
 
     /****************************************************************************************
     VALUES
@@ -299,7 +336,7 @@
        * {
        *    actionLabel: "Click here to Submit", 
        *    eventHandler: function () {
-       *      Xrm.Navigation.openUrl("https://soundharyasubhash.wordpress.com");
+       *      Xrm.Navigation.openUrl("https://test.com");
        *      // perform other operations as required on clicking
        *    }
        * }
@@ -465,6 +502,21 @@
         }
     }
 
+    /****************************************************************************************
+    MOBILE 
+    ****************************************************************************************/
+
+
+    function isTopAccessible() {
+        try {
+            window.top.location;
+            return true;
+        }
+        catch (err) {
+            return false;
+        }
+    }
+
 
     /****************************************************************************************
     MISCELLANEOUS
@@ -591,7 +643,11 @@
         SetControlReadOnly: SetControlReadOnly,
         disableAllFields: disableAllFields,
         quarterByDate: quarterByDate,
-        GetLocalizedStrings: GetLocalizedStrings
+        GetLocalizedStrings: GetLocalizedStrings,
+        getClientType: getClientType,
+        isTopAccessible: isTopAccessible,
+        isNetworkAvailable: isNetworkAvailable,
+        isOffline: isOffline
     };
 
     //********************public methods end***************
