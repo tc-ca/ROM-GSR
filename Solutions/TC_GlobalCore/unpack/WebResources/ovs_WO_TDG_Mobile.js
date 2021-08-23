@@ -1,4 +1,4 @@
-﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+///<reference path="../../Utilities/GlobalHelper.js"/>
 ///<reference path="../../Utilities/questionnaireFunctions.js"/>
 var QuickCreateHelper = QuickCreateHelper || {};
 window.top.QuickCreateHelper = QuickCreateHelper;
@@ -77,7 +77,7 @@ var WO_TDG_main = (function (window, document) {
             }
             
 
-            if (glHelper.isTopAccessible() = true) {
+            if (glHelper.isTopAccessible()) {
                 globalObj = window.top.QuickCreateHelper;
                 globalObj.formContext = formContext;
 

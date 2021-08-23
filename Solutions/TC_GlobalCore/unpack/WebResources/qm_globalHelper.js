@@ -1,4 +1,4 @@
-﻿var glHelper = (function (window, document) {
+var glHelper = (function (window, document) {
 
     //********************global vars*******************
     var FORMSTAGE_Create = 1;
@@ -40,13 +40,13 @@
     }
 
 
-    function isOffline() {
+    function isOffline(executionContext) {
 
         return getGlobalContext(executionContext).client.isOffline();
         clientContext.isNetworkAvailable()
     }
 
-    function isNetworkAvailable() {
+    function isNetworkAvailable(executionContext) {
 
         return getGlobalContext(executionContext).isNetworkAvailable();
     }
