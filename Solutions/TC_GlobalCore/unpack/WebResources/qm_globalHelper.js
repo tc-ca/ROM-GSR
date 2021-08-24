@@ -1,4 +1,4 @@
-var glHelper = (function (window, document) {
+﻿var glHelper = (function (window, document) {
 
     //********************global vars*******************
     var FORMSTAGE_Create = 1;
@@ -21,6 +21,7 @@ var glHelper = (function (window, document) {
     /**
     *
     * @param {context} executionContext
+    * 
     * 0 -	Web application, Unified Interface
     * 1 -   Mobile app
     * 2	-   Dynamics 365 for Outlook client (COM add-in)	

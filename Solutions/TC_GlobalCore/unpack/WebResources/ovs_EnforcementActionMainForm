@@ -533,8 +533,8 @@ function manageDetentionNoticeForm(formContext, status, subStatus)
       glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, false);
     }
 
-    glHelper.SetControlVisibility(formContext, FIELD_RELEASE_DATE, subStatus == ActionSubStatus.ConfirmationReceivedOnTime);
-    glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, subStatus == ActionSubStatus.ConfirmationReceivedOnTime);
+    glHelper.SetControlVisibility(formContext, FIELD_RELEASE_DATE, (subStatus == ActionSubStatus.ConfirmationReceivedOnTime || subStatus == ActionSubStatus.ConfirmationReceivedLate));
+    glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, (subStatus == ActionSubStatus.ConfirmationReceivedOnTime || subStatus == ActionSubStatus.ConfirmationReceivedLate));
     
     //Load up RESX
     var resexResourceName = "";

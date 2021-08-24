@@ -1,4 +1,4 @@
-///<reference path="../../Utilities/GlobalHelper.js"/>
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
 ///<reference path="../../Utilities/questionnaireFunctions.js"/>
 var QuickCreateHelper = QuickCreateHelper || {};
 window.top.QuickCreateHelper = QuickCreateHelper;
@@ -14,6 +14,7 @@ var WO_TDG_main = (function (window, document) {
     var globalObj;
     var currentWebApi;
     var isOffLine;
+    var clientType;
 
     var errorObject = {};
     errorObject.isValid = true;
@@ -65,15 +66,18 @@ var WO_TDG_main = (function (window, document) {
             var globalContext = Xrm.Utility.getGlobalContext();
             var formContext = executionContext.getFormContext();
             isOffLine = glHelper.isOffline(executionContext);
+            clientType = glHelper.getClientType(executionContext);
 
-            if (!isOffLine) {
-            //web, online
-                currentWebApi = Xrm.WebApi.online;
-                clientUrl = globalContext.getClientUrl();
-            } else {
-            //mobile or outlook, offline first
+            if (isOffLine && clientType > 0) {
+
+                //mobile or outlook, offline first
                 currentWebApi = Xrm.WebApi.offline;
                 clientUrl = "https://localhost:2525";
+            } else {
+
+                //web, online
+                currentWebApi = Xrm.WebApi.online;
+                clientUrl = globalContext.getClientUrl();
             }
             
 
@@ -199,9 +203,14 @@ var WO_TDG_main = (function (window, document) {
             var formContext = executionContext.getFormContext();
             var sActivityName = glHelper.GetLookupName(formContext, "ovs_oversighttype");
 
+            //offline filter fix
+            var filter = (isOffLine && clientType > 0)
+                ? "ovs_workordertypenameenglish eq '{0}'"
+                : "startswith(ovs_workordertypenameenglish,'{0}')";
+
             //Set WO Type based on Activity Type
             if (sActivityName == "Civil Aviation Document Review" || sActivityName == "Examen des documents de l'aviation civile" || sActivityName == "Examen documentation de l'aviation civile") {
-                currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=startswith(ovs_workordertypenameenglish,'Regulatory Authorization')").then(
+                currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=" + filter.replace("{0}", "Regulatory Authorization")).then(
                     function success(results) {
                         var englishName = results.entities[0]["ovs_workordertypenameenglish"];
                         var frenchName = results.entities[0]["ovs_workordertypenamefrench"];
@@ -221,7 +230,7 @@ var WO_TDG_main = (function (window, document) {
                 );
             }
             else {
-                currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=startswith(ovs_workordertypenameenglish,'Inspection')").then(
+                currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=" + filter.replace("{0}", "Inspection")).then(
                     function success(results) {
                         var englishName = results.entities[0]["ovs_workordertypenameenglish"];
                         var frenchName = results.entities[0]["ovs_workordertypenamefrench"];
@@ -268,6 +277,8 @@ var WO_TDG_main = (function (window, document) {
                 isInspector = appName.indexOf("Inspections") != -1;
                 isAnalytic = appName.indexOf("Analytics") != -1;
 
+
+
                 if (isAnalytic || isPlanner) return;
 
                 if (formType == 1) {
@@ -276,7 +287,12 @@ var WO_TDG_main = (function (window, document) {
                     //get rational "ovs_rational" , check it it has french option
                     if (isManager || isInspector) {
 
-                        currentWebApi.retrieveMultipleRecords("ovs_tyrational", "?$select=ovs_name,ovs_rationalelbl,ovs_rationalflbl,ovs_tyrationalid&$filter=startswith(ovs_name,'Unplanned')").then(
+                        //offline filter fix
+                        var filter = (isOffLine && clientType > 0)
+                            ? "ovs_name eq '{0}'"
+                            : "startswith(ovs_name,'{0}')";
+
+                        currentWebApi.retrieveMultipleRecords("ovs_tyrational", "?$select=ovs_name,ovs_rationalelbl,ovs_rationalflbl,ovs_tyrationalid&$filter=" + filter.replace("{0}","Unplanned")).then(
                             function success(results) {
                                 var ovs_name = results.entities[0]["ovs_name"];
                                 var ovs_rationalelbl = results.entities[0]["ovs_rationalelbl"];
