@@ -1,4 +1,4 @@
-﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+///<reference path="../../Utilities/GlobalHelper.js"/>
 ///<reference path="../../Utilities/questionnaireFunctions.js"/>
 var QuickCreateHelper = QuickCreateHelper || {};
 window.top.QuickCreateHelper = QuickCreateHelper;
@@ -336,6 +336,7 @@ var WO_TDG_main = (function (window, document) {
                                 editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_serviceterritory");
                             }
                             break;
+                        case "Inspector Offline":
                         case "TDG Inspections / Inspections TMD":
                             if (isPlanned && formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
                                 readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed", "ovs_qcreviewcomments", "ovs_qcreviewcompletedind", "ovs_primaryinspector",); //"msdyn_serviceterritory",
@@ -440,13 +441,47 @@ var WO_TDG_main = (function (window, document) {
 
             var currentUserId = userSettings.userId;
             currentUserId = currentUserId.replace(/[{}]/g, "");
+            var bookableresourceid;
+            var _userid_value_formatted;
 
-            currentWebApi.retrieveMultipleRecords("bookableresource", "?$filter=_userid_value eq '" + currentUserId + "'").then(function success(result) {
+            //Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "currentUserId " + currentUserId });
+
+            currentWebApi.retrieveMultipleRecords("bookableresource", "?$filter=_userid_value eq " + currentUserId).then(function success(result) {
                 if (result != null && result.entities.length > 0) {
-                    var bookableresourceid = result.entities[0].bookableresourceid;
-                    var _userid_value_formatted = result.entities[0]["_userid_value@OData.Community.Display.V1.FormattedValue"];
+
+
+                    if (isOffLine && clientType > 0) {
+                    //offline
+                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "result.entities.length " + result.entities.length });
+
+                        for (var i = 0; i < results.entities.length; i++) {
+
+                            Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "_userid_value " + result.entities[i]["_userid_value"] });
+
+                            if (result.entities[i]["_userid_value"] == currentUserId) {
+
+                                bookableresourceid = result.entities[i].bookableresourceid;
+                                _userid_value_formatted = result.entities[i]["_userid_value@OData.Community.Display.V1.FormattedValue"];
+
+                                break;
+                            }
+                        }
+                    } else {
+                        //online
+
+                        bookableresourceid = result.entities[0].bookableresourceid;
+                        _userid_value_formatted = result.entities[0]["_userid_value@OData.Community.Display.V1.FormattedValue"];
+                    }
 
                     glHelper.SetLookup(formContext, "ovs_primaryinspector", "bookableresource", bookableresourceid, _userid_value_formatted);
+
+
+
+                    //Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "bookableresourceid, _userid_value_formatted " + result.entities[0].bookableresourceid + ",  " + _userid_value_formatted});
+
+
+                    //glHelper.SetLookup(formContext, "ovs_primaryinspector", "bookableresource", bookableresourceid, _userid_value_formatted);
+
                     //glHelper.SetLookup(formContext, "ovs_primaryinspector", "bookableresource", bookableresourceid, name);
 
                     //Set Region depends on Default Isnpector region
