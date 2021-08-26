@@ -1,4 +1,4 @@
-///<reference path="../../Utilities/GlobalHelper.js"/>
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
 ///<reference path="../../Utilities/questionnaireFunctions.js"/>
 var QuickCreateHelper = QuickCreateHelper || {};
 window.top.QuickCreateHelper = QuickCreateHelper;
@@ -51,23 +51,6 @@ var WO_TDG_main = (function (window, document) {
             console.log("No data to display in the quick view control.");
             globalObj.contact = null;
             return;
-        }
-    }
-
-    function getLocalizedName(formatedString) {
-
-        var pos = formatedString.indexOf("::");
-        if (pos > -1) {
-            if (userSettings.languageId == 1036) {
-                // French
-                return formatedString.substring(pos + 2);
-            }
-            else if (userSettings.languageId == 1033) {
-                // English
-                return formatedString.substring(0, pos);
-            }
-        } else {
-            return formatedString;
         }
     }
 
@@ -430,7 +413,20 @@ var WO_TDG_main = (function (window, document) {
                         let _territoryid_value_formatted = results.entities[i].UserId["_territoryid_value@OData.Community.Display.V1.FormattedValue"];
 
                         if (_territoryid_value) {
-                            let _territoryid_value_formattedLang = getLocalizedName(_territoryid_value_formatted);
+                            let _territoryid_value_formattedLang = "";
+                            let pos = _territoryid_value_formatted.indexOf("::");
+                            if (pos > -1) {
+                                if (userSettings.languageId == 1036) {
+                                    // French
+                                    _territoryid_value_formattedLang = _territoryid_value_formatted.substring(pos + 2);
+                                }
+                                else if (userSettings.languageId == 1033) {
+                                    // English
+                                    _territoryid_value_formattedLang = _territoryid_value_formatted.substring(0, pos);
+                                }
+                            } else {
+                                _territoryid_value_formattedLang = _territoryid_value_formatted;
+                            }
 
                             glHelper.SetLookup(formContext, "msdyn_serviceterritory", _territoryid_value_lookuplogicalname, _territoryid_value, _territoryid_value_formattedLang);
                         }
@@ -448,68 +444,48 @@ var WO_TDG_main = (function (window, document) {
             currentUserId = currentUserId.replace(/[{}]/g, "");
             var bookableresourceid;
             var _userid_value_formatted;
-            var _territoryid_value;
-            var _territoryid_value_lookuplogicalname;
-            var _territoryid_value_formatted;
-            var formattedLang = "";
 
             //Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "currentUserId " + currentUserId });
 
 
-            currentWebApi.retrieveMultipleRecords("bookableresource", "?$select=name,_userid_value&$expand=UserId($select=territoryid,_territoryid_value)&$filter=_userid_value eq " + currentUserId.toLowerCase()).then(
+            currentWebApi.retrieveMultipleRecords("bookableresource", "?$select=name,_userid_value&$expand=UserId($select=territoryid)&$filter=_userid_value eq " + currentUserId).then(
                 function success(results) {
 
                     if (results != null && results.entities.length > 0) {
 
+                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Number of users fetched " + results.entities.length });
+
                         if (isOffLine && clientType > 0 && results.entities.length > 1) {
                             //offline
+                            Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "results.entities.length " + results.entities.length });
 
                             for (var i = 0; i < results.entities.length; i++) {
 
+                                Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "user match " + results.entities[i]["_userid_value"] == currentUserId });
+
                                 if (results.entities[i]["_userid_value"].toUpperCase() == currentUserId.toUpperCase()) {
 
-                                    //Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "inside " });
+                                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "inside " });
 
-                                    //primary inspector
                                     bookableresourceid = results.entities[i].bookableresourceid;
                                     _userid_value_formatted = results.entities[i]["_userid_value@OData.Community.Display.V1.FormattedValue"];
-
-                                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "results.entities[i].UserId " + results.entities[i].UserId });
-                                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "_territoryid_value " + results.entities[i].UserId["_territoryid_value"] });
-
-                                    //Inspector's region
-                                    _territoryid_value = results.entities[i].UserId["_territoryid_value"]
-                                    _territoryid_value_lookuplogicalname = results.entities[i].UserId["_territoryid_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
-                                    _territoryid_value_formatted = results.entities[i].UserId["_territoryid_value@OData.Community.Display.V1.FormattedValue"];
-
                                     break;
+
                                 }
                             }
                         } else {
                             //online
-
-                            //primary inspector
                             bookableresourceid = results.entities[0].bookableresourceid;
                             _userid_value_formatted = results.entities[0]["_userid_value@OData.Community.Display.V1.FormattedValue"];
-
-                            //Inspector's region
-                            _territoryid_value = results.entities[0].UserId["_territoryid_value"]
-                            _territoryid_value_lookuplogicalname = results.entities[0].UserId["_territoryid_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
-                            _territoryid_value_formatted = results.entities[0].UserId["_territoryid_value@OData.Community.Display.V1.FormattedValue"];
                         }
 
+                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Total " + bookableresourceid + "  " + _userid_value_formatted });
 
-                        //localize region lookup
-                        if (_territoryid_value)
-                            formattedLang = getLocalizedName(_territoryid_value_formatted);
 
-                        //primary inspector
                         glHelper.SetLookup(formContext, "ovs_primaryinspector", "bookableresource", bookableresourceid, _userid_value_formatted);
 
-                        //inspectors region
-                        glHelper.SetLookup(formContext, "msdyn_serviceterritory", _territoryid_value_lookuplogicalname, _territoryid_value, formattedLang);
+                        WO_TDG_main.SetRegion(formContext);
 
-                        //WO_TDG_main.SetRegion(formContext);
                     }
                 },
                 function (error) {

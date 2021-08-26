@@ -141,7 +141,7 @@ var AccountTDGmain = (function (window, document) {
                 window.top.QuickCreateHelper.site = {};
                 window.top.QuickCreateHelper.site.id = formContext.entityReference.id;
                 window.top.QuickCreateHelper.site.et = formContext.entityReference.entityType;
-                window.top.QuickCreateHelper.site.name = formContext.getAttribute("ovs_legalname").getValue();
+                window.top.QuickCreateHelper.site.name = formContext.getAttribute("name").getValue();
 
             } catch (e) {
                 console.log("Site_OnChange failed - lookup is empty");

@@ -326,13 +326,13 @@ var WO_TDG_main = (function (window, document) {
                                 
                             }
 
-                            //hiddenArray = new Array("msdyn_serviceterritory", "msdyn_workordertype");
-                             //msdyn_systemstatus - filter OptionSet (exclude Closed - Cancelled)
-                            if (formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
+                            ////hiddenArray = new Array("msdyn_serviceterritory", "msdyn_workordertype");
+                            // //msdyn_systemstatus - filter OptionSet (exclude Closed - Cancelled)
+                            //if (formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
 
-                                var options = new Array(); options[0] = 690970005;
-                                glHelper.filterOptionSet(formContext, "msdyn_systemstatus", options, false);
-                            }
+                            //    var options = new Array(); options[0] = 690970005;
+                            //    glHelper.filterOptionSet(formContext, "msdyn_systemstatus", options, false);
+                            //}
 
                             break;
                         default:
