@@ -36,7 +36,7 @@
     <div class="container-fluid">
         <div id="lan-EN">
             <div class="row top-double-buffer">
-                <div class="well well-lg">
+                <div class="well well-lg" id="msg">
                     Hello,
 
                     I have found an issue using ROM.
@@ -45,20 +45,20 @@
 
             <div class="row top-double-buffer">
                 <div class="col-xs-9 col-xs-offset-1">
-                    <label for="messageCS">The steps to reproduce the issue are as follows:</label>
+                    <label for="messageCS" id="lblMessageCS">The steps to reproduce the issue are as follows:</label>
                     <textarea class="form-control" id="messageCS" rows="10"></textarea>
                 </div>
 
             </div><div class="row top-double-buffer">
                 <div class="col-xs-5 col-xs-offset-1">
-                    <label for="isStoping">Is this issue preventing you from completing an inspection?</label>
+                    <label for="isStoping" id="lblIsStoping">Is this issue preventing you from completing an inspection?</label>
                     <textarea class="form-control" id="isStoping" rows="3"></textarea>
                 </div>
             </div>
 
             <div class="row top-double-buffer">
                 <div class="col-xs-5 col-xs-offset-1">
-                    <label for="isBugOrFeature">Is this bug or just a feature that would be nice to have in the system?</label>
+                    <label for="isBugOrFeature" id="lblIsBugOrFeature">Is this bug or just a feature that would be nice to have in the system?</label>
                     <textarea class="form-control" id="isBugOrFeature" rows="3"></textarea>
                 </div>
             </div>
@@ -69,41 +69,7 @@
                 </div>
             </div>
         </div>
-        <div id="lan-FR">
-            <div class="row top-double-buffer">
-                <div class="well well-lg">
-                    Bonjour,
-
-                    j'ai trouvé un problème avec l'application GSR.
-                </div>
-            </div>
-
-            <div class="row top-double-buffer">
-                <div class="col-xs-9 col-xs-offset-1">
-                    <label for="messageCS">Les étapes pour reproduire le problème sont les suivantes:</label>
-                    <textarea class="form-control" id="messageCS" rows="10"></textarea>
-                </div>
-
-            </div><div class="row top-double-buffer">
-                <div class="col-xs-5 col-xs-offset-1">
-                    <label for="isStoping">Ce problème vous empêche-t-il de terminer une inspection?</label>
-                    <textarea class="form-control" id="isStoping" rows="3"></textarea>
-                </div>
-            </div>
-
-            <div class="row top-double-buffer">
-                <div class="col-xs-5 col-xs-offset-1">
-                    <label for="isBugOrFeature">Est-ce un bug ou juste une fonctionnalité qui serait bien d'avoir dans le système?</label>
-                    <textarea class="form-control" id="isBugOrFeature" rows="3"></textarea>
-                </div>
-            </div>
-
-            <div class="row top-double-buffer">
-                <div class="col-xs-3 col-xs-offset-8">
-                    <button type="submit" id="submitCSmessage" class="btn btn-primary">Soumettre à l'équipe du support</button>
-                </div>
-            </div>
-        </div>
+        
         <script>
 
             var globalContext = Xrm.Utility.getGlobalContext();
@@ -111,29 +77,35 @@
             var dirty = false;
             var url = "";
 
-
             $(document).ready(function () {
 
                 var userSettings = Xrm.Utility.getGlobalContext().userSettings;
                 langId = userSettings.languageId;
-                if (langId === 1033) { $('#lan-EN').show(); $('#lan-FR').hide();  }
-                else { $('#lan-EN').hide(); $('#lan-FR').show(); }
-
+                
+                if (langId != 1033) {
+                    $('#msg').text("Bonjour, j'ai trouvé un problème avec l'application GSR.");
+                    $('#lblMessageCS').text("Les étapes pour reproduire le problème sont les suivantes:");
+                    $('#lblIsStoping').text("Ce problème vous empêche-t-il de terminer une inspection?");
+                    $('#lblIsBugOrFeature').text("Est-ce un bug ou juste une fonctionnalité qui serait bien d'avoir dans le système?");
+                    $('#submitCSmessage').text("Soumettre à l'équipe du support");
+                }
 
                 $('#messageCS').on('change keyup', function () {
                     dirty = true;
                 });
 
                 $('#submitCSmessage').on('click', function () {
-
                     //Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Bootstrap is ok" });
                     if (!dirty) {
-
-                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Please type in a description of the issue" });
+                        if (langId === 1033) Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Please type in a description of the issue" });
+                        else Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Veuillez écrire une description du problème" });
+                        
                         return;
                     }
                     if (url == "") {
-                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Environment Settings don't have Customer Support reference" });
+                        if (langId === 1033) Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Environment Settings don't have Customer Support reference" });
+                        else Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Les paramètres d’environnement n’ont pas de référence de support client" });
+
                         return;
                     }
 
@@ -157,7 +129,6 @@
                         req.onreadystatechange = function () {
                             if (this.readyState === 4) {
 
-
                                 req.onreadystatechange = null;
                                 if (this.status === 200) {
                                     //Xrm.Utility.closeProgressIndicator();
@@ -170,7 +141,8 @@
                                 }
                                 else {
                                     //parent.Xrm.Utility.closeProgressIndicator();
-                                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Something went wrong. Error: " + this.statusText });
+                                    if (langId === 1033) Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Something went wrong. Error: " + this.statusText });
+                                    else Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Quelque chose s’est mal passé. Erreur: " + this.statusText });
                                 }
                             }
                         };
@@ -182,7 +154,8 @@
                         Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: e.message });
                     }
                     //parent.Xrm.Utility.closeProgressIndicator();
-                })
+                });
+
 
                 Xrm.WebApi.online.retrieveMultipleRecords("qm_environmentsettings", "?$select=qm_value&$filter=qm_name eq 'CustomerSupportUrl'&$top=1").then(
                     function success(results) {
@@ -198,7 +171,6 @@
                 );
 
             });
-
 
         </script>
     </div>
