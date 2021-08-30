@@ -505,10 +505,23 @@ var WO_TDG_main = (function (window, document) {
 
         SetDefaultFiscalYear: function (formContext) {
 
+
+            var fiscalYearName;
+            var filter = "";
+            if (isOffLine && clientType > 0) {
+            //offline
+                fiscalYearName = glHelper.getFiscalYearFromCurrentDate();
+                filter = "tc_name eq '" + fiscalYearName + "'";
+            } else {
+            //online
+                filter = "tc_iscurrentfiscalyear eq true";
+            }
+
             var messageFiscalYearFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchFiscalYear.ErrorMessage");
 
-            currentWebApi.retrieveMultipleRecords("tc_tcfiscalyear", "?$select=tc_name,tc_tcfiscalyearid&$filter=tc_iscurrentfiscalyear eq true").then(
+            currentWebApi.retrieveMultipleRecords("tc_tcfiscalyear", "?$select=tc_name,tc_tcfiscalyearid&$filter=" + filter).then(
                 function success(results) {
+
                     for (var i = 0; i < results.entities.length; i++) {
                         var tc_name = results.entities[i]["tc_name"];
                         var tc_tcfiscalyearid = results.entities[i]["tc_tcfiscalyearid"];

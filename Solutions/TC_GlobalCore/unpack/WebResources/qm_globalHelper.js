@@ -1,4 +1,4 @@
-﻿var glHelper = (function (window, document) {
+var glHelper = (function (window, document) {
 
     //********************global vars*******************
     var FORMSTAGE_Create = 1;
@@ -552,6 +552,26 @@
         return quarter;
     }
 
+    function getFiscalYearFromCurrentDate() {
+
+        var result = "";
+        var today = new Date();
+        var nowY = today.getFullYear();
+        var currentQuarter = quarterByDate(today);
+
+        switch (currentQuarter) {
+
+            case "Q1": 
+            case "Q2":
+            case "Q3":
+                result = nowY.toString() + "-" + (nowY + 1).toString(); break;
+            case "Q4":
+                result = nowY.toString() + "-" + (nowY - 1).toString(); break;
+        }
+
+        return result;
+    }
+
     function GetLocalizedStrings() {
         // TODO Replace with resx Web Resource
 
@@ -648,7 +668,8 @@
         getClientType: getClientType,
         isTopAccessible: isTopAccessible,
         isNetworkAvailable: isNetworkAvailable,
-        isOffline: isOffline
+        isOffline: isOffline,
+        getFiscalYearFromCurrentDate: getFiscalYearFromCurrentDate,
     };
 
     //********************public methods end***************
