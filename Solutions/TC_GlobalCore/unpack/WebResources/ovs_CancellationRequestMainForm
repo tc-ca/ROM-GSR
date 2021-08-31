@@ -7,5 +7,7 @@ async function OnLoad(executionContext) {
 }
 
 function OnSave(executionContext) {
-    
+    var formContext = executionContext.getFormContext();
+    let lang = glHelper.GetCurrentUserLanguage();
+    glHelper.SetValue(formContext, "ovs_uidescription", lang);
 }

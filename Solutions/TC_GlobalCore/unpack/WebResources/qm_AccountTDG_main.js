@@ -11,8 +11,6 @@ var AccountTDGmain = (function (window, document) {
         "948010000": "TDG Organizations",
     };
 
-    const FIELD_LEGAL_NAME = "ovs_legalname";
-    const FIELD_OPERATING_NAME = "name";
     const STREET1 = "address1_line1";
     const CITY = "address1_city";
     const STATE_PROVINCE = "address1_stateorprovince";
@@ -90,13 +88,10 @@ var AccountTDGmain = (function (window, document) {
         
     }
 
-    //TO DO: reengineer
-    //remove the method and set fields prperties with form designer
-    function hideAllActionTypeSections(formContext) {
+   
+    //composite control fields manipulation
+    function setAddressFieldsLevel(formContext) {
         
-        glHelper.SetRequiredLevel(formContext, FIELD_OPERATING_NAME, true);
-        glHelper.SetRequiredLevel(formContext, FIELD_LEGAL_NAME, true);
-
         glHelper.SetRequiredLevel(formContext, STREET1, true);
         glHelper.SetRequiredLevel(formContext, CITY, true);
         glHelper.SetRequiredLevel(formContext, STATE_PROVINCE, true);
@@ -133,9 +128,10 @@ var AccountTDGmain = (function (window, document) {
                 getViolationHistory(formContext);
             }
 
-            hideAllActionTypeSections(formContext);
+            setAddressFieldsLevel(formContext);
 
             // This info needed for Contact-Quick create form i.e. Contact_QuickCreate.js
+            //TO Do: re-engeenir for mobile
             try {
                 window.top.QuickCreateHelper = {};
                 window.top.QuickCreateHelper.site = {};

@@ -1,4 +1,4 @@
-///<reference path="../../Utilities/GlobalHelper.js"/>
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
 ///<reference path="../../Utilities/questionnaireFunctions.js"/>
 var QuickCreateHelper = QuickCreateHelper || {};
 window.top.QuickCreateHelper = QuickCreateHelper;
@@ -509,11 +509,11 @@ var WO_TDG_main = (function (window, document) {
             var fiscalYearName;
             var filter = "";
             if (isOffLine && clientType > 0) {
-            //offline
+                //offline
                 fiscalYearName = glHelper.getFiscalYearFromCurrentDate();
                 filter = "tc_name eq '" + fiscalYearName + "'";
             } else {
-            //online
+                //online
                 filter = "tc_iscurrentfiscalyear eq true";
             }
 

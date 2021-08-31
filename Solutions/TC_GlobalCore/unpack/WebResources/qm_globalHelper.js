@@ -1,4 +1,4 @@
-var glHelper = (function (window, document) {
+﻿var glHelper = (function (window, document) {
 
     //********************global vars*******************
     var FORMSTAGE_Create = 1;
