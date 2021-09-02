@@ -105,6 +105,7 @@
     <CommandDefinition Id="Mscrm.Form.Activate">
       <EnableRules>
         <EnableRule Id="Mscrm.CanWritePrimary" />
+        <EnableRule Id="ovs.msdyn_workorder.EnableRule19.DisplayOnlyForManagerOrPlanner" />
       </EnableRules>
       <DisplayRules>
         <DisplayRule Id="Mscrm.CanWritePrimary" />
@@ -122,6 +123,7 @@
     <CommandDefinition Id="Mscrm.Form.Deactivate">
       <EnableRules>
         <EnableRule Id="Mscrm.CanWritePrimary" />
+        <EnableRule Id="ovs.msdyn_workorder.EnableRule19.DisplayOnlyForManagerOrPlanner" />
       </EnableRules>
       <DisplayRules>
         <DisplayRule Id="Mscrm.CanWritePrimary" />
@@ -301,6 +303,11 @@
       </EnableRule>
       <EnableRule Id="ovs.msdyn_workorder.EnableRule.isTDG.App.InspectorManagerPlanner">
         <CustomRule FunctionName="WORibbon.isInspectionApp" Library="$webresource:qm_WorkOrder_Ribbons.js">
+          <CrmParameter Value="PrimaryControl" />
+        </CustomRule>
+      </EnableRule>
+      <EnableRule Id="ovs.msdyn_workorder.EnableRule19.DisplayOnlyForManagerOrPlanner">
+        <CustomRule FunctionName="isManagerOrPlannerRole" Library="$webresource:ovs_ROMCommonFunctions">
           <CrmParameter Value="PrimaryControl" />
         </CustomRule>
       </EnableRule>

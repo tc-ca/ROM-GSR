@@ -21,26 +21,33 @@ const FIELD_ENABLING_ACT = "qm_enablingact";
 const FIELD_ENABLING_REGULATION = "qm_enablingregulation";
 const FIELD_DUE_DATE = "ovs_duedate";
 
+const FIELD_COCNOTREQUESTED = "qm_confirmationnotrequestedchk";
+const FIELD_COCJUSTIFICATION = "qm_justificationfornotcoc";
+
 async function OnLoad(executionContext) {
-  //get context
-  globalContext = glHelper.getGlobalContext();
-  var formContext = executionContext.getFormContext();
-  globalFormContext = formContext;
+    //get context
+    globalContext = glHelper.getGlobalContext();
+    var formContext = executionContext.getFormContext();
+    globalFormContext = formContext;
 
-  // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
-  let formType = glHelper.GetFormType(formContext);
+    // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+    let formType = glHelper.GetFormType(formContext);
 
-  //hide all sections on load, required section to be determined
-  hideAllActionTypeSections(formContext);
+    //hide all sections on load, required section to be determined
+    hideAllActionTypeSections(formContext);
 
-  // This was linked on the form (PowerApps)
-  //provisionIdField = formContext.getAttribute(FIELD_PROVISION_ID);
-  //provisionIdField.removeOnChange(provisionIdField_OnChange); // avoid binding multiple event handlers
-  //provisionIdField.addOnChange(provisionIdField_OnChange);
+    // This was linked on the form (PowerApps)
+    //provisionIdField = formContext.getAttribute(FIELD_PROVISION_ID);
+    //provisionIdField.removeOnChange(provisionIdField_OnChange); // avoid binding multiple event handlers
+    //provisionIdField.addOnChange(provisionIdField_OnChange);
 
-  enablingRegulationField = formContext.getAttribute(FIELD_ENABLING_REGULATION);
-  enablingRegulationField.removeOnChange(enablingRegulationField_OnChange); // avoid binding multiple event handlers
-  enablingRegulationField.addOnChange(enablingRegulationField_OnChange);
+    enablingRegulationField = formContext.getAttribute(FIELD_ENABLING_REGULATION);
+    enablingRegulationField.removeOnChange(enablingRegulationField_OnChange); // avoid binding multiple event handlers
+    enablingRegulationField.addOnChange(enablingRegulationField_OnChange);
+
+    var cocNoRequested = formContext.getAttribute(FIELD_COCNOTREQUESTED);
+    cocNoRequested.removeOnChange(coCNoRequested_OnChange);
+    cocNoRequested.addOnChange(coCNoRequested_OnChange);
 
     if (formType == 1) {
       //If form is new, set the Action Date to today.
@@ -78,8 +85,30 @@ async function OnLoad(executionContext) {
   
 }
 
+function coCNoRequested_OnChange(executionContext) {
+    let formContext = executionContext.getFormContext();
+    let value = glHelper.GetValue(formContext, FIELD_COCNOTREQUESTED);
+    if (value === true) {
+        glHelper.SetControlVisibility(formContext, FIELD_COCJUSTIFICATION, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_COCJUSTIFICATION, true);
+    } else {
+        glHelper.SetControlVisibility(formContext, FIELD_COCJUSTIFICATION, false);
+        glHelper.SetRequiredLevel(formContext, FIELD_COCJUSTIFICATION, false);
+        glHelper.SetValue(formContext, FIELD_COCJUSTIFICATION, "");
+    }
+
+}
+
 function OnSave(executionContext) {
-    // let formContext = executionContext.getFormContext();
+    let formContext = executionContext.getFormContext();
+    let value = glHelper.GetValue(formContext, FIELD_COCNOTREQUESTED);
+    let justification = glHelper.GetValue(formContext, FIELD_COCJUSTIFICATION);
+    if (value === true) {
+        alert("True:" + justification);
+    } else {
+        alert("False:" + justification);
+    }
+
 }
 
 function hideAllActionTypeSections(formContext) {
@@ -94,6 +123,10 @@ function hideAllActionTypeSections(formContext) {
 
     glHelper.SetRequiredLevel(formContext, "qm_rclegislationid", true);
     glHelper.SetRequiredLevel(formContext, "qm_externalcomments", true);
+
+    let value = glHelper.GetValue(formContext, FIELD_COCNOTREQUESTED);
+    glHelper.SetControlVisibility(formContext, FIELD_COCJUSTIFICATION, value);
+    glHelper.SetRequiredLevel(formContext, FIELD_COCJUSTIFICATION, value);
 
 }
 
