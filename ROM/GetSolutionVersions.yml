@@ -1,0 +1,73 @@
+trigger:
+- none
+
+pr:
+- none
+
+variables:
+- name: SolutionExists
+  value: true
+- name: SolutionVersion
+  value: ''
+- name: SolutionDisplayName
+  value: ''
+
+- name: 'CoreLocalization'
+  value: 'CoreLocalization'
+  readonly: true
+- name: 'FieldService'
+  value: 'FieldService'
+  readonly: true
+- name: 'PowerBIReports'
+  value: 'PowerBIReports'
+  readonly: true
+- name: 'TC_CustomActions'
+  value: 'TC_CustomActions'
+  readonly: true
+- name: 'TC_GlobalCore'
+  value: 'TC_GlobalCore'
+  readonly: true
+- name: 'TDGConnectionReferences'
+  value: 'TDGConnectionReferences'
+  readonly: true
+- name: 'TDGEnvironmentVariables'
+  value: 'TDGEnvironmentVariables'
+  readonly: true
+- name: 'TDGFlow'
+  value: 'TDGFlow'
+  readonly: true
+- name: 'TDGFlowInspectionReport'
+  value: 'TDGFlowInspectionReport'
+  readonly: true
+- name: 'TDGPlugins'
+  value: 'TDGPlugins'
+  readonly: true
+- name: 'TDGTemplates'
+  value: 'TDGTemplates'
+  readonly: true
+
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- task: MSCRMToolInstaller@12
+  inputs:
+    nugetFeed: 'official'
+    psFeed: 'official'
+- template: templates/GetSolutionVersion.yml
+  parameters:
+    Solutions:
+      - $(CoreLocalization)
+      - $(FieldService)
+      - $(PowerBIReports)
+      - $(TC_CustomActions)
+      - $(TC_GlobalCore)
+      - $(TDGConnectionReferences)
+      - $(TDGEnvironmentVariables)
+      - $(TDGFlow)
+      - $(TDGFlowInspectionReport)
+      - $(TDGPlugins)
+      - $(TDGTemplates)
+    ConnectionString: $(PowerPlatformSPN_Dev)
+    EnvironmentName: 'DEV-TDG'
