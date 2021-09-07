@@ -21,7 +21,7 @@ parameters:
 steps:
   - ${{ each solution in parameters.Solutions }}:
       - task: MSCRMGetSolution@12
-        displayName: '${{ EnvironmentName }} - ${{ solution }}'
+        displayName: '${{ parameters.EnvironmentName }} - ${{ solution }}'
         inputs:
           crmConnectionString: '${{ parameters.ConnectionString }}'
           solutionName: '${{ solution }}'
