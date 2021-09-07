@@ -66,6 +66,7 @@ stages:
     PowerPlatformSPN_Dev: $(PowerPlatformSPN_Dev) #used to update solution version after successful deployment to QA
     Environment: 'QA-TDG'
     StageName: 'DeployManagedSolutionToQA'
+    DeleteSolution: true
     dependsOn: 
     - 'BuildAndPublishArtifacts'
 #ACC
@@ -75,6 +76,7 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_ACC)
     Environment: 'ACC-TDG'
     StageName: 'DeployManagedSolutionToACC'
+    DeleteSolution: true
     dependsOn: 
     - 'DeployManagedSolutionToQA'
 #ACCDATA
@@ -84,7 +86,8 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_ACCDATA)
     Environment: 'ACC-TDG-DATA'
     StageName: 'DeployUnmanagedSolutionToACCDATA'
-    DeployUnmanagedSolution: true
+    DeployUnmanagedSolution: false
+    DeleteSolution: true
     dependsOn: 
     - 'DeployManagedSolutionToQA'
 #PREPROD
@@ -94,6 +97,7 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
     Environment: 'PREPROD-TDG'
     StageName: 'DeployManagedSolutionToPREPROD'
+    DeleteSolution: true
     dependsOn: 
     - 'DeployManagedSolutionToQA'
 #PROD
@@ -103,5 +107,6 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_PROD)
     Environment: 'PROD-TDG'
     StageName: 'DeployManagedSolutionToPROD'
+    DeleteSolution: true
     dependsOn: 
     - 'DeployManagedSolutionToQA'
