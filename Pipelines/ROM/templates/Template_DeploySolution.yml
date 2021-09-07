@@ -16,6 +16,9 @@ parameters:
   - name: dependsOn
     type: object
     default: []
+  - name: DeleteSolution
+    type: boolean
+    default: false
     
 stages:
 - stage: ${{Parameters.StageName}}
@@ -71,6 +74,12 @@ stages:
           - task: PowerPlatformToolInstaller@0
             inputs:
               DefaultVersion: true
+          - ${{ if eq(parameters.DeleteSolution, true) }}:
+            - task: PowerPlatformDeleteSolution@0
+              inputs:
+                authenticationType: 'PowerPlatformSPN'
+                PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
+                SolutionName: '${{Parameters.SolutionName}}'
           - ${{ if eq(parameters.DeployUnmanagedSolution, false) }}:
             - task: PowerPlatformImportSolution@0
               inputs:
