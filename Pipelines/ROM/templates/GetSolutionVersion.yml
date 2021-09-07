@@ -23,11 +23,11 @@ steps:
       - task: MSCRMGetSolution@12
         displayName: '${{ EnvironmentName }} - ${{ solution }}'
         inputs:
-      	  crmConnectionString: '${{ parameters.ConnectionString }}'
-      	  solutionName: '${{ solution }}'
-      	  existsVariableName: 'SolutionExists'
-      	  versionVariableName: 'SolutionVersion'
-      	  displayVariableName: 'SolutionDisplayName'
+          crmConnectionString: '${{ parameters.ConnectionString }}'
+          solutionName: '${{ solution }}'
+          existsVariableName: 'SolutionExists'
+          versionVariableName: 'SolutionVersion'
+          displayVariableName: 'SolutionDisplayName'
       - powershell: |
           Write-Host "SolutionExists = $(SolutionExists)"
           Write-Host "SolutionDisplayName = $(SolutionDisplayName)"
