@@ -28,6 +28,15 @@ steps:
           existsVariableName: 'SolutionExists'
           versionVariableName: 'SolutionVersion'
           displayVariableName: 'SolutionDisplayName'
-      - powershell: |
-          echo '##vso[task.setvariable variable=${{ solution }}Version;isOutput=true]$(SolutionVersion)'
-          echo '${{ solution }}Version value of $(SolutionVersion) saved to output variable.'
+      - task: PowerShell@2
+        inputs:
+          targetType: 'inline'
+          script: |
+            echo '##vso[setvariable variable=${{ solution }}Version]$(SolutionVersion)'
+            echo '${{ solution }}Version value of $(SolutionVersion) saved to output variable.'
+            
+            Write-Host "##vso[task.setvariable variable=${{ solution }}Version;]$(SolutionVersion)"
+            Write-Host "Set ${{ solution }}Version environment variable to ($env:DepartmentId)"
+             
+            Write-Host "Using ${{ solution }}Version environment variable: $(${{ solution }}Version)"
+          pwsh: true
