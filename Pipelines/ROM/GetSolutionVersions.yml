@@ -46,20 +46,6 @@ variables:
   value: 'TDGTemplates'
   readonly: true
 
-- name: Solutions
-  value:
-    $(CoreLocalization)
-    ,$(FieldService)
-    ,$(PowerBIReports)
-    ,$(TC_CustomActions)
-    ,$(TC_GlobalCore)
-    ,$(TDGConnectionReferences)
-    ,$(TDGEnvironmentVariables)
-    ,$(TDGFlow)
-    ,$(TDGFlowInspectionReport)
-    ,$(TDGPlugins)
-    ,$(TDGTemplates)
-
 pool:
   vmImage: 'windows-latest'
 
@@ -71,6 +57,17 @@ steps:
     psFeed: 'official'
 - template: templates/GetSolutionVersion.yml
   parameters:
-    Solutions: ${{ variables.Solutions }}
+    Solutions:     
+      - $(CoreLocalization)
+      - $(FieldService)
+      - $(PowerBIReports)
+      - $(TC_CustomActions)
+      - $(TC_GlobalCore)
+      - $(TDGConnectionReferences)
+      - $(TDGEnvironmentVariables)
+      - $(TDGFlow)
+      - $(TDGFlowInspectionReport)
+      - $(TDGPlugins)
+      - $(TDGTemplates)
     ConnectionString: $(ConnectionStringDev)
     EnvironmentName: 'DEV-TDG'
