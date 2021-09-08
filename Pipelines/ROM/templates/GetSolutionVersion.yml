@@ -32,11 +32,6 @@ steps:
         inputs:
           targetType: 'inline'
           script: |
-            echo '##vso[setvariable variable=${{ solution }}Version]$(SolutionVersion)'
-            echo '${{ solution }}Version value of $(SolutionVersion) saved to output variable.'
-            
             Write-Host "##vso[task.setvariable variable=${{ solution }}Version;]$(SolutionVersion)"
-            Write-Host "Set ${{ solution }}Version environment variable to ($env:DepartmentId)"
-             
-            Write-Host "Using ${{ solution }}Version environment variable: $(${{ solution }}Version)"
+            Write-Host "Set ${{ solution }}Version environment variable to $(SolutionVersion)"
           pwsh: true
