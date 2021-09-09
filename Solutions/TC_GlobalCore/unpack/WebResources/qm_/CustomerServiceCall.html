@@ -78,7 +78,7 @@
             var url = "";
 
             $(document).ready(function () {
-
+                
                 var userSettings = Xrm.Utility.getGlobalContext().userSettings;
                 langId = userSettings.languageId;
                 
@@ -119,8 +119,9 @@
                         obj.message = $('#messageCS').val();
                         obj.isStop = $('#isStoping').val();
                         obj.isBugOrFeature = $('#isBugOrFeature').val();
+                        obj.langId = String(langId);
                         var input = JSON.stringify(obj);
-
+                        
                         //call flow
                         var req = new XMLHttpRequest();
                         req.open("POST", url, false);
