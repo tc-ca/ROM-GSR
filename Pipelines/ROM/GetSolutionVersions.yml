@@ -71,3 +71,18 @@ steps:
       - $(TDGTemplates)
     ConnectionString: $(ConnectionStringDev)
     EnvironmentName: 'DEV-TDG'
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      Write-Host "${env:CORELOCALIZATION}"
+      Write-Host "${env:FIELDSERVICE}"
+      Write-Host "${env:POWERBIREPORTS}"
+      Write-Host "${env:TC_CUSTOMACTIONS}"
+      Write-Host "${env:TC_GLOBALCORE}"
+      Write-Host "${env:TDGCONNECTIONREFERENCES}"
+      Write-Host "${env:TDGENVIRONMENTVARIABLES}"
+      Write-Host "${env:TDGFLOW}"
+      Write-Host "${env:TDGFLOWINSPECTIONREPORT}"
+      Write-Host "${env:TDGPLUGINS}"
+      Write-Host "${env:TDGTEMPLATES}"
