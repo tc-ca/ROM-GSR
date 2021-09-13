@@ -29,7 +29,7 @@ variables:
   - name: VersionRevision
     value: $[counter(variables['CounterVariable'], 0)]
   - name: VersionNumber
-    value: $[format('{0}.{1}', variables['StableVersionNumber'], variables['StableVersionNumber']')
+    value: '$(StableVersionNumber).$(VersionRevision)'
 
 name: #Set Dynamically in Pipeline
 
@@ -47,7 +47,7 @@ stages:
 - template: templates/Template_UpdateBuildVersion.yml  # Template reference
   parameters:
     StageName: 'UpdateBuildVersion'
-    VersionNumber: variables['VersionNumber']
+    VersionNumber: $(VersionNumber)
 - template: templates/Template_CommitSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
