@@ -18,7 +18,7 @@ variables:
   - name: PowerPlatformSPN_PROD
     value: 'ROM PROD TDG'
   - name: SolutionName
-    value: 'TDGFlow'
+    value: 'TDGFlowInspectionReport'
   - name: VersionMajor
     value: 1
   - name: VersionMinor
@@ -66,7 +66,7 @@ stages:
     PowerPlatformSPN_Dev: $(PowerPlatformSPN_Dev) #used to update solution version after successful deployment to QA
     Environment: 'QA-TDG'
     StageName: 'DeployManagedSolutionToQA'
-    DeleteSolution: true
+    DeleteSolution: false
     dependsOn: 
     - 'BuildAndPublishArtifacts'
 #ACC
@@ -76,18 +76,7 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_ACC)
     Environment: 'ACC-TDG'
     StageName: 'DeployManagedSolutionToACC'
-    DeleteSolution: true
-    dependsOn: 
-    - 'DeployManagedSolutionToQA'
-#ACCDATA
-- template: templates/Template_DeploySolution.yml  # Template reference
-  parameters:
-    SolutionName: $(SolutionName)
-    PowerPlatformSPN: $(PowerPlatformSPN_ACCDATA)
-    Environment: 'ACC-TDG-DATA'
-    StageName: 'DeployUnmanagedSolutionToACCDATA'
-    DeployUnmanagedSolution: false
-    DeleteSolution: true
+    DeleteSolution: false
     dependsOn: 
     - 'DeployManagedSolutionToQA'
 #PREPROD
@@ -97,7 +86,7 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
     Environment: 'PREPROD-TDG'
     StageName: 'DeployManagedSolutionToPREPROD'
-    DeleteSolution: true
+    DeleteSolution: false
     dependsOn: 
     - 'DeployManagedSolutionToQA'
 #PROD
@@ -107,6 +96,6 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_PROD)
     Environment: 'PROD-TDG'
     StageName: 'DeployManagedSolutionToPROD'
-    DeleteSolution: true
+    DeleteSolution: false
     dependsOn: 
     - 'DeployManagedSolutionToQA'
