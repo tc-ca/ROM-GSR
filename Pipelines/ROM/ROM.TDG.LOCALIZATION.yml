@@ -40,7 +40,23 @@ stages:
   jobs:
   - job: PrintPipelineVariables
     steps:
+    - task: MSCRMToolInstaller@12
+      inputs:
+        nugetFeed: 'official'
+        psFeed: 'official'
+    - template: templates/GetSolutionVersion.yml
+      parameters:
+        Solutions:
+          - $(SolutionName)
+        ConnectionString: $(ConnectionStringDev)
+        EnvironmentName: 'DEV-TDG'
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "${env:SOLUTIONNAME} Version: ${{${env:SOLUTIONNAME}VERSION}}"
     - task: Bash@3
+      displayName: "Print Environment Variables"
       inputs:
         targetType: 'inline'
         script: 'env | sort'
