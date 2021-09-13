@@ -21,13 +21,15 @@ variables:
   - name: VersionMajor
     value: 1
   - name: VersionMinor
-    value: 1
+    value: 2
   - name: VersionPatch
     value: 0
   - name: StableVersionNumber
     value: '$(VersionMajor).$(VersionMinor).$(VersionPatch)'
+  - name: CounterVariable
+    value: $[format('{0}_{1}.{2}.{3}', variables['SolutionName'], variables['VersionMajor'], variables['VersionMinor'], variables['VersionPatch'])]
   - name: VersionRevision
-    value: $[counter(variables['StableVersionNumber'], 0)]
+    value: $[counter(variables['CounterVariable'], 1)]
   - name: VersionNumber
     value: '$(StableVersionNumber).$(VersionRevision)'
 
