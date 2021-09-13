@@ -1,0 +1,44 @@
+parameters:
+  - name: StageName
+    type: string
+  - name: SolutionName
+    type: string
+  - name: dependsOn
+    type: object
+    default: []
+  - name: ConnectionString
+    type: string
+  - name: EnvironmentName
+    type: string
+    default: 'DEV-TDG'  
+stages:
+- stage: ${{Parameters.StageName}}
+  dependsOn:
+  - ${{ each stage in parameters.dependsOn }}:
+    - ${{ stage }}
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: ${{Parameters.StageName}}
+    steps:
+    - task: MSCRMToolInstaller@12
+      inputs:
+        nugetFeed: 'official'
+        psFeed: 'official'
+    - template: templates/GetSolutionVersion.yml
+      parameters:
+        Solutions:
+          - $(SolutionName)
+        ConnectionString: $(ConnectionString)
+        EnvironmentName: $(EnvironmentName)
+    - task: PowerShell@2
+      displayName: "Print Current Solution Version"
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "Current ${env:CORELOCALIZATION} Version: ${env:SOLUTIONVERSION}"
+    - task: Bash@3
+      displayName: "Print All Environment Variables"
+      inputs:
+        targetType: 'inline'
+        script: 'env | sort'
