@@ -38,7 +38,7 @@ stages:
   pool:
       vmImage: 'windows-latest'
   jobs:
-  - job: UpdatePipelineVariables
+  - job: PrintSolutionVersionAndAllPipelineVariables
     steps:
     - task: MSCRMToolInstaller@12
       inputs:
@@ -51,12 +51,13 @@ stages:
         ConnectionString: $(ConnectionStringDev)
         EnvironmentName: 'DEV-TDG'
     - task: PowerShell@2
+      displayName: "Print Current Solution Version"
       inputs:
         targetType: 'inline'
         script: |
-          Write-Host "${env:SOLUTIONNAME} Version: ${{env:'${env:SOLUTIONNAME}VERSION'}}"
+          Write-Host "Current ${env:CORELOCALIZATION} Version: ${env:SOLUTIONVERSION}"
     - task: Bash@3
-      displayName: "Print Environment Variables"
+      displayName: "Print All Environment Variables"
       inputs:
         targetType: 'inline'
         script: 'env | sort'
