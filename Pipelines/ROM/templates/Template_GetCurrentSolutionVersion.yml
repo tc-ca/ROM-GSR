@@ -28,9 +28,9 @@ stages:
     - template: GetSolutionVersion.yml
       parameters:
         Solutions:
-          - $(SolutionName)
-        ConnectionString: $(ConnectionString)
-        EnvironmentName: $(EnvironmentName)
+          - ${{Parameters.SolutionName}}
+        ConnectionString: ${{Parameters.ConnectionString}}
+        EnvironmentName: ${{Parameters.EnvironmentName}}
     - task: PowerShell@2
       displayName: "Print Current Solution Version"
       inputs:
