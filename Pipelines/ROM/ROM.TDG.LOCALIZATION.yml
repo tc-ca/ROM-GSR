@@ -54,7 +54,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          Write-Host "${env:SOLUTIONNAME} Version: ${{env:${env:SOLUTIONNAME}VERSION}}"
+          Write-Host "${env:SOLUTIONNAME} Version: ${{'env:${env:SOLUTIONNAME}VERSION'}}"
     - task: Bash@3
       displayName: "Print Environment Variables"
       inputs:
