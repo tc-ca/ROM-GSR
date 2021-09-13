@@ -34,11 +34,11 @@ variables:
 name: #Set Dynamically in Pipeline
 
 stages:
-- stage: PrintPipelineVariables
+- stage: UpdatePipelineVariables
   pool:
       vmImage: 'windows-latest'
   jobs:
-  - job: PrintPipelineVariables
+  - job: UpdatePipelineVariables
     steps:
     - task: MSCRMToolInstaller@12
       inputs:
@@ -54,7 +54,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          Write-Host "${env:SOLUTIONNAME} Version: ${{'env:${env:SOLUTIONNAME}VERSION'}}"
+          Write-Host "${env:SOLUTIONNAME} Version: ${{env:'${env:SOLUTIONNAME}VERSION'}}"
     - task: Bash@3
       displayName: "Print Environment Variables"
       inputs:
