@@ -1,0 +1,47 @@
+<html><head>
+    <meta charset="utf-8">
+    <link href="Bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+
+
+    <script src="../ClientGlobalContext.js.aspx"></script>
+    <script src="Scripts/jquery_3.1.1.min.js"></script>
+    <script src="Bootstrap/js/bootstrap.min.js"></script>
+
+    <style>
+
+    </style>
+<meta></head>
+<body>
+    <div class="container-fluid">
+      <p id="holder" class="bg-warning"></p>
+    </div>
+
+    <script>
+
+        $(document).ready(function () {
+
+            var message = "";
+            var userSettings = Xrm.Utility.getGlobalContext().userSettings;
+            LCID = userSettings.languageId;
+
+            if (LCID == 1033)
+                resexResourceName = "ovs_Labels.1033.resx";
+            else if (LCID == 1036)
+                resexResourceName = "ovs_Labels.1036.resx";
+            try {
+                message = Xrm.Utility.getResourceString(resexResourceName, "site.HOTI.grid.message");
+
+            } catch (e) {
+
+                message = (LCID == 1036)
+                    ? "Les marchandises exemptées en vertu de la partie 1 ou de l’annexe 2 du Règlement TMD ne doivent pas être inscrites dans ce tableau."
+                    : "Dangerous Goods exempt under Part 1 or Schedule 2 of the TDG Regulations, should not be entered in this table.";
+            }
+            $('#holder').text(message);
+
+        });
+
+    </script>
+
+
+</body></html>
