@@ -34,33 +34,11 @@ variables:
 name: #Set Dynamically in Pipeline
 
 stages:
-- stage: UpdatePipelineVariables
-  pool:
-      vmImage: 'windows-latest'
-  jobs:
-  - job: PrintSolutionVersionAndAllPipelineVariables
-    steps:
-    - task: MSCRMToolInstaller@12
-      inputs:
-        nugetFeed: 'official'
-        psFeed: 'official'
-    - template: templates/GetSolutionVersion.yml
-      parameters:
-        Solutions:
-          - $(SolutionName)
-        ConnectionString: $(ConnectionStringDev)
-        EnvironmentName: 'DEV-TDG'
-    - task: PowerShell@2
-      displayName: "Print Current Solution Version"
-      inputs:
-        targetType: 'inline'
-        script: |
-          Write-Host "Current ${env:CORELOCALIZATION} Version: ${env:SOLUTIONVERSION}"
-    - task: Bash@3
-      displayName: "Print All Environment Variables"
-      inputs:
-        targetType: 'inline'
-        script: 'env | sort'
+- template: templates/Template_GetCurrentSolutionVersion.yml  # Template reference
+  parameters:
+    StageName: 'GetCurrentSolutionVersion'
+    SolutionName: $(SolutionName)
+    ConnectionString: $(ConnectionStringDev)
 - template: templates/Template_UpdateBuildVersion.yml  # Template reference
   parameters:
     StageName: 'UpdateBuildVersion'
