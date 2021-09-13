@@ -28,7 +28,7 @@ variables:
   - name: StableVersionNumber
     value: '$(VersionMajor).$(VersionMinor).$(VersionPatch)'
   - name: CounterVariable
-    value: '$(SolutionName)_$(VersionMajor).$(VersionMinor).$(VersionPatch)'
+    value: $[format('{0}_{1}.{2}.{3}', variables['SolutionName'], variables['VersionMajor'], variables['VersionMinor'], variables['VersionPatch'])]
   - name: VersionRevision
     value: $[counter(variables['CounterVariable'], 0)]
   - name: VersionNumber
@@ -50,7 +50,7 @@ stages:
 - template: templates/Template_UpdateBuildVersion.yml  # Template reference
   parameters:
     StageName: 'UpdateBuildVersion'
-    VersionNumber: variables['VersionNumber']
+    VersionNumber: $(VersionNumber)
 - template: templates/Template_CommitSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
