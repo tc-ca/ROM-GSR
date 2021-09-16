@@ -10,6 +10,7 @@ var AccountTDGmain = (function (window, document) {
         "948010001": "TDG Site Profile",
         "948010000": "TDG Organizations",
     };
+    var formContextGlobalRef;
 
     const STREET1 = "address1_line1";
     const CITY = "address1_city";
@@ -109,7 +110,7 @@ var AccountTDGmain = (function (window, document) {
         OnLoad: function (executionContext) {
 
             var formContext = executionContext.getFormContext();
-
+            formContextGlobalRef = formContext;
             //filter Relationship Type
             filter_customertypecode(formContext);
 
@@ -126,6 +127,10 @@ var AccountTDGmain = (function (window, document) {
 
                 //prepare data for Violations History grid
                 getViolationHistory(formContext);
+
+                var accountUN = formContext.getControl("Subgrid_AccountUNNumbers");
+                accountUN.addOnLoad(AccountTDGmain.Refresh_AccountClass);
+
             }
 
             setAddressFieldsLevel(formContext);
@@ -142,7 +147,14 @@ var AccountTDGmain = (function (window, document) {
             } catch (e) {
                 console.log("Site_OnChange failed - lookup is empty");
             }
-        }, 
+        },
+
+        Refresh_AccountClass: function () {
+
+            var accountClass = formContextGlobalRef.getControl("Subgrid_AccountClasses");
+            accountClass.refresh();
+        },
+
 
         relationShip_OnChange: function (executionContext) {
 

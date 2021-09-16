@@ -9,5 +9,8 @@ async function OnLoad(executionContext) {
 function OnSave(executionContext) {
     var formContext = executionContext.getFormContext();
     let lang = glHelper.GetCurrentUserLanguage();
+    
+    var reason = glHelper.GetOptionsetText(formContext, "ovs_cancellationrequestreason");
+    glHelper.SetValue(formContext, "ovs_selectedreasontext", reason);
     glHelper.SetValue(formContext, "ovs_uidescription", lang);
 }

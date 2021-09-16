@@ -21,7 +21,8 @@ const FIELD_ENABLING_ACT = "qm_enablingact";
 const FIELD_ENABLING_REGULATION = "qm_enablingregulation";
 const FIELD_DUE_DATE = "ovs_duedate";
 
-const FIELD_COCNOTREQUESTED = "qm_confirmationnotrequestedchk";
+// const FIELD_COCNOTREQUESTED = "qm_confirmationnotrequestedchk";
+const FIELD_COCREQUESTED = "qm_confirmationrequestedchk";
 const FIELD_COCJUSTIFICATION = "qm_justificationfornotcoc";
 
 async function OnLoad(executionContext) {
@@ -45,9 +46,9 @@ async function OnLoad(executionContext) {
     enablingRegulationField.removeOnChange(enablingRegulationField_OnChange); // avoid binding multiple event handlers
     enablingRegulationField.addOnChange(enablingRegulationField_OnChange);
 
-    var cocNoRequested = formContext.getAttribute(FIELD_COCNOTREQUESTED);
-    cocNoRequested.removeOnChange(coCNoRequested_OnChange);
-    cocNoRequested.addOnChange(coCNoRequested_OnChange);
+    var cocRequested = formContext.getAttribute(FIELD_COCREQUESTED);
+    cocRequested.removeOnChange(coCRequested_OnChange);
+    cocRequested.addOnChange(coCRequested_OnChange);
 
     if (formType == 1) {
       //If form is new, set the Action Date to today.
@@ -85,10 +86,10 @@ async function OnLoad(executionContext) {
   
 }
 
-function coCNoRequested_OnChange(executionContext) {
+function coCRequested_OnChange(executionContext) {
     let formContext = executionContext.getFormContext();
-    let value = glHelper.GetValue(formContext, FIELD_COCNOTREQUESTED);
-    if (value === true) {
+    let value = glHelper.GetValue(formContext, FIELD_COCREQUESTED);
+    if (value === false) {
         glHelper.SetControlVisibility(formContext, FIELD_COCJUSTIFICATION, true);
         glHelper.SetRequiredLevel(formContext, FIELD_COCJUSTIFICATION, true);
     } else {
@@ -101,9 +102,9 @@ function coCNoRequested_OnChange(executionContext) {
 
 function OnSave(executionContext) {
     let formContext = executionContext.getFormContext();
-    let value = glHelper.GetValue(formContext, FIELD_COCNOTREQUESTED);
+    let value = glHelper.GetValue(formContext, FIELD_COCREQUESTED);
     let justification = glHelper.GetValue(formContext, FIELD_COCJUSTIFICATION);
-    if (value === true) {
+    if (value === false) {
         alert("True:" + justification);
     } else {
         alert("False:" + justification);
@@ -124,9 +125,9 @@ function hideAllActionTypeSections(formContext) {
     glHelper.SetRequiredLevel(formContext, "qm_rclegislationid", true);
     glHelper.SetRequiredLevel(formContext, "qm_externalcomments", true);
 
-    let value = glHelper.GetValue(formContext, FIELD_COCNOTREQUESTED);
-    glHelper.SetControlVisibility(formContext, FIELD_COCJUSTIFICATION, value);
-    glHelper.SetRequiredLevel(formContext, FIELD_COCJUSTIFICATION, value);
+    let value = glHelper.GetValue(formContext, FIELD_COCREQUESTED);
+    glHelper.SetControlVisibility(formContext, FIELD_COCJUSTIFICATION, !value);
+    glHelper.SetRequiredLevel(formContext, FIELD_COCJUSTIFICATION, !value);
 
 }
 
