@@ -10,7 +10,7 @@
       <Description description="Upgrade of TC.GlobalCore" languagecode="1033" />
       <Description description="Mise à niveau de TC.GlobalCore" languagecode="1036" />
     </Descriptions>
-    <Version>1.88.0.0</Version>
+    <Version>1.89.0.0</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>oversightpublisher</UniqueName>
@@ -140,10 +140,12 @@
       <RootComponent type="1" schemaName="ovs_mocregistration" behavior="0" />
       <RootComponent type="1" schemaName="ovs_moctype" behavior="0" />
       <RootComponent type="1" schemaName="ovs_modes" behavior="0" />
+      <RootComponent type="1" schemaName="ovs_nopprocessflow" behavior="0" />
       <RootComponent type="1" schemaName="ovs_operation" behavior="0" />
       <RootComponent type="1" schemaName="ovs_operationtype" behavior="0" />
       <RootComponent type="1" schemaName="ovs_oversighttype" behavior="0" />
       <RootComponent type="1" schemaName="ovs_questionnaire" behavior="0" />
+      <RootComponent type="1" schemaName="ovs_regionalnopprocessflow" behavior="0" />
       <RootComponent type="1" schemaName="ovs_revisedquarterrequest" behavior="0" />
       <RootComponent type="1" schemaName="ovs_sitetype" behavior="0" />
       <RootComponent type="1" schemaName="ovs_tdginspectionreport" behavior="0" />
@@ -215,7 +217,9 @@
       <RootComponent type="20" id="{a8d3ef08-d189-eb11-b1ac-000d3ae92dbf}" behavior="0" />
       <RootComponent type="20" id="{c986520a-bc01-ec11-94f0-0022483c1f45}" behavior="0" />
       <RootComponent type="20" id="{de8e34ea-d189-eb11-b1ac-000d3ae92dbf}" behavior="0" />
+      <RootComponent type="29" id="{01c6a4aa-a4de-4ff9-8ae4-e55aa4326e1f}" behavior="0" />
       <RootComponent type="29" id="{168249b4-0934-eb11-a813-000d3af3fc19}" behavior="0" />
+      <RootComponent type="29" id="{1f844e99-b9d9-4517-b617-a49148f15ec3}" behavior="0" />
       <RootComponent type="29" id="{33a33eb1-1c33-eb11-a813-000d3af3fc19}" behavior="0" />
       <RootComponent type="29" id="{4cc48171-aa09-ec11-b6e6-000d3ae8f2bd}" behavior="0" />
       <RootComponent type="29" id="{5b207984-5818-eb11-a813-000d3af3a7a7}" behavior="0" />
@@ -251,8 +255,11 @@
       <RootComponent type="61" schemaName="ovs_MagnitudeAndLikelihoodMessage_high" behavior="0" />
       <RootComponent type="61" schemaName="ovs_MagnitudeAndLikelihoodMessage_low" behavior="0" />
       <RootComponent type="61" schemaName="ovs_MagnitudeAndLikelihoodMessage_medium" behavior="0" />
+      <RootComponent type="61" schemaName="ovs_NOPMainForm" behavior="0" />
+      <RootComponent type="61" schemaName="ovs_RegionalNOPMainForm" behavior="0" />
       <RootComponent type="61" schemaName="ovs_ROMCommonFunctions" behavior="0" />
       <RootComponent type="61" schemaName="ovs_SafetyAssessmentMainForm" behavior="0" />
+      <RootComponent type="61" schemaName="ovs_TdgIReport_Main.js" behavior="0" />
       <RootComponent type="61" schemaName="ovs_workOrderTimeTrackingPOC" behavior="0" />
       <RootComponent type="61" schemaName="ovs_WO_TDG_Mobile.js" behavior="0" />
       <RootComponent type="61" schemaName="qm_/Bootstrap/css/bootstrap.min.css" behavior="0" />
@@ -1324,14 +1331,6 @@
         <Dependent type="80" schemaName="ovs_OversightPlanning" displayName="TDG Inspections / Inspections TMD" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="1" schemaName="ovs_nopprocessflow" displayName="NOP Process Flow" solution="Active" />
-        <Dependent type="1" schemaName="ovs_cdnop" displayName="NOP" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="1" schemaName="ovs_regionalnopprocessflow" displayName="Regional NOP Process Flow" solution="Active" />
-        <Dependent type="1" schemaName="ovs_cdregionalnop" displayName="Regional NOP" />
-      </MissingDependency>
-      <MissingDependency>
         <Required type="1" schemaName="pricelevel" displayName="Price List" solution="msdynce_ProductManagement (9.0.4.0066)">
           <package>msdynce_ProductManagementAnchor (9.0.21041.10001)</package>
         </Required>
@@ -1978,7 +1977,7 @@
         <Required type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
-        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_PreferredResource" displayName="msdyn_bookableresource_msdyn_workorder_PreferredResource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="FieldService (8.8.0.88)">
@@ -4499,7 +4498,7 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="bookableresourceid" displayName="Bookable Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdynce_Scheduling (9.0.0.0)" />
-        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_PreferredResource" displayName="msdyn_bookableresource_msdyn_workorder_PreferredResource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="bookableresourceid" displayName="Bookable Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdynce_Scheduling (9.0.0.0)" />
@@ -6388,7 +6387,7 @@
         <Required type="2" schemaName="msdyn_supportcontact" displayName="Support Contact" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
-        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_PreferredResource" displayName="msdyn_bookableresource_msdyn_workorder_PreferredResource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_supportcontact" displayName="Support Contact" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)">
@@ -10186,14 +10185,6 @@
         <Dependent type="60" displayName="Work Order - Customer" parentDisplayName="Work Order" id="{c0ebdf20-f27f-4acc-8c9f-a9a202a5e917}" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="60" displayName="Inspection report Site Preview" parentDisplayName="Account" solution="Active" id="{c16a60f2-fb21-4a5e-a237-04421d310cbe}" />
-        <Dependent type="60" displayName="Information" parentDisplayName="TDG Inspection Report" id="{2bab2315-6ce6-442a-8269-f87ed3d6a64a}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="60" displayName="Inspection report Site Preview" parentDisplayName="Account" solution="Active" id="{c16a60f2-fb21-4a5e-a237-04421d310cbe}" />
-        <Dependent type="60" displayName="Run editable report" parentDisplayName="TDG Inspection Report" id="{d1916977-b35b-43c7-8ac3-028d977da1d1}" />
-      </MissingDependency>
-      <MissingDependency>
         <Required type="60" displayName="Account Quick Create" parentDisplayName="Account" solution="msdynce_AppCommon (9.0.4.0066)" id="{c9e7ec2d-efca-4e4c-b3e3-f63c4bba5e4b}">
           <package>msdynce_AppCommonAnchor (9.0.21041.10002)</package>
         </Required>
@@ -10314,13 +10305,13 @@
         <Required type="61" schemaName="AppCommon/Account/Account_main_system_library.js" displayName="AppCommon/Account/Account_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
           <package>msdynce_AppCommonAnchor (9.0.21041.10002)</package>
         </Required>
-        <Dependent type="60" displayName="Account for Interactive experience" parentDisplayName="Account" id="{a72c7955-442b-4ea4-9499-b10cd18b4256}" />
+        <Dependent type="60" displayName="Account" parentDisplayName="Account" id="{8448b78f-8f42-454e-8e2a-f8196b0419af}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="AppCommon/Account/Account_main_system_library.js" displayName="AppCommon/Account/Account_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
           <package>msdynce_AppCommonAnchor (9.0.21041.10002)</package>
         </Required>
-        <Dependent type="60" displayName="Information" parentDisplayName="Account" id="{b053a39a-041a-4356-acef-ddf00182762b}" />
+        <Dependent type="60" displayName="Account for Interactive experience" parentDisplayName="Account" id="{a72c7955-442b-4ea4-9499-b10cd18b4256}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="AppCommon/Account/Account_main_system_library.js" displayName="AppCommon/Account/Account_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
@@ -10380,7 +10371,7 @@
         <Required type="61" schemaName="AppCommon/Contact/Contact_main_system_library.js" displayName="AppCommon/Contact/Contact_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
           <package>msdynce_AppCommonAnchor (9.0.21041.10002)</package>
         </Required>
-        <Dependent type="60" displayName="TDG Contact" parentDisplayName="Contact" id="{ec7b5b17-85b9-eb11-8236-0022483bc67c}" />
+        <Dependent type="60" displayName="Contact for Multisession experience" parentDisplayName="Contact" id="{e06af4d1-2812-45c7-a9c2-9fb73fee7bec}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="cc_MscrmControls.FieldControls.QuickNotesControl/bundle.js" displayName="cc_MscrmControls.FieldControls.QuickNotesControl/bundle.js" solution="msdyn_FieldService_patch_update (8.8.49.21)">
@@ -10389,39 +10380,27 @@
         <Dependent type="60" displayName="Booking and Work Order" parentDisplayName="Booking" id="{c0ace4ca-f0f1-42a7-aacb-618cb8e6751a}" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="61" schemaName="ikl_/Attach2Dynamics/Library/index.html" displayName="ikl_/Attach2Dynamics/Library/index.html" solution="Attach2Dynamics (9.0.0.18)">
-          <package>Attach2Dynamics (9.0.0.18)</package>
-        </Required>
+        <Required type="61" schemaName="ikl_/Attach2Dynamics/Library/index.html" displayName="ikl_/Attach2Dynamics/Library/index.html" solution="Attach2Dynamics (9.0.0.19)" />
         <Dependent type="60" displayName="TDG Oversight Mobile" parentDisplayName="Work Order" id="{0a9b7fcb-0a01-ec11-94f0-0022483c6f5e}" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="61" schemaName="ikl_/Attach2Dynamics/Library/index.html" displayName="ikl_/Attach2Dynamics/Library/index.html" solution="Attach2Dynamics (9.0.0.18)">
-          <package>Attach2Dynamics (9.0.0.18)</package>
-        </Required>
+        <Required type="61" schemaName="ikl_/Attach2Dynamics/Library/index.html" displayName="ikl_/Attach2Dynamics/Library/index.html" solution="Attach2Dynamics (9.0.0.19)" />
         <Dependent type="60" displayName="TDG Service Task Questionnaire" parentDisplayName="Work Order Service Task" id="{1ee2b1f8-8556-449b-ae68-09d8dc19485f}" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="61" schemaName="ikl_/Attach2Dynamics/Library/index.html" displayName="ikl_/Attach2Dynamics/Library/index.html" solution="Attach2Dynamics (9.0.0.18)">
-          <package>Attach2Dynamics (9.0.0.18)</package>
-        </Required>
+        <Required type="61" schemaName="ikl_/Attach2Dynamics/Library/index.html" displayName="ikl_/Attach2Dynamics/Library/index.html" solution="Attach2Dynamics (9.0.0.19)" />
         <Dependent type="60" displayName="TDG Oversight Activity" parentDisplayName="Work Order" id="{66cddb3b-b9ca-4552-ac5e-f4d726a35268}" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="61" schemaName="ikl_/Attach2Dynamics/Library/index.html" displayName="ikl_/Attach2Dynamics/Library/index.html" solution="Attach2Dynamics (9.0.0.18)">
-          <package>Attach2Dynamics (9.0.0.18)</package>
-        </Required>
+        <Required type="61" schemaName="ikl_/Attach2Dynamics/Library/index.html" displayName="ikl_/Attach2Dynamics/Library/index.html" solution="Attach2Dynamics (9.0.0.19)" />
         <Dependent type="60" displayName="Information" parentDisplayName="Confirmation of Compliance" id="{6d118a87-79bb-48a8-975d-7399412af16a}" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="61" schemaName="ikl_/Attach2Dynamics/Library/index.html" displayName="ikl_/Attach2Dynamics/Library/index.html" solution="Attach2Dynamics (9.0.0.18)">
-          <package>Attach2Dynamics (9.0.0.18)</package>
-        </Required>
+        <Required type="61" schemaName="ikl_/Attach2Dynamics/Library/index.html" displayName="ikl_/Attach2Dynamics/Library/index.html" solution="Attach2Dynamics (9.0.0.19)" />
         <Dependent type="60" displayName=" main form" parentDisplayName="Work Order" id="{8ceb9ff6-1b97-eb11-b1ac-000d3ae939bc}" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="61" schemaName="ikl_/Attach2Dynamics/Library/index.html" displayName="ikl_/Attach2Dynamics/Library/index.html" solution="Attach2Dynamics (9.0.0.18)">
-          <package>Attach2Dynamics (9.0.0.18)</package>
-        </Required>
+        <Required type="61" schemaName="ikl_/Attach2Dynamics/Library/index.html" displayName="ikl_/Attach2Dynamics/Library/index.html" solution="Attach2Dynamics (9.0.0.19)" />
         <Dependent type="60" displayName="Time Tracking POC" parentDisplayName="Work Order" id="{9db1e70b-1961-4893-a204-84d495dbd918}" />
       </MissingDependency>
       <MissingDependency>
@@ -11210,14 +11189,6 @@
           <package>msdynce_SalesInsightsAnchor (9.0.21041.1003)</package>
         </Required>
         <Dependent type="60" displayName="TDG Contact" parentDisplayName="Contact" id="{ec7b5b17-85b9-eb11-8236-0022483bc67c}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="61" schemaName="ovs_NOPMainForm" displayName="ovs_NOPMainForm" solution="Active" />
-        <Dependent type="60" displayName="Information" parentDisplayName="NOP" id="{c92e3ed8-1c9e-4646-bf05-04f9818fe34c}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="61" schemaName="ovs_TdgIReport_Main.js" displayName="ovs_TdgIReport_Main.js" solution="Active" />
-        <Dependent type="60" displayName="Run editable report" parentDisplayName="TDG Inspection Report" id="{d1916977-b35b-43c7-8ac3-028d977da1d1}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="Sales/ClientCommon/Sales_ClientCommon.js" displayName="Sales/ClientCommon/Sales_ClientCommon.js" solution="msdynce_Sales (9.0.4.0076)">
