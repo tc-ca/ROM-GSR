@@ -49,7 +49,7 @@ stages:
           Write-Host "CoreSolutionName: $(CoreSolutionName)"
           Write-Host "PatchExists: $(PatchExists)"
           Write-Host "LatestPatchName: $(LatestPatchName)"
-          if ($(PatchExists) -eq 'False') {
+          if ($(PatchExists) -eq "False" -or $(PatchExists) -eq "false" -or $(PatchExists) -eq $false) {
               Write-Host "Patch does not exist - checking missing dependencies and components for ${env:CORESOLUTIONNAME}"
               Write-Host "##vso[task.setvariable variable=SolutionName]${env:CORESOLUTIONNAME}"
           }
