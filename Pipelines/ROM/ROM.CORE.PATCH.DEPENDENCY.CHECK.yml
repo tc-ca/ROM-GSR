@@ -36,17 +36,28 @@ stages:
         solutionName: '$(CoreSolutionName)'
         existsVariableName: 'PatchExists'
         patchVariableName: 'LatestPatchName'
-    - powershell: |
-        Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.PatchExists]$(PatchExists)"
-        Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.LatestPatchName]$(LatestPatchName)"
-        Write-Host "Patch Exists =  $(PatchExists)"
-        Write-Host "Latest Patch Name =  $(LatestPatchName)"
-        Write-Host "${{ eq('$(PatchExists)', 'False') }}"
-        Write-Host variables['task.GetLatestPatchTask.PatchExists']
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          if ($(PatchExists) -eq $false) {
+              Write-Host "Patch does not exist - checking missing dependencies and components for $(CoreSolutionName)"
+              Write-Host "##vso[task.setvariable variable=SolutionName]$(CoreSolutionName)"
+              #Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.LatestPatchName]$(CoreSolutionName)"
+          }
+          else {
+            Write-Host "Patch does exist - checking missing dependencies and components for $(LatestPatchName)"
+            Write-Host "##vso[task.setvariable variable=SolutionName]$(LatestPatchName)"
+            #Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.LatestPatchName]$(LatestPatchName)"
+          }
+          Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.PatchExists]$(PatchExists)"
+          Write-Host "SolutionName = $(SolutionName)"
+          Write-Host "Patch Exists =  $(PatchExists)"
+          Write-Host "Latest Patch Name =  $(LatestPatchName)"
     - task: MSCRMExportSolution@12
       inputs:
         crmConnectionString: '$(ConnectionStringDev)'
-        solutionName: '$(LatestPatchName)'
+        solutionName: '$(SolutionName)'
         exportManaged: true
         exportUnmanaged: false
         outputPath: '$(Build.ArtifactStagingDirectory)'
@@ -55,17 +66,11 @@ stages:
     - task: MSCRMGetSolutionMissingDependencies@12
       inputs:
         crmConnectionString: '$(ConnectionStringDev)'
-        solutionName: '$(LatestPatchName)'
+        solutionName: '$(SolutionName)'
         warnIfMissing: true
     - task: MSCRMGetSolutionMissingComponents@12
       inputs:
         crmConnectionString: '$(ConnectionStringQA)'
-        solutionFile: '$(Build.ArtifactStagingDirectory)/$(LatestPatchName)_managed.zip'
-        errorIfMissing: true
-        crmConnectionTimeout: '200'
-    - task: MSCRMGetSolutionMissingComponents@12
-      inputs:
-        crmConnectionString: '$(ConnectionStringACCTDG)'
-        solutionFile: '$(Build.ArtifactStagingDirectory)/$(LatestPatchName)_managed.zip'
+        solutionFile: '$(Build.ArtifactStagingDirectory)/$(SolutionName)_managed.zip'
         errorIfMissing: true
         crmConnectionTimeout: '200'
