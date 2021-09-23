@@ -11,7 +11,10 @@ var WO_TDG_main = (function (window, document) {
     var LCID;
     var clientUrl;
     var resexResourceName;
-    var globalObj = window.top.QuickCreateHelper;
+    var globalObj;
+    var currentWebApi;
+    var isOffLine;
+    var clientType;
 
     var errorObject = {};
     errorObject.isValid = true;
@@ -19,8 +22,7 @@ var WO_TDG_main = (function (window, document) {
 
 
     //********************private methods*******************
-    function setReportValidationError(message)
-    {
+    function setReportValidationError(message) {
         errorObject.isValid = false;
         errorObject.errorMessage.push(message);
     }
@@ -52,6 +54,84 @@ var WO_TDG_main = (function (window, document) {
         }
     }
 
+    function getLocalizedName(formatedString) {
+
+        var pos = formatedString.indexOf("::");
+        if (pos > -1) {
+            if (userSettings.languageId == 1036) {
+                // French
+                return formatedString.substring(pos + 2);
+            }
+            else if (userSettings.languageId == 1033) {
+                // English
+                return formatedString.substring(0, pos);
+            }
+        } else {
+            return formatedString;
+        }
+    }
+
+    /**
+     * mobile friendly method
+     * @param {context} formContext
+     * @param {userid} userid of user owning  bookableresource
+     * @param {isCurrentUser} isCurrentUser flag to indicate if quesry execured for current user's bookableresource or new bookable resource owner
+     */
+    function getSetInspectorRegion(formContext, userid, isCurrentUser = true) {
+
+        var bookableresourceid;
+        var _userid_value_formatted;
+        var _territoryid_value;
+        var _territoryid_value_lookuplogicalname;
+        var _territoryid_value_formatted;
+        var formattedLang = "";
+        var messageRegionFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchRegion.ErrorMessage");
+
+
+        currentWebApi.retrieveRecord("systemuser", userid.toLowerCase(), "?$select=fullname,_territoryid_value&$expand=systemuser_bookableresource_UserId($select=bookableresourceid,name),territoryid($select=name,ovs_territorynameenglish,ovs_territorynamefrench,territoryid)").then(
+            function success(results) {
+
+                if (results != null) {
+
+                    var fullname = results["fullname"];
+                    _territoryid_value = results["_territoryid_value"];
+                    _territoryid_value_formatted = results["_territoryid_value@OData.Community.Display.V1.FormattedValue"];
+                    _territoryid_value_lookuplogicalname = results["_territoryid_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+
+                    if (results.systemuser_bookableresource_UserId != null
+                        && results.systemuser_bookableresource_UserId.length > 0) {
+
+                        bookableresourceid = results.systemuser_bookableresource_UserId[0]["bookableresourceid"];
+                        _userid_value_formatted = results.systemuser_bookableresource_UserId[0]["name"];
+                    }
+
+                    if (results.hasOwnProperty("territoryid")) {
+                        _territoryid_value_formatted = results["territoryid"]["name"];
+                        var territoryid_ovs_territorynameenglish = results["territoryid"]["ovs_territorynameenglish"];
+                        var territoryid_ovs_territorynamefrench = results["territoryid"]["ovs_territorynamefrench"];
+                        var territoryid_territoryid = results["territoryid"]["territoryid"];
+                    }
+
+                    //localize region lookup
+                    if (_territoryid_value)
+                        formattedLang = getLocalizedName(_territoryid_value_formatted);
+
+                    //primary inspector
+                    if (isCurrentUser) {
+                        glHelper.SetLookup(formContext, "ovs_primaryinspector", "bookableresource", bookableresourceid, _userid_value_formatted);
+                    }
+                    //inspectors region
+                    glHelper.SetLookup(formContext, "msdyn_serviceterritory", _territoryid_value_lookuplogicalname, _territoryid_value, formattedLang);
+                }
+            },
+            function (error) {
+
+                console.log("getSetInspectorRegion method.Error :" + error.message);
+                Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageRegionFailed + " " + error.message });
+            }
+        );
+    }
+
 
     //********************private methods end***************
 
@@ -62,10 +142,32 @@ var WO_TDG_main = (function (window, document) {
         OnLoad: function (executionContext) {
 
             var globalContext = Xrm.Utility.getGlobalContext();
-
             var formContext = executionContext.getFormContext();
-            globalObj.formContext = formContext;
-            clientUrl = globalContext.getClientUrl();
+            isOffLine = glHelper.isOffline(executionContext);
+            clientType = glHelper.getClientType(executionContext);
+
+            if (isOffLine && clientType > 0) {
+
+                //mobile or outlook, offline first
+                currentWebApi = Xrm.WebApi.offline;
+                clientUrl = "https://localhost:2525";
+            } else {
+
+                //web, online
+                currentWebApi = Xrm.WebApi.online;
+                clientUrl = globalContext.getClientUrl();
+            }
+
+
+            if (glHelper.isTopAccessible()) {
+                globalObj = window.top.QuickCreateHelper;
+                globalObj.formContext = formContext;
+
+                //site
+                var site = formContext.getAttribute("msdyn_serviceaccount");
+                site.removeOnChange(WO_TDG_main.Site_OnChange); // avoid binding multiple event handlers
+                site.addOnChange(WO_TDG_main.Site_OnChange);
+            }
 
             getQuickFormAttributeValue(executionContext, "service_account_details", "primarycontactid");
             userSettings = globalContext.userSettings;
@@ -81,10 +183,6 @@ var WO_TDG_main = (function (window, document) {
             else if (LCID == 1036)
                 resexResourceName = "ovs_Labels.1036.resx";
 
-            //site
-            var site = formContext.getAttribute("msdyn_serviceaccount");
-            site.removeOnChange(WO_TDG_main.Site_OnChange); // avoid binding multiple event handlers
-            site.addOnChange(WO_TDG_main.Site_OnChange);
 
             //rational
             var rational = formContext.getAttribute("ovs_rational");
@@ -97,10 +195,12 @@ var WO_TDG_main = (function (window, document) {
             fy.removeOnChange(WO_TDG_main.FiscalYearOnchange);
             fy.addOnChange(WO_TDG_main.FiscalYearOnchange);
 
-            //wo status
-            var systemStatus = formContext.getAttribute("msdyn_systemstatus");
-            systemStatus.removeOnChange(WO_TDG_main.WO_SystemStatus_OnChange);
-            systemStatus.addOnChange(WO_TDG_main.WO_SystemStatus_OnChange);
+            //wo status - validation will work online only!
+            if (!isOffLine) {
+                var systemStatus = formContext.getAttribute("msdyn_systemstatus");
+                systemStatus.removeOnChange(WO_TDG_main.WO_SystemStatus_OnChange);
+                systemStatus.addOnChange(WO_TDG_main.WO_SystemStatus_OnChange);
+            }
 
             //WO Number/msdyn_name
             glHelper.SetControlVisibility(formContext, "msdyn_name", false);
@@ -112,7 +212,7 @@ var WO_TDG_main = (function (window, document) {
 
             //Substatus Type
             WO_TDG_main.Update_WO_Substatus(formContext);
-            
+
             var primaryInspector = formContext.getAttribute("ovs_primaryinspector");
             primaryInspector.removeOnChange(WO_TDG_main.PrimaryInspector_OnChange);
             primaryInspector.addOnChange(WO_TDG_main.PrimaryInspector_OnChange);
@@ -120,7 +220,11 @@ var WO_TDG_main = (function (window, document) {
             //on create
             if (formType == 1) {
 
-                WO_TDG_main.SetDefaultInspector(formContext);
+                //WO_TDG_main.SetDefaultInspector(formContext);
+                var currentUserId = userSettings.userId;
+                currentUserId = currentUserId.replace(/[{}]/g, "");
+                getSetInspectorRegion(formContext, currentUserId);
+
                 //fiscal year
                 WO_TDG_main.SetDefaultFiscalYear(formContext);
                 //Fiscal quarter
@@ -132,18 +236,12 @@ var WO_TDG_main = (function (window, document) {
                 //set global object fo contact quick create form
                 site.fireOnChange();
 
-                //refresh the Post-Inspection tab
-                //var postInspectionTab = formContext.ui.tabs.get("tab_PostInspection");
-                //postInspectionTab.removeTabStateChange(WO_TDG_main.OnPostInspection_StateChange);
-                //postInspectionTab.addTabStateChange(WO_TDG_main.OnPostInspection_StateChange);
-
                 //refresh the COC tab
                 var cocTab = formContext.ui.tabs.get("tab_ConfirmationOfCompliances");
                 cocTab.removeTabStateChange(WO_TDG_main.OnConfirmationOfCompliance_StateChange);
                 cocTab.addTabStateChange(WO_TDG_main.OnConfirmationOfCompliance_StateChange);
-
             }
-            
+
             // Set Oversight Activity field as Mandatory
             glHelper.SetRequiredLevel(formContext, "ovs_oversighttype", true);
         },
@@ -159,19 +257,6 @@ var WO_TDG_main = (function (window, document) {
             }
 
         },
-
-        //OnPostInspection_StateChange: function (executionContext) {
-
-        //    var formContext = executionContext.getFormContext();
-
-        //    var postInspectionTab = formContext.ui.tabs.get("tab_PostInspection");
-        //    if (postInspectionTab)
-        //    if (postInspectionTab.getDisplayState() == "expanded" && postInspectionTab.getVisible() == true) {
-
-        //       var gridCOC = formContext.getControl("Subgrid_COC");
-        //       gridCOC.refresh();
-        //    }
-        //},
 
         Site_OnChange: function (executionContext) {
             var formContext = executionContext.getFormContext();
@@ -189,23 +274,49 @@ var WO_TDG_main = (function (window, document) {
         },
 
         PrimaryInspector_OnChange: function (executionContext) {
+
             var formContext = executionContext.getFormContext();
-            WO_TDG_main.SetRegion(formContext);
+            var primaryInspector = formContext.getAttribute("ovs_primaryinspector").getValue();
+            //If Primary Inspector is being cleared out, do nothing here.
+            if (primaryInspector == null) return;
+
+            var messageRegionFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchRegion.ErrorMessage");
+
+            var primaryInspectorId = primaryInspector[0].id;
+            currentWebApi.retrieveRecord("bookableresource", primaryInspectorId, "?$select=bookableresourceid,name,_userid_value").then(
+                function success(result) {
+                    var bookableresourceid = result["bookableresourceid"];
+                    var name = result["name"];
+                    var _userid_value = result["_userid_value"];
+                    var _userid_value_formatted = result["_userid_value@OData.Community.Display.V1.FormattedValue"];
+                    var _userid_value_lookuplogicalname = result["_userid_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+
+                    getSetInspectorRegion(formContext, _userid_value, false);
+                },
+                function (error) {
+
+                    console.log("Set Region failed. Error :" + error.message);
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageRegionFailed + " " + error.message });
+                }
+            );
+
         },
 
-        ActivityType_OnChange: function (executionContext)
-        {
+        ActivityType_OnChange: function (executionContext) {
 
             var messageWOTypeFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchWorkOrderType.ErrorMessage");
             var formContext = executionContext.getFormContext();
             var sActivityName = glHelper.GetLookupName(formContext, "ovs_oversighttype");
 
+            //offline filter fix
+            var filter = (isOffLine && clientType > 0)
+                ? "ovs_workordertypenameenglish eq '{0}'"
+                : "startswith(ovs_workordertypenameenglish,'{0}')";
+
             //Set WO Type based on Activity Type
-            if (sActivityName == "Civil Aviation Document Review" || sActivityName == "Examen des documents de l'aviation civile" || sActivityName == "Examen documentation de l'aviation civile")
-            {
-                Xrm.WebApi.online.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=startswith(ovs_workordertypenameenglish,'Regulatory Authorization')").then(
-                    function success(results)
-                    {
+            if (sActivityName == "Civil Aviation Document Review" || sActivityName == "Examen des documents de l'aviation civile" || sActivityName == "Examen documentation de l'aviation civile") {
+                currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=" + filter.replace("{0}", "Regulatory Authorization")).then(
+                    function success(results) {
                         var englishName = results.entities[0]["ovs_workordertypenameenglish"];
                         var frenchName = results.entities[0]["ovs_workordertypenamefrench"];
                         var workOrderTypeId = results.entities[0]["msdyn_workordertypeid"];
@@ -217,18 +328,15 @@ var WO_TDG_main = (function (window, document) {
 
                         glHelper.SetDisabled(formContext, "ovs_rational", true);
                     },
-                    function (error)
-                    {
+                    function (error) {
                         console.log("Fetch Work Order Type Error. error: " + error.message);
                         Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageWOTypeFailed + " " + error.message });
                     }
                 );
             }
-            else
-            {
-                Xrm.WebApi.online.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=startswith(ovs_workordertypenameenglish,'Inspection')").then(
-                    function success(results)
-                    {
+            else {
+                currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=" + filter.replace("{0}", "Inspection")).then(
+                    function success(results) {
                         var englishName = results.entities[0]["ovs_workordertypenameenglish"];
                         var frenchName = results.entities[0]["ovs_workordertypenamefrench"];
                         var workOrderTypeId = results.entities[0]["msdyn_workordertypeid"];
@@ -240,17 +348,15 @@ var WO_TDG_main = (function (window, document) {
 
                         glHelper.SetDisabled(formContext, "ovs_rational", true);
                     },
-                    function (error)
-                    {
-                        console.log(messageWOTypeFailed + " "  + error.message);
+                    function (error) {
+                        console.log(messageWOTypeFailed + " " + error.message);
                         Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageWOTypeFailed + " " + error.message });
                     }
                 );
             }
         },
 
-        Rational_OnChange: function (executionContext)
-        {
+        Rational_OnChange: function (executionContext) {
 
             var messageRationalFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchRational.ErrorMessage");
 
@@ -271,10 +377,12 @@ var WO_TDG_main = (function (window, document) {
                 var readOnlyArray = new Array();
                 var editableArray = new Array();
                 var hiddenArray = new Array()
-                isPlanner = appName.indexOf("Planner")!= -1;
+                isPlanner = appName.indexOf("Planner") != -1;
                 isManager = appName.indexOf("Management ") != -1;
-                isInspector = appName.indexOf("Inspections") != -1;
+                isInspector = appName.indexOf("Inspections") != -1 || appName.indexOf("Inspector") != -1;
                 isAnalytic = appName.indexOf("Analytics") != -1;
+
+
 
                 if (isAnalytic || isPlanner) return;
 
@@ -284,8 +392,14 @@ var WO_TDG_main = (function (window, document) {
                     //get rational "ovs_rational" , check it it has french option
                     if (isManager || isInspector) {
 
-                        Xrm.WebApi.online.retrieveMultipleRecords("ovs_tyrational", "?$select=ovs_name,ovs_rationalelbl,ovs_rationalflbl,ovs_tyrationalid&$filter=startswith(ovs_name,'Unplanned')").then(
+                        //offline filter fix
+                        var filter = (isOffLine && clientType > 0)
+                            ? "ovs_name eq '{0}'"
+                            : "startswith(ovs_name,'{0}')";
+
+                        currentWebApi.retrieveMultipleRecords("ovs_tyrational", "?$select=ovs_name,ovs_rationalelbl,ovs_rationalflbl,ovs_tyrationalid&$filter=" + filter.replace("{0}", "Unplanned")).then(
                             function success(results) {
+
                                 var ovs_name = results.entities[0]["ovs_name"];
                                 var ovs_rationalelbl = results.entities[0]["ovs_rationalelbl"];
                                 var ovs_rationalflbl = results.entities[0]["ovs_rationalflbl"];
@@ -314,38 +428,34 @@ var WO_TDG_main = (function (window, document) {
                     }
                 }
                 else {
-                    switch (appName)
-                    {
+                    switch (appName) {
                         //case "TDG Planner / Planificateur TMD":
                         //    editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
                         //    break;
                         case "TDG Management / Gestion TMD":
-                            if (isPlanned)
-                            {
+                            if (isPlanned) {
                                 readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed"); //"ovs_fiscalquarter", "msdyn_serviceterritory",
                                 editableArray = new Array("qm_remote");
                             }
-                            else
-                            {
+                            else {
                                 readOnlyArray = new Array("msdyn_workordertype", "ovs_rational");
                                 editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_serviceterritory");
                             }
                             break;
+                        case "Inspector Offline":
                         case "TDG Inspections / Inspections TMD":
-                            if (isPlanned && formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED)
-                            {
+                            if (isPlanned && formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
                                 readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed", "ovs_qcreviewcomments", "ovs_qcreviewcompletedind", "ovs_primaryinspector",); //"msdyn_serviceterritory",
-                                editableArray = new Array("qm_remote");                               
+                                editableArray = new Array("qm_remote");
                             }
-                            else
-                            {
-                                readOnlyArray = new Array( "msdyn_workordertype", "ovs_rational");
+                            else {
+                                readOnlyArray = new Array("msdyn_workordertype", "ovs_rational");
                                 editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_serviceterritory"); //"ovs_rational" - cannot set editable => will set all fields editable
-                                
+
                             }
 
                             ////hiddenArray = new Array("msdyn_serviceterritory", "msdyn_workordertype");
-                            // //msdyn_systemstatus - filter OptionSet (exclude Closed - Cancelled)
+                            ////msdyn_systemstatus - filter OptionSet (exclude Closed - Cancelled)
                             //if (formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
 
                             //    var options = new Array(); options[0] = 690970005;
@@ -354,7 +464,7 @@ var WO_TDG_main = (function (window, document) {
 
                             break;
                         default:
-                    //        readOnlyArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
+                            //        readOnlyArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
                             break;
                     }
 
@@ -382,90 +492,35 @@ var WO_TDG_main = (function (window, document) {
             });
 
             //Filter Oversight Lookup
-            if (isPlanned)
-            {
+            if (isPlanned) {
                 var formContext = executionContext.getFormContext();
                 formContext.getControl("ovs_oversighttype").setDefaultView("d54acdca-91a7-eb11-9442-000d3ae99322");
             }
-            else
-            {
+            else {
                 var formContext = executionContext.getFormContext();
                 formContext.getControl("ovs_oversighttype").setDefaultView("920688A2-94A7-EB11-9442-000D3AE99322");
             }
         },
 
-        SetRegion: function (formContext)
-        {
-            var primaryInspector = formContext.getAttribute("ovs_primaryinspector").getValue();
-            //If Primary Inspector is being cleared out, do nothing here.
-            if (primaryInspector == null) return;
+        SetDefaultFiscalYear: function (formContext) {
 
-            var messageRegionFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchRegion.ErrorMessage");
-            var primaryInspectorId = primaryInspector[0].id;
-            var queryTxt = "?$select=name,_userid_value&$expand=UserId($select=territoryid)&$filter=bookableresourceid eq " + primaryInspectorId;
-            Xrm.WebApi.online.retrieveMultipleRecords("bookableresource", queryTxt).then(
-                function success(results) {
-                    for (let i = 0; i < results.entities.length; i++) {
-                        let _territoryid_value = results.entities[i].UserId["_territoryid_value"]
-                        let _territoryid_value_lookuplogicalname = results.entities[i].UserId["_territoryid_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
-                        let _territoryid_value_formatted = results.entities[i].UserId["_territoryid_value@OData.Community.Display.V1.FormattedValue"];
 
-                        if (_territoryid_value) {
-                            let _territoryid_value_formattedLang = "";
-                            let pos = _territoryid_value_formatted.indexOf("::");
-                            if (pos > -1) {
-                                if (userSettings.languageId == 1036) {
-                                    // French
-                                    _territoryid_value_formattedLang = _territoryid_value_formatted.substring(pos + 2);
-                                }
-                                else if (userSettings.languageId == 1033) {
-                                    // English
-                                    _territoryid_value_formattedLang = _territoryid_value_formatted.substring(0, pos);
-                                }
-                            } else {
-                                _territoryid_value_formattedLang = _territoryid_value_formatted;
-                            }
-
-                            glHelper.SetLookup(formContext, "msdyn_serviceterritory", _territoryid_value_lookuplogicalname, _territoryid_value, _territoryid_value_formattedLang);
-                        }
-                    }
-                },
-                function (error) {
-                    Xrm.Utility.alertDialog(error.message);
-                }
-            );
-        },
-
-        SetDefaultInspector: function (formContext) {
-
-            var currentUserId = userSettings.userId;
-            currentUserId = currentUserId.replace(/[{}]/g, "");
-
-            Xrm.WebApi.online.retrieveMultipleRecords("bookableresource", "?$filter=_userid_value eq '" + currentUserId + "'").then(function success(result) {
-                if (result != null && result.entities.length > 0) {
-                    var bookableresourceid = result.entities[0].bookableresourceid;
-                    var _userid_value_formatted = result.entities[0]["_userid_value@OData.Community.Display.V1.FormattedValue"];
-
-                    glHelper.SetLookup(formContext, "ovs_primaryinspector", "bookableresource", bookableresourceid, _userid_value_formatted);
-                    //glHelper.SetLookup(formContext, "ovs_primaryinspector", "bookableresource", bookableresourceid, name);
-
-                    //Set Region depends on Default Isnpector region
-                    WO_TDG_main.SetRegion(formContext);
-
-                }
-            }, function (error) {
-                console.log("Set Region failed. Error :" + error.message);
-                Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageRegionFailed + " " + error.message });
-            });
-        },
-
-        SetDefaultFiscalYear: function (formContext)
-        {
+            var fiscalYearName;
+            var filter = "";
+            if (isOffLine && clientType > 0) {
+                //offline
+                fiscalYearName = glHelper.getFiscalYearFromCurrentDate();
+                filter = "tc_name eq '" + fiscalYearName + "'";
+            } else {
+                //online
+                filter = "tc_iscurrentfiscalyear eq true";
+            }
 
             var messageFiscalYearFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchFiscalYear.ErrorMessage");
 
-            Xrm.WebApi.online.retrieveMultipleRecords("tc_tcfiscalyear", "?$select=tc_name,tc_tcfiscalyearid&$filter=tc_iscurrentfiscalyear eq true").then(
+            currentWebApi.retrieveMultipleRecords("tc_tcfiscalyear", "?$select=tc_name,tc_tcfiscalyearid&$filter=" + filter).then(
                 function success(results) {
+
                     for (var i = 0; i < results.entities.length; i++) {
                         var tc_name = results.entities[i]["tc_name"];
                         var tc_tcfiscalyearid = results.entities[i]["tc_tcfiscalyearid"];
@@ -480,8 +535,7 @@ var WO_TDG_main = (function (window, document) {
             );
         },
 
-        SetDefaultFiscalQuarter: function (formContext)
-        {
+        SetDefaultFiscalQuarter: function (formContext) {
             var firstPartOfPattern = "yyyy-MM-dd";
             var secondPartOfPattern = "HH:mm:ss";
             var nowDate = new Date();
@@ -492,21 +546,18 @@ var WO_TDG_main = (function (window, document) {
 
             var messageFiscalQuarterFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchFiscalQuarter.ErrorMessage");
 
-            Xrm.WebApi.online.retrieveMultipleRecords("tc_tcfiscalquarter", "?$select=tc_name&$filter=tc_quarterstart lt " + edmDate + " and tc_quarterend gt " + edmDate + "").then(
-                function success(results)
-                {
-                    for (var i = 0; i < results.entities.length; i++)
-                    {
+            currentWebApi.retrieveMultipleRecords("tc_tcfiscalquarter", "?$select=tc_name&$filter=tc_quarterstart lt " + edmDate + " and tc_quarterend gt " + edmDate + "").then(
+                function success(results) {
+                    for (var i = 0; i < results.entities.length; i++) {
                         var tc_name = results.entities[i]["tc_name"];
                         var tc_tcfiscalquarterid = results.entities[i]["tc_tcfiscalquarterid"];
 
                         glHelper.SetLookup(formContext, "ovs_fiscalquarter", "tc_tcfiscalquarter", tc_tcfiscalquarterid, tc_name);
                     }
                 },
-                function (error)
-                {
+                function (error) {
                     console.log("Set Default Fiscal Quarter failed. Error :" + error.message);
-                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageFiscalQuarterFailed +  " " + error.message });
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageFiscalQuarterFailed + " " + error.message });
                 }
             );
         },
@@ -526,7 +577,7 @@ var WO_TDG_main = (function (window, document) {
                 obj.entityType = substatus.getValue()[0].entityType;
                 obj.id = substatus.getValue()[0].id;
                 var key = substatus.getValue()[0].name.replace(/\s/g, '');
-                
+
                 obj.name = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.substatus." + key);
                 options.push(obj);
 
@@ -569,30 +620,30 @@ var WO_TDG_main = (function (window, document) {
                 Xrm.WebApi.online.execute(ovs_WO_StatusChangePostRequest).then(
                     function success(result) {
                         if (result.ok) {
-                             result.json().then(
-                                 function (responseBody) { 
+                            result.json().then(
+                                function (responseBody) {
 
-                                     if (responseBody.isValidToClose == false) {
-                                         glHelper.SetValue(formContext, "msdyn_systemstatus", null);
-                                         Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageClosePostedFailed });
-                                     }
-                                     else if (responseBody.isValidToBeCompleted == false) {
+                                    if (responseBody.isValidToClose == false) {
+                                        glHelper.SetValue(formContext, "msdyn_systemstatus", null);
+                                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageClosePostedFailed });
+                                    }
+                                    else if (responseBody.isValidToBeCompleted == false) {
 
-                                         glHelper.SetValue(formContext, "msdyn_systemstatus", null);
-                                         Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageOpenCompletedFailed });
+                                        glHelper.SetValue(formContext, "msdyn_systemstatus", null);
+                                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageOpenCompletedFailed });
 
-                                     }
-                                     else {
-                                         //If system status is set to closed
-                                         if (systemStatus == 690970004) {
-                                             //Set state to Inactive
-                                             formContext.getAttribute("statecode").setValue(1);
-                                             //Set Status Reason to Closed
-                                             formContext.getAttribute("statuscode").setValue(918640000);
-                                         }
-                                     }
-                                 }
-                             );                              
+                                    }
+                                    else {
+                                        //If system status is set to closed
+                                        if (systemStatus == 690970004) {
+                                            //Set state to Inactive
+                                            formContext.getAttribute("statecode").setValue(1);
+                                            //Set Status Reason to Closed
+                                            formContext.getAttribute("statuscode").setValue(918640000);
+                                        }
+                                    }
+                                }
+                            );
                         }
                     },
                     function (error) {
@@ -642,8 +693,8 @@ var WO_TDG_main = (function (window, document) {
                     req.onreadystatechange = null;
                     if (this.status === 200) {
                         var result = JSON.parse(this.response);
-                        if (result.hasOwnProperty("primarycontactid")) {                            
-                            
+                        if (result.hasOwnProperty("primarycontactid")) {
+
                             if (result["primarycontactid"]["telephone1"] == null) {
                                 setReportValidationError("Site " + site.name + " " + messagePhone);
                                 isValid = false;
@@ -652,13 +703,11 @@ var WO_TDG_main = (function (window, document) {
                                 setReportValidationError("Site " + site.name + " " + messageReportEmail);
                                 isValid = false;
                             }
-                            if (result["primarycontactid"]["lastname"] == null || result["primarycontactid"]["lastname"] == "")
-                            {
+                            if (result["primarycontactid"]["lastname"] == null || result["primarycontactid"]["lastname"] == "") {
                                 setReportValidationError("Site " + site.name + " " + messageReportFullName);
                                 isValid = false;
                             }
-                            if (result["primarycontactid"]["jobtitle"] == null || result["primarycontactid"]["jobtitle"] == "")
-                            {
+                            if (result["primarycontactid"]["jobtitle"] == null || result["primarycontactid"]["jobtitle"] == "") {
                                 setReportValidationError("Site " + site.name + " " + messageReportJobTitle);
                                 isValid = false;
                             }
@@ -692,12 +741,10 @@ var WO_TDG_main = (function (window, document) {
                     req.onreadystatechange = null;
                     if (this.status === 200) {
                         var result = JSON.parse(this.response);
-                        if (result["ovs_badgenumber"] == null || result["ovs_badgenumber"] == "")
-                        {
+                        if (result["ovs_badgenumber"] == null || result["ovs_badgenumber"] == "") {
                             setReportValidationError(titlePrimaryInspector + " " + prmInspector.name + " " + messageBadge);
                             isValid = false;
-                        } if (result["ovs_registeredinspectornumberrin"] == null || result["ovs_registeredinspectornumberrin"] == "")
-                        {
+                        } if (result["ovs_registeredinspectornumberrin"] == null || result["ovs_registeredinspectornumberrin"] == "") {
                             setReportValidationError(titlePrimaryInspector + " " + prmInspector.name + " " + messageRRIN);
                             isValid = false;
                         }
@@ -713,7 +760,7 @@ var WO_TDG_main = (function (window, document) {
                             } if (result["UserId"]["fullname"] == null || result["UserId"]["fullname"] == "") {
                                 setReportValidationError(messageReportFullName);
                                 isValid = false;
-                            } 
+                            }
                         }
                         else {
                             setReportValidationError(titlePrimaryInspector + " " + prmInspector.name + " is not associated with any user in the system");

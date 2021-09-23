@@ -225,7 +225,6 @@
       <RootComponent type="29" id="{5b207984-5818-eb11-a813-000d3af3a7a7}" behavior="0" />
       <RootComponent type="29" id="{5c9834c1-6e6d-eb11-a812-000d3a84129e}" behavior="0" />
       <RootComponent type="29" id="{8752932b-a809-ec11-b6e6-000d3ae8f2bd}" behavior="0" />
-      <RootComponent type="29" id="{cc3bac79-c51a-4dd0-ab95-fe679be28214}" behavior="0" />
       <RootComponent type="29" id="{e98e82eb-8891-eb11-b1ac-000d3ae99512}" behavior="0" />
       <RootComponent type="31" id="{b31dabaf-5f0e-eb11-a813-000d3af3ac0d}" behavior="0" />
       <RootComponent type="60" id="{0a24a863-4815-eb11-a813-000d3af3ac0d}" behavior="0" />
@@ -1792,7 +1791,7 @@
         <Required type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_Crew" displayName="msdyn_bookableresource_bookableresourcebooking_Crew" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdyn_FieldService_patch_update (8.8.49.21)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
-        <Dependent type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" displayName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="bookableresource_bookableresourcebooking_Resource" displayName="bookableresource_bookableresourcebooking_Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_Crew" displayName="msdyn_bookableresource_bookableresourcebooking_Crew" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdyn_FieldService_patch_update (8.8.49.21)">
@@ -1823,7 +1822,7 @@
           <package>FieldService_Anchor (8.8.29.256)</package>
           <package>msdynce_CoreServiceSchedulingAnchor (9.0.20082.1006)</package>
         </Required>
-        <Dependent type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" displayName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="bookableresource_bookableresourcebooking_Resource" displayName="bookableresource_bookableresourcebooking_Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" displayName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="MicrosoftDynamicsScheduling (3.12.0.448)">
@@ -4494,7 +4493,7 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="bookableresourceid" displayName="Bookable Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdynce_Scheduling (9.0.0.0)" />
-        <Dependent type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_Crew" displayName="msdyn_bookableresource_bookableresourcebooking_Crew" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" displayName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="bookableresourceid" displayName="Bookable Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdynce_Scheduling (9.0.0.0)" />
@@ -6585,6 +6584,12 @@
         <Required type="2" schemaName="msdyn_workorderid" displayName="WO Number" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
+        <Dependent type="2" schemaName="ovs_remote" displayName="Remote" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="msdyn_workorderid" displayName="WO Number" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)">
+          <package>FieldService_Anchor (8.8.29.256)</package>
+        </Required>
         <Dependent type="26" schemaName="My Team's Inactive Work Orders" displayName="My Team's Inactive Work Orders" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" id="{0b35e605-71d0-eb11-bacc-0022483c0387}" />
       </MissingDependency>
       <MissingDependency>
@@ -7444,6 +7449,12 @@
         <Dependent type="26" schemaName="TDG Service Tasks" displayName="TDG Service Tasks" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" id="{7853b222-368c-eb11-b1ac-000d3ae92932}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="2" schemaName="modifiedon" displayName="Modified On" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
+          <package>FieldService_Anchor (8.8.29.256)</package>
+        </Required>
+        <Dependent type="26" schemaName="Time Tracking" displayName="Time Tracking" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" id="{4eb0e3ba-061b-ec11-b6e7-000d3ae9b59b}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="2" schemaName="msdyn_actualduration" displayName="Actual Duration" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
@@ -7705,6 +7716,12 @@
         <Required type="2" schemaName="msdyn_name" displayName="Name" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
+        <Dependent type="2" schemaName="ovs_remote" displayName="Remote" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="msdyn_name" displayName="Name" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
+          <package>FieldService_Anchor (8.8.29.256)</package>
+        </Required>
         <Dependent type="26" schemaName="Inspection - Work Order Service Task View" displayName="Inspection - Work Order Service Task View" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" id="{063662d0-db4c-e111-93b3-000c2959f9b8}" />
       </MissingDependency>
       <MissingDependency>
@@ -7754,6 +7771,12 @@
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
         <Dependent type="60" displayName="Information" parentDisplayName="Work Order Service Task" id="{12a5be6b-b565-4d80-a2bc-3d4f652a3d98}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="msdyn_tasktype" displayName="Task Type" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
+          <package>FieldService_Anchor (8.8.29.256)</package>
+        </Required>
+        <Dependent type="26" schemaName="Time Tracking" displayName="Time Tracking" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" id="{4eb0e3ba-061b-ec11-b6e7-000d3ae9b59b}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_tasktype" displayName="Task Type" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
@@ -7831,7 +7854,19 @@
         <Required type="2" schemaName="msdyn_workorderservicetaskid" displayName="Work Order Service Task" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
+        <Dependent type="2" schemaName="ovs_remote" displayName="Remote" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="msdyn_workorderservicetaskid" displayName="Work Order Service Task" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
+          <package>FieldService_Anchor (8.8.29.256)</package>
+        </Required>
         <Dependent type="26" schemaName="Inspection - Work Order Service Task View" displayName="Inspection - Work Order Service Task View" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" id="{063662d0-db4c-e111-93b3-000c2959f9b8}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="msdyn_workorderservicetaskid" displayName="Work Order Service Task" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
+          <package>FieldService_Anchor (8.8.29.256)</package>
+        </Required>
+        <Dependent type="26" schemaName="Time Tracking" displayName="Time Tracking" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" id="{4eb0e3ba-061b-ec11-b6e7-000d3ae9b59b}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_workorderservicetaskid" displayName="Work Order Service Task" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
@@ -8953,10 +8988,6 @@
           <package>msdynce_CoreServiceSchedulingAnchor (9.0.20082.1006)</package>
         </Required>
         <Dependent type="80" schemaName="ovs_OversightPlanning" displayName="TDG Inspections / Inspections TMD" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="26" schemaName="Time Tracking" displayName="Time Tracking" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="Active" id="{4eb0e3ba-061b-ec11-b6e7-000d3ae9b59b}" />
-        <Dependent type="60" displayName="TDG Oversight Activity" parentDisplayName="Work Order" id="{66cddb3b-b9ca-4552-ac5e-f4d726a35268}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="26" schemaName="Work Order Service Task View - Mobile" displayName="Work Order Service Task View - Mobile" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)" id="{524a68d6-425f-e611-8108-000d3a146973}">
@@ -11174,12 +11205,6 @@
         <Required type="61" schemaName="Sales/ClientCommon/Sales_ClientCommon.js" displayName="Sales/ClientCommon/Sales_ClientCommon.js" solution="msdynce_Sales (9.0.4.0076)">
           <package>msdynce_SalesAnchor (9.0.21041.10003)</package>
         </Required>
-        <Dependent type="60" displayName="Contact" parentDisplayName="Contact" id="{1fed44d1-ae68-4a41-bd2b-f13acac4acfa}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="61" schemaName="Sales/ClientCommon/Sales_ClientCommon.js" displayName="Sales/ClientCommon/Sales_ClientCommon.js" solution="msdynce_Sales (9.0.4.0076)">
-          <package>msdynce_SalesAnchor (9.0.21041.10003)</package>
-        </Required>
         <Dependent type="60" displayName="Contact Main Form" parentDisplayName="Contact" id="{2c961780-b9f9-ea11-a815-000d3af3ac0d}" />
       </MissingDependency>
       <MissingDependency>
@@ -11199,6 +11224,12 @@
           <package>msdynce_SalesAnchor (9.0.21041.10003)</package>
         </Required>
         <Dependent type="60" displayName="TDG Site Profile" parentDisplayName="Account" id="{db5d5927-e1b5-440f-b55b-e0a95e1b053b}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="61" schemaName="Sales/ClientCommon/Sales_ClientCommon.js" displayName="Sales/ClientCommon/Sales_ClientCommon.js" solution="msdynce_Sales (9.0.4.0076)">
+          <package>msdynce_SalesAnchor (9.0.21041.10003)</package>
+        </Required>
+        <Dependent type="60" displayName="TDG Contact" parentDisplayName="Contact" id="{ec7b5b17-85b9-eb11-8236-0022483bc67c}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="Sales/Contact/Contact_main_system_library.js" displayName="Sales/Contact/Contact_main_system_library.js" solution="msdynce_SalesPatch201904 (9.0.1912.1007)">

@@ -236,27 +236,26 @@ var WO_TDG_main = (function (window, document) {
                 //set global object fo contact quick create form
                 site.fireOnChange();
 
-                //refresh the Post-Inspection tab
-                var postInspectionTab = formContext.ui.tabs.get("tab_PostInspection");
-                postInspectionTab.removeTabStateChange(WO_TDG_main.OnPostInspection_StateChange);
-                postInspectionTab.addTabStateChange(WO_TDG_main.OnPostInspection_StateChange);
+                //refresh the COC tab
+                var cocTab = formContext.ui.tabs.get("tab_ConfirmationOfCompliances");
+                cocTab.removeTabStateChange(WO_TDG_main.OnConfirmationOfCompliance_StateChange);
+                cocTab.addTabStateChange(WO_TDG_main.OnConfirmationOfCompliance_StateChange);
             }
 
             // Set Oversight Activity field as Mandatory
             glHelper.SetRequiredLevel(formContext, "ovs_oversighttype", true);
         },
 
-        OnPostInspection_StateChange: function (executionContext) {
+        OnConfirmationOfCompliance_StateChange: function (executionContext) {
 
-            var formContext = executionContext.getFormContext();
+            let formContext = executionContext.getFormContext();
 
-            var postInspectionTab = formContext.ui.tabs.get("tab_PostInspection");
-            if (postInspectionTab)
-                if (postInspectionTab.getDisplayState() == "expanded" && postInspectionTab.getVisible() == true) {
+            var cocTab = formContext.ui.tabs.get("tab_ConfirmationOfCompliances");
+            if (cocTab && cocTab.getDisplayState() == "expanded" && cocTab.getVisible() == true) {
+                var gridCOC = formContext.getControl("Subgrid_COC");
+                gridCOC.refresh();
+            }
 
-                    var gridCOC = formContext.getControl("Subgrid_COC");
-                    gridCOC.refresh();
-                }
         },
 
         Site_OnChange: function (executionContext) {
