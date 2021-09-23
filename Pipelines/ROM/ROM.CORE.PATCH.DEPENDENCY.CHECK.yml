@@ -43,13 +43,11 @@ stages:
         script: |
           if ($(PatchExists) -eq $false) {
               Write-Host "Patch does not exist - checking missing dependencies and components for $(CoreSolutionName)"
-              Write-Host "##vso[task.setvariable variable=SolutionName]$(CoreSolutionName)"
-              #Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.LatestPatchName]$(CoreSolutionName)"
+              Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.SolutionName]$(CoreSolutionName)"
           }
           else {
             Write-Host "Patch does exist - checking missing dependencies and components for $(LatestPatchName)"
-            Write-Host "##vso[task.setvariable variable=SolutionName]$(LatestPatchName)"
-            #Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.LatestPatchName]$(LatestPatchName)"
+            Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.SolutionName]$(LatestPatchName)"
           }
           Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.PatchExists]$(PatchExists)"
           Write-Host "SolutionName = $(SolutionName)"
