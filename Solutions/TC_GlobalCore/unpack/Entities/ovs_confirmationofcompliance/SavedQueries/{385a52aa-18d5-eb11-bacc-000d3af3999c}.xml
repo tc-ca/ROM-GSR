@@ -37,20 +37,18 @@
           <filter type="and">
             <condition attribute="statecode" operator="not-null" />
           </filter>
-          <link-entity name="msdyn_workorder" from="msdyn_workorderid" to="regardingobjectid" alias="a_726cd6f64992eb11b1ac000d3ae985db">
+          <link-entity name="msdyn_workorder" from="msdyn_workorderid" to="regardingobjectid" alias="a_726cd6f64992eb11b1ac000d3ae985db" visible="false">
             <attribute name="msdyn_serviceaccount" />
-            <link-entity name="activitypointer" from="regardingobjectid" to="msdyn_workorderid" alias="aa">
-              <link-entity name="activityparty" from="activityid" to="activityid" alias="ab">
-                <filter type="and">
-                  <condition attribute="partyid" operator="eq-userid" />
-                </filter>
-              </link-entity>
-            </link-entity>
           </link-entity>
           <link-entity name="qm_syresult" from="qm_syresultid" to="ovs_violation" visible="false" link-type="outer" alias="a_0b3882dd4b92eb11b1ac000d3ae985db">
             <attribute name="qm_externalcomments" />
           </link-entity>
           <attribute name="activityid" />
+          <link-entity name="systemuser" alias="ac" link-type="inner" from="systemuserid" to="owninguser">
+            <filter type="and">
+              <condition attribute="systemuserid" operator="eq-userid" />
+            </filter>
+          </link-entity>
         </entity>
       </fetch>
     </fetchxml>
