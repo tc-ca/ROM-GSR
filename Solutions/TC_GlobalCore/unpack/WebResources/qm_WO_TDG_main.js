@@ -637,9 +637,9 @@ var WO_TDG_main = (function (window, document) {
                                         //If system status is set to closed
                                         if (systemStatus == 690970004) {
                                             //Set state to Inactive
-                                            //formContext.getAttribute("statecode").setValue(1);
+                                            formContext.getAttribute("statecode").setValue(1);
                                             //Set Status Reason to Closed
-                                            //formContext.getAttribute("statuscode").setValue(918640000);
+                                            formContext.getAttribute("statuscode").setValue(918640000);
                                         }
                                     }
                                 }
