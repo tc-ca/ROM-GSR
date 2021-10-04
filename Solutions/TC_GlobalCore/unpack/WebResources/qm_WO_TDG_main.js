@@ -590,23 +590,25 @@ var WO_TDG_main = (function (window, document) {
             var formContext = executionContext.getFormContext();
             var systemStatus = formContext.getAttribute("msdyn_systemstatus").getValue();
 
-            var messageClosePostedFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.SetClosedPosted.Error");
-            var messageOpenCompletedFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.SetOpenCompleted.Error");
 
-
-            //If system status is set to cmpleted or closed
-            if (systemStatus == 690970003 || systemStatus == 690970004) {
+            //If system status is set to completed, closed or canceled check business logic called via custom action.
+            if (systemStatus == 690970003 || systemStatus == 690970004 || systemStatus == 690970005 ) {
                 var parameters = {};
                 parameters.woId = formContext.data.entity.getId().replace("{", "").replace("}", "");
+                parameters.targetedSystemStatus = systemStatus.toString();
 
                 var ovs_WO_StatusChangePostRequest = {
                     woId: parameters.woId,
-
+                    targetedSystemStatus: parameters.targetedSystemStatus,
                     getMetadata: function () {
                         return {
                             boundParameter: null,
                             parameterTypes: {
                                 "woId": {
+                                    "typeName": "Edm.String",
+                                    "structuralProperty": 1
+                                },
+                                "targetedSystemStatus": {
                                     "typeName": "Edm.String",
                                     "structuralProperty": 1
                                 }
@@ -623,15 +625,9 @@ var WO_TDG_main = (function (window, document) {
                             result.json().then(
                                 function (responseBody) {
 
-                                    if (responseBody.isValidToClose == false) {
+                                    if (responseBody.isValidToSave == false) {
                                         glHelper.SetValue(formContext, "msdyn_systemstatus", null);
-                                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageClosePostedFailed });
-                                    }
-                                    else if (responseBody.isValidToBeCompleted == false) {
-
-                                        glHelper.SetValue(formContext, "msdyn_systemstatus", null);
-                                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageOpenCompletedFailed });
-
+                                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: responseBody.message  });
                                     }
                                     else {
                                         //If system status is set to closed
