@@ -129,7 +129,9 @@ var AccountTDGmain = (function (window, document) {
                 getViolationHistory(formContext);
 
                 var accountUN = formContext.getControl("Subgrid_AccountUNNumbers");
-                accountUN.addOnLoad(AccountTDGmain.Refresh_AccountClass);
+
+                if (accountUN != null)
+                    accountUN.addOnLoad(AccountTDGmain.Refresh_AccountClass);
 
             }
 
