@@ -1,4 +1,4 @@
-﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+///<reference path="../../Utilities/GlobalHelper.js"/>
 ///<reference path="../../Utilities/questionnaireFunctions.js"/>
 var QuickCreateHelper = QuickCreateHelper || {};
 window.top.QuickCreateHelper = QuickCreateHelper;
@@ -69,6 +69,68 @@ var WO_TDG_main = (function (window, document) {
         } else {
             return formatedString;
         }
+    }
+
+    async function getBookableData(workOrder) {
+        let duration = null;
+        let modifiedon = null;
+        let hasBookings = false
+
+
+        await currentWebApi.retrieveMultipleRecords("bookableresourcebooking", `?$select=duration,modifiedon&$filter=_msdyn_workorder_value eq ${workOrder} and statecode eq 0 &$orderby=modifiedon desc`).then(
+            function success(results) {
+                for (var i = 0; i < results.entities.length; i++) {
+                    duration += results.entities[i]["duration"];
+                }
+                //take from the first record, list of records are sorted by modifiedon desc, first one should be the latest
+                if(results.entities.length > 0)
+                {
+                    modifiedon = results.entities[0]["modifiedon"]
+                    hasBookings = true
+                }
+            },
+            function (error) {
+                Xrm.Utility.alertDialog(error.message);
+            }
+        );
+        return {hasBookings:hasBookings, duration: duration, modifiedon: modifiedon}
+    }
+
+    async function updateWorkOrderServiceTaskDuration(serviceTaskId, hours, minutes) {
+        let data = null;
+        var entity = {};
+        entity.ovs_hour = hours;
+        entity.ovs_minute = minutes;
+
+        await currentWebApi.updateRecord("msdyn_workorderservicetask", serviceTaskId, entity).then(
+            function success(result) {
+                data = result.id;
+
+            },
+            function (error) {
+                Xrm.Utility.alertDialog(error.message);
+            });
+
+        return data
+
+    }
+
+    async function getServiceTasksForWorkOrder(workOrder) {
+
+        let data = null;
+
+        await currentWebApi.retrieveMultipleRecords("msdyn_workorderservicetask", `?$select=_msdyn_tasktype_value,ovs_hour,ovs_minute,modifiedon&$filter=_msdyn_workorder_value eq ${workOrder}`).then(
+            function success(results) {
+                data = results.entities
+            },
+            function (error) {
+                Xrm.Utility.alertDialog(error.message);
+            }
+        );
+
+        return data
+
+
     }
 
     /**
@@ -240,6 +302,11 @@ var WO_TDG_main = (function (window, document) {
                 var cocTab = formContext.ui.tabs.get("tab_ConfirmationOfCompliances");
                 cocTab.removeTabStateChange(WO_TDG_main.OnConfirmationOfCompliance_StateChange);
                 cocTab.addTabStateChange(WO_TDG_main.OnConfirmationOfCompliance_StateChange);
+                
+                //Time Tracking
+                var timeEntryTab = formContext.ui.tabs.get("tab_TimeTracking");
+                timeEntryTab.removeTabStateChange(WO_TDG_main.calculateAndUpdateServiceTaskDuration);
+                timeEntryTab.addTabStateChange(WO_TDG_main.calculateAndUpdateServiceTaskDuration);
             }
 
             // Set Oversight Activity field as Mandatory
@@ -801,6 +868,90 @@ var WO_TDG_main = (function (window, document) {
 
             //Xrm.Utility.closeProgressIndicator();
             return isValid;
+        },
+
+        /// Updates Work Order Service Task Record of Service Task Type "Execution" with Booking duration
+        calculateAndUpdateServiceTaskDuration: async function (executionContext) {
+
+             //todo implement msg in french
+             Xrm.Utility.showProgressIndicator('loading');
+
+            try {
+            let formContext = executionContext.getFormContext();
+            //let formContext = executionContext
+            let workOrderId = formContext.data.entity.getId().replace("{", "").replace("}", "")
+            let systemStatus = formContext.getAttribute("msdyn_systemstatus").getValue();
+            //If system status is close posted or canceled do not update service task time.
+            if (systemStatus !== 690970004 && systemStatus !== 690970005) {
+
+                //get service task off work order (should already be auto created at this point)
+                const serviceTasks = await getServiceTasksForWorkOrder(workOrderId)
+                let executionServicetask = serviceTasks.filter(x => x["_msdyn_tasktype_value"] === "794a29b3-e917-ec11-b6e7-000d3ae8ef7b") //execution inspection
+
+                //if sevice task exist.
+                if (executionServicetask.length === 1) {
+                    const bookingData = await getBookableData(workOrderId)
+                    const bookingDurationTotalMinutes = bookingData.duration
+                    const bookingModifiedOn = bookingData.modifiedon
+
+
+                    let bookingHours = null;
+                    let bookingMinutes = null;
+                    //if booking exist (null if no duration)
+                    if (bookingData.hasBookings ) {
+                        //convert total minutes to hours and minutes to place in seperate fields.
+                        bookingHours = Math.floor(bookingDurationTotalMinutes / 60);
+                        bookingMinutes = bookingDurationTotalMinutes % 60;
+
+                        const execustionServiceTaskHours = executionServicetask[0]['ovs_hour']
+                        const executionServiceTaskMinutes = executionServicetask[0]['ovs_minute']
+                        const executionServiceTaskModifiedon = executionServicetask[0]['modifiedon']
+                        const previousExecutionServiceTaskTotalBookingDuration = executionServicetask[0]['ovs_totalbookingduration']
+
+
+                        //or if user has not manually updated execution time done by comparing what was entered into service task time and booking duration
+                        //booking modified on
+
+
+                        //update execution service task if initial/first time loading work order 
+                        if ((execustionServiceTaskHours === null && executionServiceTaskMinutes === null)) {
+                            updateWorkOrderServiceTaskDuration(executionServicetask[0]['msdyn_workorderservicetaskid'], bookingHours, bookingMinutes, bookingDurationTotalMinutes)
+                        }
+                        //update execution service task if booking has been updated.
+                        else if (bookingHours !== execustionServiceTaskHours || bookingMinutes !== executionServiceTaskMinutes) {
+                            if (new Date(bookingModifiedOn).getTime() > new Date(executionServiceTaskModifiedon).getTime()) {
+                                updateWorkOrderServiceTaskDuration(executionServicetask[0]['msdyn_workorderservicetaskid'], bookingHours, bookingMinutes, bookingDurationTotalMinutes)
+                            }
+                            else {
+                                    //else service task modifiedon is greater than booking modified on, i.e. user manually updated time, no need to update time.
+                                    //unless total booking duration is different from the previous total booking duration i.e.
+
+                                if(bookingDurationTotalMinutes !== previousExecutionServiceTaskTotalBookingDuration)
+                                {
+                                    updateWorkOrderServiceTaskDuration(executionServicetask[0]['msdyn_workorderservicetaskid'], bookingHours, bookingMinutes, bookingDurationTotalMinutes)
+                                }
+                            }
+                        }
+                        else {
+                            //hours and minutes are the same, no need to update time.
+                        }
+                    }
+                    else{
+                        updateWorkOrderServiceTaskDuration(executionServicetask[0]['msdyn_workorderservicetaskid'], null, null, null)
+                    }
+
+                }
+
+            }
+                 
+             } catch (error) {
+                throw error;
+             }
+              finally {
+            Xrm.Utility.closeProgressIndicator();
+            }
+
+        
         },
 
         errorObject: errorObject,

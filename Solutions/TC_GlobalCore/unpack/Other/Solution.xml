@@ -10,7 +10,7 @@
       <Description description="Upgrade of TC.GlobalCore" languagecode="1033" />
       <Description description="Mise à niveau de TC.GlobalCore" languagecode="1036" />
     </Descriptions>
-    <Version>1.96.0.0</Version>
+    <Version>1.97.0.0</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>oversightpublisher</UniqueName>
@@ -1977,7 +1977,7 @@
         <Required type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
-        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_PreferredResource" displayName="msdyn_bookableresource_msdyn_workorder_PreferredResource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="FieldService (8.8.0.88)">
@@ -4197,7 +4197,7 @@
         <Required type="10" schemaName="msdyn_slakpiinstance_msdyn_workorder_arrival_timekpi" displayName="msdyn_slakpiinstance_msdyn_workorder_arrival_timekpi" parentSchemaName="slakpiinstance" parentDisplayName="SLA KPI Instance" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
-        <Dependent type="10" schemaName="msdyn_slakpiinstance_msdyn_workorder_arrival_timekpi" displayName="msdyn_slakpiinstance_msdyn_workorder_arrival_timekpi" parentSchemaName="slakpiinstance" parentDisplayName="SLA KPI Instance" />
+        <Dependent type="10" schemaName="msdyn_slakpiinstance_msdyn_workorder_resolutionkpiid" displayName="msdyn_slakpiinstance_msdyn_workorder_resolutionkpiid" parentSchemaName="slakpiinstance" parentDisplayName="SLA KPI Instance" />
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_slakpiinstance_msdyn_workorder_arrival_timekpi" displayName="msdyn_slakpiinstance_msdyn_workorder_arrival_timekpi" parentSchemaName="slakpiinstance" parentDisplayName="SLA KPI Instance" solution="FieldService (8.8.0.88)">
@@ -4209,7 +4209,7 @@
         <Required type="10" schemaName="msdyn_slakpiinstance_msdyn_workorder_resolutionkpiid" displayName="msdyn_slakpiinstance_msdyn_workorder_resolutionkpiid" parentSchemaName="slakpiinstance" parentDisplayName="SLA KPI Instance" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
-        <Dependent type="10" schemaName="msdyn_slakpiinstance_msdyn_workorder_arrival_timekpi" displayName="msdyn_slakpiinstance_msdyn_workorder_arrival_timekpi" parentSchemaName="slakpiinstance" parentDisplayName="SLA KPI Instance" />
+        <Dependent type="10" schemaName="msdyn_slakpiinstance_msdyn_workorder_resolutionkpiid" displayName="msdyn_slakpiinstance_msdyn_workorder_resolutionkpiid" parentSchemaName="slakpiinstance" parentDisplayName="SLA KPI Instance" />
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_slakpiinstance_msdyn_workorder_resolutionkpiid" displayName="msdyn_slakpiinstance_msdyn_workorder_resolutionkpiid" parentSchemaName="slakpiinstance" parentDisplayName="SLA KPI Instance" solution="FieldService (8.8.0.88)">
@@ -6637,7 +6637,7 @@
         <Required type="2" schemaName="msdyn_workorderid" displayName="WO Number" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
-        <Dependent type="2" schemaName="ovs_remote" displayName="remote" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" />
+        <Dependent type="2" schemaName="ovs_remote" displayName="Remote" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_workorderid" displayName="WO Number" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)">
@@ -7979,7 +7979,7 @@
         <Required type="2" schemaName="msdyn_name" displayName="Name" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
-        <Dependent type="2" schemaName="ovs_remote" displayName="remote" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" />
+        <Dependent type="2" schemaName="ovs_remote" displayName="Remote" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_name" displayName="Name" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
@@ -8147,13 +8147,13 @@
         <Required type="2" schemaName="msdyn_workorderservicetaskid" displayName="Work Order Service Task" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
-        <Dependent type="2" schemaName="ovs_istimeentered" displayName="isTimeEntered" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" />
+        <Dependent type="2" schemaName="ovs_istimeentered" displayName="Is Time Entered" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_workorderservicetaskid" displayName="Work Order Service Task" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
-        <Dependent type="2" schemaName="ovs_remote" displayName="remote" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" />
+        <Dependent type="2" schemaName="ovs_remote" displayName="Remote" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_workorderservicetaskid" displayName="Work Order Service Task" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
