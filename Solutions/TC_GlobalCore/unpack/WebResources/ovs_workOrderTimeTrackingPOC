@@ -11,7 +11,10 @@ var WO_TDG_main = (function (window, document) {
     var LCID;
     var clientUrl;
     var resexResourceName;
-    var globalObj = window.top.QuickCreateHelper;
+    var globalObj;
+    var currentWebApi;
+    var isOffLine;
+    var clientType;
 
     var errorObject = {};
     errorObject.isValid = true;
@@ -19,8 +22,7 @@ var WO_TDG_main = (function (window, document) {
 
 
     //********************private methods*******************
-    function setReportValidationError(message)
-    {
+    function setReportValidationError(message) {
         errorObject.isValid = false;
         errorObject.errorMessage.push(message);
     }
@@ -52,49 +54,145 @@ var WO_TDG_main = (function (window, document) {
         }
     }
 
-async function getRecordCount(table, filter, id) {
-//   return 1;
-let data = null;
- await Xrm.WebApi.online.retrieveMultipleRecords(table, `?$select=createdon&$filter=${filter} eq ${id}`).then(
-                    function success(results) {
-                    console.log('length-',results.entities.length)
-                    data = results.entities.length
-                    },
-                    function(error) {
-                        Xrm.Utility.alertDialog(error.message);
-                    });
+    function getLocalizedName(formatedString) {
 
-                    return data
+        var pos = formatedString.indexOf("::");
+        if (pos > -1) {
+            if (userSettings.languageId == 1036) {
+                // French
+                return formatedString.substring(pos + 2);
+            }
+            else if (userSettings.languageId == 1033) {
+                // English
+                return formatedString.substring(0, pos);
+            }
+        } else {
+            return formatedString;
+        }
+    }
 
-}
-
-
-
-async function getItemsToTrack() {
-//   return 1;
-let data = null;
-            await Xrm.WebApi.online.retrieveMultipleRecords("ovs_timetrackingconfiguration", "?$select=ovs_aggregateestimatefor,ovs_name,ovs_targetedtable,ovs_tablefilter,ovs_timeestimate, ovs_estimatetimepereachrecord").then(
-                    function success(results) {
-             data = results.entities;
-                    },
-                    function(error) {
-                        Xrm.Utility.alertDialog(error.message);
-                    });
-
-                    return data
-
-}
+    async function getBookableData(workOrder) {
+        let duration = null;
+        let modifiedon = null;
+        let hasBookings = false
 
 
+        await currentWebApi.retrieveMultipleRecords("bookableresourcebooking", `?$select=duration,modifiedon&$filter=_msdyn_workorder_value eq ${workOrder} &$orderby=modifiedon desc`).then(
+            function success(results) {
+                for (var i = 0; i < results.entities.length; i++) {
+                    duration += results.entities[i]["duration"];
+                }
+                //take from the first record, list of records are sorted by modifiedon desc, first one should be the latest
+                if (results.entities.length > 0) {
+                    modifiedon = results.entities[0]["modifiedon"]
+                    hasBookings = true
+                }
+            },
+            function (error) {
+                Xrm.Utility.alertDialog(error.message);
+            }
+        );
+        return { hasBookings: hasBookings, duration: duration, modifiedon: modifiedon }
+    }
+
+    async function updateWorkOrderServiceTaskDuration(serviceTaskId, hours, minutes, bookingDurationTotalMinutes) {
+        let data = null;
+        var entity = {};
+        entity.ovs_hour = hours;
+        entity.ovs_minute = minutes;
+        entity.ovs_totalbookingduration = bookingDurationTotalMinutes
+
+        await currentWebApi.updateRecord("msdyn_workorderservicetask", serviceTaskId, entity).then(
+            function success(result) {
+                data = result.id;
+
+            },
+            function (error) {
+                Xrm.Utility.alertDialog(error.message);
+            });
+
+        return data
+
+    }
+
+    async function getServiceTasksForWorkOrder(workOrder) {
+
+        let data = null;
+
+        await currentWebApi.retrieveMultipleRecords("msdyn_workorderservicetask", `?$select=_msdyn_tasktype_value,ovs_hour,ovs_minute,modifiedon,ovs_totalbookingduration&$filter=_msdyn_workorder_value eq ${workOrder}`).then(
+            function success(results) {
+                data = results.entities
+            },
+            function (error) {
+                Xrm.Utility.alertDialog(error.message);
+            }
+        );
+
+        return data
 
 
-async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
-//   return 1;
-    let count = await getRecordCount(table, filter, id)
-    return count * estimateTime
+    }
+
+    /**
+     * mobile friendly method
+     * @param {context} formContext
+     * @param {userid} userid of user owning  bookableresource
+     * @param {isCurrentUser} isCurrentUser flag to indicate if quesry execured for current user's bookableresource or new bookable resource owner
+     */
+    function getSetInspectorRegion(formContext, userid, isCurrentUser = true) {
+
+        var bookableresourceid;
+        var _userid_value_formatted;
+        var _territoryid_value;
+        var _territoryid_value_lookuplogicalname;
+        var _territoryid_value_formatted;
+        var formattedLang = "";
+        var messageRegionFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchRegion.ErrorMessage");
 
 
-}
+        currentWebApi.retrieveRecord("systemuser", userid.toLowerCase(), "?$select=fullname,_territoryid_value&$expand=systemuser_bookableresource_UserId($select=bookableresourceid,name),territoryid($select=name,ovs_territorynameenglish,ovs_territorynamefrench,territoryid)").then(
+            function success(results) {
+
+                if (results != null) {
+
+                    var fullname = results["fullname"];
+                    _territoryid_value = results["_territoryid_value"];
+                    _territoryid_value_formatted = results["_territoryid_value@OData.Community.Display.V1.FormattedValue"];
+                    _territoryid_value_lookuplogicalname = results["_territoryid_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+
+                    if (results.systemuser_bookableresource_UserId != null
+                        && results.systemuser_bookableresource_UserId.length > 0) {
+
+                        bookableresourceid = results.systemuser_bookableresource_UserId[0]["bookableresourceid"];
+                        _userid_value_formatted = results.systemuser_bookableresource_UserId[0]["name"];
+                    }
+
+                    if (results.hasOwnProperty("territoryid")) {
+                        _territoryid_value_formatted = results["territoryid"]["name"];
+                        var territoryid_ovs_territorynameenglish = results["territoryid"]["ovs_territorynameenglish"];
+                        var territoryid_ovs_territorynamefrench = results["territoryid"]["ovs_territorynamefrench"];
+                        var territoryid_territoryid = results["territoryid"]["territoryid"];
+                    }
+
+                    //localize region lookup
+                    if (_territoryid_value)
+                        formattedLang = getLocalizedName(_territoryid_value_formatted);
+
+                    //primary inspector
+                    if (isCurrentUser) {
+                        glHelper.SetLookup(formContext, "ovs_primaryinspector", "bookableresource", bookableresourceid, _userid_value_formatted);
+                    }
+                    //inspectors region
+                    glHelper.SetLookup(formContext, "msdyn_serviceterritory", _territoryid_value_lookuplogicalname, _territoryid_value, formattedLang);
+                }
+            },
+            function (error) {
+
+                console.log("getSetInspectorRegion method.Error :" + error.message);
+                Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageRegionFailed + " " + error.message });
+            }
+        );
+    }
 
 
     //********************private methods end***************
@@ -106,10 +204,32 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
         OnLoad: function (executionContext) {
 
             var globalContext = Xrm.Utility.getGlobalContext();
-
             var formContext = executionContext.getFormContext();
-            globalObj.formContext = formContext;
-            clientUrl = globalContext.getClientUrl();
+            isOffLine = glHelper.isOffline(executionContext);
+            clientType = glHelper.getClientType(executionContext);
+
+            if (isOffLine && clientType > 0) {
+
+                //mobile or outlook, offline first
+                currentWebApi = Xrm.WebApi.offline;
+                clientUrl = "https://localhost:2525";
+            } else {
+
+                //web, online
+                currentWebApi = Xrm.WebApi.online;
+                clientUrl = globalContext.getClientUrl();
+            }
+
+
+            if (glHelper.isTopAccessible()) {
+                globalObj = window.top.QuickCreateHelper;
+                globalObj.formContext = formContext;
+
+                //site
+                var site = formContext.getAttribute("msdyn_serviceaccount");
+                site.removeOnChange(WO_TDG_main.Site_OnChange); // avoid binding multiple event handlers
+                site.addOnChange(WO_TDG_main.Site_OnChange);
+            }
 
             getQuickFormAttributeValue(executionContext, "service_account_details", "primarycontactid");
             userSettings = globalContext.userSettings;
@@ -125,10 +245,6 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
             else if (LCID == 1036)
                 resexResourceName = "ovs_Labels.1036.resx";
 
-            //site
-            var site = formContext.getAttribute("msdyn_serviceaccount");
-            site.removeOnChange(WO_TDG_main.Site_OnChange); // avoid binding multiple event handlers
-            site.addOnChange(WO_TDG_main.Site_OnChange);
 
             //rational
             var rational = formContext.getAttribute("ovs_rational");
@@ -141,10 +257,12 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
             fy.removeOnChange(WO_TDG_main.FiscalYearOnchange);
             fy.addOnChange(WO_TDG_main.FiscalYearOnchange);
 
-            //wo status
-            var systemStatus = formContext.getAttribute("msdyn_systemstatus");
-            systemStatus.removeOnChange(WO_TDG_main.WO_SystemStatus_OnChange);
-            systemStatus.addOnChange(WO_TDG_main.WO_SystemStatus_OnChange);
+            //wo status - validation will work online only!
+            if (!isOffLine) {
+                var systemStatus = formContext.getAttribute("msdyn_systemstatus");
+                systemStatus.removeOnChange(WO_TDG_main.WO_SystemStatus_OnChange);
+                systemStatus.addOnChange(WO_TDG_main.WO_SystemStatus_OnChange);
+            }
 
             //WO Number/msdyn_name
             glHelper.SetControlVisibility(formContext, "msdyn_name", false);
@@ -154,6 +272,9 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
             activityType.removeOnChange(WO_TDG_main.ActivityType_OnChange);
             activityType.addOnChange(WO_TDG_main.ActivityType_OnChange);
 
+            //Substatus Type
+            WO_TDG_main.Update_WO_Substatus(formContext);
+
             var primaryInspector = formContext.getAttribute("ovs_primaryinspector");
             primaryInspector.removeOnChange(WO_TDG_main.PrimaryInspector_OnChange);
             primaryInspector.addOnChange(WO_TDG_main.PrimaryInspector_OnChange);
@@ -161,7 +282,11 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
             //on create
             if (formType == 1) {
 
-                WO_TDG_main.SetDefaultInspector(formContext);
+                //WO_TDG_main.SetDefaultInspector(formContext);
+                var currentUserId = userSettings.userId;
+                currentUserId = currentUserId.replace(/[{}]/g, "");
+                getSetInspectorRegion(formContext, currentUserId);
+
                 //fiscal year
                 WO_TDG_main.SetDefaultFiscalYear(formContext);
                 //Fiscal quarter
@@ -173,84 +298,30 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
                 //set global object fo contact quick create form
                 site.fireOnChange();
 
-                //refresh the Post-Inspection tab
-                var postInspectionTab = formContext.ui.tabs.get("tab_PostInspection");
-                postInspectionTab.removeTabStateChange(WO_TDG_main.OnPostInspection_StateChange);
-                postInspectionTab.addTabStateChange(WO_TDG_main.OnPostInspection_StateChange);
+                //refresh the COC tab
+                var cocTab = formContext.ui.tabs.get("tab_ConfirmationOfCompliances");
+                cocTab.removeTabStateChange(WO_TDG_main.OnConfirmationOfCompliance_StateChange);
+                cocTab.addTabStateChange(WO_TDG_main.OnConfirmationOfCompliance_StateChange);
 
-                //Time Tracking POC
-                //todo: do i need to add remove like above??
-                var timeEntryTab = formContext.ui.tabs.get("tab_TimeEntry");
-                timeEntryTab.removeTabStateChange(WO_TDG_main.OnTimeEntryTab_Clicked);
-                timeEntryTab.addTabStateChange(WO_TDG_main.OnTimeEntryTab_Clicked);
- 
-
+                //Time Tracking
+                var timeEntryTab = formContext.ui.tabs.get("tab_TimeTracking");
+                timeEntryTab.removeTabStateChange(WO_TDG_main.calculateAndUpdateServiceTaskDuration);
+                timeEntryTab.addTabStateChange(WO_TDG_main.calculateAndUpdateServiceTaskDuration);
             }
-            
+
             // Set Oversight Activity field as Mandatory
             glHelper.SetRequiredLevel(formContext, "ovs_oversighttype", true);
         },
 
-        OnPostInspection_StateChange: function (executionContext) {
+        OnConfirmationOfCompliance_StateChange: function (executionContext) {
 
-            var formContext = executionContext.getFormContext();
+            let formContext = executionContext.getFormContext();
 
-            var postInspectionTab = formContext.ui.tabs.get("tab_PostInspection");
-            if (postInspectionTab)
-            if (postInspectionTab.getDisplayState() == "expanded" && postInspectionTab.getVisible() == true) {
-
+            var cocTab = formContext.ui.tabs.get("tab_ConfirmationOfCompliances");
+            if (cocTab && cocTab.getDisplayState() == "expanded" && cocTab.getVisible() == true) {
                 var gridCOC = formContext.getControl("Subgrid_COC");
                 gridCOC.refresh();
             }
-        },
-
-
-        
-        OnTimeEntryTab_Clicked: async function (executionContext) {
-        var formContext = executionContext.getFormContext();
-        var preInspectionDuration = 0
-        var postInspectionDuration = 0
-        let itemsToTrack = await getItemsToTrack()
-        let wordkOrderId = formContext.data.entity.getId().replace("{", "").replace("}","")
-
-        for (let index = 0; index < itemsToTrack.length; index++) {
-            const item = itemsToTrack[index];
-            let estimate = 0
-
-            //do some calculation if required
-            if(item.ovs_estimatetimepereachrecord)
-                {        
-                    estimate = await calculateTotalEstimateTime(item.ovs_targetedtable, item.ovs_tablefilter, wordkOrderId, item.ovs_timeestimate)
-                }
-                else{
-                    estimate = item.ovs_timeestimate
-                }
-
-            //add value to correct bucket
-                switch (item.ovs_aggregateestimatefor) {
-                   case 918640000: // pre-inspection
-                        preInspectionDuration += estimate
-                        break;
-                 case 918640001: // post-inspection
-                        postInspectionDuration += estimate
-                        break;
-                    default:
-                        break;
-                }
-                                   
-
-        }
-
-            formContext.getAttribute('ovs_preinspectionduration').setValue(preInspectionDuration);
-            formContext.getAttribute('ovs_postinspectionduration').setValue(postInspectionDuration);
-
-
-        //look into the time configuration table
-        //loop through all active items
-        // if configuration indicates estimate should be done for all items, get count and calculate or just take estimate as whole.
-        
-
-
 
         },
 
@@ -270,23 +341,49 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
         },
 
         PrimaryInspector_OnChange: function (executionContext) {
+
             var formContext = executionContext.getFormContext();
-            WO_TDG_main.SetRegion(formContext);
+            var primaryInspector = formContext.getAttribute("ovs_primaryinspector").getValue();
+            //If Primary Inspector is being cleared out, do nothing here.
+            if (primaryInspector == null) return;
+
+            var messageRegionFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchRegion.ErrorMessage");
+
+            var primaryInspectorId = primaryInspector[0].id;
+            currentWebApi.retrieveRecord("bookableresource", primaryInspectorId, "?$select=bookableresourceid,name,_userid_value").then(
+                function success(result) {
+                    var bookableresourceid = result["bookableresourceid"];
+                    var name = result["name"];
+                    var _userid_value = result["_userid_value"];
+                    var _userid_value_formatted = result["_userid_value@OData.Community.Display.V1.FormattedValue"];
+                    var _userid_value_lookuplogicalname = result["_userid_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+
+                    getSetInspectorRegion(formContext, _userid_value, false);
+                },
+                function (error) {
+
+                    console.log("Set Region failed. Error :" + error.message);
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageRegionFailed + " " + error.message });
+                }
+            );
+
         },
 
-        ActivityType_OnChange: function (executionContext)
-        {
+        ActivityType_OnChange: function (executionContext) {
 
             var messageWOTypeFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchWorkOrderType.ErrorMessage");
             var formContext = executionContext.getFormContext();
             var sActivityName = glHelper.GetLookupName(formContext, "ovs_oversighttype");
 
+            //offline filter fix
+            var filter = (isOffLine && clientType > 0)
+                ? "ovs_workordertypenameenglish eq '{0}'"
+                : "startswith(ovs_workordertypenameenglish,'{0}')";
+
             //Set WO Type based on Activity Type
-            if (sActivityName == "Civil Aviation Document Review" || sActivityName == "Examen des documents de l'aviation civile" || sActivityName == "Examen documentation de l'aviation civile")
-            {
-                Xrm.WebApi.online.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=startswith(ovs_workordertypenameenglish,'Regulatory Authorization')").then(
-                    function success(results)
-                    {
+            if (sActivityName == "Civil Aviation Document Review" || sActivityName == "Examen des documents de l'aviation civile" || sActivityName == "Examen documentation de l'aviation civile") {
+                currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=" + filter.replace("{0}", "Regulatory Authorization")).then(
+                    function success(results) {
                         var englishName = results.entities[0]["ovs_workordertypenameenglish"];
                         var frenchName = results.entities[0]["ovs_workordertypenamefrench"];
                         var workOrderTypeId = results.entities[0]["msdyn_workordertypeid"];
@@ -297,19 +394,34 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
                             glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, englishName);
 
                         glHelper.SetDisabled(formContext, "ovs_rational", true);
+
+
+                        currentWebApi.retrieveMultipleRecords("msdyn_incidenttype", "?$select=msdyn_incidenttypeid,ovs_incidenttypenameenglish,ovs_incidenttypenamefrench&$filter=ovs_incidenttypenameenglish eq 'Regulatory%20Authorization'").then(
+                            function success(results) {
+                                var msdyn_incidenttypeid = results.entities[0]["msdyn_incidenttypeid"];
+                                var ovs_incidenttypenameenglish = results.entities[0]["ovs_incidenttypenameenglish"];
+                                var ovs_incidenttypenamefrench = results.entities[0]["ovs_incidenttypenamefrench"];
+
+                                if (userSettings.languageId == 1036)
+                                    glHelper.SetLookup(formContext, "msdyn_primaryincidenttype", "msdyn_incidenttype", msdyn_incidenttypeid, ovs_incidenttypenamefrench);
+                                if (userSettings.languageId == 1033)
+                                    glHelper.SetLookup(formContext, "msdyn_primaryincidenttype", "msdyn_incidenttype", msdyn_incidenttypeid, ovs_incidenttypenameenglish);
+                            },
+                            function (error) {
+                                Xrm.Utility.alertDialog(error.message);
+                            }
+                        );
+
                     },
-                    function (error)
-                    {
+                    function (error) {
                         console.log("Fetch Work Order Type Error. error: " + error.message);
                         Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageWOTypeFailed + " " + error.message });
                     }
                 );
             }
-            else
-            {
-                Xrm.WebApi.online.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=startswith(ovs_workordertypenameenglish,'Inspection')").then(
-                    function success(results)
-                    {
+            else {
+                currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=" + filter.replace("{0}", "Inspection")).then(
+                    function success(results) {
                         var englishName = results.entities[0]["ovs_workordertypenameenglish"];
                         var frenchName = results.entities[0]["ovs_workordertypenamefrench"];
                         var workOrderTypeId = results.entities[0]["msdyn_workordertypeid"];
@@ -320,18 +432,31 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
                             glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, englishName);
 
                         glHelper.SetDisabled(formContext, "ovs_rational", true);
+                          currentWebApi.retrieveMultipleRecords("msdyn_incidenttype", "?$select=msdyn_incidenttypeid,ovs_incidenttypenameenglish,ovs_incidenttypenamefrench&$filter=ovs_incidenttypenameenglish eq 'Inspection'").then(
+                            function success(results) {
+                                var msdyn_incidenttypeid = results.entities[0]["msdyn_incidenttypeid"];
+                                var ovs_incidenttypenameenglish = results.entities[0]["ovs_incidenttypenameenglish"];
+                                var ovs_incidenttypenamefrench = results.entities[0]["ovs_incidenttypenamefrench"];
+
+                                if (userSettings.languageId == 1036)
+                                    glHelper.SetLookup(formContext, "msdyn_primaryincidenttype", "msdyn_incidenttype", msdyn_incidenttypeid, ovs_incidenttypenamefrench);
+                                if (userSettings.languageId == 1033)
+                                    glHelper.SetLookup(formContext, "msdyn_primaryincidenttype", "msdyn_incidenttype", msdyn_incidenttypeid, ovs_incidenttypenameenglish);
+                            },
+                            function (error) {
+                                Xrm.Utility.alertDialog(error.message);
+                            }
+                        );
                     },
-                    function (error)
-                    {
-                        console.log(messageWOTypeFailed + " "  + error.message);
+                    function (error) {
+                        console.log(messageWOTypeFailed + " " + error.message);
                         Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageWOTypeFailed + " " + error.message });
                     }
                 );
             }
         },
 
-        Rational_OnChange: function (executionContext)
-        {
+        Rational_OnChange: function (executionContext) {
 
             var messageRationalFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchRational.ErrorMessage");
 
@@ -352,10 +477,12 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
                 var readOnlyArray = new Array();
                 var editableArray = new Array();
                 var hiddenArray = new Array()
-                isPlanner = appName.indexOf("Planner")!= -1;
+                isPlanner = appName.indexOf("Planner") != -1;
                 isManager = appName.indexOf("Management ") != -1;
-                isInspector = appName.indexOf("Inspections") != -1;
+                isInspector = appName.indexOf("Inspections") != -1 || appName.indexOf("Inspector") != -1;
                 isAnalytic = appName.indexOf("Analytics") != -1;
+
+
 
                 if (isAnalytic || isPlanner) return;
 
@@ -365,8 +492,14 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
                     //get rational "ovs_rational" , check it it has french option
                     if (isManager || isInspector) {
 
-                        Xrm.WebApi.online.retrieveMultipleRecords("ovs_tyrational", "?$select=ovs_name,ovs_rationalelbl,ovs_rationalflbl,ovs_tyrationalid&$filter=startswith(ovs_name,'Unplanned')").then(
+                        //offline filter fix
+                        var filter = (isOffLine && clientType > 0)
+                            ? "ovs_name eq '{0}'"
+                            : "startswith(ovs_name,'{0}')";
+
+                        currentWebApi.retrieveMultipleRecords("ovs_tyrational", "?$select=ovs_name,ovs_rationalelbl,ovs_rationalflbl,ovs_tyrationalid&$filter=" + filter.replace("{0}", "Unplanned")).then(
                             function success(results) {
+
                                 var ovs_name = results.entities[0]["ovs_name"];
                                 var ovs_rationalelbl = results.entities[0]["ovs_rationalelbl"];
                                 var ovs_rationalflbl = results.entities[0]["ovs_rationalflbl"];
@@ -395,47 +528,43 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
                     }
                 }
                 else {
-                    switch (appName)
-                    {
+                    switch (appName) {
                         //case "TDG Planner / Planificateur TMD":
                         //    editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
                         //    break;
                         case "TDG Management / Gestion TMD":
-                            if (isPlanned)
-                            {
+                            if (isPlanned) {
                                 readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed"); //"ovs_fiscalquarter", "msdyn_serviceterritory",
                                 editableArray = new Array("qm_remote");
                             }
-                            else
-                            {
+                            else {
                                 readOnlyArray = new Array("msdyn_workordertype", "ovs_rational");
                                 editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_serviceterritory");
                             }
                             break;
+                        case "Inspector Offline":
                         case "TDG Inspections / Inspections TMD":
-                            if (isPlanned && formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED)
-                            {
-                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed", "ovs_qcreviewcomments", "ovs_qcreviewcompletedind", "ovs_primaryinspector",); //"msdyn_serviceterritory",
-                                editableArray = new Array("qm_remote");                               
+                            if (isPlanned && formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
+                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed", "ovs_qcreviewcomments", "ovs_qcreviewcompletedind", "ovs_primaryinspector"); //"msdyn_serviceterritory",
+                                editableArray = new Array("qm_remote");
                             }
-                            else
-                            {
-                                readOnlyArray = new Array( "msdyn_workordertype", "ovs_rational");
+                            else {
+                                readOnlyArray = new Array("msdyn_workordertype", "ovs_rational");
                                 editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_serviceterritory"); //"ovs_rational" - cannot set editable => will set all fields editable
-                                
+
                             }
 
-                            //hiddenArray = new Array("msdyn_serviceterritory", "msdyn_workordertype");
-                             //msdyn_systemstatus - filter OptionSet (exclude Closed - Cancelled)
-                            if (formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
+                            ////hiddenArray = new Array("msdyn_serviceterritory", "msdyn_workordertype");
+                            ////msdyn_systemstatus - filter OptionSet (exclude Closed - Cancelled)
+                            //if (formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
 
-                                var options = new Array(); options[0] = 690970005;
-                                glHelper.filterOptionSet(formContext, "msdyn_systemstatus", options, false);
-                            }
+                            //    var options = new Array(); options[0] = 690970005;
+                            //    glHelper.filterOptionSet(formContext, "msdyn_systemstatus", options, false);
+                            //}
 
                             break;
                         default:
-                    //        readOnlyArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
+                            //        readOnlyArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
                             break;
                     }
 
@@ -463,90 +592,35 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
             });
 
             //Filter Oversight Lookup
-            if (isPlanned)
-            {
+            if (isPlanned) {
                 var formContext = executionContext.getFormContext();
                 formContext.getControl("ovs_oversighttype").setDefaultView("d54acdca-91a7-eb11-9442-000d3ae99322");
             }
-            else
-            {
+            else {
                 var formContext = executionContext.getFormContext();
                 formContext.getControl("ovs_oversighttype").setDefaultView("920688A2-94A7-EB11-9442-000D3AE99322");
             }
         },
 
-        SetRegion: function (formContext)
-        {
-            var primaryInspector = formContext.getAttribute("ovs_primaryinspector").getValue();
-            //If Primary Inspector is being cleared out, do nothing here.
-            if (primaryInspector == null) return;
+        SetDefaultFiscalYear: function (formContext) {
 
-            var messageRegionFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchRegion.ErrorMessage");
-            var primaryInspectorId = primaryInspector[0].id;
-            var queryTxt = "?$select=name,_userid_value&$expand=UserId($select=territoryid)&$filter=bookableresourceid eq " + primaryInspectorId;
-            Xrm.WebApi.online.retrieveMultipleRecords("bookableresource", queryTxt).then(
-                function success(results) {
-                    for (let i = 0; i < results.entities.length; i++) {
-                        let _territoryid_value = results.entities[i].UserId["_territoryid_value"]
-                        let _territoryid_value_lookuplogicalname = results.entities[i].UserId["_territoryid_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
-                        let _territoryid_value_formatted = results.entities[i].UserId["_territoryid_value@OData.Community.Display.V1.FormattedValue"];
 
-                        if (_territoryid_value) {
-                            let _territoryid_value_formattedLang = "";
-                            let pos = _territoryid_value_formatted.indexOf("::");
-                            if (pos > -1) {
-                                if (userSettings.languageId == 1036) {
-                                    // French
-                                    _territoryid_value_formattedLang = _territoryid_value_formatted.substring(pos + 2);
-                                }
-                                else if (userSettings.languageId == 1033) {
-                                    // English
-                                    _territoryid_value_formattedLang = _territoryid_value_formatted.substring(0, pos);
-                                }
-                            } else {
-                                _territoryid_value_formattedLang = _territoryid_value_formatted;
-                            }
-
-                            glHelper.SetLookup(formContext, "msdyn_serviceterritory", _territoryid_value_lookuplogicalname, _territoryid_value, _territoryid_value_formattedLang);
-                        }
-                    }
-                },
-                function (error) {
-                    Xrm.Utility.alertDialog(error.message);
-                }
-            );
-        },
-
-        SetDefaultInspector: function (formContext) {
-
-            var currentUserId = userSettings.userId;
-            currentUserId = currentUserId.replace(/[{}]/g, "");
-
-            Xrm.WebApi.online.retrieveMultipleRecords("bookableresource", "?$filter=_userid_value eq '" + currentUserId + "'").then(function success(result) {
-                if (result != null && result.entities.length > 0) {
-                    var bookableresourceid = result.entities[0].bookableresourceid;
-                    var _userid_value_formatted = result.entities[0]["_userid_value@OData.Community.Display.V1.FormattedValue"];
-
-                    glHelper.SetLookup(formContext, "ovs_primaryinspector", "bookableresource", bookableresourceid, _userid_value_formatted);
-                    //glHelper.SetLookup(formContext, "ovs_primaryinspector", "bookableresource", bookableresourceid, name);
-
-                    //Set Region depends on Default Isnpector region
-                    WO_TDG_main.SetRegion(formContext);
-
-                }
-            }, function (error) {
-                console.log("Set Region failed. Error :" + error.message);
-                Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageRegionFailed + " " + error.message });
-            });
-        },
-
-        SetDefaultFiscalYear: function (formContext)
-        {
+            var fiscalYearName;
+            var filter = "";
+            if (isOffLine && clientType > 0) {
+                //offline
+                fiscalYearName = glHelper.getFiscalYearFromCurrentDate();
+                filter = "tc_name eq '" + fiscalYearName + "'";
+            } else {
+                //online
+                filter = "tc_iscurrentfiscalyear eq true";
+            }
 
             var messageFiscalYearFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchFiscalYear.ErrorMessage");
 
-            Xrm.WebApi.online.retrieveMultipleRecords("tc_tcfiscalyear", "?$select=tc_name,tc_tcfiscalyearid&$filter=tc_iscurrentfiscalyear eq true").then(
+            currentWebApi.retrieveMultipleRecords("tc_tcfiscalyear", "?$select=tc_name,tc_tcfiscalyearid&$filter=" + filter).then(
                 function success(results) {
+
                     for (var i = 0; i < results.entities.length; i++) {
                         var tc_name = results.entities[i]["tc_name"];
                         var tc_tcfiscalyearid = results.entities[i]["tc_tcfiscalyearid"];
@@ -561,8 +635,7 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
             );
         },
 
-        SetDefaultFiscalQuarter: function (formContext)
-        {
+        SetDefaultFiscalQuarter: function (formContext) {
             var firstPartOfPattern = "yyyy-MM-dd";
             var secondPartOfPattern = "HH:mm:ss";
             var nowDate = new Date();
@@ -573,21 +646,18 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
 
             var messageFiscalQuarterFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchFiscalQuarter.ErrorMessage");
 
-            Xrm.WebApi.online.retrieveMultipleRecords("tc_tcfiscalquarter", "?$select=tc_name&$filter=tc_quarterstart lt " + edmDate + " and tc_quarterend gt " + edmDate + "").then(
-                function success(results)
-                {
-                    for (var i = 0; i < results.entities.length; i++)
-                    {
+            currentWebApi.retrieveMultipleRecords("tc_tcfiscalquarter", "?$select=tc_name&$filter=tc_quarterstart lt " + edmDate + " and tc_quarterend gt " + edmDate + "").then(
+                function success(results) {
+                    for (var i = 0; i < results.entities.length; i++) {
                         var tc_name = results.entities[i]["tc_name"];
                         var tc_tcfiscalquarterid = results.entities[i]["tc_tcfiscalquarterid"];
 
                         glHelper.SetLookup(formContext, "ovs_fiscalquarter", "tc_tcfiscalquarter", tc_tcfiscalquarterid, tc_name);
                     }
                 },
-                function (error)
-                {
+                function (error) {
                     console.log("Set Default Fiscal Quarter failed. Error :" + error.message);
-                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageFiscalQuarterFailed +  " " + error.message });
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageFiscalQuarterFailed + " " + error.message });
                 }
             );
         },
@@ -598,28 +668,47 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
             formContext.getAttribute('ovs_fiscalquarter').setValue(null);
         },
 
+        Update_WO_Substatus: function (formContext) {
+            var options = new Array();
+            var obj = new Object();
+            var substatus = formContext.getAttribute("msdyn_substatus");
+
+            if (substatus.getValue() !== null) {
+                obj.entityType = substatus.getValue()[0].entityType;
+                obj.id = substatus.getValue()[0].id;
+                var key = substatus.getValue()[0].name.replace(/\s/g, '');
+
+                obj.name = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.substatus." + key);
+                options.push(obj);
+
+                glHelper.SetValue(formContext, "msdyn_substatus", options);
+            }
+        },
+
         WO_SystemStatus_OnChange: function (executionContext) {
 
             var formContext = executionContext.getFormContext();
             var systemStatus = formContext.getAttribute("msdyn_systemstatus").getValue();
 
-            var messageClosePostedFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.SetClosedPosted.Error");
-            var messageOpenCompletedFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.SetOpenCompleted.Error");
 
-
-            //If system status is set to cmpleted or closed
-            if (systemStatus == 690970003 || systemStatus == 690970004) {
+            //If system status is set to completed, closed or canceled check business logic called via custom action.
+            if (systemStatus == 690970003 || systemStatus == 690970004 || systemStatus == 690970005) {
                 var parameters = {};
                 parameters.woId = formContext.data.entity.getId().replace("{", "").replace("}", "");
+                parameters.targetedSystemStatus = systemStatus.toString();
 
                 var ovs_WO_StatusChangePostRequest = {
                     woId: parameters.woId,
-
+                    targetedSystemStatus: parameters.targetedSystemStatus,
                     getMetadata: function () {
                         return {
                             boundParameter: null,
                             parameterTypes: {
                                 "woId": {
+                                    "typeName": "Edm.String",
+                                    "structuralProperty": 1
+                                },
+                                "targetedSystemStatus": {
                                     "typeName": "Edm.String",
                                     "structuralProperty": 1
                                 }
@@ -633,30 +722,24 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
                 Xrm.WebApi.online.execute(ovs_WO_StatusChangePostRequest).then(
                     function success(result) {
                         if (result.ok) {
-                             result.json().then(
-                                 function (responseBody) { 
+                            result.json().then(
+                                function (responseBody) {
 
-                                     if (responseBody.isValidToClose == false) {
-                                         glHelper.SetValue(formContext, "msdyn_systemstatus", null);
-                                         Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageClosePostedFailed });
-                                     }
-                                     else if (responseBody.isValidToBeCompleted == false) {
-
-                                         glHelper.SetValue(formContext, "msdyn_systemstatus", null);
-                                         Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageOpenCompletedFailed });
-
-                                     }
-                                     else {
-                                         //If system status is set to closed
-                                         if (systemStatus == 690970004) {
-                                             //Set state to Inactive
-                                             formContext.getAttribute("statecode").setValue(1);
-                                             //Set Status Reason to Closed
-                                             formContext.getAttribute("statuscode").setValue(918640000);
-                                         }
-                                     }
-                                 }
-                             );                              
+                                    if (responseBody.isValidToSave == false) {
+                                        glHelper.SetValue(formContext, "msdyn_systemstatus", null);
+                                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: responseBody.message });
+                                    }
+                                    else {
+                                        //If system status is set to closed
+                                        if (systemStatus == 690970004) {
+                                            //Set state to Inactive
+                                            formContext.getAttribute("statecode").setValue(1);
+                                            //Set Status Reason to Closed
+                                            formContext.getAttribute("statuscode").setValue(918640000);
+                                        }
+                                    }
+                                }
+                            );
                         }
                     },
                     function (error) {
@@ -706,8 +789,8 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
                     req.onreadystatechange = null;
                     if (this.status === 200) {
                         var result = JSON.parse(this.response);
-                        if (result.hasOwnProperty("primarycontactid")) {                            
-                            
+                        if (result.hasOwnProperty("primarycontactid")) {
+
                             if (result["primarycontactid"]["telephone1"] == null) {
                                 setReportValidationError("Site " + site.name + " " + messagePhone);
                                 isValid = false;
@@ -716,13 +799,11 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
                                 setReportValidationError("Site " + site.name + " " + messageReportEmail);
                                 isValid = false;
                             }
-                            if (result["primarycontactid"]["lastname"] == null || result["primarycontactid"]["lastname"] == "")
-                            {
+                            if (result["primarycontactid"]["lastname"] == null || result["primarycontactid"]["lastname"] == "") {
                                 setReportValidationError("Site " + site.name + " " + messageReportFullName);
                                 isValid = false;
                             }
-                            if (result["primarycontactid"]["jobtitle"] == null || result["primarycontactid"]["jobtitle"] == "")
-                            {
+                            if (result["primarycontactid"]["jobtitle"] == null || result["primarycontactid"]["jobtitle"] == "") {
                                 setReportValidationError("Site " + site.name + " " + messageReportJobTitle);
                                 isValid = false;
                             }
@@ -756,12 +837,10 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
                     req.onreadystatechange = null;
                     if (this.status === 200) {
                         var result = JSON.parse(this.response);
-                        if (result["ovs_badgenumber"] == null || result["ovs_badgenumber"] == "")
-                        {
+                        if (result["ovs_badgenumber"] == null || result["ovs_badgenumber"] == "") {
                             setReportValidationError(titlePrimaryInspector + " " + prmInspector.name + " " + messageBadge);
                             isValid = false;
-                        } if (result["ovs_registeredinspectornumberrin"] == null || result["ovs_registeredinspectornumberrin"] == "")
-                        {
+                        } if (result["ovs_registeredinspectornumberrin"] == null || result["ovs_registeredinspectornumberrin"] == "") {
                             setReportValidationError(titlePrimaryInspector + " " + prmInspector.name + " " + messageRRIN);
                             isValid = false;
                         }
@@ -777,7 +856,7 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
                             } if (result["UserId"]["fullname"] == null || result["UserId"]["fullname"] == "") {
                                 setReportValidationError(messageReportFullName);
                                 isValid = false;
-                            } 
+                            }
                         }
                         else {
                             setReportValidationError(titlePrimaryInspector + " " + prmInspector.name + " is not associated with any user in the system");
@@ -822,6 +901,94 @@ async function calculateTotalEstimateTime(table, filter,id, estimateTime) {
 
             //Xrm.Utility.closeProgressIndicator();
             return isValid;
+        },
+
+        /// Updates Work Order Service Task Record of Service Task Type "Execution" with Booking duration
+        calculateAndUpdateServiceTaskDuration: async function (executionContext) {
+
+            //todo implement msg in french
+            Xrm.Utility.showProgressIndicator('loading');
+
+            try {
+                let formContext = executionContext.getFormContext();
+                //let formContext = executionContext
+                let workOrderId = formContext.data.entity.getId().replace("{", "").replace("}", "")
+                let systemStatus = formContext.getAttribute("msdyn_systemstatus").getValue();
+                //If system status is close posted or canceled do not update service task time.
+                if (systemStatus !== 690970004 && systemStatus !== 690970005) {
+
+                    //get service task off work order (should already be auto created at this point)
+                    const serviceTasks = await getServiceTasksForWorkOrder(workOrderId)
+                    let executionServicetask = serviceTasks.filter(x => x["_msdyn_tasktype_value"] === "794a29b3-e917-ec11-b6e7-000d3ae8ef7b") //execution inspection
+
+                    //if sevice task exist.
+                    if (executionServicetask.length === 1) {
+                        const bookingData = await getBookableData(workOrderId)
+                        const bookingDurationTotalMinutes = bookingData.duration
+                        const bookingModifiedOn = bookingData.modifiedon
+
+
+                        let bookingHours = null;
+                        let bookingMinutes = null;
+                        //if booking exist (null if no duration)
+                        if (bookingData.hasBookings) {
+                            //convert total minutes to hours and minutes to place in seperate fields.
+                            bookingHours = Math.floor(bookingDurationTotalMinutes / 60);
+                            bookingMinutes = bookingDurationTotalMinutes % 60;
+
+                            const execustionServiceTaskHours = executionServicetask[0]['ovs_hour']
+                            const executionServiceTaskMinutes = executionServicetask[0]['ovs_minute']
+                            const executionServiceTaskModifiedon = executionServicetask[0]['modifiedon']
+                            const previousExecutionServiceTaskTotalBookingDuration = executionServicetask[0]['ovs_totalbookingduration']
+
+
+                            //or if user has not manually updated execution time done by comparing what was entered into service task time and booking duration
+                            //booking modified on
+
+
+                            //update execution service task if initial/first time loading work order 
+                            if ((execustionServiceTaskHours === null && executionServiceTaskMinutes === null)) {
+                                updateWorkOrderServiceTaskDuration(executionServicetask[0]['msdyn_workorderservicetaskid'], bookingHours, bookingMinutes, bookingDurationTotalMinutes)
+                            }
+                            //update execution service task if booking has been updated.
+                            else if (bookingHours !== execustionServiceTaskHours || bookingMinutes !== executionServiceTaskMinutes) {
+                                if (new Date(bookingModifiedOn).getTime() > new Date(executionServiceTaskModifiedon).getTime()) {
+                                    updateWorkOrderServiceTaskDuration(executionServicetask[0]['msdyn_workorderservicetaskid'], bookingHours, bookingMinutes, bookingDurationTotalMinutes)
+                                }
+                                else {
+                                    //else service task modifiedon is greater than booking modified on, i.e. user manually updated time, no need to update time.
+                                    //unless total booking duration is different from the previous total booking duration i.e.
+
+                                    if (bookingDurationTotalMinutes !== previousExecutionServiceTaskTotalBookingDuration) {
+                                        updateWorkOrderServiceTaskDuration(executionServicetask[0]['msdyn_workorderservicetaskid'], bookingHours, bookingMinutes, bookingDurationTotalMinutes)
+                                    }
+                                }
+                            }
+                            else {
+                                //hours and minutes are the same, no need to update time.
+                            }
+                        }
+                        else {
+                            updateWorkOrderServiceTaskDuration(executionServicetask[0]['msdyn_workorderservicetaskid'], null, null, null)
+                        }
+
+                           let gridTimeTracking = formContext.getControl("Subgrid_TimeTracking");
+                            gridTimeTracking.refresh();
+
+                    }
+
+                }
+
+            } catch (error) {
+                throw error;
+            }
+            finally {
+                let formContext = executionContext.getFormContext();
+             
+                Xrm.Utility.closeProgressIndicator();
+            }
+
+
         },
 
         errorObject: errorObject,

@@ -10,7 +10,7 @@
       <Description description="Upgrade of TC.GlobalCore" languagecode="1033" />
       <Description description="Mise à niveau de TC.GlobalCore" languagecode="1036" />
     </Descriptions>
-    <Version>1.100.0.0</Version>
+    <Version>1.101.0.0</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>oversightpublisher</UniqueName>
@@ -218,7 +218,6 @@
       <RootComponent type="20" id="{c986520a-bc01-ec11-94f0-0022483c1f45}" behavior="0" />
       <RootComponent type="20" id="{de8e34ea-d189-eb11-b1ac-000d3ae92dbf}" behavior="0" />
       <RootComponent type="29" id="{01c6a4aa-a4de-4ff9-8ae4-e55aa4326e1f}" behavior="0" />
-      <RootComponent type="29" id="{0c8e9f30-c81f-ec11-b6e6-0022483d0420}" behavior="0" />
       <RootComponent type="29" id="{168249b4-0934-eb11-a813-000d3af3fc19}" behavior="0" />
       <RootComponent type="29" id="{1f844e99-b9d9-4517-b617-a49148f15ec3}" behavior="0" />
       <RootComponent type="29" id="{33a33eb1-1c33-eb11-a813-000d3af3fc19}" behavior="0" />
@@ -1978,7 +1977,7 @@
         <Required type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
-        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_PreferredResource" displayName="msdyn_bookableresource_msdyn_workorder_PreferredResource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="FieldService (8.8.0.88)">
@@ -4501,7 +4500,7 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="bookableresourceid" displayName="Bookable Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdynce_Scheduling (9.0.0.0)" />
-        <Dependent type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" displayName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_Crew" displayName="msdyn_bookableresource_bookableresourcebooking_Crew" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="bookableresourceid" displayName="Bookable Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdynce_Scheduling (9.0.0.0)" />
@@ -7998,12 +7997,6 @@
         <Required type="2" schemaName="msdyn_name" displayName="Name" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
-        <Dependent type="29" displayName="Set Hour and Minute to Null If Time Entry is not required." id="{0c8e9f30-c81f-ec11-b6e6-0022483d0420}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="2" schemaName="msdyn_name" displayName="Name" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
-          <package>FieldService_Anchor (8.8.29.256)</package>
-        </Required>
         <Dependent type="60" displayName="Work Order Service Task - Mobile" parentDisplayName="Work Order Service Task" id="{06a480e2-69e6-4283-8aa5-9fa17c86671f}" />
       </MissingDependency>
       <MissingDependency>
@@ -8112,6 +8105,12 @@
         <Required type="2" schemaName="msdyn_workorderincident" displayName="Work Order Incident" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
+        <Dependent type="26" schemaName="Time Tracking" displayName="Time Tracking" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" id="{4eb0e3ba-061b-ec11-b6e7-000d3ae9b59b}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="msdyn_workorderincident" displayName="Work Order Incident" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
+          <package>FieldService_Anchor (8.8.29.256)</package>
+        </Required>
         <Dependent type="60" displayName="Work Order Service Task - Mobile" parentDisplayName="Work Order Service Task" id="{06a480e2-69e6-4283-8aa5-9fa17c86671f}" />
       </MissingDependency>
       <MissingDependency>
@@ -8179,12 +8178,6 @@
           <package>FieldService_Anchor (8.8.29.256)</package>
         </Required>
         <Dependent type="26" schemaName="TDG Service Tasks" displayName="TDG Service Tasks" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" id="{7853b222-368c-eb11-b1ac-000d3ae92932}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="2" schemaName="msdyn_workorderservicetaskid" displayName="Work Order Service Task" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
-          <package>FieldService_Anchor (8.8.29.256)</package>
-        </Required>
-        <Dependent type="29" displayName="Set Hour and Minute to Null If Time Entry is not required." id="{0c8e9f30-c81f-ec11-b6e6-0022483d0420}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_workorderservicetaskid" displayName="Work Order Service Task" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)">
