@@ -119,14 +119,19 @@ var WO_TDG_main = (function (window, document) {
 
         let data = null;
 
-        await currentWebApi.retrieveMultipleRecords("msdyn_workorderservicetask", `?$select=_msdyn_tasktype_value,ovs_hour,ovs_minute,modifiedon,ovs_totalbookingduration&$filter=_msdyn_workorder_value eq ${workOrder}`).then(
+        await currentWebApi
+          .retrieveMultipleRecords(
+            "msdyn_workorderservicetask",
+            `?$select=_msdyn_tasktype_value,ovs_hour,ovs_minute,modifiedon,ovs_totalbookingduration,_msdyn_workorderincident_value&$filter=_msdyn_workorder_value eq ${workOrder}`
+          )
+          .then(
             function success(results) {
-                data = results.entities
+              data = results.entities;
             },
             function (error) {
-                Xrm.Utility.alertDialog(error.message);
+              Xrm.Utility.alertDialog(error.message);
             }
-        );
+          );
 
         return data
 

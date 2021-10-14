@@ -77,7 +77,7 @@ var WO_TDG_main = (function (window, document) {
         let hasBookings = false
 
 
-        await currentWebApi.retrieveMultipleRecords("bookableresourcebooking", `?$select=duration,modifiedon&$filter=_msdyn_workorder_value eq ${workOrder} and statecode eq 0 &$orderby=modifiedon desc`).then(
+        await currentWebApi.retrieveMultipleRecords("bookableresourcebooking", `?$select=duration,modifiedon&$filter=_msdyn_workorder_value eq ${workOrder} &$orderby=modifiedon desc`).then(
             function success(results) {
                 for (var i = 0; i < results.entities.length; i++) {
                     duration += results.entities[i]["duration"];
@@ -119,19 +119,44 @@ var WO_TDG_main = (function (window, document) {
 
         let data = null;
 
-        await currentWebApi.retrieveMultipleRecords("msdyn_workorderservicetask", `?$select=_msdyn_tasktype_value,ovs_hour,ovs_minute,modifiedon,ovs_totalbookingduration&$filter=_msdyn_workorder_value eq ${workOrder}`).then(
-            function success(results) {
-                data = results.entities
-            },
-            function (error) {
-                Xrm.Utility.alertDialog(error.message);
-            }
-        );
+        await currentWebApi
+            .retrieveMultipleRecords(
+                "msdyn_workorderservicetask",
+                `?$select=_msdyn_tasktype_value,ovs_hour,ovs_minute,modifiedon,ovs_totalbookingduration,_msdyn_workorderincident_value&$filter=_msdyn_workorder_value eq ${workOrder}`
+            )
+            .then(
+                function success(results) {
+                    data = results.entities;
+                },
+                function (error) {
+                    Xrm.Utility.alertDialog(error.message);
+                }
+            );
 
         return data
 
-
     }
+
+    async function deleteServiceTask(id) {
+        let data = false;
+
+        await currentWebApi
+            .deleteRecord(
+                "msdyn_workorderservicetask",
+                id
+            )
+            .then(
+                function success(results) {
+                    data = true;
+                },
+                function (error) {
+                    Xrm.Utility.alertDialog(error.message);
+                }
+            );
+
+        return data;
+    }
+
 
     /**
      * mobile friendly method
@@ -279,6 +304,10 @@ var WO_TDG_main = (function (window, document) {
             primaryInspector.removeOnChange(WO_TDG_main.PrimaryInspector_OnChange);
             primaryInspector.addOnChange(WO_TDG_main.PrimaryInspector_OnChange);
 
+            var remote = formContext.getAttribute("qm_remote");
+            remote.removeOnChange(WO_TDG_main.Remote_OnChange);
+            remote.addOnChange(WO_TDG_main.Remote_OnChange);
+
             //on create
             if (formType == 1) {
 
@@ -305,8 +334,8 @@ var WO_TDG_main = (function (window, document) {
 
                 //Time Tracking
                 var timeEntryTab = formContext.ui.tabs.get("tab_TimeTracking");
-                timeEntryTab.removeTabStateChange(WO_TDG_main.calculateAndUpdateServiceTaskDuration);
-                timeEntryTab.addTabStateChange(WO_TDG_main.calculateAndUpdateServiceTaskDuration);
+                timeEntryTab.removeTabStateChange(WO_TDG_main.CalculateAndUpdateServiceTaskDuration);
+                timeEntryTab.addTabStateChange(WO_TDG_main.CalculateAndUpdateServiceTaskDuration);
             }
 
             // Set Oversight Activity field as Mandatory
@@ -432,7 +461,7 @@ var WO_TDG_main = (function (window, document) {
                             glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, englishName);
 
                         glHelper.SetDisabled(formContext, "ovs_rational", true);
-                          currentWebApi.retrieveMultipleRecords("msdyn_incidenttype", "?$select=msdyn_incidenttypeid,ovs_incidenttypenameenglish,ovs_incidenttypenamefrench&$filter=ovs_incidenttypenameenglish eq 'Inspection'").then(
+                        currentWebApi.retrieveMultipleRecords("msdyn_incidenttype", "?$select=msdyn_incidenttypeid,ovs_incidenttypenameenglish,ovs_incidenttypenamefrench&$filter=ovs_incidenttypenameenglish eq 'Inspection'").then(
                             function success(results) {
                                 var msdyn_incidenttypeid = results.entities[0]["msdyn_incidenttypeid"];
                                 var ovs_incidenttypenameenglish = results.entities[0]["ovs_incidenttypenameenglish"];
@@ -903,8 +932,28 @@ var WO_TDG_main = (function (window, document) {
             return isValid;
         },
 
+        Remote_OnChange: async function (executionContext) {
+            //do this only on update, as new work order does not have service tasks yet
+            //if remote === true then blank/null any travel time field values, as no travel is required.
+
+            if (formType > 1) {
+                let formContext = executionContext.getFormContext();
+                let remote = formContext.getAttribute("qm_remote").getValue();
+                
+                let workOrderId = formContext.data.entity.getId().replace("{", "").replace("}", "")
+                const serviceTasks = await getServiceTasksForWorkOrder(workOrderId);
+                let travelServicetask = serviceTasks.filter(x => x["_msdyn_tasktype_value"] === "ca3a829a-e917-ec11-b6e7-000d3ae8ef7b") //travel task type
+
+                if (remote) {
+                    if (travelServicetask.length === 1) {
+                        updateWorkOrderServiceTaskDuration(travelServicetask[0]['msdyn_workorderservicetaskid'], null, null, null)
+                    }
+                }
+            }
+        },
+
         /// Updates Work Order Service Task Record of Service Task Type "Execution" with Booking duration
-        calculateAndUpdateServiceTaskDuration: async function (executionContext) {
+        CalculateAndUpdateServiceTaskDuration: async function (executionContext) {
 
             //todo implement msg in french
             Xrm.Utility.showProgressIndicator('loading');
@@ -972,8 +1021,8 @@ var WO_TDG_main = (function (window, document) {
                             updateWorkOrderServiceTaskDuration(executionServicetask[0]['msdyn_workorderservicetaskid'], null, null, null)
                         }
 
-                           let gridTimeTracking = formContext.getControl("Subgrid_TimeTracking");
-                            gridTimeTracking.refresh();
+                        let gridTimeTracking = formContext.getControl("Subgrid_TimeTracking");
+                        gridTimeTracking.refresh();
 
                     }
 
@@ -984,7 +1033,7 @@ var WO_TDG_main = (function (window, document) {
             }
             finally {
                 let formContext = executionContext.getFormContext();
-             
+
                 Xrm.Utility.closeProgressIndicator();
             }
 
