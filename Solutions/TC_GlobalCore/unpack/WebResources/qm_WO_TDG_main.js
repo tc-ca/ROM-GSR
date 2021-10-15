@@ -217,6 +217,9 @@ var WO_TDG_main = (function (window, document) {
             primaryInspector.removeOnChange(WO_TDG_main.PrimaryInspector_OnChange);
             primaryInspector.addOnChange(WO_TDG_main.PrimaryInspector_OnChange);
 
+            // Filter WO_SystemStatus (hide "Open - In Progress")
+            WO_TDG_main.WO_SystemStatus_FilterOptionSet(formContext);
+
             //on create
             if (formType == 1) {
 
@@ -652,6 +655,16 @@ var WO_TDG_main = (function (window, document) {
                 formContext.getAttribute("statecode").setValue(0);
                 formContext.getAttribute("statuscode").setValue(1);
             }
+        },
+
+        WO_SystemStatus_FilterOptionSet: function (formContext) {
+
+                           
+                            ////msdyn_systemstatus - filter OptionSet (hide "Open - In Progress")
+                            if (formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
+                                var options = new Array(); options[0] = 690970002;
+                                glHelper.filterOptionSet(formContext, "msdyn_systemstatus", options, false);
+                            }
         },
 
         ReportDataValidate: function (formContext) {
