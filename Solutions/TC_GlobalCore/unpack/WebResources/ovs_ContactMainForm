@@ -86,9 +86,13 @@ function hideAllActionTypeSections(formContext, currentUserRoles) {
     glHelper.SetSectionVisibility(formContext, TabNames.TAB_DETAIL, DetailSections.PersonalNotes, isSysAdmin);
     glHelper.SetSectionVisibility(formContext, TabNames.TAB_DETAIL, DetailSections.Shipping, isSysAdmin);
 
-    glHelper.SetControlVisibility(formContext, FIELD_ACCOUNT_NAME, true);
-    glHelper.SetRequiredLevel(formContext, FIELD_ACCOUNT_NAME, true);
-
+    //Check FIELD_ACCOUNT_NAME field exist on the form before to Set Visible/RequiredLevel
+    // Changes Related to the N:N relationsheep for Account and Contact tables
+    if (formContext.getAttribute(FIELD_ACCOUNT_NAME) != null) {
+        glHelper.SetControlVisibility(formContext, FIELD_ACCOUNT_NAME, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_ACCOUNT_NAME, true);
+    }
+    // End changes
     glHelper.SetRequiredLevel(formContext, FIELD_TITLE, true);
     glHelper.SetRequiredLevel(formContext, FIELD_EMAIL, true);
     glHelper.SetRequiredLevel(formContext, FIELD_BUSINESS_PHONE_NUMBER, true);
