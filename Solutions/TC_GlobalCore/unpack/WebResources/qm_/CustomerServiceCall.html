@@ -30,6 +30,11 @@
                 display: table-cell;
             }
         }
+        .msg {
+            font-style: italic;
+            font-size: 12px;
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -43,23 +48,36 @@
                 </div>
             </div>
 
-            <div class="row top-double-buffer">
-                <div class="col-xs-9 col-xs-offset-1">
-                    <label for="messageCS" id="lblMessageCS">The steps to reproduce the issue are as follows:</label>
-                    <textarea class="form-control" id="messageCS" rows="10"></textarea>
-                </div>
 
-            </div><div class="row top-double-buffer">
+
+
+            <div class="row top-double-buffer">
                 <div class="col-xs-5 col-xs-offset-1">
-                    <label for="isStoping" id="lblIsStoping">Is this issue preventing you from completing an inspection?</label>
-                    <textarea class="form-control" id="isStoping" rows="3"></textarea>
+                    <label for="isBugOrFeatureMsg" id="lblIsBugOrFeatureMsg">Did you find an issue (bug), or would you like to propose a new feature be added to the system?</label>
+                    <label for="isBugOrFeature" id="lblIsBugOrFeature">If you are proposing a new feature, explain the benefits.</label>
+                    <textarea class="form-control" id="isBugOrFeature" rows="3"></textarea>
                 </div>
             </div>
 
             <div class="row top-double-buffer">
                 <div class="col-xs-5 col-xs-offset-1">
-                    <label for="isBugOrFeature" id="lblIsBugOrFeature">Is this bug or just a feature that would be nice to have in the system?</label>
-                    <textarea class="form-control" id="isBugOrFeature" rows="3"></textarea>
+                    <label for="isStoping" id="lblIsStoping">If you found a bug, is it preventing you from completing an inspection?</label>
+                    <textarea class="form-control" id="isStoping" rows="3"></textarea>
+                </div>
+            </div>
+
+            <div class="row top-double-buffer">
+                <div class="col-xs-9 col-xs-offset-1">
+                    <label for="message" id="lblMessage">If you found a bug, please provide the work order number or site number and the steps for reproducing the bug.</label>
+                    <label for="messageCS" id="lblMessageCS">The steps to reproduce the bug are as follows:</label>
+                    <p id="step1" class="msg">Example steps:</p>
+                    <p id="step2" class="msg">WO-2021-10000XXX:</p>
+                    <p id="step3" class="msg">1. In an open work order, click the Post Inspection tab.</p>
+                    <p id="step4" class="msg">2. Click Add New Safety Assessment.</p>
+                    <p id="step5" class="msg">3. Click Add Existing Violation.</p>
+                    <p id="step6" class="msg">4. … (list the rest of the steps needed to reproduce the bug)</p>
+
+                    <textarea class="form-control" id="messageCS" rows="10"></textarea>
                 </div>
             </div>
 
@@ -68,6 +86,9 @@
                     <button type="submit" id="submitCSmessage" class="btn btn-primary">Submit to Support Team</button>
                 </div>
             </div>
+
+
+
         </div>
         
         <script>
@@ -84,9 +105,21 @@
                 
                 if (langId != 1033) {
                     $('#msg').text("Bonjour, j'ai trouvé un problème avec l'application GSR.");
-                    $('#lblMessageCS').text("Les étapes pour reproduire le problème sont les suivantes:");
-                    $('#lblIsStoping').text("Ce problème vous empêche-t-il de terminer une inspection?");
-                    $('#lblIsBugOrFeature').text("Est-ce un bug ou juste une fonctionnalité qui serait bien d'avoir dans le système?");
+                    $('#lblIsBugOrFeatureMsg').text("Avez-vous trouvé un problème (bogue), ou souhaitez-vous proposer qu’une nouvelle fonctionnalité soit ajoutée au système?");
+                    $('#lblIsBugOrFeature').text("Si vous proposez une nouvelle fonctionnalité, expliquez les avantages.");
+
+                    $('#lblIsStoping').text("Si vous avez trouvé un bogue, vous empêche-t-il de terminer une inspection?");
+
+                    $('#lblMessage').text("Si vous avez trouvé un bogue, veuillez fournir le numéro d’ordre de travail ou le numéro de site et les étapes de reproduction du bogue.");
+                    $('#lblMessageCS').text("Les étapes pour reproduire le bogue sont les suivantes:");
+
+                    $('#step1').text("Exemples d’étapes:");
+                    $('#step2').text("WO-2021-10000XXX:");
+                    $('#step3').text("1. Dans un ordre de travail ouvert, cliquez sur l’onglet Après l'inspection.");
+                    $('#step4').text("2. Cliquez sur Ajouter une nouvelle évaluation de la sécurité");
+                    $('#step5').text("3. Cliquez sur Ajouter une infraction existante.");
+                    $('#step6').text("4. ... (énumérer le reste des étapes nécessaires pour reproduire le bogue)");
+
                     $('#submitCSmessage').text("Soumettre à l'équipe du support");
                 }
 
