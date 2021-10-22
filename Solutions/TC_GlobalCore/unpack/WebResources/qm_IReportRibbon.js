@@ -1,4 +1,4 @@
-///<reference path="../Utilities/questionnaireFunctions.js"/>
+﻿///<reference path="../Utilities/questionnaireFunctions.js"/>
 
 var IReportRibbon = (function (window, document) {
 
