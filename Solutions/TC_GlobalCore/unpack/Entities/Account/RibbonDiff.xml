@@ -94,6 +94,11 @@
         <Button Alt="$Resources(EntityDisplayName):Ribbon.SubGrid.AddNew" Command="Mscrm.AddNewRecordFromSubGridStandard" Id="ovs.account.Button35.Button.Mscrm.SubGrid.account.AddNewStandard" Image32by32="/_imgs/ribbon/newrecord32.png" Image16by16="/_imgs/ribbon/New_16.png" LabelText="$Resources(EntityDisplayName):Ribbon.SubGrid.AddNew" Sequence="0" TemplateAlias="o1" ToolTipTitle="$Resources(EntityDisplayName):Mscrm_SubGrid_EntityLogicalName_MainTab_Management_AddNewStandard_ToolTipTitle" ToolTipDescription="$Resources(EntityDisplayName):Mscrm_SubGrid_EntityLogicalName_MainTab_Management_AddNewStandard_ToolTipDescription" ModernImage="New" />
       </CommandUIDefinition>
     </CustomAction>
+    <CustomAction Id="ovs.account.Button37.Button.ovs.Form.account.CustomDeactivate.CustomAction" Location="Mscrm.Form.account.MainTab.Save.Controls._children" Sequence="50">
+      <CommandUIDefinition>
+        <Button Alt="$Resources:Ribbon.HomepageGrid.account.Record.Status.Deactivate" Command="ovs.account.Command.Form.Deactivate" Id="ovs.account.Button37.Button.ovs.Form.account.CustomDeactivate" Image32by32="/_imgs/ribbon/Deactivate_32.png" Image16by16="/_imgs/ribbon/Deactivate_16.png" LabelText="$Resources:Ribbon.HomepageGrid.account.Record.Status.Deactivate" Sequence="50" TemplateAlias="o1" ToolTipTitle="$Resources:Ribbon.HomepageGrid.account.Record.Status.Deactivate" ToolTipDescription="$LocLabels:ovs.account.Button37.Button.ovs.Form.account.CustomDeactivate.ToolTipDescription" ModernImage="DeActivate" />
+      </CommandUIDefinition>
+    </CustomAction>
     <CustomAction Id="ovs.account.Button4.Button.Mscrm.HomepageGrid.account.Deactivate.CustomAction" Location="Mscrm.HomepageGrid.account.MainTab.Management.Controls._children" Sequence="28">
       <CommandUIDefinition>
         <Button Alt="$Resources:Ribbon.HomepageGrid.account.Record.Status.Deactivate" Command="Mscrm.HomepageGrid.Deactivate" Id="ovs.account.Button4.Button.Mscrm.HomepageGrid.account.Deactivate" Image32by32="/_imgs/ribbon/Deactivate_32.png" Image16by16="/_imgs/ribbon/Deactivate_16.png" LabelText="$Resources:Ribbon.HomepageGrid.account.Record.Status.Deactivate" Sequence="28" TemplateAlias="o2" ToolTipTitle="$Resources:Ribbon.HomepageGrid.account.Record.Status.Deactivate" ToolTipDescription="$Resources(EntityPluralDisplayName):Ribbon.Tooltip.Deactivate" ModernImage="DeActivate" />
@@ -155,10 +160,59 @@
         </JavaScriptFunction>
       </Actions>
     </CommandDefinition>
+    <CommandDefinition Id="Mscrm.Form.Deactivate">
+      <EnableRules>
+        <EnableRule Id="Mscrm.CanWritePrimary" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.CanWritePrimary" />
+        <DisplayRule Id="Mscrm.PrimaryIsActive" />
+        <DisplayRule Id="Mscrm.PrimaryEntityHasStatecode" />
+        <DisplayRule Id="Mscrm.PrimaryIsNotActivity" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="Mscrm.CommandBarActions.changeState" Library="/_static/_common/scripts/CommandBarActions.js">
+          <StringParameter Value="deactivate" />
+          <CrmParameter Value="FirstPrimaryItemId" />
+          <CrmParameter Value="PrimaryEntityTypeName" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="ovs.account.Command.Form.Deactivate">
+      <EnableRules>
+        <EnableRule Id="Mscrm.CanWritePrimary" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.CanWritePrimary" />
+        <DisplayRule Id="Mscrm.PrimaryIsActive" />
+        <DisplayRule Id="Mscrm.PrimaryEntityHasStatecode" />
+        <DisplayRule Id="Mscrm.PrimaryIsNotActivity" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="overridedeactivatebtn" Library="$webresource:ovs_AccountTDG_Ribbons.js">
+          <StringParameter Value="deactivate" />
+          <CrmParameter Value="FirstPrimaryItemId" />
+          <CrmParameter Value="PrimaryEntityTypeName" />
+          <CrmParameter Value="PrimaryControl" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
   </CommandDefinitions>
   <RuleDefinitions>
     <TabDisplayRules />
     <DisplayRules>
+      <DisplayRule Id="Mscrm.CanWritePrimary">
+        <EntityPrivilegeRule PrivilegeType="Write" PrivilegeDepth="Basic" AppliesTo="PrimaryEntity" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.PrimaryEntityHasStatecode">
+        <EntityPropertyRule AppliesTo="PrimaryEntity" PropertyName="HasStateCode" PropertyValue="true" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.PrimaryIsActive">
+        <FormStateRule State="Existing" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.PrimaryIsNotActivity">
+        <EntityPropertyRule AppliesTo="PrimaryEntity" PropertyName="IsActivity" PropertyValue="false" />
+      </DisplayRule>
       <DisplayRule Id="ovs.account.DisplayRule0.HideAddNewSubGridStandardWhenOnAccount">
         <EntityRule EntityName="account" AppliesTo="PrimaryEntity" Context="SubGridStandard" Default="false" InvertResult="true" />
       </DisplayRule>
@@ -166,6 +220,9 @@
     <EnableRules>
       <EnableRule Id="Mscrm.AppendToPrimary">
         <RecordPrivilegeRule PrivilegeType="AppendTo" AppliesTo="PrimaryEntity" />
+      </EnableRule>
+      <EnableRule Id="Mscrm.CanWritePrimary">
+        <RecordPrivilegeRule PrivilegeType="Write" AppliesTo="PrimaryEntity" />
       </EnableRule>
       <EnableRule Id="Mscrm.EntityFormIsEnabled">
         <FormStateRule State="Disabled" InvertResult="true" />
@@ -299,6 +356,11 @@
         <Title description="Ajouter à la liste de marketing" languagecode="1036" />
       </Titles>
     </LocLabel>
+    <LocLabel Id="ovs.account.Button37.Button.ovs.Form.account.CustomDeactivate.ToolTipDescription">
+      <Titles>
+        <Title description="Custom Deactivate these {0}. &lt;br&gt;&lt;br&gt;You can reactivate these {0} from the Inactive {0} View." languagecode="1033" />
+      </Titles>
+    </LocLabel>
     <LocLabel Id="ovs.account.Button8.Button.Mscrm.HomepageGrid.account.FollowButton.LabelText">
       <Titles>
         <Title description="Follow" languagecode="1033" />
@@ -315,6 +377,55 @@
       <Titles>
         <Title description="Follow" languagecode="1033" />
         <Title description="Suivre" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Ribbon.SubGrid.account.CopyListMember">
+      <Titles>
+        <Title description="Add to Another Marketing List" languagecode="1033" />
+        <Title description="Add to Another Marketing List" languagecode="1025" />
+        <Title description="Add to Another Marketing List" languagecode="1026" />
+        <Title description="Add to Another Marketing List" languagecode="1027" />
+        <Title description="Add to Another Marketing List" languagecode="1029" />
+        <Title description="Add to Another Marketing List" languagecode="1030" />
+        <Title description="Add to Another Marketing List" languagecode="1031" />
+        <Title description="Add to Another Marketing List" languagecode="1032" />
+        <Title description="Add to Another Marketing List" languagecode="3082" />
+        <Title description="Add to Another Marketing List" languagecode="1061" />
+        <Title description="Add to Another Marketing List" languagecode="1069" />
+        <Title description="Add to Another Marketing List" languagecode="1035" />
+        <Title description="Ajouter à une autre liste de marketing" languagecode="1036" />
+        <Title description="Add to Another Marketing List" languagecode="1110" />
+        <Title description="Add to Another Marketing List" languagecode="1037" />
+        <Title description="Add to Another Marketing List" languagecode="1081" />
+        <Title description="Add to Another Marketing List" languagecode="1050" />
+        <Title description="Add to Another Marketing List" languagecode="1038" />
+        <Title description="Add to Another Marketing List" languagecode="1057" />
+        <Title description="Add to Another Marketing List" languagecode="1040" />
+        <Title description="Add to Another Marketing List" languagecode="1041" />
+        <Title description="Add to Another Marketing List" languagecode="1087" />
+        <Title description="Add to Another Marketing List" languagecode="1042" />
+        <Title description="Add to Another Marketing List" languagecode="1063" />
+        <Title description="Add to Another Marketing List" languagecode="1062" />
+        <Title description="Add to Another Marketing List" languagecode="1086" />
+        <Title description="Add to Another Marketing List" languagecode="1044" />
+        <Title description="Add to Another Marketing List" languagecode="1043" />
+        <Title description="Add to Another Marketing List" languagecode="1045" />
+        <Title description="Add to Another Marketing List" languagecode="1046" />
+        <Title description="Add to Another Marketing List" languagecode="2070" />
+        <Title description="Add to Another Marketing List" languagecode="1048" />
+        <Title description="Add to Another Marketing List" languagecode="1049" />
+        <Title description="Add to Another Marketing List" languagecode="1051" />
+        <Title description="Add to Another Marketing List" languagecode="1060" />
+        <Title description="Add to Another Marketing List" languagecode="10266" />
+        <Title description="Add to Another Marketing List" languagecode="9242" />
+        <Title description="Add to Another Marketing List" languagecode="1053" />
+        <Title description="Add to Another Marketing List" languagecode="1054" />
+        <Title description="Add to Another Marketing List" languagecode="1055" />
+        <Title description="Add to Another Marketing List" languagecode="1058" />
+        <Title description="Add to Another Marketing List" languagecode="1066" />
+        <Title description="Add to Another Marketing List" languagecode="2052" />
+        <Title description="Add to Another Marketing List" languagecode="3076" />
+        <Title description="Add to Another Marketing List" languagecode="1028" />
       </Titles>
     </LocLabel>
     <LocLabel Id="Ribbon.SubGrid.account.CopyListMember">
@@ -366,55 +477,6 @@
         <Title description="添加到其他市场营销列表" languagecode="2052" />
         <Title description="新增至其他行銷名單" languagecode="3076" />
         <Title description="新增至其他行銷名單" languagecode="1028" />
-      </Titles>
-    </LocLabel>
-    <LocLabel Id="Ribbon.SubGrid.account.CopyListMember">
-      <Titles>
-        <Title description="Add to Another Marketing List" languagecode="1033" />
-        <Title description="Add to Another Marketing List" languagecode="1025" />
-        <Title description="Add to Another Marketing List" languagecode="1026" />
-        <Title description="Add to Another Marketing List" languagecode="1027" />
-        <Title description="Add to Another Marketing List" languagecode="1029" />
-        <Title description="Add to Another Marketing List" languagecode="1030" />
-        <Title description="Add to Another Marketing List" languagecode="1031" />
-        <Title description="Add to Another Marketing List" languagecode="1032" />
-        <Title description="Add to Another Marketing List" languagecode="3082" />
-        <Title description="Add to Another Marketing List" languagecode="1061" />
-        <Title description="Add to Another Marketing List" languagecode="1069" />
-        <Title description="Add to Another Marketing List" languagecode="1035" />
-        <Title description="Ajouter à une autre liste de marketing" languagecode="1036" />
-        <Title description="Add to Another Marketing List" languagecode="1110" />
-        <Title description="Add to Another Marketing List" languagecode="1037" />
-        <Title description="Add to Another Marketing List" languagecode="1081" />
-        <Title description="Add to Another Marketing List" languagecode="1050" />
-        <Title description="Add to Another Marketing List" languagecode="1038" />
-        <Title description="Add to Another Marketing List" languagecode="1057" />
-        <Title description="Add to Another Marketing List" languagecode="1040" />
-        <Title description="Add to Another Marketing List" languagecode="1041" />
-        <Title description="Add to Another Marketing List" languagecode="1087" />
-        <Title description="Add to Another Marketing List" languagecode="1042" />
-        <Title description="Add to Another Marketing List" languagecode="1063" />
-        <Title description="Add to Another Marketing List" languagecode="1062" />
-        <Title description="Add to Another Marketing List" languagecode="1086" />
-        <Title description="Add to Another Marketing List" languagecode="1044" />
-        <Title description="Add to Another Marketing List" languagecode="1043" />
-        <Title description="Add to Another Marketing List" languagecode="1045" />
-        <Title description="Add to Another Marketing List" languagecode="1046" />
-        <Title description="Add to Another Marketing List" languagecode="2070" />
-        <Title description="Add to Another Marketing List" languagecode="1048" />
-        <Title description="Add to Another Marketing List" languagecode="1049" />
-        <Title description="Add to Another Marketing List" languagecode="1051" />
-        <Title description="Add to Another Marketing List" languagecode="1060" />
-        <Title description="Add to Another Marketing List" languagecode="10266" />
-        <Title description="Add to Another Marketing List" languagecode="9242" />
-        <Title description="Add to Another Marketing List" languagecode="1053" />
-        <Title description="Add to Another Marketing List" languagecode="1054" />
-        <Title description="Add to Another Marketing List" languagecode="1055" />
-        <Title description="Add to Another Marketing List" languagecode="1058" />
-        <Title description="Add to Another Marketing List" languagecode="1066" />
-        <Title description="Add to Another Marketing List" languagecode="2052" />
-        <Title description="Add to Another Marketing List" languagecode="3076" />
-        <Title description="Add to Another Marketing List" languagecode="1028" />
       </Titles>
     </LocLabel>
     <LocLabel Id="Ribbon.Tooltip.AddToMarketingList">
