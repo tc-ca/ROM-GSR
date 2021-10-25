@@ -7,7 +7,6 @@ var resexResourceName;
 
 
 function CalculatedRiskParameters_OnChange(executionContext) {
-
     var formContext = executionContext.getFormContext();
 
     var magnitudeOptionValue = glHelper.GetValue(formContext, "ovs_cymagnitudeofharm");
@@ -99,6 +98,24 @@ function OverrideRecommendation_OnChange(executionContext)
     glHelper.SetRequiredLevel(formContext, "ovs_overridejustification", isSelectionChanged);
 }
 
+function onSaveSafetyAssessment(executionContext) {
+    var formContext = executionContext.getFormContext();
+    var gridContext = formContext.getControl("grdViolations");
+    var violationCount = gridContext.getGrid().getTotalRecordCount();
+    var errorNoViolations = Xrm.Utility.getResourceString(resexResourceName, "ovs_safetyassessment.Violations.Error");
+
+    // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+    let formType = glHelper.GetFormType(formContext);
+    
+    if (violationCount == 0 && formType > 1) {
+        
+        glHelper.DisplayFormNotification(errorNoViolations, "ERROR", 5000);
+        executionContext.getEventArgs().preventDefault();//will prevent CRM form save
+
+        return;
+    }
+}
+
 function submitSafetyAssessment(executionContext,primaryIds)
 {
     Xrm.Page.data.entity.save();
@@ -106,7 +123,6 @@ function submitSafetyAssessment(executionContext,primaryIds)
     var errorNoViolations = Xrm.Utility.getResourceString(resexResourceName, "ovs_safetyassessment.Violations.Error");
     var errorSEATSaveWarning = Xrm.Utility.getResourceString(resexResourceName, "ovs_safetyassessment.Save.Warning");
     var messageSEATConfirmation = Xrm.Utility.getResourceString(resexResourceName, "ovs_safetyassessment.Save.Confirmation");
-
 
     //Check first if there are violations associated with this SEAT record
     

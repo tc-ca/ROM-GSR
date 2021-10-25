@@ -2,7 +2,6 @@
 ///<reference path="../../Utilities/questionnaireFunctions.js"/>
 
 var AccountTDGmain = (function (window, document) {
-
      //variables
     var formType;
      //optionset value: form name
@@ -108,9 +107,13 @@ var AccountTDGmain = (function (window, document) {
 
 
         OnLoad: function (executionContext) {
-
+            
             var formContext = executionContext.getFormContext();
             formContextGlobalRef = formContext;
+
+            if (AccountTDGmain.hasCurrentUserRole("TDG QA")) {
+                glHelper.SetTabVisibility(formContext, "tab_Operations", true);
+            }
             //filter Relationship Type
             filter_customertypecode(formContext);
 
@@ -149,6 +152,18 @@ var AccountTDGmain = (function (window, document) {
             } catch (e) {
                 console.log("Site_OnChange failed - lookup is empty");
             }
+        },
+
+        hasCurrentUserRole: function(roleName) {
+            let hasRole = false;
+            let roles = Xrm.Utility.getGlobalContext().userSettings.roles;
+            roles.forEach(x => {
+                if (x.name === roleName) {
+                    hasRole = true;
+                    return;
+                }
+            });
+            return hasRole;
         },
 
         Refresh_AccountClass: function () {
