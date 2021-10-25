@@ -173,7 +173,7 @@ var IReportRibbon = (function (window, document) {
 
     }
 
-    function createInspectionReport(url) {
+    function createInspectionReport() {
 
         //var formContext = window.top.QuickCreateHelper.formContext;
 
@@ -223,11 +223,11 @@ var IReportRibbon = (function (window, document) {
         Xrm.Navigation.navigateTo(pageData, navigationOptions).then(
             function success(result) {
 
-                obj.inspection_report_id = result.savedEntityReference[0].id.replace("{", "").replace("}", "");
-                var input = JSON.stringify(obj);
-                console.log("Input " + input);
+                //obj.inspection_report_id = result.savedEntityReference[0].id.replace("{", "").replace("}", "");
+                //var input = JSON.stringify(obj);
+                //console.log("Input " + input);
 
-                callFlow(url, input)
+                //callFlow(url, input)
             },
             function error() {
                 console.log(error);
@@ -236,7 +236,7 @@ var IReportRibbon = (function (window, document) {
         );
     }
 
-    function existingReport(url, input, reportId) {
+    function existingReport(reportId) {
 
     // Open the form.
 
@@ -254,7 +254,7 @@ var IReportRibbon = (function (window, document) {
         };
         Xrm.Navigation.navigateTo(pageData, navigationOptions).then(
             function success() {
-                callFlow(url, input);
+                //callFlow(url, input);
             },
             function error() {
                 console.log(error);
@@ -279,7 +279,7 @@ var IReportRibbon = (function (window, document) {
         if (!validateReportPreReq()) return;
 
         //sync
-        getFlowUrl();
+        //getFlowUrl();
 
         if (formContext.data.entity.getIsDirty()) {
 
@@ -292,7 +292,7 @@ var IReportRibbon = (function (window, document) {
                         //async save
                         formContext.data.save().then(function () {
 
-                            createInspectionReport(reportUrl);
+                            //createInspectionReport(reportUrl);
                         }, function (e) {
 
                             Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Cannot save the form. Error: " + this.statusText });
@@ -306,7 +306,7 @@ var IReportRibbon = (function (window, document) {
 
         }
         //if not - run the report
-        else { createInspectionReport(reportUrl); }
+        else { createInspectionReport(); }
     }
 
     function updateInspectionReport(selectedItems, gridControl) {
@@ -318,7 +318,7 @@ var IReportRibbon = (function (window, document) {
         console.log("Input " + input);
 
         formContext = window.top.QuickCreateHelper.formContext;
-        getFlowUrl();
+        //getFlowUrl();
 
         //run navigation from WO main script
         if (!validateReportPreReq()) return;
@@ -333,7 +333,7 @@ var IReportRibbon = (function (window, document) {
 
                         formContext.data.save().then(function () {
 
-                            existingReport(reportUrl, input, reportId);
+                            existingReport(reportId);
 
                         }, function (e) {
 
@@ -347,7 +347,9 @@ var IReportRibbon = (function (window, document) {
 
         }
         //if not - run the report
-        else { existingReport(reportUrl, input, reportId); }
+        //else { existingReport(reportUrl, input, reportId); }
+        else { existingReport(reportId); }
+
 
     }
 

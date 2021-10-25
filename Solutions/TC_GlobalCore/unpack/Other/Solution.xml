@@ -10,7 +10,7 @@
       <Description description="Upgrade of TC.GlobalCore" languagecode="1033" />
       <Description description="Mise à niveau de TC.GlobalCore" languagecode="1036" />
     </Descriptions>
-    <Version>1.107.0.0</Version>
+    <Version>1.108.0.0</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>oversightpublisher</UniqueName>
@@ -257,6 +257,7 @@
       <RootComponent type="61" schemaName="ovs_MagnitudeAndLikelihoodMessage_high" behavior="0" />
       <RootComponent type="61" schemaName="ovs_MagnitudeAndLikelihoodMessage_low" behavior="0" />
       <RootComponent type="61" schemaName="ovs_MagnitudeAndLikelihoodMessage_medium" behavior="0" />
+      <RootComponent type="61" schemaName="ovs_moc_mainform" behavior="0" />
       <RootComponent type="61" schemaName="ovs_NOPMainForm" behavior="0" />
       <RootComponent type="61" schemaName="ovs_RegionalNOPMainForm" behavior="0" />
       <RootComponent type="61" schemaName="ovs_ROMCommonFunctions" behavior="0" />
@@ -4438,7 +4439,7 @@
         <Required type="10" schemaName="msdyn_slakpiinstance_msdyn_workorder_arrival_timekpi" displayName="msdyn_slakpiinstance_msdyn_workorder_arrival_timekpi" parentSchemaName="slakpiinstance" parentDisplayName="SLA KPI Instance" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.53.27)</package>
         </Required>
-        <Dependent type="10" schemaName="msdyn_slakpiinstance_msdyn_workorder_arrival_timekpi" displayName="msdyn_slakpiinstance_msdyn_workorder_arrival_timekpi" parentSchemaName="slakpiinstance" parentDisplayName="SLA KPI Instance" />
+        <Dependent type="10" schemaName="msdyn_slakpiinstance_msdyn_workorder_resolutionkpiid" displayName="msdyn_slakpiinstance_msdyn_workorder_resolutionkpiid" parentSchemaName="slakpiinstance" parentDisplayName="SLA KPI Instance" />
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_slakpiinstance_msdyn_workorder_arrival_timekpi" displayName="msdyn_slakpiinstance_msdyn_workorder_arrival_timekpi" parentSchemaName="slakpiinstance" parentDisplayName="SLA KPI Instance" solution="FieldService (8.8.0.88)">
@@ -4450,7 +4451,7 @@
         <Required type="10" schemaName="msdyn_slakpiinstance_msdyn_workorder_resolutionkpiid" displayName="msdyn_slakpiinstance_msdyn_workorder_resolutionkpiid" parentSchemaName="slakpiinstance" parentDisplayName="SLA KPI Instance" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.53.27)</package>
         </Required>
-        <Dependent type="10" schemaName="msdyn_slakpiinstance_msdyn_workorder_arrival_timekpi" displayName="msdyn_slakpiinstance_msdyn_workorder_arrival_timekpi" parentSchemaName="slakpiinstance" parentDisplayName="SLA KPI Instance" />
+        <Dependent type="10" schemaName="msdyn_slakpiinstance_msdyn_workorder_resolutionkpiid" displayName="msdyn_slakpiinstance_msdyn_workorder_resolutionkpiid" parentSchemaName="slakpiinstance" parentDisplayName="SLA KPI Instance" />
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="msdyn_slakpiinstance_msdyn_workorder_resolutionkpiid" displayName="msdyn_slakpiinstance_msdyn_workorder_resolutionkpiid" parentSchemaName="slakpiinstance" parentDisplayName="SLA KPI Instance" solution="FieldService (8.8.0.88)">
@@ -4739,11 +4740,11 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="bookableresourceid" displayName="Bookable Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdynce_Scheduling (9.0.0.0)" />
-        <Dependent type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_Crew" displayName="msdyn_bookableresource_bookableresourcebooking_Crew" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" displayName="msdyn_bookableresource_bookableresourcebooking_ResourceGroup" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="bookableresourceid" displayName="Bookable Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdynce_Scheduling (9.0.0.0)" />
-        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_PreferredResource" displayName="msdyn_bookableresource_msdyn_workorder_PreferredResource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="bookableresourceid" displayName="Bookable Resource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" solution="msdynce_Scheduling (9.0.0.0)" />
@@ -6724,7 +6725,7 @@
         <Required type="2" schemaName="msdyn_supportcontact" displayName="Support Contact" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.53.27)</package>
         </Required>
-        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_SupportContact" displayName="msdyn_bookableresource_msdyn_workorder_SupportContact" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
+        <Dependent type="10" schemaName="msdyn_bookableresource_msdyn_workorder_PreferredResource" displayName="msdyn_bookableresource_msdyn_workorder_PreferredResource" parentSchemaName="bookableresource" parentDisplayName="Bookable Resource" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_supportcontact" displayName="Support Contact" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)">
@@ -11909,6 +11910,12 @@
         <Required type="61" schemaName="Sales/ClientCommon/Sales_ClientCommon.js" displayName="Sales/ClientCommon/Sales_ClientCommon.js" solution="msdynce_Sales (9.0.4.0076)">
           <package>msdynce_SalesAnchor (9.0.21101.10001)</package>
         </Required>
+        <Dependent type="60" displayName="Contact" parentDisplayName="Contact" id="{1fed44d1-ae68-4a41-bd2b-f13acac4acfa}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="61" schemaName="Sales/ClientCommon/Sales_ClientCommon.js" displayName="Sales/ClientCommon/Sales_ClientCommon.js" solution="msdynce_Sales (9.0.4.0076)">
+          <package>msdynce_SalesAnchor (9.0.21101.10001)</package>
+        </Required>
         <Dependent type="60" displayName="Contact Main Form" parentDisplayName="Contact" id="{2c961780-b9f9-ea11-a815-000d3af3ac0d}" />
       </MissingDependency>
       <MissingDependency>
@@ -11928,12 +11935,6 @@
           <package>msdynce_SalesAnchor (9.0.21101.10001)</package>
         </Required>
         <Dependent type="60" displayName="TDG Site Profile" parentDisplayName="Account" id="{db5d5927-e1b5-440f-b55b-e0a95e1b053b}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="61" schemaName="Sales/ClientCommon/Sales_ClientCommon.js" displayName="Sales/ClientCommon/Sales_ClientCommon.js" solution="msdynce_Sales (9.0.4.0076)">
-          <package>msdynce_SalesAnchor (9.0.21101.10001)</package>
-        </Required>
-        <Dependent type="60" displayName="TDG Contact" parentDisplayName="Contact" id="{ec7b5b17-85b9-eb11-8236-0022483bc67c}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="Sales/Contact/Contact_main_system_library.js" displayName="Sales/Contact/Contact_main_system_library.js" solution="msdynce_SalesPatch201904 (9.0.1912.1007)">

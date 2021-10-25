@@ -1,0 +1,49 @@
+﻿var globalFormContext;
+
+async function OnLoad(executionContext) {
+
+    //get context
+    globalContext = glHelper.getGlobalContext();
+    var formContext = executionContext.getFormContext();
+    globalFormContext = formContext;
+
+    var formContext = executionContext.getFormContext();
+    formContextGlobalRef = formContext;
+   
+    if (this.hasCurrentUserRole("TDG QA")) {
+        glHelper.SetTabVisibility(formContext, "operations_profile", true);
+        glHelper.SetControlVisibility(formContext, "ovs_name", true);
+        glHelper.SetControlVisibility(formContext, "ovs_operationfacilitytype", true);
+        glHelper.SetControlVisibility(formContext, "ovs_lineofbusiness", true);
+        glHelper.SetControlVisibility(formContext, "ovs_mocprogram", true);
+        glHelper.SetControlVisibility(formContext, "ovs_cdriskscore", true);
+        glHelper.SetControlVisibility(formContext, "ovs_cdpriorityscore", true);
+        glHelper.SetControlVisibility(formContext, "ovs_cdriskcategory", true);
+    }
+    else {
+        glHelper.SetTabVisibility(formContext, "operations_profile", false);
+        glHelper.SetControlVisibility(formContext, "ovs_name", false);
+        glHelper.SetControlVisibility(formContext, "ovs_operationfacilitytype", false);
+        glHelper.SetControlVisibility(formContext, "ovs_lineofbusiness", false);
+        glHelper.SetControlVisibility(formContext, "ovs_mocprogram", false);
+        glHelper.SetControlVisibility(formContext, "ovs_cdriskscore", false);
+        glHelper.SetControlVisibility(formContext, "ovs_cdpriorityscore", false);
+        glHelper.SetControlVisibility(formContext, "ovs_cdriskcategory", false);
+    }
+}
+
+function hasCurrentUserRole(roleName) {
+    let hasRole = false;
+    let roles = Xrm.Utility.getGlobalContext().userSettings.roles;
+    roles.forEach(x => {
+        if (x.name === roleName) {
+            hasRole = true;
+            return;
+        }
+    });
+    return hasRole;
+}
+
+function OnSave(executionContext) {
+
+}

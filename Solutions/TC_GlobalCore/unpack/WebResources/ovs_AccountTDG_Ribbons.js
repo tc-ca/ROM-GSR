@@ -1,6 +1,10 @@
 ///<reference path="../Utilities/GlobalHelper.js"/>
 
-    function overridedeactivatebtn(parm1, parm2, parm3, executionContext) {
+var AccountRibbon = (function (window, document) {
+
+    var TDG_QA = "TDG QA";
+  
+ function overridedeactivatebtn(parm1, parm2, parm3, executionContext) {
 
         debugger;
 
@@ -26,7 +30,7 @@
                 if (results.entities.length > 0) {
                     var confirmStrings = {
                         text: "You are about to deactivate a site with active operation(s). Deactivating the site will deactivate all of its Operations. Would you like to continue?",
-                        title: "Warning",
+                        title: "Warning. Confirm Deactivation:",
                         confirmButtonLabel: "YES"
                     };
                     var confirmOptions = { height: 200, width: 450 };
@@ -47,3 +51,21 @@
             }
         );
 }
+
+ function isTDG_QA(context) {
+        var roles = Xrm.Utility.getGlobalContext().userSettings.roles;
+        var enable = false;
+
+        roles.forEach(function (item) {
+
+            if (item.name == TDG_QA) enable = true;
+
+        });
+
+        return !enable;
+    }
+
+    return {
+        isTDG_QA: isTDG_QA
+    };
+})(window, document);
