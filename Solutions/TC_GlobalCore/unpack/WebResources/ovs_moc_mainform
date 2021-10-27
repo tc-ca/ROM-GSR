@@ -36,7 +36,7 @@ function hasCurrentUserRole(roleName) {
     let hasRole = false;
     let roles = Xrm.Utility.getGlobalContext().userSettings.roles;
     roles.forEach(x => {
-        if (x.name === roleName) {
+        if (x.name === "System Administrator" || x.name === roleName) {
             hasRole = true;
             return;
         }

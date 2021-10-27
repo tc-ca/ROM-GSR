@@ -112,7 +112,8 @@ var AccountTDGmain = (function (window, document) {
             formContextGlobalRef = formContext;
 
             if (AccountTDGmain.hasCurrentUserRole("TDG QA")) {
-                glHelper.SetTabVisibility(formContext, "tab_Operations", true);
+                if (formContext.ui.tabs.get("tab_Operations") != null)
+                    glHelper.SetTabVisibility(formContext, "tab_Operations", true);
             }
             //filter Relationship Type
             filter_customertypecode(formContext);
@@ -158,7 +159,7 @@ var AccountTDGmain = (function (window, document) {
             let hasRole = false;
             let roles = Xrm.Utility.getGlobalContext().userSettings.roles;
             roles.forEach(x => {
-                if (x.name === roleName) {
+                if (x.name === "System Administrator" || x.name === roleName) {
                     hasRole = true;
                     return;
                 }

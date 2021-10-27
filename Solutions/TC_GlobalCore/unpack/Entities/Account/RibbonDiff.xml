@@ -182,6 +182,7 @@
       <EnableRules>
         <EnableRule Id="Mscrm.CanWritePrimary" />
         <EnableRule Id="ovs.account.EnableRule.Custom_Security Role_TDG_QA" />
+        <EnableRule Id="ovs.account.EnableRule.IsActiveWO" />
       </EnableRules>
       <DisplayRules>
         <DisplayRule Id="Mscrm.CanWritePrimary" />
@@ -236,6 +237,12 @@
       <EnableRule Id="ovs.account.EnableRule.Custom_Security Role_TDG_QA">
         <FormStateRule State="Existing" Default="false" />
         <CustomRule FunctionName="AccountRibbon.isTDG_QA" Library="$webresource:ovs_AccountTDG_Ribbons.js" Default="false" InvertResult="true">
+          <CrmParameter Value="PrimaryControl" />
+        </CustomRule>
+      </EnableRule>
+      <EnableRule Id="ovs.account.EnableRule.IsActiveWO">
+        <FormStateRule State="Existing" Default="false" />
+        <CustomRule FunctionName="AccountRibbon.isActiveWorkOrder" Library="$webresource:ovs_AccountTDG_Ribbons.js" Default="true" InvertResult="false">
           <CrmParameter Value="PrimaryControl" />
         </CustomRule>
       </EnableRule>
