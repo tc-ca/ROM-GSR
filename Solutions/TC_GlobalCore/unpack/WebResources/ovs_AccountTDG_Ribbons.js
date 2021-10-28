@@ -9,28 +9,37 @@ var AccountRibbon = (function (window, document) {
     stask.Inactive = {};
     stask.Inactive.statecode = 1;
     stask.Inactive.statuscode = 2;
+    //this variable stores if async operation was already completed
+    var isAsyncOperationCompleted = false;
+    //this variable stores the result - if button enabled or not
+    var enableFromUser = false;
+    var enable = false;
 
     //********************private methods*******************
     // Temporarry: show Deactivation button for the specific user role (TDG QA)
     function isTDG_QA(context) {
         var roles = Xrm.Utility.getGlobalContext().userSettings.roles;
-        var enable = false;
+       // var enable = false;
 
         roles.forEach(function (item) {
-            if (item.name == TDG_QA) enable = true;
+            if (item.name == TDG_QA) enableFromUser = true;
         });
-        return !enable;
+        return enableFromUser && enable;
     }
 
     function isActiveWorkOrder(primaryControl) {
 
         if (primaryControl == null) return;
+        if (enableFromUser == false) return;
+        if (isAsyncOperationCompleted) {
+            return enableFromUser && enable;
+        }
+
         const formContext = primaryControl;
         var isOffLine = glHelper.isOffline(formContext);
         var clientType = glHelper.getClientType(formContext);
         var currentWebApi;
-        var enable = false;
-
+       
         if (isOffLine && clientType > 0) {
             //mobile or outlook, offline first
             currentWebApi = Xrm.WebApi.offline;
@@ -41,26 +50,27 @@ var AccountRibbon = (function (window, document) {
 
         var accountid = formContext.data.entity.getId().replace("{", "").replace("}", "");
 
-            currentWebApi.retrieveMultipleRecords("msdyn_workorder", "?$filter=_msdyn_serviceaccount_value eq " + accountid + " and statecode eq 0").then(
-
+        currentWebApi.retrieveMultipleRecords("msdyn_workorder", "?$filter=_msdyn_serviceaccount_value eq " + accountid + " and statecode eq 0").then(
             function success(results) {
-                //Set ConfirmDialog values baced on the retrieveMultipleRecords result
-                    if (results.entities.length > 0) {
-                        enable = true;
-                    }
-                    if (enable) {
-                        formContext.ui.refreshRibbon();
-                    }
-                },
+                //Async operation was completed successfully
+                isAsyncOperationCompleted = true;
+                if (results.entities.length < 1) {
+                    enable = true;
+                }
+                else enable = false;
+                if (enable) {
+                    formContext.ui.refreshRibbon();
+                }
+            },
 
-                    function (error) {
-                        Xrm.Utility.alertDialog(error.message);
+            function (error) {
+                isAsyncOperationCompleted = true;
+                Xrm.Utility.alertDialog(error.message);
 
-                    }
+            }
         );
-        return enable;
+        return false;
     }
-
 
     // Override Deactivate btn to the custom
     function overridedeactivatebtn(parm1, parm2, parm3, primaryControl) {
@@ -148,7 +158,8 @@ var AccountRibbon = (function (window, document) {
 //********************public methods***************
     return {
         overridedeactivatebtn: overridedeactivatebtn,
-        isTDG_QA: isTDG_QA,
-        isActiveWorkOrder: isActiveWorkOrder
+        isActiveWorkOrder: isActiveWorkOrder,
+        isTDG_QA: isTDG_QA
+        
     };
 })(window, document);
