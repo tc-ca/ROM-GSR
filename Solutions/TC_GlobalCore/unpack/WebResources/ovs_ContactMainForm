@@ -1,4 +1,4 @@
-﻿var globalFormContext;
+var globalFormContext;
 
 const TabNames = {
     TAB_SUMMARY: "SUMMARY_TAB",
@@ -17,6 +17,7 @@ const SummarySections = {
     Timeline: "SOCIAL_PANE_TAB",
     Assistant: "Summary_section_6",
     Company: "CUSTOMER_DETAILS_TAB",
+    Account: "ACCOUNTS_TAB",
     Map: "MapSection",
     BusinessCard: "BusinessCard"
 };
@@ -68,11 +69,13 @@ function hideAllActionTypeSections(formContext, currentUserRoles) {
     if (currentUserRoles && currentUserRoles.find(r => r.name === "System Administrator")) isSysAdmin = true;
 
     glHelper.SetTabVisibility(formContext, TabNames.TAB_SUMMARY, true);
-    glHelper.SetTabVisibility(formContext, TabNames.TAB_DETAIL, true);
+    glHelper.SetTabVisibility(formContext, TabNames.TAB_DETAIL, isSysAdmin);
     glHelper.SetTabVisibility(formContext, TabNames.TAB_SCHEDULING, false);
     glHelper.SetTabVisibility(formContext, TabNames.TAB_FILES, false);
 
     glHelper.SetSectionVisibility(formContext, TabNames.TAB_SUMMARY, SummarySections.ContactInformation, true);
+        if (formContext.ui.tabs.get(TabNames.TAB_SUMMARY).sections.get(SummarySections.Account))
+            glHelper.SetSectionVisibility(formContext, TabNames.TAB_SUMMARY, SummarySections.Account, true);
     glHelper.SetSectionVisibility(formContext, TabNames.TAB_SUMMARY, SummarySections.Timeline, isSysAdmin);
     glHelper.SetSectionVisibility(formContext, TabNames.TAB_SUMMARY, SummarySections.Assistant, isSysAdmin);
     glHelper.SetSectionVisibility(formContext, TabNames.TAB_SUMMARY, SummarySections.Company, isSysAdmin);

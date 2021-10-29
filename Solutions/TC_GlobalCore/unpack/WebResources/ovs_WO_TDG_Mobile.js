@@ -217,6 +217,15 @@ var WO_TDG_main = (function (window, document) {
             primaryInspector.removeOnChange(WO_TDG_main.PrimaryInspector_OnChange);
             primaryInspector.addOnChange(WO_TDG_main.PrimaryInspector_OnChange);
 
+            // Filter WO_SystemStatus (hide "Open - In Progress")
+            WO_TDG_main.WO_SystemStatus_FilterOptionSet(formContext);
+
+            //operation
+            var operation = formContext.getAttribute("ovs_mocoperationid");
+            operation.removeOnChange(WO_TDG_main.Operation_OnChange);
+            operation.addOnChange(WO_TDG_main.Operation_OnChange);
+
+
             //on create
             if (formType == 1) {
 
@@ -234,7 +243,7 @@ var WO_TDG_main = (function (window, document) {
             //on update etc
             if (formType > 1) {
                 //set global object fo contact quick create form
-                site.fireOnChange();
+                site.fireOnChange();                
 
                 //refresh the COC tab
                 var cocTab = formContext.ui.tabs.get("tab_ConfirmationOfCompliances");
@@ -244,6 +253,12 @@ var WO_TDG_main = (function (window, document) {
 
             // Set Oversight Activity field as Mandatory
             glHelper.SetRequiredLevel(formContext, "ovs_oversighttype", true);
+
+            // make Operation required -> move to designer once testing is done 
+            glHelper.SetRequiredLevel(formContext, "ovs_mocoperationid", true);
+            //pre-filter Oversith Type and Region
+            operation.fireOnChange();
+
         },
 
         OnConfirmationOfCompliance_StateChange: function (executionContext) {
@@ -590,23 +605,25 @@ var WO_TDG_main = (function (window, document) {
             var formContext = executionContext.getFormContext();
             var systemStatus = formContext.getAttribute("msdyn_systemstatus").getValue();
 
-            var messageClosePostedFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.SetClosedPosted.Error");
-            var messageOpenCompletedFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.SetOpenCompleted.Error");
 
-
-            //If system status is set to cmpleted or closed
-            if (systemStatus == 690970003 || systemStatus == 690970004) {
+            //If system status is set to completed, closed or canceled check business logic called via custom action.
+            if (systemStatus == 690970003 || systemStatus == 690970004 || systemStatus == 690970005) {
                 var parameters = {};
                 parameters.woId = formContext.data.entity.getId().replace("{", "").replace("}", "");
+                parameters.targetedSystemStatus = systemStatus.toString();
 
                 var ovs_WO_StatusChangePostRequest = {
                     woId: parameters.woId,
-
+                    targetedSystemStatus: parameters.targetedSystemStatus,
                     getMetadata: function () {
                         return {
                             boundParameter: null,
                             parameterTypes: {
                                 "woId": {
+                                    "typeName": "Edm.String",
+                                    "structuralProperty": 1
+                                },
+                                "targetedSystemStatus": {
                                     "typeName": "Edm.String",
                                     "structuralProperty": 1
                                 }
@@ -623,15 +640,9 @@ var WO_TDG_main = (function (window, document) {
                             result.json().then(
                                 function (responseBody) {
 
-                                    if (responseBody.isValidToClose == false) {
+                                    if (responseBody.isValidToSave == false) {
                                         glHelper.SetValue(formContext, "msdyn_systemstatus", null);
-                                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageClosePostedFailed });
-                                    }
-                                    else if (responseBody.isValidToBeCompleted == false) {
-
-                                        glHelper.SetValue(formContext, "msdyn_systemstatus", null);
-                                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageOpenCompletedFailed });
-
+                                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: responseBody.message });
                                     }
                                     else {
                                         //If system status is set to closed
@@ -655,6 +666,16 @@ var WO_TDG_main = (function (window, document) {
                 //Keep record Active
                 formContext.getAttribute("statecode").setValue(0);
                 formContext.getAttribute("statuscode").setValue(1);
+            }
+        },
+
+        WO_SystemStatus_FilterOptionSet: function (formContext) {
+
+
+            ////msdyn_systemstatus - filter OptionSet (hide "Open - In Progress")
+            if (formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
+                var options = new Array(); options[0] = 690970002;
+                glHelper.filterOptionSet(formContext, "msdyn_systemstatus", options, false);
             }
         },
 
@@ -805,6 +826,64 @@ var WO_TDG_main = (function (window, document) {
 
             //Xrm.Utility.closeProgressIndicator();
             return isValid;
+        },
+
+        filterOversigthType: function () {
+            
+            var filter = "<filter type='and'><condition attribute='accountcategorycode' operator='eq' value='1'/></filter>";
+            formContext.getControl("ovs_oversighttype").addCustomFilter(filter, "ovs_oversighttype");
+        },
+
+        filterRegion: function () {
+
+            var filter = "<filter type='and'><condition attribute='accountcategorycode' operator='eq' value='1'/></filter>";
+            formContext.getControl("msdyn_serviceterritory").addCustomFilter(filter, "territory");
+        },
+
+        Operation_OnChange: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+
+            //------------  add pre-filter for Oversight Type ---------------------//
+
+            //if selected operation has a Operation Type value of HOTI, then the Oversight Types should be filtered to only those with the English name starting with "GC"
+
+            //add hoti related OperationType optionset values
+            var hoti = new Array();//array of integers
+
+            //if selected operation has a Operation Type value of Civil Aviation Document Review, then Oversight Types should be filtered so that Civil Aviation Document Review is the only Oversight Type.
+            //add Civil Aviation related OperationType optionset values
+            var avion = new Array();//array of integers
+
+
+            //ELSE
+            //the Oversight Types should be filtered to only those with the English name starting with "MOC".
+            //add MOC related OperationType optionset values
+            var MOCs = new Array();//array of integers
+
+
+            var operation = formContext.getAttribute("ovs_mocoperationid").getValue();
+            if (operation === null || operation === undefined) return;
+
+            //get Operation type and add pre-search on callback using arrays then add presearch
+
+            formContext.getControl("ovs_oversighttype").addPreSearch(Sdk.filterCustomerAccounts);
+
+            //-------------   end pre-filter for Oversight Type ------------//
+
+            //-------------  add pre-filter for Region ---------------------//
+
+            //if selected operation has a Line of Business value of TDG Region, then HQ-ES should be filtered out of the Work Order region lookup list 
+
+            //if the operation has a Line of Business value of Engineering Services, then HQ - EQ should be automatically selected as the Work Order Region
+
+
+
+
+
+             //-------------  end pre-filter for Region ---------------------//
+
+
         },
 
         errorObject: errorObject,

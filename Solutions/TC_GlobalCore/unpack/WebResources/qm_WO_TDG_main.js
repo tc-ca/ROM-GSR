@@ -1,4 +1,4 @@
-///<reference path="../../Utilities/GlobalHelper.js"/>
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
 ///<reference path="../../Utilities/questionnaireFunctions.js"/>
 var QuickCreateHelper = QuickCreateHelper || {};
 window.top.QuickCreateHelper = QuickCreateHelper;
@@ -184,9 +184,6 @@ var WO_TDG_main = (function (window, document) {
                 resexResourceName = "ovs_Labels.1036.resx";
 
 
-            // make Operation required -> move to designer once testing is done 
-            glHelper.SetRequiredLevel(formContext, "ovs_mocoperationid", true);
-
             //rational
             var rational = formContext.getAttribute("ovs_rational");
             rational.removeOnChange(WO_TDG_main.Rational_OnChange);
@@ -197,6 +194,11 @@ var WO_TDG_main = (function (window, document) {
             var fy = formContext.getAttribute("ovs_fiscalyear");
             fy.removeOnChange(WO_TDG_main.FiscalYearOnchange);
             fy.addOnChange(WO_TDG_main.FiscalYearOnchange);
+
+            //only on update should user be able to make change to system status
+             if (formType < 2) {
+               glHelper.SetDisabled(formContext, "msdyn_systemstatus", true);
+             }
 
             //wo status - validation will work online only!
             if (!isOffLine) {
@@ -598,7 +600,7 @@ var WO_TDG_main = (function (window, document) {
 
 
             //If system status is set to completed, closed or canceled check business logic called via custom action.
-            if (systemStatus == 690970003 || systemStatus == 690970004 || systemStatus == 690970005) {
+            if (systemStatus == 690970003 || systemStatus == 690970004 || systemStatus == 690970005 ) {
                 var parameters = {};
                 parameters.woId = formContext.data.entity.getId().replace("{", "").replace("}", "");
                 parameters.targetedSystemStatus = systemStatus.toString();
@@ -633,7 +635,7 @@ var WO_TDG_main = (function (window, document) {
 
                                     if (responseBody.isValidToSave == false) {
                                         glHelper.SetValue(formContext, "msdyn_systemstatus", null);
-                                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: responseBody.message });
+                                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: responseBody.message  });
                                     }
                                     else {
                                         //If system status is set to closed
@@ -662,12 +664,12 @@ var WO_TDG_main = (function (window, document) {
 
         WO_SystemStatus_FilterOptionSet: function (formContext) {
 
-
-            ////msdyn_systemstatus - filter OptionSet (hide "Open - In Progress")
-            if (formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
-                var options = new Array(); options[0] = 690970002;
-                glHelper.filterOptionSet(formContext, "msdyn_systemstatus", options, false);
-            }
+                           
+                            ////msdyn_systemstatus - filter OptionSet (hide "Open - In Progress")
+                            if (formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
+                                var options = new Array(); options[0] = 690970002;
+                                glHelper.filterOptionSet(formContext, "msdyn_systemstatus", options, false);
+                            }
         },
 
         ReportDataValidate: function (formContext) {
