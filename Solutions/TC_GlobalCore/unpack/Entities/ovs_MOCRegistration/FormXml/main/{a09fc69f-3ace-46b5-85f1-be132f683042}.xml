@@ -5,7 +5,7 @@
     <IntroducedVersion>1.0.0.1</IntroducedVersion>
     <FormPresentation>1</FormPresentation>
     <FormActivationState>1</FormActivationState>
-    <form headerdensity="HighWithControls">
+    <form headerdensity="HighWithControls" shownavigationbar="true" showImage="false" maxWidth="1920">
       <tabs>
         <tab verticallayout="true" id="{0b52e8b7-4c54-45b9-8320-a991567a9562}" IsUserDefined="1">
           <labels>
@@ -40,12 +40,12 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{c93b371e-cc1c-46d0-aabf-f37316968f16}" locklevel="0" colspan="1" rowspan="1">
+                      <cell id="{c93b371e-cc1c-46d0-aabf-f37316968f16}" locklevel="0" colspan="1" rowspan="1" showlabel="true">
                         <labels>
                           <label description="Operation Type" languagecode="1033" />
                           <label description="Type d'opération" languagecode="1036" />
                         </labels>
-                        <control id="ovs_operationtype" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="ovs_operationtype" disabled="false" />
+                        <control id="ovs_operationtype" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="ovs_operationtype" disabled="false" uniqueid="{d2059b79-807e-7732-da4e-29a74a6d0aca}" />
                       </cell>
                     </row>
                     <row>
@@ -461,7 +461,7 @@
         </rows>
       </footer>
       <Navigation>
-        <NavBar />
+        <NavBar></NavBar>
         <NavBarAreas>
           <NavBarArea Id="Info">
             <Titles>
@@ -499,6 +499,11 @@
         <event name="onload" application="true" active="true">
           <Handlers>
             <Handler functionName="OnLoad" libraryName="ovs_moc_mainform" handlerUniqueId="{656a2259-59cd-4e1e-83b8-c4a5ee02d6b7}" enabled="true" parameters="" passExecutionContext="true" />
+          </Handlers>
+        </event>
+        <event name="onchange" application="false" active="false" attribute="ovs_operationtype">
+          <Handlers>
+            <Handler functionName="OperationType_OnChange" libraryName="ovs_moc_mainform" handlerUniqueId="{a2bc80da-010b-3a51-2514-c14c1c6b23c0}" enabled="true" parameters="" passExecutionContext="true" />
           </Handlers>
         </event>
       </events>

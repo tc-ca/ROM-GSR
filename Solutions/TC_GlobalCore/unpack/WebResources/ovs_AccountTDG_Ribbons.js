@@ -2,7 +2,7 @@
 
 var AccountRibbon = (function (window, document) {
 
-     //variables
+    //variables
     var TDG_QA = "TDG QA";
     //state object 
     var stask = {};
@@ -19,12 +19,17 @@ var AccountRibbon = (function (window, document) {
     // Temporarry: show Deactivation button for the specific user role (TDG QA)
     function isTDG_QA(context) {
         var roles = Xrm.Utility.getGlobalContext().userSettings.roles;
-       // var enable = false;
+        // var enable = false;
 
         roles.forEach(function (item) {
             if (item.name == TDG_QA) enableFromUser = true;
         });
         return enableFromUser && enable;
+    }
+
+    function HideOOBDeactivationButton(primaryControl) {
+
+        return true;
     }
 
     function isActiveWorkOrder(primaryControl) {
@@ -39,7 +44,7 @@ var AccountRibbon = (function (window, document) {
         var isOffLine = glHelper.isOffline(formContext);
         var clientType = glHelper.getClientType(formContext);
         var currentWebApi;
-       
+
         if (isOffLine && clientType > 0) {
             //mobile or outlook, offline first
             currentWebApi = Xrm.WebApi.offline;
@@ -92,7 +97,7 @@ var AccountRibbon = (function (window, document) {
             //web, online
             currentWebApi = Xrm.WebApi.online;
         }
-    // Get account GUID 
+        // Get account GUID 
         var accountid = formContext.data.entity.getId().replace("{", "").replace("}", "");
         try {
             // Get all active operations associated with this account
@@ -124,7 +129,7 @@ var AccountRibbon = (function (window, document) {
                                 setTimeout(function () {
                                     Xrm.Utility.closeProgressIndicator();
                                 }, 1000);
-                                
+
                             }
                             //  Mscrm.CommandBarActions.changeState(parm1, parm2, parm3);
                         });
@@ -155,11 +160,12 @@ var AccountRibbon = (function (window, document) {
         //sync save
         formContext.data.entity.save();
     }
-//********************public methods***************
+    //********************public methods***************
     return {
         overridedeactivatebtn: overridedeactivatebtn,
         isActiveWorkOrder: isActiveWorkOrder,
-        isTDG_QA: isTDG_QA
-        
+        isTDG_QA: isTDG_QA,
+        HideOOBDeactivationButton: HideOOBDeactivationButton
+
     };
 })(window, document);
