@@ -1,5 +1,14 @@
 ﻿var globalFormContext;
 
+const FIELD_OPERATION_TYPE = "ovs_operationtype";
+const FIELD_MOC_REGISTRATION_ID = "ovs_mocregistrationname";
+const FIELD_MOC_FACILITY_TYPE = "ovs_operationfacilitytype";
+const FIELD_MOC_REGISTRATION_EXPIRY_DATE = "ovs_registrationexpiry";
+const FIELD_MOC_REGISTRATION_INITIAL_DATE = "ovs_mocinitialregistrationdate";
+
+const VALUE_HOTI = 918640038;
+const VALUE_CIV_AV = 918640040
+
 async function OnLoad(executionContext) {
 
     //get context
@@ -9,6 +18,9 @@ async function OnLoad(executionContext) {
 
     var formContext = executionContext.getFormContext();
     formContextGlobalRef = formContext;
+
+    //Toggle required level based on Operation Type
+    toggleRequiredLevel(formContext);
    
     if (this.hasCurrentUserRole("TDG QA")) {
         glHelper.SetTabVisibility(formContext, "operations_profile", true);
@@ -46,4 +58,28 @@ function hasCurrentUserRole(roleName) {
 
 function OnSave(executionContext) {
 
+}
+
+function toggleRequiredLevel(formContext)
+{
+
+    var operationType = glHelper.GetValue(formContext, FIELD_OPERATION_TYPE);
+    var fieldsRequired = true;
+
+    if (operationType == VALUE_CIV_AV || operationType == VALUE_HOTI)
+        fieldsRequired = false;
+
+    glHelper.SetRequiredLevel(formContext, FIELD_OPERATION_TYPE, fieldsRequired);
+    glHelper.SetRequiredLevel(formContext, FIELD_MOC_FACILITY_TYPE, fieldsRequired);
+    glHelper.SetRequiredLevel(formContext, FIELD_MOC_REGISTRATION_EXPIRY_DATE, fieldsRequired);
+    glHelper.SetRequiredLevel(formContext, FIELD_MOC_REGISTRATION_ID, fieldsRequired);
+    glHelper.SetRequiredLevel(formContext, FIELD_MOC_REGISTRATION_INITIAL_DATE, fieldsRequired);
+
+}
+
+function OperationType_OnChange(executionContext)
+{
+    var formContext = executionContext.getFormContext();
+
+    toggleRequiredLevel(formContext);
 }

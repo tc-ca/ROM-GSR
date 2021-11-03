@@ -12,19 +12,20 @@ var AccountRibbon = (function (window, document) {
     //this variable stores if async operation was already completed
     var isAsyncOperationCompleted = false;
     //this variable stores the result - if button enabled or not
-    var enableFromUser = false;
+    var enableFromUser = true;
     var enable = false;
 
     //********************private methods*******************
     // Temporarry: show Deactivation button for the specific user role (TDG QA)
     function isTDG_QA(context) {
         var roles = Xrm.Utility.getGlobalContext().userSettings.roles;
-        // var enable = false;
-
+        
         roles.forEach(function (item) {
             if (item.name == TDG_QA) enableFromUser = true;
         });
-        return enableFromUser && enable;
+        // Return enableFromUser - is a temporary solution to show a custom deactivation button for the QA security role only. Keep this function in case we need hide/show it again
+        //return enableFromUser && enable;
+         return true && enable;
     }
 
     function HideOOBDeactivationButton(primaryControl) {
@@ -37,7 +38,7 @@ var AccountRibbon = (function (window, document) {
         if (primaryControl == null) return;
         if (enableFromUser == false) return;
         if (isAsyncOperationCompleted) {
-            return enableFromUser && enable;
+            return true && enable;
         }
 
         const formContext = primaryControl;
