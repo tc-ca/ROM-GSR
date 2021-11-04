@@ -1,0 +1,43 @@
+var globalFormContext;
+
+const FIELD_OPERATION_TYPE = "ovs_operationtype";
+const FIELD_MOC_REGISTRATION_ID = "ovs_mocregistrationname";
+const FIELD_MOC_FACILITY_TYPE = "ovs_operationfacilitytype";
+const FIELD_MOC_REGISTRATION_EXPIRY_DATE = "ovs_registrationexpiry";
+const FIELD_MOC_REGISTRATION_INITIAL_DATE = "ovs_mocinitialregistrationdate";
+
+const VALUE_HOTI   = 918640038;
+const VALUE_CIV_AV = 918640040
+
+
+function OnLoad(executionContext)
+{
+    //get context
+    globalContext = glHelper.getGlobalContext();
+    var formContext = executionContext.getFormContext();
+    globalFormContext = formContext;
+
+    // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+    let formType = glHelper.GetFormType(formContext);
+
+    //hide all sections on load, required section to be determined
+    hideShowFields(formContext);
+
+}
+
+function hideShowFields(formContext)
+{
+    
+    var operationType = glHelper.GetValue(formContext, FIELD_OPERATION_TYPE);
+    var fieldsRequired = true;
+
+    if (operationType == VALUE_CIV_AV || operationType == VALUE_HOTI)
+        fieldsRequired = false;
+
+    glHelper.SetRequiredLevel(formContext, FIELD_OPERATION_TYPE, fieldsRequired);
+    glHelper.SetRequiredLevel(formContext, FIELD_MOC_FACILITY_TYPE, fieldsRequired);
+    glHelper.SetRequiredLevel(formContext, FIELD_MOC_REGISTRATION_EXPIRY_DATE, fieldsRequired);
+    glHelper.SetRequiredLevel(formContext, FIELD_MOC_REGISTRATION_ID, fieldsRequired);
+    glHelper.SetRequiredLevel(formContext, FIELD_MOC_REGISTRATION_INITIAL_DATE, fieldsRequired);
+
+}
