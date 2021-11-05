@@ -34,8 +34,8 @@ stages:
         existsVariableName: 'PatchExists'
         patchVariableName: 'LatestPatchName'
     - powershell: |
-        Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.PatchExists]$(PatchExists)"
-        Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.LatestPatchName]$(LatestPatchName)"
+        Write-Host "##vso[task.setvariable variable=PatchExists]$(PatchExists)"
+        Write-Host "##vso[task.setvariable variable=LatestPatchName]$(LatestPatchName)"
         Write-Host "Patch Exists =  $(PatchExists)"
         Write-Host "Latest Patch Name =  $(LatestPatchName)"
         Write-Host "${{ eq('$(PatchExists)', 'False') }}"
@@ -70,7 +70,7 @@ stages:
     - template: ../task/GetSolutionVersion.yml
       parameters:
         Solutions:
-          - "$(LatestPatchName)"
+          - variables['LatestPatchName']
         ConnectionString: ${{Parameters.ConnectionString}}
         EnvironmentName: ${{Parameters.EnvironmentName}}
     - task: PowerShell@2
