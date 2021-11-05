@@ -68,10 +68,10 @@ stages:
           }
         failOnStderr: true
     - task: MSCRMGetSolution@12
-      displayName: 'Get Patch: ${LatestPatchName} - ${{ parameters.EnvironmentName }}'
+      displayName: 'Get Patch: $(LatestPatchName) - ${{ parameters.EnvironmentName }}'
       inputs:
         crmConnectionString: '${{ parameters.ConnectionString }}'
-        solutionName: '${LatestPatchName}'
+        solutionName: '$(LatestPatchName)'
         existsVariableName: 'SolutionExists'
         versionVariableName: 'SolutionVersion'
         displayVariableName: 'SolutionDisplayName'
@@ -87,4 +87,4 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          Write-Host "Current ${{Parameters.SolutionName}} Version: ${env:SOLUTIONVERSION}"
+          Write-Host "Current ${{Parameters.SolutionName}} Patch Version: ${env:SOLUTIONVERSION}"
