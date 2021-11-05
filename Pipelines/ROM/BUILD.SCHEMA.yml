@@ -23,14 +23,14 @@ stages:
 
 #get the current solution version from dynamics
 #version stored into environment variable ${env:SOLUTIONVERSION}
-- template: templates/Template_GetCurrentSolutionVersion.yml  # Template reference
+- template: templates/stage/GetCurrentSolutionVersion.yml  # Template reference
   parameters:
     StageName: 'GetCurrentSolutionVersion'
     SolutionName: $(SolutionName)
     ConnectionString: $(ConnectionStringDev)
 
 #update the build name with the current patch version being deployed 
-- template: templates/Template_UpdateBuildVersion.yml  # Template reference
+- template: templates/stage/Template_UpdateBuildVersion.yml  # Template reference
   parameters:
     StageName: 'UpdateBuildVersion'
     VersionNumber: $(SolutionVersion)

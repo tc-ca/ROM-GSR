@@ -65,14 +65,14 @@ stages:
         Write-Host "Latest Patch Name =  $(LatestPatchName)"
         Write-Host "${{ eq('$(PatchExists)', 'False') }}"
         Write-Host variables['task.GetLatestPatchTask.PatchExists']
-- template: templates/Template_CommitSolution.yml  # Template reference
+- template: templates/stage/Template_CommitSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_Dev)
     StageName: 'BuildAndPublishArtifacts'
     dependsOn: 
     - 'RollupSolutionOnDev'
-- template: templates/Template_DeployHoldingSolution.yml  # Template reference
+- template: templates/stage/Template_DeployHoldingSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_QA)
@@ -80,14 +80,14 @@ stages:
     StageName: 'DeployManagedSolutionToQA'
     dependsOn: 
     - 'BuildAndPublishArtifacts'
-- template: templates/Template_PatchSolution.yml  # Template reference
+- template: templates/stage/Template_PatchSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     ConnectionString: $(Pipeline_ConnectionStringDev)
     StageName: 'CreatePatchOnDev'
     dependsOn: 
     - 'DeployManagedSolutionToQA'
-- template: templates/Template_DeploySolution.yml  # Template reference
+- template: templates/stage/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_ACCDATA)
@@ -96,7 +96,7 @@ stages:
     DeployUnmanagedSolution: true
     dependsOn: 
     - 'DeployManagedSolutionToQA'
-- template: templates/Template_DeployHoldingSolution.yml  # Template reference
+- template: templates/stage/Template_DeployHoldingSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_ACC)
@@ -104,7 +104,7 @@ stages:
     StageName: 'DeployManagedSolutionToACC'
     dependsOn: 
     - 'DeployManagedSolutionToQA'
-- template: templates/Template_DeployHoldingSolution.yml  # Template reference
+- template: templates/stage/Template_DeployHoldingSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
@@ -112,7 +112,7 @@ stages:
     StageName: 'DeployManagedSolutionToPREPROD'
     dependsOn: 
     - 'DeployManagedSolutionToQA'
-- template: templates/Template_DeployHoldingSolution.yml  # Template reference
+- template: templates/stage/Template_DeployHoldingSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_PROD)

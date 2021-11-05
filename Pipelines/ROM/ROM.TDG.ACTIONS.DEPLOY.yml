@@ -60,13 +60,13 @@ stages:
       inputs:
         targetType: 'inline'
         script: 'env | sort'
-- template: templates/Template_UpdateBuildVersion.yml  # Template reference
+- template: templates/stage/Template_UpdateBuildVersion.yml  # Template reference
   parameters:
     StageName: 'UpdateBuildVersion'
     VersionNumber: variables['VersionNumber']
     dependsOn: 
     - 'UpdateBuildNumber'
-- template: templates/Template_CommitSolution.yml  # Template reference
+- template: templates/stage/Template_CommitSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_Dev)
@@ -74,7 +74,7 @@ stages:
     dependsOn: 
     - 'UpdateBuildVersion'
 #QA
-- template: templates/Template_DeploySolution.yml  # Template reference
+- template: templates/stage/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_QA)
@@ -84,7 +84,7 @@ stages:
     dependsOn: 
     - 'BuildAndPublishArtifacts'
 #ACC
-- template: templates/Template_DeploySolution.yml  # Template reference
+- template: templates/stage/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_ACC)
@@ -93,7 +93,7 @@ stages:
     dependsOn: 
     - 'DeployManagedSolutionToQA'
 #ACCDATA
-- template: templates/Template_DeploySolution.yml  # Template reference
+- template: templates/stage/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_ACCDATA)
@@ -103,7 +103,7 @@ stages:
     dependsOn: 
     - 'DeployManagedSolutionToQA'
 #PREPROD
-- template: templates/Template_DeploySolution.yml  # Template reference
+- template: templates/stage/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
@@ -112,7 +112,7 @@ stages:
     dependsOn: 
     - 'DeployManagedSolutionToQA'
 #PROD
-- template: templates/Template_DeploySolution.yml  # Template reference
+- template: templates/stage/Template_DeploySolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_PROD)
