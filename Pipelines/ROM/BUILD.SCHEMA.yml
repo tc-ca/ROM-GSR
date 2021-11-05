@@ -1,0 +1,85 @@
+trigger: none
+pr: none
+
+variables:
+  - name: PowerPlatformSPN_Dev
+    value: 'TDGCORE-DEV'
+  - name: PowerPlatformSPN_QA
+    value: 'ROM QA TDG'
+  - name: PowerPlatformSPN_ACC
+    value: 'ROM ACC TDG'
+  - name: PowerPlatformSPN_ACCDATA
+    value: 'ROM ACC TDG DATA'
+  - name: PowerPlatformSPN_PREPROD
+    value: 'ROM PREPROD TDG'
+  - name: PowerPlatformSPN_PROD
+    value: 'ROM PROD TDG'
+  - name: SolutionName
+    value: 'TC_GlobalCore'
+
+name: #Set Dynamically in Pipeline
+
+stages:
+
+#get the current solution version from dynamics
+#version stored into environment variable ${env:SOLUTIONVERSION}
+- template: templates/Template_GetCurrentSolutionVersion.yml  # Template reference
+  parameters:
+    StageName: 'GetCurrentSolutionVersion'
+    SolutionName: $(SolutionName)
+    ConnectionString: $(ConnectionStringDev)
+
+#update the build name with the current patch version being deployed 
+- template: templates/Template_UpdateBuildVersion.yml  # Template reference
+  parameters:
+    StageName: 'UpdateBuildVersion'
+    VersionNumber: $(SolutionVersion)
+    dependsOn: 
+    - 'GetCurrentSolutionVersion'
+
+#deploy the patch to QA
+#- template: templates/Template_DeploySolution.yml  # Template reference
+#  parameters:
+#    SolutionName: $(SolutionName)
+#    PowerPlatformSPN: $(PowerPlatformSPN_QA)
+#    PowerPlatformSPN_Dev: $(PowerPlatformSPN_Dev) #used to update solution version after successful deployment to QA
+#    Environment: 'QA-TDG'
+#    StageName: 'DeployManagedSolutionToQA'
+#    dependsOn: 
+#    - 'GetCurrentSolutionVersion'
+#
+##    
+#- template: templates/Template_CommitSolution.yml  # Template reference
+#  parameters:
+#    SolutionName: $(SolutionName)
+#    PowerPlatformSPN: $(PowerPlatformSPN_Dev)
+#    StageName: 'BuildAndPublishArtifacts'
+#    dependsOn: 
+#    - 'DeployManagedSolutionToQA'
+##ACC
+#- template: templates/Template_DeploySolution.yml  # Template reference
+#  parameters:
+#    SolutionName: $(SolutionName)
+#    PowerPlatformSPN: $(PowerPlatformSPN_ACC)
+#    Environment: 'ACC-TDG'
+#    StageName: 'DeployManagedSolutionToACC'
+#    dependsOn: 
+#    - 'DeployManagedSolutionToQA'
+##PREPROD
+#- template: templates/Template_DeploySolution.yml  # Template reference
+#  parameters:
+#    SolutionName: $(SolutionName)
+#    PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
+#    Environment: 'PREPROD-TDG'
+#    StageName: 'DeployManagedSolutionToPREPROD'
+#    dependsOn: 
+#    - 'DeployManagedSolutionToQA'
+##PROD
+#- template: templates/Template_DeploySolution.yml  # Template reference
+#  parameters:
+#    SolutionName: $(SolutionName)
+#    PowerPlatformSPN: $(PowerPlatformSPN_PROD)
+#    Environment: 'PROD-TDG'
+#    StageName: 'DeployManagedSolutionToPROD'
+#    dependsOn: 
+#    - 'DeployManagedSolutionToQA'

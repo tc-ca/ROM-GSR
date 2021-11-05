@@ -10,7 +10,7 @@ parameters:
     type: string
   - name: EnvironmentName
     type: string
-    default: 'DEV-TDG'  
+    default: 'TDGCORE-DEV'  
 stages:
 - stage: ${{Parameters.StageName}}
   dependsOn:
@@ -38,8 +38,3 @@ stages:
         targetType: 'inline'
         script: |
           Write-Host "Current ${{Parameters.SolutionName}} Version: ${env:SOLUTIONVERSION}"
-    - task: Bash@3
-      displayName: "Print All Environment Variables"
-      inputs:
-        targetType: 'inline'
-        script: 'env | sort'
