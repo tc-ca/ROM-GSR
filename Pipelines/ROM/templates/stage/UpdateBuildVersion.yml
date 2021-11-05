@@ -17,11 +17,12 @@ stages:
   jobs:
   - job: ${{Parameters.StageName}}
     steps:
+      - checkout: none
       - task: PowerShell@2
         displayName: Set the name of the build to next solution version
         inputs:
           targetType: 'inline'
           script: |
-            [string] $buildName = "$(VersionNumber)"
+            [string] $buildName = "${env:PATCHVERSION}"
             Write-Host "Setting the name of the build to '$buildName'."
             Write-Host "##vso[build.updatebuildnumber]$buildName"
