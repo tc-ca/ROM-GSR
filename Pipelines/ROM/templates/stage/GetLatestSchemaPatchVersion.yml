@@ -79,8 +79,8 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          Write-Host "##vso[task.setvariable variable=${{ SolutionName }}PatchVersion;]$(SolutionVersion)"
-          Write-Host "Set ${{ SolutionName }}Version environment variable to $(SolutionVersion)"
+          Write-Host "##vso[task.setvariable variable=${{Parameters.SolutionName}}PatchVersion;]$(SolutionVersion)"
+          Write-Host "Set ${{Parameters.SolutionName}}PatchVersion environment variable to $(SolutionVersion)"
         pwsh: true
     - task: PowerShell@2
       displayName: "Print Current Solution Version"
