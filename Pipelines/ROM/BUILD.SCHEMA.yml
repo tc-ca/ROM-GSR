@@ -3,7 +3,7 @@ pr: none
 
 variables:
   - name: PowerPlatformSPN_Dev
-    value: 'TDGCORE-DEV'
+    value: 'ROM DEV TDG'
   - name: PowerPlatformSPN_QA
     value: 'ROM QA TDG'
   - name: PowerPlatformSPN_ACC
@@ -23,18 +23,18 @@ stages:
 
 #get the current solution version from dynamics
 #version stored into environment variable ${env:SOLUTIONVERSION}
-- template: templates/stage/GetCurrentSolutionVersion.yml  # Template reference
+- template: templates/stage/GetLatestSchemaPatchVersion.yml  # Template reference
   parameters:
     StageName: 'GetCurrentSolutionVersion'
     SolutionName: $(SolutionName)
     ConnectionString: $(ConnectionStringDev)
 
 #update the build name with the current patch version being deployed 
-- template: templates/stage/UpdateBuildVersion.yml  # Template reference
-  parameters:
-    StageName: 'UpdateBuildVersion'
-    VersionNumber: $(SolutionVersion)
-    dependsOn: 
+#- template: templates/stage/UpdateBuildVersion.yml  # Template reference
+#  parameters:
+#    StageName: 'UpdateBuildVersion'
+#    VersionNumber: $(SolutionVersion)
+#    dependsOn: 
 
 #deploy the patch to QA
 #- template: templates/DeploySolution.yml  # Template reference
