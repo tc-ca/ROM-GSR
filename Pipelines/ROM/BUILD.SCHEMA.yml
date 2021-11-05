@@ -30,14 +30,14 @@ stages:
     ConnectionString: $(ConnectionStringDev)
 
 #update the build name with the current patch version being deployed 
-- template: templates/stage/Template_UpdateBuildVersion.yml  # Template reference
+- template: templates/stage/UpdateBuildVersion.yml  # Template reference
   parameters:
     StageName: 'UpdateBuildVersion'
     VersionNumber: $(SolutionVersion)
     dependsOn: 
 
 #deploy the patch to QA
-#- template: templates/Template_DeploySolution.yml  # Template reference
+#- template: templates/DeploySolution.yml  # Template reference
 #  parameters:
 #    SolutionName: $(SolutionName)
 #    PowerPlatformSPN: $(PowerPlatformSPN_QA)
@@ -48,7 +48,7 @@ stages:
 #    - 'GetCurrentSolutionVersion'
 #
 ##    
-#- template: templates/Template_CommitSolution.yml  # Template reference
+#- template: templates/CommitSolution.yml  # Template reference
 #  parameters:
 #    SolutionName: $(SolutionName)
 #    PowerPlatformSPN: $(PowerPlatformSPN_Dev)
@@ -56,7 +56,7 @@ stages:
 #    dependsOn: 
 #    - 'DeployManagedSolutionToQA'
 ##ACC
-#- template: templates/Template_DeploySolution.yml  # Template reference
+#- template: templates/DeploySolution.yml  # Template reference
 #  parameters:
 #    SolutionName: $(SolutionName)
 #    PowerPlatformSPN: $(PowerPlatformSPN_ACC)
@@ -65,7 +65,7 @@ stages:
 #    dependsOn: 
 #    - 'DeployManagedSolutionToQA'
 ##PREPROD
-#- template: templates/Template_DeploySolution.yml  # Template reference
+#- template: templates/DeploySolution.yml  # Template reference
 #  parameters:
 #    SolutionName: $(SolutionName)
 #    PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
@@ -74,7 +74,7 @@ stages:
 #    dependsOn: 
 #    - 'DeployManagedSolutionToQA'
 ##PROD
-#- template: templates/Template_DeploySolution.yml  # Template reference
+#- template: templates/DeploySolution.yml  # Template reference
 #  parameters:
 #    SolutionName: $(SolutionName)
 #    PowerPlatformSPN: $(PowerPlatformSPN_PROD)
