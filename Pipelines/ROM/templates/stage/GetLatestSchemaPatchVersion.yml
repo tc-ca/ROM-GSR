@@ -40,6 +40,7 @@ stages:
         Write-Host "Latest Patch Name =  $(LatestPatchName)"
         Write-Host "${{ eq('$(PatchExists)', 'False') }}"
     - task: PowerShell@2
+      name: "Check for Patch"
       inputs:
         targetType: 'inline'
         script: |
@@ -68,7 +69,7 @@ stages:
           }
         failOnStderr: true
     - task: MSCRMGetSolution@12
-      displayName: "Get variables['LatestPatchName']"
+      displayName: "Get Latest Patch"
       inputs:
         crmConnectionString: '${{ parameters.ConnectionString }}'
         solutionName: '$(LatestPatchName)'
