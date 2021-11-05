@@ -3,7 +3,7 @@ pr: none
 
 variables:
   - name: PowerPlatformSPN_Dev
-    value: 'TDGCORE-DEV'
+    value: 'ROM DEV TDG'
   - name: PowerPlatformSPN_QA
     value: 'ROM QA TDG'
   - name: PowerPlatformSPN_ACC
@@ -23,7 +23,7 @@ stages:
 
 #get the current solution version from dynamics
 #version stored into environment variable ${env:SOLUTIONVERSION}
-- template: templates/stage/GetCurrentSolutionVersion.yml  # Template reference
+- template: templates/stage/GetLatestSchemaPatchVersion.yml  # Template reference
   parameters:
     StageName: 'GetCurrentSolutionVersion'
     SolutionName: $(SolutionName)
