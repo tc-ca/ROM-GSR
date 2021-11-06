@@ -29,14 +29,6 @@ stages:
     SolutionName: $(SolutionName)
     ConnectionString: $(ConnectionStringDev)
 
-#update the build name with the current patch version being deployed 
-- template: templates/stage/UpdateBuildVersion.yml  # Template reference
-  parameters:
-    StageName: 'UpdateBuildVersion'
-    VersionNumber: 'PatchVersion'
-    dependsOn: 
-    - 'GetSchemaPatch'
-
 #deploy the patch to QA
 #- template: templates/DeploySolution.yml  # Template reference
 #  parameters:
