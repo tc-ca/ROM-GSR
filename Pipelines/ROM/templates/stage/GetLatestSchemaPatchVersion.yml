@@ -84,8 +84,11 @@ stages:
           Write-Host "Set PatchVersion environment variable to $(SolutionVersion)"
         pwsh: true
     - task: PowerShell@2
-      displayName: "Print Current Solution Version"
+      displayName: "Set the name of the build to next solution version"
       inputs:
         targetType: 'inline'
         script: |
+          [string] $buildName = "${env:LATESTPATCHNAME} - ${env:SOLUTIONVERSION}"
           Write-Host "${env:LATESTPATCHNAME} Version: ${env:SOLUTIONVERSION}"
+          Write-Host "Setting the name of the build to '$buildName'."
+          Write-Host "##vso[build.updatebuildnumber]$buildName"
