@@ -28,34 +28,24 @@ stages:
     StageName: 'GetSchemaPatch'
     SolutionName: $(SolutionName)
     ConnectionString: $(ConnectionStringDev)
-
-#update the build name with the current patch version being deployed 
-- template: templates/stage/UpdateBuildVersion.yml  # Template reference
+- template: templates/stage/CommitSolution.yml  # Template reference
   parameters:
-    StageName: 'UpdateBuildVersion'
-    VersionNumber: 'PatchVersion'
+    SolutionName: variables['LatestPatchName']
+    PowerPlatformSPN: $(PowerPlatformSPN_Dev)
+    StageName: 'BuildAndPublishArtifacts'
     dependsOn: 
     - 'GetSchemaPatch'
-
 #deploy the patch to QA
-#- template: templates/DeploySolution.yml  # Template reference
-#  parameters:
-#    SolutionName: $(SolutionName)
-#    PowerPlatformSPN: $(PowerPlatformSPN_QA)
-#    PowerPlatformSPN_Dev: $(PowerPlatformSPN_Dev) #used to update solution version after successful deployment to QA
-#    Environment: 'QA-TDG'
-#    StageName: 'DeployManagedSolutionToQA'
-#    dependsOn: 
-#    - 'GetCurrentSolutionVersion'
-#
-##    
-#- template: templates/CommitSolution.yml  # Template reference
-#  parameters:
-#    SolutionName: $(SolutionName)
-#    PowerPlatformSPN: $(PowerPlatformSPN_Dev)
-#    StageName: 'BuildAndPublishArtifacts'
-#    dependsOn: 
-#    - 'DeployManagedSolutionToQA'
+# - template: templates/stage/DeploySolution.yml  # Template reference
+#   parameters:
+#     SolutionName: variables['LatestPatchName']
+#     PowerPlatformSPN: $(PowerPlatformSPN_QA)
+#     PowerPlatformSPN_Dev: $(PowerPlatformSPN_Dev) #used to update solution version after successful deployment to QA
+#     Environment: 'QA-TDG'
+#     StageName: 'DeployManagedSolutionToQA'
+#     dependsOn: 
+#     - 'BuildAndPublishArtifacts'
+
 ##ACC
 #- template: templates/DeploySolution.yml  # Template reference
 #  parameters:
