@@ -28,13 +28,7 @@ stages:
     StageName: 'GetSchemaPatch'
     SolutionName: $(SolutionName)
     ConnectionString: $(ConnectionStringDev)
-- template: templates/stage/CommitSolution.yml  # Template reference
-  parameters:
-    SolutionName: variables['LatestPatchName']
-    PowerPlatformSPN: $(PowerPlatformSPN_Dev)
-    StageName: 'BuildAndPublishArtifacts'
-    dependsOn: 
-    - 'GetSchemaPatch'
+    
 #deploy the patch to QA
 # - template: templates/stage/DeploySolution.yml  # Template reference
 #   parameters:
