@@ -23,7 +23,9 @@ stages:
   jobs:
   - job: ${{Parameters.StageName}}_GetPatchInfo
     steps:
-    - checkout: none
+    - checkout: self
+      persistCredentials: true
+      clean: true
     - task: MSCRMToolInstaller@12
       inputs:
         nugetFeed: 'official'
@@ -94,7 +96,9 @@ stages:
           Write-Host "${env:LATESTPATCHNAME} Version: ${env:SOLUTIONVERSION}"
           Write-Host "Setting the name of the build to '$buildName'."
           Write-Host "##vso[build.updatebuildnumber]$buildName"
-          
+    - task: PowerPlatformToolInstaller@0
+      inputs:
+        DefaultVersion: true
 #======================commit the latest patch to github ========================
     - task: PowerPlatformPublishCustomizations@0
       inputs:
@@ -181,7 +185,7 @@ stages:
         git config user.name "tc-buildbot"
         git checkout development
         git add --all
-        git commit -m "Update Solution - ${{Parameters.SolutionName}}: $env:COMMITMESSAGE"
+        git commit -m "Update Solution - ${{Parameters.SolutionName}} - $(LatestPatchName): $env:COMMITMESSAGE"
         
         echo "Push solution changes to the remote repository"
         git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
