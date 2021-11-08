@@ -34,7 +34,7 @@ stages:
 #deploy the patch to COREQA
 - template: templates/stage/DeploySolution.yml  # Template reference
   parameters:
-    SolutionName: $(Build.BuildNumber)
+    SolutionName: $(Build.BuildNumber) #build name (number) set in the previous stage, should use dedicated varible
     PowerPlatformSPN: $(PowerPlatformSPN_COREQA)
     Environment: 'COREQA-TDG'
     StageName: 'DeployManagedSolutionToCOREQA'
