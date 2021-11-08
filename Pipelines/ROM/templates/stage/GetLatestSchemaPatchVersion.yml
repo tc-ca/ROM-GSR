@@ -140,7 +140,7 @@ stages:
           Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\unpack folder created."
         } else {
           Remove-Item -Path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\unpack' -recurse
-        )
+        }
         Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\$(LatestPatchName)\* -Destination $(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\unpack
     - task: PublishBuildArtifacts@1
       displayName: publish solution zip
