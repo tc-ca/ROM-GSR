@@ -138,8 +138,10 @@ stages:
           Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\unpack folder does not exists."
           New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\unpack'
           Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\unpack folder created."
-        }
-        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\${{Parameters.SolutionName}}\* -Destination $(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\unpack
+        } else {
+          Remove-Item -Path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\unpack' -recurse
+        )
+        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\$(LatestPatchName)\* -Destination $(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\unpack
     - task: PublishBuildArtifacts@1
       displayName: publish solution zip
       inputs:
@@ -185,7 +187,7 @@ stages:
         git config user.name "tc-buildbot"
         git checkout development
         git add --all
-        git commit -m "Update Solution - ${{Parameters.SolutionName}} - $(LatestPatchName): $env:COMMITMESSAGE"
+        git commit -m "Update Solution - $(LatestPatchName): $env:COMMITMESSAGE"
         
         echo "Push solution changes to the remote repository"
         git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
