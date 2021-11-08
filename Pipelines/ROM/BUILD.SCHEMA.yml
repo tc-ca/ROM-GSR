@@ -6,6 +6,8 @@ variables:
     value: 'ROM DEV TDG'
   - name: PowerPlatformSPN_QA
     value: 'ROM QA TDG'
+  - name: PowerPlatformSPN_COREQA
+    value: 'CORE QA TDG'
   - name: PowerPlatformSPN_ACC
     value: 'ROM ACC TDG'
   - name: PowerPlatformSPN_ACCDATA
@@ -29,6 +31,15 @@ stages:
     SolutionName: $(SolutionName)
     ConnectionString: $(ConnectionStringDev)
     PowerPlatformSPN: $(PowerPlatformSPN_Dev)
+#deploy the patch to COREQA
+- template: templates/stage/DeploySolution.yml  # Template reference
+  parameters:
+    SolutionName: $(Build.BuildNumber)
+    PowerPlatformSPN: $(PowerPlatformSPN_COREQA)
+    Environment: 'COREQA-TDG'
+    StageName: 'DeployManagedSolutionToCOREQA'
+    dependsOn: 
+    - 'GetSchemaPatch'
 
 #deploy the patch to QA
 # - template: templates/stage/DeploySolution.yml  # Template reference
