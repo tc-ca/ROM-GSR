@@ -40,6 +40,14 @@ stages:
     StageName: 'DeployManagedSolutionToCOREQA'
     dependsOn: 
     - 'GetSchemaPatch'
+- template: templates/stage/DeploySolution.yml  # Template reference
+  parameters:
+    SolutionName: $(Build.BuildNumber) #build name (number) set in the previous stage, should use dedicated varible
+    PowerPlatformSPN: $(PowerPlatformSPN_QA)
+    Environment: 'QA-TDG'
+    StageName: 'DeployManagedSolutionToROMQA'
+    dependsOn: 
+    - 'GetSchemaPatch'
 
 #deploy the patch to QA
 # - template: templates/stage/DeploySolution.yml  # Template reference
