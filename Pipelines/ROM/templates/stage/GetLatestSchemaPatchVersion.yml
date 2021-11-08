@@ -92,8 +92,8 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          [string] $buildName = "${env:LATESTPATCHNAME} - ${env:SOLUTIONVERSION}"
-          Write-Host "${env:LATESTPATCHNAME} Version: ${env:SOLUTIONVERSION}"
+          [string] $buildName = "${env:LATESTPATCHNAME}_${env:SOLUTIONVERSION}"
+          Write-Host "${env:LATESTPATCHNAME}_${env:SOLUTIONVERSION}"
           Write-Host "Setting the name of the build to '$buildName'."
           Write-Host "##vso[build.updatebuildnumber]$buildName"
     - task: PowerPlatformToolInstaller@0
@@ -109,7 +109,7 @@ stages:
         authenticationType: 'PowerPlatformSPN'
         PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
         SolutionName: '$(LatestPatchName)'
-        SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\zip\$(LatestPatchName).zip'
+        SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\zip\$(Build.BuildNumber).zip'
         AsyncOperation: true
         MaxAsyncWaitTime: '9999'
     - task: PowerPlatformExportSolution@0
@@ -117,31 +117,31 @@ stages:
         authenticationType: 'PowerPlatformSPN'
         PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
         SolutionName: '$(LatestPatchName)'
-        SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\zip\$(LatestPatchName)_Managed.zip'
+        SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\zip\$(Build.BuildNumber)_Managed.zip'
         Managed: true
         AsyncOperation: true
         MaxAsyncWaitTime: '9999'
         ExportAutoNumberingSettings: true
     - task: PowerPlatformUnpackSolution@0
       inputs:
-        SolutionInputFile: '$(Build.ArtifactStagingDirectory)\zip\$(LatestPatchName).zip'
-        SolutionTargetFolder: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)'
+        SolutionInputFile: '$(Build.ArtifactStagingDirectory)\zip\$(Build.BuildNumber).zip'
+        SolutionTargetFolder: '$(Build.ArtifactStagingDirectory)\$(Build.BuildNumber)'
     - task: PublishBuildArtifacts@1
       displayName: publish unpacked files
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)\$(LatestPatchName)'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\$(Build.BuildNumber)'
         ArtifactName: 'unpacked'
         publishLocation: 'Container'
     - powershell: |
-        If(!(test-path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\unpack'))
+        If(!(test-path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\unpack'))
         {
-          Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\unpack folder does not exists."
-          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\unpack'
-          Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\unpack folder created."
+          Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\unpack folder does not exists."
+          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\unpack'
+          Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\unpack folder created."
         } else {
-          Remove-Item -Path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\unpack' -recurse
+          Remove-Item -Path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\unpack' -recurse
         }
-        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\$(LatestPatchName)\* -Destination $(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\unpack
+        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\$(Build.BuildNumber)\* -Destination $(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\unpack
     - task: PublishBuildArtifacts@1
       displayName: publish solution zip
       inputs:
@@ -149,13 +149,13 @@ stages:
         ArtifactName: 'zip'
         publishLocation: 'Container'
     - powershell: |
-        If(!(test-path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\zip'))
+        If(!(test-path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\zip'))
         {
-          Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\zip folder does not exists."
-          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\zip'
-          Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\zip folder created."
+          Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\zip folder does not exists."
+          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\zip'
+          Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\zip folder created."
         }
-        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\zip\* -Destination $(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(LatestPatchName)\zip
+        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\zip\* -Destination $(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\zip
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
@@ -187,7 +187,7 @@ stages:
         git config user.name "tc-buildbot"
         git checkout development
         git add --all
-        git commit -m "Update Solution - $(LatestPatchName): $env:COMMITMESSAGE"
+        git commit -m "Update Solution - $(Build.BuildNumber): $env:COMMITMESSAGE"
         
         echo "Push solution changes to the remote repository"
         git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
