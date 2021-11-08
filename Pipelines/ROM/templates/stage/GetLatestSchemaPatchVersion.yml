@@ -27,12 +27,12 @@ stages:
       persistCredentials: true
       clean: true
     - task: MSCRMToolInstaller@12
-      name: Install third party D365 deployment tools
+      displayName: Install third party D365 deployment tools
       inputs:
         nugetFeed: 'official'
         psFeed: 'official'
     - task: MSCRMGetLatestPatch@12
-      name: Get Latest Patch
+      displayName: Get Latest Patch
       inputs:
         crmConnectionString: '${{Parameters.ConnectionString}}'
         solutionName: '${{Parameters.SolutionName}}'
