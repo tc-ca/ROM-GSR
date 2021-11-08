@@ -23,6 +23,6 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            [string] $buildName = $(VersionNumber)
+            [string] $buildName = ${env:VERSIONNUMBER}
             Write-Host "Setting the name of the build to '$buildName'."
             Write-Host "##vso[build.updatebuildnumber]$buildName"
