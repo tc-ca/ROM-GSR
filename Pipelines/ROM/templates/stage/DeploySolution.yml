@@ -13,6 +13,9 @@ parameters:
   - name: DeployUnmanagedSolution
     type: boolean
     default: false
+  - name: IncrementVersion
+    type: boolean
+    default: true
   - name: dependsOn
     type: object
     default: []
@@ -100,7 +103,7 @@ stages:
                 MaxAsyncWaitTime: '360'
                 HoldingSolution: false
                 OverwriteUnmanagedCustomizations: false
-          - ${{ if eq(Parameters.Environment, 'QA-TDG') }}:
+          - ${{ if and(eq(Parameters.Environment, 'QA-TDG'), eq(Parameters.IncrementVersion, true)) }}:
             - task: PowerPlatformSetSolutionVersion@0
               inputs:
                 authenticationType: 'PowerPlatformSPN'
