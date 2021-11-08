@@ -27,11 +27,12 @@ stages:
       persistCredentials: true
       clean: true
     - task: MSCRMToolInstaller@12
+      name: Install third party D365 deployment tools
       inputs:
         nugetFeed: 'official'
         psFeed: 'official'
     - task: MSCRMGetLatestPatch@12
-      name: GetLatestPatchTask
+      name: Get Latest Patch
       inputs:
         crmConnectionString: '${{Parameters.ConnectionString}}'
         solutionName: '${{Parameters.SolutionName}}'
@@ -44,7 +45,7 @@ stages:
         Write-Host "Latest Patch Name =  $(LatestPatchName)"
         Write-Host "${{ eq('$(PatchExists)', 'False') }}"
     - task: PowerShell@2
-      displayName: "Check for Patch"
+      displayName: Assert Patch Exists = True
       inputs:
         targetType: 'inline'
         script: |
@@ -73,7 +74,7 @@ stages:
           }
         failOnStderr: true
     - task: MSCRMGetSolution@12
-      displayName: "Get Latest Patch"
+      displayName: Get Solution Details
       inputs:
         crmConnectionString: '${{ parameters.ConnectionString }}'
         solutionName: '$(LatestPatchName)'
@@ -81,6 +82,7 @@ stages:
         versionVariableName: 'SolutionVersion'
         displayVariableName: 'SolutionDisplayName'
     - task: PowerShell@2
+      displayName: Set PatchVersion Variable
       inputs:
         targetType: 'inline'
         script: |
@@ -88,7 +90,7 @@ stages:
           Write-Host "Set PatchVersion environment variable to $(SolutionVersion)"
         pwsh: true
     - task: PowerShell@2
-      displayName: "Set the name of the build to next solution version"
+      displayName: "Set build name"
       inputs:
         targetType: 'inline'
         script: |
@@ -97,14 +99,17 @@ stages:
           Write-Host "Setting the name of the build to '$buildName'."
           Write-Host "##vso[build.updatebuildnumber]$buildName"
     - task: PowerPlatformToolInstaller@0
+      displayName: Power Platform Tools Installer
       inputs:
         DefaultVersion: true
 #======================commit the latest patch to github ========================
     - task: PowerPlatformPublishCustomizations@0
+      displayName: Publish Customizations
       inputs:
         authenticationType: 'PowerPlatformSPN'
         PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
     - task: PowerPlatformExportSolution@0
+      displayName: Export Unmanaged Solution
       inputs:
         authenticationType: 'PowerPlatformSPN'
         PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
@@ -113,6 +118,7 @@ stages:
         AsyncOperation: true
         MaxAsyncWaitTime: '9999'
     - task: PowerPlatformExportSolution@0
+      displayName: Export Managed Solution
       inputs:
         authenticationType: 'PowerPlatformSPN'
         PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
@@ -123,6 +129,7 @@ stages:
         MaxAsyncWaitTime: '9999'
         ExportAutoNumberingSettings: true
     - task: PowerPlatformUnpackSolution@0
+      displayName: Unpack Unmanaged solution
       inputs:
         SolutionInputFile: '$(Build.ArtifactStagingDirectory)\zip\$(Build.BuildNumber).zip'
         SolutionTargetFolder: '$(Build.ArtifactStagingDirectory)\$(Build.BuildNumber)'
@@ -157,6 +164,7 @@ stages:
         }
         Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\zip\* -Destination $(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\zip
     - task: PowerShell@2
+      displayName: Print Pipeline File Directories
       inputs:
         targetType: 'inline'
         script: |
