@@ -1,29 +1,10 @@
 trigger:
 - none
-
 pr:
 - none
-
 variables:
-- name: PowerPlatformSPN_COREDEV
-  value: 'TDG CORE DEV'
-- name: PowerPlatformSPN_Dev
-  value: 'ROM DEV TDG'
-- name: PowerPlatformSPN_QA
-  value: 'ROM QA TDG'
-- name: PowerPlatformSPN_COREQA
-  value: 'TDG CORE QA'
-- name: PowerPlatformSPN_ACC
-  value: 'ROM ACC TDG'
-- name: PowerPlatformSPN_ACCDATA
-  value: 'ROM ACC TDG DATA'
-- name: PowerPlatformSPN_PREPROD
-  value: 'ROM PREPROD TDG'
-- name: PowerPlatformSPN_PROD
-  value: 'ROM PROD TDG'
 - name: SolutionName
-  value: 'TC_GlobalCore'
-
+  value: "Default Value"
 # # this is being defined in app-ci pipeline
 # resources:
 #   pipelines:
@@ -37,19 +18,67 @@ variables:
 #     trigger: 
 #       branches:
 #       - development
-
 stages:
-- template: templates/stage/GetLatestSchemaPatchVersion.yml  # Template reference
-  parameters:
-    StageName: 'GetSchemaPatch'
-    SolutionName: $(SolutionName)
-    ConnectionString: $(ConnectionStringDev)
-    PowerPlatformSPN: $(PowerPlatformSPN_DEV)
-- template: templates/stage/DependencyCheck.yml  # Template reference
-  parameters:
-    SolutionName: '$(SolutionName)'
-    ConnectionStringSource: '$(ConnectionStringDev)'
-    ConnectionStringDest: '$(ConnectionStringQA)'
-    StageName: 'DependencyCheck'
-    dependsOn: 
-    - 'GetSchemaPatch'
+- stage: CheckForMissingDependencies
+  pool:
+      vmImage: 'vs2017-win2016'
+  jobs:
+  - job: CheckForMissingDependenciesDev
+    steps:
+    - checkout: none
+    - task: MSCRMToolInstaller@12
+      inputs:
+        nugetFeed: 'official'
+        psFeed: 'official'
+    - task: MSCRMGetLatestPatch@12
+      name: GetLatestPatchTask
+      inputs:
+        crmConnectionString: '$(ConnectionStringDev)'
+        solutionName: '$(CoreSolutionName)'
+        existsVariableName: 'PatchExists'
+        patchVariableName: 'LatestPatchName'
+    - task: PowerShell@2
+      name: SetSolutionName
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "CoreSolutionName: $(CoreSolutionName)"
+          Write-Host "PatchExists: $(PatchExists)"
+          Write-Host "LatestPatchName: $(LatestPatchName)"
+          if ("$(PatchExists)" -eq "False" -or "$(PatchExists)" -eq "false" -or "$(PatchExists)" -eq $false) {
+              Write-Host "Patch does not exist - checking missing dependencies and components for ${env:CORESOLUTIONNAME}"
+              Write-Host "##vso[task.setvariable variable=SolutionName]${env:CORESOLUTIONNAME}"
+          }
+          else {
+            Write-Host "Patch does exist - checking missing dependencies and components for $(LatestPatchName)"
+            Write-Host "##vso[task.setvariable variable=SolutionName]$(LatestPatchName)"
+            #Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.SolutionName]$(LatestPatchName)"
+          }
+          Write-Host "##vso[task.setvariable variable=task.GetLatestPatchTask.PatchExists]$(PatchExists)"
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "SolutionName = $(SolutionName)"
+          Write-Host "Patch Exists = $(PatchExists)"
+          Write-Host "Latest Patch Name =  $(LatestPatchName)"
+    - task: MSCRMExportSolution@12
+      inputs:
+        crmConnectionString: '$(ConnectionStringDev)'
+        solutionName: '$(SolutionName)'
+        exportManaged: true
+        exportUnmanaged: false
+        outputPath: '$(Build.ArtifactStagingDirectory)'
+        crmConnectionTimeout: '1960'
+        useAsyncMode: true
+    - task: MSCRMGetSolutionMissingDependencies@12
+      inputs:
+        crmConnectionString: '$(ConnectionStringDev)'
+        solutionName: '$(SolutionName)'
+        warnIfMissing: true
+    - task: MSCRMGetSolutionMissingComponents@12
+      inputs:
+        crmConnectionString: '$(ConnectionStringQA)'
+        solutionFile: '$(Build.ArtifactStagingDirectory)/$(SolutionName)_managed.zip'
+        errorIfMissing: true
+        crmConnectionTimeout: '200'
