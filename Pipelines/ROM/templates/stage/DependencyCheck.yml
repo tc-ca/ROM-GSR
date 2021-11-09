@@ -21,6 +21,12 @@ stages:
   jobs:
   - job: CreatePatchOnDev
     steps:
+    - checkout: none
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'current'
+        downloadType: 'specific'
+        downloadPath: '$(System.ArtifactsDirectory)'
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
