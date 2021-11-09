@@ -2,6 +2,8 @@ trigger: none
 pr: none
 
 variables:
+  - name: PowerPlatformSPN_COREDEV
+    value: 'TDG CORE DEV'
   - name: PowerPlatformSPN_Dev
     value: 'ROM DEV TDG'
   - name: PowerPlatformSPN_QA
@@ -25,31 +27,48 @@ stages:
 
 #get the current solution version from dynamics
 #version stored into environment variable ${env:SOLUTIONVERSION}
-- template: templates/stage/GetLatestSchemaPatchVersion.yml  # Template reference
+#- template: templates/stage/GetLatestSchemaPatchVersion.yml  # Template reference
+#  parameters:
+#    StageName: 'GetSchemaPatch'
+#    SolutionName: $(SolutionName)
+#    ConnectionString: $(ConnectionStringDev)
+#    PowerPlatformSPN: $(PowerPlatformSPN_Dev)
+#- template: templates/stage/GetLatestSchemaPatchVersion.yml  # Template reference
+#  parameters:
+#    StageName: 'GetSchemaPatch'
+#    SolutionName: $(SolutionName)
+#    ConnectionString: $(ConnectionStringCoreDev)
+#    PowerPlatformSPN: $(PowerPlatformSPN_COREDEV)
+#
+##deploy the patch to COREQA
+#- template: templates/stage/DeploySolution.yml  # Template reference
+#  parameters:
+#    SolutionName: $(Build.BuildNumber) #build name (number) set in the previous stage, should use dedicated varible
+#    PowerPlatformSPN: $(PowerPlatformSPN_COREQA)
+#    Environment: 'COREQA-TDG'
+#    StageName: 'DeployManagedSolutionToCOREQA'
+#    IncrementVersion: false
+#    CreateNewPatch: true
+#    dependsOn: 
+#    - 'GetSchemaPatch'
+- template: templates/stage/PatchSolution.yml  # Template reference
   parameters:
-    StageName: 'GetSchemaPatch'
     SolutionName: $(SolutionName)
-    ConnectionString: $(ConnectionStringDev)
-    PowerPlatformSPN: $(PowerPlatformSPN_Dev)
-#deploy the patch to COREQA
-# - template: templates/stage/DeploySolution.yml  # Template reference
-#   parameters:
-#     SolutionName: $(Build.BuildNumber) #build name (number) set in the previous stage, should use dedicated varible
-#     PowerPlatformSPN: $(PowerPlatformSPN_COREQA)
-#     Environment: 'COREQA-TDG'
-#     StageName: 'DeployManagedSolutionToCOREQA'
-#     IncrementVersion: false
-#     dependsOn: 
-#     - 'GetSchemaPatch'
-- template: templates/stage/DeploySolution.yml  # Template reference
-  parameters:
-    SolutionName: $(Build.BuildNumber) #build name (number) set in the previous stage, should use dedicated varible
-    PowerPlatformSPN: $(PowerPlatformSPN_QA)
-    Environment: 'QA-TDG'
-    StageName: 'DeployManagedSolutionToROMQA'
-    IncrementVersion: false
-    dependsOn: 
-    - 'GetSchemaPatch'
+    ConnectionString: $(ConnectionStringCoreDev)
+    StageName: 'CreatePatchOnDev'
+#    dependsOn: 
+#    - 'DeployManagedSolutionToCOREQA'
+
+#- template: templates/stage/DeploySolution.yml  # Template reference
+#  parameters:
+#    SolutionName: $(Build.BuildNumber) #build name (number) set in the previous stage, should use dedicated varible
+#    PowerPlatformSPN: $(PowerPlatformSPN_QA)
+#    Environment: 'QA-TDG'
+#    StageName: 'DeployManagedSolutionToROMQA'
+#    IncrementVersion: false
+#    dependsOn: 
+#    - 'DeployManagedSolutionToCOREQA'
+
 
 #deploy the patch to QA
 # - template: templates/stage/DeploySolution.yml  # Template reference
