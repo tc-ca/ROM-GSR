@@ -8,9 +8,9 @@ pr:
 
 variables:
   - name: PowerPlatformSPN_Dev
-    value: 'TDG CORE DEV'
+    value: 'ROM DEV TDG'
   - name: PowerPlatformSPN_QA
-    value: 'TDG CORE QA'
+    value: 'ROM DEV QA'
   - name: PowerPlatformSPN_ACC
     value: 'ROM ACC TDG'
   - name: PowerPlatformSPN_ACCDATA
@@ -51,7 +51,7 @@ stages:
 - template: templates/stage/RollupSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
-    ConnectionString: $(ConnectionStringCoreDev)
+    ConnectionString: $(Pipeline_ConnectionStringDev)
     StageName: 'RollupSolutionOnDev'
 - template: templates/stage/CommitSolution.yml  # Template reference
   parameters:
@@ -71,7 +71,7 @@ stages:
 - template: templates/stage/PatchSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
-    ConnectionString: $(ConnectionStringCoreDev)
+    ConnectionString: $(Pipeline_ConnectionStringDev)
     StageName: 'CreatePatchOnDev'
     dependsOn: 
     - 'DeployManagedSolutionToQA'
