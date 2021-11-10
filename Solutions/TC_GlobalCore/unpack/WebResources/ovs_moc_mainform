@@ -16,8 +16,9 @@ async function OnLoad(executionContext) {
     var formContext = executionContext.getFormContext();
     globalFormContext = formContext;
 
-    var formContext = executionContext.getFormContext();
-    formContextGlobalRef = formContext;
+    // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+    let formType = glHelper.GetFormType(formContext);
+ 
 
     //Toggle required level based on Operation Type
     toggleRequiredLevel(formContext);
@@ -42,7 +43,22 @@ async function OnLoad(executionContext) {
         glHelper.SetControlVisibility(formContext, "ovs_cdpriorityscore", false);
         glHelper.SetControlVisibility(formContext, "ovs_cdriskcategory", false);
     }
+
+    //Add function to Refresh Operation Class when UNCode is added
+    if (formType > 1) {
+        var OperationUN = formContext.getControl("Subgrid_OperationUNNumber");
+        if (OperationUN != null)
+            OperationUN.addOnLoad(Refresh_OperationClass);
+    }
 }
+
+function Refresh_OperationClass() {
+
+    var OperationClass = globalFormContext.getControl("grd_Class");
+    if (OperationClass != null)
+        OperationClass.refresh();
+}
+
 
 function hasCurrentUserRole(roleName) {
     let hasRole = false;
