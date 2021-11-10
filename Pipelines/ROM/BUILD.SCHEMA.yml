@@ -46,7 +46,7 @@ stages:
 - template: templates/stage/DependencyCheck.yml  # Template reference
   parameters:
     StageName: 'DependencyCheck'
-    SolutionName: $(Build.BuildNumber)
+    SolutionName: '$(Build.BuildNumber)'
     ConnectionStringDest: $(ConnectionStringQA)
     ConnectionStringSource: $(ConnectionStringDev)
     dependsOn: 
@@ -55,7 +55,7 @@ stages:
 #deploy the patch to QA
 - template: templates/stage/DeploySolution.yml  # Template reference
   parameters:
-    SolutionName: $(Build.BuildNumber) #build name (number) set in the previous stage, should use dedicated varible
+    SolutionName: '$(Build.BuildNumber)' #build name (number) set in the previous stage, should use dedicated varible
     PowerPlatformSPN: $(PowerPlatformSPN_QA)
     Environment: 'QA-TDG'
     StageName: 'DeployManagedSolutionToQA'
@@ -77,7 +77,7 @@ stages:
 #ACC
 - template: templates/stage/DeploySolution.yml  # Template reference
   parameters:
-    SolutionName: $(Build.BuildNumber)
+    SolutionName: '$(Build.BuildNumber)'
     PowerPlatformSPN: $(PowerPlatformSPN_ACC)
     Environment: 'ACC-TDG'
     StageName: 'DeployManagedSolutionToACC'
@@ -87,7 +87,7 @@ stages:
 #PREPROD
 - template: templates/stage/DeploySolution.yml  # Template reference
   parameters:
-    SolutionName: $(Build.BuildNumber)
+    SolutionName: '$(Build.BuildNumber)'
     PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
     Environment: 'PREPROD-TDG'
     StageName: 'DeployManagedSolutionToPREPROD'
@@ -97,7 +97,7 @@ stages:
 #PROD
 - template: templates/stage/DeploySolution.yml  # Template reference
   parameters:
-    SolutionName: $(Build.BuildNumber)
+    SolutionName: '$(Build.BuildNumber)'
     PowerPlatformSPN: $(PowerPlatformSPN_PROD)
     Environment: 'PROD-TDG'
     StageName: 'DeployManagedSolutionToPROD'
