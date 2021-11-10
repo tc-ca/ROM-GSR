@@ -46,9 +46,9 @@ stages:
 - template: templates/stage/DependencyCheck.yml  # Template reference
   parameters:
     StageName: 'DependencyCheck'
-    SolutionName: $(SolutionName)
-    ConnectionStringDest: $(ConnectionStringDev)
-    ConnectionStringSource: $(ConnectionStringQA)
+    SolutionName: $(Build.BuildNumber)
+    ConnectionStringDest: $(ConnectionStringQA)
+    ConnectionStringSource: $(ConnectionStringDev)
     dependsOn: 
     - 'GetSchemaPatch'
 
