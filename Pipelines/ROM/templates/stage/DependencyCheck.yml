@@ -46,6 +46,6 @@ stages:
     - task: MSCRMGetSolutionMissingComponents@12
       inputs:
         crmConnectionString: '${{Parameters.ConnectionStringDest}}'
-        solutionFile: '$(Build.ArtifactStagingDirectory)\zip\$(Build.BuildNumber)_Managed.zip'
+        solutionFile: '$(Build.ArtifactStagingDirectory)\zip\${{Parameters.SolutionName}}_Managed.zip'
         errorIfMissing: true
         crmConnectionTimeout: '999'
