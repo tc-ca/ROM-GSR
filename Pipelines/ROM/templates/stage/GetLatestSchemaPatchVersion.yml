@@ -32,6 +32,7 @@ stages:
         nugetFeed: 'official'
         psFeed: 'official'
     - task: MSCRMGetLatestPatch@12
+      name: GetLatestPatch
       displayName: Get Latest Patch
       inputs:
         crmConnectionString: '${{Parameters.ConnectionString}}'
@@ -39,8 +40,8 @@ stages:
         existsVariableName: 'PatchExists'
         patchVariableName: 'LatestPatchName'
     - powershell: |
-        Write-Host "##vso[task.setvariable variable=PatchExists]$(PatchExists)"
-        Write-Host "##vso[task.setvariable variable=LatestPatchName]$(LatestPatchName)"
+        Write-Host "##vso[task.setvariable variable=PatchExists;isOutput=true]$(PatchExists)"
+        Write-Host "##vso[task.setvariable variable=LatestPatchName;isOutput=true]$(LatestPatchName)"
         Write-Host "Patch Exists =  $(PatchExists)"
         Write-Host "Latest Patch Name =  $(LatestPatchName)"
         Write-Host "${{ eq('$(PatchExists)', 'False') }}"
@@ -86,7 +87,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          Write-Host "##vso[task.setvariable variable=PatchVersion;]$(SolutionVersion)"
+          Write-Host "##vso[task.setvariable variable=PatchVersion;isOutput=true]$(SolutionVersion)"
           Write-Host "Set PatchVersion environment variable to $(SolutionVersion)"
         pwsh: true
     - task: PowerShell@2
@@ -98,6 +99,7 @@ stages:
           Write-Host "${env:LATESTPATCHNAME}_${env:SOLUTIONVERSION}"
           Write-Host "Setting the name of the build to '$buildName'."
           Write-Host "##vso[build.updatebuildnumber]$buildName"
+          Write-Host "##vso[task.setvariable variable=myStageOutputVar;isOutput=true]$myVar"
     - task: PowerPlatformToolInstaller@0
       displayName: Power Platform Tools Installer
       inputs:
