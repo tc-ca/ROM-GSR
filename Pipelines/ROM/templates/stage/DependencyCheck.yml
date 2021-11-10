@@ -19,7 +19,7 @@ stages:
   pool:
       vmImage: 'windows-latest'
   jobs:
-  - job: CreatePatchOnDev
+  - job: ${{Parameters.StageName}}_Job
     steps:
     - checkout: none
     - task: DownloadBuildArtifacts@1
