@@ -36,13 +36,15 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_DEV)
 
 #fail the build if there are missing components identified on the patch
-- template: templates/stage/GetLatestSchemaPatchVersion.yml  # Template reference
+- template: templates/stage/DependencyCheck.yml  # Template reference
   parameters:
-    StageName: 'GetSchemaPatch'
+    StageName: 'DependencyCheck'
     SolutionName: $(SolutionName)
-    ConnectionString: $(ConnectionStringDev)
+    ConnectionStringDest: $(ConnectionStringDev)
+    ConnectionStringSource: $(ConnectionStringQA)
     PowerPlatformSPN: $(PowerPlatformSPN_DEV)
-
+    dependsOn: 
+    - 'GetSchemaPatch'
 #deploy the patch to QA
 - template: templates/stage/DeploySolution.yml  # Template reference
   parameters:
@@ -52,7 +54,7 @@ stages:
     StageName: 'DeployManagedSolutionToQA'
     IncrementVersion: false
     dependsOn: 
-    - 'GetSchemaPatch'
+    - 'DependencyCheck'
 
 #after a successfull deployment to QA, patch the solution in DEV
 - template: templates/stage/PatchSolution.yml  # Template reference
