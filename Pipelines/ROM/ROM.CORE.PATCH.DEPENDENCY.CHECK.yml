@@ -1,10 +1,16 @@
-trigger:
-- none
-pr:
-- none
 variables:
 - name: SolutionName
   value: "Default Value"
+
+schedules:
+- cron: "0 06,19 * * *"
+  displayName: Depenency Check 
+  branches:
+    include:
+    - development
+
+trigger: none
+pr: none
 
 stages:
 - stage: CheckForMissingDependencies
