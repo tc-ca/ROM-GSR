@@ -19,13 +19,13 @@ var AccountRibbon = (function (window, document) {
     // Temporarry: show Deactivation button for the specific user role (TDG QA)
     function isTDG_QA(context) {
         var roles = Xrm.Utility.getGlobalContext().userSettings.roles;
-        
+
         roles.forEach(function (item) {
             if (item.name == TDG_QA) enableFromUser = true;
         });
         // Return enableFromUser - is a temporary solution to show a custom deactivation button for the QA security role only. Keep this function in case we need hide/show it again
         //return enableFromUser && enable;
-         return true && enable;
+        return enableFromUser && enable;
     }
 
     function HideOOBDeactivationButton(primaryControl) {
@@ -38,7 +38,7 @@ var AccountRibbon = (function (window, document) {
         if (primaryControl == null) return;
         if (enableFromUser == false) return;
         if (isAsyncOperationCompleted) {
-            return true && enable;
+            return enableFromUser && enable;
         }
 
         const formContext = primaryControl;
@@ -71,8 +71,8 @@ var AccountRibbon = (function (window, document) {
 
             function (error) {
                 isAsyncOperationCompleted = true;
-                Xrm.Utility.alertDialog(error.message);
-
+                Xrm.Navigation.openErrorDialog({ message: error.message });
+                //Xrm.Utility.alertDialog(error.message);
             }
         );
         return false;
@@ -81,7 +81,7 @@ var AccountRibbon = (function (window, document) {
     // Override Deactivate btn to the custom
     function overridedeactivatebtn(parm1, parm2, parm3, primaryControl) {
 
-        debugger;
+        //debugger;
 
         if (primaryControl == null) return;
         const formContext = primaryControl;
@@ -130,15 +130,14 @@ var AccountRibbon = (function (window, document) {
                                 setTimeout(function () {
                                     Xrm.Utility.closeProgressIndicator();
                                 }, 1000);
-
                             }
                             //  Mscrm.CommandBarActions.changeState(parm1, parm2, parm3);
                         });
                 },
 
                 function (error) {
-                    Xrm.Utility.alertDialog(error.message);
-
+                    Xrm.Navigation.openErrorDialog({ message: error.message });
+                    //Xrm.Utility.alertDialog(error.message);
                 }
 
             );

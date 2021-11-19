@@ -5,6 +5,7 @@ const FIELD_MOC_REGISTRATION_ID = "ovs_mocregistrationname";
 const FIELD_MOC_FACILITY_TYPE = "ovs_operationfacilitytype";
 const FIELD_MOC_REGISTRATION_EXPIRY_DATE = "ovs_registrationexpiry";
 const FIELD_MOC_REGISTRATION_INITIAL_DATE = "ovs_mocinitialregistrationdate";
+const FIELD_HUB_INDICATOR = "ovs_hubind";
 
 const VALUE_HOTI = 918640038;
 const VALUE_CIV_AV = 918640040
@@ -42,6 +43,18 @@ async function OnLoad(executionContext) {
         glHelper.SetControlVisibility(formContext, "ovs_cdriskscore", false);
         glHelper.SetControlVisibility(formContext, "ovs_cdpriorityscore", false);
         glHelper.SetControlVisibility(formContext, "ovs_cdriskcategory", false);
+    }
+
+    //Restrict Ability To Update Hub Flag
+    if (this.hasCurrentUserRole("TDG Manager") || this.hasCurrentUserRole("TDG Planner"))
+    {
+        glHelper.SetDisabled(formContext, FIELD_HUB_INDICATOR, false);
+        glHelper.SetDisabled(formContext, FIELD_HUB_INDICATOR, false);
+    }
+    else
+    {
+        glHelper.SetDisabled(formContext, FIELD_HUB_INDICATOR, true);
+        glHelper.SetDisabled(formContext, FIELD_HUB_INDICATOR, true);
     }
 
     //Add function to Refresh Operation Class when UNCode is added

@@ -1,4 +1,4 @@
-﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+///<reference path="../../Utilities/GlobalHelper.js"/>
 ///<reference path="../../Utilities/questionnaireFunctions.js"/>
 var QuickCreateHelper = QuickCreateHelper || {};
 window.top.QuickCreateHelper = QuickCreateHelper;
@@ -195,10 +195,13 @@ var WO_TDG_main = (function (window, document) {
             fy.removeOnChange(WO_TDG_main.FiscalYearOnchange);
             fy.addOnChange(WO_TDG_main.FiscalYearOnchange);
 
-            //only on update should user be able to make change to system status
-             if (formType < 2) {
-               glHelper.SetDisabled(formContext, "msdyn_systemstatus", true);
-             }
+            ////only on update should user be able to make change to system status
+
+            ////1 - create, 2 - update  - all the rest is disabled forms
+            ////TO DO:check status with Ainsle
+            // if (formType < 3) {
+            //   glHelper.SetDisabled(formContext, "msdyn_systemstatus", true);
+            // }
 
             //wo status - validation will work online only!
             if (!isOffLine) {
