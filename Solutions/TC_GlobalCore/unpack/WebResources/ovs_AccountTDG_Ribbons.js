@@ -25,7 +25,7 @@ var AccountRibbon = (function (window, document) {
         });
         // Return enableFromUser - is a temporary solution to show a custom deactivation button for the QA security role only. Keep this function in case we need hide/show it again
         //return enableFromUser && enable;
-        return enableFromUser && enable;
+        return true && enable;
     }
 
     function HideOOBDeactivationButton(primaryControl) {
@@ -38,7 +38,7 @@ var AccountRibbon = (function (window, document) {
         if (primaryControl == null) return;
         if (enableFromUser == false) return;
         if (isAsyncOperationCompleted) {
-            return enableFromUser && enable;
+            return true && enable;
         }
 
         const formContext = primaryControl;
