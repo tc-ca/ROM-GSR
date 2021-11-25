@@ -1,0 +1,38 @@
+var globalFormContext;
+
+function OnLoad(executionContext)
+{
+    //get context
+    globalContext = glHelper.getGlobalContext();
+    var formContext = executionContext.getFormContext();
+    globalFormContext = formContext;
+
+    // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+    let formType = glHelper.GetFormType(formContext);
+
+    //hide all sections on load, required section to be determined
+    hideAllActionTypeSections(formContext);
+
+}
+
+function hideAllActionTypeSections(formContext)
+{
+    let roles = glHelper.GetCurrentUserRoles();
+
+    if (roles)
+    {
+        var hasPlanner = false;
+
+        if (roles.find(r => r.name.includes("Planner")) || roles.find(r => r.name.includes("Administrator")))
+        {
+            hasPlanner = true;
+        }
+
+        glHelper.SetDisabled(formContext, "ovs_cdncscoreclosed", !hasPlanner);
+        glHelper.SetDisabled(formContext, "ovs_cdncscoreopen", !hasPlanner);
+        glHelper.SetDisabled(formContext, "ovs_cdseatlevel", !hasPlanner);
+
+        
+    }
+
+}
