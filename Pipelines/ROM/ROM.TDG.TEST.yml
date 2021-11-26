@@ -75,15 +75,28 @@ stages:
     StageName: 'CreatePatchOnDev'
     dependsOn: 
     - 'DeployManagedSolutionToQA'
-- template: templates/stage/DeploySolution.yml  # Template reference
+
+#deploy to acc-data as unmanaged solution
+# - template: templates/stage/DeploySolution.yml  # Template reference
+#   parameters:
+#     SolutionName: $(SolutionName)
+#     PowerPlatformSPN: $(PowerPlatformSPN_ACCDATA)
+#     Environment: 'ACC-TDG-DATA'
+#     StageName: 'DeployManagedSolutionToACCDATA'
+#     DeployUnmanagedSolution: true
+#     dependsOn: 
+#     - 'DeployManagedSolutionToQA'
+
+#deploy to acc-data as managed solution using holding pattern
+- template: templates/stage/DeployHoldingSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
     PowerPlatformSPN: $(PowerPlatformSPN_ACCDATA)
     Environment: 'ACC-TDG-DATA'
     StageName: 'DeployManagedSolutionToACCDATA'
-    DeployUnmanagedSolution: true
     dependsOn: 
     - 'DeployManagedSolutionToQA'
+
 - template: templates/stage/DeployHoldingSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
