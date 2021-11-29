@@ -10,7 +10,7 @@
       <Description description="Upgrade of TDG Core Schema" languagecode="1033" />
       <Description description="Mise à niveau de TC.GlobalCore" languagecode="1036" />
     </Descriptions>
-    <Version>1.121.0.0</Version>
+    <Version>1.122.0.0</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>oversightpublisher</UniqueName>
@@ -245,6 +245,7 @@
       <RootComponent type="61" schemaName="ovs_ROMCommonFunctions" behavior="0" />
       <RootComponent type="61" schemaName="ovs_SafetyAssessmentMainForm" behavior="0" />
       <RootComponent type="61" schemaName="ovs_TdgIReport_Main.js" behavior="0" />
+      <RootComponent type="61" schemaName="ovs_TDG_Clean_ResourceRequirements_Ribbon.js" behavior="0" />
       <RootComponent type="61" schemaName="ovs_workOrderTimeTrackingPOC" behavior="0" />
       <RootComponent type="61" schemaName="ovs_WO_TDG_Mobile.js" behavior="0" />
       <RootComponent type="61" schemaName="qm_/Bootstrap/css/bootstrap.min.css" behavior="0" />
@@ -715,6 +716,18 @@
           <package>FieldService_Anchor (8.8.55.10)</package>
         </Required>
         <Dependent type="1" schemaName="msdyn_workordertype" displayName="Work Order Type" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="opportunity" displayName="Opportunity" solution="msdynce_Sales (9.0.4.0076)">
+          <package>msdynce_SalesAnchor (9.0.21111.10001)</package>
+        </Required>
+        <Dependent type="2" schemaName="opendeals" displayName="Open Deals" parentSchemaName="account" parentDisplayName="Account" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="opportunity" displayName="Opportunity" solution="msdynce_Sales (9.0.4.0076)">
+          <package>msdynce_SalesAnchor (9.0.21111.10001)</package>
+        </Required>
+        <Dependent type="2" schemaName="openrevenue" displayName="Open Revenue" parentSchemaName="account" parentDisplayName="Account" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="opportunity" displayName="Opportunity" solution="msdynce_Sales (9.0.4.0076)">
@@ -9390,6 +9403,36 @@
         <Dependent type="60" displayName="TDG Service Task" parentDisplayName="Work Order Service Task" id="{941a4cdd-5d5c-4dde-ab60-7ff85737cee6}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="2" schemaName="estimatedvalue" displayName="Est. Revenue" parentSchemaName="opportunity" parentDisplayName="Opportunity" solution="msdynce_Sales (9.0.4.0076)">
+          <package>msdynce_SalesAnchor (9.0.21111.10001)</package>
+        </Required>
+        <Dependent type="2" schemaName="openrevenue" displayName="Open Revenue" parentSchemaName="account" parentDisplayName="Account" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="opportunityid" displayName="Opportunity" parentSchemaName="opportunity" parentDisplayName="Opportunity" solution="msdynce_Sales (9.0.4.0076)">
+          <package>msdynce_SalesAnchor (9.0.21111.10001)</package>
+        </Required>
+        <Dependent type="2" schemaName="opendeals" displayName="Open Deals" parentSchemaName="account" parentDisplayName="Account" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="opportunityid" displayName="Opportunity" parentSchemaName="opportunity" parentDisplayName="Opportunity" solution="msdynce_Sales (9.0.4.0076)">
+          <package>msdynce_SalesAnchor (9.0.21111.10001)</package>
+        </Required>
+        <Dependent type="2" schemaName="openrevenue" displayName="Open Revenue" parentSchemaName="account" parentDisplayName="Account" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="statecode" displayName="Status" parentSchemaName="opportunity" parentDisplayName="Opportunity" solution="msdynce_Sales (9.0.4.0076)">
+          <package>msdynce_SalesAnchor (9.0.21111.10001)</package>
+        </Required>
+        <Dependent type="2" schemaName="opendeals" displayName="Open Deals" parentSchemaName="account" parentDisplayName="Account" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="statecode" displayName="Status" parentSchemaName="opportunity" parentDisplayName="Opportunity" solution="msdynce_Sales (9.0.4.0076)">
+          <package>msdynce_SalesAnchor (9.0.21111.10001)</package>
+        </Required>
+        <Dependent type="2" schemaName="openrevenue" displayName="Open Revenue" parentSchemaName="account" parentDisplayName="Account" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="2" schemaName="territoryid" displayName="Region" parentSchemaName="systemuser" parentDisplayName="User" solution="msdynce_AppCommon (9.0.4.0066)">
           <package>msdynce_AppCommonAnchor (9.0.21111.10001)</package>
         </Required>
@@ -10926,19 +10969,13 @@
         <Required type="61" schemaName="AppCommon/Account/Account_main_system_library.js" displayName="AppCommon/Account/Account_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
           <package>msdynce_AppCommonAnchor (9.0.21111.10001)</package>
         </Required>
-        <Dependent type="60" displayName="TDG Site Profile - Custom DeActivation Button" parentDisplayName="Account" id="{05264e2c-47d5-4669-bd52-f903380ba1fa}" />
+        <Dependent type="60" displayName="TDG Organizations" parentDisplayName="Account" id="{444fd031-7381-4a73-a520-2b2fd7ebe013}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="AppCommon/Account/Account_main_system_library.js" displayName="AppCommon/Account/Account_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
           <package>msdynce_AppCommonAnchor (9.0.21111.10001)</package>
         </Required>
         <Dependent type="60" displayName="TDG Site Profile" parentDisplayName="Account" id="{db5d5927-e1b5-440f-b55b-e0a95e1b053b}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="61" schemaName="AppCommon/Contact/Contact_main_system_library.js" displayName="AppCommon/Contact/Contact_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
-          <package>msdynce_AppCommonAnchor (9.0.21111.10001)</package>
-        </Required>
-        <Dependent type="60" displayName="Contact" parentDisplayName="Contact" id="{1fed44d1-ae68-4a41-bd2b-f13acac4acfa}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="AppCommon/Contact/Contact_main_system_library.js" displayName="AppCommon/Contact/Contact_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
@@ -10951,6 +10988,12 @@
           <package>msdynce_AppCommonAnchor (9.0.21111.10001)</package>
         </Required>
         <Dependent type="60" displayName="Information" parentDisplayName="Contact" id="{894cc46a-b0cb-4ab0-8bf6-200544e46a2d}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="61" schemaName="AppCommon/Contact/Contact_main_system_library.js" displayName="AppCommon/Contact/Contact_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
+          <package>msdynce_AppCommonAnchor (9.0.21111.10001)</package>
+        </Required>
+        <Dependent type="60" displayName="TDG Contact" parentDisplayName="Contact" id="{ec7b5b17-85b9-eb11-8236-0022483bc67c}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="AppCommon/Territory/Territory_main_system_library.js" displayName="AppCommon/Territory/Territory_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
@@ -11555,19 +11598,19 @@
         <Required type="61" schemaName="Sales/ClientCommon/Sales_ClientCommon.js" displayName="Sales/ClientCommon/Sales_ClientCommon.js" solution="msdynce_Sales (9.0.4.0076)">
           <package>msdynce_SalesAnchor (9.0.21111.10001)</package>
         </Required>
-        <Dependent type="60" displayName="TDG Site Profile" parentDisplayName="Account" id="{db5d5927-e1b5-440f-b55b-e0a95e1b053b}" />
+        <Dependent type="60" displayName="TDG Contact" parentDisplayName="Contact" id="{ec7b5b17-85b9-eb11-8236-0022483bc67c}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="61" schemaName="Sales/Contact/Contact_main_system_library.js" displayName="Sales/Contact/Contact_main_system_library.js" solution="msdynce_SalesPatch201904 (9.0.1912.1007)">
+          <package>msdynce_SalesAnchor (9.0.21111.10001)</package>
+        </Required>
+        <Dependent type="60" displayName="Contact" parentDisplayName="Contact" id="{1fed44d1-ae68-4a41-bd2b-f13acac4acfa}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="Sales/Contact/Contact_main_system_library.js" displayName="Sales/Contact/Contact_main_system_library.js" solution="msdynce_SalesPatch201904 (9.0.1912.1007)">
           <package>msdynce_SalesAnchor (9.0.21111.10001)</package>
         </Required>
         <Dependent type="60" displayName="Contact Main Form" parentDisplayName="Contact" id="{2c961780-b9f9-ea11-a815-000d3af3ac0d}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="61" schemaName="Sales/Contact/Contact_main_system_library.js" displayName="Sales/Contact/Contact_main_system_library.js" solution="msdynce_SalesPatch201904 (9.0.1912.1007)">
-          <package>msdynce_SalesAnchor (9.0.21111.10001)</package>
-        </Required>
-        <Dependent type="60" displayName="TDG Contact" parentDisplayName="Contact" id="{ec7b5b17-85b9-eb11-8236-0022483bc67c}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="Scheduling/BookableResource/BookableResource_main_system_library.js" displayName="Scheduling/BookableResource/BookableResource_main_system_library.js" solution="msdynce_Scheduling (9.0.0.0)" />

@@ -25,6 +25,11 @@
         <Button Alt="$Resources(EntityDisplayName):Ribbon.SubGrid.OpenAssociatedGridView" Command="Mscrm.OpenAssociatedGridViewOnLiteGridStandard" Id="ovs.msdyn_workorder.Button8.Button.Mscrm.SubGrid.msdyn_workorder.OpenAssociatedGridViewStandard" Image32by32="/_imgs/ribbon/OpenAssociatedGridView32.png" Image16by16="/_imgs/ribbon/OpenAssociatedGridView16.png" LabelText="$Resources(EntityDisplayName):Ribbon.SubGrid.OpenAssociatedGridView" Sequence="0" TemplateAlias="o1" ToolTipTitle="$Resources(EntityDisplayName):Mscrm_SubGrid_EntityLogicalName_MainTab_Management_OpenAssociatedGridViewStandard_ToolTipTitle" ToolTipDescription="$Resources(EntityDisplayName):Mscrm_SubGrid_EntityLogicalName_MainTab_Management_OpenAssociatedGridViewStandard_ToolTipDescription" />
       </CommandUIDefinition>
     </CustomAction>
+    <CustomAction Id="ovs.msdyn_workorder.ClearResourceRequirements.CustomAction" Location="Mscrm.HomepageGrid.msdyn_workorder.MainTab.Management.Controls._children" Sequence="35">
+      <CommandUIDefinition>
+        <Button Alt="$LocLabels:ovs.msdyn_workorder.ClearResourceRequirements.Alt" Command="ovs.msdyn_workorder.CleanResourceRequirements.Command" Id="ovs.msdyn_workorder.ClearResourceRequirements" LabelText="$LocLabels:ovs.msdyn_workorder.ClearResourceRequirements.LabelText" Sequence="35" TemplateAlias="o2" ToolTipTitle="$LocLabels:ovs.msdyn_workorder.ClearResourceRequirements.ToolTipTitle" ToolTipDescription="$LocLabels:ovs.msdyn_workorder.ClearResourceRequirements.ToolTipDescription" />
+      </CommandUIDefinition>
+    </CustomAction>
     <CustomAction Id="ovs.msdyn_workorder.Form.TDG.InspectionReport.CustomAction" Location="Mscrm.Form.msdyn_workorder.MainTab.Save.Controls._children" Sequence="76">
       <CommandUIDefinition>
         <Button Alt="$LocLabels:ovs.msdyn_workorder.Form.TDG.InspectionReport.Alt" Command="" Id="ovs.msdyn_workorder.Form.TDG.InspectionReport" LabelText="$LocLabels:ovs.msdyn_workorder.Form.TDG.InspectionReport.LabelText" Sequence="76" TemplateAlias="o2" ToolTipTitle="$LocLabels:ovs.msdyn_workorder.Form.TDG.InspectionReport.ToolTipTitle" ToolTipDescription="$LocLabels:ovs.msdyn_workorder.Form.TDG.InspectionReport.ToolTipDescription" />
@@ -207,6 +212,17 @@
       </DisplayRules>
       <Actions />
     </CommandDefinition>
+    <CommandDefinition Id="ovs.msdyn_workorder.CleanResourceRequirements.Command">
+      <EnableRules>
+        <EnableRule Id="ovs.msdyn_workorder.CleanResourceRequirements.EnableRule" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="ovs.msdyn_workorder.CleanResourceRequirements.DisplayRule" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="ResReqClean.CleanResReq" Library="$webresource:ovs_TDG_Clean_ResourceRequirements_Ribbon.js" />
+      </Actions>
+    </CommandDefinition>
     <CommandDefinition Id="ovs.msdyn_workorder.Command.Form.TDG.InspectionReport">
       <EnableRules>
         <EnableRule Id="ovs.msdyn_workorder.EnableRule.isTDG.App.InspectorManagerPlanner" />
@@ -224,6 +240,9 @@
   <RuleDefinitions>
     <TabDisplayRules />
     <DisplayRules>
+      <DisplayRule Id="ovs.msdyn_workorder.CleanResourceRequirements.DisplayRule">
+        <EntityPrivilegeRule PrivilegeType="Delete" PrivilegeDepth="None" EntityName="lead" />
+      </DisplayRule>
       <DisplayRule Id="ovs.msdyn_workorder.DisplayRule.HideOnAccountEntity">
         <EntityRule EntityName="account" AppliesTo="PrimaryEntity" Context="SubGridStandard" Default="false" InvertResult="true" />
       </DisplayRule>
@@ -300,6 +319,9 @@
             <CustomRule FunctionName="XrmCore.InternalUtilities.DialogUtilities.isAllowLegacyDialogsEmbedding" Library="$webresource:Main_system_library.js" />
           </Or>
         </OrRule>
+      </EnableRule>
+      <EnableRule Id="ovs.msdyn_workorder.CleanResourceRequirements.EnableRule">
+        <RecordPrivilegeRule PrivilegeType="Delete" AppliesTo="PrimaryEntity" />
       </EnableRule>
       <EnableRule Id="ovs.msdyn_workorder.EnableRule.isTDG.App.InspectorManagerPlanner">
         <CustomRule FunctionName="WORibbon.isInspectionApp" Library="$webresource:qm_WorkOrder_Ribbons.js">
@@ -410,6 +432,26 @@
         <Title languagecode="2052" description="日程安排助理" />
         <Title languagecode="3076" description="排程小幫手" />
         <Title languagecode="1028" description="排程小幫手" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="ovs.msdyn_workorder.ClearResourceRequirements.Alt">
+      <Titles>
+        <Title description="Clean Resource Requirements" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="ovs.msdyn_workorder.ClearResourceRequirements.LabelText">
+      <Titles>
+        <Title description="Clean Resource Requirements" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="ovs.msdyn_workorder.ClearResourceRequirements.ToolTipDescription">
+      <Titles>
+        <Title description="Clean Resource Requirements" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="ovs.msdyn_workorder.ClearResourceRequirements.ToolTipTitle">
+      <Titles>
+        <Title description="Clean Resource Requirements" languagecode="1033" />
       </Titles>
     </LocLabel>
     <LocLabel Id="ovs.msdyn_workorder.Form.TDG.InspectionReport.Alt">
