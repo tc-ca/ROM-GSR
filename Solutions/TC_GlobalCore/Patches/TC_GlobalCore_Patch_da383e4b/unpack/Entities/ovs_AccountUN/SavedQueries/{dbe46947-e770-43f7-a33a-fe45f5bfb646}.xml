@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{dbe46947-e770-43f7-a33a-fe45f5bfb646}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
+        <row name="result" id="ovs_accountunid">
+          <cell name="a_87c23c50a008401db1244599991be764.tdg_undisplayname" width="116" />
+          <cell name="a_87c23c50a008401db1244599991be764.tdg_shippingnamedescriptiontxt" width="162" />
+          <cell name="ovs_supplychaindirection" width="100" />
+          <cell name="a_87c23c50a008401db1244599991be764.tdg_primaryclasscd" width="100" />
+          <cell name="a_87c23c50a008401db1244599991be764.tdg_secondaryclasscd" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="ovs_accountun">
+          <attribute name="ovs_accountunid" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="1" />
+          </filter>
+          <attribute name="ovs_supplychaindirection" />
+          <link-entity alias="a_87c23c50a008401db1244599991be764" name="tdg_unnumber" to="ovs_unnumber" from="tdg_unnumberid" link-type="outer" visible="false">
+            <attribute name="tdg_shippingnamedescriptiontxt" />
+            <attribute name="tdg_undisplayname" />
+            <attribute name="tdg_primaryclasscd" />
+            <attribute name="tdg_secondaryclasscd" />
+          </link-entity>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="UN NUMBER (Inactive)" languagecode="1033" />
+      <LocalizedName description="Numéros UN (inactif)" languagecode="1036" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
