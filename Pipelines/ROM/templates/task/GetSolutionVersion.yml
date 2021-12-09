@@ -1,0 +1,37 @@
+### msqldump.yml ###
+parameters:
+  - name: Solutions
+    type: object
+    default: {}
+  - name: ConnectionString
+    type: string
+  - name: EnvironmentName
+    type: string
+    default: 'DEV-TDG'
+  - name: SolutionExists
+    type: number
+    default: '0'
+  - name: SolutionVersion
+    type: string
+    default: ''
+  - name: SolutionDisplayName
+    type: string
+    default: ''
+
+steps:
+  - ${{ each solution in parameters.Solutions }}:
+      - task: MSCRMGetSolution@12
+        displayName: '${{ parameters.EnvironmentName }} - ${{ solution }}'
+        inputs:
+          crmConnectionString: '${{ parameters.ConnectionString }}'
+          solutionName: '${{ solution }}'
+          existsVariableName: 'SolutionExists'
+          versionVariableName: 'SolutionVersion'
+          displayVariableName: 'SolutionDisplayName'
+      - task: PowerShell@2
+        inputs:
+          targetType: 'inline'
+          script: |
+            Write-Host "##vso[task.setvariable variable=${{ solution }}Version;]$(SolutionVersion)"
+            Write-Host "Set ${{ solution }}Version environment variable to $(SolutionVersion)"
+          pwsh: true

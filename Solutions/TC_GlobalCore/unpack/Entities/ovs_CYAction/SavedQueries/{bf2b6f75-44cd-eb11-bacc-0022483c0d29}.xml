@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{bf2b6f75-44cd-eb11-bacc-0022483c0d29}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="subject" select="1" icon="1" preview="1">
+        <row name="result" id="activityid">
+          <cell name="subject" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="regardingobjectid" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="a_d408d2b57977406e9e8923200e987b6b.msdyn_serviceaccount" width="225" />
+          <cell name="ovs_actiontype" width="216" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="statecode" width="142" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_actiondate" width="100" />
+          <cell name="createdon" width="125" />
+          <cell name="modifiedon" width="122" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
+        <entity name="ovs_cyaction">
+          <attribute name="subject" />
+          <attribute name="createdon" />
+          <attribute name="statecode" />
+          <attribute name="regardingobjectid" />
+          <attribute name="ovs_actiontype" />
+          <attribute name="modifiedon" />
+          <order attribute="subject" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="in">
+              <value>3</value>
+              <value>0</value>
+            </condition>
+          </filter>
+          <link-entity name="activityparty" from="activityid" to="activityid" alias="aa" link-type="inner">
+            <filter type="and">
+              <condition attribute="partyid" operator="eq-userid" />
+            </filter>
+          </link-entity>
+          <link-entity name="msdyn_workorder" from="msdyn_workorderid" to="regardingobjectid" alias="ab" link-type="inner" />
+          <attribute name="activityid" />
+          <link-entity alias="a_d408d2b57977406e9e8923200e987b6b" name="msdyn_workorder" to="regardingobjectid" from="msdyn_workorderid" link-type="outer" visible="false">
+            <attribute name="msdyn_serviceaccount" />
+          </link-entity>
+          <attribute name="ovs_actiondate" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.18.1.1</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="My Active Safety &amp; Enforcement Actions" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

@@ -1,0 +1,156 @@
+﻿<html>
+
+<head>
+    <meta charset="utf-8" />
+    <link href="Bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="bootstrapTable/bootstrapTable.min.css" rel="stylesheet" type="text/css" />
+
+
+    <script src="../ClientGlobalContext.js.aspx"></script>
+    <script src="Scripts/jquery_3.1.1.min.js"></script>
+    <script src="Bootstrap/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <table id="mainTable" data-classes="table table-hover table-no-bordered" data-pagination="true" data-toggle="table" data-page-size="30" data-row-style="rowTailor" data-search="true" data-search-on-enter-key="true" data-search-align="left">
+            </table>
+
+        </div>
+    </div>
+
+
+
+
+    <script>
+
+        var globalContext = parent.Xrm.Utility.getGlobalContext();
+        var clientUrl = globalContext.getClientUrl();
+
+
+        function rowTailor(row, index) {
+            return {
+                //classes: 'text-nowrap',
+                css: { "cursor": "pointer", "color": "#505050", "font-family": "Segoe UI", "font-size": "13px", "font-style": "normal", "font-weight": "400;", "line-height": "16px", "padding-top": "5px", "padding-bottom": "5px" }
+            };
+        }
+
+        function violationLink(value, row, index, field) {
+
+            var link = clientUrl + "/main.aspx?etn=qm_syresult&extraqs=&id=" + encodeURIComponent(row.ViolationId) + "&newWindow=true&pagetype=entityrecord"
+
+            return "<a href='" + link + "' target='_blank' class='text-primary'>" + value + "</a>";
+        }
+
+        function woLink(value, row, index, field) {
+
+            var link = clientUrl + "/main.aspx?etn=msdyn_workorder&extraqs=&id=" + encodeURIComponent(row.WorkOrderId) + "&newWindow=true&pagetype=entityrecord"
+
+            return "<a href='" + link + "' target='_blank' class='text-primary'>" + value + "</a>";
+        }
+
+        function displayData(input) {
+
+            userSettings = Xrm.Utility.getGlobalContext().userSettings;
+            langId = userSettings.languageId;
+            let english =  langId === 1033
+            let resourceName = langId === 1033 ? "ovs_Labels.1033.resx" : "ovs_Labels.1036.resx";
+
+
+            if (input == null && input == undefined && input == '') return;
+
+            var data = JSON.parse(input);
+            var rows = new Array();
+            for (var i = 0; i < data.length; i++) {
+
+
+                rows.push({
+                    ViolationId : data[i].ViolationId,
+                    WorkOrderId : data[i].WorkOrderId,
+                    InspectionDate : data[i].InspectionDate,
+                    ViolationName : data[i].ViolationName,
+                    ViolationCount : data[i].ViolationCount,
+                    ViolationExternalComments : data[i].ViolationExternalComments,
+                    WorkOrderName : data[i].WorkOrderName,
+                    Provision : english ? data[i].ProvisionEnglish : data[i].ProvisionFrench,
+                    ViolationDisplay : english ? data[i].ViolationDisplayEnglish : data[i].ViolationDisplayFrench
+                })
+
+            }
+
+            //TODO: fix getResourceString is not available tried with and without parent
+            // let workOrderHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.WorkOrderNumber");
+            // let provisionHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.Provision");
+            // let inspectionDateHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.InspectionDate");
+            // let violationDateHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.ViolationCount");
+            // let violationDisplayHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.ViolationDisplay");
+
+            let workOrderHeaderTitle = langId === 1033 ? "Work Order Number" : "No ordre de travail"
+            let provisionHeaderTitle = langId === 1033 ? "Provision" : "Disposition"
+            let inspectionDateHeaderTitle = langId === 1033 ? "Inspection Date" : "Date d'inspection"
+            let violationDateHeaderTitle = langId === 1033 ? "Violation Count" : "Nombre d'infractions"
+            let violationDisplayHeaderTitle = langId === 1033 ? "Violation Display" : "Affichage des infractions"
+
+            $('#mainTable').bootstrapTable({
+                locale: langId === 1033 ? 'en-US' : 'fr-FR',
+                columns: [
+                    {
+                        field: 'ViolationId',
+                        visible: false
+                    },
+                    {
+                        field: 'WorkOrderId',
+                         visible: false
+                    },
+                        {
+                        field: 'WorkOrderName',
+                        title: workOrderHeaderTitle,
+                        sortable: true,
+                        formatter: "woLink"
+                    },
+                    {
+                        field: 'Provision',
+                        title: provisionHeaderTitle,
+                        formatter: "violationLink",
+
+                        sortable: true
+
+                    },
+                    {
+                        field: 'InspectionDate',
+                        title: inspectionDateHeaderTitle,
+                        sortable: true
+
+                    },
+                       {
+                        field: 'ViolationCount',
+                        title: violationDateHeaderTitle,
+                        sortable: true
+
+                    },
+                    {
+                        field: 'ViolationDisplay',
+                        title: violationDisplayHeaderTitle
+                    }
+                ],
+                data:rows
+            });
+
+
+        }
+
+        $(document).ready(function () {
+            displayData(window.top.localStorage.getItem('_violationsHistory'));
+        });
+
+    </script>
+
+
+    <script src="bootstrapTable/bootstrapTable.min.js"></script>
+    <script src="bootstrapTable/bootstrap-table-locale-all.js"></script>
+</body>
+
+</html>

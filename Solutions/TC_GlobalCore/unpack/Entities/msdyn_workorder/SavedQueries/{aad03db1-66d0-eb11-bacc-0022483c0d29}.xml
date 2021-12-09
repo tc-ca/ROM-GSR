@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{aad03db1-66d0-eb11-bacc-0022483c0d29}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="msdyn_name" select="1" icon="1" preview="1">
+        <row name="result" id="msdyn_workorderid">
+          <cell name="msdyn_name" width="122" />
+          <cell name="msdyn_serviceaccount" width="300" />
+          <cell name="msdyn_address1" width="165" />
+          <cell name="msdyn_city" width="100" />
+          <cell name="msdyn_stateorprovince" width="75" />
+          <cell name="msdyn_postalcode" width="100" />
+          <cell name="msdyn_systemstatus" width="138" />
+          <cell name="ovs_oversighttype" width="184" />
+          <cell name="ovs_primaryinspector" width="113" />
+          <cell name="ovs_fiscalyear" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+        <entity name="msdyn_workorder">
+          <attribute name="msdyn_name" />
+          <attribute name="msdyn_serviceaccount" />
+          <attribute name="msdyn_workorderid" />
+          <attribute name="ovs_oversighttype" />
+          <attribute name="msdyn_address1" />
+          <attribute name="msdyn_city" />
+          <attribute name="msdyn_stateorprovince" />
+          <attribute name="msdyn_postalcode" />
+          <attribute name="ovs_fiscalyear" />
+          <attribute name="ovs_primaryinspector" />
+          <attribute name="msdyn_systemstatus" />
+          <order attribute="ovs_fiscalyear" descending="true" />
+          <order attribute="msdyn_name" descending="true" />
+          <link-entity name="systemuser" alias="aa" link-type="inner" from="systemuserid" to="owninguser">
+            <filter type="and">
+              <condition attribute="businessunitid" operator="eq-businessid" />
+            </filter>
+          </link-entity>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.22.1.1</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="My Region's Work Orders" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

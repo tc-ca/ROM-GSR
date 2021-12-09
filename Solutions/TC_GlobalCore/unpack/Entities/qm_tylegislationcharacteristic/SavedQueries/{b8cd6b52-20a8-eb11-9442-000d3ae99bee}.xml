@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{b8cd6b52-20a8-eb11-9442-000d3ae99bee}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="qm_name" select="1" icon="1" preview="1">
+        <row name="result" id="qm_tylegislationcharacteristicid">
+          <cell name="qm_name" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical">
+        <entity name="qm_tylegislationcharacteristic">
+          <attribute name="qm_tylegislationcharacteristicid" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+            <condition attribute="qm_categoryid" operator="not-null" />
+          </filter>
+          <link-entity name="qm_tylegislationcharacteristic" alias="aa" link-type="inner" from="qm_tylegislationcharacteristicid" to="qm_categoryid">
+            <filter type="and">
+              <condition attribute="qm_tylegislationcharacteristicid" operator="eq" value="{c2c8bb4c-1fa8-eb11-9442-000d3ae99322}" uiname="Air Operator Function::Fonction de l'exploitant aérien" uitype="qm_tylegislationcharacteristic" />
+            </filter>
+          </link-entity>
+          <attribute name="qm_name" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.2</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Air Operator Function" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

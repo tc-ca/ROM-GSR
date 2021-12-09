@@ -1,0 +1,40 @@
+parameters:
+  - name: StageName
+    type: string
+  - name: SolutionName
+    type: string
+  - name: dependsOn
+    type: object
+    default: []
+  - name: ConnectionString
+    type: string
+  - name: EnvironmentName
+    type: string
+    default: 'TDGCORE-DEV'  
+stages:
+- stage: ${{Parameters.StageName}}
+  dependsOn:
+  - ${{ each stage in parameters.dependsOn }}:
+    - ${{ stage }}
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: ${{Parameters.StageName}}
+    steps:
+    - checkout: none
+    - task: MSCRMToolInstaller@12
+      inputs:
+        nugetFeed: 'official'
+        psFeed: 'official'
+    - template: ../task/GetSolutionVersion.yml
+      parameters:
+        Solutions:
+          - ${{Parameters.SolutionName}}
+        ConnectionString: ${{Parameters.ConnectionString}}
+        EnvironmentName: ${{Parameters.EnvironmentName}}
+    - task: PowerShell@2
+      displayName: "Print Current Solution Version"
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "Current ${{Parameters.SolutionName}} Version: ${env:SOLUTIONVERSION}"

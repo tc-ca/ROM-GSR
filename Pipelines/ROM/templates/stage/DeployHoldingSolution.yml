@@ -1,0 +1,83 @@
+parameters:
+  - name: PowerPlatformSPN
+    type: string
+  - name: SolutionName
+    type: string
+  - name: Environment
+    type: string
+  - name: StageName
+    type: string
+  - name: dependsOn
+    type: object
+    default: []
+    
+stages:
+- stage: ${{Parameters.StageName}}
+  dependsOn:
+  - ${{ each stage in parameters.dependsOn }}:
+    - ${{ stage }}
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - deployment: Deploy
+    displayName: ${{Parameters.StageName}}
+    environment: ${{Parameters.Environment}}
+    timeoutInMinutes: 360
+    cancelTimeoutInMinutes: 2
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: PowerShell@2
+            inputs:
+              targetType: 'inline'
+              script: |
+                Write-Host "============================================"
+                Write-Host "Echoing Parameter Values"
+                Write-Host "Parameters.SolutionName: ${{Parameters.SolutionName}}"
+                Write-Host "Parameters.PowerPlatformSPN: ${{Parameters.PowerPlatformSPN}}"
+                Write-Host "============================================"
+          - task: PowerShell@2
+            inputs:
+              targetType: 'inline'
+              script: |
+                Write-Host "============================================"
+                Write-Host "System.DefaultWorkingDirectory"
+                Get-ChildItem -Path "$(System.DefaultWorkingDirectory)"
+                Write-Host "============================================"
+                Write-Host "Agent.BuildDirectory"
+                Get-ChildItem -Path "$(Agent.BuildDirectory)"
+                Write-Host "============================================"
+                Write-Host ""
+                Write-Host "============================================"
+                Write-Host "Build.ArtifactStagingDirectory"
+                Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)"
+                Write-Host "============================================"
+                Write-Host "============================================"
+                Write-Host "Build.BinariesDirectory"
+                Get-ChildItem -Path "$(Build.BinariesDirectory)"
+                Write-Host "============================================"
+                Write-Host "============================================"
+                Write-Host "Build.SourcesDirectory"
+                Get-ChildItem -Path "$(Build.SourcesDirectory)"
+                Write-Host "============================================"
+              errorActionPreference: 'continue'
+          - task: PowerPlatformToolInstaller@0
+            inputs:
+              DefaultVersion: true
+          - task: PowerPlatformImportSolution@0
+            inputs:
+              authenticationType: 'PowerPlatformSPN'
+              PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
+              SolutionInputFile: '$(Agent.BuildDirectory)\zip\${{Parameters.SolutionName}}_Managed.zip'
+              AsyncOperation: true
+              MaxAsyncWaitTime: '360'
+              HoldingSolution: true
+              OverwriteUnmanagedCustomizations: true
+          - task: PowerPlatformApplySolutionUpgrade@0
+            inputs:
+              authenticationType: 'PowerPlatformSPN'
+              PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
+              SolutionName: '${{Parameters.SolutionName}}'
+              AsyncOperation: true
+              MaxAsyncWaitTime: '360'

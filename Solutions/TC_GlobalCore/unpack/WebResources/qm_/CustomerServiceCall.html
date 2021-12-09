@@ -1,0 +1,212 @@
+﻿<html>
+<head>
+    <meta charset="utf-8" />
+    <link href="Bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+
+    <script src="../ClientGlobalContext.js.aspx"></script>
+    <script src="Scripts/jquery_3.1.1.min.js"></script>
+    <script src="Bootstrap/js/bootstrap.min.js"></script>
+
+    <style>
+        .top-buffer {
+            margin-top: 10px;
+        }
+
+        .top-double-buffer {
+            margin-top: 20px;
+        }
+
+        .top-grand-buffer {
+            margin-top: 50px;
+        }
+
+        .bottom-buffer {
+            margin-bottom: 20px;
+        }
+
+        @-moz-document url-prefix() {
+            fieldset {
+                display: table-cell;
+            }
+        }
+        .msg {
+            font-style: italic;
+            font-size: 12px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div id="lan-EN">
+            <div class="row top-double-buffer">
+                <div class="well well-lg" id="msg">
+                    Hello,
+
+                    I have found an issue using ROM.
+                </div>
+            </div>
+
+
+
+
+            <div class="row top-double-buffer">
+                <div class="col-xs-5 col-xs-offset-1">
+                    <label for="isBugOrFeatureMsg" id="lblIsBugOrFeatureMsg">Did you find an issue (bug), or would you like to propose a new feature be added to the system?</label>
+                    <label for="isBugOrFeature" id="lblIsBugOrFeature">If you are proposing a new feature, explain the benefits.</label>
+                    <textarea class="form-control" id="isBugOrFeature" rows="3"></textarea>
+                </div>
+            </div>
+
+            <div class="row top-double-buffer">
+                <div class="col-xs-5 col-xs-offset-1">
+                    <label for="isStoping" id="lblIsStoping">If you found a bug, is it preventing you from completing an inspection?</label>
+                    <textarea class="form-control" id="isStoping" rows="3"></textarea>
+                </div>
+            </div>
+
+            <div class="row top-double-buffer">
+                <div class="col-xs-9 col-xs-offset-1">
+                    <label for="message" id="lblMessage">If you found a bug, please provide the work order number or site number and the steps for reproducing the bug.</label>
+                    <label for="messageCS" id="lblMessageCS">The steps to reproduce the bug are as follows:</label>
+                    <p id="step1" class="msg">Example steps:</p>
+                    <p id="step2" class="msg">WO-2021-10000XXX:</p>
+                    <p id="step3" class="msg">1. In an open work order, click the Post Inspection tab.</p>
+                    <p id="step4" class="msg">2. Click Add New Safety Assessment.</p>
+                    <p id="step5" class="msg">3. Click Add Existing Violation.</p>
+                    <p id="step6" class="msg">4. … (list the rest of the steps needed to reproduce the bug)</p>
+
+                    <textarea class="form-control" id="messageCS" rows="10"></textarea>
+                </div>
+            </div>
+
+            <div class="row top-double-buffer">
+                <div class="col-xs-3 col-xs-offset-8">
+                    <button type="submit" id="submitCSmessage" class="btn btn-primary">Submit to Support Team</button>
+                </div>
+            </div>
+
+
+
+        </div>
+        
+        <script>
+
+            var globalContext = Xrm.Utility.getGlobalContext();
+            var clientUrl = globalContext.getClientUrl();
+            var dirty = false;
+            var url = "";
+
+            $(document).ready(function () {
+                
+                var userSettings = Xrm.Utility.getGlobalContext().userSettings;
+                langId = userSettings.languageId;
+                
+                if (langId != 1033) {
+                    $('#msg').text("Bonjour, j'ai trouvé un problème avec l'application GSR.");
+                    $('#lblIsBugOrFeatureMsg').text("Avez-vous trouvé un problème (bogue), ou souhaitez-vous proposer qu’une nouvelle fonctionnalité soit ajoutée au système?");
+                    $('#lblIsBugOrFeature').text("Si vous proposez une nouvelle fonctionnalité, expliquez les avantages.");
+
+                    $('#lblIsStoping').text("Si vous avez trouvé un bogue, vous empêche-t-il de terminer une inspection?");
+
+                    $('#lblMessage').text("Si vous avez trouvé un bogue, veuillez fournir le numéro d’ordre de travail ou le numéro de site et les étapes de reproduction du bogue.");
+                    $('#lblMessageCS').text("Les étapes pour reproduire le bogue sont les suivantes:");
+
+                    $('#step1').text("Exemples d’étapes:");
+                    $('#step2').text("WO-2021-10000XXX:");
+                    $('#step3').text("1. Dans un ordre de travail ouvert, cliquez sur l’onglet Après l'inspection.");
+                    $('#step4').text("2. Cliquez sur Ajouter une nouvelle évaluation de la sécurité");
+                    $('#step5').text("3. Cliquez sur Ajouter une infraction existante.");
+                    $('#step6').text("4. ... (énumérer le reste des étapes nécessaires pour reproduire le bogue)");
+
+                    $('#submitCSmessage').text("Soumettre à l'équipe du support");
+                }
+
+                $('#messageCS').on('change keyup', function () {
+                    dirty = true;
+                });
+
+                $('#submitCSmessage').on('click', function () {
+                    //Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Bootstrap is ok" });
+                    if (!dirty) {
+                        if (langId === 1033) Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Please type in a description of the issue" });
+                        else Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Veuillez écrire une description du problème" });
+                        
+                        return;
+                    }
+                    if (url == "") {
+                        if (langId === 1033) Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Environment Settings don't have Customer Support reference" });
+                        else Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Les paramètres d’environnement n’ont pas de référence de support client" });
+
+                        return;
+                    }
+
+                    //parent.Xrm.Utility.showProgressIndicator("Posting ...");
+
+                    try {
+
+                        //get url from environment settings
+                        var obj = {};
+                        obj.userId = userSettings.userId.replace("{", "").replace("}", "");
+                        obj.message = $('#messageCS').val();
+                        obj.isStop = $('#isStoping').val();
+                        obj.isBugOrFeature = $('#isBugOrFeature').val();
+                        obj.langId = String(langId);
+                        var input = JSON.stringify(obj);
+                        
+                        //call flow
+                        var req = new XMLHttpRequest();
+                        req.open("POST", url, false);
+                        req.setRequestHeader('Content-Type', 'application/json');
+
+                        req.onreadystatechange = function () {
+                            if (this.readyState === 4) {
+
+                                req.onreadystatechange = null;
+                                if (this.status === 200) {
+                                    //Xrm.Utility.closeProgressIndicator();
+                                    var result = this.response;
+                                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: result });
+                                    $('#messageCS').val("");
+                                    $('#isStoping').val("");
+                                    $('#isBugOrFeature').val("");
+                                    dirty = false;
+                                }
+                                else {
+                                    //parent.Xrm.Utility.closeProgressIndicator();
+                                    if (langId === 1033) Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Something went wrong. Error: " + this.statusText });
+                                    else Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Quelque chose s’est mal passé. Erreur: " + this.statusText });
+                                }
+                            }
+                        };
+                        req.send(input);
+
+                    } catch (e) {
+                        //parent.Xrm.Utility.closeProgressIndicator();
+                        console.log(e.message);
+                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: e.message });
+                    }
+                    //parent.Xrm.Utility.closeProgressIndicator();
+                });
+
+
+                Xrm.WebApi.online.retrieveMultipleRecords("qm_environmentsettings", "?$select=qm_value&$filter=qm_name eq 'CustomerSupportUrl'&$top=1").then(
+                    function success(results) {
+                        for (var i = 0; i < results.entities.length; i++) {
+                            url = results.entities[i]["qm_value"];
+                        }
+                    },
+                    function (error) {
+
+                        console.log(error.message);
+                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: error.message });
+                    }
+                );
+
+            });
+
+        </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>1</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{e53580ba-175a-40e8-83ea-52a4c5d40b86}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
+        <row name="result" id="ovs_mocfacilitytypeid">
+          <cell name="ovs_englishlabel" width="100" />
+          <cell name="ovs_frenchlabel" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>4</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="ovs_mocfacilitytype">
+          <attribute name="ovs_mocfacilitytypeid" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <filter type="or" isquickfindfields="1">
+            <condition attribute="ovs_frenchlabel" operator="like" value="{0}" />
+            <condition attribute="ovs_englishlabel" operator="like" value="{0}" />
+          </filter>
+          <attribute name="ovs_frenchlabel" />
+          <attribute name="ovs_englishlabel" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Quick Find Active MOC Facility Types" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

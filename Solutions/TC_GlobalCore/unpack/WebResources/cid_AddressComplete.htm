@@ -1,0 +1,289 @@
+<HTML>
+<HEAD>
+    <META NAME="GENERATOR" Content="Microsoft Visual Studio">
+    <TITLE></TITLE>
+    <style>
+        body {
+            background-color: white;
+        }
+
+        text {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            padding: 6px 12px;
+        }
+
+        label {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            margin: 0px 0px 5px;
+            font-weight: bold;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+</HEAD>
+<BODY>
+    <script type="text/javascript">
+        function search() {
+            debugger;
+            var address_search = document.getElementById("address_search").value
+            var SearchTerm = address_search;
+            var LanguagePreference = 'en';
+
+            AddressComplete.Find(SearchTerm, LanguagePreference);
+        }
+
+        function onInput(e) {
+            //debugger;
+
+            var input = e.target;
+            var val = input.value;
+            var list = input.getAttribute('list');
+            var options = document.getElementById(list).childNodes;
+            var found = false;
+            var index = 0;
+
+            // skip 1st option
+            for (var i = 1; i < options.length; i++) {
+                var current = options[i].value;
+                if (current === val) {
+                    found = true;
+                    index = i;
+                    break;
+                }
+            }
+
+            if (found) {
+                var id = AddressComplete.GetId(index - 1);
+                AddressComplete.Retrieve(id);
+            }
+            else {
+                search();
+            }
+        }
+    </script>
+
+    <form>
+        <label for="fname">Address Lookup</label>
+        <br>
+
+        <input list="address_list" id="address_search" name="address_search" value="" size="38" />
+        <br>
+        <datalist id="address_list">
+            <option value="" />
+            <option value="" />
+            <option value="" />
+            <option value="" />
+            <option value="" />
+            <option value="" />
+            <option value="" />
+        </datalist>
+        <input type="text" id="address_list_id" hidden />
+        <input type="button" onclick="getResponse()" value="getResponse" hidden />
+        <br />
+        <input type="text" id="bn" value="832569966" />
+        <input type="button" onclick="bn_click()" value=">>" />
+    </form>
+
+    <script type="text/javascript">
+        //debugger;
+        document.querySelector('input[list="address_list"]').addEventListener('input', onInput);
+        AddressComplete.removeOptions('address_list', false);
+
+        function getResponse() {
+            debugger;
+            var entity = "cr4eb_temp_odata";
+            var list = parent.OData_List(entity);
+            alert(entity + " >> " + list.length);
+        }
+
+        function bn_click() {
+            debugger;
+            var bn = document.getElementById("bn").value;
+            Retrieve(bn);
+        }
+    </script>
+
+    <script>
+        var _Key = "481271ac-7937-4ee6-997c-a4e791125538";
+        var _Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IlNJRCIsIm5hbWVpZCI6IjIwIiwicm9sZSI6IkJ1c2luZXNzUmVnaXN0cmF0aW9uTnVtYmVyJEJ1c2luZXNzVHlwZUNvZGUgIiwiQ29ycmVsYXRpb25LZXkiOiJhNGU3OTExMjU1MzgiLCJuYmYiOjE2MzUxOTIwMTAsImV4cCI6MTk1MDcyNDgxMCwiaWF0IjoxNjM1MTkyMDEwLCJpc3MiOiJUcmFuc3BvcnQgQ2FuYWRhIiwiYXVkIjoiVHJhbnNwb3J0IENhbmFkYSJ9.FbunkYIaglOLhc4THq4pYJeZWTdo4d1e7bmIGGKKE0w";
+        var _UserRole = "02"
+
+        function Retrieve(bn) {
+            debugger;
+
+            var settings = {
+                "url": "https://wwwapps.tc.gc.ca/Saf-Sec-Sur/3/tdg-bn/api/v1/Businesses/832569966",
+                "method": "GET",
+                "timeout": 0,
+                "dataType": "jsonp",
+                "headers": {
+                    "TC-BN-API-KEY": "481271ac-7937-4ee6-997c-a4e791125538",
+                    "TC-BN-IDENTITY-TOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IlNJRCIsIm5hbWVpZCI6IjIwIiwicm9sZSI6IkJ1c2luZXNzUmVnaXN0cmF0aW9uTnVtYmVyJEJ1c2luZXNzVHlwZUNvZGUgIiwiQ29ycmVsYXRpb25LZXkiOiJhNGU3OTExMjU1MzgiLCJuYmYiOjE2MzUxOTIwMTAsImV4cCI6MTk1MDcyNDgxMCwiaWF0IjoxNjM1MTkyMDEwLCJpc3MiOiJUcmFuc3BvcnQgQ2FuYWRhIiwiYXVkIjoiVHJhbnNwb3J0IENhbmFkYSJ9.FbunkYIaglOLhc4THq4pYJeZWTdo4d1e7bmIGGKKE0w",
+                    "TC-BN-UserRole": "02"
+                },
+            };
+
+            $.ajax(settings).done(function (response) {
+                alert(response);
+            });
+        }
+
+        var AddressComplete = {
+            _Key: "JC96-FZ55-MW77-AG97",
+            _MaxResults: 7,
+            _MaxSuggestions: 7,
+            _SearchFor: 'Everything',
+
+            GetId: function (index) {
+                //debugger;
+                var address_list_id = document.getElementById('address_list_id').value;
+                var list = address_list_id.split(";");
+                return list[index];
+            },
+
+            Find: function (SearchTerm, LanguagePreference) {
+                //debugger;
+
+                this.removeOptions('address_list', false);
+                document.getElementById('address_list_id').value = "";
+
+                var LastId = '';
+                var Country = '';
+                var url = 'https://ws1.postescanada-canadapost.ca/AddressComplete/Interactive/Find/v2.10/json3.ws';
+
+                var params = '';
+                params += "&Key=" + encodeURIComponent(this._Key);
+                params += "&SearchTerm=" + encodeURIComponent(SearchTerm);
+                params += "&LastId=" + encodeURIComponent(LastId);
+                params += "&SearchFor=" + encodeURIComponent(this._SearchFor);
+                params += "&Country=" + encodeURIComponent(Country);
+                params += "&LanguagePreference=" + encodeURIComponent(LanguagePreference);
+                params += "&MaxSuggestions=" + encodeURIComponent(this._MaxSuggestions);
+                params += "&MaxResults=" + encodeURIComponent(this._MaxResults);
+
+                var http = new XMLHttpRequest();
+                http.open('POST', url, true);
+                http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                http.onreadystatechange = function () {
+                    if (http.readyState == 4 && http.status == 200) {
+                        var response = JSON.parse(http.responseText);
+
+                        // Test for an error
+                        if (response.Items.length == 1 && typeof (response.Items[0].Error) != "undefined") {
+                            // Show the error message
+                            // alert(response.Items[0].Description);
+                        }
+                        else {
+                            // Check if there were any items found
+                            if (response.Items.length == 0) {
+                                //alert("Sorry, there were no results");
+                            }
+                            else {
+                                //debugger;
+                                var items = response.Items;
+                                var address_list = document.getElementById('address_list');
+                                var address_list_id = "";
+
+                                this._Items = [];
+
+                                for (i = 0; i < items.length; i++) {
+                                    var item = items[i];
+                                    var value = item.Id;
+                                    var text = item.Text + ', ' + item.Description;
+
+                                    address_list.options[i].value = text;
+                                    address_list_id += value + ";";
+                                    //address_list_id.add(new Option(text, value));
+                                }
+                                document.getElementById('address_list_id').value = address_list_id;
+                            }
+                        }
+                    }
+                }
+
+                try {
+                    http.send(params);
+                } catch (e) {
+                    debugger;
+                }
+            },
+
+            Retrieve: function (Id) {
+                //debugger;
+
+                var url = 'https://ws1.postescanada-canadapost.ca/AddressComplete/Interactive/Retrieve/v2.11/json3.ws';
+                var params = '';
+                params += "&Key=" + encodeURIComponent(this._Key);
+                params += "&Id=" + encodeURIComponent(Id);
+
+                var http = new XMLHttpRequest();
+                http.open('POST', url, true);
+                http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                http.onreadystatechange = function () {
+                    if (http.readyState == 4 && http.status == 200) {
+                        var response = JSON.parse(http.responseText);
+                        // Test for an error
+                        if (response.Items.length == 1 && typeof (response.Items[0].Error) != "undefined") {
+                            // Show the error message
+                            // alert(response.Items[0].Description);
+                        }
+                        else {
+                            // Check if there were any items found
+                            if (response.Items.length == 0) {
+                                // alert("Sorry, there were no results");
+                            }
+                            else {
+                                //debugger;
+                                AddressComplete.Selected(response.Items);
+                            }
+                        }
+                    }
+                }
+                http.send(params);
+            },
+
+            removeOptions: function (name, option_ind) {
+                //debugger;
+
+                var selectElement = document.getElementById(name);
+                for (var i = selectElement.options.length - 1; i >= 0; i--) {
+                    if (option_ind) {
+                        selectElement.remove(i);
+                    }
+                    else {
+                        selectElement.options[i].value = "";
+                    }
+                }
+            },
+
+            getItem: function (field) {
+                return sessionStorage.getItem(field);
+            },
+
+            Selected: function (data) {
+                debugger;
+
+                var item_e = data[0]; // english
+
+                sessionStorage.setItem("POBoxNumber", item_e.POBoxNumber);
+                sessionStorage.setItem("Line1", item_e.Line1);
+                sessionStorage.setItem("Line2", item_e.Line2);
+                sessionStorage.setItem("Line3", item_e.Line3);
+                sessionStorage.setItem("City", item_e.City);
+                sessionStorage.setItem("ProvinceName", item_e.ProvinceName);
+                sessionStorage.setItem("PostalCode", item_e.PostalCode);
+                sessionStorage.setItem("CountryName", item_e.CountryName);
+                sessionStorage.setItem("Label", item_e.Label);
+
+                try {
+                    // transfer control back to parent form
+                    //window.parent.Xrm.Page.AddressComplete_Selected;
+                    //var value = parent.Xrm.Utility.AddressComplete_Selected();
+                    parent.AddressComplete_Selected();
+                } catch (e) { }
+            }
+        }
+    </script>
+</BODY>
+</HTML>

@@ -1,0 +1,43 @@
+parameters:
+  - name: SolutionName
+    type: string
+  - name: ConnectionString
+    type: string
+  - name: StageName
+    type: string
+  - name: dependsOn
+    type: object
+    default: []
+    
+stages:
+- stage: ${{Parameters.StageName}}
+  dependsOn:
+  - ${{ each stage in parameters.dependsOn }}:
+    - ${{ stage }}
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: CreatePatchOnDev
+    steps:
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "============================================"
+          Write-Host "Echoing Parameter Values"
+          Write-Host "Parameters.SolutionName: ${{Parameters.SolutionName}}"
+          Write-Host "Parameters.StageName: ${{Parameters.StageName}}"
+          Write-Host "============================================"
+    - task: MSCRMToolInstaller@12
+      displayName: Power DevOps Tool Installer
+    - task: MSCRMPublishCustomizations@12
+      displayName: Publish Customizations
+      inputs:
+        crmConnectionString: '${{Parameters.ConnectionString}}'
+        crmConnectionTimeout: '3600'
+    - task: MSCRMCreatePatch@12
+      displayName: 'Create Patch: ${{Parameters.SolutionName}}'
+      inputs:
+        crmConnectionString: '${{Parameters.ConnectionString}}'
+        uniqueName: '${{Parameters.SolutionName}}'
+        crmConnectionTimeout: '21600'

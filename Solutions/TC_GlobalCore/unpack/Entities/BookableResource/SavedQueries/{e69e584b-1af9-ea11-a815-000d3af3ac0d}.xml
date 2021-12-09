@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{e69e584b-1af9-ea11-a815-000d3af3ac0d}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="name" select="1" icon="1" preview="1">
+        <row name="result" id="bookableresourceid">
+          <cell name="name" width="154" />
+          <cell name="a_f6080665170f41809a240f3ec8ef787e.title" width="300" />
+          <cell name="a_f6080665170f41809a240f3ec8ef787e.domainname" width="245" />
+          <cell name="ovs_badgenumber" width="86" />
+          <cell name="ovs_registeredinspectornumberrin" width="92" />
+          <cell name="a_f6080665170f41809a240f3ec8ef787e.address1_telephone1" width="108" />
+          <cell name="a_f6080665170f41809a240f3ec8ef787e.address1_stateorprovince" width="50" />
+          <cell name="a_f6080665170f41809a240f3ec8ef787e.territoryid" width="300" />
+          <cell name="a_f6080665170f41809a240f3ec8ef787e.parentsystemuserid" width="300" />
+          <cell name="a_f6080665170f41809a240f3ec8ef787e.businessunitid" width="300" />
+          <cell name="a_f6080665170f41809a240f3ec8ef787e.islicensed" width="49" />
+          <cell name="a_f6080665170f41809a240f3ec8ef787e.caltype" width="109" />
+          <cell name="a_f6080665170f41809a240f3ec8ef787e.emailrouteraccessapproval" width="100" />
+          <cell name="a_f6080665170f41809a240f3ec8ef787e.invitestatuscode" width="135" />
+          <cell name="msdyn_enabledforfieldservicemobile" width="49" />
+          <cell name="msdyn_startlocation" width="100" />
+          <cell name="msdyn_targetutilization" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical">
+        <entity name="bookableresource">
+          <attribute name="name" />
+          <attribute name="bookableresourceid" />
+          <filter type="and">
+            <condition attribute="resourcetype" operator="eq" value="3" />
+          </filter>
+          <link-entity alias="a_f6080665170f41809a240f3ec8ef787e" name="systemuser" to="userid" from="systemuserid" link-type="outer" visible="false">
+            <attribute name="domainname" />
+            <attribute name="title" />
+            <attribute name="address1_telephone1" />
+            <attribute name="address1_stateorprovince" />
+            <attribute name="territoryid" />
+            <attribute name="parentsystemuserid" />
+            <attribute name="businessunitid" />
+            <attribute name="islicensed" />
+            <attribute name="caltype" />
+            <attribute name="emailrouteraccessapproval" />
+            <attribute name="invitestatuscode" />
+          </link-entity>
+          <order attribute="name" descending="false" />
+          <attribute name="ovs_badgenumber" />
+          <attribute name="msdyn_enabledforfieldservicemobile" />
+          <attribute name="ovs_registeredinspectornumberrin" />
+          <attribute name="msdyn_startlocation" />
+          <attribute name="msdyn_targetutilization" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.1</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Inspector View" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

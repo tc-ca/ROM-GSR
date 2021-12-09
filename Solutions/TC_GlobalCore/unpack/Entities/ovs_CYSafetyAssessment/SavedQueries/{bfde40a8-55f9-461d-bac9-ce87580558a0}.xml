@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{bfde40a8-55f9-461d-bac9-ce87580558a0}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
+        <row name="result" id="ovs_cysafetyassessmentid">
+          <cell name="ovs_name" width="160" />
+          <cell name="ovs_inspectionid" width="117" />
+          <cell name="a_a738485e04b640d2b43ab4ec532ba7d3.msdyn_serviceaccount" width="177" />
+          <cell name="statuscode" width="120" />
+          <cell name="ovs_instrumentselection" width="263" />
+          <cell name="ovs_overriderecommendation" width="209" />
+          <cell name="createdon" width="113" />
+          <cell name="modifiedon" width="122" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="ovs_cysafetyassessment">
+          <attribute name="ovs_cysafetyassessmentid" />
+          <attribute name="ovs_name" />
+          <attribute name="createdon" />
+          <attribute name="statuscode" />
+          <attribute name="ovs_instrumentselection" />
+          <attribute name="ovs_overriderecommendation" />
+          <attribute name="ovs_inspectionid" />
+          <attribute name="modifiedon" />
+          <order attribute="modifiedon" descending="true" />
+          <filter type="and">
+            <condition attribute="ownerid" operator="eq-userid" />
+            <condition attribute="statuscode" operator="in">
+              <value>918640000</value>
+              <value>2</value>
+            </condition>
+          </filter>
+          <link-entity alias="a_a738485e04b640d2b43ab4ec532ba7d3" name="msdyn_workorder" to="ovs_inspectionid" from="msdyn_workorderid" link-type="outer" visible="false">
+            <attribute name="msdyn_serviceaccount" />
+          </link-entity>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>4.2.1.4</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="My Inactive Safety Assessments" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

@@ -1,0 +1,263 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RibbonDiffXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <CustomActions>
+    <HideCustomAction HideActionId="tc.Mscrm.Form.bookableresourcebooking.Activate.Hide" Location="Mscrm.Form.bookableresourcebooking.Activate" />
+    <HideCustomAction HideActionId="tc.Mscrm.Form.bookableresourcebooking.Deactivate.Hide" Location="Mscrm.Form.bookableresourcebooking.Deactivate" />
+    <HideCustomAction HideActionId="tc.Mscrm.Form.bookableresourcebooking.NewRecord.Hide" Location="Mscrm.Form.bookableresourcebooking.NewRecord" />
+    <CustomAction Id="tc.Mscrm.Form.bookableresourcebooking.NewRecordForBPFEntity.CustomAction" Location="Mscrm.Form.bookableresourcebooking.MainTab.Save.Controls._children" Sequence="45">
+      <CommandUIDefinition>
+        <Button Alt="$Resources:Ribbon.HomepageGrid.MainTab.New" Command="Mscrm.Form.NewRecordForBPFEntity" Id="Mscrm.Form.bookableresourcebooking.NewRecordForBPFEntity" Image32by32="/_imgs/ribbon/newrecord32.png" Image16by16="/_imgs/ribbon/NewRecord_16.png" LabelText="$LocLabels:Mscrm.Form.bookableresourcebooking.NewRecordForBPFEntity.LabelText" Sequence="45" TemplateAlias="o1" ToolTipTitle="$Resources:Ribbon.HomepageGrid.MainTab.New" ToolTipDescription="$Resources(EntityDisplayName):Ribbon.Tooltip.New" ModernImage="New" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <CustomAction Id="tc.Mscrm.HomepageGrid.bookableresourcebooking.NewRecord.CustomAction" Location="Mscrm.HomepageGrid.bookableresourcebooking.MainTab.Management.Controls._children" Sequence="10">
+      <CommandUIDefinition>
+        <Button Alt="$Resources:Ribbon.HomepageGrid.MainTab.New" Command="Mscrm.NewRecordFromGrid" Id="Mscrm.HomepageGrid.bookableresourcebooking.NewRecord" Image32by32="/_imgs/ribbon/newrecord32.png" Image16by16="/_imgs/ribbon/New_16.png" LabelText="$LocLabels:Mscrm.HomepageGrid.bookableresourcebooking.NewRecord.LabelText" Sequence="10" TemplateAlias="o1" ToolTipTitle="$Resources:Ribbon.HomepageGrid.MainTab.New" ToolTipDescription="$Resources(EntityDisplayName):Ribbon.Tooltip.New" ModernImage="New" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <CustomAction Id="tc.Mscrm.HomepageGrid.bookableresourcebooking.NewRecordForBPFEntity.CustomAction" Location="Mscrm.HomepageGrid.bookableresourcebooking.MainTab.Management.Controls._children" Sequence="10">
+      <CommandUIDefinition>
+        <Button Alt="$Resources:Ribbon.HomepageGrid.MainTab.New" Command="Mscrm.HomepageGrid.NewRecordForBPFEntity" Id="Mscrm.HomepageGrid.bookableresourcebooking.NewRecordForBPFEntity" Image32by32="/_imgs/ribbon/newrecord32.png" Image16by16="/_imgs/ribbon/NewRecord_16.png" LabelText="$LocLabels:Mscrm.HomepageGrid.bookableresourcebooking.NewRecordForBPFEntity.LabelText" Sequence="10" TemplateAlias="o1" ToolTipTitle="$Resources:Ribbon.HomepageGrid.MainTab.New" ToolTipDescription="$Resources(EntityDisplayName):Ribbon.Tooltip.New" ModernImage="New" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <HideCustomAction HideActionId="tc.Mscrm.SubGrid.bookableresourcebooking.Activate.Hide" Location="Mscrm.SubGrid.bookableresourcebooking.Activate" />
+    <CustomAction Id="tc.Mscrm.SubGrid.bookableresourcebooking.AddNewStandard.CustomAction" Location="Mscrm.SubGrid.bookableresourcebooking.MainTab.Management.Controls._children" Sequence="20">
+      <CommandUIDefinition>
+        <Button Alt="$LocLabels:Mscrm.SubGrid.bookableresourcebooking.AddNewStandard.Alt" Command="Mscrm.AddNewRecordFromSubGridStandard" Id="Mscrm.SubGrid.bookableresourcebooking.AddNewStandard" Image32by32="/_imgs/ribbon/newrecord32.png" Image16by16="/_imgs/ribbon/New_16.png" LabelText="$LocLabels:Mscrm.SubGrid.bookableresourcebooking.AddNewStandard.LabelText" Sequence="20" TemplateAlias="o1" ToolTipTitle="$LocLabels:Mscrm.SubGrid.bookableresourcebooking.AddNewStandard.ToolTipTitle" ModernImage="New" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <CustomAction Id="tc.Mscrm.SubGrid.bookableresourcebooking.NewRecord.CustomAction" Location="Mscrm.SubGrid.bookableresourcebooking.MainTab.Management.Controls._children" Sequence="10">
+      <CommandUIDefinition>
+        <Button Command="Mscrm.NewRecordFromGrid" Id="Mscrm.SubGrid.bookableresourcebooking.NewRecord" Image32by32="/_imgs/ribbon/newrecord32.png" Image16by16="/_imgs/ribbon/New_16.png" LabelText="$Resources(EntityDisplayName):Ribbon.SubGrid.MainTab.New" Sequence="10" TemplateAlias="o1" ToolTipTitle="$Resources(EntityDisplayName):Ribbon.SubGrid.MainTab.New" ToolTipDescription="$Resources(EntityDisplayName):Ribbon.Tooltip.New" ModernImage="New" />
+      </CommandUIDefinition>
+    </CustomAction>
+  </CustomActions>
+  <Templates>
+    <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
+  </Templates>
+  <CommandDefinitions>
+    <CommandDefinition Id="Mscrm.EditSelectedRecord">
+      <EnableRules>
+        <EnableRule Id="Mscrm.CheckBulkEditSupportForEntity" />
+        <EnableRule Id="Mscrm.VisualizationPaneNotMaximized" />
+        <EnableRule Id="Mscrm.IsValidForHierarchyView" />
+        <EnableRule Id="Mscrm.ShowOnNonModernAndModernIfAllowed" />
+        <EnableRule Id="tc.bookableresourcebooking.EnableRule0.HideButtonIfFormIsReadOnly" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.BulkEditPrivilege" />
+        <DisplayRule Id="Mscrm.WriteSelectedEntityPermission" />
+        <DisplayRule Id="Mscrm.HybridDialogBulkEditEnabled" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="FieldService.OpenMainFormDialog.Library.OpenExistingRecordForm" Library="$webresource:msdyn_/MainFormDialog/FieldService.OpenMainFormDialog.js">
+          <CrmParameter Value="SelectedEntityTypeName" />
+          <CrmParameter Value="SelectedControl" />
+          <CrmParameter Value="SelectedControlSelectedItemReferences" />
+          <CrmParameter Value="PrimaryControl" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="Mscrm.NewRecordFromGrid">
+      <EnableRules>
+        <EnableRule Id="Mscrm.IsValidForHierarchyView" />
+        <EnableRule Id="Mscrm.IsValidForHierarchyPageInUC" />
+        <EnableRule Id="Mscrm.IsEntityAvailableForUserInMocaOffline" />
+        <EnableRule Id="Mscrm.PrimaryIsNotActivityHomePageGrid" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.CreateSelectedEntityPermission" />
+        <DisplayRule Id="Mscrm.ShowForNonRelationshipBoundGrids" />
+        <DisplayRule Id="Mscrm.HideNewForChildEntities" />
+        <DisplayRule Id="Mscrm.HideAddressEntities" />
+        <DisplayRule Id="Mscrm.SelectedEntityIsNotBPFEntity" />
+        <DisplayRule Id="Mscrm.IsNotActivityPointer" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.Open.openNewRecord" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedEntityTypeName" />
+          <CrmParameter Value="SelectedControl" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+  </CommandDefinitions>
+  <RuleDefinitions>
+    <TabDisplayRules />
+    <DisplayRules>
+      <DisplayRule Id="Mscrm.CreateSelectedEntityPermission">
+        <EntityPrivilegeRule PrivilegeType="Create" PrivilegeDepth="Basic" AppliesTo="SelectedEntity" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.HideAddressEntities">
+        <EntityRule EntityName="customeraddress" AppliesTo="SelectedEntity" Default="false" InvertResult="true" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.HideNewForChildEntities">
+        <EntityPropertyRule AppliesTo="SelectedEntity" PropertyName="IsChildEntity" PropertyValue="false" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.IsNotActivityPointer">
+        <EntityRule EntityName="activitypointer" AppliesTo="SelectedEntity" InvertResult="true" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.SelectedEntityIsNotBPFEntity">
+        <EntityPropertyRule AppliesTo="SelectedEntity" PropertyName="IsBPFEntity" PropertyValue="false" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.ShowForNonRelationshipBoundGrids">
+        <RelationshipTypeRule AppliesTo="SelectedEntity" RelationshipType="NoRelationship" />
+      </DisplayRule>
+    </DisplayRules>
+    <EnableRules>
+      <EnableRule Id="Mscrm.IsEntityAvailableForUserInMocaOffline">
+        <CustomRule FunctionName="XrmCore.Rules.Online.IsEntityAvailableForUserInMocaOffline" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedEntityTypeName" />
+        </CustomRule>
+      </EnableRule>
+      <EnableRule Id="Mscrm.IsValidForHierarchyPageInUC">
+        <CustomRule FunctionName="XrmCore.Rules.HierarchyView.isValidForHierarchyPageInUC" Library="$webresource:Main_system_library.js" />
+      </EnableRule>
+      <EnableRule Id="Mscrm.PrimaryIsNotActivityHomePageGrid">
+        <CustomRule FunctionName="XrmCore.Rules.Enabled.PrimaryIsNotActivityHomePageGrid" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedEntityTypeName" />
+          <CrmParameter Value="SelectedControl" />
+        </CustomRule>
+      </EnableRule>
+      <EnableRule Id="tc.bookableresourcebooking.EnableRule0.HideButtonIfFormIsReadOnly">
+        <CustomRule FunctionName="HideButtonIfFormIsReadOnly" Library="$webresource:ovs_ROMCommonFunctions">
+          <CrmParameter Value="PrimaryControl" />
+        </CustomRule>
+      </EnableRule>
+    </EnableRules>
+  </RuleDefinitions>
+  <LocLabels>
+    <LocLabel Id="Mscrm.Form.bookableresourcebooking.NewRecordForBPFEntity.LabelText">
+      <Titles>
+        <Title description="New" languagecode="1033" />
+        <Title description="New" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.Form.bookableresourcebooking.RemoteAssistContactSearch.LabelText">
+      <Titles>
+        <Title description="Remote Assist" languagecode="1033" />
+        <Title description="Remote Assist" languagecode="1025" />
+        <Title description="Remote Assist" languagecode="1026" />
+        <Title description="Remote Assist" languagecode="1027" />
+        <Title description="Remote Assist" languagecode="1029" />
+        <Title description="Remote Assist" languagecode="1030" />
+        <Title description="Remote Assist" languagecode="1031" />
+        <Title description="Remote Assist" languagecode="1032" />
+        <Title description="Remote Assist" languagecode="3082" />
+        <Title description="Remote Assist" languagecode="1061" />
+        <Title description="Remote Assist" languagecode="1069" />
+        <Title description="Remote Assist" languagecode="1035" />
+        <Title description="Assistance à distance" languagecode="1036" />
+        <Title description="Remote Assist" languagecode="1110" />
+        <Title description="Remote Assist" languagecode="1037" />
+        <Title description="Remote Assist" languagecode="1081" />
+        <Title description="Remote Assist" languagecode="1050" />
+        <Title description="Remote Assist" languagecode="1038" />
+        <Title description="Remote Assist" languagecode="1057" />
+        <Title description="Remote Assist" languagecode="1040" />
+        <Title description="Remote Assist" languagecode="1041" />
+        <Title description="Remote Assist" languagecode="1087" />
+        <Title description="Remote Assist" languagecode="1042" />
+        <Title description="Remote Assist" languagecode="1063" />
+        <Title description="Remote Assist" languagecode="1062" />
+        <Title description="Remote Assist" languagecode="1086" />
+        <Title description="Remote Assist" languagecode="1044" />
+        <Title description="Remote Assist" languagecode="1043" />
+        <Title description="Remote Assist" languagecode="1045" />
+        <Title description="Remote Assist" languagecode="1046" />
+        <Title description="Remote Assist" languagecode="2070" />
+        <Title description="Remote Assist" languagecode="1048" />
+        <Title description="Remote Assist" languagecode="1049" />
+        <Title description="Remote Assist" languagecode="1051" />
+        <Title description="Remote Assist" languagecode="1060" />
+        <Title description="Remote Assist" languagecode="3098" />
+        <Title description="Remote Assist" languagecode="2074" />
+        <Title description="Remote Assist" languagecode="1053" />
+        <Title description="Remote Assist" languagecode="1054" />
+        <Title description="Remote Assist" languagecode="1055" />
+        <Title description="Remote Assist" languagecode="1058" />
+        <Title description="Remote Assist" languagecode="1066" />
+        <Title description="Remote Assist" languagecode="2052" />
+        <Title description="Remote Assist" languagecode="3076" />
+        <Title description="Remote Assist" languagecode="1028" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.HomepageGrid.bookableresourcebooking.NewRecord.LabelText">
+      <Titles>
+        <Title description="New" languagecode="1033" />
+        <Title description="New" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.HomepageGrid.bookableresourcebooking.NewRecordForBPFEntity.LabelText">
+      <Titles>
+        <Title description="New" languagecode="1033" />
+        <Title description="New" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.HomePageGrid.bookableresourcebooking.RemoteAssist.LabelText">
+      <Titles>
+        <Title description="Remote Assist" languagecode="1033" />
+        <Title description="Remote Assist" languagecode="1025" />
+        <Title description="Remote Assist" languagecode="1026" />
+        <Title description="Remote Assist" languagecode="1027" />
+        <Title description="Remote Assist" languagecode="1029" />
+        <Title description="Remote Assist" languagecode="1030" />
+        <Title description="Remote Assist" languagecode="1031" />
+        <Title description="Remote Assist" languagecode="1032" />
+        <Title description="Remote Assist" languagecode="3082" />
+        <Title description="Remote Assist" languagecode="1061" />
+        <Title description="Remote Assist" languagecode="1069" />
+        <Title description="Remote Assist" languagecode="1035" />
+        <Title description="Assistance à distance" languagecode="1036" />
+        <Title description="Remote Assist" languagecode="1110" />
+        <Title description="Remote Assist" languagecode="1037" />
+        <Title description="Remote Assist" languagecode="1081" />
+        <Title description="Remote Assist" languagecode="1050" />
+        <Title description="Remote Assist" languagecode="1038" />
+        <Title description="Remote Assist" languagecode="1057" />
+        <Title description="Remote Assist" languagecode="1040" />
+        <Title description="Remote Assist" languagecode="1041" />
+        <Title description="Remote Assist" languagecode="1087" />
+        <Title description="Remote Assist" languagecode="1042" />
+        <Title description="Remote Assist" languagecode="1063" />
+        <Title description="Remote Assist" languagecode="1062" />
+        <Title description="Remote Assist" languagecode="1086" />
+        <Title description="Remote Assist" languagecode="1044" />
+        <Title description="Remote Assist" languagecode="1043" />
+        <Title description="Remote Assist" languagecode="1045" />
+        <Title description="Remote Assist" languagecode="1046" />
+        <Title description="Remote Assist" languagecode="2070" />
+        <Title description="Remote Assist" languagecode="1048" />
+        <Title description="Remote Assist" languagecode="1049" />
+        <Title description="Remote Assist" languagecode="1051" />
+        <Title description="Remote Assist" languagecode="1060" />
+        <Title description="Remote Assist" languagecode="3098" />
+        <Title description="Remote Assist" languagecode="2074" />
+        <Title description="Remote Assist" languagecode="1053" />
+        <Title description="Remote Assist" languagecode="1054" />
+        <Title description="Remote Assist" languagecode="1055" />
+        <Title description="Remote Assist" languagecode="1058" />
+        <Title description="Remote Assist" languagecode="1066" />
+        <Title description="Remote Assist" languagecode="2052" />
+        <Title description="Remote Assist" languagecode="3076" />
+        <Title description="Remote Assist" languagecode="1028" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.SubGrid.bookableresourcebooking.AddNewStandard.Alt">
+      <Titles>
+        <Title description="Add New {0}" languagecode="1033" />
+        <Title description="Ajouter Nouvelle {0}" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.SubGrid.bookableresourcebooking.AddNewStandard.LabelText">
+      <Titles>
+        <Title description="Add New {0}" languagecode="1033" />
+        <Title description="Ajouter Nouvelle {0}" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.SubGrid.bookableresourcebooking.AddNewStandard.ToolTipTitle">
+      <Titles>
+        <Title description="Add New {0}" languagecode="1033" />
+        <Title description="Ajouter Nouvelle {0}" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+  </LocLabels>
+</RibbonDiffXml>

@@ -1,0 +1,114 @@
+﻿var globalFormContext;
+
+const FIELD_OPERATION_TYPE = "ovs_operationtype";
+const FIELD_MOC_REGISTRATION_ID = "ovs_mocregistrationname";
+const FIELD_MOC_FACILITY_TYPE = "ovs_operationfacilitytype";
+const FIELD_MOC_REGISTRATION_EXPIRY_DATE = "ovs_registrationexpiry";
+const FIELD_MOC_REGISTRATION_INITIAL_DATE = "ovs_mocinitialregistrationdate";
+const FIELD_HUB_INDICATOR = "ovs_hubind";
+
+const VALUE_HOTI = 918640038;
+const VALUE_CIV_AV = 918640040
+
+async function OnLoad(executionContext) {
+
+    //get context
+    globalContext = glHelper.getGlobalContext();
+    var formContext = executionContext.getFormContext();
+    globalFormContext = formContext;
+
+    // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+    let formType = glHelper.GetFormType(formContext);
+ 
+
+    //Toggle required level based on Operation Type
+    toggleRequiredLevel(formContext);
+   
+    if (this.hasCurrentUserRole("TDG QA")) {
+        glHelper.SetTabVisibility(formContext, "operations_profile", true);
+        glHelper.SetControlVisibility(formContext, "ovs_name", true);
+        glHelper.SetControlVisibility(formContext, "ovs_operationfacilitytype", true);
+        glHelper.SetControlVisibility(formContext, "ovs_lineofbusiness", true);
+        glHelper.SetControlVisibility(formContext, "ovs_mocprogram", true);
+        glHelper.SetControlVisibility(formContext, "ovs_cdriskscore", true);
+        glHelper.SetControlVisibility(formContext, "ovs_cdpriorityscore", true);
+        glHelper.SetControlVisibility(formContext, "ovs_cdriskcategory", true);
+    }
+    else {
+        glHelper.SetTabVisibility(formContext, "operations_profile", false);
+        glHelper.SetControlVisibility(formContext, "ovs_name", false);
+        glHelper.SetControlVisibility(formContext, "ovs_operationfacilitytype", false);
+        glHelper.SetControlVisibility(formContext, "ovs_lineofbusiness", false);
+        glHelper.SetControlVisibility(formContext, "ovs_mocprogram", false);
+        glHelper.SetControlVisibility(formContext, "ovs_cdriskscore", false);
+        glHelper.SetControlVisibility(formContext, "ovs_cdpriorityscore", false);
+        glHelper.SetControlVisibility(formContext, "ovs_cdriskcategory", false);
+    }
+
+    //Restrict Ability To Update Hub Flag
+    if (this.hasCurrentUserRole("TDG Manager") || this.hasCurrentUserRole("TDG Planner"))
+    {
+        glHelper.SetDisabled(formContext, FIELD_HUB_INDICATOR, false);
+        glHelper.SetDisabled(formContext, FIELD_HUB_INDICATOR, false);
+    }
+    else
+    {
+        glHelper.SetDisabled(formContext, FIELD_HUB_INDICATOR, true);
+        glHelper.SetDisabled(formContext, FIELD_HUB_INDICATOR, true);
+    }
+
+    //Add function to Refresh Operation Class when UNCode is added
+    if (formType > 1) {
+        var OperationUN = formContext.getControl("Subgrid_OperationUNNumber");
+        if (OperationUN != null)
+            OperationUN.addOnLoad(Refresh_OperationClass);
+    }
+}
+
+function Refresh_OperationClass() {
+
+    var OperationClass = globalFormContext.getControl("grd_Class");
+    if (OperationClass != null)
+        OperationClass.refresh();
+}
+
+
+function hasCurrentUserRole(roleName) {
+    let hasRole = false;
+    let roles = Xrm.Utility.getGlobalContext().userSettings.roles;
+    roles.forEach(x => {
+        if (x.name === "System Administrator" || x.name === roleName) {
+            hasRole = true;
+            return;
+        }
+    });
+    return hasRole;
+}
+
+function OnSave(executionContext) {
+
+}
+
+function toggleRequiredLevel(formContext)
+{
+
+    var operationType = glHelper.GetValue(formContext, FIELD_OPERATION_TYPE);
+    var fieldsRequired = true;
+
+    if (operationType == VALUE_CIV_AV || operationType == VALUE_HOTI)
+        fieldsRequired = false;
+
+    glHelper.SetRequiredLevel(formContext, FIELD_OPERATION_TYPE, fieldsRequired);
+    glHelper.SetRequiredLevel(formContext, FIELD_MOC_FACILITY_TYPE, fieldsRequired);
+    glHelper.SetRequiredLevel(formContext, FIELD_MOC_REGISTRATION_EXPIRY_DATE, fieldsRequired);
+    glHelper.SetRequiredLevel(formContext, FIELD_MOC_REGISTRATION_ID, fieldsRequired);
+    glHelper.SetRequiredLevel(formContext, FIELD_MOC_REGISTRATION_INITIAL_DATE, fieldsRequired);
+
+}
+
+function OperationType_OnChange(executionContext)
+{
+    var formContext = executionContext.getFormContext();
+
+    toggleRequiredLevel(formContext);
+}

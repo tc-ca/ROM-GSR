@@ -24,6 +24,8 @@ stages:
       vmImage: 'vs2017-win2016'
   jobs:
   - job: Export_Dev
+    timeoutInMinutes: 360 # how long to run the job before automatically cancelling
+    cancelTimeoutInMinutes: 2 # how much time to give 'run always even if cancelled tasks' before stopping them
     displayName: Export_Dev
     pool:
       vmImage: vs2017-win2016
@@ -124,17 +126,27 @@ stages:
         failOnStderr: true
     - task: MSCRMExportSolution@12
       displayName: 'Export Manged Solution: $(CoreSolutionName)'
-      timeoutInMinutes: 4000
       inputs:
         crmConnectionString: '$(ConnectionStringDev)'
         solutionName: '$(CoreSolutionName)'
         exportManaged: true
+        exportUnmanaged: false
+        includeVersionInSolutionFile: true
+        outputPath: '$(Build.ArtifactStagingDirectory)'
+        crmConnectionTimeout: '21600'
+        asyncWaitTimeout: '21600'
+        exportAutoNumberingSettings: true
+    - task: MSCRMExportSolution@12
+      displayName: 'Export UnManged Solution: $(CoreSolutionName)'
+      inputs:
+        crmConnectionString: '$(ConnectionStringDev)'
+        solutionName: '$(CoreSolutionName)'
+        exportManaged: false
         exportUnmanaged: true
         includeVersionInSolutionFile: true
         outputPath: '$(Build.ArtifactStagingDirectory)'
-        crmConnectionTimeout: '4000'
-        useAsyncMode: true
-        asyncWaitTimeout: '4000'
+        crmConnectionTimeout: '21600'
+        asyncWaitTimeout: '21600'
         exportAutoNumberingSettings: true
     - task: PowerShell@2
       inputs:
@@ -204,10 +216,12 @@ stages:
 - stage: QA
   jobs:
   - deployment: Deploy
+    timeoutInMinutes: 360 # how long to run the job before automatically cancelling
+    cancelTimeoutInMinutes: 2 # how much time to give 'run always even if cancelled tasks' before stopping them
     condition: succeeded()
     pool:
       vmImage: 'vs2017-win2016'
-    environment: QA
+    environment: QA-TDG
     strategy:
       runOnce:
         deploy:
@@ -307,28 +321,29 @@ stages:
               solutionFile: '$(Agent.BuildDirectory)\TC_GlobalCore_Base\$(SolutionFileName)_$(SolutionVersion)_managed.zip'
               publishWorkflows: true
               overwriteUnmanagedCustomizations: true
-              skipProductUpdateDependencies: true
               holdingSolution: true
-              asyncWaitTimeout: '99999'
-              crmConnectionTimeout: '99999'
+              useAsyncMode: false
+              asyncWaitTimeout: '21600'
+              crmConnectionTimeout: '21600'
           - task: MSCRMApplySolution@12
             displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
             inputs:
               crmConnectionString: '$(ConnectionStringQa)'
               solutionName: '$(CoreSolutionName)'
-              useAsyncMode: true
-              asyncWaitTimeout: '99999'
-              crmConnectionTimeout: '99999'
+              asyncWaitTimeout: '21600'
+              crmConnectionTimeout: '21600'
           - task: MSCRMCreatePatch@12
             displayName: 'Create Patch: $(CoreSolutionName)'
             inputs:
               crmConnectionString: '$(ConnectionStringDev)'
               uniqueName: '$(CoreSolutionName)'
               versionNumber: '$(NextSolutionVersion)'
-              crmConnectionTimeout: '900'
+              crmConnectionTimeout: '21600'
 - stage: ACC
   jobs:
   - deployment: Deploy
+    timeoutInMinutes: 360 # how long to run the job before automatically cancelling
+    cancelTimeoutInMinutes: 2 # how much time to give 'run always even if cancelled tasks' before stopping them
     condition: succeeded()
     pool:
       vmImage: 'vs2017-win2016'
@@ -432,23 +447,24 @@ stages:
               solutionFile: '$(Agent.BuildDirectory)\TC_GlobalCore_Base\$(SolutionFileName)_$(SolutionVersion)_managed.zip'
               publishWorkflows: true
               overwriteUnmanagedCustomizations: true
-              skipProductUpdateDependencies: true
               holdingSolution: true
-              override: true
-              asyncWaitTimeout: '99999'
-              crmConnectionTimeout: '99999'
+              useAsyncMode: false
+              asyncWaitTimeout: '21600'
+              crmConnectionTimeout: '21600'
           - task: MSCRMApplySolution@12
             displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
             inputs:
               crmConnectionString: '$(ConnectionStringAccTdg)'
               solutionName: '$(CoreSolutionName)'
-              useAsyncMode: true
-              asyncWaitTimeout: '99999'
-              crmConnectionTimeout: '99999'
+              asyncWaitTimeout: '21600'
+              crmConnectionTimeout: '21600'
 - stage: ACCDATA
+  condition: succeeded()
+  dependsOn: QA
   jobs:
   - deployment: Deploy
-    condition: succeeded()
+    timeoutInMinutes: 360 # how long to run the job before automatically cancelling
+    cancelTimeoutInMinutes: 2 # how much time to give 'run always even if cancelled tasks' before stopping them
     pool:
       vmImage: 'vs2017-win2016'
     environment: ACC-TDG-DATA
@@ -551,16 +567,14 @@ stages:
               solutionFile: '$(Agent.BuildDirectory)\TC_GlobalCore_Base\$(SolutionFileName)_$(SolutionVersion)_managed.zip'
               publishWorkflows: true
               overwriteUnmanagedCustomizations: true
-              skipProductUpdateDependencies: true
               holdingSolution: true
-              override: true
-              asyncWaitTimeout: '99999'
-              crmConnectionTimeout: '99999'
+              useAsyncMode: false
+              asyncWaitTimeout: '21600'
+              crmConnectionTimeout: '21600'
           - task: MSCRMApplySolution@12
             displayName: 'Apply Solution Upgrade: $(CoreSolutionName)'
             inputs:
               crmConnectionString: '$(ConnectionStringAccTdgData)'
               solutionName: '$(CoreSolutionName)'
-              useAsyncMode: true
-              asyncWaitTimeout: '99999'
-              crmConnectionTimeout: '99999'
+              asyncWaitTimeout: '21600'
+              crmConnectionTimeout: '21600'
