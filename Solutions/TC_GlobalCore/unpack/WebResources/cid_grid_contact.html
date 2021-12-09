@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="https://cid-dev-tcd365.crm3.dynamics.com//WebResources/cid_jquery.min.js"></script>
+    <script type="text/javascript" src="https://cid-dev-tcd365.crm3.dynamics.com//WebResources/cid_w2ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cid-dev-tcd365.crm3.dynamics.com//WebResources/cid_w2ui.min.css" />
+</head>
+<body>
+    <div id="grid1" style="width: 100%; height: 200px;"></div>
+    <script type="text/javascript">
+        debugger;
+
+        $(function () {
+            $('#grid1').w2grid({
+                name: 'grid1',
+
+                records: [],
+
+                columns: [
+                    { field: 'full_name', text: 'Full Name', size: '40%' },
+                    { field: 'email', text: 'Email', size: '30%' },
+                    { field: 'contact_type', text: 'Contact Type', size: '30%'}
+                ]
+            });
+
+            debugger;
+            var grid1 = w2ui.grid1;
+            grid1.records = load_data();
+            grid1.refresh();
+        });
+
+        function load_data() {
+            var data = [
+                { recid: 1, full_name: 'Tony Nguyen', email: 'nguyentony65@gmail.com', contact_type: 'Primary' },
+                { recid: 2, full_name: 'Anis Aboumsabih', email: 'anis.aboumsabih@tc.gc.ca', contact_type: 'Secondary' }
+            ];
+
+            return data;
+        }
+
+    </script>
+
+</body>
+</html>

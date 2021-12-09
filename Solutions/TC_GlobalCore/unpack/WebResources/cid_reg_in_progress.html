@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="https://cid-dev-tcd365.crm3.dynamics.com//WebResources/cid_jquery.min.js"></script>
+    <script type="text/javascript" src="https://cid-dev-tcd365.crm3.dynamics.com//WebResources/cid_w2ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cid-dev-tcd365.crm3.dynamics.com//WebResources/cid_w2ui.min.css" />
+</head>
+<body>
+    <b>Company Information<br /><br /></b>
+    <div id="grid1" style="width: 100%; height: 200px;"></div>
+    <br />
+    <b>Sites Information<br /><br /></b>
+    <div id="grid2" style="width: 100%; height: 200px;"></div>
+    <script type="text/javascript">
+        debugger;
+
+        $(function () {
+            $('#grid1').w2grid({
+                name: 'grid1',
+
+                records:
+                    [
+                        { recid: 1, status: 'Complete', required_info: '1. Company Name and Address', action_1: 'Update', action_2: 'Mark Incomplete' },
+                        { recid: 2, status: 'Incomplete', required_info: '2. Contacts', action_1: 'Update', action_2: 'Mark Incomplete' },
+                        { recid: 3, status: 'Incomplete', required_info: '3. NAICS Codes', action_1: 'Update', action_2: 'Mark Complete' },
+                        { recid: 4, status: 'Incomplete', required_info: '4. Attest Company Information', action_1: '', action_2: 'Mark Complete' }
+                    ],
+
+                columns: [
+                    { field: 'status', text: 'Status', size: '20%' },
+                    { field: 'required_info', text: 'Required Information', size: '50%' },
+                    {
+                        field: 'action_1', text: 'Action', size: '30%',
+                        render: function (record, index, column_index) {
+                            var html = create_button(1, record.recid, record.action_1, record.action_2);
+                            return html;
+                        }
+                    }
+                ]
+            });
+        });
+
+        $(function () {
+            $('#grid2').w2grid({
+                name: 'grid2',
+
+                records:
+                    [
+                        { recid: 1, status: 'Pending', required_info: '1. Claim Site(s) known to TC', action_1: 'TBD', action_2: '' },
+                        { recid: 2, status: 'Pending', required_info: '2. Add Additional Site(s)', action_1: 'Update', action_2: 'Mark Complete' },
+                        { recid: 3, status: 'Pending', required_info: '3. Complete Site Informationm', action_1: 'Update', action_2: 'Mark Complete' },
+                        { recid: 4, status: 'Pending', required_info: '4. Attest Information for all Site(s)', action_1: '', action_2: 'Mark Complete' }
+                    ],
+
+                columns: [
+                    { field: 'status', text: 'Status', size: '20%' },
+                    { field: 'required_info', text: 'Required Information', size: '50%' },
+                    {
+                        field: 'action_1', text: 'Action', size: '30%',
+                        render: function (record, index, column_index) {
+                            var html = create_button(2, record.recid, record.action_1, record.action_2);
+                            return html;
+                        }
+                    }
+                ]
+            });
+        });
+
+        function create_button(grid_number, recid, action_1, action_2) {
+            var html = '<div>';
+            if (action_1 != "") {
+                html += '<input type="button" value="' + action_1 + '" onclick="button_click(' + grid_number + ',' + '1,' + recid + ')" />';
+            }
+            if (action_2 != "") {
+                html += ' <input type="button" value="' + action_2 + '" onclick="button_click(' + grid_number + ',' + '2,' + recid + ')" />';
+            }
+            return html + '</div>';
+        }
+
+        function button_click(grid_number, action_number, recid) {
+            alert("grid_number = " + grid_number + " >> " + "action_number = " + action_number + " >> " + "recid = " + recid);
+        }
+
+    </script>
+
+</body>
+</html>
