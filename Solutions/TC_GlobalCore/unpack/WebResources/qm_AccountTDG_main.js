@@ -5,9 +5,14 @@ var AccountTDGmain = (function (window, document) {
      //variables
     var formType;
      //optionset value: form name
-    var formMapping = {
+    var formMapping_EN = {
         "948010001": "TDG Site Profile",
         "948010000": "TDG Organizations",
+    };
+
+    var formMapping_FR = {
+        "948010001": "Profil du site de TMD",
+        "948010000": "Organisations TMD",
     };
     var formContextGlobalRef;
 
@@ -175,11 +180,17 @@ var AccountTDGmain = (function (window, document) {
 
 
         relationShip_OnChange: function (executionContext) {
-
+            
             var formContext = executionContext.getFormContext();
 
+            //Load up resources for English/French labels
+            var langId = Xrm.Utility.getGlobalContext().userSettings.languageId;
             var rType = glHelper.GetValue(formContext, "customertypecode");
-                  glHelper.SwitchFormByName(formContext, formMapping[rType.toString()]);
+
+            if (langId == 1033)
+                glHelper.SwitchFormByName(formContext, formMapping_EN[rType.toString()]);
+            else if (langId == 1036)
+                glHelper.SwitchFormByName(formContext, formMapping_FR[rType.toString()]);
 
         },
     }

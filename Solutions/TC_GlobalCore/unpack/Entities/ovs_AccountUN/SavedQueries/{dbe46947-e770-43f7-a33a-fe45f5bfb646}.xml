@@ -10,9 +10,11 @@
     <layoutxml>
       <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
         <row name="result" id="ovs_accountunid">
-          <cell name="ovs_unnumber" width="100" />
-          <cell name="a_87c23c50a008401db1244599991be764.tdg_shippingnamedescriptiontxt" width="100" />
+          <cell name="a_87c23c50a008401db1244599991be764.tdg_undisplayname" width="116" />
+          <cell name="a_87c23c50a008401db1244599991be764.tdg_shippingnamedescriptiontxt" width="162" />
           <cell name="ovs_supplychaindirection" width="100" />
+          <cell name="a_87c23c50a008401db1244599991be764.tdg_primaryclasscd" width="100" />
+          <cell name="a_87c23c50a008401db1244599991be764.tdg_secondaryclasscd" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -24,10 +26,12 @@
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="1" />
           </filter>
-          <attribute name="ovs_unnumber" />
           <attribute name="ovs_supplychaindirection" />
           <link-entity alias="a_87c23c50a008401db1244599991be764" name="tdg_unnumber" to="ovs_unnumber" from="tdg_unnumberid" link-type="outer" visible="false">
             <attribute name="tdg_shippingnamedescriptiontxt" />
+            <attribute name="tdg_undisplayname" />
+            <attribute name="tdg_primaryclasscd" />
+            <attribute name="tdg_secondaryclasscd" />
           </link-entity>
         </entity>
       </fetch>
