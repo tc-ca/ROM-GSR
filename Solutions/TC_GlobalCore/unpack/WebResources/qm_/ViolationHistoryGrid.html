@@ -51,6 +51,12 @@
 
             return "<a href='" + link + "' target='_blank' class='text-primary'>" + value + "</a>";
         }
+        function oppLink(value, row, index, field) {
+
+            var link = clientUrl + "/main.aspx?etn=ovs_mocregistration&extraqs=&id=" + encodeURIComponent(row.OperationId) + "&newWindow=true&pagetype=entityrecord"
+
+            return "<a href='" + link + "' target='_blank' class='text-primary'>" + value + "</a>";
+        }       
 
         function displayData(input) {
 
@@ -69,12 +75,14 @@
 
                 rows.push({
                     ViolationId : data[i].ViolationId,
-                    WorkOrderId : data[i].WorkOrderId,
+                    WorkOrderId: data[i].WorkOrderId, 
+                    OperationId: data[i].OperationId,
                     InspectionDate : data[i].InspectionDate,
                     ViolationName : data[i].ViolationName,
                     ViolationCount : data[i].ViolationCount,
                     ViolationExternalComments : data[i].ViolationExternalComments,
-                    WorkOrderName : data[i].WorkOrderName,
+                    WorkOrderName: data[i].WorkOrderName,
+                    OperationName: data[i].OperationName,
                     Provision : english ? data[i].ProvisionEnglish : data[i].ProvisionFrench,
                     ViolationDisplay : english ? data[i].ViolationDisplayEnglish : data[i].ViolationDisplayFrench
                 })
@@ -82,17 +90,20 @@
             }
 
             //TODO: fix getResourceString is not available tried with and without parent
-            // let workOrderHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.WorkOrderNumber");
-            // let provisionHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.Provision");
-            // let inspectionDateHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.InspectionDate");
-            // let violationDateHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.ViolationCount");
-            // let violationDisplayHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.ViolationDisplay");
+            let workOrderHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.WorkOrderNumber");
+            let operationHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.Operation"); 
+             let provisionHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.Provision");
+             let inspectionDateHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.InspectionDate");
+             let violationDateHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.ViolationCount");
+             let violationDisplayHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.ViolationDisplay");
 
-            let workOrderHeaderTitle = langId === 1033 ? "Work Order Number" : "No ordre de travail"
-            let provisionHeaderTitle = langId === 1033 ? "Provision" : "Disposition"
-            let inspectionDateHeaderTitle = langId === 1033 ? "Inspection Date" : "Date d'inspection"
-            let violationDateHeaderTitle = langId === 1033 ? "Violation Count" : "Nombre d'infractions"
-            let violationDisplayHeaderTitle = langId === 1033 ? "Violation Display" : "Affichage des infractions"
+            //let workOrderHeaderTitle = langId === 1033 ? "Work Order Number" : "No ordre de travail";
+            //let operationHeaderTitle = langId === 1033 ? "Operation" : "Operation";
+            //let provisionHeaderTitle = langId === 1033 ? "Provision" : "Disposition"
+            //let inspectionDateHeaderTitle = langId === 1033 ? "Inspection Date" : "Date d'inspection";
+            //let violationDateHeaderTitle = langId === 1033 ? "Violation Count" : "Nombre d'infractions";
+            //let violationDisplayHeaderTitle = langId === 1033 ? "Violation Display" : "Affichage des infractions";
+
 
             $('#mainTable').bootstrapTable({
                 locale: langId === 1033 ? 'en-US' : 'fr-FR',
@@ -105,11 +116,21 @@
                         field: 'WorkOrderId',
                          visible: false
                     },
-                        {
+                    {
                         field: 'WorkOrderName',
                         title: workOrderHeaderTitle,
                         sortable: true,
                         formatter: "woLink"
+                    },
+                    {
+                        field: 'OperationId',
+                        visible: false
+                    },
+                    {
+                        field: 'OperationName',
+                        title: operationHeaderTitle,
+                        sortable: true,
+                        formatter: "oppLink"
                     },
                     {
                         field: 'Provision',

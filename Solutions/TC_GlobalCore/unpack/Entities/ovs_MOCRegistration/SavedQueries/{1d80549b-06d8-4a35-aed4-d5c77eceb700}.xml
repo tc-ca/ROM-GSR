@@ -25,14 +25,10 @@
     </layoutxml>
     <querytype>2</querytype>
     <fetchxml>
-      <fetch version="1.0" mapping="logical">
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="ovs_mocregistration">
           <attribute name="ovs_name" />
           <attribute name="createdon" />
-          <order attribute="ovs_name" descending="false" />
-          <filter type="and">
-            <condition attribute="statecode" operator="eq" value="0" />
-          </filter>
           <attribute name="ovs_mocregistrationname" />
           <attribute name="ovs_operationtype" />
           <attribute name="ovs_mocinitialregistrationdate" />
@@ -41,6 +37,7 @@
           <attribute name="ovs_cdpriorityscore" />
           <attribute name="ovs_mocprogram" />
           <attribute name="statecode" />
+          <order attribute="ovs_name" descending="false" />
           <attribute name="ovs_mocregistrationid" />
         </entity>
       </fetch>
