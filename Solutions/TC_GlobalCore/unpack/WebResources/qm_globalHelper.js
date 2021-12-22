@@ -211,11 +211,11 @@
     }
 
     function disableAllFields(formContext) {
-      formContext.ui.controls.forEach(function (control, i) {
-        if (control && control.getDisabled && !control.getDisabled()) {
-          control.setDisabled(true);
-        }
-      });
+        formContext.ui.controls.forEach(function (control, i) {
+            if (control && control.getDisabled && !control.getDisabled()) {
+                control.setDisabled(true);
+            }
+        });
     }
 
     function SetDisabled(formContext, attr, disabled) {
@@ -283,7 +283,7 @@
     /****************************************************************************************
     Notifications
     ****************************************************************************************/
-    
+
     function alertDialogText(messeageText, confirmaionText) {
         var mt = (messeageText != null && messeageText != undefined && messeageText.length > 0) ? messeageText : "A message from form";
         var cbl = (confirmaionText != null && confirmaionText != undefined && confirmaionText.length > 0) ? confirmaionText : "OK";
@@ -437,6 +437,11 @@
     CHOICE
     ****************************************************************************************/
 
+    function GetOptionsetValue(formContext, attr) {
+        var val = formContext.getAttribute(attr).getValue();
+        return val ? val : "";
+    }
+
     function GetOptionsetText(formContext, attr) {
         var val = formContext.getAttribute(attr).getText();
         return val ? val : "";
@@ -561,7 +566,7 @@
 
         switch (currentQuarter) {
 
-            case "Q1": 
+            case "Q1":
             case "Q2":
             case "Q3":
                 result = nowY.toString() + "-" + (nowY + 1).toString(); break;
@@ -639,6 +644,7 @@
         GetLookupAttrId: GetLookupAttrId,
         GetLookupName: GetLookupName,
         GetOptionsetText: GetOptionsetText,
+        GetOptionsetValue: GetOptionsetValue,
         GetValue: GetValue,
         ResetField: ResetField,
         SetTabVisibility: SetTabVisibility,
