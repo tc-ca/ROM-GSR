@@ -15,6 +15,8 @@ var WO_TDG_main = (function (window, document) {
     var currentWebApi;
     var isOffLine;
     var clientType;
+    var OperationTypeGlobalValue;
+    var OperationTypeGlobalText;
 
     var errorObject = {};
     errorObject.isValid = true;
@@ -132,6 +134,59 @@ var WO_TDG_main = (function (window, document) {
         );
     }
 
+    function setInspectionType(formContext, inspectionType) {
+
+        var messageWOTypeFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchWorkOrderType.ErrorMessage");
+        var sActivityName = glHelper.GetLookupName(formContext, "ovs_oversighttype");
+
+        //offline filter fix
+        var filter = (isOffLine && clientType > 0)
+            ? "ovs_workordertypenameenglish eq '{0}'"
+            : "startswith(ovs_workordertypenameenglish,'{0}')";
+
+        //Set WO Type based on Activity Type
+        if (inspectionType == 0) {
+            currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=" + filter.replace("{0}", "Regulatory Authorization")).then(
+                function success(results) {
+                    var englishName = results.entities[0]["ovs_workordertypenameenglish"];
+                    var frenchName = results.entities[0]["ovs_workordertypenamefrench"];
+                    var workOrderTypeId = results.entities[0]["msdyn_workordertypeid"];
+
+                    if (userSettings.languageId == 1036)
+                        glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, frenchName);
+                    if (userSettings.languageId == 1033)
+                        glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, englishName);
+
+                    glHelper.SetDisabled(formContext, "ovs_rational", true);
+                },
+                function (error) {
+                    console.log("Fetch Work Order Type Error. error: " + error.message);
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageWOTypeFailed + " " + error.message });
+                }
+            );
+        }
+        else {
+            currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=" + filter.replace("{0}", "Inspection")).then(
+                function success(results) {
+                    var englishName = results.entities[0]["ovs_workordertypenameenglish"];
+                    var frenchName = results.entities[0]["ovs_workordertypenamefrench"];
+                    var workOrderTypeId = results.entities[0]["msdyn_workordertypeid"];
+
+                    if (userSettings.languageId == 1036)
+                        glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, frenchName);
+                    if (userSettings.languageId == 1033)
+                        glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, englishName);
+
+                    glHelper.SetDisabled(formContext, "ovs_rational", true);
+                },
+                function (error) {
+                    console.log(messageWOTypeFailed + " " + error.message);
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageWOTypeFailed + " " + error.message });
+                }
+            );
+        }
+    }
+
 
     //********************private methods end***************
 
@@ -205,10 +260,12 @@ var WO_TDG_main = (function (window, document) {
             //WO Number/msdyn_name
             glHelper.SetControlVisibility(formContext, "msdyn_name", false);
 
-            //Activity Type
-            var activityType = formContext.getAttribute("ovs_oversighttype");
-            activityType.removeOnChange(WO_TDG_main.ActivityType_OnChange);
-            activityType.addOnChange(WO_TDG_main.ActivityType_OnChange);
+            //move to operation on change to work sequentialy - no Oversight Type can be selected befor operation is set.
+            ////Activity Type
+            //var activityType = formContext.getAttribute("ovs_oversighttype");
+            //activityType.removeOnChange(WO_TDG_main.ActivityType_OnChange);
+            //activityType.addOnChange(WO_TDG_main.ActivityType_OnChange);
+
 
             //Substatus Type
             WO_TDG_main.Update_WO_Substatus(formContext);
@@ -243,7 +300,7 @@ var WO_TDG_main = (function (window, document) {
             //on update etc
             if (formType > 1) {
                 //set global object fo contact quick create form
-                site.fireOnChange();                
+                site.fireOnChange();
 
                 //refresh the COC tab
                 var cocTab = formContext.ui.tabs.get("tab_ConfirmationOfCompliances");
@@ -315,60 +372,6 @@ var WO_TDG_main = (function (window, document) {
                 }
             );
 
-        },
-
-        ActivityType_OnChange: function (executionContext) {
-
-            var messageWOTypeFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchWorkOrderType.ErrorMessage");
-            var formContext = executionContext.getFormContext();
-            var sActivityName = glHelper.GetLookupName(formContext, "ovs_oversighttype");
-
-            //offline filter fix
-            var filter = (isOffLine && clientType > 0)
-                ? "ovs_workordertypenameenglish eq '{0}'"
-                : "startswith(ovs_workordertypenameenglish,'{0}')";
-
-            //Set WO Type based on Activity Type
-            if (sActivityName == "Civil Aviation Document Review" || sActivityName == "Examen des documents de l'aviation civile" || sActivityName == "Examen documentation de l'aviation civile") {
-                currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=" + filter.replace("{0}", "Regulatory Authorization")).then(
-                    function success(results) {
-                        var englishName = results.entities[0]["ovs_workordertypenameenglish"];
-                        var frenchName = results.entities[0]["ovs_workordertypenamefrench"];
-                        var workOrderTypeId = results.entities[0]["msdyn_workordertypeid"];
-
-                        if (userSettings.languageId == 1036)
-                            glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, frenchName);
-                        if (userSettings.languageId == 1033)
-                            glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, englishName);
-
-                        glHelper.SetDisabled(formContext, "ovs_rational", true);
-                    },
-                    function (error) {
-                        console.log("Fetch Work Order Type Error. error: " + error.message);
-                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageWOTypeFailed + " " + error.message });
-                    }
-                );
-            }
-            else {
-                currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=" + filter.replace("{0}", "Inspection")).then(
-                    function success(results) {
-                        var englishName = results.entities[0]["ovs_workordertypenameenglish"];
-                        var frenchName = results.entities[0]["ovs_workordertypenamefrench"];
-                        var workOrderTypeId = results.entities[0]["msdyn_workordertypeid"];
-
-                        if (userSettings.languageId == 1036)
-                            glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, frenchName);
-                        if (userSettings.languageId == 1033)
-                            glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, englishName);
-
-                        glHelper.SetDisabled(formContext, "ovs_rational", true);
-                    },
-                    function (error) {
-                        console.log(messageWOTypeFailed + " " + error.message);
-                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageWOTypeFailed + " " + error.message });
-                    }
-                );
-            }
         },
 
         Rational_OnChange: function (executionContext) {
@@ -828,65 +831,110 @@ var WO_TDG_main = (function (window, document) {
             return isValid;
         },
 
-        filterOversigthType: function () {
-            
-            var filter = "<filter type='and'><condition attribute='accountcategorycode' operator='eq' value='1'/></filter>";
+        filterOversigthType: function (executionContext) {
+
+            var filter = "";
+            var formContext = executionContext.getFormContext();
+            var filterTemplate = "<filter type='and'><condition attribute='ovs_oversighttypenameenglish' operator='like' value='{0}'/></filter>";
+
+            switch (OperationTypeGlobalValue) {
+
+                case 918640038: filter = filterTemplate.replace('{0}', 'GC%'); break;
+                case 918640040: filter = filterTemplate.replace('{0}', 'Civil%'); break;
+                default: filter = filterTemplate.replace('{0}', 'MOC%');
+            }
+
             formContext.getControl("ovs_oversighttype").addCustomFilter(filter, "ovs_oversighttype");
-        },
-
-        filterRegion: function () {
-
-            var filter = "<filter type='and'><condition attribute='accountcategorycode' operator='eq' value='1'/></filter>";
-            formContext.getControl("msdyn_serviceterritory").addCustomFilter(filter, "territory");
         },
 
         Operation_OnChange: function (executionContext) {
 
             var formContext = executionContext.getFormContext();
 
-            //------------  add pre-filter for Oversight Type ---------------------//
-
-            //if selected operation has a Operation Type value of HOTI, then the Oversight Types should be filtered to only those with the English name starting with "GC"
-
-            //add hoti related OperationType optionset values
-            var hoti = new Array();//array of integers
-
-            //if selected operation has a Operation Type value of Civil Aviation Document Review, then Oversight Types should be filtered so that Civil Aviation Document Review is the only Oversight Type.
-            //add Civil Aviation related OperationType optionset values
-            var avion = new Array();//array of integers
-
-
-            //ELSE
-            //the Oversight Types should be filtered to only those with the English name starting with "MOC".
-            //add MOC related OperationType optionset values
-            var MOCs = new Array();//array of integers
-
-
             var operation = formContext.getAttribute("ovs_mocoperationid").getValue();
-            if (operation === null || operation === undefined) return;
+            if (operation === null || operation === undefined) {
 
-            //get Operation type and add pre-search on callback using arrays then add presearch
+            //set oversight type and inspection type empty
 
-            //formContext.getControl("ovs_oversighttype").addPreSearch("create method");
+                glHelper.SetValue(formContext, "ovs_oversighttype", null);
+                glHelper.SetValue(formContext, "msdyn_workordertype", null);
+                glHelper.SetDisabled(formContext, "ovs_oversighttype", true);
+                return;
+            }
 
-            //-------------   end pre-filter for Oversight Type ------------//
+            currentWebApi.retrieveRecord("ovs_mocregistration", operation[0].id, "?$select=_ovs_lineofbusiness_value,ovs_mocregistrationid,ovs_name,ovs_operationtype").then(
+                function success(result) {
+                    var _ovs_lineofbusiness_value = result["_ovs_lineofbusiness_value"];
+                    var _ovs_lineofbusiness_value_formatted = result["_ovs_lineofbusiness_value@OData.Community.Display.V1.FormattedValue"];
+                    var _ovs_lineofbusiness_value_lookuplogicalname = result["_ovs_lineofbusiness_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                    var ovs_mocregistrationid = result["ovs_mocregistrationid"];
+                    var ovs_name = result["ovs_name"];
+                    OperationTypeGlobalValue = result["ovs_operationtype"];
+                    OperationTypeGlobalText = result["ovs_operationtype@OData.Community.Display.V1.FormattedValue"];
 
-            //-------------  add pre-filter for Region ---------------------//
+                    //-----  add pre-filter for Oversight Type -------------//
+                    formContext.getControl("ovs_oversighttype").removePreSearch(WO_TDG_main.filterOversigthType)
+                    formContext.getControl("ovs_oversighttype").addPreSearch(WO_TDG_main.filterOversigthType);
 
-            //if selected operation has a Line of Business value of TDG Region, then HQ-ES should be filtered out of the Work Order region lookup list 
+                    if (OperationTypeGlobalValue == 918640040) {
 
-            //if the operation has a Line of Business value of Engineering Services, then HQ - EQ should be automatically selected as the Work Order Region
-
-
-
-
-
-             //-------------  end pre-filter for Region ---------------------//
+                        var sActivityName = glHelper.GetLookupName(formContext, "ovs_oversighttype");
 
 
+                        //If aviation is already selected
+                        if (sActivityName == "Civil Aviation Document Review" || sActivityName == "Examen des documents de l'aviation civile" || sActivityName == "Examen documentation de l'aviation civile") {
+
+                            glHelper.SetDisabled(formContext, "ovs_oversighttype", true);
+                        }
+                        else {
+
+                            //offline filter fix
+                            var filter = (isOffLine && clientType > 0)
+                                ? "ovs_oversighttypenameenglish eq 'Civil%20Aviation%20Document%20Review'"
+                                : "startswith(ovs_oversighttypenameenglish,'Civil%20Aviation%20Document%20Review')";
+
+                            currentWebApi.retrieveMultipleRecords("ovs_oversighttype", "?$select=ovs_oversighttypeid,ovs_oversighttypenameenglish,ovs_oversighttypenamefrench&$filter=" + filter).then(
+                                function success(results) {
+                                    var ovs_oversighttypeid = results.entities[0]["ovs_oversighttypeid"];
+                                    var ovs_oversighttypenameenglish = results.entities[0]["ovs_oversighttypenameenglish"];
+                                    var ovs_oversighttypenamefrench = results.entities[0]["ovs_oversighttypenamefrench"];
+
+
+                                    if (userSettings.languageId == 1036)
+                                        glHelper.SetLookup(formContext, "ovs_oversighttype", "ovs_oversighttype", ovs_oversighttypeid, ovs_oversighttypenamefrench);
+                                    if (userSettings.languageId == 1033)
+                                        glHelper.SetLookup(formContext, "ovs_oversighttype", "ovs_oversighttype", ovs_oversighttypeid, ovs_oversighttypenameenglish);
+
+                                    glHelper.SetDisabled(formContext, "ovs_oversighttype", true);
+
+                                    setInspectionType(formContext, 0);
+                                },
+                                function (error) {
+                                    Xrm.Navigation.openErrorDialog({ message: error.message });
+                                }
+                            );
+
+                        }
+                    }//not an aviation
+                    else {
+                        setInspectionType(formContext, 1);
+                        glHelper.SetDisabled(formContext, "ovs_oversighttype", false);
+                    }
+
+                    //-------------   end pre-filter for Oversight Type ------------//
+
+                },
+                function (error) {
+                    Xrm.Navigation.openErrorDialog({ message: error.message });
+
+                }
+            );
         },
 
         errorObject: errorObject,
+        OperationTypeGlobalValue: OperationTypeGlobalValue,
+        OperationTypeGlobalText: OperationTypeGlobalText,
+
     }
 
 

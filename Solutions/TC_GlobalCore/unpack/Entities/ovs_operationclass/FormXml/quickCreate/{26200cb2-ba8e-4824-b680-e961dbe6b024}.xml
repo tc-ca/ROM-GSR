@@ -14,17 +14,34 @@
           <columns>
             <column width="33%">
               <sections>
-                <section id="{8cab3bfa-e1df-43df-b6dc-7ea5b1aa355f}" name="tab_1_column_1_section_1" columns="1" showlabel="false" showbar="false" IsUserDefined="0">
+                <section id="{8cab3bfa-e1df-43df-b6dc-7ea5b1aa355f}" name="tab_1_column_1_section_1" columns="1" showlabel="false" showbar="false" IsUserDefined="0" locklevel="0" labelwidth="130" celllabelalignment="Left" celllabelposition="Top">
                   <labels>
                     <label description="section" languagecode="1033" />
                   </labels>
                   <rows>
                     <row>
-                      <cell id="{654897e4-372c-e77e-ecb0-4b30682abe5c}" showlabel="false" locklevel="0">
+                      <cell id="{9ea3d641-caec-49b6-c05d-92ccca794799}" showlabel="true" locklevel="0">
                         <labels>
                           <label description="Primary Class" languagecode="1033" />
                         </labels>
-                        <control id="ovs_primaryclass" classid="{4AA28AB7-9C13-4F57-A73D-AD894D048B5F}" datafieldname="ovs_primaryclass" disabled="false" uniqueid="{c0cbac25-e806-2ae0-d8d6-c77b32078563}" />
+                        <control id="ovs_primeclass" classid="{3EF39988-22BB-4f0b-BBBE-64B5A3748AEE}" datafieldname="ovs_primeclass" disabled="false" uniqueid="{d13b13ae-8589-eb6c-9697-14ade92744a6}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{93d6ec73-69cb-ed3d-ac24-072dbd58da78}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="ERAP Category" languagecode="1033" />
+                        </labels>
+                        <control id="ovs_erapcategory" classid="{3EF39988-22BB-4f0b-BBBE-64B5A3748AEE}" datafieldname="ovs_erapcategory" disabled="true" uniqueid="{c3484695-61ca-543e-bee6-b95c84e933c1}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{5e319a5e-bc48-9e03-180e-b8a14e1b42d5}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="Supply Chain Direction" languagecode="1033" />
+                          <label description="Supply Chain Direction" languagecode="1036" />
+                        </labels>
+                        <control id="ovs_supplychaindirection" classid="{4AA28AB7-9C13-4F57-A73D-AD894D048B5F}" datafieldname="ovs_supplychaindirection" disabled="false" uniqueid="{4d11eeaa-7283-a47c-5ab5-867ecd9ee2ab}" />
                       </cell>
                     </row>
                   </rows>
@@ -33,17 +50,18 @@
             </column>
             <column width="33%">
               <sections>
-                <section id="{6f005ae9-fe50-44af-bf93-6311a1cfbba4}" name="tab_1_column_2_section_1" columns="1" showlabel="false" showbar="false" IsUserDefined="0">
+                <section id="{6f005ae9-fe50-44af-bf93-6311a1cfbba4}" name="tab_1_column_2_section_1" columns="1" showlabel="false" showbar="false" IsUserDefined="0" locklevel="0" labelwidth="130" celllabelalignment="Left" celllabelposition="Top">
                   <labels>
                     <label description="section" languagecode="1033" />
                   </labels>
                   <rows>
                     <row>
-                      <cell id="{5e319a5e-bc48-9e03-180e-b8a14e1b42d5}" showlabel="false" locklevel="0">
+                      <cell id="{654897e4-372c-e77e-ecb0-4b30682abe5c}" showlabel="true" locklevel="0">
                         <labels>
-                          <label description="Supply Chain Direction" languagecode="1033" />
+                          <label description="Primary Class" languagecode="1033" />
+                          <label description="Primary Class" languagecode="1036" />
                         </labels>
-                        <control id="ovs_supplychaindirection" classid="{4AA28AB7-9C13-4F57-A73D-AD894D048B5F}" datafieldname="ovs_supplychaindirection" disabled="false" uniqueid="{4d11eeaa-7283-a47c-5ab5-867ecd9ee2ab}" />
+                        <control id="ovs_primaryclass" classid="{4AA28AB7-9C13-4F57-A73D-AD894D048B5F}" datafieldname="ovs_primaryclass" disabled="true" uniqueid="{c0cbac25-e806-2ae0-d8d6-c77b32078563}" />
                       </cell>
                     </row>
                   </rows>
@@ -58,7 +76,7 @@
                   </labels>
                   <rows>
                     <row>
-                      <cell id="{189817cf-0370-4f81-9ac9-f166d245f42e}">
+                      <cell id="{b08c525c-4ab4-7e12-ec31-c2ec892e5598}" showlabel="false">
                         <labels>
                           <label description="" languagecode="1033" />
                         </labels>
@@ -76,6 +94,17 @@
         <Role Id="{627090ff-40a3-4053-8790-584edc5be201}" />
         <Role Id="{119f245c-3cc8-4b62-b31c-d1a046ced15d}" />
       </DisplayConditions>
+      <formLibraries>
+        <Library name="cr34c_OperationClass_QuickCreateForm" libraryUniqueId="{59dee2c6-160d-4064-967b-2430d0423869}" />
+        <Library name="qm_globalHelper.js" libraryUniqueId="{c6ec29f3-3200-4251-acb2-b1360d3cb942}" />
+      </formLibraries>
+      <events>
+        <event name="onload" application="true" active="true">
+          <Handlers>
+            <Handler functionName="OnLoad" libraryName="cr34c_OperationClass_QuickCreateForm" handlerUniqueId="{5b246a59-7aa4-468b-8605-84daeafa2778}" enabled="true" parameters="" passExecutionContext="true" />
+          </Handlers>
+        </event>
+      </events>
     </form>
     <IsCustomizable>1</IsCustomizable>
     <CanBeDeleted>1</CanBeDeleted>
