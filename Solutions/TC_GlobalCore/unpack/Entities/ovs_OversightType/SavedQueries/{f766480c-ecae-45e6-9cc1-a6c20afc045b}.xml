@@ -11,6 +11,7 @@
       <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
         <row name="result" id="ovs_oversighttypeid">
           <cell name="ovs_name" width="300" />
+          <cell name="ovs_iptmacrocategory" width="100" />
           <cell name="a_bae09c27f4da4c09b94f8dcae29bfec6.name" width="100" />
           <cell name="a_bae09c27f4da4c09b94f8dcae29bfec6.businessunitid" width="100" />
         </row>
@@ -20,7 +21,6 @@
     <fetchxml>
       <fetch version="1.0" mapping="logical">
         <entity name="ovs_oversighttype">
-          <attribute name="ovs_oversighttypeid" />
           <attribute name="ovs_name" />
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="0" />
@@ -29,6 +29,8 @@
             <attribute name="name" />
             <attribute name="businessunitid" />
           </link-entity>
+          <attribute name="ovs_iptmacrocategory" />
+          <attribute name="ovs_oversighttypeid" />
         </entity>
       </fetch>
     </fetchxml>
