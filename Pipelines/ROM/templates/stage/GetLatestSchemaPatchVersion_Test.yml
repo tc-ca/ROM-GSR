@@ -1,0 +1,202 @@
+parameters:
+  - name: StageName
+    type: string
+  - name: SolutionName
+    type: string
+  - name: dependsOn
+    type: object
+    default: []
+  - name: ConnectionString
+    type: string
+  - name: EnvironmentName
+    type: string
+    default: 'ROM DEV TDG'
+  - name: PowerPlatformSPN
+    type: string
+stages:
+- stage: ${{Parameters.StageName}}
+  dependsOn:
+  - ${{ each stage in parameters.dependsOn }}:
+    - ${{ stage }}
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: ${{Parameters.StageName}}_GetPatchInfo
+    steps:
+    - checkout: self
+      persistCredentials: true
+      clean: true
+    - task: MSCRMToolInstaller@12
+      displayName: Install third party D365 deployment tools
+      inputs:
+        nugetFeed: 'official'
+        psFeed: 'official'
+    - task: MSCRMGetLatestPatch@12
+      name: GetLatestPatch
+      displayName: Get Latest Patch
+      inputs:
+        crmConnectionString: '${{Parameters.ConnectionString}}'
+        solutionName: '${{Parameters.SolutionName}}'
+        existsVariableName: 'PatchExists'
+        patchVariableName: 'LatestPatchName'
+    - powershell: |
+        Write-Host "##vso[task.setvariable variable=PatchExists;isOutput=true]$(PatchExists)"
+        Write-Host "##vso[task.setvariable variable=LatestPatchName;isOutput=true]$(LatestPatchName)"
+        Write-Host "Patch Exists =  $(PatchExists)"
+        Write-Host "Latest Patch Name =  $(LatestPatchName)"
+        Write-Host "${{ eq('$(PatchExists)', 'False') }}"
+    - task: PowerShell@2
+      displayName: Assert Patch Exists = True
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "============================================"
+          $patchExists = "${env:PatchExists}"
+          $type = $patchExists.GetType().Name
+          Write-Output "precheck: type = $type"
+          Write-Output "precheck: type=String: $($type.Equals('String'))"
+          if ($type = "String")
+          {
+            switch -regex ($patchExists)
+            {
+              "^(1|true|yes|on|enabled)$" { $patchExistsBool = $true }
+          
+              default { $patchExistsBool = $false }
+            }
+          }
+          else
+          {
+            $patchExistsBool = $patchExists
+          }
+          Write-Output "postCheck: patchExistsBool = $patchExistsBool"
+          if ($patchExistsBool -eq $false)
+          {
+            throw "No patch currently exists no need to rollup."
+          }
+        failOnStderr: true
+    - task: MSCRMGetSolution@12
+      displayName: Get Solution Details
+      inputs:
+        crmConnectionString: '${{ parameters.ConnectionString }}'
+        solutionName: '$(LatestPatchName)'
+        existsVariableName: 'SolutionExists'
+        versionVariableName: 'SolutionVersion'
+        displayVariableName: 'SolutionDisplayName'
+    - task: PowerShell@2
+      displayName: Set PatchVersion Variable
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "##vso[task.setvariable variable=PatchVersion;isOutput=true]$(SolutionVersion)"
+          Write-Host "Set PatchVersion environment variable to $(SolutionVersion)"
+        pwsh: true
+    - task: PowerShell@2
+      displayName: "Set build name"
+      inputs:
+        targetType: 'inline'
+        script: |
+          [string] $buildName = "${env:LATESTPATCHNAME}"
+          Write-Host "${env:LATESTPATCHNAME}"
+          Write-Host "Setting the name of the build to '$buildName'."
+          Write-Host "##vso[build.updatebuildnumber]$buildName"
+    - task: PowerPlatformToolInstaller@0
+      displayName: Power Platform Tools Installer
+      inputs:
+        DefaultVersion: true
+#======================commit the latest patch to github ========================
+    - task: PowerPlatformPublishCustomizations@0
+      displayName: Publish Customizations
+      inputs:
+        authenticationType: 'PowerPlatformSPN'
+        PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
+    - task: PowerPlatformExportSolution@0
+      displayName: Export Unmanaged Solution
+      inputs:
+        authenticationType: 'PowerPlatformSPN'
+        PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
+        SolutionName: '$(LatestPatchName)'
+        SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\zip\$(Build.BuildNumber).zip'
+        AsyncOperation: true
+        MaxAsyncWaitTime: '9999'
+    - task: PowerPlatformExportSolution@0
+      displayName: Export Managed Solution
+      inputs:
+        authenticationType: 'PowerPlatformSPN'
+        PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
+        SolutionName: '$(LatestPatchName)'
+        SolutionOutputFile: '$(Build.ArtifactStagingDirectory)\zip\$(Build.BuildNumber)_Managed.zip'
+        Managed: true
+        AsyncOperation: true
+        MaxAsyncWaitTime: '9999'
+        ExportAutoNumberingSettings: true
+    - task: PowerPlatformUnpackSolution@0
+      displayName: Unpack Unmanaged solution
+      inputs:
+        SolutionInputFile: '$(Build.ArtifactStagingDirectory)\zip\$(Build.BuildNumber).zip'
+        SolutionTargetFolder: '$(Build.ArtifactStagingDirectory)\$(Build.BuildNumber)'
+    - task: PublishBuildArtifacts@1
+      displayName: publish unpacked files
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\$(Build.BuildNumber)'
+        ArtifactName: 'unpacked'
+        publishLocation: 'Container'
+    - powershell: |
+        If(!(test-path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\unpack'))
+        {
+          Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\unpack folder does not exists."
+          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\unpack'
+          Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\unpack folder created."
+        } else {
+          Remove-Item -Path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\unpack' -recurse
+        }
+        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\$(Build.BuildNumber)\* -Destination $(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\unpack
+    - task: PublishBuildArtifacts@1
+      displayName: publish solution zip
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\zip'
+        ArtifactName: 'zip'
+        publishLocation: 'Container'
+    - powershell: |
+        If(!(test-path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\zip'))
+        {
+          Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\zip folder does not exists."
+          New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\zip'
+          Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\zip folder created."
+        }
+        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\zip\* -Destination $(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\zip
+    - task: PowerShell@2
+      displayName: Print Pipeline File Directories
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "============================================"
+          Write-Host "System.DefaultWorkingDirectory"
+          Get-ChildItem -Path "$(System.DefaultWorkingDirectory)"
+          Write-Host "============================================"
+          Write-Host "Agent.BuildDirectory"
+          Get-ChildItem -Path "$(Agent.BuildDirectory)"
+          Write-Host "============================================"
+          Write-Host ""
+          Write-Host "============================================"
+          Write-Host "Build.ArtifactStagingDirectory"
+          Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)"
+          Write-Host "============================================"
+          Write-Host "============================================"
+          Write-Host "Build.BinariesDirectory"
+          Get-ChildItem -Path "$(Build.BinariesDirectory)"
+          Write-Host "============================================"
+          Write-Host "============================================"
+          Write-Host "Build.SourcesDirectory"
+          Get-ChildItem -Path "$(Build.SourcesDirectory)"
+          Write-Host "============================================"
+        errorActionPreference: 'continue'
+    - powershell: |
+        echo "Committing all CDS solution changes"
+        git config user.email "nepasrepondre-noreply@tc.gc.ca"
+        git config user.name "tc-buildbot"
+        git checkout development
+        git add --all
+        git commit -m "Update Solution - $(Build.BuildNumber): $env:COMMITMESSAGE"
+        
+        echo "Push solution changes to the remote repository"
+        git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
