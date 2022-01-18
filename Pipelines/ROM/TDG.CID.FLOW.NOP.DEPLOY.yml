@@ -19,6 +19,20 @@ variables:
     value: 'ROM PROD TDG'
   - name: SolutionName
     value: 'TDG_NOP_Flows'
+  - name: VersionMajor
+    value: 1
+  - name: VersionMinor
+    value: 0
+  - name: VersionPatch
+    value: 0
+  - name: StableVersionNumber
+    value: '$(VersionMajor).$(VersionMinor).$(VersionPatch)'
+  - name: CounterVariable
+    value: '$(SolutionName)_$(VersionMajor).$(VersionMinor).$(VersionPatch)'
+  - name: VersionRevision
+    value: $[counter(variables['CounterVariable'], 0)]
+  - name: VersionNumber
+    value: '$(StableVersionNumber).$(VersionRevision)'
 
 name: #Set Dynamically in Pipeline
 
