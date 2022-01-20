@@ -30,3 +30,9 @@ steps:
         Write-Host "Build.ArtifactStagingDirectory"
         Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)"
         Write-Host "============================================"
+  - task: PublishBuildArtifacts@1
+    displayName: publish unpacked files
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)\cid-dev'
+      ArtifactName: 'portal_config'
+      publishLocation: 'Container'
