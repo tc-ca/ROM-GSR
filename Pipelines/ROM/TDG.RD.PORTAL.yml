@@ -1,0 +1,28 @@
+trigger: none
+pool:
+  vmImage: windows-latest
+steps:
+  #Install the Power Platform CLI
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        Invoke-WebRequest https://aka.ms/PowerAppsCLI -OutFile pac.msi
+        msiexec /i pac.msi /quiet /norestart
+  #Create the authentication profile for the dev environment
+  - task: PowerShell@2
+    env:
+      PowerPlatformAadApplicationSecret: $(PowerPlatformAadApplicationSecret)
+    inputs:
+      targetType: 'inline'
+      script: |
+        # refresh path to make pac available
+        $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+        pac install latest
+        pac auth create --name PORTAL_DEV `
+          --url ${env:PowerPlatformDevURL} `
+          --tenant ${env:PowerPlatformAadDirectoryId} `
+          --applicationId ${env:PowerPlatformAadApplicationId} `
+          --clientSecret ${env:PowerPlatformAadApplicationSecret}
+        pac org who
+        pac paportal download --path $(Build.ArtifactStagingDirectory) --webSiteId ${env:PowerPlatformDevPortalWebSiteId}
