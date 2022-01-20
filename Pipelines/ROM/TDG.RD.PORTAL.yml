@@ -26,3 +26,7 @@ steps:
           --clientSecret ${env:PowerPlatformAadApplicationSecret}
         pac org who
         pac paportal download --path $(Build.ArtifactStagingDirectory) --webSiteId ${env:PowerPlatformDevPortalWebSiteId}
+        Write-Host "============================================"
+        Write-Host "Build.ArtifactStagingDirectory"
+        Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)"
+        Write-Host "============================================"
