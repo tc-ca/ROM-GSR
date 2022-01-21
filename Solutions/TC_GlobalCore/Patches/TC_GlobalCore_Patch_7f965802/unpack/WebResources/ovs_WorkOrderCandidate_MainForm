@@ -1,0 +1,131 @@
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+///<reference path="../../Utilities/questionnaireFunctions.js"/>
+
+var Candidates_TDG_main = (function (window, document) {
+
+
+    //variables
+    var LCID;
+    var clientUrl;
+    var resexResourceName;
+    var currentWebApi;
+    var isOffLine;
+    var clientType;
+    var oat = new Array("GC Targeted", "GC CEP", "GC Follow-up", "MOC Follow-up","MOC Targeted" );
+    var formType;
+
+    //********************private methods*******************
+
+    function isJustificationMandatory(formContext, oversightTypeId) {
+
+
+        if (glHelper.GetValue(formContext, "ovs_cdpriorityscore") >= 100.00) {
+
+            //TO DO: Localize if design approved
+            var message = "The Priority Score is above a threshold. Record cannot be remove without replacement.";
+
+            glHelper.SetRequiredLevel(formContext, "ovs_justification", true);
+            Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: message });
+
+        }
+        else {
+            if (oversightTypeId != null)
+                currentWebApi.retrieveRecord("ovs_oversighttype", oversightTypeId, "?$select=ovs_oversighttypenameenglish").then(
+                    function success(result) {
+                        var isReq = false;
+                        var nameenglish = result["ovs_oversighttypenameenglish"];
+                        var x = nameenglish.trim().toLowerCase();
+                        for (var i = 0; i < oat.length; i++) {
+                            if (x.indexOf(oat[i].toLowerCase()) > -1) {
+                                isReq = true;
+                                break;
+                            }
+                        }
+                        if (isReq) glHelper.SetRequiredLevel(formContext, "ovs_justification", true);
+                        else glHelper.SetRequiredLevel(formContext, "ovs_justification", false);
+                    },
+                    function (error) {
+
+                        glHelper.SetRequiredLevel(formContext, "ovs_justification", false);
+                        console.log("isJustificationMandatory error: " + error.message);
+                        Xrm.Navigation.openErrorDialog({ message: error.message });
+                    }
+                );
+            else glHelper.SetRequiredLevel(formContext, "ovs_justification", false);
+        }
+    }
+
+
+    //********************private methods end***************
+
+    //********************public methods***************
+    return {
+
+        OnLoad: function (executionContext) {
+
+            var globalContext = Xrm.Utility.getGlobalContext();
+            var formContext = executionContext.getFormContext();
+            formType = glHelper.GetFormType(formContext);
+
+            isOffLine = glHelper.isOffline(executionContext);
+            clientType = glHelper.getClientType(executionContext);
+
+            if (isOffLine && clientType > 0) {
+
+                //mobile or outlook, offline first
+                currentWebApi = Xrm.WebApi.offline;
+                clientUrl = "https://localhost:2525";
+            }
+            else {
+
+                //web, online
+                currentWebApi = Xrm.WebApi.online;
+                clientUrl = globalContext.getClientUrl();
+            }
+
+
+            //planning status
+            var planningstatus = formContext.getAttribute("ovs_planningstatus");
+            planningstatus.removeOnChange(Candidates_TDG_main.PlanningStatus_Change);
+            planningstatus.addOnChange(Candidates_TDG_main.PlanningStatus_Change);
+
+
+            var oversighttype = formContext.getAttribute("ovs_oversighttype");
+            oversighttype.removeOnChange(Candidates_TDG_main.ActivityType_OnCahnge);
+            oversighttype.addOnChange(Candidates_TDG_main.ActivityType_OnCahnge);            
+
+
+            if (formType > 1) {
+                planningstatus.fireOnChange();
+            }
+        },
+
+        PlanningStatus_Change: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+            //if replaced
+            if (glHelper.GetOptionsetValue(formContext, "ovs_planningstatus") == 918640001) {
+                //validate if justification is required
+                var ovesightTypeId = glHelper.GetValue(formContext, "ovs_oversighttype")[0]
+                    ? glHelper.GetLookupAttrId(formContext, "ovs_oversighttype").replace('{', '').replace('}', '')
+                    : null;
+                isJustificationMandatory(formContext, ovesightTypeId);
+            } else glHelper.SetRequiredLevel(formContext, "ovs_justification", false);
+
+        },
+
+        ActivityType_OnCahnge: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+
+            if (glHelper.GetValue(formContext, "ovs_oversighttype")[0]) {
+                var planningstatus = formContext.getAttribute("ovs_planningstatus");
+                planningstatus.fireOnChange();
+            }
+        },
+    }
+
+
+    //********************public methods end***************
+
+})(window, document)
