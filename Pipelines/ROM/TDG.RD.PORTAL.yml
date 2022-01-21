@@ -56,6 +56,7 @@ stages:
         ArtifactName: 'cid-dev'
         publishLocation: 'Container'
   #TODO Store the config folder in repo
+
   #Deploy to QA
 - stage: DeployToQA
   pool:
@@ -70,9 +71,6 @@ stages:
       runOnce:
         deploy:
           steps:
-          - checkout: self
-            persistCredentials: true
-            clean: true
           #Install the Power Platform CLI
           - task: PowerShell@2
             displayName: Download Power Platform CLI
@@ -83,7 +81,7 @@ stages:
                 msiexec /i pac.msi /quiet /norestart
           
           - task: PowerShell@2
-            displayName: Download portal configuration
+            displayName: Upload portal configuration
             env:
               PowerPlatformAadApplicationSecret: $(PowerPlatformAadApplicationSecret)
             inputs:
