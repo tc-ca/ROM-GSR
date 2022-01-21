@@ -1,0 +1,191 @@
+{% fetchxml accountFetch %}
+<fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+    <entity name="account">
+        <attribute name="name" />
+        
+        <attribute name="telephone1" />
+        <attribute name="accountid" />
+        <order descending="false" attribute="name" />
+    </entity>
+</fetch>
+{% endfetchxml %}
+
+<div>
+    <button type="button" class="btn btn-primary new-record btn-sm my-0 glyphicon glyphicon-plus" onclick="NewRecord()"></button>
+    <table id="accountTable" class="table table-responsive-md table-striped text-center">
+        <thead>
+            <tr>
+                <th class="text-center hidden">Account Id</th>
+                <th class="text-center">Name</th>
+              
+                <th class="text-center">Telephone</th>
+                <th class="text-center"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for acc in accountFetch.results.entities %}
+            {% assign accountId = acc.accountid %}
+            <tr id={{ accountID }}>
+                <td class="hidden" contenteditable="true">{{ accountId }}</td>
+                <td contenteditable="true" id="{{ accountID }}_name">{{ acc.name }}</td>
+                
+                <td contenteditable="true" id="{{ accountID }}_telephone">{{ acc.telephone1 }}</td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm my-0 glyphicon glyphicon-remove" onclick="RemoveRecord('{{ accountId }}')"></button>
+                    <button type="button" class="btn btn-success btn-sm my-0 glyphicon glyphicon-ok" onclick="UpdateRecord('{{ accountId }}')"></button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+  
+    (function (webapi, $) {
+        function safeAjax(ajaxOptions) {
+            var deferredAjax = $.Deferred();
+
+            shell.getTokenDeferred().done(function (token) {
+                // add headers for AJAX
+                if (!ajaxOptions.headers) {
+                    $.extend(ajaxOptions, {
+                        headers: {
+                            "__RequestVerificationToken": token
+                        }
+                    });
+                } else {
+                    ajaxOptions.headers["__RequestVerificationToken"] = token;
+                }
+                $.ajax(ajaxOptions)
+                    .done(function (data, textStatus, jqXHR) {
+                        validateLoginSession(data, textStatus, jqXHR, deferredAjax.resolve);
+                    }).fail(deferredAjax.reject); //AJAX
+            }).fail(function () {
+                deferredAjax.rejectWith(this, arguments); // on token failure pass the token AJAX and args
+            });
+
+            return deferredAjax.promise();
+        }
+        webapi.safeAjax = safeAjax;
+    })(window.webapi = window.webapi || {}, jQuery)
+
+    function NewRecord() {
+
+        var guid = NewGuid();
+        var newLine = '';
+        newLine += '<tr id=' + guid + '>';
+        newLine += '    <td class="hidden" contenteditable="true">' + guid + '</td>';
+        newLine += '    <td contenteditable="true" id="' + guid + '_name"></td>';
+        newLine += '    <td contenteditable="true" id="' + guid + '_telephone"></td>';
+        newLine += '    <td>';
+        newLine += '        <button type="button" class="btn btn-danger btn-sm my-0 glyphicon glyphicon-remove" onclick="RemoveUnsavedRecord(\'' + guid + '\')"></button>';
+        newLine += '        <button type="button" class="btn btn-success btn-sm my-0 glyphicon glyphicon-ok" onclick="CreateRecord(\'' + guid + '\')"></button>';
+        newLine += '    </td>';
+        newLine += '</tr>';
+
+        $("#accountTable").append(newLine);
+        $("#" + guid + "_name").focus();
+    };
+
+    function NewGuid() {
+        var dt = new Date().getTime();
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (dt + Math.random() * 16) % 16 | 0;
+            dt = Math.floor(dt / 16);
+            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+        return uuid;
+    }
+
+    function CreateRecord(accountId) {
+
+        $("#loading").fadeIn();
+
+        var accountName = $("#" + accountId + "_name").text();
+        var telephone = $("#" + accountId + "_telephone").text();
+     
+        var contactFirstName = "";
+        var contactLastName = "";
+
+        if (!!contactName) {
+            contactFirstName = contactName.split(" ")[0];
+
+            if (contactName.split(" ").length > 1)
+                contactLastName = contactName.substr(contactName.indexOf(" ") + 1);
+        }
+
+        webapi.safeAjax({
+            type: "POST",
+            url: "/_api/accounts",
+            contentType: "application/json",
+            data: JSON.stringify({
+                "accountid": accountId,
+                "name": accountName,
+                "telephone1": telephone
+               
+            }),
+            success: function (res, status, xhr) {
+                $("#loading").fadeOut();
+                alert("The record has been created successfully.");
+                location.reload();
+            },
+            error: function () {
+                $("#loading").fadeOut();
+            }
+        });
+    };
+
+    function UpdateRecord(accountId) {
+
+        $("#loading").fadeIn();
+
+        var accountName = $("#" + accountId + "_name").text();
+        var telephone = $("#" + accountId + "_telephone").text();
+
+        webapi.safeAjax({
+            type: "PATCH",
+            url: "/_api/accounts(" + accountId + ")",
+            contentType: "application/json",
+            data: JSON.stringify({
+                "name": accountName,
+                "telephone1": telephone
+            }),
+            success: function (res) {
+                $("#loading").fadeOut();
+                alert("The record has been updated successfully.");
+            },
+            error: function () {
+                $("#loading").fadeOut();
+            }
+        });
+    };
+
+    function RemoveUnsavedRecord(accountId) {
+
+        if (!!accountId) {
+            $("#" + accountId).remove();
+        }
+    };
+
+    function RemoveRecord(accountId) {
+
+        $("#loading").fadeIn();
+        if (!!accountId) {
+            webapi.safeAjax({
+                type: "DELETE",
+                url: "/_api/accounts(" + accountId + ")",
+                contentType: "application/json",
+                success: function (res) {
+                    $("#" + accountId).remove();
+                    $("#loading").fadeOut();
+                    alert("The record has been deleted.");
+                },
+                error: function () {
+                    $("#loading").fadeOut();
+                }
+            });
+        }
+    };
+
+</script>

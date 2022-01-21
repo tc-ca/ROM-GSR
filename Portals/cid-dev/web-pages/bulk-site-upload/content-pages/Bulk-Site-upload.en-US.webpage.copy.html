@@ -1,0 +1,28 @@
+<div class="row sectionBlockLayout" style="display: flex; flex-wrap: wrap; padding: 8px; margin: 0px; text-align: left; min-height: 100px;">
+  <div>
+    <p>click <a draggable="true" id="linkdownload">here</a> to download template </p>
+  </div>
+  <div class="container" style="display: flex; flex-wrap: wrap;">
+    <div class="col-md-12 columnBlockLayout" style="display: flex; flex-direction: column;">
+    </div>
+  </div>
+</div>
+<div>
+  <div> {% entityform name: 'Add Bulk site attachment' %} </div>
+  <div>
+    <h2 class="blue_border">List of Activities</h2>{% include 'entity_list' key: 'Upload Sites' %}
+  </div>
+  <script>
+    $(document).ready(function() {
+      var pageURL = window.location.href;
+      var DownloadURL = "~/RD_Sites_Template.xlsm";
+      var linktemplate = document.getElementById("linkdownload");
+      linktemplate.href = DownloadURL;
+      linktemplate.download = "RD_Sites_Template.xlsx";
+    });
+  </script>
+</div>
+<div>
+  <p></p>
+  <h2 class="blue_border">List of Sites</h2>{% include 'entity_list' key: 'Parent company site list' %}
+</div>

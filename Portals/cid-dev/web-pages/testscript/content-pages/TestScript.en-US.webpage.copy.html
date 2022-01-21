@@ -1,0 +1,19 @@
+{% include 'WebAPIAJAX'%}
+{% assign is_valid = true %}
+<div class="row sectionBlockLayout" style="display: flex; flex-wrap: wrap; padding: 8px; margin: 0px; text-align: left; min-height: 100px;">
+  <div class="container" style="display: flex; flex-wrap: wrap;">
+    <div class="col-md-12 columnBlockLayout" style="display: flex; flex-direction: column;"></div>
+  </div><button id="download">download</button><button id="callapi">call api</button>
+</div>
+<script>
+  $(document).ready(async function() {
+    alert('test123');
+    $('#callapi').on('click', async function() {
+      alert('before functioncall');
+      // Add_Operation_entity
+      let opId = await Add_Operation_entity('88d2bf38-006f-ec11-a81b-0022486da668');
+      console.log(opId);
+      alert("alert id " + opId);
+    });
+  });
+</script>
