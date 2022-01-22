@@ -13,11 +13,15 @@ $(document).ready(function () {
     sessionStorage.setItem("address1_line1", address1_line1);
 
     // resize WebResource_address_complete
-    $("#WebResource_address_complete").height('45px');
+    $("#WebResource_address_complete").height('65px');
 });
 
 function AddressComplete_Hide_address1_line1() {
-    $("#address1_line1").parent().hide();
+    //$("#address1_line1").parent().parent().hide();
+}
+
+function AddressComplete_address1_line1() {
+    $("#address1_line1").val(sessionStorage.getItem("Line1"));
 }
 
 function AddressComplete_Selected() {

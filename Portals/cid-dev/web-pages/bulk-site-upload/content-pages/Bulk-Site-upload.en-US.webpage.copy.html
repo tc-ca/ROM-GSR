@@ -1,28 +1,147 @@
+<style>
+  #processingMsg {
+    width: 300px;
+    text-align: center;
+    padding: 6px 10px;
+    z-index: 9999;
+    top: 15%;
+    left: 40%;
+    position: fixed;
+    -webkit-border-radius: 0 0 2px 2px;
+    border-radius: 0 0 2px 2px;
+    -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: none;
+  }
+  .loader {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    margin-top: -15px;
+    margin-left: -15px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    border-top-color: #07d;
+    animation: spinner .6s linear infinite;
+  }
+  @keyframes spinner {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>
+{% assign parentid = user.parentcustomerid.id %}
+{% fetchxml environment_settings %}
+<fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+  <entity name="qm_environmentsettings">
+    <attribute name="qm_environmentsettingsid" />
+    <attribute name="qm_name" />
+    <attribute name="createdon" />
+    <attribute name="qm_value" />
+    <order attribute="qm_name" descending="false" />
+    <filter type="and">
+      <condition attribute="qm_name" operator="like" value="%CID[_]%" />
+    </filter>
+  </entity>
+</fetch>
+{% endfetchxml %}
+{% for env_setting in environment_settings.results.entities %}
+{% if {{env_setting.qm_name}}  == 'CID_Upload_Excel_Flow' %}
+{% assign excelload_Flow_URL = env_setting.qm_value %}
+{% endif %}
+{% if {{env_setting.qm_name}}  == 'CID_Bulk_Upload' %}
+{% assign Bulk_flow_URL = env_setting.qm_value %}
+{% endif %}
+{% endfor %}
 <div class="row sectionBlockLayout" style="display: flex; flex-wrap: wrap; padding: 8px; margin: 0px; text-align: left; min-height: 100px;">
   <div>
-    <p>click <a draggable="true" id="linkdownload">here</a> to download template </p>
+    <p>click download button to download your Sites </p>
+    <button id="linkdownload" type="button" class="submit-btn btn btn-primary form-action-container-left">Download</button>
   </div>
   <div class="container" style="display: flex; flex-wrap: wrap;">
     <div class="col-md-12 columnBlockLayout" style="display: flex; flex-direction: column;">
     </div>
   </div>
+  <div role="alert" class="alert alert-warning" />
+  <div class="loader"></div>
 </div>
 <div>
   <div> {% entityform name: 'Add Bulk site attachment' %} </div>
   <div>
     <h2 class="blue_border">List of Activities</h2>{% include 'entity_list' key: 'Upload Sites' %}
   </div>
-  <script>
-    $(document).ready(function() {
-      var pageURL = window.location.href;
-      var DownloadURL = "~/RD_Sites_Template.xlsm";
-      var linktemplate = document.getElementById("linkdownload");
-      linktemplate.href = DownloadURL;
-      linktemplate.download = "RD_Sites_Template.xlsx";
-    });
-  </script>
 </div>
 <div>
   <p></p>
   <h2 class="blue_border">List of Sites</h2>{% include 'entity_list' key: 'Parent company site list' %}
 </div>
+<script>
+  $(document).ready(function() {
+    $(window).load(function() {
+      $('#ll').hide();
+    });
+    var pageURL = window.location.href;
+    //var DownloadURL = "~/RD_Sites_Template.xlsm";
+    //var linktemplate = document.getElementById("linkdownload");
+    //linktemplate.href = DownloadURL;
+    //linktemplate.download = "RD_Sites_Template.xlsx";
+    $('#linkdownload').on('click', async function() {
+      notificationMsg.show("System is downloading site info ...");
+      $('#ll').show();
+      var companyid = '{{parentid}}';
+      notificationMsg.show("System is downloading site info ...");
+      var acupdate =
+        '{ "accountid": "' + companyid + '" }';
+      var req = new XMLHttpRequest();
+      var url = "https://prod-17.canadacentral.logic.azure.com:443/workflows/900f6e70915a4cddbb65b3c79da14581/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LZveFQ8DXIDobQOPzgoc0LgOcSOPpqVcnCEicN1lvEQ";
+      req.open("POST", url, true);
+      req.setRequestHeader('Content-Type', 'application/json');
+      req.onreadystatechange = function() {
+        if (this.readyState === 4) {
+          req.onreadystatechange = null;
+          if (this.status === 200) {
+            var result = this.response;
+            $('#ll').hide();
+            notificationMsg.show("Download complete");
+            var fileattachementURL = "https://rd-tdgcore-dev.powerappsportals.com/_entity/annotation/" + result;
+            window.location.replace(fileattachementURL);
+          } else {
+            var result = this.response;
+            alert("Error " + result);
+          }
+        }
+      }
+      req.send(acupdate);
+    });
+  });
+  var notificationMsg = (function() {
+    var $processingMsgEl = $('#processingMsg'),
+      _msg = 'Processing...',
+      _stack = 0,
+      _endTimeout;
+    return {
+      show: function(msg) {
+        $processingMsgEl.text(msg || _msg);
+        if (_stack === 0) {
+          clearTimeout(_endTimeout);
+          $processingMsgEl.show();
+        }
+        _stack++;
+      },
+      hide: function() {
+        _stack--;
+        if (_stack <= 0) {
+          _stack = 0;
+          clearTimeout(_endTimeout);
+          _endTimeout = setTimeout(function() {
+            $processingMsgEl.hide();
+          }, 500);
+        }
+      }
+    }
+  })();
+</script>
