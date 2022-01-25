@@ -2,11 +2,11 @@
 
 $(document).ready(function () {
     addValidator("emailaddress1", "E-mail");
-    addValidator("address1_line1", "Street 1");
-    addValidator("address1_city", "City");
-    addValidator("address1_stateorprovince", "Province");
-    addValidator("address1_postalcode", "Postal Code");
-    addValidator("address1_country", "Country");
+    //addValidator("address1_line1", "Street 1");
+    //addValidator("address1_city", "City");
+    //addValidator("address1_stateorprovince", "Province");
+    //addValidator("address1_postalcode", "Postal Code");
+    //addValidator("address1_country", "Country");
 
     // session varss
     var address1_line1 = $("#address1_line1").val();
