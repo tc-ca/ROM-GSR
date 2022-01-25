@@ -11,7 +11,7 @@
         border-radius: 0 0 2px 2px;
         -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        --display: none;
+      
     }
   
 </style>
@@ -42,9 +42,11 @@
 <script>
   $(document).ready(function() {
     $(window).load(function() {
+        alert("onload");
     //  $('#ll').hide();
-          notificationMsg.show("System is downloading site info ...");
-          alert("onload");
+        //  notificationMsg.show("System is downloading site info ...");
+            $("#processingMsg").css("display", "none");
+            $("#processingMsg").hide();
     });
     var pageURL = window.location.href;
     //var DownloadURL = "~/RD_Sites_Template.xlsm";
@@ -52,6 +54,9 @@
     //linktemplate.href = DownloadURL;
     //linktemplate.download = "RD_Sites_Template.xlsx";
     $('#linkdownload').on('click', async function() {
+          $('#processingMsg').css('display','block');
+        $('#processingMsg').text('System is downloading site info ...');
+        
      // notificationMsg.show("System is downloading site info ...");
      
      // $('#ll').show();
@@ -70,7 +75,7 @@
           if (this.status === 200) {
             var result = this.response;
            // $('#ll').hide();
-            notificationMsg.show("Download complete");
+             $('#processingMsg').text("Download complete");
             var fileattachementURL = "https://rd-tdgcore-dev.powerappsportals.com/_entity/annotation/" + result;
             window.location.replace(fileattachementURL);
           } else {
@@ -131,7 +136,7 @@
           
          {% include 'Page Copy' %}    
 <div class="row sectionBlockLayout" style="display: flex; flex-wrap: wrap; padding: 8px; margin: 0px; text-align: left; min-height: 100px;">
-
+ 
   <div>
     <p>click download button to download your Sites </p>
     <div>
@@ -154,7 +159,7 @@
   {% include 'entity_list' key: 'Parent company site list' %}
 
 </div>
-   <div id="processingMsg" class="alert alert-warning" role="alert"></div>
+   <div id="processingMsg" class="alert alert-warning" role="alert">system is downloading file</div>
 </div>
   {% endblock %}
 
