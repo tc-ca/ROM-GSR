@@ -30,12 +30,29 @@ stages:
           Write-Host "Parameters.StageName: ${{Parameters.StageName}}"
           Write-Host "============================================"
     - task: MSCRMToolInstaller@12
-      displayName: Power DevOps Tool Installer
+      displayName: Install third party D365 deployment tools
+      inputs:
+        nugetFeed: 'official'
+        psFeed: 'official'
+    - task: MSCRMGetLatestPatch@12
+      name: GetLatestPatch
+      displayName: Get Latest Patch
+      inputs:
+        crmConnectionString: '${{Parameters.ConnectionString}}'
+        solutionName: '${{Parameters.SolutionName}}'
+        existsVariableName: 'PatchExists'
+        patchVariableName: 'LatestPatchName'
+    - powershell: |
+        Write-Host "##vso[task.setvariable variable=PatchExists;isOutput=true]$(PatchExists)"
+        Write-Host "##vso[task.setvariable variable=LatestPatchName;isOutput=true]$(LatestPatchName)"
+        Write-Host "Patch Exists =  $(PatchExists)"
+        Write-Host "Latest Patch Name =  $(LatestPatchName)"
+        Write-Host "${{ eq('$(PatchExists)', 'False') }}"
     - task: MSCRMGetSolution@12
       displayName: Get Solution Details
       inputs:
         crmConnectionString: '${{ parameters.ConnectionString }}'
-        solutionName: '$(SolutionName)'
+        solutionName: '$(LatestPatchName)'
         existsVariableName: 'SolutionExists'
         versionVariableName: 'SolutionVersion'
         displayVariableName: 'SolutionDisplayName'
