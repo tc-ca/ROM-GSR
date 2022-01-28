@@ -2,12 +2,12 @@ variables:
 - name: SolutionName
   value: "Default Value"
 
-#schedules:
-#- cron: "0 06,19 * * Mon-Friday"
-#  displayName: DepenencyCheck 
-#  branches:
-#    include:
-#    - development
+schedules:
+- cron: "0 06,19 * * Mon-Friday"
+  displayName: DepenencyCheck 
+  branches:
+    include:
+    - development
 
 trigger: none
 pr: none
@@ -15,7 +15,7 @@ pr: none
 stages:
 - stage: CheckForMissingDependencies
   pool:
-      vmImage: 'vs2017-win2016'
+      vmImage: 'windows-latest'
   jobs:
   - job: CheckForMissingDependenciesDev
     steps:
@@ -27,6 +27,9 @@ stages:
     - task: MSCRMPing@12
       inputs:
         crmConnectionString: '$(ConnectionStringDev)'
+    - task: MSCRMPing@12
+      inputs:
+        crmConnectionString: '$(ConnectionStringQA)'
     - task: MSCRMGetLatestPatch@12
       name: GetLatestPatchTask
       inputs:

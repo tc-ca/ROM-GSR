@@ -31,33 +31,34 @@ stages:
 #get the current patch, export managed and unmanaged zips, unpack unmanaged, store in source control
 #version stored into environment variable ${env:SOLUTIONVERSION}
 #$(Build.BuildNumber) will get set to "<patchname>_<patchversion>" and used in subsequent stages
-- template: templates/stage/GetLatestSchemaPatchVersion.yml  # Template reference
-  parameters:
-    StageName: 'GetSchemaPatch'
-    SolutionName: $(SolutionName)
-    ConnectionString: $(ConnectionStringDev)
-    PowerPlatformSPN: $(PowerPlatformSPN_DEV)
 
-#fail the build if there are missing components identified on the patch
-- template: templates/stage/DependencyCheck.yml  # Template reference
-  parameters:
-    StageName: 'DependencyCheck'
-    SolutionName: $(Build.BuildNumber)
-    ConnectionStringDest: $(ConnectionStringQA)
-    ConnectionStringSource: $(ConnectionStringDev)
-    dependsOn: 
-    - 'GetSchemaPatch'
+# - template: templates/stage/GetLatestSchemaPatchVersion.yml  # Template reference
+#   parameters:
+#     StageName: 'GetSchemaPatch'
+#     SolutionName: $(SolutionName)
+#     ConnectionString: $(ConnectionStringDev)
+#     PowerPlatformSPN: $(PowerPlatformSPN_DEV)
 
-#deploy the patch to QA
-- template: templates/stage/DeploySolution.yml  # Template reference
-  parameters:
-    SolutionName: $(Build.BuildNumber) #build name (number) set in the previous stage, should use dedicated varible
-    PowerPlatformSPN: $(PowerPlatformSPN_QA)
-    Environment: 'QA-TDG'
-    StageName: 'DeployManagedSolutionToQA'
-    IncrementVersion: false
-    dependsOn: 
-    - 'DependencyCheck'
+# #fail the build if there are missing components identified on the patch
+# - template: templates/stage/DependencyCheck.yml  # Template reference
+#   parameters:
+#     StageName: 'DependencyCheck'
+#     SolutionName: $(Build.BuildNumber)
+#     ConnectionStringDest: $(ConnectionStringQA)
+#     ConnectionStringSource: $(ConnectionStringDev)
+#     dependsOn: 
+#     - 'GetSchemaPatch'
+
+# #deploy the patch to QA
+# - template: templates/stage/DeploySolution.yml  # Template reference
+#   parameters:
+#     SolutionName: $(Build.BuildNumber) #build name (number) set in the previous stage, should use dedicated varible
+#     PowerPlatformSPN: $(PowerPlatformSPN_QA)
+#     Environment: 'QA-TDG'
+#     StageName: 'DeployManagedSolutionToQA'
+#     IncrementVersion: false
+#     dependsOn: 
+#     - 'DependencyCheck'
 
 #after a successfull deployment to QA, patch the solution in DEV
 - template: templates/stage/PatchSolution.yml  # Template reference
@@ -65,37 +66,37 @@ stages:
     SolutionName: $(SolutionName)
     ConnectionString: $(ConnectionStringDev)
     StageName: 'CreatePatchOnDev'
-    dependsOn: 
-    - 'DeployManagedSolutionToQA'
+    # dependsOn: 
+    # - 'DeployManagedSolutionToQA'
 
 #all subsequent deployments will require an explicit stage approval by an approver for that environment
 
-#ACC
-- template: templates/stage/DeploySolution.yml  # Template reference
-  parameters:
-    SolutionName: $(Build.BuildNumber)
-    PowerPlatformSPN: $(PowerPlatformSPN_ACC)
-    Environment: 'ACC-TDG'
-    StageName: 'DeployManagedSolutionToACC'
-    dependsOn: 
-    - 'DeployManagedSolutionToQA'
+# #ACC
+# - template: templates/stage/DeploySolution.yml  # Template reference
+#   parameters:
+#     SolutionName: $(Build.BuildNumber)
+#     PowerPlatformSPN: $(PowerPlatformSPN_ACC)
+#     Environment: 'ACC-TDG'
+#     StageName: 'DeployManagedSolutionToACC'
+#     dependsOn: 
+#     - 'DeployManagedSolutionToQA'
 
-#PREPROD
-- template: templates/stage/DeploySolution.yml  # Template reference
-  parameters:
-    SolutionName: $(Build.BuildNumber)
-    PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
-    Environment: 'PREPROD-TDG'
-    StageName: 'DeployManagedSolutionToPREPROD'
-    dependsOn: 
-    - 'DeployManagedSolutionToQA'
+# #PREPROD
+# - template: templates/stage/DeploySolution.yml  # Template reference
+#   parameters:
+#     SolutionName: $(Build.BuildNumber)
+#     PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
+#     Environment: 'PREPROD-TDG'
+#     StageName: 'DeployManagedSolutionToPREPROD'
+#     dependsOn: 
+#     - 'DeployManagedSolutionToQA'
 
-#PROD
-- template: templates/stage/DeploySolution.yml  # Template reference
-  parameters:
-    SolutionName: $(Build.BuildNumber)
-    PowerPlatformSPN: $(PowerPlatformSPN_PROD)
-    Environment: 'PROD-TDG'
-    StageName: 'DeployManagedSolutionToPROD'
-    dependsOn: 
-    - 'DeployManagedSolutionToQA'
+# #PROD
+# - template: templates/stage/DeploySolution.yml  # Template reference
+#   parameters:
+#     SolutionName: $(Build.BuildNumber)
+#     PowerPlatformSPN: $(PowerPlatformSPN_PROD)
+#     Environment: 'PROD-TDG'
+#     StageName: 'DeployManagedSolutionToPROD'
+#     dependsOn: 
+#     - 'DeployManagedSolutionToQA'

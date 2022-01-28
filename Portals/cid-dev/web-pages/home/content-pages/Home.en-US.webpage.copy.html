@@ -1,0 +1,11 @@
+<div class="panel panel-default">
+</div>
+{% comment %}{% assign parentCompany = user.parentcustomerid.id %}{% endcomment %}
+{% assign parentCompany = user.parentcustomerid.id %}
+{% if parentCompany %}
+{% comment %}{% entityform name: 'ManageCompany' %}{% endcomment %}
+{% webform name: 'CompanyRegistrationWizard' %}
+{% else %}
+{% entityform name: 'NewCompany' %}
+{% comment %}{% entityform name: 'NewCompany' %}{% endcomment %}
+{% endif %}

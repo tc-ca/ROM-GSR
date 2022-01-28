@@ -137,27 +137,28 @@ var WO_TDG_main = (function (window, document) {
             let duration = null;
             let modifiedon = null;
             let hasBookings = false;
+            let status = "0" //active
 
             await currentWebApi
-                .retrieveMultipleRecords(
-                    "bookableresourcebooking",
-                    `?$select=duration,modifiedon&$filter=_msdyn_workorder_value eq ${workOrder} &$orderby=modifiedon desc`
-                )
-                .then(
-                    function success(results) {
-                        for (var i = 0; i < results.entities.length; i++) {
-                            duration += results.entities[i]["duration"];
-                        }
-                        //take from the first record, list of records are sorted by modifiedon desc, first one should be the latest
-                        if (results.entities.length > 0) {
-                            modifiedon = results.entities[0]["modifiedon"];
-                            hasBookings = true;
-                        }
-                    },
-                    function (error) {
-                        Xrm.Utility.alertDialog(error.message);
-                    }
-                );
+              .retrieveMultipleRecords(
+                "bookableresourcebooking",
+                `?$select=duration,modifiedon&$filter=_msdyn_workorder_value eq ${workOrder} and statecode eq ${status} &$orderby=modifiedon desc`
+              )
+              .then(
+                function success(results) {
+                  for (var i = 0; i < results.entities.length; i++) {
+                    duration += results.entities[i]["duration"];
+                  }
+                  //take from the first record, list of records are sorted by modifiedon desc, first one should be the latest
+                  if (results.entities.length > 0) {
+                    modifiedon = results.entities[0]["modifiedon"];
+                    hasBookings = true;
+                  }
+                },
+                function (error) {
+                  Xrm.Utility.alertDialog(error.message);
+                }
+              );
             return {
                 hasBookings: hasBookings,
                 duration: duration,
@@ -373,7 +374,7 @@ var WO_TDG_main = (function (window, document) {
                 function success(result) {
                     const count = result.entities.length;
                     if (count > 0) {
-                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Please note: One or more Seat Assessment not marked as complete." });
+                        glHelper.DisplayFormNotification(seatWarningMessage, "WARNING", 10000);
                     }
                 },
                 function (error) {
