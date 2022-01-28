@@ -19,6 +19,7 @@ stages:
   jobs:
   - job: CreatePatchOnDev
     steps:
+    - checkout: none
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
@@ -30,14 +31,46 @@ stages:
           Write-Host "============================================"
     - task: MSCRMToolInstaller@12
       displayName: Power DevOps Tool Installer
-    - task: MSCRMPublishCustomizations@12
-      displayName: Publish Customizations
+    - task: MSCRMGetSolution@12
+      displayName: Get Solution Details
       inputs:
-        crmConnectionString: '${{Parameters.ConnectionString}}'
-        crmConnectionTimeout: '3600'
+        crmConnectionString: '${{ parameters.ConnectionString }}'
+        solutionName: '$(SolutionName)'
+        existsVariableName: 'SolutionExists'
+        versionVariableName: 'SolutionVersion'
+        displayVariableName: 'SolutionDisplayName'
+    - task: PowerShell@2
+      displayName: Set PatchVersion Variable
+      inputs:
+        targetType: 'inline'
+        script: |
+          [string]$SolutionVersion = $(SolutionVersion)
+                                
+          #create next version
+          $versionParts = $SolutionVersion.Split(".")
+                                          
+          $major = "$($versionParts[0])"
+          $minor = "$($versionParts[1])"
+          $build = "$($versionParts[2])"
+          $revision = "$($versionParts[3])"
+                                          
+          [int]$nextbuild = 0
+          [bool]$result = [int]::TryParse($build, [ref]$nextbuild)
+          $nextbuild = $nextbuild + 1
+          [string]$nextVersion = "$major.$minor.$nextbuild.$revision"
+                                          
+          Write-Output  "major = $major"
+          Write-Output  "minor = $minor"
+          Write-Output  "build = $build"
+          Write-Output  "revision = $revision"
+          Write-Output  "nextVersion = $nextVersion"
+          Write-Host "##vso[task.setvariable variable=PatchVersion]$nextVersion"
+          Write-Host "Set PatchVersion environment variable to $nextVersion"
+        pwsh: true
     - task: MSCRMCreatePatch@12
       displayName: 'Create Patch: ${{Parameters.SolutionName}}'
       inputs:
         crmConnectionString: '${{Parameters.ConnectionString}}'
         uniqueName: '${{Parameters.SolutionName}}'
         crmConnectionTimeout: '21600'
+        versionNumber: $(PatchVersion)

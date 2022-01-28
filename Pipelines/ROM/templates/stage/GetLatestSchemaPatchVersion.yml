@@ -83,14 +83,6 @@ stages:
         versionVariableName: 'SolutionVersion'
         displayVariableName: 'SolutionDisplayName'
     - task: PowerShell@2
-      displayName: Set PatchVersion Variable
-      inputs:
-        targetType: 'inline'
-        script: |
-          Write-Host "##vso[task.setvariable variable=PatchVersion;isOutput=true]$(SolutionVersion)"
-          Write-Host "Set PatchVersion environment variable to $(SolutionVersion)"
-        pwsh: true
-    - task: PowerShell@2
       displayName: "Set build name"
       inputs:
         targetType: 'inline'
