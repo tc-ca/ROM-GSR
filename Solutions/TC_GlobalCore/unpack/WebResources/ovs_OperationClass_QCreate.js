@@ -3,14 +3,32 @@
 const FIELD_PRIME_CLASS = "ovs_primeclass";
 const FIELD_ERAP_CATEGORY = "ovs_erapcategory";
 
+var clientUrl;
+var currentWebApi;
+var isOffLine;
+var clientType;
+
+
 function OnLoad(executionContext) {
     //get context
     globalContext = glHelper.getGlobalContext();
     var formContext = executionContext.getFormContext();
     globalFormContext = formContext;
 
-    // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
-    let formType = glHelper.GetFormType(formContext);
+    isOffLine = glHelper.isOffline(executionContext);
+    clientType = glHelper.getClientType(executionContext);
+
+    if (isOffLine && clientType > 0) {
+
+        //mobile or outlook, offline first
+        currentWebApi = Xrm.WebApi.offline;
+        clientUrl = "https://localhost:2525";
+    } else {
+
+        //web, online
+        currentWebApi = Xrm.WebApi.online;
+        clientUrl = globalContext.getClientUrl();
+    }
 
     var primaryClassCode = formContext.getAttribute(FIELD_PRIME_CLASS);
     primaryClassCode.removeOnChange(primaryClassCode_OnChange); // avoid binding multiple event handlers
@@ -25,25 +43,24 @@ function primaryClassCode_OnChange(executionContext) {
     getEnvironmentVariableInternal(formContext, "tdg_Env_Variables", pcType);
 }
 
-top.environmentVariables = [];
 
 function getEnvironmentVariableInternal(formContext, varName, pcType) {
     "use strict";
     var json = null;
-    Xrm.WebApi.retrieveMultipleRecords("environmentvariabledefinition", "?$select=defaultvalue,displayname&$expand=environmentvariabledefinition_environmentvariablevalue($select=value)&$filter=schemaname eq '" + varName + "'").then(
+    currentWebApi.retrieveMultipleRecords("environmentvariabledefinition", "?$select=defaultvalue,displayname&$expand=environmentvariabledefinition_environmentvariablevalue($select=value)&$filter=schemaname eq '" + varName + "'").then(
         function success(result) {
-            for (var i = 0; i < result.entities.length; i++) {
-                if (typeof (result.entities[i]["environmentvariabledefinition_environmentvariablevalue"]) != "undefined"
-                    && result.entities[i]["environmentvariabledefinition_environmentvariablevalue"].length > 0) {
-                    json = result.entities[i]["environmentvariabledefinition_environmentvariablevalue"][0].value;
-                }
-                else if (typeof (result.entities[i].defaultvalue) != "undefined") {
-                    json = result.entities[i].defaultvalue;
-                }
-                else {
-                    json = null;
-                }
+            //&& result.entities[0]["environmentvariabledefinition_environmentvariablevalue"].length > 0)
+
+            if (typeof (result.entities[0].defaultvalue) != "undefined") {
+                json = result.entities[0].defaultvalue;
             }
+            else if (typeof (result.entities[0]) != "undefined") {
+                json = result.entities[0]["environmentvariabledefinition_environmentvariablevalue"][0].value;
+            }
+            else {
+                json = null;
+            }
+
 
             var data = JSON.parse(json);
             if (data != null || typeof data !== 'undefined') {

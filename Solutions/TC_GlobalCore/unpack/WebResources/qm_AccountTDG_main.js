@@ -22,6 +22,11 @@ var AccountTDGmain = (function (window, document) {
     const ZIP_POSTALCODE = "address1_postalcode";
     const COUNTRY = "address1_country";
 
+    const TAB_NAME = "tab_Operations"
+    const SECTION_NAME = "tab_Operations_section_NOP_Plaaning";
+
+
+
 
     //********************private methods*******************
 
@@ -93,17 +98,25 @@ var AccountTDGmain = (function (window, document) {
         
     }
 
-   
-    //composite control fields manipulation
-    function setAddressFieldsLevel(formContext) {
-        
-        glHelper.SetRequiredLevel(formContext, STREET1, true);
-        glHelper.SetRequiredLevel(formContext, CITY, true);
-        glHelper.SetRequiredLevel(formContext, STATE_PROVINCE, true);
-        glHelper.SetRequiredLevel(formContext, ZIP_POSTALCODE, true);
-        glHelper.SetRequiredLevel(formContext, COUNTRY, true);
-
+    function setFieldPermissions(formContext) {
+        var rType = glHelper.GetValue(formContext, "customertypecode");
+        if (rType !== null && rType.toString() === "948010001") {
+            var isPlanner = glHelper.hasCurrentUserRole("TDG Planner");
+            glHelper.SetSectionVisibility(formContext, TAB_NAME, SECTION_NAME, isPlanner);
+        }
     }
+
+
+    //composite control fields manipulation
+    //function setAddressFieldsLevel(formContext) {
+        
+    //    glHelper.SetRequiredLevel(formContext, STREET1, true);
+    //    glHelper.SetRequiredLevel(formContext, CITY, true);
+    //    glHelper.SetRequiredLevel(formContext, STATE_PROVINCE, true);
+    //    glHelper.SetRequiredLevel(formContext, ZIP_POSTALCODE, true);
+    //    glHelper.SetRequiredLevel(formContext, COUNTRY, true);
+
+    //}
 
     //********************private methods end***************
 
@@ -116,10 +129,11 @@ var AccountTDGmain = (function (window, document) {
             var formContext = executionContext.getFormContext();
             formContextGlobalRef = formContext;
 
-            if (AccountTDGmain.hasCurrentUserRole("TDG QA")) {
-                if (formContext.ui.tabs.get("tab_Operations") != null)
-                    glHelper.SetTabVisibility(formContext, "tab_Operations", true);
-            }
+            //if (AccountTDGmain.hasCurrentUserRole("TDG QA")) {
+            //    if (formContext.ui.tabs.get("tab_Operations") != null)
+            //        glHelper.SetTabVisibility(formContext, "tab_Operations", true);
+            //}
+
             //filter Relationship Type
             filter_customertypecode(formContext);
 
@@ -129,7 +143,7 @@ var AccountTDGmain = (function (window, document) {
             var rTypeCode = formContext.getAttribute("customertypecode");
             rTypeCode.removeOnChange(AccountTDGmain.relationShip_OnChange); // avoid binding multiple event handlers
             rTypeCode.addOnChange(AccountTDGmain.relationShip_OnChange);
-
+            
             if (formType > 1) {
 
                 rTypeCode.fireOnChange();
@@ -137,14 +151,14 @@ var AccountTDGmain = (function (window, document) {
                 //prepare data for Violations History grid
                 getViolationHistory(formContext);
 
-                var accountUN = formContext.getControl("Subgrid_AccountUNNumbers");
+                //var accountUN = formContext.getControl("Subgrid_AccountUNNumbers");
 
-                if (accountUN != null)
-                    accountUN.addOnLoad(AccountTDGmain.Refresh_AccountClass);
+                //if (accountUN != null)
+                //    accountUN.addOnLoad(AccountTDGmain.Refresh_AccountClass);
 
             }
 
-            setAddressFieldsLevel(formContext);
+            //setAddressFieldsLevel(formContext);
 
             // This info needed for Contact-Quick create form i.e. Contact_QuickCreate.js
             //TO Do: re-engeenir for mobile
@@ -158,25 +172,16 @@ var AccountTDGmain = (function (window, document) {
             } catch (e) {
                 console.log("Site_OnChange failed - lookup is empty");
             }
+
+            setFieldPermissions(formContext);
         },
 
-        hasCurrentUserRole: function(roleName) {
-            let hasRole = false;
-            let roles = Xrm.Utility.getGlobalContext().userSettings.roles;
-            roles.forEach(x => {
-                if (x.name === "System Administrator" || x.name === roleName) {
-                    hasRole = true;
-                    return;
-                }
-            });
-            return hasRole;
-        },
 
-        Refresh_AccountClass: function () {
+        //Refresh_AccountClass: function () {
 
-            var accountClass = formContextGlobalRef.getControl("Subgrid_AccountClasses");
-            accountClass.refresh();
-        },
+        //    var accountClass = formContextGlobalRef.getControl("Subgrid_AccountClasses");
+        //    accountClass.refresh();
+        //},
 
 
         relationShip_OnChange: function (executionContext) {

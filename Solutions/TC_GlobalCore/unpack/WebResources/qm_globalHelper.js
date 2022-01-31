@@ -196,8 +196,12 @@
 
     function SetSectionVisibility(formContext, tabname, sectionname, visible) {
         var tab = formContext.ui.tabs.get(tabname);
-        var section = tab.sections.get(sectionname);
-        section.setVisible(visible);
+        if (tab !== null) {
+            var section = tab.sections.get(sectionname);
+            if (section !== null) {
+                section.setVisible(visible);
+            }
+        }
     }
 
     function SetTabVisibility(formContext, tabname, visible) {
@@ -256,6 +260,20 @@
     function GetCurrentUserRoles() {
         return getGlobalContext().userSettings.roles.getAll();
     }
+
+    function hasCurrentUserRole(roleName) {
+
+        let hasRole = false;
+        let roles = Xrm.Utility.getGlobalContext().userSettings.roles;
+        roles.forEach(x => {
+            if (x.name === roleName) {
+                hasRole = true;
+                return;
+            }
+        });
+        return hasRole;
+    }
+
 
     function isCurrentUserSystemAdministrator() {
         let currentUserRoles = getGlobalContext().userSettings.roles.getAll();
@@ -665,6 +683,7 @@
         GetCurrentRecordId: GetCurrentRecordId,
         GetCurrentUserLanguage: GetCurrentUserLanguage,
         GetCurrentUserRoles: GetCurrentUserRoles,
+        hasCurrentUserRole: hasCurrentUserRole,
         GetCurrentUserSettings: GetCurrentUserSettings,
         isCurrentUserSystemAdministrator: isCurrentUserSystemAdministrator,
         SetControlReadOnly: SetControlReadOnly,

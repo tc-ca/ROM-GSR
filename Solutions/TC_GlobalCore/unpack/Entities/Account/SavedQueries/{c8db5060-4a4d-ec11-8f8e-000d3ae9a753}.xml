@@ -10,11 +10,14 @@
     <layoutxml>
       <grid name="resultset" jump="name" select="1" preview="1" icon="1">
         <row name="result" id="accountid">
-          <cell name="name" width="150" />
-          <cell name="address1_composite" width="100" />
-          <cell name="address1_city" width="100" />
-          <cell name="address1_stateorprovince" width="100" />
+          <cell name="cid_siteid" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="cid_sitename" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="address1_composite" width="300" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="cid_siteclaim" width="100" />
+          <cell name="createdon" width="100" />
+          <cell name="cid_createdbyregistrant" width="100" />
+          <cell name="cid_issiteattested" width="100" />
+          <cell name="statuscode" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -22,15 +25,18 @@
     <fetchxml>
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="account">
-          <attribute name="name" />
           <attribute name="address1_composite" />
-          <attribute name="address1_city" />
-          <attribute name="address1_stateorprovince" />
           <attribute name="cid_siteclaim" />
-          <order attribute="name" descending="false" />
+          <order attribute="cid_siteclaim" descending="false" />
           <filter type="and">
             <condition attribute="customertypecode" operator="eq" value="948010001" />
           </filter>
+          <attribute name="cid_issiteattested" />
+          <attribute name="cid_siteid" />
+          <attribute name="statuscode" />
+          <attribute name="createdon" />
+          <attribute name="cid_createdbyregistrant" />
+          <attribute name="cid_sitename" />
           <attribute name="accountid" />
         </entity>
       </fetch>

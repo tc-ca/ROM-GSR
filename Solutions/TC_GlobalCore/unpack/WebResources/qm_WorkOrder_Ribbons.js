@@ -270,14 +270,14 @@ var WORibbon = (function (window, document) {
         //Xrm.Utility.showProgressIndicator("Reporting ...");
 
         //run navigation from WO main script
-        if (WO_TDG_main != null && WO_TDG_main != undefined && WO_TDG_main.ReportDataValidate) {
+        if (WO_TDG_ReportHelper != null && WO_TDG_ReportHelper != undefined && WO_TDG_ReportHelper.ReportDataValidate) {
 
-            if (!WO_TDG_main.ReportDataValidate(formContext)) {
+            if (!WO_TDG_ReportHelper.ReportDataValidate(formContext)) {
 
                 //Xrm.Utility.closeProgressIndicator();
                 Xrm.Navigation.openAlertDialog({
                     confirmButtonLabel: "OK",
-                    text: glHelper.GetLocalizedStrings().ValidationInspectionReport + "\n" + WO_TDG_main.errorObject.errorMessage.join("\n"),
+                    text: glHelper.GetLocalizedStrings().ValidationInspectionReport + "\n" + WO_TDG_ReportHelper.errorObject.errorMessage.join("\n"),
                     title: glHelper.GetLocalizedStrings().TitleValidationInspectionReport
                 }, { height: 300, width: 500 });
 
