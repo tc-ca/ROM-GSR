@@ -1,23 +1,23 @@
-// Profile.js
+// SiteWizard-Create.js
 
 $(document).ready(function () {
-    addValidator("emailaddress1", "E-mail");
+    // resize WebResource_address_complete
+    $("#WebResource_address_complete").height('72px');
+
+    debugger;
+    var cid_legalname = ("{{user.cid_legalname}}");
+    $("#ovs_legalname").val(cid_legalname);
+    $("#name").val(cid_legalname);
+
     //addValidator("address1_line1", "Street 1");
     //addValidator("address1_city", "City");
     //addValidator("address1_stateorprovince", "Province");
     //addValidator("address1_postalcode", "Postal Code");
     //addValidator("address1_country", "Country");
-
-    // session varss
-    var address1_line1 = $("#address1_line1").val();
-    sessionStorage.setItem("address1_line1", address1_line1);
-
-    // resize WebResource_address_complete
-    $("#WebResource_address_complete").height('70px');
 });
 
 function AddressComplete_Hide_address1_line1() {
-    //$("#address1_line1").parent().parent().hide();
+    $("#address1_line1").parent().parent().hide();
 }
 
 function AddressComplete_address1_line1() {
@@ -34,7 +34,7 @@ function AddressComplete_Selected() {
     $("#address1_country").val(sessionStorage.getItem("CountryName"));
 }
 
-// setRequiredLevel("required");
+//eg. addValidator("customerid", "Customer")
 function addValidator(fieldName, fieldLabel) {
     if (typeof (Page_Validators) == 'undefined') return;
 
@@ -64,7 +64,7 @@ function addValidator(fieldName, fieldLabel) {
     $("a[href='#" + fieldName + "_label']").on("click", function () { scrollToAndFocus(fieldName + '_label', fieldName); });
 }
 
-// setRequiredLevel("none");
+//eg. removeValidator("customerid")
 function removeValidator(fieldName) {
     $.each(Page_Validators, function (index, validator) {
         if (validator.id == "RequiredFieldValidator" + fieldName) {
@@ -74,3 +74,4 @@ function removeValidator(fieldName) {
 
     $("#" + fieldName + "_label").parent().removeClass("required");
 }
+

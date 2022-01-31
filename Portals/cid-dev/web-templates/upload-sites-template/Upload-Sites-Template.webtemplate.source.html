@@ -11,7 +11,7 @@
         border-radius: 0 0 2px 2px;
         -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      
+      display:none;
     }
   
 </style>
@@ -37,18 +37,25 @@
 {% if {{env_setting.qm_name}}  == 'CID_Bulk_Upload' %}
 {% assign Bulk_flow_URL = env_setting.qm_value %}
 {% endif %}
+
+{% if {{env_setting.qm_name}}  == 'CID_Download_Template_Flow' %}
+{% assign download_flow_URL = env_setting.qm_value %}
+{% endif %}
+
+
 {% endfor %}
 
 <script>
   $(document).ready(function() {
     $(window).load(function() {
-        alert("onload");
+      
     //  $('#ll').hide();
         //  notificationMsg.show("System is downloading site info ...");
             $("#processingMsg").css("display", "none");
             $("#processingMsg").hide();
     });
     var pageURL = window.location.href;
+ 
     //var DownloadURL = "~/RD_Sites_Template.xlsm";
     //var linktemplate = document.getElementById("linkdownload");
     //linktemplate.href = DownloadURL;
@@ -66,19 +73,26 @@
       var acupdate =
         '{ "accountid": "' + companyid + '" }';
       var req = new XMLHttpRequest();
-      var url = "https://prod-17.canadacentral.logic.azure.com:443/workflows/900f6e70915a4cddbb65b3c79da14581/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LZveFQ8DXIDobQOPzgoc0LgOcSOPpqVcnCEicN1lvEQ";
+    
+      var url = '{{download_flow_URL}}';
+      console.log(url);
+      //"https://prod-17.canadacentral.logic.azure.com:443/workflows/900f6e70915a4cddbb65b3c79da14581/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LZveFQ8DXIDobQOPzgoc0LgOcSOPpqVcnCEicN1lvEQ";
       req.open("POST", url, true);
       req.setRequestHeader('Content-Type', 'application/json');
       req.onreadystatechange = function() {
         if (this.readyState === 4) {
           req.onreadystatechange = null;
           if (this.status === 200) {
+               $('#processingMsg').text("Download complete");
             var result = this.response;
            // $('#ll').hide();
-             $('#processingMsg').text("Download complete");
-            var fileattachementURL = "https://rd-tdgcore-dev.powerappsportals.com/_entity/annotation/" + result;
+            //https://rd-tdgcore-dev.powerappsportals.com/_entity/annotation/
+            var fileattachementURL = "~/_entity/annotation/" + result;
             window.location.replace(fileattachementURL);
+             $("#processingMsg").css("display", "none");
+            $("#processingMsg").hide();
           } else {
+              $('#processingMsg').text("Download was not completed due to system issue, please contact system support");
             var result = this.response;
             alert("Error " + result);
           }
@@ -134,25 +148,42 @@
         <div class="col-md-12">
             {% block main %}
           
+
+
          {% include 'Page Copy' %}    
+      
+
 <div class="row sectionBlockLayout" style="display: flex; flex-wrap: wrap; padding: 8px; margin: 0px; text-align: left; min-height: 100px;">
  
+ <table> 
+  <tr>
+  <td>
+   <div>
+         <div>
+         
+          <h3 class="blue_border">Step 1: Download Bulk upload Template.</h2>
+            <p> </p>
+        </div>
+      <div>
+        <button id="linkdownload" type="button" class="submit-btn btn btn-primary form-action-container-left">Download</button>
+       </div>
+
+         </div>
+</td>
+  </tr>
+
+<tr>
+<td>
+  <div> 
+  <p></p>
+      <h3 class="blue_border">Step 2: Upload file.</h2>
+  {% entityform name: 'Add Bulk site attachment' %} </div>
   <div>
-    <p>click download button to download your Sites </p>
-    <div>
-    <button id="linkdownload" type="button" class="submit-btn btn btn-primary form-action-container-left">Download</button>
-    </div>
- </div>
 
-  
-
-
-  <div> {% entityform name: 'Add Bulk site attachment' %} </div>
-  <div>
-    <h2 class="blue_border">List of Activities</h2>
-    {% include 'entity_list' key: 'Upload Sites' %}
   </div>
-
+  </td>
+  </tr>
+</table>
 <div>
   <p></p>
   <h2 class="blue_border">List of Sites</h2>

@@ -109,7 +109,10 @@
         }).always(notificationMsg.hide);
     }
 
-
+function add_site_operation1(siteid) 
+ {
+   alert(siteid);
+ }
 
  function Check_If_Operation_exists (siteid) 
  {
@@ -175,7 +178,7 @@ var operationid ;
         "<order attribute='ovs_name' descending='false' />" +
    "<filter type='and' >"+
             "<condition attribute='ovs_operationtype' operator='eq' value='918640038' />" +
-            "<condition attribute='ovs_siteid' operator='eq' value='88d2bf38-006f-ec11-a81b-0022486da668' />" +
+            "<condition attribute='ovs_siteid' operator='eq' value= " + siteid + " />" +
         "</filter>" +
     "</entity>" +
 "</fetch>";
@@ -190,15 +193,15 @@ var operationid ;
 								type: "GET",
        // url: "/_api/contacts?$select=fullname,firstname,lastname,emailaddress1,telephone1",
        // contentType: "application/json",
-								success: function (res) {
+								success: function (res, status, xhr)  {
                   
-										 const retrived_opid =   res.value[0]['ovs_mocregistrationid'];
+										 const retrived_opid =   xhr.getResponseHeader('ovs_mocregistrationid'); //res.value[0]['ovs_mocregistrationid'];
                     
                    //  return retrived_opid;
                   
                        
-                     if (retrived_opid == null)
-                     {
+                     //if (retrived_opid == null)
+                     //{
                        webapi.safeAjax({
         type: "POST",
           url: "/_api/ovs_mocregistrations",
@@ -217,14 +220,14 @@ var operationid ;
      
         }
       });
-                     }//end if
-                     else
-                     {
+                    // }//end if
+                    // else
+                     //{
                     
                       
-                          resolve(retrived_opid);
+                          //resolve(retrived_opid);
                        // return retrived_opid;
-                     }
+                     //}
 									
                 }
             });
@@ -235,6 +238,79 @@ var operationid ;
 }
 
 
- 
-    
-	</script>
+  function create_site_operation(siteid)  {
+    var operationId = "";
+    var FetchXMLQuery = " <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' > " +
+                          "<entity name='ovs_mocregistration' >" +
+                              "<attribute name='ovs_mocregistrationid' />" +
+                              "<attribute name='ovs_operationtype' />" +
+                              "<attribute name='ovs_siteid' />" +
+                          "<filter type='and' >"+
+                              "<condition attribute='ovs_operationtype' operator='eq' value='918640038' />" +
+                              "<condition attribute='ovs_siteid' operator='eq' value=" + siteid + " />" +
+                          "</filter>" +
+                          "</entity>" +
+                        "</fetch>";
+      webapi.safeAjax({
+                  type: "GET",
+                  url: "/_api/ovs_mocregistrations?" +
+                  "fetchXml=" +encodeURIComponent(FetchXMLQuery),
+                  contentType: "application/json",
+                      success: function (res, status, xhr)  {
+                          operationId =   xhr.getResponseHeader('ovs_mocregistrationid');
+                      }
+                  });
+
+    if(operationId == "")
+    {
+        webapi.safeAjax({
+            type: "POST",
+            url: "/_api/ovs_mocregistrations",
+            contentType: "application/json",
+            data: JSON.stringify({
+                "ovs_operationtype": 918640038,
+                "ovs_SiteId@odata.bind": "/accounts(" + siteid + ")"
+            }),
+            success: function (res, status, xhr) {
+                //alert('Success');
+            },
+            error: function(){
+                //alert('Fail');
+            }
+        });
+    }
+  }
+
+
+function site_has_mode_of_transportation(siteid)  {
+  var id = "";
+    var FetchXMLQuery = " <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' > " +
+                          "<entity name='cid_modeoftransportation' >" +
+                              "<attribute name='cid_site' />" +
+                              "<filter type='and' >"+
+                                  "<condition attribute='cid_site' operator='eq' value=" + siteid + " />" +
+                              "</filter>" +
+                          "</entity>" +
+                        "</fetch>";
+                        
+              webapi.safeAjax({
+                  type: "GET",
+                  url: "/_api/cid_modeoftransportation?" +
+                  "fetchXml=" +encodeURIComponent(FetchXMLQuery),
+                  contentType: "application/json",
+                      success: function (res, status, xhr)  {
+                         id = "success";
+                          //id =   xhr.getResponseHeader('cid_modeoftransportationid');
+                      },
+                       error: function(){
+                          id = "fail";
+                      }
+                  });
+
+
+      return id;
+  
+     }
+
+
+</script>
