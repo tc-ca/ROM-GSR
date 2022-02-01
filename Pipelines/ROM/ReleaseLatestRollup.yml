@@ -47,7 +47,7 @@ stages:
 #fail the build if there are missing components identified on the patch
 - template: templates/stage/DependencyCheck.yml  # Template reference
   parameters:
-    StageName: 'DependencyCheck'
+    StageName: 'DependencyCheckACC'
     SolutionName: $(SolutionName)
     ConnectionStringDest: $(ConnectionStringACC)
     ConnectionStringSource: $(ConnectionStringDEV)
@@ -60,7 +60,15 @@ stages:
     Environment: 'ACC-TDG'
     StageName: 'DeployManagedSolutionToACC'
     dependsOn: 
-    - 'DependencyCheck'
+    - 'DependencyCheckACC'
+- template: templates/stage/DependencyCheck.yml  # Template reference
+  parameters:
+    StageName: 'DependencyCheckPREPROD'
+    SolutionName: $(SolutionName)
+    ConnectionStringDest: $(ConnectionStringPREPROD)
+    ConnectionStringSource: $(ConnectionStringDEV)
+    dependsOn: 
+    - 'DeployManagedSolutionToACC'
 - template: templates/stage/DeployHoldingSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
@@ -68,7 +76,15 @@ stages:
     Environment: 'PREPROD-TDG'
     StageName: 'DeployManagedSolutionToPREPROD'
     dependsOn: 
-    - 'DeployManagedSolutionToQA'
+    - 'DependencyCheckPREPROD'
+- template: templates/stage/DependencyCheck.yml  # Template reference
+  parameters:
+    StageName: 'DependencyCheckPROD'
+    SolutionName: $(SolutionName)
+    ConnectionStringDest: $(ConnectionStringPROD)
+    ConnectionStringSource: $(ConnectionStringDEV)
+    dependsOn: 
+    - 'DeployManagedSolutionToPREPROD'
 - template: templates/stage/DeployHoldingSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
@@ -76,4 +92,4 @@ stages:
     Environment: 'PROD-TDG'
     StageName: 'DeployManagedSolutionToPROD'
     dependsOn: 
-    - 'DeployManagedSolutionToQA'
+    - 'DependencyCheckPROD'
