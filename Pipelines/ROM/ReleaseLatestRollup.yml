@@ -1,0 +1,79 @@
+trigger:
+- none
+
+pr:
+- none
+
+#variable 'Pipeline_ConnectionStringDev' defined in devops
+
+variables:
+  - name: PowerPlatformSPN_Dev
+    value: 'TDG CORE DEV'
+  - name: PowerPlatformSPN_QA
+    value: 'TDG CORE QA'
+  - name: PowerPlatformSPN_ACC
+    value: 'ROM ACC TDG'
+  - name: PowerPlatformSPN_ACCDATA
+    value: 'ROM ACC TDG DATA'
+  - name: PowerPlatformSPN_PREPROD
+    value: 'ROM PREPROD TDG'
+  - name: PowerPlatformSPN_PROD
+    value: 'ROM PROD TDG'
+  - name: SolutionName
+    value: 'TC_GlobalCore'
+
+name: 'Release Pipeline'
+
+stages:
+- stage: DownloadBuildArtifacts
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: DownloadBuildArtifacts
+    steps:
+    - checkout: none
+      persistCredentials: true
+      clean: true
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'specific'
+        project: '0e26be07-8156-4953-b64e-80a4ed8a33f3'
+        pipeline: '900'
+        buildVersionToDownload: 'latest'
+        allowPartiallySucceededBuilds: true
+        downloadType: 'single'
+        artifactName: 'zip'
+        downloadPath: '$(Build.ArtifactStagingDirectory)'
+#fail the build if there are missing components identified on the patch
+- template: templates/stage/DependencyCheck.yml  # Template reference
+  parameters:
+    StageName: 'DependencyCheck'
+    SolutionName: $(SolutionName)
+    ConnectionStringDest: $(ConnectionStringACC)
+    ConnectionStringSource: $(ConnectionStringDEV)
+    dependsOn: 
+    - 'DownloadBuildArtifacts'
+- template: templates/stage/DeployHoldingSolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_ACC)
+    Environment: 'ACC-TDG'
+    StageName: 'DeployManagedSolutionToACC'
+    dependsOn: 
+    - 'DependencyCheck'
+- template: templates/stage/DeployHoldingSolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
+    Environment: 'PREPROD-TDG'
+    StageName: 'DeployManagedSolutionToPREPROD'
+    dependsOn: 
+    - 'DeployManagedSolutionToQA'
+- template: templates/stage/DeployHoldingSolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_PROD)
+    Environment: 'PROD-TDG'
+    StageName: 'DeployManagedSolutionToPROD'
+    dependsOn: 
+    - 'DeployManagedSolutionToQA'
