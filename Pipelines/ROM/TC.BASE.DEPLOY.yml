@@ -10,7 +10,7 @@ variables:
 stages:
 - stage: BuildAndPublishArtifact
   pool:
-      vmImage: 'vs2017-win2016'
+      vmImage: 'windows-latest'
   jobs:
   - job: BuildAndPublishArtifact
     steps:
@@ -151,7 +151,7 @@ stages:
   - deployment: Deploy
     condition: succeeded()
     pool:
-      vmImage: 'vs2017-win2016'
+      vmImage: 'windows-latest'
     environment: DEV-TDG
     strategy:
       runOnce:
@@ -259,7 +259,7 @@ stages:
   - deployment: Deploy
     condition: succeeded()
     pool:
-      vmImage: 'vs2017-win2016'
+      vmImage: 'windows-latest'
     environment: QA-TDG
     strategy:
       runOnce:
@@ -369,7 +369,7 @@ stages:
   - deployment: Deploy
     condition: succeeded()
     pool:
-      vmImage: 'vs2017-win2016'
+      vmImage: 'windows-latest'
     environment: ACC-TDG
     strategy:
       runOnce:

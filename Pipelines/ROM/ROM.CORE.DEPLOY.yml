@@ -21,14 +21,14 @@ resources:
 stages:
 - stage: BuildAndPublishArtifact
   pool:
-      vmImage: 'vs2017-win2016'
+      vmImage: 'windows-latest'
   jobs:
   - job: Export_Dev
     timeoutInMinutes: 360 # how long to run the job before automatically cancelling
     cancelTimeoutInMinutes: 2 # how much time to give 'run always even if cancelled tasks' before stopping them
     displayName: Export_Dev
     pool:
-      vmImage: vs2017-win2016
+      vmImage: 'windows-latest'
     steps:
     - checkout: self
       clean: true 
@@ -220,7 +220,7 @@ stages:
     cancelTimeoutInMinutes: 2 # how much time to give 'run always even if cancelled tasks' before stopping them
     condition: succeeded()
     pool:
-      vmImage: 'vs2017-win2016'
+      vmImage: 'windows-latest'
     environment: QA-TDG
     strategy:
       runOnce:
@@ -346,7 +346,7 @@ stages:
     cancelTimeoutInMinutes: 2 # how much time to give 'run always even if cancelled tasks' before stopping them
     condition: succeeded()
     pool:
-      vmImage: 'vs2017-win2016'
+      vmImage: 'windows-latest'
     environment: ACC-TDG
     strategy:
       runOnce:
@@ -466,7 +466,7 @@ stages:
     timeoutInMinutes: 360 # how long to run the job before automatically cancelling
     cancelTimeoutInMinutes: 2 # how much time to give 'run always even if cancelled tasks' before stopping them
     pool:
-      vmImage: 'vs2017-win2016'
+      vmImage: 'windows-latest'
     environment: ACC-TDG-DATA
     strategy:
       runOnce:
