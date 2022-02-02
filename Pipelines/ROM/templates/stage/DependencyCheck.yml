@@ -22,11 +22,6 @@ stages:
   - job: ${{Parameters.StageName}}_Job
     steps:
     - checkout: none
-    - task: DownloadBuildArtifacts@1
-      inputs:
-        buildType: 'current'
-        downloadType: 'specific'
-        downloadPath: '$(System.ArtifactsDirectory)'
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
@@ -38,14 +33,16 @@ stages:
           Write-Host "============================================"
     - task: MSCRMToolInstaller@12
       displayName: Power DevOps Tool Installer
-    - task: MSCRMGetSolutionMissingDependencies@12
-      inputs:
-        crmConnectionString: '${{Parameters.ConnectionStringSource}}'
-        solutionName: ${{Parameters.SolutionName}}
-        warnIfMissing: true
+
     - task: MSCRMGetSolutionMissingComponents@12
       inputs:
         crmConnectionString: '${{Parameters.ConnectionStringDest}}'
         solutionFile: '$(Build.ArtifactStagingDirectory)\zip\${{Parameters.SolutionName}}_Managed.zip'
         errorIfMissing: true
         crmConnectionTimeout: '999'
+
+#    - task: MSCRMGetSolutionMissingDependencies@12
+#      inputs:
+#        crmConnectionString: '${{Parameters.ConnectionStringSource}}'
+#        solutionName: ${{Parameters.SolutionName}}
+#        warnIfMissing: true
