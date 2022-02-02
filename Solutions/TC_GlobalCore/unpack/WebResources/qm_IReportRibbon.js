@@ -67,13 +67,13 @@ var IReportRibbon = (function (window, document) {
     function validateReportPreReq() {
 
         //run navigation from WO main script
-        if (WO_TDG_main != null && WO_TDG_main != undefined && WO_TDG_main.ReportDataValidate) {
+        if (WO_TDG_ReportHelper != null && WO_TDG_ReportHelper != undefined && WO_TDG_ReportHelper.ReportDataValidate) {
 
-            if (!WO_TDG_main.ReportDataValidate(formContext)) {
+            if (!WO_TDG_ReportHelper.ReportDataValidate(formContext)) {
 
                 Xrm.Navigation.openAlertDialog({
                     confirmButtonLabel: "OK",
-                    text: glHelper.GetLocalizedStrings().ValidationInspectionReport + "\n" + WO_TDG_main.errorObject.errorMessage.join("\n"),
+                    text: glHelper.GetLocalizedStrings().ValidationInspectionReport + "\n" + WO_TDG_ReportHelper.errorObject.errorMessage.join("\n"),
                     title: glHelper.GetLocalizedStrings().TitleValidationInspectionReport
                 }, { height: 300, width: 500 });
                 return false;
@@ -419,12 +419,6 @@ var IReportRibbon = (function (window, document) {
                                 };
                                 reqCreate.send(JSON.stringify(entity));
 
-                                //    var ovs_generalcomments = result["ovs_generalcomments"];
-                                //    var ovs_reportlanguage = result["ovs_reportlanguage"];
-                                //    var ovs_reportlanguage_formatted = result["ovs_reportlanguage@OData.Community.Display.V1.FormattedValue"];
-                                //    var _ovs_workorderid_value = result["_ovs_workorderid_value"];
-                                //    var _ovs_workorderid_value_formatted = result["_ovs_workorderid_value@OData.Community.Display.V1.FormattedValue"];
-                                //    var _ovs_workorderid_value_lookuplogicalname = result["_ovs_workorderid_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
                             } else {
                                 Xrm.Navigation.openErrorDialog({ message: this.statusText });
                             }

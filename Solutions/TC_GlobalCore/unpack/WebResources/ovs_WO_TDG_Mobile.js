@@ -158,6 +158,23 @@ var WO_TDG_main = (function (window, document) {
                         glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, englishName);
 
                     glHelper.SetDisabled(formContext, "ovs_rational", true);
+
+                    currentWebApi.retrieveMultipleRecords("msdyn_incidenttype", "?$select=msdyn_incidenttypeid,ovs_incidenttypenameenglish,ovs_incidenttypenamefrench&$filter=ovs_incidenttypenameenglish eq 'Regulatory%20Authorization'").then(
+                        function success(results) {
+                            var msdyn_incidenttypeid = results.entities[0]["msdyn_incidenttypeid"];
+                            var ovs_incidenttypenameenglish = results.entities[0]["ovs_incidenttypenameenglish"];
+                            var ovs_incidenttypenamefrench = results.entities[0]["ovs_incidenttypenamefrench"];
+
+                            if (userSettings.languageId == 1036)
+                                glHelper.SetLookup(formContext, "msdyn_primaryincidenttype", "msdyn_incidenttype", msdyn_incidenttypeid, ovs_incidenttypenamefrench);
+                            if (userSettings.languageId == 1033)
+                                glHelper.SetLookup(formContext, "msdyn_primaryincidenttype", "msdyn_incidenttype", msdyn_incidenttypeid, ovs_incidenttypenameenglish);
+                        },
+                        function (error) {
+                            Xrm.Utility.alertDialog(error.message);
+                        }
+                    );
+
                 },
                 function (error) {
                     console.log("Fetch Work Order Type Error. error: " + error.message);
@@ -178,6 +195,26 @@ var WO_TDG_main = (function (window, document) {
                         glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, englishName);
 
                     glHelper.SetDisabled(formContext, "ovs_rational", true);
+
+                    currentWebApi.retrieveMultipleRecords("msdyn_incidenttype", "?$select=msdyn_incidenttypeid,ovs_incidenttypenameenglish,ovs_incidenttypenamefrench&$filter=ovs_incidenttypenameenglish eq 'Inspection'")
+                        .then(
+                            function success(results) {
+                                var msdyn_incidenttypeid = results.entities[0]["msdyn_incidenttypeid"];
+                                var ovs_incidenttypenameenglish = results.entities[0]["ovs_incidenttypenameenglish"];
+                                var ovs_incidenttypenamefrench = results.entities[0]["ovs_incidenttypenamefrench"];
+
+                                if (userSettings.languageId == 1036)
+                                    glHelper.SetLookup(formContext, "msdyn_primaryincidenttype", "msdyn_incidenttype", msdyn_incidenttypeid, ovs_incidenttypenamefrench);
+                                if (userSettings.languageId == 1033)
+                                    glHelper.SetLookup(formContext, "msdyn_primaryincidenttype", "msdyn_incidenttype", msdyn_incidenttypeid, ovs_incidenttypenameenglish);
+                            },
+                            function (error) {
+                                Xrm.Utility.alertDialog(error.message);
+                            }
+                        );
+
+
+
                 },
                 function (error) {
                     console.log(messageWOTypeFailed + " " + error.message);
@@ -312,7 +349,7 @@ var WO_TDG_main = (function (window, document) {
             glHelper.SetRequiredLevel(formContext, "ovs_oversighttype", true);
 
             // make Operation required -> move to designer once testing is done 
-            glHelper.SetRequiredLevel(formContext, "ovs_mocoperationid", true);
+            //glHelper.SetRequiredLevel(formContext, "ovs_mocoperationid", true);
             //pre-filter Oversith Type and Region
             operation.fireOnChange();
 

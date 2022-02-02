@@ -5,12 +5,12 @@ $(document).ready(function () {
     var fullname = '{{user.fullname}}';
     var parentcustomerid = '{{user.parentcustomerid}}';
 
-    if (parentcustomerid == "") {
-        var regurl = "~/RegistrationWizard";
-        var registerationURL = regurl;
-        window.location.href = registerationURL;
-        return;
-    }
+    //if (parentcustomerid == "") {
+    //    var regurl = "~/RegistrationWizard";
+     //   var registerationURL = regurl;
+     //   window.location.href = registerationURL;
+     //   return;
+  //  }
 
     $("#primarycontactid").attr("value", primarycontactid);
     $("#primarycontactid_name").attr("value", fullname);

@@ -19,13 +19,16 @@
     </layoutxml>
     <querytype>0</querytype>
     <fetchxml>
-      <fetch version="1.0" output-format="xml-platform" mapping="logical">
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="contact">
           <attribute name="fullname" />
-          <order attribute="fullname" descending="false" />
           <attribute name="parentcustomerid" />
           <attribute name="emailaddress1" />
           <attribute name="cid_contacttype" />
+          <order attribute="fullname" descending="false" />
+          <filter type="and">
+            <condition attribute="statuscode" operator="eq" value="1" />
+          </filter>
           <attribute name="contactid" />
         </entity>
       </fetch>

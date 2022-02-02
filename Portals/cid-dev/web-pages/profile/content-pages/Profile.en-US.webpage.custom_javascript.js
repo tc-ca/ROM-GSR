@@ -13,7 +13,7 @@ $(document).ready(function () {
     sessionStorage.setItem("address1_line1", address1_line1);
 
     // resize WebResource_address_complete
-    $("#WebResource_address_complete").height('65px');
+    $("#WebResource_address_complete").height('70px');
 });
 
 function AddressComplete_Hide_address1_line1() {

@@ -1,0 +1,270 @@
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+///<reference path="../../Utilities/questionnaireFunctions.js"/>
+
+var WO_TDG_TTrack = (function (window, document) {
+
+    //variables
+    var formType;
+    var userSettings;
+    var LCID;
+    var clientUrl;
+    var resexResourceName;
+    var globalObj;
+    var currentWebApi;
+    var isOffLine;
+    var clientType;
+
+    //********************private methods*******************
+    const timeTrackingFunctions = {
+        getBookableData: async function (workOrder) {
+            let duration = null;
+            let modifiedon = null;
+            let hasBookings = false;
+            let status = "0" //active
+
+            await currentWebApi
+                .retrieveMultipleRecords(
+                    "bookableresourcebooking",
+                    `?$select=duration,modifiedon&$filter=_msdyn_workorder_value eq ${workOrder} and statecode eq ${status} &$orderby=modifiedon desc`
+                )
+                .then(
+                    function success(results) {
+                        for (var i = 0; i < results.entities.length; i++) {
+                            duration += results.entities[i]["duration"];
+                        }
+                        //take from the first record, list of records are sorted by modifiedon desc, first one should be the latest
+                        if (results.entities.length > 0) {
+                            modifiedon = results.entities[0]["modifiedon"];
+                            hasBookings = true;
+                        }
+                    },
+                    function (error) {
+                        Xrm.Navigation.openErrorDialog({ message: error.message });
+                    }
+                );
+            return {
+                hasBookings: hasBookings,
+                duration: duration,
+                modifiedon: modifiedon,
+            };
+        },
+        updateWorkOrderServiceTaskDuration: async function (
+            serviceTaskId,
+            hours,
+            minutes,
+            bookingDurationTotalMinutes
+        ) {
+            let data = null;
+            var entity = {};
+            entity.ovs_hour = hours;
+            entity.ovs_minute = minutes;
+            entity.ovs_totalbookingduration = bookingDurationTotalMinutes;
+
+            await currentWebApi
+                .updateRecord("msdyn_workorderservicetask", serviceTaskId, entity)
+                .then(
+                    function success(result) {
+                        data = result.id;
+                    },
+                    function (error) {
+                        Xrm.Navigation.openErrorDialog({ message: error.message });
+                    }
+                );
+
+            return data;
+        },
+        getServiceTasksForWorkOrder: async function (workOrder) {
+            let data = null;
+
+            await currentWebApi
+                .retrieveMultipleRecords(
+                    "msdyn_workorderservicetask",
+                    `?$select=_msdyn_tasktype_value,ovs_hour,ovs_minute,modifiedon,ovs_totalbookingduration,_msdyn_workorderincident_value&$filter=_msdyn_workorder_value eq ${workOrder}`
+                )
+                .then(
+                    function success(results) {
+                        data = results.entities;
+                    },
+                    function (error) {
+                        Xrm.Navigation.openErrorDialog({ message: error.message });
+                    }
+                );
+
+            return data;
+        },
+    };
+
+
+    //********************private methods end***************
+
+    //********************public methods***************
+    return {
+
+
+        OnLoad: function (executionContext) {
+
+            var globalContext = Xrm.Utility.getGlobalContext();
+            var formContext = executionContext.getFormContext();
+            isOffLine = glHelper.isOffline(executionContext);
+            clientType = glHelper.getClientType(executionContext);
+
+            if (isOffLine && clientType > 0) {
+
+                //mobile or outlook, offline first
+                currentWebApi = Xrm.WebApi.offline;
+                clientUrl = "https://localhost:2525";
+            } else {
+
+                //web, online
+                currentWebApi = Xrm.WebApi.online;
+                clientUrl = globalContext.getClientUrl();
+            }
+
+            userSettings = globalContext.userSettings;
+
+            // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+            formType = glHelper.GetFormType(formContext);
+
+            //Load up resources for English/French labels
+            LCID = userSettings.languageId;
+
+            if (LCID == 1033)
+                resexResourceName = "ovs_Labels.1033.resx";
+            else if (LCID == 1036)
+                resexResourceName = "ovs_Labels.1036.resx";
+
+            //time tracking functionality
+            var remote = formContext.getAttribute("qm_remote");
+            remote.removeOnChange(WO_TDG_TTrack.Remote_OnChange);
+            remote.addOnChange(WO_TDG_TTrack.Remote_OnChange);
+
+            //on update etc
+            if (formType > 1) {
+
+                ////////// Time Tracking calculation
+                var timeEntryTab = formContext.ui.tabs.get("tab_TimeTracking");
+                timeEntryTab.removeTabStateChange(WO_TDG_TTrack.CalculateAndUpdateServiceTaskDuration);
+                timeEntryTab.addTabStateChange(WO_TDG_TTrack.CalculateAndUpdateServiceTaskDuration);
+                /////////////
+            }
+
+        },
+
+        Remote_OnChange: async function (executionContext) {
+            //do this only on update, as new work order does not have service tasks yet
+            //if remote === true then blank/null any travel time field values, as no travel is required.
+
+            if (formType > 1) {
+                let formContext = executionContext.getFormContext();
+                let remote = formContext.getAttribute("qm_remote").getValue();
+
+                let workOrderId = formContext.data.entity.getId().replace("{", "").replace("}", "")
+                const serviceTasks = await timeTrackingFunctions.getServiceTasksForWorkOrder(workOrderId);
+                let travelServicetask = serviceTasks.filter(x => x["_msdyn_tasktype_value"] === "ca3a829a-e917-ec11-b6e7-000d3ae8ef7b") //travel task type
+
+                if (remote) {
+                    if (travelServicetask.length === 1) {
+                        timeTrackingFunctions.updateWorkOrderServiceTaskDuration(
+                            travelServicetask[0]["msdyn_workorderservicetaskid"],
+                            null,
+                            null,
+                            null
+                        );
+                    }
+                }
+            }
+        },
+
+        /// Updates Work Order Service Task Record of Service Task Type "Execution" with Booking duration
+        CalculateAndUpdateServiceTaskDuration: async function (executionContext) {
+
+            const loadingMessage = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.loading.Message");
+            Xrm.Utility.showProgressIndicator(loadingMessage);
+
+            try {
+                let formContext = executionContext.getFormContext();
+                //let formContext = executionContext
+                let workOrderId = formContext.data.entity.getId().replace("{", "").replace("}", "")
+                let systemStatus = formContext.getAttribute("msdyn_systemstatus").getValue();
+                //If system status is close posted or canceled do not update service task time.
+                if (systemStatus !== 690970004 && systemStatus !== 690970005) {
+
+                    //get service task off work order (should already be auto created at this point)
+                    const serviceTasks = await timeTrackingFunctions.getServiceTasksForWorkOrder(workOrderId)
+                    let executionServicetask = serviceTasks.filter(x => x["_msdyn_tasktype_value"] === "794a29b3-e917-ec11-b6e7-000d3ae8ef7b") //execution inspection
+
+                    //if sevice task exist.
+                    if (executionServicetask.length === 1) {
+                        const bookingData = await timeTrackingFunctions.getBookableData(workOrderId)
+                        const bookingDurationTotalMinutes = bookingData.duration
+                        const bookingModifiedOn = bookingData.modifiedon
+
+
+                        let bookingHours = null;
+                        let bookingMinutes = null;
+                        //if booking exist (null if no duration)
+                        if (bookingData.hasBookings) {
+                            //convert total minutes to hours and minutes to place in seperate fields.
+                            bookingHours = Math.floor(bookingDurationTotalMinutes / 60);
+                            bookingMinutes = bookingDurationTotalMinutes % 60;
+
+                            const execustionServiceTaskHours = executionServicetask[0]['ovs_hour']
+                            const executionServiceTaskMinutes = executionServicetask[0]['ovs_minute']
+                            const executionServiceTaskModifiedon = executionServicetask[0]['modifiedon']
+                            const previousExecutionServiceTaskTotalBookingDuration = executionServicetask[0]['ovs_totalbookingduration']
+
+
+                            //or if user has not manually updated execution time done by comparing what was entered into service task time and booking duration
+                            //booking modified on
+
+
+                            //update execution service task if initial/first time loading work order 
+                            if ((execustionServiceTaskHours === null && executionServiceTaskMinutes === null)) {
+                                await timeTrackingFunctions.updateWorkOrderServiceTaskDuration(executionServicetask[0]['msdyn_workorderservicetaskid'], bookingHours, bookingMinutes, bookingDurationTotalMinutes)
+                            }
+                            //update execution service task if booking has been updated.
+                            else if (bookingHours !== execustionServiceTaskHours || bookingMinutes !== executionServiceTaskMinutes) {
+                                if (new Date(bookingModifiedOn).getTime() > new Date(executionServiceTaskModifiedon).getTime()) {
+                                    await timeTrackingFunctions.updateWorkOrderServiceTaskDuration(executionServicetask[0]['msdyn_workorderservicetaskid'], bookingHours, bookingMinutes, bookingDurationTotalMinutes)
+                                }
+                                else {
+                                    //else service task modifiedon is greater than booking modified on, i.e. user manually updated time, no need to update time.
+                                    //unless total booking duration is different from the previous total booking duration i.e.
+
+                                    if (bookingDurationTotalMinutes !== previousExecutionServiceTaskTotalBookingDuration) {
+                                        await timeTrackingFunctions.updateWorkOrderServiceTaskDuration(executionServicetask[0]['msdyn_workorderservicetaskid'], bookingHours, bookingMinutes, bookingDurationTotalMinutes)
+                                    }
+                                }
+                            }
+                            else {
+                                //hours and minutes are the same, no need to update time.
+                            }
+                        }
+                        else {
+                            await timeTrackingFunctions.updateWorkOrderServiceTaskDuration(executionServicetask[0]['msdyn_workorderservicetaskid'], null, null, null)
+                        }
+
+
+
+                    }
+
+                }
+
+            } catch (error) {
+                throw error;
+            }
+            finally {
+
+                Xrm.Utility.closeProgressIndicator();
+                let formContext = executionContext.getFormContext();
+                let gridTimeTracking = formContext.getControl("Subgrid_TimeTracking");
+                gridTimeTracking.refresh();
+            }
+
+
+        },
+
+    }
+    //********************public methods end***************
+
+})(window, document)

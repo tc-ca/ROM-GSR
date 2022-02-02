@@ -15,17 +15,11 @@ var WO_TDG_main = (function (window, document) {
     var currentWebApi;
     var isOffLine;
     var clientType;
-
-    var errorObject = {};
-    errorObject.isValid = true;
-    errorObject.errorMessage = new Array();
+    var OperationTypeGlobalValue;
+    var OperationTypeGlobalText;
 
 
     //********************private methods*******************
-    function setReportValidationError(message) {
-        errorObject.isValid = false;
-        errorObject.errorMessage.push(message);
-    }
 
     function getQuickFormAttributeValue(executionContext, QuickViewControlName, AttributeSchemaName) {
 
@@ -132,84 +126,95 @@ var WO_TDG_main = (function (window, document) {
         );
     }
 
-    const timeTrackingFunctions = {
-        getBookableData: async function (workOrder) {
-            let duration = null;
-            let modifiedon = null;
-            let hasBookings = false;
-            let status = "0" //active
+    function setInspectionType(formContext, inspectionType) {
 
-            await currentWebApi
-              .retrieveMultipleRecords(
-                "bookableresourcebooking",
-                `?$select=duration,modifiedon&$filter=_msdyn_workorder_value eq ${workOrder} and statecode eq ${status} &$orderby=modifiedon desc`
-              )
-              .then(
+        var messageWOTypeFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchWorkOrderType.ErrorMessage");
+        var sActivityName = glHelper.GetLookupName(formContext, "ovs_oversighttype");
+
+        //offline filter fix
+        var filter = (isOffLine && clientType > 0)
+            ? "ovs_workordertypenameenglish eq '{0}'"
+            : "startswith(ovs_workordertypenameenglish,'{0}')";
+
+        //Set WO Type based on Activity Type
+        if (inspectionType == 0) {
+            currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=" + filter.replace("{0}", "Regulatory Authorization")).then(
                 function success(results) {
-                  for (var i = 0; i < results.entities.length; i++) {
-                    duration += results.entities[i]["duration"];
-                  }
-                  //take from the first record, list of records are sorted by modifiedon desc, first one should be the latest
-                  if (results.entities.length > 0) {
-                    modifiedon = results.entities[0]["modifiedon"];
-                    hasBookings = true;
-                  }
+                    var englishName = results.entities[0]["ovs_workordertypenameenglish"];
+                    var frenchName = results.entities[0]["ovs_workordertypenamefrench"];
+                    var workOrderTypeId = results.entities[0]["msdyn_workordertypeid"];
+
+                    if (userSettings.languageId == 1036)
+                        glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, frenchName);
+                    if (userSettings.languageId == 1033)
+                        glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, englishName);
+
+                    glHelper.SetDisabled(formContext, "ovs_rational", true);
+
+                    currentWebApi.retrieveMultipleRecords("msdyn_incidenttype", "?$select=msdyn_incidenttypeid,ovs_incidenttypenameenglish,ovs_incidenttypenamefrench&$filter=ovs_incidenttypenameenglish eq 'Regulatory%20Authorization'").then(
+                        function success(results) {
+                            var msdyn_incidenttypeid = results.entities[0]["msdyn_incidenttypeid"];
+                            var ovs_incidenttypenameenglish = results.entities[0]["ovs_incidenttypenameenglish"];
+                            var ovs_incidenttypenamefrench = results.entities[0]["ovs_incidenttypenamefrench"];
+
+                            if (userSettings.languageId == 1036)
+                                glHelper.SetLookup(formContext, "msdyn_primaryincidenttype", "msdyn_incidenttype", msdyn_incidenttypeid, ovs_incidenttypenamefrench);
+                            if (userSettings.languageId == 1033)
+                                glHelper.SetLookup(formContext, "msdyn_primaryincidenttype", "msdyn_incidenttype", msdyn_incidenttypeid, ovs_incidenttypenameenglish);
+                        },
+                        function (error) {
+                            Xrm.Navigation.openErrorDialog({ message: error.message });
+                        }
+                    );
+
                 },
                 function (error) {
-                  Xrm.Utility.alertDialog(error.message);
+                    console.log("Fetch Work Order Type Error. error: " + error.message);
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageWOTypeFailed + " " + error.message });
                 }
-              );
-            return {
-                hasBookings: hasBookings,
-                duration: duration,
-                modifiedon: modifiedon,
-            };
-        },
-        updateWorkOrderServiceTaskDuration: async function (
-            serviceTaskId,
-            hours,
-            minutes,
-            bookingDurationTotalMinutes
-        ) {
-            let data = null;
-            var entity = {};
-            entity.ovs_hour = hours;
-            entity.ovs_minute = minutes;
-            entity.ovs_totalbookingduration = bookingDurationTotalMinutes;
+            );
+        }
+        else {
+            currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=" + filter.replace("{0}", "Inspection")).then(
+                function success(results) {
+                    var englishName = results.entities[0]["ovs_workordertypenameenglish"];
+                    var frenchName = results.entities[0]["ovs_workordertypenamefrench"];
+                    var workOrderTypeId = results.entities[0]["msdyn_workordertypeid"];
 
-            await currentWebApi
-                .updateRecord("msdyn_workorderservicetask", serviceTaskId, entity)
-                .then(
-                    function success(result) {
-                        data = result.id;
-                    },
-                    function (error) {
-                        Xrm.Utility.alertDialog(error.message);
-                    }
-                );
+                    if (userSettings.languageId == 1036)
+                        glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, frenchName);
+                    if (userSettings.languageId == 1033)
+                        glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, englishName);
 
-            return data;
-        },
-        getServiceTasksForWorkOrder: async function (workOrder) {
-            let data = null;
+                    glHelper.SetDisabled(formContext, "ovs_rational", true);
 
-            await currentWebApi
-                .retrieveMultipleRecords(
-                    "msdyn_workorderservicetask",
-                    `?$select=_msdyn_tasktype_value,ovs_hour,ovs_minute,modifiedon,ovs_totalbookingduration,_msdyn_workorderincident_value&$filter=_msdyn_workorder_value eq ${workOrder}`
-                )
-                .then(
-                    function success(results) {
-                        data = results.entities;
-                    },
-                    function (error) {
-                        Xrm.Utility.alertDialog(error.message);
-                    }
-                );
+                    currentWebApi.retrieveMultipleRecords("msdyn_incidenttype", "?$select=msdyn_incidenttypeid,ovs_incidenttypenameenglish,ovs_incidenttypenamefrench&$filter=ovs_incidenttypenameenglish eq 'Inspection'")
+                        .then(
+                            function success(results) {
+                                var msdyn_incidenttypeid = results.entities[0]["msdyn_incidenttypeid"];
+                                var ovs_incidenttypenameenglish = results.entities[0]["ovs_incidenttypenameenglish"];
+                                var ovs_incidenttypenamefrench = results.entities[0]["ovs_incidenttypenamefrench"];
 
-            return data;
-        },
-    };
+                                if (userSettings.languageId == 1036)
+                                    glHelper.SetLookup(formContext, "msdyn_primaryincidenttype", "msdyn_incidenttype", msdyn_incidenttypeid, ovs_incidenttypenamefrench);
+                                if (userSettings.languageId == 1033)
+                                    glHelper.SetLookup(formContext, "msdyn_primaryincidenttype", "msdyn_incidenttype", msdyn_incidenttypeid, ovs_incidenttypenameenglish);
+                            },
+                            function (error) {
+                                Xrm.Navigation.openErrorDialog({ message: error.message });
+                            }
+                        );
+
+
+
+                },
+                function (error) {
+                    console.log(messageWOTypeFailed + " " + error.message);
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageWOTypeFailed + " " + error.message });
+                }
+            );
+        }
+    }
 
 
     //********************private methods end***************
@@ -274,13 +279,6 @@ var WO_TDG_main = (function (window, document) {
             fy.removeOnChange(WO_TDG_main.FiscalYearOnchange);
             fy.addOnChange(WO_TDG_main.FiscalYearOnchange);
 
-            ////only on update should user be able to make change to system status
-
-            ////1 - create, 2 - update  - all the rest is disabled forms
-            ////TO DO:check status with Ainsle
-            // if (formType < 3) {
-            //   glHelper.SetDisabled(formContext, "msdyn_systemstatus", true);
-            // }
 
             //wo status - validation will work online only!
             if (!isOffLine) {
@@ -292,10 +290,11 @@ var WO_TDG_main = (function (window, document) {
             //WO Number/msdyn_name
             glHelper.SetControlVisibility(formContext, "msdyn_name", false);
 
-            //Activity Type
-            var activityType = formContext.getAttribute("ovs_oversighttype");
-            activityType.removeOnChange(WO_TDG_main.ActivityType_OnChange);
-            activityType.addOnChange(WO_TDG_main.ActivityType_OnChange);
+            //move to operation on change to work sequentialy - no Oversight Type can be selected befor operation is set.
+            ////Activity Type
+            //var activityType = formContext.getAttribute("ovs_oversighttype");
+            //activityType.removeOnChange(WO_TDG_main.ActivityType_OnChange);
+            //activityType.addOnChange(WO_TDG_main.ActivityType_OnChange);
 
             //Substatus Type
             WO_TDG_main.Update_WO_Substatus(formContext);
@@ -304,14 +303,13 @@ var WO_TDG_main = (function (window, document) {
             primaryInspector.removeOnChange(WO_TDG_main.PrimaryInspector_OnChange);
             primaryInspector.addOnChange(WO_TDG_main.PrimaryInspector_OnChange);
 
-            //time tracking functionality
-            var remote = formContext.getAttribute("qm_remote");
-            remote.removeOnChange(WO_TDG_main.Remote_OnChange);
-            remote.addOnChange(WO_TDG_main.Remote_OnChange);
+            // Filter WO_SystemStatus (hide "Open - In Progress")
+            WO_TDG_main.WO_SystemStatus_FilterOptionSet(formContext);
 
-            //move under Rational OnChange
-            //// Filter WO_SystemStatus (hide "Open - In Progress")
-            //WO_TDG_main.WO_SystemStatus_FilterOptionSet(formContext);
+            //operation
+            var operation = formContext.getAttribute("ovs_mocoperationid");
+            operation.removeOnChange(WO_TDG_main.Operation_OnChange);
+            operation.addOnChange(WO_TDG_main.Operation_OnChange);
 
             //on create
             if (formType == 1) {
@@ -342,7 +340,7 @@ var WO_TDG_main = (function (window, document) {
                 cocTab.addTabStateChange(
                     WO_TDG_main.OnConfirmationOfCompliance_StateChange
                 );
-                
+
                 ///////// SEAT popup warning message
                 var gridSEAT = formContext.getControl("subgrid_safetyAssessment");
                 gridSEAT.removeOnLoad(WO_TDG_main.SubgridSafetyAssessment_OnLoad);
@@ -350,16 +348,16 @@ var WO_TDG_main = (function (window, document) {
                 //need to referesh the grid after page onload, sometimes it does not automatically do it for the above event to get called.
                 gridSEAT.refresh();
                 ///////////
-                    
-                ////////// Time Tracking calculation
-                var timeEntryTab = formContext.ui.tabs.get("tab_TimeTracking");
-                timeEntryTab.removeTabStateChange(WO_TDG_main.CalculateAndUpdateServiceTaskDuration);
-                timeEntryTab.addTabStateChange(WO_TDG_main.CalculateAndUpdateServiceTaskDuration);
-                /////////////
+
             }
 
             // Set Oversight Activity field as Mandatory
             glHelper.SetRequiredLevel(formContext, "ovs_oversighttype", true);
+
+            // make Operation required -> move to designer once testing is done 
+            //glHelper.SetRequiredLevel(formContext, "ovs_mocoperationid", true);
+            //pre-filter Oversith Type and Region
+            operation.fireOnChange();
         },
 
         SubgridSafetyAssessment_OnLoad: function (executionContext) {
@@ -379,7 +377,7 @@ var WO_TDG_main = (function (window, document) {
                 },
                 function (error) {
 
-                    Xrm.Utility.alertDialog(error.message);
+                    Xrm.Navigation.openErrorDialog({ message: error.message });
                 }
             );
 
@@ -439,93 +437,6 @@ var WO_TDG_main = (function (window, document) {
                 }
             );
 
-        },
-
-        ActivityType_OnChange: function (executionContext) {
-
-            var messageWOTypeFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchWorkOrderType.ErrorMessage");
-            var formContext = executionContext.getFormContext();
-            var sActivityName = glHelper.GetLookupName(formContext, "ovs_oversighttype");
-
-            //offline filter fix
-            var filter = (isOffLine && clientType > 0)
-                ? "ovs_workordertypenameenglish eq '{0}'"
-                : "startswith(ovs_workordertypenameenglish,'{0}')";
-
-            //Set WO Type based on Activity Type
-            if (sActivityName == "Civil Aviation Document Review" || sActivityName == "Examen des documents de l'aviation civile" || sActivityName == "Examen documentation de l'aviation civile") {
-                currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=" + filter.replace("{0}", "Regulatory Authorization")).then(
-                    function success(results) {
-                        var englishName = results.entities[0]["ovs_workordertypenameenglish"];
-                        var frenchName = results.entities[0]["ovs_workordertypenamefrench"];
-                        var workOrderTypeId = results.entities[0]["msdyn_workordertypeid"];
-
-                        if (userSettings.languageId == 1036)
-                            glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, frenchName);
-                        if (userSettings.languageId == 1033)
-                            glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, englishName);
-
-                        glHelper.SetDisabled(formContext, "ovs_rational", true);
-
-                        currentWebApi.retrieveMultipleRecords("msdyn_incidenttype", "?$select=msdyn_incidenttypeid,ovs_incidenttypenameenglish,ovs_incidenttypenamefrench&$filter=ovs_incidenttypenameenglish eq 'Regulatory%20Authorization'").then(
-                            function success(results) {
-                                var msdyn_incidenttypeid = results.entities[0]["msdyn_incidenttypeid"];
-                                var ovs_incidenttypenameenglish = results.entities[0]["ovs_incidenttypenameenglish"];
-                                var ovs_incidenttypenamefrench = results.entities[0]["ovs_incidenttypenamefrench"];
-
-                                if (userSettings.languageId == 1036)
-                                    glHelper.SetLookup(formContext, "msdyn_primaryincidenttype", "msdyn_incidenttype", msdyn_incidenttypeid, ovs_incidenttypenamefrench);
-                                if (userSettings.languageId == 1033)
-                                    glHelper.SetLookup(formContext, "msdyn_primaryincidenttype", "msdyn_incidenttype", msdyn_incidenttypeid, ovs_incidenttypenameenglish);
-                            },
-                            function (error) {
-                                Xrm.Utility.alertDialog(error.message);
-                            }
-                        );
-                    },
-                    function (error) {
-                        console.log("Fetch Work Order Type Error. error: " + error.message);
-                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageWOTypeFailed + " " + error.message });
-                    }
-                );
-            }
-            else {
-                currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=" + filter.replace("{0}", "Inspection")).then(
-                    function success(results) {
-                        var englishName = results.entities[0]["ovs_workordertypenameenglish"];
-                        var frenchName = results.entities[0]["ovs_workordertypenamefrench"];
-                        var workOrderTypeId = results.entities[0]["msdyn_workordertypeid"];
-
-                        if (userSettings.languageId == 1036)
-                            glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, frenchName);
-                        if (userSettings.languageId == 1033)
-                            glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, englishName);
-
-                        glHelper.SetDisabled(formContext, "ovs_rational", true);
-
-                        currentWebApi.retrieveMultipleRecords("msdyn_incidenttype", "?$select=msdyn_incidenttypeid,ovs_incidenttypenameenglish,ovs_incidenttypenamefrench&$filter=ovs_incidenttypenameenglish eq 'Inspection'")
-                        .then(
-                            function success(results) {
-                                var msdyn_incidenttypeid = results.entities[0]["msdyn_incidenttypeid"];
-                                var ovs_incidenttypenameenglish = results.entities[0]["ovs_incidenttypenameenglish"];
-                                var ovs_incidenttypenamefrench = results.entities[0]["ovs_incidenttypenamefrench"];
-
-                                if (userSettings.languageId == 1036)
-                                    glHelper.SetLookup(formContext, "msdyn_primaryincidenttype", "msdyn_incidenttype", msdyn_incidenttypeid, ovs_incidenttypenamefrench);
-                                if (userSettings.languageId == 1033)
-                                    glHelper.SetLookup(formContext, "msdyn_primaryincidenttype", "msdyn_incidenttype", msdyn_incidenttypeid, ovs_incidenttypenameenglish);
-                            },
-                            function (error) {
-                                Xrm.Utility.alertDialog(error.message);
-                            }
-                        );
-                    },
-                    function (error) {
-                        console.log(messageWOTypeFailed + " " + error.message);
-                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageWOTypeFailed + " " + error.message });
-                    }
-                );
-            }
         },
 
         Rational_OnChange: function (executionContext) {
@@ -617,12 +528,12 @@ var WO_TDG_main = (function (window, document) {
                         case "Inspector Offline":
                         case "TDG Inspections / Inspections TMD":
                             if (isPlanned && formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
-                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed", "ovs_qcreviewcomments", "ovs_qcreviewcompletedind", "ovs_primaryinspector"); //"msdyn_serviceterritory",
+                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_mocoperationid", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed", "ovs_qcreviewcomments", "ovs_qcreviewcompletedind", "ovs_primaryinspector",); //"msdyn_serviceterritory",
                                 editableArray = new Array("qm_remote");
                             }
                             else {
                                 readOnlyArray = new Array("msdyn_workordertype", "ovs_rational");
-                                editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_serviceterritory"); //"ovs_rational" - cannot set editable => will set all fields editable
+                                editableArray = new Array("msdyn_serviceaccount", "ovs_mocoperationid", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_serviceterritory"); //"ovs_rational" - cannot set editable => will set all fields editable
 
                             }
 
@@ -842,271 +753,106 @@ var WO_TDG_main = (function (window, document) {
             }
         },
 
-        ReportDataValidate: function (formContext) {
+        filterOversigthType: function (executionContext) {
 
-            //Xrm.Utility.showProgressIndicator("Validating ...");
+            var filter = "";
+            var formContext = executionContext.getFormContext();
+            var filterTemplate = "<filter type='and'><condition attribute='ovs_oversighttypenameenglish' operator='like' value='{0}'/></filter>";
 
-            //check: primary contact with email, phone and job title; primary inspector with RIN and Badge; atleast one booking associated with WO having start date
-            var isValid = true;
-            errorObject.errorMessage = new Array();
+            switch (OperationTypeGlobalValue) {
 
-            var messageReportContact = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.Contact.ErrorMessage");
-            var messageReportEmail = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.Email.ErrorMessage");
-            var messageReportFullName = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.FullName.ErrorMessage");
-            var messageReportJobTitle = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.JobTitle.ErrorMessage");
-            var messageReportPrimaryContact = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.PrimaryContact.ErrorMessage");
-            var messagePhone = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.Phone.ErrorMessage");
-            var messageBadge = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.Badge.ErrorMessage");
-            var messageRRIN = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.RRIN.ErrorMessage");
-            var messageWorkOrderNoBookings = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.Bookings.ErrorMessage");
-            var messageWorkOrderFewBookings = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.FewBookings.ErrorMessage");
-            var titlePrimaryInspector = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.PrimaryInspector.Title");
-
-
-            //check primary contact
-            var site = formContext.getAttribute("msdyn_serviceaccount").getValue()[0];
-            var req = new XMLHttpRequest();
-            req.open("GET", clientUrl + "/api/data/v9.1/accounts(" + site.id.replace("{", "").replace("}", "") + ")?$select=_primarycontactid_value&$expand=primarycontactid($select=telephone1,emailaddress1,fullname,lastname,jobtitle)", false);
-            req.setRequestHeader("OData-MaxVersion", "4.0");
-            req.setRequestHeader("OData-Version", "4.0");
-            req.setRequestHeader("Accept", "application/json");
-            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-            req.setRequestHeader("Prefer", "odata.include-annotations=\"*\"");
-            req.onreadystatechange = function () {
-                if (this.readyState === 4) {
-                    req.onreadystatechange = null;
-                    if (this.status === 200) {
-                        var result = JSON.parse(this.response);
-                        if (result.hasOwnProperty("primarycontactid")) {
-
-                            if (result["primarycontactid"]["telephone1"] == null) {
-                                setReportValidationError("Site " + site.name + " " + messagePhone);
-                                isValid = false;
-                            }
-                            if (result["primarycontactid"]["emailaddress1"] == null) {
-                                setReportValidationError("Site " + site.name + " " + messageReportEmail);
-                                isValid = false;
-                            }
-                            if (result["primarycontactid"]["lastname"] == null || result["primarycontactid"]["lastname"] == "") {
-                                setReportValidationError("Site " + site.name + " " + messageReportFullName);
-                                isValid = false;
-                            }
-                            if (result["primarycontactid"]["jobtitle"] == null || result["primarycontactid"]["jobtitle"] == "") {
-                                setReportValidationError("Site " + site.name + " " + messageReportJobTitle);
-                                isValid = false;
-                            }
-                        }
-                        else {
-                            setReportValidationError("Site " + site.name + " " + messageReportContact);
-                            isValid = false;
-                        }
-
-                        //Xrm.Utility.closeProgressIndicator();
-
-                    } else {
-                        //Xrm.Utility.closeProgressIndicator();
-                        Xrm.Navigation.openErrorDialog({ message: this.statusText });
-                    }
-                }
-            };
-            req.send();
-
-            //check primary inspector            
-            var prmInspector = formContext.getAttribute("ovs_primaryinspector").getValue()[0];
-            var req = new XMLHttpRequest();
-            req.open("GET", clientUrl + "/api/data/v9.1/bookableresources(" + prmInspector.id.replace("{", "").replace("}", "") + ")?$select=ovs_registeredinspectornumberrin,ovs_badgenumber&$expand=UserId($select=address1_telephone1,domainname,internalemailaddress,fullname)", false);
-            req.setRequestHeader("OData-MaxVersion", "4.0");
-            req.setRequestHeader("OData-Version", "4.0");
-            req.setRequestHeader("Accept", "application/json");
-            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-            req.setRequestHeader("Prefer", "odata.include-annotations=\"*\"");
-            req.onreadystatechange = function () {
-                if (this.readyState === 4) {
-                    req.onreadystatechange = null;
-                    if (this.status === 200) {
-                        var result = JSON.parse(this.response);
-                        if (result["ovs_badgenumber"] == null || result["ovs_badgenumber"] == "") {
-                            setReportValidationError(titlePrimaryInspector + " " + prmInspector.name + " " + messageBadge);
-                            isValid = false;
-                        } if (result["ovs_registeredinspectornumberrin"] == null || result["ovs_registeredinspectornumberrin"] == "") {
-                            setReportValidationError(titlePrimaryInspector + " " + prmInspector.name + " " + messageRRIN);
-                            isValid = false;
-                        }
-                        if (result.hasOwnProperty("UserId")) {
-                            if (result["UserId"]["address1_telephone1"] == null) {
-                                setReportValidationError(titlePrimaryInspector + " " + prmInspector.name + " " + messagePhone);
-                                isValid = false;
-                            }
-                            if (result["UserId"]["internalemailaddress"] == null
-                                && result["UserId"]["domainname"] == null) {
-                                setReportValidationError(titlePrimaryInspector + " " + prmInspector.name + " " + messageReportEmail);
-                                isValid = false;
-                            } if (result["UserId"]["fullname"] == null || result["UserId"]["fullname"] == "") {
-                                setReportValidationError(messageReportFullName);
-                                isValid = false;
-                            }
-                        }
-                        else {
-                            setReportValidationError(titlePrimaryInspector + " " + prmInspector.name + " is not associated with any user in the system");
-                            isValid = false;
-                        }
-                    } else {
-                        //Xrm.Utility.closeProgressIndicator();
-                        Xrm.Navigation.openErrorDialog({ message: this.statusText });
-                    }
-                }
-            };
-            req.send();
-
-            //check booking
-            var req = new XMLHttpRequest();
-            req.open("GET", clientUrl + "/api/data/v9.1/bookableresourcebookings?$select=starttime&$filter=starttime ne null and statecode eq 0 and _msdyn_workorder_value eq " + formContext.data.entity.getId().replace("{", "").replace("}", ""), false);
-            req.setRequestHeader("OData-MaxVersion", "4.0");
-            req.setRequestHeader("OData-Version", "4.0");
-            req.setRequestHeader("Accept", "application/json");
-            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-            req.setRequestHeader("Prefer", "odata.maxpagesize=1");
-            req.onreadystatechange = function () {
-                if (this.readyState === 4) {
-                    req.onreadystatechange = null;
-                    if (this.status === 200) {
-                        var results = JSON.parse(this.response);
-                        if (results.value.length == 0) {
-                            isValid = false;
-                            setReportValidationError(messageWorkOrderNoBookings);
-                        }
-                    } else {
-                        //Xrm.Utility.closeProgressIndicator();
-                        Xrm.Navigation.openErrorDialog({ message: this.statusText });
-                    }
-
-                    //Xrm.Utility.closeProgressIndicator();
-                }
-            };
-            req.send();
-
-            errorObject.isValid = isValid;
-
-            //Xrm.Utility.closeProgressIndicator();
-            return isValid;
-        },
-        
-        Remote_OnChange: async function (executionContext) {
-            //do this only on update, as new work order does not have service tasks yet
-            //if remote === true then blank/null any travel time field values, as no travel is required.
-
-            if (formType > 1) {
-                let formContext = executionContext.getFormContext();
-                let remote = formContext.getAttribute("qm_remote").getValue();
-                
-                let workOrderId = formContext.data.entity.getId().replace("{", "").replace("}", "")
-                const serviceTasks = await timeTrackingFunctions.getServiceTasksForWorkOrder(workOrderId);
-                let travelServicetask = serviceTasks.filter(x => x["_msdyn_tasktype_value"] === "ca3a829a-e917-ec11-b6e7-000d3ae8ef7b") //travel task type
-
-                if (remote) {
-                    if (travelServicetask.length === 1) {
-                        timeTrackingFunctions.updateWorkOrderServiceTaskDuration(
-                          travelServicetask[0]["msdyn_workorderservicetaskid"],
-                          null,
-                          null,
-                          null
-                        );
-                    }
-                }
+                case 918640038: filter = filterTemplate.replace('{0}', 'GC%'); break;
+                case 918640040: filter = filterTemplate.replace('{0}', 'Civil%'); break;
+                default: filter = filterTemplate.replace('{0}', 'MOC%');
             }
+
+            formContext.getControl("ovs_oversighttype").addCustomFilter(filter, "ovs_oversighttype");
         },
 
-        /// Updates Work Order Service Task Record of Service Task Type "Execution" with Booking duration
-        CalculateAndUpdateServiceTaskDuration: async function (executionContext) {
+        Operation_OnChange: function (executionContext) {
 
-            const loadingMessage = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.loading.Message");
-            Xrm.Utility.showProgressIndicator(loadingMessage);
+            var formContext = executionContext.getFormContext();
 
-            try {
-                let formContext = executionContext.getFormContext();
-                //let formContext = executionContext
-                let workOrderId = formContext.data.entity.getId().replace("{", "").replace("}", "")
-                let systemStatus = formContext.getAttribute("msdyn_systemstatus").getValue();
-                //If system status is close posted or canceled do not update service task time.
-                if (systemStatus !== 690970004 && systemStatus !== 690970005) {
+            var operation = formContext.getAttribute("ovs_mocoperationid").getValue();
+            if (operation === null || operation === undefined) {
 
-                    //get service task off work order (should already be auto created at this point)
-                    const serviceTasks = await timeTrackingFunctions.getServiceTasksForWorkOrder(workOrderId)
-                    let executionServicetask = serviceTasks.filter(x => x["_msdyn_tasktype_value"] === "794a29b3-e917-ec11-b6e7-000d3ae8ef7b") //execution inspection
+                //set oversight type and inspection type empty
 
-                    //if sevice task exist.
-                    if (executionServicetask.length === 1) {
-                        const bookingData = await timeTrackingFunctions.getBookableData(workOrderId)
-                        const bookingDurationTotalMinutes = bookingData.duration
-                        const bookingModifiedOn = bookingData.modifiedon
+                glHelper.SetValue(formContext, "ovs_oversighttype", null);
+                glHelper.SetValue(formContext, "msdyn_workordertype", null);
+                glHelper.SetDisabled(formContext, "ovs_oversighttype", true);
+                return;
+            }
 
+            currentWebApi.retrieveRecord("ovs_mocregistration", operation[0].id, "?$select=_ovs_lineofbusiness_value,ovs_mocregistrationid,ovs_name,ovs_operationtype").then(
+                function success(result) {
+                    var _ovs_lineofbusiness_value = result["_ovs_lineofbusiness_value"];
+                    var _ovs_lineofbusiness_value_formatted = result["_ovs_lineofbusiness_value@OData.Community.Display.V1.FormattedValue"];
+                    var _ovs_lineofbusiness_value_lookuplogicalname = result["_ovs_lineofbusiness_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                    var ovs_mocregistrationid = result["ovs_mocregistrationid"];
+                    var ovs_name = result["ovs_name"];
+                    OperationTypeGlobalValue = result["ovs_operationtype"];
+                    OperationTypeGlobalText = result["ovs_operationtype@OData.Community.Display.V1.FormattedValue"];
 
-                        let bookingHours = null;
-                        let bookingMinutes = null;
-                        //if booking exist (null if no duration)
-                        if (bookingData.hasBookings) {
-                            //convert total minutes to hours and minutes to place in seperate fields.
-                            bookingHours = Math.floor(bookingDurationTotalMinutes / 60);
-                            bookingMinutes = bookingDurationTotalMinutes % 60;
+                    //-----  add pre-filter for Oversight Type -------------//
+                    formContext.getControl("ovs_oversighttype").removePreSearch(WO_TDG_main.filterOversigthType)
+                    formContext.getControl("ovs_oversighttype").addPreSearch(WO_TDG_main.filterOversigthType);
 
-                            const execustionServiceTaskHours = executionServicetask[0]['ovs_hour']
-                            const executionServiceTaskMinutes = executionServicetask[0]['ovs_minute']
-                            const executionServiceTaskModifiedon = executionServicetask[0]['modifiedon']
-                            const previousExecutionServiceTaskTotalBookingDuration = executionServicetask[0]['ovs_totalbookingduration']
+                    if (OperationTypeGlobalValue == 918640040) {
+
+                        var sActivityName = glHelper.GetLookupName(formContext, "ovs_oversighttype");
 
 
-                            //or if user has not manually updated execution time done by comparing what was entered into service task time and booking duration
-                            //booking modified on
+                        //If aviation is already selected
+                        if (sActivityName == "Civil Aviation Document Review" || sActivityName == "Examen des documents de l'aviation civile" || sActivityName == "Examen documentation de l'aviation civile") {
+
+                            glHelper.SetDisabled(formContext, "ovs_oversighttype", true);
+                        }
+                        else {
+
+                            //offline filter fix
+                            var filter = (isOffLine && clientType > 0)
+                                ? "ovs_oversighttypenameenglish eq 'Civil%20Aviation%20Document%20Review'"
+                                : "startswith(ovs_oversighttypenameenglish,'Civil%20Aviation%20Document%20Review')";
+
+                            currentWebApi.retrieveMultipleRecords("ovs_oversighttype", "?$select=ovs_oversighttypeid,ovs_oversighttypenameenglish,ovs_oversighttypenamefrench&$filter=" + filter).then(
+                                function success(results) {
+                                    var ovs_oversighttypeid = results.entities[0]["ovs_oversighttypeid"];
+                                    var ovs_oversighttypenameenglish = results.entities[0]["ovs_oversighttypenameenglish"];
+                                    var ovs_oversighttypenamefrench = results.entities[0]["ovs_oversighttypenamefrench"];
 
 
-                            //update execution service task if initial/first time loading work order 
-                            if ((execustionServiceTaskHours === null && executionServiceTaskMinutes === null)) {
-                                await timeTrackingFunctions.updateWorkOrderServiceTaskDuration(executionServicetask[0]['msdyn_workorderservicetaskid'], bookingHours, bookingMinutes, bookingDurationTotalMinutes)
-                            }
-                            //update execution service task if booking has been updated.
-                            else if (bookingHours !== execustionServiceTaskHours || bookingMinutes !== executionServiceTaskMinutes) {
-                                if (new Date(bookingModifiedOn).getTime() > new Date(executionServiceTaskModifiedon).getTime()) {
-                                    await timeTrackingFunctions.updateWorkOrderServiceTaskDuration(executionServicetask[0]['msdyn_workorderservicetaskid'], bookingHours, bookingMinutes, bookingDurationTotalMinutes)
+                                    if (userSettings.languageId == 1036)
+                                        glHelper.SetLookup(formContext, "ovs_oversighttype", "ovs_oversighttype", ovs_oversighttypeid, ovs_oversighttypenamefrench);
+                                    if (userSettings.languageId == 1033)
+                                        glHelper.SetLookup(formContext, "ovs_oversighttype", "ovs_oversighttype", ovs_oversighttypeid, ovs_oversighttypenameenglish);
+
+                                    glHelper.SetDisabled(formContext, "ovs_oversighttype", true);
+
+                                    setInspectionType(formContext, 0);
+                                },
+                                function (error) {
+                                    Xrm.Navigation.openErrorDialog({ message: error.message });
                                 }
-                                else {
-                                    //else service task modifiedon is greater than booking modified on, i.e. user manually updated time, no need to update time.
-                                    //unless total booking duration is different from the previous total booking duration i.e.
+                            );
 
-                                    if (bookingDurationTotalMinutes !== previousExecutionServiceTaskTotalBookingDuration) {
-                                        await timeTrackingFunctions.updateWorkOrderServiceTaskDuration(executionServicetask[0]['msdyn_workorderservicetaskid'], bookingHours, bookingMinutes, bookingDurationTotalMinutes)
-                                    }
-                                }
-                            }
-                            else {
-                                //hours and minutes are the same, no need to update time.
-                            }
                         }
-                        else {
-                            await timeTrackingFunctions.updateWorkOrderServiceTaskDuration(executionServicetask[0]['msdyn_workorderservicetaskid'], null, null, null)
-                        }
-
-                       
-
+                    }//not an aviation
+                    else {
+                        setInspectionType(formContext, 1);
+                        glHelper.SetDisabled(formContext, "ovs_oversighttype", false);
                     }
 
+                    //-------------   end pre-filter for Oversight Type ------------//
+
+                },
+                function (error) {
+                    Xrm.Navigation.openErrorDialog({ message: error.message });
+
                 }
-
-            } catch (error) {
-                throw error;
-            }
-            finally {
-
-                Xrm.Utility.closeProgressIndicator();
-                let formContext = executionContext.getFormContext();
-                let gridTimeTracking = formContext.getControl("Subgrid_TimeTracking");
-                gridTimeTracking.refresh();
-            }
-
-
+            );
         },
 
-
-        errorObject: errorObject,
     }
 
 

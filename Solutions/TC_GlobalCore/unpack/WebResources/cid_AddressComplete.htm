@@ -1,10 +1,12 @@
 <HTML>
 <HEAD>
-    <META NAME="GENERATOR" Content="Microsoft Visual Studio">
     <TITLE></TITLE>
     <style>
         body {
             background-color: white;
+            display: block;
+            margin-left: 0px;
+            margin-right: 0px;
         }
 
         text {
@@ -19,22 +21,42 @@
             margin: 0px 0px 5px;
             font-weight: bold;
         }
+
+        .form-control {
+            display: block;
+            font-size: 16px;
+            line-height: 1.4375;
+            color: #555;
+            border: 1px solid #949494;
+            border-radius: 4px;
+            box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+            font-family: "Noto Sans",sans-serif;
+            padding: 6px 12px;
+            height: auto;
+            max-width: 100%;
+            min-height: 37px;
+            background-image: none;
+            margin-top: 7px;
+            width: 100%;
+        }
     </style>
+    <!-- Using jquery library -->
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 </HEAD>
 <BODY>
     <script type="text/javascript">
         function search() {
-            debugger;
-            var address_search = document.getElementById("address_search").value
-            var SearchTerm = address_search;
+            //debugger;
+            var address1_line1 = document.getElementById("address1_line1").value
+            var SearchTerm = address1_line1;
             var LanguagePreference = 'en';
 
             AddressComplete.Find(SearchTerm, LanguagePreference);
         }
 
         function onInput(e) {
-            //debugger;
+            debugger;
 
             var input = e.target;
             var val = input.value;
@@ -42,6 +64,15 @@
             var options = document.getElementById(list).childNodes;
             var found = false;
             var index = 0;
+
+            // address1_line1
+            var address1_line1 = document.getElementById('address1_line1').value;
+            sessionStorage.setItem("Line1", address1_line1);
+            try {
+                // transfer control back to parent form
+                parent.AddressComplete_address1_line1();
+            } catch (e) { }
+
 
             // skip 1st option
             for (var i = 1; i < options.length; i++) {
@@ -63,74 +94,40 @@
         }
     </script>
 
-    <form>
-        <label for="fname">Address Lookup</label>
-        <br>
-
-        <input list="address_list" id="address_search" name="address_search" value="" size="38" />
-        <br>
-        <datalist id="address_list">
-            <option value="" />
-            <option value="" />
-            <option value="" />
-            <option value="" />
-            <option value="" />
-            <option value="" />
-            <option value="" />
-        </datalist>
-        <input type="text" id="address_list_id" hidden />
-        <input type="button" onclick="getResponse()" value="getResponse" hidden />
-        <br />
-        <input type="text" id="bn" value="832569966" />
-        <input type="button" onclick="bn_click()" value=">>" />
-    </form>
+    <label for="address1_line1" class="field-label">Street 1</label>
+    <span id="address1_line1_required" style="color: red;font-weight: bold"> *</span>
+    <br>
+    <input list="address_list" id="address1_line1" class="text form-control" />
+    <br>
+    <datalist id="address_list">
+        <option value="" />
+        <option value="" />
+        <option value="" />
+        <option value="" />
+        <option value="" />
+        <option value="" />
+        <option value="" />
+    </datalist>
+    <input type="text" id="address_list_id" hidden />
 
     <script type="text/javascript">
-        //debugger;
-        document.querySelector('input[list="address_list"]').addEventListener('input', onInput);
-        AddressComplete.removeOptions('address_list', false);
-
-        function getResponse() {
+        $(document).ready(function () {
             debugger;
-            var entity = "cr4eb_temp_odata";
-            var list = parent.OData_List(entity);
-            alert(entity + " >> " + list.length);
-        }
+            document.querySelector('input[list="address_list"]').addEventListener('input', onInput);
+            AddressComplete.removeOptions('address_list', false);
 
-        function bn_click() {
-            debugger;
-            var bn = document.getElementById("bn").value;
-            Retrieve(bn);
-        }
+            var address1_line1 = sessionStorage.getItem("address1_line1");
+            document.getElementById('address1_line1').value = address1_line1;
+
+            // AddressComplete_Hide_address1_line1
+            parent.AddressComplete_Hide_address1_line1();
+        })
+
     </script>
 
     <script>
-        var _Key = "481271ac-7937-4ee6-997c-a4e791125538";
-        var _Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IlNJRCIsIm5hbWVpZCI6IjIwIiwicm9sZSI6IkJ1c2luZXNzUmVnaXN0cmF0aW9uTnVtYmVyJEJ1c2luZXNzVHlwZUNvZGUgIiwiQ29ycmVsYXRpb25LZXkiOiJhNGU3OTExMjU1MzgiLCJuYmYiOjE2MzUxOTIwMTAsImV4cCI6MTk1MDcyNDgxMCwiaWF0IjoxNjM1MTkyMDEwLCJpc3MiOiJUcmFuc3BvcnQgQ2FuYWRhIiwiYXVkIjoiVHJhbnNwb3J0IENhbmFkYSJ9.FbunkYIaglOLhc4THq4pYJeZWTdo4d1e7bmIGGKKE0w";
-        var _UserRole = "02"
-
-        function Retrieve(bn) {
-            debugger;
-
-            var settings = {
-                "url": "https://wwwapps.tc.gc.ca/Saf-Sec-Sur/3/tdg-bn/api/v1/Businesses/832569966",
-                "method": "GET",
-                "timeout": 0,
-                "dataType": "jsonp",
-                "headers": {
-                    "TC-BN-API-KEY": "481271ac-7937-4ee6-997c-a4e791125538",
-                    "TC-BN-IDENTITY-TOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IlNJRCIsIm5hbWVpZCI6IjIwIiwicm9sZSI6IkJ1c2luZXNzUmVnaXN0cmF0aW9uTnVtYmVyJEJ1c2luZXNzVHlwZUNvZGUgIiwiQ29ycmVsYXRpb25LZXkiOiJhNGU3OTExMjU1MzgiLCJuYmYiOjE2MzUxOTIwMTAsImV4cCI6MTk1MDcyNDgxMCwiaWF0IjoxNjM1MTkyMDEwLCJpc3MiOiJUcmFuc3BvcnQgQ2FuYWRhIiwiYXVkIjoiVHJhbnNwb3J0IENhbmFkYSJ9.FbunkYIaglOLhc4THq4pYJeZWTdo4d1e7bmIGGKKE0w",
-                    "TC-BN-UserRole": "02"
-                },
-            };
-
-            $.ajax(settings).done(function (response) {
-                alert(response);
-            });
-        }
-
         var AddressComplete = {
-            _Key: "JC96-FZ55-MW77-AG97",
+            _Key: "MM95-DM44-MP35-XM79",
             _MaxResults: 7,
             _MaxSuggestions: 7,
             _SearchFor: 'Everything',
@@ -281,6 +278,9 @@
                     //window.parent.Xrm.Page.AddressComplete_Selected;
                     //var value = parent.Xrm.Utility.AddressComplete_Selected();
                     parent.AddressComplete_Selected();
+
+                    // set address1
+                    document.getElementById('address1_line1').value = item_e.Line1;
                 } catch (e) { }
             }
         }

@@ -10,30 +10,24 @@
     <layoutxml>
       <grid name="resultset" jump="cid_name" select="1" icon="1" preview="1">
         <row name="result" id="cid_naicscodeid">
-          <cell name="cid_name" width="200" />
-          <cell name="cid_naicslevel" width="100" />
-          <cell name="cid_lastnode" width="100" />
-          <cell name="cid_naicsclasstitle" width="100" />
-          <cell name="cid_naicsclasstitlefr" width="100" />
-          <cell name="cid_naicshierarchicalstructure" width="100" />
+          <cell name="cid_name" width="100" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="cid_naicsclasstitle" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="cid_naicsclasstitlefr" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
         </row>
       </grid>
     </layoutxml>
     <querytype>0</querytype>
     <fetchxml>
-      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="cid_naicscode">
           <attribute name="cid_name" />
-          <attribute name="cid_naicscodeid" />
-          <attribute name="cid_lastnode" />
           <attribute name="cid_naicsclasstitle" />
           <attribute name="cid_naicsclasstitlefr" />
-          <attribute name="cid_naicslevel" />
-          <attribute name="cid_naicshierarchicalstructure" />
           <order attribute="cid_name" descending="false" />
           <filter type="and">
-            <condition attribute="cid_naicslevel" operator="eq" value="5" />
+            <condition attribute="cid_lastnode" operator="eq" value="1" />
           </filter>
+          <attribute name="cid_naicscodeid" />
         </entity>
       </fetch>
     </fetchxml>
