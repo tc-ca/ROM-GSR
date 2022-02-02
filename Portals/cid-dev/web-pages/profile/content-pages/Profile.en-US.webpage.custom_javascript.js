@@ -1,6 +1,13 @@
 // Profile.js
 
 $(document).ready(function () {
+    // resize WebResource_address_complete
+    $("#WebResource_address_complete").height('72px');
+    $("#emailaddress1").width('100%');
+
+    $("#telephone1").attr("placeholder", "");
+    $("#mobilephone").attr("placeholder", "");
+
     addValidator("emailaddress1", "E-mail");
     //addValidator("address1_line1", "Street 1");
     //addValidator("address1_city", "City");
@@ -8,12 +15,9 @@ $(document).ready(function () {
     //addValidator("address1_postalcode", "Postal Code");
     //addValidator("address1_country", "Country");
 
-    // session varss
+    // session vars
     var address1_line1 = $("#address1_line1").val();
     sessionStorage.setItem("address1_line1", address1_line1);
-
-    // resize WebResource_address_complete
-    $("#WebResource_address_complete").height('70px');
 });
 
 function AddressComplete_Hide_address1_line1() {

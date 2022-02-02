@@ -4,6 +4,9 @@
 $(document).ready(function () {
     // resize WebResource_address_complete
     $("#WebResource_address_complete").height('72px');
+    $("#websiteurl").width('100%');
+
+    $("#telephone1").attr("placeholder", "");
 
     var step_start = sessionStorage.getItem("step_start");
     step_start = (step_start == "null" ? "" : step_start);
