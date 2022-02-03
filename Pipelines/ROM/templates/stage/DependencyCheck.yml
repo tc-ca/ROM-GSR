@@ -23,6 +23,12 @@ stages:
     steps:
     - checkout: none
     - template: ../task/PrintPipelineFileDirectories.yml
+    #this is required else the files are not in the pipeline
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'current'
+        downloadType: 'specific'
+        downloadPath: '$(System.ArtifactsDirectory)'
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
