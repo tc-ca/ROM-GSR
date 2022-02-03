@@ -1,0 +1,27 @@
+steps:
+- task: PowerShell@2
+  displayName: Print Pipeline File Directories
+  inputs:
+    targetType: 'inline'
+    script: |
+      Write-Host "============================================"
+      Write-Host "System.DefaultWorkingDirectory"
+      Get-ChildItem -Path "$(System.DefaultWorkingDirectory)"
+      Write-Host "============================================"
+      Write-Host "Agent.BuildDirectory"
+      Get-ChildItem -Path "$(Agent.BuildDirectory)"
+      Write-Host "============================================"
+      Write-Host ""
+      Write-Host "============================================"
+      Write-Host "Build.ArtifactStagingDirectory"
+      Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)"
+      Write-Host "============================================"
+      Write-Host "============================================"
+      Write-Host "Build.BinariesDirectory"
+      Get-ChildItem -Path "$(Build.BinariesDirectory)"
+      Write-Host "============================================"
+      Write-Host "============================================"
+      Write-Host "Build.SourcesDirectory"
+      Get-ChildItem -Path "$(Build.SourcesDirectory)"
+      Write-Host "============================================"
+    errorActionPreference: 'continue'
