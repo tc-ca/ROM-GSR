@@ -21,14 +21,17 @@ stages:
   jobs:
   - job: ${{Parameters.StageName}}_Job
     steps:
-    - checkout: none
-    - template: ../task/PrintPipelineFileDirectories.yml
+    - checkout: none   
+    
     #this is required else the files are not in the pipeline
     - task: DownloadBuildArtifacts@1
       inputs:
         buildType: 'current'
         downloadType: 'specific'
-        downloadPath: '$(System.ArtifactsDirectory)'
+        downloadPath: '$(Agent.BuildDirectory)'
+        
+    - template: ../task/PrintPipelineFileDirectories.yml
+    
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
@@ -38,6 +41,7 @@ stages:
           Write-Host "Parameters.SolutionName: ${{Parameters.SolutionName}}"
           Write-Host "Parameters.StageName: ${{Parameters.StageName}}"
           Write-Host "============================================"
+    
     - task: MSCRMToolInstaller@12
       displayName: Power DevOps Tool Installer
 
