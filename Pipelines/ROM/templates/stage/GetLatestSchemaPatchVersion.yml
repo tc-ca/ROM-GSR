@@ -148,7 +148,7 @@ stages:
           Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\zip folder created."
         }
         Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\zip\* -Destination $(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\Patches\$(Build.BuildNumber)\zip
-    - template: ../PrintPipelineFileDirectories.yml
+    - template: ../task/PrintPipelineFileDirectories.yml
     - powershell: |
         echo "Committing all CDS solution changes"
         git config user.email "nepasrepondre-noreply@tc.gc.ca"
