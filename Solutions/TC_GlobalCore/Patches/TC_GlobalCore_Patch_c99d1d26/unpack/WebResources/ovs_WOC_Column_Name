@@ -1,0 +1,117 @@
+﻿var CRJ_Column_Name = (function (window, document) {
+
+    //********************private methods*******************
+
+
+    function displayIconTooltip(rowData, userLCID) {
+
+        var str = JSON.parse(rowData);  
+
+        var image = 0;
+        var isHQ = (str.ovs_hqflag == null)
+            ? false : (str.ovs_hqflag_Value._val == 1) ? true : false;
+        var isPriorityScore = (isNaN(str.ovs_cdpriorityscore_Value))
+            ? false : str.ovs_cdpriorityscore_Value >= 100;
+        var isLocal = (str.ovs_regionflag == null)
+            ? false : (str.ovs_regionflag_Value._val == 1) ? true : false;
+        var isJust = (str.ovs_justification_Value == null)
+            ? false : (str.ovs_justification_Value.trim() == "")
+                ? false : true;
+
+        if (isHQ && isPriorityScore && !isLocal) image = 1;// hq flag high priority - green ball checked
+        if (isHQ && !isPriorityScore && !isLocal) image = 2;// hq flag low priority - green ball
+        if (isHQ && isLocal) image = 3;// hq flag justified - green check mark
+        if (!isHQ && isLocal) image = 4;// local flag justified - green check mark
+        if (!isHQ && !isLocal) image = 5;// local flag - blue ball
+        if (isHQ && isPriorityScore && isLocal && !isJust) image = 6;// justification text mandatory
+        if (!isHQ && !isPriorityScore && isLocal && !isJust) image = 6;//justification text mandatory
+        if (isHQ && isLocal && !isJust) image = 6;// justification text mandatory
+
+        //all the rest - deafault - nothing
+
+        switch (image) {
+            case 1:
+                imgName = "ovs_green_ballChecked_16.png";
+                switch (userLCID) {
+                    case 1036:
+                        tooltip = "French: HQ Candidate top priority score";
+                        break;
+                    default:
+                        tooltip = "English: HQ Candidate top priority score";
+                        break;
+                }
+                break;
+            case 2:
+                imgName = "ovs_green_ball_16.png";
+                switch (userLCID) {
+                    case 1036:
+                        tooltip = "French: HQ Candidate low priority score";
+                        break;
+                    default:
+                        tooltip = "English: HQ Candidate low priority score";
+                        break;
+                }
+                break;
+
+            case 3:
+                imgName = "ovs_green_checkmark_16.png";
+                switch (userLCID) {
+                    case 1036:
+                        tooltip = "French: HQ Candidate Justified";
+                        break;
+                    default:
+                        tooltip = "English: HQ Candidate Justified";
+                        break;
+                }
+                break;
+            case 4:
+                imgName = "ovs_green_checkmark_16.png";
+                switch (userLCID) {
+                    case 1036:
+                        tooltip = "French: Local Candidate Justified";
+                        break;
+                    default:
+                        tooltip = "English: Local Candidate Justified";
+                        break;
+                }
+                break;
+            case 5:
+                imgName = "ovs_blue_ball_16.png";
+                switch (userLCID) {
+                    case 1036:
+                        tooltip = "French: Local Candidate";
+                        break;
+                    default:
+                        tooltip = "English: Local Candidate";
+                        break;
+                }
+                break;
+            case 6:
+                imgName = "ovs_red_ball_16.png";
+                switch (userLCID) {
+                    case 1036:
+                        tooltip = "French: Justification cannot be empty";
+                        break;
+                    default:
+                        tooltip = "English: Justification cannot be empty";
+                        break;
+                }
+                break;
+            default:
+                imgName = "";
+                tooltip = "";
+                break;
+        }
+        var resultarray = [imgName, tooltip];
+        return resultarray;
+    }
+
+    //********************private methods end***************
+
+    //********************public methods***************
+    return {
+
+        displayIconTooltip: displayIconTooltip,
+    };
+
+})(window, document);

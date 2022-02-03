@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RibbonDiffXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <CustomActions>
+    <CustomAction Id="tdg.ovs_workordercandidate.HQapproved.Button.CustomAction" Location="Mscrm.SubGrid.ovs_workordercandidate.MainTab.Management.Controls._children" Sequence="6">
+      <CommandUIDefinition>
+        <Button Alt="$LocLabels:tdg.ovs_workordercandidate.HQapproved.Button.Alt" Command="tdg.ovs_workordercandidate.HQapproved.Command" Id="tdg.ovs_workordercandidate.HQapproved.Button" Image16by16="" LabelText="$LocLabels:tdg.ovs_workordercandidate.HQapproved.Button.LabelText" Sequence="6" TemplateAlias="o1" ToolTipTitle="$LocLabels:tdg.ovs_workordercandidate.HQapproved.Button.ToolTipTitle" ModernImage="$webresource:msdyn_/Icons/SVG/Priorities.SVG" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <CustomAction Id="tdg.ovs_workordercandidate.LocalCandidate.Button.CustomAction" Location="Mscrm.SubGrid.ovs_workordercandidate.MainTab.Management.Controls._children" Sequence="8">
+      <CommandUIDefinition>
+        <Button Alt="$LocLabels:tdg.ovs_workordercandidate.LocalCandidate.Button.Alt" Command="tdg.ovs_workordercandidate.LocalCandidate.Command" Id="tdg.ovs_workordercandidate.LocalCandidate.Button" LabelText="$LocLabels:tdg.ovs_workordercandidate.LocalCandidate.Button.LabelText" Sequence="8" TemplateAlias="o1" ToolTipTitle="$LocLabels:tdg.ovs_workordercandidate.LocalCandidate.Button.ToolTipTitle" ModernImage="$webresource:msdyn_/Icons/SVG/Priorities.SVG" />
+      </CommandUIDefinition>
+    </CustomAction>
+  </CustomActions>
+  <Templates>
+    <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
+  </Templates>
+  <CommandDefinitions>
+    <CommandDefinition Id="tdg.ovs_workordercandidate.HQapproved.Command">
+      <EnableRules>
+        <EnableRule Id="tdg.ovs_workordercandidate.ReplacementJustification.Count.EnableRule" />
+        <EnableRule Id="tdg.ovs_workordercandidate.isHQsellected.EnableRule" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="tdg.ovs_workordercandidate.ReplacementJustification.EntityPrivilage.DisplayRule" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="WOC_RJ.displayForHQ" Library="$webresource:ovs_WOC_Replacement_Ribbon.js">
+          <CrmParameter Value="SelectedControlSelectedItemReferences" />
+          <CrmParameter Value="SelectedControlSelectedItemCount" />
+          <CrmParameter Value="UserLcid" />
+          <CrmParameter Value="SelectedControl" />
+          <CrmParameter Value="PrimaryControl" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="tdg.ovs_workordercandidate.LocalCandidate.Command">
+      <EnableRules>
+        <EnableRule Id="tdg.ovs_workordercandidate.ReplacementJustification.Count.EnableRule" />
+        <EnableRule Id="tdg.ovs_workordercandidate.isLocalsellected.EnableRule" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="tdg.ovs_workordercandidate.ReplacementJustification.EntityPrivilage.DisplayRule" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="WOC_RJ.displayForLocal" Library="$webresource:ovs_WOC_Replacement_Ribbon.js">
+          <CrmParameter Value="SelectedControlSelectedItemReferences" />
+          <CrmParameter Value="SelectedControlSelectedItemCount" />
+          <CrmParameter Value="UserLcid" />
+          <CrmParameter Value="SelectedControl" />
+          <CrmParameter Value="PrimaryControl" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+  </CommandDefinitions>
+  <RuleDefinitions>
+    <TabDisplayRules />
+    <DisplayRules>
+      <DisplayRule Id="tdg.ovs_workordercandidate.ReplacementJustification.EntityPrivilage.DisplayRule">
+        <EntityPrivilegeRule PrivilegeType="Delete" PrivilegeDepth="Global" AppliesTo="PrimaryEntity" />
+      </DisplayRule>
+    </DisplayRules>
+    <EnableRules>
+      <EnableRule Id="tdg.ovs_workordercandidate.isHQsellected.EnableRule">
+        <CustomRule FunctionName="WOC_RJ.isHQ" Library="$webresource:ovs_WOC_Replacement_Ribbon.js">
+          <CrmParameter Value="SelectedControlSelectedItemReferences" />
+          <CrmParameter Value="SelectedControl" />
+        </CustomRule>
+      </EnableRule>
+      <EnableRule Id="tdg.ovs_workordercandidate.isLocalsellected.EnableRule">
+        <CustomRule FunctionName="WOC_RJ.isLocal" Library="$webresource:ovs_WOC_Replacement_Ribbon.js">
+          <CrmParameter Value="SelectedControlSelectedItemReferences" />
+          <CrmParameter Value="SelectedControl" />
+        </CustomRule>
+      </EnableRule>
+      <EnableRule Id="tdg.ovs_workordercandidate.ReplacementJustification.Count.EnableRule">
+        <SelectionCountRule AppliesTo="SelectedEntity" Minimum="1" Maximum="1" />
+      </EnableRule>
+    </EnableRules>
+  </RuleDefinitions>
+  <LocLabels>
+    <LocLabel Id="tdg.ovs_workordercandidate.HQapproved.Button.Alt">
+      <Titles>
+        <Title description="Add HQ Approved candidate for replacement" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="tdg.ovs_workordercandidate.HQapproved.Button.LabelText">
+      <Titles>
+        <Title description="HQ Approved" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="tdg.ovs_workordercandidate.HQapproved.Button.ToolTipTitle">
+      <Titles>
+        <Title description="Add HQ Approved candidate for replacement" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="tdg.ovs_workordercandidate.LocalCandidate.Button.Alt">
+      <Titles>
+        <Title description="Add local candidate as substitute" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="tdg.ovs_workordercandidate.LocalCandidate.Button.LabelText">
+      <Titles>
+        <Title description="Substitute" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="tdg.ovs_workordercandidate.LocalCandidate.Button.ToolTipTitle">
+      <Titles>
+        <Title description="Add local candidate as substitute" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+  </LocLabels>
+</RibbonDiffXml>
