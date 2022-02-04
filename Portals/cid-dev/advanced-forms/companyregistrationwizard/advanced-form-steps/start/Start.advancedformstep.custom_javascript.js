@@ -1,6 +1,10 @@
-// Start.js
+// CompanyRegistrationWizard-Start.js
 
 $(document).ready(function () {
+    debugger;
+
+    var cid_has_cra_bn = $("#cid_has_cra_bn").val();
+
     $("#parentcustomerid").parent().parent().parent().hide();
 
     $("#cid_has_cra_bn").change(cid_has_cra_bn_onchange);
@@ -8,11 +12,11 @@ $(document).ready(function () {
 
     $("#cid_reasonfornobnnumber").change(cid_reasonfornobnnumber_onchange);
     cid_reasonfornobnnumber_onchange();
-
-    document.getElementById('parentcustomerid').readOnly = true;
 });
 
 function cid_reasonfornobnnumber_onchange() {
+    debugger;
+
     cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
     if (cid_reasonfornobnnumber == 3)   // other
     {
@@ -44,6 +48,7 @@ function clear_parentcustomerid() {
 }
 
 function cid_has_cra_bn_onchange() {
+    debugger;
     clear_parentcustomerid();
 
     removeValidator("cid_crabusinessnumber");

@@ -1,19 +1,24 @@
-// Basic Form - SiteCreate.js
+// Basic Form - Site Create.js
 
 $(document).ready(function () {
     debugger;
 
+    $("#telephone1").attr("placeholder", "");
+
     // resize WebResource_address_complete
     $("#WebResource_address_complete").height('72px');
+    sessionStorage.setItem("AddressLine1Text", "");
 
     var cid_legalname = ("{{user.cid_legalname}}");
     $("#ovs_legalname").val(cid_legalname);
     $("#name").val(cid_legalname);
     $("#cid_sitename").val(cid_legalname);
+    $("#address1_country").val("Canada");   // default Canada
 
     // hide controls
     //$("#ovs_legalname").parent().parent().hide();
     $("#name").parent().parent().hide();
+    $("#cid_siteclaim").parent().parent().hide();
 });
 
 function AddressComplete_Hide_address1_line1() {

@@ -1,4 +1,4 @@
-// CreateCompany.js
+// CompanyRegistrationWizard-Create Company.js
 
 $(document).ready(function () {
     debugger;
@@ -19,8 +19,12 @@ $(document).ready(function () {
     var cid_has_cra_bn = (cid_has_cra_bn == "1" ? 1 : 0);
     $('#cid_has_cra_bn').val(cid_has_cra_bn);
 
+    var cid_crabusinessnumber = sessionStorage.getItem("cid_crabusinessnumber");
+    cid_crabusinessnumber = (cid_crabusinessnumber != "null" ? cid_crabusinessnumber : "");
+
     // do not have a business number?
-    if (!cid_has_cra_bn) {
+    if (cid_crabusinessnumber == "")
+    {
         //$('#cid_has_cra_bn_0').prop('checked', true);
 
         $("#cid_crabusinessnumber").parent().parent().hide();
