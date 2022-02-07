@@ -45,9 +45,12 @@ $(document).ready(function() {
     var validation = true;
     var rows = $("#CompanySites .view-grid table").find("tbody > tr");
 
+	var errorMessage = "";
+
     if (rows.length <= 0) {
 		validation = false;
-        alert('You cannot proceed before adding company site(s).');
+        //alert('You cannot proceed before adding company site(s).');
+		errorMessage = "You cannot proceed before adding company site(s).";
     }
     else{
 		rows.each(function(){
@@ -64,15 +67,28 @@ $(document).ready(function() {
 						else if(tdElement.attr('data-attribute') == 'cid_issiteattested' && tdElement.attr('data-value') == 'false')
 						{
 							validation = false;
-							alert('You cannot proceed before attesting all the company sites.');
+							//alert('You cannot proceed before attesting all the company sites.');
+							errorMessage = 'You cannot proceed before attesting all the company sites.';
 						}
 					}
 				})	
 			}
-			else
-				return validation;
+//			else
+//				return validation;
 		})
 	}
+
+	          if(!validation)
+    {
+    $('#ValidationSummaryEntityFormView div').remove(); 
+
+   var validationSection = $('#ValidationSummaryEntityFormView');
+   
+   validationSection.append($("<div class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));  
+  validationSection.show();
+    }
+
+
 	return validation; 
     }
 });

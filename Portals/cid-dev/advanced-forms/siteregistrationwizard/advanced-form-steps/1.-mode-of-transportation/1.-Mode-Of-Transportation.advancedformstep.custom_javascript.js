@@ -7,6 +7,8 @@ if (window.jQuery) {
    (function ($) {
         webFormClientValidate = function() {
             var validation = false;
+            var errorMessage = "";
+
             var urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('id')) {
                 var siteid = urlParams.get('id');
@@ -15,25 +17,28 @@ if (window.jQuery) {
                 var rows = $("#Modes_Of_Transportation .view-grid table").find("tbody > tr");
 
           if (rows.length <= 0) {
-                alert('You cannot proceed before adding at least one mode of transportation.');
+              errorMessage = "You cannot proceed before adding at least one mode of transportation.";
+              validation = false;
+                //alert('You cannot proceed before adding at least one mode of transportation.');
           }
-          else{
-                validation = true;
-          }
-          return validation; 
+          //else{
+          //      validation = true;
+          //}
+          //return validation; 
 
-                var filter = "cid_site/Id eq guid'" + siteid + "'";
 
-                //var data = OData_List("motSet", filter);
-                
-                //if (data == null || data == "") {
-                //    alert('You cannot proceed before adding at least one mode of transportation.');
-                //    return false;
-               // }
-               // else{
-                //    return true;
-                //}
             }
+
+                         if(!validation)
+    {
+    $('#ValidationSummaryEntityFormView div').remove(); 
+
+   var validationSection = $('#ValidationSummaryEntityFormView');
+   
+   validationSection.append($("<div class='notification alert-danger' role='alert'>"+ errorMessage + "</div>"));  
+  validationSection.show();
+    }
+
           return validation; 
         }
    }(window.jQuery));

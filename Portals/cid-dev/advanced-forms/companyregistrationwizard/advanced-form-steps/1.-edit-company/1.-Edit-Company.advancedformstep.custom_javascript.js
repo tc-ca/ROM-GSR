@@ -1,6 +1,7 @@
 // CompanyRegistrationWizard-Edit Company.js
 
 $(document).ready(function () {
+    debugger;
     // resize WebResource_address_complete
     $("#WebResource_address_complete").height('72px');
     $("#websiteurl").width('100%');
@@ -10,37 +11,28 @@ $(document).ready(function () {
     var step_start = sessionStorage.getItem("step_start");
     step_start = (step_start == "null" ? "" : step_start);
 
-    //var cid_has_cra_bn = "{{user.cid_has_cra_bn}}";
-    //var value = (cid_has_cra_bn ? 1 : 0);
-    //$('#cid_has_cra_bn').val(value);
+    debugger;
 
-    var cid_has_cra_bn = sessionStorage.getItem("cid_has_cra_bn");
-    var cid_has_cra_bn = (cid_has_cra_bn == "1" ? 1 : 0);
+    var cid_has_cra_bn = '{{user.cid_has_cra_bn}}';
+    var cid_has_cra_bn = (cid_has_cra_bn == "true" ? true : false);
+    var cid_crabusinessnumber = '{{user.cid_crabusinessnumber}}';
+    var cid_reasonfornobnnumber = "{{user.cid_reasonfornobnnumber}}";
+    var cid_reasonfornobnnumber_other = "{{user.cid_reasonfornobnnumber_other}}";
+    var cid_legalname = "{{user.cid_legalname}}";
+    var cid_operatingname = "{{user.cid_operatingname}}";
+
     $('#cid_has_cra_bn').val(cid_has_cra_bn);
 
-    var cid_crabusinessnumber = sessionStorage.getItem("cid_crabusinessnumber");
-    cid_crabusinessnumber = (cid_crabusinessnumber != "null" ? cid_crabusinessnumber : "");
-
     // do not have a business number?
-    if (cid_crabusinessnumber == "")
-    {
-        //$('#cid_has_cra_bn_0').prop('checked', true);
-
+    if (!cid_has_cra_bn) {
         $("#cid_crabusinessnumber").parent().parent().hide();
         $("#cid_reasonfornobnnumber").parent().parent().show();
 
-        //var cid_reasonfornobnnumber = "{{user.cid_reasonfornobnnumber}}";
-
-        var cid_reasonfornobnnumber = sessionStorage.getItem("cid_reasonfornobnnumber");
         $("#cid_reasonfornobnnumber").val(cid_reasonfornobnnumber);
-
-        //addValidator("cid_reasonfornobnnumber", "Reason for no CRA Business Number");
 
         if (cid_reasonfornobnnumber == "3")   // other
         {
             $("#cid_reasonfornobnnumber_other").parent().parent().show();
-            //var cid_reasonfornobnnumber_other = "{{user.cid_reasonfornobnnumber_other}}";
-            var cid_reasonfornobnnumber_other = sessionStorage.getItem("cid_reasonfornobnnumber_other");
             $("#cid_reasonfornobnnumber_other").val(cid_reasonfornobnnumber_other);
         }
         else {
@@ -48,14 +40,14 @@ $(document).ready(function () {
         }
     }
     else {
-        debugger;
-
+        $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
         $("#cid_crabusinessnumber").parent().parent().show();
         $("#cid_reasonfornobnnumber").parent().parent().hide();
         $("#cid_reasonfornobnnumber_other").parent().parent().hide();
-
-        //addValidator("cid_crabusinessnumber", "CRA Business Number");
     }
+
+    $("#ovs_legalname").val(cid_legalname);
+    $("#name").val(cid_operatingname);
 
     $('#cid_crabusinessnumber').attr("readonly", true);
     $('#ovs_legalname').attr("readonly", true);
@@ -72,17 +64,6 @@ $(document).ready(function () {
     if (step_start == "1") {
         var AddressLine2Text = sessionStorage.getItem("AddressLine2Text");
         AddressLine2Text = (AddressLine2Text == "null" ? "" : AddressLine2Text);
-
-        //$("#cid_crabusinessnumber").val("{{user.cid_crabusinessnumber}}");
-        $("#cid_crabusinessnumber").val(sessionStorage.getItem("cid_crabusinessnumber"));
-
-        //var cid_legalname = "{{user.cid_legalname}}";
-        var cid_legalname = sessionStorage.getItem("cid_legalname");
-        $("#ovs_legalname").val(cid_legalname);
-
-        var OperatingName = sessionStorage.getItem("OperatingName");
-        OperatingName = (OperatingName == "null" ? cid_legalname : OperatingName);
-        $("#name").val(OperatingName);
 
         $("#address1_line1").val(sessionStorage.getItem("AddressLine1Text"));
         $("#address1_line2").val(AddressLine2Text);

@@ -7,15 +7,29 @@ if (window.jQuery) {
    (function ($) {
         webFormClientValidate = function() {
           var validation = false;
-
+var errorMessage = "";
           var rows = $("#operation_un_numbers .view-grid table").find("tbody > tr");
 
           if (rows.length <= 0) {
-                alert('You cannot proceed before adding UN Number(s).');
+                validation = false;
+                errorMessage = "You cannot proceed before adding UN Number(s).";
+                //alert('You cannot proceed before adding UN Number(s).');
           }
-          else{
-                validation = true;
-          }
+          //else{
+            //    validation = true;
+          //}
+
+          
+                                   if(!validation)
+    {
+    $('#ValidationSummaryEntityFormView div').remove(); 
+
+   var validationSection = $('#ValidationSummaryEntityFormView');
+   
+   validationSection.append($("<div class='notification alert-danger' role='alert'>"+ errorMessage + "</div>"));  
+  validationSection.show();
+    }
+
           return validation; 
         }
    }(window.jQuery));
