@@ -6,7 +6,7 @@ $(document).ready(function() {
 if (window.jQuery) {
    (function ($) {
         webFormClientValidate = function() {
-          var validation = false;
+          var validation = true;
 var errorMessage = "";
           var rows = $("#operation_un_numbers .view-grid table").find("tbody > tr");
 
@@ -15,9 +15,6 @@ var errorMessage = "";
                 errorMessage = "You cannot proceed before adding UN Number(s).";
                 //alert('You cannot proceed before adding UN Number(s).');
           }
-          //else{
-            //    validation = true;
-          //}
 
           
                                    if(!validation)

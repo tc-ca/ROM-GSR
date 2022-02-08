@@ -5,7 +5,7 @@ $(document).ready(function() {
 if (window.jQuery) {
    (function ($) {
         webFormClientValidate = function() {
-          var validation = false;
+          var validation = true;
           var errorMessage = "";
 
           var rows = $("#operation_classes .view-grid table").find("tbody > tr");
@@ -15,9 +15,7 @@ if (window.jQuery) {
                 validation = false;
                 errorMessage = "You cannot proceed before adding classes(s).";
           }
-          //else{
-            //    validation = true;
-          //}
+
 
                                    if(!validation)
     {

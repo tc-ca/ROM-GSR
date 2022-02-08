@@ -1,6 +1,10 @@
+<div id="loader"></div>
 <div class="panel panel-default">
 </div>
 <div>
+  <script>
+    $('#loader').show();
+  </script>
   {% assign parentCompanyId = user.parentcustomerid.id %}
   {% if parentCompanyId %}
   {% assign company = entities['account'][parentCompanyId] %}
@@ -21,4 +25,7 @@
     window.location.replace('/RegistrationWizard');
   </script>
   {% endif %}
+  <script>
+    $('#loader').hide();
+  </script>
 </div>
