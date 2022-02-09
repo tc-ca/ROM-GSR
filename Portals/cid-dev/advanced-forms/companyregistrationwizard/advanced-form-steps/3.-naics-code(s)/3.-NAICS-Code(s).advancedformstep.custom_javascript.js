@@ -1,14 +1,14 @@
 // CompanyRegistrationWizard-NAICS Code.js
 
 $(document).ready(function () {
-    debugger;
+    //debugger;
 
-    var subgrid = $("#subgrid");
+    //var subgrid = $("#subgrid");
 });
 
 if (window.jQuery) {
     (function ($) {
-        webFormClientValidate = function () {
+          webFormClientValidate = function () {
             debugger;
 
             var validation = true;
