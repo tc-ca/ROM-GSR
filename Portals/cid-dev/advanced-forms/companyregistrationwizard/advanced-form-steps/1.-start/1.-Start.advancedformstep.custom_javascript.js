@@ -5,10 +5,12 @@ $(document).ready(function () {
 
     // default current use is "Primary"
     $("#cid_contacttype").val(100000000);
-    $("#cid_contacttype").parent().parent().hide();
+    control_hide("cid_contacttype");
 
-    $("#parentcustomerid").parent().parent().parent().hide();
-    $("#cid_operatingname").parent().parent().hide();
+    //$("#parentcustomerid").parent().parent().parent().hide();
+    //$("#cid_operatingname").parent().parent().hide();
+    control_hide("parentcustomerid", true);
+    control_hide("cid_operatingname");
 
     $("#cid_has_cra_bn").change(cid_has_cra_bn_onchange);
     cid_has_cra_bn_onchange();
@@ -114,15 +116,6 @@ if (window.jQuery) {
                     $("#cid_operatingname").val(rom_data.name);
                 }
 
-                //cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
-                //cid_reasonfornobnnumber_other = $("#cid_reasonfornobnnumber_other").val();
-                //sessionStorage.setItem("cid_crabusinessnumber", "");
-                //sessionStorage.setItem("cid_reasonfornobnnumber", cid_reasonfornobnnumber);
-                //sessionStorage.setItem("cid_reasonfornobnnumber_other", cid_reasonfornobnnumber_other);
-                //sessionStorage.setItem("cid_legalname", legalname);
-                //sessionStorage.setItem("OperatingName", legalname); // default
-                //sessionStorage.setItem("CountryCode", "CA");        // default CA
-
                 validation = true;
             }
             else {
@@ -130,7 +123,8 @@ if (window.jQuery) {
                 var data = cid_crabusinessnumber_onchange();
 
                 if (data == "") {
-                    alert("Invalid CRA Business Number");
+                    error_message("Invalid CRA Business Number");
+                    //alert("Invalid CRA Business Number");
                 }
                 else {
                     legalname = data.cid_legalname;
@@ -275,4 +269,21 @@ function OData_List(entity, filter) {
         response = json.value;
     });
     return response;
+}
+
+function error_message(message)
+{
+    var validationSection = $('#ValidationSummaryEntityFormView');
+    validationSection.append($("<div class='notification alert-danger' role='alert'>" + message + "</div>"));
+    validationSection.show();
+}
+
+function control_hide(fieldName, is_lookup) {
+    if (is_lookup) {
+        $("#" + fieldName).parent().parent().parent().hide();
+    }
+    else {
+        $("#" + fieldName).hide();
+        $("#" + fieldName + "_label").hide();
+    }
 }
