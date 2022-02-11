@@ -13,6 +13,8 @@ $(document).ready(function () {
 
     debugger;
 
+    //var contactId = window.parent["Microsoft"]["Dynamic365"]["Portal"]["User"]["contactId"];
+
     var cid_has_cra_bn = '{{user.cid_has_cra_bn}}';
     var cid_has_cra_bn = (cid_has_cra_bn == "true" ? true : false);
     var cid_crabusinessnumber = '{{user.cid_crabusinessnumber}}';
@@ -20,6 +22,9 @@ $(document).ready(function () {
     var cid_reasonfornobnnumber_other = "{{user.cid_reasonfornobnnumber_other}}";
     var cid_legalname = "{{user.cid_legalname}}";
     var cid_operatingname = "{{user.cid_operatingname}}";
+
+    //cid_legalname = cid_legalname.replace("&#39;", "'");
+    //cid_operatingname = cid_operatingname.replace("&#39;", "'");
 
     $('#cid_has_cra_bn').val(cid_has_cra_bn);
 
