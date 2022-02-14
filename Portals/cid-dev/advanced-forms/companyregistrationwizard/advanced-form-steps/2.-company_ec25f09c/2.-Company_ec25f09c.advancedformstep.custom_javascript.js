@@ -23,8 +23,10 @@ $(document).ready(function () {
     var cid_legalname = "{{user.cid_legalname}}";
     var cid_operatingname = "{{user.cid_operatingname}}";
 
-    //cid_legalname = cid_legalname.replace("&#39;", "'");
-    //cid_operatingname = cid_operatingname.replace("&#39;", "'");
+    var k_char_apostrophe = "&#39;";
+
+    cid_legalname = cid_legalname.replace(k_char_apostrophe, "'");
+    cid_operatingname = cid_operatingname.replace(k_char_apostrophe, "'");
 
     $('#cid_has_cra_bn').val(cid_has_cra_bn);
 

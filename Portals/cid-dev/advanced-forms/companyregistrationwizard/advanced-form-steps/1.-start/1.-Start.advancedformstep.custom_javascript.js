@@ -1,14 +1,17 @@
 // CompanyRegistrationWizard-Start.js
 
+var _step_start = "0";
+
 $(document).ready(function () {
     debugger;
+
+    _step_start = sessionStorage.getItem("step_start");
+    _step_start = (_step_start == null ? "0" : _step_start);
 
     // default current use is "Primary"
     $("#cid_contacttype").val(100000000);
     control_hide("cid_contacttype");
 
-    //$("#parentcustomerid").parent().parent().parent().hide();
-    //$("#cid_operatingname").parent().parent().hide();
     control_hide("parentcustomerid", true);
     control_hide("cid_operatingname");
 
@@ -17,23 +20,69 @@ $(document).ready(function () {
 
     $("#cid_reasonfornobnnumber").change(cid_reasonfornobnnumber_onchange);
     cid_reasonfornobnnumber_onchange();
+
+    _step_start = "1";
 });
+
+function cid_has_cra_bn_onchange() {
+    debugger;
+
+    if (_step_start == "0") {
+        clear_parentcustomerid();
+
+        removeValidator("cid_crabusinessnumber");
+        removeValidator("cid_reasonfornobnnumber");
+        removeValidator("cid_reasonfornobnnumber_other");
+        removeValidator("cid_legalname");
+    }
+
+    control_hide("cid_reasonfornobnnumber_other");
+
+    var cid_has_cra_bn = $("#cid_has_cra_bn").val();
+
+    // do not have a business number?
+    if (cid_has_cra_bn == "0") {
+        control_hide("cid_crabusinessnumber");
+        control_show("cid_reasonfornobnnumber");
+        control_show("cid_legalname");
+
+        addValidator("cid_legalname", "Legal Name");
+        addValidator("cid_reasonfornobnnumber", "Reason for no CRA Business Number");
+
+        // clear data
+        $("#cid_crabusinessnumber").val("");
+    }
+    else {
+        control_show("cid_crabusinessnumber");
+        control_hide("cid_reasonfornobnnumber");
+        control_hide("cid_legalname");
+
+        addValidator("cid_crabusinessnumber", "CRA Business Number");
+
+        // clear data
+        $("#cid_reasonfornobnnumber").val("");
+        $("#cid_reasonfornobnnumber_other").val("");
+        $("#cid_legalname").val("");
+   }
+}
 
 function cid_reasonfornobnnumber_onchange() {
     debugger;
 
-    $("#cid_reasonfornobnnumber_other").val("");
+    if (_step_start == "0") {
+        $("#cid_reasonfornobnnumber_other").val("");
+    }
 
-    $("#cid_reasonfornobnnumber_other").val();
+    //$("#cid_reasonfornobnnumber_other").val();
     cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
-    if (cid_reasonfornobnnumber == 3)   // other
+    if (cid_reasonfornobnnumber == "3")   // other
     {
-        $("#cid_reasonfornobnnumber_other").parent().parent().show();
+        control_show("cid_reasonfornobnnumber_other");
         addValidator("cid_reasonfornobnnumber_other", "Other Reason");
     }
     else
     {
-        $("#cid_reasonfornobnnumber_other").parent().parent().hide();
+        control_hide("cid_reasonfornobnnumber_other");
         removeValidator("cid_reasonfornobnnumber_other");
     }
 }
@@ -56,37 +105,6 @@ function clear_parentcustomerid() {
 
     $("#parentcustomerid").attr("value", null);
     $("#parentcustomerid_name").attr("value", null);
-}
-
-function cid_has_cra_bn_onchange() {
-    debugger;
-    clear_parentcustomerid();
-
-    removeValidator("cid_crabusinessnumber");
-    removeValidator("cid_reasonfornobnnumber");
-    removeValidator("cid_reasonfornobnnumber_other");
-    removeValidator("cid_legalname");
-
-    var cid_has_cra_bn = $("#cid_has_cra_bn").val();
-
-    $("#cid_reasonfornobnnumber_other").parent().parent().hide();
-
-    // do not have a business number?
-    if (cid_has_cra_bn == 0) {
-        $("#cid_crabusinessnumber").parent().parent().hide();
-        $("#cid_reasonfornobnnumber").parent().parent().show();
-        $("#cid_legalname").parent().parent().show();
-
-        addValidator("cid_legalname", "Legal Name");
-        addValidator("cid_reasonfornobnnumber", "Reason for no CRA Business Number");
-    }
-    else {
-        $("#cid_crabusinessnumber").parent().parent().show();
-        $("#cid_reasonfornobnnumber").parent().parent().hide();
-        $("#cid_legalname").parent().parent().hide();
-
-        addValidator("cid_crabusinessnumber", "CRA Business Number");
-    }
 }
 
 if (window.jQuery) {
@@ -124,7 +142,6 @@ if (window.jQuery) {
 
                 if (data == "") {
                     error_message("Invalid CRA Business Number");
-                    //alert("Invalid CRA Business Number");
                 }
                 else {
                     legalname = data.cid_legalname;
@@ -147,44 +164,6 @@ if (window.jQuery) {
             return validation;
         }
     }(window.jQuery));
-}
-
-function addValidator(fieldName, fieldLabel) {
-    if (typeof (Page_Validators) == 'undefined') return;
-
-    // Create new validator
-    $("#" + fieldName + "_label").parent().addClass("required");
-
-    var newValidator = document.createElement('span');
-    newValidator.style.display = "none";
-    newValidator.id = "RequiredFieldValidator" + fieldName;
-    newValidator.controltovalidate = "casetypecode";
-    newValidator.errormessage = "<a href='#" + fieldName + "_label'>" + fieldLabel + " is a mandatory field.</a>";
-    newValidator.validationGroup = "";
-    newValidator.initialvalue = "";
-    newValidator.evaluationfunction = function () {
-        var value = $("#" + fieldName).val();
-        if (value == null || value == "") {
-            return false;
-        } else {
-            return true;
-        }
-    };
-
-    // Add the new validator to the page validators array:
-    Page_Validators.push(newValidator);
-
-    // Wire-up the click event handler of the validation summary link
-    $("a[href='#" + fieldName + "_label']").on("click", function () { scrollToAndFocus(fieldName + '_label', fieldName); });
-}
-
-function removeValidator(fieldName) {
-    $.each(Page_Validators, function (index, validator) {
-        if (validator.id == "RequiredFieldValidator" + fieldName) {
-            Page_Validators.splice(index, 1);
-        }
-    });
-    $("#" + fieldName + "_label").parent().removeClass("required");
 }
 
 function cid_crabusinessnumber_onchange() {
@@ -226,11 +205,9 @@ function Retrieve_cra(bn) {
 }
 
 function BN_Selected(data) {
-    debugger;
-
-    var LegalName = data.LegalName				        // Legal Name
-    var OperatingName = data.OperatingName				// Operating Name
-    OperatingName = (OperatingName == "" ? LegalName : OperatingName);  // default
+    var LegalName = data.LegalName				        
+    var OperatingName = data.OperatingName				
+    OperatingName = (OperatingName == "" ? LegalName : OperatingName);
 
     var address = data.PhysicalLocationAddress;
     var AddressLine1Text = address.AddressLine1Text;
@@ -254,8 +231,6 @@ function BN_Selected(data) {
 // odata
 function OData_List(entity, filter) {
     var url = entity + "?$filter=" + filter;
-
-    //var oDataUrl = "https://cid-dev.powerappsportals.com/_odata/" + url;
     var oDataUrl = "~/_odata/" + url;
 
     var response = null;
@@ -286,4 +261,52 @@ function control_hide(fieldName, is_lookup) {
         $("#" + fieldName).hide();
         $("#" + fieldName + "_label").hide();
     }
+}
+
+function control_show(fieldName, is_lookup) {
+    if (is_lookup) {
+        $("#" + fieldName).parent().parent().parent().show();
+    }
+    else {
+        $("#" + fieldName).show();
+        $("#" + fieldName + "_label").show();
+    }
+}
+
+function addValidator(fieldName, fieldLabel) {
+    if (typeof (Page_Validators) == 'undefined') return;
+
+    // Create new validator
+    $("#" + fieldName + "_label").parent().addClass("required");
+
+    var newValidator = document.createElement('span');
+    newValidator.style.display = "none";
+    newValidator.id = "RequiredFieldValidator" + fieldName;
+    newValidator.controltovalidate = "casetypecode";
+    newValidator.errormessage = "<a href='#" + fieldName + "_label'>" + fieldLabel + " is a mandatory field.</a>";
+    newValidator.validationGroup = "";
+    newValidator.initialvalue = "";
+    newValidator.evaluationfunction = function () {
+        var value = $("#" + fieldName).val();
+        if (value == null || value == "") {
+            return false;
+        } else {
+            return true;
+        }
+    };
+
+    // Add the new validator to the page validators array:
+    Page_Validators.push(newValidator);
+
+    // Wire-up the click event handler of the validation summary link
+    $("a[href='#" + fieldName + "_label']").on("click", function () { scrollToAndFocus(fieldName + '_label', fieldName); });
+}
+
+function removeValidator(fieldName) {
+    $.each(Page_Validators, function (index, validator) {
+        if (validator.id == "RequiredFieldValidator" + fieldName) {
+            Page_Validators.splice(index, 1);
+        }
+    });
+    $("#" + fieldName + "_label").parent().removeClass("required");
 }
