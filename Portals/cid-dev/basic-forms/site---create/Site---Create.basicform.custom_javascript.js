@@ -2,6 +2,7 @@
 
 $(document).ready(function () {
     debugger;
+    var k_char_apostrophe = "&#39;";
 
     $("#telephone1").attr("placeholder", "");
 
@@ -10,19 +11,20 @@ $(document).ready(function () {
     sessionStorage.setItem("AddressLine1Text", "");
 
     var cid_legalname = ("{{user.cid_legalname}}");
+    cid_legalname = cid_legalname.replace(k_char_apostrophe, "'");
+
     $("#ovs_legalname").val(cid_legalname);
     $("#name").val(cid_legalname);
     $("#cid_sitename").val(cid_legalname);
     $("#address1_country").val("Canada");   // default Canada
 
     // hide controls
-    //$("#ovs_legalname").parent().parent().hide();
-    $("#name").parent().parent().hide();
-    $("#cid_siteclaim").parent().parent().hide();
+    control_hide("name");
+    control_hide("cid_siteclaim");
 });
 
 function AddressComplete_Hide_address1_line1() {
-    $("#address1_line1").parent().parent().hide();
+    control_hide("address1_line1");
 }
 
 function AddressComplete_address1_line1() {
@@ -39,14 +41,22 @@ function AddressComplete_Selected() {
     $("#address1_country").val(sessionStorage.getItem("CountryName"));
 }
 
-//$(document).ready(function () {
-//    await createOperation();
-//});
+function control_hide(fieldName, is_lookup) {
+    if (is_lookup) {
+        $("#" + fieldName).parent().parent().parent().hide();
+    }
+    else {
+        $("#" + fieldName).hide();
+        $("#" + fieldName + "_label").hide();
+    }
+}
 
-//async function createOperation() {
-//    alert('before functioncall');
-//    // Add_Operation_entity
-//    let opId = await Add_Operation_entity('21d2e769-2a74-ec11-8942-000d3a840e6b');
-//    console.log(opId);
-//    alert("alert id " + opId);
-//}
+function control_show(fieldName, is_lookup) {
+    if (is_lookup) {
+        $("#" + fieldName).parent().parent().parent().show();
+    }
+    else {
+        $("#" + fieldName).show();
+        $("#" + fieldName + "_label").show();
+    }
+}
