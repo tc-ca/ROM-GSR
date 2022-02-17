@@ -2,6 +2,9 @@
   adx_name: Authentication/Registration/DenyMinors
   adx_sitesettingid: 0f61a2f2-39a9-e711-80c7-000d3afd3574
   adx_value: false
+- adx_name: Webapi/cid_modeoftransportation/fields
+  adx_sitesettingid: 18e62cdb-5b8f-ec11-8d20-0022483bb0e4
+  adx_value: '*'
 - adx_description: A true or false value. If set to true, the local account will be marked as deprecated. The portal user will be required to migrate to a non-deprecated account.
   adx_name: Authentication/Registration/LocalLoginDeprecated
   adx_sitesettingid: 1cdd92e9-7bad-e711-80c7-000d3afd1882
@@ -36,6 +39,9 @@
   adx_name: KnowledgeManagement/DisplayNotes
   adx_sitesettingid: 5457ee60-5a25-472f-a733-dd4969268fa7
   adx_value: false
+- adx_name: Webapi/ovs_mocregistration/fields
+  adx_sitesettingid: 5c3e6842-558f-ec11-8d20-0022483bb0e4
+  adx_value: '*'
 - adx_description: 'Override query for site search, to apply additional weights and filters. @Query is the query text entered by a user. Lucene query syntax reference: http://lucene.apache.org/core/old_versioned_docs/versions/2_9_1/queryparsersyntax.html'
   adx_name: search/query
   adx_sitesettingid: 5d1e8f94-6b66-e211-9d9e-00155d03a715
@@ -112,7 +118,6 @@
   adx_value: false
 - adx_name: Authentication/Registration/LoginButtonAuthenticationType
   adx_sitesettingid: 91a18fc1-622b-e711-80df-00155dfcea14
-  adx_value: https://te-auth.id.tbs-sct.gc.ca/
   importsequencenumber: 3
 - adx_name: Webapi/account/fields
   adx_sitesettingid: 928c3473-4454-ec11-8f8e-000d3ae9aa5f
@@ -136,11 +141,14 @@
 - adx_description: 'The amount of time the IP address will have to wait if Authentication/LoginThrottling/MaxInvaildAttemptsFromIPAddress occur within Authentication/LoginThrottling/MaxAttemptsTimeLimitTimeSpan amount of time. Default: 00:10:00 (10 mins)'
   adx_name: Authentication/LoginThrottling/IpAddressTimeoutTimeSpan
   adx_sitesettingid: 9d833015-b1fa-e511-80d3-00155db754a9
-  adx_value: 00:10:00
+  adx_value: 00:60:00
 - adx_description: Denies use of the portal to minors without parental consent. By default, it is set to false.
   adx_name: Authentication/Registration/DenyMinorsWithoutParentalConsent
   adx_sitesettingid: 9f12c006-3aa9-e711-80c7-000d3afd3574
   adx_value: false
+- adx_name: Webapi/cid_modeoftransportation/enabled
+  adx_sitesettingid: a6842cce-5b8f-ec11-8d20-0022483bb0e4
+  adx_value: True
 - adx_description: Site setting that determines if the language code is included in the portal URL.
   adx_name: MultiLanguage/DisplayLanguageCodeInURL
   adx_sitesettingid: a94e3044-26b3-4ba6-afd7-8ff43553d14c
@@ -164,7 +172,7 @@
 - adx_description: 'The amount of time the Authentication/LoginThrottling/MaxInvaildAttemptsFromIPAddress are to be within before the IP address has to wait Authentication/LoginThrottling/IpAddressTimeoutTimeSpan. Default: 00:03:00 (3 mins)'
   adx_name: Authentication/LoginThrottling/MaxAttemptsTimeLimitTimeSpan
   adx_sitesettingid: c529ce6a-b1fa-e511-80d3-00155db754a9
-  adx_value: 00:10:00
+  adx_value: 00:60:00
 - adx_description: >-
     A collection of search logical name filter options. Defining a value here will add dropdown filter options to site-wide search.
 
@@ -241,13 +249,16 @@
 - adx_description: Idle time of Portal
   adx_name: Authentication/ApplicationCookie/ExpireTimeSpan
   adx_sitesettingid: f4d1ef46-2b77-ec11-8942-000d3a840cdc
-  adx_value: 00:10:00
+  adx_value: 00:60:00
 - adx_name: Search/IndexQueryName
   adx_sitesettingid: f7f02105-7496-e211-be45-00155d03a500
   adx_value: Portal Search
+- adx_name: Webapi/error/innererror
+  adx_sitesettingid: f9237990-558f-ec11-8d20-0022483bb0e4
+  adx_value: True
 - adx_name: Search/Enabled
   adx_sitesettingid: f9f02105-7496-e211-be45-00155d03a500
-  adx_value: true
+  adx_value: false
 - adx_description: 'The Prefix entered here will be used to filter Notes Text, allowing you to control notes exposed on the Portal ex: *WEB*'
   adx_name: KnowledgeManagement/NotesFilter
   adx_sitesettingid: fe33c85c-8d38-4d8a-97ed-8fd6c6296eee

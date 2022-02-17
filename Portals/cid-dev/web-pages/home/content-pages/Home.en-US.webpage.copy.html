@@ -1,6 +1,31 @@
+<div id="loader"></div>
 <div class="panel panel-default">
 </div>
-{% assign parentCompany = user.parentcustomerid.id %}
-{% if parentCompany %}
-{% webform name: 'CompanyRegistrationWizard' %}
-{% endif %}
+<div>
+  <script>
+    $('#loader').show();
+  </script>
+  {% assign parentCompanyId = user.parentcustomerid.id %}
+  {% if parentCompanyId %}
+  {% assign company = entities['account'][parentCompanyId] %}
+  {{ company.cid_cidcompanystatus }}
+  {% if company.cid_cidcompanystatus  and company.cid_cidcompanystatus.value == 100000005 %}
+  You will be redirected to the registartion page.
+  Please wait ...
+  <script>
+    window.location.replace('/registration');
+  </script>
+  {% else %}
+  <script>
+    window.location.replace('/RegistrationWizard');
+  </script>
+  {% endif %}
+  {% else %}
+  <script>
+    window.location.replace('/RegistrationWizard');
+  </script>
+  {% endif %}
+  <script>
+    $('#loader').show();
+  </script>
+</div>

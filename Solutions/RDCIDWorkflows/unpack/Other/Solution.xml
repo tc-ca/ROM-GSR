@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ImportExportXml version="9.2.22012.133" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ImportExportXml version="9.2.22014.127" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <UniqueName>RDCIDWorkflows</UniqueName>
     <LocalizedNames>
       <LocalizedName description="RD.CID.Workflows" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.0.0.3</Version>
+    <Version>1.0.0.5</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>CID_Solution</UniqueName>
@@ -84,8 +84,10 @@
       <RootComponent type="29" id="{77cbb758-143d-42fb-894e-5bcb5a67de7d}" behavior="0" />
       <RootComponent type="29" id="{8cb3f20e-ed97-41c1-a3c1-bc8ea69f5699}" behavior="0" />
       <RootComponent type="29" id="{8e225f6e-3466-4019-8a6d-6ffaafd4bed5}" behavior="0" />
+      <RootComponent type="29" id="{ccb176f4-79bf-483c-b4d5-8c1301852138}" behavior="0" />
       <RootComponent type="29" id="{f2732764-5261-4af7-bfc6-b25e2a71a54b}" behavior="0" />
       <RootComponent type="29" id="{f37ccd28-9e54-48cb-8889-810280cb6840}" behavior="0" />
+      <RootComponent type="29" id="{f82f3099-61c7-4248-b7a0-a7994b432061}" behavior="0" />
       <RootComponent type="29" id="{fdb7a254-de5e-407a-8d0f-61688785c886}" behavior="0" />
     </RootComponents>
     <MissingDependencies>
@@ -98,12 +100,36 @@
         <Dependent type="29" displayName="CID_Account UN Number" id="{8cb3f20e-ed97-41c1-a3c1-bc8ea69f5699}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="1" schemaName="ovs_mocregistration" displayName="Operation" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation UN number" id="{ccb176f4-79bf-483c-b4d5-8c1301852138}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="ovs_mocregistration" displayName="Operation" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation class" id="{f82f3099-61c7-4248-b7a0-a7994b432061}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="1" schemaName="ovs_modes" displayName="Modes" solution="Active" />
         <Dependent type="29" displayName="Mode of Transportation" id="{77cbb758-143d-42fb-894e-5bcb5a67de7d}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="1" schemaName="ovs_operationclass" displayName="Operation Class" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation class" id="{f82f3099-61c7-4248-b7a0-a7994b432061}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="ovs_operationunnumber" displayName="Operation UN Number" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation UN number" id="{ccb176f4-79bf-483c-b4d5-8c1301852138}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="10" schemaName="cid_account_cid_modeoftransportation_Site" displayName="cid_account_cid_modeoftransportation_Site" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
         <Dependent type="29" displayName="Mode of Transportation" id="{77cbb758-143d-42fb-894e-5bcb5a67de7d}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="10" schemaName="ovs_OperationUNNumber_OperationUNNumber_o" displayName="ovs_OperationUNNumber_OperationUNNumber_o" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation UN number" id="{ccb176f4-79bf-483c-b4d5-8c1301852138}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="10" schemaName="ovs_ovs_mocregistration_ovs_operationclass_OperationClass" displayName="ovs_ovs_mocregistration_ovs_operationclass_OperationClass" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation class" id="{f82f3099-61c7-4248-b7a0-a7994b432061}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="cid_ovs_modes_cid_modeoftransportation_Mode" displayName="cid_ovs_modes_cid_modeoftransportation_Mode" parentSchemaName="ovs_modes" parentDisplayName="Modes" solution="Active" />
@@ -174,12 +200,68 @@
         <Dependent type="29" displayName="CID_Account UN Number" id="{8cb3f20e-ed97-41c1-a3c1-bc8ea69f5699}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="2" schemaName="ovs_mocregistrationid" displayName="Operation Id" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation UN number" id="{ccb176f4-79bf-483c-b4d5-8c1301852138}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_mocregistrationid" displayName="Operation Id" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation class" id="{f82f3099-61c7-4248-b7a0-a7994b432061}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_name" displayName="Operation ID" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation UN number" id="{ccb176f4-79bf-483c-b4d5-8c1301852138}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_name" displayName="Operation ID" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation class" id="{f82f3099-61c7-4248-b7a0-a7994b432061}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_siteid" displayName="Site" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation UN number" id="{ccb176f4-79bf-483c-b4d5-8c1301852138}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_siteid" displayName="Site" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation class" id="{f82f3099-61c7-4248-b7a0-a7994b432061}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="2" schemaName="ovs_modesid" displayName="Modes" parentSchemaName="ovs_modes" parentDisplayName="Modes" solution="Active" />
         <Dependent type="29" displayName="Mode of Transportation" id="{77cbb758-143d-42fb-894e-5bcb5a67de7d}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="ovs_name" displayName="Name" parentSchemaName="ovs_modes" parentDisplayName="Modes" solution="Active" />
         <Dependent type="29" displayName="Mode of Transportation" id="{77cbb758-143d-42fb-894e-5bcb5a67de7d}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_site" displayName="Site" parentSchemaName="ovs_operationclass" parentDisplayName="Operation Class" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation class" id="{f82f3099-61c7-4248-b7a0-a7994b432061}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_name" displayName="Name" parentSchemaName="ovs_operationclass" parentDisplayName="Operation Class" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation class" id="{f82f3099-61c7-4248-b7a0-a7994b432061}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_operationclass" displayName="Operation Class" parentSchemaName="ovs_operationclass" parentDisplayName="Operation Class" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation class" id="{f82f3099-61c7-4248-b7a0-a7994b432061}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_operationclassid" displayName="Operation Class" parentSchemaName="ovs_operationclass" parentDisplayName="Operation Class" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation class" id="{f82f3099-61c7-4248-b7a0-a7994b432061}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_site" displayName="Site" parentSchemaName="ovs_operationunnumber" parentDisplayName="Operation UN Number" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation UN number" id="{ccb176f4-79bf-483c-b4d5-8c1301852138}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_name" displayName="Name" parentSchemaName="ovs_operationunnumber" parentDisplayName="Operation UN Number" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation UN number" id="{ccb176f4-79bf-483c-b4d5-8c1301852138}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_operationunnumber" displayName="Operation UN Number" parentSchemaName="ovs_operationunnumber" parentDisplayName="Operation UN Number" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation UN number" id="{ccb176f4-79bf-483c-b4d5-8c1301852138}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_operationunnumberid" displayName="Operation UN Number" parentSchemaName="ovs_operationunnumber" parentDisplayName="Operation UN Number" solution="Active" />
+        <Dependent type="29" displayName="Populate Site in operation UN number" id="{ccb176f4-79bf-483c-b4d5-8c1301852138}" />
       </MissingDependency>
     </MissingDependencies>
   </SolutionManifest>

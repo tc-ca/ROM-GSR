@@ -1,18 +1,28 @@
-// Start.js
+// CompanyRegistrationWizard-Start.js
 
 $(document).ready(function () {
+    debugger;
+
+    // default current use is "Primary"
+    $("#cid_contacttype").val(100000000);
+    $("#cid_contacttype").parent().parent().hide();
+
     $("#parentcustomerid").parent().parent().parent().hide();
+    $("#cid_operatingname").parent().parent().hide();
 
     $("#cid_has_cra_bn").change(cid_has_cra_bn_onchange);
     cid_has_cra_bn_onchange();
 
     $("#cid_reasonfornobnnumber").change(cid_reasonfornobnnumber_onchange);
     cid_reasonfornobnnumber_onchange();
-
-    document.getElementById('parentcustomerid').readOnly = true;
 });
 
 function cid_reasonfornobnnumber_onchange() {
+    debugger;
+
+    $("#cid_reasonfornobnnumber_other").val("");
+
+    $("#cid_reasonfornobnnumber_other").val();
     cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
     if (cid_reasonfornobnnumber == 3)   // other
     {
@@ -28,10 +38,7 @@ function cid_reasonfornobnnumber_onchange() {
 
 // clear parentcustomerid
 function clear_parentcustomerid() {
-    sessionStorage.setItem("cid_crabusinessnumber", "");
-    sessionStorage.setItem("cid_reasonfornobnnumber", "");
-    sessionStorage.setItem("cid_reasonfornobnnumber_other", "");
-    sessionStorage.setItem("cid_legalname", "");
+    // clear data
     sessionStorage.setItem("AddressLine1Text", "");
     sessionStorage.setItem("AddressLine2Text", "");
     sessionStorage.setItem("CityName", "");
@@ -39,11 +46,18 @@ function clear_parentcustomerid() {
     sessionStorage.setItem("PostalZipCode", "");
     sessionStorage.setItem("CountryCode", "");
 
+    $("#cid_crabusinessnumber").val("");
+    $("#cid_reasonfornobnnumber").val("");
+    $("#cid_reasonfornobnnumber_other").val("");
+    $("#cid_legalname").val("");
+    $("#cid_operatingname").val("");
+
     $("#parentcustomerid").attr("value", null);
     $("#parentcustomerid_name").attr("value", null);
 }
 
 function cid_has_cra_bn_onchange() {
+    debugger;
     clear_parentcustomerid();
 
     removeValidator("cid_crabusinessnumber");
@@ -51,13 +65,12 @@ function cid_has_cra_bn_onchange() {
     removeValidator("cid_reasonfornobnnumber_other");
     removeValidator("cid_legalname");
 
-    var cid_has_cra_bn_1 = document.getElementById("cid_has_cra_bn_1").checked;
-    var cid_has_cra_bn = (cid_has_cra_bn_1 ? 1 : 0);
+    var cid_has_cra_bn = $("#cid_has_cra_bn").val();
 
     $("#cid_reasonfornobnnumber_other").parent().parent().hide();
 
     // do not have a business number?
-    if (!cid_has_cra_bn) {
+    if (cid_has_cra_bn == 0) {
         $("#cid_crabusinessnumber").parent().parent().hide();
         $("#cid_reasonfornobnnumber").parent().parent().show();
         $("#cid_legalname").parent().parent().show();
@@ -79,15 +92,15 @@ if (window.jQuery) {
         webFormClientValidate = function () {
             sessionStorage.setItem("step_start", "1");
             debugger;
-            var cid_has_cra_bn_1 = document.getElementById("cid_has_cra_bn_1").checked;
-            var cid_has_cra_bn = (cid_has_cra_bn_1 ? 1 : 0);
-            sessionStorage.setItem("cid_has_cra_bn", cid_has_cra_bn);
+            var cid_has_cra_bn = $("#cid_has_cra_bn").val();
 
             var validation = false;
             var rom_data, filter, legalname;
 
             // do not have a business number?
-            if (!cid_has_cra_bn) {
+            if (cid_has_cra_bn == 0) {
+                debugger;
+
                 legalname = $("#cid_legalname").val();
                 filter = "ovs_legalname eq '" + legalname + "'";
                 rom_data = OData_List("account", filter);
@@ -97,16 +110,18 @@ if (window.jQuery) {
                     $("#parentcustomerid").attr("value", rom_data.accountid);
                     $("#parentcustomerid_name").attr("value", legalname);
                     $("#parentcustomerid_entityname").attr("value", 'account');
+
+                    $("#cid_operatingname").val(rom_data.name);
                 }
 
-                cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
-                cid_reasonfornobnnumber_other = $("#cid_reasonfornobnnumber_other").val();
-                sessionStorage.setItem("cid_crabusinessnumber", "");
-                sessionStorage.setItem("cid_reasonfornobnnumber", cid_reasonfornobnnumber);
-                sessionStorage.setItem("cid_reasonfornobnnumber_other", cid_reasonfornobnnumber_other);
-                sessionStorage.setItem("cid_legalname", legalname);
-                sessionStorage.setItem("OperatingName", legalname); // default
-                sessionStorage.setItem("CountryCode", "CA");        // default CA
+                //cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
+                //cid_reasonfornobnnumber_other = $("#cid_reasonfornobnnumber_other").val();
+                //sessionStorage.setItem("cid_crabusinessnumber", "");
+                //sessionStorage.setItem("cid_reasonfornobnnumber", cid_reasonfornobnnumber);
+                //sessionStorage.setItem("cid_reasonfornobnnumber_other", cid_reasonfornobnnumber_other);
+                //sessionStorage.setItem("cid_legalname", legalname);
+                //sessionStorage.setItem("OperatingName", legalname); // default
+                //sessionStorage.setItem("CountryCode", "CA");        // default CA
 
                 validation = true;
             }
@@ -217,6 +232,8 @@ function Retrieve_cra(bn) {
 }
 
 function BN_Selected(data) {
+    debugger;
+
     var LegalName = data.LegalName				        // Legal Name
     var OperatingName = data.OperatingName				// Operating Name
     OperatingName = (OperatingName == "" ? LegalName : OperatingName);  // default
@@ -229,12 +246,9 @@ function BN_Selected(data) {
     var PostalZipCode = address.PostalZipCode;
     var CountryCode = address.CountryCode;
 
-    var cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
+    $("#cid_legalname").val(LegalName);
+    $("#cid_operatingname").val(OperatingName);
 
-    sessionStorage.setItem("cid_crabusinessnumber", data.BusinessRegistrationNumber);
-    sessionStorage.setItem("cid_reasonfornobnnumber", cid_reasonfornobnnumber);
-    sessionStorage.setItem("cid_legalname", LegalName);
-    sessionStorage.setItem("OperatingName", OperatingName);
     sessionStorage.setItem("AddressLine1Text", AddressLine1Text);
     sessionStorage.setItem("AddressLine2Text", AddressLine2Text);
     sessionStorage.setItem("CityName", CityName);

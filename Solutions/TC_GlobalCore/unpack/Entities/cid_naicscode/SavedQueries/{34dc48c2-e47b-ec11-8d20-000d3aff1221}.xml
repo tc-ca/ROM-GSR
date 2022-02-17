@@ -12,18 +12,20 @@
         <row name="result" id="cid_naicscodeid">
           <cell name="cid_name" width="150" />
           <cell name="cid_naicsclasstitle" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
-          <cell name="cid_naicsclasstitlefr" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
         </row>
       </grid>
     </layoutxml>
     <querytype>0</querytype>
     <fetchxml>
-      <fetch version="1.0" output-format="xml-platform" mapping="logical">
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="cid_naicscode">
           <attribute name="cid_name" />
-          <order attribute="cid_name" descending="false" />
-          <attribute name="cid_naicsclasstitlefr" />
           <attribute name="cid_naicsclasstitle" />
+          <order attribute="cid_name" descending="false" />
+          <filter type="and">
+            <condition attribute="cid_lastnode" operator="eq" value="1" />
+            <condition attribute="statuscode" operator="eq" value="1" />
+          </filter>
           <attribute name="cid_naicscodeid" />
         </entity>
       </fetch>

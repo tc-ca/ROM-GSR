@@ -1,0 +1,254 @@
+<HTML>
+<HEAD>
+    <TITLE></TITLE>
+    <style>
+        body {
+            background-color: white;
+            display: block;
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+
+        text {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            padding: 6px 12px;
+        }
+
+        label {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            margin: 0px 0px 5px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            display: block;
+            font-size: 16px;
+            line-height: 1.4375;
+            color: #555;
+            border: 1px solid #949494;
+            border-radius: 4px;
+            box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+            font-family: "Noto Sans",sans-serif;
+            padding: 6px 12px;
+            height: auto;
+            max-width: 100%;
+            min-height: 37px;
+            background-image: none;
+            margin-top: 7px;
+            width: 100%;
+        }
+    </style>
+    <!-- Using jquery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+</HEAD>
+<BODY>
+    <script type="text/javascript">
+        function search() {
+            debugger;
+            var cid_naicscode = document.getElementById("cid_naicscode").value;
+            var filter = "startswith(cid_name, '" + cid_naicscode + "') or substringof('" + cid_naicscode + "', cid_naicsclasstitle)";
+            var items = tdgcore.common.OData_List("cid_naicscode", filter);
+
+            var cid_naicscode_list = document.getElementById('cid_naicscode_list');
+
+            // remove options
+            $('#cid_naicscode_list').empty();
+
+            var cid_naicscode_list_id = "";
+            for (i = 0; i < items.length; i++) {
+                var item = items[i];
+                var value = item.cid_naicscodeid;
+                var cid_naicsclasstitle = item.cid_naicsclasstitle;
+                var text = item.cid_name + ' - ' + tdgcore.common.text_language(item.cid_naicsclasstitle);
+
+                cid_naicscode_list_id += value + ";";
+
+                const option = document.createElement('option');
+                option.value = text;
+                cid_naicscode_list.appendChild(option);
+            }
+            document.getElementById('cid_naicscode_list_id').value = cid_naicscode_list_id;
+        }
+
+        function onInput(e) {
+            //debugger;
+
+            var input = e.target;
+            var val = input.value;
+            var list = input.getAttribute('list');
+            var options = document.getElementById(list).childNodes;
+            var found = false;
+            var index = 0;
+            var text = "";
+
+            // skip 1st option
+            for (var i = 1; i < options.length; i++) {
+                var current = options[i].value;
+                if (current === val) {
+                    found = true;
+                    index = i;
+                    text = current;
+                    break;
+                }
+            }
+
+            if (found) {
+                debugger;
+                var id = $('#cid_naicscode_list_id').val();
+                var list = id.split(";");
+                id = list[index];
+
+                try {
+                    // transfer control back to parent form
+                    parent.naicscode_selected(text, id);
+                } catch (e) { }
+            }
+            else {
+                search();
+            }
+        }
+    </script>
+
+    <label for="cid_naicscode" class="field-label">NAICS Code</label>
+    <span id="cid_naicscode_required" style="color: red;font-weight: bold"> *</span>
+    <br>
+    <input list="cid_naicscode_list" id="cid_naicscode" class="text form-control" />
+    <br>
+    <datalist id="cid_naicscode_list">
+    </datalist>
+
+    <input type="text" id="cid_naicscode_list_id" hidden />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //debugger;
+            document.querySelector('input[list="cid_naicscode_list"]').addEventListener('input', onInput);
+        })
+
+    </script>
+
+    <script>
+        // tdgcore_common.js
+
+        if (typeof (tdgcore) == "undefined") {
+            tdgcore = {
+                __namespace: true
+            };
+        }
+
+        if (typeof (tdgcore.common) == "undefined") {
+            tdgcore.common = {
+                text_language: function (text) {
+                    var value = "";
+                    var language = '{{website.selected_language.code}}';
+                    var j = cid_naicsclasstitle.indexOf("::");
+                    if (language == 0) {
+
+                    }
+                    else {
+
+                    }
+                    return value;
+                },
+
+                // setRequiredLevel("required");
+                addValidator: function (fieldName, fieldLabel) {
+                    if (typeof (Page_Validators) == 'undefined') return;
+
+                    // Create new validator
+                    $("#" + fieldName + "_label").parent().addClass("required");
+
+                    var newValidator = document.createElement('span');
+                    newValidator.style.display = "none";
+                    newValidator.id = "RequiredFieldValidator" + fieldName;
+                    newValidator.controltovalidate = "casetypecode";
+                    newValidator.errormessage = "<a href='#" + fieldName + "_label'>" + fieldLabel + " is a mandatory field.</a>";
+                    newValidator.validationGroup = "";
+                    newValidator.initialvalue = "";
+                    newValidator.evaluationfunction = function () {
+                        var value = $("#" + fieldName).val();
+                        if (value == null || value == "") {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    };
+
+                    // Add the new validator to the page validators array:
+                    Page_Validators.push(newValidator);
+
+                    // Wire-up the click event handler of the validation summary link
+                    $("a[href='#" + fieldName + "_label']").on("click", function () { scrollToAndFocus(fieldName + '_label', fieldName); });
+                },
+
+                // setRequiredLevel("none");
+                removeValidator: function (fieldName) {
+                    $.each(Page_Validators, function (index, validator) {
+                        if (validator.id == "RequiredFieldValidator" + fieldName) {
+                            Page_Validators.splice(index, 1);
+                        }
+                    });
+
+                    $("#" + fieldName + "_label").parent().removeClass("required");
+                },
+
+                // odata
+                OData_List: function (entity, filter) {
+                    var url = entity + "?$filter=" + filter;
+                    var oDataUrl = "~/_odata/" + url;
+                    //var oDataUrl = "https://rd-tdgcore-dev.powerappsportals.com/_odata/" + url;
+                    var response = null;
+
+                    $.ajax({
+                        type: "GET",
+                        url: oDataUrl,
+                        dataType: "json",
+                        async: false
+                    }).done(function (json) {
+                        response = json.value;
+                    });
+                    return response;
+                },
+
+                error_message: function (message) {
+                    var validationSection = $('#ValidationSummaryEntityFormView');
+                    validationSection.append($("<div class='notification alert-danger' role='alert'>" + message + "</div>"));
+                    validationSection.show();
+                },
+
+                control_hide: function (fieldName, is_lookup) {
+                    if (is_lookup) {
+                        $("#" + fieldName).parent().parent().parent().hide();
+                    }
+                    else {
+                        $("#" + fieldName).hide();
+                        $("#" + fieldName + "_label").hide();
+                    }
+                },
+
+                control_show: function (fieldName, is_lookup) {
+                    if (is_lookup) {
+                        $("#" + fieldName).parent().parent().parent().show();
+                    }
+                    else {
+                        $("#" + fieldName).show();
+                        $("#" + fieldName + "_label").show();
+                    }
+                },
+
+                replace_special_char: function (value) {
+                    var k_char_apostrophe = "&#39;";
+                    value = value.replace(k_char_apostrophe, "'");
+                    return value;
+                },
+
+                init: function () {
+                }
+            }
+        }
+    </script>
+</BODY>
+</HTML>

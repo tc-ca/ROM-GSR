@@ -10,8 +10,8 @@
     <layoutxml>
       <grid name="resultset" jump="tdg_name" select="1" icon="1" preview="1">
         <row name="result" id="tdg_unnumberid">
-          <cell name="tdg_name" width="300" />
-          <cell name="createdon" width="125" />
+          <cell name="tdg_name" width="100" />
+          <cell name="tdg_packinggroupcd" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -19,20 +19,17 @@
     <fetchxml>
       <fetch version="1.0" mapping="logical">
         <entity name="tdg_unnumber">
-          <attribute name="tdg_unnumberid" />
-          <attribute name="tdg_name" />
-          <attribute name="createdon" />
-          <order attribute="tdg_name" descending="false" />
+          <order attribute="tdg_packinggroupcd" descending="false" />
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="0" />
           </filter>
           <filter type="or" isquickfindfields="1">
             <condition attribute="tdg_name" operator="like" value="{0}" />
-            <condition attribute="tdg_shippingnamedescriptionetxt" operator="like" value="{0}" />
-            <condition attribute="tdg_shippingnamedescriptionftxt" operator="like" value="{0}" />
-            <condition attribute="tdg_packinggroupcd" operator="like" value="{0}" />
-            <condition attribute="tdg_primaryclasscd" operator="like" value="{0}" />
+            <condition attribute="tdg_undisplayname" operator="like" value="{0}" />
           </filter>
+          <attribute name="tdg_name" />
+          <attribute name="tdg_packinggroupcd" />
+          <attribute name="tdg_unnumberid" />
         </entity>
       </fetch>
     </fetchxml>

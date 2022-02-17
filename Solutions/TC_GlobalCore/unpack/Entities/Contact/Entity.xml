@@ -46,7 +46,7 @@
           <IsFilterable>0</IsFilterable>
           <IsRetrievable>0</IsRetrievable>
           <IsLocalizable>0</IsLocalizable>
-          <AppDefaultValue>-1</AppDefaultValue>
+          <AppDefaultValue>100000001</AppDefaultValue>
           <optionset Name="cid_contact_cid_contacttype">
             <OptionSetType>picklist</OptionSetType>
             <IntroducedVersion>2021.9.22.7</IntroducedVersion>
@@ -65,12 +65,7 @@
               </option>
               <option value="100000001" ExternalValue="" Color="#0000ff">
                 <labels>
-                  <label description="Backup / Secondary" languagecode="1033" />
-                </labels>
-              </option>
-              <option value="100000002" ExternalValue="" Color="#0000ff">
-                <labels>
-                  <label description="Other" languagecode="1033" />
+                  <label description="Secondary" languagecode="1033" />
                 </labels>
               </option>
             </options>
@@ -155,7 +150,7 @@
           <LookupStyle>single</LookupStyle>
           <LookupTypes />
           <displaynames>
-            <displayname description="Created By (Registrant)" languagecode="1033" />
+            <displayname description="Created By" languagecode="1033" />
           </displaynames>
           <Descriptions>
             <Description description="" languagecode="1033" />
@@ -216,7 +211,7 @@
             </options>
           </optionset>
           <displaynames>
-            <displayname description="Has a CRA Business Number?" languagecode="1033" />
+            <displayname description="Do you have a CRA Business Number?" languagecode="1033" />
           </displaynames>
           <Descriptions>
             <Description description="NEW" languagecode="1033" />
@@ -259,7 +254,7 @@
             <displayname description="Legal Name" languagecode="1033" />
           </displaynames>
           <Descriptions>
-            <Description description="NEW&#xA;Legal name of a Parent Company or Site" languagecode="1033" />
+            <Description description="NEW Legal name of a Parent Company or Site" languagecode="1033" />
           </Descriptions>
         </attribute>
         <attribute PhysicalName="cid_ModifiedByRegistrant">
@@ -295,7 +290,47 @@
           <LookupStyle>single</LookupStyle>
           <LookupTypes />
           <displaynames>
-            <displayname description="Modified By (Registrant)" languagecode="1033" />
+            <displayname description="Modified By" languagecode="1033" />
+          </displaynames>
+          <Descriptions>
+            <Description description="" languagecode="1033" />
+          </Descriptions>
+        </attribute>
+        <attribute PhysicalName="cid_operatingname">
+          <Type>nvarchar</Type>
+          <Name>cid_operatingname</Name>
+          <LogicalName>cid_operatingname</LogicalName>
+          <RequiredLevel>none</RequiredLevel>
+          <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+          <ImeMode>auto</ImeMode>
+          <ValidForUpdateApi>1</ValidForUpdateApi>
+          <ValidForReadApi>1</ValidForReadApi>
+          <ValidForCreateApi>1</ValidForCreateApi>
+          <IsCustomField>1</IsCustomField>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsSecured>0</IsSecured>
+          <IntroducedVersion>1.0.0.0</IntroducedVersion>
+          <IsCustomizable>1</IsCustomizable>
+          <IsRenameable>1</IsRenameable>
+          <CanModifySearchSettings>1</CanModifySearchSettings>
+          <CanModifyRequirementLevelSettings>1</CanModifyRequirementLevelSettings>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <SourceType>0</SourceType>
+          <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+          <IsSortableEnabled>0</IsSortableEnabled>
+          <CanModifyGlobalFilterSettings>1</CanModifyGlobalFilterSettings>
+          <CanModifyIsSortableSettings>1</CanModifyIsSortableSettings>
+          <IsDataSourceSecret>0</IsDataSourceSecret>
+          <AutoNumberFormat></AutoNumberFormat>
+          <IsSearchable>0</IsSearchable>
+          <IsFilterable>0</IsFilterable>
+          <IsRetrievable>0</IsRetrievable>
+          <IsLocalizable>0</IsLocalizable>
+          <Format>text</Format>
+          <MaxLength>100</MaxLength>
+          <Length>200</Length>
+          <displaynames>
+            <displayname description="Operating Name" languagecode="1033" />
           </displaynames>
           <Descriptions>
             <Description description="" languagecode="1033" />
@@ -334,7 +369,7 @@
           <AppDefaultValue>-1</AppDefaultValue>
           <OptionSetName>cid_account_without_cra_bn</OptionSetName>
           <displaynames>
-            <displayname description="Reason for no Business Number" languagecode="1033" />
+            <displayname description="Reason for No Business Number" languagecode="1033" />
           </displaynames>
           <Descriptions>
             <Description description="NEW" languagecode="1033" />
@@ -374,10 +409,45 @@
           <MaxLength>100</MaxLength>
           <Length>200</Length>
           <displaynames>
-            <displayname description="Other Reason" languagecode="1033" />
+            <displayname description="Further Details Regarding No CRA Business Number" languagecode="1033" />
           </displaynames>
           <Descriptions>
             <Description description="" languagecode="1033" />
+          </Descriptions>
+        </attribute>
+        <attribute PhysicalName="FirstName">
+          <Type>nvarchar</Type>
+          <Name>firstname</Name>
+          <LogicalName>firstname</LogicalName>
+          <RequiredLevel>required</RequiredLevel>
+          <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid|RequiredForForm</DisplayMask>
+          <ImeMode>active</ImeMode>
+          <ValidForUpdateApi>1</ValidForUpdateApi>
+          <ValidForReadApi>1</ValidForReadApi>
+          <ValidForCreateApi>1</ValidForCreateApi>
+          <IsCustomField>0</IsCustomField>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsSecured>0</IsSecured>
+          <IntroducedVersion>5.0.0.0</IntroducedVersion>
+          <SourceType>0</SourceType>
+          <IsGlobalFilterEnabled>0</IsGlobalFilterEnabled>
+          <IsSortableEnabled>0</IsSortableEnabled>
+          <IsDataSourceSecret>0</IsDataSourceSecret>
+          <AutoNumberFormat></AutoNumberFormat>
+          <IsSearchable>1</IsSearchable>
+          <IsFilterable>0</IsFilterable>
+          <IsRetrievable>0</IsRetrievable>
+          <IsLocalizable>0</IsLocalizable>
+          <Format>text</Format>
+          <MaxLength>50</MaxLength>
+          <Length>100</Length>
+          <displaynames>
+            <displayname description="First Name" languagecode="1033" />
+            <displayname description="Prénom" languagecode="1036" />
+          </displaynames>
+          <Descriptions>
+            <Description description="Type the contact's first name to make sure the contact is addressed correctly in sales calls, email, and marketing campaigns." languagecode="1033" />
+            <Description description="Tapez le prénom du contact pour vous assurer que le contact est mentionné correctement dans les appels de télévente, le courrier électronique et les campagnes marketing." languagecode="1036" />
           </Descriptions>
         </attribute>
       </attributes>

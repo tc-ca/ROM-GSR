@@ -10,13 +10,12 @@
     <layoutxml>
       <grid name="resultset" jump="ovs_name" select="1" preview="1" icon="1">
         <row name="result" id="ovs_operationunnumberid">
-          <cell name="a_b375e71a6743ec118c600022483c3ed3.tdg_undisplayname" width="150" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
-          <cell name="a_b375e71a6743ec118c600022483c3ed3.ovs_erapcategory" width="125" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_unnumber" width="100" />
+          <cell name="a_b375e71a6743ec118c600022483c3ed3.tdg_packinggroupcd" width="100" disableSorting="1" />
           <cell name="cid_annualquantityvolume" width="200" />
           <cell name="cid_unitofmeasurement" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="cid_annualnumberofshipment" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="createdon" width="100" />
-          <cell name="cid_createdbyregistrant" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -27,15 +26,14 @@
           <attribute name="cid_unitofmeasurement" />
           <attribute name="cid_annualnumberofshipment" />
           <attribute name="createdon" />
-          <attribute name="cid_createdbyregistrant" />
           <attribute name="cid_annualquantityvolume" />
           <order attribute="cid_annualnumberofshipment" descending="false" />
           <filter type="and">
             <condition attribute="statuscode" operator="eq" value="1" />
           </filter>
-          <link-entity name="tdg_unnumber" from="tdg_unnumberid" to="ovs_unnumber" visible="false" link-type="outer" alias="a_b375e71a6743ec118c600022483c3ed3">
-            <attribute name="tdg_undisplayname" />
-            <attribute name="ovs_erapcategory" />
+          <attribute name="ovs_unnumber" />
+          <link-entity alias="a_b375e71a6743ec118c600022483c3ed3" name="tdg_unnumber" from="tdg_unnumberid" to="ovs_unnumber" link-type="outer" visible="false">
+            <attribute name="tdg_packinggroupcd" />
           </link-entity>
           <attribute name="ovs_operationunnumberid" />
         </entity>

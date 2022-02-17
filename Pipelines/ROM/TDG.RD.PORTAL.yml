@@ -64,6 +64,7 @@ stages:
 - stage: DeployToQA
   pool:
       vmImage: 'windows-latest'
+  dependsOn: DownloadAndPublishPortalConfig
   jobs:
   - deployment: Deploy
     displayName:  DeployToQA
@@ -98,4 +99,86 @@ stages:
                   --applicationId ${env:PowerPlatformAadApplicationId} `
                   --clientSecret ${env:PowerPlatformAadApplicationSecret}
                 pac auth select --name PORTAL_QA
+                pac paportal upload --path $(Agent.BuildDirectory)\cid-dev
+
+  #Deploy to ACC
+- stage: DeployToACC
+  pool:
+      vmImage: 'windows-latest'
+  dependsOn: DeployToQA
+  jobs:
+  - deployment: Deploy
+    displayName: DeployToACC
+    environment: ACC-TDG
+    timeoutInMinutes: 360
+    cancelTimeoutInMinutes: 2
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          #Install the Power Platform CLI
+          - task: PowerShell@2
+            displayName: Download Power Platform CLI
+            inputs:
+              targetType: 'inline'
+              script: |
+                Invoke-WebRequest https://aka.ms/PowerAppsCLI -OutFile pac.msi
+                msiexec /i pac.msi /quiet /norestart
+          
+          - task: PowerShell@2
+            displayName: Upload portal configuration
+            env:
+              PowerPlatformAadApplicationSecret: $(PowerPlatformAadApplicationSecret)
+            inputs:
+              targetType: 'inline'
+              script: |
+                $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+                pac install latest
+                pac auth create --name PORTAL_ACC `
+                  --url ${env:PowerPlatformACCURL} `
+                  --tenant ${env:PowerPlatformAadDirectoryId} `
+                  --applicationId ${env:PowerPlatformAadApplicationId} `
+                  --clientSecret ${env:PowerPlatformAadApplicationSecret}
+                pac auth select --name PORTAL_ACC
+                pac paportal upload --path $(Agent.BuildDirectory)\cid-dev
+
+  #Deploy to PREPROD
+- stage: DeployToPREPROD
+  pool:
+      vmImage: 'windows-latest'
+  dependsOn: DeployToQA
+  jobs:
+  - deployment: Deploy
+    displayName: DeployToPREPROD
+    environment: PREPROD-TDG
+    timeoutInMinutes: 360
+    cancelTimeoutInMinutes: 2
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          #Install the Power Platform CLI
+          - task: PowerShell@2
+            displayName: Download Power Platform CLI
+            inputs:
+              targetType: 'inline'
+              script: |
+                Invoke-WebRequest https://aka.ms/PowerAppsCLI -OutFile pac.msi
+                msiexec /i pac.msi /quiet /norestart
+          
+          - task: PowerShell@2
+            displayName: Upload portal configuration
+            env:
+              PowerPlatformAadApplicationSecret: $(PowerPlatformAadApplicationSecret)
+            inputs:
+              targetType: 'inline'
+              script: |
+                $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+                pac install latest
+                pac auth create --name PORTAL_PREPROD `
+                  --url ${env:PowerPlatformPREPRODURL} `
+                  --tenant ${env:PowerPlatformAadDirectoryId} `
+                  --applicationId ${env:PowerPlatformAadApplicationId} `
+                  --clientSecret ${env:PowerPlatformAadApplicationSecret}
+                pac auth select --name PORTAL_ACC
                 pac paportal upload --path $(Agent.BuildDirectory)\cid-dev

@@ -34,10 +34,39 @@ function OnLoad(executionContext)
     else
     {
 
-        
+        glHelper.SetDisabled(formContext, "ovs_cdfiscalyearid", true);
+        glHelper.SetDisabled(formContext, "ovs_cdregionid", true);
 
     }
 
+    var isPlanner = hasCurrentUserRole("TDG Planner");
+    var isManager = hasCurrentUserRole("TDG Manager");
+    var isInspector = hasCurrentUserRole("TDG Inspector");
+
+    glHelper.SetDisabled(formContext, "ovs_capacity", !isPlanner);
+
+    //These fields show be visible by Planners only
+    glHelper.SetControlVisibility(formContext, "ovs_capacity", isPlanner);
+    glHelper.SetControlVisibility(formContext, "ovs_cdwoccount", isPlanner);
+    glHelper.SetControlVisibility(formContext, "ovs_cdwocvariance", isPlanner);
     
 
+
+
+}
+
+
+function hasCurrentUserRole(roleName)
+{
+    let hasRole = false;
+    let roles = Xrm.Utility.getGlobalContext().userSettings.roles;
+    roles.forEach(x =>
+    {
+        if (x.name === "System Administrator" || x.name === roleName)
+        {
+            hasRole = true;
+            return;
+        }
+    });
+    return hasRole;
 }
