@@ -1,4 +1,4 @@
-﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+///<reference path="../../Utilities/GlobalHelper.js"/>
 ///<reference path="../../Utilities/questionnaireFunctions.js"/>
 
 var Candidates_TDG_main = (function (window, document) {
@@ -113,12 +113,9 @@ var Candidates_TDG_main = (function (window, document) {
                 clientUrl = globalContext.getClientUrl();
             }
 
-            if (hasCurrentUserRole("TDG Planner"))
-            {
-
-
-            }
-            else
+            
+            
+            if (!hasCurrentUserRole("TDG Planner"))
             {
                 glHelper.SetDisabled(formContext, FIELD_HQ_FLAG, true);
                 glHelper.SetDisabled(formContext, FIELD_INITIAL_RECOMMENDATION, true);
