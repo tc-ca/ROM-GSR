@@ -1,0 +1,13 @@
+trigger: none
+pr: none
+
+variables:
+  - name: SolutionName
+    value: 'TC_GlobalCore'
+
+stages:
+- template: templates/stage/PatchSolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    ConnectionString: $(Pipeline_ConnectionStringDev)
+    StageName: 'CreatePatchOnDev'
