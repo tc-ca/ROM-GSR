@@ -5,7 +5,7 @@
     <IntroducedVersion>1.0.0.0</IntroducedVersion>
     <FormPresentation>1</FormPresentation>
     <FormActivationState>1</FormActivationState>
-    <form headerdensity="HighWithControls">
+    <form headerdensity="HighWithControls" shownavigationbar="true" showImage="false" maxWidth="1920">
       <tabs>
         <tab verticallayout="true" id="{7496e746-4fb2-4e1e-8943-847ac9149c1e}" IsUserDefined="1">
           <labels>
@@ -54,7 +54,7 @@
                           <label description="Fiscal Year" languagecode="1033" />
                           <label description="Fiscal Year" languagecode="1036" />
                         </labels>
-                        <control id="ovs_cdfiscalyearid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ovs_cdfiscalyearid" disabled="false" uniqueid="{b22150dc-b6db-5733-a98b-6540a428eba2}">
+                        <control id="ovs_cdfiscalyearid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ovs_cdfiscalyearid" disabled="true" uniqueid="{b22150dc-b6db-5733-a98b-6540a428eba2}">
                           <parameters>
                             <AutoResolve>true</AutoResolve>
                             <DisableMru>false</DisableMru>
@@ -107,7 +107,7 @@
                           <label description="Work Order Candidate Count" languagecode="1033" />
                           <label description="Work Order Candidate Count" languagecode="1036" />
                         </labels>
-                        <control id="ovs_cdwoccount" classid="{C6D124CA-7EDA-4a60-AEA9-7FB8D318B68F}" datafieldname="ovs_cdwoccount" disabled="false" />
+                        <control id="ovs_cdwoccount" classid="{C6D124CA-7EDA-4a60-AEA9-7FB8D318B68F}" datafieldname="ovs_cdwoccount" disabled="false" uniqueid="{70084ce7-931e-62e8-657b-a6d507b3e24b}" />
                       </cell>
                     </row>
                     <row>
@@ -116,7 +116,7 @@
                           <label description="Work Order Candidate Variance" languagecode="1033" />
                           <label description="Work Order Candidate Variance" languagecode="1036" />
                         </labels>
-                        <control id="ovs_cdwocvariance" classid="{C6D124CA-7EDA-4a60-AEA9-7FB8D318B68F}" datafieldname="ovs_cdwocvariance" disabled="false" />
+                        <control id="ovs_cdwocvariance" classid="{C6D124CA-7EDA-4a60-AEA9-7FB8D318B68F}" datafieldname="ovs_cdwocvariance" disabled="false" uniqueid="{862d8495-35cb-bda9-0cd0-46dda23d9ab7}" />
                       </cell>
                     </row>
                   </rows>
@@ -185,7 +185,7 @@
                           <parameters>
                             <TargetEntityType>ovs_workordercandidate</TargetEntityType>
                             <ViewId>{BA8A6646-0C52-EC11-8F8E-000D3AE8EDDC}</ViewId>
-                            <EnableViewPicker>true</EnableViewPicker>
+                            <EnableViewPicker>false</EnableViewPicker>
                             <RelationshipName>ovs_CDRegionalNOP_WorkOrderCandidate</RelationshipName>
                             <RecordsPerPage>250</RecordsPerPage>
                             <AutoExpand>Auto</AutoExpand>
@@ -197,7 +197,7 @@
                             <VisualizationId />
                             <IsUserChart>false</IsUserChart>
                             <EnableChartPicker>true</EnableChartPicker>
-                            <ViewIds>{F29A4275-247D-EC11-8D20-0022483DBAFC},{BA8A6646-0C52-EC11-8F8E-000D3AE8EDDC}</ViewIds>
+                            <ViewIds>{BA8A6646-0C52-EC11-8F8E-000D3AE8EDDC}</ViewIds>
                           </parameters>
                         </control>
                       </cell>
@@ -292,6 +292,17 @@
           </row>
         </rows>
       </footer>
+      <formLibraries>
+        <Library name="qm_globalHelper.js" libraryUniqueId="{4ce05cbc-16e0-8b0e-6bc0-a14135bcb80a}" />
+        <Library name="ovs_RegionalNOPMainForm" libraryUniqueId="{d9e72280-07ec-d70e-b3cd-2e7ad2b3459c}" />
+      </formLibraries>
+      <events>
+        <event name="onload" application="false" active="false">
+          <Handlers>
+            <Handler functionName="OnLoad" libraryName="ovs_RegionalNOPMainForm" handlerUniqueId="{0a1ceadb-676d-a0c9-8d50-14e7b9e43d37}" enabled="true" parameters="" passExecutionContext="true" />
+          </Handlers>
+        </event>
+      </events>
       <DisplayConditions Order="0" FallbackForm="true">
         <Everyone />
       </DisplayConditions>

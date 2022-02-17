@@ -136,6 +136,20 @@ var WO_TDG_main = (function (window, document) {
             ? "ovs_workordertypenameenglish eq '{0}'"
             : "startswith(ovs_workordertypenameenglish,'{0}')";
 
+        //unmanaged change 2022-02-14
+        //determine if user is in Planner app, do not lock rational if so
+        //========================================================
+        var globalContext = Xrm.Utility.getGlobalContext();
+        globalContext.getCurrentAppName().then(function (appName) {
+            var isPlannerApp = appName.indexOf("Planner") != -1;
+
+            if (!isPlannerApp) {
+                glHelper.SetDisabled(formContext, "ovs_rational", true);
+            }
+        });
+        //========================================================
+
+
         //Set WO Type based on Activity Type
         if (inspectionType == 0) {
             currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=" + filter.replace("{0}", "Regulatory Authorization")).then(
@@ -148,8 +162,6 @@ var WO_TDG_main = (function (window, document) {
                         glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, frenchName);
                     if (userSettings.languageId == 1033)
                         glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, englishName);
-
-                    glHelper.SetDisabled(formContext, "ovs_rational", true);
 
                     currentWebApi.retrieveMultipleRecords("msdyn_incidenttype", "?$select=msdyn_incidenttypeid,ovs_incidenttypenameenglish,ovs_incidenttypenamefrench&$filter=ovs_incidenttypenameenglish eq 'Regulatory%20Authorization'").then(
                         function success(results) {
@@ -186,8 +198,6 @@ var WO_TDG_main = (function (window, document) {
                     if (userSettings.languageId == 1033)
                         glHelper.SetLookup(formContext, "msdyn_workordertype", "msdyn_workordertype", workOrderTypeId, englishName);
 
-                    glHelper.SetDisabled(formContext, "ovs_rational", true);
-
                     currentWebApi.retrieveMultipleRecords("msdyn_incidenttype", "?$select=msdyn_incidenttypeid,ovs_incidenttypenameenglish,ovs_incidenttypenamefrench&$filter=ovs_incidenttypenameenglish eq 'Inspection'")
                         .then(
                             function success(results) {
@@ -204,9 +214,6 @@ var WO_TDG_main = (function (window, document) {
                                 Xrm.Navigation.openErrorDialog({ message: error.message });
                             }
                         );
-
-
-
                 },
                 function (error) {
                     console.log(messageWOTypeFailed + " " + error.message);
@@ -517,7 +524,7 @@ var WO_TDG_main = (function (window, document) {
                         //    break;
                         case "TDG Management / Gestion TMD":
                             if (isPlanned) {
-                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed"); //"ovs_fiscalquarter", "msdyn_serviceterritory",
+                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_mocoperationid", "ovs_oversighttype", "ovs_fiscalyear", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed"); //"ovs_fiscalquarter", "msdyn_serviceterritory",
                                 editableArray = new Array("qm_remote");
                             }
                             else {

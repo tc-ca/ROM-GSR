@@ -10,10 +10,9 @@
     <layoutxml>
       <grid name="resultset" jump="fullname" select="1" preview="1" icon="1">
         <row name="result" id="contactid">
+          <cell name="cid_contacttype" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="fullname" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="emailaddress1" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
-          <cell name="cid_contacttype" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
-          <cell name="parentcustomerid" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
         </row>
       </grid>
     </layoutxml>
@@ -22,9 +21,9 @@
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="contact">
           <attribute name="fullname" />
-          <attribute name="parentcustomerid" />
           <attribute name="emailaddress1" />
           <attribute name="cid_contacttype" />
+          <order attribute="cid_contacttype" descending="false" />
           <order attribute="fullname" descending="false" />
           <filter type="and">
             <condition attribute="statuscode" operator="eq" value="1" />

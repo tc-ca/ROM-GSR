@@ -10,6 +10,7 @@
         <tab verticallayout="true" id="{0b52e8b7-4c54-45b9-8320-a991567a9562}" IsUserDefined="1" labelid="{7142bdfa-03d5-4e4e-af3d-99de61282a11}">
           <labels>
             <label description="General" languagecode="1033" />
+            <label description="Résumé" languagecode="1036" />
           </labels>
           <columns>
             <column width="100%">
@@ -17,6 +18,7 @@
                 <section showlabel="false" showbar="false" IsUserDefined="0" id="{ca013b40-edb2-4890-9c35-3fc563cc0710}" name="tab_General" labelid="{b2113cfd-9b19-4825-bef0-7f6c904fd349}">
                   <labels>
                     <label description="General" languagecode="1033" />
+                    <label description="Résumé" languagecode="1036" />
                   </labels>
                   <rows>
                     <row>
@@ -35,6 +37,14 @@
                           <label description="Type d'opération" languagecode="1036" />
                         </labels>
                         <control id="ovs_operationtype" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="ovs_operationtype" disabled="false" uniqueid="{d2059b79-807e-7732-da4e-29a74a6d0aca}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{513beecd-cebd-4d00-8542-e76d7178f512}" locklevel="0" colspan="1" rowspan="1" visible="false">
+                        <labels>
+                          <label description="IIS Created Date" languagecode="1033" />
+                        </labels>
+                        <control id="ovs_iiscreateddate" classid="{5B773807-9FB2-42DB-97C3-7A91EFF8ADFF}" datafieldname="ovs_iiscreateddate" disabled="false" />
                       </cell>
                     </row>
                     <row>
@@ -118,6 +128,7 @@
         <tab name="tab_3" id="{aa61e692-e804-13ce-eac5-7c46d4113179}" IsUserDefined="0" locklevel="0" showlabel="true" expanded="true" labelid="{d965959b-a09b-4bbb-8dcf-2a65376b1d40}">
           <labels>
             <label description="NOP Profile" languagecode="1033" />
+            <label description="Profil du PNS" languagecode="1036" />
           </labels>
           <columns>
             <column width="100%">
@@ -189,6 +200,7 @@
                 <section name="tab_2_section_1" showlabel="true" showbar="false" locklevel="0" id="{10e578e6-7ecd-ab80-16a3-46ca314886c6}" IsUserDefined="0" layout="varwidth" columns="1" labelwidth="115" celllabelalignment="Left" celllabelposition="Left" labelid="{66432756-1e9d-4982-b355-92422f916456}">
                   <labels>
                     <label description="HOTI Profile" languagecode="1033" />
+                    <label description="Profil MDTI" languagecode="1036" />
                   </labels>
                   <rows>
                     <row>
@@ -367,6 +379,7 @@
                 <section name="tab_2_section_2" showlabel="true" showbar="false" locklevel="0" id="{03c0a071-2942-9722-8418-2698133de989}" IsUserDefined="0" layout="varwidth" columns="1" labelwidth="115" celllabelalignment="Left" celllabelposition="Left" labelid="{33fd28f6-12ee-486d-a8b7-e6f0886d5989}">
                   <labels>
                     <label description="AVIATION PROFILE" languagecode="1033" />
+                    <label description="PROFIL AVIATON" languagecode="1036" />
                   </labels>
                   <rows>
                     <row>
@@ -568,6 +581,11 @@
         <event name="onload" application="true" active="true">
           <Handlers>
             <Handler functionName="OnLoad" libraryName="ovs_moc_mainform_planner" handlerUniqueId="{c66f2545-3373-463c-a988-ad22e95aa128}" enabled="true" parameters="" passExecutionContext="true" />
+          </Handlers>
+        </event>
+        <event name="onchange" application="true" active="true" attribute="ovs_operationtype">
+          <Handlers>
+            <Handler functionName="OperationType_OnChange" libraryName="ovs_moc_mainform_planner" handlerUniqueId="{045d5495-49d8-4c09-99e7-cd12c3c468d0}" enabled="true" parameters="" passExecutionContext="true" />
           </Handlers>
         </event>
       </events>

@@ -56,7 +56,7 @@
         }
 
         function onInput(e) {
-            debugger;
+            //debugger;
 
             var input = e.target;
             var val = input.value;
@@ -85,8 +85,18 @@
             }
 
             if (found) {
+                debugger;
                 var id = AddressComplete.GetId(index - 1);
-                AddressComplete.Retrieve(id);
+                var list = id.split(";");
+                if (list[1] == "Retrieve") {
+                    AddressComplete.Retrieve(list[0]);
+                }
+                else {
+                    var LanguagePreference = 'en';
+                    var LastId = list[0];
+
+                    AddressComplete.Find_LastId(LastId, LanguagePreference);
+                }
             }
             else {
                 search();
@@ -108,7 +118,17 @@
         <option value="" />
         <option value="" />
     </datalist>
+    <datalist id="address_list_lastid">
+        <option value="Edge">
+        <option value="Firefox">
+        <option value="Chrome">
+        <option value="Opera">
+        <option value="Safari">
+        <option value="iPhone" />
+        <option value="iPad" />
+    </datalist>    
     <input type="text" id="address_list_id" hidden />
+    <input type="text" id="address_list_next" hidden />
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -116,7 +136,8 @@
             document.querySelector('input[list="address_list"]').addEventListener('input', onInput);
             AddressComplete.removeOptions('address_list', false);
 
-            var address1_line1 = sessionStorage.getItem("address1_line1");
+            var address1_line1 = sessionStorage.getItem("AddressLine1Text");
+            address1_line1 = (address1_line1 == "null" ? "" : address1_line1);
             document.getElementById('address1_line1').value = address1_line1;
 
             // AddressComplete_Hide_address1_line1
@@ -135,8 +156,12 @@
             GetId: function (index) {
                 //debugger;
                 var address_list_id = document.getElementById('address_list_id').value;
+                var address_list_next = document.getElementById('address_list_next').value;
                 var list = address_list_id.split(";");
-                return list[index];
+                var next_list = address_list_next.split(";");
+                var value = list[index] + ";" + next_list[index];
+
+                return value;
             },
 
             Find: function (SearchTerm, LanguagePreference) {
@@ -145,14 +170,13 @@
                 this.removeOptions('address_list', false);
                 document.getElementById('address_list_id').value = "";
 
-                var LastId = '';
+                //var LastId = '';
                 var Country = '';
                 var url = 'https://ws1.postescanada-canadapost.ca/AddressComplete/Interactive/Find/v2.10/json3.ws';
 
                 var params = '';
                 params += "&Key=" + encodeURIComponent(this._Key);
                 params += "&SearchTerm=" + encodeURIComponent(SearchTerm);
-                params += "&LastId=" + encodeURIComponent(LastId);
                 params += "&SearchFor=" + encodeURIComponent(this._SearchFor);
                 params += "&Country=" + encodeURIComponent(Country);
                 params += "&LanguagePreference=" + encodeURIComponent(LanguagePreference);
@@ -181,19 +205,101 @@
                                 var items = response.Items;
                                 var address_list = document.getElementById('address_list');
                                 var address_list_id = "";
+                                var address_list_next = "";
 
                                 this._Items = [];
 
-                                for (i = 0; i < items.length; i++) {
+                                if (items.length > 7) {
+                                    debugger;
+                                }
+                                var max = (items.length > 7 ? 7 : items.length);
+                                for (i = 0; i < max; i++) {
                                     var item = items[i];
                                     var value = item.Id;
+                                    var next = item.Next;
                                     var text = item.Text + ', ' + item.Description;
 
                                     address_list.options[i].value = text;
                                     address_list_id += value + ";";
+                                    address_list_next += next + ";";
                                     //address_list_id.add(new Option(text, value));
                                 }
                                 document.getElementById('address_list_id').value = address_list_id;
+                                document.getElementById('address_list_next').value = address_list_next;
+                            }
+                        }
+                    }
+                }
+
+                try {
+                    http.send(params);
+                } catch (e) {
+                    debugger;
+                }
+            },
+
+            Find_LastId: function (LastId, LanguagePreference) {
+                //debugger;
+
+                this.removeOptions('address_list', false);
+                document.getElementById('address_list_id').value = "";
+
+                //var LastId = '';
+                var Country = '';
+                var url = 'https://ws1.postescanada-canadapost.ca/AddressComplete/Interactive/Find/v2.10/json3.ws';
+
+                var params = '';
+                params += "&Key=" + encodeURIComponent(this._Key);
+                params += "&LastId=" + encodeURIComponent(LastId);
+                params += "&SearchFor=" + encodeURIComponent(this._SearchFor);
+                params += "&Country=" + encodeURIComponent(Country);
+                params += "&LanguagePreference=" + encodeURIComponent(LanguagePreference);
+                params += "&MaxSuggestions=" + encodeURIComponent(this._MaxSuggestions);
+                params += "&MaxResults=" + encodeURIComponent(this._MaxResults);
+
+                var http = new XMLHttpRequest();
+                http.open('POST', url, true);
+                http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                http.onreadystatechange = function () {
+                    if (http.readyState == 4 && http.status == 200) {
+                        var response = JSON.parse(http.responseText);
+
+                        // Test for an error
+                        if (response.Items.length == 1 && typeof (response.Items[0].Error) != "undefined") {
+                            // Show the error message
+                            // alert(response.Items[0].Description);
+                        }
+                        else {
+                            // Check if there were any items found
+                            if (response.Items.length == 0) {
+                                //alert("Sorry, there were no results");
+                            }
+                            else {
+                                //debugger;
+                                var items = response.Items;
+                                var address_list = document.getElementById('address_list_lastid');
+                                var address_list_id = "";
+                                var address_list_next = "";
+
+                                this._Items = [];
+
+                                if (items.length > 7) {
+                                    debugger;
+                                }
+                                var max = (items.length > 7 ? 7 : items.length);
+                                for (i = 0; i < max; i++) {
+                                    var item = items[i];
+                                    var value = item.Id;
+                                    var next = item.Next;
+                                    var text = item.Text + ', ' + item.Description;
+
+                                    address_list.options[i].value = text;
+                                    address_list_id += value + ";";
+                                    address_list_next += next + ";";
+                                    //address_list_id.add(new Option(text, value));
+                                }
+                                document.getElementById('address_list_id').value = address_list_id;
+                                document.getElementById('address_list_next').value = address_list_next;
                             }
                         }
                     }
@@ -207,7 +313,7 @@
             },
 
             Retrieve: function (Id) {
-                //debugger;
+                debugger;
 
                 var url = 'https://ws1.postescanada-canadapost.ca/AddressComplete/Interactive/Retrieve/v2.11/json3.ws';
                 var params = '';

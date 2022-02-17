@@ -14,6 +14,14 @@ var Candidates_TDG_main = (function (window, document) {
     var oat = new Array("GC Targeted", "GC CEP", "GC Follow-up", "MOC Follow-up","MOC Targeted" );
     var formType;
 
+    //Constants
+    const FIELD_HQ_FLAG                 = "ovs_hqflag";
+    const FIELD_INITIAL_RECOMMENDATION  = "ovs_hqflag";
+    const FIELD_OVERSIGHT_TYPE          = "ovs_oversighttype"; 
+    const FIELD_RATIONALE               = "ovs_rationale";
+    const FIELD_REGIONAL_NOP            = "ovs_regionalnop";
+
+
     //********************private methods*******************
 
     function isJustificationMandatory(formContext, oversightTypeId) {
@@ -62,6 +70,21 @@ var Candidates_TDG_main = (function (window, document) {
         }
     }
 
+    function hasCurrentUserRole(roleName)
+    {
+        let hasRole = false;
+        let roles = Xrm.Utility.getGlobalContext().userSettings.roles;
+        roles.forEach(x =>
+        {
+            if (x.name === "System Administrator" || x.name === roleName)
+            {
+                hasRole = true;
+                return;
+            }
+        });
+        return hasRole;
+    }
+
 
     //********************private methods end***************
 
@@ -90,45 +113,20 @@ var Candidates_TDG_main = (function (window, document) {
                 clientUrl = globalContext.getClientUrl();
             }
 
-
-            //planning status
-            var planningstatus = formContext.getAttribute("ovs_planningstatus");
-            planningstatus.removeOnChange(Candidates_TDG_main.PlanningStatus_Change);
-            planningstatus.addOnChange(Candidates_TDG_main.PlanningStatus_Change);
+            if (hasCurrentUserRole("TDG Planner"))
+            {
 
 
-            var oversighttype = formContext.getAttribute("ovs_oversighttype");
-            oversighttype.removeOnChange(Candidates_TDG_main.ActivityType_OnCahnge);
-            oversighttype.addOnChange(Candidates_TDG_main.ActivityType_OnCahnge);            
-
-
-            if (formType > 1) {
-                planningstatus.fireOnChange();
             }
-        },
-
-        PlanningStatus_Change: function (executionContext) {
-
-            var formContext = executionContext.getFormContext();
-            //if replaced
-            if (glHelper.GetOptionsetValue(formContext, "ovs_planningstatus") == 918640001) {
-                //validate if justification is required
-                var ovesightTypeId = glHelper.GetValue(formContext, "ovs_oversighttype")[0]
-                    ? glHelper.GetLookupAttrId(formContext, "ovs_oversighttype").replace('{', '').replace('}', '')
-                    : null;
-                isJustificationMandatory(formContext, ovesightTypeId);
-            } else glHelper.SetRequiredLevel(formContext, "ovs_justification", false);
-
-        },
-
-        ActivityType_OnCahnge: function (executionContext) {
-
-            var formContext = executionContext.getFormContext();
-
-            if (glHelper.GetValue(formContext, "ovs_oversighttype")[0]) {
-                var planningstatus = formContext.getAttribute("ovs_planningstatus");
-                planningstatus.fireOnChange();
+            else
+            {
+                glHelper.SetDisabled(formContext, FIELD_HQ_FLAG, true);
+                glHelper.SetDisabled(formContext, FIELD_INITIAL_RECOMMENDATION, true);
+                glHelper.SetDisabled(formContext, FIELD_OVERSIGHT_TYPE, true);
+                glHelper.SetDisabled(formContext, FIELD_RATIONALE, true);
+                glHelper.SetDisabled(formContext, FIELD_REGIONAL_NOP, true);
             }
+  
         },
     }
 

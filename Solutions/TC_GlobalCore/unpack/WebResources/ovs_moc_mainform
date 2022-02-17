@@ -45,9 +45,23 @@ async function OnLoad(executionContext) {
 
 function setFieldPermissions(formContext) {
     var isManager = this.hasCurrentUserRole("TDG Manager");
+    var isPlanner = this.hasCurrentUserRole("TDG Planner");
+    var isInspector = this.hasCurrentUserRole("TDG Inspector");
+
 
     glHelper.SetDisabled(formContext, FIELD_HUB_INDICATOR, !isManager);
     glHelper.SetDisabled(formContext, FIELD_FOLLOW_UP_INDICATOR, !isManager);
+
+    glHelper.SetDisabled(formContext, FIELD_ACCIDENT_INDICATOR, !isPlanner);
+    glHelper.SetDisabled(formContext, FIELD_CEP_INDICATOR, !isPlanner);
+    glHelper.SetDisabled(formContext, FIELD_TARGETED_INDICATOR, !isPlanner);
+
+    glHelper.SetDisabled(formContext, FIELD_FOLLOW_UP_INDICATOR, !isPlanner);
+    glHelper.SetDisabled(formContext, FIELD_FOLLOW_UP_INDICATOR, !isManager);
+    glHelper.SetDisabled(formContext, FIELD_FOLLOW_UP_INDICATOR, isInspector);
+
+
+
 }
 
 

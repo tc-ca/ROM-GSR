@@ -14,7 +14,7 @@
       <tabs>
         <tab name="SUMMARY_TAB" id="{3b0b63a9-d379-689a-0ec3-e71eb4c6a841}" IsUserDefined="0" showlabel="true" expanded="true" locklevel="0" labelid="{74890bab-f4da-4b60-83c3-721a620de9de}">
           <labels>
-            <label description="Summary" languagecode="1033" />
+            <label description="Site" languagecode="1033" />
             <label description="Résumé" languagecode="1036" />
           </labels>
           <columns>
@@ -171,7 +171,7 @@
                           <label description="Country" languagecode="1033" />
                           <label description="Pays" languagecode="1036" />
                         </labels>
-                        <control id="address1_country" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="address1_country" disabled="false" />
+                        <control id="address1_country" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="address1_country" disabled="true" uniqueid="{84c9d0c4-e486-6002-80c1-bb4423246773}" />
                       </cell>
                       <cell id="{b0e82a7e-5683-d90c-308a-0d779377ea8a}" showlabel="true" locklevel="0" labelid="{1b087c18-a9b3-4c44-a942-8ffd8a458a08}">
                         <labels>
@@ -182,7 +182,7 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{30208796-5be8-d951-6d07-9dd532c47a65}" showlabel="true" locklevel="0">
+                      <cell id="{30208796-5be8-d951-6d07-9dd532c47a65}" showlabel="true" locklevel="0" visible="false">
                         <labels>
                           <label description="Is Site Attested?" languagecode="1033" />
                           <label description="Is Site Attested?" languagecode="1036" />
@@ -244,20 +244,46 @@
                     <row />
                     <row />
                     <row />
+                    <row>
+                      <cell id="{5167c450-1d83-31e7-1b23-129dad6beb15}" showlabel="false" colspan="1" auto="false" rowspan="4">
+                        <labels>
+                          <label description="modeoftransportation" languagecode="1033" />
+                        </labels>
+                        <control id="WebResource_modeoftransportation" classid="{9FDF5F91-88B1-47f4-AD53-C11EFC01A01D}">
+                          <parameters>
+                            <Url>cid_modeoftransportation.htm</Url>
+                            <PassParameters>false</PassParameters>
+                            <ShowOnMobileClient>false</ShowOnMobileClient>
+                            <Security>false</Security>
+                            <Scrolling>no</Scrolling>
+                            <Border>false</Border>
+                            <WebResourceId>{F74798AE-888E-EC11-8D20-0022483BB976}</WebResourceId>
+                          </parameters>
+                        </control>
+                        <events>
+                          <event name="onload" application="false">
+                            <dependencies />
+                          </event>
+                        </events>
+                      </cell>
+                    </row>
+                    <row />
+                    <row />
+                    <row />
                   </rows>
                 </section>
               </sections>
             </column>
           </columns>
         </tab>
-        <tab name="site_requirement_level" id="{40cae20c-0604-2170-82a5-954820d4038d}" IsUserDefined="0" locklevel="0" showlabel="true" expanded="false">
+        <tab name="site_requirement_level" id="{40cae20c-0604-2170-82a5-954820d4038d}" IsUserDefined="0" locklevel="0" showlabel="false" expanded="false">
           <labels>
-            <label description="Requirement Level" languagecode="1033" />
+            <label description="Basic / Extended" languagecode="1033" />
           </labels>
           <columns>
             <column width="100%">
               <sections>
-                <section name="tab_5_section_1" showlabel="false" showbar="false" locklevel="0" id="{43b37cc8-c463-8d74-0ea2-2653727c09d4}" IsUserDefined="0" layout="varwidth" columns="1" labelwidth="115">
+                <section name="tab_5_section_1" showlabel="false" showbar="false" locklevel="0" id="{43b37cc8-c463-8d74-0ea2-2653727c09d4}" IsUserDefined="0" layout="varwidth" columns="11" labelwidth="115" celllabelalignment="Left" celllabelposition="Left">
                   <labels>
                     <label description="Section" languagecode="1033" />
                   </labels>
@@ -265,10 +291,15 @@
                     <row>
                       <cell id="{c4bcd823-61c9-b7e3-da3d-7276b4562293}" showlabel="true" locklevel="0">
                         <labels>
-                          <label description="Requirement Level" languagecode="1033" />
+                          <label description="Basic / Extended" languagecode="1033" />
                           <label description="CID Requirement Level" languagecode="1036" />
                         </labels>
-                        <control id="cid_requirementlevel" classid="{3EF39988-22BB-4f0b-BBBE-64B5A3748AEE}" datafieldname="cid_requirementlevel" disabled="false" />
+                        <control id="cid_requirementlevel" classid="{3EF39988-22BB-4f0b-BBBE-64B5A3748AEE}" datafieldname="cid_requirementlevel" disabled="false" uniqueid="{ac53e73b-9501-6eda-2d73-3a3d149ec6b2}" />
+                      </cell>
+                      <cell id="{28c75ea4-1533-e750-cb09-aad0dd366370}" showlabel="false">
+                        <labels>
+                          <label description="" languagecode="1033" />
+                        </labels>
                       </cell>
                     </row>
                   </rows>
@@ -277,9 +308,9 @@
             </column>
           </columns>
         </tab>
-        <tab name="operation" id="{9c576c92-ba33-b013-8a33-18e581262222}" IsUserDefined="0" locklevel="0" showlabel="true" expanded="false">
+        <tab name="operation" id="{9c576c92-ba33-b013-8a33-18e581262222}" IsUserDefined="0" locklevel="0" showlabel="true" expanded="true">
           <labels>
-            <label description="Operation" languagecode="1033" />
+            <label description="Further Site Details" languagecode="1033" />
           </labels>
           <columns>
             <column width="100%">
@@ -293,7 +324,7 @@
                       <cell id="{9c98c811-1e4d-aeb8-dc93-a001973490e8}" showlabel="false" colspan="1" auto="false" rowspan="12">
                         <labels>
                           <label description="Operations" languagecode="1033" />
-                          <label description="Inscriptions MOC" languagecode="1036" />
+                          <label description="Opérations" languagecode="1036" />
                         </labels>
                         <control id="Operations" classid="{E7A81278-8635-4d9e-8D4D-59480B391C5B}" indicationOfSubgrid="true" uniqueid="{703d8b38-225d-e594-0462-adc483e1a613}">
                           <parameters>

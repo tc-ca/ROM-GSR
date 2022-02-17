@@ -57,10 +57,11 @@ var AddressComplete = {
                     }
                     else
                     {
-                        //debugger;
+                        debugger;
                         var items = response.Items;
                         var address_list = document.getElementById('address_list');
                         var address_list_id = "";
+                        var address_list_next = "";
 
                         this._Items = [];
 
@@ -68,13 +69,17 @@ var AddressComplete = {
                         {
                             var item = items[i];
                             var value = item.Id;
+                            var next = item.Next;
                             var text = item.Text + ', ' + item.Description;
 
                             address_list.options[i].value = text;
                             address_list_id += value + ";";
+                            address_list_next += next + ";";
+
                             //address_list_id.add(new Option(text, value));
                         }
                         document.getElementById('address_list_id').value = address_list_id;
+                        document.getElementById('address_list_next').value = address_list_next;
                     }
                 }
             }
@@ -115,7 +120,7 @@ var AddressComplete = {
                         // alert("Sorry, there were no results");
                     }
                     else {
-                        //debugger;
+                        debugger;
                         AddressComplete.Selected(response.Items);
                     }
                 }

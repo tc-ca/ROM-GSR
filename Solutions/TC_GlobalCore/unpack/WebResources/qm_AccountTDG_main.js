@@ -134,6 +134,10 @@ var AccountTDGmain = (function (window, document) {
             //        glHelper.SetTabVisibility(formContext, "tab_Operations", true);
             //}
 
+            if (AccountTDGmain.hasCurrentUserRole("TDG Planner"))
+                glHelper.SetControlVisibility(formContext, "ovs_cdpopulationdensity", false);
+            
+
             //filter Relationship Type
             filter_customertypecode(formContext);
 

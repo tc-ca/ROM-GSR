@@ -39,7 +39,8 @@ var NOPRibbon = (function (window, document) {
 
                 },
                 function (error) {
-                    Xrm.Utility.alertDialog(error.message);
+
+                    Xrm.Navigation.openErrorDialog({ message: error.message });
                 }
 
             );

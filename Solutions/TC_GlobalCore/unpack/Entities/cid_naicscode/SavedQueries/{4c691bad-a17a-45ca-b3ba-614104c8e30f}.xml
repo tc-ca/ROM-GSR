@@ -24,7 +24,6 @@
     <fetchxml>
       <fetch version="1.0" mapping="logical">
         <entity name="cid_naicscode">
-          <attribute name="cid_naicscodeid" />
           <attribute name="cid_name" />
           <attribute name="createdon" />
           <order attribute="cid_name" descending="false" />
@@ -33,12 +32,14 @@
           </filter>
           <filter type="or" isquickfindfields="1">
             <condition attribute="cid_name" operator="like" value="{0}" />
+            <condition attribute="cid_naicsclasstitle" operator="like" value="{0}" />
           </filter>
           <attribute name="cid_naicsclasstitle" />
           <attribute name="cid_naicsclasstitlefr" />
           <attribute name="cid_naicslevel" />
           <attribute name="cid_naicshierarchicalstructure" />
           <attribute name="cid_naicssuperscript" />
+          <attribute name="cid_naicscodeid" />
         </entity>
       </fetch>
     </fetchxml>
