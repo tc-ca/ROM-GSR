@@ -48,14 +48,29 @@ stages:
         Write-Host "Patch Exists =  $(PatchExists)"
         Write-Host "Latest Patch Name =  $(LatestPatchName)"
         Write-Host "${{ eq('$(PatchExists)', 'False') }}"
+    
+    #get current patch details if one exists
     - task: MSCRMGetSolution@12
       displayName: Get Solution Details
+      condition: and(succeeded(), not(eq(variables['LatestPatchName'], '')))
       inputs:
         crmConnectionString: '${{ parameters.ConnectionString }}'
         solutionName: '$(LatestPatchName)'
         existsVariableName: 'SolutionExists'
         versionVariableName: 'SolutionVersion'
         displayVariableName: 'SolutionDisplayName'
+        
+    #get main solution details if there is no existing patch
+    - task: MSCRMGetSolution@12
+      displayName: Get Solution Details
+      condition: and(succeeded(), eq(variables['LatestPatchName'], ''))
+      inputs:
+        crmConnectionString: '${{ parameters.ConnectionString }}'
+        solutionName: '$(LatestPatchName)'
+        existsVariableName: 'SolutionExists'
+        versionVariableName: 'SolutionVersion'
+        displayVariableName: 'SolutionDisplayName'
+
     - task: PowerShell@2
       displayName: Set PatchVersion Variable
       inputs:
