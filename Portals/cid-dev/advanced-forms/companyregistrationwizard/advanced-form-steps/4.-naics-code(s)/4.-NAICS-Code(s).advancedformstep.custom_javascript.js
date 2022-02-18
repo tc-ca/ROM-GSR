@@ -14,14 +14,14 @@ function subgrid_language() {
 	entityList.on("loaded", function () {
 		//debugger;
 		entityList.find("table tbody > tr").each(function (index, tr) {
-			//debugger;
+			debugger;
 			var primaryColumn = $(tr).find('td')[0];
 
 			/// or retrieve column by name
 			/// var primaryColumn = tr.find('td[data-attribute="name"]');
 
 			var url = $(primaryColumn).find("a")[0].href;
-			console.log("URL: " + url);
+			//console.log("URL: " + url);
 			if (!!url) {
 				$(tr).find('td').each(function (index, td) {
 					debugger;
