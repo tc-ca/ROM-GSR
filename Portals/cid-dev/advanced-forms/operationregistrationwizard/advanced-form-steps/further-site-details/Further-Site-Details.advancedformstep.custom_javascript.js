@@ -1,4 +1,9 @@
 	$(document).ready(function() {
+		var companyName = '{{user.parentcustomerid.name }}';
+		var header = $('.page-header h1');
+		if(companyName != null && header != null)
+			header.text(header.text() + ' - ' + companyName);
+
 	    $('table').each(function () {
             var selectedTable = $(this);
 		    if(selectedTable.attr('data-name').includes('_readonly'))

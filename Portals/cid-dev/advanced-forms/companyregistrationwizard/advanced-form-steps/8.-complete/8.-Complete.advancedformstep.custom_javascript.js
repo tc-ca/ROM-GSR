@@ -8,4 +8,9 @@
                 });
             }
 	    });
-	});
+
+	var companyName = '{{user.parentcustomerid.name }}';
+    var header = $('.page-header h1');
+	if(companyName != null && header != null)
+		header.text(header.text() + ' - ' + companyName);
+});

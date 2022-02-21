@@ -1,4 +1,10 @@
 $(document).ready(function() {
+
+	var companyName = '{{user.parentcustomerid.name }}';
+    var header = $('.page-header h1');
+	if(companyName != null && header != null)
+		header.text(header.text() + ' - ' + companyName);
+
 	$(".entity-grid").on("loaded", function () {
 		var actionButtonsToolbar = $('.view-toolbar');
 		//if ($("#bulkUploadBtn").length <= 0)
@@ -41,56 +47,102 @@ $(document).ready(function() {
 		});
     });
 	
-	webFormClientValidate = function() {
-    var validation = true;
-    var rows = $("#CompanySites .view-grid table").find("tbody > tr");
+	//webFormClientValidate = function() {
+    //var validation = true;
+    //var rows = $("#CompanySites .view-grid table").find("tbody > tr");
 
-	var errorMessage = "";
+	//var errorMessage = "";
 
-    if (rows.length <= 0) {
-		validation = false;
-        //alert('You cannot proceed before adding company site(s).');
-		errorMessage = "You cannot proceed before adding company site(s).";
-    }
-    else{
-		rows.each(function(){
-			var skipRow = false;
-			if(validation == true) 
-			{			
-				$(this).find('td').each(function(){
-					if(skipRow == false){
-						var tdElement = $(this);
-						
-						//if(tdElement.attr('data-attribute') == 'statuscode' && tdElement.attr('data-value').includes('2'))
-						if(tdElement.attr('data-attribute') == 'statuscode' && tdElement.attr('aria-label') == 'Inactive')
-							skipRow = true;
-						else if(tdElement.attr('data-attribute') == 'cid_issiteattested' && tdElement.attr('data-value') == 'false')
-						{
-							validation = false;
-							//alert('You cannot proceed before attesting all the company sites.');
-							errorMessage = 'You cannot proceed before attesting all the company sites.';
-						}
-					}
-				})	
-			}
+    //if (rows.length <= 0) {
+	//	validation = false;
+    //    //alert('You cannot proceed before adding company site(s).');
+	//	errorMessage = "You cannot proceed before adding company site(s).";
+    //}
+    //else{
+	//	rows.each(function(){
+	//		var skipRow = false;
+	//		if(validation == true) 
+	//		{			
+	//			$(this).find('td').each(function(){
+	//				if(skipRow == false){
+	//					var tdElement = $(this);
+	//					
+	//					//if(tdElement.attr('data-attribute') == 'statuscode' && tdElement.attr('data-value').includes('2'))
+	//					if(tdElement.attr('data-attribute') == 'statuscode' && tdElement.attr('aria-label') == 'Inactive')
+	//						skipRow = true;
+	//					else if(tdElement.attr('data-attribute') == 'cid_issiteattested' && tdElement.attr('data-value') == 'false')
+	//					{
+	//						validation = false;
+	//						//alert('You cannot proceed before attesting all the company sites.');
+	//						errorMessage = 'You cannot proceed before attesting all the company sites.';
+	//					}
+	//				}
+	//			})	
+	//		}
 //			else
 //				return validation;
-		})
-	}
+	//	})
+	//}
 
-	          if(!validation)
-    {
-    $('#ValidationSummaryEntityFormView div').remove(); 
+	 //         if(!validation)
+    //{
+    //$('#ValidationSummaryEntityFormView div').remove(); 
 
-   var validationSection = $('#ValidationSummaryEntityFormView');
+   //var validationSection = $('#ValidationSummaryEntityFormView');
    
-   validationSection.append($("<div class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));  
-  validationSection.show();
-    }
+   //validationSection.append($("<div class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));  
+  //validationSection.show();
+    //}
 
 
-	return validation; 
-    }
+	//return validation; 
+    //}
+
+
+
+        webFormClientValidate = function () {
+            var validation = true;
+            var errorMessage = "";
+            var companyId = $("#EntityFormView_EntityID").val();	
+			var filter = "parentaccountid/Id eq (guid'" + companyId + "')";
+			var data = ExecuteOData("Validation_CompanySites", filter);
+            
+			if(data == null)
+			{
+                errorMessage = "You cannot proceed before adding active company site(s).";
+                validation = false;
+            }
+			else
+			{
+				if(data.length <= 0)
+				{
+					errorMessage = "You cannot proceed before adding active company site(s).";
+					validation = false;
+				}
+				else
+				{
+					filter = "parentaccountid/Id eq (guid'" + companyId + "')";
+					data = ExecuteOData("Validation_CompanyNotAttestedSites", filter);
+						
+					if(data != null && data.length > 0)
+					{
+						errorMessage = "You cannot proceed before attesting all the company sites.";
+						validation = false;
+					}
+				}
+			}
+
+            if (!validation) {
+                $('#ValidationSummaryEntityFormView div').remove();
+
+                var validationSection = $('#ValidationSummaryEntityFormView');
+
+                validationSection.append($("<div class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
+                validationSection.show();
+            }
+
+           return validation;
+		}
+		
+		
 });
-
-

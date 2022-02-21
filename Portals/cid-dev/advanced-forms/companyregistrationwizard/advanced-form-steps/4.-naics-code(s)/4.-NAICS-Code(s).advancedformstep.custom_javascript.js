@@ -3,6 +3,12 @@
 $(document).ready(function () {
 	//debugger;
 	subgrid_language();
+
+	var companyName = '{{user.parentcustomerid.name }}';
+    var header = $('.page-header h1');
+	if(companyName != null && header != null)
+		header.text(header.text() + ' - ' + companyName);
+
 });
 
 function subgrid_language() {
@@ -55,6 +61,41 @@ function text_language (text, language) {
 		value = text.substr(index1 + 2);
 	}
 	return value;
+}
+
+if (window.jQuery) {
+    (function ($) {
+        webFormClientValidate = function () {
+            var validation = true;
+            var errorMessage = "";
+            var companyId = $("#EntityFormView_EntityID").val();	
+			//var filter = "cid_company/Id eq (guid'" + companyId + "')";
+			//var data = ExecuteOData("Validation_CompanyNAICSCodes", filter);
+            
+			//if(data == null || data.length <= 0)
+			if(companyId == null)
+			{
+				errorMessage = "Error: Missing company Id.";
+                validation = false;
+			}
+			else if(!CompanyHasNAICSCodes(companyId))
+			{
+                errorMessage = "You cannot proceed before adding company NAICS code(s).";
+                validation = false;
+            }
+
+            if (!validation) {
+                $('#ValidationSummaryEntityFormView div').remove();
+
+                var validationSection = $('#ValidationSummaryEntityFormView');
+
+                validationSection.append($("<div class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
+                validationSection.show();
+            }
+
+           return validation;
+		}
+    }(window.jQuery));
 }
 
 //if (window.jQuery) {

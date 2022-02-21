@@ -1,5 +1,66 @@
-function ExecuteOData(entity, filter) {
-    var url = entity + "?$filter=" + filter;
+<script>
+function CompanyHasNAICSCodes(companyId)
+{
+    var returnValue = false;
+    var filter = "cid_company/Id eq (guid'" + companyId + "')";
+	var data = ExecuteOData("Validation_CompanyNAICSCodes", filter);
+
+    if(data != null && data.length > 0)
+        returnValue = true;
+
+    return returnValue;
+}
+
+function CompanyHasERAPs(companyId)
+{
+    var returnValue = false;
+    var filter = "cid_company/Id eq (guid'" + companyId + "')";
+	var data = ExecuteOData("Validation_CompanyERAPs", filter);
+
+    if(data != null && data.length > 0)
+        returnValue = true;
+        
+    return returnValue;
+}
+
+function SiteHasModeOfTransportations(siteId)
+{
+    var returnValue = false;
+    var filter = "cid_site/Id eq (guid'" + siteId + "')";
+	var data = ExecuteOData("Validation_SiteModeOfTransportations", filter);
+
+    if(data != null && data.length > 0)
+        returnValue = true;
+
+    return returnValue;
+}
+
+function SiteHasOperationClasses(operationId)
+{
+    var returnValue = false;
+    var filter = "ovs_operationclass/Id eq (guid'" + operationId + "')";
+	var data = ExecuteOData("Validation_SiteClasses", filter);
+
+    if(data != null && data.length > 0)
+        returnValue = true;
+
+    return returnValue;
+}
+
+function SiteHasOperationUNNumbers(operationId)
+{
+    var returnValue = false;
+    var filter = "ovs_operationunnumber/Id eq (guid'" + operationId + "')";
+	var data = ExecuteOData("Validation_SiteUNNumbers", filter);
+
+    if(data != null && data.length > 0)
+        returnValue = true;
+
+    return returnValue;
+}
+
+function ExecuteOData(list, filter) {
+    var url = list + "?$filter=" + filter;
     var oDataUrl = "~/_odata/" + url;
     var response = null;
 
@@ -13,3 +74,4 @@ function ExecuteOData(entity, filter) {
     });
     return response;
 }
+</script>
