@@ -1,0 +1,126 @@
+﻿var IPT_Run = (function (window, document) {
+
+    //********************private methods*******************
+
+    var LCID;
+
+    function runIPT(runid) {
+
+       //TO DO: localize
+        Xrm.Utility.showProgressIndicator("Working ...");
+
+        var parameters = {};
+        parameters.runid = runid;
+
+        var ovs_IPTRunRequest = {
+            runid: parameters.runid,
+
+            getMetadata: function () {
+                return {
+                    boundParameter: null,
+                    parameterTypes: {
+                        "runid": {
+                            "typeName": "Edm.String",
+                            "structuralProperty": 1
+                        }
+                    },
+                    operationType: 0,
+                    operationName: "ovs_IPTRun"
+                };
+            }
+        };
+
+        Xrm.WebApi.online.execute(ovs_IPTRunRequest).then(
+            function success(result) {
+
+                Xrm.Utility.closeProgressIndicator();
+
+                if (result.ok) {
+                    result.text().then(function (i) {
+                        var data = JSON.parse(i);
+                        if (data != null || typeof data !== 'undefined') {
+
+                            if ((data.response != null)
+                                && typeof data.response !== 'undefined')
+                                if (data.response.indexOf("Error") > -1) {
+                                    //show error message
+                                    //TO DO: localize
+                                    var alertStrings = { confirmButtonLabel: "Yes", text: "Call failed with follow error: " + data.response };
+                                }
+                                else {
+                                    //notify about call result and further notifications
+                                    //TO DO: localize
+                                    var alertStrings = { confirmButtonLabel: "Yes", text: "Ipt calculation process has been started. You will be notified about the progress and its results via emails and Teams messaging" };
+                                }
+                            Xrm.Navigation.openAlertDialog(alertStrings);
+                        }
+                    }, function (error) {
+
+                        console.log("IPT call response parse error: " + error.message);
+                        //TO DO: localize
+                        Xrm.Navigation.openErrorDialog({ message: "Something went wrong. Error: " + error.message });
+                    });
+                }
+            },
+            function (error) {
+
+                Xrm.Utility.closeProgressIndicator();
+                console.log("IPT call error: " + error.message);
+                //TO DO: localize
+                Xrm.Navigation.openErrorDialog({ message: "Something went wrong. Error: " + error.message });
+            }
+        );
+
+    }
+
+    function on_IPT_run(primaryControl) {
+
+        var result = "";
+        var globalContext = Xrm.Utility.getGlobalContext();
+        var formContext = primaryControl;
+
+        LCID = globalContext.userSettings.languageId;
+
+            //if (LCID == 1033)
+            //    resexResourceName = "?.1033.resx";
+            //else if (LCID == 1036)
+            //    resexResourceName = "?.1036.resx";
+
+            //var confirmationText = Xrm.Utility.getResourceString(resexResourceName, "");
+
+        //check if form is saved
+        if (formContext.data.getIsDirty()) {
+
+            //TO DO: localize
+            var alertStrings = { confirmButtonLabel: "Yes", text: "Please save the form before execution" };
+            Xrm.Navigation.openAlertDialog(alertStrings);
+            return;
+        }
+
+        var pageInput = Xrm.Utility.getPageContext().input;
+        var runid = pageInput.entityId.replace("{", "").replace("}", "");
+
+        //notify about start
+        var confirmStrings = { text: "You're going to start IPT calculation process. Proceed?", title: "Confirm Dialog" };
+        Xrm.Navigation.openConfirmDialog(confirmStrings).then(
+            function (success) {
+                if (success.confirmed) {
+                //get entity id and run IPT job in Azure
+                    runIPT(runid);
+                }                   
+                else
+                    console.log("Dialog closed using Cancel button or X.");
+            });
+
+        return result;
+    }
+
+    //********************public methods********************
+
+    return {
+
+        on_IPT_run: on_IPT_run,
+       
+    };
+
+})(window, document);
