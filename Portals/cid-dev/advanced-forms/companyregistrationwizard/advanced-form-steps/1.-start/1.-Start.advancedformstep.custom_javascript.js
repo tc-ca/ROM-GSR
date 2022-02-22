@@ -22,6 +22,11 @@ $(document).ready(function () {
     cid_reasonfornobnnumber_onchange();
 
     _step_start = "1";
+
+    // autocomplete off
+    $("#cid_crabusinessnumber").attr("autocomplete", "new-password");
+    $("#cid_legalname").attr("autocomplete", "new-password");
+    $("#cid_reasonfornobnnumber_other").attr("autocomplete", "new-password");
 });
 
 function cid_has_cra_bn_onchange() {
@@ -63,7 +68,7 @@ function cid_has_cra_bn_onchange() {
         $("#cid_reasonfornobnnumber").val("");
         $("#cid_reasonfornobnnumber_other").val("");
         $("#cid_legalname").val("");
-   }
+    }
 }
 
 function cid_reasonfornobnnumber_onchange() {
@@ -80,8 +85,7 @@ function cid_reasonfornobnnumber_onchange() {
         control_show("cid_reasonfornobnnumber_other");
         addValidator("cid_reasonfornobnnumber_other", "Other Reason");
     }
-    else
-    {
+    else {
         control_hide("cid_reasonfornobnnumber_other");
         removeValidator("cid_reasonfornobnnumber_other");
     }
@@ -90,13 +94,6 @@ function cid_reasonfornobnnumber_onchange() {
 // clear parentcustomerid
 function clear_parentcustomerid() {
     // clear data
-    sessionStorage.setItem("AddressLine1Text", "");
-    sessionStorage.setItem("AddressLine2Text", "");
-    sessionStorage.setItem("CityName", "");
-    sessionStorage.setItem("ProvinceStateCode", "");
-    sessionStorage.setItem("PostalZipCode", "");
-    sessionStorage.setItem("CountryCode", "");
-
     $("#cid_crabusinessnumber").val("");
     $("#cid_reasonfornobnnumber").val("");
     $("#cid_reasonfornobnnumber_other").val("");
@@ -205,8 +202,8 @@ function Retrieve_cra(bn) {
 }
 
 function BN_Selected(data) {
-    var LegalName = data.LegalName				        
-    var OperatingName = data.OperatingName				
+    var LegalName = data.LegalName
+    var OperatingName = data.OperatingName
     OperatingName = (OperatingName == "" ? LegalName : OperatingName);
 
     var address = data.PhysicalLocationAddress;
@@ -246,8 +243,7 @@ function OData_List(entity, filter) {
     return response;
 }
 
-function error_message(message)
-{
+function error_message(message) {
     var validationSection = $('#ValidationSummaryEntityFormView');
     validationSection.append($("<div class='notification alert-danger' role='alert'>" + message + "</div>"));
     validationSection.show();

@@ -2,12 +2,24 @@
 
 $(document).ready(function () {
     debugger;
+
+    //when the page is done loading, disable autocomplete on all inputs[text]
+    $('input[type="text"]').attr('autocomplete', 'off');
+
     $("#emailaddress1").width('100%');
 
     $("#telephone1").attr("placeholder", "");
     $("#mobilephone").attr("placeholder", "");
 
     addValidator("emailaddress1", "E-mail");
+
+    // autocomplete off
+    //$("#firstname").attr("autocomplete", "new-password");
+    //$("#lastname").attr("autocomplete", "new-password");
+    //$("#emailaddress1").attr("autocomplete", "new-password");
+    //$("#telephone1").attr("autocomplete", "new-password");
+    //$("#mobilephone").attr("autocomplete", "new-password");
+    //$("#fax").attr("autocomplete", "new-password");
 });
 
 // setRequiredLevel("required");

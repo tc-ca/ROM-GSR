@@ -27,10 +27,17 @@ $(document).ready(function () {
     // default operating name to legalname
     control_hide("name");
 
-    	var companyName = '{{user.parentcustomerid.name }}';
-    var header = $('.page-header h1');
-	if(companyName != null && header != null)
-		header.text(header.text() + ' - ' + companyName);
+    // autocomplete off
+    $("#cid_sitename").attr("autocomplete", "new-password");
+    $("#address1_line2").attr("autocomplete", "new-password");
+    $("#address1_line3").attr("autocomplete", "new-password");
+    $("#address1_city").attr("autocomplete", "new-password");
+    $("#address1_stateorprovince").attr("autocomplete", "new-password");
+    $("#address1_postalcode").attr("autocomplete", "new-password");
+    $("#address1_longitude").attr("autocomplete", "new-password");
+    $("#address1_latitude").attr("autocomplete", "new-password");
+    $("#telephone1").attr("autocomplete", "new-password");
+    $("#fax").attr("autocomplete", "new-password");
 });
 
 if (window.jQuery) {

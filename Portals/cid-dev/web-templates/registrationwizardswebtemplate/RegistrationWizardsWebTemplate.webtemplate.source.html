@@ -47,6 +47,18 @@ function SiteHasOperationClasses(operationId)
     return returnValue;
 }
 
+function SiteHasOperationClasses(operationId, siteId)
+{
+    var returnValue = false;
+    var filter = "ovs_operationclass/Id eq (guid'" + operationId + "')";
+	var data = ExecuteOData("Validation_SiteClasses", filter);
+
+    if(data != null && data.length > 0)
+        returnValue = true;
+
+    return returnValue;
+}
+
 function SiteHasOperationUNNumbers(operationId)
 {
     var returnValue = false;

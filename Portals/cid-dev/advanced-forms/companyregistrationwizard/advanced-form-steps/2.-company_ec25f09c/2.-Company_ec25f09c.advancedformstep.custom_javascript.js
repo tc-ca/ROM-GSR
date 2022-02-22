@@ -2,11 +2,11 @@
 
 $(document).ready(function () {
     debugger;
-    
-	var companyName = '{{user.parentcustomerid.name }}';
+
+    var companyName = '{{user.parentcustomerid.name }}';
     var header = $('.page-header h1');
-	if(companyName != null && header != null)
-		header.text(header.text() + ' - ' + companyName);
+    if (companyName != null && header != null)
+        header.text(header.text() + ' - ' + companyName);
 
     // resize WebResource_address_complete
     $("#WebResource_address_complete").height('72px');
@@ -20,6 +20,8 @@ $(document).ready(function () {
     if (step_start == "2") {
         var cid_has_cra_bn = $('#cid_has_cra_bn').val();
         var address1_line1 = $("#address1_line1").val();
+        var cid_legalname = $('#ovs_legalname').val();
+        var cid_operatingname = $('#name').val();
     }
     else {
         var cid_has_cra_bn = '{{user.cid_has_cra_bn}}';
@@ -84,6 +86,21 @@ $(document).ready(function () {
     addValidator("address1_stateorprovince", "Province");
     addValidator("address1_postalcode", "Postal Code");
     addValidator("address1_country", "Country");
+
+    // autocomplete off
+    $("#name").attr("autocomplete", "new-password");
+    $("#address1_line2").attr("autocomplete", "new-password");
+    $("#address1_line3").attr("autocomplete", "new-password");
+    $("#address1_city").attr("autocomplete", "new-password");
+    $("#address1_stateorprovince").attr("autocomplete", "new-password");
+    $("#address1_postalcode").attr("autocomplete", "new-password");
+    $("#address1_country").attr("autocomplete", "new-password");
+    $("#address1_longitude").attr("autocomplete", "new-password");
+    $("#address1_latitude").attr("autocomplete", "new-password");
+    $("#telephone1").attr("autocomplete", "new-password");
+    $("#fax").attr("autocomplete", "new-password");
+    $("#cid_reasonfornobnnumber_other").attr("autocomplete", "new-password");
+    $("#websiteurl").attr("autocomplete", "new-password");
 });
 
 if (window.jQuery) {
@@ -154,4 +171,3 @@ function removeValidator(fieldName) {
 
     $("#" + fieldName + "_label").parent().removeClass("required");
 }
-

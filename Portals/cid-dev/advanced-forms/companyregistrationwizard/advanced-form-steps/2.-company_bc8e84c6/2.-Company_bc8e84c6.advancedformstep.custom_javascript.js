@@ -81,6 +81,21 @@ $(document).ready(function () {
         $("#address1_postalcode").val(sessionStorage.getItem("PostalZipCode"));
         $("#address1_country").val(sessionStorage.getItem("CountryCode"));
     }
+
+    // autocomplete off
+    $("#name").attr("autocomplete", "new-password");
+    $("#address1_line2").attr("autocomplete", "new-password");
+    $("#address1_line3").attr("autocomplete", "new-password");
+    $("#address1_city").attr("autocomplete", "new-password");
+    $("#address1_stateorprovince").attr("autocomplete", "new-password");
+    $("#address1_postalcode").attr("autocomplete", "new-password");
+    $("#address1_country").attr("autocomplete", "new-password");
+    $("#address1_longitude").attr("autocomplete", "new-password");
+    $("#address1_latitude").attr("autocomplete", "new-password");
+    $("#telephone1").attr("autocomplete", "new-password");
+    $("#fax").attr("autocomplete", "new-password");
+    $("#cid_reasonfornobnnumber_other").attr("autocomplete", "new-password");
+    $("#websiteurl").attr("autocomplete", "new-password");
 });
 
 if (window.jQuery) {
@@ -151,4 +166,3 @@ function removeValidator(fieldName) {
 
     $("#" + fieldName + "_label").parent().removeClass("required");
 }
-
