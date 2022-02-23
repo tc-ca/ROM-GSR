@@ -47,7 +47,9 @@ if (window.jQuery) {
  (function ($) {
     webFormClientValidate = function() {
         var validation = false;
-        var companyId = $("#EntityFormView_EntityID").val();	
+        var companyId = $("#EntityFormView_EntityID").val();
+
+        //Contacts validation
         var filter = "parentcustomerid/Id eq (guid'" + companyId + "')";
         var data = ExecuteOData("Validation_CompanyPrimarySecondaryContacts", filter);
 		var errorMessage = "";
@@ -73,7 +75,7 @@ if (window.jQuery) {
 		if(!validation)
 			errorMessage = "You cannot attest company before adding primary and secondary contacts.</br>";
 		
-		
+		//NAICS Codes validation
 		if(!CompanyHasNAICSCodes(companyId))
 		{
             errorMessage = errorMessage + "You cannot attest company before adding company NAICS code(s).</br>";

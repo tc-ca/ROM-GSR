@@ -244,7 +244,11 @@ function OData_List(entity, filter) {
 }
 
 function error_message(message) {
+    debugger;
+
     var validationSection = $('#ValidationSummaryEntityFormView');
+    validationSection[0].innerHTML = "";
+
     validationSection.append($("<div class='notification alert-danger' role='alert'>" + message + "</div>"));
     validationSection.show();
 }

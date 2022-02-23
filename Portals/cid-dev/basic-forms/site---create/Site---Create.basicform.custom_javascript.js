@@ -1,4 +1,4 @@
-// Basic Form - Site Create.js
+// Basic Form - Site - Create.js
 
 $(document).ready(function () {
     debugger;
@@ -11,7 +11,7 @@ $(document).ready(function () {
     $("#WebResource_address_complete").height('72px');
     sessionStorage.setItem("AddressLine1Text", "");
 
-    var cid_legalname = ("{{user.cid_legalname}}");
+    var cid_legalname = "{{user.cid_legalname}}";
     cid_legalname = cid_legalname.replace(k_char_apostrophe, "'");
 
     $("#ovs_legalname").val(cid_legalname);
@@ -29,7 +29,6 @@ $(document).ready(function () {
     });
     cid_same_as_company_change();
 
-    //control_autocomplete();
     $("#cid_sitename").attr("autocomplete", "new-password");
     $("#address1_line2").attr("autocomplete", "new-password");
     $("#address1_line3").attr("autocomplete", "new-password");
@@ -47,32 +46,64 @@ function cid_same_as_company_change() {
     var value = $("#cid_same_as_company")[0].checked;
     if (value) {
         $("#WebResource_address_complete").hide();
-        control_hide("address1_line2");
-        control_hide("address1_line3");
-        control_hide("address1_city");
-        control_hide("address1_stateorprovince");
-        control_hide("address1_postalcode");
-        control_hide("address1_country");
+        control_show("address1_line1");
+        $("#address1_line1").prop('readonly', true);
+        $("#address1_line2").prop('readonly', true);
+        $("#address1_line3").prop('readonly', true);
+        $("#address1_city").prop('readonly', true);
+        $("#address1_stateorprovince").prop('readonly', true);
+        $("#address1_postalcode").prop('readonly', true);
 
-        $("#address1_line1").val("N/A");
-        $("#address1_city").val("N/A");
-        $("#address1_stateorprovince").val("N/A");
-        $("#address1_postalcode").val("N/A");
+        debugger;
+        var parent_id = '{{ user.parentcustomerid.id }}';
+        var filter = "accountid eq guid'" + parent_id + "'";
+        var data = OData_List("account", filter);
+
+        var address1_line1 = "N/A";
+        var address1_city = "N/A";
+        var address1_stateorprovince = "N/A";
+        var address1_postalcode = "N/A";
+        var address1_country = "Canada";
+
+        if (data.length > 0) {
+            var item = data[0];
+            address1_line1 = item.address1_line1;
+            address1_line2 = item.address1_line2;
+            address1_line2 = (address1_line2 == null ? "" : address1_line2);
+            address1_line3 = item.address1_line3;
+            address1_line3 = (address1_line3 == null ? "" : address1_line3);
+            address1_city = item.address1_city;
+            address1_stateorprovince = item.address1_stateorprovince;
+            address1_postalcode = item.address1_postalcode;
+            address1_country = item.address1_country;
+       }
+        
+        $("#address1_line1").val(address1_line1);
+        $("#address1_line2").val(address1_line2);
+        $("#address1_line3").val(address1_line3);
+        $("#address1_city").val(address1_city);
+        $("#address1_stateorprovince").val(address1_stateorprovince);
+        $("#address1_postalcode").val(address1_postalcode);
+        $("#address1_country").val(address1_country);
     }
     else {
         $("#WebResource_address_complete").show();
-        control_show("address1_line2");
-        control_show("address1_line3");
-        control_show("address1_city");
-        control_show("address1_stateorprovince");
-        control_show("address1_postalcode");
-        control_show("address1_country");
+        control_hide("address1_line1");
+        $("#address1_line1").prop('readonly', false);
+        $("#address1_line2").prop('readonly', false);
+        $("#address1_line3").prop('readonly', false);
+        $("#address1_city").prop('readonly', false);
+        $("#address1_stateorprovince").prop('readonly', false);
+        $("#address1_postalcode").prop('readonly', false);
 
         $("#address1_line1").val("");
+        $("#address1_line2").val("");
+        $("#address1_line3").val("");
         $("#address1_city").val("");
         $("#address1_stateorprovince").val("");
         $("#address1_postalcode").val("");
-    }
+        $("#address1_country").val("Canada");
+   }
 }
 
 function AddressComplete_Hide_address1_line1() {
@@ -113,19 +144,19 @@ function control_show(fieldName, is_lookup) {
     }
 }
 
-function control_autocomplete() {
-    //return;
+// odata
+function OData_List(entity, filter) {
+    var url = entity + "?$filter=" + filter;
+    var oDataUrl = "~/_odata/" + url;
+    var response = null;
 
-    $('input, select, textarea').each(
-    function (index) {
-        var input = this;
-        var index1 = input.name.indexOf("ctl00$");
-        var index2 = input.name.lastIndexOf("$");
-        var ctrl = input.name.substr(index2+1);
-        var type = this.getAttribute("type");
-        if ((index1 >= 0) && (type != "hidden")) {
-            debugger;
-            $("#" + ctrl).prop("autocomplete", "new-password");
-        }
+    $.ajax({
+        type: "GET",
+        url: oDataUrl,
+        dataType: "json",
+        async: false
+    }).done(function (json) {
+        response = json.value;
     });
+    return response;
 }
