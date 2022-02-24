@@ -1,7 +1,7 @@
 // ProfileCustom.js
 
 $(document).ready(function () {
-
+    debugger;
 });
 
 function AddressComplete_Selected() {
