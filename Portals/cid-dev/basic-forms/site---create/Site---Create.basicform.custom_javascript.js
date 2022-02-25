@@ -41,13 +41,20 @@ $(document).ready(function () {
     $("#fax").attr("autocomplete", "new-password");
 });
 
+function WebResource_address_complete_readonly(value) {
+    debugger;
+    var f = document.getElementById("WebResource_address_complete");
+    var c = f.contentWindow;
+    c.readonly();
+},
+
 function cid_same_as_company_change() {
     debugger;
     var value = $("#cid_same_as_company")[0].checked;
     if (value) {
-        $("#WebResource_address_complete").hide();
-        control_show("address1_line1");
-        $("#address1_line1").prop('readonly', true);
+        //$("#WebResource_address_complete").hide();
+        WebResource_address_complete_readonly(true);
+
         $("#address1_line2").prop('readonly', true);
         $("#address1_line3").prop('readonly', true);
         $("#address1_city").prop('readonly', true);
@@ -76,8 +83,8 @@ function cid_same_as_company_change() {
             address1_stateorprovince = item.address1_stateorprovince;
             address1_postalcode = item.address1_postalcode;
             address1_country = item.address1_country;
-       }
-        
+        }
+
         $("#address1_line1").val(address1_line1);
         $("#address1_line2").val(address1_line2);
         $("#address1_line3").val(address1_line3);
@@ -87,9 +94,9 @@ function cid_same_as_company_change() {
         $("#address1_country").val(address1_country);
     }
     else {
-        $("#WebResource_address_complete").show();
-        control_hide("address1_line1");
-        $("#address1_line1").prop('readonly', false);
+        //$("#WebResource_address_complete").show();
+        WebResource_address_complete_readonly(false);
+
         $("#address1_line2").prop('readonly', false);
         $("#address1_line3").prop('readonly', false);
         $("#address1_city").prop('readonly', false);
@@ -103,7 +110,7 @@ function cid_same_as_company_change() {
         $("#address1_stateorprovince").val("");
         $("#address1_postalcode").val("");
         $("#address1_country").val("Canada");
-   }
+    }
 }
 
 function AddressComplete_Hide_address1_line1() {

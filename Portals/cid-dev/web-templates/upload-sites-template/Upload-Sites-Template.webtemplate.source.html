@@ -55,7 +55,51 @@
             $("#processingMsg").hide();
     });
     var pageURL = window.location.href;
- 
+ $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value='Save &amp; Validate' class='submit-btn btn btn-primary form-action-container-left' />");
+
+$('#btn_attachfile_and_scan').click(function(e) 
+{
+  
+  // Get the name of the selected file
+    var FileName = $('#AttachFile')[0].files[0].name;
+   
+    // Get the mime type of the selected file
+
+    var MimeType = $('#AttachFile')[0].files[0].type;
+
+    // Get the content of the selected file
+
+    var file = document.getElementById('AttachFile').files[0];
+  
+  if (file) {
+
+            // Read the file
+
+            var reader = new FileReader();
+
+            reader.readAsDataURL(file);
+
+            // The browser has finished reading the file, we can now do something with it...
+
+            reader.onload = function (e) {
+
+                // The browser has finished reading the file, we can now do something with it...
+
+                var DocumentbodyContents = e.target.result;
+
+                // Split the string at the first comma (removing the base64 prefix)
+
+                DocumentbodyContents = DocumentbodyContents.substring(DocumentbodyContents.indexOf(',') + 1);
+
+alert(DocumentbodyContents);
+
+            };
+
+        }
+
+e.preventDefault();
+});
+
     //var DownloadURL = "~/RD_Sites_Template.xlsm";
     //var linktemplate = document.getElementById("linkdownload");
     //linktemplate.href = DownloadURL;

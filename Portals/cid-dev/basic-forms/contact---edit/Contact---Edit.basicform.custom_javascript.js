@@ -14,12 +14,14 @@ $(document).ready(function () {
     addValidator("emailaddress1", "E-mail");
 
     // autocomplete off
-    $("#firstname").attr("autocomplete", "new-password");
-    $("#lastname").attr("autocomplete", "new-password");
-    $("#emailaddress1").attr("autocomplete", "new-password");
-    $("#telephone1").attr("autocomplete", "new-password");
-    $("#mobilephone").attr("autocomplete", "new-password");
-    $("#fax").attr("autocomplete", "new-password");
+    try {
+        $("#firstname").attr("autocomplete", "new-password");
+        $("#lastname").attr("autocomplete", "new-password");
+        $("#emailaddress1").attr("autocomplete", "new-password");
+        $("#telephone1").attr("autocomplete", "new-password");
+        $("#mobilephone").attr("autocomplete", "new-password");
+        $("#fax").attr("autocomplete", "new-password");
+    } catch (e) {}
 });
 
 // setRequiredLevel("required");
