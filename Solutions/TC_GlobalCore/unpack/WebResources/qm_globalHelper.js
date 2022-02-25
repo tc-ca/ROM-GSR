@@ -88,6 +88,17 @@
         formContext.ui.formSelector.items.get(formId).navigate();
     }
 
+    function SetFormReadOnly(formContext) {
+
+        var formControls = formContext.ui.controls;
+
+        formControls.forEach(element => {
+            if (element.getName() != "" && element.getName() != null) {
+                element.setDisabled(true);
+            }
+        });
+    }
+
 
     /****************************************************************************************
     VALUES
@@ -659,6 +670,7 @@
         getGlobalContext: getGlobalContext,
         GetFormName: GetFormName,
         GetFormType: GetFormType,
+        SetFormReadOnly: SetFormReadOnly,
         GetLookupAttrId: GetLookupAttrId,
         GetLookupName: GetLookupName,
         GetOptionsetText: GetOptionsetText,

@@ -52,11 +52,11 @@
             var SearchTerm = address1_line1;
             var LanguagePreference = 'en';
 
-            AddressComplete.Find(SearchTerm, LanguagePreference);
+            AddressComplete.Find(SearchTerm, LanguagePreference, false);
         }
 
         function onInput(e) {
-            //debugger;
+            debugger;
 
             var input = e.target;
             var val = input.value;
@@ -73,9 +73,7 @@
                 parent.AddressComplete_address1_line1();
             } catch (e) { }
 
-
-            // skip 1st option
-            for (var i = 1; i < options.length; i++) {
+            for (var i = 0; i < options.length; i++) {
                 var current = options[i].value;
                 if (current === val) {
                     found = true;
@@ -85,17 +83,24 @@
             }
 
             if (found) {
-                debugger;
-                var id = AddressComplete.GetId(index - 1);
+                //debugger;
+                var id = AddressComplete.GetId(index);
                 var list = id.split(";");
                 if (list[1] == "Retrieve") {
+                    //document.getElementById('address_list').value = list[0];
                     AddressComplete.Retrieve(list[0]);
+
+                    document.getElementById('address_list_id').value = list[0] + ";";
+                    document.getElementById('address_list_next').value = list[1] + ";";
                 }
                 else {
+                    debugger;
                     var LanguagePreference = 'en';
                     var LastId = list[0];
 
-                    AddressComplete.Find_LastId(LastId, LanguagePreference);
+                    document.getElementById('address1_line1').value = ""; // list[0];
+
+                    //AddressComplete.Find(LastId, LanguagePreference, true);
                 }
             }
             else {
@@ -110,31 +115,21 @@
     <input list="address_list" id="address1_line1" class="text form-control" />
     <br>
     <datalist id="address_list">
-        <option value="" />
-        <option value="" />
-        <option value="" />
-        <option value="" />
-        <option value="" />
-        <option value="" />
-        <option value="" />
     </datalist>
-    <datalist id="address_list_lastid">
-        <option value="Edge">
-        <option value="Firefox">
-        <option value="Chrome">
-        <option value="Opera">
-        <option value="Safari">
-        <option value="iPhone" />
-        <option value="iPad" />
-    </datalist>    
+
+    <datalist id="address_list2">
+    </datalist>
+
     <input type="text" id="address_list_id" hidden />
     <input type="text" id="address_list_next" hidden />
 
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
+            //debugger;
+            document.getElementById("address1_line1").setAttribute("autocomplete", "off");
+
             document.querySelector('input[list="address_list"]').addEventListener('input', onInput);
-            AddressComplete.removeOptions('address_list', false);
+            AddressComplete.removeOptions('address_list');
 
             var address1_line1 = sessionStorage.getItem("AddressLine1Text");
             address1_line1 = (address1_line1 == "null" ? "" : address1_line1);
@@ -147,6 +142,13 @@
     </script>
 
     <script>
+        function readonly() {
+            debugger;
+            document.getElementById("address1_line1").prop('readonly', true);
+
+            //document.getElementById('targetFrame').contentWindow.targetFunction();
+        }
+
         var AddressComplete = {
             _Key: "MM95-DM44-MP35-XM79",
             _MaxResults: 7,
@@ -164,19 +166,26 @@
                 return value;
             },
 
-            Find: function (SearchTerm, LanguagePreference) {
-                //debugger;
+            Find: function (SearchTerm, LanguagePreference, LastId_ind) {
+                debugger;
 
-                this.removeOptions('address_list', false);
+                var listname = (!LastId_ind ? "address_list" : "address_list2");
+                this.removeOptions(listname);
                 document.getElementById('address_list_id').value = "";
+                document.getElementById('address_list_next').value = "";
 
-                //var LastId = '';
                 var Country = '';
                 var url = 'https://ws1.postescanada-canadapost.ca/AddressComplete/Interactive/Find/v2.10/json3.ws';
 
                 var params = '';
                 params += "&Key=" + encodeURIComponent(this._Key);
-                params += "&SearchTerm=" + encodeURIComponent(SearchTerm);
+                if (!LastId_ind) {
+                    params += "&SearchTerm=" + encodeURIComponent(SearchTerm);
+                }
+                else {
+                    params += "&LastId=" + encodeURIComponent(SearchTerm);
+
+                }
                 params += "&SearchFor=" + encodeURIComponent(this._SearchFor);
                 params += "&Country=" + encodeURIComponent(Country);
                 params += "&LanguagePreference=" + encodeURIComponent(LanguagePreference);
@@ -201,102 +210,30 @@
                                 //alert("Sorry, there were no results");
                             }
                             else {
-                                //debugger;
+                                debugger;
                                 var items = response.Items;
-                                var address_list = document.getElementById('address_list');
+
+                                var address_list = document.getElementById(listname);
+                                document.getElementById('address1_line1').setAttribute('list', document.getElementById(listname).id);
+
                                 var address_list_id = "";
                                 var address_list_next = "";
 
                                 this._Items = [];
 
-                                if (items.length > 7) {
-                                    debugger;
-                                }
-                                var max = (items.length > 7 ? 7 : items.length);
+                                var max = items.length;
                                 for (i = 0; i < max; i++) {
                                     var item = items[i];
                                     var value = item.Id;
                                     var next = item.Next;
                                     var text = item.Text + ', ' + item.Description;
 
-                                    address_list.options[i].value = text;
                                     address_list_id += value + ";";
                                     address_list_next += next + ";";
-                                    //address_list_id.add(new Option(text, value));
-                                }
-                                document.getElementById('address_list_id').value = address_list_id;
-                                document.getElementById('address_list_next').value = address_list_next;
-                            }
-                        }
-                    }
-                }
 
-                try {
-                    http.send(params);
-                } catch (e) {
-                    debugger;
-                }
-            },
-
-            Find_LastId: function (LastId, LanguagePreference) {
-                //debugger;
-
-                this.removeOptions('address_list', false);
-                document.getElementById('address_list_id').value = "";
-
-                //var LastId = '';
-                var Country = '';
-                var url = 'https://ws1.postescanada-canadapost.ca/AddressComplete/Interactive/Find/v2.10/json3.ws';
-
-                var params = '';
-                params += "&Key=" + encodeURIComponent(this._Key);
-                params += "&LastId=" + encodeURIComponent(LastId);
-                params += "&SearchFor=" + encodeURIComponent(this._SearchFor);
-                params += "&Country=" + encodeURIComponent(Country);
-                params += "&LanguagePreference=" + encodeURIComponent(LanguagePreference);
-                params += "&MaxSuggestions=" + encodeURIComponent(this._MaxSuggestions);
-                params += "&MaxResults=" + encodeURIComponent(this._MaxResults);
-
-                var http = new XMLHttpRequest();
-                http.open('POST', url, true);
-                http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                http.onreadystatechange = function () {
-                    if (http.readyState == 4 && http.status == 200) {
-                        var response = JSON.parse(http.responseText);
-
-                        // Test for an error
-                        if (response.Items.length == 1 && typeof (response.Items[0].Error) != "undefined") {
-                            // Show the error message
-                            // alert(response.Items[0].Description);
-                        }
-                        else {
-                            // Check if there were any items found
-                            if (response.Items.length == 0) {
-                                //alert("Sorry, there were no results");
-                            }
-                            else {
-                                //debugger;
-                                var items = response.Items;
-                                var address_list = document.getElementById('address_list_lastid');
-                                var address_list_id = "";
-                                var address_list_next = "";
-
-                                this._Items = [];
-
-                                if (items.length > 7) {
-                                    debugger;
-                                }
-                                var max = (items.length > 7 ? 7 : items.length);
-                                for (i = 0; i < max; i++) {
-                                    var item = items[i];
-                                    var value = item.Id;
-                                    var next = item.Next;
-                                    var text = item.Text + ', ' + item.Description;
-
-                                    address_list.options[i].value = text;
-                                    address_list_id += value + ";";
-                                    address_list_next += next + ";";
-                                    //address_list_id.add(new Option(text, value));
+                                    const option = document.createElement('option');
+                                    option.value = text;
+                                    address_list.appendChild(option);
                                 }
                                 document.getElementById('address_list_id').value = address_list_id;
                                 document.getElementById('address_list_next').value = address_list_next;
@@ -337,7 +274,7 @@
                                 // alert("Sorry, there were no results");
                             }
                             else {
-                                //debugger;
+                                debugger;
                                 AddressComplete.Selected(response.Items);
                             }
                         }
@@ -346,18 +283,9 @@
                 http.send(params);
             },
 
-            removeOptions: function (name, option_ind) {
-                //debugger;
-
-                var selectElement = document.getElementById(name);
-                for (var i = selectElement.options.length - 1; i >= 0; i--) {
-                    if (option_ind) {
-                        selectElement.remove(i);
-                    }
-                    else {
-                        selectElement.options[i].value = "";
-                    }
-                }
+            removeOptions: function (name) {
+                // remove options
+                $('#' + name).empty();
             },
 
             getItem: function (field) {

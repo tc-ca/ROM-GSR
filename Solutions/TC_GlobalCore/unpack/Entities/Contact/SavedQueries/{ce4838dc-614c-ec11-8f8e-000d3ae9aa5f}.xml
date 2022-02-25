@@ -10,10 +10,8 @@
     <layoutxml>
       <grid name="resultset" jump="fullname" select="1" preview="1" icon="1">
         <row name="result" id="contactid">
-          <cell name="fullname" width="150" />
-          <cell name="emailaddress1" width="100" />
-          <cell name="firstname" width="100" />
-          <cell name="lastname" width="100" />
+          <cell name="cid_contacttype" width="100" />
+          <cell name="parentcustomerid" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -21,17 +19,16 @@
     <fetchxml>
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="contact">
-          <attribute name="fullname" />
-          <attribute name="lastname" />
-          <attribute name="firstname" />
-          <attribute name="emailaddress1" />
-          <order attribute="fullname" descending="false" />
+          <attribute name="cid_contacttype" />
+          <order attribute="cid_contacttype" descending="false" />
           <filter type="and">
             <condition attribute="cid_contacttype" operator="in">
               <value>100000000</value>
               <value>100000001</value>
             </condition>
+            <condition attribute="statuscode" operator="eq" value="1" />
           </filter>
+          <attribute name="parentcustomerid" />
           <attribute name="contactid" />
         </entity>
       </fetch>

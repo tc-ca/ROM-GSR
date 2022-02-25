@@ -11,9 +11,6 @@
                 <Button Alt="$LocLabels:ovs.ovs_cdnop.RunCEPReplacement.Alt" Command="ovs.ovs_cdnop.RunCEPReplacement.Command" Id="ovs.ovs_cdnop.RunCEPReplacement" LabelText="$LocLabels:ovs.ovs_cdnop.RunCEPReplacement.LabelText" Sequence="13" ToolTipTitle="$LocLabels:ovs.ovs_cdnop.RunCEPReplacement.ToolTipTitle" ToolTipDescription="$LocLabels:ovs.ovs_cdnop.RunCEPReplacement.ToolTipDescription" ModernImage="$webresource:AppCommon/ControlWS/HolidaySchedule/RightArrow.svg" />
               </Controls>
             </MenuSection>
-            <MenuSection Id="ovs.ovs_cdnop.Section7.Section" Title="$LocLabels:ovs.ovs_cdnop.Section7.Section.Title" Sequence="15" DisplayMode="Menu16">
-              <Controls Id="ovs.ovs_cdnop.Section7.Section.Controls" />
-            </MenuSection>
           </Menu>
         </FlyoutAnchor>
       </CommandUIDefinition>
@@ -23,9 +20,20 @@
     <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
   </Templates>
   <CommandDefinitions>
+    <CommandDefinition Id="Mscrm.Enabled">
+      <EnableRules>
+        <EnableRule Id="Mscrm.Enabled" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="ovs.ovs_cdnop.CEP.DisplayRule" />
+      </DisplayRules>
+      <Actions />
+    </CommandDefinition>
     <CommandDefinition Id="ovs.ovs_cdnop.RunCEPReplacement.Command">
       <EnableRules />
-      <DisplayRules />
+      <DisplayRules>
+        <DisplayRule Id="ovs.ovs_cdnop.CEP.DisplayRule" />
+      </DisplayRules>
       <Actions>
         <JavaScriptFunction FunctionName="NOPRibbon.runCEPReplacement" Library="$webresource:ovs_NOP_Ribbon.js">
           <CrmParameter Value="PrimaryControl" />
@@ -34,7 +42,9 @@
     </CommandDefinition>
     <CommandDefinition Id="ovs.ovs_cdnop.RunCEPSelection.Command">
       <EnableRules />
-      <DisplayRules />
+      <DisplayRules>
+        <DisplayRule Id="ovs.ovs_cdnop.CEP.DisplayRule" />
+      </DisplayRules>
       <Actions>
         <JavaScriptFunction FunctionName="NOPRibbon.runCEPSelection" Library="$webresource:ovs_NOP_Ribbon.js">
           <CrmParameter Value="PrimaryControl" />
@@ -44,13 +54,17 @@
   </CommandDefinitions>
   <RuleDefinitions>
     <TabDisplayRules />
-    <DisplayRules />
+    <DisplayRules>
+      <DisplayRule Id="ovs.ovs_cdnop.CEP.DisplayRule">
+        <FormStateRule State="Existing" Default="true" />
+      </DisplayRule>
+    </DisplayRules>
     <EnableRules />
   </RuleDefinitions>
   <LocLabels>
     <LocLabel Id="ovs.ovs_cdnop.Button3.Button.LabelText">
       <Titles>
-        <Title description="CEP/IPT" languagecode="1033" />
+        <Title description="CEP" languagecode="1033" />
       </Titles>
     </LocLabel>
     <LocLabel Id="ovs.ovs_cdnop.RunCEPReplacement.Alt">
@@ -96,11 +110,6 @@
     <LocLabel Id="ovs.ovs_cdnop.Section6.Section.Title">
       <Titles>
         <Title description="CEP" languagecode="1033" />
-      </Titles>
-    </LocLabel>
-    <LocLabel Id="ovs.ovs_cdnop.Section7.Section.Title">
-      <Titles>
-        <Title description="IPT" languagecode="1033" />
       </Titles>
     </LocLabel>
   </LocLabels>

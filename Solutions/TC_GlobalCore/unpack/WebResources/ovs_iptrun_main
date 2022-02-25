@@ -1,0 +1,33 @@
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+///<reference path="../../Utilities/questionnaireFunctions.js"/>
+
+var IPTRun_main = (function (window, document) {
+
+
+    //********************private methods*******************
+
+    //********************public methods***************
+
+
+    return {
+
+        OnLoad: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+
+            //set defaults:
+            if (glHelper.GetValue(formContext,"ovs_fromdate") == "") glHelper.SetValue(formContext, "ovs_fromdate", new Date());
+            if (glHelper.GetValue(formContext, "ovs_modebaseconstant") == "")glHelper.SetValue(formContext, "ovs_modebaseconstant", 1.15);
+            if (glHelper.GetValue(formContext, "ovs_populationdensitylb") == "") glHelper.SetValue(formContext, "ovs_populationdensitylb", 100);
+            if (glHelper.GetValue(formContext, "ovs_startyear") == "") glHelper.SetValue(formContext, "ovs_startyear", 2);
+            if (glHelper.GetValue(formContext, "ovs_yearscyclemax") == "") glHelper.SetValue(formContext, "ovs_yearscyclemax", 9);
+            if (glHelper.GetValue(formContext, "ovs_yearscyclemin") == "") glHelper.SetValue(formContext, "ovs_yearscyclemin", 2);
+            if (glHelper.GetValue(formContext, "ovs_forgettingfactor") == "") glHelper.SetValue(formContext, "ovs_forgettingfactor", 1);
+
+            //set readonly if not draft and not closed
+            if (glHelper.GetValue(formContext, "statuscode") > 2) glHelper.SetFormReadOnly(formContext);
+
+        },
+
+    }
+})(window, document);

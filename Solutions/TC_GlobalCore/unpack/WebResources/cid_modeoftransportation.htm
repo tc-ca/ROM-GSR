@@ -194,30 +194,19 @@
 
         if (typeof (tdgcore.common) == "undefined") {
             tdgcore.common = {
-                param_get: function (url, param) {
+                text_language: function (text, language) {
+                    //var selected_language = '{{website.selected_language.code}}';
+                    //sessionStorage.setItem("selected_language", selected_language);
+
                     var value = "";
-
-                    //get the part after question mark with parameters list
-                    const parametersString = url.split("?")[1];
-
-                    if (parametersString) {
-                        // split string to pair parameter=value
-                        for (let paramPairStr of parametersString.split("&")) {
-                            var paramPair = paramPairStr.split("=");
-                            if (paramPair[0] == param) {
-                                value = paramPair[1];
-                                break;
-                            }
-                        }
+                    var index1 = text.indexOf("::");
+                    if (language == "en-US") {
+                        value = text.substr(0, index1);
+                    }
+                    else {
+                        value = text.substr(index1 + 2);
                     }
                     return value;
-
-                    //var value = "";
-                    //var urlParams = new URLSearchParams(url);
-                    //if (urlParams.has(param)) {
-                    //    value = urlParams.get(param);
-                    //}
-                    //return value;
                 },
 
                 // setRequiredLevel("required");
@@ -263,15 +252,9 @@
 
                 // odata
                 OData_List: function (entity, filter) {
-                    if (filter != "") {
-                        var url = entity + "?$filter=" + filter;
-                    }
-                    else {
-                        var url = entity;
-                    }
-
-                    //var oDataUrl = "~/_odata/" + url;
-                    var oDataUrl = "https://rd-tdgcore-dev.powerappsportals.com/_odata/" + url;
+                    var url = entity + "?$filter=" + filter;
+                    var oDataUrl = "~/_odata/" + url;
+                    //var oDataUrl = "https://rd-tdgcore-dev.powerappsportals.com/_odata/" + url;
                     var response = null;
 
                     $.ajax({

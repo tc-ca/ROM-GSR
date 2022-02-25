@@ -48,6 +48,7 @@
     <script type="text/javascript">
         function search() {
             debugger;
+            var selected_language = sessionStorage.getItem("selected_language");
             var cid_naicscode = document.getElementById("cid_naicscode").value;
             var filter = "startswith(cid_name, '" + cid_naicscode + "') or substringof('" + cid_naicscode + "', cid_naicsclasstitle)";
             var items = tdgcore.common.OData_List("cid_naicscode", filter);
@@ -62,7 +63,8 @@
                 var item = items[i];
                 var value = item.cid_naicscodeid;
                 var cid_naicsclasstitle = item.cid_naicsclasstitle;
-                var text = item.cid_name + ' - ' + tdgcore.common.text_language(item.cid_naicsclasstitle);
+                var text = item.cid_name + ' - ' +
+                    tdgcore.common.text_language(item.cid_naicsclasstitle, selected_language);
 
                 cid_naicscode_list_id += value + ";";
 
@@ -124,7 +126,9 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            //debugger;
+            debugger;
+            document.getElementById("cid_naicscode").setAttribute("autocomplete", "off");
+
             document.querySelector('input[list="cid_naicscode_list"]').addEventListener('input', onInput);
         })
 
@@ -141,15 +145,17 @@
 
         if (typeof (tdgcore.common) == "undefined") {
             tdgcore.common = {
-                text_language: function (text) {
-                    var value = "";
-                    var language = '{{website.selected_language.code}}';
-                    var j = cid_naicsclasstitle.indexOf("::");
-                    if (language == 0) {
+                text_language: function (text, language) {
+                    //var selected_language = '{{website.selected_language.code}}';
+                    //sessionStorage.setItem("selected_language", selected_language);
 
+                    var value = "";
+                    var index1 = text.indexOf("::");
+                    if (language == "en-US") {
+                        value = text.substr(0, index1);
                     }
                     else {
-
+                        value = text.substr(index1+2);
                     }
                     return value;
                 },
