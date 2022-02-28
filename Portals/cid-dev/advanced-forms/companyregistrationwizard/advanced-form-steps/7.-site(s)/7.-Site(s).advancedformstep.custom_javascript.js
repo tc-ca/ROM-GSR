@@ -1,10 +1,4 @@
 $(document).ready(function() {
-
-	var companyName = '{{user.parentcustomerid.name }}';
-    var header = $('.page-header h1');
-	if(companyName != null && header != null)
-		header.text(header.text() + ' - ' + companyName);
-
 	$(".entity-grid").on("loaded", function () {
 		var actionButtonsToolbar = $('.view-toolbar');
 		//if ($("#bulkUploadBtn").length <= 0)
@@ -39,6 +33,8 @@ $(document).ready(function() {
 				
 				if(tdElement.attr('data-attribute') == 'statuscode' && tdElement.attr('aria-label') == 'Inactive')
 				{
+					trElement.css("background-color", "#ddd");
+					trElement.css("color", "grey");
 					firstTdElement.find('a').removeAttr("href");
 					firstTdElement.find('span').remove();
 					firstTdElement.find('input').remove();
@@ -136,9 +132,9 @@ $(document).ready(function() {
                 $('#ValidationSummaryEntityFormView div').remove();
 
                 var validationSection = $('#ValidationSummaryEntityFormView');
-
-                validationSection.append($("<div class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
+                validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
                 validationSection.show();
+				$('#alertMessages').focus();
             }
 
            return validation;

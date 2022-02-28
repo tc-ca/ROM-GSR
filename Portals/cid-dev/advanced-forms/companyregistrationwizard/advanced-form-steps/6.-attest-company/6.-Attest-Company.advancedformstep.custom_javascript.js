@@ -37,10 +37,8 @@ $(document).ready(function () {
         }
     });
 
-		var companyName = '{{user.parentcustomerid.name }}';
-    var header = $('.page-header h1');
-	if(companyName != null && header != null)
-		header.text(header.text() + ' - ' + companyName);
+	if ($("#printSummary").length <= 0)
+        $('#ValidationSummaryEntityFormView').after("<br><div id='printSummary' class='input-group pull-right'><input type='button' value='Print Summary' onclick='window.print();' class='btn btn-primary button next submit-btn'></div>");
 });
 
 if (window.jQuery) {
@@ -86,8 +84,9 @@ if (window.jQuery) {
 		{
             $('#ValidationSummaryEntityFormView div').remove();
             var validationSection = $('#ValidationSummaryEntityFormView');
-            validationSection.append($("<div class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
+            validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
             validationSection.show();
+			$('#alertMessages').focus();
         }
 		return validation;
     }

@@ -47,22 +47,25 @@
 
 <script>
   $(document).ready(function() {
+
+$("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value='Scan and Upload' class='submit-btn btn btn-primary form-action-container-left' />");
     $(window).load(function() {
-      
+  $("#InsertButton").css("display", "none");
+   
+//InsertButton
     //  $('#ll').hide();
         //  notificationMsg.show("System is downloading site info ...");
             $("#processingMsg").css("display", "none");
             $("#processingMsg").hide();
     });
-    var pageURL = window.location.href;
- $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value='Save &amp; Validate' class='submit-btn btn btn-primary form-action-container-left' />");
+   // var pageURL = window.location.href;
 
 $('#btn_attachfile_and_scan').click(function(e) 
 {
-  
+    var DocumentbodyContents;
   // Get the name of the selected file
     var FileName = $('#AttachFile')[0].files[0].name;
-   
+
     // Get the mime type of the selected file
 
     var MimeType = $('#AttachFile')[0].files[0].type;
@@ -85,22 +88,64 @@ $('#btn_attachfile_and_scan').click(function(e)
 
                 // The browser has finished reading the file, we can now do something with it...
 
-                var DocumentbodyContents = e.target.result;
+                 DocumentbodyContents = e.target.result;
 
                 // Split the string at the first comma (removing the base64 prefix)
 
                 DocumentbodyContents = DocumentbodyContents.substring(DocumentbodyContents.indexOf(',') + 1);
 
-alert(DocumentbodyContents);
+
+var Scan_API_URL ="https://prod-02.canadacentral.logic.azure.com:443/workflows/9c5deab59bdb45739dc659748c59b1a1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZDI2-YxUhNZkKvpXe7R7Cs_y8J5gGtcB6ZT-y5EAMok";
+var c = String.raw `X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*`;
+
+alert (DocumentbodyContents);
+Call_Virsu_Scan_API(Scan_API_URL ,btoa(c));
+//,DocumentbodyContents);
+
+             
+
 
             };
 
+
         }
 
-e.preventDefault();
+
+
+//btoa(c) );
+
+/*var xhr = new XMLHttpRequest();
+xhr.withCredentials = true;
+
+xhr.addEventListener("readystatechange", function() {
+  if(this.readyState === 4) {
+   alert ("done");
+   alert(this.status);
+   //xhr.setHeader("Access-Control-Allow-Origin", "*");
+
+   // console.log(this.responseText);
+   // alert(this.responseText);
+  }
+  alert(FileName);
+xhr.open("POST", "https://wwwapps.tc.gc.ca/Saf-Sec-Sur/13/MTAPI/api/v1/file-scan-status?filename=" + "FileName",true);
+xhr.setRequestHeader("access-Control-Allow-Origin", "*");
+xhr.setRequestHeader("Content-Type", "application/octet-stream");
+xhr.setRequestHeader("Access-Control-Allow-Credentials", "true");
+xhr.setRequestHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+xhr.setRequestHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+
+
+//xhr.setRequestHeader("Cookie", "_mtoa_session=ef57638bc41c4615ba2eb0721bfa9ab7");
+
+xhr.send("AAAA");
+ */
 });
 
-    //var DownloadURL = "~/RD_Sites_Template.xlsm";
+//alert(DocumentbodyContents);
+//e.preventDefault();
+
+
+//var DownloadURL = "~/RD_Sites_Template.xlsm";
     //var linktemplate = document.getElementById("linkdownload");
     //linktemplate.href = DownloadURL;
     //linktemplate.download = "RD_Sites_Template.xlsx";
@@ -116,6 +161,8 @@ e.preventDefault();
     
       var acupdate =
         '{ "accountid": "' + companyid + '" }';
+    
+   
       var req = new XMLHttpRequest();
     
       var url = '{{download_flow_URL}}';
@@ -144,7 +191,11 @@ e.preventDefault();
       }
       req.send(acupdate);
     });
-  });
+
+});//end document ready
+
+    
+
   
 
    // Notification component
@@ -175,6 +226,43 @@ e.preventDefault();
             }
         }
     })();
+
+
+function Call_Virsu_Scan_API(url, fileContent)
+{
+  
+  var acupdate =
+       '{"FileContent" :"' + fileContent  + '" }';
+ alert ("after assigned the variable");
+         // '{ "accountid": "' + companyid + '" }';
+      var req = new XMLHttpRequest();
+    
+     
+      console.log(url);
+      //"https://prod-17.canadacentral.logic.azure.com:443/workflows/900f6e70915a4cddbb65b3c79da14581/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LZveFQ8DXIDobQOPzgoc0LgOcSOPpqVcnCEicN1lvEQ";
+      req.open("POST", url, true);
+      req.setRequestHeader('Content-Type', 'application/json');
+      req.onreadystatechange = function() {
+        if (this.readyState === 4) {
+          req.onreadystatechange = null;
+          if (this.status === 200) {
+               $('#processingMsg').text(this.response);
+               alert (this.response);
+            var result = this.response;
+         
+           
+             $("#processingMsg").css("display", "none");
+            $("#processingMsg").hide();
+          } else {
+              $('#processingMsg').text("Error Please Try again Later.");
+            var result = this.response;
+            alert("Error " + result);
+          }
+        }
+      }
+     
+      req.send(acupdate);
+}
 
 </script>
 <div class="container">

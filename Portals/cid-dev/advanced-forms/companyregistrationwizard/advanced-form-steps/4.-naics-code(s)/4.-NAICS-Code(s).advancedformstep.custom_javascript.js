@@ -3,12 +3,6 @@
 $(document).ready(function () {
 	//debugger;
 	subgrid_language();
-
-	var companyName = '{{user.parentcustomerid.name }}';
-    var header = $('.page-header h1');
-	if(companyName != null && header != null)
-		header.text(header.text() + ' - ' + companyName);
-
 });
 
 function subgrid_language() {
@@ -89,39 +83,12 @@ if (window.jQuery) {
 
                 var validationSection = $('#ValidationSummaryEntityFormView');
 
-                validationSection.append($("<div class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
+                validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
                 validationSection.show();
+				$('#alertMessages').focus();
             }
 
            return validation;
 		}
     }(window.jQuery));
 }
-
-//if (window.jQuery) {
-//    (function ($) {
-//        webFormClientValidate = function () {
-//            debugger;
-
-//            var validation = true;
-//            var errorMessage = "";
-//            var rows = $("#CompanyNAICSCodes .view-grid table").find("tbody > tr");
-
-//            if (rows.length <= 0) {
-//                errorMessage = "You cannot proceed before adding company NAICS code(s).";
-//                validation = false;
-//            }
-
-//            if (!validation) {
-//                $('#ValidationSummaryEntityFormView div').remove();
-
-//                var validationSection = $('#ValidationSummaryEntityFormView');
-
-//                validationSection.append($("<div class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
-//                validationSection.show();
-//            }
-
-//            return validation;
-//        }
-//    }(window.jQuery));
-//}

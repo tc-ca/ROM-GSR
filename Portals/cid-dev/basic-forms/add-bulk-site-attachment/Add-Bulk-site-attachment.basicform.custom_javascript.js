@@ -1,16 +1,3 @@
-if (window.jQuery) {
-   (function ($) {
-      if (typeof (webFormClientValidate) != 'undefined') {
-         var originalValidationFunction = webFormClientValidate;
-         if (originalValidationFunction && typeof (originalValidationFunction) == "function") {
-            webFormClientValidate = function() {
-               originalValidationFunction.apply(this, arguments);
-               // do your custom validation here
-               // return false; // to prevent the form submit you need to return false
-               // end custom validation.
-               return false;
-            };
-         }
-      }
-   }(window.jQuery));
-}
+// alert("before insert button");
+ $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value='Save &amp; Validate' class='submit-btn btn btn-primary form-action-container-left' />");
+//InsertButton

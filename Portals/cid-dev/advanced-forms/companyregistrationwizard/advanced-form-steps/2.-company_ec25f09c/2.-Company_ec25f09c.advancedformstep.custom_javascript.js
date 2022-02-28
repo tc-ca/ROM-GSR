@@ -3,10 +3,9 @@
 $(document).ready(function () {
     debugger;
 
-    var companyName = '{{user.parentcustomerid.name }}';
-    var header = $('.page-header h1');
-    if (companyName != null && header != null)
-        header.text(header.text() + ' - ' + companyName);
+var companyName = '{{user.parentcustomerid.name }}';
+if (companyName)
+    $(".previous-btn").attr('disabled', true);
 
     // resize WebResource_address_complete
     $("#WebResource_address_complete").height('72px');

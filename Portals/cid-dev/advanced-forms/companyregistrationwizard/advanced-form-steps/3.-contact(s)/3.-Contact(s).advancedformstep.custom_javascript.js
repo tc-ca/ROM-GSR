@@ -3,12 +3,6 @@
 $(document).ready(function () {
     debugger;
     sessionStorage.setItem("step_start",2);
-
-	var companyName = '{{user.parentcustomerid.name }}';
-    var header = $('.page-header h1');
-	if(companyName != null && header != null)
-		header.text(header.text() + ' - ' + companyName);
-
 });
 
 if (window.jQuery) {
@@ -40,11 +34,11 @@ if (window.jQuery) {
         if(!validation)
         {
             $('#ValidationSummaryEntityFormView div').remove(); 
-
             var validationSection = $('#ValidationSummaryEntityFormView');
-   
-            validationSection.append($("<div class='notification alert-danger' role='alert'>You cannot proceed before adding primary and secondary contacts.</div>"));  
+            var errorMessage = "You cannot proceed before adding at least one secondary contact.";   
+            validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
             validationSection.show();
+			$('#alertMessages').focus();
         }
     return validation;
     }

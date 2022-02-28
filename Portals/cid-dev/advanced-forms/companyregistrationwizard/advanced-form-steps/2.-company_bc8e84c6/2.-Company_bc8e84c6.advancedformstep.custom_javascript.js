@@ -2,6 +2,11 @@
 
 $(document).ready(function () {
     debugger;
+
+    var companyName = '{{user.parentcustomerid.name }}';
+    if (companyName)
+        $(".previous-btn").attr('disabled', true);
+
     // resize WebResource_address_complete
     $("#WebResource_address_complete").height('72px');
     $("#websiteurl").width('100%');
