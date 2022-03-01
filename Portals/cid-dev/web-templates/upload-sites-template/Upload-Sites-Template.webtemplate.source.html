@@ -50,18 +50,19 @@
 
 $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value='Scan and Upload' class='submit-btn btn btn-primary form-action-container-left' />");
     $(window).load(function() {
+
   $("#InsertButton").css("display", "none");
    
 //InsertButton
     //  $('#ll').hide();
         //  notificationMsg.show("System is downloading site info ...");
-            $("#processingMsg").css("display", "none");
-            $("#processingMsg").hide();
+           
     });
    // var pageURL = window.location.href;
 
 $('#btn_attachfile_and_scan').click(function(e) 
 {
+    $("#mainContent").before("<div class='validation' style='color:black;margin-bottom: 20px;'>File is sent for scaning</div>");
     var DocumentbodyContents;
   // Get the name of the selected file
     var FileName = $('#AttachFile')[0].files[0].name;
@@ -69,13 +70,16 @@ $('#btn_attachfile_and_scan').click(function(e)
     // Get the mime type of the selected file
 
     var MimeType = $('#AttachFile')[0].files[0].type;
+    alert (MimeType);
 
     // Get the content of the selected file
 
     var file = document.getElementById('AttachFile').files[0];
   
   if (file) {
-
+   
+ $('#processingMsg').css('display','block');
+$('#processingMsg').text("File is sent for scanning please wait");
             // Read the file
 
             var reader = new FileReader();
@@ -96,17 +100,25 @@ $('#btn_attachfile_and_scan').click(function(e)
 
 
 var Scan_API_URL ="https://prod-02.canadacentral.logic.azure.com:443/workflows/9c5deab59bdb45739dc659748c59b1a1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZDI2-YxUhNZkKvpXe7R7Cs_y8J5gGtcB6ZT-y5EAMok";
-var c = String.raw `X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*`;
+//var c = String.raw `X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*`;
 
-alert (DocumentbodyContents);
-Call_Virsu_Scan_API(Scan_API_URL ,btoa(c));
-//,DocumentbodyContents);
 
+Call_Virsu_Scan_API(Scan_API_URL ,DocumentbodyContents);
+
+//,btoa(c));
              
 
 
             };
 
+
+        }
+        else
+        {
+
+            $("#AttachFile").after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select file</div>");
+$('#processingMsg').css('display','block');
+$('#processingMsg').text("Please Select File First");
 
         }
 
@@ -233,7 +245,7 @@ function Call_Virsu_Scan_API(url, fileContent)
   
   var acupdate =
        '{"FileContent" :"' + fileContent  + '" }';
- alert ("after assigned the variable");
+
          // '{ "accountid": "' + companyid + '" }';
       var req = new XMLHttpRequest();
     

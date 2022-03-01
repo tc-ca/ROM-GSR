@@ -2,7 +2,7 @@ $(document).ready(function () {
 	var companyName = '{{user.parentcustomerid.name }}';
 	var header = $('.page-header h1');
 	var startStep = $('ol.progress > li').first();//$(".progress li:first");
-	testFunc();
+
 	if(companyName)
 	{
 		if(header)
