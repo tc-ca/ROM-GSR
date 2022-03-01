@@ -1,0 +1,348 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_office365": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceOutlookTDGCoreUser"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      },
+      "shared_teams_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceMSTeamsTDGCoreUser"
+        },
+        "api": {
+          "name": "shared_teams"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "65fe68e2-31e2-40be-b426-6fcb394d164a"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "ovs_iptrun",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/runas": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "conditions": [
+            {
+              "expression": "@or(equals(triggerBody()?['statuscode'],918640001),equals(triggerBody()?['statuscode'],918640002))"
+            }
+          ]
+        }
+      },
+      "actions": {
+        "Message_to_user": {
+          "runAfter": {
+            "Append_to_string_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a616045c-b601-430a-b832-e627726c2d98"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "message2user",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Get_calling_user_email": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "e3640b89-0320-4a62-b7fd-fab91a5f2e2b"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "systemusers",
+              "recordId": "@triggerOutputs()?['body/_modifiedby_value']",
+              "$select": "domainname"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Calling_user_email": {
+          "runAfter": {
+            "Get_calling_user_email": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1e8b22c5-6ae3-40ba-9ef9-fc19e4978ff2"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "callingUserEmail",
+                "type": "string",
+                "value": "@outputs('Get_calling_user_email')?['body/domainname']"
+              }
+            ]
+          }
+        },
+        "Get_Customer_Support_team": {
+          "runAfter": {
+            "Calling_user_email": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b1640843-3d94-485e-ae24-a3f5a9f39521"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "qm_environmentsettingses",
+              "$filter": "(qm_name eq 'IPT_Notification_list')",
+              "$top": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "SupportTeam": {
+          "runAfter": {
+            "Get_Customer_Support_team": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "38b12fb8-26a7-4f00-99ec-a16fcbfcc76a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": " SupportTeam",
+                "type": "string",
+                "value": "@{first(body('Get_Customer_Support_team')?['value'])?['qm_value']}"
+              }
+            ]
+          }
+        },
+        "Append_to_string_variable": {
+          "runAfter": {
+            "SupportTeam": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f0f8fa74-24dc-4ec7-b8ea-a96fa59ee23d"
+          },
+          "type": "AppendToStringVariable",
+          "inputs": {
+            "name": " SupportTeam",
+            "value": ";@{variables('callingUserEmail')}"
+          }
+        },
+        "Failed_or_Completed__-_set_message": {
+          "actions": {
+            "Set_failed_message": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "6b0d4aa5-04a6-486d-8c8c-a53051a3c0c2"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "message2user",
+                "value": "IPT run was failed. \n\nL'exécution de l'OPRI a échoué."
+              }
+            }
+          },
+          "runAfter": {
+            "Support_Team_Filtered_unique_values": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Set_completed_message": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "668835ad-f3b4-4e1e-96a7-bfc3329c3699"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "message2user",
+                  "value": "IPT run was completed\n\nL'exécution de l'OPRI s'est terminée avec succès"
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@triggerOutputs()?['body/statuscode']",
+              918640002
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d7ef56a6-2d81-497d-a7ee-101bece7ed0b"
+          },
+          "type": "If"
+        },
+        "Send_an_email_(V2)": {
+          "runAfter": {
+            "Send_to_each": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "49b31c1c-2879-4ca8-9c32-ba76ea764d99"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_office365",
+              "operationId": "SendEmailV2",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+            },
+            "parameters": {
+              "emailMessage/To": "@variables(' SupportTeam')",
+              "emailMessage/Subject": "IPT Run status update/La mise à jour de l'état de l'exécution de l'OPRI",
+              "emailMessage/Body": "<p>Hello/Bonjour, <br>\n@{variables('message2user')}</p>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "_Support_Team_As_Array": {
+          "runAfter": {
+            "Message_to_user": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6367cddc-4b00-4660-8776-5762c4de3fb5"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "SupportTeamAsArray",
+                "type": "array",
+                "value": "@split(variables(' SupportTeam'),';')"
+              }
+            ]
+          }
+        },
+        "Send_to_each": {
+          "foreach": "@variables('SupportTeamFiltered')",
+          "actions": {
+            "Post_a_message_as_the_Flow_bot_to_a_user": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "a5d978d5-79cb-4fd1-afdf-c58634b08e55"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_teams_1",
+                  "operationId": "PostUserNotification",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams"
+                },
+                "parameters": {
+                  "PostNotificationRequest/recipient/to": "@{items('Send_to_each')};",
+                  "PostNotificationRequest/messageBody": "Hello/Bonjour,\n@{variables('message2user')}",
+                  "PostNotificationRequest/messageTitle": "IPT Run status update/La mise à jour de l'état de l'exécution de l'OPRI",
+                  "PostNotificationRequest/recipient/isAlert": true
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "Failed_or_Completed__-_set_message": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "82a02db9-a529-4942-9927-43eae1efb7d8"
+          },
+          "type": "Foreach"
+        },
+        "Support_Team_Filtered_unique_values": {
+          "runAfter": {
+            "_Support_Team_As_Array": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6e7ad749-db2f-4462-8236-6aaeb8826941"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "SupportTeamFiltered",
+                "type": "array",
+                "value": "@union(variables('SupportTeamAsArray'),variables('SupportTeamAsArray'))"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}

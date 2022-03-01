@@ -1,1 +1,388 @@
-{"properties":{"connectionReferences":{"shared_commondataserviceforapps":{"runtimeSource":"embedded","connection":{},"api":{"name":"shared_commondataserviceforapps"}}},"definition":{"$schema":"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#","contentVersion":"1.0.0.0","parameters":{"$connections":{"defaultValue":{},"type":"Object"},"$authentication":{"defaultValue":{},"type":"SecureObject"}},"triggers":{"When_a_record_is_created,_updated_or_deleted":{"metadata":{"operationMetadataId":"13592ab4-c16b-4e38-90de-1f60e16394de"},"type":"OpenApiConnectionWebhook","inputs":{"host":{"connectionName":"shared_commondataserviceforapps","operationId":"SubscribeWebhookTrigger","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"subscriptionRequest/message":1,"subscriptionRequest/entityname":"bookableresource","subscriptionRequest/scope":3,"subscriptionRequest/name":"b81b36bc-63af-eb11-8236-000d3ae91ce1"},"authentication":"@parameters('$authentication')"}}},"actions":{"List_of_Bookable_Resource_Categories":{"runAfter":{},"metadata":{"operationMetadataId":"b1ea2118-ef4a-4852-a6c0-067998edbc80"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps","operationId":"ListRecords","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"bookableresourcecategories","$filter":"name eq 'Inspector'"},"authentication":"@parameters('$authentication')"}},"Apply_to_each":{"foreach":"@outputs('List_of_Bookable_Resource_Categories')?['body/value']","actions":{"Parse_JSON":{"runAfter":{},"metadata":{"operationMetadataId":"a3ede232-cde1-45e8-b06e-d7ad37b1548e"},"type":"ParseJson","inputs":{"content":"@items('Apply_to_each')","schema":{"type":"object","properties":{"@@odata.type":{"type":"string"},"@@odata.id":{"type":"string"},"@@odata.etag":{"type":"string"},"@@odata.editLink":{"type":"string"},"_owningbusinessunit_value@Microsoft.Dynamics.CRM.associatednavigationproperty":{"type":"string"},"_owningbusinessunit_value@Microsoft.Dynamics.CRM.lookuplogicalname":{"type":"string"},"_owningbusinessunit_value@odata.type":{"type":"string"},"_owningbusinessunit_value":{"type":"string"},"modifiedon@OData.Community.Display.V1.FormattedValue":{"type":"string"},"modifiedon@odata.type":{"type":"string"},"modifiedon":{"type":"string"},"statecode@OData.Community.Display.V1.FormattedValue":{"type":"string"},"statecode":{"type":"integer"},"statuscode@OData.Community.Display.V1.FormattedValue":{"type":"string"},"statuscode":{"type":"integer"},"_createdby_value@OData.Community.Display.V1.FormattedValue":{"type":"string"},"_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname":{"type":"string"},"_createdby_value@odata.type":{"type":"string"},"_createdby_value":{"type":"string"},"_ownerid_value@OData.Community.Display.V1.FormattedValue":{"type":"string"},"_ownerid_value@Microsoft.Dynamics.CRM.associatednavigationproperty":{"type":"string"},"_ownerid_value@Microsoft.Dynamics.CRM.lookuplogicalname":{"type":"string"},"_ownerid_value@odata.type":{"type":"string"},"_ownerid_value":{"type":"string"},"bookableresourcecategoryid@odata.type":{"type":"string"},"bookableresourcecategoryid":{"type":"string"},"_owninguser_value@Microsoft.Dynamics.CRM.lookuplogicalname":{"type":"string"},"_owninguser_value@odata.type":{"type":"string"},"_owninguser_value":{"type":"string"},"_modifiedby_value@OData.Community.Display.V1.FormattedValue":{"type":"string"},"_modifiedby_value@Microsoft.Dynamics.CRM.lookuplogicalname":{"type":"string"},"_modifiedby_value@odata.type":{"type":"string"},"_modifiedby_value":{"type":"string"},"versionnumber@OData.Community.Display.V1.FormattedValue":{"type":"string"},"versionnumber@odata.type":{"type":"string"},"versionnumber":{"type":"integer"},"createdon@OData.Community.Display.V1.FormattedValue":{"type":"string"},"createdon@odata.type":{"type":"string"},"createdon":{"type":"string"},"name":{"type":"string"},"owningbusinessunit@odata.associationLink":{"type":"string"},"owningbusinessunit@odata.navigationLink":{"type":"string"},"ownerid@odata.associationLink":{"type":"string"},"ownerid@odata.navigationLink":{"type":"string"},"createdbyname@odata.associationLink":{"type":"string"},"createdbyname@odata.navigationLink":{"type":"string"},"createdonbehalfbyname@odata.associationLink":{"type":"string"},"createdonbehalfbyname@odata.navigationLink":{"type":"string"},"modifiedbyname@odata.associationLink":{"type":"string"},"modifiedbyname@odata.navigationLink":{"type":"string"},"modifiedonbehalfbyname@odata.associationLink":{"type":"string"},"modifiedonbehalfbyname@odata.navigationLink":{"type":"string"},"owninguser@odata.associationLink":{"type":"string"},"owninguser@odata.navigationLink":{"type":"string"},"owningteam@odata.associationLink":{"type":"string"},"owningteam@odata.navigationLink":{"type":"string"},"BookableResourceCategory_SyncErrors@odata.associationLink":{"type":"string"},"BookableResourceCategory_SyncErrors@odata.navigationLink":{"type":"string"},"bookableresourcecategory_DuplicateMatchingRecord@odata.associationLink":{"type":"string"},"bookableresourcecategory_DuplicateMatchingRecord@odata.navigationLink":{"type":"string"},"bookableresourcecategory_DuplicateBaseRecord@odata.associationLink":{"type":"string"},"bookableresourcecategory_DuplicateBaseRecord@odata.navigationLink":{"type":"string"},"bookableresourcecategory_AsyncOperations@odata.associationLink":{"type":"string"},"bookableresourcecategory_AsyncOperations@odata.navigationLink":{"type":"string"},"bookableresourcecategory_MailboxTrackingFolders@odata.associationLink":{"type":"string"},"bookableresourcecategory_MailboxTrackingFolders@odata.navigationLink":{"type":"string"},"bookableresourcecategory_UserEntityInstanceDatas@odata.associationLink":{"type":"string"},"bookableresourcecategory_UserEntityInstanceDatas@odata.navigationLink":{"type":"string"},"bookableresourcecategory_ProcessSession@odata.associationLink":{"type":"string"},"bookableresourcecategory_ProcessSession@odata.navigationLink":{"type":"string"},"bookableresourcecategory_BulkDeleteFailures@odata.associationLink":{"type":"string"},"bookableresourcecategory_BulkDeleteFailures@odata.navigationLink":{"type":"string"},"bookableresourcecategory_PrincipalObjectAttributeAccesses@odata.associationLink":{"type":"string"},"bookableresourcecategory_PrincipalObjectAttributeAccesses@odata.navigationLink":{"type":"string"},"bookableresourcecategory_bookableresourcecategoryassn_ResourceCategory@odata.associationLink":{"type":"string"},"bookableresourcecategory_bookableresourcecategoryassn_ResourceCategory@odata.navigationLink":{"type":"string"},"transactioncurrencyid@odata.associationLink":{"type":"string"},"transactioncurrencyid@odata.navigationLink":{"type":"string"},"msdyn_bookableresourcecategory_requirementresourcecategory_ResourceCategory@odata.associationLink":{"type":"string"},"msdyn_bookableresourcecategory_requirementresourcecategory_ResourceCategory@odata.navigationLink":{"type":"string"}}}}},"Create_a_new_record":{"runAfter":{"Get_Record_Bookable_Resource":["Succeeded"]},"metadata":{"operationMetadataId":"749ff159-99b1-4f24-b9fc-665e8651ef79"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps","operationId":"CreateRecord","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"bookableresourcecategoryassns","item/Resource@odata.bind":"@outputs('Get_Record_Bookable_Resource')?['body/@odata.id']","item/ResourceCategory@odata.bind":"@body('Parse_JSON')?['@odata.id']"},"authentication":"@parameters('$authentication')"}},"Get_Record_Bookable_Resource":{"runAfter":{"Parse_JSON":["Succeeded"]},"metadata":{"operationMetadataId":"8bdcbd73-6bc0-4034-a221-47f571f15ca9"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps","operationId":"GetItem","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"bookableresources","recordId":"@triggerOutputs()?['body/bookableresourceid']"},"authentication":"@parameters('$authentication')"}}},"runAfter":{"List_of_Bookable_Resource_Categories":["Succeeded"]},"metadata":{"operationMetadataId":"4a429cee-d0f3-47d9-ad6e-7677be0d73d5"},"type":"Foreach"}}}},"schemaVersion":"1.0.0.0"}
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_record_is_created,_updated_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "13592ab4-c16b-4e38-90de-1f60e16394de"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 1,
+              "subscriptionRequest/entityname": "bookableresource",
+              "subscriptionRequest/scope": 3
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "List_of_Bookable_Resource_Categories": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "b1ea2118-ef4a-4852-a6c0-067998edbc80"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "bookableresourcecategories",
+              "$filter": "name eq 'Inspector'"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Apply_to_each": {
+          "foreach": "@outputs('List_of_Bookable_Resource_Categories')?['body/value']",
+          "actions": {
+            "Parse_JSON": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "a3ede232-cde1-45e8-b06e-d7ad37b1548e"
+              },
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@items('Apply_to_each')",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "@@odata.type": {
+                      "type": "string"
+                    },
+                    "@@odata.id": {
+                      "type": "string"
+                    },
+                    "@@odata.etag": {
+                      "type": "string"
+                    },
+                    "@@odata.editLink": {
+                      "type": "string"
+                    },
+                    "_owningbusinessunit_value@Microsoft.Dynamics.CRM.associatednavigationproperty": {
+                      "type": "string"
+                    },
+                    "_owningbusinessunit_value@Microsoft.Dynamics.CRM.lookuplogicalname": {
+                      "type": "string"
+                    },
+                    "_owningbusinessunit_value@odata.type": {
+                      "type": "string"
+                    },
+                    "_owningbusinessunit_value": {
+                      "type": "string"
+                    },
+                    "modifiedon@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "modifiedon@odata.type": {
+                      "type": "string"
+                    },
+                    "modifiedon": {
+                      "type": "string"
+                    },
+                    "statecode@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "statecode": {
+                      "type": "integer"
+                    },
+                    "statuscode@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "statuscode": {
+                      "type": "integer"
+                    },
+                    "_createdby_value@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "_createdby_value@Microsoft.Dynamics.CRM.lookuplogicalname": {
+                      "type": "string"
+                    },
+                    "_createdby_value@odata.type": {
+                      "type": "string"
+                    },
+                    "_createdby_value": {
+                      "type": "string"
+                    },
+                    "_ownerid_value@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "_ownerid_value@Microsoft.Dynamics.CRM.associatednavigationproperty": {
+                      "type": "string"
+                    },
+                    "_ownerid_value@Microsoft.Dynamics.CRM.lookuplogicalname": {
+                      "type": "string"
+                    },
+                    "_ownerid_value@odata.type": {
+                      "type": "string"
+                    },
+                    "_ownerid_value": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategoryid@odata.type": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategoryid": {
+                      "type": "string"
+                    },
+                    "_owninguser_value@Microsoft.Dynamics.CRM.lookuplogicalname": {
+                      "type": "string"
+                    },
+                    "_owninguser_value@odata.type": {
+                      "type": "string"
+                    },
+                    "_owninguser_value": {
+                      "type": "string"
+                    },
+                    "_modifiedby_value@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "_modifiedby_value@Microsoft.Dynamics.CRM.lookuplogicalname": {
+                      "type": "string"
+                    },
+                    "_modifiedby_value@odata.type": {
+                      "type": "string"
+                    },
+                    "_modifiedby_value": {
+                      "type": "string"
+                    },
+                    "versionnumber@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "versionnumber@odata.type": {
+                      "type": "string"
+                    },
+                    "versionnumber": {
+                      "type": "integer"
+                    },
+                    "createdon@OData.Community.Display.V1.FormattedValue": {
+                      "type": "string"
+                    },
+                    "createdon@odata.type": {
+                      "type": "string"
+                    },
+                    "createdon": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "owningbusinessunit@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "owningbusinessunit@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "ownerid@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "ownerid@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "createdbyname@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "createdbyname@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "createdonbehalfbyname@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "createdonbehalfbyname@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "modifiedbyname@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "modifiedbyname@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "modifiedonbehalfbyname@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "modifiedonbehalfbyname@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "owninguser@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "owninguser@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "owningteam@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "owningteam@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "BookableResourceCategory_SyncErrors@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "BookableResourceCategory_SyncErrors@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategory_DuplicateMatchingRecord@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategory_DuplicateMatchingRecord@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategory_DuplicateBaseRecord@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategory_DuplicateBaseRecord@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategory_AsyncOperations@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategory_AsyncOperations@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategory_MailboxTrackingFolders@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategory_MailboxTrackingFolders@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategory_UserEntityInstanceDatas@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategory_UserEntityInstanceDatas@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategory_ProcessSession@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategory_ProcessSession@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategory_BulkDeleteFailures@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategory_BulkDeleteFailures@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategory_PrincipalObjectAttributeAccesses@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategory_PrincipalObjectAttributeAccesses@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategory_bookableresourcecategoryassn_ResourceCategory@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "bookableresourcecategory_bookableresourcecategoryassn_ResourceCategory@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "transactioncurrencyid@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "transactioncurrencyid@odata.navigationLink": {
+                      "type": "string"
+                    },
+                    "msdyn_bookableresourcecategory_requirementresourcecategory_ResourceCategory@odata.associationLink": {
+                      "type": "string"
+                    },
+                    "msdyn_bookableresourcecategory_requirementresourcecategory_ResourceCategory@odata.navigationLink": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "Create_a_new_record": {
+              "runAfter": {
+                "Get_Record_Bookable_Resource": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "749ff159-99b1-4f24-b9fc-665e8651ef79"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "bookableresourcecategoryassns",
+                  "item/Resource@odata.bind": "@outputs('Get_Record_Bookable_Resource')?['body/@odata.id']",
+                  "item/ResourceCategory@odata.bind": "@body('Parse_JSON')?['@odata.id']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Get_Record_Bookable_Resource": {
+              "runAfter": {
+                "Parse_JSON": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "8bdcbd73-6bc0-4034-a221-47f571f15ca9"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "bookableresources",
+                  "recordId": "@triggerOutputs()?['body/bookableresourceid']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "List_of_Bookable_Resource_Categories": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4a429cee-d0f3-47d9-ad6e-7677be0d73d5"
+          },
+          "type": "Foreach"
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}

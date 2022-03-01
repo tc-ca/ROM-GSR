@@ -1,1 +1,238 @@
-{"properties":{"connectionReferences":{"shared_commondataserviceforapps":{"impersonation":{},"runtimeSource":"embedded","connection":{},"api":{"name":"shared_commondataserviceforapps"}}},"definition":{"$schema":"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#","contentVersion":"1.0.0.0","parameters":{"$connections":{"defaultValue":{},"type":"Object"},"$authentication":{"defaultValue":{},"type":"SecureObject"}},"triggers":{"When_a_record_is_created,_updated_or_deleted":{"type":"OpenApiConnectionWebhook","inputs":{"host":{"apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps","connectionName":"shared_commondataserviceforapps","operationId":"SubscribeWebhookTrigger"},"parameters":{"subscriptionRequest/message":7,"subscriptionRequest/entityname":"msdyn_workorder","subscriptionRequest/scope":3,"subscriptionRequest/filteringattributes":"msdyn_serviceterritory,ovs_fiscalyear,ovs_fiscalquarter,ovs_rational,","subscriptionRequest/name":"b1352b4e-58af-eb11-8236-000d3ae8b65a"},"authentication":"@parameters('$authentication')"}}},"actions":{"List_Unplanned_Forecasts_records":{"runAfter":{"Apply_to_each_Rational":["Succeeded"]},"type":"OpenApiConnection","inputs":{"host":{"apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps","connectionName":"shared_commondataserviceforapps","operationId":"ListRecords"},"parameters":{"entityName":"ovs_unplannedforecasts","$filter":"_ovs_fiscalyear_value eq @{triggerOutputs()?['body/_ovs_fiscalyear_value']}"},"authentication":"@parameters('$authentication')"}},"Apply_to_each_Unplanned_Forecast":{"foreach":"@outputs('List_Unplanned_Forecasts_records')?['body/value']","actions":{"List_Work_Orders_records":{"runAfter":{},"type":"OpenApiConnection","inputs":{"host":{"apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps","connectionName":"shared_commondataserviceforapps","operationId":"ListRecords"},"parameters":{"entityName":"msdyn_workorders","$filter":"_ovs_rational_value eq '47f438c7-c104-eb11-a813-000d3af3a7a7'  and _msdyn_serviceterritory_value eq @{items('Apply_to_each_Unplanned_Forecast')?['_ovs_region_value']} and\n_ovs_fiscalquarter_value eq @{items('Apply_to_each_Unplanned_Forecast')?['_ovs_quarter_value']}"},"authentication":"@parameters('$authentication')"}},"Update_a_record":{"runAfter":{"Set_variable":["Succeeded"]},"type":"OpenApiConnection","inputs":{"host":{"apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps","connectionName":"shared_commondataserviceforapps","operationId":"UpdateRecord"},"parameters":{"entityName":"ovs_unplannedforecasts","recordId":"@items('Apply_to_each_Unplanned_Forecast')?['ovs_unplannedforecastid']","item/ovs_forecast":"@variables('unplannedCount')"},"authentication":"@parameters('$authentication')"}},"Set_variable":{"runAfter":{"List_Work_Orders_records":["Succeeded"]},"type":"SetVariable","inputs":{"name":"unplannedCount","value":"@length(outputs('List_Work_Orders_records')?['body/value'])"}}},"runAfter":{"List_Unplanned_Forecasts_records":["Succeeded"]},"type":"Foreach"},"Initialize_variable_unplannedCount":{"runAfter":{},"type":"InitializeVariable","inputs":{"variables":[{"name":"unplannedCount","type":"integer","value":0}]}},"Initialize_variable":{"runAfter":{"Initialize_variable_unplannedCount":["Succeeded"]},"type":"InitializeVariable","inputs":{"variables":[{"name":"rationalType","type":"string"}]}},"List_Rationals_records":{"runAfter":{"Initialize_variable":["Succeeded"]},"type":"OpenApiConnection","inputs":{"host":{"apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps","connectionName":"shared_commondataserviceforapps","operationId":"ListRecords"},"parameters":{"entityName":"ovs_tyrationals","$filter":"ovs_name eq 'Unplanned'"},"authentication":"@parameters('$authentication')"},"description":"get only unplanned record"},"Apply_to_each_Rational":{"foreach":"@outputs('List_Rationals_records')?['body/value']","actions":{"Set_rationalType":{"runAfter":{},"type":"SetVariable","inputs":{"name":"rationalType","value":"@items('Apply_to_each_Rational')?['ovs_tyrationalid']"}}},"runAfter":{"List_Rationals_records":["Succeeded"]},"type":"Foreach","runtimeConfiguration":{"concurrency":{"repetitions":1}}}}}},"schemaVersion":"1.0.0.0"}
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_record_is_created,_updated_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "96c30c5f-1550-4e7e-bd68-fb2e2aa03824"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 7,
+              "subscriptionRequest/entityname": "msdyn_workorder",
+              "subscriptionRequest/scope": 3,
+              "subscriptionRequest/filteringattributes": "msdyn_serviceterritory,ovs_fiscalyear,ovs_fiscalquarter,ovs_rational,"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "List_Unplanned_Forecasts_records": {
+          "runAfter": {
+            "Apply_to_each_Rational": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "96bb41e1-311c-451f-8f7b-94ca1423d034"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_unplannedforecasts",
+              "$filter": "_ovs_fiscalyear_value eq @{triggerOutputs()?['body/_ovs_fiscalyear_value']}"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Apply_to_each_Unplanned_Forecast": {
+          "foreach": "@outputs('List_Unplanned_Forecasts_records')?['body/value']",
+          "actions": {
+            "List_Work_Orders_records": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "ba737e2a-8d8e-411e-92e3-d7d78886e838"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "msdyn_workorders",
+                  "$filter": "_ovs_rational_value eq '47f438c7-c104-eb11-a813-000d3af3a7a7'  and _msdyn_serviceterritory_value eq @{items('Apply_to_each_Unplanned_Forecast')?['_ovs_region_value']} and\n_ovs_fiscalquarter_value eq @{items('Apply_to_each_Unplanned_Forecast')?['_ovs_quarter_value']}"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Update_a_record": {
+              "runAfter": {
+                "Set_variable": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "c5f3e630-d9cf-4707-82f8-32c330b3cdc6"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "ovs_unplannedforecasts",
+                  "recordId": "@items('Apply_to_each_Unplanned_Forecast')?['ovs_unplannedforecastid']",
+                  "item/ovs_forecast": "@variables('unplannedCount')"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Set_variable": {
+              "runAfter": {
+                "List_Work_Orders_records": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0ca03b3a-1e71-4cea-ad67-d3da7a75920e"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "unplannedCount",
+                "value": "@length(outputs('List_Work_Orders_records')?['body/value'])"
+              }
+            }
+          },
+          "runAfter": {
+            "List_Unplanned_Forecasts_records": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "46504c76-9906-4ede-b48e-cf646ca4bad8"
+          },
+          "type": "Foreach"
+        },
+        "Initialize_variable_unplannedCount": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "c703d0c7-f1ee-4cfb-8a2d-0cfe78922092"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "unplannedCount",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "Initialize_variable": {
+          "runAfter": {
+            "Initialize_variable_unplannedCount": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "108fe02e-bd8e-45df-9b4e-3bdef762dac5"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "rationalType",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "List_Rationals_records": {
+          "runAfter": {
+            "Initialize_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "970850c9-b49b-4682-a39f-0685076a3a71"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_tyrationals",
+              "$filter": "ovs_name eq 'Unplanned'"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "description": "get only unplanned record"
+        },
+        "Apply_to_each_Rational": {
+          "foreach": "@outputs('List_Rationals_records')?['body/value']",
+          "actions": {
+            "Set_rationalType": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "5566a327-676b-46ad-b76c-c1ba787a693d"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "rationalType",
+                "value": "@items('Apply_to_each_Rational')?['ovs_tyrationalid']"
+              }
+            }
+          },
+          "runAfter": {
+            "List_Rationals_records": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8e02e390-250b-413f-970a-58e88ab833c8"
+          },
+          "type": "Foreach",
+          "runtimeConfiguration": {
+            "concurrency": {
+              "repetitions": 1
+            }
+          }
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}

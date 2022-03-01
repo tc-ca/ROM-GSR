@@ -1,1 +1,908 @@
-{"properties":{"connectionReferences":{"shared_sharepointonline":{"runtimeSource":"embedded","connection":{},"api":{"name":"shared_sharepointonline"}},"shared_wordonlinebusiness_1":{"runtimeSource":"embedded","connection":{},"api":{"name":"shared_wordonlinebusiness"}},"shared_commondataserviceforapps_2":{"runtimeSource":"embedded","connection":{},"api":{"name":"shared_commondataserviceforapps"}},"shared_commondataserviceforapps":{"runtimeSource":"embedded","connection":{},"api":{"name":"shared_commondataserviceforapps"}}},"definition":{"$schema":"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#","contentVersion":"1.0.0.0","parameters":{"$connections":{"defaultValue":{},"type":"Object"},"$authentication":{"defaultValue":{},"type":"SecureObject"},"dynamicscrmonline.organizationName":{"defaultValue":"","type":"String"},"dynamicscrmonline.entityName":{"defaultValue":"","type":"String"},"Notice of Direction to Remedy Non Compliance EN":{"defaultValue":"-NDRNC-AOPMC-","type":"String","metadata":{"schemaName":"ovs_NoticeofDirectiontoRemedyNonComplianceEN"}}},"triggers":{"When_a_row_is_added,_modified_or_deleted":{"type":"OpenApiConnectionWebhook","inputs":{"host":{"connectionName":"shared_commondataserviceforapps","operationId":"SubscribeWebhookTrigger","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"subscriptionRequest/message":4,"subscriptionRequest/entityname":"ovs_cyaction","subscriptionRequest/scope":4,"subscriptionRequest/filteringattributes":"statuscode,statecode"},"authentication":"@parameters('$authentication')"},"conditions":[{"expression":"@equals(triggerOutputs()?['body/ovs_actiontype'],918640001)"}]}},"actions":{"Get_file_content":{"runAfter":{"Apply_to_each":["Succeeded"]},"metadata":{"%252fShared%2bDocuments%252fGeneral%252fIIS%2bReports%252fFoxPro%2bVersion%2bof%2bIIS%2bCompleted%2bRail%2bReport%2b-%2bRDIMS-%25237082637-v1-50030-2011-07-20-CANADIAN_NATIONAL_RAILWAY-COMPLIANCE_INSPECTION.pdf":"/Shared Documents/General/IIS Reports/FoxPro Version of IIS Completed Rail Report - RDIMS-#7082637-v1-50030-2011-07-20-CANADIAN_NATIONAL_RAILWAY-COMPLIANCE_INSPECTION.pdf","%252fShared%2bDocuments%252fInspection%2bReport%2bTemplates%252fSA_NOTICE_OF_DIRECTION.doc":"/Shared Documents/Inspection Report Templates/SA_NOTICE_OF_DIRECTION.doc","%252fShared%2bDocuments%252fInspection%2bReport%2bTemplates%252fSA_NOTICE_OF_DIRECTION.docx":"/Shared Documents/Inspection Report Templates/SA_NOTICE_OF_DIRECTION.docx","%252fShared%2bDocuments%252fInspection%2bReport%2bTemplates%252fSA_NOTICE_OF_DIRECTION_REVISED.docx":"/Shared Documents/Inspection Report Templates/SA_NOTICE_OF_DIRECTION_REVISED.docx","%252fShared%2bDocuments%252fInspection%2bReport%2bTemplates%252fNOTICE_OF_DIRECTION_TO_REMEDY_NON-COMPLIANCE.docx":"/Shared Documents/Inspection Report Templates/NOTICE_OF_DIRECTION_TO_REMEDY_NON-COMPLIANCE.docx"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_sharepointonline","operationId":"GetFileContent","apiId":"/providers/Microsoft.PowerApps/apis/shared_sharepointonline"},"parameters":{"dataset":"https://034gc.sharepoint.com/sites/SamuraiTeam","id":"%252fShared%2bDocuments%252fInspection%2bReport%2bTemplates%252fNOTICE_OF_DIRECTION_TO_REMEDY_NON-COMPLIANCE.docx","inferContentType":true},"authentication":"@parameters('$authentication')"}},"Create_file":{"runAfter":{"Populate_a_Microsoft_Word_template":["Succeeded"]},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_sharepointonline","operationId":"CreateFile","apiId":"/providers/Microsoft.PowerApps/apis/shared_sharepointonline"},"parameters":{"dataset":"https://034gc.sharepoint.com/sites/SamuraiTeam","folderPath":"/Shared Documents/Inspection Report Templates/Temp","name":"@{variables('FileName')}.docx","body":"@base64(outputs('Populate_a_Microsoft_Word_template')?['body'])"},"authentication":"@parameters('$authentication')"},"runtimeConfiguration":{"contentTransfer":{"transferMode":"Chunked"}}},"Convert_Word_Document_to_PDF":{"runAfter":{"Create_file":["Succeeded"]},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_wordonlinebusiness_1","operationId":"GetFilePDF","apiId":"/providers/Microsoft.PowerApps/apis/shared_wordonlinebusiness"},"parameters":{"source":"sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211","drive":"b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV","file":"/Inspection Report Templates/Temp/@{outputs('Create_file')?['body/Name']}"},"authentication":"@parameters('$authentication')"}},"Delete_file":{"runAfter":{"Create_Note_on_Work_Order":["Succeeded"]},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_sharepointonline","operationId":"DeleteFile","apiId":"/providers/Microsoft.PowerApps/apis/shared_sharepointonline"},"parameters":{"dataset":"https://034gc.sharepoint.com/sites/SamuraiTeam","id":"@outputs('Create_file')?['body/Id']"},"authentication":"@parameters('$authentication')"}},"Populate_a_Microsoft_Word_template":{"runAfter":{"Get_file_content":["Succeeded"]},"metadata":{"01QZYBJ7D7WBS5TYFRDBFJATRQHL6XCCML":"/Inspection Report Templates/SA_NOTICE_OF_DIRECTION.docx","01QZYBJ7DTQ2GUAAHEAJAITVFVVFDUTBGI":"/Inspection Report Templates/SA_NOTICE_OF_DIRECTION.docx","01QZYBJ7GFZLBSXRBVQNBKOGXWPX5RXECQ":"/Inspection Report Templates/SA_NOTICE_OF_DIRECTION.docx","01QZYBJ7F4ZXWRC5UCRBDIFFIY2UL4GH62":"/Inspection Report Templates/SA_NOTICE_OF_DIRECTION.docx","01QZYBJ7ERBOETFHDABRDZ2B7MGMOC6OSB":"/Inspection Report Templates/SA_NOTICE_OF_DIRECTION.docx","01QZYBJ7BNM2HRCH43WVHISSOI37TPHJG6":"/Inspection Report Templates/SA_NOTICE_OF_DIRECTION_REVISED.docx","01QZYBJ7DPRAZQ6TC7VJEKOL5EIQG4RHBO":"/Inspection Report Templates/NOTICE_OF_DIRECTION_TO_REMEDY_NON-COMPLIANCE.docx"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_wordonlinebusiness_1","operationId":"CreateFileItem","apiId":"/providers/Microsoft.PowerApps/apis/shared_wordonlinebusiness"},"parameters":{"source":"sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211","drive":"b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV","file":"01QZYBJ7DPRAZQ6TC7VJEKOL5EIQG4RHBO","dynamicFileSchema/220326055":"@triggerOutputs()?['body/ovs_designatedperson']","dynamicFileSchema/690186090":"@variables('closingInspectorBadge')","dynamicFileSchema/878509874":"@variables('closingInspectorTitle')","dynamicFileSchema/1134297212":"@{outputs('Get_Inspector_Details')?['body/firstname']} @{outputs('Get_Inspector_Details')?['body/lastname']}","dynamicFileSchema/1171604637":"@outputs('Get_Inspector_Details')?['body/address1_fax']","dynamicFileSchema/1223643435":"@outputs('Get_Work_Order_Details')?['body/msdyn_name']","dynamicFileSchema/1227957053":"  @{variables('closingInspectorName')}","dynamicFileSchema/1563210458":"@variables('ReleaseDate')","dynamicFileSchema/1566602880":"@body('Get_Inspector_Details')?['systemuser_bookableresource_UserId'][0]['ovs_registeredinspectornumberrin']","dynamicFileSchema/1566754733":"@triggerOutputs()?['body/ovs_noncompliancedetailstxt']","dynamicFileSchema/1573465195":"@{outputs('Get_Work_Order_Details')?['body/msdyn_city']}, @{outputs('Get_Work_Order_Details')?['body/msdyn_stateorprovince']}","dynamicFileSchema/1854989054":"@variables('RevocationText')","dynamicFileSchema/1895389775":"@{outputs('Get_Primary_Contact_For_Account')?['body/primarycontactid/fullname']} - @{outputs('Get_Primary_Contact_For_Account')?['body/primarycontactid/jobtitle']}","dynamicFileSchema/1976571402":"@variables('LocalTime')","dynamicFileSchema/-2097462769":"@triggerOutputs()?['body/ovs_actionnumber']","dynamicFileSchema/-1395809158":"@outputs('Get_Primary_Contact_For_Account')?['body/ovs_legalname']","dynamicFileSchema/-745960806":"@{outputs('Get_Primary_Contact_For_Account')?['body/address1_line1']} @{outputs('Get_Primary_Contact_For_Account')?['body/address1_city']} @{outputs('Get_Primary_Contact_For_Account')?['body/address1_stateorprovince']} @{outputs('Get_Primary_Contact_For_Account')?['body/address1_postalcode']}","dynamicFileSchema/-1713186279":"@outputs('Get_Primary_Contact_For_Account')?['body/primarycontactid/emailaddress1']","dynamicFileSchema/-183747007":"@outputs('Get_Primary_Contact_For_Account')?['body/primarycontactid/telephone1']","dynamicFileSchema/-1755352695":"@outputs('Get_Primary_Contact_For_Account')?['body/primarycontactid/fax']","dynamicFileSchema/-761756268":"@outputs('Get_Inspector_Details')?['body/title']","dynamicFileSchema/-502672078":"@outputs('Get_Inspector_Details')?['body/address1_composite']","dynamicFileSchema/-848561687":"@outputs('Get_Inspector_Details')?['body/internalemailaddress']","dynamicFileSchema/-935824125":"@outputs('Get_Inspector_Details')?['body/address1_telephone1']","dynamicFileSchema/-1742393533":"@formatDateTime(triggerOutputs()?['body/ovs_actiondate'],'dd-MMM-yyyy')","dynamicFileSchema/-1755735195":"@body('Get_Inspector_Details')?['systemuser_bookableresource_UserId'][0]['ovs_badgenumber']","dynamicFileSchema/-1208326396":"@triggerOutputs()?['body/ovs_designatedpersontitle']","dynamicFileSchema/-2058928123":"@variables('DirectionText')","dynamicFileSchema/-43916254":"@variables('closingInspectorRINN')"},"authentication":"@parameters('$authentication')"}},"Get_Inspector_Details":{"runAfter":{"Get_Primary_Contact_For_Account":["Succeeded"]},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_2","operationId":"GetItem","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"systemusers","recordId":"@outputs('Get_Work_Order_Details')?['body/_ownerid_value']","$select":"firstname,lastname,internalemailaddress,address1_composite,address2_telephone1,address1_telephone1,address1_postalcode,address1_fax,title","$expand":"systemuser_bookableresource_UserId($select=ovs_registeredinspectornumberrin,ovs_badgenumber)"},"authentication":"@parameters('$authentication')"}},"Create_Note_on_Work_Order":{"runAfter":{"Convert_Word_Document_to_PDF":["Succeeded"]},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_2","operationId":"CreateRecord","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"annotations","item/subject":"Notice Of Direction To Remedy Non-Compliance","item/isdocument":true,"item/documentbody":"@base64(outputs('Convert_Word_Document_to_PDF')?['body'])","item/filename":"@{variables('FileName')}.pdf","item/objectid_msdyn_workorder@odata.bind":"/msdyn_workorders/@{outputs('Get_Work_Order_Details')?['body/msdyn_workorderid']}"},"authentication":"@parameters('$authentication')"}},"Get_Work_Order_Details":{"runAfter":{"Init_-_Violations_Array":["Succeeded"]},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps","operationId":"GetItem","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"msdyn_workorders","recordId":"@triggerOutputs()?['body/_regardingobjectid_value']","$expand":"msdyn_serviceaccount($select=name,emailaddress1,telephone1,_primarycontactid_value,fax,address1_composite;$expand=primarycontactid($select=fullname))"},"authentication":"@parameters('$authentication')"}},"Get_List_of_Violations":{"runAfter":{"Init_-_Designated_Person_Title":["Succeeded"]},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_2","operationId":"ListRecords","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"qm_syresults","$select":"qm_violationcount,qm_externalcomments","$filter":"_qm_workorderid_value eq '@{outputs('Get_Work_Order_Details')?['body/msdyn_workorderid']}'","$expand":"qm_rclegislationId($select=qm_name)"},"authentication":"@parameters('$authentication')"}},"Apply_to_each":{"foreach":"@outputs('Get_List_of_Violations')?['body/value']","actions":{"Append_to_array_variable":{"runAfter":{},"type":"AppendToArrayVariable","inputs":{"name":"ViolationsArray","value":{"ViolationName":"@items('Apply_to_each')?['qm_rclegislationid/qm_name']","ViolationCount":"@items('Apply_to_each')?['qm_violationcount']","ExternalComment":"@items('Apply_to_each')?['qm_externalcomments']"}}}},"runAfter":{"Get_List_of_Violations":["Succeeded"]},"type":"Foreach"},"Init_-_Designated_Person_Name":{"runAfter":{"Condition":["Succeeded"]},"type":"InitializeVariable","inputs":{"variables":[{"name":"DesignatedPersonName","type":"string"}]}},"Init_-_Designated_Person_Title":{"runAfter":{"Init_-_Designated_Person_Name":["Succeeded"]},"type":"InitializeVariable","inputs":{"variables":[{"name":"DesignatedPersonTitle","type":"string"}]}},"Init_-_Direction_Text":{"runAfter":{"Continue_If_Status_Is_Active_Or_Confirmation_Received_On_Time":["Succeeded"]},"type":"InitializeVariable","inputs":{"variables":[{"name":"DirectionText","type":"string"}]}},"Init_-_Violations_Array":{"runAfter":{"If_Status_is_Active":["Succeeded"]},"type":"InitializeVariable","inputs":{"variables":[{"name":"ViolationsArray","type":"array"}]}},"Init_-_Revocation_Text":{"runAfter":{"Init_-_Direction_Text":["Succeeded"]},"type":"InitializeVariable","inputs":{"variables":[{"name":"RevocationText","type":"string"}]}},"If_Status_is_Active":{"actions":{"Set_variable_4":{"runAfter":{},"type":"SetVariable","inputs":{"name":"DirectionText","value":"@triggerOutputs()?['body/ovs_directiontxt']"}}},"runAfter":{"Get_Closing_Inspector_Details":["Succeeded"]},"else":{"actions":{"If_Status_Reason_is_Confirmation_Received_On_Time":{"actions":{"Set_Revocation_Text":{"runAfter":{},"type":"SetVariable","inputs":{"name":"RevocationText","value":"@triggerOutputs()?['body/ovs_revocationjustificationtxt']"}},"Set_Direction_Text":{"runAfter":{"Set_Revocation_Text":["Succeeded"]},"type":"SetVariable","inputs":{"name":"DirectionText","value":"@triggerOutputs()?['body/ovs_directiontxt']"}},"Set_Closing_Inspector_Name":{"runAfter":{"Set_Direction_Text":["Succeeded"]},"type":"SetVariable","inputs":{"name":"closingInspectorName","value":" @{outputs('Get_Closing_Inspector_Details')?['body/firstname']} @{outputs('Get_Closing_Inspector_Details')?['body/lastname']}"}},"Set_Closing_Inspector_Badge":{"runAfter":{"Set_Closing_Inspector_Name":["Succeeded"]},"type":"SetVariable","inputs":{"name":"closingInspectorBadge","value":"@{body('Get_Closing_Inspector_Details')?['systemuser_bookableresource_UserId'][0]['ovs_badgenumber']}"}},"Set_Closing_Inspector_RINN":{"runAfter":{"Set_Closing_Inspector_Badge":["Succeeded"]},"type":"SetVariable","inputs":{"name":"closingInspectorRINN","value":"@{body('Get_Closing_Inspector_Details')?['systemuser_bookableresource_UserId'][0]['ovs_registeredinspectornumberrin']}"}},"Set_Closing_Inspector_Title":{"runAfter":{"Set_Closing_Inspector_RINN":["Succeeded"]},"type":"SetVariable","inputs":{"name":"closingInspectorTitle","value":"@outputs('Get_Closing_Inspector_Details')?['body/title']"}},"Set_LocalTime":{"runAfter":{"Set_Closing_Inspector_Title":["Succeeded"]},"type":"SetVariable","inputs":{"name":"LocalTime","value":"@{formatDateTime(triggerOutputs()?['body/ovs_localtime'], 'HH:mm:ss')}"}}},"runAfter":{},"else":{"actions":{"Terminate":{"runAfter":{},"type":"Terminate","inputs":{"runStatus":"Cancelled"}}}},"expression":{"equals":["@triggerOutputs()?['body/statuscode']",918640000]},"type":"If"}}},"expression":{"equals":["@triggerOutputs()?['body/statuscode']",4]},"type":"If"},"Get_Closing_Inspector_Details":{"runAfter":{"Init_-_LocalTime":["Succeeded"]},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_2","operationId":"GetItem","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"systemusers","recordId":"@triggerOutputs()?['body/_modifiedby_value']","$select":"firstname,lastname,internalemailaddress,address1_composite,address2_telephone1,address1_telephone1,address1_postalcode,address1_fax,title","$expand":"systemuser_bookableresource_UserId($select=ovs_registeredinspectornumberrin,ovs_badgenumber)"},"authentication":"@parameters('$authentication')"}},"Init_-_closingInspectorName":{"runAfter":{"Init_-_Revocation_Text":["Succeeded"]},"type":"InitializeVariable","inputs":{"variables":[{"name":"closingInspectorName","type":"string"}]}},"Init_-_closingInspectorBadge":{"runAfter":{"Init_-_closingInspectorName":["Succeeded"]},"type":"InitializeVariable","inputs":{"variables":[{"name":"closingInspectorBadge","type":"string"}]}},"Init_-_closingInspectorRINN":{"runAfter":{"Init_-_closingInspectorTitle":["Succeeded"]},"type":"InitializeVariable","inputs":{"variables":[{"name":"closingInspectorRINN","type":"string"}]}},"Condition":{"actions":{"Set_Release_Date":{"runAfter":{},"type":"SetVariable","inputs":{"name":"ReleaseDate","value":"@triggerOutputs()?['body/ovs_releasedate']"}}},"runAfter":{"Get_Inspector_Details":["Succeeded"]},"expression":{"greater":["@length(body('Get_Closing_Inspector_Details')?['systemuser_bookableresource_UserId'])",0]},"type":"If"},"Init_-_File_Name":{"runAfter":{"Init_-_closingInspectorRINN":["Succeeded"]},"type":"InitializeVariable","inputs":{"variables":[{"name":"FileName","type":"string","value":"@{triggerOutputs()?['body/ovs_actionnumber']}@{parameters('Notice of Direction to Remedy Non Compliance EN')}@{formatDateTime(utcNow(),'ddMMyyyyhhmmfff')}"}]}},"Continue_If_Status_Is_Active_Or_Confirmation_Received_On_Time":{"actions":{},"runAfter":{},"else":{"actions":{"Terminate_2":{"runAfter":{},"type":"Terminate","inputs":{"runStatus":"Cancelled"}}}},"expression":{"or":[{"equals":["@triggerOutputs()?['body/statuscode']",918640000]},{"equals":["@triggerOutputs()?['body/statuscode']",4]}]},"type":"If"},"Get_Primary_Contact_For_Account":{"runAfter":{"Get_Work_Order_Details":["Succeeded"]},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_2","operationId":"GetItem","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"accounts","recordId":"@outputs('Get_Work_Order_Details')?['body/_msdyn_serviceaccount_value']","$select":"name,emailaddress1,accountid,address1_line1,address1_city,address1_postalcode,ovs_legalname,address1_stateorprovince","$expand":"primarycontactid($select=jobtitle,fullname,emailaddress1,telephone1,fax)"},"authentication":"@parameters('$authentication')"}},"Init_-_Release_Date":{"runAfter":{"Init_-_File_Name":["Succeeded"]},"type":"InitializeVariable","inputs":{"variables":[{"name":"ReleaseDate","type":"string"}]}},"Init_-_LocalTime":{"runAfter":{"Init_-_Release_Date":["Succeeded"]},"type":"InitializeVariable","inputs":{"variables":[{"name":"LocalTime","type":"string"}]}},"Init_-_closingInspectorTitle":{"runAfter":{"Init_-_closingInspectorBadge":["Succeeded"]},"type":"InitializeVariable","inputs":{"variables":[{"name":"closingInspectorTitle","type":"string"}]}}}}},"schemaVersion":"1.0.0.0"}
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceSharepointTDGCoreUser"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      },
+      "shared_wordonlinebusiness_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceWordOnlineTDGCoreUser"
+        },
+        "api": {
+          "name": "shared_wordonlinebusiness"
+        }
+      },
+      "shared_commondataserviceforapps_2": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "dynamicscrmonline.organizationName": {
+          "defaultValue": "",
+          "type": "String"
+        },
+        "dynamicscrmonline.entityName": {
+          "defaultValue": "",
+          "type": "String"
+        },
+        "Notice of Direction to Remedy Non Compliance EN": {
+          "defaultValue": "-NDRNC-AOPMC-",
+          "type": "String",
+          "metadata": {
+            "schemaName": "ovs_NoticeofDirectiontoRemedyNonComplianceEN"
+          }
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "847a8a30-5902-4448-9a52-d813b38b65ef"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 4,
+              "subscriptionRequest/entityname": "ovs_cyaction",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "statuscode,statecode"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "conditions": [
+            {
+              "expression": "@equals(triggerOutputs()?['body/ovs_actiontype'],918640001)"
+            }
+          ]
+        }
+      },
+      "actions": {
+        "Get_file_content": {
+          "runAfter": {
+            "Apply_to_each": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "%252fShared%2bDocuments%252fGeneral%252fIIS%2bReports%252fFoxPro%2bVersion%2bof%2bIIS%2bCompleted%2bRail%2bReport%2b-%2bRDIMS-%25237082637-v1-50030-2011-07-20-CANADIAN_NATIONAL_RAILWAY-COMPLIANCE_INSPECTION.pdf": "/Shared Documents/General/IIS Reports/FoxPro Version of IIS Completed Rail Report - RDIMS-#7082637-v1-50030-2011-07-20-CANADIAN_NATIONAL_RAILWAY-COMPLIANCE_INSPECTION.pdf",
+            "%252fShared%2bDocuments%252fInspection%2bReport%2bTemplates%252fSA_NOTICE_OF_DIRECTION.doc": "/Shared Documents/Inspection Report Templates/SA_NOTICE_OF_DIRECTION.doc",
+            "%252fShared%2bDocuments%252fInspection%2bReport%2bTemplates%252fSA_NOTICE_OF_DIRECTION.docx": "/Shared Documents/Inspection Report Templates/SA_NOTICE_OF_DIRECTION.docx",
+            "%252fShared%2bDocuments%252fInspection%2bReport%2bTemplates%252fSA_NOTICE_OF_DIRECTION_REVISED.docx": "/Shared Documents/Inspection Report Templates/SA_NOTICE_OF_DIRECTION_REVISED.docx",
+            "%252fShared%2bDocuments%252fInspection%2bReport%2bTemplates%252fNOTICE_OF_DIRECTION_TO_REMEDY_NON-COMPLIANCE.docx": "/Shared Documents/Inspection Report Templates/NOTICE_OF_DIRECTION_TO_REMEDY_NON-COMPLIANCE.docx",
+            "operationMetadataId": "e31f4b48-fecc-41f0-a56d-41f93cfb9328"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetFileContent",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+              "id": "%252fShared%2bDocuments%252fInspection%2bReport%2bTemplates%252fNOTICE_OF_DIRECTION_TO_REMEDY_NON-COMPLIANCE.docx",
+              "inferContentType": true
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Create_file": {
+          "runAfter": {
+            "Populate_a_Microsoft_Word_template": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a9a0adb1-092d-4064-affd-058288e79b40"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "CreateFile",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+              "folderPath": "/Shared Documents/Inspection Report Templates/Temp",
+              "name": "@{variables('FileName')}.docx",
+              "body": "@base64(outputs('Populate_a_Microsoft_Word_template')?['body'])"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          }
+        },
+        "Convert_Word_Document_to_PDF": {
+          "runAfter": {
+            "Create_file": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b0cf16fc-5304-449e-8d9a-4448fe0383d9"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_wordonlinebusiness_1",
+              "operationId": "GetFilePDF",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_wordonlinebusiness"
+            },
+            "parameters": {
+              "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
+              "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
+              "file": "/Inspection Report Templates/Temp/@{outputs('Create_file')?['body/Name']}"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Delete_file": {
+          "runAfter": {
+            "Create_Note_on_Work_Order": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "68b1b1b2-278e-46aa-9fde-839b65509289"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "DeleteFile",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+              "id": "@outputs('Create_file')?['body/Id']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Populate_a_Microsoft_Word_template": {
+          "runAfter": {
+            "Get_file_content": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "01QZYBJ7D7WBS5TYFRDBFJATRQHL6XCCML": "/Inspection Report Templates/SA_NOTICE_OF_DIRECTION.docx",
+            "01QZYBJ7DTQ2GUAAHEAJAITVFVVFDUTBGI": "/Inspection Report Templates/SA_NOTICE_OF_DIRECTION.docx",
+            "01QZYBJ7GFZLBSXRBVQNBKOGXWPX5RXECQ": "/Inspection Report Templates/SA_NOTICE_OF_DIRECTION.docx",
+            "01QZYBJ7F4ZXWRC5UCRBDIFFIY2UL4GH62": "/Inspection Report Templates/SA_NOTICE_OF_DIRECTION.docx",
+            "01QZYBJ7ERBOETFHDABRDZ2B7MGMOC6OSB": "/Inspection Report Templates/SA_NOTICE_OF_DIRECTION.docx",
+            "01QZYBJ7BNM2HRCH43WVHISSOI37TPHJG6": "/Inspection Report Templates/SA_NOTICE_OF_DIRECTION_REVISED.docx",
+            "01QZYBJ7DPRAZQ6TC7VJEKOL5EIQG4RHBO": "/Inspection Report Templates/NOTICE_OF_DIRECTION_TO_REMEDY_NON-COMPLIANCE.docx",
+            "operationMetadataId": "e632acc8-559d-4348-8370-ade1cfe854e0"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_wordonlinebusiness_1",
+              "operationId": "CreateFileItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_wordonlinebusiness"
+            },
+            "parameters": {
+              "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
+              "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
+              "file": "01QZYBJ7DPRAZQ6TC7VJEKOL5EIQG4RHBO",
+              "dynamicFileSchema/220326055": "@triggerOutputs()?['body/ovs_designatedperson']",
+              "dynamicFileSchema/690186090": "@variables('closingInspectorBadge')",
+              "dynamicFileSchema/878509874": "@variables('closingInspectorTitle')",
+              "dynamicFileSchema/1134297212": "@{outputs('Get_Inspector_Details')?['body/firstname']} @{outputs('Get_Inspector_Details')?['body/lastname']}",
+              "dynamicFileSchema/1171604637": "@outputs('Get_Inspector_Details')?['body/address1_fax']",
+              "dynamicFileSchema/1223643435": "@outputs('Get_Work_Order_Details')?['body/msdyn_name']",
+              "dynamicFileSchema/1227957053": "  @{variables('closingInspectorName')}",
+              "dynamicFileSchema/1563210458": "@variables('ReleaseDate')",
+              "dynamicFileSchema/1566602880": "@body('Get_Inspector_Details')?['systemuser_bookableresource_UserId'][0]['ovs_registeredinspectornumberrin']",
+              "dynamicFileSchema/1566754733": "@triggerOutputs()?['body/ovs_noncompliancedetailstxt']",
+              "dynamicFileSchema/1573465195": "@{outputs('Get_Work_Order_Details')?['body/msdyn_city']}, @{outputs('Get_Work_Order_Details')?['body/msdyn_stateorprovince']}",
+              "dynamicFileSchema/1854989054": "@variables('RevocationText')",
+              "dynamicFileSchema/1895389775": "@{outputs('Get_Primary_Contact_For_Account')?['body/primarycontactid/fullname']} - @{outputs('Get_Primary_Contact_For_Account')?['body/primarycontactid/jobtitle']}",
+              "dynamicFileSchema/1976571402": "@variables('LocalTime')",
+              "dynamicFileSchema/-2097462769": "@triggerOutputs()?['body/ovs_actionnumber']",
+              "dynamicFileSchema/-1395809158": "@outputs('Get_Primary_Contact_For_Account')?['body/ovs_legalname']",
+              "dynamicFileSchema/-745960806": "@{outputs('Get_Primary_Contact_For_Account')?['body/address1_line1']} @{outputs('Get_Primary_Contact_For_Account')?['body/address1_city']} @{outputs('Get_Primary_Contact_For_Account')?['body/address1_stateorprovince']} @{outputs('Get_Primary_Contact_For_Account')?['body/address1_postalcode']}",
+              "dynamicFileSchema/-1713186279": "@outputs('Get_Primary_Contact_For_Account')?['body/primarycontactid/emailaddress1']",
+              "dynamicFileSchema/-183747007": "@outputs('Get_Primary_Contact_For_Account')?['body/primarycontactid/telephone1']",
+              "dynamicFileSchema/-1755352695": "@outputs('Get_Primary_Contact_For_Account')?['body/primarycontactid/fax']",
+              "dynamicFileSchema/-761756268": "@outputs('Get_Inspector_Details')?['body/title']",
+              "dynamicFileSchema/-502672078": "@outputs('Get_Inspector_Details')?['body/address1_composite']",
+              "dynamicFileSchema/-848561687": "@outputs('Get_Inspector_Details')?['body/internalemailaddress']",
+              "dynamicFileSchema/-935824125": "@outputs('Get_Inspector_Details')?['body/address1_telephone1']",
+              "dynamicFileSchema/-1742393533": "@formatDateTime(triggerOutputs()?['body/ovs_actiondate'],'dd-MMM-yyyy')",
+              "dynamicFileSchema/-1755735195": "@body('Get_Inspector_Details')?['systemuser_bookableresource_UserId'][0]['ovs_badgenumber']",
+              "dynamicFileSchema/-1208326396": "@triggerOutputs()?['body/ovs_designatedpersontitle']",
+              "dynamicFileSchema/-2058928123": "@variables('DirectionText')",
+              "dynamicFileSchema/-43916254": "@variables('closingInspectorRINN')"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Get_Inspector_Details": {
+          "runAfter": {
+            "Get_Primary_Contact_For_Account": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "809f5723-d24b-4a1e-9181-d098dc2d7ac2"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_2",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "systemusers",
+              "recordId": "@outputs('Get_Work_Order_Details')?['body/_ownerid_value']",
+              "$select": "firstname,lastname,internalemailaddress,address1_composite,address2_telephone1,address1_telephone1,address1_postalcode,address1_fax,title",
+              "$expand": "systemuser_bookableresource_UserId($select=ovs_registeredinspectornumberrin,ovs_badgenumber)"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Create_Note_on_Work_Order": {
+          "runAfter": {
+            "Convert_Word_Document_to_PDF": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a1dfecfb-4011-4f9b-b662-732d258e9c3e"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_2",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "annotations",
+              "item/subject": "Notice Of Direction To Remedy Non-Compliance",
+              "item/isdocument": true,
+              "item/documentbody": "@base64(outputs('Convert_Word_Document_to_PDF')?['body'])",
+              "item/filename": "@{variables('FileName')}.pdf",
+              "item/objectid_msdyn_workorder@odata.bind": "/msdyn_workorders/@{outputs('Get_Work_Order_Details')?['body/msdyn_workorderid']}"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Get_Work_Order_Details": {
+          "runAfter": {
+            "Init_-_Violations_Array": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f377dca8-0baf-471f-b8a9-dc628c382d84"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "msdyn_workorders",
+              "recordId": "@triggerOutputs()?['body/_regardingobjectid_value']",
+              "$expand": "msdyn_serviceaccount($select=name,emailaddress1,telephone1,_primarycontactid_value,fax,address1_composite;$expand=primarycontactid($select=fullname))"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Get_List_of_Violations": {
+          "runAfter": {
+            "Init_-_Designated_Person_Title": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "fd415909-7c16-43e3-9e61-2b6481fa6151"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_2",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "qm_syresults",
+              "$select": "qm_violationcount,qm_externalcomments",
+              "$filter": "_qm_workorderid_value eq '@{outputs('Get_Work_Order_Details')?['body/msdyn_workorderid']}'",
+              "$expand": "qm_rclegislationId($select=qm_name)"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Apply_to_each": {
+          "foreach": "@outputs('Get_List_of_Violations')?['body/value']",
+          "actions": {
+            "Append_to_array_variable": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "c2e6f17e-d6ea-4b88-96c2-d5d42acf7faf"
+              },
+              "type": "AppendToArrayVariable",
+              "inputs": {
+                "name": "ViolationsArray",
+                "value": {
+                  "ViolationName": "@items('Apply_to_each')?['qm_rclegislationid/qm_name']",
+                  "ViolationCount": "@items('Apply_to_each')?['qm_violationcount']",
+                  "ExternalComment": "@items('Apply_to_each')?['qm_externalcomments']"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Get_List_of_Violations": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d1459c0c-c654-49a3-9df4-f7ad18ca0b7e"
+          },
+          "type": "Foreach"
+        },
+        "Init_-_Designated_Person_Name": {
+          "runAfter": {
+            "Condition": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2e4aef78-1c54-4c2e-bad6-1ddb46afface"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "DesignatedPersonName",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Init_-_Designated_Person_Title": {
+          "runAfter": {
+            "Init_-_Designated_Person_Name": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "cbe2fbc3-6df6-4d20-bd3a-b5813fa2335b"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "DesignatedPersonTitle",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Init_-_Direction_Text": {
+          "runAfter": {
+            "Continue_If_Status_Is_Active_Or_Confirmation_Received_On_Time": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ae36dd2a-8a55-4d12-802a-51de46db4819"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "DirectionText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Init_-_Violations_Array": {
+          "runAfter": {
+            "If_Status_is_Active": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "10e9879a-e178-4414-8038-5dc2e9d6b822"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ViolationsArray",
+                "type": "array"
+              }
+            ]
+          }
+        },
+        "Init_-_Revocation_Text": {
+          "runAfter": {
+            "Init_-_Direction_Text": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7030d6a0-5d72-42e6-8e2c-cfb1b90a5299"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RevocationText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "If_Status_is_Active": {
+          "actions": {
+            "Set_variable_4": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "7686063b-48fb-4a08-8d40-749032ca86fe"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "DirectionText",
+                "value": "@triggerOutputs()?['body/ovs_directiontxt']"
+              }
+            }
+          },
+          "runAfter": {
+            "Get_Closing_Inspector_Details": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "If_Status_Reason_is_Confirmation_Received_On_Time": {
+                "actions": {
+                  "Set_Revocation_Text": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "4731e3ee-96c9-4f67-b861-36a879d4e049"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "RevocationText",
+                      "value": "@triggerOutputs()?['body/ovs_revocationjustificationtxt']"
+                    }
+                  },
+                  "Set_Direction_Text": {
+                    "runAfter": {
+                      "Set_Revocation_Text": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "b4a6d313-ed76-4984-ab14-3f361f095875"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "DirectionText",
+                      "value": "@triggerOutputs()?['body/ovs_directiontxt']"
+                    }
+                  },
+                  "Set_Closing_Inspector_Name": {
+                    "runAfter": {
+                      "Set_Direction_Text": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "01b152c3-8f9d-4136-b388-3488ff756213"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "closingInspectorName",
+                      "value": " @{outputs('Get_Closing_Inspector_Details')?['body/firstname']} @{outputs('Get_Closing_Inspector_Details')?['body/lastname']}"
+                    }
+                  },
+                  "Set_Closing_Inspector_Badge": {
+                    "runAfter": {
+                      "Set_Closing_Inspector_Name": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "ae434e22-4a36-47f8-9888-e312cf6275ae"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "closingInspectorBadge",
+                      "value": "@{body('Get_Closing_Inspector_Details')?['systemuser_bookableresource_UserId'][0]['ovs_badgenumber']}"
+                    }
+                  },
+                  "Set_Closing_Inspector_RINN": {
+                    "runAfter": {
+                      "Set_Closing_Inspector_Badge": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "58d92011-fa47-4b8e-94db-4d7cf4a71754"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "closingInspectorRINN",
+                      "value": "@{body('Get_Closing_Inspector_Details')?['systemuser_bookableresource_UserId'][0]['ovs_registeredinspectornumberrin']}"
+                    }
+                  },
+                  "Set_Closing_Inspector_Title": {
+                    "runAfter": {
+                      "Set_Closing_Inspector_RINN": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "b0e2e714-8f85-4ce2-9969-f24417f55b57"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "closingInspectorTitle",
+                      "value": "@outputs('Get_Closing_Inspector_Details')?['body/title']"
+                    }
+                  },
+                  "Set_LocalTime": {
+                    "runAfter": {
+                      "Set_Closing_Inspector_Title": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "bd8befc8-3bd0-4be8-a79d-0a87f5bbf4c3"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "LocalTime",
+                      "value": "@{formatDateTime(triggerOutputs()?['body/ovs_localtime'], 'HH:mm:ss')}"
+                    }
+                  }
+                },
+                "runAfter": {},
+                "else": {
+                  "actions": {
+                    "Terminate": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "660c9135-3131-4083-9e2d-bc2b06b63fb4"
+                      },
+                      "type": "Terminate",
+                      "inputs": {
+                        "runStatus": "Cancelled"
+                      }
+                    }
+                  }
+                },
+                "expression": {
+                  "equals": [
+                    "@triggerOutputs()?['body/statuscode']",
+                    918640000
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "704b4c56-fc62-4e89-a2bd-cde93c767d17"
+                },
+                "type": "If"
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@triggerOutputs()?['body/statuscode']",
+              4
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5d1730c5-8b73-4933-844f-e9414d0ed8ad"
+          },
+          "type": "If"
+        },
+        "Get_Closing_Inspector_Details": {
+          "runAfter": {
+            "Init_-_LocalTime": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "acd8cbe4-7537-4a60-8fa7-dc067f2e5f8c"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_2",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "systemusers",
+              "recordId": "@triggerOutputs()?['body/_modifiedby_value']",
+              "$select": "firstname,lastname,internalemailaddress,address1_composite,address2_telephone1,address1_telephone1,address1_postalcode,address1_fax,title",
+              "$expand": "systemuser_bookableresource_UserId($select=ovs_registeredinspectornumberrin,ovs_badgenumber)"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Init_-_closingInspectorName": {
+          "runAfter": {
+            "Init_-_Revocation_Text": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c5dd812e-95d7-4673-97dc-c2bf462e5c9b"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "closingInspectorName",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Init_-_closingInspectorBadge": {
+          "runAfter": {
+            "Init_-_closingInspectorName": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9a25d774-f035-4652-9f53-03e8866e753c"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "closingInspectorBadge",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Init_-_closingInspectorRINN": {
+          "runAfter": {
+            "Init_-_closingInspectorTitle": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ef5a2a31-a582-4443-bf4b-c61faa7b1caf"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "closingInspectorRINN",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Condition": {
+          "actions": {
+            "Set_Release_Date": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "8c9eb640-6d4f-4c94-a3e9-8d9ff3c80609"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ReleaseDate",
+                "value": "@triggerOutputs()?['body/ovs_releasedate']"
+              }
+            }
+          },
+          "runAfter": {
+            "Get_Inspector_Details": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "greater": [
+              "@length(body('Get_Closing_Inspector_Details')?['systemuser_bookableresource_UserId'])",
+              0
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e48e9d24-be30-4f15-8e5a-b6472dabe5db"
+          },
+          "type": "If"
+        },
+        "Init_-_File_Name": {
+          "runAfter": {
+            "Init_-_closingInspectorRINN": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2e12dc85-e3c5-48d5-84fd-f80d04e3f7a6"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FileName",
+                "type": "string",
+                "value": "@{triggerOutputs()?['body/ovs_actionnumber']}@{parameters('Notice of Direction to Remedy Non Compliance EN')}@{formatDateTime(utcNow(),'ddMMyyyyhhmmfff')}"
+              }
+            ]
+          }
+        },
+        "Continue_If_Status_Is_Active_Or_Confirmation_Received_On_Time": {
+          "actions": {},
+          "runAfter": {},
+          "else": {
+            "actions": {
+              "Terminate_2": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "12885633-ed62-4c2e-8b5a-8537260a2d6c"
+                },
+                "type": "Terminate",
+                "inputs": {
+                  "runStatus": "Cancelled"
+                }
+              }
+            }
+          },
+          "expression": {
+            "or": [
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/statuscode']",
+                  918640000
+                ]
+              },
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/statuscode']",
+                  4
+                ]
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "59cbd770-0f09-4f03-ae7c-53ec8fb131e5"
+          },
+          "type": "If"
+        },
+        "Get_Primary_Contact_For_Account": {
+          "runAfter": {
+            "Get_Work_Order_Details": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4b0a6b10-7b6b-4e28-b2bd-e3762a7945d0"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_2",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "accounts",
+              "recordId": "@outputs('Get_Work_Order_Details')?['body/_msdyn_serviceaccount_value']",
+              "$select": "name,emailaddress1,accountid,address1_line1,address1_city,address1_postalcode,ovs_legalname,address1_stateorprovince",
+              "$expand": "primarycontactid($select=jobtitle,fullname,emailaddress1,telephone1,fax)"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Init_-_Release_Date": {
+          "runAfter": {
+            "Init_-_File_Name": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "14fa2e71-a383-4730-819f-9dd1840876be"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ReleaseDate",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Init_-_LocalTime": {
+          "runAfter": {
+            "Init_-_Release_Date": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5ad37097-a203-45b6-b8ef-b57f18c2c761"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "LocalTime",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Init_-_closingInspectorTitle": {
+          "runAfter": {
+            "Init_-_closingInspectorBadge": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d38810d0-1594-4046-bfcb-4f2ab4f125c8"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "closingInspectorTitle",
+                "type": "string"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}

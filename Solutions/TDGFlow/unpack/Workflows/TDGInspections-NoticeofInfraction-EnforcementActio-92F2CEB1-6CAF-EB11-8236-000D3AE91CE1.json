@@ -1,1 +1,971 @@
-{"properties":{"connectionReferences":{"shared_commondataserviceforapps_1":{"runtimeSource":"embedded","connection":{},"api":{"name":"shared_commondataserviceforapps"}},"shared_wordonlinebusiness_1":{"runtimeSource":"embedded","connection":{},"api":{"name":"shared_wordonlinebusiness"}},"shared_sharepointonline_1":{"runtimeSource":"embedded","connection":{},"api":{"name":"shared_sharepointonline"}},"shared_azureblob":{"runtimeSource":"embedded","connection":{},"api":{"name":"shared_azureblob"}}},"definition":{"$schema":"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#","contentVersion":"1.0.0.0","parameters":{"$connections":{"defaultValue":{},"type":"Object"},"$authentication":{"defaultValue":{},"type":"SecureObject"},"Notice Of Infraction EN":{"defaultValue":"-NI-AI-","type":"String","metadata":{"schemaName":"ovs_NoticeOfInfractionEN","description":"Report middle name"}}},"triggers":{"When_a_row_is_added,_modified_or_deleted":{"metadata":{"operationMetadataId":"ab5b5f5a-06da-400a-9990-be27b7f45fd7"},"type":"OpenApiConnectionWebhook","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"SubscribeWebhookTrigger","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"subscriptionRequest/message":4,"subscriptionRequest/entityname":"ovs_cyaction","subscriptionRequest/scope":4,"subscriptionRequest/runas":1,"subscriptionRequest/name":"92f2ceb1-6caf-eb11-8236-000d3ae91ce1"},"authentication":"@parameters('$authentication')"},"conditions":[{"expression":"@and(equals(triggerBody()?['statuscode'],2),equals(triggerBody()?['ovs_actiontype'],918640004))"}]}},"actions":{"Is_work_order":{"actions":{"Get_Site_and_Primary_Contact":{"runAfter":{"Set_Blob_Path":["Succeeded"]},"metadata":{"operationMetadataId":"3257d718-a462-46e2-843a-7010804d9b76"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"GetItem","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"accounts","recordId":"@outputs('Get_a_WO._All_fields')?['body/_msdyn_serviceaccount_value']","$select":"name,emailaddress1,accountid,address1_composite, address1_city,address1_stateorprovince,address1_line1,address1_postalcode,address1_country,ovs_legalname","$expand":"primarycontactid($select=jobtitle,fullname,emailaddress1,telephone1)"},"authentication":"@parameters('$authentication')"}},"Get_The_Single_Booking":{"runAfter":{"Get_Primary_Inspector":["Succeeded"]},"metadata":{"operationMetadataId":"684eb811-ab07-410c-ae81-87e1be5b3c2c"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"ListRecords","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"bookableresourcebookings","$select":"starttime","$filter":"(_msdyn_workorder_value eq @{outputs('Get_a_WO._All_fields')?['body/msdyn_workorderid']})","$orderby":"starttime desc","$top":1},"authentication":"@parameters('$authentication')"}},"Apply_StartTime_if_any":{"foreach":"@outputs('Get_The_Single_Booking')?['body/value']","actions":{"Set_StartTime_EN":{"runAfter":{},"metadata":{"operationMetadataId":"118715e0-c77f-4949-9cc0-93a90e68a238"},"type":"SetVariable","inputs":{"name":"bookingStartTimeEN","value":"@{formatDateTime(items('Apply_StartTime_if_any')?['starttime'], 'd MMMM yyyy')}"}},"Set_StartTime_FR":{"runAfter":{"Set_temp_month_FR":["Succeeded"]},"metadata":{"operationMetadataId":"b56242cf-3502-47e5-a284-13154efaf7ba"},"type":"SetVariable","inputs":{"name":"bookingStartTimeFR","value":"@{replace(formatDateTime(items('Apply_StartTime_if_any')?['starttime'], 'd MMMM yyyy'),variables('tempStartTimeEN'),variables('tempStartTimeFR'))}"}},"Set_month_name_EN":{"runAfter":{"Set_Parsed_array":["Succeeded"]},"metadata":{"operationMetadataId":"42ea3a53-46ce-4271-b90a-8a4c6852c174"},"type":"SetVariable","inputs":{"name":"tempStartTimeEN","value":"@{variables('enDateArray')[1]}"}},"Parse_JSON":{"runAfter":{"Set_month_name_EN":["Succeeded"]},"metadata":{"operationMetadataId":"b508f382-f914-4845-b9b8-a8d8ba594d63"},"type":"ParseJson","inputs":{"content":"@variables('Month2FR')","schema":{"type":"array","items":{"type":"object","properties":{"Key":{"type":"string"},"Value":{"type":"string"}},"required":["Key","Value"]}}}},"Set_temp_month_FR":{"runAfter":{"Filter_array":["Succeeded"]},"metadata":{"operationMetadataId":"9aaf00eb-2179-4e16-a90b-b1163d098e9b"},"type":"SetVariable","inputs":{"name":"tempStartTimeFR","value":"@{first(body('Filter_array'))?['Value']}"}},"Filter_array":{"runAfter":{"Parse_JSON":["Succeeded"]},"metadata":{"operationMetadataId":"45d4342f-4c3a-4909-aa02-a16dec4773c8"},"type":"Query","inputs":{"from":"@body('Parse_JSON')","where":"@equals(item()['Key'], variables('tempStartTimeEN'))"}},"Compose":{"runAfter":{"Set_StartTime_EN":["Succeeded"]},"metadata":{"operationMetadataId":"7edcc4b5-7c48-4c36-bff7-d9f6c47813b2"},"type":"Compose","inputs":"@split(variables('bookingStartTimeEN'),' ')"},"Set_Parsed_array":{"runAfter":{"Compose":["Succeeded"]},"metadata":{"operationMetadataId":"b6c9fe93-6963-42db-ad94-710666b3a99f"},"type":"SetVariable","inputs":{"name":"enDateArray","value":"@outputs('Compose')"}}},"runAfter":{"Get_The_Single_Booking":["Succeeded"]},"metadata":{"operationMetadataId":"94b25f7f-a78d-450b-89c2-404768fa63c1"},"type":"Foreach"},"Get_Primary_Inspector":{"runAfter":{"Get_Site_and_Primary_Contact":["Succeeded"]},"metadata":{"operationMetadataId":"a593e41b-4981-49d2-bd2e-f7e3b2a9563c"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"GetItem","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"bookableresources","recordId":"@outputs('Get_a_WO._All_fields')?['body/_ovs_primaryinspector_value']","$select":"name,msdyn_primaryemail,bookableresourceid,ovs_badgenumber,ovs_registeredinspectornumberrin","$expand":"UserId($select=lastname,firstname,systemuserid,fullname)"},"authentication":"@parameters('$authentication')"}},"Convert_Word_Document_to_PDF":{"runAfter":{"Location_Condition":["Succeeded"]},"metadata":{"operationMetadataId":"c034be2c-57d1-4948-b688-f7c2a7746dc4"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_wordonlinebusiness_1","operationId":"GetFilePDF","apiId":"/providers/Microsoft.PowerApps/apis/shared_wordonlinebusiness"},"parameters":{"source":"sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211","drive":"b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV","file":"/Reports@{variables('SPfolderPath')}/@{variables('fileNameSP')}"},"authentication":"@parameters('$authentication')"}},"Set_Blob_Path":{"runAfter":{"Get_a_WO._All_fields":["Succeeded"]},"metadata":{"operationMetadataId":"83406c7b-681b-40ba-a445-29a72072a6d5"},"type":"SetVariable","inputs":{"name":"filePathBlob","value":"@{outputs('Get_a_WO._All_fields')?['body/msdyn_name']}_@{variables('RegardingId')}/@{triggerOutputs()?['body/ovs_actionnumber']}@{parameters('Notice Of Infraction EN')}@{variables('filePostfix')}.pdf"}},"Create_new_folder_in_SP":{"runAfter":{},"metadata":{"operationMetadataId":"4195542f-6f45-4a11-ad4c-cdc54d6c8d51"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_sharepointonline_1","operationId":"CreateNewFolder","apiId":"/providers/Microsoft.PowerApps/apis/shared_sharepointonline"},"parameters":{"dataset":"https://034gc.sharepoint.com/sites/SamuraiTeam","table":"ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395","parameters/path":"/Reports@{variables('SPfolderPath')}"},"authentication":"@parameters('$authentication')"}},"Get_a_WO._All_fields":{"runAfter":{"Create_new_folder_in_SP":["Succeeded"]},"metadata":{"operationMetadataId":"86b3845d-fa8f-49e4-95fe-9343c402ea97"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"GetItem","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"msdyn_workorders","recordId":"@triggerOutputs()?['body/_regardingobjectid_value']"},"authentication":"@parameters('$authentication')"}},"Delete_folder":{"runAfter":{"Create_PDF_file_blob":["Succeeded","Failed","TimedOut","Skipped"]},"metadata":{"operationMetadataId":"5c9b86a7-afb1-4019-b786-4ec88a698c5e"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_sharepointonline_1","operationId":"DeleteItem","apiId":"/providers/Microsoft.PowerApps/apis/shared_sharepointonline"},"parameters":{"dataset":"https://034gc.sharepoint.com/sites/SamuraiTeam","table":"Documents","id":"@outputs('Create_new_folder_in_SP')?['body/ID']"},"authentication":"@parameters('$authentication')"}},"Create_PDF_file_blob":{"runAfter":{"Add_Annotation_file":["Failed","TimedOut"]},"metadata":{"operationMetadataId":"8c9a6454-7a32-48d1-b256-145eee5d4329"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_azureblob","operationId":"CreateFile","apiId":"/providers/Microsoft.PowerApps/apis/shared_azureblob"},"parameters":{"folderPath":"/msdynworkorder","name":"@variables('filePathBlob')","body":"@outputs('Convert_Word_Document_to_PDF')?['body']","Content-Type":"application/pdf"},"authentication":"@parameters('$authentication')"},"runtimeConfiguration":{"contentTransfer":{"transferMode":"Chunked"}}},"Location_Condition":{"actions":{"Populate_a_Microsoft_Word_template_NoLocation":{"runAfter":{},"metadata":{"01QZYBJ7EI4EVTAFWFBBCKOFJGD2UZSUL4":"/Inspection Report Templates/Notice of Infraction V1.docx","01QZYBJ7EXZMAJWIBB65GKEVRXXXWJRD6M":"/Inspection Report Templates/Notice of Infraction V2.docx","01QZYBJ7FS5BS2ZXI4Q5FKQNLW76O7M3BR":"/Inspection Report Templates/Notice of Infraction V3.docx","01QZYBJ7H5I5AAAZTYL5CIQLY3BWOHQ75D":"/Inspection Report Templates/Notice of Infraction V4.docx","01QZYBJ7G6OZE52WS6ANEL4ZAZL657V7BS":"/Inspection Report Templates/Notice of Infraction V5.docx","01QZYBJ7AAYYFN24MQCFEZYTXUHDTAPYPX":"/Inspection Report Templates/Notice of Infraction V6.docx","01QZYBJ7FQTOZSDPCK6FGYYXGJQWGJABKB":"/Inspection Report Templates/Notice of Infraction V7.docx","01QZYBJ7A7SZ66P4JGF5FILIWZKATITRQT":"/Inspection Report Templates/Notice of Infraction Revised.docx","01QZYBJ7AZ7TMKEOGF3ZDILKX73QITEQPJ":"/Inspection Report Templates/Notice of Infraction Revised Location.docx","01QZYBJ7FHBU6Q6XX3AJGIXW7VJYVAQQI5":"/Inspection Report Templates/Notice of Infraction Revised NoLocation.docx","01QZYBJ7FK6EICCXPPE5F3DLGUHQPHXHLB":"/Inspection Report Templates/Notice of Infraction Revised NoLocation.docx","operationMetadataId":"11598007-6781-414c-8ac6-3f54c0117709"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_wordonlinebusiness_1","operationId":"CreateFileItem","apiId":"/providers/Microsoft.PowerApps/apis/shared_wordonlinebusiness"},"parameters":{"source":"sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211","drive":"b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV","file":"01QZYBJ7FK6EICCXPPE5F3DLGUHQPHXHLB","dynamicFileSchema/382301797":"@{outputs('Get_Site_and_Primary_Contact')?['body/address1_line1']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_city']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_stateorprovince']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_postalcode']}","dynamicFileSchema/465325485":"@outputs('Get_Primary_Inspector')?['body/userid/fullname']","dynamicFileSchema/1018354222":"@outputs('Get_Primary_Inspector')?['body/ovs_registeredinspectornumberrin']","dynamicFileSchema/1098905991":"@outputs('Get_Site_and_Primary_Contact')?['body/primarycontactid/fullname']","dynamicFileSchema/1285996689":"@outputs('Get_Site_and_Primary_Contact')?['body/ovs_legalname']","dynamicFileSchema/1301888070":"@triggerOutputs()?['body/ovs_actiondate']","dynamicFileSchema/1539550161":"@outputs('Get_Site_and_Primary_Contact')?['body/ovs_legalname']","dynamicFileSchema/1592131855":"@variables('bookingStartTimeEN')","dynamicFileSchema/2034456519":"@triggerOutputs()?['body/ovs_noncompliancedetailstxt']","dynamicFileSchema/-565412095":"@outputs('Get_a_WO._All_fields')?['body/msdyn_name']","dynamicFileSchema/-1975126":"@variables('bookingStartTimeFR')","dynamicFileSchema/-2089449557":"@outputs('Get_Primary_Inspector')?['body/ovs_badgenumber']"},"authentication":"@parameters('$authentication')"}},"Create_file_in_SP_No_Location":{"runAfter":{"Populate_a_Microsoft_Word_template_NoLocation":["Succeeded"]},"metadata":{"operationMetadataId":"c94959bb-39d4-40da-8d45-fd7da98e0101"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_sharepointonline_1","operationId":"CreateFile","apiId":"/providers/Microsoft.PowerApps/apis/shared_sharepointonline"},"parameters":{"dataset":"https://034gc.sharepoint.com/sites/SamuraiTeam","folderPath":"@outputs('Create_new_folder_in_SP')?['body/{FullPath}']","name":"@variables('fileNameSP')","body":"@outputs('Populate_a_Microsoft_Word_template_NoLocation')?['body']"},"authentication":"@parameters('$authentication')"},"runtimeConfiguration":{"contentTransfer":{"transferMode":"Chunked"}}}},"runAfter":{"Apply_StartTime_if_any":["Succeeded"]},"else":{"actions":{"Populate_a_Microsoft_Word_template_Location":{"runAfter":{},"metadata":{"01QZYBJ7EI4EVTAFWFBBCKOFJGD2UZSUL4":"/Inspection Report Templates/Notice of Infraction V1.docx","01QZYBJ7EXZMAJWIBB65GKEVRXXXWJRD6M":"/Inspection Report Templates/Notice of Infraction V2.docx","01QZYBJ7FS5BS2ZXI4Q5FKQNLW76O7M3BR":"/Inspection Report Templates/Notice of Infraction V3.docx","01QZYBJ7H5I5AAAZTYL5CIQLY3BWOHQ75D":"/Inspection Report Templates/Notice of Infraction V4.docx","01QZYBJ7G6OZE52WS6ANEL4ZAZL657V7BS":"/Inspection Report Templates/Notice of Infraction V5.docx","01QZYBJ7AAYYFN24MQCFEZYTXUHDTAPYPX":"/Inspection Report Templates/Notice of Infraction V6.docx","01QZYBJ7FQTOZSDPCK6FGYYXGJQWGJABKB":"/Inspection Report Templates/Notice of Infraction V7.docx","01QZYBJ7A7SZ66P4JGF5FILIWZKATITRQT":"/Inspection Report Templates/Notice of Infraction Revised.docx","01QZYBJ7AZ7TMKEOGF3ZDILKX73QITEQPJ":"/Inspection Report Templates/Notice of Infraction Revised Location.docx","01QZYBJ7DPF6R4LYOUMRCLIDGUB6OMSD34":"/Inspection Report Templates/Notice of Infraction Revised Location.docx","operationMetadataId":"260aeaba-b457-48d3-a491-0fdeeb557390"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_wordonlinebusiness_1","operationId":"CreateFileItem","apiId":"/providers/Microsoft.PowerApps/apis/shared_wordonlinebusiness"},"parameters":{"source":"sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211","drive":"b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV","file":"01QZYBJ7DPF6R4LYOUMRCLIDGUB6OMSD34","dynamicFileSchema/382301797":"@{outputs('Get_Site_and_Primary_Contact')?['body/address1_line1']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_city']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_stateorprovince']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_postalcode']}","dynamicFileSchema/465325485":"@outputs('Get_Primary_Inspector')?['body/userid/fullname']","dynamicFileSchema/1018354222":"@outputs('Get_Primary_Inspector')?['body/ovs_registeredinspectornumberrin']","dynamicFileSchema/1098905991":"@outputs('Get_Site_and_Primary_Contact')?['body/primarycontactid/fullname']","dynamicFileSchema/1285996689":"@outputs('Get_Site_and_Primary_Contact')?['body/ovs_legalname']","dynamicFileSchema/1301888070":"@triggerOutputs()?['body/ovs_actiondate']","dynamicFileSchema/1539550161":"@outputs('Get_Site_and_Primary_Contact')?['body/ovs_legalname']","dynamicFileSchema/1592131855":"@variables('bookingStartTimeEN')","dynamicFileSchema/2034456519":"@triggerOutputs()?['body/ovs_noncompliancedetailstxt']","dynamicFileSchema/-565412095":"@outputs('Get_a_WO._All_fields')?['body/msdyn_name']","dynamicFileSchema/-106351805":"@{outputs('Get_a_WO._All_fields')?['body/msdyn_address1']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_city']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_stateorprovince']}. @{outputs('Get_a_WO._All_fields')?['body/msdyn_postalcode']}","dynamicFileSchema/-1975126":"@variables('bookingStartTimeFR')","dynamicFileSchema/-2089449557":"@outputs('Get_Primary_Inspector')?['body/ovs_badgenumber']"},"authentication":"@parameters('$authentication')"}},"Create_file_in_SP_With_Location":{"runAfter":{"Populate_a_Microsoft_Word_template_Location":["Succeeded"]},"metadata":{"operationMetadataId":"0028d720-f555-4438-bb4f-7f60de6bf241"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_sharepointonline_1","operationId":"CreateFile","apiId":"/providers/Microsoft.PowerApps/apis/shared_sharepointonline"},"parameters":{"dataset":"https://034gc.sharepoint.com/sites/SamuraiTeam","folderPath":"@outputs('Create_new_folder_in_SP')?['body/{FullPath}']","name":"@variables('fileNameSP')","body":"@outputs('Populate_a_Microsoft_Word_template_Location')?['body']"},"authentication":"@parameters('$authentication')"},"runtimeConfiguration":{"contentTransfer":{"transferMode":"Chunked"}}}}},"expression":{"and":[{"equals":["@outputs('Get_Site_and_Primary_Contact')?['body/address1_line1']","@outputs('Get_a_WO._All_fields')?['body/msdyn_address1']"]},{"equals":["@outputs('Get_Site_and_Primary_Contact')?['body/address1_city']","@outputs('Get_a_WO._All_fields')?['body/msdyn_city']"]},{"equals":["@outputs('Get_Site_and_Primary_Contact')?['body/address1_postalcode']","@outputs('Get_a_WO._All_fields')?['body/msdyn_postalcode']"]},{"equals":["@outputs('Get_Site_and_Primary_Contact')?['body/address1_stateorprovince']","@outputs('Get_a_WO._All_fields')?['body/msdyn_stateorprovince']"]}]},"metadata":{"operationMetadataId":"4a0dcd86-0bac-40f6-befc-05bda3a6dc41"},"type":"If"},"Add_Annotation_file":{"runAfter":{"Convert_Word_Document_to_PDF":["Succeeded"]},"metadata":{"operationMetadataId":"3ceaf55e-0e59-47c7-bd4d-7d2879de7243"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"CreateRecord","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"annotations","item/subject":"Work order @{outputs('Get_a_WO._All_fields')?['body/msdyn_name']}","item/isdocument":true,"item/documentbody":"@base64(outputs('Convert_Word_Document_to_PDF')?['body'])","item/filename":"@{triggerOutputs()?['body/ovs_actionnumber']}@{parameters('Notice Of Infraction EN')}@{variables('filePostfix')}.pdf","item/objectid_msdyn_workorder@odata.bind":"/msdyn_workorders/@{outputs('Get_a_WO._All_fields')?['body/msdyn_workorderid']}"},"authentication":"@parameters('$authentication')"}}},"runAfter":{"File_Name_Postfix":["Succeeded"]},"expression":{"equals":["@variables('RegardingType')","msdyn_workorders"]},"metadata":{"operationMetadataId":"a15e5253-2a87-4a69-9340-ad8a9bdb06a9"},"type":"If"},"Clean_WO_guid":{"runAfter":{"Month2French":["Succeeded"]},"metadata":{"operationMetadataId":"c4531742-3a3b-4cbb-a60f-7ce77099d1c0"},"type":"InitializeVariable","inputs":{"variables":[{"name":"RegardingId","type":"string","value":"@toUpper(replace(triggerOutputs()?['body/_regardingobjectid_value'], '-', ''))"}]}},"Regarding_Type":{"runAfter":{"Clean_WO_guid":["Succeeded"]},"metadata":{"operationMetadataId":"1c3daf28-9334-4aaa-b8a2-109b9accf10d"},"type":"InitializeVariable","inputs":{"variables":[{"name":"RegardingType","type":"string","value":"@{triggerOutputs()?['body/_regardingobjectid_type']}"}]}},"SP_Folder_Path":{"runAfter":{"Regarding_Type":["Succeeded"]},"metadata":{"operationMetadataId":"1f00b6a5-89b4-4476-8eed-8a2daa8f1e06"},"type":"InitializeVariable","inputs":{"variables":[{"name":"SPfolderPath","type":"string","value":"/@{variables('RegardingId')}"}]}},"File_Name_SharePoint":{"runAfter":{"SP_Folder_Path":["Succeeded"]},"metadata":{"operationMetadataId":"5244e22f-b3f4-4fd5-bf08-c4609cff7231"},"type":"InitializeVariable","inputs":{"variables":[{"name":"fileNameSP","type":"string","value":"@{triggerOutputs()?['body/ovs_actionnumber']}-Notice of Infraction.docx"}]}},"Booking_StartTime_EN":{"runAfter":{"File_Path_Blob":["Succeeded"]},"metadata":{"operationMetadataId":"7d60002a-0b35-4d59-8193-486b9758669c"},"type":"InitializeVariable","inputs":{"variables":[{"name":"bookingStartTimeEN","type":"string"}]}},"File_Path_Blob":{"runAfter":{"File_Name_SharePoint":["Succeeded"]},"metadata":{"operationMetadataId":"93fb687c-a777-430a-8984-ea0c4dbac92d"},"type":"InitializeVariable","inputs":{"variables":[{"name":"filePathBlob","type":"string"}]}},"Booking_StartTime_FR":{"runAfter":{"Booking_StartTime_EN":["Succeeded"]},"metadata":{"operationMetadataId":"9f3de69b-bec6-41ad-923c-92f99a877ead"},"type":"InitializeVariable","inputs":{"variables":[{"name":"bookingStartTimeFR","type":"string"}]}},"Month2French":{"runAfter":{},"metadata":{"operationMetadataId":"4558a6a6-d66e-485f-8b8e-cd8d51ad2d4e"},"type":"InitializeVariable","inputs":{"variables":[{"name":"Month2FR","type":"array","value":[{"Key":"January","Value":"Janvier"},{"Key":"February","Value":"Février"},{"Key":"March","Value":"Mars"},{"Key":"April","Value":"Avril"},{"Key":"May","Value":"May"},{"Key":"June","Value":"Juin"},{"Key":"July","Value":"Juillet"},{"Key":"August","Value":"Août"},{"Key":"September","Value":"Septembre"},{"Key":"October","Value":"Octobre"},{"Key":"November","Value":"Novembre"},{"Key":"December","Value":"Décembre"}]}]}},"Temp_StartTime_FR":{"runAfter":{"Temp_StartTime_EN":["Succeeded"]},"metadata":{"operationMetadataId":"564bba04-a854-4380-abbe-8ddf71b979b9"},"type":"InitializeVariable","inputs":{"variables":[{"name":"tempStartTimeFR","type":"string"}]}},"Temp_StartTime_EN":{"runAfter":{"Booking_StartTime_FR":["Succeeded"]},"metadata":{"operationMetadataId":"163a4510-fb8d-4142-91f6-10542560efb9"},"type":"InitializeVariable","inputs":{"variables":[{"name":"tempStartTimeEN","type":"string"}]}},"Date_parse_array_EN":{"runAfter":{"Temp_StartTime_FR":["Succeeded"]},"metadata":{"operationMetadataId":"38f1173d-d5f2-4387-89dc-bc2ddf59ecc5"},"type":"InitializeVariable","inputs":{"variables":[{"name":"enDateArray","type":"array"}]}},"File_Name_Postfix":{"runAfter":{"Date_parse_array_EN":["Succeeded"]},"metadata":{"operationMetadataId":"fc3a32e4-f623-40c3-b132-d9c0e2223ff6"},"type":"InitializeVariable","inputs":{"variables":[{"name":"filePostfix","type":"string","value":"@formatDateTime(utcNow(), 'ddMMyyyyhhmmfff')"}]}}},"outputs":{}}},"schemaVersion":"1.0.0.0"}
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_wordonlinebusiness_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceWordOnlineTDGCoreUser"
+        },
+        "api": {
+          "name": "shared_wordonlinebusiness"
+        }
+      },
+      "shared_sharepointonline_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceSharepointTDGCoreUser"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      },
+      "shared_azureblob": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceBlobSASKey"
+        },
+        "api": {
+          "name": "shared_azureblob"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "Notice Of Infraction EN": {
+          "defaultValue": "-NI-AI-",
+          "type": "String",
+          "metadata": {
+            "schemaName": "ovs_NoticeOfInfractionEN",
+            "description": "Report middle name"
+          }
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "ab5b5f5a-06da-400a-9990-be27b7f45fd7"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 4,
+              "subscriptionRequest/entityname": "ovs_cyaction",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/runas": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "conditions": [
+            {
+              "expression": "@and(equals(triggerBody()?['statuscode'],2),equals(triggerBody()?['ovs_actiontype'],918640004))"
+            }
+          ]
+        }
+      },
+      "actions": {
+        "Is_work_order": {
+          "actions": {
+            "Get_Site_and_Primary_Contact": {
+              "runAfter": {
+                "Set_Blob_Path": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "3257d718-a462-46e2-843a-7010804d9b76"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "recordId": "@outputs('Get_a_WO._All_fields')?['body/_msdyn_serviceaccount_value']",
+                  "$select": "name,emailaddress1,accountid,address1_composite, address1_city,address1_stateorprovince,address1_line1,address1_postalcode,address1_country,ovs_legalname",
+                  "$expand": "primarycontactid($select=jobtitle,fullname,emailaddress1,telephone1)"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Get_The_Single_Booking": {
+              "runAfter": {
+                "Get_Primary_Inspector": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "684eb811-ab07-410c-ae81-87e1be5b3c2c"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "bookableresourcebookings",
+                  "$select": "starttime",
+                  "$filter": "(_msdyn_workorder_value eq @{outputs('Get_a_WO._All_fields')?['body/msdyn_workorderid']})",
+                  "$orderby": "starttime desc",
+                  "$top": 1
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Apply_StartTime_if_any": {
+              "foreach": "@outputs('Get_The_Single_Booking')?['body/value']",
+              "actions": {
+                "Set_StartTime_EN": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "118715e0-c77f-4949-9cc0-93a90e68a238"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "bookingStartTimeEN",
+                    "value": "@{formatDateTime(items('Apply_StartTime_if_any')?['starttime'], 'd MMMM yyyy')}"
+                  }
+                },
+                "Set_StartTime_FR": {
+                  "runAfter": {
+                    "Set_temp_month_FR": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "b56242cf-3502-47e5-a284-13154efaf7ba"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "bookingStartTimeFR",
+                    "value": "@{replace(formatDateTime(items('Apply_StartTime_if_any')?['starttime'], 'd MMMM yyyy'),variables('tempStartTimeEN'),variables('tempStartTimeFR'))}"
+                  }
+                },
+                "Set_month_name_EN": {
+                  "runAfter": {
+                    "Set_Parsed_array": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "42ea3a53-46ce-4271-b90a-8a4c6852c174"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "tempStartTimeEN",
+                    "value": "@{variables('enDateArray')[1]}"
+                  }
+                },
+                "Parse_JSON": {
+                  "runAfter": {
+                    "Set_month_name_EN": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "b508f382-f914-4845-b9b8-a8d8ba594d63"
+                  },
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@variables('Month2FR')",
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "Key": {
+                            "type": "string"
+                          },
+                          "Value": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "Key",
+                          "Value"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "Set_temp_month_FR": {
+                  "runAfter": {
+                    "Filter_array": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "9aaf00eb-2179-4e16-a90b-b1163d098e9b"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "tempStartTimeFR",
+                    "value": "@{first(body('Filter_array'))?['Value']}"
+                  }
+                },
+                "Filter_array": {
+                  "runAfter": {
+                    "Parse_JSON": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "45d4342f-4c3a-4909-aa02-a16dec4773c8"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Parse_JSON')",
+                    "where": "@equals(item()['Key'], variables('tempStartTimeEN'))"
+                  }
+                },
+                "Compose": {
+                  "runAfter": {
+                    "Set_StartTime_EN": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "7edcc4b5-7c48-4c36-bff7-d9f6c47813b2"
+                  },
+                  "type": "Compose",
+                  "inputs": "@split(variables('bookingStartTimeEN'),' ')"
+                },
+                "Set_Parsed_array": {
+                  "runAfter": {
+                    "Compose": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "b6c9fe93-6963-42db-ad94-710666b3a99f"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "enDateArray",
+                    "value": "@outputs('Compose')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Get_The_Single_Booking": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "94b25f7f-a78d-450b-89c2-404768fa63c1"
+              },
+              "type": "Foreach"
+            },
+            "Get_Primary_Inspector": {
+              "runAfter": {
+                "Get_Site_and_Primary_Contact": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a593e41b-4981-49d2-bd2e-f7e3b2a9563c"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "bookableresources",
+                  "recordId": "@outputs('Get_a_WO._All_fields')?['body/_ovs_primaryinspector_value']",
+                  "$select": "name,msdyn_primaryemail,bookableresourceid,ovs_badgenumber,ovs_registeredinspectornumberrin",
+                  "$expand": "UserId($select=lastname,firstname,systemuserid,fullname)"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Convert_Word_Document_to_PDF": {
+              "runAfter": {
+                "Location_Condition": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "c034be2c-57d1-4948-b688-f7c2a7746dc4"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_wordonlinebusiness_1",
+                  "operationId": "GetFilePDF",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_wordonlinebusiness"
+                },
+                "parameters": {
+                  "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
+                  "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
+                  "file": "/Reports@{variables('SPfolderPath')}/@{variables('fileNameSP')}"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Set_Blob_Path": {
+              "runAfter": {
+                "Get_a_WO._All_fields": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "83406c7b-681b-40ba-a445-29a72072a6d5"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "filePathBlob",
+                "value": "@{outputs('Get_a_WO._All_fields')?['body/msdyn_name']}_@{variables('RegardingId')}/@{triggerOutputs()?['body/ovs_actionnumber']}@{parameters('Notice Of Infraction EN')}@{variables('filePostfix')}.pdf"
+              }
+            },
+            "Create_new_folder_in_SP": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "4195542f-6f45-4a11-ad4c-cdc54d6c8d51"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "CreateNewFolder",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                  "table": "ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395",
+                  "parameters/path": "/Reports@{variables('SPfolderPath')}"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Get_a_WO._All_fields": {
+              "runAfter": {
+                "Create_new_folder_in_SP": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "86b3845d-fa8f-49e4-95fe-9343c402ea97"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "msdyn_workorders",
+                  "recordId": "@triggerOutputs()?['body/_regardingobjectid_value']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Delete_folder": {
+              "runAfter": {
+                "Create_PDF_file_blob": [
+                  "Succeeded",
+                  "Failed",
+                  "TimedOut",
+                  "Skipped"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "5c9b86a7-afb1-4019-b786-4ec88a698c5e"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "DeleteItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                  "table": "Documents",
+                  "id": "@outputs('Create_new_folder_in_SP')?['body/ID']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Create_PDF_file_blob": {
+              "runAfter": {
+                "Add_Annotation_file": [
+                  "Failed",
+                  "TimedOut"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "8c9a6454-7a32-48d1-b256-145eee5d4329"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_azureblob",
+                  "operationId": "CreateFile",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_azureblob"
+                },
+                "parameters": {
+                  "folderPath": "/msdynworkorder",
+                  "name": "@variables('filePathBlob')",
+                  "body": "@outputs('Convert_Word_Document_to_PDF')?['body']",
+                  "Content-Type": "application/pdf"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runtimeConfiguration": {
+                "contentTransfer": {
+                  "transferMode": "Chunked"
+                }
+              }
+            },
+            "Location_Condition": {
+              "actions": {
+                "Populate_a_Microsoft_Word_template_NoLocation": {
+                  "runAfter": {},
+                  "metadata": {
+                    "01QZYBJ7EI4EVTAFWFBBCKOFJGD2UZSUL4": "/Inspection Report Templates/Notice of Infraction V1.docx",
+                    "01QZYBJ7EXZMAJWIBB65GKEVRXXXWJRD6M": "/Inspection Report Templates/Notice of Infraction V2.docx",
+                    "01QZYBJ7FS5BS2ZXI4Q5FKQNLW76O7M3BR": "/Inspection Report Templates/Notice of Infraction V3.docx",
+                    "01QZYBJ7H5I5AAAZTYL5CIQLY3BWOHQ75D": "/Inspection Report Templates/Notice of Infraction V4.docx",
+                    "01QZYBJ7G6OZE52WS6ANEL4ZAZL657V7BS": "/Inspection Report Templates/Notice of Infraction V5.docx",
+                    "01QZYBJ7AAYYFN24MQCFEZYTXUHDTAPYPX": "/Inspection Report Templates/Notice of Infraction V6.docx",
+                    "01QZYBJ7FQTOZSDPCK6FGYYXGJQWGJABKB": "/Inspection Report Templates/Notice of Infraction V7.docx",
+                    "01QZYBJ7A7SZ66P4JGF5FILIWZKATITRQT": "/Inspection Report Templates/Notice of Infraction Revised.docx",
+                    "01QZYBJ7AZ7TMKEOGF3ZDILKX73QITEQPJ": "/Inspection Report Templates/Notice of Infraction Revised Location.docx",
+                    "01QZYBJ7FHBU6Q6XX3AJGIXW7VJYVAQQI5": "/Inspection Report Templates/Notice of Infraction Revised NoLocation.docx",
+                    "01QZYBJ7FK6EICCXPPE5F3DLGUHQPHXHLB": "/Inspection Report Templates/Notice of Infraction Revised NoLocation.docx",
+                    "operationMetadataId": "11598007-6781-414c-8ac6-3f54c0117709"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_wordonlinebusiness_1",
+                      "operationId": "CreateFileItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_wordonlinebusiness"
+                    },
+                    "parameters": {
+                      "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
+                      "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
+                      "file": "01QZYBJ7FK6EICCXPPE5F3DLGUHQPHXHLB",
+                      "dynamicFileSchema/382301797": "@{outputs('Get_Site_and_Primary_Contact')?['body/address1_line1']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_city']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_stateorprovince']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_postalcode']}",
+                      "dynamicFileSchema/465325485": "@outputs('Get_Primary_Inspector')?['body/userid/fullname']",
+                      "dynamicFileSchema/1018354222": "@outputs('Get_Primary_Inspector')?['body/ovs_registeredinspectornumberrin']",
+                      "dynamicFileSchema/1098905991": "@outputs('Get_Site_and_Primary_Contact')?['body/primarycontactid/fullname']",
+                      "dynamicFileSchema/1285996689": "@outputs('Get_Site_and_Primary_Contact')?['body/ovs_legalname']",
+                      "dynamicFileSchema/1301888070": "@triggerOutputs()?['body/ovs_actiondate']",
+                      "dynamicFileSchema/1539550161": "@outputs('Get_Site_and_Primary_Contact')?['body/ovs_legalname']",
+                      "dynamicFileSchema/1592131855": "@variables('bookingStartTimeEN')",
+                      "dynamicFileSchema/2034456519": "@triggerOutputs()?['body/ovs_noncompliancedetailstxt']",
+                      "dynamicFileSchema/-565412095": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
+                      "dynamicFileSchema/-1975126": "@variables('bookingStartTimeFR')",
+                      "dynamicFileSchema/-2089449557": "@outputs('Get_Primary_Inspector')?['body/ovs_badgenumber']"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Create_file_in_SP_No_Location": {
+                  "runAfter": {
+                    "Populate_a_Microsoft_Word_template_NoLocation": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "c94959bb-39d4-40da-8d45-fd7da98e0101"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline_1",
+                      "operationId": "CreateFile",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                      "folderPath": "@outputs('Create_new_folder_in_SP')?['body/{FullPath}']",
+                      "name": "@variables('fileNameSP')",
+                      "body": "@outputs('Populate_a_Microsoft_Word_template_NoLocation')?['body']"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runtimeConfiguration": {
+                    "contentTransfer": {
+                      "transferMode": "Chunked"
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Apply_StartTime_if_any": [
+                  "Succeeded"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "Populate_a_Microsoft_Word_template_Location": {
+                    "runAfter": {},
+                    "metadata": {
+                      "01QZYBJ7EI4EVTAFWFBBCKOFJGD2UZSUL4": "/Inspection Report Templates/Notice of Infraction V1.docx",
+                      "01QZYBJ7EXZMAJWIBB65GKEVRXXXWJRD6M": "/Inspection Report Templates/Notice of Infraction V2.docx",
+                      "01QZYBJ7FS5BS2ZXI4Q5FKQNLW76O7M3BR": "/Inspection Report Templates/Notice of Infraction V3.docx",
+                      "01QZYBJ7H5I5AAAZTYL5CIQLY3BWOHQ75D": "/Inspection Report Templates/Notice of Infraction V4.docx",
+                      "01QZYBJ7G6OZE52WS6ANEL4ZAZL657V7BS": "/Inspection Report Templates/Notice of Infraction V5.docx",
+                      "01QZYBJ7AAYYFN24MQCFEZYTXUHDTAPYPX": "/Inspection Report Templates/Notice of Infraction V6.docx",
+                      "01QZYBJ7FQTOZSDPCK6FGYYXGJQWGJABKB": "/Inspection Report Templates/Notice of Infraction V7.docx",
+                      "01QZYBJ7A7SZ66P4JGF5FILIWZKATITRQT": "/Inspection Report Templates/Notice of Infraction Revised.docx",
+                      "01QZYBJ7AZ7TMKEOGF3ZDILKX73QITEQPJ": "/Inspection Report Templates/Notice of Infraction Revised Location.docx",
+                      "01QZYBJ7DPF6R4LYOUMRCLIDGUB6OMSD34": "/Inspection Report Templates/Notice of Infraction Revised Location.docx",
+                      "operationMetadataId": "260aeaba-b457-48d3-a491-0fdeeb557390"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_wordonlinebusiness_1",
+                        "operationId": "CreateFileItem",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_wordonlinebusiness"
+                      },
+                      "parameters": {
+                        "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
+                        "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
+                        "file": "01QZYBJ7DPF6R4LYOUMRCLIDGUB6OMSD34",
+                        "dynamicFileSchema/382301797": "@{outputs('Get_Site_and_Primary_Contact')?['body/address1_line1']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_city']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_stateorprovince']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_postalcode']}",
+                        "dynamicFileSchema/465325485": "@outputs('Get_Primary_Inspector')?['body/userid/fullname']",
+                        "dynamicFileSchema/1018354222": "@outputs('Get_Primary_Inspector')?['body/ovs_registeredinspectornumberrin']",
+                        "dynamicFileSchema/1098905991": "@outputs('Get_Site_and_Primary_Contact')?['body/primarycontactid/fullname']",
+                        "dynamicFileSchema/1285996689": "@outputs('Get_Site_and_Primary_Contact')?['body/ovs_legalname']",
+                        "dynamicFileSchema/1301888070": "@triggerOutputs()?['body/ovs_actiondate']",
+                        "dynamicFileSchema/1539550161": "@outputs('Get_Site_and_Primary_Contact')?['body/ovs_legalname']",
+                        "dynamicFileSchema/1592131855": "@variables('bookingStartTimeEN')",
+                        "dynamicFileSchema/2034456519": "@triggerOutputs()?['body/ovs_noncompliancedetailstxt']",
+                        "dynamicFileSchema/-565412095": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
+                        "dynamicFileSchema/-106351805": "@{outputs('Get_a_WO._All_fields')?['body/msdyn_address1']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_city']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_stateorprovince']}. @{outputs('Get_a_WO._All_fields')?['body/msdyn_postalcode']}",
+                        "dynamicFileSchema/-1975126": "@variables('bookingStartTimeFR')",
+                        "dynamicFileSchema/-2089449557": "@outputs('Get_Primary_Inspector')?['body/ovs_badgenumber']"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Create_file_in_SP_With_Location": {
+                    "runAfter": {
+                      "Populate_a_Microsoft_Word_template_Location": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "0028d720-f555-4438-bb4f-7f60de6bf241"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_sharepointonline_1",
+                        "operationId": "CreateFile",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                      },
+                      "parameters": {
+                        "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                        "folderPath": "@outputs('Create_new_folder_in_SP')?['body/{FullPath}']",
+                        "name": "@variables('fileNameSP')",
+                        "body": "@outputs('Populate_a_Microsoft_Word_template_Location')?['body']"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    },
+                    "runtimeConfiguration": {
+                      "contentTransfer": {
+                        "transferMode": "Chunked"
+                      }
+                    }
+                  }
+                }
+              },
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@outputs('Get_Site_and_Primary_Contact')?['body/address1_line1']",
+                      "@outputs('Get_a_WO._All_fields')?['body/msdyn_address1']"
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@outputs('Get_Site_and_Primary_Contact')?['body/address1_city']",
+                      "@outputs('Get_a_WO._All_fields')?['body/msdyn_city']"
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@outputs('Get_Site_and_Primary_Contact')?['body/address1_postalcode']",
+                      "@outputs('Get_a_WO._All_fields')?['body/msdyn_postalcode']"
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@outputs('Get_Site_and_Primary_Contact')?['body/address1_stateorprovince']",
+                      "@outputs('Get_a_WO._All_fields')?['body/msdyn_stateorprovince']"
+                    ]
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "4a0dcd86-0bac-40f6-befc-05bda3a6dc41"
+              },
+              "type": "If"
+            },
+            "Add_Annotation_file": {
+              "runAfter": {
+                "Convert_Word_Document_to_PDF": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "3ceaf55e-0e59-47c7-bd4d-7d2879de7243"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "annotations",
+                  "item/subject": "Work order @{outputs('Get_a_WO._All_fields')?['body/msdyn_name']}",
+                  "item/isdocument": true,
+                  "item/documentbody": "@base64(outputs('Convert_Word_Document_to_PDF')?['body'])",
+                  "item/filename": "@{triggerOutputs()?['body/ovs_actionnumber']}@{parameters('Notice Of Infraction EN')}@{variables('filePostfix')}.pdf",
+                  "item/objectid_msdyn_workorder@odata.bind": "/msdyn_workorders/@{outputs('Get_a_WO._All_fields')?['body/msdyn_workorderid']}"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "File_Name_Postfix": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "equals": [
+              "@variables('RegardingType')",
+              "msdyn_workorders"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a15e5253-2a87-4a69-9340-ad8a9bdb06a9"
+          },
+          "type": "If"
+        },
+        "Clean_WO_guid": {
+          "runAfter": {
+            "Month2French": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c4531742-3a3b-4cbb-a60f-7ce77099d1c0"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RegardingId",
+                "type": "string",
+                "value": "@toUpper(replace(triggerOutputs()?['body/_regardingobjectid_value'], '-', ''))"
+              }
+            ]
+          }
+        },
+        "Regarding_Type": {
+          "runAfter": {
+            "Clean_WO_guid": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1c3daf28-9334-4aaa-b8a2-109b9accf10d"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RegardingType",
+                "type": "string",
+                "value": "@{triggerOutputs()?['body/_regardingobjectid_type']}"
+              }
+            ]
+          }
+        },
+        "SP_Folder_Path": {
+          "runAfter": {
+            "Regarding_Type": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1f00b6a5-89b4-4476-8eed-8a2daa8f1e06"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "SPfolderPath",
+                "type": "string",
+                "value": "/@{variables('RegardingId')}"
+              }
+            ]
+          }
+        },
+        "File_Name_SharePoint": {
+          "runAfter": {
+            "SP_Folder_Path": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5244e22f-b3f4-4fd5-bf08-c4609cff7231"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "fileNameSP",
+                "type": "string",
+                "value": "@{triggerOutputs()?['body/ovs_actionnumber']}-Notice of Infraction.docx"
+              }
+            ]
+          }
+        },
+        "Booking_StartTime_EN": {
+          "runAfter": {
+            "File_Path_Blob": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7d60002a-0b35-4d59-8193-486b9758669c"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "bookingStartTimeEN",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "File_Path_Blob": {
+          "runAfter": {
+            "File_Name_SharePoint": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "93fb687c-a777-430a-8984-ea0c4dbac92d"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "filePathBlob",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Booking_StartTime_FR": {
+          "runAfter": {
+            "Booking_StartTime_EN": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9f3de69b-bec6-41ad-923c-92f99a877ead"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "bookingStartTimeFR",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Month2French": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "4558a6a6-d66e-485f-8b8e-cd8d51ad2d4e"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Month2FR",
+                "type": "array",
+                "value": [
+                  {
+                    "Key": "January",
+                    "Value": "Janvier"
+                  },
+                  {
+                    "Key": "February",
+                    "Value": "Février"
+                  },
+                  {
+                    "Key": "March",
+                    "Value": "Mars"
+                  },
+                  {
+                    "Key": "April",
+                    "Value": "Avril"
+                  },
+                  {
+                    "Key": "May",
+                    "Value": "May"
+                  },
+                  {
+                    "Key": "June",
+                    "Value": "Juin"
+                  },
+                  {
+                    "Key": "July",
+                    "Value": "Juillet"
+                  },
+                  {
+                    "Key": "August",
+                    "Value": "Août"
+                  },
+                  {
+                    "Key": "September",
+                    "Value": "Septembre"
+                  },
+                  {
+                    "Key": "October",
+                    "Value": "Octobre"
+                  },
+                  {
+                    "Key": "November",
+                    "Value": "Novembre"
+                  },
+                  {
+                    "Key": "December",
+                    "Value": "Décembre"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "Temp_StartTime_FR": {
+          "runAfter": {
+            "Temp_StartTime_EN": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "564bba04-a854-4380-abbe-8ddf71b979b9"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "tempStartTimeFR",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Temp_StartTime_EN": {
+          "runAfter": {
+            "Booking_StartTime_FR": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "163a4510-fb8d-4142-91f6-10542560efb9"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "tempStartTimeEN",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Date_parse_array_EN": {
+          "runAfter": {
+            "Temp_StartTime_FR": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "38f1173d-d5f2-4387-89dc-bc2ddf59ecc5"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "enDateArray",
+                "type": "array"
+              }
+            ]
+          }
+        },
+        "File_Name_Postfix": {
+          "runAfter": {
+            "Date_parse_array_EN": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "fc3a32e4-f623-40c3-b132-d9c0e2223ff6"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "filePostfix",
+                "type": "string",
+                "value": "@formatDateTime(utcNow(), 'ddMMyyyyhhmmfff')"
+              }
+            ]
+          }
+        }
+      },
+      "outputs": {}
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}
