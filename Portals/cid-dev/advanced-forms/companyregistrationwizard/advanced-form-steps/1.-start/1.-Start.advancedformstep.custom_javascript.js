@@ -10,10 +10,10 @@ $(document).ready(function () {
 
     // default current use is "Primary"
     $("#cid_contacttype").val(100000000);
-    tdgcore.common.control_hide("cid_contacttype");
+    tdg.c.control_hide("cid_contacttype");
 
-    tdgcore.common.control_hide("parentcustomerid", true);
-    tdgcore.common.control_hide("cid_operatingname");
+    tdg.c.control_hide("parentcustomerid", true);
+    tdg.c.control_hide("cid_operatingname");
 
     $("#cid_has_cra_bn").change(cid_has_cra_bn_onchange);
     cid_has_cra_bn_onchange();
@@ -35,34 +35,34 @@ function cid_has_cra_bn_onchange() {
     if (_step_start == "0") {
         clear_parentcustomerid();
 
-        tdgcore.common.removeValidator("cid_crabusinessnumber");
-        tdgcore.common.removeValidator("cid_reasonfornobnnumber");
-        tdgcore.common.removeValidator("cid_reasonfornobnnumber_other");
-        tdgcore.common.removeValidator("cid_legalname");
+        tdg.c.removeValidator("cid_crabusinessnumber");
+        tdg.c.removeValidator("cid_reasonfornobnnumber");
+        tdg.c.removeValidator("cid_reasonfornobnnumber_other");
+        tdg.c.removeValidator("cid_legalname");
     }
 
-    tdgcore.common.control_hide("cid_reasonfornobnnumber_other");
+    tdg.c.control_hide("cid_reasonfornobnnumber_other");
 
     var cid_has_cra_bn = $("#cid_has_cra_bn").val();
 
     // do not have a business number?
     if (cid_has_cra_bn == "0") {
-        tdgcore.common.control_hide("cid_crabusinessnumber");
-        tdgcore.common.control_show("cid_reasonfornobnnumber");
-        tdgcore.common.control_show("cid_legalname");
+        tdg.c.control_hide("cid_crabusinessnumber");
+        tdg.c.control_show("cid_reasonfornobnnumber");
+        tdg.c.control_show("cid_legalname");
 
-        tdgcore.common.addValidator("cid_legalname", "Legal Name");
-        tdgcore.common.addValidator("cid_reasonfornobnnumber", "Reason for no CRA Business Number");
+        tdg.c.addValidator("cid_legalname", "Legal Name");
+        tdg.c.addValidator("cid_reasonfornobnnumber", "Reason for no CRA Business Number");
 
         // clear data
         $("#cid_crabusinessnumber").val("");
     }
     else {
-        tdgcore.common.control_show("cid_crabusinessnumber");
-        tdgcore.common.control_hide("cid_reasonfornobnnumber");
-        tdgcore.common.control_hide("cid_legalname");
+        tdg.c.control_show("cid_crabusinessnumber");
+        tdg.c.control_hide("cid_reasonfornobnnumber");
+        tdg.c.control_hide("cid_legalname");
 
-        tdgcore.common.addValidator("cid_crabusinessnumber", "CRA Business Number");
+        tdg.c.addValidator("cid_crabusinessnumber", "CRA Business Number");
 
         // clear data
         $("#cid_reasonfornobnnumber").val("");
@@ -82,12 +82,12 @@ function cid_reasonfornobnnumber_onchange() {
     cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
     if (cid_reasonfornobnnumber == "3")   // other
     {
-        tdgcore.common.control_show("cid_reasonfornobnnumber_other");
-        tdgcore.common.addValidator("cid_reasonfornobnnumber_other", "Other Reason");
+        tdg.c.control_show("cid_reasonfornobnnumber_other");
+        tdg.c.addValidator("cid_reasonfornobnnumber_other", "Other Reason");
     }
     else {
-        tdgcore.common.control_hide("cid_reasonfornobnnumber_other");
-        tdgcore.common.removeValidator("cid_reasonfornobnnumber_other");
+        tdg.c.control_hide("cid_reasonfornobnnumber_other");
+        tdg.c.removeValidator("cid_reasonfornobnnumber_other");
     }
 }
 
@@ -120,7 +120,7 @@ if (window.jQuery) {
 
                 legalname = $("#cid_legalname").val();
                 filter = "ovs_legalname eq '" + legalname + "'";
-                rom_data = tdgcore.common.OData_List("account", filter);
+                rom_data = tdg.c.OData_List("account", filter);
                 if (rom_data.length > 0) {
                     rom_data = rom_data[0];
 
@@ -138,7 +138,7 @@ if (window.jQuery) {
                 var data = cid_crabusinessnumber_onchange();
 
                 if (data == "") {
-                    tdgcore.common.error_message("Invalid CRA Business Number");
+                    tdg.c.error_message("Invalid CRA Business Number");
                 }
                 else {
                     debugger;
@@ -149,7 +149,7 @@ if (window.jQuery) {
                     validation = false; // true
 
                     filter = "cid_crabusinessnumber eq '" + cid_crabusinessnumber + "'";
-                    rom_data = tdgcore.common.OData_List("account", filter);
+                    rom_data = tdg.c.OData_List("account", filter);
                     if (rom_data.length > 0) {
                         rom_data = rom_data[0];
 
@@ -180,7 +180,7 @@ function Retrieve_cra(bn) {
     var data_fake = {};
     var filter = "cid_businessregistrationnumber eq '" + bn + "'";
 
-    data = tdgcore.common.OData_List("cid_fake_cra_bn_api", filter);
+    data = tdg.c.OData_List("cid_fake_cra_bn_api", filter);
     if (data.length == 0) {
         return data;
     }

@@ -1,38 +1,37 @@
-$(document).ready(function() {
+// CompanyRegistrationWizard-Site.js
+
+$(document).ready(function () {
+	debugger;
+
 	$(".entity-grid").on("loaded", function () {
 		var actionButtonsToolbar = $('.view-toolbar');
 		//if ($("#bulkUploadBtn").length <= 0)
 		//	actionButtonsToolbar.prepend("<div id='bulkUploadBtn' class='input-group pull-left'><a href='/Bulk_Site_Upload'  target='_blank' rel='noopener noreferrer' class='btn btn-info pull-left action' title='Bulk Site Upload'>Bulk Site Upload</a></div>");
 		//if ($("#attestMultipledBtn").length <= 0)
 		//	actionButtonsToolbar.prepend("<div id='attestMultipledBtn' class='input-group pull-left'><a href='#' class='btn btn-info pull-left action' title='Attest Multiple' disabled>Attest Multiple</a></div>");
-		
+
 		$(this).find("tbody").find("tr").each(function () {
 			var trElement = $(this);
 			var recId = trElement.attr('data-id');
 			var firstTdElement = trElement.find('td:first');
 			var disabledRow = false;
-			
+
 			trElement.find("td").each(function () {
 				var tdElement = $(this);
-				if(tdElement.attr('data-attribute') == 'cid_issiteattested')
-				{
-					if(tdElement.attr('data-value') == 'true')
-					{
-						if ($("#spn_" + recId).length <= 0)
-						{
+				if (tdElement.attr('data-attribute') == 'cid_issiteattested') {
+					if (tdElement.attr('data-value') == 'true') {
+						if ($("#spn_" + recId).length <= 0) {
 							firstTdElement.prepend("<span id='spn_' + recId +' class='glyphicon glyphicon-ok' style='color: #3c763d;'></span>&nbsp;&nbsp;&nbsp;");
 							trElement.css("background-color", "#dff0d8");
 						}
 					}
-					else
-					{
+					else {
 						//if ($("#chk_" + recId).length <= 0)
 						//	firstTdElement.prepend("<input type='checkbox' id='chk_' + recId +'>&nbsp;&nbsp;&nbsp;");
 					}
 				}
-				
-				if(tdElement.attr('data-attribute') == 'statuscode' && tdElement.attr('aria-label') == 'Inactive')
-				{
+
+				if (tdElement.attr('data-attribute') == 'statuscode' && tdElement.attr('aria-label') == 'Inactive') {
 					trElement.css("background-color", "#ddd");
 					trElement.css("color", "grey");
 					firstTdElement.find('a').removeAttr("href");
@@ -41,104 +40,43 @@ $(document).ready(function() {
 				}
 			});
 		});
-    });
-	
-	//webFormClientValidate = function() {
-    //var validation = true;
-    //var rows = $("#CompanySites .view-grid table").find("tbody > tr");
+	});
 
-	//var errorMessage = "";
+	webFormClientValidate = function () {
+		var validation = true;
+		var errorMessage = "";
+		var companyId = $("#EntityFormView_EntityID").val();
+		var filter = "parentaccountid/Id eq (guid'" + companyId + "')";
+		var data = ExecuteOData("Validation_CompanySites", filter);
 
-    //if (rows.length <= 0) {
-	//	validation = false;
-    //    //alert('You cannot proceed before adding company site(s).');
-	//	errorMessage = "You cannot proceed before adding company site(s).";
-    //}
-    //else{
-	//	rows.each(function(){
-	//		var skipRow = false;
-	//		if(validation == true) 
-	//		{			
-	//			$(this).find('td').each(function(){
-	//				if(skipRow == false){
-	//					var tdElement = $(this);
-	//					
-	//					//if(tdElement.attr('data-attribute') == 'statuscode' && tdElement.attr('data-value').includes('2'))
-	//					if(tdElement.attr('data-attribute') == 'statuscode' && tdElement.attr('aria-label') == 'Inactive')
-	//						skipRow = true;
-	//					else if(tdElement.attr('data-attribute') == 'cid_issiteattested' && tdElement.attr('data-value') == 'false')
-	//					{
-	//						validation = false;
-	//						//alert('You cannot proceed before attesting all the company sites.');
-	//						errorMessage = 'You cannot proceed before attesting all the company sites.';
-	//					}
-	//				}
-	//			})	
-	//		}
-//			else
-//				return validation;
-	//	})
-	//}
+		if (data == null) {
+			errorMessage = "You cannot proceed before adding active company site(s).";
+			validation = false;
+		}
+		else {
+			if (data.length <= 0) {
+				errorMessage = "You cannot proceed before adding active company site(s).";
+				validation = false;
+			}
+			else {
+				filter = "parentaccountid/Id eq (guid'" + companyId + "')";
+				data = ExecuteOData("Validation_CompanyNotAttestedSites", filter);
 
-	 //         if(!validation)
-    //{
-    //$('#ValidationSummaryEntityFormView div').remove(); 
-
-   //var validationSection = $('#ValidationSummaryEntityFormView');
-   
-   //validationSection.append($("<div class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));  
-  //validationSection.show();
-    //}
-
-
-	//return validation; 
-    //}
-
-
-
-        webFormClientValidate = function () {
-            var validation = true;
-            var errorMessage = "";
-            var companyId = $("#EntityFormView_EntityID").val();	
-			var filter = "parentaccountid/Id eq (guid'" + companyId + "')";
-			var data = ExecuteOData("Validation_CompanySites", filter);
-            
-			if(data == null)
-			{
-                errorMessage = "You cannot proceed before adding active company site(s).";
-                validation = false;
-            }
-			else
-			{
-				if(data.length <= 0)
-				{
-					errorMessage = "You cannot proceed before adding active company site(s).";
+				if (data != null && data.length > 0) {
+					errorMessage = "You cannot proceed before attesting all the company sites.";
 					validation = false;
 				}
-				else
-				{
-					filter = "parentaccountid/Id eq (guid'" + companyId + "')";
-					data = ExecuteOData("Validation_CompanyNotAttestedSites", filter);
-						
-					if(data != null && data.length > 0)
-					{
-						errorMessage = "You cannot proceed before attesting all the company sites.";
-						validation = false;
-					}
-				}
 			}
-
-            if (!validation) {
-                $('#ValidationSummaryEntityFormView div').remove();
-
-                var validationSection = $('#ValidationSummaryEntityFormView');
-                validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
-                validationSection.show();
-				$('#alertMessages').focus();
-            }
-
-           return validation;
 		}
-		
-		
+
+		if (!validation) {
+			$('#ValidationSummaryEntityFormView div').remove();
+
+			var validationSection = $('#ValidationSummaryEntityFormView');
+			validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
+			validationSection.show();
+			$('#alertMessages').focus();
+		}
+		return validation;
+	}
 });

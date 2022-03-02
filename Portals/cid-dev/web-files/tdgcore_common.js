@@ -1,13 +1,13 @@
 ﻿// tdgcore_common.js
 
-if (typeof (tdgcore) == "undefined") {
-    tdgcore = {
+if (typeof (tdg) == "undefined") {
+    tdg = {
         __namespace: true
     };
 }
 
-if (typeof (tdgcore.common) == "undefined") {
-    tdgcore.common = {
+if (typeof (tdg.c) == "undefined") {
+    tdg.c = {
         // how to calling function inside an iFrame
         iframe_call_function_inside: function () {
             debugger;

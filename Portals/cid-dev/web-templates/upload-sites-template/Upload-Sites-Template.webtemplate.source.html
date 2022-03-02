@@ -1,4 +1,5 @@
- <style>
+
+<style>
     #processingMsg {
         width: 300px;
         text-align: center;
@@ -11,23 +12,22 @@
         border-radius: 0 0 2px 2px;
         -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      display:none;
+        //display: none;
     }
-  
 </style>
 {% assign parentid = user.parentcustomerid.id %}
 {% fetchxml environment_settings %}
 <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
-  <entity name="qm_environmentsettings">
-    <attribute name="qm_environmentsettingsid" />
-    <attribute name="qm_name" />
-    <attribute name="createdon" />
-    <attribute name="qm_value" />
-    <order attribute="qm_name" descending="false" />
-    <filter type="and">
-      <condition attribute="qm_name" operator="like" value="%CID[_]%" />
-    </filter>
-  </entity>
+    <entity name="qm_environmentsettings">
+        <attribute name="qm_environmentsettingsid" />
+        <attribute name="qm_name" />
+        <attribute name="createdon" />
+        <attribute name="qm_value" />
+        <order attribute="qm_name" descending="false" />
+        <filter type="and">
+            <condition attribute="qm_name" operator="like" value="%CID[_]%" />
+        </filter>
+    </entity>
 </fetch>
 {% endfetchxml %}
 {% for env_setting in environment_settings.results.entities %}
@@ -52,15 +52,15 @@ $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name=
     $(window).load(function() {
 
   $("#InsertButton").css("display", "none");
-   
+
 //InsertButton
     //  $('#ll').hide();
         //  notificationMsg.show("System is downloading site info ...");
-           
+
     });
    // var pageURL = window.location.href;
 
-$('#btn_attachfile_and_scan').click(function(e) 
+$('#btn_attachfile_and_scan').click(function(e)
 {
     $("#mainContent").before("<div class='validation' style='color:black;margin-bottom: 20px;'>File is sent for scaning</div>");
     var DocumentbodyContents;
@@ -70,55 +70,71 @@ $('#btn_attachfile_and_scan').click(function(e)
     // Get the mime type of the selected file
 
     var MimeType = $('#AttachFile')[0].files[0].type;
-  
+
 
     // Get the content of the selected file
 
     var file = document.getElementById('AttachFile').files[0];
-  
-  if (file) {
-   
- $('#processingMsg').css('display','block');
-$('#processingMsg').text("File is sent for scanning please wait");
-            // Read the file
 
-            var reader = new FileReader();
+    if (file) {
 
-            reader.readAsDataURL(file);
+        $('#processingMsg').css('display', 'block');
+        $('#processingMsg').text("File is sent for scanning please wait");
+        // Read the file
+
+        var reader = new FileReader();
+
+        reader.readAsDataURL(file);
+
+        // The browser has finished reading the file, we can now do something with it...
+
+        reader.onload = function (e) {
 
             // The browser has finished reading the file, we can now do something with it...
 
-            reader.onload = function (e) {
+            DocumentbodyContents = e.target.result;
 
-                // The browser has finished reading the file, we can now do something with it...
+            // Split the string at the first comma (removing the base64 prefix)
 
-                 DocumentbodyContents = e.target.result;
-
-                // Split the string at the first comma (removing the base64 prefix)
-
-                DocumentbodyContents = DocumentbodyContents.substring(DocumentbodyContents.indexOf(',') + 1);
+            DocumentbodyContents = DocumentbodyContents.substring(DocumentbodyContents.indexOf(',') + 1);
 
 
-var Scan_API_URL ="https://prod-02.canadacentral.logic.azure.com:443/workflows/9c5deab59bdb45739dc659748c59b1a1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZDI2-YxUhNZkKvpXe7R7Cs_y8J5gGtcB6ZT-y5EAMok";
-//var c = String.raw `X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*`;
+            var Scan_API_URL = "https://prod-02.canadacentral.logic.azure.com:443/workflows/9c5deab59bdb45739dc659748c59b1a1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZDI2-YxUhNZkKvpXe7R7Cs_y8J5gGtcB6ZT-y5EAMok";
+           // var c = String.raw `X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*`;
 
 
-Call_Virsu_Scan_API(Scan_API_URL ,DocumentbodyContents);
+            Call_Virsu_Scan_API(Scan_API_URL
+            // ,btoa(c));
+            ,DocumentbodyContents);
 
-//,btoa(c));
-             
+            
+            
+            var data = "X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*";
 
+            //var xhr = new XMLHttpRequest();
+           // xhr.withCredentials = true;
 
-            };
+          //  xhr.addEventListener("readystatechange", function () {
+               // if (this.readyState === 4) {
+                //    console.log(this.responseText);
+                 //   alert(this.responseText);
+              //  }
+          //  });
 
+           // xhr.open("POST", "https://wwwapps.tc.gc.ca/Saf-Sec-Sur/13/MTAPI/api/v1/file-scan-status?filename=test");
+          //  xhr.setRequestHeader("Content-Type", "application/octet-stream");
+           // xhr.setRequestHeader("access-Control-Allow-Origin", "*");
+
+           // xhr.send(data);
 
         }
+    }
         else
         {
-
-            $("#AttachFile").after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select file</div>");
-$('#processingMsg').css('display','block');
-$('#processingMsg').text("Please Select File First");
+alert ("Please select file first");
+           // $("#AttachFile").after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select file</div>");
+//$('#processingMsg').css('display','block');
+//$('#processingMsg').text("Please Select File First");
 
         }
 
@@ -126,31 +142,7 @@ $('#processingMsg').text("Please Select File First");
 
 //btoa(c) );
 
-/*var xhr = new XMLHttpRequest();
-xhr.withCredentials = true;
 
-xhr.addEventListener("readystatechange", function() {
-  if(this.readyState === 4) {
-   alert ("done");
-   alert(this.status);
-   //xhr.setHeader("Access-Control-Allow-Origin", "*");
-
-   // console.log(this.responseText);
-   // alert(this.responseText);
-  }
-  alert(FileName);
-xhr.open("POST", "https://wwwapps.tc.gc.ca/Saf-Sec-Sur/13/MTAPI/api/v1/file-scan-status?filename=" + "FileName",true);
-xhr.setRequestHeader("access-Control-Allow-Origin", "*");
-xhr.setRequestHeader("Content-Type", "application/octet-stream");
-xhr.setRequestHeader("Access-Control-Allow-Credentials", "true");
-xhr.setRequestHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-xhr.setRequestHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-
-
-//xhr.setRequestHeader("Cookie", "_mtoa_session=ef57638bc41c4615ba2eb0721bfa9ab7");
-
-xhr.send("AAAA");
- */
 });
 
 //alert(DocumentbodyContents);
@@ -162,21 +154,22 @@ xhr.send("AAAA");
     //linktemplate.href = DownloadURL;
     //linktemplate.download = "RD_Sites_Template.xlsx";
     $('#linkdownload').on('click', async function() {
+       
           $('#processingMsg').css('display','block');
         $('#processingMsg').text('System is downloading site info ...');
-        
+
      // notificationMsg.show("System is downloading site info ...");
-     
+
      // $('#ll').show();
       var companyid = '{{parentid}}';
 
-    
+
       var acupdate =
         '{ "accountid": "' + companyid + '" }';
-    
-   
+
+
       var req = new XMLHttpRequest();
-    
+
       var url = '{{download_flow_URL}}';
       console.log(url);
       //"https://prod-17.canadacentral.logic.azure.com:443/workflows/900f6e70915a4cddbb65b3c79da14581/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LZveFQ8DXIDobQOPzgoc0LgOcSOPpqVcnCEicN1lvEQ";
@@ -206,9 +199,9 @@ xhr.send("AAAA");
 
 });//end document ready
 
-    
 
-  
+
+
 
    // Notification component
     var notificationMsg = (function () {
@@ -218,7 +211,7 @@ xhr.send("AAAA");
             _endTimeout;
         return {
             show: function (msg) {
-             
+
                 $processingMsgEl.text(msg || _msg);
                 if (_stack === 0) {
                     clearTimeout(_endTimeout);
@@ -242,14 +235,15 @@ xhr.send("AAAA");
 
 function Call_Virsu_Scan_API(url, fileContent)
 {
-  
+  $("#processingMsg").css("display", "block");
+          $('#processingMsg').text("file is sent for scanning please wait...");
   var acupdate =
-       '{"FileContent" :"' + fileContent  + '" }';
+        '{"FileContent" :"' + fileContent  + '" }';
 
          // '{ "accountid": "' + companyid + '" }';
       var req = new XMLHttpRequest();
-    
-     
+
+
       console.log(url);
       //"https://prod-17.canadacentral.logic.azure.com:443/workflows/900f6e70915a4cddbb65b3c79da14581/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LZveFQ8DXIDobQOPzgoc0LgOcSOPpqVcnCEicN1lvEQ";
       req.open("POST", url, true);
@@ -258,8 +252,8 @@ function Call_Virsu_Scan_API(url, fileContent)
         if (this.readyState === 4) {
           req.onreadystatechange = null;
           if (this.status === 200) {
-               $('#processingMsg').text(this.response);
-               alert (this.response);
+             //  $('#processingMsg').text(this.response);
+
             var result = this.response;
          if (result.toLowerCase().trim() == "false")
          {
@@ -270,7 +264,7 @@ function Call_Virsu_Scan_API(url, fileContent)
          {
              alert("File did not pass scanning");
          }
-           
+
              $("#processingMsg").css("display", "none");
             $("#processingMsg").hide();
           } else {
@@ -280,7 +274,7 @@ function Call_Virsu_Scan_API(url, fileContent)
           }
         }
       }
-     
+
       req.send(acupdate);
 }
 
@@ -291,24 +285,55 @@ function Call_Virsu_Scan_API(url, fileContent)
         {% include 'Breadcrumbs' %}
         {% endblock %}
         {% block title %}
-        {% include 'Page Header' %} 
+        {% include 'Page Header' %}
         {% endblock %}
     </div>
 
     <div id="mainContent" class="row">
-      
+
         <div class="col-md-12">
             {% block main %}
-          
-   {% include 'Page Copy' %}  
 
-           
-      
+            {% include 'Page Copy' %}
+
+<div class="row sectionBlockLayout" style="display: flex; flex-wrap: wrap; padding: 8px; margin: 0px; text-align: left; min-height: 100px;">
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <div>
+            <div>
+              <h3 class="blue_border">Step 1: Download Bulk upload Template.</h3>
+              <p> </p>
+            </div>
+            <div><button type="button" id="linkdownload" class="submit-btn btn btn-primary form-action-container-left">Download</button></div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div>
+            <p></p>
+            <h3 class="blue_border">Step 2: Upload file.</h3>{% entityform name: 'Add Bulk site attachment' %}
+          </div>
+          <div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div>
+    <p></p>
+    <h2 class="blue_border">List of Sites</h2>{% include 'entity_list' key: 'Parent company site list' %}
+  </div>
+  <div role="alert" class="alert alert-warning" style="width: 300px; text-align: center; padding-top: 6px; padding-right: 10px; padding-bottom: 6px; padding-left: 10px; z-index: 9999; top: 15%; left: 40%; position: fixed; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px; display: none;">system is downloading file</div>
+</div>
 
 
-  {% endblock %}
 
-        
+            {% endblock %}
+
+
         </div>
     </div>
 </div>

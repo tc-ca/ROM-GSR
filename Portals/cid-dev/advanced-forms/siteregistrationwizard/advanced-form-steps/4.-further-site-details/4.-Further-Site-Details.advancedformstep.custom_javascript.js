@@ -9,6 +9,9 @@ $(document).ready(function() {
 			}
 		});
 	}
+	else{
+		$("#NextButton").click();
+	}
 	
 	webFormClientValidate = function() {
     var validation = true;

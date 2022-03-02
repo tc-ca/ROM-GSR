@@ -11,6 +11,7 @@ $(document).ready(function () {
     $("#telephone1").attr("placeholder", "");
     $("#mobilephone").attr("placeholder", "");
 
+    //tdg.c.addValidator("emailaddress1", "E-mail");
     addValidator("emailaddress1", "E-mail");
 
     // autocomplete off
@@ -21,7 +22,7 @@ $(document).ready(function () {
         $("#telephone1").attr("autocomplete", "new-password");
         $("#mobilephone").attr("autocomplete", "new-password");
         $("#fax").attr("autocomplete", "new-password");
-    } catch (e) {}
+    } catch (e) { }
 });
 
 // setRequiredLevel("required");

@@ -3,9 +3,9 @@
 $(document).ready(function () {
     debugger;
 
-var companyName = '{{user.parentcustomerid.name }}';
-if (companyName)
-    $(".previous-btn").attr('disabled', true);
+    var companyName = '{{user.parentcustomerid.name }}';
+    if (companyName)
+        $(".previous-btn").attr('disabled', true);
 
     // resize WebResource_address_complete
     $("#WebResource_address_complete").height('72px');
@@ -32,18 +32,20 @@ if (companyName)
         var cid_operatingname = "{{user.cid_operatingname}}";
         var address1_line1 = "{{user.address1_line1}}";
     }
-    $("#cid_has_cra_bn").parent().parent().hide();
+    tdg.c.control_hide("cid_has_cra_bn");
+    //$("#cid_has_cra_bn").parent().parent().hide();
     sessionStorage.setItem("AddressLine1Text", address1_line1);
 
-    var k_char_apostrophe = "&#39;";
-
-    cid_legalname = cid_legalname.replace(k_char_apostrophe, "'");
-    cid_operatingname = cid_operatingname.replace(k_char_apostrophe, "'");
+    tdg.c.replace_special_char(cid_legalname);
+    tdg.c.replace_special_char(cid_operatingname);
 
     // do not have a business number?
     if (cid_has_cra_bn != "1") {
-        $("#cid_crabusinessnumber").parent().parent().hide();
-        $("#cid_reasonfornobnnumber").parent().parent().show();
+        tdg.c.control_hide("cid_crabusinessnumber");
+        tdg.c.control_show("cid_reasonfornobnnumber");
+
+        //$("#cid_crabusinessnumber").parent().parent().hide();
+        //$("#cid_reasonfornobnnumber").parent().parent().show();
 
         if (step_start != "2") {
             $("#cid_reasonfornobnnumber").val(cid_reasonfornobnnumber);
@@ -51,22 +53,28 @@ if (companyName)
 
         if (cid_reasonfornobnnumber == "3")   // other
         {
-            $("#cid_reasonfornobnnumber_other").parent().parent().show();
+            tdg.c.control_show("cid_reasonfornobnnumber_other");
+            //$("#cid_reasonfornobnnumber_other").parent().parent().show();
             if (step_start != "2") {
                 $("#cid_reasonfornobnnumber_other").val(cid_reasonfornobnnumber_other);
             }
         }
         else {
-            $("#cid_reasonfornobnnumber_other").parent().parent().hide();
+            tdg.c.control_hide("cid_reasonfornobnnumber_other");
+            //$("#cid_reasonfornobnnumber_other").parent().parent().hide();
         }
     }
     else {
         if (step_start != "2") {
             $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
         }
-        $("#cid_crabusinessnumber").parent().parent().show();
-        $("#cid_reasonfornobnnumber").parent().parent().hide();
-        $("#cid_reasonfornobnnumber_other").parent().parent().hide();
+        tdg.c.control_show("cid_crabusinessnumber");
+        tdg.c.control_hide("cid_reasonfornobnnumber");
+        tdg.c.control_hide("cid_reasonfornobnnumber_other");
+
+        //$("#cid_crabusinessnumber").parent().parent().show();
+        //$("#cid_reasonfornobnnumber").parent().parent().hide();
+        //$("#cid_reasonfornobnnumber_other").parent().parent().hide();
     }
 
     if (step_start != "2") {
@@ -80,11 +88,11 @@ if (companyName)
     $('#cid_reasonfornobnnumber').css("pointer-events", "none");
     $('#cid_reasonfornobnnumber_other').attr("readonly", true);
 
-    addValidator("address1_line1", "Street 1");
-    addValidator("address1_city", "City");
-    addValidator("address1_stateorprovince", "Province");
-    addValidator("address1_postalcode", "Postal Code");
-    addValidator("address1_country", "Country");
+    tdg.c.addValidator("address1_line1", "Street 1");
+    tdg.c.addValidator("address1_city", "City");
+    tdg.c.addValidator("address1_stateorprovince", "Province");
+    tdg.c.addValidator("address1_postalcode", "Postal Code");
+    tdg.c.addValidator("address1_country", "Country");
 
     // autocomplete off
     $("#name").attr("autocomplete", "new-password");
@@ -113,7 +121,9 @@ if (window.jQuery) {
 }
 
 function AddressComplete_Hide_address1_line1() {
-    $("#address1_line1").parent().parent().hide();
+    debugger;
+    tdg.c.control_hide("address1_line1");
+    //$("#address1_line1").parent().parent().hide();
 }
 
 function AddressComplete_address1_line1() {
@@ -128,45 +138,4 @@ function AddressComplete_Selected() {
     $("#address1_stateorprovince").val(sessionStorage.getItem("ProvinceName"));
     $("#address1_postalcode").val(sessionStorage.getItem("PostalCode"));
     $("#address1_country").val(sessionStorage.getItem("CountryName"));
-}
-
-//eg. addValidator("customerid", "Customer")
-function addValidator(fieldName, fieldLabel) {
-    if (typeof (Page_Validators) == 'undefined') return;
-
-    // Create new validator
-    $("#" + fieldName + "_label").parent().addClass("required");
-
-    var newValidator = document.createElement('span');
-    newValidator.style.display = "none";
-    newValidator.id = "RequiredFieldValidator" + fieldName;
-    newValidator.controltovalidate = "casetypecode";
-    newValidator.errormessage = "<a href='#" + fieldName + "_label'>" + fieldLabel + " is a mandatory field.</a>";
-    newValidator.validationGroup = "";
-    newValidator.initialvalue = "";
-    newValidator.evaluationfunction = function () {
-        var value = $("#" + fieldName).val();
-        if (value == null || value == "") {
-            return false;
-        } else {
-            return true;
-        }
-    };
-
-    // Add the new validator to the page validators array:
-    Page_Validators.push(newValidator);
-
-    // Wire-up the click event handler of the validation summary link
-    $("a[href='#" + fieldName + "_label']").on("click", function () { scrollToAndFocus(fieldName + '_label', fieldName); });
-}
-
-//eg. removeValidator("customerid")
-function removeValidator(fieldName) {
-    $.each(Page_Validators, function (index, validator) {
-        if (validator.id == "RequiredFieldValidator" + fieldName) {
-            Page_Validators.splice(index, 1);
-        }
-    });
-
-    $("#" + fieldName + "_label").parent().removeClass("required");
 }
