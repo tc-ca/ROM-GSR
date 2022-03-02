@@ -6,8 +6,6 @@ $(document).ready(function() {
 			if(firstRow){
 				var operationWizardURL = "~/en-US/OperationRegistrationWizard/?id=" + firstRow.attr('data-id');
 				window.location.href = operationWizardURL;
-				//window.location.assign(operationWizardURL);
-				//window.location = operationWizardURL;
 			}
 		});
 	}

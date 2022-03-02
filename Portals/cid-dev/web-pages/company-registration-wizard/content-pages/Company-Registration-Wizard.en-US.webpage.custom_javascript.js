@@ -1,17 +1,17 @@
 $(document).ready(function () {
 	var companyName = '{{user.parentcustomerid.name }}';
 	var header = $('.page-header h1');
-	var startStep = $('ol.progress > li').first();//$(".progress li:first");
+	//var startStep = $('ol.progress > li').first();
 
 	if(companyName)
 	{
 		if(header)
 			header.text(header.text() + ' - ' + companyName);
-		if(startStep)
-		{
-			startStep.css('background-color', '#eaebed');
-			startStep.css('color', 'grey');
-		}
+		//if(startStep)
+		//{
+		//	startStep.css('background-color', '#eaebed');
+		//	startStep.css('color', 'grey');
+		//}
 	}
 
     var instructionBtns = $(".instruction-btn");
