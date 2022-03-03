@@ -3,8 +3,6 @@
 $(document).ready(function () {
     debugger;
 
-    var k_char_apostrophe = "&#39;";
-
     $("#telephone1").attr("placeholder", "");
 
     // resize WebResource_address_complete
@@ -12,7 +10,7 @@ $(document).ready(function () {
     sessionStorage.setItem("AddressLine1Text", "");
 
     var cid_legalname = "{{user.cid_legalname}}";
-    cid_legalname = cid_legalname.replace(k_char_apostrophe, "'");
+    cid_legalname = tdg.c.replace_special_char(cid_legalname);
 
     $("#ovs_legalname").val(cid_legalname);
     $("#name").val(cid_legalname);
@@ -20,8 +18,8 @@ $(document).ready(function () {
     $("#address1_country").val("Canada");   // default Canada
 
     // hide controls
-    control_hide("name");
-    control_hide("cid_siteclaim");
+    tdg.c.control_hide("name");
+    tdg.c.control_hide("cid_siteclaim");
 
     // cid_same_as_company
     $("#cid_same_as_company").change(function () {
@@ -43,10 +41,21 @@ $(document).ready(function () {
 
 function WebResource_address_complete_readonly(value) {
     debugger;
-    var f = document.getElementById("WebResource_address_complete");
-    var c = f.contentWindow;
-    c.readonly();
-},
+    try {
+        var f = document.getElementById("WebResource_address_complete");
+        var c = f.contentWindow;
+        c.readonly(value);
+    } catch (e) {}
+}
+
+function WebResource_address_complete_address1_line1(value) {
+    debugger;
+    try {
+        var f = document.getElementById("WebResource_address_complete");
+        var c = f.contentWindow;
+        c.address1_line1(value);
+    } catch (e) { }
+}
 
 function cid_same_as_company_change() {
     debugger;
@@ -64,7 +73,7 @@ function cid_same_as_company_change() {
         debugger;
         var parent_id = '{{ user.parentcustomerid.id }}';
         var filter = "accountid eq guid'" + parent_id + "'";
-        var data = OData_List("account", filter);
+        var data = tdg.c.OData_List("account", filter);
 
         var address1_line1 = "N/A";
         var address1_city = "N/A";
@@ -85,6 +94,7 @@ function cid_same_as_company_change() {
             address1_country = item.address1_country;
         }
 
+        WebResource_address_complete_address1_line1(address1_line1);
         $("#address1_line1").val(address1_line1);
         $("#address1_line2").val(address1_line2);
         $("#address1_line3").val(address1_line3);
@@ -103,6 +113,7 @@ function cid_same_as_company_change() {
         $("#address1_stateorprovince").prop('readonly', false);
         $("#address1_postalcode").prop('readonly', false);
 
+        WebResource_address_complete_address1_line1("");
         $("#address1_line1").val("");
         $("#address1_line2").val("");
         $("#address1_line3").val("");
@@ -114,7 +125,7 @@ function cid_same_as_company_change() {
 }
 
 function AddressComplete_Hide_address1_line1() {
-    control_hide("address1_line1");
+    tdg.c.control_hide("address1_line1");
 }
 
 function AddressComplete_address1_line1() {
@@ -129,41 +140,4 @@ function AddressComplete_Selected() {
     $("#address1_stateorprovince").val(sessionStorage.getItem("ProvinceName"));
     $("#address1_postalcode").val(sessionStorage.getItem("PostalCode"));
     $("#address1_country").val(sessionStorage.getItem("CountryName"));
-}
-
-function control_hide(fieldName, is_lookup) {
-    if (is_lookup) {
-        $("#" + fieldName).parent().parent().parent().hide();
-    }
-    else {
-        $("#" + fieldName).hide();
-        $("#" + fieldName + "_label").hide();
-    }
-}
-
-function control_show(fieldName, is_lookup) {
-    if (is_lookup) {
-        $("#" + fieldName).parent().parent().parent().show();
-    }
-    else {
-        $("#" + fieldName).show();
-        $("#" + fieldName + "_label").show();
-    }
-}
-
-// odata
-function OData_List(entity, filter) {
-    var url = entity + "?$filter=" + filter;
-    var oDataUrl = "~/_odata/" + url;
-    var response = null;
-
-    $.ajax({
-        type: "GET",
-        url: oDataUrl,
-        dataType: "json",
-        async: false
-    }).done(function (json) {
-        response = json.value;
-    });
-    return response;
 }

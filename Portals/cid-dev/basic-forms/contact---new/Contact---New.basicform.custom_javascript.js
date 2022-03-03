@@ -1,5 +1,4 @@
 // Basic Form-Contact - New.js
-
 $(document).ready(function () {
     debugger;
 

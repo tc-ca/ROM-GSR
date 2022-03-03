@@ -1,74 +1,85 @@
+<script type="text/javascript" src="~/tdgcore_common.js" ></script>
 <script>
 function CompanyHasNAICSCodes(companyId)
 {
-    var returnValue = false;
-    var filter = "cid_company/Id eq (guid'" + companyId + "')";
-	var data = ExecuteOData("Validation_CompanyNAICSCodes", filter);
-
-    if(data != null && data.length > 0)
-        returnValue = true;
-
-    return returnValue;
+    return false;//Validate(companyId, 'cid_company', 'Validation_CompanyNAICSCodes');
 }
 
 function CompanyHasERAPs(companyId)
 {
-    var returnValue = false;
     var filter = "cid_company/Id eq (guid'" + companyId + "')";
 	var data = ExecuteOData("Validation_CompanyERAPs", filter);
 
     if(data != null && data.length > 0)
-        returnValue = true;
-        
-    return returnValue;
+        return true;
+    else    
+        return false;
 }
 
 function SiteHasModeOfTransportations(siteId)
 {
-    var returnValue = false;
     var filter = "cid_site/Id eq (guid'" + siteId + "')";
 	var data = ExecuteOData("Validation_SiteModeOfTransportations", filter);
 
     if(data != null && data.length > 0)
-        returnValue = true;
-
-    return returnValue;
+        return true;
+    else
+        return false;
 }
 
 function SiteHasOperationClasses(operationId)
 {
-    var returnValue = false;
     var filter = "ovs_operationclass/Id eq (guid'" + operationId + "')";
 	var data = ExecuteOData("Validation_SiteClasses", filter);
 
     if(data != null && data.length > 0)
-        returnValue = true;
-
-    return returnValue;
+        return true;
+    else
+        return false;
 }
 
 function SiteHasOperationClasses(operationId, siteId)
 {
-    var returnValue = false;
     var filter = "ovs_operationclass/Id eq (guid'" + operationId + "')";
 	var data = ExecuteOData("Validation_SiteClasses", filter);
 
     if(data != null && data.length > 0)
-        returnValue = true;
-
-    return returnValue;
+        return true;
+    else
+        return false;
 }
 
 function SiteHasOperationUNNumbers(operationId)
 {
-    var returnValue = false;
     var filter = "ovs_operationunnumber/Id eq (guid'" + operationId + "')";
 	var data = ExecuteOData("Validation_SiteUNNumbers", filter);
 
     if(data != null && data.length > 0)
-        returnValue = true;
+        retunr true;
+    else
+        return false;
+}
 
-    return returnValue;
+function OperationDetailsProvided(operationId)
+{
+    var filter = "ovs_mocregistration/Id eq (guid'" + operationId + "')";
+	var data = ExecuteOData("Validation_OperationDetailsList", filter);
+
+    if(data != null && data.length > 0)
+        return true;
+    else
+        return false;
+}
+
+function Validate(recordId, entityName, list)
+{
+    var filter = entityName + "/Id eq (guid'" + recordId + "')";
+	var data = ExecuteOData(list, filter);
+
+    if(data != null && data.length > 0)
+        return true;
+    else
+        return false;
 }
 
 function ExecuteOData(list, filter) {

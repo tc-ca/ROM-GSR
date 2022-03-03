@@ -12,7 +12,6 @@
         border-radius: 0 0 2px 2px;
         -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        //display: none;
     }
 </style>
 {% assign parentid = user.parentcustomerid.id %}
@@ -46,7 +45,7 @@
 {% endfor %}
 
 <script>
-  $(document).ready(function() {
+  $(document).ready( function() {
 
 $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value='Scan and Upload' class='submit-btn btn btn-primary form-action-container-left' />");
     $(window).load(function() {
@@ -103,32 +102,44 @@ $('#btn_attachfile_and_scan').click(function(e)
            // var c = String.raw `X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*`;
 
 
-            Call_Virsu_Scan_API(Scan_API_URL
+          //  Call_Virsu_Scan_API(Scan_API_URL
             // ,btoa(c));
-            ,DocumentbodyContents);
+           // ,DocumentbodyContents);
 
-            
-            
+
+           // fetch_getScanResult();
+
             var data = "X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*";
 
-            //var xhr = new XMLHttpRequest();
-           // xhr.withCredentials = true;
+              //calladdresscomplete();
+var Source_scanapiurl = "https://wwwapps.tc.gc.ca/Saf-Sec-Sur/13/MTAPI/api/v1/file-scan-status?filename=test";
+        var xhr = new XMLHttpRequest();
 
-          //  xhr.addEventListener("readystatechange", function () {
-               // if (this.readyState === 4) {
-                //    console.log(this.responseText);
-                 //   alert(this.responseText);
-              //  }
-          //  });
-
-           // xhr.open("POST", "https://wwwapps.tc.gc.ca/Saf-Sec-Sur/13/MTAPI/api/v1/file-scan-status?filename=test");
-          //  xhr.setRequestHeader("Content-Type", "application/octet-stream");
-           // xhr.setRequestHeader("access-Control-Allow-Origin", "*");
-
-           // xhr.send(data);
-
-        }
+const options = {
+    uri: Source_scanapiurl, /* Set url here. */
+    body: data,
+    headers: {
+        'Content-Type': 'application/octet-stream'
     }
+};
+
+
+            xhr.post(options, (error, response, body) => {
+                if (error) {
+                    console.log('Error: ', error);
+                    alert(error);
+                    return;
+                }
+                else {
+                    alert(response);
+                }
+
+            });
+
+
+
+        }//end loader
+    }//end if file
         else
         {
 alert ("Please select file first");
@@ -154,7 +165,7 @@ alert ("Please select file first");
     //linktemplate.href = DownloadURL;
     //linktemplate.download = "RD_Sites_Template.xlsx";
     $('#linkdownload').on('click', async function() {
-       
+
           $('#processingMsg').css('display','block');
         $('#processingMsg').text('System is downloading site info ...');
 
@@ -277,6 +288,81 @@ function Call_Virsu_Scan_API(url, fileContent)
 
       req.send(acupdate);
 }
+const fetch_getScanResult = async () => {
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/octet-stream");
+    //myHeaders.append("access-Control-Allow-Origin", "*");
+
+    const raw = "X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*";
+
+    const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+    };
+
+    let repsponse = await fetch("https://wwwapps.tc.gc.ca/Saf-Sec-Sur/13/MTAPI/api/v1/file-scan-status?filename=test", requestOptions);
+      //  .then(response => response.text())
+       // .then(result => console.log(result))
+        //.catch(error => console.log('error', error));
+    if (response.status === 200) {
+        console.log(await response.text());
+        alert(await response.text());
+    }
+}
+
+function calladdresscomplete() {
+            alert("started");
+            var url = 'https://ws1.postescanada-canadapost.ca/AddressComplete/Interactive/Find/v2.10/json3.ws';
+            var params = '';
+            params += "&Key=" + encodeURIComponent("MM95-DM44-MP35-XM79");
+            params += "&SearchTerm=" + encodeURIComponent("675 holly avenue");
+         //   params += "&LastId=" + encodeURIComponent(LastId);
+           // params += "&SearchFor=" + encodeURIComponent("675 holly avenue , milton Ontario");
+            params += "&Country=" + encodeURIComponent("CAN");
+            params += "&LanguagePreference=" + encodeURIComponent("en");
+           // params += "&MaxSuggestions=" + encodeURIComponent(7);
+            params += "&MaxResults=" + encodeURIComponent(7);
+            var http = new XMLHttpRequest();
+            http.open('POST', url, true);
+            http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            http.onreadystatechange = function () {
+
+                if (http.readyState == 4 && http.status == 200) {
+
+                    var response = JSON.parse(http.responseText);
+                    // Test for an error
+                    if (response.Items.length == 1 && typeof (response.Items[0].Error) != "undefined") {
+                        // Show the error message
+                        alert(response.Items[0].Description);
+                    }
+                    else {
+                        // Check if there were any items found
+                        if (response.Items.length == 0)
+                            alert("Sorry, there were no results");
+                        else {
+                            alert(response.Items.length);
+                            alert("else " + response.Items[0].Id);
+                            alert("else " + response.Items[0].Text);
+                            alert("else " + response.Items[0].Description);
+                            // PUT YOUR CODE HERE
+                            //FYI: The output is an array of key value pairs (e.g. response.Items[0].Id), the keys being:
+                            //Id
+                            //Text
+                            //Highlight
+                            //Cursor
+                            //Description
+                            //Next
+                        }
+                    }
+                }
+            }
+            http.send(params);
+            alert("sent");
+        }
+
 
 </script>
 <div class="container">
@@ -296,38 +382,38 @@ function Call_Virsu_Scan_API(url, fileContent)
 
             {% include 'Page Copy' %}
 
-<div class="row sectionBlockLayout" style="display: flex; flex-wrap: wrap; padding: 8px; margin: 0px; text-align: left; min-height: 100px;">
-  <table>
-    <tbody>
-      <tr>
-        <td>
-          <div>
-            <div>
-              <h3 class="blue_border">Step 1: Download Bulk upload Template.</h3>
-              <p> </p>
+            <div class="row sectionBlockLayout" style="display: flex; flex-wrap: wrap; padding: 8px; margin: 0px; text-align: left; min-height: 100px;">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div>
+                                    <div>
+                                        <h3 class="blue_border">Step 1: Download Bulk upload Template.</h3>
+                                        <p> </p>
+                                    </div>
+                                    <div><button type="button" id="linkdownload" class="submit-btn btn btn-primary form-action-container-left">Download</button></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div>
+                                    <p></p>
+                                    <h3 class="blue_border">Step 2: Upload file.</h3>{% entityform name: 'Add Bulk site attachment' %}
+                                </div>
+                                <div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div>
+                    <p></p>
+                    <h2 class="blue_border">List of Sites</h2>{% include 'entity_list' key: 'Parent company site list' %}
+                </div>
+                <div role="alert" class="alert alert-warning" style="width: 300px; text-align: center; padding-top: 6px; padding-right: 10px; padding-bottom: 6px; padding-left: 10px; z-index: 9999; top: 15%; left: 40%; position: fixed; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px; display: none;">system is downloading file</div>
             </div>
-            <div><button type="button" id="linkdownload" class="submit-btn btn btn-primary form-action-container-left">Download</button></div>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div>
-            <p></p>
-            <h3 class="blue_border">Step 2: Upload file.</h3>{% entityform name: 'Add Bulk site attachment' %}
-          </div>
-          <div>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div>
-    <p></p>
-    <h2 class="blue_border">List of Sites</h2>{% include 'entity_list' key: 'Parent company site list' %}
-  </div>
-  <div role="alert" class="alert alert-warning" style="width: 300px; text-align: center; padding-top: 6px; padding-right: 10px; padding-bottom: 6px; padding-left: 10px; z-index: 9999; top: 15%; left: 40%; position: fixed; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px; display: none;">system is downloading file</div>
-</div>
 
 
 

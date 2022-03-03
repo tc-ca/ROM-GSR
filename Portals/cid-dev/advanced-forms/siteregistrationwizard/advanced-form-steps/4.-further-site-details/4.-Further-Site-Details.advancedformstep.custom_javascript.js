@@ -9,9 +9,9 @@ $(document).ready(function() {
 			}
 		});
 	}
-	else{
-		$("#NextButton").click();
-	}
+	//else{
+	//	$("#NextButton").click();
+	//}
 	
 	webFormClientValidate = function() {
     var validation = true;
@@ -33,6 +33,7 @@ $(document).ready(function() {
 		
 	    if(!validation)
     	{
+			var errorMessage = 'You cannot proceed before completing site operation details.';
     		$('#ValidationSummaryEntityFormView div').remove(); 
 
    			var validationSection = $('#ValidationSummaryEntityFormView');
