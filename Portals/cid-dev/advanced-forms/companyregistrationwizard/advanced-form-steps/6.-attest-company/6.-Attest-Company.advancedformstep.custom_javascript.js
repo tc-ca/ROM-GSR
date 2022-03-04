@@ -49,7 +49,7 @@ if (window.jQuery) {
 
         //Contacts validation
         var filter = "parentcustomerid/Id eq (guid'" + companyId + "')";
-        var data = ExecuteOData("Validation_CompanyPrimarySecondaryContacts", filter);
+        var data = ExecuteQuery("Validation_CompanyPrimarySecondaryContacts", filter);
 		var errorMessage = "";
             
         if(data != null)

@@ -15,7 +15,7 @@ if (window.jQuery) {
           //      validation = false;
           //      errorMessage = "You cannot proceed before adding classes(s).";
           //}
-				if(!SiteHasOperationClasses(operationId))
+				if(!SiteHasOperationClasses(operationId, null))
 				{
 					errorMessage = "You cannot proceed before adding classes(s).";
 					validation = false;

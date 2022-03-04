@@ -12,3 +12,37 @@ $(document).ready(function() {
         $('#ValidationSummaryEntityFormView').after("<br><div id='printSummary' class='input-group pull-right'><input type='button' value='Print Summary' onclick='window.print();' class='btn btn-primary button next submit-btn'></div>");
 
 });
+
+if (window.jQuery) {
+ (function ($) {
+    webFormClientValidate = function() {
+        var validation = false;
+        var siteId = $("#EntityFormView_EntityID").val();
+
+       
+		//Classes validation
+		if(!SiteHasOperationClasses(null, siteId))
+		{
+            errorMessage = errorMessage + "You cannot proceed before adding classes(s).</br>";
+            validation = false;
+        }
+
+		//UN Numbers validation
+		if(!SiteHasOperationUNNumbers(null, siteId))
+		{
+            errorMessage = errorMessage + "You cannot proceed before adding UN Number(s).</br>";
+            validation = false;
+        }
+
+        if (!validation) 
+		{
+            $('#ValidationSummaryEntityFormView div').remove();
+            var validationSection = $('#ValidationSummaryEntityFormView');
+            validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
+            validationSection.show();
+			$('#alertMessages').focus();
+        }
+		return validation;
+    }
+   }(window.jQuery));
+}

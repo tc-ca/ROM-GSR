@@ -1,18 +1,20 @@
 $(document).ready(function() {
 	var urlParams = new URLSearchParams(window.location.search);
 	if (urlParams.has('id')) {
+		var siteid = urlParams.get('id');
 		$(".entity-grid").on("loaded", function () {
 			var firstRow = $("#Operations .view-grid table tbody").find("tr:first");
 			if(firstRow){
-				var operationWizardURL = "~/en-US/OperationRegistrationWizard/?id=" + firstRow.attr('data-id');
-				window.location.href = operationWizardURL;
+				var operationId = firstRow.attr('data-id');
+				if(OperationDetailsProvided(siteid))
+					$("#NextButton").click();	
+				else
+					window.location.href = "~/en-US/OperationRegistrationWizard/?id=" + operationId;
 			}
 		});
-	}
-	//else{
-	//	$("#NextButton").click();
-	//}
 	
+	}
+
 	webFormClientValidate = function() {
     var validation = true;
     var rows = $("#Operations .view-grid table").find("tbody > tr");

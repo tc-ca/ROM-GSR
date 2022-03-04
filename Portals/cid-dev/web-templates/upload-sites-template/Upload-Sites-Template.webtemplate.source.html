@@ -46,15 +46,14 @@
 
 <script>
   $(document).ready( function() {
-
-$("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value='Scan and Upload' class='submit-btn btn btn-primary form-action-container-left' />");
+      
+      //hide existing submit button
+       $("#InsertButton").css("display", "none");
+      //hid processing div
+   $('#processingMsg').css('display', 'none');
+  //add new submit button
+  $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value='Scan and Upload' class='submit-btn btn btn-primary form-action-container-left' />");
     $(window).load(function() {
-
-  $("#InsertButton").css("display", "none");
-
-//InsertButton
-    //  $('#ll').hide();
-        //  notificationMsg.show("System is downloading site info ...");
 
     });
    // var pageURL = window.location.href;
@@ -65,20 +64,15 @@ $('#btn_attachfile_and_scan').click(function(e)
     var DocumentbodyContents;
   // Get the name of the selected file
     var FileName = $('#AttachFile')[0].files[0].name;
-
     // Get the mime type of the selected file
-
     var MimeType = $('#AttachFile')[0].files[0].type;
-
-
     // Get the content of the selected file
-
     var file = document.getElementById('AttachFile').files[0];
 
     if (file) {
 
         $('#processingMsg').css('display', 'block');
-        $('#processingMsg').text("File is sent for scanning please wait");
+        $('#processingMsg').text("File is sent for scanning please wait...");
         // Read the file
 
         var reader = new FileReader();
@@ -102,41 +96,15 @@ $('#btn_attachfile_and_scan').click(function(e)
            // var c = String.raw `X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*`;
 
 
-          //  Call_Virsu_Scan_API(Scan_API_URL
+           Call_Virsu_Scan_API(Scan_API_URL
             // ,btoa(c));
-           // ,DocumentbodyContents);
-
+            ,DocumentbodyContents);
 
            // fetch_getScanResult();
-
-            var data = "X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*";
-
+            //var data = "X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*";
               //calladdresscomplete();
-var Source_scanapiurl = "https://wwwapps.tc.gc.ca/Saf-Sec-Sur/13/MTAPI/api/v1/file-scan-status?filename=test";
-        var xhr = new XMLHttpRequest();
-
-const options = {
-    uri: Source_scanapiurl, /* Set url here. */
-    body: data,
-    headers: {
-        'Content-Type': 'application/octet-stream'
-    }
-};
-
-
-            xhr.post(options, (error, response, body) => {
-                if (error) {
-                    console.log('Error: ', error);
-                    alert(error);
-                    return;
-                }
-                else {
-                    alert(response);
-                }
-
-            });
-
-
+           //var Source_scanapiurl = "https://wwwapps.tc.gc.ca/Saf-Sec-Sur/13/MTAPI/api/v1/file-scan-status?filename=test";
+            //callhttpscanapi();
 
         }//end loader
     }//end if file
@@ -144,16 +112,11 @@ const options = {
         {
 alert ("Please select file first");
            // $("#AttachFile").after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select file</div>");
-//$('#processingMsg').css('display','block');
-//$('#processingMsg').text("Please Select File First");
+           //$('#processingMsg').css('display','block');
+           //$('#processingMsg').text("Please Select File First");
 
         }
-
-
-
 //btoa(c) );
-
-
 });
 
 //alert(DocumentbodyContents);
@@ -277,7 +240,7 @@ function Call_Virsu_Scan_API(url, fileContent)
          }
 
              $("#processingMsg").css("display", "none");
-            $("#processingMsg").hide();
+          
           } else {
               $('#processingMsg').text("Error Please Try again Later.");
             var result = this.response;
@@ -360,9 +323,32 @@ function calladdresscomplete() {
                 }
             }
             http.send(params);
-            alert("sent");
+          
         }
+function callhttpscanapi()
+{
+    alert("start");
+    var data = "abc";
 
+var xhr = new XMLHttpRequest();
+//xhr.withCredentials = true;
+
+xhr.addEventListener("readystatechange", function() {
+  if(this.readyState === 4) {
+    console.log(this.responseText);
+    alert (this.responseText);
+    alert(this.response);
+  }
+});
+
+xhr.open("POST", "https://wwwapps.tc.gc.ca/Saf-Sec-Sur/13/MTAPI/api/v1/file-scan-status?filename=test.txt");
+//xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+//xhr.overrideMimeType("application/octet-stream");
+xhr.setRequestHeader("Accept", "application/octet-stream");
+//xhr.responseType = "application/json";
+xhr.send(data);
+
+}
 
 </script>
 <div class="container">
@@ -383,6 +369,7 @@ function calladdresscomplete() {
             {% include 'Page Copy' %}
 
             <div class="row sectionBlockLayout" style="display: flex; flex-wrap: wrap; padding: 8px; margin: 0px; text-align: left; min-height: 100px;">
+               <div id="processingMsg" class="alert alert-warning" role="alert"></div>
                 <table>
                     <tbody>
                         <tr>
@@ -412,8 +399,7 @@ function calladdresscomplete() {
                     <p></p>
                     <h2 class="blue_border">List of Sites</h2>{% include 'entity_list' key: 'Parent company site list' %}
                 </div>
-                <div role="alert" class="alert alert-warning" style="width: 300px; text-align: center; padding-top: 6px; padding-right: 10px; padding-bottom: 6px; padding-left: 10px; z-index: 9999; top: 15%; left: 40%; position: fixed; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px; display: none;">system is downloading file</div>
-            </div>
+               
 
 
 

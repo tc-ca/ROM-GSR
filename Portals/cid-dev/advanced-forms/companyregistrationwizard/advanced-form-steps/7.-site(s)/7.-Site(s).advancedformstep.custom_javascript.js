@@ -47,7 +47,7 @@ $(document).ready(function () {
 		var errorMessage = "";
 		var companyId = $("#EntityFormView_EntityID").val();
 		var filter = "parentaccountid/Id eq (guid'" + companyId + "')";
-		var data = ExecuteOData("Validation_CompanySites", filter);
+		var data = ExecuteQuery("Validation_CompanySites", filter);
 
 		if (data == null) {
 			errorMessage = "You cannot proceed before adding active company site(s).";
@@ -60,7 +60,7 @@ $(document).ready(function () {
 			}
 			else {
 				filter = "parentaccountid/Id eq (guid'" + companyId + "')";
-				data = ExecuteOData("Validation_CompanyNotAttestedSites", filter);
+				data = ExecuteQuery("Validation_CompanyNotAttestedSites", filter);
 
 				if (data != null && data.length > 0) {
 					errorMessage = "You cannot proceed before attesting all the company sites.";

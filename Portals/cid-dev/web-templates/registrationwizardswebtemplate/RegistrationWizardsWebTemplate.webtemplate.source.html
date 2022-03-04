@@ -1,80 +1,41 @@
-<script type="text/javascript" src="~/tdgcore_common.js" ></script>
 <script>
-function CompanyHasNAICSCodes(companyId)
-{
-    return false;//Validate(companyId, 'cid_company', 'Validation_CompanyNAICSCodes');
+function CompanyHasNAICSCodes(companyId){
+    return Validate(companyId, 'cid_company', 'Validation_CompanyNAICSCodes');
 }
 
-function CompanyHasERAPs(companyId)
-{
-    var filter = "cid_company/Id eq (guid'" + companyId + "')";
-	var data = ExecuteOData("Validation_CompanyERAPs", filter);
-
-    if(data != null && data.length > 0)
-        return true;
-    else    
-        return false;
+function CompanyHasERAPs(companyId){
+    return Validate(companyId, 'cid_company', 'Validation_CompanyERAPs');
 }
 
-function SiteHasModeOfTransportations(siteId)
-{
-    var filter = "cid_site/Id eq (guid'" + siteId + "')";
-	var data = ExecuteOData("Validation_SiteModeOfTransportations", filter);
+function SiteHasModeOfTransportations(siteId){
+    return Validate(siteId, 'cid_site', 'Validation_SiteModeOfTransportations');
+}
 
-    if(data != null && data.length > 0)
-        return true;
+function SiteHasOperationClasses(operationId, siteId){
+    if(operationId != null)
+        return Validate(operationId, 'ovs_operationclass', 'Validation_SiteClasses');
+    else if(siteId != null)
+        return Validate(siteId, 'cid_site', 'Validation_SiteClasses');
     else
         return false;
 }
 
-function SiteHasOperationClasses(operationId)
-{
-    var filter = "ovs_operationclass/Id eq (guid'" + operationId + "')";
-	var data = ExecuteOData("Validation_SiteClasses", filter);
-
-    if(data != null && data.length > 0)
-        return true;
+function SiteHasOperationUNNumbers(operationId, siteId){
+    if(operationId != null)
+        return Validate(operationId, 'ovs_operationunnumber', 'Validation_SiteUNNumbers');
+    else if(siteId != null)
+        return Validate(siteId, 'cid_site', 'Validation_SiteUNNumbers');
     else
         return false;
 }
 
-function SiteHasOperationClasses(operationId, siteId)
-{
-    var filter = "ovs_operationclass/Id eq (guid'" + operationId + "')";
-	var data = ExecuteOData("Validation_SiteClasses", filter);
-
-    if(data != null && data.length > 0)
-        return true;
-    else
-        return false;
+function OperationDetailsProvided(operationId){
+    return Validate(operationId, 'ovs_siteid', 'Validation_OperationDetailsList');
 }
 
-function SiteHasOperationUNNumbers(operationId)
-{
-    var filter = "ovs_operationunnumber/Id eq (guid'" + operationId + "')";
-	var data = ExecuteOData("Validation_SiteUNNumbers", filter);
-
-    if(data != null && data.length > 0)
-        retunr true;
-    else
-        return false;
-}
-
-function OperationDetailsProvided(operationId)
-{
-    var filter = "ovs_mocregistration/Id eq (guid'" + operationId + "')";
-	var data = ExecuteOData("Validation_OperationDetailsList", filter);
-
-    if(data != null && data.length > 0)
-        return true;
-    else
-        return false;
-}
-
-function Validate(recordId, entityName, list)
-{
+function Validate(recordId, entityName, list){
     var filter = entityName + "/Id eq (guid'" + recordId + "')";
-	var data = ExecuteOData(list, filter);
+	var data = ExecuteQuery(list, filter);
 
     if(data != null && data.length > 0)
         return true;
@@ -82,7 +43,7 @@ function Validate(recordId, entityName, list)
         return false;
 }
 
-function ExecuteOData(list, filter) {
+function ExecuteQuery(list, filter){
     var url = list + "?$filter=" + filter;
     var oDataUrl = "~/_odata/" + url;
     var response = null;
@@ -98,3 +59,4 @@ function ExecuteOData(list, filter) {
     return response;
 }
 </script>
+ <script type="text/javascript" src="~/tdgcore_common.js" ></script>

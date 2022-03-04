@@ -17,7 +17,7 @@ if (window.jQuery) {
                 //alert('You cannot proceed before adding UN Number(s).');
           //}
 
-          		if(!SiteHasOperationUNNumbers(operationId))
+          		if(!SiteHasOperationUNNumbers(operationId, null))
 				{
 					errorMessage = "You cannot proceed before adding UN Number(s).";
 					validation = false;

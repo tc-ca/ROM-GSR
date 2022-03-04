@@ -11,7 +11,8 @@ if (window.jQuery) {
         var validation = false;
         var companyId = $("#EntityFormView_EntityID").val();	
         var filter = "parentcustomerid/Id eq (guid'" + companyId + "')";
-        var data = ExecuteOData("Validation_CompanyPrimarySecondaryContacts", filter);
+
+        var data = ExecuteQuery("Validation_CompanyPrimarySecondaryContacts", filter);
             
         if(data != null)
         {
