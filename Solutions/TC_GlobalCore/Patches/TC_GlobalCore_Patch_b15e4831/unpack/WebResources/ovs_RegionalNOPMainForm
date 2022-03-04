@@ -1,0 +1,72 @@
+///<reference path="../../Utilities/GlobalHelper.js"/>
+
+var globalFormContext;
+var LCID;
+var userSettings;
+var resexResourceName;
+
+function OnLoad(executionContext)
+{
+    //get context
+    globalContext = glHelper.getGlobalContext();
+    var formContext = executionContext.getFormContext();
+    var id = glHelper.GetCurrentRecordId(formContext);
+
+    globalFormContext = formContext;
+
+    // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+    formType = glHelper.GetFormType(formContext);
+
+    userSettings = Xrm.Utility.getGlobalContext().userSettings;
+
+    LCID = userSettings.languageId;
+
+    if (LCID == 1033)
+        resexResourceName = "ovs_Labels.1033.resx";
+    else if (LCID == 1036)
+        resexResourceName = "ovs_Labels.1036.resx";
+
+    //If form is new, autosave so we can add violations
+    if (formType == 1)
+    {
+        //Xrm.Page.data.entity.save();
+    }
+    else
+    {
+
+        glHelper.SetDisabled(formContext, "ovs_cdfiscalyearid", true);
+        glHelper.SetDisabled(formContext, "ovs_cdregionid", true);
+
+    }
+
+    var isPlanner = hasCurrentUserRole("TDG Planner");
+    var isManager = hasCurrentUserRole("TDG Manager");
+    var isInspector = hasCurrentUserRole("TDG Inspector");
+
+    glHelper.SetDisabled(formContext, "ovs_capacity", !isPlanner);
+
+    //These fields show be visible by Planners only
+    glHelper.SetControlVisibility(formContext, "ovs_capacity", isPlanner);
+    glHelper.SetControlVisibility(formContext, "ovs_cdwoccount", isPlanner);
+    glHelper.SetControlVisibility(formContext, "ovs_cdwocvariance", isPlanner);
+    
+
+
+
+}
+
+
+function hasCurrentUserRole(roleName)
+{
+    let hasRole = false;
+    let roles = Xrm.Utility.getGlobalContext().userSettings.roles;
+    roles.forEach(x =>
+    {
+        if (x.name === "System Administrator" || x.name === roleName)
+        {
+            hasRole = true;
+            return;
+        }
+    });
+    return hasRole;
+}
