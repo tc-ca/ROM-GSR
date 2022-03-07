@@ -3,6 +3,22 @@
 $(document).ready(function () {
     debugger;
 
+    $('#InsertButton').on('click', function (e) {
+        debugger;
+        // default address1
+        var ovs_address_type = $("#ovs_address_type").val();
+        switch (ovs_address_type) {
+            case "1":   // legal land description
+                address1_default("N/A");
+                break;
+            case "2":   // lat/long
+                address1_default("N/A");
+                break;
+        }
+    });
+
+    clear_address_type_required_fields();
+
     $("#telephone1").attr("placeholder", "");
 
     // resize WebResource_address_complete
@@ -37,19 +53,89 @@ $(document).ready(function () {
     $("#address1_latitude").attr("autocomplete", "new-password");
     $("#telephone1").attr("autocomplete", "new-password");
     $("#fax").attr("autocomplete", "new-password");
+
+    $("#ovs_address_type").change(function () {
+        ovs_address_type_change();
+    });
+    ovs_address_type_change();
 });
 
-function WebResource_address_complete_readonly(value) {
+function clear_address_type_required_fields() {
+    for (var i = 0; i < 2; i++) {
+        // address
+        tdg.c.removeValidator("address1_line1");
+        tdg.c.removeValidator("address1_city");
+        tdg.c.removeValidator("address1_stateorprovince");
+        tdg.c.removeValidator("address1_postalcode");
+
+        // legal land description
+        tdg.c.removeValidator("ovs_lld_quarter");
+        tdg.c.removeValidator("ovs_lld_section");
+        tdg.c.removeValidator("ovs_lld_township");
+        tdg.c.removeValidator("ovs_lld_range");
+        tdg.c.removeValidator("ovs_lld_meridian");
+
+        // lat/long
+        tdg.c.removeValidator("address1_latitude");
+        tdg.c.removeValidator("address1_longitude");
+    }
+}
+
+function address1_default(value) {
+    $("#address1_line1").val(value);
+    $("#address1_city").val(value);
+    $("#address1_stateorprovince").val(value);
+    $("#address1_postalcode").val(value);
+}
+
+function ovs_address_type_change() {
     debugger;
+
+    // hide sections
+    //tdg.c.section_hide("section_address");
+    //tdg.c.section_hide("section_legal_land_description");
+    //tdg.c.section_hide("section_latitude_longitude");
+
+    clear_address_type_required_fields();
+
+    var ovs_address_type = $("#ovs_address_type").val();
+    switch (ovs_address_type) {
+        case "1": // legal land description
+            tdg.c.section_show("section_legal_land_description");
+
+            tdg.c.addValidator("ovs_lld_quarter","Quarter");
+            tdg.c.addValidator("ovs_lld_section", "Section");
+            tdg.c.addValidator("ovs_lld_township", "Township");
+            tdg.c.addValidator("ovs_lld_range","Range");
+            tdg.c.addValidator("ovs_lld_meridian","Meridian");
+            break;
+        case "2": // lat/long
+            tdg.c.section_show("section_latitude_longitude");
+
+            tdg.c.addValidator("address1_latitude", "Latitude");
+            tdg.c.addValidator("address1_longitude", "Longitude");
+            break;
+        default:
+            tdg.c.section_show("section_address");
+
+            tdg.c.addValidator("address1_line1","Street 1");
+            tdg.c.addValidator("address1_city","City");
+            tdg.c.addValidator("address1_stateorprovince","Province");
+            tdg.c.addValidator("address1_postalcode","Postal Code");
+    }
+}
+
+function WebResource_address_complete_readonly(value) {
+    //debugger;
     try {
         var f = document.getElementById("WebResource_address_complete");
         var c = f.contentWindow;
         c.readonly(value);
-    } catch (e) {}
+    } catch (e) { }
 }
 
 function WebResource_address_complete_address1_line1(value) {
-    debugger;
+    //debugger;
     try {
         var f = document.getElementById("WebResource_address_complete");
         var c = f.contentWindow;
@@ -58,7 +144,7 @@ function WebResource_address_complete_address1_line1(value) {
 }
 
 function cid_same_as_company_change() {
-    debugger;
+    //debugger;
     var value = $("#cid_same_as_company")[0].checked;
     if (value) {
         //$("#WebResource_address_complete").hide();

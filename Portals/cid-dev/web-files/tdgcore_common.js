@@ -1,11 +1,13 @@
 ﻿// tdgcore_common.js
 
+// tdg = tdgcore
 if (typeof (tdg) == "undefined") {
     tdg = {
         __namespace: true
     };
 }
 
+// tdg.c = tdgcore.common
 if (typeof (tdg.c) == "undefined") {
     tdg.c = {
         // how to calling function inside an iFrame
@@ -33,43 +35,49 @@ if (typeof (tdg.c) == "undefined") {
 
         // setRequiredLevel("required");
         addValidator: function (fieldName, fieldLabel) {
-            if (typeof (Page_Validators) == 'undefined') return;
+            try {
+                if (typeof (Page_Validators) == 'undefined') return;
 
-            // Create new validator
-            $("#" + fieldName + "_label").parent().addClass("required");
+                // Create new validator
+                $("#" + fieldName + "_label").parent().addClass("required");
 
-            var newValidator = document.createElement('span');
-            newValidator.style.display = "none";
-            newValidator.id = "RequiredFieldValidator" + fieldName;
-            newValidator.controltovalidate = "casetypecode";
-            newValidator.errormessage = "<a href='#" + fieldName + "_label'>" + fieldLabel + " is a mandatory field.</a>";
-            newValidator.validationGroup = "";
-            newValidator.initialvalue = "";
-            newValidator.evaluationfunction = function () {
-                var value = $("#" + fieldName).val();
-                if (value == null || value == "") {
-                    return false;
-                } else {
-                    return true;
-                }
-            };
+                var newValidator = document.createElement('span');
+                newValidator.style.display = "none";
+                newValidator.id = "RequiredFieldValidator" + fieldName;
+                newValidator.controltovalidate = "casetypecode";
+                newValidator.errormessage = "<a href='#" + fieldName + "_label'>" + fieldLabel + " is a mandatory field.</a>";
+                newValidator.validationGroup = "";
+                newValidator.initialvalue = "";
+                newValidator.evaluationfunction = function () {
+                    var value = $("#" + fieldName).val();
+                    if (value == null || value == "") {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                };
 
-            // Add the new validator to the page validators array:
-            Page_Validators.push(newValidator);
+                // Add the new validator to the page validators array:
+                Page_Validators.push(newValidator);
 
-            // Wire-up the click event handler of the validation summary link
-            $("a[href='#" + fieldName + "_label']").on("click", function () { scrollToAndFocus(fieldName + '_label', fieldName); });
+                // Wire-up the click event handler of the validation summary link
+                $("a[href='#" + fieldName + "_label']").on("click", function () { scrollToAndFocus(fieldName + '_label', fieldName); });
+
+            } catch (e) {}
         },
 
         // setRequiredLevel("none");
         removeValidator: function (fieldName) {
-            $.each(Page_Validators, function (index, validator) {
-                if (validator.id == "RequiredFieldValidator" + fieldName) {
-                    Page_Validators.splice(index, 1);
-                }
-            });
+            try {
+                $.each(Page_Validators, function (index, validator) {
+                    if (validator.id == "RequiredFieldValidator" + fieldName) {
+                        Page_Validators.splice(index, 1);
+                    }
+                });
 
-            $("#" + fieldName + "_label").parent().removeClass("required");
+                $("#" + fieldName + "_label").parent().removeClass("required");
+            } catch (e) {}
+
         },
 
         // odata
@@ -90,10 +98,13 @@ if (typeof (tdg.c) == "undefined") {
             return response;
         },
 
-        error_message: function (message) {
+        error_message: function (message, clear) {
             debugger;
             var validationSection = $('#ValidationSummaryEntityFormView');
-            validationSection[0].innerHTML = "";
+            //validationSection[0].innerHTML = "";
+            if (clear) {
+                $('#ValidationSummaryEntityFormView div').remove();
+            }
 
             validationSection.append($("<div class='notification alert-danger' role='alert'>" + message + "</div>"));
             validationSection.show();
@@ -117,6 +128,14 @@ if (typeof (tdg.c) == "undefined") {
                 $("#" + fieldName).show();
                 $("#" + fieldName + "_label").show();
             }
+        },
+
+        section_hide: function (sectionName) {
+            $(".section[data-name='" + sectionName + "']").closest("fieldset").hide();
+        },
+
+        section_show: function (sectionName) {
+            $(".section[data-name='" + sectionName + "']").closest("fieldset").show();
         },
 
         control_autocomplete: function () {
@@ -143,9 +162,6 @@ if (typeof (tdg.c) == "undefined") {
             var k_char_apostrophe = "&#39;";
             value = value.replace(k_char_apostrophe, "'");
             return value;
-        },
-
-        init: function () {
         }
     }
 }

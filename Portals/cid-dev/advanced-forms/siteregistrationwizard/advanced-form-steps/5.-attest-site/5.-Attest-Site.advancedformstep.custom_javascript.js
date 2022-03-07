@@ -16,9 +16,9 @@ $(document).ready(function() {
 if (window.jQuery) {
  (function ($) {
     webFormClientValidate = function() {
-        var validation = false;
+        var validation = true;
         var siteId = $("#EntityFormView_EntityID").val();
-
+        var errorMessage = "";
        
 		//Classes validation
 		if(!SiteHasOperationClasses(null, siteId))

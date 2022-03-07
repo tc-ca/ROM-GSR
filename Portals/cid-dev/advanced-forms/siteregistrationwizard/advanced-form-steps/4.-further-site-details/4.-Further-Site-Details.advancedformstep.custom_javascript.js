@@ -6,13 +6,22 @@ $(document).ready(function() {
 			var firstRow = $("#Operations .view-grid table tbody").find("tr:first");
 			if(firstRow){
 				var operationId = firstRow.attr('data-id');
-				if(OperationDetailsProvided(siteid))
-					$("#NextButton").click();	
-				else
-					window.location.href = "~/en-US/OperationRegistrationWizard/?id=" + operationId;
+				
+				if(operationId){
+					firstRow.find('td').each(function(){
+						var tdElement = $(this);
+								
+						if(tdElement.attr('data-attribute') == 'cid_operationdetailsprovided')
+						{
+							if(tdElement.attr('data-value') == 'false')
+								window.location.href = "~/en-US/OperationRegistrationWizard/?id=" + operationId;
+							else
+								$("#NextButton").click();
+						}
+					})
+				}
 			}
 		});
-	
 	}
 
 	webFormClientValidate = function() {

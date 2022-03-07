@@ -15,15 +15,13 @@ if (window.jQuery) {
           //      validation = false;
           //      errorMessage = "You cannot proceed before adding classes(s).";
           //}
-				if(!SiteHasOperationClasses(operationId, null))
-				{
+				if(!SiteHasOperationClasses(operationId, null)){
 					errorMessage = "You cannot proceed before adding classes(s).";
 					validation = false;
 				}
 			}
 
-            if(!validation)
-			{
+            if(!validation){
 				$('#ValidationSummaryEntityFormView div').remove(); 
 
 				var validationSection = $('#ValidationSummaryEntityFormView');
@@ -32,7 +30,13 @@ if (window.jQuery) {
                 validationSection.show();
 				$('#alertMessages').focus();
 			}
-
+            else{
+                
+                if(IsExtendedSite(operationId)){
+                    alert("Extended");
+                    SetOperationDetailsProvided(operationId);
+                }
+            }
 			return validation; 
         }
    }(window.jQuery));

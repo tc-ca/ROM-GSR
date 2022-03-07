@@ -1,4 +1,32 @@
 <script>
+(function(webapi, $){
+		function safeAjax(ajaxOptions) {
+			var deferredAjax = $.Deferred();
+	
+			shell.getTokenDeferred().done(function (token) {
+				// add headers for AJAX
+				if (!ajaxOptions.headers) {
+					$.extend(ajaxOptions, {
+						headers: {
+							"__RequestVerificationToken": token
+						}
+					}); 
+				} else {
+					ajaxOptions.headers["__RequestVerificationToken"] = token;
+				}
+				$.ajax(ajaxOptions)
+					.done(function(data, textStatus, jqXHR) {
+						validateLoginSession(data, textStatus, jqXHR, deferredAjax.resolve);
+					}).fail(deferredAjax.reject); //AJAX
+			}).fail(function () {
+				deferredAjax.rejectWith(this, arguments); // on token failure pass the token AJAX and args
+			});
+	
+			return deferredAjax.promise();	
+		}
+		webapi.safeAjax = safeAjax;
+	})(window.webapi = window.webapi || {}, jQuery)
+
 function CompanyHasNAICSCodes(companyId){
     return Validate(companyId, 'cid_company', 'Validation_CompanyNAICSCodes');
 }
@@ -29,12 +57,22 @@ function SiteHasOperationUNNumbers(operationId, siteId){
         return false;
 }
 
-function OperationDetailsProvided(operationId){
+function XOperationDetailsProvided(operationId){
     return Validate(operationId, 'ovs_siteid', 'Validation_OperationDetailsList');
 }
 
-function Validate(recordId, entityName, list){
-    var filter = entityName + "/Id eq (guid'" + recordId + "')";
+function IsExtendedSite(operationId){
+    var filter = "ovs_mocregistrationid eq guid'" + operationId + "'";
+	var data = ExecuteQuery("Validation_OperationDetailsList", filter);
+
+    if(data.length > 0)
+        return data[0]['cid_extendedsite'];
+    else
+        return false;
+}
+
+function Validate(recordId, fieldName, list){
+    var filter = fieldName + "/Id eq (guid'" + recordId + "')";
 	var data = ExecuteQuery(list, filter);
 
     if(data != null && data.length > 0)
@@ -58,5 +96,24 @@ function ExecuteQuery(list, filter){
     });
     return response;
 }
+
+function SetOperationDetailsProvided(operationId){
+    webapi.safeAjax({
+     type: "PATCH",
+     url: "/_api/ovs_mocregistration(" + operationId + ")",
+     contentType: "application/json",
+     data: JSON.stringify({
+       //"cid_operationdetailsprovided": "1"
+       "ovs_cepsampling_strataname" : "X"
+     }),
+     success: function (res) {
+       alert(res);
+     },
+     error: function(){
+        alert('Fail');
+     }
+   });
+}
+
 </script>
  <script type="text/javascript" src="~/tdgcore_common.js" ></script>

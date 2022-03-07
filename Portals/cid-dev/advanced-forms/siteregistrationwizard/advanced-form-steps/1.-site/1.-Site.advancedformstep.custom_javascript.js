@@ -2,9 +2,12 @@
 
 $(document).ready(function () {
     debugger;
+    var urlParams = new URLSearchParams(window.location.search);
+
+    if (urlParams.has('newsite') && urlParams.get('newsite') == 'true')
+        $("#NextButton").click();
 
     $('#NextButton').on('click', async function () {
-        var urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('id')) {
             await create_site_operation(urlParams.get('id'));
         }
