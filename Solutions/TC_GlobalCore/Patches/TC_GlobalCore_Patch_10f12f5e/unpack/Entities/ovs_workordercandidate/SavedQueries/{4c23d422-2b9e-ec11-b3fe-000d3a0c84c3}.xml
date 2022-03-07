@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{4c23d422-2b9e-ec11-b3fe-000d3a0c84c3}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ovs_name" select="1" preview="1" icon="1">
+        <row name="result" id="ovs_workordercandidateid">
+          <cell name="ovs_name" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_regionalnop" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_site" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_operationid" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="a_e83f7c9e1c4fec118f8e000d3ae883b0.ovs_mocregistrationname" width="150" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="a_e83f7c9e1c4fec118f8e000d3ae883b0.ovs_operationtype" width="150" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="a_190e33d2493cec118c600022483d7cbf.address1_composite" width="125" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="a_190e33d2493cec118c600022483d7cbf.address1_city" width="100" disableSorting="1" />
+          <cell name="a_190e33d2493cec118c600022483d7cbf.address1_stateorprovince" width="100" disableSorting="1" />
+          <cell name="ovs_oversighttype" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_initialrecommendation" width="100" />
+          <cell name="ovs_hqflag" width="100" />
+          <cell name="ovs_regionflag" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_justification" width="125" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_primaryinspector" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_plannedquarter" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_remote" width="100" />
+          <cell name="ovs_cdpriorityscore" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_currentlyplanned" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="statecode" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical">
+        <entity name="ovs_workordercandidate">
+          <attribute name="ovs_name" />
+          <order attribute="ovs_name" descending="false" />
+          <attribute name="statecode" />
+          <attribute name="ovs_site" />
+          <attribute name="ovs_remote" />
+          <attribute name="ovs_regionalnop" />
+          <attribute name="ovs_regionflag" />
+          <attribute name="ovs_cdpriorityscore" />
+          <attribute name="ovs_primaryinspector" />
+          <attribute name="ovs_plannedquarter" />
+          <attribute name="ovs_oversighttype" />
+          <attribute name="ovs_operationid" />
+          <attribute name="ovs_justification" />
+          <attribute name="ovs_initialrecommendation" />
+          <attribute name="ovs_hqflag" />
+          <attribute name="ovs_currentlyplanned" />
+          <link-entity alias="a_190e33d2493cec118c600022483d7cbf" name="account" from="accountid" to="ovs_site" link-type="outer" visible="false">
+            <attribute name="address1_stateorprovince" />
+            <attribute name="address1_city" />
+            <attribute name="address1_composite" />
+          </link-entity>
+          <link-entity alias="a_e83f7c9e1c4fec118f8e000d3ae883b0" name="ovs_mocregistration" from="ovs_mocregistrationid" to="ovs_operationid" link-type="outer" visible="false">
+            <attribute name="ovs_mocregistrationname" />
+            <attribute name="ovs_operationtype" />
+          </link-entity>
+          <attribute name="ovs_workordercandidateid" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="National WOCs" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
