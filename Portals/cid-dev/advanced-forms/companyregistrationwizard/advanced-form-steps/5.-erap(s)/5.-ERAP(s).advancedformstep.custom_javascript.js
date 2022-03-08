@@ -1,48 +1,43 @@
+// CompanyRegistrationWizard-ERAP.js
+
 $(document).ready(function () {
-		var companyName = '{{user.parentcustomerid.name }}';
-    var header = $('.page-header h1');
-	if(companyName != null && header != null)
-		header.text(header.text() + ' - ' + companyName);
+    debugger;
+
+    var cid_has_cra_bn = '{{user.cid_has_cra_bn}}';
+    cid_has_cra_bn = (cid_has_cra_bn == "true" ? true : false);
+
+    if (cid_has_cra_bn) {
+        var cid_crabusinessnumber = '{{user.cid_crabusinessnumber}}';
+        var data = root_erap_list(cid_crabusinessnumber);
+        for (var i = 0; i < data.length; i++) {
+            debugger;
+            var item = data[i];
+        }
+    }
 });
-    
-//if (window.jQuery) {
-//    (function ($) {
-//        webFormClientValidate = function () {
-//            var validation = true;
-//            var errorMessage = "";
-//            var companyId = $("#EntityFormView_EntityID").val();	
 
-//			if(companyId == null)
-//			{
-//				errorMessage = "Error: Missing company Id.";
-//                validation = false;
-//			}
-//			else if(!CompanyHasERAPs(companyId))
-//			{
-//                errorMessage = "You cannot proceed before adding company ERAP(s).";
-//                validation = false;
-//            }
+if (window.jQuery) {
+    (function ($) {
+        webFormClientValidate = function () {
+            debugger;
 
+            var validation = true;
 
-//			var filter = "cid_company/Id eq (guid'" + companyId + "')";
-//			var data = ExecuteOData("Validation_CompanyERAPs", filter);
-//            
-//			if(data == null || data.length <= 0)
-//			{
-//                errorMessage = "You cannot proceed before adding company ERAP(s).";
-//               validation = false;
-//            }
-//
-//            if (!validation) {
-//                $('#ValidationSummaryEntityFormView div').remove();
-//
-//                var validationSection = $('#ValidationSummaryEntityFormView');
-//
-//                validationSection.append($("<div class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
-//                validationSection.show();
-//            }
-//
-//           return validation;
-//		}
-//    }(window.jQuery));
-//}
+            return validation;
+        }
+    }(window.jQuery));
+}
+
+function root_erap_list(bn) {
+    debugger;
+
+    var data;
+    var filter = "root_org_business_cra_num eq " + bn + "";
+
+    data = tdg.c.OData_List("root_erap", filter);
+    if (data.length == 0) {
+        return data;
+    }
+
+    return data;
+}

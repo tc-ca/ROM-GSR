@@ -4,6 +4,8 @@ $(document).ready(function () {
 	debugger;
 
 	$(".entity-grid").on("loaded", function () {
+		$(".info").hide();
+
 		var actionButtonsToolbar = $('.view-toolbar');
 		//if ($("#bulkUploadBtn").length <= 0)
 		//	actionButtonsToolbar.prepend("<div id='bulkUploadBtn' class='input-group pull-left'><a href='/Bulk_Site_Upload'  target='_blank' rel='noopener noreferrer' class='btn btn-info pull-left action' title='Bulk Site Upload'>Bulk Site Upload</a></div>");
@@ -31,12 +33,13 @@ $(document).ready(function () {
 					}
 				}
 
-				if (tdElement.attr('data-attribute') == 'statuscode' && tdElement.attr('aria-label') == 'Inactive') {
-					trElement.css("background-color", "#ddd");
-					trElement.css("color", "grey");
+				if (tdElement.attr('data-attribute') == 'cid_siteclaim' && tdElement.attr('aria-label') != 'My Site Active') {
 					firstTdElement.find('a').removeAttr("href");
 					firstTdElement.find('span').remove();
 					firstTdElement.find('input').remove();
+					//trElement.find("button").attr('disabled', "disabled");
+					trElement.css("background-color", "#ddd");
+					trElement.css("color", "grey");
 				}
 			});
 		});

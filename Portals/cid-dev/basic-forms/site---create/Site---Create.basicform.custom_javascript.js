@@ -3,19 +3,19 @@
 $(document).ready(function () {
     debugger;
 
-    $('#InsertButton').on('click', function (e) {
-        debugger;
-        // default address1
-        var ovs_address_type = $("#ovs_address_type").val();
-        switch (ovs_address_type) {
-            case "1":   // legal land description
-                address1_default("N/A");
-                break;
-            case "2":   // lat/long
-                address1_default("N/A");
-                break;
-        }
-    });
+    //$('#InsertButton').on('click', function (e) {
+    //    debugger;
+    //    // default address1
+    //    var ovs_address_type = $("#ovs_address_type").val();
+    //    switch (ovs_address_type) {
+    //        case "1":   // legal land description
+    //            address1_default("N/A");
+    //            break;
+    //        case "2":   // lat/long
+    //            address1_default("N/A");
+    //            break;
+    //    }
+    //});
 
     clear_address_type_required_fields();
 
@@ -43,7 +43,12 @@ $(document).ready(function () {
     });
     cid_same_as_company_change();
 
+
     $("#cid_sitename").attr("autocomplete", "new-password");
+    $("#telephone1").attr("autocomplete", "new-password");
+    $("#fax").attr("autocomplete", "new-password");
+
+    // address
     $("#address1_line2").attr("autocomplete", "new-password");
     $("#address1_line3").attr("autocomplete", "new-password");
     $("#address1_city").attr("autocomplete", "new-password");
@@ -51,13 +56,23 @@ $(document).ready(function () {
     $("#address1_postalcode").attr("autocomplete", "new-password");
     $("#address1_longitude").attr("autocomplete", "new-password");
     $("#address1_latitude").attr("autocomplete", "new-password");
-    $("#telephone1").attr("autocomplete", "new-password");
-    $("#fax").attr("autocomplete", "new-password");
+
+    // legal land description
+    $("#ovs_lld_quarter").attr("autocomplete", "new-password");
+    $("#ovs_lld_section").attr("autocomplete", "new-password");
+    $("#ovs_lld_township").attr("autocomplete", "new-password");
+    $("#ovs_lld_range").attr("autocomplete", "new-password");
+    $("#ovs_lld_meridian").attr("autocomplete", "new-password");
+    $("#ovs_lld_province").attr("autocomplete", "new-password");
+
+    // lat/long
+    $("#address1_latitude").attr("autocomplete", "new-password");
+    $("#address1_longitude").attr("autocomplete", "new-password");
 
     $("#ovs_address_type").change(function () {
-        ovs_address_type_change();
+        ovs_address_type_change(true);
     });
-    ovs_address_type_change();
+    ovs_address_type_change(false);
 });
 
 function clear_address_type_required_fields() {
@@ -69,11 +84,12 @@ function clear_address_type_required_fields() {
         tdg.c.removeValidator("address1_postalcode");
 
         // legal land description
-        tdg.c.removeValidator("ovs_lld_quarter");
+        //tdg.c.removeValidator("ovs_lld_quarter");
         tdg.c.removeValidator("ovs_lld_section");
         tdg.c.removeValidator("ovs_lld_township");
         tdg.c.removeValidator("ovs_lld_range");
         tdg.c.removeValidator("ovs_lld_meridian");
+        tdg.c.removeValidator("ovs_lld_province");
 
         // lat/long
         tdg.c.removeValidator("address1_latitude");
@@ -88,13 +104,13 @@ function address1_default(value) {
     $("#address1_postalcode").val(value);
 }
 
-function ovs_address_type_change() {
+function ovs_address_type_change(reset_data) {
     debugger;
 
     // hide sections
-    //tdg.c.section_hide("section_address");
-    //tdg.c.section_hide("section_legal_land_description");
-    //tdg.c.section_hide("section_latitude_longitude");
+    tdg.c.section_hide("section_address");
+    tdg.c.section_hide("section_legal_land_description");
+    tdg.c.section_hide("section_latitude_longitude");
 
     clear_address_type_required_fields();
 
@@ -103,17 +119,26 @@ function ovs_address_type_change() {
         case "1": // legal land description
             tdg.c.section_show("section_legal_land_description");
 
-            tdg.c.addValidator("ovs_lld_quarter","Quarter");
+            //tdg.c.addValidator("ovs_lld_quarter","Quarter/LSC");
             tdg.c.addValidator("ovs_lld_section", "Section");
             tdg.c.addValidator("ovs_lld_township", "Township");
             tdg.c.addValidator("ovs_lld_range","Range");
-            tdg.c.addValidator("ovs_lld_meridian","Meridian");
+            tdg.c.addValidator("ovs_lld_meridian", "Meridian");
+            tdg.c.addValidator("ovs_lld_province", "Province / Territory");
+
+            if (reset_data) {
+                address1_default("N/A");
+            }
             break;
         case "2": // lat/long
             tdg.c.section_show("section_latitude_longitude");
 
             tdg.c.addValidator("address1_latitude", "Latitude");
             tdg.c.addValidator("address1_longitude", "Longitude");
+
+            if (reset_data) {
+                address1_default("N/A");
+            }
             break;
         default:
             tdg.c.section_show("section_address");
@@ -121,7 +146,11 @@ function ovs_address_type_change() {
             tdg.c.addValidator("address1_line1","Street 1");
             tdg.c.addValidator("address1_city","City");
             tdg.c.addValidator("address1_stateorprovince","Province");
-            tdg.c.addValidator("address1_postalcode","Postal Code");
+            tdg.c.addValidator("address1_postalcode", "Postal Code");
+
+            if (reset_data) {
+                address1_default("");
+            }
     }
 }
 

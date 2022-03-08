@@ -32,9 +32,12 @@ if (window.jQuery) {
 			}
             else{
                 
-                if(IsExtendedSite(operationId)){
-                    alert("Extended");
+                if(!IsExtendedSite(operationId)){
+                    alert('Basic');
                     SetOperationDetailsProvided(operationId);
+                }
+                else{
+                    alert('Extended');
                 }
             }
 			return validation; 
