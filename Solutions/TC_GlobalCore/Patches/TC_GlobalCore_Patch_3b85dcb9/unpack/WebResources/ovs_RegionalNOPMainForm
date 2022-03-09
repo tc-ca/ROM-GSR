@@ -1,0 +1,146 @@
+///<reference path="../../Utilities/GlobalHelper.js"/>
+
+var globalFormContext;
+var LCID;
+var userSettings;
+var resexResourceName;
+
+function OnLoad(executionContext)
+{
+    //get context
+    globalContext = glHelper.getGlobalContext();
+    var formContext = executionContext.getFormContext();
+    var id = glHelper.GetCurrentRecordId(formContext);
+
+    globalFormContext = formContext;
+
+    // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+    formType = glHelper.GetFormType(formContext);
+
+    userSettings = Xrm.Utility.getGlobalContext().userSettings;
+
+    LCID = userSettings.languageId;
+
+    if (LCID == 1033)
+        resexResourceName = "ovs_Labels.1033.resx";
+    else if (LCID == 1036)
+        resexResourceName = "ovs_Labels.1036.resx";
+
+    //If form is new, autosave so we can add violations
+    if (formType == 1)
+    {
+        //Xrm.Page.data.entity.save();
+    }
+    else
+    {
+
+        glHelper.SetDisabled(formContext, "ovs_cdfiscalyearid", true);
+        glHelper.SetDisabled(formContext, "ovs_cdregionid", true);
+
+    }
+
+    var isPlanner = hasCurrentUserRole("TDG Planner");
+    var isManager = hasCurrentUserRole("TDG Manager");
+    var isInspector = hasCurrentUserRole("TDG Inspector");
+
+    glHelper.SetDisabled(formContext, "ovs_capacity", !isPlanner);
+
+    //These fields show be visible by Planners only
+    glHelper.SetControlVisibility(formContext, "ovs_capacity", isPlanner);
+    glHelper.SetControlVisibility(formContext, "ovs_cdwoccount", isPlanner);
+    glHelper.SetControlVisibility(formContext, "ovs_cdwocvariance", isPlanner);
+    
+
+
+
+}
+
+
+function hasCurrentUserRole(roleName)
+{
+    let hasRole = false;
+    let roles = Xrm.Utility.getGlobalContext().userSettings.roles;
+    roles.forEach(x =>
+    {
+        if (x.name === "System Administrator" || x.name === roleName)
+        {
+            hasRole = true;
+            return;
+        }
+    });
+    return hasRole;
+}
+
+function FillRegionalCapacity(executionContext)
+{
+    Xrm.Utility.showProgressIndicator("Regional Capacity Adjustment In Progress.");
+
+    var recordId = executionContext.entityReference.id;
+
+        recordId = recordId.replace(/[{}]/g, "");
+
+        //Begin Action Call
+
+        var req = new XMLHttpRequest();
+    req.open("POST", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/ovs_cdregionalnops(" + recordId + ")/Microsoft.Dynamics.CRM.ovs_FillRegionalCapacity", false);
+        req.setRequestHeader("OData-MaxVersion", "4.0");
+        req.setRequestHeader("OData-Version", "4.0");
+        req.setRequestHeader("Accept", "application/json");
+        req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+        req.onreadystatechange = function ()
+        {
+            if (this.readyState === 4)
+            {
+                req.onreadystatechange = null;
+
+                if (this.status === 204)
+                {
+                    
+
+                    Xrm.Utility.alertDialog("Capacity Has Been Adjusted.");
+
+                    calculateRollupField("ovs_cdregionalnops", recordId, "ovs_hqrollup");
+                }
+                else
+                {
+                    Xrm.Utility.alertDialog("An Error Has Occured.");
+                }
+            }
+        };
+        req.send();
+
+        //End Action Call
+
+    Xrm.Utility.closeProgressIndicator();
+}
+
+
+function calculateRollupField(TargetEntitySetName, TargetRecordId, TargetRollupFieldName)
+{
+    TargetRecordId = TargetRecordId.replace("{", "").replace("}", "");
+    var req = new XMLHttpRequest();
+    req.open(this.method, this.url, true); // Need this to initiate the request
+    req.setRequestHeader("OData-Version", "4.0");
+    req.setRequestHeader("OData-MaxVersion", "4.0");
+    req.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v8.2/" +
+        "CalculateRollupField(Target=@p1,FieldName=@p2)?" +
+        "@p1={'@odata.id':'" + TargetEntitySetName + "(" + TargetRecordId + ")'}&" +
+        "@p2='" + TargetRollupFieldName + "'", true);
+    req.onreadystatechange = function ()
+    {
+        if (this.readyState === 4)
+        {
+            req.onreadystatechange = null;
+            if (this.status === 200)
+            {
+                var results = JSON.parse(this.response);
+                //Use XRM commands to perform operation..
+            }
+            else
+            {
+                Xrm.Utility.alertDialog(this.statusText);
+            }
+        }
+    };
+    req.send(JSON.stringify({}));
+}
