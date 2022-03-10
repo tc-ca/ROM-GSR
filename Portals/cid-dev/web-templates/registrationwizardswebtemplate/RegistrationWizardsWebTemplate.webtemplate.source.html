@@ -61,14 +61,26 @@ function XOperationDetailsProvided(operationId){
     return Validate(operationId, 'ovs_siteid', 'Validation_OperationDetailsList');
 }
 
-function IsExtendedSite(operationId){
-    var filter = "ovs_mocregistrationid eq guid'" + operationId + "'";
-	var data = ExecuteQuery("Validation_OperationDetailsList", filter);
+function IsExtendedSite(operationId, siteId){
+    //if(siteId){
+    //    var filter = "accountid eq guid'" + siteId + "'";
+    //    var data = ExecuteQuery("Validation_OperationDetailsList", filter);
 
-    if(data.length > 0)
-        return data[0]['cid_extendedsite'];
-    else
-        return false;
+    //    if(data.length > 0)
+    //        return data[0]['cid_requirementlevel'];
+    //    else
+    //        return false;
+    //}
+
+    if(operationId){
+        var filter = "ovs_mocregistrationid eq guid'" + operationId + "'";
+        var data = ExecuteQuery("Validation_OperationDetailsList", filter);
+
+        if(data.length > 0)
+            return data[0]['cid_extendedsite'];
+        else
+            return false;
+    }
 }
 
 function Validate(recordId, fieldName, list){
@@ -97,21 +109,19 @@ function ExecuteQuery(list, filter){
     return response;
 }
 
-function SetOperationDetailsProvided(operationId){
+function SetOperationDetailsProvided(operationId, value){
     webapi.safeAjax({
      type: "PATCH",
-     url: "/_api/ovs_mocregistration(" + operationId + ")",
+     url: "/_api/ovs_mocregistrations(" + operationId + ")",
      contentType: "application/json",
      data: JSON.stringify({
-       //"cid_operationdetailsprovided": "1"
-       "ovs_cepsampling_strataname" : "X"
+        "cid_operationdetailsprovided": value
      }),
      success: function (res) {
-       //alert(res);
        alert('Success');
      },
-     error: function(){
-        alert('Fail');
+     error: function (request, message, error) {
+        alert(error);
      }
    });
 }

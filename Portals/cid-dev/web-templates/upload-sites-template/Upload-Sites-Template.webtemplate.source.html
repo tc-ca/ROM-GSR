@@ -127,7 +127,7 @@ alert ("Please select file first");
     //var linktemplate = document.getElementById("linkdownload");
     //linktemplate.href = DownloadURL;
     //linktemplate.download = "RD_Sites_Template.xlsx";
-    $('#linkdownload').on('click', async function() {
+    $('#linkdownload_English').on('click', async function() {
 
           $('#processingMsg').css('display','block');
         $('#processingMsg').text('System is downloading site info ...');
@@ -138,8 +138,8 @@ alert ("Please select file first");
       var companyid = '{{parentid}}';
 
 
-      var acupdate =
-        '{ "accountid": "' + companyid + '" }';
+      var flowparamaters =
+        '{ "accountid": "' + companyid + '",'  + '"Language": "English" }';
 
 
       var req = new XMLHttpRequest();
@@ -168,8 +168,55 @@ alert ("Please select file first");
           }
         }
       }
-      req.send(acupdate);
+      req.send(flowparamaters);
     });
+
+
+ $('#linkdownload_French').on('click', async function() {
+
+          $('#processingMsg').css('display','block');
+        $('#processingMsg').text('System is downloading site info ...');
+
+     // notificationMsg.show("System is downloading site info ...");
+
+     // $('#ll').show();
+      var companyid = '{{parentid}}';
+
+
+      var flowparamaters =
+        '{ "accountid": "' + companyid + '",'  + '"Language": "French" }';
+
+
+      var req = new XMLHttpRequest();
+
+      var url = '{{download_flow_URL}}';
+      console.log(url);
+      //"https://prod-17.canadacentral.logic.azure.com:443/workflows/900f6e70915a4cddbb65b3c79da14581/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LZveFQ8DXIDobQOPzgoc0LgOcSOPpqVcnCEicN1lvEQ";
+      req.open("POST", url, true);
+      req.setRequestHeader('Content-Type', 'application/json');
+      req.onreadystatechange = function() {
+        if (this.readyState === 4) {
+          req.onreadystatechange = null;
+          if (this.status === 200) {
+               $('#processingMsg').text("Download complete");
+            var result = this.response;
+           // $('#ll').hide();
+            //https://rd-tdgcore-dev.powerappsportals.com/_entity/annotation/
+            var fileattachementURL = "~/_entity/annotation/" + result;
+            window.location.replace(fileattachementURL);
+             $("#processingMsg").css("display", "none");
+            $("#processingMsg").hide();
+          } else {
+              $('#processingMsg').text("Download was not completed due to system issue, please contact system support");
+            var result = this.response;
+            alert("Error " + result);
+          }
+        }
+      }
+      req.send(flowparamaters);
+    });
+
+
 
 });//end document ready
 
@@ -376,10 +423,23 @@ xhr.send(data);
                             <td>
                                 <div>
                                     <div>
-                                        <h3 class="blue_border">Step 1: Download Bulk upload Template.</h3>
+                                        <h3 class="blue_border">Step 1. Download the custom Site Bulk Upload Excel template</h3>
                                         <p> </p>
                                     </div>
-                                    <div><button type="button" id="linkdownload" class="submit-btn btn btn-primary form-action-container-left">Download</button></div>
+                                    <div>
+                                    
+                                    <table>
+                                    <tr>
+                                    <td>
+                                    <button type="button" id="linkdownload_English" class="submit-btn btn btn-primary form-action-container-left">English Version</button>
+                                    </td>
+                                    <td> &nbsp;&nbsp;</td>
+                                    <td>
+                                    <button type="button" id="linkdownload_French" class="submit-btn btn btn-primary form-action-container-left">French Version</button>
+                                    </td>
+                                    </tr>
+                                    </table>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -387,7 +447,7 @@ xhr.send(data);
                             <td>
                                 <div>
                                     <p></p>
-                                    <h3 class="blue_border">Step 2: Upload file.</h3>{% entityform name: 'Add Bulk site attachment' %}
+                                    <h3 class="blue_border">Step 2. Upload the completed custom Site Bulk Upload Excel workbook.</h3>{% entityform name: 'Add Bulk site attachment' %}
                                 </div>
                                 <div>
                                 </div>

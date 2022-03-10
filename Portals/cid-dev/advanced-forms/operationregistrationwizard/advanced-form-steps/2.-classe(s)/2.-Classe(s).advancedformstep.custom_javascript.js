@@ -31,13 +31,8 @@ if (window.jQuery) {
 				$('#alertMessages').focus();
 			}
             else{
-                
-                if(!IsExtendedSite(operationId)){
-                    alert('Basic');
-                    SetOperationDetailsProvided(operationId);
-                }
-                else{
-                    alert('Extended');
+                if(!IsExtendedSite(operationId, null)){
+                    SetOperationDetailsProvided(operationId, true);
                 }
             }
 			return validation; 

@@ -4,8 +4,15 @@ $(document).ready(function () {
     debugger;
 
     var urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('newsite') && urlParams.get('newsite') == 'true' && !urlParams.has('stepid'))
+    if (urlParams.has('newsite') && urlParams.get('newsite') == 'true' && !urlParams.has('stepid')){
+        $('#redirectInstruction').show();
+        $('#instructions').hide();
+        $('#EntityFormView').hide();
+
         $("#NextButton").click();
+    }
+    else
+        $('#redirectInstruction').hide();
 
     $('#NextButton').on('click', async function () {
         if (urlParams.has('id')) {
