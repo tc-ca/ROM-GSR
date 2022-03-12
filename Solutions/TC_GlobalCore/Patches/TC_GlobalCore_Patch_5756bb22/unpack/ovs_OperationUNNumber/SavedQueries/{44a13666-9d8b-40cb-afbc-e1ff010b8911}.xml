@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{44a13666-9d8b-40cb-afbc-e1ff010b8911}</savedqueryid>
+    <layoutxml>
+      <grid name="ovs_operationunnumbers" jump="ovs_name" select="1" icon="1" preview="1">
+        <row name="ovs_operationunnumber" id="ovs_operationunnumberid">
+          <cell name="a_aa926912ce4544209d5e421fe49483ab.tdg_undisplayname" width="146" />
+          <cell name="a_aa926912ce4544209d5e421fe49483ab.tdg_shippingnamedescriptiontxt" width="201" />
+          <cell name="ovs_supplychaindirection" width="185" />
+          <cell name="a_aa926912ce4544209d5e421fe49483ab.tdg_primaryclasscd" width="132" />
+          <cell name="a_aa926912ce4544209d5e421fe49483ab.tdg_secondaryclasscd" width="100" />
+          <cell name="a_aa926912ce4544209d5e421fe49483ab.statecode" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>2</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="ovs_operationunnumber">
+          <attribute name="ovs_operationunnumberid" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="ovs_supplychaindirection" />
+          <link-entity alias="a_aa926912ce4544209d5e421fe49483ab" name="tdg_unnumber" to="ovs_unnumber" from="tdg_unnumberid" link-type="outer" visible="false">
+            <attribute name="tdg_shippingnamedescriptiontxt" />
+            <attribute name="statecode" />
+            <attribute name="tdg_primaryclasscd" />
+            <attribute name="tdg_secondaryclasscd" />
+            <attribute name="tdg_undisplayname" />
+          </link-entity>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Operation UN Number Associated View" languagecode="1033" />
+      <LocalizedName description="Numéro UN vue associée" languagecode="1036" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
