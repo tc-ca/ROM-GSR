@@ -60,7 +60,7 @@
 
 $('#btn_attachfile_and_scan').click(function(e)
 {
-    $("#mainContent").before("<div class='validation' style='color:black;margin-bottom: 20px;'>File is sent for scaning</div>");
+   // $("#mainContent").before("<div class='validation' style='color:black;margin-bottom: 20px;'>File is sent for scaning</div>");
     var DocumentbodyContents;
   // Get the name of the selected file
     var FileName = $('#AttachFile')[0].files[0].name;
@@ -99,6 +99,10 @@ $('#btn_attachfile_and_scan').click(function(e)
            Call_Virsu_Scan_API(Scan_API_URL
             // ,btoa(c));
             ,DocumentbodyContents);
+
+
+         // call_Metadefender_Api();
+
 
            // fetch_getScanResult();
             //var data = "X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*";
@@ -394,6 +398,27 @@ xhr.open("POST", "https://wwwapps.tc.gc.ca/Saf-Sec-Sur/13/MTAPI/api/v1/file-scan
 xhr.setRequestHeader("Accept", "application/octet-stream");
 //xhr.responseType = "application/json";
 xhr.send(data);
+
+}
+
+function call_Metadefender_Api()
+{
+var settings = {
+  "url": "https://wwwapps2.tc.gc.ca/Saf-Sec-Sur/13/tc-virusscan-api/api/v1/file-scan?filename=test",
+  "method": "POST",
+  "timeout": 0,
+  "headers": {
+    "Content-Type": "text/json",
+    "Accept": "*/*",
+    "Access-Control-Allow-Origin": "*",
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjU2Y2Y3NzJkYTExNTQzNjliODc3YTFlM2ZkMTc3ZGE5IiwibmJmIjoxNjQ3Mjg0NDA4LCJleHAiOjE2NDcyODQ0MzgsImlhdCI6MTY0NzI4NDQwOH0.fsMW4HAIkdvjY5GDL9166_w16vfx3_eBCzYOYyXvDcw"
+  },
+  "data": "'xxxx'",
+};
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});
 
 }
 

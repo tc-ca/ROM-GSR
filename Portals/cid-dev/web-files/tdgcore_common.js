@@ -98,6 +98,11 @@ if (typeof (tdg.c) == "undefined") {
             return response;
         },
 
+        error_message_clear: function () {
+            debugger;
+            $('#ValidationSummaryEntityFormView div').remove();
+        },
+
         error_message: function (message, clear) {
             debugger;
             var validationSection = $('#ValidationSummaryEntityFormView');

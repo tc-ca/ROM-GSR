@@ -114,6 +114,8 @@ if (window.jQuery) {
             var validation = false;
             var rom_data, filter, legalname;
 
+            tdg.c.error_message_clear();
+
             // do not have a business number?
             if (cid_has_cra_bn == 0) {
                 debugger;
