@@ -98,7 +98,7 @@
             ]
           }
         },
-        "Get_calling_user_email": {
+        "Get_IPT_creator_user_email": {
           "runAfter": {},
           "metadata": {
             "operationMetadataId": "e3640b89-0320-4a62-b7fd-fab91a5f2e2b"
@@ -112,7 +112,7 @@
             },
             "parameters": {
               "entityName": "systemusers",
-              "recordId": "@triggerOutputs()?['body/_modifiedby_value']",
+              "recordId": "@triggerOutputs()?['body/_createdby_value']",
               "$select": "domainname"
             },
             "authentication": "@parameters('$authentication')"
@@ -120,7 +120,7 @@
         },
         "Calling_user_email": {
           "runAfter": {
-            "Get_calling_user_email": [
+            "Get_IPT_creator_user_email": [
               "Succeeded"
             ]
           },
@@ -133,7 +133,7 @@
               {
                 "name": "callingUserEmail",
                 "type": "string",
-                "value": "@outputs('Get_calling_user_email')?['body/domainname']"
+                "value": "@outputs('Get_IPT_creator_user_email')?['body/domainname']"
               }
             ]
           }

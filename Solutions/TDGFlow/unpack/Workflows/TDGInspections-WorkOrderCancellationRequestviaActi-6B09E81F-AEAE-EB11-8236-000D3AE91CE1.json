@@ -321,6 +321,31 @@
                 },
                 "authentication": "@parameters('$authentication')"
               }
+            },
+            "Update_a_row": {
+              "runAfter": {
+                "Send_an_email_(V2)_2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "07767969-087a-4744-9ecf-46a34f3782b2"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_3",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "ovs_cancellationrequests",
+                  "recordId": "@triggerOutputs()?['body/activityid']",
+                  "item/statecode": 1,
+                  "item/statuscode": 2
+                },
+                "authentication": "@parameters('$authentication')"
+              }
             }
           },
           "runAfter": {
