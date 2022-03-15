@@ -57,6 +57,22 @@ function SiteHasOperationUNNumbers(operationId, siteId){
         return false;
 }
 
+function SiteHasModesOfTransportation(operationId, siteId){
+    webapi.safeAjax({
+     type: "GET",
+     url: "/_api/ovs_mocregistration_ovs_modesset?$select=ovs_mocregistrationid&$filter=ovs_mocregistrationid eq " + operationId,
+     contentType: "application/json"
+
+     success: function (res) {
+       alert('Success');
+     },
+     error: function (request, message, error) {
+        alert(error);
+     }
+   });
+   alert('Test');
+}
+
 function XOperationDetailsProvided(operationId){
     return Validate(operationId, 'ovs_siteid', 'Validation_OperationDetailsList');
 }
@@ -109,7 +125,7 @@ function ExecuteQuery(list, filter){
     return response;
 }
 
-function SetOperationDetailsProvided(operationId, value){
+function UpdateOperationDetailsProvided(operationId, value){
     webapi.safeAjax({
      type: "PATCH",
      url: "/_api/ovs_mocregistrations(" + operationId + ")",

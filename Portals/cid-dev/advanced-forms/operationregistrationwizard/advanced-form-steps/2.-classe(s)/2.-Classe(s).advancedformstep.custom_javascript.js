@@ -32,10 +32,14 @@ if (window.jQuery) {
 			}
             else{
                 if(!IsExtendedSite(operationId, null)){
-                    SetOperationDetailsProvided(operationId, true);
+                    OperationDetailsProvided(operationId, true);
                 }
             }
 			return validation; 
         }
    }(window.jQuery));
+}
+
+async function OperationDetailsProvided(operationId, flag){
+    await UpdateOperationDetailsProvided(operationId, flag);
 }

@@ -1,4 +1,8 @@
 $(document).ready(function() {
+	$('#instructions').hide();
+    $('#EntityFormView').hide();
+	$('#redirectInstruction').show();
+
 	var urlParams = new URLSearchParams(window.location.search);
 	if (urlParams.has('id')) {
 		var siteid = urlParams.get('id');
@@ -13,10 +17,6 @@ $(document).ready(function() {
 								
 						if(tdElement.attr('data-attribute') == 'cid_operationdetailsprovided')
 						{
-							$('#instructions').hide();
-        					$('#EntityFormView').hide();
-							$('#redirectInstruction').show();
-
 							if(tdElement.attr('data-value') == 'false')
 								window.location.href = "~/en-US/OperationRegistrationWizard/?id=" + operationId;
 							else
