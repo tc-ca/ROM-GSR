@@ -205,6 +205,7 @@
                               "entityName": "ovs_workordercandidates",
                               "recordId": "@items('For_Each_WOC')?['ovs_workordercandidateid']",
                               "item/ovs_currentlyplanned": "@variables('IsCurrentlyPlanned')",
+                              "item/ownerid@odata.bind": "/teams/@{triggerOutputs()?['body/_ownerid_value']}",
                               "item/ovs_regionalnop@odata.bind": "/ovs_cdregionalnops/@{triggerOutputs()?['body/ovs_cdregionalnopid']}"
                             },
                             "authentication": "@parameters('$authentication')"
@@ -245,6 +246,7 @@
                             "item/ovs_name": "WOC - @{items('For_Each_Operation')?['ovs_name']}",
                             "item/ovs_operationid@odata.bind": "/ovs_mocregistrations/@{items('For_Each_Operation')?['ovs_mocregistrationid']}",
                             "item/ovs_oversighttype@odata.bind": "/ovs_oversighttypes/@{variables('FinalOversightType')}",
+                            "item/ownerid@odata.bind": "/teams/@{triggerOutputs()?['body/_ownerid_value']}",
                             "item/ovs_plannedfiscalyear@odata.bind": "/tc_tcfiscalyears/@{triggerOutputs()?['body/_ovs_cdfiscalyearid_value']}",
                             "item/ovs_cdpriorityscore": "@items('For_Each_Operation')?['ovs_cdpriorityscore']",
                             "item/ovs_regionalnop@odata.bind": "/ovs_cdregionalnops/@{triggerOutputs()?['body/ovs_cdregionalnopid']}",
@@ -270,12 +272,24 @@
               },
               "runAfter": {},
               "expression": {
-                "not": {
-                  "equals": [
-                    "@items('For_Each_Operation')?['ovs_operationtype']",
-                    918640040
-                  ]
-                }
+                "and": [
+                  {
+                    "not": {
+                      "equals": [
+                        "@items('For_Each_Operation')?['ovs_operationtype']",
+                        918640040
+                      ]
+                    }
+                  },
+                  {
+                    "not": {
+                      "equals": [
+                        "@items('For_Each_Operation')?['ovs_operationtype']",
+                        918640042
+                      ]
+                    }
+                  }
+                ]
               },
               "metadata": {
                 "operationMetadataId": "6222e0d3-86c6-4532-8981-ebdb42bd52e4"
