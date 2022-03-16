@@ -7,14 +7,7 @@ if (window.jQuery) {
             var urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('id')) {
                 var operationId = urlParams.get('id');
-
-          //var rows = $("#operation_classes .view-grid table").find("tbody > tr");
-
-          //if (rows.length <= 0) {
-          //      //alert('You cannot proceed before adding classes(s).');
-          //      validation = false;
-          //      errorMessage = "You cannot proceed before adding classes(s).";
-          //}
+                
 				if(!SiteHasOperationClasses(operationId, null)){
 					errorMessage = "You cannot proceed before adding classes(s).";
 					validation = false;

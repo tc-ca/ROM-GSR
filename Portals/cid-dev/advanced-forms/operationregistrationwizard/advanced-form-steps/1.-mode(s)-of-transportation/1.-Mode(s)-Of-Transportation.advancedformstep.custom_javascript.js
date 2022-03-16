@@ -10,19 +10,24 @@ if (window.jQuery) {
 			//    validation = false;
 			//}
 
-            var urlParams = new URLSearchParams(window.location.search);
+            //var urlParams = new URLSearchParams(window.location.search);
 
-            if (urlParams.has('id')) {
-                var operationId = urlParams.get('id');
+            //if (urlParams.has('id')) {
+            //    var operationId = urlParams.get('id');
 
-				//if(!SiteHasModesOfTransportation(operationId, null)){
-				//	errorMessage = "You cannot proceed before adding at least one mode of transportation.";
-				//	validation = false;
-				}
-			}
+			//	if(!checkMOTExist(operationId, null)){
+			//		errorMessage = "You cannot proceed before adding at least one mode of transportation.";
+			//		validation = false;
+			//	}
+			//}
 
-			
+			 var checkedCheckBoxes = $('[id*="cid_"]:checkbox:checked'); 
 
+			if(checkedCheckBoxes && checkedCheckBoxes.length <= 0)
+			{
+                errorMessage = "You cannot proceed before adding at least one mode of transportation.";
+                validation = false;
+            }
 
 
             if(!validation)
@@ -38,3 +43,7 @@ if (window.jQuery) {
 		}
    }(window.jQuery));
 }
+
+//async function checkMOTExist(operationId, siteId){
+//	await SiteHasModesOfTransportation(operationId, siteId);
+//}

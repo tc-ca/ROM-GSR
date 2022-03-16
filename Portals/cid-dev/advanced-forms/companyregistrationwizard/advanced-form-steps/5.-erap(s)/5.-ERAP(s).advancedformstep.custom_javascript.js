@@ -2,8 +2,6 @@
 
 $(document).ready(function () {
     debugger;
-    //xxx();
-    //return;
 
     var rows = $("#eraps .view-grid table").find("tbody > tr");
 
@@ -40,38 +38,25 @@ if (window.jQuery) {
 }
 
 function xxx() {
-    // Operating Name = "Sample@Account"
+    var list = tdg.webapi.list("cid_companyerap", "cid_erapid");
+
+    var parent_id = '{{user.parentcustomerid.Id}}';
+
     var data = {
-        "name": "Sample@Account"
+        "cid_Company@odata.bind": "/accounts(" + parent_id + ")",
+        "cid_erapid": "Sample@Account"
     };
-    tdg.webapi.create("account", data);
+    tdg.webapi.create("cid_companyerap", data);
 }
 
 function cid_companyeraps_insert(parent_id, cid_erapid)
 {
     debugger;
     var data = {
-        "name": "Sample@Account"
+        "cid_Company@odata.bind": "/accounts(" + parent_id + ")",
+        "cid_erapid": cid_erapid
     };
-    tdg.webapi.create("account", data)
-
-    //var data = {
-    //    "cid_Company@odata.bind": "/accounts(" + parent_id + ")",
-    //    "cid_erapid": cid_erapid
-    //};
-
-    //webapi.safeAjax({
-    //    type: "POST",
-    //    url: "/_api/cid_companyeraps",
-    //    contentType: "application/json",
-    //    data: JSON.stringify(data),
-    //    success: function (res, status, xhr) {
-    //        debugger;
-    //        //print id of newly created entity record
-    //        console.log("entityID: " + xhr.getResponseHeader("entityid"))
-    //    }
-    //});
-
+    tdg.webapi.create("cid_companyerap", data);
 }
 
 function root_company(bn) {
@@ -110,6 +95,28 @@ function root_erap_list(bn) {
 
 if (typeof (tdg.webapi) == "undefined") {
     tdg.webapi = {
+        list: function (entity_name, select) {
+            // not working!!
+            debugger;
+
+            var data = {
+                type: "GET",
+                url: "/_api/" + entity_name + "s?$select=" + select,
+                contentType: "application/json"
+            };
+
+            var value = webapi.safeAjax(data)
+                .fail(function (response) {
+                    if (response.responseJSON) {
+                        alert("Error: " + response.responseJSON.error.message)
+                    } else {
+                        alert("Error: Web API is not available... ")
+                    }
+                }).always();
+
+            return value;
+        },
+
         create: function (entity_name, data) {
             debugger;
 
