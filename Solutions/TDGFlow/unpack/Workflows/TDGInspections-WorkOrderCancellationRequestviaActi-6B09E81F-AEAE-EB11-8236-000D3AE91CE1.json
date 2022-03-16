@@ -197,27 +197,6 @@
         "Apply_to_each_approval_response": {
           "foreach": "@if(variables('IsLanguageFrench'), outputs('Start_and_wait_for_an_approval_-_FR')?['body/responses'], outputs('Start_and_wait_for_an_approval_-_EN')?['body/responses'])",
           "actions": {
-            "Create_Cancellation_Request_Response_as_Note": {
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "fde87fed-75b8-43c2-ad2e-6969e1947c27"
-              },
-              "type": "OpenApiConnection",
-              "inputs": {
-                "host": {
-                  "connectionName": "shared_commondataserviceforapps_3",
-                  "operationId": "CreateRecord",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                },
-                "parameters": {
-                  "entityName": "annotations",
-                  "item/subject": "@{if(variables('IsLanguageFrench'), 'Demande d''annulation', 'Cancellation Request')} - @{triggerOutputs()?['body/ovs_selectedreasontext']} - @{if(variables('IsLanguageFrench'), if(equals(outputs('Start_and_wait_for_an_approval_-_FR')?['body/outcome'], 'Approve'), 'Approuvé', 'Rejetée'), if(equals(outputs('Start_and_wait_for_an_approval_-_EN')?['body/outcome'], 'Approve'), 'Approved', 'Rejected'))} ",
-                  "item/notetext": "@{if(variables('IsLanguageFrench'), 'À', 'To')}: @{outputs('Get_User_Requesting_Cancellation')?['body/firstname']} @{outputs('Get_User_Requesting_Cancellation')?['body/lastname']} \n@{if(variables('IsLanguageFrench'), 'De', 'From')}: @{outputs('Get_Work_Owner_Owner')?['body/firstname']} @{outputs('Get_Work_Owner_Owner')?['body/lastname']} \n@{if(variables('IsLanguageFrench'), 'Commentaires', 'Comments')}: @{items('Apply_to_each_approval_response')?['comments']}",
-                  "item/objectid_msdyn_workorder@odata.bind": "msdyn_workorders(@{outputs('Get_Related_Work_Order')?['body/msdyn_workorderid']})"
-                },
-                "authentication": "@parameters('$authentication')"
-              }
-            },
             "Check_if_Approver_Response_is_Approve": {
               "actions": {
                 "Set_Approval_Result_-_Approved": {
@@ -232,11 +211,7 @@
                   }
                 }
               },
-              "runAfter": {
-                "Create_Cancellation_Request_Response_as_Note": [
-                  "Succeeded"
-                ]
-              },
+              "runAfter": {},
               "else": {
                 "actions": {
                   "Set_Approval_Result_-_Rejected": {
@@ -262,6 +237,43 @@
                 "operationMetadataId": "7867fc30-37cf-40e9-9d34-344359dda9eb"
               },
               "type": "If"
+            },
+            "Apply_to_each_3": {
+              "foreach": "@outputs('Start_and_wait_for_an_approval_-_EN')?['body/responses']",
+              "actions": {
+                "Update_Cancelation_Request_to_Completed": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "b65aba40-d3be-4645-835c-dfeb57f6e2b2"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_3",
+                      "operationId": "UpdateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "ovs_cancellationrequests",
+                      "recordId": "@triggerOutputs()?['body/activityid']",
+                      "item/subject": " @{if(variables('IsLanguageFrench'), if(equals(outputs('Start_and_wait_for_an_approval_-_FR')?['body/outcome'], 'Approve'), 'approuvé', 'rejetée'), if(equals(outputs('Start_and_wait_for_an_approval_-_EN')?['body/outcome'], 'Approve'), 'Approved', 'Rejected'))}",
+                      "item/statecode": 1,
+                      "item/description": "@{triggerOutputs()?['body/ovs_selectedreasontext']} -  @{if(variables('IsLanguageFrench'), if(equals(outputs('Start_and_wait_for_an_approval_-_FR')?['body/outcome'], 'Approve'), 'approuvé', 'rejetée'), if(equals(outputs('Start_and_wait_for_an_approval_-_EN')?['body/outcome'], 'Approve'), 'approved', 'rejected'))} @{if(variables('IsLanguageFrench'), 'par', 'by')}: @{outputs('Get_Work_Owner_Owner')?['body/firstname']} @{outputs('Get_Work_Owner_Owner')?['body/lastname']} - @{if(variables('IsLanguageFrench'), 'Commentaires', 'Comments')}[ @{items('Apply_to_each_approval_response')?['comments']}]",
+                      "item/statuscode": 2
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Check_if_Approver_Response_is_Approve": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "265c900d-c718-429e-812b-afa9179a0e4e"
+              },
+              "type": "Foreach"
             }
           },
           "runAfter": {
@@ -318,31 +330,6 @@
                   "emailMessage/To": "TDGNationalOversightPlan-PlanNationaldeSurveillanceTMD@tc.gc.ca",
                   "emailMessage/Subject": "Work Order @{outputs('Update_Substatus_of_Work_Order')?['body/msdyn_name']} - Cancellation Notification",
                   "emailMessage/Body": "<p>This email is to notify you of an approval for cancellation that occurred for the Work Order @{outputs('Update_Substatus_of_Work_Order')?['body/msdyn_name']}<br>\n<br>\nWork Order: @{outputs('Update_Work_Order_to_reflect_Approved_Cancellation')?['body/msdyn_name']}<br>\nReason: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@{triggerOutputs()?['body/_ovs_cancellationrequestreason_label']}<br>\nComments: @{triggerOutputs()?['body/ovs_cancellationrequuestcomments']}</p>"
-                },
-                "authentication": "@parameters('$authentication')"
-              }
-            },
-            "Update_a_row": {
-              "runAfter": {
-                "Send_an_email_(V2)_2": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "07767969-087a-4744-9ecf-46a34f3782b2"
-              },
-              "type": "OpenApiConnection",
-              "inputs": {
-                "host": {
-                  "connectionName": "shared_commondataserviceforapps_3",
-                  "operationId": "UpdateRecord",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                },
-                "parameters": {
-                  "entityName": "ovs_cancellationrequests",
-                  "recordId": "@triggerOutputs()?['body/activityid']",
-                  "item/statecode": 1,
-                  "item/statuscode": 2
                 },
                 "authentication": "@parameters('$authentication')"
               }
