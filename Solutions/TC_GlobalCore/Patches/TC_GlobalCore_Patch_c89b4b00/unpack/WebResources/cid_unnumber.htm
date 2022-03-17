@@ -1,0 +1,258 @@
+<HTML>
+<HEAD>
+    <TITLE></TITLE>
+    <style>
+        body {
+            background-color: white;
+            display: block;
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+
+        text {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            padding: 6px 12px;
+        }
+
+        label {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            margin: 0px 0px 5px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            display: block;
+            font-size: 16px;
+            line-height: 1.4375;
+            color: #555;
+            border: 1px solid #949494;
+            border-radius: 4px;
+            box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+            font-family: "Noto Sans",sans-serif;
+            padding: 6px 12px;
+            height: auto;
+            max-width: 100%;
+            min-height: 37px;
+            background-image: none;
+            margin-top: 7px;
+            width: 100%;
+        }
+    </style>
+    <!-- Using jquery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+</HEAD>
+<BODY>
+    <script type="text/javascript">
+        function search() {
+            debugger;
+            var selected_language = sessionStorage.getItem("selected_language");
+            selected_language = (selected_language == null ? "en-US" : selected_language);
+            var tdg_unnumberid = document.getElementById("tdg_unnumberid").value;
+            var filter = "substringof('" + tdg_unnumberid + "', tdg_undisplayname) or substringof('" + tdg_unnumberid + "', tdg_shippingnamedescriptiontxt)";
+            var items = common.OData_List("tdg_unnumber", filter);
+
+            var tdg_unnumberid_list = document.getElementById('tdg_unnumberid_list');
+
+            // remove options
+            $('#tdg_unnumberid_list').empty();
+
+            var tdg_unnumberid_list_id = "";
+            for (i = 0; i < items.length; i++) {
+                var item = items[i];
+                var value = item.tdg_unnumberid;
+                var text = item.tdg_undisplayname + ' - ' +
+                    common.text_language(item.tdg_shippingnamedescriptiontxt, selected_language);
+
+                tdg_unnumberid_list_id += value + ";";
+
+                const option = document.createElement('option');
+                option.value = text;
+                tdg_unnumberid_list.appendChild(option);
+            }
+            document.getElementById('tdg_unnumberid_list_id').value = tdg_unnumberid_list_id;
+        }
+
+        function onInput(e) {
+            //debugger;
+
+            var input = e.target;
+            var val = input.value;
+            var list = input.getAttribute('list');
+            var options = document.getElementById(list).childNodes;
+            var found = false;
+            var index = 0;
+            var text = "";
+
+            // skip 1st option
+            for (var i = 1; i < options.length; i++) {
+                var current = options[i].value;
+                if (current === val) {
+                    found = true;
+                    index = i;
+                    text = current;
+                    break;
+                }
+            }
+
+            if (found) {
+                debugger;
+                var id = $('#tdg_unnumberid_list_id').val();
+                var list = id.split(";");
+                id = list[index];
+
+                try {
+                    // transfer control back to parent form
+                    parent.tdg_unnumberid_selected(text, id);
+                } catch (e) { }
+            }
+            else {
+                search();
+            }
+        }
+
+        function erap_list(site_id) {
+            var selected_language = sessionStorage.getItem("selected_language");
+            selected_language = (selected_language == null ? "en-US" : selected_language);
+            var tdg_unnumberid = document.getElementById("tdg_unnumberid").value;
+            var filter = "substringof('" + tdg_unnumberid + "', tdg_undisplayname) or substringof('" + tdg_unnumberid + "', tdg_shippingnamedescriptiontxt)";
+            var items = common.OData_List("tdg_unnumber", filter);
+        }
+
+    </script>
+
+    <label for="data_from" class="field-label">Source of data:</label>
+    <select id="data_from" class="text form-control">
+        <option value="1" selected>ERAP</option>
+        <option value="2">UN Master List</option>
+    </select>
+    <br />
+    <label for="tdg_unnumberid" class="field-label">UN Number</label>
+    <span id="tdg_unnumberid_required" style="color: red;font-weight: bold"> *</span>
+    <br>
+    <input list="tdg_unnumberid_list" id="tdg_unnumberid" class="text form-control" />
+    <br>
+    <datalist id="tdg_unnumberid_list">
+    </datalist>
+
+    <br>
+    <input list="erap_list" id="tdg_erap" class="text form-control" onclick="alert('tdg_erap');" />
+    <br>
+    <datalist id="erap_list" onclick="alert('erap_list');">
+        <option class="text form-control" data-placeid="1" value="Louvres, France"></option>
+        <option class="text form-control" data-placeid="2" value="Louvre Museum, Rue de Rivoli, Paris, France"></option>
+        <option class="text form-control" data-placeid="3" value="Louvres, France"></option>
+    </datalist>
+
+    <br />
+    <input id="txt_text1" onkeypress="handleKeypress(this, event);" />
+    <button id="elem" onclick="emitKey();">Autoclick</button>
+
+    <input type="text" id="tdg_unnumberid_list_id" hidden />
+    <script>
+        function emitKey() {
+            debugger;
+
+            // work on text
+            const e1 = document.getElementById('txt_text1');   
+            e1.dispatchEvent(new KeyboardEvent('keypress', { 'key': 'a' }));
+
+            // not work on list
+            //const e2 = document.getElementById('tdg_erap');
+            //e2.dispatchEvent(new KeyboardEvent('keypress', { 'key': 'a' }));
+
+            //// not work on datalist
+            //const e3 = document.getElementById('erap_list');
+            //e3.dispatchEvent(new KeyboardEvent('keypress', { 'key': 'a' }));
+
+            //const e4 = document.getElementById('tdg_erap');
+            //const ev4 = document.createEvent("MouseEvents");
+            //ev4.initMouseEvent("click", true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null);
+            //e4.dispatchEvent(ev4);
+
+            var keyboardEvent = document.createEvent("KeyboardEvent");
+            var initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
+            keyboardEvent[initMethod](
+                "keyup", // event type : keydown, keyup, keypress
+                true, // bubbles
+                true, // cancelable
+                window, // viewArg: should be window
+                false, // ctrlKeyArg
+                false, // altKeyArg
+                false, // shiftKeyArg
+                false, // metaKeyArg
+                40, // keyCodeArg : unsigned long the virtual key code, else 0
+                0 // charCodeArgs : unsigned long the Unicode character associated with the depressed key, else 0
+            );
+            const e5 = document.getElementById('tdg_erap');
+            e5.focus();
+            e5.dispatchEvent(keyboardEvent);
+
+            $("#tdg_erap").trigger(jQuery.Event('keyup', { keycode: 40 }));
+
+        }
+
+        function handleKeypress(target, event) {
+            debugger;
+            if (event.keyCode == 0 && event.key != "") {
+                target.value += event.key;
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            debugger;
+            document.getElementById("tdg_unnumberid").setAttribute("autocomplete", "off");
+
+            document.querySelector('input[list="tdg_unnumberid_list"]').addEventListener('input', onInput);
+
+            emitKey();
+        })
+
+    </script>
+
+    <script>
+        // tdgcore_common.js
+
+        if (typeof (common) == "undefined") {
+            common = {
+                text_language: function (text, language) {
+                    //var selected_language = '{{website.selected_language.code}}';
+                    //sessionStorage.setItem("selected_language", selected_language);
+
+                    var value = "";
+                    var index1 = text.indexOf("::");
+                    if (language == "en-US") {
+                        value = text.substr(0, index1);
+                    }
+                    else {
+                        value = text.substr(index1+2);
+                    }
+                    return value;
+                },
+
+                // odata
+                OData_List: function (entity, filter) {
+                    var url = entity + "?$filter=" + filter;
+                    //var oDataUrl = "~/_odata/" + url;
+                    var oDataUrl = "https://rd-tdgcore-dev.powerappsportals.com/_odata/" + url;
+                    var response = null;
+
+                    $.ajax({
+                        type: "GET",
+                        url: oDataUrl,
+                        dataType: "json",
+                        async: false
+                    }).done(function (json) {
+                        response = json.value;
+                    });
+                    return response;
+                }
+            }
+        }
+    </script>
+</BODY>
+</HTML>
