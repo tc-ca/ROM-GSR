@@ -100,7 +100,7 @@
 
                     document.getElementById('address1_line1').value = ""; // list[0];
 
-                    //AddressComplete.Find(LastId, LanguagePreference, true);
+                    AddressComplete.Find(LastId, LanguagePreference, true);
                 }
             }
             else {
@@ -116,7 +116,6 @@
     <br>
     <datalist id="address_list">
     </datalist>
-
     <datalist id="address_list2">
     </datalist>
 
@@ -125,7 +124,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            //debugger;
+            debugger;
             document.getElementById("address1_line1").setAttribute("autocomplete", "off");
 
             document.querySelector('input[list="address_list"]').addEventListener('input', onInput);
@@ -136,17 +135,24 @@
             document.getElementById('address1_line1').value = address1_line1;
 
             // AddressComplete_Hide_address1_line1
-            parent.AddressComplete_Hide_address1_line1();
+            try {
+                parent.AddressComplete_Hide_address1_line1();
+            } catch (e) {}
         })
 
     </script>
 
     <script>
-        function readonly() {
+        function readonly(value) {
             debugger;
-            document.getElementById("address1_line1").prop('readonly', true);
+
+            document.getElementById("address_list").prop('readonly', value);
 
             //document.getElementById('targetFrame').contentWindow.targetFunction();
+        }
+
+        function address1_line1(value) {
+            document.getElementById('address1_line1').value = value;
         }
 
         var AddressComplete = {

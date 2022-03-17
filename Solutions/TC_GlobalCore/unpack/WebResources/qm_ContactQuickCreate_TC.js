@@ -14,7 +14,8 @@ var Contact_QC_TC= (function (window, document) {
             glHelper.SetRequiredLevel(formContext, "firstname", true);
             glHelper.SetRequiredLevel(formContext, "lastname", true);
             glHelper.SetRequiredLevel(formContext, "parentcustomerid", true);
-            glHelper.SetRequiredLevel(formContext, "emailaddress1", true);
+            //Task 165369: Remove mandatory requirement for email field in contact record
+            //glHelper.SetRequiredLevel(formContext, "emailaddress1", true);
             glHelper.SetRequiredLevel(formContext, "jobtitle", true);
             glHelper.SetRequiredLevel(formContext, "telephone1", true);
             glHelper.SetRequiredLevel(formContext, "parentcustomerid", true);

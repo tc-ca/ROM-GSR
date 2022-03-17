@@ -1,7 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RibbonDiffXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <CustomActions>
-    <HideCustomAction HideActionId="ovs.Mscrm.SubGrid.ovs_cyaction.Delete.Hide" Location="Mscrm.SubGrid.ovs_cyaction.Delete" />
+    <CustomAction Id="ovs.Mscrm.Form.ovs_cyaction.Activate.CustomAction" Location="Mscrm.Form.ovs_cyaction.MainTab.Save.Controls._children" Sequence="50">
+      <CommandUIDefinition>
+        <Button Alt="$Resources:Ribbon.HomepageGrid.account.Record.Status.Activate" Command="Mscrm.Form.Activate" Id="Mscrm.Form.ovs_cyaction.Activate" Image32by32="/_imgs/ribbon/Activate_32.png" Image16by16="/_imgs/ribbon/Activate_16.png" LabelText="$Resources:Ribbon.HomepageGrid.account.Record.Status.Activate" Sequence="50" TemplateAlias="o2" ToolTipTitle="$Resources:Ribbon.HomepageGrid.account.Record.Status.Activate" ToolTipDescription="$Resources(EntityPluralDisplayName):Ribbon.Tooltip.Activate" ModernImage="Activate" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <CustomAction Id="ovs.Mscrm.Form.ovs_cyaction.Deactivate.CustomAction" Location="Mscrm.Form.ovs_cyaction.MainTab.Save.Controls._children" Sequence="60">
+      <CommandUIDefinition>
+        <Button Alt="$Resources:Ribbon.HomepageGrid.account.Record.Status.Deactivate" Command="Mscrm.Form.Deactivate" Id="Mscrm.Form.ovs_cyaction.Deactivate" Image32by32="/_imgs/ribbon/Deactivate_32.png" Image16by16="/_imgs/ribbon/Deactivate_16.png" LabelText="$Resources:Ribbon.HomepageGrid.account.Record.Status.Deactivate" Sequence="60" TemplateAlias="o2" ToolTipTitle="$Resources:Ribbon.HomepageGrid.account.Record.Status.Deactivate" ToolTipDescription="$Resources(EntityPluralDisplayName):Ribbon.Tooltip.Deactivate" ModernImage="DeActivate" />
+      </CommandUIDefinition>
+    </CustomAction>
     <HideCustomAction HideActionId="ovs.Mscrm.SubGrid.ovs_cyaction.Flows.RefreshCommandBar.Hide" Location="Mscrm.SubGrid.ovs_cyaction.Flows.RefreshCommandBar" />
     <HideCustomAction HideActionId="ovs.Mscrm.SubGrid.ovs_cyaction.RunReport.Hide" Location="Mscrm.SubGrid.ovs_cyaction.RunReport" />
     <CustomAction Id="ovs.tc.ovs_cyaction.Button2.Button.Mscrm.SubGrid.ovs_cyaction.AddNewStandard.CustomAction" Location="Mscrm.SubGrid.ovs_cyaction.MainTab.Management.Controls._children" Sequence="0">
@@ -31,6 +40,24 @@
         </JavaScriptFunction>
       </Actions>
     </CommandDefinition>
+    <CommandDefinition Id="Mscrm.DeleteSelectedRecord">
+      <EnableRules>
+        <EnableRule Id="Mscrm.SelectionCountAtLeastOne" />
+        <EnableRule Id="Mscrm.VisualizationPaneNotMaximized" />
+        <EnableRule Id="Mscrm.IsEntityAvailableForUserInMocaOffline" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.NotShowForManyToManyGrids" />
+        <DisplayRule Id="Mscrm.DeleteSelectedEntityPermission" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.Delete.deleteRecords" Library="$Webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedControl" />
+          <CrmParameter Value="SelectedControlSelectedItemReferences" />
+          <CrmParameter Value="SelectedEntityTypeName" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
     <CommandDefinition Id="Mscrm.EditSelectedRecord">
       <EnableRules>
         <EnableRule Id="Mscrm.CheckBulkEditSupportForEntity" />
@@ -49,6 +76,40 @@
           <CrmParameter Value="SelectedControl" />
           <CrmParameter Value="SelectedControlSelectedItemReferences" />
           <CrmParameter Value="SelectedEntityTypeName" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="Mscrm.Form.Activate">
+      <EnableRules>
+        <EnableRule Id="Mscrm.CanWritePrimary" />
+        <EnableRule Id="ovs.ovs_cyaction.EnableRule8.DisplayisROMRole" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.CanWritePrimary" />
+        <DisplayRule Id="Mscrm.PrimaryIsInactive" />
+        <DisplayRule Id="Mscrm.PrimaryEntityHasStatecode" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.Activate.activatePrimaryRecord" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="FirstPrimaryItemId" />
+          <CrmParameter Value="PrimaryEntityTypeName" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="Mscrm.Form.Deactivate">
+      <EnableRules>
+        <EnableRule Id="Mscrm.CanWritePrimary" />
+        <EnableRule Id="ovs.ovs_cyaction.EnableRule8.DisplayisROMRole" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.CanWritePrimary" />
+        <DisplayRule Id="Mscrm.PrimaryIsActive" />
+        <DisplayRule Id="Mscrm.PrimaryEntityHasStatecode" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.Deactivate.deactivatePrimaryRecord" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="FirstPrimaryItemId" />
+          <CrmParameter Value="PrimaryEntityTypeName" />
         </JavaScriptFunction>
       </Actions>
     </CommandDefinition>
@@ -98,6 +159,12 @@
       <DisplayRule Id="Mscrm.CanWriteSelected">
         <EntityPrivilegeRule PrivilegeType="Write" PrivilegeDepth="Basic" AppliesTo="SelectedEntity" />
       </DisplayRule>
+      <DisplayRule Id="Mscrm.DeleteSelectedEntityPermission">
+        <EntityPrivilegeRule PrivilegeType="Delete" PrivilegeDepth="Basic" AppliesTo="SelectedEntity" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.NotShowForManyToManyGrids">
+        <RelationshipTypeRule AppliesTo="SelectedEntity" RelationshipType="ManyToMany" InvertResult="true" />
+      </DisplayRule>
       <DisplayRule Id="Mscrm.PrimaryEntityHasStatecode">
         <EntityPropertyRule AppliesTo="PrimaryEntity" PropertyName="HasStateCode" PropertyValue="true" />
       </DisplayRule>
@@ -113,16 +180,27 @@
       <DisplayRule Id="Mscrm.SelectedEntityHasStatecode">
         <EntityPropertyRule AppliesTo="SelectedEntity" PropertyName="HasStateCode" PropertyValue="true" />
       </DisplayRule>
+      <DisplayRule Id="ovs.ovs_cyaction.DisplayRule12.DisplayRule">
+        <EntityPrivilegeRule PrivilegeType="Write" PrivilegeDepth="Basic" AppliesTo="PrimaryEntity" EntityName="ovs_unplannedforecast" />
+      </DisplayRule>
     </DisplayRules>
     <EnableRules>
       <EnableRule Id="Mscrm.CanWritePrimary">
         <RecordPrivilegeRule PrivilegeType="Write" AppliesTo="PrimaryEntity" />
+      </EnableRule>
+      <EnableRule Id="Mscrm.IsEntityAvailableForUserInMocaOffline">
+        <CustomRule FunctionName="XrmCore.Rules.Online.IsEntityAvailableForUserInMocaOffline" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedEntityTypeName" />
+        </CustomRule>
       </EnableRule>
       <EnableRule Id="Mscrm.SelectionCountAtLeastOne">
         <SelectionCountRule AppliesTo="SelectedEntity" Minimum="1" />
       </EnableRule>
       <EnableRule Id="ovs.ovs_cyaction.EnableRule7.DisplayOnlyIsManagerOrPlannerRole">
         <CustomRule FunctionName="isManagerOrPlannerRole" Library="$webresource:ovs_ROMCommonFunctions" />
+      </EnableRule>
+      <EnableRule Id="ovs.ovs_cyaction.EnableRule8.DisplayisROMRole">
+        <CustomRule FunctionName="isROMRole" Library="$webresource:ovs_ROMCommonFunctions" />
       </EnableRule>
       <EnableRule Id="tc.ovs_cyaction.EnableRule0.HideButtonIfFormIsReadOnly">
         <CustomRule FunctionName="HideButtonIfFormIsReadOnly" Library="$webresource:ovs_ROMCommonFunctions">

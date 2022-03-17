@@ -34,7 +34,9 @@ const ActionTypes =
     DirectionIssuedUnderSubsection19:   918640003,
     NoticeOfInfraction:                 918640004,
     Ticket:                             918640005,
-    Investigation:                      918640006
+    Investigation:                      918640006,
+    NoticeOfDefectiveConstructionOrRecall_9_2:  918640007,
+    NoticeOfDefectiveRepairOrDefectiveTesting_9_3:  918640008
 }
 
 const ActionSubStatus =
@@ -227,6 +229,12 @@ function ActionProcess(formContext) {
         case ActionTypes.Ticket:
             manageTicketForm(formContext, status, subStatus);
             break;
+
+        case ActionTypes.NoticeOfDefectiveConstructionOrRecall_9_2:
+        case ActionTypes.NoticeOfDefectiveRepairOrDefectiveTesting_9_3:
+            manageNoticeOfDefective(formContext, status, subStatus);
+            break;
+
         default:
             break;
 
@@ -690,6 +698,31 @@ function manageInvestigation(formContext, status, subStatus) {
     } else {
         glHelper.SetRequiredLevel(formContext, FIELD_DATE_RESOLVED, false);
     }
+    if (subStatus === ActionSubStatus.CloseDuplicate) {
+        glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
+        glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
+    }
+}
+
+function manageNoticeOfDefective(formContext, status, subStatus) {
+    // Set Status options
+    glHelper.filterOptionSet(formContext, STATUS_CODE, [StateCodes.Canceled, StateCodes.Active], false);
+
+    //Set Substatus options
+    if (status === StateCodes.Draft) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Draft], true);
+    } else if (status === StateCodes.Closed) {
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Closed, ActionSubStatus.CloseDuplicate], true);
+    }
+
+    let isClosedDuplicated = (subStatus === ActionSubStatus.CloseDuplicate);
+    glHelper.SetRequiredLevel(formContext, FIELD_ACTION_DATE, !isClosedDuplicated);
+
+    glHelper.SetSectionVisibility(formContext, TAB_GENERAL_NAME, Sections.Intervention, true);
+
+    glHelper.SetControlVisibility(formContext, FIELD_INTERVENTION_SUMMARY, true);
+    glHelper.SetRequiredLevel(formContext, FIELD_INTERVENTION_SUMMARY, !isClosedDuplicated);
+
     if (subStatus === ActionSubStatus.CloseDuplicate) {
         glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
         glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);

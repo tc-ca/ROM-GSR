@@ -17,6 +17,7 @@ var WO_TDG_main = (function (window, document) {
     var clientType;
     var OperationTypeGlobalValue;
     var OperationTypeGlobalText;
+    var isOnLoad = false;
 
 
     //********************private methods*******************
@@ -231,11 +232,12 @@ var WO_TDG_main = (function (window, document) {
 
 
         OnLoad: function (executionContext) {
-
+           
             var globalContext = Xrm.Utility.getGlobalContext();
             var formContext = executionContext.getFormContext();
             isOffLine = glHelper.isOffline(executionContext);
             clientType = glHelper.getClientType(executionContext);
+            isOnLoad = true;
 
             if (isOffLine && clientType > 0) {
 
@@ -584,7 +586,7 @@ var WO_TDG_main = (function (window, document) {
             // Filter WO_SystemStatus (hide "Open - In Progress")
             WO_TDG_main.WO_SystemStatus_FilterOptionSet(formContext, isPlanned);
 
-
+           
             //Filter Oversight Lookup
             if (isPlanned) {
                 var formContext = executionContext.getFormContext();
@@ -594,6 +596,14 @@ var WO_TDG_main = (function (window, document) {
                 var formContext = executionContext.getFormContext();
                 formContext.getControl("ovs_oversighttype").setDefaultView("920688A2-94A7-EB11-9442-000D3AE99322");
             }
+
+            //reset oversight type so that user must re-pick
+            //dont erase the value onload as this function is fired at that event, only run when rational actually changes
+            if (!isOnLoad)
+            {
+              glHelper.SetValue(formContext, "ovs_oversighttype", null);
+            }
+            isOnLoad = false; //set to false so next time when the event is fired we can go inside the condition.
         },
 
         SetDefaultFiscalYear: function (formContext) {

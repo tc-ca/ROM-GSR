@@ -3,11 +3,19 @@
     //********************private methods*******************
 
     var LCID;
+    var messageCallFailed;
+    var messageProcessStarted;
+    var messageWentWrong;
+    var messageAnotherRun;
+    var messageSaveForm;
+    var messageProceedPrompt;
+    var messageWorking;
+    var yesNo;
 
     function runIPT(runid, formContext) {
 
         //TO DO: localize
-        Xrm.Utility.showProgressIndicator("Working ...");
+        Xrm.Utility.showProgressIndicator(messageWorking);
 
         var parameters = {};
         parameters.runid = runid;
@@ -45,12 +53,12 @@
                                 if (data.response.indexOf("Error") > -1) {
                                     //show error message
                                     //TO DO: localize
-                                    var alertStrings = { confirmButtonLabel: "Yes", text: "Call failed with follow error: " + data.response };
+                                    var alertStrings = { confirmButtonLabel: yesNo, text: messageCallFailed + data.response };
                                 }
                                 else {
                                     //notify about call result and further notifications
                                     //TO DO: localize
-                                    var alertStrings = { confirmButtonLabel: "Yes", text: "Ipt calculation process has been started. You will be notified about the progress and its results via emails and Teams messaging" };
+                                    var alertStrings = { confirmButtonLabel: yesNo, text: messageProcessStarted };
 
                                     //set form read only
                                     if (IPTRun_main != null
@@ -65,7 +73,7 @@
 
                         console.log("IPT call response parse error: " + error.message);
                         //TO DO: localize
-                        Xrm.Navigation.openErrorDialog({ message: "Something went wrong. Error: " + error.message });
+                        Xrm.Navigation.openErrorDialog({ message: messageWentWrong + error.message });
                     });
                 }
             },
@@ -74,7 +82,7 @@
                 Xrm.Utility.closeProgressIndicator();
                 console.log("IPT call error: " + error.message);
                 //TO DO: localize
-                Xrm.Navigation.openErrorDialog({ message: "Something went wrong. Error: " + error.message });
+                Xrm.Navigation.openErrorDialog({ message: messageWentWrong + error.message });
             }
         );
 
@@ -87,7 +95,7 @@
                 if(results.entities.length > 0) {
 
                     //TO DO: localize
-                    var alertStrings = { confirmButtonLabel: "Yes", text: "There is another IPT Calculation runs right now. Please try later." };
+                    var alertStrings = { confirmButtonLabel: yesNo, text: messageAnotherRun };
                     Xrm.Navigation.openAlertDialog(alertStrings);
                 }
                 else runIPT(runid, formContext);
@@ -95,7 +103,7 @@
             function (error) {
                 console.log("validateNoOtherRun error: " + error.message);
                 //TO DO: localize
-                Xrm.Navigation.openErrorDialog({ message: "Something went wrong. Error: " + error.message });
+                Xrm.Navigation.openErrorDialog({ message: messageWentWrong + error.message });
             }
         );
     }
@@ -108,18 +116,24 @@
 
         LCID = globalContext.userSettings.languageId;
 
-        //if (LCID == 1033)
-        //    resexResourceName = "?.1033.resx";
-        //else if (LCID == 1036)
-        //    resexResourceName = "?.1036.resx";
 
-        //var confirmationText = Xrm.Utility.getResourceString(resexResourceName, "");
+        var resexResourceName = LCID === 1033 ? "ovs_Labels.1033.resx" : "ovs_Labels.1036.resx";
+
+        messageCallFailed = Xrm.Utility.getResourceString(resexResourceName, "IPT.ribbon.CallFailed");
+        messageProcessStarted = Xrm.Utility.getResourceString(resexResourceName, "IPT.ribbon.ProcessStarted");
+        messageWentWrong = Xrm.Utility.getResourceString(resexResourceName, "IPT.ribbon.WentWrong");
+        messageAnotherRun = Xrm.Utility.getResourceString(resexResourceName, "IPT.ribbon.AnotherRun");
+        messageSaveForm = Xrm.Utility.getResourceString(resexResourceName, "IPT.ribbon.SaveForm");
+        messageProceedPrompt = Xrm.Utility.getResourceString(resexResourceName, "IPT.ribbon.ProceedPrompt");
+        messageWorking = Xrm.Utility.getResourceString(resexResourceName, "IPT.ribbon.Working");
+        yesNo = LCID === 1033 ? "Yes" : "Oui";
+
 
         //check if form is saved
         if (formContext.data.getIsDirty()) {
 
             //TO DO: localize
-            var alertStrings = { confirmButtonLabel: "Yes", text: "Please save the form before execution" };
+            var alertStrings = { confirmButtonLabel: yesNo , text: messageSaveForm };
             Xrm.Navigation.openAlertDialog(alertStrings);
             return;
         }
@@ -128,7 +142,7 @@
         var runid = pageInput.entityId.replace("{", "").replace("}", "");
 
         //notify about start
-        var confirmStrings = { text: "You're going to start IPT calculation process. Proceed?", title: "Confirm Dialog" };
+        var confirmStrings = { text: messageProceedPrompt, title: "Confirm Dialog" };
         Xrm.Navigation.openConfirmDialog(confirmStrings).then(
             function (success) {
                 if (success.confirmed) {

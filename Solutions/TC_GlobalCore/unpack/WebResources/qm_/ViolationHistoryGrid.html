@@ -84,20 +84,20 @@
                     WorkOrderName: data[i].WorkOrderName,
                     OperationName: data[i].OperationName,
                     Provision : english ? data[i].ProvisionEnglish : data[i].ProvisionFrench,
-                    ViolationDisplay : english ? data[i].ViolationDisplayEnglish : data[i].ViolationDisplayFrench
+                    ViolationDisplay: english ? data[i].ViolationDisplayEnglish : data[i].ViolationDisplayFrench,
+                    COC_status: data[i].COC_status
                 })
 
             }
 
-            //TODO: fix getResourceString is not available tried with and without parent
             let workOrderHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.WorkOrderNumber");
             let operationHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.Operation"); 
              let provisionHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.Provision");
              let inspectionDateHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.InspectionDate");
              let violationDateHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.ViolationCount");
              let violationDisplayHeaderTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.ViolationDisplay");
-
-
+            let COC_statusTitle = parent.Xrm.Utility.getResourceString(resourceName, "qm_syresult.ViolationHistoryTableHeader.COC_status");
+            
 
             $('#mainTable').bootstrapTable({
                 locale: langId === 1033 ? 'en-US' : 'fr-FR',
@@ -140,7 +140,7 @@
                         sortable: true
 
                     },
-                       {
+                    {
                         field: 'ViolationCount',
                         title: violationDateHeaderTitle,
                         sortable: true
@@ -149,6 +149,10 @@
                     {
                         field: 'ViolationDisplay',
                         title: violationDisplayHeaderTitle
+                    },
+                    {
+                        field: 'COC_status',
+                        title: COC_statusTitle
                     }
                 ],
                 data:rows

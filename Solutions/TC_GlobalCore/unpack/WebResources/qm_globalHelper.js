@@ -107,7 +107,7 @@
     function GetValue(formContext, attr) {
         var result;
         var val = formContext.getAttribute(attr).getValue();
-        if (val == null) {
+        if (val === null) {
             result = "";
         }
         else {

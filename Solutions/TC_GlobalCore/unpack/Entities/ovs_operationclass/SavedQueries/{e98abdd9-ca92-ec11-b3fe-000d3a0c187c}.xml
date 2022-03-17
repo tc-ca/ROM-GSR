@@ -19,12 +19,13 @@
     <fetchxml>
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="ovs_operationclass">
+          <attribute name="cid_site" />
+          <attribute name="ovs_operationclass" />
           <order attribute="ovs_operationclass" descending="false" />
           <filter type="and">
             <condition attribute="statuscode" operator="eq" value="1" />
+            <condition attribute="cid_createdbyregistrant" operator="not-null" />
           </filter>
-          <attribute name="cid_site" />
-          <attribute name="ovs_operationclass" />
           <attribute name="ovs_operationclassid" />
         </entity>
       </fetch>

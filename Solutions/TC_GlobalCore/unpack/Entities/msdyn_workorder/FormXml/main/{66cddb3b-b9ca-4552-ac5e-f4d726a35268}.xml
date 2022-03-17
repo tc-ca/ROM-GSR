@@ -497,7 +497,7 @@
                             <ShowArticleTab>false</ShowArticleTab>
                             <SelectDefaultLanguage>00000000-0000-0000-0000-000000000000</SelectDefaultLanguage>
                             <UClientActivities>appointment,campaignactivity,campaignresponse,email,fax,incidentresolution,letter,opportunityclose,orderclose,phonecall,quoteclose,recurringappointmentmaster,socialactivity,task,msfp_surveyinvite,msfp_surveyresponse,ovs_cancellationrequest,ovs_confirmationofcompliance,ovs_cyaction,ovs_followuprequest</UClientActivities>
-                            <UClientActivitiesConfigurationJSON>{"ovs_followuprequest":{"showStatus":true,"canCreate":true,"fieldsConfig":{"labelOverride":true,"header":{"labelOption":"Show","displayOption":"AlwaysShow"},"body":[{"labelOption":"Hide","displayOption":"AlwaysShow"},{"labelOption":"Hide","displayOption":"AlwaysShow"},{"labelOption":"Hide","displayOption":"ShowOnExpand"},{"labelOption":"Hide","displayOption":"Hide"}],"footer":{"labelOption":"Hide","displayOption":"AlwaysShow"}}},"ovs_confirmationofcompliance":{"showStatus":true,"canCreate":false},"ovs_cyaction":{"showStatus":true,"canCreate":false},"msdyn_bookingalert":{"showStatus":true,"canCreate":false},"ovs_revisedquarterrequest":{"showStatus":true,"canCreate":false}}</UClientActivitiesConfigurationJSON>
+                            <UClientActivitiesConfigurationJSON>{"ovs_followuprequest":{"showStatus":true,"canCreate":true,"fieldsConfig":{"labelOverride":true,"header":{"labelOption":"Show","displayOption":"AlwaysShow"},"body":[{"labelOption":"Hide","displayOption":"AlwaysShow"},{"labelOption":"Hide","displayOption":"AlwaysShow"},{"labelOption":"Hide","displayOption":"ShowOnExpand"},{"labelOption":"Hide","displayOption":"Hide"}],"footer":{"labelOption":"Hide","displayOption":"AlwaysShow"}}},"ovs_confirmationofcompliance":{"showStatus":true,"canCreate":false},"ovs_cyaction":{"showStatus":true,"canCreate":false},"msdyn_bookingalert":{"showStatus":true,"canCreate":false},"ovs_revisedquarterrequest":{"showStatus":true,"canCreate":false},"ovs_cancellationrequest":{"showStatus":true,"canCreate":true,"fieldsConfig":{"labelOverride":true,"header":{"labelOption":"Show","displayOption":"AlwaysShow"},"body":[{"labelOption":"Show","displayOption":"AlwaysShow"},{"labelOption":"Show","displayOption":"AlwaysShow"},{"labelOption":"Hide","displayOption":"ShowOnExpand"},{"labelOption":"Hide","displayOption":"Hide"}],"footer":{"labelOption":"Hide","displayOption":"AlwaysShow"}},"createUsing":"default","openUsing":"default"}}</UClientActivitiesConfigurationJSON>
                           </parameters>
                         </control>
                       </cell>
@@ -1501,8 +1501,8 @@
         </tab>
         <tab name="tab_cepdata" id="{b7aab9b4-609e-4d76-4c18-e154b1ce29e8}" IsUserDefined="0" locklevel="0" showlabel="true" expanded="true">
           <labels>
-            <label description="CEP" languagecode="1033" />
-            <label description="PEC " languagecode="1036" />
+            <label description="Statistics" languagecode="1033" />
+            <label description="Statistiques" languagecode="1036" />
           </labels>
           <columns>
             <column width="100%">
@@ -3224,6 +3224,53 @@
             </parameters>
           </customControl>
         </controlDescription>
+        <controlDescription forControl="{8db4ed34-6147-2ac5-6b18-89100ead379d}">
+          <customControl id="{E7A81278-8635-4D9E-8D4D-59480B391C5B}" formFactor="0">
+            <parameters />
+          </customControl>
+          <customControl formFactor="1" name="MscrmControls.Grid.GridControl">
+            <parameters>
+              <data-set name="Grid">
+                <ViewId>{4EB0E3BA-061B-EC11-B6E7-000D3AE9B59B}</ViewId>
+                <columnsDefaultView />
+                <IsUserView>false</IsUserView>
+                <RelationshipName>msdyn_msdyn_workorder_msdyn_workorderservicetask_WorkOrder</RelationshipName>
+                <TargetEntityType>msdyn_workorderservicetask</TargetEntityType>
+                <EnableViewPicker>false</EnableViewPicker>
+                <FilteredViewIds>{C9FD8F4D-8184-4DDB-A31A-89E66E8E710E}</FilteredViewIds>
+              </data-set>
+              <EnableGroupBy static="true" type="Enum">yes</EnableGroupBy>
+              <EnableEditing static="true" type="Enum">yes</EnableEditing>
+              <ReflowBehavior static="true" type="Enum">GridOnly</ReflowBehavior>
+              <ListLayoutDirection static="true" type="Enum">Vertical</ListLayoutDirection>
+              <EnableSubGridAutoCollapse static="true" type="Enum">false</EnableSubGridAutoCollapse>
+              <EnableFiltering static="true" type="Enum">yes</EnableFiltering>
+              <HideNestedGridColumnHeader static="true" type="Enum">no</HideNestedGridColumnHeader>
+              <EnableJumpBar static="true" type="Enum">yes</EnableJumpBar>
+            </parameters>
+          </customControl>
+          <customControl formFactor="2" name="MscrmControls.Grid.GridControl">
+            <parameters>
+              <data-set name="Grid">
+                <ViewId>{4EB0E3BA-061B-EC11-B6E7-000D3AE9B59B}</ViewId>
+                <columnsDefaultView />
+                <IsUserView>false</IsUserView>
+                <RelationshipName>msdyn_msdyn_workorder_msdyn_workorderservicetask_WorkOrder</RelationshipName>
+                <TargetEntityType>msdyn_workorderservicetask</TargetEntityType>
+                <EnableViewPicker>false</EnableViewPicker>
+                <FilteredViewIds>{C9FD8F4D-8184-4DDB-A31A-89E66E8E710E}</FilteredViewIds>
+              </data-set>
+              <EnableGroupBy static="true" type="Enum">yes</EnableGroupBy>
+              <EnableEditing static="true" type="Enum">yes</EnableEditing>
+              <ReflowBehavior static="true" type="Enum">GridOnly</ReflowBehavior>
+              <ListLayoutDirection static="true" type="Enum">Vertical</ListLayoutDirection>
+              <EnableSubGridAutoCollapse static="true" type="Enum">false</EnableSubGridAutoCollapse>
+              <EnableFiltering static="true" type="Enum">yes</EnableFiltering>
+              <HideNestedGridColumnHeader static="true" type="Enum">no</HideNestedGridColumnHeader>
+              <EnableJumpBar static="true" type="Enum">yes</EnableJumpBar>
+            </parameters>
+          </customControl>
+        </controlDescription>
         <controlDescription forControl="{5dc2aea6-d9ae-9bce-09a2-ecb8044ba345}">
           <customControl id="{E7A81278-8635-4d9e-8D4D-59480B391C5B}" formFactor="0">
             <parameters>
@@ -3284,53 +3331,6 @@
               <EnableFiltering static="true" type="Enum">no</EnableFiltering>
               <HideNestedGridColumnHeader static="true" type="Enum">yes</HideNestedGridColumnHeader>
               <EnableJumpBar static="true" type="Enum">no</EnableJumpBar>
-            </parameters>
-          </customControl>
-        </controlDescription>
-        <controlDescription forControl="{8db4ed34-6147-2ac5-6b18-89100ead379d}">
-          <customControl id="{E7A81278-8635-4D9E-8D4D-59480B391C5B}" formFactor="0">
-            <parameters />
-          </customControl>
-          <customControl formFactor="1" name="MscrmControls.Grid.GridControl">
-            <parameters>
-              <data-set name="Grid">
-                <ViewId>{4EB0E3BA-061B-EC11-B6E7-000D3AE9B59B}</ViewId>
-                <columnsDefaultView />
-                <IsUserView>false</IsUserView>
-                <RelationshipName>msdyn_msdyn_workorder_msdyn_workorderservicetask_WorkOrder</RelationshipName>
-                <TargetEntityType>msdyn_workorderservicetask</TargetEntityType>
-                <EnableViewPicker>false</EnableViewPicker>
-                <FilteredViewIds>{C9FD8F4D-8184-4DDB-A31A-89E66E8E710E}</FilteredViewIds>
-              </data-set>
-              <EnableGroupBy static="true" type="Enum">yes</EnableGroupBy>
-              <EnableEditing static="true" type="Enum">yes</EnableEditing>
-              <ReflowBehavior static="true" type="Enum">GridOnly</ReflowBehavior>
-              <ListLayoutDirection static="true" type="Enum">Vertical</ListLayoutDirection>
-              <EnableSubGridAutoCollapse static="true" type="Enum">false</EnableSubGridAutoCollapse>
-              <EnableFiltering static="true" type="Enum">yes</EnableFiltering>
-              <HideNestedGridColumnHeader static="true" type="Enum">no</HideNestedGridColumnHeader>
-              <EnableJumpBar static="true" type="Enum">yes</EnableJumpBar>
-            </parameters>
-          </customControl>
-          <customControl formFactor="2" name="MscrmControls.Grid.GridControl">
-            <parameters>
-              <data-set name="Grid">
-                <ViewId>{4EB0E3BA-061B-EC11-B6E7-000D3AE9B59B}</ViewId>
-                <columnsDefaultView />
-                <IsUserView>false</IsUserView>
-                <RelationshipName>msdyn_msdyn_workorder_msdyn_workorderservicetask_WorkOrder</RelationshipName>
-                <TargetEntityType>msdyn_workorderservicetask</TargetEntityType>
-                <EnableViewPicker>false</EnableViewPicker>
-                <FilteredViewIds>{C9FD8F4D-8184-4DDB-A31A-89E66E8E710E}</FilteredViewIds>
-              </data-set>
-              <EnableGroupBy static="true" type="Enum">yes</EnableGroupBy>
-              <EnableEditing static="true" type="Enum">yes</EnableEditing>
-              <ReflowBehavior static="true" type="Enum">GridOnly</ReflowBehavior>
-              <ListLayoutDirection static="true" type="Enum">Vertical</ListLayoutDirection>
-              <EnableSubGridAutoCollapse static="true" type="Enum">false</EnableSubGridAutoCollapse>
-              <EnableFiltering static="true" type="Enum">yes</EnableFiltering>
-              <HideNestedGridColumnHeader static="true" type="Enum">no</HideNestedGridColumnHeader>
-              <EnableJumpBar static="true" type="Enum">yes</EnableJumpBar>
             </parameters>
           </customControl>
         </controlDescription>

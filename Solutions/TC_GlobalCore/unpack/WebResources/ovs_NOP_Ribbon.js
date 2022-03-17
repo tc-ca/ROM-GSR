@@ -2,10 +2,11 @@
 
 var NOPRibbon = (function (window, document) {
 
+    var cepDialogOptions = { height: 300, width: 500 };
 
     const cepSamplingFunctions = {
         getConfigValues: async function (nopId) {
-            let ovs_cepsampling_status = null;
+            let statecode = null;
             let ovs_cepsampling_runcepselection = null;
             let ovs_cepsampling_operationtype = null;
             let ovs_cepsampling_excluderiskcategory = null;
@@ -16,10 +17,15 @@ var NOPRibbon = (function (window, document) {
             let ovs_cepsampling_recidivismsamplesize = null;
             let oversightTypeCount = 0;
             let legislationCount = 0;
+            let workOrderCanidatesCount = 0;
 
-            await Xrm.WebApi.online.retrieveRecord("ovs_cdnop", nopId, "?$select=ovs_cepsampling_status,ovs_cepsampling_runcepselection,ovs_cepsampling_operationtype,ovs_cepsampling_recidivismsamplesize,ovs_cepsampling_recidivismviolationcount,ovs_cepsampling_samplesize,ovs_cepsampling_violationfoundbeforedate,ovs_cepsampling_violationfoundlastnyears,ovs_cepsampling_excluderiskcategory&$expand=ovs_cepsampling_cdnop_ovs_oversighttype($select=ovs_oversighttypeid),ovs_cepsampling_cdnop_qm_rclegislation($select=qm_rclegislationid)").then(
-                function success(result) {
-                    ovs_cepsampling_status = result["ovs_cepsampling_status"];
+            let ovs_cdfiscalyear = null;
+
+            await Xrm.WebApi.online.retrieveRecord("ovs_cdnop", nopId, "?$select=_ovs_cdfiscalyearid_value,statecode,ovs_cepsampling_runcepselection,ovs_cepsampling_operationtype,ovs_cepsampling_recidivismsamplesize,ovs_cepsampling_recidivismviolationcount,ovs_cepsampling_samplesize,ovs_cepsampling_violationfoundbeforedate,ovs_cepsampling_violationfoundlastnyears,ovs_cepsampling_excluderiskcategory&$expand=ovs_cepsampling_cdnop_ovs_oversighttype($select=ovs_oversighttypeid),ovs_cepsampling_cdnop_qm_rclegislation($select=qm_rclegislationid),ovs_ovs_cdnop_ovs_cdregionalnop_CDNOPId($select=ovs_cdregionalnopid)").then(
+                async function success(result) {
+                    
+                    ovs_cdfiscalyear = result["_ovs_cdfiscalyearid_value"];
+                    statecode = result["statecode"];
                     ovs_cepsampling_runcepselection = result["ovs_cepsampling_runcepselection"];
                     ovs_cepsampling_operationtype = result["ovs_cepsampling_operationtype"];
                     ovs_cepsampling_excluderiskcategory = result["ovs_cepsampling_excluderiskcategory"];
@@ -27,17 +33,23 @@ var NOPRibbon = (function (window, document) {
                     ovs_cepsampling_violationfoundlastnyears = result["ovs_cepsampling_violationfoundlastnyears"];
                     ovs_cepsampling_recidivismviolationcount = result["ovs_cepsampling_recidivismviolationcount"];
                     ovs_cepsampling_samplesize = result["ovs_cepsampling_samplesize"];
-                    ovs_cepsampling_recidivismsamplesize = result["ovs_cepsampling_recidivismsamplesize"];
-                    oversightTypeCount = 0;
-                    legislationCount = 0;
-
-                    for (let a = 0; a < result.ovs_cepsampling_cdnop_ovs_oversighttype.length; a++) {
-                        oversightTypeCount = a;
-                    }
-                    for (let b = 0; b < result.ovs_cepsampling_cdnop_qm_rclegislation.length; b++) {
-                        legislationCount = b;
-                    }
-
+                    ovs_cepsampling_recidivismsamplesize = result["ovs_cepsampling_recidivismsamplesize"];        
+                    oversightTypeCount = result.ovs_cepsampling_cdnop_ovs_oversighttype.length;                
+                    legislationCount = result.ovs_cepsampling_cdnop_qm_rclegislation.length;
+                    
+                    //loop through each region and total how many work order canditates
+                    for (let b = 0; b < result.ovs_ovs_cdnop_ovs_cdregionalnop_CDNOPId.length; b++) {
+                     await Xrm.WebApi.online.retrieveMultipleRecords("ovs_cdregionalnop", "?$select=ovs_cdwoccount&$filter=ovs_cdregionalnopid eq c4448a27-b748-47f2-bfd5-3d59fbf38038").then(
+                        function success(results) {
+                            for (var i = 0; i < results.entities.length; i++) {
+                                workOrderCanidatesCount += results.entities[i]["ovs_cdwoccount"];
+                            }
+                        },
+                        function(error) {
+                            Xrm.Utility.alertDialog(error.message);
+                        }
+                    );
+                }
                 },
                 function (error) {
 
@@ -48,7 +60,8 @@ var NOPRibbon = (function (window, document) {
 
 
             return {
-                sampling_status: ovs_cepsampling_status,
+                fiscalyear: ovs_cdfiscalyear,
+                statecode: statecode,
                 runcepselection: ovs_cepsampling_runcepselection,
                 operationtype: ovs_cepsampling_operationtype,
                 excluderiskcategory: ovs_cepsampling_excluderiskcategory,
@@ -58,46 +71,48 @@ var NOPRibbon = (function (window, document) {
                 samplesize: ovs_cepsampling_samplesize,
                 recidivismsamplesize: ovs_cepsampling_recidivismsamplesize,
                 oversightTypeCount: oversightTypeCount,
-                legislationCount: legislationCount
+                legislationCount: legislationCount,
+                workOrderCanidatesCount: workOrderCanidatesCount
             };
         },
+        
         validateRequiredFields: function (config) {
 
             let msg = "";
             let success = true;
 
             if (!config.operationtype) {
-                msg += "> The Operation type" + " field is required." + "\n";
+                msg += "> Operation type" + " field is required." + "\n";
                 success = false;
             }
 
             if (!config.violationfoundbeforedate) {
 
-                msg += "> The Violation Found Prior to Date" + " field is required." + "\n";
+                msg += "> Violation Found Prior to Date" + " field is required." + "\n";
                 success = false;
             }
 
             if (!config.violationfoundlastnyears) {
 
-                msg += "> The Violation found during the last N Years" + " field is required." + "\n";
+                msg += "> Violation found during the last N Years" + " field is required." + "\n";
                 success = false;
             }
 
             if (!config.recidivismviolationcount) {
 
-                msg += "> The Recidivism When Violation Count Equals" + " field is required." + "\n";
+                msg += "> Recidivism When Violation Count Equals" + " field is required." + "\n";
                 success = false;
             }
 
             if (!config.samplesize) {
 
-                msg += "> The CEP Sample Size" + " field is required." + "\n";
+                msg += "> CEP Sample Size" + " field is required." + "\n";
                 success = false;
             }
 
             if (!config.recidivismsamplesize) {
 
-                msg += "> The Recidivism Sample Size" + " field is required." + "\n";
+                msg += "> Recidivism Sample Size" + " field is required." + "\n";
                 success = false;
             }
 
@@ -115,11 +130,11 @@ var NOPRibbon = (function (window, document) {
 
             if (!config.legislationCount) {
 
-                msg += "> Exclude violation" + " grid" + "\n";
+                msg += "> Exclude violation of type" + "\n";
                 success = false;
             }
             if (!config.oversightTypeCount) {
-                msg += "> Exclude inspections" + " grid" + "\n";
+                msg += "> Exclude inspections of type" + "\n";
                 success = false;
             }
 
@@ -154,7 +169,7 @@ var NOPRibbon = (function (window, document) {
                     title: "Validation Check",
                     confirmButtonLabel: "Continue",
                 };
-                await Xrm.Navigation.openConfirmDialog(confirmStrings).then(function (success) {
+                await Xrm.Navigation.openConfirmDialog(confirmStrings, cepDialogOptions).then(function (success) {
                     if (success.confirmed) {
 
                         _success = true;
@@ -166,6 +181,31 @@ var NOPRibbon = (function (window, document) {
             }
             return { success: _success }
         },
+        validateWorkOrderCanidatesCount: async function (config) {
+   
+        let _success = true;
+
+        if (config.workOrderCanidatesCount > 0) {
+
+           let confirmStrings = {
+                text: 'There are existing GC CEP WOCs in the NOP. This will clear all existing strata information and select a new set of CEP Operations. WOCs will not be affected. Are you sure you would like to continue?',
+                title: "Warning",
+                confirmButtonLabel: "Continue",
+            };
+            await Xrm.Navigation.openConfirmDialog(confirmStrings, cepDialogOptions).then(function (success) {
+                if (success.confirmed) {
+
+                    _success = true;
+
+                } else {
+                    _success = false;
+                }
+            });
+
+        }
+
+        return { success: _success }
+    },
         runCEPSelection: async function (primaryControl) {
 
             if (primaryControl == null) { return };
@@ -178,18 +218,30 @@ var NOPRibbon = (function (window, document) {
             formContext.data.refresh(); // the azure function changes the run cep selection status on complete, refresh page to get lastest status.
 
             let nopId = formContext.data.entity.getId().replace("{", "").replace("}", "");
-
+            
+            //add progress as there is a little delay in retrieving data from web api
+            Xrm.Utility.showProgressIndicator('Validating Data');
             let cepConfigValues = await cepSamplingFunctions.getConfigValues(nopId);
+            Xrm.Utility.closeProgressIndicator();
 
-                if (cepConfigValues.sampling_status != 918640000) {
-                  glHelper.DisplayFormNotification(
-                    "Error! CEP selections can only run when status is draft",
-                    "ERROR",
-                    10000
-                  );
-                  return;
-                  //exit early
-                }
+            var active = 0;
+            if (cepConfigValues.statecode != active) {
+              glHelper.DisplayFormNotification(
+                "Error! CEP selections can only run when NOP is active",
+                "ERROR",
+                10000
+              );
+              return;
+              //exit early
+            }
+
+            
+            let result = await cepSamplingFunctions.validateWorkOrderCanidatesCount(cepConfigValues);
+
+            if (!result.success) {
+                return //exit early
+            }
+            
             if (cepConfigValues.runcepselection) {
                 glHelper.DisplayFormNotification(
                     "The CEP Selection Azure function is already running, please wait, when the process has been completed you will get an in-app notification.",
@@ -200,10 +252,10 @@ var NOPRibbon = (function (window, document) {
                 //exit early
             }
 
-            let result = cepSamplingFunctions.validateRequiredFields(cepConfigValues);
+            result = cepSamplingFunctions.validateRequiredFields(cepConfigValues);
 
             if (!result.success) {
-                Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: result.msg, title: "Validation Check" });
+                Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: result.msg, title: "Validation Check" }, cepDialogOptions);
                 return; // exit early
             }
 
@@ -223,7 +275,7 @@ var NOPRibbon = (function (window, document) {
                     confirmButtonLabel: "Continue",
                     subtitle: "Missing values for optional fields, click continue to ignore warning and proceed with CEP Selection.",
                 };
-                Xrm.Navigation.openConfirmDialog(confirmStrings).then(
+                Xrm.Navigation.openConfirmDialog(confirmStrings,cepDialogOptions).then(
                     function (success) {
                         if (success.confirmed) {
                             formContext.getAttribute("ovs_cepsampling_runcepselection").setValue(true);
@@ -252,29 +304,10 @@ var NOPRibbon = (function (window, document) {
                 );
             }
 
-        },
-        runCEPReplacement: async function (primaryControl) {
-
-            if (primaryControl == null) { return };
-            const formContext = primaryControl;
-
-            formContext.data.refresh(); // the azure function changes the run cep replacement status on complete, refresh page to get lastest status.
-
-            let formType = glHelper.GetFormType(formContext);
-            if (formType == 1) { return }; //on create
-
-
-            let nopId = formContext.data.entity
-                .getId()
-                .replace("{", "")
-                .replace("}", "");
-
-            console.log('button working')
-        },
+        }
     };
 
     return {
-        runCEPSelection: cepSamplingFunctions.runCEPSelection,
-        runCEPReplacement: cepSamplingFunctions.runCEPReplacement
+        runCEPSelection: cepSamplingFunctions.runCEPSelection
     };
 })(window, document);

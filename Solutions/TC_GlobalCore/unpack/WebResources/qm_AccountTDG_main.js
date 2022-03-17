@@ -21,9 +21,7 @@ var AccountTDGmain = (function (window, document) {
     const STATE_PROVINCE = "address1_stateorprovince";
     const ZIP_POSTALCODE = "address1_postalcode";
     const COUNTRY = "address1_country";
-
-    const TAB_NAME = "tab_Operations"
-    const SECTION_NAME = "tab_Operations_section_NOP_Plaaning";
+    const PRIMARYCONTACT = "primarycontactid";
 
 
 
@@ -98,13 +96,7 @@ var AccountTDGmain = (function (window, document) {
         
     }
 
-    function setFieldPermissions(formContext) {
-        var rType = glHelper.GetValue(formContext, "customertypecode");
-        if (rType !== null && rType.toString() === "948010001") {
-            var isPlanner = glHelper.hasCurrentUserRole("TDG Planner");
-            glHelper.SetSectionVisibility(formContext, TAB_NAME, SECTION_NAME, isPlanner);
-        }
-    }
+
 
 
     //composite control fields manipulation
@@ -126,7 +118,7 @@ var AccountTDGmain = (function (window, document) {
 
         OnLoad: function (executionContext) {
             
-            var formContext = executionContext.getFormContext();
+            const formContext = executionContext.getFormContext();
             formContextGlobalRef = formContext;
 
             //if (AccountTDGmain.hasCurrentUserRole("TDG QA")) {
@@ -134,9 +126,8 @@ var AccountTDGmain = (function (window, document) {
             //        glHelper.SetTabVisibility(formContext, "tab_Operations", true);
             //}
 
-            if (glHelper.hasCurrentUserRole("TDG Planner"))
-                glHelper.SetControlVisibility(formContext, "ovs_cdpopulationdensity", false);
-            
+            //TASK 165366
+            glHelper.SetRequiredLevel(formContext, PRIMARYCONTACT, true);
 
             //filter Relationship Type
             filter_customertypecode(formContext);
@@ -176,8 +167,8 @@ var AccountTDGmain = (function (window, document) {
             } catch (e) {
                 console.log("Site_OnChange failed - lookup is empty");
             }
-
-            setFieldPermissions(formContext);
+            
+            
         },
 
 
