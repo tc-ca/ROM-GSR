@@ -1,11 +1,13 @@
+//
 // CompanyRegistrationWizard-Company Create.js
-
+//
 $(document).ready(function () {
     debugger;
 
     var companyName = '{{user.parentcustomerid.name }}';
-    if (companyName)
+    if (companyName) {
         $(".previous-btn").attr('disabled', true);
+    }
 
     // resize WebResource_address_complete
     $("#WebResource_address_complete").height('72px');
@@ -21,7 +23,7 @@ $(document).ready(function () {
     var cid_has_cra_bn = '{{user.cid_has_cra_bn}}';
     var cid_has_cra_bn = (cid_has_cra_bn == "true" ? 1 : 0);
     var cid_crabusinessnumber = '{{user.cid_crabusinessnumber}}';
-    var cid_reasonfornobnnumber = "{{user.cid_reasonfornobnnumber}}";
+    var cid_reasonfornobnnumber = "{{user.cid_reasonfornobnnumber.Value}}";
     var cid_reasonfornobnnumber_other = "{{user.cid_reasonfornobnnumber_other}}";
     var cid_legalname = "{{user.cid_legalname}}";
     var cid_operatingname = "{{user.cid_operatingname}}";
@@ -30,7 +32,6 @@ $(document).ready(function () {
     tdg.c.replace_special_char(cid_operatingname);
 
     $('#cid_has_cra_bn').val(cid_has_cra_bn);
-    //$("#cid_has_cra_bn").parent().parent().hide();
     tdg.c.control_hide("cid_has_cra_bn");
 
     // do not have a business number?
@@ -38,20 +39,15 @@ $(document).ready(function () {
         tdg.c.control_hide("cid_crabusinessnumber");
         tdg.c.control_show("cid_reasonfornobnnumber");
 
-        //$("#cid_crabusinessnumber").parent().parent().hide();
-        //$("#cid_reasonfornobnnumber").parent().parent().show();
-
         $("#cid_reasonfornobnnumber").val(cid_reasonfornobnnumber);
 
         if (cid_reasonfornobnnumber == "3")   // other
         {
             tdg.c.control_show("cid_reasonfornobnnumber_other");
-            //$("#cid_reasonfornobnnumber_other").parent().parent().show();
             $("#cid_reasonfornobnnumber_other").val(cid_reasonfornobnnumber_other);
         }
         else {
             tdg.c.control_show("cid_reasonfornobnnumber_other");
-            //$("#cid_reasonfornobnnumber_other").parent().parent().hide();
         }
     }
     else {
@@ -60,9 +56,6 @@ $(document).ready(function () {
         tdg.c.control_hide("cid_reasonfornobnnumber_other");
 
         $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
-        //$("#cid_crabusinessnumber").parent().parent().show();
-        //$("#cid_reasonfornobnnumber").parent().parent().hide();
-        //$("#cid_reasonfornobnnumber_other").parent().parent().hide();
     }
 
     $("#ovs_legalname").val(cid_legalname);
@@ -81,16 +74,23 @@ $(document).ready(function () {
     tdg.c.addValidator("address1_country", "Country");
 
     if (step_start == "1") {
-        var AddressLine2Text = sessionStorage.getItem("AddressLine2Text");
-        AddressLine2Text = (AddressLine2Text == "null" ? "" : AddressLine2Text);
+        var address1_line1 = "{{user.address1_line1}}";
+        var address1_line2 = "{{user.address1_line2}}";
+        var address1_line3 = "{{user.address1_line3}}";
+        var address1_city = "{{user.address1_city}}";
+        var address1_stateorprovince = "{{user.address1_stateorprovince}}";
+        var address1_postalcode = "{{user.address1_postalcode}}";
+        var address1_country = "{{user.address1_country}}";
 
-        $("#address1_line1").val(sessionStorage.getItem("AddressLine1Text"));
-        $("#address1_line2").val(AddressLine2Text);
-        $("#address1_line3").val("");
-        $("#address1_city").val(sessionStorage.getItem("CityName"));
-        $("#address1_stateorprovince").val(sessionStorage.getItem("ProvinceStateCode"));
-        $("#address1_postalcode").val(sessionStorage.getItem("PostalZipCode"));
-        $("#address1_country").val(sessionStorage.getItem("CountryCode"));
+        $("#address1_line1").val(address1_line1);
+        $("#address1_line2").val(address1_line2);
+        $("#address1_line3").val(address1_line3);
+        $("#address1_city").val(address1_city);
+        $("#address1_stateorprovince").val(address1_stateorprovince);
+        $("#address1_postalcode").val(address1_postalcode);
+        $("#address1_country").val(address1_country);
+
+        sessionStorage.setItem("AddressLine1Text", address1_line1);
     }
 
     // autocomplete off
@@ -122,14 +122,15 @@ if (window.jQuery) {
 function AddressComplete_Hide_address1_line1() {
     debugger;
     tdg.c.control_hide("address1_line1");
-    //$("#address1_line1").parent().parent().hide();
 }
 
 function AddressComplete_address1_line1() {
+    debugger;
     $("#address1_line1").val(sessionStorage.getItem("Line1"));
 }
 
 function AddressComplete_Selected() {
+    debugger;
     $("#address1_line1").val(sessionStorage.getItem("Line1"));
     $("#address1_line2").val(sessionStorage.getItem("Line2"));
     $("#address1_line3").val(sessionStorage.getItem("Line3"));

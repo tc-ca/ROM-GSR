@@ -7,7 +7,10 @@
 </div>
 <script>
   $(document).ready(async function() {
-    alert('test123');
+    alert('start');
+    let token = await getTokenwithClientid();
+    alert("after function call");
+    alert(token);
     $('#callapi').on('click', async function() {
       alert('before functioncall');
       // Add_Operation_entity
@@ -16,4 +19,141 @@
       alert("alert id " + opId);
     });
   });
+  function getTokenwithClientid() {
+    var t;
+    (function(auth, $) {
+      "use strict";
+      var callback = null;
+      //Force Login for Anonymous users. Below line can be commented if force login is not needed.
+      //    $.cookie("ImplicitGrantForceLogin", 1);
+      let clientId = "2e6b3c9c-0a5a-4651-8913-1aa1267a19ef"; //Add the Client ID registered on CRM.
+      auth.getAuthenticationToken = function(callbackFn) {
+        callback = callbackFn;
+        $.ajax({
+          type: 'GET',
+          url: `/_services/auth/token?client_id=${clientId}`,
+          cache: false,
+          success: handleGetAuthenticationTokenSuccess,
+          error: jqXHR => callback(null, jqXHR)
+        });
+      }
+      function handleGetAuthenticationTokenSuccess(data, status, jqXHR) {
+        t = data;
+        var jsonResult = JSON.parse(jqXHR.getResponseHeader('X-Responded-JSON'));
+        if (jsonResult && jsonResult.status == 401) {
+          var forceLogin = Number($.cookie("ImplicitGrantForceLogin")) === 1;
+          if (forceLogin) {
+            // If the user is not logged in, redirect to login page
+            redirectToLogin();
+          } else {
+            callback(null, jsonResult); //Run callback method with error message
+          }
+        } else {
+          // Pass the token to the callback function
+          callback(data);
+        }
+      }
+      function redirectToLogin() {
+        var redirectUrl = window.location;
+        var loginUrl = window.location.origin + '/SignIn?returnUrl=' + encodeURIComponent(redirectUrl);
+        window.location = loginUrl;
+      }
+    }(window.auth || (window.auth = {}), window.jQuery));
+    // Part 2: Define Callback function and call window.auth.getAuthenticationToken to fetch the token.
+    var callbackFn = function(data, err) {
+      if (data) {
+        alert("calling authenticate");
+        call_old_scanAPI(data);
+        authenticate_MetaDefender_Api(data);
+        call_Metadefender_Api(data);
+        //Token received
+        console.log(data);
+      } else {
+        console.log("Error");
+        if (err) {
+          // 401 is returned for anonymous users.
+          if (err.status == 401) {
+            console.log("Login required");
+          }
+          // To handle any other error
+          else {
+            console.log(err.responseJSON.ErrorId + " : " + err.responseJSON.ErrorMessage);
+          }
+        }
+      }
+    }
+    // Fetch Token Call
+    window.auth.getAuthenticationToken(callbackFn);
+    return t;
+  }
+  function authenticate_MetaDefender_Api(token) {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "text/json");
+    //"application/json-patch+json");
+    myHeaders.append("Connection", "Keep-Alive");
+    myHeaders.append("Accept", "*/*");
+    myHeaders.append("Access-Control-Allow-Origin", "*");
+    //myHeaders.append("Authorization", "Bearer " + token);
+    var raw = JSON.stringify({
+      "username": "56cf772da1154369b877a1e3fd177da9",
+      "password": "3fa7ae5d1c8f4e37b764cf7530f4f0e8f512779b6a72440fb9e13ecd76ed2e6b",
+      "Authorization": "Bearer " + token
+    });
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+      //,
+      //mode: 'no-cors'
+    };
+    fetch("https://wwwapps2.tc.gc.ca/Saf-Sec-Sur/13/tc-virusscan-api/api/v1/authenticate?Authorization Value=" + token, requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+  }
+  function call_Metadefender_Api(token) {
+    //var token = authenticate_MetaDefender_Api();
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "text/json");
+    myHeaders.append("Accept", "*/*");
+    myHeaders.append("Access-Control-Allow-Origin", "*");
+    myHeaders.append("Authorization", "Bearer " + token);
+    var raw = "'xxxx'";
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow',
+      mode: 'no-cors'
+    };
+    fetch("https://wwwapps2.tc.gc.ca/Saf-Sec-Sur/13/tc-virusscan-api/api/v1/file-scan?filename=test&Authorization Value=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjU2Y2Y3NzJkYTExNTQzNjliODc3YTFlM2ZkMTc3ZGE5IiwibmJmIjoxNjQ3NDgwNjYxLCJleHAiOjE2NDc0ODA2OTEsImlhdCI6MTY0NzQ4MDY2MX0.kDLgLXMmX7dRpbAEFldkBBNpqeTxVOAjE-4CD_T58yA&mode= 'no-cors'", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+  }
+  function call_old_scanAPI(token) {
+    var myHeaders = new Headers();
+    // myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+    myHeaders.append("Content-Type", "text/json");
+    //myHeaders.append("Cookie", "_mtoa_session=6c7f8ebb4ebc400baebd733898da0c87");
+    // myHeaders.append("Content-Type", "text/json");
+    myHeaders.append("Accept", "*/*");
+    myHeaders.append("Access-Control-Allow-Origin", "*");
+    //myHeaders.append("Authorization", "Bearer " + token);
+    var urlencoded = new URLSearchParams();
+    urlencoded.append("value", "X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*");
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: 'follow',
+      mode: 'no-cors'
+    };
+    fetch("https://wwwapps.tc.gc.ca/Saf-Sec-Sur/13/MTAPI/api/v1/file-scan-status?filename=test", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+    console.log("after fetch");
+  }
 </script>

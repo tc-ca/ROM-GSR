@@ -1,16 +1,17 @@
+//
 // CompanyRegistrationWizard-Start.js
-
-var _step_start = "0";
-
+//
 $(document).ready(function () {
     debugger;
 
-    _step_start = sessionStorage.getItem("step_start");
-    _step_start = (_step_start == null ? "0" : _step_start);
+    tdg.c.section_hide("section_address_1");
 
     // default current use is "Primary"
     $("#cid_contacttype").val(100000000);
     tdg.c.control_hide("cid_contacttype");
+
+    // default has a cra bn
+    $("#cid_has_cra_bn").val("1");
 
     tdg.c.control_hide("parentcustomerid", true);
     tdg.c.control_hide("cid_operatingname");
@@ -21,8 +22,6 @@ $(document).ready(function () {
     $("#cid_reasonfornobnnumber").change(cid_reasonfornobnnumber_onchange);
     cid_reasonfornobnnumber_onchange();
 
-    _step_start = "1";
-
     // autocomplete off
     $("#cid_crabusinessnumber").attr("autocomplete", "new-password");
     $("#cid_legalname").attr("autocomplete", "new-password");
@@ -32,14 +31,12 @@ $(document).ready(function () {
 function cid_has_cra_bn_onchange() {
     debugger;
 
-    if (_step_start == "0") {
-        clear_parentcustomerid();
+    clear_parentcustomerid();
 
-        tdg.c.removeValidator("cid_crabusinessnumber");
-        tdg.c.removeValidator("cid_reasonfornobnnumber");
-        tdg.c.removeValidator("cid_reasonfornobnnumber_other");
-        tdg.c.removeValidator("cid_legalname");
-    }
+    tdg.c.removeValidator("cid_crabusinessnumber");
+    tdg.c.removeValidator("cid_reasonfornobnnumber");
+    tdg.c.removeValidator("cid_reasonfornobnnumber_other");
+    tdg.c.removeValidator("cid_legalname");
 
     tdg.c.control_hide("cid_reasonfornobnnumber_other");
 
@@ -74,11 +71,8 @@ function cid_has_cra_bn_onchange() {
 function cid_reasonfornobnnumber_onchange() {
     debugger;
 
-    if (_step_start == "0") {
-        $("#cid_reasonfornobnnumber_other").val("");
-    }
+    $("#cid_reasonfornobnnumber_other").val("");
 
-    //$("#cid_reasonfornobnnumber_other").val();
     cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
     if (cid_reasonfornobnnumber == "3")   // other
     {
@@ -208,25 +202,22 @@ function Retrieve_cra(bn) {
 }
 
 function BN_Selected(data) {
+    debugger;
+
     var LegalName = data.LegalName
     var OperatingName = data.OperatingName
     OperatingName = (OperatingName == "" ? LegalName : OperatingName);
 
     var address = data.PhysicalLocationAddress;
-    var AddressLine1Text = address.AddressLine1Text;
-    var AddressLine2Text = address.AddressLine2Text;
-    var CityName = address.CityName;
-    var ProvinceStateCode = address.ProvinceStateCode;
-    var PostalZipCode = address.PostalZipCode;
-    var CountryCode = address.CountryCode;
 
     $("#cid_legalname").val(LegalName);
     $("#cid_operatingname").val(OperatingName);
 
-    sessionStorage.setItem("AddressLine1Text", AddressLine1Text);
-    sessionStorage.setItem("AddressLine2Text", AddressLine2Text);
-    sessionStorage.setItem("CityName", CityName);
-    sessionStorage.setItem("ProvinceStateCode", ProvinceStateCode);
-    sessionStorage.setItem("PostalZipCode", PostalZipCode);
-    sessionStorage.setItem("CountryCode", CountryCode);
+    $("#address1_line1").val(address.AddressLine1Text);
+    $("#address1_line2").val(address.AddressLine2Text);
+    $("#address1_line3").val("");
+    $("#address1_city").val(address.CityName);
+    $("#address1_stateorprovince").val(address.ProvinceStateCode);
+    $("#address1_postalcode").val(address.PostalZipCode);
+    $("#address1_country").val(address.CountryCode);
 }

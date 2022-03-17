@@ -171,30 +171,143 @@ if (typeof (tdg.c) == "undefined") {
     }
 }
 
-(function (webapi, $) {
-    function safeAjax(ajaxOptions) {
-        var deferredAjax = $.Deferred();
+// tdg.webapi = tdgcore.webapi
+if (typeof (tdg.webapi) == "undefined") {
+    tdg.webapi = {
+        list: function (entity_name, filter) {
+            debugger;
 
-        shell.getTokenDeferred().done(function (token) {
-            // add headers for AJAX
-            if (!ajaxOptions.headers) {
-                $.extend(ajaxOptions, {
-                    headers: {
-                        "__RequestVerificationToken": token
-                    }
-                });
-            } else {
-                ajaxOptions.headers["__RequestVerificationToken"] = token;
-            }
-            $.ajax(ajaxOptions)
-                .done(function (data, textStatus, jqXHR) {
-                    validateLoginSession(data, textStatus, jqXHR, deferredAjax.resolve);
-                }).fail(deferredAjax.reject); //AJAX
-        }).fail(function () {
-            deferredAjax.rejectWith(this, arguments); // on token failure pass the token AJAX and args
-        });
+            var response = null;
+            $.ajax({
+                type: "GET",
+                url: "/_api/" + entity_name + "s?$filter=" + filter,
+                contentType: "application/json",
+                async: false
+            }).done(function (json) {
+                response = json.value;
+            });
+            return response;
+        },
 
-        return deferredAjax.promise();
+        create: function (entity_name, data) {
+            debugger;
+
+            webapi.safeAjax({
+                type: "POST",
+                url: "/_api/" + entity_name + "s",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+
+                success: function (res, status, xhr) {
+                    debugger;
+                    //print id of newly created table record
+                    console.log("entityID: " + xhr.getResponseHeader("entityid"))
+                }
+            });
+        },
+
+        update: function (entity_name, record_id, data) {
+            debugger;
+
+            webapi.safeAjax({
+                type: "PATCH",
+                url: "/_api/" + entity_name + "s(" + record_id + ")",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+
+                success: function (res) {
+                    debugger;
+                    console.log(res);
+                }
+            });
+        },
+
+        delete: function (entity_name, record_id) {
+            debugger;
+
+            webapi.safeAjax({
+                type: "DELETE",
+                url: "/_api/" + entity_name + "s(" + record_id + ")",
+                contentType: "application/json",
+
+                success: function (res) {
+                    debugger;
+                    console.log(res);
+                }
+            });
+        },
+
+        inactive: function (entity_name, record_id) {
+            var data = {
+                "statecode": 1,
+                "statuscode": 821350004
+            };
+            tdg.webapi.update(entity_name, record_id, data);
+        }
     }
-    webapi.safeAjax = safeAjax;
-})(window.webapi = window.webapi || {}, jQuery)
+}
+
+// tdg.root = tdgcore.root
+if (typeof (tdg.root) == "undefined") {
+    tdg.root = {
+        setup: function (cid_has_cra_bn, cid_crabusinessnumber, parentcustomerid, contact_id) {
+            debugger;
+            var rows = tdg.webapi.list("cid_companyerap", "statuscode eq 1");
+            var length = rows.length;
+
+            if ((cid_has_cra_bn) && (length == 0)) {
+                var data = tdg.root.erap_list(cid_crabusinessnumber);
+                for (var i = 0; i < data.length; i++) {
+                    var item = data[i];
+                    var root_name = item.root_name;
+                    tdg.root.cid_companyeraps_insert(parentcustomerid, root_name, contact_id);
+                }
+            }
+        },
+
+        erap_list: function (bn) {
+            debugger;
+
+            var root = tdg.root.company(bn);
+            if (root != null) {
+                var root_organization_id = root.root_organization_id;
+                var i = root_organization_id.lastIndexOf('.');
+                root_organization_id = root_organization_id.substr(0, i);
+
+                var data;
+                var filter = "root_organization_id eq " + root_organization_id;
+
+                data = tdg.c.OData_List("root_erap", filter);
+                if (data.length == 0) {
+                    return data;
+                }
+
+                return data;
+            }
+            return data;
+        },
+
+        cid_companyeraps_insert: function (parent_id, cid_erapid, contact_id) {
+            debugger;
+            var data = {
+                "cid_Company@odata.bind": "/accounts(" + parent_id + ")",
+                "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
+                "cid_erapid": cid_erapid
+            };
+            tdg.webapi.create("cid_companyerap", data);
+        },
+
+        company: function (bn) {
+            var data;
+            var filter = "root_org_business_cra_num eq " + bn;
+
+            data = tdg.c.OData_List("root_company", filter);
+            if (data.length == 0) {
+                return data;
+            }
+
+            return data[0];
+        }
+    }
+}
+
