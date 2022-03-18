@@ -46,7 +46,7 @@
 
 <script>
   $(document).ready( function() {
-      
+      call_Inital_validation();
       //hide existing submit button
        $("#InsertButton").css("display", "none");
       //hid processing div
@@ -54,7 +54,7 @@
   //add new submit button
   $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value='Scan and Upload' class='submit-btn btn btn-primary form-action-container-left' />");
     $(window).load(function() {
-
+    //call_Inital_validation();
     });
    // var pageURL = window.location.href;
 
@@ -96,12 +96,12 @@ $('#btn_attachfile_and_scan').click(function(e)
            // var c = String.raw `X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*`;
 
 
-          // Call_Virsu_Scan_API(Scan_API_URL
+          Call_Virsu_Scan_API(Scan_API_URL
             // ,btoa(c));
-            //,DocumentbodyContents);
+            ,DocumentbodyContents);
 
 
-          call_Metadefender_Api();
+        // call_Metadefender_Api();
 
 
            // fetch_getScanResult();
@@ -260,8 +260,10 @@ alert ("Please select file first");
 
 function Call_Virsu_Scan_API(url, fileContent)
 {
-  $("#processingMsg").css("display", "block");
-          $('#processingMsg').text("file is sent for scanning please wait...");
+
+      $('#processingMsg').css('display', 'block');
+        $('#processingMsg').text("File is sent for scanning, please wait..");
+
   var acupdate =
         '{"FileContent" :"' + fileContent  + '" }';
 
@@ -454,6 +456,76 @@ fetch("https://wwwapps2.tc.gc.ca/Saf-Sec-Sur/13/tc-virusscan-api/api/v1/file-sca
 
 
 }
+
+function call_Inital_validation()
+{
+
+  var URLs = new URLSearchParams(window.location.search);
+        var newrecordid = URLs.get('id');
+        var companyid = URLs.get('companyid');
+        if  ( companyid != null  )
+{
+ $('#processingMsg').css('display', 'block');
+        $('#processingMsg').text("Preliminary analysis of the uploaded file has begun");
+
+        //notificationMsg.show("System is validating uploaded List ...");
+ 
+
+        var URLs = new URLSearchParams(window.location.search);
+        var newrecordid = URLs.get('id');
+        var companyid = URLs.get('companyid');
+        var acupdate =
+            '{ "activityid":"' + newrecordid + '" , "name": "test second upload sites", "accountid": "' + companyid + '" }';
+        var req = new XMLHttpRequest();
+        var url = '{{excelload_Flow_URL}}';
+        
+        //"https://prod-21.canadacentral.logic.azure.com:443/workflows/1b560b6972c9486c9e8a8703c39fc8ff/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=rAQ5udszPA6NIKwMwn8EspcMsvlwgFjkVaqdRuFM8dw";
+        req.open("POST", url, true);
+        req.setRequestHeader('Content-Type', 'application/json');
+
+        req.onreadystatechange = function () {
+
+            if (this.readyState === 4) {
+
+                req.onreadystatechange = null;
+                notificationMsg.hide();
+                if (this.status === 200) {
+                    var result = this.response;
+                    
+                    //var response = confirm("Validation has been completed successfully. Do you want to proceed with the upload?");
+                   // if (response == true) {
+                      //  var flowpramater = '{"accountid": "' + companyid + '","Filelocation":"' + result  +'","activityid":"' + newrecordid +'"}';
+                    //var flowurl = '{{Bulk_flow_URL}}';
+                    //"https://prod-04.canadacentral.logic.azure.com:443/workflows/d1f0399ee2f14c8cb5f97b7a3d980e18/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=HodXII8arm-pmLQA-zKLiafDncFzFfLLsbpdOXkNd-Y";
+                      alert ("File has passed Initial validation. you will be notified by email when processing is done.")
+                      //  callworkflow(flowurl, flowpramater);
+                   
+                   
+                    var result = this.response;
+
+
+                } else if (this.status === 402) {
+
+alert ("Uploaded List did not pass validation, please check the errors list.");
+                    var result = this.response;
+                
+
+                       document.getElementById("errortable").innerHTML = result;
+                    
+                } else {
+
+                  
+                    var result = this.response;
+                    alert(result);
+                       // window.location.replace("~/Bulk_Site_Upload");
+                }
+            }
+        }
+        req.send(acupdate);
+
+
+}//end if
+}//end function
 
 </script>
 <div class="container">
