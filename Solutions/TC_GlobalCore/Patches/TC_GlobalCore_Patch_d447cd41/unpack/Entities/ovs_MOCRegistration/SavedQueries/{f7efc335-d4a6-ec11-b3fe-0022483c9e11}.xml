@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{f7efc335-d4a6-ec11-b3fe-0022483c9e11}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
+        <row name="result" id="ovs_mocregistrationid">
+          <cell name="ovs_name" width="157" />
+          <cell name="ovs_cepsampling_strataname" width="214" />
+          <cell name="statecode" width="100" />
+          <cell name="ovs_cepsampling_replaced" width="100" />
+          <cell name="ovs_cepsampling_replacement" width="100" />
+          <cell name="modifiedon" width="203" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
+        <entity name="ovs_mocregistration">
+          <attribute name="ovs_name" />
+          <attribute name="ovs_mocregistrationid" />
+          <attribute name="ovs_cepsampling_strataname" />
+          <attribute name="statecode" />
+          <attribute name="ovs_cepsampling_replaced" />
+          <attribute name="ovs_cepsampling_replacement" />
+          <attribute name="modifiedon" />
+          <order attribute="ovs_cepsampling_strataname" descending="false" />
+          <order attribute="modifiedon" descending="true" />
+          <filter type="and">
+            <filter type="or">
+              <condition attribute="ovs_cepsampling_replaced" operator="eq" value="1" />
+              <filter type="or">
+                <condition attribute="ovs_cepsampling_replacement" operator="eq" value="1" />
+              </filter>
+            </filter>
+          </filter>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="CEP - Replacement  " languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
