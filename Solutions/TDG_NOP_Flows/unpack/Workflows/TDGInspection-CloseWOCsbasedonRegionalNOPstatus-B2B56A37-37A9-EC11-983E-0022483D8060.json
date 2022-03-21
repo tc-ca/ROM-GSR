@@ -1,0 +1,124 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "Regional_NOP_inactive_and_Work_Orders_Generated": {
+          "metadata": {
+            "operationMetadataId": "916b9931-7d50-477f-9806-646f22e7d873"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "ovs_cdregionalnop",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/runas": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "conditions": [
+            {
+              "expression": "@and(equals(triggerBody()?['statecode'],1),equals(triggerBody()?['statuscode'],918640006))"
+            }
+          ],
+          "runtimeConfiguration": {
+            "concurrency": {
+              "runs": 1
+            }
+          }
+        }
+      },
+      "actions": {
+        "Apply_to_each": {
+          "foreach": "@outputs('Get_WOCs')?['body/value']",
+          "actions": {
+            "Update_a_row": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "bc0861ce-8476-42be-9243-8330873e2ae8"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "ovs_workordercandidates",
+                  "recordId": "@items('Apply_to_each')?['ovs_workordercandidateid']",
+                  "item/statuscode": 2,
+                  "item/statecode": 1
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "Get_WOCs": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a1b217cb-944e-4d71-8310-0c4c2fef8921"
+          },
+          "type": "Foreach",
+          "runtimeConfiguration": {
+            "concurrency": {
+              "repetitions": 25
+            }
+          }
+        },
+        "Get_WOCs": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "3682171c-3278-46f6-8920-96e33b214689"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_workordercandidates",
+              "$select": "statecode,statuscode,ovs_workordercandidateid",
+              "$filter": "(statecode eq 0 and _ovs_regionalnop_value eq @{triggerOutputs()?['body/ovs_cdregionalnopid']})"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}
