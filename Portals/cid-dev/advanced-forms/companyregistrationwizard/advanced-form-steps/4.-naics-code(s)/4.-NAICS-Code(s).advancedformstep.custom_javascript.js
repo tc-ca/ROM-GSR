@@ -57,38 +57,38 @@ function text_language (text, language) {
 	return value;
 }
 
-if (window.jQuery) {
-    (function ($) {
-        webFormClientValidate = function () {
-            var validation = true;
-            var errorMessage = "";
-            var companyId = $("#EntityFormView_EntityID").val();	
-			//var filter = "cid_company/Id eq (guid'" + companyId + "')";
-			//var data = ExecuteOData("Validation_CompanyNAICSCodes", filter);
+//if (window.jQuery) {
+    //(function ($) {
+        //webFormClientValidate = function () {
+        //    var validation = true;
+        //    var errorMessage = "";
+        //    var companyId = $("#EntityFormView_EntityID").val();	
+		//	//var filter = "cid_company/Id eq (guid'" + companyId + "')";
+		//	//var data = ExecuteOData("Validation_CompanyNAICSCodes", filter);
             
-			//if(data == null || data.length <= 0)
-			if(companyId == null)
-			{
-				errorMessage = "Error: Missing company Id.";
-                validation = false;
-			}
-			else if(!CompanyHasNAICSCodes(companyId))
-			{
-                errorMessage = "You cannot proceed before adding company NAICS code(s).";
-                validation = false;
-            }
+		//	//if(data == null || data.length <= 0)
+		//	if(companyId == null)
+		//	{
+		//		errorMessage = "Error: Missing company Id.";
+      //          validation = false;
+	//		}
+	//		else if(!CompanyHasNAICSCodes(companyId))
+	//		{
+        //        errorMessage = "You cannot proceed before adding company NAICS code(s).";
+        //        validation = false;
+         //   }
 
-            if (!validation) {
-                $('#ValidationSummaryEntityFormView div').remove();
+       //     if (!validation) {
+        //        $('#ValidationSummaryEntityFormView div').remove();
 
-                var validationSection = $('#ValidationSummaryEntityFormView');
+        //        var validationSection = $('#ValidationSummaryEntityFormView');
 
-                validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
-                validationSection.show();
-				$('#alertMessages').focus();
-            }
+        //        validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
+        //        validationSection.show();
+		//		$('#alertMessages').focus();
+        //    }
 
-           return validation;
-		}
-    }(window.jQuery));
-}
+      //     return validation;
+	//	}
+  //  }(window.jQuery));
+//}

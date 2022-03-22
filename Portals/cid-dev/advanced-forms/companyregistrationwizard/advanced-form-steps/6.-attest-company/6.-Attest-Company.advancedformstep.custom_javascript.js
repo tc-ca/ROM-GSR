@@ -73,12 +73,12 @@ if (window.jQuery) {
 		if(!validation)
 			errorMessage = "You cannot attest company before adding primary and secondary contacts.</br>";
 		
-		//NAICS Codes validation
-		if(!CompanyHasNAICSCodes(companyId))
-		{
-            errorMessage = errorMessage + "You cannot attest company before adding company NAICS code(s).</br>";
-            validation = false;
-        }
+		////NAICS Codes validation
+		//if(!CompanyHasNAICSCodes(companyId))
+		//{
+        //    errorMessage = errorMessage + "You cannot attest company before adding company NAICS code(s).</br>";
+        //    validation = false;
+        //}
 
         if (!validation) 
 		{
