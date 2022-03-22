@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{6551506e-b87e-ec11-8d20-0022483e1408}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
+        <row name="result" id="ovs_mocregistrationid">
+          <cell name="ovs_name" width="102" />
+          <cell name="ovs_operationtype" width="100" />
+          <cell name="ovs_hubind" width="100" />
+          <cell name="a_b6c0d516f9dd4225b18a730ad609cfc2.statecode" width="100" />
+          <cell name="a_b6c0d516f9dd4225b18a730ad609cfc2.address1_postalcode" width="100" />
+          <cell name="ovs_cepsampling_strataname" width="128" />
+          <cell name="ovs_cepsampling_inspectedinprevfiscalyear" width="100" />
+          <cell name="ovs_cepsampling_area" width="56" />
+          <cell name="ovs_cdriskcategory" width="110" />
+          <cell name="ovs_cepsampling_recidivism" width="89" />
+          <cell name="ovs_cepsampling_strata" width="65" />
+          <cell name="ovs_cepsampling_recidivismcount" width="132" />
+          <cell name="ovs_cepsampling_n1" width="42" />
+          <cell name="ovs_cepsampling_n2" width="46" />
+          <cell name="ovs_ovs_cepsampling_n2sum" width="52" />
+          <cell name="ovs_cepsampling_n" width="47" />
+          <cell name="ovs_cepind" width="100" />
+          <cell name="ovs_cepsampling_randomlyselectedbysystem" width="25" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
+        <entity name="ovs_mocregistration">
+          <attribute name="ovs_name" />
+          <attribute name="ovs_mocregistrationid" />
+          <filter type="and">
+            <condition attribute="ovs_cepsampling_strataname" operator="not-null" />
+          </filter>
+          <attribute name="ovs_cdriskcategory" />
+          <attribute name="ovs_cepsampling_recidivism" />
+          <attribute name="ovs_cepsampling_strata" />
+          <attribute name="ovs_cepsampling_recidivismcount" />
+          <attribute name="ovs_cepsampling_strataname" />
+          <attribute name="ovs_cepsampling_n1" />
+          <attribute name="ovs_cepsampling_n2" />
+          <attribute name="ovs_ovs_cepsampling_n2sum" />
+          <attribute name="ovs_cepsampling_n" />
+          <attribute name="ovs_cepsampling_randomlyselectedbysystem" />
+          <order attribute="ovs_cepsampling_strataname" descending="false" />
+          <attribute name="ovs_cepsampling_inspectedinprevfiscalyear" />
+          <attribute name="ovs_cepsampling_area" />
+          <attribute name="ovs_cepind" />
+          <attribute name="ovs_operationtype" />
+          <attribute name="ovs_hubind" />
+          <link-entity alias="a_b6c0d516f9dd4225b18a730ad609cfc2" name="account" to="ovs_siteid" from="accountid" link-type="outer" visible="false">
+            <attribute name="statecode" />
+            <attribute name="address1_postalcode" />
+          </link-entity>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="CEP - Frame" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
