@@ -12,6 +12,13 @@ $(document).ready(function () {
 		//	startStep.css('background-color', '#eaebed');
 		//	startStep.css('color', 'grey');
 		//}
+		var companyid = '{{user.parentcustomerid.id}}';
+
+		var  company_status = "{{entities.account['20e6041a-3610-453f-af55-009e75690d3f'].cid_cidcompanystatus.value}}";
+
+		if(company_status == '100000005'){
+			window.location.href = "~/registration";
+		}
 	}
 
     var instructionBtns = $(".instruction-btn");
