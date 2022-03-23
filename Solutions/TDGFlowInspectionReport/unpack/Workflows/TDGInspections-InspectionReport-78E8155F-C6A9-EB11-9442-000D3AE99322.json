@@ -1937,7 +1937,7 @@
                           "entityName": "bookableresourcebookings",
                           "recordId": "@variables('BookingId')",
                           "item/BookingStatus@odata.bind": "/bookingstatuses(c33410b9-1abe-4631-b4e9-6e4a1113af34)",
-                          "item/endtime": "@utcnow()"
+                          "item/endtime": "@if(greater(items('Update_booking_resources')?['endtime'], utcnow()),utcnow(),items('Update_booking_resources')?['endtime'])"
                         },
                         "authentication": "@parameters('$authentication')"
                       }
