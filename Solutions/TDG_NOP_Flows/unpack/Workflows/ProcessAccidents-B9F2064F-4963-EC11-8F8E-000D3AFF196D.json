@@ -33,48 +33,15 @@
         "manual": {
           "splitOn": "@triggerBody()['rows']",
           "metadata": {
-            "operationMetadataId": "6336e188-d670-426f-8882-5efc8a46ac6c"
+            "operationMetadataId": "35826f2e-9b87-4112-a9ca-0b118a13463e"
           },
           "type": "Request",
           "kind": "ApiConnection",
           "inputs": {
             "schema": {
               "type": "object",
-              "properties": {
-                "rows": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "entity": {
-                        "type": "object",
-                        "properties": {
-                          "_ovs_cdfiscalyearid_value": {
-                            "title": "Fiscal Year",
-                            "type": "string",
-                            "format": "guid"
-                          },
-                          "ovs_cdnopid": {
-                            "title": "NOP",
-                            "type": "string",
-                            "format": "guid"
-                          }
-                        },
-                        "required": [
-                          "_ovs_cdfiscalyearid_value",
-                          "ovs_cdnopid"
-                        ]
-                      }
-                    },
-                    "required": [
-                      "entity"
-                    ]
-                  }
-                }
-              },
-              "required": [
-                "rows"
-              ]
+              "properties": {},
+              "required": []
             },
             "host": {
               "connection": {
@@ -109,7 +76,7 @@
             "parameters": {
               "entityName": "ovs_cdregionalnops",
               "$select": "ovs_cdregionalnopid",
-              "$filter": "(_ovs_cdnopid_value eq '@{triggerBody()?['entity']?['ovs_cdnopid']}')"
+              "$filter": "(_ovs_cdnopid_value eq '')"
             },
             "authentication": {
               "type": "Raw",
@@ -168,6 +135,7 @@
                               "item/ovs_site@odata.bind": "/accounts/@{items('For_Each_WOC')?['_ovs_site_value']}",
                               "item/statuscode": 1,
                               "item/ovs_hqflag": true,
+                              "item/ovs_initialrecommendation": 918640000,
                               "item/ovs_name": "WOC - @{items('For_Each_WOC')?['ovs_operationid/ovs_name']}",
                               "item/ovs_operationid@odata.bind": "/ovs_mocregistrations/@{items('For_Each_WOC')?['_ovs_operationid_value']}",
                               "item/ovs_oversighttype@odata.bind": "/ovs_oversighttypes/@{variables('HubOversightType')}",
@@ -213,6 +181,7 @@
                               "item/ovs_site@odata.bind": "/accounts/@{items('For_Each_WOC')?['_ovs_site_value']}",
                               "item/statuscode": 1,
                               "item/ovs_hqflag": true,
+                              "item/ovs_initialrecommendation": 918640000,
                               "item/ovs_name": "WOC - @{items('For_Each_WOC')?['ovs_operationid/ovs_name']}",
                               "item/ovs_operationid@odata.bind": "/ovs_mocregistrations/@{items('For_Each_WOC')?['_ovs_operationid_value']}",
                               "item/ovs_oversighttype@odata.bind": "/ovs_oversighttypes/@{variables('HubOversightType')}",
@@ -289,6 +258,7 @@
                               "item/ovs_site@odata.bind": "/accounts/@{items('For_Each_WOC')?['_ovs_site_value']}",
                               "item/statuscode": 1,
                               "item/ovs_hqflag": true,
+                              "item/ovs_initialrecommendation": 918640000,
                               "item/ovs_name": "WOC - @{items('For_Each_WOC')?['ovs_operationid/ovs_name']}",
                               "item/ovs_operationid@odata.bind": "/ovs_mocregistrations/@{items('For_Each_WOC')?['_ovs_operationid_value']}",
                               "item/ovs_oversighttype@odata.bind": "/ovs_oversighttypes/@{variables('HubOversightType')}",
@@ -456,7 +426,7 @@
             "parameters": {
               "entityName": "tc_tcfiscalquarters",
               "$select": "tc_tcfiscalquarterid",
-              "$filter": "(_tc_tcfiscalyearid_value eq '@{triggerBody()?['entity']?['_ovs_cdfiscalyearid_value']}' and tc_name eq 'Q1')"
+              "$filter": "(_tc_tcfiscalyearid_value eq '' and tc_name eq 'Q1')"
             },
             "authentication": {
               "type": "Raw",
@@ -483,7 +453,7 @@
             "parameters": {
               "entityName": "tc_tcfiscalquarters",
               "$select": "tc_tcfiscalquarterid",
-              "$filter": "(_tc_tcfiscalyearid_value eq '@{triggerBody()?['entity']?['_ovs_cdfiscalyearid_value']}' and tc_name eq 'Q2')"
+              "$filter": "(_tc_tcfiscalyearid_value eq '' and tc_name eq 'Q2')"
             },
             "authentication": {
               "type": "Raw",
@@ -510,7 +480,7 @@
             "parameters": {
               "entityName": "tc_tcfiscalquarters",
               "$select": "tc_tcfiscalquarterid",
-              "$filter": "(_tc_tcfiscalyearid_value eq '@{triggerBody()?['entity']?['_ovs_cdfiscalyearid_value']}' and tc_name eq 'Q3')"
+              "$filter": "(_tc_tcfiscalyearid_value eq '' and tc_name eq 'Q3')"
             },
             "authentication": {
               "type": "Raw",
@@ -537,7 +507,7 @@
             "parameters": {
               "entityName": "tc_tcfiscalquarters",
               "$select": "tc_tcfiscalquarterid",
-              "$filter": "(_tc_tcfiscalyearid_value eq '@{triggerBody()?['entity']?['_ovs_cdfiscalyearid_value']}' and tc_name eq 'Q4')"
+              "$filter": "(_tc_tcfiscalyearid_value eq '' and tc_name eq 'Q4')"
             },
             "authentication": {
               "type": "Raw",
@@ -757,7 +727,7 @@
             "parameters": {
               "entityName": "annotations",
               "item/subject": "Accidents Flow Ran Successfully",
-              "item/objectid_ovs_cdnop@odata.bind": "/ovs_cdnops/@{triggerBody()?['entity']?['ovs_cdnopid']}"
+              "item/objectid_ovs_cdnop@odata.bind": "/ovs_cdnops/"
             },
             "authentication": {
               "type": "Raw",
