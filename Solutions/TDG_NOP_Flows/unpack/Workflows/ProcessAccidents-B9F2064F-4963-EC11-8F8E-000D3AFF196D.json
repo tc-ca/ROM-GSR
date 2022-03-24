@@ -40,7 +40,33 @@
           "inputs": {
             "schema": {
               "type": "object",
-              "properties": {},
+              "properties": {
+                "rows": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "entity": {
+                        "type": "object",
+                        "properties": {
+                          "_ovs_cdfiscalyearid_value": {
+                            "title": "Fiscal Year",
+                            "type": "string",
+                            "format": "guid"
+                          },
+                          "ovs_cdnopid": {
+                            "title": "NOP",
+                            "type": "string",
+                            "format": "guid"
+                          }
+                        },
+                        "required": []
+                      }
+                    },
+                    "required": []
+                  }
+                }
+              },
               "required": []
             },
             "host": {
@@ -76,7 +102,7 @@
             "parameters": {
               "entityName": "ovs_cdregionalnops",
               "$select": "ovs_cdregionalnopid",
-              "$filter": "(_ovs_cdnopid_value eq '')"
+              "$filter": "(_ovs_cdnopid_value eq '@{triggerBody()?['entity']?['ovs_cdnopid']}')"
             },
             "authentication": {
               "type": "Raw",
@@ -426,7 +452,7 @@
             "parameters": {
               "entityName": "tc_tcfiscalquarters",
               "$select": "tc_tcfiscalquarterid",
-              "$filter": "(_tc_tcfiscalyearid_value eq '' and tc_name eq 'Q1')"
+              "$filter": "(_tc_tcfiscalyearid_value eq '@{triggerBody()?['entity']?['_ovs_cdfiscalyearid_value']}' and tc_name eq 'Q1')"
             },
             "authentication": {
               "type": "Raw",
@@ -453,7 +479,7 @@
             "parameters": {
               "entityName": "tc_tcfiscalquarters",
               "$select": "tc_tcfiscalquarterid",
-              "$filter": "(_tc_tcfiscalyearid_value eq '' and tc_name eq 'Q2')"
+              "$filter": "(_tc_tcfiscalyearid_value eq '@{triggerBody()?['entity']?['_ovs_cdfiscalyearid_value']}' and tc_name eq 'Q2')"
             },
             "authentication": {
               "type": "Raw",
@@ -480,7 +506,7 @@
             "parameters": {
               "entityName": "tc_tcfiscalquarters",
               "$select": "tc_tcfiscalquarterid",
-              "$filter": "(_tc_tcfiscalyearid_value eq '' and tc_name eq 'Q3')"
+              "$filter": "(_tc_tcfiscalyearid_value eq '@{triggerBody()?['entity']?['_ovs_cdfiscalyearid_value']}' and tc_name eq 'Q3')"
             },
             "authentication": {
               "type": "Raw",
@@ -507,7 +533,7 @@
             "parameters": {
               "entityName": "tc_tcfiscalquarters",
               "$select": "tc_tcfiscalquarterid",
-              "$filter": "(_tc_tcfiscalyearid_value eq '' and tc_name eq 'Q4')"
+              "$filter": "(_tc_tcfiscalyearid_value eq '@{triggerBody()?['entity']?['_ovs_cdfiscalyearid_value']}' and tc_name eq 'Q4')"
             },
             "authentication": {
               "type": "Raw",
@@ -727,7 +753,7 @@
             "parameters": {
               "entityName": "annotations",
               "item/subject": "Accidents Flow Ran Successfully",
-              "item/objectid_ovs_cdnop@odata.bind": "/ovs_cdnops/"
+              "item/objectid_ovs_cdnop@odata.bind": "/ovs_cdnops/@{triggerBody()?['entity']?['ovs_cdnopid']}"
             },
             "authentication": {
               "type": "Raw",
