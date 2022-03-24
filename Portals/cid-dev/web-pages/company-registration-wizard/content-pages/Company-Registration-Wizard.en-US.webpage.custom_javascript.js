@@ -6,18 +6,17 @@ $(document).ready(function () {
 	if(companyName)
 	{
 		if(header)
-			header.text(header.text() + ' - ' + companyName);
+			header.text(header.text() + ' for ' + companyName);
 		//if(startStep)
 		//{
 		//	startStep.css('background-color', '#eaebed');
 		//	startStep.css('color', 'grey');
 		//}
 		var companyid = '{{user.parentcustomerid.id}}';
-
-		var  company_status = "{{entities.account['20e6041a-3610-453f-af55-009e75690d3f'].cid_cidcompanystatus.value}}";
+		var  company_status = "{{entities.account[user.parentcustomerid.id].cid_cidcompanystatus.value}}";
 
 		if(company_status == '100000005'){
-			window.location.href = "~/registration";
+			window.location.href = "~/dashboard";
 		}
 	}
 

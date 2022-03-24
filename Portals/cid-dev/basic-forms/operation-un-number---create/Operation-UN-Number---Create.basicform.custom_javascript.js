@@ -35,12 +35,15 @@ function tdg_unnumberid_selected(text, id) {
     $("#ovs_unnumber_entityname").attr("value", 'tdg_unnumber');
 }
 
+//Function called on form submit
 if (window.jQuery) {
     (function ($) {
+
         webFormClientValidate = function () {
             debugger;
             var validation = true;
 
+            //Add logic to check if valid input in the fields
             return validation;
         }
     }(window.jQuery));

@@ -1,7 +1,30 @@
-<div id="loader"><br>
-  <br>
-  {% assign parentCompanyId = user.parentcustomerid.id %} {% if parentCompanyId %} {% assign company = entities['account'][parentCompanyId] %} {{ company.cid_cidcompanystatus }} {% if company.cid_cidcompanystatus and company.cid_cidcompanystatus.value == 100000005 %} You will be redirected to the registartion page. Please wait ... {% else %} {% endif %} {% else %} {% endif %}<br>
-  <br>
+<div id="loader"></div>
+<div class="panel panel-default">
+</div>
+<div>
+  <script>
+    $('#loader').show();
+  </script>
+  {% assign parentCompanyId = user.parentcustomerid.id %}
+  {% if parentCompanyId %}
+  {% assign company = entities['account'][parentCompanyId] %}
+  {{ company.cid_cidcompanystatus }}
+  {% if company.cid_cidcompanystatus  and company.cid_cidcompanystatus.value == 100000005 %}
+  You will be redirected to the registartion page.
+  Please wait ...
+  <script>
+    window.location.replace('/dashboard');
+  </script>
+  {% else %}
+  <script>
+    window.location.replace('/RegistrationWizard');
+  </script>
+  {% endif %}
+  {% else %}
+  <script>
+    window.location.replace('/RegistrationWizard');
+  </script>
+  {% endif %}
   <script>
     $('#loader').show();
   </script>

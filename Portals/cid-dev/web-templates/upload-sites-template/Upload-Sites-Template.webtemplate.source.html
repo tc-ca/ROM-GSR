@@ -500,15 +500,17 @@ function call_Inital_validation()
                 notificationMsg.hide();
                 if (this.status === 200) {
                     var result = this.response;
-  $('#processingMsg').css('display', 'none');
+                    $('#processingMsg').css('display', 'none');
                     //var response = confirm("Validation has been completed successfully. Do you want to proceed with the upload?");
                    // if (response == true) {
                       //  var flowpramater = '{"accountid": "' + companyid + '","Filelocation":"' + result  +'","activityid":"' + newrecordid +'"}';
                     //var flowurl = '{{Bulk_flow_URL}}';
                     //"https://prod-04.canadacentral.logic.azure.com:443/workflows/d1f0399ee2f14c8cb5f97b7a3d980e18/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=HodXII8arm-pmLQA-zKLiafDncFzFfLLsbpdOXkNd-Y";
-                    
-                     alert( req.getResponseHeader('DetailMessage'));
-                      alert ("File has passed Initial validation. you will be notified by email when processing is done.")
+                  //  var parser = new DOMParser();
+	           // var doc = parser.parseFromString(req.getResponseHeader('DetailMessage'), 'text/html');
+                     alert (this.response);
+                     //alert(req.getResponseHeader('DetailMessage'));
+                     // alert ("File has passed Initial validation. you will be notified by email when processing is done.")
                       //  callworkflow(flowurl, flowpramater);
 
 
@@ -518,7 +520,8 @@ function call_Inital_validation()
                 } else if (this.status === 402) {
 
   $('#processingMsg').css('display', 'none');
-                alert ("Uploaded List did not pass validation, please check the errors list.");
+               // alert ("Uploaded List did not pass validation, please check the errors list.");
+               alert (this.response) ;
                     var result = this.response;
 
 

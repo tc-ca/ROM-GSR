@@ -10,7 +10,6 @@ $(document).ready(function() {
 			var firstRow = $("#Operations .view-grid table tbody").find("tr:first");
 			if(firstRow){
 				var operationId = firstRow.attr('data-id');
-				
 				if(operationId){
 					firstRow.find('td').each(function(){
 						var tdElement = $(this);
