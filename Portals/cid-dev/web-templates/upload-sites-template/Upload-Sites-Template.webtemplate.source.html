@@ -41,6 +41,10 @@
 {% assign download_flow_URL = env_setting.qm_value %}
 {% endif %}
 
+{% if {{env_setting.qm_name}}  == 'CID_Flow_FileScan' %}
+{% assign Scan_flow_URL = env_setting.qm_value %}
+{% endif %}
+
 
 {% endfor %}
 
@@ -82,7 +86,7 @@ $('#btn_attachfile_and_scan').click(function(e)
 
     if (MimeType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
    {
-       alert ("Mime Type error");
+      
  // call the submit button to show error message
     $("#InsertButton").click();
    }
@@ -110,7 +114,8 @@ $('#btn_attachfile_and_scan').click(function(e)
             DocumentbodyContents = DocumentbodyContents.substring(DocumentbodyContents.indexOf(',') + 1);
 
 
-            var Scan_API_URL = "https://prod-02.canadacentral.logic.azure.com:443/workflows/9c5deab59bdb45739dc659748c59b1a1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZDI2-YxUhNZkKvpXe7R7Cs_y8J5gGtcB6ZT-y5EAMok";
+            var Scan_API_URL = '{{Scan_flow_URL}}';
+            //"https://prod-02.canadacentral.logic.azure.com:443/workflows/9c5deab59bdb45739dc659748c59b1a1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZDI2-YxUhNZkKvpXe7R7Cs_y8J5gGtcB6ZT-y5EAMok";
            // var c = String.raw `X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*`;
 
 

@@ -1,5 +1,6 @@
+//
 // CompanyRegistrationWizard-NAICS Code.js
-
+//
 $(document).ready(function () {
 	//debugger;
 	subgrid_language();
@@ -14,38 +15,33 @@ function subgrid_language() {
 	entityList.on("loaded", function () {
 		//debugger;
 		entityList.find("table tbody > tr").each(function (index, tr) {
-			debugger;
 			var primaryColumn = $(tr).find('td')[0];
 
 			/// or retrieve column by name
 			/// var primaryColumn = tr.find('td[data-attribute="name"]');
 
 			var url = $(primaryColumn).find("a")[0].href;
-			//console.log("URL: " + url);
 			if (!!url) {
 				$(tr).find('td').each(function (index, td) {
-					debugger;
+					//debugger;
 					var tdElement = $(this);
 					var value = tdElement.attr('data-attribute');
 					if (value != null) {
 						var index1 = value.indexOf('.cid_naicsclasstitle');
 						if (index1 != -1) {
-							debugger;
+							//debugger;
 							var cellValue = $(td).text();
-							cellValue = text_language(cellValue,selected_language);
+							cellValue = text_language(cellValue, selected_language);
 							$(td).text(cellValue);
-
-							//var newElement = '<a href="' + url + '" class="details-link has-tooltip" data-toggle="tooltip">' + cellValue + '</a>';
-							//$(td).append(newElement);
 						}
-                    }
+					}
 				});
 			}
 		});
 	});
 }
 
-function text_language (text, language) {
+function text_language(text, language) {
 	var value = "";
 	var index1 = text.indexOf("::");
 	if (language == "en-US") {
@@ -65,7 +61,7 @@ function text_language (text, language) {
         //    var companyId = $("#EntityFormView_EntityID").val();	
 		//	//var filter = "cid_company/Id eq (guid'" + companyId + "')";
 		//	//var data = ExecuteOData("Validation_CompanyNAICSCodes", filter);
-            
+
 		//	//if(data == null || data.length <= 0)
 		//	if(companyId == null)
 		//	{
