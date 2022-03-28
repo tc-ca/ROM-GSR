@@ -2,9 +2,6 @@
 // Basic Form-Company NAICS Code - Create.js
 //
 
-//To apply the Asterisk(*) Sign using custom JS:
-//$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
-
 $(document).ready(function () {
     debugger;
 
@@ -15,7 +12,7 @@ $(document).ready(function () {
     $("#WebResource_naicscode").height('72px');
 
     // hide controls
-    tdg.c.control_hide("cid_naicscode", true);
+    //tdg.c.control_hide("cid_naicscode", true);
 
     // insert button
     btn_save_new_setup();
@@ -53,14 +50,16 @@ function btn_save_new_onclick()
 
     // clear message
     tdg.c.error_message_clear();
-    //$('#ValidationSummaryEntityFormControl_EntityFormView')[0].innerHTML = "";
-    //$('#ValidationSummaryEntityFormControl_EntityFormView').hide();
 
-    if (Page_ClientValidate('')) {
-
+    if (Page_ClientValidate()) {
+        // insert
+        var account_id = '{{user.parentcustomerid.Id}}';
+        var contact_id = '{{user.id}}';
+        var cid_naicscode = $("#cid_naicscode").attr("value");
+        cid_companynaicscode_insert(account_id, cid_naicscode, contact_id);
     }
     else {
-
+        return;
     }
 
     try {
@@ -68,21 +67,17 @@ function btn_save_new_onclick()
         var c = f.contentWindow;
         c.clear_field();
     } catch { }
-
-    // clear lookup
-    $("#cid_naicscode").attr("value", null);
-    $("#cid_naicscode_name").attr("value", "");
-    //$("#cid_naicscode_entityname").attr("value", 'cid_naicscode');
 };
 
-function naicscode_selected(text, id) {
+function cid_companynaicscode_insert(account_id, cid_naicscode, contact_id)
+{
     debugger;
-
-    var index1 = text.indexOf(" - ");
-    text = text.substr(0, index1);
-    $("#cid_naicscode").attr("value", id);
-    $("#cid_naicscode_name").attr("value", text);
-    $("#cid_naicscode_entityname").attr("value", 'cid_naicscode');
+    var data = {
+        "cid_Company@odata.bind": "/accounts(" + account_id + ")",
+        "cid_NAICSCode@odata.bind": "/cid_naicscode(" + cid_naicscode + ")",
+        "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
+    };
+    tdg.webapi.create("cid_companynaicscode", data);
 }
 
 function entityFormClientValidate() {
@@ -202,8 +197,8 @@ if (typeof (tdg.c) == "undefined") {
 
         error_message_clear: function () {
             debugger;
-            $('#ValidationSummaryEntityFormView div').remove();
-            $('#ValidationSummaryEntityFormControl div').remove();           
+            $('#ValidationSummaryEntityFormControl_EntityFormView')[0].innerHTML = "";
+            $('#ValidationSummaryEntityFormControl_EntityFormView').hide();
         },
 
         error_message: function (message, clear) {
@@ -257,4 +252,81 @@ if (typeof (tdg.c) == "undefined") {
         }
     }
 }
+
+// tdg.webapi = tdgcore.webapi
+if (typeof (tdg.webapi) == "undefined") {
+    tdg.webapi = {
+        list: function (entity_name, filter) {
+            debugger;
+
+            var response = null;
+            $.ajax({
+                type: "GET",
+                url: "/_api/" + entity_name + "s?$filter=" + filter,
+                contentType: "application/json",
+                async: false
+            }).done(function (json) {
+                response = json.value;
+            });
+            return response;
+        },
+
+        create: function (entity_name, data) {
+            debugger;
+
+            webapi.safeAjax({
+                type: "POST",
+                url: "/_api/" + entity_name + "s",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+
+                success: function (res, status, xhr) {
+                    debugger;
+                    //print id of newly created table record
+                    console.log("webapi.safeAjax.create->record_id: " + xhr.getResponseHeader("entityid"))
+                }
+            });
+        },
+
+        update: function (entity_name, record_id, data) {
+            debugger;
+
+            webapi.safeAjax({
+                type: "PATCH",
+                url: "/_api/" + entity_name + "s(" + record_id + ")",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+
+                success: function (res) {
+                    debugger;
+                    console.log(res);
+                }
+            });
+        },
+
+        delete: function (entity_name, record_id) {
+            debugger;
+
+            webapi.safeAjax({
+                type: "DELETE",
+                url: "/_api/" + entity_name + "s(" + record_id + ")",
+                contentType: "application/json",
+
+                success: function (res) {
+                    debugger;
+                    console.log(res);
+                }
+            });
+        },
+
+        inactive: function (entity_name, record_id) {
+            var data = {
+                "statecode": 1,
+                "statuscode": 821350004
+            };
+            tdg.webapi.update(entity_name, record_id, data);
+        }
+    }
+}
+
 

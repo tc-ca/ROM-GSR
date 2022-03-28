@@ -2,9 +2,33 @@
 // CompanyRegistrationWizard-NAICS Code.js
 //
 $(document).ready(function () {
-	//debugger;
+	debugger;
 	subgrid_language();
+
+	webapi_test();
 });
+
+function webapi_test() {
+	debugger;
+
+	// https://rd-tdgcore-dev.powerappsportals.com/_api/cid_companyeraps
+	var parentcustomerid = 'efa1192a-620c-4bd0-9524-dfd0c3a83f8e';
+	var contact_id = 'a36861c7-86a4-ec11-b3fe-0022483c9e11';
+	var cid_crabusinessnumber = '999999999';
+	tdg.root.setup(cid_has_cra_bn, cid_crabusinessnumber, parentcustomerid, contact_id);
+
+	// https://rd-tdgcore-dev.powerappsportals.com/_api/cid_companynaicscodes
+	var account_id = 'efa1192a-620c-4bd0-9524-dfd0c3a83f8e';
+	var contact_id = 'a36861c7-86a4-ec11-b3fe-0022483c9e11';
+	var cid_naicscode = '72f2e887-d192-ec11-b400-000d3a849007'
+	var rows = tdg.webapi.list("cid_companynaicscode", "statuscode eq 1");
+	var data = {
+		"cid_Company@odata.bind": "/accounts(" + account_id + ")",
+		"cid_NAICSCode@odata.bind": "/cid_naicscode(" + cid_naicscode + ")",
+		"cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
+	};
+	tdg.webapi.create("cid_companynaicscode", data);
+}
 
 function subgrid_language() {
 	debugger;
@@ -54,37 +78,34 @@ function text_language(text, language) {
 }
 
 //if (window.jQuery) {
-    //(function ($) {
-        //webFormClientValidate = function () {
-        //    var validation = true;
-        //    var errorMessage = "";
-        //    var companyId = $("#EntityFormView_EntityID").val();	
-		//	//var filter = "cid_company/Id eq (guid'" + companyId + "')";
-		//	//var data = ExecuteOData("Validation_CompanyNAICSCodes", filter);
+//    (function ($) {
+//        webFormClientValidate = function () {
+//            var validation = true;
+//            var errorMessage = "";
+//            var companyId = $("#EntityFormView_EntityID").val();	
 
-		//	//if(data == null || data.length <= 0)
-		//	if(companyId == null)
-		//	{
-		//		errorMessage = "Error: Missing company Id.";
-      //          validation = false;
-	//		}
-	//		else if(!CompanyHasNAICSCodes(companyId))
-	//		{
-        //        errorMessage = "You cannot proceed before adding company NAICS code(s).";
-        //        validation = false;
-         //   }
+//			if (companyId == null)
+//			{
+//				errorMessage = "Error: Missing company Id.";
+//                validation = false;
+//			}
+//			else if(!CompanyHasNAICSCodes(companyId))
+//			{
+//                errorMessage = "You cannot proceed before adding company NAICS code(s).";
+//                validation = false;
+//            }
 
-       //     if (!validation) {
-        //        $('#ValidationSummaryEntityFormView div').remove();
+//            if (!validation) {
+//                $('#ValidationSummaryEntityFormView div').remove();
 
-        //        var validationSection = $('#ValidationSummaryEntityFormView');
+//                var validationSection = $('#ValidationSummaryEntityFormView');
 
-        //        validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
-        //        validationSection.show();
-		//		$('#alertMessages').focus();
-        //    }
+//                validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
+//                validationSection.show();
+//				$('#alertMessages').focus();
+//            }
 
-      //     return validation;
-	//	}
-  //  }(window.jQuery));
+//           return validation;
+//		}
+//    }(window.jQuery));
 //}
