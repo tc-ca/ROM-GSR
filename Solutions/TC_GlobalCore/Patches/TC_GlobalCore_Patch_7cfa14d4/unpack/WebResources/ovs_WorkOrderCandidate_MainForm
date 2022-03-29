@@ -1,0 +1,63 @@
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+///<reference path="../../Utilities/questionnaireFunctions.js"/>
+
+var Candidates_TDG_main = (function (window, document) {
+
+
+    //variables
+    var LCID;
+    var clientUrl;
+    var resexResourceName;
+    var currentWebApi;
+    var isOffLine;
+    var clientType;
+    var oat = new Array("GC Targeted", "GC CEP", "GC Follow-up", "MOC Follow-up", "MOC Targeted");
+    var formType;
+
+    //Constants
+    const FIELD_HQ_FLAG = "ovs_hqflag";
+    const FIELD_Region_FLAG = "ovs_regionflag";
+    const FIELD_INITIAL_RECOMMENDATION = "ovs_initialrecommendation";
+    const FIELD_OVERSIGHT_TYPE = "ovs_oversighttype";
+    const FIELD_RATIONALE = "ovs_rationale";
+    const FIELD_REGIONAL_NOP = "ovs_regionalnop";
+
+
+    //********************private methods*******************
+
+
+    //********************private methods end***************
+
+    //********************public methods***************
+    return {
+
+        OnLoad: function (executionContext) {
+
+            var globalContext = Xrm.Utility.getGlobalContext();
+            var formContext = executionContext.getFormContext();
+            formType = glHelper.GetFormType(formContext);
+
+            isOffLine = glHelper.isOffline(executionContext);
+            clientType = glHelper.getClientType(executionContext);
+
+            if (isOffLine && clientType > 0) {
+
+                //mobile or outlook, offline first
+                currentWebApi = Xrm.WebApi.offline;
+                clientUrl = "https://localhost:2525";
+            }
+            else {
+
+                //web, online
+                currentWebApi = Xrm.WebApi.online;
+                clientUrl = globalContext.getClientUrl();
+            }
+
+        },
+
+    }
+
+
+    //********************public methods end***************
+
+})(window, document)
