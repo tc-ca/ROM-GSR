@@ -108,7 +108,7 @@
             },
             "parameters": {
               "entityName": "ovs_cdregionalnops",
-              "$select": "ovs_cdregionalnopid",
+              "$select": "ovs_cdregionalnopid,ownerid",
               "$filter": "(_ovs_cdnopid_value eq '@{triggerBody()?['entity']?['ovs_cdnopid']}')"
             },
             "authentication": {
@@ -172,6 +172,7 @@
                               "item/ovs_name": "WOC - @{items('For_Each_WOC')?['ovs_operationid/ovs_name']}",
                               "item/ovs_operationid@odata.bind": "/ovs_mocregistrations/@{items('For_Each_WOC')?['_ovs_operationid_value']}",
                               "item/ovs_oversighttype@odata.bind": "/ovs_oversighttypes/@{variables('HubOversightType')}",
+                              "item/ownerid@odata.bind": "/teams/@{items('For_Each_Regional_NOP')?['_ownerid_value']}",
                               "item/ovs_plannedfiscalyear@odata.bind": "/tc_tcfiscalyears/@{items('For_Each_WOC')?['_ovs_plannedfiscalyear_value']}",
                               "item/ovs_plannedquarter@odata.bind": "/tc_tcfiscalquarters/@{variables('Q2 Id')}",
                               "item/ovs_regionflag": true,
@@ -218,6 +219,7 @@
                               "item/ovs_name": "WOC - @{items('For_Each_WOC')?['ovs_operationid/ovs_name']}",
                               "item/ovs_operationid@odata.bind": "/ovs_mocregistrations/@{items('For_Each_WOC')?['_ovs_operationid_value']}",
                               "item/ovs_oversighttype@odata.bind": "/ovs_oversighttypes/@{variables('HubOversightType')}",
+                              "item/ownerid@odata.bind": "/teams/@{items('For_Each_Regional_NOP')?['_ownerid_value']}",
                               "item/ovs_plannedfiscalyear@odata.bind": "/tc_tcfiscalyears/@{items('For_Each_WOC')?['_ovs_plannedfiscalyear_value']}",
                               "item/ovs_plannedquarter@odata.bind": "/tc_tcfiscalquarters/@{variables('Q3 Id')}",
                               "item/ovs_regionflag": true,
@@ -295,6 +297,7 @@
                               "item/ovs_name": "WOC - @{items('For_Each_WOC')?['ovs_operationid/ovs_name']}",
                               "item/ovs_operationid@odata.bind": "/ovs_mocregistrations/@{items('For_Each_WOC')?['_ovs_operationid_value']}",
                               "item/ovs_oversighttype@odata.bind": "/ovs_oversighttypes/@{variables('HubOversightType')}",
+                              "item/ownerid@odata.bind": "/teams/@{items('For_Each_Regional_NOP')?['_ownerid_value']}",
                               "item/ovs_plannedfiscalyear@odata.bind": "/tc_tcfiscalyears/@{items('For_Each_WOC')?['_ovs_plannedfiscalyear_value']}",
                               "item/ovs_plannedquarter@odata.bind": "/tc_tcfiscalquarters/@{variables('Q1 Id')}",
                               "item/ovs_regionflag": true,

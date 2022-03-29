@@ -49,6 +49,47 @@
         "For_Each_Operation": {
           "foreach": "@outputs('Get_All_Active_Operations_By_Region')?['body/value']",
           "actions": {
+            "If_LoB_Is_Engineering_Services": {
+              "actions": {
+                "Set_Target_Regional_NOP_To_ES": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "77873698-468c-4132-9c7f-e05394183a3e"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "TargetRegionalNOP",
+                    "value": "@variables('RegionalNOP_ES')"
+                  }
+                }
+              },
+              "runAfter": {},
+              "else": {
+                "actions": {
+                  "Set_Target_Regional_NOP_To_Current": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "77873698-468c-4132-9c7f-e05394183a3e"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "TargetRegionalNOP",
+                      "value": "@triggerOutputs()?['body/ovs_cdregionalnopid']"
+                    }
+                  }
+                }
+              },
+              "expression": {
+                "equals": [
+                  "@items('For_Each_Operation')?['_ovs_lineofbusiness_value']",
+                  "@variables('EngineeringServiceLOB')"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "6762a348-1487-4f2c-9c3a-a111c4ae6f08"
+              },
+              "type": "If"
+            },
             "Is_Not_Civ_Av_Or_HOTI_GOA": {
               "actions": {
                 "Is_HOTI": {
@@ -206,7 +247,7 @@
                               "recordId": "@items('For_Each_WOC')?['ovs_workordercandidateid']",
                               "item/ovs_currentlyplanned": "@variables('IsCurrentlyPlanned')",
                               "item/ownerid@odata.bind": "/teams/@{triggerOutputs()?['body/_ownerid_value']}",
-                              "item/ovs_regionalnop@odata.bind": "/ovs_cdregionalnops/@{triggerOutputs()?['body/ovs_cdregionalnopid']}"
+                              "item/ovs_regionalnop@odata.bind": "/ovs_cdregionalnops/@{variables('TargetRegionalNOP')}"
                             },
                             "authentication": "@parameters('$authentication')"
                           }
@@ -249,7 +290,7 @@
                             "item/ownerid@odata.bind": "/teams/@{triggerOutputs()?['body/_ownerid_value']}",
                             "item/ovs_plannedfiscalyear@odata.bind": "/tc_tcfiscalyears/@{triggerOutputs()?['body/_ovs_cdfiscalyearid_value']}",
                             "item/ovs_cdpriorityscore": "@items('For_Each_Operation')?['ovs_cdpriorityscore']",
-                            "item/ovs_regionalnop@odata.bind": "/ovs_cdregionalnops/@{triggerOutputs()?['body/ovs_cdregionalnopid']}",
+                            "item/ovs_regionalnop@odata.bind": "/ovs_cdregionalnops/@{variables('TargetRegionalNOP')}",
                             "item/ovs_cdriskcategory": "@items('For_Each_Operation')?['ovs_cdriskcategory']",
                             "item/ovs_cdriskscore": "@items('For_Each_Operation')?['ovs_cdriskscore']"
                           },
@@ -270,7 +311,11 @@
                   "type": "If"
                 }
               },
-              "runAfter": {},
+              "runAfter": {
+                "If_LoB_Is_Engineering_Services": [
+                  "Succeeded"
+                ]
+              },
               "expression": {
                 "and": [
                   {
@@ -309,7 +354,7 @@
         },
         "Get_All_Active_Operations_By_Region": {
           "runAfter": {
-            "Set_CurrentFiscalYear": [
+            "Set_TargetRegionalNOP": [
               "Succeeded"
             ]
           },
@@ -325,10 +370,15 @@
             },
             "parameters": {
               "entityName": "ovs_mocregistrations",
-              "$select": "ovs_name,_ovs_siteid_value,ovs_mocregistrationid,ovs_cdriskscore,ovs_cdpriorityscore,ovs_cdriskcategory,ovs_operationtype",
+              "$select": "ovs_name,_ovs_siteid_value,ovs_mocregistrationid,ovs_cdriskscore,ovs_cdpriorityscore,ovs_cdriskcategory,ovs_operationtype,ovs_lineofbusiness",
               "$filter": "(statecode eq 0) and (ovs_SiteId/_territoryid_value eq @{triggerOutputs()?['body/_ovs_cdregionid_value']})"
             },
             "authentication": "@parameters('$authentication')"
+          },
+          "runtimeConfiguration": {
+            "paginationPolicy": {
+              "minimumItemCount": 100000
+            }
           }
         },
         "Initialize_GC_IPT_Type": {
@@ -352,7 +402,7 @@
         },
         "Get_Oversight_Type_-_GC_IPT": {
           "runAfter": {
-            "Initialize_CurrentFiscalYear": [
+            "Initialize_TargetRegionalNOP": [
               "Succeeded"
             ]
           },
@@ -376,7 +426,7 @@
         },
         "Set_GC_IPT": {
           "runAfter": {
-            "Get_CurrentFiscalYear": [
+            "Get_RegionalNOPES": [
               "Succeeded"
             ]
           },
@@ -537,6 +587,139 @@
                 "type": "string"
               }
             ]
+          }
+        },
+        "Initialize_EngineeringServiceLOB": {
+          "runAfter": {
+            "Initialize_CurrentFiscalYear": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "186c9482-e1b6-4b34-be39-a561ff3494c4"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "EngineeringServiceLOB",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Get_EngineeringServiceLOB": {
+          "runAfter": {
+            "Get_CurrentFiscalYear": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "689bd39b-071f-4265-8af9-3a238f303208"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_lobs",
+              "$filter": "(ovs_lineofbusinessnameenglish eq 'Engineering Services')"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_RegionalNOP_ES": {
+          "runAfter": {
+            "Initialize_EngineeringServiceLOB": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "82ab69b8-d237-4694-8f85-fac9c6f10806"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RegionalNOP_ES",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Get_RegionalNOPES": {
+          "runAfter": {
+            "Get_EngineeringServiceLOB": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "689bd39b-071f-4265-8af9-3a238f303208"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_cdregionalnops",
+              "$filter": "(_ovs_cdfiscalyearid_value eq '@{triggerOutputs()?['body/_ovs_cdfiscalyearid_value']}' and ovs_cdregionidname eq 'HQ-ES')"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_TargetRegionalNOP": {
+          "runAfter": {
+            "Initialize_RegionalNOP_ES": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "44dbf849-f9ff-4ce2-bf10-bd1296c5c65b"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "TargetRegionalNOP",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Set_EngineeringServiceLoB": {
+          "runAfter": {
+            "Set_CurrentFiscalYear": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "77873698-468c-4132-9c7f-e05394183a3e"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "EngineeringServiceLOB",
+            "value": "@{first(outputs('Get_EngineeringServiceLOB')?['body/value'])?['ovs_lobid']}"
+          }
+        },
+        "Set_TargetRegionalNOP": {
+          "runAfter": {
+            "Set_EngineeringServiceLoB": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "77873698-468c-4132-9c7f-e05394183a3e"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "RegionalNOP_ES",
+            "value": "@{first(outputs('Get_RegionalNOPES')?['body/value'])?['ovs_cdregionalnopid']}"
           }
         }
       }
