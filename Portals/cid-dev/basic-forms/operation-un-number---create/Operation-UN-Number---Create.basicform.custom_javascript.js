@@ -43,7 +43,15 @@ if (window.jQuery) {
             debugger;
             var validation = true;
 
-            //Add logic to check if valid input in the fields
+            //remove commas from quantity field
+            var validBuffer = $("#cid_annualquantityvolume").attr("value").replaceAll(',', '');
+            alert(validBuffer);
+            $("#cid_annualquantityvolume").attr("value", validBuffer);
+
+            //remove commas from number of shippments field
+            validBuffer = $("#cid_annualnumberofshipment").attr("value").replaceAll(',', '');
+            $("#cid_annualnumberofshipment").attr("value", validBuffer);
+
             return validation;
         }
     }(window.jQuery));
