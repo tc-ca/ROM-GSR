@@ -47,9 +47,16 @@ function tdg_unnumber_get(id) {
 
 if (window.jQuery) {
     (function ($) {
-        webFormClientValidate = function () {
+        entityFormClientValidate = function () {
             debugger;
             var validation = true;
+
+            var validBuffer = $("#cid_annualquantityvolume").val().replaceAll(',', '');
+            $("#cid_annualquantityvolume").val(validBuffer);
+
+            //remove commas from number of shippments field
+            validBuffer = $("#cid_annualnumberofshipment").val().replaceAll(',', '');
+            $("#cid_annualnumberofshipment").val(validBuffer);
 
             return validation;
         }

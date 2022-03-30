@@ -39,18 +39,17 @@ function tdg_unnumberid_selected(text, id) {
 if (window.jQuery) {
     (function ($) {
 
-        webFormClientValidate = function () {
+        entityFormClientValidate = function () {
             debugger;
             var validation = true;
 
             //remove commas from quantity field
-            var validBuffer = $("#cid_annualquantityvolume").attr("value").replaceAll(',', '');
-            alert(validBuffer);
-            $("#cid_annualquantityvolume").attr("value", validBuffer);
+            var validBuffer = $("#cid_annualquantityvolume").val().replaceAll(',', '');
+            $("#cid_annualquantityvolume").val(validBuffer);
 
             //remove commas from number of shippments field
-            validBuffer = $("#cid_annualnumberofshipment").attr("value").replaceAll(',', '');
-            $("#cid_annualnumberofshipment").attr("value", validBuffer);
+            validBuffer = $("#cid_annualnumberofshipment").val().replaceAll(',', '');
+            $("#cid_annualnumberofshipment").val(validBuffer);
 
             return validation;
         }

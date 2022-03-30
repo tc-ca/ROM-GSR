@@ -5,7 +5,7 @@ $(document).ready(function () {
 	debugger;
 	subgrid_language();
 
-	webapi_test();
+	//webapi_test();
 });
 
 function webapi_test() {

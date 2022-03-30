@@ -1,7 +1,6 @@
 //
 // Basic Form-Company NAICS Code - Create.js
 //
-
 $(document).ready(function () {
     debugger;
 
@@ -12,11 +11,33 @@ $(document).ready(function () {
     $("#WebResource_naicscode").height('72px');
 
     // hide controls
-    //tdg.c.control_hide("cid_naicscode", true);
+    tdg.c.control_hide("cid_naicscode", true);
 
     // insert button
     btn_save_new_setup();
+
+    //webapi_test();
 });
+
+function webapi_test() {
+    // https://rd-tdgcore-dev.powerappsportals.com/_api/cid_companyeraps
+    var parentcustomerid = 'efa1192a-620c-4bd0-9524-dfd0c3a83f8e';
+    var contact_id = 'a36861c7-86a4-ec11-b3fe-0022483c9e11';
+    var cid_crabusinessnumber = '999999999';
+    tdg.root.setup(cid_has_cra_bn, cid_crabusinessnumber, parentcustomerid, contact_id);
+
+    // https://rd-tdgcore-dev.powerappsportals.com/_api/cid_companynaicscodes
+    var account_id = 'efa1192a-620c-4bd0-9524-dfd0c3a83f8e';
+    var contact_id = 'a36861c7-86a4-ec11-b3fe-0022483c9e11';
+    var cid_naicscode = '72f2e887-d192-ec11-b400-000d3a849007'
+    var rows = tdg.webapi.list("cid_companynaicscode", "statuscode eq 1");
+    var data = {
+        "cid_Company@odata.bind": "/accounts(" + account_id + ")",
+        "cid_NAICSCode@odata.bind": "/cid_naicscode(" + cid_naicscode + ")",
+        "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
+    };
+    tdg.webapi.create("cid_companynaicscode", data);
+}
 
 function btn_save_new_setup() {
     debugger;
@@ -74,7 +95,7 @@ function cid_companynaicscode_insert(account_id, cid_naicscode, contact_id)
     debugger;
     var data = {
         "cid_Company@odata.bind": "/accounts(" + account_id + ")",
-        "cid_NAICSCode@odata.bind": "/cid_naicscode(" + cid_naicscode + ")",
+        "cid_NAICSCode@odata.bind": "/cid_naicscodes(" + cid_naicscode + ")",
         "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
     };
     tdg.webapi.create("cid_companynaicscode", data);
