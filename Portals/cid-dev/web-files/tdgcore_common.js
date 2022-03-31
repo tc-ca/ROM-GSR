@@ -1,4 +1,7 @@
-﻿// tdgcore_common.js
+﻿//To apply the Asterisk(*) Sign using custom JS:
+//$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
+
+// tdgcore_common.js
 
 // tdg = tdgcore
 if (typeof (tdg) == "undefined") {
@@ -101,6 +104,12 @@ if (typeof (tdg.c) == "undefined") {
         error_message_clear: function () {
             debugger;
             $('#ValidationSummaryEntityFormView div').remove();
+
+            //$('#ValidationSummaryEntityFormView')[0].remove();
+            //$('#ValidationSummaryEntityFormView').hide();
+
+            $('#ValidationSummaryEntityFormControl_EntityFormView')[0].innerHTML = "";
+            $('#ValidationSummaryEntityFormControl_EntityFormView').hide();
         },
 
         error_message: function (message, clear) {
@@ -171,6 +180,37 @@ if (typeof (tdg.c) == "undefined") {
     }
 }
 
+// Wrapper AJAX function
+(function (webapi, $) {
+    function safeAjax(ajaxOptions) {
+        debugger;
+
+        var deferredAjax = $.Deferred();
+
+        shell.getTokenDeferred().done(function (token) {
+            // add headers for AJAX
+            if (!ajaxOptions.headers) {
+                $.extend(ajaxOptions, {
+                    headers: {
+                        "__RequestVerificationToken": token
+                    }
+                });
+            } else {
+                ajaxOptions.headers["__RequestVerificationToken"] = token;
+            }
+            $.ajax(ajaxOptions)
+                .done(function (data, textStatus, jqXHR) {
+                    validateLoginSession(data, textStatus, jqXHR, deferredAjax.resolve);
+                }).fail(deferredAjax.reject); //AJAX
+        }).fail(function () {
+            deferredAjax.rejectWith(this, arguments); // on token failure pass the token AJAX and args
+        });
+
+        return deferredAjax.promise();
+    }
+    webapi.safeAjax = safeAjax;
+})(window.webapi = window.webapi || {}, jQuery)
+
 // tdg.webapi = tdgcore.webapi
 if (typeof (tdg.webapi) == "undefined") {
     tdg.webapi = {
@@ -189,6 +229,13 @@ if (typeof (tdg.webapi) == "undefined") {
             return response;
         },
 
+        // Sample code to insert
+        //var data = {
+        //    "cid_Company@odata.bind": "/accounts(" + parent_id + ")",
+        //    "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
+        //    "cid_erapid": cid_erapid
+        //};
+        //tdg.webapi.create("cid_companyerap", data);
         create: function (entity_name, data) {
             debugger;
 
@@ -201,7 +248,7 @@ if (typeof (tdg.webapi) == "undefined") {
                 success: function (res, status, xhr) {
                     debugger;
                     //print id of newly created table record
-                    console.log("entityID: " + xhr.getResponseHeader("entityid"))
+                    console.log("webapi.safeAjax.create->record_id: " + xhr.getResponseHeader("entityid"))
                 }
             });
         },

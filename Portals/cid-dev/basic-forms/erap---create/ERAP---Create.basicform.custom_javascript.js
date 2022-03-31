@@ -7,12 +7,104 @@ $(document).ready(function () {
     $('input[type="text"]').attr('autocomplete', 'off');
 
     // insert button
-    btn_save_new_setup();
+    //btn_save_new_setup();
+
+    xxx();
 });
+
+function xxx() {
+    debugger;
+    // Type your custom code here. Details Steps as below:
+    //$("#InsertButton").append("<input type='button' id='btn_save_new' name='btn_save_new' value='Save and Exit' class='submit-btn btn btn-primary form-action-container-left' />")
+
+    var button = $('<input type="button" name="btn_save_new" id="btn_save_new" />');
+    $("#InsertButton").after(button);
+
+    var button1 = $("#InsertButton");
+    button1.prop("value", "Submit and Close");
+    var className = button1[0].className
+    var fontSize = button1.css("fontSize");
+    var color = button1.css("color");
+    var background_color = button1.css("background-color");
+
+    var button2 = $("#btn_save_new");
+    button2.prop("value", "Submit and Add Another");
+    button2[0].className = className;
+    button2.css("fontSize", fontSize);
+    button2.css('color', color);
+    button2.css("background-color", background_color);
+
+    // bind the click event to this custom buttton
+    $("#btn_save_new").bind("click", function () {
+        xxx_onclick();
+    });
+}
+
+function xxx_onclick() {
+    if (typeof entityFormClientValidate === 'function') {
+        if (entityFormClientValidate())
+        {
+            if (typeof Page_ClientValidate === 'function')
+            {
+                if (Page_ClientValidate('')) {
+                    clearIsDirty();
+                    disableButtons();
+                    this.value = 'Processing...';
+                }
+            } else {
+                clearIsDirty();
+                disableButtons();
+                this.value = 'Processing...';
+            }
+        } else {
+            return false;
+        }
+    } else {
+        if (typeof Page_ClientValidate === 'function') {
+            if (Page_ClientValidate('')) {
+                clearIsDirty();
+                disableButtons();
+                this.value = 'Processing...';
+            }
+        } else {
+            clearIsDirty();
+            disableButtons();
+            this.value = 'Processing...';
+        }
+    };
+
+    var button1 = $("#InsertButton");
+    var eventTarget = button1[0].name;
+    var eventArgument = "";
+    var validation = true;
+    var validationGroup = "";
+    var actionUrl = window.document.URL;
+    var trackFocus = false;
+    var clientSubmit = true;
+
+    //WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(
+    //    eventTarget,
+    //    eventArgument,
+    //    validation,
+    //    validationGroup,
+    //    actionUrl,
+    //    trackFocus,
+    //    clientSubmit));
+
+    debugger;
+
+    // insert
+    var parent_id = '{{user.parentcustomerid.Id}}';
+    var contact_id = '{{user.id}}';
+    var cid_erapid = $("#cid_erapid").val();
+
+    cid_companyerap_insert(parent_id, cid_erapid, contact_id);
+}
 
 function btn_save_new_setup() {
     debugger;
 
+    // class = "submit-btn btn btn-primary form-action-container-left"
     var button = $('<input type="button" name="btn_save_new" id="btn_save_new" />');
     $("#InsertButton").after(button);
     $("#btn_save_new").click(function () { btn_save_new_onclick(); });
@@ -34,25 +126,25 @@ function btn_save_new_setup() {
     button2.css("background-color", background_color);
 }
 
-function btn_save_new_onclick() {
-    debugger;
+//function btn_save_new_onclick() {
+//    debugger;
 
-    if (typeof (Page_Validators) == 'undefined') return;
+//    if (typeof (Page_Validators) == 'undefined') return;
 
-    // clear message
-    tdg.c.error_message_clear();
+//    // clear message
+//    tdg.c.error_message_clear();
 
-    if (Page_ClientValidate()) {
-        // insert
-        var account_id = '{{user.parentcustomerid.Id}}';
-        var contact_id = '{{user.id}}';
-        var cid_erapid = $("#cid_erapid").val();
-        cid_companyerap_insert(account_id, cid_erapid, contact_id);
-    }
-    else {
-        return;
-    }
-};
+//    if (Page_ClientValidate()) {
+//        // insert
+//        var account_id = '{{user.parentcustomerid.Id}}';
+//        var contact_id = '{{user.id}}';
+//        var cid_erapid = $("#cid_erapid").val();
+//        cid_companyerap_insert(account_id, cid_erapid, contact_id);
+//    }
+//    else {
+//        return;
+//    }
+//};
 
 function cid_companyerap_insert(account_id, cid_erapid, contact_id) {
     debugger;
@@ -78,25 +170,6 @@ if (window.jQuery) {
         }
     }(window.jQuery));
 }
-
-(function (webapi, $) {
-    function safeAjax(ajaxOptions) {
-        debugger;
-        var deferredAjax = $.Deferred();
-
-        // removed call to shell.getTokenDeferred()
-
-        $.ajax(ajaxOptions)
-            .done(function (data, textStatus, jqXHR) {
-                validateLoginSession(data, textStatus, jqXHR, deferredAjax.resolve);
-            }).fail(deferredAjax.reject);
-
-        return deferredAjax.promise();
-    }
-
-    webapi.safeAjax = safeAjax;
-
-})(window.webapi = window.webapi || {}, jQuery)
 
 // tdgcore_common.js
 
@@ -255,6 +328,37 @@ if (typeof (tdg.c) == "undefined") {
         }
     }
 }
+
+// Wrapper AJAX function
+(function (webapi, $) {
+    function safeAjax(ajaxOptions) {
+        debugger;
+
+        var deferredAjax = $.Deferred();
+
+        shell.getTokenDeferred().done(function (token) {
+            // add headers for AJAX
+            if (!ajaxOptions.headers) {
+                $.extend(ajaxOptions, {
+                    headers: {
+                        "__RequestVerificationToken": token
+                    }
+                });
+            } else {
+                ajaxOptions.headers["__RequestVerificationToken"] = token;
+            }
+            $.ajax(ajaxOptions)
+                .done(function (data, textStatus, jqXHR) {
+                    validateLoginSession(data, textStatus, jqXHR, deferredAjax.resolve);
+                }).fail(deferredAjax.reject); //AJAX
+        }).fail(function () {
+            deferredAjax.rejectWith(this, arguments); // on token failure pass the token AJAX and args
+        });
+
+        return deferredAjax.promise();
+    }
+    webapi.safeAjax = safeAjax;
+})(window.webapi = window.webapi || {}, jQuery)
 
 // tdg.webapi = tdgcore.webapi
 if (typeof (tdg.webapi) == "undefined") {

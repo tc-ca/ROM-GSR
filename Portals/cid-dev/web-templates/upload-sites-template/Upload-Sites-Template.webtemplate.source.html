@@ -15,6 +15,8 @@
     }
 </style>
 {% assign parentid = user.parentcustomerid.id %}
+{% assign contactid = user.id %}
+{% assign languagecode = website.selected_language.code %}
 {% fetchxml environment_settings %}
 <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
     <entity name="qm_environmentsettings">
@@ -54,7 +56,9 @@
       //add new submit button
       $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value='Upload' class='submit-btn btn btn-primary form-action-container-left' />");
       $("#InsertButton").css("display", "none");
-      call_Inital_validation();
+    var langcode = '{{languagecode}}'  ;
+    
+      call_Inital_validation(langcode);
    
 
     $(window).load(function() {
@@ -115,13 +119,11 @@ $('#btn_attachfile_and_scan').click(function(e)
 
 
             var Scan_API_URL = '{{Scan_flow_URL}}';
-            //"https://prod-02.canadacentral.logic.azure.com:443/workflows/9c5deab59bdb45739dc659748c59b1a1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZDI2-YxUhNZkKvpXe7R7Cs_y8J5gGtcB6ZT-y5EAMok";
-           // var c = String.raw `X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*`;
-
+           
 
           Call_Virsu_Scan_API(Scan_API_URL
             // ,btoa(c));
-            ,DocumentbodyContents);
+            ,DocumentbodyContents , '100000001',FileName,langcode );
 
 
         // call_Metadefender_Api();
@@ -270,21 +272,19 @@ $('#btn_attachfile_and_scan').click(function(e)
     })();
 
 
-function Call_Virsu_Scan_API(url, fileContent)
+function Call_Virsu_Scan_API(url, fileContent, activitytype , excelfilename , language)
 {
 
+var companyid = '{{parentid}}';
+var contactid = '{{contactid}}'
       $('#processingMsg').css('display', 'block');
         $('#processingMsg').text("Workbook is being scanned….");
 
   var acupdate =
-        '{"FileContent" :"' + fileContent  + '" }';
-
-         // '{ "accountid": "' + companyid + '" }';
-      var req = new XMLHttpRequest();
+        '{"FileContent" :"' + fileContent  + '", "CompanyId" : "' + companyid + '" , "ActionedBy" :"' + contactid +  '", "ActivityType" : "'+ activitytype +'" ,"ExcelFileName" : "' + excelfilename + '" , "Lang" : "' + language + '" }';
 
 
-      console.log(url);
-      //"https://prod-17.canadacentral.logic.azure.com:443/workflows/900f6e70915a4cddbb65b3c79da14581/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LZveFQ8DXIDobQOPzgoc0LgOcSOPpqVcnCEicN1lvEQ";
+      var req = new XMLHttpRequest();     
       req.open("POST", url, true);
       req.setRequestHeader('Content-Type', 'application/json');
       req.onreadystatechange = function() {
@@ -294,16 +294,21 @@ function Call_Virsu_Scan_API(url, fileContent)
              //  $('#processingMsg').text(this.response);
 
             var result = this.response;
-         if (result.toLowerCase().trim() == "false")
+           
+         if (result.toLowerCase().trim() == "allowed")
          {
+           
                $('#processingMsg').css('display', 'block');
                $('#processingMsg').text("Preliminary analysis of the uploaded workbook has begun…");
               $("#InsertButton").click();
 
          }
          else
-         {
-             alert("Error - Bulk Site Registration Upload: Initial upload stopped due to a potential virus.");
+         {     
+             $("#processingMsg").css("display", "none");
+           // alert ( req.getResponseHeader('MessageCode') );
+             alert ( req.getResponseHeader('Message') );
+            // alert("Error - Bulk Site Registration Upload: Initial upload stopped due to a potential virus.");
          }
 
              $("#processingMsg").css("display", "none");
@@ -471,7 +476,7 @@ fetch("https://wwwapps2.tc.gc.ca/Saf-Sec-Sur/13/tc-virusscan-api/api/v1/file-sca
 
 }
 
-function call_Inital_validation()
+function call_Inital_validation(Language)
 {
 
   var URLs = new URLSearchParams(window.location.search);
