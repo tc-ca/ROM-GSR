@@ -370,9 +370,8 @@
             },
             "parameters": {
               "entityName": "ovs_mocregistrations",
-              "$select": "ovs_name,_ovs_siteid_value,ovs_mocregistrationid,ovs_cdriskscore,ovs_cdpriorityscore,ovs_cdriskcategory,ovs_operationtype,ovs_lineofbusiness",
-              "$filter": "(statecode eq 0) and (ovs_SiteId/_territoryid_value eq @{triggerOutputs()?['body/_ovs_cdregionid_value']})",
-              "$top": 10
+              "$select": "ovs_name,_ovs_siteid_value,ovs_mocregistrationid,ovs_cdriskscore,ovs_cdpriorityscore,ovs_cdriskcategory,ovs_operationtype,_ovs_lineofbusiness_value",
+              "$filter": "(statecode eq 0) and (ovs_SiteId/_territoryid_value eq @{triggerOutputs()?['body/_ovs_cdregionid_value']})"
             },
             "authentication": "@parameters('$authentication')"
           },
