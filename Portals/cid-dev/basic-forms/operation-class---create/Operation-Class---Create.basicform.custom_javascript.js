@@ -1,62 +1,14 @@
 //
-// Basic Form-Operation UN Number - Create.js
+// Basic Form-Operation Class- Create.js
 //
 $(document).ready(function () {
     debugger;
-
-    // hide controls
-    tdg.c.control_hide("ovs_unnumber", true);
-
-    var selected_language = '{{website.selected_language.code}}';
-    sessionStorage.setItem("selected_language", selected_language);
-
-    // resize WebResource_unnumber
-    $("#WebResource_unnumber").height('72px');
-
-    sessionStorage.setItem("tdg_unnumberid", "");
-
     //when the page is done loading, disable autocomplete on all inputs[text]
     $('input[type="text"]').attr('autocomplete', 'off');
 
-    // autocomplete off
-    //$("#cid_unitofmeasurement").attr("autocomplete", "new-password");
-    //$("#cid_annualquantityvolume").attr("autocomplete", "new-password");
-    //$("#cid_annualnumberofshipment").attr("autocomplete", "new-password");
-    //$("#ovs_supplychaindirection").attr("autocomplete", "new-password");
-
+    // insert button
     btn_save_new_setup();
 });
-
-function tdg_unnumberid_selected(text, id) {
-    debugger;
-
-    var index1 = text.indexOf(" - ");
-    text = text.substr(0, index1);
-    $("#ovs_unnumber").attr("value", id);
-    $("#ovs_unnumber_name").attr("value", text);
-    $("#ovs_unnumber_entityname").attr("value", 'tdg_unnumber');
-}
-
-//Function called on form submit
-if (window.jQuery) {
-    (function ($) {
-
-        entityFormClientValidate = function () {
-            debugger;
-            var validation = true;
-
-            //remove commas from quantity field
-            var validBuffer = $("#cid_annualquantityvolume").val().replaceAll(',', '');
-            $("#cid_annualquantityvolume").val(validBuffer);
-
-            //remove commas from number of shippments field
-            validBuffer = $("#cid_annualnumberofshipment").val().replaceAll(',', '');
-            $("#cid_annualnumberofshipment").val(validBuffer);
-
-            return validation;
-        }
-    }(window.jQuery));
-}
 
 function btn_save_new_setup() {
     //debugger;
@@ -132,38 +84,23 @@ function btn_save_new_onclick() {
 
     // insert
     var contact_id = '{{user.id}}';
-    var ovs_unnumber = $("#ovs_unnumber").val();
-    var cid_unitofmeasurement = $("#cid_unitofmeasurement").val();
-    var cid_annualnumberofshipment = $("#cid_annualnumberofshipment").val();
-    var cid_annualquantityvolume = $("#cid_annualquantityvolume").val();
+    var ovs_primeclass = $("#ovs_primeclass").val();
 
-    ovs_operationunnumber_insert(operation_id,
-        ovs_unnumber,
-        cid_unitofmeasurement,
-        cid_annualquantityvolume,
-        cid_annualnumberofshipment,
-        contact_id);
+    ovs_operationclass_insert(operation_id, ovs_primeclass, contact_id);
 
     // clear form
-    $("#cid_unitofmeasurement").val(null);
-    $("#cid_annualnumberofshipment").val("");
-    $("#cid_annualquantityvolume").val("");
+    $("#ovs_primeclass").val("");
 }
 
-function ovs_operationunnumber_insert(operation_id, ovs_unnumber,
-    cid_unitofmeasurement, cid_annualquantityvolume, cid_annualnumberofshipment,
-    contact_id)
-{
+function ovs_operationclass_insert(operation_id, ovs_primeclass, contact_id) {
     debugger;
     var data = {
+        //"cid_Site@odata.bind": "/accounts(" + account_id + ")",
         "ovs_OperationClass@odata.bind": "/ovs_mocregistrations(" + operation_id + ")",
-        "ovs_UNNumber@odata.bind": "/tdg_unnumbers(" + ovs_unnumber + ")",
         "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
-        "cid_unitofmeasurement": cid_unitofmeasurement,
-        "cid_annualquantityvolume": cid_annualquantityvolume,
-        "cid_annualnumberofshipment": cid_annualnumberofshipment
+        "ovs_primeclass": ovs_primeclass
     };
-    //tdg.webapi.create("ovs_operationunnumbers", data);
+    tdg.webapi.create("ovs_operationclasses", data);
 }
 
 // tdgcore_common.js

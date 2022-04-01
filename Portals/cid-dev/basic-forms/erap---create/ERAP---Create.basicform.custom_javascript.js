@@ -7,16 +7,11 @@ $(document).ready(function () {
     $('input[type="text"]').attr('autocomplete', 'off');
 
     // insert button
-    //btn_save_new_setup();
-
-    xxx();
+    btn_save_new_setup();
 });
 
-function xxx() {
-    debugger;
-    // Type your custom code here. Details Steps as below:
-    //$("#InsertButton").append("<input type='button' id='btn_save_new' name='btn_save_new' value='Save and Exit' class='submit-btn btn btn-primary form-action-container-left' />")
-
+function btn_save_new_setup()
+{
     var button = $('<input type="button" name="btn_save_new" id="btn_save_new" />');
     $("#InsertButton").after(button);
 
@@ -36,11 +31,13 @@ function xxx() {
 
     // bind the click event to this custom buttton
     $("#btn_save_new").bind("click", function () {
-        xxx_onclick();
+        btn_save_new_onclick();
     });
 }
 
-function xxx_onclick() {
+function btn_save_new_onclick()
+{
+    tdg.c.error_message_clear();
     if (typeof entityFormClientValidate === 'function') {
         if (entityFormClientValidate())
         {
@@ -48,12 +45,12 @@ function xxx_onclick() {
             {
                 if (Page_ClientValidate('')) {
                     clearIsDirty();
-                    disableButtons();
+                    //disableButtons();
                     this.value = 'Processing...';
                 }
             } else {
                 clearIsDirty();
-                disableButtons();
+                //disableButtons();
                 this.value = 'Processing...';
             }
         } else {
@@ -63,12 +60,12 @@ function xxx_onclick() {
         if (typeof Page_ClientValidate === 'function') {
             if (Page_ClientValidate('')) {
                 clearIsDirty();
-                disableButtons();
+                //disableButtons();
                 this.value = 'Processing...';
             }
         } else {
             clearIsDirty();
-            disableButtons();
+            //disableButtons();
             this.value = 'Processing...';
         }
     };
@@ -99,52 +96,10 @@ function xxx_onclick() {
     var cid_erapid = $("#cid_erapid").val();
 
     cid_companyerap_insert(parent_id, cid_erapid, contact_id);
+
+    // clear form
+    $("#cid_erapid").val("");
 }
-
-function btn_save_new_setup() {
-    debugger;
-
-    // class = "submit-btn btn btn-primary form-action-container-left"
-    var button = $('<input type="button" name="btn_save_new" id="btn_save_new" />');
-    $("#InsertButton").after(button);
-    $("#btn_save_new").click(function () { btn_save_new_onclick(); });
-
-    var button1 = $("#InsertButton");
-    button1.prop("value", "Submit and Close");
-    var className = button1.css("className");
-    var fontSize = button1.css("fontSize");
-    fontSize = (fontSize.replace("px", "") - 1) + "px";
-    var color = button1.css("color");
-    var background_color = button1.css("background-color");
-
-    var button2 = $("#btn_save_new");
-    button2.prop("value", "Submit and Add Another");
-    button2.css('background-color', background_color);
-    button2.css('color', color);
-    button2.css("class", className);
-    button2.css("fontSize", fontSize);
-    button2.css("background-color", background_color);
-}
-
-//function btn_save_new_onclick() {
-//    debugger;
-
-//    if (typeof (Page_Validators) == 'undefined') return;
-
-//    // clear message
-//    tdg.c.error_message_clear();
-
-//    if (Page_ClientValidate()) {
-//        // insert
-//        var account_id = '{{user.parentcustomerid.Id}}';
-//        var contact_id = '{{user.id}}';
-//        var cid_erapid = $("#cid_erapid").val();
-//        cid_companyerap_insert(account_id, cid_erapid, contact_id);
-//    }
-//    else {
-//        return;
-//    }
-//};
 
 function cid_companyerap_insert(account_id, cid_erapid, contact_id) {
     debugger;
@@ -153,22 +108,7 @@ function cid_companyerap_insert(account_id, cid_erapid, contact_id) {
         "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
         "cid_erapid": cid_erapid
     };
-    tdg.webapi.create("cid_companyerap", data);
-}
-
-function entityFormClientValidate() {
-    debugger;
-}
-
-if (window.jQuery) {
-    (function ($) {
-        entityFormClientValidate = function () {
-            debugger;
-            var validation = true;
-
-            return validation;
-        }
-    }(window.jQuery));
+    tdg.webapi.create("cid_companyeraps", data);
 }
 
 // tdgcore_common.js
@@ -272,7 +212,7 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         error_message_clear: function () {
-            debugger;
+            //debugger;
             $('#ValidationSummaryEntityFormControl_EntityFormView')[0].innerHTML = "";
             $('#ValidationSummaryEntityFormControl_EntityFormView').hide();
         },
@@ -369,7 +309,7 @@ if (typeof (tdg.webapi) == "undefined") {
             var response = null;
             $.ajax({
                 type: "GET",
-                url: "/_api/" + entity_name + "s?$filter=" + filter,
+                url: "/_api/" + entity_name + "?$filter=" + filter,
                 contentType: "application/json",
                 async: false
             }).done(function (json) {
@@ -383,7 +323,7 @@ if (typeof (tdg.webapi) == "undefined") {
 
             webapi.safeAjax({
                 type: "POST",
-                url: "/_api/" + entity_name + "s",
+                url: "/_api/" + entity_name,
                 contentType: "application/json",
                 data: JSON.stringify(data),
 
@@ -400,7 +340,7 @@ if (typeof (tdg.webapi) == "undefined") {
 
             webapi.safeAjax({
                 type: "PATCH",
-                url: "/_api/" + entity_name + "s(" + record_id + ")",
+                url: "/_api/" + entity_name + "(" + record_id + ")",
                 contentType: "application/json",
                 data: JSON.stringify(data),
 
@@ -416,7 +356,7 @@ if (typeof (tdg.webapi) == "undefined") {
 
             webapi.safeAjax({
                 type: "DELETE",
-                url: "/_api/" + entity_name + "s(" + record_id + ")",
+                url: "/_api/" + entity_name + "(" + record_id + ")",
                 contentType: "application/json",
 
                 success: function (res) {

@@ -105,10 +105,14 @@ if (typeof (tdg.c) == "undefined") {
             debugger;
             $('#ValidationSummaryEntityFormView div').remove();
 
-            //$('#ValidationSummaryEntityFormView')[0].remove();
-            //$('#ValidationSummaryEntityFormView').hide();
+            try {
+                $('#ValidationSummaryEntityFormView')[0].remove();
+            } catch (e) {}
+            $('#ValidationSummaryEntityFormView').hide();
 
-            $('#ValidationSummaryEntityFormControl_EntityFormView')[0].innerHTML = "";
+            try {
+                $('#ValidationSummaryEntityFormControl_EntityFormView')[0].innerHTML = "";
+            } catch (e) {}
             $('#ValidationSummaryEntityFormControl_EntityFormView').hide();
         },
 
@@ -183,7 +187,7 @@ if (typeof (tdg.c) == "undefined") {
 // Wrapper AJAX function
 (function (webapi, $) {
     function safeAjax(ajaxOptions) {
-        debugger;
+        //debugger;
 
         var deferredAjax = $.Deferred();
 
@@ -214,13 +218,14 @@ if (typeof (tdg.c) == "undefined") {
 // tdg.webapi = tdgcore.webapi
 if (typeof (tdg.webapi) == "undefined") {
     tdg.webapi = {
+        // entity_name must be in plural
         list: function (entity_name, filter) {
             debugger;
 
             var response = null;
             $.ajax({
                 type: "GET",
-                url: "/_api/" + entity_name + "s?$filter=" + filter,
+                url: "/_api/" + entity_name + "?$filter=" + filter,
                 contentType: "application/json",
                 async: false
             }).done(function (json) {
@@ -235,13 +240,13 @@ if (typeof (tdg.webapi) == "undefined") {
         //    "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
         //    "cid_erapid": cid_erapid
         //};
-        //tdg.webapi.create("cid_companyerap", data);
+        //tdg.webapi.create("cid_companyeraps", data);
         create: function (entity_name, data) {
             debugger;
 
             webapi.safeAjax({
                 type: "POST",
-                url: "/_api/" + entity_name + "s",
+                url: "/_api/" + entity_name,
                 contentType: "application/json",
                 data: JSON.stringify(data),
 
@@ -258,7 +263,7 @@ if (typeof (tdg.webapi) == "undefined") {
 
             webapi.safeAjax({
                 type: "PATCH",
-                url: "/_api/" + entity_name + "s(" + record_id + ")",
+                url: "/_api/" + entity_name + "(" + record_id + ")",
                 contentType: "application/json",
                 data: JSON.stringify(data),
 
@@ -274,7 +279,7 @@ if (typeof (tdg.webapi) == "undefined") {
 
             webapi.safeAjax({
                 type: "DELETE",
-                url: "/_api/" + entity_name + "s(" + record_id + ")",
+                url: "/_api/" + entity_name + "(" + record_id + ")",
                 contentType: "application/json",
 
                 success: function (res) {
@@ -299,7 +304,7 @@ if (typeof (tdg.root) == "undefined") {
     tdg.root = {
         setup: function (cid_has_cra_bn, cid_crabusinessnumber, parentcustomerid, contact_id) {
             debugger;
-            var rows = tdg.webapi.list("cid_companyerap", "statuscode eq 1");
+            var rows = tdg.webapi.list("cid_companyeraps", "statuscode eq 1");
             var length = rows.length;
 
             if ((cid_has_cra_bn) && (length == 0)) {

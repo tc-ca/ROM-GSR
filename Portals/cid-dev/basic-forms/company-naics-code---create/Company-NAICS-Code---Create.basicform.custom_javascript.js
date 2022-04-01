@@ -3,117 +3,90 @@
 //
 $(document).ready(function () {
     debugger;
-
-    var selected_language = '{{website.selected_language.code}}';
-    sessionStorage.setItem("selected_language", selected_language);
-
-    // resize WebResource_address_complete
-    $("#WebResource_naicscode").height('72px');
-
-    // hide controls
-    tdg.c.control_hide("cid_naicscode", true);
+    //when the page is done loading, disable autocomplete on all inputs[text]
+    $('input[type="text"]').attr('autocomplete', 'off');
 
     // insert button
     btn_save_new_setup();
-
-    //webapi_test();
 });
 
-function webapi_test() {
-    // https://rd-tdgcore-dev.powerappsportals.com/_api/cid_companyeraps
-    var parentcustomerid = 'efa1192a-620c-4bd0-9524-dfd0c3a83f8e';
-    var contact_id = 'a36861c7-86a4-ec11-b3fe-0022483c9e11';
-    var cid_crabusinessnumber = '999999999';
-    tdg.root.setup(cid_has_cra_bn, cid_crabusinessnumber, parentcustomerid, contact_id);
-
-    // https://rd-tdgcore-dev.powerappsportals.com/_api/cid_companynaicscodes
-    var account_id = 'efa1192a-620c-4bd0-9524-dfd0c3a83f8e';
-    var contact_id = 'a36861c7-86a4-ec11-b3fe-0022483c9e11';
-    var cid_naicscode = '72f2e887-d192-ec11-b400-000d3a849007'
-    var rows = tdg.webapi.list("cid_companynaicscode", "statuscode eq 1");
-    var data = {
-        "cid_Company@odata.bind": "/accounts(" + account_id + ")",
-        "cid_NAICSCode@odata.bind": "/cid_naicscode(" + cid_naicscode + ")",
-        "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
-    };
-    tdg.webapi.create("cid_companynaicscode", data);
-}
-
 function btn_save_new_setup() {
-    debugger;
+    //debugger;
 
     var button = $('<input type="button" name="btn_save_new" id="btn_save_new" />');
     $("#InsertButton").after(button);
-    $("#btn_save_new").click(function () { btn_save_new_onclick(); });
 
     var button1 = $("#InsertButton");
     button1.prop("value", "Submit and Close");
-    var className = button1.css("className");
+    var className = button1[0].className
     var fontSize = button1.css("fontSize");
-    fontSize = (fontSize.replace("px", "") - 1) + "px";
     var color = button1.css("color");
     var background_color = button1.css("background-color");
 
     var button2 = $("#btn_save_new");
     button2.prop("value", "Submit and Add Another");
-    button2.css('background-color', background_color);
-    button2.css('color', color);
-    button2.css("class", className);
+    button2[0].className = className;
     button2.css("fontSize", fontSize);
+    button2.css('color', color);
     button2.css("background-color", background_color);
+
+    // bind the click event to this custom buttton
+    $("#btn_save_new").bind("click", function () {
+        btn_save_new_onclick();
+    });
 }
 
-function btn_save_new_onclick()
-{
-    debugger;
-
-    if (typeof (Page_Validators) == 'undefined') return;
-
-    // clear message
+function btn_save_new_onclick() {
     tdg.c.error_message_clear();
+    if (typeof entityFormClientValidate === 'function') {
+        if (entityFormClientValidate()) {
+            if (typeof Page_ClientValidate === 'function') {
+                if (Page_ClientValidate('')) {
+                    clearIsDirty();
+                    //disableButtons();
+                    this.value = 'Processing...';
+                }
+            } else {
+                clearIsDirty();
+                //disableButtons();
+                this.value = 'Processing...';
+            }
+        } else {
+            return false;
+        }
+    } else {
+        if (typeof Page_ClientValidate === 'function') {
+            if (Page_ClientValidate('')) {
+                clearIsDirty();
+                //disableButtons();
+                this.value = 'Processing...';
+            }
+        } else {
+            clearIsDirty();
+            //disableButtons();
+            this.value = 'Processing...';
+        }
+    };
 
-    if (Page_ClientValidate()) {
-        // insert
-        var account_id = '{{user.parentcustomerid.Id}}';
-        var contact_id = '{{user.id}}';
-        var cid_naicscode = $("#cid_naicscode").attr("value");
-        cid_companynaicscode_insert(account_id, cid_naicscode, contact_id);
-    }
-    else {
-        return;
-    }
+    // insert
+    var account_id = '{{user.parentcustomerid.Id}}';
+    var contact_id = '{{user.id}}';
+    var cid_naicscode = $("#cid_naicscode").attr("value");
 
-    try {
-        var f = document.getElementById("WebResource_naicscode");
-        var c = f.contentWindow;
-        c.clear_field();
-    } catch { }
-};
+    cid_companynaicscode_insert(account_id, cid_naicscode, contact_id);
 
-function cid_companynaicscode_insert(account_id, cid_naicscode, contact_id)
-{
+    // clear form
+    $("#cid_naicscode").val("");
+}
+
+function cid_companynaicscode_insert(account_id, cid_naicscode, contact_id) {
     debugger;
     var data = {
         "cid_Company@odata.bind": "/accounts(" + account_id + ")",
         "cid_NAICSCode@odata.bind": "/cid_naicscodes(" + cid_naicscode + ")",
         "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
     };
-    tdg.webapi.create("cid_companynaicscode", data);
-}
-
-function entityFormClientValidate() {
-    debugger;
-}
-
-if (window.jQuery) {
-    (function ($) {
-        entityFormClientValidate  = function () {
-            debugger;
-            var validation = true;
-
-            return validation;
-        }
-    }(window.jQuery));
+    tdg.webapi.create("cid_companynaicscodes", data);
 }
 
 // tdgcore_common.js
@@ -217,7 +190,7 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         error_message_clear: function () {
-            debugger;
+            //debugger;
             $('#ValidationSummaryEntityFormControl_EntityFormView')[0].innerHTML = "";
             $('#ValidationSummaryEntityFormControl_EntityFormView').hide();
         },
@@ -274,6 +247,37 @@ if (typeof (tdg.c) == "undefined") {
     }
 }
 
+// Wrapper AJAX function
+(function (webapi, $) {
+    function safeAjax(ajaxOptions) {
+        //debugger;
+
+        var deferredAjax = $.Deferred();
+
+        shell.getTokenDeferred().done(function (token) {
+            // add headers for AJAX
+            if (!ajaxOptions.headers) {
+                $.extend(ajaxOptions, {
+                    headers: {
+                        "__RequestVerificationToken": token
+                    }
+                });
+            } else {
+                ajaxOptions.headers["__RequestVerificationToken"] = token;
+            }
+            $.ajax(ajaxOptions)
+                .done(function (data, textStatus, jqXHR) {
+                    validateLoginSession(data, textStatus, jqXHR, deferredAjax.resolve);
+                }).fail(deferredAjax.reject); //AJAX
+        }).fail(function () {
+            deferredAjax.rejectWith(this, arguments); // on token failure pass the token AJAX and args
+        });
+
+        return deferredAjax.promise();
+    }
+    webapi.safeAjax = safeAjax;
+})(window.webapi = window.webapi || {}, jQuery)
+
 // tdg.webapi = tdgcore.webapi
 if (typeof (tdg.webapi) == "undefined") {
     tdg.webapi = {
@@ -283,7 +287,7 @@ if (typeof (tdg.webapi) == "undefined") {
             var response = null;
             $.ajax({
                 type: "GET",
-                url: "/_api/" + entity_name + "s?$filter=" + filter,
+                url: "/_api/" + entity_name + "?$filter=" + filter,
                 contentType: "application/json",
                 async: false
             }).done(function (json) {
@@ -297,7 +301,7 @@ if (typeof (tdg.webapi) == "undefined") {
 
             webapi.safeAjax({
                 type: "POST",
-                url: "/_api/" + entity_name + "s",
+                url: "/_api/" + entity_name,
                 contentType: "application/json",
                 data: JSON.stringify(data),
 
@@ -314,7 +318,7 @@ if (typeof (tdg.webapi) == "undefined") {
 
             webapi.safeAjax({
                 type: "PATCH",
-                url: "/_api/" + entity_name + "s(" + record_id + ")",
+                url: "/_api/" + entity_name + "(" + record_id + ")",
                 contentType: "application/json",
                 data: JSON.stringify(data),
 
@@ -330,7 +334,7 @@ if (typeof (tdg.webapi) == "undefined") {
 
             webapi.safeAjax({
                 type: "DELETE",
-                url: "/_api/" + entity_name + "s(" + record_id + ")",
+                url: "/_api/" + entity_name + "(" + record_id + ")",
                 contentType: "application/json",
 
                 success: function (res) {
@@ -349,5 +353,3 @@ if (typeof (tdg.webapi) == "undefined") {
         }
     }
 }
-
-
