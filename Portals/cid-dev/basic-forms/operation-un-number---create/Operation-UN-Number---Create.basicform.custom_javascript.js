@@ -5,7 +5,7 @@ $(document).ready(function () {
     debugger;
 
     // hide controls
-    tdg.c.control_hide("ovs_unnumber", true);
+    //tdg.c.control_hide("ovs_unnumber", true);
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
@@ -163,7 +163,7 @@ function ovs_operationunnumber_insert(operation_id, ovs_unnumber,
         "cid_annualquantityvolume": cid_annualquantityvolume,
         "cid_annualnumberofshipment": cid_annualnumberofshipment
     };
-    //tdg.webapi.create("ovs_operationunnumbers", data);
+    tdg.webapi.create("ovs_operationunnumbers", data);
 }
 
 // tdgcore_common.js

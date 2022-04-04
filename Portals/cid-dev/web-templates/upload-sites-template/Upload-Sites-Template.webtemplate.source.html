@@ -14,6 +14,21 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         display: none;
     }
+
+    #warnningMessage {
+        -width: 300px;
+        -text-align: center;
+       -padding: 6px 10px;
+        z-index: 9999;
+        top: 15%;
+        left: 40%;
+        position: fixed;
+        -webkit-border-radius: 0 0 2px 2px;
+        -border-radius: 0 0 2px 2px;
+        -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        -box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        display: none;
+    }
 </style>
 {% assign parentid = user.parentcustomerid.id %}
 {% assign contactid = user.id %}
@@ -49,22 +64,24 @@
 {% endif %}
 
 
+
+{% if {{env_setting.qm_name}}  == 'CID_Check_User_Response_To_continue' %}
+{% assign CID_Check_User_Response_To_continue = env_setting.qm_value %}
+{% endif %}
+
 {% endfor %}
 
 <script>
   $(document).ready( function() {
-confirmDialog("Is this working?", (ans) => {
-  if (ans) {
-     console.log("Yes");
-  }else {
-     console.log("No");
-  }
- });
+
+//TrigerMessageBox('test');
       //add new submit button
       $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value='Upload' class='submit-btn btn btn-primary form-action-container-left' />");
+     
       $("#InsertButton").css("display", "none");
     var langcode = '{{languagecode}}'  ;
     var BulkActivitytype = '100000001' ;
+    //intial validation will be executed if this is a redirect call
       call_Inital_validation(langcode , BulkActivitytype);
 
 
@@ -109,6 +126,9 @@ $('#btn_attachfile_and_scan').click(function(e)
 
         $('#processingMsg').css('display', 'block');
         $('#processingMsg').text("Workbook is being scanned….");
+
+      //  $('#warnningMessage').css('display', 'block');
+       // $('#warnningMessage').text("Workbook is being scanned….");
         // Read the file
 
         var reader = new FileReader();
@@ -270,6 +290,47 @@ $('#btn_attachfile_and_scan').click(function(e)
     })();
 
 
+
+function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls , Lang)
+{
+    
+ var url = '{{CID_Check_User_Response_To_continue}}' ;
+
+  var acupdate =
+  ' { "activityid":"' + activityid  + '", "user_reponse":"' + UserResponse +'", "Log_details": "' +Logdetaisls + '","Lang":"' + Lang+ '"}' ;
+ 
+    
+      var req = new XMLHttpRequest();
+      req.open("POST", url, true);
+      req.setRequestHeader('Content-Type', 'application/json');
+      req.onreadystatechange = function() {
+        if (this.readyState === 4) {
+          req.onreadystatechange = null;
+          if (this.status === 200) {
+             //  $('#processingMsg').text(this.response);
+
+            var result = this.response;
+
+         
+
+               $('#processingMsg').css('display', 'block');
+               $('#processingMsg').text("");
+            
+
+         }
+         else {
+              $('#processingMsg').text("Error Please Try again Later.");
+            var result = this.response;
+            alert("Error " + result);
+          }
+        }
+      }
+
+      req.send(acupdate);
+
+}
+
+
 function Call_Virsu_Scan_API(url, fileContent, activitytype , excelfilename , language)
 {
 
@@ -332,8 +393,11 @@ function call_Inital_validation(Language , bulkactivitytype)
         var companyname = '{{ user.parentcustomerid.Name }}';
         if  ( companyid != null  )
 {
-        $('#processingMsg').css('display', 'block');
-        $('#processingMsg').text("Preliminary analysis of the uploaded workbook has begun…");
+       // $('#processingMsg').css('display', 'block');
+        //$('#processingMsg').text("Preliminary analysis of the uploaded workbook has begun…");
+
+  $('#warnningMessage').css('display', 'block');
+        $('#warnningMessage').text("Preliminary analysis of the uploaded workbook has begun…");
 
         //notificationMsg.show("System is validating uploaded List ...");
 
@@ -348,7 +412,7 @@ function call_Inital_validation(Language , bulkactivitytype)
         var req = new XMLHttpRequest();
         var url = '{{excelload_Flow_URL}}';
 
-        //"https://prod-21.canadacentral.logic.azure.com:443/workflows/1b560b6972c9486c9e8a8703c39fc8ff/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=rAQ5udszPA6NIKwMwn8EspcMsvlwgFjkVaqdRuFM8dw";
+       
         req.open("POST", url, true);
         req.setRequestHeader('Content-Type', 'application/json');
 
@@ -360,29 +424,47 @@ function call_Inital_validation(Language , bulkactivitytype)
                   $('#processingMsg').css('display', 'none');
                 if (this.status === 200) {
                     var result = this.response;
-                    $('#processingMsg').css('display', 'none');
-
-                     alert (this.response);
+                    //$('#processingMsg').css('display', 'none');
+                   $('#warnningMessage').css('display', 'none');
+                    // alert (this.response);
                      //alert(req.getResponseHeader('DetailMessage'));
 
 
 
                     var result = this.response;
+                    confirmDialog(result, (ans) => {
+                            if (ans) {
+                                console.log("Yes");
+
+                                Call_Check_User_Response_flow(newrecordid , 'yes' , '' , Language);
+                                }else {
+                            Call_Check_User_Response_flow(newrecordid , 'No' , '' , Language);
+                            }
+                            });
 
 
                 } else if (this.status === 402) {
 
                  $('#processingMsg').css('display', 'none');
+                  $('#warnningMessage').css('display', 'none');
                // alert ("Uploaded List did not pass validation, please check the errors list.");
-               alert (this.response) ;
+              // alert (this.response) ;
                     var result = this.response;
 
+                    confirmDialog(result, (ans) => {
+                            if (ans) {
+                                console.log("Yes");
+                                }else {
+                            console.log("No");
+                            }
+                            });
 
-                       document.getElementById("errortable").innerHTML = result;
+                       //document.getElementById("errortable").innerHTML = result;
 
                 } else {
-
-                  $('#processingMsg').css('display', 'none');
+ 
+                   $('#warnningMessage').css('display', 'none');
+                  //$('#processingMsg').css('display', 'none');
                     var result = this.response;
                     alert(result);
                        // window.location.replace("~/Bulk_Site_Upload");
@@ -397,6 +479,36 @@ else{
       $('#processingMsg').css('display', 'none');
 }
 }//end function
+
+function TrigerMessageBox(message)
+{
+  
+$(`<section class="mfp-hide modal-dialog modal-content overlay-def" id="myModal">
+    <header class="modal-header">
+        <h2 class="modal-title">CID Portal</h2>
+    </header>
+    <div class="modal-body">
+        <ol>${message}</ol>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Yes</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+    </div>
+</section>
+`).appendTo('body');
+
+$document.trigger( "open.wb-lbx", [
+			[
+				{
+					src: "#myModal",
+					type: "inline"
+				}
+			],
+			true
+		]);
+
+
+}
 
  function confirmDialog(message, handler) {
       /*  $(`<div class="modal fade" id="myModal" role="dialog"> 
@@ -413,30 +525,52 @@ else{
        </div> 
     </div> 
   </div>`).appendTo('body');*/
-
-
-     $(`<div class="modal" id="myModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
+/*
+  $(`<section class="modal-dialog modal-content overlay-def">
+  <div class="modal" id="myModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-content overlay-def" >
     <div class="modal-content">
-      <div class="modal-header bg-primary">
+      <div class="modal-header ">
         <h5 class="modal-title">CID Portal</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span>
-        </button>
+       
       </div>
       <div class="modal-body">
-        <p>${message}</p>
+        <ol>${message}</ol>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-yes">Yes</button>
-        <button type="button" class="btn btn-no" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-primary">Yes</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
       </div>
     </div>
   </div>
-</div>`).appendTo('body');
+</div></section>`).appendTo('body');
+*/
+
+ $(`<section class="modal-dialog modal-content overlay-def" id="myModal">
+    <header class="modal-header">
+        <h2 class="modal-title">CID Portal</h2>
+    </header>
+    <div class="modal-body">
+        <ol>${message}</ol>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Yes</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+    </div>
+</section>
+`).appendTo('body');
 
 
-
+$document.trigger( "open.wb-lbx", [
+			[
+				{
+					src: "#myModal",
+					type: "inline"
+				}
+			],
+			true
+		]);
+	
         //Trigger the modal
         $("#myModal").modal({
             backdrop: 'static',
@@ -462,7 +596,7 @@ else{
     }
 
 </script>
-<div class="container">
+<div class="container ">
     <div class="container">
         {% block breadcrumbs %}
         {% include 'Breadcrumbs' %}
@@ -472,7 +606,7 @@ else{
         {% endblock %}
     </div>
 
-    <div id="mainContent" class="row">
+    <div id="mainContent" class="wb-lbx row">
 
         <div class="col-md-12">
             {% block main %}
@@ -484,9 +618,12 @@ else{
             <div class="row sectionBlockLayout" style="display: flex; flex-wrap: wrap; padding: 8px; margin: 0px; text-align: left; min-height: 100px;">
 
 
+  <section class="alert alert-warning" id="warnningMessage">
+                </section>
 
-
-                <div id="processingMsg" class="alert alert-warning" role="alert"></div>
+                <div id="processingMsg" class="alert alert-warning" role="alert">
+              
+                </div>
                 <table>
                     <tbody>
                         <tr>

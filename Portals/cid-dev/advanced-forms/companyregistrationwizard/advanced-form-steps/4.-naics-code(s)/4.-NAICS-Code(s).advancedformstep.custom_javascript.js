@@ -4,33 +4,7 @@
 $(document).ready(function () {
 	debugger;
 	subgrid_language();
-
-	//webapi_test();
 });
-
-function webapi_test() {
-	debugger;
-
-	// https://rd-tdgcore-dev.powerappsportals.com/_api/cid_companynaicscodes
-	var account_id = 'efa1192a-620c-4bd0-9524-dfd0c3a83f8e';
-	var contact_id = 'a36861c7-86a4-ec11-b3fe-0022483c9e11';
-	var cid_naicscode = '72f2e887-d192-ec11-b400-000d3a849007'; // Soybean farming
-	//var rows = tdg.webapi.list("cid_companynaicscode", "statuscode eq 1");
-
-	//var data = {
-	//	"cid_Company@odata.bind": "/accounts(" + account_id + ")",
-	//	"cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
-	//	"cid_NAICSCode@odata.bind": "/cid_naicscodes(" + cid_naicscode + ")"
-	//};
-
-	var data = {
-		"cid_Company@odata.bind": "/accounts(" + account_id + ")",
-		"cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
-		"cid_x@odata.bind": "/cid_naicscodes(" + cid_naicscode + ")"
-	};
-
-	tdg.webapi.create("cid_companynaicscode", data);
-}
 
 function subgrid_language() {
 	//debugger;

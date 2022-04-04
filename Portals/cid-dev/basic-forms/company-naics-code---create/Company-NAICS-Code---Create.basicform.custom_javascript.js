@@ -3,11 +3,19 @@
 //
 $(document).ready(function () {
     debugger;
+
+    // hide controls
+    tdg.c.control_hide("cid_naicscode", true);
+
     //when the page is done loading, disable autocomplete on all inputs[text]
     $('input[type="text"]').attr('autocomplete', 'off');
 
     // insert button
     btn_save_new_setup();
+
+    // clear form
+    $("#cid_naicscode").attr("value", null);
+    $("#cid_naicscode_name").attr("value", null);
 });
 
 function btn_save_new_setup() {
@@ -76,7 +84,8 @@ function btn_save_new_onclick() {
     cid_companynaicscode_insert(account_id, cid_naicscode, contact_id);
 
     // clear form
-    $("#cid_naicscode").val("");
+    $("#cid_naicscode").attr("value", null);
+    $("#cid_naicscode_name").attr("value", null);
 }
 
 function cid_companynaicscode_insert(account_id, cid_naicscode, contact_id) {
