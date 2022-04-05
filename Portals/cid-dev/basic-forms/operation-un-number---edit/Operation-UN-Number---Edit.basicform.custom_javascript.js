@@ -4,6 +4,8 @@
 $(document).ready(function () {
     debugger;
 
+    insert_tdgcore_common_js();
+
     // hide controls
     control_hide("ovs_unnumber", true);
 
@@ -63,59 +65,10 @@ if (window.jQuery) {
     }(window.jQuery));
 }
 
-function control_hide(fieldName, is_lookup) {
-    if (is_lookup) {
-        $("#" + fieldName).parent().parent().parent().hide();
-    }
-    else {
-        $("#" + fieldName).hide();
-        $("#" + fieldName + "_label").hide();
-    }
-}
+function insert_tdgcore_common_js() {
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = "/tdgcore_common.js";
 
-function control_show(fieldName, is_lookup) {
-    if (is_lookup) {
-        $("#" + fieldName).parent().parent().parent().show();
-    }
-    else {
-        $("#" + fieldName).show();
-        $("#" + fieldName + "_label").show();
-    }
-}
-
-if (typeof (common) == "undefined") {
-    common = {
-        text_language: function (text, language) {
-            //var selected_language = '{{website.selected_language.code}}';
-            //sessionStorage.setItem("selected_language", selected_language);
-
-            var value = "";
-            var index1 = text.indexOf("::");
-            if (language == "en-US") {
-                value = text.substr(0, index1);
-            }
-            else {
-                value = text.substr(index1 + 2);
-            }
-            return value;
-        },
-
-        // odata
-        OData_List: function (entity, filter) {
-            var url = entity + "?$filter=" + filter;
-            var oDataUrl = "~/_odata/" + url;
-            //var oDataUrl = "https://rd-tdgcore-dev.powerappsportals.com/_odata/" + url;
-            var response = null;
-
-            $.ajax({
-                type: "GET",
-                url: oDataUrl,
-                dataType: "json",
-                async: false
-            }).done(function (json) {
-                response = json.value;
-            });
-            return response;
-        }
-    }
+    $("body").append(script);
 }

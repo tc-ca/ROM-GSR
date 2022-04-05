@@ -1,10 +1,11 @@
+//
 // CompanyRegistrationWizard-Contact.js
-
+//
 $(document).ready(function () {
     debugger;
     sessionStorage.setItem("step_start", 2);
 
-    root_erap_setup();
+    //root_erap_setup();
 });
 
 if (window.jQuery) {

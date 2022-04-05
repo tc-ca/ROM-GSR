@@ -1,17 +1,18 @@
 
 <style>
+
     #processingMsg {
-        width: 300px;
-        text-align: center;
-        padding: 6px 10px;
-        z-index: 9999;
-        top: 15%;
-        left: 40%;
-        position: fixed;
+       -width: 300px;
+        -text-align: center;
+        -padding: 6px 10px;
+        -z-index: 9999;
+        -top: 15%;
+        -left: 40%;
+        -position: fixed;
         -webkit-border-radius: 0 0 2px 2px;
-        border-radius: 0 0 2px 2px;
+        -border-radius: 0 0 2px 2px;
         -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        -box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         display: none;
     }
 
@@ -74,7 +75,7 @@
 <script>
   $(document).ready( function() {
 
-//TrigerMessageBox('test');
+
       //add new submit button
       $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value='Upload' class='submit-btn btn btn-primary form-action-container-left' />");
      
@@ -260,40 +261,11 @@ $('#btn_attachfile_and_scan').click(function(e)
 });//end document ready
 
 
-   // Notification component
-    var notificationMsg = (function () {
-        var $processingMsgEl = $('#processingMsg'),
-            _msg = 'Processing...',
-            _stack = 0,
-            _endTimeout;
-        return {
-            show: function (msg) {
-
-                $processingMsgEl.text(msg || _msg);
-                if (_stack === 0) {
-                    clearTimeout(_endTimeout);
-                    $processingMsgEl.show();
-                }
-                _stack++;
-            },
-            hide: function () {
-                _stack--;
-                if (_stack <= 0) {
-                    _stack = 0;
-                    clearTimeout(_endTimeout);
-                    _endTimeout = setTimeout(function () {
-                        $processingMsgEl.hide();
-                    }, 500);
-                }
-            }
-        }
-    })();
-
 
 
 function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls , Lang)
 {
-    
+    var useremail = '{{user.emailaddress1}}';
  var url = '{{CID_Check_User_Response_To_continue}}' ;
 
   var acupdate =
@@ -310,11 +282,22 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
              //  $('#processingMsg').text(this.response);
 
             var result = this.response;
+            var responseMessage ;
+         if (UserResponse == 'yes')
+         {
+             responseMessage  = 'The CID system will now begin the second of two sets of validations of the file being uploaded. An email will be sent to your email address of ' + useremail +', indicating the results the second set of validations and the subsequent steps to take. ' +
+             'At this point you can wait for the notification email and proceed with the next step described from within it. Alternatively, you can leave the Registration process temporarily and the system will return you to the spot where you left off when you return.' 
+             + useremail +' is the email address from the current user’s profile';
 
-         
+         }
+         else{
+             responseMessage='Initial request for Bulk Upload is now complete based on an early cancellation.' + 
+'The original request to bulk upload sites is cancelled. Please proceed with the remainder of the Registration process.';
+
+         }
 
                $('#processingMsg').css('display', 'block');
-               $('#processingMsg').text("");
+               $('#processingMsg').text(responseMessage);
             
 
          }
@@ -396,8 +379,8 @@ function call_Inital_validation(Language , bulkactivitytype)
        // $('#processingMsg').css('display', 'block');
         //$('#processingMsg').text("Preliminary analysis of the uploaded workbook has begun…");
 
-  $('#warnningMessage').css('display', 'block');
-        $('#warnningMessage').text("Preliminary analysis of the uploaded workbook has begun…");
+         $('#processingMsg').css('display', 'block');
+        $('#processingMsg').text("Preliminary analysis of the uploaded workbook has begun…");
 
         //notificationMsg.show("System is validating uploaded List ...");
 
@@ -434,13 +417,18 @@ function call_Inital_validation(Language , bulkactivitytype)
                     var result = this.response;
                     confirmDialog(result, (ans) => {
                             if (ans) {
-                                console.log("Yes");
-
+                               // console.log("Yes");
                                 Call_Check_User_Response_flow(newrecordid , 'yes' , '' , Language);
+                            
                                 }else {
-                            Call_Check_User_Response_flow(newrecordid , 'No' , '' , Language);
+                                 Call_Check_User_Response_flow(newrecordid , 'No' , '' , Language);
+                                //console.log("No");
                             }
                             });
+
+
+
+                 
 
 
                 } else if (this.status === 402) {
@@ -480,120 +468,53 @@ else{
 }
 }//end function
 
-function TrigerMessageBox(message)
+function confirmDialog(message, handler)
 {
   
-$(`<section class="mfp-hide modal-dialog modal-content overlay-def" id="myModal">
+$(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
     <header class="modal-header">
         <h2 class="modal-title">CID Portal</h2>
     </header>
     <div class="modal-body">
-        <ol>${message}</ol>
+        ${message}
+      
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Yes</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
-    </div>
+  <div class="modal-footer">
+     <button id="btnYes" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">Yes</button>
+    <button  id="btnNo" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" data-dismiss="modal">No</button>
+  
 </section>
 `).appendTo('body');
 
-$document.trigger( "open.wb-lbx", [
-			[
-				{
-					src: "#myModal",
-					type: "inline"
-				}
-			],
-			true
-		]);
+
+
+     $("#myModal").css('top' , '15%');
+        $("#myModal").css('left' , '40%');
+        $("#myModal").css('position', 'fixed'); 
+        $("#myModal").css('z-index', '9999');
+
+
+ $("#btnYes").click(function () {
+     
+           // handler(true);
+          //  $("#myModal").modal("hide");
+          $("#myModal").remove();
+           handler(true);
+        });
+
+        //Pass false to callback function
+        $("#btnNo").click(function () {
+            
+            //handler(lse);
+            $("#myModal").remove();
+             handler(false);
+        });
+
 
 
 }
 
- function confirmDialog(message, handler) {
-      /*  $(`<div class="modal fade" id="myModal" role="dialog"> 
-     <div class="modal-dialog"> 
-       <!-- Modal content--> 
-        <div class="modal-content"> 
-           <div class="modal-body" style="padding:10px;"> 
-             <h4 class="text-center">${message}</h4> 
-             <div class="text-center"> 
-               <a class="btn btn-danger btn-yes">yes</a> 
-               <a class="btn btn-default btn-no">no</a> 
-             </div> 
-           </div> 
-       </div> 
-    </div> 
-  </div>`).appendTo('body');*/
-/*
-  $(`<section class="modal-dialog modal-content overlay-def">
-  <div class="modal" id="myModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-content overlay-def" >
-    <div class="modal-content">
-      <div class="modal-header ">
-        <h5 class="modal-title">CID Portal</h5>
-       
-      </div>
-      <div class="modal-body">
-        <ol>${message}</ol>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Yes</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
-      </div>
-    </div>
-  </div>
-</div></section>`).appendTo('body');
-*/
-
- $(`<section class="modal-dialog modal-content overlay-def" id="myModal">
-    <header class="modal-header">
-        <h2 class="modal-title">CID Portal</h2>
-    </header>
-    <div class="modal-body">
-        <ol>${message}</ol>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Yes</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
-    </div>
-</section>
-`).appendTo('body');
-
-
-$document.trigger( "open.wb-lbx", [
-			[
-				{
-					src: "#myModal",
-					type: "inline"
-				}
-			],
-			true
-		]);
-	
-        //Trigger the modal
-        $("#myModal").modal({
-            backdrop: 'static',
-            keyboard: false
-        });
-
-        //Pass true to a callback function
-        $(".btn-yes").click(function () {
-            handler(true);
-            $("#myModal").modal("hide");
-        });
-
-        //Pass false to callback function
-        $(".btn-no").click(function () {
-            handler(false);
-            $("#myModal").modal("hide");
-        });
-
-        //Remove the modal once it is closed.
-        $("#myModal").on('hidden.bs.modal', function () {
-            $("#myModal").remove();
-        });
-    }
+ 
 
 </script>
 <div class="container ">
@@ -606,7 +527,7 @@ $document.trigger( "open.wb-lbx", [
         {% endblock %}
     </div>
 
-    <div id="mainContent" class="wb-lbx row">
+    <div id="mainContent" class="row">
 
         <div class="col-md-12">
             {% block main %}

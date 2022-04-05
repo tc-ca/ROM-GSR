@@ -1,5 +1,6 @@
+//
 // Basic Form - Site - Create.js
-
+//
 $(document).ready(function () {
     debugger;
 
@@ -122,7 +123,7 @@ function ovs_address_type_change(reset_data) {
             //tdg.c.addValidator("ovs_lld_quarter","Quarter/LSC");
             tdg.c.addValidator("ovs_lld_section", "Section");
             tdg.c.addValidator("ovs_lld_township", "Township");
-            tdg.c.addValidator("ovs_lld_range","Range");
+            tdg.c.addValidator("ovs_lld_range", "Range");
             tdg.c.addValidator("ovs_lld_meridian", "Meridian");
             tdg.c.addValidator("ovs_lld_province", "Province / Territory");
 
@@ -143,9 +144,9 @@ function ovs_address_type_change(reset_data) {
         default:
             tdg.c.section_show("section_address");
 
-            tdg.c.addValidator("address1_line1","Street 1");
-            tdg.c.addValidator("address1_city","City");
-            tdg.c.addValidator("address1_stateorprovince","Province");
+            tdg.c.addValidator("address1_line1", "Street 1");
+            tdg.c.addValidator("address1_city", "City");
+            tdg.c.addValidator("address1_stateorprovince", "Province");
             tdg.c.addValidator("address1_postalcode", "Postal Code");
 
             if (reset_data) {

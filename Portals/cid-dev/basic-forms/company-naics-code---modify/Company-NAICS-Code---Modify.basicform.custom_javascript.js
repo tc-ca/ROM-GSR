@@ -1,7 +1,11 @@
+//
 // Basic Form-Company NAICS Code - Modify.js
-
+//
 $(document).ready(function () {
     debugger;
+
+    insert_tdgcore_common_js();
+
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
@@ -9,8 +13,16 @@ $(document).ready(function () {
     $("#WebResource_naicscode").height('72px');
 
     // hide controls
-    control_hide("cid_naicscode", true);
+    tdg.c.control_hide("cid_naicscode", true);
 });
+
+function insert_tdgcore_common_js() {
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = "/tdgcore_common.js";
+
+    $("body").append(script);
+}
 
 function naicscode_selected(text, id) {
     debugger;
@@ -31,24 +43,4 @@ if (window.jQuery) {
             return validation;
         }
     }(window.jQuery));
-}
-
-function control_hide(fieldName, is_lookup) {
-    if (is_lookup) {
-        $("#" + fieldName).parent().parent().parent().hide();
-    }
-    else {
-        $("#" + fieldName).hide();
-        $("#" + fieldName + "_label").hide();
-    }
-}
-
-function control_show(fieldName, is_lookup) {
-    if (is_lookup) {
-        $("#" + fieldName).parent().parent().parent().show();
-    }
-    else {
-        $("#" + fieldName).show();
-        $("#" + fieldName + "_label").show();
-    }
 }
