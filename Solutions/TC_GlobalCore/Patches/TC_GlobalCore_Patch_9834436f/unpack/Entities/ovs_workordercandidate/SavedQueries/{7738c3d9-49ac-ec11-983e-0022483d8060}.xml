@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{7738c3d9-49ac-ec11-983e-0022483d8060}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
+        <row name="result" id="ovs_workordercandidateid">
+          <cell name="ovs_name" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_site" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_operationid" width="100" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_oversighttype" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_hqflag" width="75" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_regionflag" width="98" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="statecode" width="77" />
+          <cell name="ovs_justification" width="300" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+        <entity name="ovs_workordercandidate">
+          <attribute name="ovs_name" />
+          <attribute name="ovs_hqflag" />
+          <attribute name="ovs_site" />
+          <attribute name="ovs_operationid" />
+          <attribute name="ovs_oversighttype" />
+          <attribute name="ovs_regionflag" />
+          <attribute name="statecode" />
+          <order attribute="ovs_name" descending="false" />
+          <filter type="and">
+            <condition attribute="ovs_justificationrequired" operator="eq" value="1" />
+          </filter>
+          <attribute name="ovs_justification" />
+          <attribute name="ovs_workordercandidateid" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="WOC Missing Justifications" languagecode="1033" />
+      <LocalizedName description="Justifications manquantes pour COT" languagecode="1036" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="For planners and NOP managers" languagecode="1033" />
+    </Descriptions>
+  </savedquery>
+</savedqueries>

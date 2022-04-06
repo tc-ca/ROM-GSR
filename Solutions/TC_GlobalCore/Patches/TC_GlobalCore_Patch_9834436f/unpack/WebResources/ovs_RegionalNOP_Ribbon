@@ -1,0 +1,247 @@
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+///<reference path="../../Utilities/RNOP_ValidationFunctions.js"/>
+
+var RegionNOPRibbon = (function (window, document) {
+
+    var LCID;
+    var messageValidationFailed;
+    var messageProcessStarted;
+    var messageWentWrong;
+    var messageValidatingData;
+    var messageValidationCheck;
+    var messageConfirmButtonLabel;
+    var messageContinue;
+    var msg_WOC_noActiveWOC;
+    var yesNo;
+
+    var RNOPDialogOptions = { height: 200, width: 500 };
+
+    function runGenerateWO(runid, formContext) {
+
+        //TO DO: localize
+     //  Xrm.Utility.showProgressIndicator(messageProcessStarted);
+
+        var parameters = {};
+        parameters.runid = runid;
+
+        var ovs_GenerateWORequest = {
+            runid: parameters.runid,
+
+            getMetadata: function () {
+                return {
+                    boundParameter: null,
+                    parameterTypes: {
+                        "runid": {
+                            "typeName": "Edm.String",
+                            "structuralProperty": 1
+                        }
+                    },
+                    operationType: 0,
+                    operationName: "ovs_GenerateWOfortheRNOP"
+                };
+            }
+        };
+        
+        var alertStrings = { confirmButtonLabel: "OK", text: messageProcessStarted };
+        
+
+        Xrm.WebApi.online.execute(ovs_GenerateWORequest).then(
+            function success(result) {
+
+                Xrm.Utility.closeProgressIndicator();
+
+                if (result.ok) {
+                    result.text().then(function (i) {
+                        var data = JSON.parse(i);
+                        if (data != null || typeof data !== 'undefined') {
+
+                            if ((data.response != null) && typeof data.response !== 'undefined') {
+                                if (data.response.indexOf("Error") > -1) {
+                                    //show error message
+                                    //TO DO: localize
+                                      alertStrings = { confirmButtonLabel: yesNo, text: messageWentWrong + " " + data.response };
+                                }
+                                else {
+                                    //notify about call result 
+                                    //TO DO: localize
+                                      alertStrings = { confirmButtonLabel: yesNo, text: messageProcessStarted };
+                                }
+                            }
+                            Xrm.Navigation.openAlertDialog(alertStrings);
+                        }
+                    }, function (error) {
+
+                        console.log(messageWentWrong + ": + error.message");
+                        //TO DO: localize
+                        Xrm.Navigation.openErrorDialog({ message: messageWentWrong + " " + error.message });
+                    });
+                }
+            },
+            function (error) {
+
+                Xrm.Utility.closeProgressIndicator();
+                console.log(messageWentWrong + " " + error.message);
+                //TO DO: localize
+                Xrm.Navigation.openErrorDialog({ message: messageWentWrong + " " + error.message });
+            }
+        );
+
+    }
+
+    async function on_runGenerateWO(primaryControl) {
+
+        debugger;
+        var _create = false;
+        var result = "";
+        if (primaryControl == null) { return };
+        var globalContext = Xrm.Utility.getGlobalContext();
+        var formContext = primaryControl;
+
+        let formType = glHelper.GetFormType(formContext);
+        if (formType == 1) { return }; //on create
+
+        LCID = globalContext.userSettings.languageId;
+
+        var resexResourceName = LCID === 1033 ? "ovs_Labels.1033.resx" : "ovs_Labels.1036.resx";
+
+        messageProcessStarted = Xrm.Utility.getResourceString(resexResourceName, "ovs_CDRegionalNOP.GWORibbon.ProcessStarted");
+        messageWentWrong = Xrm.Utility.getResourceString(resexResourceName, "ovs_CDRegionalNOP.GWORibbon.WentWrong");
+        messageValidationFailed = Xrm.Utility.getResourceString(resexResourceName, "ovs_CDRegionalNOP.GWORibbon.ValidationFail");
+        messageValidatingData = Xrm.Utility.getResourceString(resexResourceName, "ovs_CDRegionalNOP.GWORibbon.ValidationStarted");
+        messageValidationCheck = Xrm.Utility.getResourceString(resexResourceName, "ovs_CDRegionalNOP.GWORibbon.ValidationCheck");
+        messageContinue = Xrm.Utility.getResourceString(resexResourceName, "ovs_CDRegionalNOP.GWORibbon.ConfirmText");
+        messageConfirmButtonLabel = Xrm.Utility.getResourceString(resexResourceName, "ovs_CDRegionalNOP.GWORibbon.ConfirmText");
+        msg_WOC_noActiveWOC = Xrm.Utility.getResourceString(resexResourceName, "ovs_CDRegionalNOP.Validation.ActiveWOC_DoNotExists");
+        yesNo = LCID === 1033 ? "Yes" : "Oui";
+
+
+        let id = formContext.data.entity.getId().replace("{", "").replace("}", "");
+
+        //add progress as there is a little delay in retrieving data from web api
+        Xrm.Utility.showProgressIndicator(messageValidatingData);
+        var msg_warning = await rnopHelper.ReturnValidationFunction(formContext, id);
+
+        Xrm.Utility.closeProgressIndicator();
+
+        if (msg_warning != null && msg_warning != "" && msg_warning != "0") {
+
+            let confirmStrings = {
+                text: messageValidationFailed,
+                title: messageValidationCheck,
+                confirmButtonLabel: messageContinue,
+                // subtitle: messageValidationCheck,
+            };
+            Xrm.Navigation.openConfirmDialog(confirmStrings, RNOPDialogOptions).then(
+                function (success) {
+                    if (success.confirmed) {
+                        runGenerateWO(id, formContext);
+                    }
+                    else return; //exit early
+                });
+        }
+        else if (msg_warning == "0") {
+            var alertStrings = { confirmButtonLabel: yesNo, text: msg_WOC_noActiveWOC };
+            Xrm.Navigation.openAlertDialog(alertStrings);
+        }
+        else {
+            var confirmStrings = { confirmButtonLabel: yesNo, text: messageProcessStarted };
+            Xrm.Navigation.openConfirmDialog(confirmStrings).then(
+                function (success) {
+                    if (success.confirmed) {
+                        //get entity id and runGenerateWO
+                        runGenerateWO(id, formContext);
+                    }
+                    else return; //exit early
+                });
+             }
+        return result;
+    }
+
+    function calculateRollupField(primaryControl, TargetEntitySetName, TargetRecordId, TargetRollupFieldName) {
+
+
+        var globalContext = Xrm.Utility.getGlobalContext();
+        var clientUrl = globalContext.getClientUrl();
+
+        TargetRecordId = TargetRecordId.replace("{", "").replace("}", "");
+        var req = new XMLHttpRequest();
+        //??//req.open(this.method, this.url, true); // Need this to initiate the request
+        req.setRequestHeader("OData-Version", "4.0");
+        req.setRequestHeader("OData-MaxVersion", "4.0");
+        req.open("GET", clientUrl + "/api/data/v9.2/" +
+            "CalculateRollupField(Target=@p1,FieldName=@p2)?" +
+            "@p1={'@odata.id':'" + TargetEntitySetName + "(" + TargetRecordId + ")'}&" +
+            "@p2='" + TargetRollupFieldName + "'", true);
+        req.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                req.onreadystatechange = null;
+                if (this.status === 200) {
+                    var results = JSON.parse(this.response);
+
+                    primaryControl.data.refresh(false);
+                }
+                else {
+                    Xrm.Navigation.openErrorDialog({ message: this.statusText });
+                }
+            }
+        };
+        req.send(JSON.stringify({}));
+    }
+
+    function reCalculateTotals(primaryControl) {
+        var recordId = primaryControl.entityReference.id;
+
+        recordId = recordId.replace(/[{}]/g, "");
+
+        calculateRollupField(primaryControl, "ovs_cdregionalnops", recordId, "ovs_hqrollup");
+        calculateRollupField(primaryControl, "ovs_cdregionalnops", recordId, "ovs_cdwoccount");
+
+    }
+
+    function fillRegionalCapacity (executionContext) {
+        Xrm.Utility.showProgressIndicator("Regional Capacity Adjustment In Progress.");
+
+        var recordId = executionContext.entityReference.id;
+
+        recordId = recordId.replace(/[{}]/g, "");
+
+        var globalContext = Xrm.Utility.getGlobalContext();
+        var clientUrl = globalContext.getClientUrl();
+
+        //Begin Action Call
+
+        var req = new XMLHttpRequest();
+        req.open("POST", clientUrl + "/api/data/v9.2/ovs_cdregionalnops(" + recordId + ")/Microsoft.Dynamics.CRM.ovs_FillRegionalCapacity", false);
+        req.setRequestHeader("OData-MaxVersion", "4.0");
+        req.setRequestHeader("OData-Version", "4.0");
+        req.setRequestHeader("Accept", "application/json");
+        req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+        req.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                req.onreadystatechange = null;
+
+                if (this.status === 204) {
+
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Capacity Has Been Adjusted." });
+
+                    calculateRollupField(executionContext, "ovs_cdregionalnops", recordId, "ovs_hqrollup");
+                }
+                else {
+
+                    Xrm.Navigation.openErrorDialog({ message: "An Error Has Occured." });
+                }
+            }
+        };
+        req.send();
+
+        //End Action Call
+
+        Xrm.Utility.closeProgressIndicator();
+    }
+
+    return {
+        on_runGenerateWO: on_runGenerateWO,
+        reCalculateTotals: reCalculateTotals,
+        fillRegionalCapacity: fillRegionalCapacity
+    };
+})(window, document);
