@@ -6,6 +6,9 @@ $(document).ready(function () {
 
     insert_tdgcore_common_js();
 
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
     // hide controls
     control_hide("ovs_unnumber", true);
 

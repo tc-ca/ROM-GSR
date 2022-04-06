@@ -4,6 +4,11 @@
 $(document).ready(function () {
     debugger;
 
+    sessionStorage.setItem(tdg.error_message.k_tdgcore_error_message, null)
+
+    //tdg.error_message.read_file();
+    tdg.error_message.message("m000001");
+
     tdg.c.section_hide("section_address_1");
 
     // default current use is "Primary"
@@ -220,4 +225,64 @@ function BN_Selected(data) {
     $("#address1_stateorprovince").val(address.ProvinceStateCode);
     $("#address1_postalcode").val(address.PostalZipCode);
     $("#address1_country").val(address.CountryCode);
+}
+
+// tdg.error_message = tdgcore.error_message
+if (typeof (tdg.error_message) == "undefined") {
+    tdg.error_message = {
+        k_tdgcore_error_message: "tdgcore_error_message",
+
+        message: function (code) {
+            debugger;
+
+            var list = sessionStorage.getItem(this.k_tdgcore_error_message);
+            if (list == null) {
+                tdg.error_message.read_file();
+            }
+
+            // wait and retrieve list
+            var found = false;
+            do {
+                this.sleep(5);
+                debugger;
+                var list = sessionStorage.getItem(this.k_tdgcore_error_message);
+                if (list != null) {
+                    found = true;
+                }
+            }
+            while (found);
+
+            debugger;
+        },
+
+        sleep: function (second)
+        {
+            var delay = second * 1000;
+            var start = new Date().getTime();
+            while (new Date().getTime() < start + delay);
+        },
+
+        read_file: function () {
+            debugger;
+
+            var url = window.document.URL;
+            url = url.replace("https://","");
+            var index1 = url.indexOf("/");
+            var file = "https://" + url.substring(0, index1);
+            file += "/tdgcore_error_message.json";
+
+            fetch(file)
+                .then(response => {
+                    return response.json();
+                })
+                .then(jsondata => this.receivedText(jsondata));
+        },
+
+        receivedText: function (data) {
+            debugger;
+
+            var value = JSON.stringify(data);
+            sessionStorage.setItem(this.k_tdgcore_error_message, value)
+        }
+    }
 }

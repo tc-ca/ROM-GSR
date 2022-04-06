@@ -101,6 +101,27 @@ if (typeof (tdg.c) == "undefined") {
             return response;
         },
 
+        message_panel: function () {
+            debugger;
+
+            var language = sessionStorage.getItem("selected_language");
+
+            try {
+                var text = $("#MessagePanel")[0].innerText;
+                var index1 = text.indexOf("::");
+                if (index1 < 0) {
+                    text = text + "::" + text;
+                }
+                if (language == "en-US") {
+                    value = text.substr(0, index1);
+                }
+                else {
+                    value = text.substr(index1 + 2);
+                }
+                $("#MessagePanel")[0].innerText = value;
+            } catch (e) { }
+        },
+
         error_message_clear: function () {
             debugger;
             $('#ValidationSummaryEntityFormView div').remove();
