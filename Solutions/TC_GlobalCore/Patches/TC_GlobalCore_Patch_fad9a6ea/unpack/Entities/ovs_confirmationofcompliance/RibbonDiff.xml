@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RibbonDiffXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <CustomActions>
+    <HideCustomAction HideActionId="ovs.Mscrm.Form.ovs_confirmationofcompliance.Delete.Hide" Location="Mscrm.Form.ovs_confirmationofcompliance.Delete" />
+    <HideCustomAction HideActionId="ovs.Mscrm.SubGrid.ovs_confirmationofcompliance.AddExistingStandard.Hide" Location="Mscrm.SubGrid.ovs_confirmationofcompliance.AddExistingStandard" />
+    <CustomAction Id="ovs.Mscrm.SubGrid.ovs_confirmationofcompliance.AddNewStandard.CustomAction" Location="Mscrm.SubGrid.ovs_confirmationofcompliance.MainTab.Management.Controls._children" Sequence="20">
+      <CommandUIDefinition>
+        <Button Alt="$LocLabels:Mscrm.SubGrid.ovs_confirmationofcompliance.AddNewStandard.Alt" Command="Mscrm.AddNewRecordFromSubGridStandard" Id="Mscrm.SubGrid.ovs_confirmationofcompliance.AddNewStandard" Image32by32="/_imgs/ribbon/newrecord32.png" Image16by16="/_imgs/ribbon/New_16.png" LabelText="$LocLabels:Mscrm.SubGrid.ovs_confirmationofcompliance.AddNewStandard.LabelText" Sequence="20" TemplateAlias="o1" ToolTipTitle="$LocLabels:Mscrm.SubGrid.ovs_confirmationofcompliance.AddNewStandard.ToolTipTitle" ToolTipDescription="$Resources(EntityDisplayName):Mscrm_SubGrid_EntityLogicalName_MainTab_Management_AddNewStandard_ToolTipDescription" ModernImage="New" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <HideCustomAction HideActionId="ovs.Mscrm.SubGrid.ovs_confirmationofcompliance.Delete.Hide" Location="Mscrm.SubGrid.ovs_confirmationofcompliance.Delete" />
+    <HideCustomAction HideActionId="ovs.Mscrm.SubGrid.ovs_confirmationofcompliance.Flows.RefreshCommandBar.Hide" Location="Mscrm.SubGrid.ovs_confirmationofcompliance.Flows.RefreshCommandBar" />
+    <HideCustomAction HideActionId="ovs.Mscrm.SubGrid.ovs_confirmationofcompliance.RunReport.Hide" Location="Mscrm.SubGrid.ovs_confirmationofcompliance.RunReport" />
+    <CustomAction Id="ovs.tc.ovs_confirmationofcompliance.Form.Button.Delete.CustomAction" Location="Mscrm.Form.ovs_confirmationofcompliance.MainTab.Management.Controls._children" Sequence="0">
+      <CommandUIDefinition>
+        <Button Alt="$Resources:Ribbon.HomepageGrid.MainTab.Management.Delete" Command="tc.ovs_confirmationofcompliance.Form.Delete.Command" Id="tc.ovs_confirmationofcompliance.Form.Button.Delete" Image32by32="/_imgs/Workplace/remove_32.png" Image16by16="/_imgs/ribbon/Delete_16.png" LabelText="$Resources:Ribbon.HomepageGrid.MainTab.Management.Delete" Sequence="0" TemplateAlias="o1" ToolTipTitle="$Resources:Mscrm_Form_Other_MainTab_Management_Delete_ToolTipTitle" ToolTipDescription="$Resources(EntityDisplayName):Ribbon.Form.Tooltip.Delete" ModernImage="Remove" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <CustomAction Id="ovs.tc.ovs_confirmationofcompliance.SubGrid.Button.Delete.CustomAction" Location="Mscrm.SubGrid.ovs_confirmationofcompliance.MainTab.Actions.Controls._children" Sequence="0">
+      <CommandUIDefinition>
+        <Button Alt="$Resources:Ribbon.HomepageGrid.MainTab.Management.Delete" Command="tc.ovs_confirmationofcompliance.SubGrid.Delete.Command" Id="tc.ovs_confirmationofcompliance.SubGrid.Button.Delete" Image32by32="/_imgs/Workplace/remove_32.png" Image16by16="/_imgs/ribbon/Delete_16.png" LabelText="$Resources(EntityDisplayName):Ribbon.SubGrid.MainTab.Management.Delete" Sequence="0" TemplateAlias="o1" ToolTipTitle="$Resources(EntityDisplayName):Mscrm_SubGrid_EntityLogicalName_MainTab_Management_Delete_ToolTipTitle" ToolTipDescription="$Resources(EntityPluralDisplayName):Ribbon.HomepageGrid.Tooltip.Delete" ModernImage="Remove" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <HideCustomAction HideActionId="tc.Mscrm.Form.ovs_confirmationofcompliance.SaveAsComplete.Hide" Location="Mscrm.Form.ovs_confirmationofcompliance.SaveAsComplete" />
+  </CustomActions>
+  <Templates>
+    <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
+  </Templates>
+  <CommandDefinitions>
+    <CommandDefinition Id="Mscrm.EditSelectedRecord">
+      <EnableRules>
+        <EnableRule Id="Mscrm.CheckBulkEditSupportForEntity" />
+        <EnableRule Id="Mscrm.VisualizationPaneNotMaximized" />
+        <EnableRule Id="Mscrm.IsValidForHierarchyView" />
+        <EnableRule Id="Mscrm.ShowOnNonModernAndModernIfAllowed" />
+        <EnableRule Id="tc.ovs_confirmationofcompliance.EnableRule0.HideButtonIfFormIsReadOnly" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.BulkEditPrivilege" />
+        <DisplayRule Id="Mscrm.WriteSelectedEntityPermission" />
+        <DisplayRule Id="Mscrm.HybridDialogBulkEditEnabled" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.BulkEdit.bulkEditRecords" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedControl" />
+          <CrmParameter Value="SelectedControlSelectedItemReferences" />
+          <CrmParameter Value="SelectedEntityTypeName" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="Mscrm.HomepageGrid.Activate">
+      <EnableRules>
+        <EnableRule Id="Mscrm.VisualizationPaneNotMaximized" />
+        <EnableRule Id="Mscrm.SelectionCountAtLeastOne" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.CanWriteSelected" />
+        <DisplayRule Id="Mscrm.SelectedEntityHasStatecode" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.Activate.activateRecords" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedControl" />
+          <CrmParameter Value="SelectedControlSelectedItemReferences" />
+          <CrmParameter Value="SelectedEntityTypeName" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="Mscrm.HomepageGrid.Deactivate">
+      <EnableRules>
+        <EnableRule Id="Mscrm.VisualizationPaneNotMaximized" />
+        <EnableRule Id="Mscrm.SelectionCountAtLeastOne" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.CanWriteSelected" />
+        <DisplayRule Id="Mscrm.SelectedEntityHasStatecode" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.Deactivate.deactivateRecords" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedControl" />
+          <CrmParameter Value="SelectedControlSelectedItemReferences" />
+          <CrmParameter Value="SelectedEntityTypeName" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="tc.ovs_confirmationofcompliance.Form.Delete.Command">
+      <EnableRules />
+      <DisplayRules>
+        <DisplayRule Id="tc.ovs_confirmationofcompliance.Form.Delete.DisplayRule" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="isPlannerRole" Library="$webresource:ovs_ROMCommonFunctions">
+          <BoolParameter Value="true" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="tc.ovs_confirmationofcompliance.SubGrid.Delete.Command">
+      <EnableRules>
+        <EnableRule Id="tc.ovs_confirmationofcompliance.SubGrid.EnableDelete.displayOnlyisPlannerRole" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="tc.ovs_confirmationofcompliance.SubGrid.Delete.DisplayRule" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.BulkDelete.bulkDeleteRecords" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedControl" />
+          <CrmParameter Value="SelectedControlSelectedItemReferences" />
+          <CrmParameter Value="SelectedEntityTypeName" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+  </CommandDefinitions>
+  <RuleDefinitions>
+    <TabDisplayRules />
+    <DisplayRules>
+      <DisplayRule Id="tc.ovs_confirmationofcompliance.Form.Delete.DisplayRule">
+        <ValueRule Value="" InvertResult="true" />
+      </DisplayRule>
+      <DisplayRule Id="tc.ovs_confirmationofcompliance.SubGrid.Delete.DisplayRule">
+        <EntityPrivilegeRule PrivilegeType="Delete" PrivilegeDepth="Basic" AppliesTo="SelectedEntity" EntityName="ovs_confirmationofcompliance" />
+      </DisplayRule>
+    </DisplayRules>
+    <EnableRules>
+      <EnableRule Id="tc.ovs_confirmationofcompliance.EnableRule0.HideButtonIfFormIsReadOnly">
+        <CustomRule FunctionName="HideButtonIfFormIsReadOnly" Library="$webresource:ovs_ROMCommonFunctions">
+          <CrmParameter Value="PrimaryControl" />
+        </CustomRule>
+      </EnableRule>
+      <EnableRule Id="tc.ovs_confirmationofcompliance.Form.EnableDelete.displayOnlyisPlannerRole">
+        <CustomRule FunctionName="isPlannerRole" Library="$webresource:ovs_ROMCommonFunctions" />
+      </EnableRule>
+      <EnableRule Id="tc.ovs_confirmationofcompliance.SubGrid.EnableDelete.displayOnlyisPlannerRole">
+        <CustomRule FunctionName="isPlannerRole" Library="$webresource:ovs_ROMCommonFunctions" />
+      </EnableRule>
+    </EnableRules>
+  </RuleDefinitions>
+  <LocLabels>
+    <LocLabel Id="Mscrm.SubGrid.ovs_confirmationofcompliance.AddNewStandard.Alt">
+      <Titles>
+        <Title description="Add New {0}" languagecode="1033" />
+        <Title description="Nouvelle {0}" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.SubGrid.ovs_confirmationofcompliance.AddNewStandard.LabelText">
+      <Titles>
+        <Title description="Add New {0}" languagecode="1033" />
+        <Title description="Nouvelle {0}" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.SubGrid.ovs_confirmationofcompliance.AddNewStandard.ToolTipTitle">
+      <Titles>
+        <Title description="Add New {0}" languagecode="1033" />
+        <Title description="Nouvelle {0}" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+  </LocLabels>
+</RibbonDiffXml>

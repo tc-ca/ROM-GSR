@@ -1,0 +1,93 @@
+//Used to hide buttons for ROM - Inspectors unless they're an admin as well
+function isROMRoleAndNotSystemAdministrator() {
+    return (isROMRole() && !isSystemAdministrator())
+}
+
+//  If Role === "TDG Planner" 
+function isPlannerRole() {
+    var roles = Xrm.Utility.getGlobalContext().userSettings.roles;
+    var enable = false;
+    roles.forEach(function (item) {
+        if (item.name === "TDG Planner") enable = true;
+    });
+    return enable;
+}
+
+// IF Role === "TDG Manager" 
+function isManagerRole() {
+    var roles = Xrm.Utility.getGlobalContext().userSettings.roles;
+    var enable = false;
+    roles.forEach(function (item) {
+        if (item.name === "TDG Manager") enable = true;
+    });
+    return enable;
+}
+
+// IF Role === "TDG Inspector" 
+function isInspectorRole() {
+    var roles = Xrm.Utility.getGlobalContext().userSettings.roles;
+    var enable = false;
+    roles.forEach(function (item) {
+        if (item.name === "TDG Inspector") enable = true;
+    });
+    return enable;
+}
+
+function isManagerOrPlannerRole() {
+    romRoles = ["TDG Planner", "TDG Manager"]
+    var userRoles = Xrm.Utility.getGlobalContext().userSettings.roles;
+    //return true when a romRole matches a userRole
+    for (var i = 0; i < romRoles.length; i++) {
+        for (var j = 0; j < userRoles.getLength(); j++) {
+            if (romRoles[i] === userRoles._getByIndex(j).name) {
+                return true;
+            }
+        }
+    }
+    //No match
+    return false;
+}
+
+function isROMRole() {
+    romRoles = ["TDG Inspector", "TDG Base", "TDG Manager", "TDG Planner", "TDG Analyst"]
+    var userRoles = Xrm.Utility.getGlobalContext().userSettings.roles;
+    //return true when a romRole matches a userRole
+    for (var i = 0; i < romRoles.length; i++) {
+        for (var j = 0; j < userRoles.getLength(); j++) {
+            if (romRoles[i] === userRoles._getByIndex(j).name) {
+                return true;
+            }
+        }
+    }
+    //No match
+    return false;
+}
+
+function isSystemAdministrator() {
+    var roles = Xrm.Utility.getGlobalContext().userSettings.roles;
+    var enable = false;
+    roles.forEach(function (item) {
+
+        if (item.name === "System Administrator") enable = true;
+
+    });
+    return enable;
+}
+
+// 0	Undefined
+// 1	Create
+// 2	Update
+// 3	Read Only
+// 4	Disabled
+// 6	Bulk Edit
+//when user does not have access the record the type will be set to "Read Only"
+//when work order is set to closed posted the record is set to inActive which is form type of "Disabled"
+function HideButtonIfFormIsReadOnly(formContext) {
+    switch (formContext.ui.getFormType()) {
+      case 3:
+      case 4:
+        return false
+      default:
+        return true
+    }
+}
