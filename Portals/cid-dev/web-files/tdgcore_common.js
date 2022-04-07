@@ -320,6 +320,79 @@ if (typeof (tdg.webapi) == "undefined") {
     }
 }
 
+// tdg.error_message = tdgcore.error_message
+if (typeof (tdg.error_message) == "undefined") {
+    tdg.error_message = {
+        k_english: "en-US",
+        k_tdgcore_error_message: "tdgcore_error_message",
+
+        message: function (code) {
+            debugger;
+
+            var list = tdg.message.list();
+            var value = code;
+            var selected_language = sessionStorage.getItem("selected_language");
+
+            for (var index1 = 0; index1 < list.length; index1++) {
+                var item = list[index1];
+                if (item.code == code) {
+                    value = (selected_language == this.k_english ? item.message_en : item.message_fr);
+                    break;
+                }
+            }
+            return value;
+
+            var list = sessionStorage.getItem(this.k_tdgcore_error_message);
+            if (list == "null") {
+                tdg.error_message.read_file();
+            }
+
+            // wait and retrieve list
+            var found = false;
+            do {
+                this.sleep(5);
+                debugger;
+                var list = sessionStorage.getItem(this.k_tdgcore_error_message);
+                if (list != "null") {
+                    found = true;
+                }
+            }
+            while (!found);
+
+            debugger;
+        },
+
+        sleep: function (second) {
+            var delay = second * 1000;
+            var start = new Date().getTime();
+            while (new Date().getTime() < start + delay);
+        },
+
+        read_file: function () {
+            debugger;
+
+            var url = window.document.URL;
+            url = url.replace("https://", "");
+            var index1 = url.indexOf("/");
+            var file = "https://" + url.substring(0, index1);
+            file += "/tdgcore_error_message.json";
+
+            fetch(file)
+                .then(response => {
+                    return response.json();
+                })
+                .then(jsondata => this.receivedText(jsondata));
+        },
+
+        receivedText: function (data) {
+            debugger;
+
+            var value = JSON.stringify(data);
+            sessionStorage.setItem(this.k_tdgcore_error_message, value)
+        }
+    }
+}
+
 // tdg.root = tdgcore.root
 if (typeof (tdg.root) == "undefined") {
     tdg.root = {

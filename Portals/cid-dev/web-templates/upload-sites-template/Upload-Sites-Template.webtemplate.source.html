@@ -16,14 +16,14 @@
         display: none;
     }
 
-    #warnningMessage {
+    #infoMsg {
         -width: 300px;
         -text-align: center;
        -padding: 6px 10px;
-        z-index: 9999;
-        top: 15%;
-        left: 40%;
-        position: fixed;
+        -z-index: 9999;
+        -top: 15%;
+        -left: 40%;
+        -position: fixed;
         -webkit-border-radius: 0 0 2px 2px;
         -border-radius: 0 0 2px 2px;
         -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -295,9 +295,12 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
 'The original request to bulk upload sites is cancelled. Please proceed with the remainder of the Registration process.';
 
          }
+        
 
-               $('#processingMsg').css('display', 'block');
-               $('#processingMsg').text(responseMessage);
+
+
+               $('#infoMsg').css('display', 'block');
+               $('#infoMsg').text(responseMessage);
             
 
          }
@@ -376,6 +379,13 @@ function call_Inital_validation(Language , bulkactivitytype)
         var companyname = '{{ user.parentcustomerid.Name }}';
         if  ( companyid != null  )
 {
+
+
+//var url = window.location.search;
+//url.searchParams.delete('id');
+//url.searchParams.delete('companyid');
+//history.pushState(null, document.title, url);
+
        // $('#processingMsg').css('display', 'block');
         //$('#processingMsg').text("Preliminary analysis of the uploaded workbook has begun…");
 
@@ -439,13 +449,9 @@ function call_Inital_validation(Language , bulkactivitytype)
               // alert (this.response) ;
                     var result = this.response;
 
-                    confirmDialog(result, (ans) => {
-                            if (ans) {
-                                console.log("Yes");
-                                }else {
-                            console.log("No");
-                            }
-                            });
+                     $('#processingMsg').css('display', 'block');
+                     $('#processingMsg').text(result);
+
 
                        //document.getElementById("errortable").innerHTML = result;
 
@@ -457,7 +463,7 @@ function call_Inital_validation(Language , bulkactivitytype)
                      $('#processingMsg').css('display', 'block');
                      $('#processingMsg').text(result);
 
-                    alert(result);
+                 //   alert(result);
                        // window.location.replace("~/Bulk_Site_Upload");
                 }
             }
@@ -542,12 +548,11 @@ $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
             <div class="row sectionBlockLayout" style="display: flex; flex-wrap: wrap; padding: 8px; margin: 0px; text-align: left; min-height: 100px;">
 
 
-  <section class="alert alert-warning" id="warnningMessage">
-                </section>
 
                 <div id="processingMsg" class="alert alert-warning" role="alert">
-              
+           
                 </div>
+                   <div id="infoMsg" class="alert alert-info"></div>
                 <table>
                     <tbody>
                         <tr>
