@@ -1,0 +1,166 @@
+﻿<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <link href="../qm_/Bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+
+    <script src="../ClientGlobalContext.js.aspx"></script>
+    <script src="../qm_/Scripts/jquery_3.1.1.min.js"></script>
+    <script src="../qm_/Bootstrap/js/bootstrap.min.js"></script>
+
+    <style>
+
+        .top-mini-buffer {
+            margin-top: 5px;
+        }
+
+        .top-buffer {
+            margin-top: 10px;
+        }
+
+        .top-double-buffer {
+            margin-top: 20px;
+        }
+
+        .top-grand-buffer {
+            margin-top: 50px;
+        }
+
+        .bottom-buffer {
+            margin-bottom: 20px;
+        }
+
+        @-moz-document url-prefix() {
+            fieldset {
+                display: table-cell;
+            }
+        }
+
+        .msg {
+            font-style: italic;
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .form-group.required .control-label:after {
+            content: "*";
+            color: red;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container-fluid">
+
+        <div class="row top-buffer">
+            <div class="form-group required">
+                <div class="col-xs-12">
+                    <label class="control-label" for="txtJustify" id="lblJustify">Please, justify the cancelation: </label>
+                    <textarea class="form-control required" id="txtJustify" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="row top-buffer">
+            <div class="col-xs-2 col-xs-offset-8">
+                <button type="submit" id="submitCancelation" class="btn btn-primary">Cancel Report?</button>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <script>
+
+        var globalContext = Xrm.Utility.getGlobalContext();
+        var formContext;
+        var gridControl;
+        var LCID = 1033;
+
+        $(document).ready(function () {
+
+            var userSettings = globalContext.userSettings;
+            LCID = userSettings.languageId;
+
+            if (LCID == 1033)
+                resexResourceName = "ovs_Labels.1033.resx";
+            else if (LCID == 1036)
+                resexResourceName = "ovs_Labels.1036.resx";
+
+            //localization
+            var NoReportMessage = Xrm.Utility.getResourceString(resexResourceName, "tdgReport.Cancel.NoReport");
+            var JustificationEmptyMessage = Xrm.Utility.getResourceString(resexResourceName, "tdgReport.Cancel.JustificationEmpty");
+            var successMessage = Xrm.Utility.getResourceString(resexResourceName, "tdgReport.Cancel.SuccessMessage");
+            var JustifyLabel = Xrm.Utility.getResourceString(resexResourceName, "tdgReport.Cancel.JustifyLabel");
+            var CancelButtonLabel = Xrm.Utility.getResourceString(resexResourceName, "tdgReport.Cancel.CancelButton");
+
+            var yesNo = LCID === 1033 ? "Yes" : "Oui";
+
+            $('#lblJustify').text(JustifyLabel);
+            $('#submitCancelation').text(CancelButtonLabel);
+
+
+            var reportid = JSON.parse(decodeURIComponent(location.search.split("=")[1]))["reportid"];
+            if (reportid === null
+                || reportid === undefined
+                || reportid == "") {
+
+                Xrm.Navigation.openErrorDialog({ message: NoReportMessage }).then(
+                    function success(result) {
+                        window.close();
+                    },
+                    function (error) {
+                        Xrm.Navigation.openErrorDialog({ message: error.message });
+                        window.close();
+                    }
+                );                
+            }
+
+            $('#submitCancelation').on('click', function () {
+
+                var justification = $("#txtJustify").val();
+                //validate Justification
+                if (justification.trim() == "") {
+
+                    Xrm.Navigation.openErrorDialog({ message: JustificationEmptyMessage });
+                }
+                else {
+
+                    var entity = {};
+                    entity.ovs_justification = justification;
+                    entity.statuscode = 918640001;
+
+                    Xrm.WebApi.online.updateRecord("ovs_tdginspectionreport", reportid, entity).then(
+                        function success(result) {
+                            var updatedEntityId = result.id;
+
+                            //to do localize
+                            var alertStrings = { confirmButtonLabel: yesNo, text: successMessage };
+                            Xrm.Navigation.openAlertDialog(alertStrings).then(
+                                function success(result) {
+                                    window.returnValue = updatedEntityId;
+                                    window.close();
+                                },
+                                function (error) {
+                                    console.log(error);
+                                    window.close();
+                                }
+                            );
+                            
+                        },
+                        function (error) {
+                            Xrm.Navigation.openErrorDialog({ message: error.message });
+                            window.close();
+                        }
+                    );
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
