@@ -125,7 +125,7 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         error_message_clear: function () {
-            debugger;
+            //debugger;
             $('#ValidationSummaryEntityFormView div').remove();
 
             try {
@@ -141,10 +141,21 @@ if (typeof (tdg.c) == "undefined") {
 
         error_message: function (message, clear) {
             debugger;
-            var validationSection = $('#ValidationSummaryEntityFormView');
-            //validationSection[0].innerHTML = "";
+
+            var validationSection = $('#ValidationSummaryEntityFormControl_EntityFormView');
+            if (!validationSection.hasOwnProperty("length")) {
+                validationSection = $('#ValidationSummaryEntityFormView');
+                if (!validationSection.hasOwnProperty("length")) {
+                    validationSection = $('#ValidationSummaryEntityFormView div');
+                }
+                else {
+                    validationSection = null;
+                }
+            }
+            if (validationSection == null) return;
+
             if (clear) {
-                $('#ValidationSummaryEntityFormView div').remove();
+                validationSection.remove();
             }
 
             validationSection.append($("<div class='notification alert-danger' role='alert'>" + message + "</div>"));

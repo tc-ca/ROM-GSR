@@ -4,6 +4,8 @@
 $(document).ready(function () {
     debugger;
 
+    error_message_advanced_form("m000002", true);
+
     tdg.c.section_hide("section_address_1");
 
     // default current use is "Primary"
@@ -27,6 +29,18 @@ $(document).ready(function () {
     $("#cid_legalname").attr("autocomplete", "new-password");
     $("#cid_reasonfornobnnumber_other").attr("autocomplete", "new-password");
 });
+
+function error_message_advanced_form(message, clear) {
+    debugger;
+    message = tdg.error_message.message(message);
+    if (clear) {
+        $('#ValidationSummaryEntityFormView div').remove();
+    }
+    var validationSection = $('#ValidationSummaryEntityFormView');
+    validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + message + "</div>"));
+    validationSection.show();
+    $('#alertMessages').focus();
+}
 
 function cid_has_cra_bn_onchange() {
     debugger;
@@ -135,7 +149,8 @@ if (window.jQuery) {
 
                 if (data == "") {
                     var msg = tdg.error_message.message("m000001"); // "Invalid CRA Business Number"
-                    tdg.c.error_message(msg);  
+                    //tdg.c.error_message(msg);
+                    error_message_advanced_form("m000001", true);
                 }
                 else {
                     debugger;

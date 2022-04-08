@@ -2,8 +2,6 @@
 if (typeof (tdg.message) == "undefined") {
     tdg.message = {
         list: function () {
-            debugger;
-
             var list =
                 [
                     {
