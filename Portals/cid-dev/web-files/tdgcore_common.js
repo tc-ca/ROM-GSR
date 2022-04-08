@@ -37,9 +37,11 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         // setRequiredLevel("required");
-        addValidator: function (fieldName, fieldLabel) {
+        addValidator: function (fieldName) {
             try {
                 if (typeof (Page_Validators) == 'undefined') return;
+
+                var fieldLabel = $("#" + fieldName + "_label")[0].innerHTML;
 
                 // Create new validator
                 $("#" + fieldName + "_label").parent().addClass("required");
@@ -358,8 +360,6 @@ if (typeof (tdg.error_message) == "undefined") {
                 }
             }
             while (!found);
-
-            debugger;
         },
 
         sleep: function (second) {

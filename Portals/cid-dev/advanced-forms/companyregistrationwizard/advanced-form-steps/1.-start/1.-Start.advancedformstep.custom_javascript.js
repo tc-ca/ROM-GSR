@@ -48,8 +48,8 @@ function cid_has_cra_bn_onchange() {
         tdg.c.control_show("cid_reasonfornobnnumber");
         tdg.c.control_show("cid_legalname");
 
-        tdg.c.addValidator("cid_legalname", "Legal Name");
-        tdg.c.addValidator("cid_reasonfornobnnumber", "Reason for no CRA Business Number");
+        tdg.c.addValidator("cid_legalname");
+        tdg.c.addValidator("cid_reasonfornobnnumber");
 
         // clear data
         $("#cid_crabusinessnumber").val("");
@@ -59,7 +59,7 @@ function cid_has_cra_bn_onchange() {
         tdg.c.control_hide("cid_reasonfornobnnumber");
         tdg.c.control_hide("cid_legalname");
 
-        tdg.c.addValidator("cid_crabusinessnumber", "CRA Business Number");
+        tdg.c.addValidator("cid_crabusinessnumber");
 
         // clear data
         $("#cid_reasonfornobnnumber").val("");
@@ -77,7 +77,7 @@ function cid_reasonfornobnnumber_onchange() {
     if (cid_reasonfornobnnumber == "3")   // other
     {
         tdg.c.control_show("cid_reasonfornobnnumber_other");
-        tdg.c.addValidator("cid_reasonfornobnnumber_other", "Other Reason");
+        tdg.c.addValidator("cid_reasonfornobnnumber_other");
     }
     else {
         tdg.c.control_hide("cid_reasonfornobnnumber_other");
