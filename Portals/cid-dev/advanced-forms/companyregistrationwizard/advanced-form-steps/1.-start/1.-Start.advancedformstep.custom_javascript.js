@@ -4,8 +4,6 @@
 $(document).ready(function () {
     debugger;
 
-    error_message_advanced_form("m000002", true);
-
     tdg.c.section_hide("section_address_1");
 
     // default current use is "Primary"
@@ -148,9 +146,8 @@ if (window.jQuery) {
                 var data = cid_crabusinessnumber_onchange();
 
                 if (data == "") {
-                    var msg = tdg.error_message.message("m000001"); // "Invalid CRA Business Number"
                     //tdg.c.error_message(msg);
-                    error_message_advanced_form("m000001", true);
+                    tdg.c.error_message_advanced_form("m000001", true);   // "Invalid CRA Business Number"
                 }
                 else {
                     debugger;

@@ -21,6 +21,33 @@ if (typeof (tdg.c) == "undefined") {
             c.targetFunction();
         },
 
+        btn_save_new_setup: function() {
+            var button = $('<input type="button" name="btn_save_new" id="btn_save_new" />');
+            $("#InsertButton").after(button);
+
+            var button1 = $("#InsertButton");
+            var text1 = tdg.error_message.message("m000003");   // Submit and Close
+            button1.prop("value", text1);
+            var className = button1[0].className
+            var fontSize = button1.css("fontSize");
+            var color = button1.css("color");
+            var background_color = button1.css("background-color");
+
+            var button2 = $("#btn_save_new");
+            var text1 = tdg.error_message.message("m000004");   // Submit and Add Another
+            button2.prop("value", text1);
+            button2[0].className = className;
+            button2.css("fontSize", fontSize);
+            button2.css('color', color);
+            button2.css("background-color", background_color);
+
+            // bind the click event to this custom buttton
+            $("#btn_save_new").bind("click", function () {
+                debugger;
+                btn_save_new_onclick();
+            });
+        },
+
         text_language: function (text, language) {
             //var selected_language = '{{website.selected_language.code}}';
             //sessionStorage.setItem("selected_language", selected_language);
@@ -103,8 +130,20 @@ if (typeof (tdg.c) == "undefined") {
             return response;
         },
 
+        message_panel_clear: function () {
+            try {
+                $("#MessagePanel")[0].innerText = "";
+            } catch (e) {}
+        },
+
+        message_panel_set: function (msg) {
+            try {
+                $("#MessagePanel")[0].innerText = msg;
+            } catch (e) {}
+        },
+
         message_panel: function () {
-            debugger;
+            //debugger;
 
             var language = sessionStorage.getItem("selected_language");
 
@@ -126,40 +165,62 @@ if (typeof (tdg.c) == "undefined") {
 
         error_message_clear: function () {
             //debugger;
-            $('#ValidationSummaryEntityFormView div').remove();
-
+            var v = this.ValidationSummary();
             try {
-                $('#ValidationSummaryEntityFormView')[0].remove();
-            } catch (e) {}
-            $('#ValidationSummaryEntityFormView').hide();
+                v[0].innerHTML = "";
+            } catch (e) { }
 
-            try {
-                $('#ValidationSummaryEntityFormControl_EntityFormView')[0].innerHTML = "";
-            } catch (e) {}
-            $('#ValidationSummaryEntityFormControl_EntityFormView').hide();
+            this.message_panel_clear();
+
+            //$v.hide();
+
+            //$('#ValidationSummaryEntityFormView div').remove();
+            //try {
+            //    $('#ValidationSummaryEntityFormView')[0].remove();
+            //} catch (e) {}
+            //$('#ValidationSummaryEntityFormView').hide();
+
+            //try {
+            //    $('#ValidationSummaryEntityFormControl_EntityFormView')[0].innerHTML = "";
+            //} catch (e) {}
+            //$('#ValidationSummaryEntityFormControl_EntityFormView').hide();
+        },
+
+        ValidationSummary: function () {
+            var v = $('#ValidationSummaryEntityFormView');
+            if (!v.hasOwnProperty("length")) {
+                v = $('#ValidationSummaryEntityFormControl_EntityFormView');
+            }
+            return v;
         },
 
         error_message: function (message, clear) {
             debugger;
+            message = tdg.c.message(message);
 
-            var validationSection = $('#ValidationSummaryEntityFormControl_EntityFormView');
-            if (!validationSection.hasOwnProperty("length")) {
-                validationSection = $('#ValidationSummaryEntityFormView');
-                if (!validationSection.hasOwnProperty("length")) {
-                    validationSection = $('#ValidationSummaryEntityFormView div');
-                }
-                else {
-                    validationSection = null;
-                }
-            }
-            if (validationSection == null) return;
+            var v = this.ValidationSummary();
+            if (v == null) return;
 
             if (clear) {
-                validationSection.remove();
+                v.remove();
             }
 
-            validationSection.append($("<div class='notification alert-danger' role='alert'>" + message + "</div>"));
+            //v.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + message + "</div>"));
+            //v.show();
+            //$('#alertMessages').focus();
+        },
+
+        error_message_advanced_form: function (message, clear) {
+            debugger;
+            message = tdg.error_message.message(message);
+            if (clear) {
+                $('#ValidationSummaryEntityFormView div').remove();
+            }
+            var alertMessages = "alertMessages";
+            var validationSection = $('#ValidationSummaryEntityFormView');
+            validationSection.append($("<div id='" + alertMessages + "' tabindex='0' class='notification alert-danger' role='alert'>" + message + "</div>"));
             validationSection.show();
+            $('#' + alertMessages).focus();
         },
 
         control_hide: function (fieldName, is_lookup) {
@@ -275,7 +336,7 @@ if (typeof (tdg.webapi) == "undefined") {
         //    "cid_erapid": cid_erapid
         //};
         //tdg.webapi.create("cid_companyeraps", data);
-        create: function (entity_name, data) {
+        create: function (entity_name, data, success_cb, error_cb) {
             debugger;
 
             webapi.safeAjax({
@@ -287,7 +348,19 @@ if (typeof (tdg.webapi) == "undefined") {
                 success: function (res, status, xhr) {
                     debugger;
                     //print id of newly created table record
-                    console.log("webapi.safeAjax.create->record_id: " + xhr.getResponseHeader("entityid"))
+                    console.log("webapi.safeAjax.create->record_id: " + xhr.getResponseHeader("entityid"));
+                    try {
+                        success_cb();
+                    } catch (e) {}
+                },
+
+                error: function (res, status, errorThrown) {
+                    debugger;
+                    var msg = res.responseJSON.error.innererror.message;
+                    console.log(msg);
+                    try {
+                        error_cb(msg);
+                    } catch (e) { }
                 }
             });
         },
@@ -340,7 +413,7 @@ if (typeof (tdg.error_message) == "undefined") {
         k_tdgcore_error_message: "tdgcore_error_message",
 
         message: function (code) {
-            debugger;
+            //debugger;
 
             var list = tdg.message.list();
             var value = code;

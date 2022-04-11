@@ -4,102 +4,68 @@
 $(document).ready(function () {
     debugger;
 
-    insert_tdgcore_common_js();
+    page_setup();
 
     //when the page is done loading, disable autocomplete on all inputs[text]
     $('input[type="text"]').attr('autocomplete', 'off');
 
     // insert button
-    btn_save_new_setup();
+    tdg.c.btn_save_new_setup();
 });
 
-function insert_tdgcore_common_js() {
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = "/tdgcore_common.js";
+function page_setup() {
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
 
-    $("body").append(script);
+    const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = file;
+
+        $("body").append(script);
+    }
+
+    // server error?
+    tdg.c.message_panel();
 }
 
-function btn_save_new_setup()
-{
-    var button = $('<input type="button" name="btn_save_new" id="btn_save_new" />');
-    $("#InsertButton").after(button);
+if (window.jQuery) {
+    (function ($) {
+        entityFormClientValidate = function () {
+            debugger;
+            tdg.c.message_panel_clear();
+            var validation = true;
+            return validation;
+        }
 
-    var button1 = $("#InsertButton");
-    button1.prop("value", "Submit and Close");
-    var className = button1[0].className
-    var fontSize = button1.css("fontSize");
-    var color = button1.css("color");
-    var background_color = button1.css("background-color");
-
-    var button2 = $("#btn_save_new");
-    button2.prop("value", "Submit and Add Another");
-    button2[0].className = className;
-    button2.css("fontSize", fontSize);
-    button2.css('color', color);
-    button2.css("background-color", background_color);
-
-    // bind the click event to this custom buttton
-    $("#btn_save_new").bind("click", function () {
-        btn_save_new_onclick();
-    });
+        //webFormClientValidate = function () {
+        //    debugger;
+        //    var validation = true;
+        //    return validation;
+        //}
+    }(window.jQuery));
 }
 
-function btn_save_new_onclick()
-{
+// call back from tdg.c
+function btn_save_new_onclick() {
+    var value = false;
+
     tdg.c.error_message_clear();
     if (typeof entityFormClientValidate === 'function') {
-        if (entityFormClientValidate())
-        {
-            if (typeof Page_ClientValidate === 'function')
-            {
-                if (Page_ClientValidate('')) {
-                    clearIsDirty();
-                    //disableButtons();
-                    this.value = 'Processing...';
+        if (entityFormClientValidate()) {
+            if (typeof Page_ClientValidate === 'function') {
+                value = Page_ClientValidate('');
                 }
-            } else {
-                clearIsDirty();
-                //disableButtons();
-                this.value = 'Processing...';
-            }
-        } else {
-            return false;
-        }
-    } else {
-        if (typeof Page_ClientValidate === 'function') {
-            if (Page_ClientValidate('')) {
-                clearIsDirty();
-                //disableButtons();
-                this.value = 'Processing...';
-            }
-        } else {
-            clearIsDirty();
-            //disableButtons();
-            this.value = 'Processing...';
-        }
+        } 
     };
 
-    var button1 = $("#InsertButton");
-    var eventTarget = button1[0].name;
-    var eventArgument = "";
-    var validation = true;
-    var validationGroup = "";
-    var actionUrl = window.document.URL;
-    var trackFocus = false;
-    var clientSubmit = true;
-
-    //WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(
-    //    eventTarget,
-    //    eventArgument,
-    //    validation,
-    //    validationGroup,
-    //    actionUrl,
-    //    trackFocus,
-    //    clientSubmit));
-
     debugger;
+
+    if (!value) {
+        return;
+    }
 
     // insert
     var parent_id = '{{user.parentcustomerid.Id}}';
@@ -119,5 +85,25 @@ function cid_companyerap_insert(account_id, cid_erapid, contact_id) {
         "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
         "cid_erapid": cid_erapid
     };
-    tdg.webapi.create("cid_companyeraps", data);
+    tdg.webapi.create("cid_companyeraps", data, success_cb, error_cb);
+}
+
+function success_cb() {
+    debugger;
+}
+
+function error_cb(msg) {
+    debugger;
+
+    //tdg.c.message_panel_set(msg);
+
+    //var validationSection = $('#ValidationSummaryEntityFormView');
+    //validationSection.append($("<div id='" + alertMessages + "' tabindex='0' class='notification alert-danger' role='alert'>" + message + "</div>"));
+    //validationSection.show();
+    //$('#' + alertMessages).focus();
+
+    var validationSection = $("#MessagePanel");
+    var text = '<div id="MessagePanel" class="message alert alert-info alert-danger alert-danger" role="alert">WTH</div>';
+    validationSection.append($(text));
+    validationSection.show();
 }

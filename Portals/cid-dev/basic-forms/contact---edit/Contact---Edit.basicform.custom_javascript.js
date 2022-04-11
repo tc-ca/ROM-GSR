@@ -4,7 +4,7 @@
 $(document).ready(function () {
     debugger;
 
-    insert_tdgcore_common_js();
+    page_setup();
 
     //when the page is done loading, disable autocomplete on all inputs[text]
     $('input[type="text"]').attr('autocomplete', 'off');
@@ -14,7 +14,7 @@ $(document).ready(function () {
     $("#telephone1").attr("placeholder", "");
     $("#mobilephone").attr("placeholder", "");
 
-    tdg.c.addValidator("emailaddress1", "E-mail");
+    tdg.c.addValidator("emailaddress1");
 
     // autocomplete off
     try {
@@ -27,10 +27,20 @@ $(document).ready(function () {
     } catch (e) {}
 });
 
-function insert_tdgcore_common_js() {
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = "/tdgcore_common.js";
+function page_setup() {
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
 
-    $("body").append(script);
+    const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = file;
+
+        $("body").append(script);
+    }
+
+    // server error?
+    tdg.c.message_panel();
 }

@@ -94,11 +94,11 @@ $(document).ready(function () {
     $('#cid_reasonfornobnnumber').css("pointer-events", "none");
     $('#cid_reasonfornobnnumber_other').attr("readonly", true);
 
-    tdg.c.addValidator("address1_line1", "Street 1");
-    tdg.c.addValidator("address1_city", "City");
-    tdg.c.addValidator("address1_stateorprovince", "Province");
-    tdg.c.addValidator("address1_postalcode", "Postal Code");
-    tdg.c.addValidator("address1_country", "Country");
+    tdg.c.addValidator("address1_line1");
+    tdg.c.addValidator("address1_city");
+    tdg.c.addValidator("address1_stateorprovince");
+    tdg.c.addValidator("address1_postalcode");
+    tdg.c.addValidator("address1_country");
 
     // autocomplete off
     $("#name").attr("autocomplete", "new-password");

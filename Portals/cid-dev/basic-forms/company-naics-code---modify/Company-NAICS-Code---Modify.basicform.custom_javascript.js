@@ -4,7 +4,7 @@
 $(document).ready(function () {
     debugger;
 
-    insert_tdgcore_common_js();
+    page_setup();
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
@@ -16,12 +16,22 @@ $(document).ready(function () {
     tdg.c.control_hide("cid_naicscode", true);
 });
 
-function insert_tdgcore_common_js() {
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = "/tdgcore_common.js";
+function page_setup() {
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
 
-    $("body").append(script);
+    const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = file;
+
+        $("body").append(script);
+    }
+
+    // server error?
+    tdg.c.message_panel();
 }
 
 function naicscode_selected(text, id) {

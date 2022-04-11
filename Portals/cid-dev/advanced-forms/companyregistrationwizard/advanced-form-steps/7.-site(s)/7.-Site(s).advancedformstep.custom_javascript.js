@@ -32,8 +32,8 @@ $(document).ready(function () {
 						//	firstTdElement.prepend("<input type='checkbox' id='chk_' + recId +'>&nbsp;&nbsp;&nbsp;");
 					}
 				}
-
-				if (tdElement.attr('data-attribute') == 'cid_siteclaim' && tdElement.attr('aria-label') != 'My Site Active') {
+				if ((tdElement.attr('data-attribute') == 'statuscode' && tdElement.attr('aria-label') == 'Inactive') ||
+				(tdElement.attr('data-attribute') == 'cid_siteclaim' && tdElement.attr('aria-label') != 'My Site Active')) {
 					firstTdElement.find('a').removeAttr("href");
 					firstTdElement.find('span').remove();
 					firstTdElement.find('input').remove();

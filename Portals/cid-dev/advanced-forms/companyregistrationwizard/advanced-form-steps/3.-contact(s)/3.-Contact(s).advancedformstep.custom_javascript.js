@@ -34,12 +34,14 @@ if (window.jQuery) {
             }
 
             if (!validation) {
-                $('#ValidationSummaryEntityFormView div').remove();
-                var validationSection = $('#ValidationSummaryEntityFormView');
-                var errorMessage = "You cannot proceed before adding at least one secondary contact.";
-                validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
-                validationSection.show();
-                $('#alertMessages').focus();
+                tdg.c.error_message_advanced_form("m000002", true);   // You cannot proceed before adding at least one secondary contact.
+
+                //$('#ValidationSummaryEntityFormView div').remove();
+                //var validationSection = $('#ValidationSummaryEntityFormView');
+                //var errorMessage = "You cannot proceed before adding at least one secondary contact.";
+                //validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
+                //validationSection.show();
+                //$('#alertMessages').focus();
             }
             return validation;
         }
