@@ -239,7 +239,7 @@
               "type": "If"
             },
             "Apply_to_each_3": {
-              "foreach": "@outputs('Start_and_wait_for_an_approval_-_EN')?['body/responses']",
+              "foreach": "@if(variables('IsLanguageFrench'), outputs('Start_and_wait_for_an_approval_-_FR')?['body/responses'], outputs('Start_and_wait_for_an_approval_-_EN')?['body/responses'])",
               "actions": {
                 "Update_Cancelation_Request_to_Completed": {
                   "runAfter": {},
