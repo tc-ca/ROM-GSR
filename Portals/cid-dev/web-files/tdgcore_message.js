@@ -23,6 +23,21 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000004",
                         "message_en": "Submit and Add Another",
                         "message_fr": "Soumettre et ajouter un autre"
+                    },
+                    {
+                        "code": "m000005",
+                        "message_en": "Record added",
+                        "message_fr": "Enregistrement ajouté"
+                    },
+                    {
+                        "code": "m000006",
+                        "message_en": "You cannot attest company before adding primary and secondary contacts.</br>",
+                        "message_fr": "Vous ne pouvez pas attester de l'entreprise avant d'avoir ajouté des contacts principaux et secondaires.</br>"
+                    },
+                    {
+                        "code": "m000007",
+                        "message_en": "Print Summary",
+                        "message_fr": "Imprimer le résumé"
                     }
               ];
 

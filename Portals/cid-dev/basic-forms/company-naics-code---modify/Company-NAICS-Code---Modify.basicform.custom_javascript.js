@@ -6,9 +6,6 @@ $(document).ready(function () {
 
     page_setup();
 
-    var selected_language = '{{website.selected_language.code}}';
-    sessionStorage.setItem("selected_language", selected_language);
-
     // resize WebResource_address_complete
     $("#WebResource_naicscode").height('72px');
 

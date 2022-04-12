@@ -49,9 +49,6 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         text_language: function (text, language) {
-            //var selected_language = '{{website.selected_language.code}}';
-            //sessionStorage.setItem("selected_language", selected_language);
-
             var value = "";
             var index1 = text.indexOf("::");
             if (language == "en-US") {
@@ -136,9 +133,17 @@ if (typeof (tdg.c) == "undefined") {
             } catch (e) {}
         },
 
-        message_panel_set: function (msg) {
+        message_panel_set: function (validationSection, msg) {
+            // clear msg
             try {
-                $("#MessagePanel")[0].innerText = msg;
+                $('#MessagePanel').remove();
+            } catch (e) { }
+
+            try {
+                var target = $("#" + validationSection);
+                var text = '<div id="MessagePanel" class="message alert alert-info alert-danger alert-danger" role="alert">' + msg + '</div>';
+                target.append($(text));
+                target.show();
             } catch (e) {}
         },
 
@@ -152,6 +157,7 @@ if (typeof (tdg.c) == "undefined") {
                 var index1 = text.indexOf("::");
                 if (index1 < 0) {
                     text = text + "::" + text;
+                    index1 = text.indexOf("::");
                 }
                 if (language == "en-US") {
                     value = text.substr(0, index1);

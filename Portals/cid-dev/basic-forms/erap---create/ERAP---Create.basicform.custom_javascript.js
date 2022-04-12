@@ -90,20 +90,15 @@ function cid_companyerap_insert(account_id, cid_erapid, contact_id) {
 
 function success_cb() {
     debugger;
+
+    msg = tdg.error_message.message("m000005"); // Record added
+    tdg.c.message_panel_set("EntityFormControl", msg);
 }
 
 function error_cb(msg) {
     debugger;
 
-    //tdg.c.message_panel_set(msg);
-
-    //var validationSection = $('#ValidationSummaryEntityFormView');
-    //validationSection.append($("<div id='" + alertMessages + "' tabindex='0' class='notification alert-danger' role='alert'>" + message + "</div>"));
-    //validationSection.show();
-    //$('#' + alertMessages).focus();
-
-    var validationSection = $("#MessagePanel");
-    var text = '<div id="MessagePanel" class="message alert alert-info alert-danger alert-danger" role="alert">WTH</div>';
-    validationSection.append($(text));
-    validationSection.show();
+    var selected_language = '{{website.selected_language.code}}';
+    msg = tdg.c.text_language(msg, selected_language)
+    tdg.c.message_panel_set("EntityFormControl", msg);
 }

@@ -11,11 +11,13 @@ $(document).ready(function () {
 if (window.jQuery) {
     (function ($) {
         webFormClientValidate = function () {
+            debugger;
             var validation = false;
             var companyId = $("#EntityFormView_EntityID").val();
             var filter = "parentcustomerid/Id eq (guid'" + companyId + "')";
 
-            var data = ExecuteQuery("Validation_CompanyPrimarySecondaryContacts", filter);
+            //var data = ExecuteQuery("Validation_CompanyPrimarySecondaryContacts", filter);
+            var data = tdg.c.OData_List("contact", filter);
 
             if (data != null) {
                 var primaryFound = false;
