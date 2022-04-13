@@ -16,8 +16,7 @@ if (window.jQuery) {
             var companyId = $("#EntityFormView_EntityID").val();
             var filter = "parentcustomerid/Id eq (guid'" + companyId + "')";
 
-            //var data = ExecuteQuery("Validation_CompanyPrimarySecondaryContacts", filter);
-            var data = tdg.c.OData_List("contact", filter);
+            var data = ExecuteQuery("Validation_CompanyPrimarySecondaryContacts", filter);
 
             if (data != null) {
                 var primaryFound = false;

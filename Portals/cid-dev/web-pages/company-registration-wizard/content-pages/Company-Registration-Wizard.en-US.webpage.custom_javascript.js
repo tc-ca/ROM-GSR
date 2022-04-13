@@ -24,4 +24,10 @@ $(document).ready(function () {
 
     if (instructionBtns.length > 0)
 	    instructionBtns.click(function(){ alert('Choose the same named button found below'); });
+
+    $("legend").each(function() {
+		$(this).removeClass();
+		$(this).css("font-size", "24px");
+		$(this).css("font-weight", "bold");
+    });
 });

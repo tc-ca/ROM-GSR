@@ -38,9 +38,35 @@ $(document).ready(function () {
 
     if ($("#printSummary").length <= 0) {
         //var label = tdg.error_message.message("m000007");
-        $('#NextButton').parentnode().append("<div id='printSummary' role='group' class='btn-group entity-action-button'><input type='button' name='PrintButton' value='Print Summary' onclick='window.print();' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'></div>");
+        //$('#NextButton').parentnode().append("<div id='printSummary' role='group' class='btn-group entity-action-button'><input type='button' name='PrintButton' value='Print Summary' onclick='window.print();' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'></div>");
+        printSummary();
     }
 });
+
+function printSummary() {
+    var button = $('<input type="button" name="printSummary" id="printSummary" />');
+    $("#NextButton").after(button);
+
+    var button1 = $("#NextButton");
+    var className = button1[0].className
+    var fontSize = button1.css("fontSize");
+    var color = button1.css("color");
+    var background_color = button1.css("background-color");
+
+    var button2 = $("#printSummary");
+    var text1 = tdg.error_message.message("m000007");
+    button2.prop("value", text1);
+    button2[0].className = className;
+    button2.css("fontSize", fontSize);
+    button2.css('color', color);
+    button2.css("background-color", background_color);
+
+    // bind the click event to this custom buttton
+    $("#printSummary").bind("click", function () {
+        debugger;
+        window.print();
+    });
+}
 
 if (window.jQuery) {
     (function ($) {

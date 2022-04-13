@@ -8,4 +8,10 @@ $(document).ready(function () {
 			header.text(header.text() + ' - ' + companyName);
 		
 	}
+
+	$("legend").each(function() {
+		$(this).removeClass();
+		$(this).css("font-size", "24px");
+		$(this).css("font-weight", "bold");
+    });
 });
