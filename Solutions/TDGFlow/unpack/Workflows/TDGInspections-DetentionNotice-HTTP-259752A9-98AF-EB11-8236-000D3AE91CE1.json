@@ -58,7 +58,7 @@
           "defaultValue": "",
           "type": "String"
         },
-        "Detention Notice EN": {
+        "Detention Notice EN (ovs_DetentionNoticeEN)": {
           "defaultValue": "-DN-AR-",
           "type": "String",
           "metadata": {
@@ -280,7 +280,8 @@
             },
             "parameters": {
               "entityName": "annotations",
-              "item/subject": "Detention Notice",
+              "item/subject": "Avis de rétention - Detention Notice",
+              "item/notetext": "Nom du dossier -",
               "item/isdocument": true,
               "item/documentbody": "@base64(outputs('Convert_Word_Document_to_PDF')?['body'])",
               "item/filename": "@{variables('FileName')}.pdf",
@@ -773,7 +774,7 @@
               {
                 "name": "FileName",
                 "type": "string",
-                "value": "@{triggerOutputs()?['body/ovs_actionnumber']}@{parameters('Detention Notice EN')}@{formatDateTime(utcNow(),'ddMMyyyyhhmmfff')}"
+                "value": "@{triggerOutputs()?['body/ovs_actionnumber']}@{parameters('Detention Notice EN (ovs_DetentionNoticeEN)')}@{formatDateTime(utcNow(),'ddMMyyyyhhmmfff')}"
               }
             ]
           }
