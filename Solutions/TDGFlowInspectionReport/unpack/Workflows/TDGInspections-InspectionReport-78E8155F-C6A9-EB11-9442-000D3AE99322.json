@@ -109,7 +109,7 @@
         },
         "Violations": {
           "runAfter": {
-            "Is_Booking_complete": [
+            "Is_COC_exist": [
               "Succeeded"
             ]
           },
@@ -1812,61 +1812,130 @@
             "Apply_to_each_Violation": {
               "foreach": "@outputs('Get_Violations(Results)')?['body/value']",
               "actions": {
-                "Create_a_Confirmation_Team": {
+                "Check_if_COC_exists": {
+                  "actions": {
+                    "Set_COC_count_to_0": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "9b230440-a0f7-496b-94b3-dde7ba804b24"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "isCOCexist",
+                        "value": 0
+                      }
+                    }
+                  },
                   "runAfter": {
-                    "Create_a_Confirmation_User": [
-                      "Failed",
-                      "Skipped"
+                    "Set_COC_count": [
+                      "Succeeded"
+                    ]
+                  },
+                  "else": {
+                    "actions": {
+                      "Create_a_Confirmation_User": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "745420a8-7edc-447f-b070-463ce9c59ab3"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_commondataserviceforapps",
+                            "operationId": "CreateRecord",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                          },
+                          "parameters": {
+                            "entityName": "ovs_confirmationofcompliances",
+                            "item/ovs_daterequested": "@utcNow()",
+                            "item/statuscode": "@if(items('Apply_to_each_Violation')?['qm_confirmationrequestedchk'],4,918640004)",
+                            "item/ovs_Violation_ovs_confirmationofcompliance@odata.bind": "/qm_syresults(@{items('Apply_to_each_Violation')?['qm_syresultid']})",
+                            "item/statecode": "@if(items('Apply_to_each_Violation')?['qm_confirmationrequestedchk'],3,1)",
+                            "item/scheduledend": "@items('Apply_to_each_Violation')?['ovs_duedate']",
+                            "item/ovs_justificationtxt": "@items('Apply_to_each_Violation')?['qm_justificationfornotcoc']",
+                            "item/ownerid_ovs_confirmationofcompliance@odata.bind": "/systemusers(@{outputs('Get_a_WO._All_fields')?['body/_ownerid_value']})",
+                            "item/regardingobjectid_msdyn_workorder_ovs_confirmationofcompliance@odata.bind": "/msdyn_workorders(@{outputs('Get_a_WO._All_fields')?['body/msdyn_workorderid']})"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      },
+                      "Create_a_Confirmation_Team": {
+                        "runAfter": {
+                          "Create_a_Confirmation_User": [
+                            "Failed",
+                            "Skipped"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "c98957c5-93d8-4586-9db2-0ff9078abcab"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_commondataserviceforapps",
+                            "operationId": "CreateRecord",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                          },
+                          "parameters": {
+                            "entityName": "ovs_confirmationofcompliances",
+                            "item/ovs_daterequested": "@utcNow()",
+                            "item/statuscode": "@if(items('Apply_to_each_Violation')?['qm_confirmationrequestedchk'],4,918640004)",
+                            "item/ovs_Violation_ovs_confirmationofcompliance@odata.bind": "/qm_syresults(@{items('Apply_to_each_Violation')?['qm_syresultid']})",
+                            "item/statecode": "@if(items('Apply_to_each_Violation')?['qm_confirmationrequestedchk'],3,1)",
+                            "item/scheduledend": "@items('Apply_to_each_Violation')?['ovs_duedate']",
+                            "item/ownerid_ovs_confirmationofcompliance@odata.bind": "/teams(@{outputs('Get_a_WO._All_fields')?['body/_ownerid_value']})",
+                            "item/regardingobjectid_msdyn_workorder_ovs_confirmationofcompliance@odata.bind": "/msdyn_workorders(@{outputs('Get_a_WO._All_fields')?['body/msdyn_workorderid']})",
+                            "item/subject": "Confirmation of Compliance - @{items('Apply_to_each_Violation')?['qm_rclegislationid/qm_legislationlbl']}"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      }
+                    }
+                  },
+                  "expression": {
+                    "greater": [
+                      "@variables('isCOCexist')",
+                      0
                     ]
                   },
                   "metadata": {
-                    "operationMetadataId": "c98957c5-93d8-4586-9db2-0ff9078abcab"
+                    "operationMetadataId": "b0c21db5-1f07-4c19-a5a2-979653bd4c67"
+                  },
+                  "type": "If"
+                },
+                "Get_Violation_COCs": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "0b91f2b8-b07c-46b0-a35f-ccb385aee7ed"
                   },
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
                       "connectionName": "shared_commondataserviceforapps",
-                      "operationId": "CreateRecord",
+                      "operationId": "ListRecords",
                       "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                     },
                     "parameters": {
                       "entityName": "ovs_confirmationofcompliances",
-                      "item/ovs_daterequested": "@utcNow()",
-                      "item/statuscode": "@if(items('Apply_to_each_Violation')?['qm_confirmationrequestedchk'],4,918640004)",
-                      "item/ovs_Violation_ovs_confirmationofcompliance@odata.bind": "/qm_syresults(@{items('Apply_to_each_Violation')?['qm_syresultid']})",
-                      "item/statecode": "@if(items('Apply_to_each_Violation')?['qm_confirmationrequestedchk'],3,1)",
-                      "item/scheduledend": "@items('Apply_to_each_Violation')?['ovs_duedate']",
-                      "item/ownerid_ovs_confirmationofcompliance@odata.bind": "/teams(@{outputs('Get_a_WO._All_fields')?['body/_ownerid_value']})",
-                      "item/regardingobjectid_msdyn_workorder_ovs_confirmationofcompliance@odata.bind": "/msdyn_workorders(@{outputs('Get_a_WO._All_fields')?['body/msdyn_workorderid']})",
-                      "item/subject": "Confirmation of Compliance - @{items('Apply_to_each_Violation')?['qm_rclegislationid/qm_legislationlbl']}"
+                      "$select": "activityid",
+                      "$filter": "(_ovs_violation_value eq @{items('Apply_to_each_Violation')?['qm_syresultid']})"
                     },
                     "authentication": "@parameters('$authentication')"
                   }
                 },
-                "Create_a_Confirmation_User": {
-                  "runAfter": {},
-                  "metadata": {
-                    "operationMetadataId": "745420a8-7edc-447f-b070-463ce9c59ab3"
+                "Set_COC_count": {
+                  "runAfter": {
+                    "Get_Violation_COCs": [
+                      "Succeeded"
+                    ]
                   },
-                  "type": "OpenApiConnection",
+                  "metadata": {
+                    "operationMetadataId": "dc334d47-24df-4b52-9a12-c1de460b9a61"
+                  },
+                  "type": "SetVariable",
                   "inputs": {
-                    "host": {
-                      "connectionName": "shared_commondataserviceforapps",
-                      "operationId": "CreateRecord",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                    },
-                    "parameters": {
-                      "entityName": "ovs_confirmationofcompliances",
-                      "item/ovs_daterequested": "@utcNow()",
-                      "item/statuscode": "@if(items('Apply_to_each_Violation')?['qm_confirmationrequestedchk'],4,918640004)",
-                      "item/ovs_Violation_ovs_confirmationofcompliance@odata.bind": "/qm_syresults(@{items('Apply_to_each_Violation')?['qm_syresultid']})",
-                      "item/statecode": "@if(items('Apply_to_each_Violation')?['qm_confirmationrequestedchk'],3,1)",
-                      "item/scheduledend": "@items('Apply_to_each_Violation')?['ovs_duedate']",
-                      "item/ovs_justificationtxt": "@items('Apply_to_each_Violation')?['qm_justificationfornotcoc']",
-                      "item/ownerid_ovs_confirmationofcompliance@odata.bind": "/systemusers(@{outputs('Get_a_WO._All_fields')?['body/_ownerid_value']})",
-                      "item/regardingobjectid_msdyn_workorder_ovs_confirmationofcompliance@odata.bind": "/msdyn_workorders(@{outputs('Get_a_WO._All_fields')?['body/msdyn_workorderid']})"
-                    },
-                    "authentication": "@parameters('$authentication')"
+                    "name": "isCOCexist",
+                    "value": "@length(outputs('Get_Violation_COCs')?['body/value'])"
                   }
                 }
               },
@@ -2437,6 +2506,26 @@
           "inputs": {
             "name": "bookingEndTime",
             "value": "@first(outputs('Get_Bookings')?['body/value'])?['endtime']"
+          }
+        },
+        "Is_COC_exist": {
+          "runAfter": {
+            "Is_Booking_complete": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6613fba3-0ba8-4cda-a44b-2ffe61a210ab"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "isCOCexist",
+                "type": "integer",
+                "value": 0
+              }
+            ]
           }
         }
       },
