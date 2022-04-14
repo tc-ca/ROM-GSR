@@ -11,28 +11,61 @@ function subgrid_language() {
 
 	var entityList = $(".entity-grid").eq(0);
 
+	//var value = $(".entity-grid").eq(0)[0].innerText;
+
 	entityList.on("loaded", function () {
-		entityList.find("table tbody > tr").each(function (index, tr) {
-			var primaryColumn = $(tr).find('td')[0];
+		debugger;
 
-			/// or retrieve column by name
-			/// var primaryColumn = tr.find('td[data-attribute="name"]');
+		// header
+		let header = entityList.find("table thead > tr");
+		for (var index1 = 0; index1 < header.length; index1++) {
+			debugger;
+			let tr = header[index1];
 
-			var url = $(primaryColumn).find("a")[0].href;
-			if (!!url) {
-				$(tr).find('td').each(function (index, td) {
-					var tdElement = $(this);
-					var value = tdElement.attr('data-attribute');
-					if (value != null) {
-						var index1 = value.indexOf('.cid_naicsclasstitle');
-						if (index1 != -1) {
-							var cellValue = $(td).text();
-							cellValue = tdg.c.text_language(cellValue, selected_language);
-							$(td).text(cellValue);
-						}
-					}
-				});
+			let cols = $(tr).find('th');
+			for (var i = 0; i < cols.length; i++) {
+				var tdElement = cols[i];
+				var className = $(tdElement)[0].className;
+				if (className.indexOf("sort-enabled") == -1) {
+					var text = $(tdElement).text();
+					text = tdg.c.text_language(text, selected_language);
+					$(tdElement).text(text);
+				}
 			}
-		});
+        }
+		//header.each(function (index, tr) {
+		//	debugger;
+
+		//	let cols = $(tr).find('th');
+		//	for (var i = 0; i < cols.length; i++) {
+		//		var tdElement = cols[i];
+		//		var className = $(tdElement)[0].className;
+		//		if (className.indexOf("sort-enabled") == -1) {
+		//			var text = $(tdElement).text();
+		//			text = tdg.c.text_language(text, selected_language);
+		//			$(tdElement).text(text);
+  //              }
+  //          }
+		//}
+
+		let rows = entityList.find("table tbody > tr");
+		//rows.find("table tbody > tr").each(function (index, tr) {
+		//	debugger;
+
+		//	$(tr).find('td').each(function (index, td) {
+		//		debugger;
+
+		//		var tdElement = $(this);
+		//		var value = tdElement.attr('data-attribute');
+		//		if (value != null) {
+		//			var index1 = value.indexOf('.cid_naicsclasstitle');
+		//			if (index1 != -1) {
+		//				var cellValue = $(td).text();
+		//				cellValue = tdg.c.text_language(cellValue, selected_language);
+		//				$(td).text(cellValue);
+		//			}
+		//		}
+		//	});
+		//}
 	});
 }

@@ -3,6 +3,20 @@
 $(document).ready(function () {
 	debugger;
 
+	var companyId = $("#EntityFormView_EntityID").val();
+	var filter = "parentaccountid/Id eq (guid'" + companyId + "')";
+	var data = ExecuteQuery("Validation_UnclaimedSites", filter);
+
+	if (data.length > 0) {
+		var message = "The Sites shown in the datagrid below, with a Site Claim of 'Site Claim Pending', " +
+		"are understood to belong to your company.\n" +
+		"Using the button (V) to the right of each of those Sites, please choose one of following actions:\n" +
+		"- Set as My Site Active\n" +
+		"- Set and Attest as My Site Inactive\n" +
+		"- Set and Attest Not My Site\n";
+		alert(data.length + "-" + message);
+	}
+
 	$(".entity-grid").on("loaded", function () {
 		$(".info").hide();
 

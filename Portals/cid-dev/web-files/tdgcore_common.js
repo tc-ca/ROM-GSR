@@ -49,14 +49,17 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         text_language: function (text, language) {
-            var value = "";
+            var value = text;
             var index1 = text.indexOf("::");
-            if (language == "en-US") {
-                value = text.substr(0, index1);
+            if (index1 > -1) {
+                if (language == "en-US") {
+                    value = text.substr(0, index1);
+                }
+                else {
+                    value = text.substr(index1 + 2);
+                }
             }
-            else {
-                value = text.substr(index1 + 2);
-            }
+
             return value;
         },
 
