@@ -60,4 +60,45 @@ function header() {
 		value = value.replace("{0}", companyName);
 		$('.page-header h1').text(value);
 	} catch (e) { }
+
+	//top_menu();
+}
+
+function top_menu() {
+	debugger;
+
+	// top menu
+	var list = $("ul.nav.navbar-nav.weblinks");
+	for (var i = 0; i < list.length; i++) {
+		var item = list[i];
+
+		var list_set1 = $(item).find('li');
+		for (var j = 0; j < list_set1.length; j++) {
+			var item2 = list_set1[j];
+			var text = item2.outerText;
+			if (text != "") {
+				text = text + " _FR";
+				//text = tdg.error_message.message(text);
+				item2.outerText = text;
+			}
+        }
+	}
+
+	// breadcrumb
+	var list = $("ul.breadcrumb");
+	for (var i = 0; i < list.length; i++) {
+		var item = list[i];
+
+		var list_set1 = $(item).find('li');
+		for (var j = 0; j < list_set1.length; j++) {
+			var item2 = list_set1[j];
+			var text = item2.outerText;
+			if (text != "") {
+				text = text + " _FR";
+				//text = tdg.error_message.message(text);
+				item2.outerText = text;
+			}
+		}
+	}
+
 }
