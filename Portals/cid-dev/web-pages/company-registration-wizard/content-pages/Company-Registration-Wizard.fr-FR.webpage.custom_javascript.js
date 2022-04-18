@@ -61,7 +61,7 @@ function header() {
 		$('.page-header h1').text(value);
 	} catch (e) { }
 
-	//top_menu();
+	top_menu();
 }
 
 function top_menu() {
@@ -75,14 +75,28 @@ function top_menu() {
 		var list_set1 = $(item).find('li');
 		for (var j = 0; j < list_set1.length; j++) {
 			var item2 = list_set1[j];
-			var text = item2.outerText;
-			if (text != "") {
-				text = text + " _FR";
-				//text = tdg.error_message.message(text);
-				item2.outerText = text;
-			}
+			if (item2.innerText != "") {
+				var href = $(item2).find("a");
+
+				// no href?
+				if (href.length == 0) {
+					var text = item2.innerText;
+					if (text != "") {
+						text = text + " _FR";
+						//text = tdg.error_message.message(text);
+						item2.outerText = text;
+					}
+				}
+				else {
+					var text = item2.innerText + "_FR";
+					var text = "\n  <a " + href[0].attributes[0] + " title='" + text + "'>" + text + "</a>\n ";
+					item2.innerHTML = text;
+				}
+            }
         }
 	}
+
+	return;
 
 	// breadcrumb
 	var list = $("ul.breadcrumb");
