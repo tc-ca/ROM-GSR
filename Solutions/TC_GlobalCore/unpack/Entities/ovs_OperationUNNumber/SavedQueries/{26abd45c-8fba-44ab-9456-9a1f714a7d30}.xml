@@ -10,8 +10,9 @@
     <layoutxml>
       <grid name="ovs_operationunnumbers" jump="ovs_name" select="1" icon="1" preview="0">
         <row name="ovs_operationunnumber" id="ovs_operationunnumberid">
-          <cell name="ovs_unnumber" width="100" />
-          <cell name="ovs_supplychaindirection" width="200" />
+          <cell name="a_df1d9cd7267e4277a712877ffae3fbab.tdg_undisplayname" width="100" />
+          <cell name="ovs_supplychaindirection" width="150" />
+          <cell name="a_df1d9cd7267e4277a712877ffae3fbab.tdg_primaryclasscd" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -23,8 +24,11 @@
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="0" />
           </filter>
-          <attribute name="ovs_unnumber" />
           <attribute name="ovs_supplychaindirection" />
+          <link-entity alias="a_df1d9cd7267e4277a712877ffae3fbab" name="tdg_unnumber" to="ovs_unnumber" from="tdg_unnumberid" link-type="outer" visible="false">
+            <attribute name="tdg_primaryclasscd" />
+            <attribute name="tdg_undisplayname" />
+          </link-entity>
         </entity>
       </fetch>
     </fetchxml>

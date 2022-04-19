@@ -24,7 +24,7 @@
 
         .form-control {
             display: block;
-            font-size: 16px;
+            font-size: 14px;
             line-height: 1.4375;
             color: #555;
             border: 1px solid #949494;
@@ -137,6 +137,13 @@
             // AddressComplete_Hide_address1_line1
             try {
                 parent.AddressComplete_Hide_address1_line1();
+            } catch (e) { }
+
+            // language
+            try {
+                var selected_language = sessionStorage.getItem("selected_language");
+                var value = (selected_language == "en-US" ? "Street 1" :"Rue 1");
+                $("#address1_line1")[0].labels[0].innerHTML = value;
             } catch (e) {}
         })
 

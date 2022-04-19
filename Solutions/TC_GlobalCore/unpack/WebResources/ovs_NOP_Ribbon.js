@@ -39,10 +39,10 @@ var NOPRibbon = (function (window, document) {
                     
                     //loop through each region and total how many work order canditates
                     for (let b = 0; b < result.ovs_ovs_cdnop_ovs_cdregionalnop_CDNOPId.length; b++) {
-                     await Xrm.WebApi.online.retrieveMultipleRecords("ovs_cdregionalnop", "?$select=ovs_cdwoccount&$filter=ovs_cdregionalnopid eq c4448a27-b748-47f2-bfd5-3d59fbf38038").then(
+                     await Xrm.WebApi.online.retrieveMultipleRecords("ovs_cdregionalnop", `?$expand=ovs_CDRegionalNOP_WorkOrderCandidate($select=ovs_workordercandidateid)&$filter=ovs_cdregionalnopid eq ${result.ovs_ovs_cdnop_ovs_cdregionalnop_CDNOPId[b]["ovs_cdregionalnopid"]}`).then(
                         function success(results) {
                             for (var i = 0; i < results.entities.length; i++) {
-                                workOrderCanidatesCount += results.entities[i]["ovs_cdwoccount"];
+                                workOrderCanidatesCount += results.entities[i]["ovs_CDRegionalNOP_WorkOrderCandidate@odata.nextLink"].length;
                             }
                         },
                         function(error) {

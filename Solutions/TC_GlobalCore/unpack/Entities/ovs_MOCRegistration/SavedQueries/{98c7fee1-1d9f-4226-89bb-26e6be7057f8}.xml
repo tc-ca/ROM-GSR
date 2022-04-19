@@ -10,14 +10,13 @@
     <layoutxml>
       <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
         <row name="result" id="ovs_mocregistrationid">
-          <cell name="ovs_name" width="187" />
-          <cell name="ovs_mocregistrationname" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
-          <cell name="ovs_hubind" width="100" />
+          <cell name="ovs_siteid" width="200" />
           <cell name="ovs_operationtype" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
-          <cell name="ovs_lineofbusiness" width="100" />
-          <cell name="ovs_mocinitialregistrationdate" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
-          <cell name="ovs_registrationexpiry" width="100" />
-          <cell name="ovs_mocprogram" width="100" />
+          <cell name="ovs_name" width="120" />
+          <cell name="a_a0c6a14fd84c4908be493be467ce6b86.territoryid" width="120" />
+          <cell name="ovs_hubind" width="70" />
+          <cell name="ovs_mocregistrationname" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_registrationexpiry" width="120" />
           <cell name="ovs_cdriskscore" width="100" />
           <cell name="ovs_cdpriorityscore" width="100" />
           <cell name="ovs_cdriskcategory" width="100" />
@@ -33,23 +32,25 @@
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="0" />
           </filter>
-          <attribute name="ovs_mocinitialregistrationdate" />
-          <attribute name="ovs_mocprogram" />
           <attribute name="ovs_cdriskscore" />
           <attribute name="ovs_cdpriorityscore" />
           <attribute name="ovs_cdriskcategory" />
           <attribute name="ovs_registrationexpiry" />
-          <attribute name="ovs_lineofbusiness" />
           <attribute name="ovs_mocregistrationname" />
           <attribute name="ovs_hubind" />
           <attribute name="ovs_operationtype" />
           <attribute name="ovs_mocregistrationid" />
+          <attribute name="ovs_siteid" />
+          <link-entity alias="a_a0c6a14fd84c4908be493be467ce6b86" name="account" to="ovs_siteid" from="accountid" link-type="outer" visible="false">
+            <attribute name="territoryid" />
+          </link-entity>
         </entity>
       </fetch>
     </fetchxml>
     <IntroducedVersion>1.0.0.1</IntroducedVersion>
     <LocalizedNames>
       <LocalizedName description="Active Operations" languagecode="1033" />
+      <LocalizedName description="Les opérations actives" languagecode="1036" />
     </LocalizedNames>
   </savedquery>
 </savedqueries>

@@ -569,6 +569,8 @@ function manageDetentionNoticeForm(formContext, status, subStatus)
     glHelper.SetControlVisibility(formContext, FIELD_MOC_PDF_TEXT_EN, LCID == 1033);
     glHelper.SetControlVisibility(formContext, FIELD_MOC_PDF_TEXT_FR, LCID == 1036);
 
+    //fire business rule on entity
+    formContext.getAttribute("ovs_reasonhoti").fireOnChange();
 
     //var reasonHOT_EN = Xrm.Utility.getResourceString(resexResourceName, "ovs_enforcementaction.reasonHOTI.EN.Text");
     //var reasonHOT_FR = Xrm.Utility.getResourceString(resexResourceName, "ovs_enforcementaction.reasonHOTI.FR.Text");

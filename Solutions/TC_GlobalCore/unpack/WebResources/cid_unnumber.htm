@@ -24,7 +24,7 @@
 
         .form-control {
             display: block;
-            font-size: 16px;
+            font-size: 14px;
             line-height: 1.4375;
             color: #555;
             border: 1px solid #949494;
@@ -46,8 +46,40 @@
 </HEAD>
 <BODY>
     <script type="text/javascript">
-        function search() {
+        function unnumber_clear() {
+            parent.$("#ovs_unnumber").attr("value", null);
+            parent.$("#ovs_unnumber_name").attr("value", null);
+        }
+
+        function unnumber_selected(text, id) {
             debugger;
+
+            var index1 = text.indexOf(" - ");
+            text = text.substr(0, index1);
+            parent.$("#ovs_unnumber").attr("value", id);
+            parent.$("#ovs_unnumber_name").attr("value", text);
+            parent.$("#ovs_unnumber_entityname").attr("value", 'tdg_unnumber');
+       }
+
+        // How to call this from web portal page             
+        // var f = document.getElementById("WebResource_naicscode");
+        // var c = f.contentWindow;
+        // c.clear_field();
+        function clear_field() {
+            debugger;
+            document.getElementById("tdg_unnumberid").value = "";
+
+            unnumber_clear();
+        }
+
+        function search() {
+            unnumber_clear();
+
+            var tdg_unnumberid = document.getElementById("tdg_unnumberid").value;
+            if (tdg_unnumberid.length < 2) return;
+
+            debugger;
+
             var selected_language = sessionStorage.getItem("selected_language");
             selected_language = (selected_language == null ? "en-US" : selected_language);
             var tdg_unnumberid = document.getElementById("tdg_unnumberid").value;
@@ -86,8 +118,7 @@
             var index = 0;
             var text = "";
 
-            // skip 1st option
-            for (var i = 1; i < options.length; i++) {
+            for (var i = 0; i < options.length; i++) {
                 var current = options[i].value;
                 if (current === val) {
                     found = true;
@@ -98,19 +129,26 @@
             }
 
             if (found) {
-                debugger;
                 var id = $('#tdg_unnumberid_list_id').val();
                 var list = id.split(";");
                 id = list[index];
 
                 try {
+                    debugger;
+
                     // transfer control back to parent form
                     parent.tdg_unnumberid_selected(text, id);
+
                 } catch (e) { }
             }
             else {
                 search();
             }
+        }
+
+        function tdg_unnumber_get(id) {
+            var filter = "tdg_unnumberid eq guid'" + id + "'";
+            var item = common.OData_List("tdg_unnumber", filter);
         }
 
         function erap_list(site_id) {
@@ -123,12 +161,6 @@
 
     </script>
 
-    <label for="data_from" class="field-label">Source of data:</label>
-    <select id="data_from" class="text form-control">
-        <option value="1" selected>ERAP</option>
-        <option value="2">UN Master List</option>
-    </select>
-    <br />
     <label for="tdg_unnumberid" class="field-label">UN Number</label>
     <span id="tdg_unnumberid_required" style="color: red;font-weight: bold"> *</span>
     <br>
@@ -136,80 +168,22 @@
     <br>
     <datalist id="tdg_unnumberid_list">
     </datalist>
-
-    <br>
-    <input list="erap_list" id="tdg_erap" class="text form-control" onclick="alert('tdg_erap');" />
-    <br>
-    <datalist id="erap_list" onclick="alert('erap_list');">
-        <option class="text form-control" data-placeid="1" value="Louvres, France"></option>
-        <option class="text form-control" data-placeid="2" value="Louvre Museum, Rue de Rivoli, Paris, France"></option>
-        <option class="text form-control" data-placeid="3" value="Louvres, France"></option>
-    </datalist>
-
     <br />
-    <input id="txt_text1" onkeypress="handleKeypress(this, event);" />
-    <button id="elem" onclick="emitKey();">Autoclick</button>
 
     <input type="text" id="tdg_unnumberid_list_id" hidden />
     <script>
-        function emitKey() {
-            debugger;
 
-            // work on text
-            const e1 = document.getElementById('txt_text1');   
-            e1.dispatchEvent(new KeyboardEvent('keypress', { 'key': 'a' }));
-
-            // not work on list
-            //const e2 = document.getElementById('tdg_erap');
-            //e2.dispatchEvent(new KeyboardEvent('keypress', { 'key': 'a' }));
-
-            //// not work on datalist
-            //const e3 = document.getElementById('erap_list');
-            //e3.dispatchEvent(new KeyboardEvent('keypress', { 'key': 'a' }));
-
-            //const e4 = document.getElementById('tdg_erap');
-            //const ev4 = document.createEvent("MouseEvents");
-            //ev4.initMouseEvent("click", true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null);
-            //e4.dispatchEvent(ev4);
-
-            var keyboardEvent = document.createEvent("KeyboardEvent");
-            var initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
-            keyboardEvent[initMethod](
-                "keyup", // event type : keydown, keyup, keypress
-                true, // bubbles
-                true, // cancelable
-                window, // viewArg: should be window
-                false, // ctrlKeyArg
-                false, // altKeyArg
-                false, // shiftKeyArg
-                false, // metaKeyArg
-                40, // keyCodeArg : unsigned long the virtual key code, else 0
-                0 // charCodeArgs : unsigned long the Unicode character associated with the depressed key, else 0
-            );
-            const e5 = document.getElementById('tdg_erap');
-            e5.focus();
-            e5.dispatchEvent(keyboardEvent);
-
-            $("#tdg_erap").trigger(jQuery.Event('keyup', { keycode: 40 }));
-
-        }
-
-        function handleKeypress(target, event) {
-            debugger;
-            if (event.keyCode == 0 && event.key != "") {
-                target.value += event.key;
-            }
-        }
     </script>
 
     <script type="text/javascript">
         $(document).ready(function () {
             debugger;
+            var tdg_unnumberid = sessionStorage.getItem("tdg_unnumberid");
+            document.getElementById("tdg_unnumberid").value = tdg_unnumberid;
+
             document.getElementById("tdg_unnumberid").setAttribute("autocomplete", "off");
 
             document.querySelector('input[list="tdg_unnumberid_list"]').addEventListener('input', onInput);
-
-            emitKey();
         })
 
     </script>
@@ -237,8 +211,8 @@
                 // odata
                 OData_List: function (entity, filter) {
                     var url = entity + "?$filter=" + filter;
-                    //var oDataUrl = "~/_odata/" + url;
-                    var oDataUrl = "https://rd-tdgcore-dev.powerappsportals.com/_odata/" + url;
+                    var oDataUrl = "~/_odata/" + url;
+                    //var oDataUrl = "https://rd-tdgcore-dev.powerappsportals.com/_odata/" + url;
                     var response = null;
 
                     $.ajax({

@@ -1,4 +1,4 @@
-///<reference path="../../Utilities/GlobalHelper.js"/>
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
 ///<reference path="../../Utilities/RNOP_ValidationFunctions.js"/>
 
 var RegionNOPRibbon = (function (window, document) {
@@ -20,9 +20,6 @@ var RegionNOPRibbon = (function (window, document) {
 
         //TO DO: localize
      //  Xrm.Utility.showProgressIndicator(messageProcessStarted);
-
-
-       
 
         var parameters = {};
         parameters.runid = runid;
@@ -88,7 +85,6 @@ var RegionNOPRibbon = (function (window, document) {
                 Xrm.Navigation.openErrorDialog({ message: messageWentWrong + " " + error.message });
             }
         );
-
 
     }
 
@@ -161,7 +157,90 @@ var RegionNOPRibbon = (function (window, document) {
         return result;
     }
 
+    function calculateRollupField(primaryControl, TargetEntitySetName, TargetRecordId, TargetRollupFieldName) {
+
+
+        var globalContext = Xrm.Utility.getGlobalContext();
+        var clientUrl = globalContext.getClientUrl();
+
+        TargetRecordId = TargetRecordId.replace("{", "").replace("}", "");
+        var req = new XMLHttpRequest();
+        req.open("GET", clientUrl + "/api/data/v9.2/" +
+            "CalculateRollupField(Target=@p1,FieldName=@p2)?" +
+            "@p1={'@odata.id':'" + TargetEntitySetName + "(" + TargetRecordId + ")'}&" +
+            "@p2='" + TargetRollupFieldName + "'", true);
+        req.setRequestHeader("OData-Version", "4.0");
+        req.setRequestHeader("OData-MaxVersion", "4.0");
+        req.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                req.onreadystatechange = null;
+                if (this.status === 200) {
+                    var results = JSON.parse(this.response);
+
+                    primaryControl.data.refresh(false);
+                }
+                else {
+                    Xrm.Navigation.openErrorDialog({ message: this.statusText });
+                }
+            }
+        };
+        req.send(JSON.stringify({}));
+    }
+
+    function reCalculateTotals(primaryControl) {
+        var recordId = primaryControl.entityReference.id;
+
+        recordId = recordId.replace(/[{}]/g, "");
+
+        calculateRollupField(primaryControl, "ovs_cdregionalnops", recordId, "ovs_hqrollup");
+        calculateRollupField(primaryControl, "ovs_cdregionalnops", recordId, "ovs_cdwoccount");
+
+    }
+
+    function fillRegionalCapacity (executionContext) {
+        Xrm.Utility.showProgressIndicator("Regional Capacity Adjustment In Progress.");
+
+        var recordId = executionContext.entityReference.id;
+
+        recordId = recordId.replace(/[{}]/g, "");
+
+        var globalContext = Xrm.Utility.getGlobalContext();
+        var clientUrl = globalContext.getClientUrl();
+
+        //Begin Action Call
+
+        var req = new XMLHttpRequest();
+        req.open("POST", clientUrl + "/api/data/v9.2/ovs_cdregionalnops(" + recordId + ")/Microsoft.Dynamics.CRM.ovs_FillRegionalCapacity", false);
+        req.setRequestHeader("OData-MaxVersion", "4.0");
+        req.setRequestHeader("OData-Version", "4.0");
+        req.setRequestHeader("Accept", "application/json");
+        req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+        req.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                req.onreadystatechange = null;
+
+                if (this.status === 204) {
+
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Capacity Has Been Adjusted." });
+
+                    calculateRollupField(executionContext, "ovs_cdregionalnops", recordId, "ovs_hqrollup");
+                }
+                else {
+
+                    Xrm.Navigation.openErrorDialog({ message: "An Error Has Occured." });
+                }
+            }
+        };
+        req.send();
+
+        //End Action Call
+
+        Xrm.Utility.closeProgressIndicator();
+    }
+
     return {
-        on_runGenerateWO: on_runGenerateWO
+        on_runGenerateWO: on_runGenerateWO,
+        reCalculateTotals: reCalculateTotals,
+        fillRegionalCapacity: fillRegionalCapacity
     };
 })(window, document);

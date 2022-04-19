@@ -23,6 +23,9 @@
           <cell name="ovs_ovs_cepsampling_n2sum" width="100" />
           <cell name="ovs_cepind" width="100" />
           <cell name="ovs_cepsampling_randomlyselectedbysystem" width="100" />
+          <cell name="statecode" width="100" />
+          <cell name="a_4c5f151cc68c412ca6a53afb172ea5b7.statecode" width="100" />
+          <cell name="modifiedon" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -40,14 +43,23 @@
           <attribute name="ovs_cepsampling_n1" />
           <attribute name="ovs_cepsampling_n2" />
           <attribute name="ovs_ovs_cepsampling_n2sum" />
-          <order attribute="ovs_cepsampling_strataname" descending="false" />
           <attribute name="ovs_cepsampling_inspectedinprevfiscalyear" />
           <attribute name="ovs_cepsampling_area" />
           <attribute name="ovs_cepind" />
           <attribute name="ovs_cepsampling_randomlyselectedbysystem" />
+          <attribute name="statecode" />
           <filter type="and">
-            <condition attribute="ovs_cepind" operator="eq" value="1" />
+            <filter type="or">
+              <condition attribute="ovs_cepsampling_randomlyselectedbysystem" operator="eq" value="1" />
+              <condition attribute="ovs_cepind" operator="eq" value="1" />
+            </filter>
           </filter>
+          <attribute name="modifiedon" />
+          <order attribute="ovs_cepsampling_strataname" descending="false" />
+          <order attribute="modifiedon" descending="true" />
+          <link-entity alias="a_4c5f151cc68c412ca6a53afb172ea5b7" name="account" to="ovs_siteid" from="accountid" link-type="outer" visible="false">
+            <attribute name="statecode" />
+          </link-entity>
         </entity>
       </fetch>
     </fetchxml>

@@ -33,6 +33,8 @@ function OnLoad(executionContext) {
     var primaryClassCode = formContext.getAttribute(FIELD_PRIME_CLASS);
     primaryClassCode.removeOnChange(primaryClassCode_OnChange); // avoid binding multiple event handlers
     primaryClassCode.addOnChange(primaryClassCode_OnChange);
+
+    filterClassesOptionSet(formContext);
 }
 
 function primaryClassCode_OnChange(executionContext) {
@@ -75,3 +77,14 @@ function getEnvironmentVariableInternal(formContext, varName, pcType) {
         }
     );
 }
+
+
+function filterClassesOptionSet(formContext)
+{
+    glHelper.RemoveOptionSetOption(formContext, FIELD_PRIME_CLASS, 918640006);//1
+    glHelper.RemoveOptionSetOption(formContext, FIELD_PRIME_CLASS, 918640007);//2
+    glHelper.RemoveOptionSetOption(formContext, FIELD_PRIME_CLASS, 918640008);//4
+    glHelper.RemoveOptionSetOption(formContext, FIELD_PRIME_CLASS, 918640009);//5
+    glHelper.RemoveOptionSetOption(formContext, FIELD_PRIME_CLASS, 918640010);//6
+}
+

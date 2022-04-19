@@ -11,9 +11,10 @@
       <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
         <row name="result" id="ovs_mocregistrationid">
           <cell name="ovs_name" width="102" />
+          <cell name="statecode" width="100" />
           <cell name="ovs_operationtype" width="100" />
           <cell name="ovs_hubind" width="100" />
-          <cell name="a_b6c0d516f9dd4225b18a730ad609cfc2.statecode" width="100" />
+          <cell name="a_b6c0d516f9dd4225b18a730ad609cfc2.statecode" width="100" disableSorting="1" />
           <cell name="a_b6c0d516f9dd4225b18a730ad609cfc2.address1_postalcode" width="100" />
           <cell name="ovs_cepsampling_strataname" width="128" />
           <cell name="ovs_cepsampling_inspectedinprevfiscalyear" width="100" />
@@ -27,7 +28,7 @@
           <cell name="ovs_ovs_cepsampling_n2sum" width="52" />
           <cell name="ovs_cepsampling_n" width="47" />
           <cell name="ovs_cepind" width="100" />
-          <cell name="ovs_cepsampling_randomlyselectedbysystem" width="25" />
+          <cell name="ovs_cepsampling_randomlyselectedbysystem" width="127" />
         </row>
       </grid>
     </layoutxml>
@@ -36,7 +37,6 @@
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
         <entity name="ovs_mocregistration">
           <attribute name="ovs_name" />
-          <attribute name="ovs_mocregistrationid" />
           <filter type="and">
             <condition attribute="ovs_cepsampling_strataname" operator="not-null" />
           </filter>
@@ -56,10 +56,12 @@
           <attribute name="ovs_cepind" />
           <attribute name="ovs_operationtype" />
           <attribute name="ovs_hubind" />
+          <attribute name="statecode" />
           <link-entity alias="a_b6c0d516f9dd4225b18a730ad609cfc2" name="account" to="ovs_siteid" from="accountid" link-type="outer" visible="false">
-            <attribute name="statecode" />
             <attribute name="address1_postalcode" />
+            <attribute name="statecode" />
           </link-entity>
+          <attribute name="ovs_mocregistrationid" />
         </entity>
       </fetch>
     </fetchxml>

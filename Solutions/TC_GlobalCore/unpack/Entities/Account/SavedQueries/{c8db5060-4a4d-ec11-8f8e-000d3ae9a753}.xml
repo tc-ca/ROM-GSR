@@ -13,11 +13,11 @@
           <cell name="cid_siteid" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="cid_sitename" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="cid_issiteattested" width="100" />
+          <cell name="cid_attestationdate" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="ovs_address_display" width="300" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="cid_requirementlevel" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="createdon" width="100" />
           <cell name="cid_createdbyregistrant" width="100" />
-          <cell name="statuscode" width="100" />
           <cell name="cid_siteclaim" width="100" />
         </row>
       </grid>
@@ -28,18 +28,19 @@
         <entity name="account">
           <attribute name="cid_issiteattested" />
           <attribute name="cid_siteid" />
-          <attribute name="statuscode" />
           <attribute name="createdon" />
           <attribute name="cid_createdbyregistrant" />
           <attribute name="cid_sitename" />
           <attribute name="cid_requirementlevel" />
+          <attribute name="cid_siteclaim" />
+          <attribute name="ovs_address_display" />
+          <attribute name="cid_attestationdate" />
           <order attribute="cid_siteclaim" descending="false" />
           <order attribute="cid_issiteattested" descending="true" />
           <filter type="and">
             <condition attribute="customertypecode" operator="eq" value="948010001" />
+            <condition attribute="statuscode" operator="eq" value="1" />
           </filter>
-          <attribute name="cid_siteclaim" />
-          <attribute name="ovs_address_display" />
           <attribute name="accountid" />
         </entity>
       </fetch>

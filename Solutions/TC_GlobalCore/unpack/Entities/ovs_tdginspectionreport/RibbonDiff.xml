@@ -11,6 +11,11 @@
     <HideCustomAction HideActionId="ovs.Mscrm.SubGrid.ovs_tdginspectionreport.RunReport.Hide" Location="Mscrm.SubGrid.ovs_tdginspectionreport.RunReport" />
     <HideCustomAction HideActionId="ovs.Mscrm.SubGrid.ovs_tdginspectionreport.SendSelected.Hide" Location="Mscrm.SubGrid.ovs_tdginspectionreport.SendSelected" />
     <HideCustomAction HideActionId="ovs.Mscrm.SubGrid.ovs_tdginspectionreport.Sharing.Hide" Location="Mscrm.SubGrid.ovs_tdginspectionreport.Sharing" />
+    <CustomAction Id="ovs.TdgInspectionReport.Button.Mscrm.SubGrid.CancelReport.CustomAction" Location="Mscrm.SubGrid.ovs_tdginspectionreport.MainTab.Management.Controls._children" Sequence="70">
+      <CommandUIDefinition>
+        <Button Alt="$LocLabels:ovs.TdgInspectionReport.Button.Mscrm.SubGrid.CancelReport.Alt" Command="ovs.TdgInspectionReport.Command.SubGrid.CancelReport" Id="ovs.TdgInspectionReport.Button.Mscrm.SubGrid.CancelReport" Image32by32="/_imgs/ribbon/edit32.png" Image16by16="/_imgs/ribbon/Edit_16.png" LabelText="$LocLabels:ovs.TdgInspectionReport.Button.Mscrm.SubGrid.CancelReport.LabelText" Sequence="70" TemplateAlias="o1" ToolTipTitle="$LocLabels:ovs.TdgInspectionReport.Button.Mscrm.SubGrid.CancelReport.ToolTipTitle" ToolTipDescription="$LocLabels:ovs.TdgInspectionReport.Button.Mscrm.SubGrid.CancelReport.ToolTipDescription" ModernImage="Edit" />
+      </CommandUIDefinition>
+    </CustomAction>
     <CustomAction Id="ovs.TdgInspectionReport.Button.Mscrm.SubGrid.CloneReport.CustomAction" Location="Mscrm.SubGrid.ovs_tdginspectionreport.MainTab.Management.Controls._children" Sequence="65">
       <CommandUIDefinition>
         <Button Alt="$LocLabels:ovs.TdgInspectionReport.Button.Mscrm.SubGrid.CloneReport.Alt" Command="ovs.TdgInspectionReport.Command.SubGrid.CloneReport" Id="ovs.TdgInspectionReport.Button.Mscrm.SubGrid.CloneReport" Image32by32="/_imgs/ribbon/edit32.png" Image16by16="/_imgs/ribbon/Edit_16.png" LabelText="$LocLabels:ovs.TdgInspectionReport.Button.Mscrm.SubGrid.CloneReport.LabelText" Sequence="65" TemplateAlias="o1" ToolTipTitle="$LocLabels:ovs.TdgInspectionReport.Button.Mscrm.SubGrid.CloneReport.ToolTipTitle" ToolTipDescription="$LocLabels:ovs.TdgInspectionReport.Button.Mscrm.SubGrid.CloneReport.ToolTipDescription" ModernImage="Edit" />
@@ -101,6 +106,28 @@
         </JavaScriptFunction>
       </Actions>
     </CommandDefinition>
+    <CommandDefinition Id="ovs.TdgInspectionReport.Command.SubGrid.CancelReport">
+      <EnableRules>
+        <EnableRule Id="Mscrm.ShowOnNonModernAndModernIfAllowed" />
+        <EnableRule Id="Mscrm.IsValidForHierarchyView" />
+        <EnableRule Id="Mscrm.VisualizationPaneNotMaximized" />
+        <EnableRule Id="Mscrm.CheckBulkEditSupportForEntity" />
+        <EnableRule Id="ovs.TdgInspectionReport.EnableRule.SingleCountRule" />
+        <EnableRule Id="tc.ovs_tdginspectionreport.EnableRule10.HideButtonIfFormIsReadOnly" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.HybridDialogBulkEditEnabled" />
+        <DisplayRule Id="Mscrm.BulkEditPrivilege" />
+        <DisplayRule Id="Mscrm.WriteSelectedEntityPermission" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="IReportRibbon.cancelInspectionReport" Library="$webresource:qm_IReportRibbon.js">
+          <CrmParameter Value="SelectedControlSelectedItemIds" />
+          <CrmParameter Value="UserLcid" />
+          <CrmParameter Value="SelectedControl" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
     <CommandDefinition Id="ovs.TdgInspectionReport.Command.SubGrid.CloneReport">
       <EnableRules>
         <EnableRule Id="Mscrm.ShowOnNonModernAndModernIfAllowed" />
@@ -179,6 +206,30 @@
     </EnableRules>
   </RuleDefinitions>
   <LocLabels>
+    <LocLabel Id="ovs.TdgInspectionReport.Button.Mscrm.SubGrid.CancelReport.Alt">
+      <Titles>
+        <Title description="Cancel selected issued report" languagecode="1033" />
+        <Title description="Annuler le rapport publié sélectionné" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="ovs.TdgInspectionReport.Button.Mscrm.SubGrid.CancelReport.LabelText">
+      <Titles>
+        <Title description="Cancel" languagecode="1033" />
+        <Title description="Annuler" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="ovs.TdgInspectionReport.Button.Mscrm.SubGrid.CancelReport.ToolTipDescription">
+      <Titles>
+        <Title description="Cancel selected issued report" languagecode="1033" />
+        <Title description="Annuler le rapport publié sélectionné" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="ovs.TdgInspectionReport.Button.Mscrm.SubGrid.CancelReport.ToolTipTitle">
+      <Titles>
+        <Title description="Cancel selected issued report" languagecode="1033" />
+        <Title description="Annuler le rapport publié sélectionné" languagecode="1036" />
+      </Titles>
+    </LocLabel>
     <LocLabel Id="ovs.TdgInspectionReport.Button.Mscrm.SubGrid.CloneReport.Alt">
       <Titles>
         <Title description="Clone Selected Report" languagecode="1033" />

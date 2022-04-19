@@ -432,11 +432,81 @@ var IReportRibbon = (function (window, document) {
         );
     }
 
+    function cancelInspectionReport(selectedItems, LCID, gridControl) {
+
+
+        formContext = window.top.QuickCreateHelper.formContext;
+        var globalContext = Xrm.Utility.getGlobalContext();
+        var resexResourceName = "ovs_Labels.1033.resx";
+
+        if (LCID == 1033)
+            resexResourceName = "ovs_Labels.1033.resx";
+        else if (LCID == 1036)
+            resexResourceName = "ovs_Labels.1036.resx";
+
+        var LCID = globalContext.userSettings.languageId;
+        var yesNo = LCID === 1033 ? "Yes" : "Oui";
+
+        var notIssuedMessage = Xrm.Utility.getResourceString(resexResourceName, "tdgReport.Cancel.NotIssued");
+        var popupTitleMessage = Xrm.Utility.getResourceString(resexResourceName, "tdgReport.Cancel.PopupTitle");
+
+        var wrongMessage = Xrm.Utility.getResourceString(resexResourceName, "tdgReport.Cancel.WentWrong");
+
+        Xrm.WebApi.online.retrieveRecord("ovs_tdginspectionreport", selectedItems[0], "?$select=statuscode").then(
+            function success(result) {
+                var statuscode = result["statuscode"];
+                if (statuscode != 2) {
+
+                    var alertStrings = { confirmButtonLabel: yesNo, text: notIssuedMessage };
+                    Xrm.Navigation.openAlertDialog(alertStrings);
+                    return;
+                }
+                var formParameters = {
+                    reportid: selectedItems[0]
+                };
+
+                var pageData = {
+                    pageType: "webresource",
+                    webresourceName: "ovs_/CancelTDG_Report.html",
+                    data: JSON.stringify(formParameters)
+                };
+                var navigationOptions = {
+                    target: 2,
+                    height: { value: 30, unit: "%" },
+                    width: { value: 40, unit: "%" },
+                    position: 1,
+                    title: popupTitleMessage
+                };
+                Xrm.Navigation.navigateTo(pageData, navigationOptions).then(
+                    function success(result) {
+
+                        //result is blank when "x" is clicked or window closed
+                        if (!result) {
+                            return;
+                        }
+                        refreshGrids();
+                    },
+                    function error() {
+                        console.log(error);
+                        Xrm.Navigation.openErrorDialog({ message: wrongMessage + " " + error });
+                    }
+                );
+                
+            },
+            function (error) {
+                console.log(error);
+                Xrm.Navigation.openErrorDialog({ message: wrongMessage + " " + error });
+            }
+        );
+    }
+
+
     return {
 
         startInspectionReport: startInspectionReport,
         updateInspectionReport: updateInspectionReport,
         cloneInspectionReport: cloneInspectionReport,
+        cancelInspectionReport: cancelInspectionReport,       
     };
 
 })(window, document);
