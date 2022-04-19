@@ -2,6 +2,18 @@
 if (typeof (tdg.message) == "undefined") {
     tdg.message = {
         list: function () {
+            var m000013_EN = "The Sites shown in the datagrid below, with a Site Claim of 'Site Claim Pending', " +
+                             "are understood to belong to your company.\n" +
+                             "Using the button (V) to the right of each of those Sites, please choose one of following actions:\n" +
+                             "- Set as My Site Active\n" +
+                             "- Set and Attest as My Site Inactive\n" +
+                             "- Set and Attest Not My Site\n";
+            var m000013_FR = "Les sites affichés dans la grille de données ci-dessous, avec une revendication de site de 'Revendication de site en attente', " +
+                             "sont considérés comme appartenant à votre entreprise.\n" +
+                             "À l'aide du bouton (V) à droite de chacun de ces sites, veuillez choisir l'une des actions suivantes :\n" +
+                             "- Définir comme Mon site actif\n" +
+                             "- Définir et attester comme mon site inactif\n" +
+                             "- Définir et attester qu'il ne s'agit pas de mon site\n";
             var list =
                 [
                     {
@@ -94,7 +106,21 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "Choose the same named button found below",
                         "message_fr": "Sélectionnez le bouton identique ci-dessous"
                     },
-
+                    {
+                        "code": "m000011",
+                        "message_en": "You cannot proceed before adding active company site(s).",
+                        "message_fr": "Vous ne pouvez pas continuer avant d'avoir ajouté le(s) site(s) d'entreprise actif(s)."
+                    },
+                    {
+                        "code": "m000012",
+                        "message_en": "You cannot proceed before attesting all the company sites.",
+                        "message_fr": "Vous ne pouvez pas continuer avant d'avoir attesté tous les sites de l'entreprise."
+                    },
+                    {
+                        "code": "m000013",
+                        "message_en": m000013_EN,
+                        "message_fr": m000013_FR
+                    }
               ];
 
             return list;

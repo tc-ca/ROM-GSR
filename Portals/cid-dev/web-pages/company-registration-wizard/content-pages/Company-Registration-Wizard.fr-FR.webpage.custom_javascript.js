@@ -67,6 +67,8 @@ function header() {
 function top_menu() {
 	debugger;
 
+	return;
+
 	// top menu
 	var list = $("ul.nav.navbar-nav.weblinks");
 	for (var i = 0; i < list.length; i++) {

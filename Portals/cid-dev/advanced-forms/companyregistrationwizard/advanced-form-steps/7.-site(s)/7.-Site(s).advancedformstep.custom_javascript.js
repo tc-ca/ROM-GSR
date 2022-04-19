@@ -1,5 +1,6 @@
+//
 // CompanyRegistrationWizard-Site.js
-
+//
 $(document).ready(function () {
 	debugger;
 
@@ -8,12 +9,13 @@ $(document).ready(function () {
 	var data = ExecuteQuery("Validation_UnclaimedSites", filter);
 
 	if (data.length > 0) {
-		var message = "The Sites shown in the datagrid below, with a Site Claim of 'Site Claim Pending', " +
-		"are understood to belong to your company.\n" +
-		"Using the button (V) to the right of each of those Sites, please choose one of following actions:\n" +
-		"- Set as My Site Active\n" +
-		"- Set and Attest as My Site Inactive\n" +
-		"- Set and Attest Not My Site\n";
+		//var message = "The Sites shown in the datagrid below, with a Site Claim of 'Site Claim Pending', " +
+		//	"are understood to belong to your company.\n" +
+		//	"Using the button (V) to the right of each of those Sites, please choose one of following actions:\n" +
+		//	"- Set as My Site Active\n" +
+		//	"- Set and Attest as My Site Inactive\n" +
+		//	"- Set and Attest Not My Site\n";
+		message = tdg.error_message.message("m000013");
 		alert(data.length + "-" + message);
 	}
 
@@ -47,7 +49,7 @@ $(document).ready(function () {
 					}
 				}
 				if ((tdElement.attr('data-attribute') == 'statuscode' && tdElement.attr('aria-label') == 'Inactive') ||
-				(tdElement.attr('data-attribute') == 'cid_siteclaim' && tdElement.attr('aria-label') != 'My Site Active')) {
+					(tdElement.attr('data-attribute') == 'cid_siteclaim' && tdElement.attr('aria-label') != 'My Site Active')) {
 					firstTdElement.find('a').removeAttr("href");
 					firstTdElement.find('span').remove();
 					firstTdElement.find('input').remove();
@@ -67,12 +69,12 @@ $(document).ready(function () {
 		var data = ExecuteQuery("Validation_CompanySites", filter);
 
 		if (data == null) {
-			errorMessage = "You cannot proceed before adding active company site(s).";
+			errorMessage = "m000011";	// "You cannot proceed before adding active company site(s).";
 			validation = false;
 		}
 		else {
 			if (data.length <= 0) {
-				errorMessage = "You cannot proceed before adding active company site(s).";
+				errorMessage = "m000011";
 				validation = false;
 			}
 			else {
@@ -80,19 +82,20 @@ $(document).ready(function () {
 				data = ExecuteQuery("Validation_CompanyNotAttestedSites", filter);
 
 				if (data != null && data.length > 0) {
-					errorMessage = "You cannot proceed before attesting all the company sites.";
+					errorMessage = "m000012";	// You cannot proceed before attesting all the company sites.
 					validation = false;
 				}
 			}
 		}
 
 		if (!validation) {
-			$('#ValidationSummaryEntityFormView div').remove();
+			tdg.c.error_message_advanced_form(errorMessage, true);
 
-			var validationSection = $('#ValidationSummaryEntityFormView');
-			validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
-			validationSection.show();
-			$('#alertMessages').focus();
+			//$('#ValidationSummaryEntityFormView div').remove();
+			//var validationSection = $('#ValidationSummaryEntityFormView');
+			//validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
+			//validationSection.show();
+			//$('#alertMessages').focus();
 		}
 		return validation;
 	}
