@@ -14,20 +14,67 @@
     <Sequence DisplayName="UpdateStep1">
       <Sequence.Variables>
         <Variable x:TypeArguments="x:Object" Name="UpdateStep1_1" />
+        <Variable x:TypeArguments="x:Object" Name="UpdateStep1_2" />
+        <Variable x:TypeArguments="x:Object" Name="UpdateStep1_3" />
+        <Variable x:TypeArguments="x:Object" Name="UpdateStep1_4" />
       </Sequence.Variables>
       <Assign x:TypeArguments="mxs:Entity" To="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" Value="[New Entity(&quot;account&quot;)]" />
       <Assign x:TypeArguments="s:Guid" To="[CreatedEntities(&quot;primaryEntity#Temp&quot;).Id]" Value="[InputEntities(&quot;primaryEntity&quot;).Id]" />
       <mxswa:ActivityReference AssemblyQualifiedName="Microsoft.Crm.Workflow.Activities.EvaluateExpression, Microsoft.Crm.Workflow, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" DisplayName="EvaluateExpression">
         <mxswa:ActivityReference.Arguments>
-          <InArgument x:TypeArguments="x:String" x:Key="ExpressionOperator">CreateCrmType</InArgument>
-          <InArgument x:TypeArguments="s:Object[]" x:Key="Parameters">[New Object() { Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.OptionSetValue, "1", "Picklist" }]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="ExpressionOperator">RetrieveCurrentTime</InArgument>
+          <InArgument x:TypeArguments="s:Object[]" x:Key="Parameters" xml:space="preserve">[New Object() {  }]</InArgument>
           <InArgument x:TypeArguments="s:Type" x:Key="TargetType">
-            <mxswa:ReferenceLiteral x:TypeArguments="s:Type" Value="mxs:OptionSetValue" />
+            <mxswa:ReferenceLiteral x:TypeArguments="s:Type" Value="s:DateTime" />
+          </InArgument>
+          <OutArgument x:TypeArguments="x:Object" x:Key="Result">[UpdateStep1_2]</OutArgument>
+        </mxswa:ActivityReference.Arguments>
+      </mxswa:ActivityReference>
+      <mxswa:ActivityReference AssemblyQualifiedName="Microsoft.Crm.Workflow.Activities.EvaluateExpression, Microsoft.Crm.Workflow, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" DisplayName="EvaluateExpression">
+        <mxswa:ActivityReference.Arguments>
+          <InArgument x:TypeArguments="x:String" x:Key="ExpressionOperator">SelectFirstNonNull</InArgument>
+          <InArgument x:TypeArguments="s:Object[]" x:Key="Parameters">[New Object() { UpdateStep1_2 }]</InArgument>
+          <InArgument x:TypeArguments="s:Type" x:Key="TargetType">
+            <mxswa:ReferenceLiteral x:TypeArguments="s:Type" Value="s:DateTime" />
           </InArgument>
           <OutArgument x:TypeArguments="x:Object" x:Key="Result">[UpdateStep1_1]</OutArgument>
         </mxswa:ActivityReference.Arguments>
       </mxswa:ActivityReference>
-      <mxswa:SetEntityProperty Attribute="cid_siteclaim" Entity="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" EntityName="account" Value="[UpdateStep1_1]">
+      <mxswa:SetEntityProperty Attribute="cid_attestationdate" Entity="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" EntityName="account" Value="[UpdateStep1_1]">
+        <mxswa:SetEntityProperty.TargetType>
+          <InArgument x:TypeArguments="s:Type">
+            <mxswa:ReferenceLiteral x:TypeArguments="s:Type" Value="s:DateTime" />
+          </InArgument>
+        </mxswa:SetEntityProperty.TargetType>
+      </mxswa:SetEntityProperty>
+      <mxswa:ActivityReference AssemblyQualifiedName="Microsoft.Crm.Workflow.Activities.EvaluateExpression, Microsoft.Crm.Workflow, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" DisplayName="EvaluateExpression">
+        <mxswa:ActivityReference.Arguments>
+          <InArgument x:TypeArguments="x:String" x:Key="ExpressionOperator">CreateCrmType</InArgument>
+          <InArgument x:TypeArguments="s:Object[]" x:Key="Parameters">[New Object() { Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.Boolean, "True" }]</InArgument>
+          <InArgument x:TypeArguments="s:Type" x:Key="TargetType">
+            <mxswa:ReferenceLiteral x:TypeArguments="s:Type" Value="x:Boolean" />
+          </InArgument>
+          <OutArgument x:TypeArguments="x:Object" x:Key="Result">[UpdateStep1_3]</OutArgument>
+        </mxswa:ActivityReference.Arguments>
+      </mxswa:ActivityReference>
+      <mxswa:SetEntityProperty Attribute="cid_issiteattested" Entity="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" EntityName="account" Value="[UpdateStep1_3]">
+        <mxswa:SetEntityProperty.TargetType>
+          <InArgument x:TypeArguments="s:Type">
+            <mxswa:ReferenceLiteral x:TypeArguments="s:Type" Value="x:Boolean" />
+          </InArgument>
+        </mxswa:SetEntityProperty.TargetType>
+      </mxswa:SetEntityProperty>
+      <mxswa:ActivityReference AssemblyQualifiedName="Microsoft.Crm.Workflow.Activities.EvaluateExpression, Microsoft.Crm.Workflow, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" DisplayName="EvaluateExpression">
+        <mxswa:ActivityReference.Arguments>
+          <InArgument x:TypeArguments="x:String" x:Key="ExpressionOperator">CreateCrmType</InArgument>
+          <InArgument x:TypeArguments="s:Object[]" x:Key="Parameters">[New Object() { Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.OptionSetValue, "100000001", "Picklist" }]</InArgument>
+          <InArgument x:TypeArguments="s:Type" x:Key="TargetType">
+            <mxswa:ReferenceLiteral x:TypeArguments="s:Type" Value="mxs:OptionSetValue" />
+          </InArgument>
+          <OutArgument x:TypeArguments="x:Object" x:Key="Result">[UpdateStep1_4]</OutArgument>
+        </mxswa:ActivityReference.Arguments>
+      </mxswa:ActivityReference>
+      <mxswa:SetEntityProperty Attribute="cid_siteclaim" Entity="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" EntityName="account" Value="[UpdateStep1_4]">
         <mxswa:SetEntityProperty.TargetType>
           <InArgument x:TypeArguments="s:Type">
             <mxswa:ReferenceLiteral x:TypeArguments="s:Type" Value="mxs:OptionSetValue" />
@@ -36,7 +83,6 @@
       </mxswa:SetEntityProperty>
       <mxswa:UpdateEntity DisplayName="UpdateStep1" Entity="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" EntityName="account" />
       <Assign x:TypeArguments="mxs:Entity" To="[InputEntities(&quot;primaryEntity&quot;)]" Value="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" />
-      <Persist />
     </Sequence>
   </mxswa:Workflow>
 </Activity>
