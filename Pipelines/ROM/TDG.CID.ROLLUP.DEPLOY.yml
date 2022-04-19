@@ -60,14 +60,52 @@ stages:
     StageName: 'BuildAndPublishArtifacts'
     dependsOn: 
     - 'RollupSolutionOnDev'
-- template: templates/stage/DeployHoldingSolution.yml  # Template reference
-  parameters:
-    SolutionName: $(SolutionName)
-    PowerPlatformSPN: $(PowerPlatformSPN_QA)
-    Environment: 'QA-TDG'
-    StageName: 'DeployManagedSolutionToQA'
-    dependsOn: 
-    - 'BuildAndPublishArtifacts'
+
+# - template: templates/stage/DeployHoldingSolution.yml  # Template reference
+#   parameters:
+#     SolutionName: $(SolutionName)
+#     PowerPlatformSPN: $(PowerPlatformSPN_QA)
+#     Environment: 'QA-TDG'
+#     StageName: 'DeployManagedSolutionToQA'
+#     dependsOn: 
+#     - 'BuildAndPublishArtifacts'
+
+- stage: ImportSolutionToQA
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: ImportSolutionToQA
+    steps:
+    - checkout: none
+      persistCredentials: true
+      clean: true
+    - task: PowerPlatformImportSolution@0
+      inputs:
+        authenticationType: 'PowerPlatformSPN'
+        PowerPlatformSPN: '$(PowerPlatformSPN_QA)'
+        SolutionInputFile: '$(Agent.BuildDirectory)\zip\$(SolutionName)_Managed.zip'
+        AsyncOperation: true
+        MaxAsyncWaitTime: '9999'
+        HoldingSolution: true
+        OverwriteUnmanagedCustomizations: false
+
+- stage: ApplySolutionUpgradeQA
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: ApplySolutionUpgradeQA
+    steps:
+    - checkout: none
+      persistCredentials: true
+      clean: true
+    - task: PowerPlatformApplySolutionUpgrade@0
+      inputs:
+        authenticationType: 'PowerPlatformSPN'
+        PowerPlatformSPN: '$(PowerPlatformSPN_QA)'
+        SolutionName: '$(SolutionName)'
+        AsyncOperation: true
+        MaxAsyncWaitTime: '9999'
+
 - template: templates/stage/PatchSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
@@ -87,37 +125,137 @@ stages:
 #     dependsOn: 
 #     - 'DeployManagedSolutionToQA'
 
-#deploy to acc-data as managed solution using holding pattern
-- template: templates/stage/DeployHoldingSolution.yml  # Template reference
-  parameters:
-    SolutionName: $(SolutionName)
-    PowerPlatformSPN: $(PowerPlatformSPN_ACCDATA)
-    Environment: 'ACC-TDG-DATA'
-    StageName: 'DeployManagedSolutionToACCDATA'
-    dependsOn: 
-    - 'DeployManagedSolutionToQA'
+- stage: ImportSolutionToACC
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: ImportSolutionToACC
+    steps:
+    - checkout: none
+      persistCredentials: true
+      clean: true
+    - task: PowerPlatformImportSolution@0
+      inputs:
+        authenticationType: 'PowerPlatformSPN'
+        PowerPlatformSPN: '$(PowerPlatformSPN_ACC)'
+        SolutionInputFile: '$(Agent.BuildDirectory)\zip\$(SolutionName)_Managed.zip'
+        AsyncOperation: true
+        MaxAsyncWaitTime: '9999'
+        HoldingSolution: true
+        OverwriteUnmanagedCustomizations: false
 
-- template: templates/stage/DeployHoldingSolution.yml  # Template reference
-  parameters:
-    SolutionName: $(SolutionName)
-    PowerPlatformSPN: $(PowerPlatformSPN_ACC)
-    Environment: 'ACC-TDG'
-    StageName: 'DeployManagedSolutionToACC'
-    dependsOn: 
-    - 'DeployManagedSolutionToQA'
-- template: templates/stage/DeployHoldingSolution.yml  # Template reference
-  parameters:
-    SolutionName: $(SolutionName)
-    PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
-    Environment: 'PREPROD-TDG'
-    StageName: 'DeployManagedSolutionToPREPROD'
-    dependsOn: 
-    - 'DeployManagedSolutionToQA'
-- template: templates/stage/DeployHoldingSolution.yml  # Template reference
-  parameters:
-    SolutionName: $(SolutionName)
-    PowerPlatformSPN: $(PowerPlatformSPN_PROD)
-    Environment: 'PROD-TDG'
-    StageName: 'DeployManagedSolutionToPROD'
-    dependsOn: 
-    - 'DeployManagedSolutionToQA'
+- stage: ApplySolutionUpgradeACC
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: ApplySolutionUpgradeACC
+    steps:
+    - checkout: none
+      persistCredentials: true
+      clean: true
+    - task: PowerPlatformApplySolutionUpgrade@0
+      inputs:
+        authenticationType: 'PowerPlatformSPN'
+        PowerPlatformSPN: '$(PowerPlatformSPN_ACC)'
+        SolutionName: '$(SolutionName)'
+        AsyncOperation: true
+        MaxAsyncWaitTime: '9999'
+
+# - template: templates/stage/DeployHoldingSolution.yml  # Template reference
+#   parameters:
+#     SolutionName: $(SolutionName)
+#     PowerPlatformSPN: $(PowerPlatformSPN_ACC)
+#     Environment: 'ACC-TDG'
+#     StageName: 'DeployManagedSolutionToACC'
+#     dependsOn: 
+#     - 'DeployManagedSolutionToQA'
+
+# - template: templates/stage/DeployHoldingSolution.yml  # Template reference
+#   parameters:
+#     SolutionName: $(SolutionName)
+#     PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
+#     Environment: 'PREPROD-TDG'
+#     StageName: 'DeployManagedSolutionToPREPROD'
+#     dependsOn: 
+#     - 'DeployManagedSolutionToQA'
+
+- stage: ImportSolutionToPREPROD
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: ImportSolutionToPREPROD
+    steps:
+    - checkout: none
+      persistCredentials: true
+      clean: true
+    - task: PowerPlatformImportSolution@0
+      inputs:
+        authenticationType: 'PowerPlatformSPN'
+        PowerPlatformSPN: '$(PowerPlatformSPN_PREPROD)'
+        SolutionInputFile: '$(Agent.BuildDirectory)\zip\$(SolutionName)_Managed.zip'
+        AsyncOperation: true
+        MaxAsyncWaitTime: '9999'
+        HoldingSolution: true
+        OverwriteUnmanagedCustomizations: false
+
+- stage: ApplySolutionUpgradePREPROD
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: ApplySolutionUpgradePREPROD
+    steps:
+    - checkout: none
+      persistCredentials: true
+      clean: true
+    - task: PowerPlatformApplySolutionUpgrade@0
+      inputs:
+        authenticationType: 'PowerPlatformSPN'
+        PowerPlatformSPN: '$(PowerPlatformSPN_PREPROD)'
+        SolutionName: '$(SolutionName)'
+        AsyncOperation: true
+        MaxAsyncWaitTime: '9999'
+
+# - template: templates/stage/DeployHoldingSolution.yml  # Template reference
+#   parameters:
+#     SolutionName: $(SolutionName)
+#     PowerPlatformSPN: $(PowerPlatformSPN_PROD)
+#     Environment: 'PROD-TDG'
+#     StageName: 'DeployManagedSolutionToPROD'
+#     dependsOn: 
+#     - 'DeployManagedSolutionToQA'
+
+- stage: ImportSolutionToPROD
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: ImportSolutionToPROD
+    steps:
+    - checkout: none
+      persistCredentials: true
+      clean: true
+    - task: PowerPlatformImportSolution@0
+      inputs:
+        authenticationType: 'PowerPlatformSPN'
+        PowerPlatformSPN: '$(PowerPlatformSPN_PROD)'
+        SolutionInputFile: '$(Agent.BuildDirectory)\zip\$(SolutionName)_Managed.zip'
+        AsyncOperation: true
+        MaxAsyncWaitTime: '9999'
+        HoldingSolution: true
+        OverwriteUnmanagedCustomizations: false
+
+- stage: ApplySolutionUpgradePROD
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: ApplySolutionUpgradePROD
+    steps:
+    - checkout: none
+      persistCredentials: true
+      clean: true
+    - task: PowerPlatformApplySolutionUpgrade@0
+      inputs:
+        authenticationType: 'PowerPlatformSPN'
+        PowerPlatformSPN: '$(PowerPlatformSPN_PROD)'
+        SolutionName: '$(SolutionName)'
+        AsyncOperation: true
+        MaxAsyncWaitTime: '9999'
