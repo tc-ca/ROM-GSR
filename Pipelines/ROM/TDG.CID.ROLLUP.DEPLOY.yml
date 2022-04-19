@@ -90,6 +90,8 @@ stages:
         OverwriteUnmanagedCustomizations: false
 
 - stage: ApplySolutionUpgradeQA
+  dependsOn:
+    - 'ImportSolutionToQA'
   pool:
       vmImage: 'windows-latest'
   jobs:
@@ -112,7 +114,7 @@ stages:
     ConnectionString: $(Pipeline_ConnectionStringDev)
     StageName: 'CreatePatchOnDev'
     dependsOn: 
-    - 'DeployManagedSolutionToQA'
+    - 'ApplySolutionUpgradeQA'
 
 #deploy to acc-data as unmanaged solution
 # - template: templates/stage/DeploySolution.yml  # Template reference
@@ -126,6 +128,8 @@ stages:
 #     - 'DeployManagedSolutionToQA'
 
 - stage: ImportSolutionToACC
+  dependsOn:
+    - 'ApplySolutionUpgradeQA'
   pool:
       vmImage: 'windows-latest'
   jobs:
@@ -145,6 +149,8 @@ stages:
         OverwriteUnmanagedCustomizations: false
 
 - stage: ApplySolutionUpgradeACC
+  dependsOn:
+    - 'ImportSolutionToACC'
   pool:
       vmImage: 'windows-latest'
   jobs:
@@ -180,6 +186,8 @@ stages:
 #     - 'DeployManagedSolutionToQA'
 
 - stage: ImportSolutionToPREPROD
+  dependsOn:
+    - 'ApplySolutionUpgradeQA'
   pool:
       vmImage: 'windows-latest'
   jobs:
@@ -199,6 +207,8 @@ stages:
         OverwriteUnmanagedCustomizations: false
 
 - stage: ApplySolutionUpgradePREPROD
+  dependsOn:
+    - 'ImportSolutionToPREPROD'
   pool:
       vmImage: 'windows-latest'
   jobs:
@@ -225,6 +235,8 @@ stages:
 #     - 'DeployManagedSolutionToQA'
 
 - stage: ImportSolutionToPROD
+  dependsOn:
+    - 'ApplySolutionUpgradeQA'
   pool:
       vmImage: 'windows-latest'
   jobs:
@@ -244,6 +256,8 @@ stages:
         OverwriteUnmanagedCustomizations: false
 
 - stage: ApplySolutionUpgradePROD
+  dependsOn:
+    - 'ImportSolutionToPROD'
   pool:
       vmImage: 'windows-latest'
   jobs:
