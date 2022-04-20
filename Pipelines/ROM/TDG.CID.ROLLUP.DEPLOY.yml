@@ -134,6 +134,7 @@ stages:
       inputs:
         DefaultVersion: true
     - task: PowerPlatformApplySolutionUpgrade@0
+      continueOnError: true
       inputs:
         authenticationType: 'PowerPlatformSPN'
         PowerPlatformSPN: '$(PowerPlatformSPN_QA)'
@@ -204,6 +205,7 @@ stages:
       vmImage: 'windows-latest'
   jobs:
   - job: ApplySolutionUpgradeACC
+    continueOnError: true
     timeoutInMinutes: 0
     steps:
     - checkout: none
@@ -282,6 +284,7 @@ stages:
       vmImage: 'windows-latest'
   jobs:
   - job: ApplySolutionUpgradePREPROD
+    continueOnError: true
     timeoutInMinutes: 0
     steps:
     - checkout: none
@@ -351,6 +354,7 @@ stages:
       vmImage: 'windows-latest'
   jobs:
   - job: ApplySolutionUpgradePROD
+    continueOnError: true
     timeoutInMinutes: 0
     steps:
     - checkout: none
