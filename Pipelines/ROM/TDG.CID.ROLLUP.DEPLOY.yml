@@ -74,42 +74,49 @@ stages:
   pool:
       vmImage: 'windows-latest'
   jobs:
-  - job: ImportSolutionToQA
-    steps:
-    - checkout: none
-      persistCredentials: true
-    - task: DownloadBuildArtifacts@1
-      inputs:
-        buildType: 'current'
-        downloadType: 'single'
-        artifactName: 'zip'
-        downloadPath: '$(Agent.BuildDirectory)'
-    - task: PowerShell@2
-      inputs:
-        targetType: 'inline'
-        script: |
-          Write-Host "============================================"
-          Write-Host "Agent.BuildDirectory"
-          Get-ChildItem -Path "$(Agent.BuildDirectory)"
-          Write-Host "============================================"
-          Write-Host ""
-          Write-Host "============================================"
-          Write-Host "Agent.BuildDirectory/zip"
-          Get-ChildItem -Path "$(Agent.BuildDirectory)/zip"
-          Write-Host "============================================"
-        errorActionPreference: 'continue'
-    - task: PowerPlatformToolInstaller@0
-      inputs:
-        DefaultVersion: true
-    - task: PowerPlatformImportSolution@0
-      inputs:
-        authenticationType: 'PowerPlatformSPN'
-        PowerPlatformSPN: '$(PowerPlatformSPN_QA)'
-        SolutionInputFile: '$(Agent.BuildDirectory)\zip\$(SolutionName)_Managed.zip'
-        AsyncOperation: true
-        MaxAsyncWaitTime: '9999'
-        HoldingSolution: true
-        OverwriteUnmanagedCustomizations: false
+  - deployment: Deploy
+    displayName:  ImportSolutionToQA
+    environment: QA-TDG
+    timeoutInMinutes: 9999
+    cancelTimeoutInMinutes: 2
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: none
+            persistCredentials: true
+          - task: DownloadBuildArtifacts@1
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'zip'
+              downloadPath: '$(Agent.BuildDirectory)'
+          - task: PowerShell@2
+            inputs:
+              targetType: 'inline'
+              script: |
+                Write-Host "============================================"
+                Write-Host "Agent.BuildDirectory"
+                Get-ChildItem -Path "$(Agent.BuildDirectory)"
+                Write-Host "============================================"
+                Write-Host ""
+                Write-Host "============================================"
+                Write-Host "Agent.BuildDirectory/zip"
+                Get-ChildItem -Path "$(Agent.BuildDirectory)/zip"
+                Write-Host "============================================"
+              errorActionPreference: 'continue'
+          - task: PowerPlatformToolInstaller@0
+            inputs:
+              DefaultVersion: true
+          - task: PowerPlatformImportSolution@0
+            inputs:
+              authenticationType: 'PowerPlatformSPN'
+              PowerPlatformSPN: '$(PowerPlatformSPN_QA)'
+              SolutionInputFile: '$(Agent.BuildDirectory)\zip\$(SolutionName)_Managed.zip'
+              AsyncOperation: true
+              MaxAsyncWaitTime: '9999'
+              HoldingSolution: true
+              OverwriteUnmanagedCustomizations: false
 
 - stage: ApplySolutionUpgradeQA
   dependsOn:
@@ -158,29 +165,36 @@ stages:
   pool:
       vmImage: 'windows-latest'
   jobs:
-  - job: ImportSolutionToACC
-    steps:
-    - checkout: none
-      persistCredentials: true
-      clean: true
-    - task: DownloadBuildArtifacts@1
-      inputs:
-        buildType: 'current'
-        downloadType: 'single'
-        artifactName: 'zip'
-        downloadPath: '$(Agent.BuildDirectory)'
-    - task: PowerPlatformToolInstaller@0
-      inputs:
-        DefaultVersion: true
-    - task: PowerPlatformImportSolution@0
-      inputs:
-        authenticationType: 'PowerPlatformSPN'
-        PowerPlatformSPN: '$(PowerPlatformSPN_ACC)'
-        SolutionInputFile: '$(Agent.BuildDirectory)\zip\$(SolutionName)_Managed.zip'
-        AsyncOperation: true
-        MaxAsyncWaitTime: '9999'
-        HoldingSolution: true
-        OverwriteUnmanagedCustomizations: false
+  - deployment: Deploy
+    displayName:  ImportSolutionToACC
+    environment: ACC-TDG
+    timeoutInMinutes: 9999
+    cancelTimeoutInMinutes: 2
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: none
+            persistCredentials: true
+            clean: true
+          - task: DownloadBuildArtifacts@1
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'zip'
+              downloadPath: '$(Agent.BuildDirectory)'
+          - task: PowerPlatformToolInstaller@0
+            inputs:
+              DefaultVersion: true
+          - task: PowerPlatformImportSolution@0
+            inputs:
+              authenticationType: 'PowerPlatformSPN'
+              PowerPlatformSPN: '$(PowerPlatformSPN_ACC)'
+              SolutionInputFile: '$(Agent.BuildDirectory)\zip\$(SolutionName)_Managed.zip'
+              AsyncOperation: true
+              MaxAsyncWaitTime: '9999'
+              HoldingSolution: true
+              OverwriteUnmanagedCustomizations: false
 
 - stage: ApplySolutionUpgradeACC
   dependsOn:
@@ -228,29 +242,36 @@ stages:
   pool:
       vmImage: 'windows-latest'
   jobs:
-  - job: ImportSolutionToPREPROD
-    steps:
-    - checkout: none
-      persistCredentials: true
-      clean: true
-    - task: DownloadBuildArtifacts@1
-      inputs:
-        buildType: 'current'
-        downloadType: 'single'
-        artifactName: 'zip'
-        downloadPath: '$(Agent.BuildDirectory)'
-    - task: PowerPlatformToolInstaller@0
-      inputs:
-        DefaultVersion: true
-    - task: PowerPlatformImportSolution@0
-      inputs:
-        authenticationType: 'PowerPlatformSPN'
-        PowerPlatformSPN: '$(PowerPlatformSPN_PREPROD)'
-        SolutionInputFile: '$(Agent.BuildDirectory)\zip\$(SolutionName)_Managed.zip'
-        AsyncOperation: true
-        MaxAsyncWaitTime: '9999'
-        HoldingSolution: true
-        OverwriteUnmanagedCustomizations: false
+  - deployment: Deploy
+    displayName:  ImportSolutionToPREPROD
+    environment: PREPROD-TDG
+    timeoutInMinutes: 9999
+    cancelTimeoutInMinutes: 2
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: none
+            persistCredentials: true
+            clean: true
+          - task: DownloadBuildArtifacts@1
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'zip'
+              downloadPath: '$(Agent.BuildDirectory)'
+          - task: PowerPlatformToolInstaller@0
+            inputs:
+              DefaultVersion: true
+          - task: PowerPlatformImportSolution@0
+            inputs:
+              authenticationType: 'PowerPlatformSPN'
+              PowerPlatformSPN: '$(PowerPlatformSPN_PREPROD)'
+              SolutionInputFile: '$(Agent.BuildDirectory)\zip\$(SolutionName)_Managed.zip'
+              AsyncOperation: true
+              MaxAsyncWaitTime: '9999'
+              HoldingSolution: true
+              OverwriteUnmanagedCustomizations: false
 
 - stage: ApplySolutionUpgradePREPROD
   dependsOn:
@@ -289,29 +310,36 @@ stages:
   pool:
       vmImage: 'windows-latest'
   jobs:
-  - job: ImportSolutionToPROD
-    steps:
-    - checkout: none
-      persistCredentials: true
-      clean: true
-    - task: DownloadBuildArtifacts@1
-      inputs:
-        buildType: 'current'
-        downloadType: 'single'
-        artifactName: 'zip'
-        downloadPath: '$(Agent.BuildDirectory)'
-    - task: PowerPlatformToolInstaller@0
-      inputs:
-        DefaultVersion: true
-    - task: PowerPlatformImportSolution@0
-      inputs:
-        authenticationType: 'PowerPlatformSPN'
-        PowerPlatformSPN: '$(PowerPlatformSPN_PROD)'
-        SolutionInputFile: '$(Agent.BuildDirectory)\zip\$(SolutionName)_Managed.zip'
-        AsyncOperation: true
-        MaxAsyncWaitTime: '9999'
-        HoldingSolution: true
-        OverwriteUnmanagedCustomizations: false
+  - deployment: Deploy
+    displayName:  ImportSolutionToPROD
+    environment: PROD-TDG
+    timeoutInMinutes: 9999
+    cancelTimeoutInMinutes: 2
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: none
+            persistCredentials: true
+            clean: true
+          - task: DownloadBuildArtifacts@1
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'zip'
+              downloadPath: '$(Agent.BuildDirectory)'
+          - task: PowerPlatformToolInstaller@0
+            inputs:
+              DefaultVersion: true
+          - task: PowerPlatformImportSolution@0
+            inputs:
+              authenticationType: 'PowerPlatformSPN'
+              PowerPlatformSPN: '$(PowerPlatformSPN_PROD)'
+              SolutionInputFile: '$(Agent.BuildDirectory)\zip\$(SolutionName)_Managed.zip'
+              AsyncOperation: true
+              MaxAsyncWaitTime: '9999'
+              HoldingSolution: true
+              OverwriteUnmanagedCustomizations: false
 
 - stage: ApplySolutionUpgradePROD
   dependsOn:
