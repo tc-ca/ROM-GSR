@@ -104,18 +104,18 @@ stages:
           Get-ChildItem -Path "$(Build.SourcesDirectory)"
           Write-Host "============================================"
         errorActionPreference: 'continue'
-    - task: PowerPlatformToolInstaller@0
-      inputs:
-        DefaultVersion: true
-    - task: PowerPlatformImportSolution@0
-      inputs:
-        authenticationType: 'PowerPlatformSPN'
-        PowerPlatformSPN: '$(PowerPlatformSPN_QA)'
-        SolutionInputFile: '$(Agent.BuildDirectory)\zip\$(SolutionName)_Managed.zip'
-        AsyncOperation: true
-        MaxAsyncWaitTime: '9999'
-        HoldingSolution: true
-        OverwriteUnmanagedCustomizations: false
+    # - task: PowerPlatformToolInstaller@0
+    #   inputs:
+    #     DefaultVersion: true
+    # - task: PowerPlatformImportSolution@0
+    #   inputs:
+    #     authenticationType: 'PowerPlatformSPN'
+    #     PowerPlatformSPN: '$(PowerPlatformSPN_QA)'
+    #     SolutionInputFile: '$(Agent.BuildDirectory)\zip\$(SolutionName)_Managed.zip'
+    #     AsyncOperation: true
+    #     MaxAsyncWaitTime: '9999'
+    #     HoldingSolution: true
+    #     OverwriteUnmanagedCustomizations: false
 
 - stage: ApplySolutionUpgradeQA
   dependsOn:
