@@ -78,6 +78,12 @@ stages:
     steps:
     - checkout: none
       persistCredentials: true
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'zip'
+        downloadPath: '$(Agent.BuildDirectory)'
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
