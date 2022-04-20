@@ -89,38 +89,27 @@ stages:
         targetType: 'inline'
         script: |
           Write-Host "============================================"
-          Write-Host "System.DefaultWorkingDirectory"
-          Get-ChildItem -Path "$(System.DefaultWorkingDirectory)"
-          Write-Host "============================================"
           Write-Host "Agent.BuildDirectory"
           Get-ChildItem -Path "$(Agent.BuildDirectory)"
           Write-Host "============================================"
           Write-Host ""
           Write-Host "============================================"
-          Write-Host "Build.ArtifactStagingDirectory"
-          Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)"
-          Write-Host "============================================"
-          Write-Host "============================================"
-          Write-Host "Build.BinariesDirectory"
-          Get-ChildItem -Path "$(Build.BinariesDirectory)"
-          Write-Host "============================================"
-          Write-Host "============================================"
-          Write-Host "Build.SourcesDirectory"
-          Get-ChildItem -Path "$(Build.SourcesDirectory)"
+          Write-Host "Agent.BuildDirectory/zip"
+          Get-ChildItem -Path "$(Agent.BuildDirectory)/zip"
           Write-Host "============================================"
         errorActionPreference: 'continue'
-    # - task: PowerPlatformToolInstaller@0
-    #   inputs:
-    #     DefaultVersion: true
-    # - task: PowerPlatformImportSolution@0
-    #   inputs:
-    #     authenticationType: 'PowerPlatformSPN'
-    #     PowerPlatformSPN: '$(PowerPlatformSPN_QA)'
-    #     SolutionInputFile: '$(Agent.BuildDirectory)\zip\$(SolutionName)_Managed.zip'
-    #     AsyncOperation: true
-    #     MaxAsyncWaitTime: '9999'
-    #     HoldingSolution: true
-    #     OverwriteUnmanagedCustomizations: false
+    - task: PowerPlatformToolInstaller@0
+      inputs:
+        DefaultVersion: true
+    - task: PowerPlatformImportSolution@0
+      inputs:
+        authenticationType: 'PowerPlatformSPN'
+        PowerPlatformSPN: '$(PowerPlatformSPN_QA)'
+        SolutionInputFile: '$(Agent.BuildDirectory)\zip\$(SolutionName)_Managed.zip'
+        AsyncOperation: true
+        MaxAsyncWaitTime: '9999'
+        HoldingSolution: true
+        OverwriteUnmanagedCustomizations: false
 
 - stage: ApplySolutionUpgradeQA
   dependsOn:
@@ -174,6 +163,12 @@ stages:
     - checkout: none
       persistCredentials: true
       clean: true
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'zip'
+        downloadPath: '$(Agent.BuildDirectory)'
     - task: PowerPlatformToolInstaller@0
       inputs:
         DefaultVersion: true
@@ -238,6 +233,12 @@ stages:
     - checkout: none
       persistCredentials: true
       clean: true
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'zip'
+        downloadPath: '$(Agent.BuildDirectory)'
     - task: PowerPlatformToolInstaller@0
       inputs:
         DefaultVersion: true
@@ -293,6 +294,12 @@ stages:
     - checkout: none
       persistCredentials: true
       clean: true
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'zip'
+        downloadPath: '$(Agent.BuildDirectory)'
     - task: PowerPlatformToolInstaller@0
       inputs:
         DefaultVersion: true
