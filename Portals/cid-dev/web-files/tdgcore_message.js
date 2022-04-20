@@ -17,6 +17,26 @@ if (typeof (tdg.message) == "undefined") {
             var list =
                 [
                     {
+                        "code": "CID_PORTAL",
+                        "message_en": "Transport Canada CID Portal",
+                        "message_fr": "Portail CID de Transports Canada"
+                    },
+                    {
+                        "code": "OK",
+                        "message_en": "OK",
+                        "message_fr": "D'accord"
+                    },
+                    {
+                        "code": "Yes",
+                        "message_en": "Yes",
+                        "message_fr": "Qui"
+                    },
+                    {
+                        "code": "No",
+                        "message_en": "No",
+                        "message_fr": "Non",
+                    },
+                    {
                         "code": "1. Start",
                         "message_en": "1. Start",
                         "message_fr": "1. Commencez"

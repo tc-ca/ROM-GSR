@@ -16,7 +16,9 @@ $(document).ready(function () {
 		//	"- Set and Attest as My Site Inactive\n" +
 		//	"- Set and Attest Not My Site\n";
 		message = tdg.error_message.message("m000013");
-		alert(data.length + "-" + message);
+
+		tdg.c.dialog_OK(data.length + "-" + message);
+		//alert(data.length + "-" + message);
 	}
 
 	$(".entity-grid").on("loaded", function () {
@@ -100,3 +102,18 @@ $(document).ready(function () {
 		return validation;
 	}
 });
+
+function sample_dialog_YN(message) {
+	debugger;
+
+	tdg.c.dialog_OK(message);
+	//dialog_YN(message, (ans) => {
+	//	if (ans) {
+	//		// console.log("Yes");
+	//		Call_Check_User_Response_flow(newrecordid, 'yes', '', Language);
+	//	} else {
+	//		Call_Check_User_Response_flow(newrecordid, 'No', '', Language);
+	//		//console.log("No");
+	//	}
+	//});
+}

@@ -173,9 +173,10 @@ $('#btn_attachfile_and_scan').click(function(e)
 
     $('#linkdownload_English').on('click', async function() {
 
-          $('#processingMsg').css('display','block');
-        $('#processingMsg').text('The custom Site Bulk Upload Excel workbook is being downloaded …');
-
+          //$('#processingMsg').css('display','block');
+       // $('#processingMsg').text(');
+  $('#infoMsg').css('display', 'block');
+               $('#infoMsg').html( 'The custom Site Bulk Upload Excel workbook is being downloaded …');
 
       var companyid = '{{parentid}}';
      var flowparamaters =
@@ -199,8 +200,8 @@ $('#btn_attachfile_and_scan').click(function(e)
             //https://rd-tdgcore-dev.powerappsportals.com/_entity/annotation/
             var fileattachementURL = "~/_entity/annotation/" + result;
             window.location.replace(fileattachementURL);
-             $("#processingMsg").css("display", "none");
-            $("#processingMsg").hide();
+             $("#infoMsg").css("display", "none");
+           // $("#processingMsg").hide();
           } else {
               $('#processingMsg').text("Download was not completed due to system issue, please contact system support");
             var result = this.response;
@@ -285,9 +286,9 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
             var responseMessage ;
          if (UserResponse == 'yes')
          {
-             responseMessage  = 'The CID system will now begin the second of two sets of validations of the file being uploaded. An email will be sent to your email address of ' + useremail +', indicating the results the second set of validations and the subsequent steps to take. ' +
-             'At this point you can wait for the notification email and proceed with the next step described from within it. Alternatively, you can leave the Registration process temporarily and the system will return you to the spot where you left off when you return.' 
-             + useremail +' is the email address from the current user’s profile';
+             responseMessage  = 'The CID system will now begin the second of two sets of validations of the file being uploaded. An email will be sent to your email address of ' + useremail +', indicating the results the second set of validations and the subsequent steps to take. <br><br>' +
+             'At this point you can wait for the notification email and proceed with the next step described from within it. Alternatively, you can leave the Registration process temporarily and the system will return you to the spot where you left off when you return. <br>' 
+            + '<ul> <li>' + useremail +' is the email address from the current user’s profile </li> </ul>';
 
          }
          else{
@@ -300,7 +301,7 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
 
 
                $('#infoMsg').css('display', 'block');
-               $('#infoMsg').text(responseMessage);
+               $('#infoMsg').html( responseMessage);
             
 
          }
@@ -322,8 +323,8 @@ function Call_Virsu_Scan_API(url, fileContent, activitytype , excelfilename , la
 
 var companyid = '{{parentid}}';
 var contactid = '{{contactid}}'
-      $('#processingMsg').css('display', 'block');
-        $('#processingMsg').text("Workbook is being scanned….");
+      $('#infoMsg').css('display', 'block');
+        $('#infoMsg').text("Workbook is being scanned….");
 
   var acupdate =
         '{"FileContent" :"' + fileContent  + '", "CompanyId" : "' + companyid + '" , "ActionedBy" :"' + contactid +  '", "ActivityType" : "'+ activitytype +'" ,"ExcelFileName" : "' + excelfilename + '" , "Lang" : "' + language + '" }';
@@ -343,8 +344,8 @@ var contactid = '{{contactid}}'
          if (result.toLowerCase().trim() == "allowed")
          {
 
-               $('#processingMsg').css('display', 'block');
-               $('#processingMsg').text("Preliminary analysis of the uploaded workbook has begun…");
+               $('#infoMsg').css('display', 'block');
+               $('#infoMsg').text("Preliminary analysis of the uploaded workbook has begun…");
               $("#InsertButton").click();
 
          }
@@ -356,7 +357,7 @@ var contactid = '{{contactid}}'
             // alert("Error - Bulk Site Registration Upload: Initial upload stopped due to a potential virus.");
          }
 
-             $("#processingMsg").css("display", "none");
+             $("#infoMsg").css("display", "none");
 
           } else {
               $('#processingMsg').text("Error Please Try again Later.");
@@ -389,8 +390,8 @@ function call_Inital_validation(Language , bulkactivitytype)
        // $('#processingMsg').css('display', 'block');
         //$('#processingMsg').text("Preliminary analysis of the uploaded workbook has begun…");
 
-         $('#processingMsg').css('display', 'block');
-        $('#processingMsg').text("Preliminary analysis of the uploaded workbook has begun…");
+         $('#infoMsg').css('display', 'block');
+        $('#infoMsg').text("Preliminary analysis of the uploaded workbook has begun…");
 
         //notificationMsg.show("System is validating uploaded List ...");
 
@@ -414,10 +415,10 @@ function call_Inital_validation(Language , bulkactivitytype)
             if (this.readyState === 4) {
 
                 req.onreadystatechange = null;
-                  $('#processingMsg').css('display', 'none');
+                  $('#infoMsg').css('display', 'none');
                 if (this.status === 200) {
                     var result = this.response;
-                    $('#processingMsg').css('display', 'none');
+                    $('#infoMsg').css('display', 'none');
                   // $('#warnningMessage').css('display', 'none');
                     // alert (this.response);
                      //alert(req.getResponseHeader('DetailMessage'));
@@ -479,7 +480,7 @@ else{
 
 function confirmDialog(message, handler)
 {
-  
+
 $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
     <header class="modal-header">
         <h2 class="modal-title">CID Portal</h2>

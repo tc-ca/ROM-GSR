@@ -282,8 +282,84 @@ if (typeof (tdg.c) == "undefined") {
 
         replace_special_char: function (value) {
             var k_char_apostrophe = "&#39;";
-            value = value.replace(k_char_apostrophe, "'");
+            value = value.replaceAll(k_char_apostrophe, "'");
             return value;
+        },
+
+        // sample calling dialog_YN
+        //dialog_YN(message, (ans) => {
+	    //	if (ans) {
+	    //		// console.log("Yes");
+	    //		Call_Check_User_Response_flow(newrecordid, 'yes', '', Language);
+	    //	} else {
+	    //		Call_Check_User_Response_flow(newrecordid, 'No', '', Language);
+	    //		//console.log("No");
+	    //	}
+	    //});
+        dialog_YN: function (message, handler) {
+            message = message.replaceAll("\n", "<br>");
+            var header = tdg.error_message.message("CID_PORTAL");
+            var yes = tdg.error_message.message("Yes");
+            var no = tdg.error_message.message("No");
+
+            $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
+	            <header class="modal-header">
+	            <h2 class="modal-title">${header}</h2>
+	            </header>
+	            <div class="modal-body">
+	            ${message}
+	            </div>
+	            <div class="modal-footer">
+	            <button id="btnYes" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">${yes}</button>
+	            <button id="btnNo" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" data-dismiss="modal">${no}</button>
+	            </section>
+	            `).appendTo('body');
+
+            $("#myModal").css('top', '15%');
+            $("#myModal").css('left', '40%');
+            $("#myModal").css('position', 'fixed');
+            $("#myModal").css('z-index', '9999');
+
+            $("#btnYes").click(function () {
+                // handler(true);
+                // $("#myModal").modal("hide");
+                $("#myModal").remove();
+                handler(true);
+            });
+
+            //Pass false to callback function
+            $("#btnNo").click(function () {
+                //handler(lse);
+                $("#myModal").remove();
+                handler(false);
+            });
+        },
+
+        dialog_OK: function (message) {
+            message = message.replaceAll("\n", "<br>");
+            var header = tdg.error_message.message("CID_PORTAL");
+            var OK = tdg.error_message.message("OK");
+
+            $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
+	            <header class="modal-header">
+	            <h2 class="modal-title">${header}</h2>
+	            </header>
+	            <div class="modal-body">
+	            ${message}
+	            </div>
+	            <div class="modal-footer">
+	            <button id="btnOK" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">${OK}</button>
+	            </section>
+	            `).appendTo('body');
+
+            $("#myModal").css('top', '15%');
+            $("#myModal").css('left', '40%');
+            $("#myModal").css('position', 'fixed');
+            $("#myModal").css('z-index', '9999');
+
+            $("#btnOK").click(function () {
+                $("#myModal").remove();
+            });
         }
     }
 }
