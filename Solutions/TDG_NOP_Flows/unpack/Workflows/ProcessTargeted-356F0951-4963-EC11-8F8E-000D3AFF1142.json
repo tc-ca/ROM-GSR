@@ -3,14 +3,18 @@
     "connectionReferences": {
       "shared_commondataservice": {
         "runtimeSource": "invoker",
-        "connection": {},
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseLegacyServicePrinciple"
+        },
         "api": {
           "name": "shared_commondataservice"
         }
       },
       "shared_commondataserviceforapps": {
         "runtimeSource": "embedded",
-        "connection": {},
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
         "api": {
           "name": "shared_commondataserviceforapps"
         }
@@ -335,6 +339,8 @@
                         "parameters": {
                           "entityName": "ovs_workordercandidates",
                           "recordId": "@items('For_Each_WOC')?['ovs_workordercandidateid']",
+                          "item/ovs_site@odata.bind": "/accounts/@{items('For_Each_WOC')?['_ovs_site_value']}",
+                          "item/statuscode": 1,
                           "item/ovs_hqflag": true,
                           "item/ovs_initialrecommendation": 918640000,
                           "item/ovs_oversighttype@odata.bind": "/ovs_oversighttypes/@{variables('HubOversightType')}",
@@ -400,6 +406,8 @@
                               "parameters": {
                                 "entityName": "ovs_workordercandidates",
                                 "recordId": "@items('For_Each_WOC')?['ovs_workordercandidateid']",
+                                "item/ovs_site@odata.bind": "/accounts/@{items('For_Each_WOC')?['_ovs_site_value']}",
+                                "item/statuscode": 1,
                                 "item/ovs_hqflag": true,
                                 "item/ovs_initialrecommendation": 918640000,
                                 "item/ovs_oversighttype@odata.bind": "/ovs_oversighttypes/@{variables('TargetedOversightType')}",
@@ -430,6 +438,8 @@
                                 "parameters": {
                                   "entityName": "ovs_workordercandidates",
                                   "recordId": "@items('For_Each_WOC')?['ovs_workordercandidateid']",
+                                  "item/ovs_site@odata.bind": "/accounts/@{items('For_Each_WOC')?['_ovs_site_value']}",
+                                  "item/statuscode": 1,
                                   "item/ovs_hqflag": true,
                                   "item/ovs_initialrecommendation": 918640000,
                                   "item/ovs_oversighttype@odata.bind": "/ovs_oversighttypes/@{variables('MOCTargetedOversightType')}",
