@@ -45,7 +45,7 @@ function header() {
 		var className = item.className;
 
 		// 1st step?
-		if (i == 0 && className == "list-group-item active") {
+		if ((i == 0 || i == 1) && (className == "list-group-item active")) {
 			code = "m000008";	// Company Registration Wizard
 		}
 
