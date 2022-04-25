@@ -4,21 +4,37 @@
 $(document).ready(function () {
     debugger;
 
-    insert_tdgcore_common_js();
+    page_setup();
 
     //when the page is done loading, disable autocomplete on all inputs[text]
     $('input[type="text"]').attr('autocomplete', 'off');
 
     // insert button
     btn_save_new_setup();
+
+    debugger;
+    var btn_close = $(".form-close")[0];
+    btn_close.click(function () {
+        alert("xxx");
+    });
 });
 
-function insert_tdgcore_common_js() {
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = "/tdgcore_common.js";
+function page_setup() {
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
 
-    $("body").append(script);
+    const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = file;
+
+        $("body").append(script);
+    }
+
+    // server error?
+    tdg.c.message_panel();
 }
 
 function btn_save_new_setup() {
@@ -47,35 +63,14 @@ function btn_save_new_setup() {
     });
 }
 
-function btn_save_new_onclick() {
+function btn_save_new_onclick()
+{
     tdg.c.error_message_clear();
     if (typeof entityFormClientValidate === 'function') {
         if (entityFormClientValidate()) {
             if (typeof Page_ClientValidate === 'function') {
-                if (Page_ClientValidate('')) {
-                    clearIsDirty();
-                    //disableButtons();
-                    this.value = 'Processing...';
-                }
-            } else {
-                clearIsDirty();
-                //disableButtons();
-                this.value = 'Processing...';
+                value = Page_ClientValidate('');
             }
-        } else {
-            return false;
-        }
-    } else {
-        if (typeof Page_ClientValidate === 'function') {
-            if (Page_ClientValidate('')) {
-                clearIsDirty();
-                //disableButtons();
-                this.value = 'Processing...';
-            }
-        } else {
-            clearIsDirty();
-            //disableButtons();
-            this.value = 'Processing...';
         }
     };
 
@@ -98,9 +93,6 @@ function btn_save_new_onclick() {
     var ovs_primeclass = $("#ovs_primeclass").val();
 
     ovs_operationclass_insert(operation_id, ovs_primeclass, contact_id);
-
-    // clear form
-    $("#ovs_primeclass").val("");
 }
 
 function ovs_operationclass_insert(operation_id, ovs_primeclass, contact_id) {
@@ -111,5 +103,28 @@ function ovs_operationclass_insert(operation_id, ovs_primeclass, contact_id) {
         "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
         "ovs_primeclass": ovs_primeclass
     };
-    tdg.webapi.create("ovs_operationclasses", data);
+    tdg.webapi.create("ovs_operationclasses", data, success_cb, error_cb);
+}
+
+function form_clear() {
+    debugger;
+    $("#ovs_primeclass").val("");
+}
+
+function success_cb() {
+    debugger;
+
+    msg = tdg.error_message.message("m000005"); // Record added
+    tdg.c.message_panel_set("EntityFormControl", msg);
+
+    // clear form
+    form_clear();
+}
+
+function error_cb(msg) {
+    debugger;
+
+    var selected_language = '{{website.selected_language.code}}';
+    msg = tdg.c.text_language(msg, selected_language)
+    tdg.c.message_panel_set("EntityFormControl", msg);
 }

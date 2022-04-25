@@ -73,9 +73,6 @@ function btn_save_new_onclick() {
     var cid_erapid = $("#cid_erapid").val();
 
     cid_companyerap_insert(parent_id, cid_erapid, contact_id);
-
-    // clear form
-    $("#cid_erapid").val("");
 }
 
 function cid_companyerap_insert(account_id, cid_erapid, contact_id) {
@@ -88,11 +85,18 @@ function cid_companyerap_insert(account_id, cid_erapid, contact_id) {
     tdg.webapi.create("cid_companyeraps", data, success_cb, error_cb);
 }
 
+function form_clear() {
+    debugger;
+    $("#cid_erapid").val("");
+}
+
 function success_cb() {
     debugger;
 
     msg = tdg.error_message.message("m000005"); // Record added
     tdg.c.message_panel_set("EntityFormControl", msg);
+
+    form_clear();
 }
 
 function error_cb(msg) {

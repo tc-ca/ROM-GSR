@@ -125,8 +125,8 @@ $('#btn_attachfile_and_scan').click(function(e)
 
   else if (file) {
 
-        $('#processingMsg').css('display', 'block');
-        $('#processingMsg').text("Workbook is being scanned….");
+       // $('#processingMsg').css('display', 'block');
+        //$('#processingMsg').text("Workbook is being scanned….");
 
       //  $('#warnningMessage').css('display', 'block');
        // $('#warnningMessage').text("Workbook is being scanned….");
@@ -176,7 +176,7 @@ $('#btn_attachfile_and_scan').click(function(e)
           //$('#processingMsg').css('display','block');
        // $('#processingMsg').text(');
   $('#infoMsg').css('display', 'block');
-               $('#infoMsg').html( 'The custom Site Bulk Upload Excel workbook is being downloaded …');
+               $('#infoMsg').html( '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>');
 
       var companyid = '{{parentid}}';
      var flowparamaters =
@@ -194,7 +194,7 @@ $('#btn_attachfile_and_scan').click(function(e)
         if (this.readyState === 4) {
           req.onreadystatechange = null;
           if (this.status === 200) {
-               $('#processingMsg').text("Download complete");
+               $('#processingMsg').html("<p> Download complete </p>");
             var result = this.response;
            // $('#ll').hide();
             //https://rd-tdgcore-dev.powerappsportals.com/_entity/annotation/
@@ -216,7 +216,7 @@ $('#btn_attachfile_and_scan').click(function(e)
  $('#linkdownload_French').on('click', async function() {
 
           $('#processingMsg').css('display','block');
-        $('#processingMsg').text('System is downloading site info ...');
+        $('#processingMsg').html('<p>System is downloading site info ...</p>');
 
      // notificationMsg.show("System is downloading site info ...");
 
@@ -286,14 +286,14 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
             var responseMessage ;
          if (UserResponse == 'yes')
          {
-             responseMessage  = 'The CID system will now begin the second of two sets of validations of the file being uploaded. An email will be sent to your email address of ' + useremail +', indicating the results the second set of validations and the subsequent steps to take. <br><br>' +
-             'At this point you can wait for the notification email and proceed with the next step described from within it. Alternatively, you can leave the Registration process temporarily and the system will return you to the spot where you left off when you return. <br>' 
+             responseMessage  = '<p>The CID system will now begin the second of two sets of validations of the file being uploaded. An email will be sent to your email address of ' + useremail +', indicating the results the second set of validations and the subsequent steps to take. <br><br>' +
+             'At this point you can wait for the notification email and proceed with the next step described from within it. Alternatively, you can leave the Registration process temporarily and the system will return you to the spot where you left off when you return. <br> </p>' 
             + '<ul> <li>' + useremail +' is the email address from the current user’s profile </li> </ul>';
 
          }
          else{
-             responseMessage='Initial request for Bulk Upload is now complete based on an early cancellation.' + 
-'The original request to bulk upload sites is cancelled. Please proceed with the remainder of the Registration process.';
+             responseMessage='<p>Initial request for Bulk Upload is now complete based on an early cancellation. <br>' + 
+'The original request to bulk upload sites is cancelled. Please proceed with the remainder of the Registration process.</p>';
 
          }
         
@@ -324,7 +324,7 @@ function Call_Virsu_Scan_API(url, fileContent, activitytype , excelfilename , la
 var companyid = '{{parentid}}';
 var contactid = '{{contactid}}'
       $('#infoMsg').css('display', 'block');
-        $('#infoMsg').text("Workbook is being scanned….");
+        $('#infoMsg').html("<p> Workbook is being scanned…. </p>");
 
   var acupdate =
         '{"FileContent" :"' + fileContent  + '", "CompanyId" : "' + companyid + '" , "ActionedBy" :"' + contactid +  '", "ActivityType" : "'+ activitytype +'" ,"ExcelFileName" : "' + excelfilename + '" , "Lang" : "' + language + '" }';
@@ -345,7 +345,7 @@ var contactid = '{{contactid}}'
          {
 
                $('#infoMsg').css('display', 'block');
-               $('#infoMsg').text("Preliminary analysis of the uploaded workbook has begun…");
+               $('#infoMsg').html("<p> Preliminary analysis of the uploaded workbook has begun…</p>");
               $("#InsertButton").click();
 
          }
@@ -391,7 +391,7 @@ function call_Inital_validation(Language , bulkactivitytype)
         //$('#processingMsg').text("Preliminary analysis of the uploaded workbook has begun…");
 
          $('#infoMsg').css('display', 'block');
-        $('#infoMsg').text("Preliminary analysis of the uploaded workbook has begun…");
+        $('#infoMsg').html("<p>Preliminary analysis of the uploaded workbook has begun…</p>");
 
         //notificationMsg.show("System is validating uploaded List ...");
 
