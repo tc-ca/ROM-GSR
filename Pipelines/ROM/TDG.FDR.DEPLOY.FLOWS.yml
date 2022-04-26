@@ -37,7 +37,7 @@ variables:
 name: #Set Dynamically in Pipeline
 
 stages:
-- stage: PrintPipelineVariables
+- stage: PrintPipelineVariables # shows all pipeline variables
   pool:
       vmImage: 'windows-latest'
   jobs:
@@ -62,16 +62,16 @@ stages:
 - template: templates/stage/DeployFlowSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
-    # PowerPlatformSPN: $(PowerPlatformSPN_QA)
-    PowerPlatformEnvironment: $(PowerPlatformSPN_QA)
+    PowerPlatformSPN: $(PowerPlatformSPN_QA)
     PowerPlatformSPN_Dev: $(PowerPlatformSPN_Dev) #used to update solution version after successful deployment to QA
     UseDeploymentSettingsFile: true
-    DeploymentSettingsFile: 'connection_references/FDR_Deploy_Settings.json'
+    DeploymentSettingsFile: 'connection_references/FDR_QA-2_Deploy_Settings.json'
     Environment: 'QA-2-TDG'
     StageName: 'DeployManagedSolutionToQA'
     DeleteSolution: false
     dependsOn: 
     - 'BuildAndPublishArtifacts'
+
 # #ACC
 # - template: templates/stage/DeploySolution.yml  # Template reference
 #   parameters:
