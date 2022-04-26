@@ -68,8 +68,10 @@ stages:
           - ${{ if eq(parameters.DeployUnmanagedSolution, false) }}:
             - task: PowerPlatformImportSolution@0
               inputs:
-                authenticationType: 'PowerPlatformSPN'
-                PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
+                authenticationType: 'PowerPlatformEnvironment'
+                PowerPlatformEnvironment: '${{Parameters.PowerPlatformSPN}}'
+                UseDeploymentSettingsFile: '${{Parameters.UseDeploymentSettingsFile}}'
+                DeploymentSettingsFile: '${{Parameters.DeploymentSettingsFile}}'
                 SolutionInputFile: '$(Agent.BuildDirectory)\zip\${{Parameters.SolutionName}}_Managed.zip'
                 AsyncOperation: true
                 MaxAsyncWaitTime: '360'
