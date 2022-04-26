@@ -46,6 +46,8 @@ stages:
       runOnce:
         deploy:
           steps:
+          - checkout: self
+          path: 'ROM-GSR/ROM/'
           - task: PowerShell@2
             inputs:
               targetType: 'inline'
@@ -71,7 +73,7 @@ stages:
                 authenticationType: 'PowerPlatformEnvironment'
                 PowerPlatformEnvironment: '${{Parameters.PowerPlatformSPN}}'
                 UseDeploymentSettingsFile: '${{Parameters.UseDeploymentSettingsFile}}'
-                DeploymentSettingsFile: '${{Parameters.DeploymentSettingsFile}}'
+                DeploymentSettingsFile: '$(System.DefaultWorkingDirectory)\'${{Parameters.DeploymentSettingsFile}}'
                 SolutionInputFile: '$(Agent.BuildDirectory)\zip\${{Parameters.SolutionName}}_Managed.zip'
                 AsyncOperation: true
                 MaxAsyncWaitTime: '360'
@@ -83,7 +85,7 @@ stages:
                 authenticationType: 'PowerPlatformEnvironment'
                 PowerPlatformEnvironment: '${{Parameters.PowerPlatformSPN}}'
                 UseDeploymentSettingsFile: '${{Parameters.UseDeploymentSettingsFile}}'
-                DeploymentSettingsFile: '${{Parameters.DeploymentSettingsFile}}'
+                DeploymentSettingsFile: '$(System.DefaultWorkingDirectory)\'${{Parameters.DeploymentSettingsFile}}'
                 SolutionInputFile: '$(Agent.BuildDirectory)\zip\${{Parameters.SolutionName}}.zip'
                 AsyncOperation: true
                 MaxAsyncWaitTime: '360'
