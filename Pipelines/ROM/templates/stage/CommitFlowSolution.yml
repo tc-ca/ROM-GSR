@@ -105,7 +105,7 @@ stages:
           Write-Host "$(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\unpack folder created."
         }
         Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\${{Parameters.SolutionName}}\* -Destination $(Build.SourcesDirectory)\Solutions\${{Parameters.SolutionName}}\unpack
-        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\${{Parameters.SolutionName}}\* -Destination $(Build.SourcesDirectory)\Solutions\${{System.DefaultWorkingDirectory}}/connection_references/FDR_QA-2_Deploy_settings.json
+        Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\${{Parameters.SolutionName}}\* -Destination $(Build.SourcesDirectory)\Solutions\${{Build.ArtifactStagingDirectory}}/connection_references/FDR_QA-2_Deploy_settings.json
     - task: PublishBuildArtifacts@1
       displayName: publish solution zip
       inputs:
