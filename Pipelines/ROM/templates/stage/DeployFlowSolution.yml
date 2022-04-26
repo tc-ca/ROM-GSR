@@ -55,9 +55,13 @@ stages:
                 Write-Host "Echoing Parameter Values"
                 Write-Host "Parameters.SolutionName: ${{Parameters.SolutionName}}"
                 Write-Host "Parameters.PowerPlatformSPN: ${{Parameters.PowerPlatformSPN}}"
-                Write-Host "diretory path"
-                Write-Host "Agent build directory: $(Agent.BuildDirectory)"
-                Write-Host "Agent build directory: $(Pipeline.Workspace)"
+                Write-Host "zzzzzzzzzzzzzzzzzzzzzzz"
+                Write-Host "a: Build.SourcesDirectory"
+                Write-Host "yyyyyyyyyyyyyyyyyyyyyyy"
+                Write-Host "b: $(Build.SourcesDirectory)\${{Parameters.DeploymentSettingsFile}}"
+
+
+                
                 Write-Host "============================================"
           - template: ../task/PrintPipelineFileDirectories.yml
           - task: PowerPlatformToolInstaller@0
@@ -75,7 +79,7 @@ stages:
                 authenticationType: 'PowerPlatformEnvironment'
                 PowerPlatformEnvironment: '${{Parameters.PowerPlatformSPN}}'
                 UseDeploymentSettingsFile: '${{Parameters.UseDeploymentSettingsFile}}'
-                DeploymentSettingsFile: '$(Agent.BuildDirectory)\${{Parameters.DeploymentSettingsFile}}'
+                DeploymentSettingsFile: '$(Build.SourcesDirectory)\${{Parameters.DeploymentSettingsFile}}'
                 SolutionInputFile: '$(Agent.BuildDirectory)\zip\${{Parameters.SolutionName}}_Managed.zip'
                 AsyncOperation: true
                 MaxAsyncWaitTime: '360'
@@ -87,7 +91,7 @@ stages:
                 authenticationType: 'PowerPlatformEnvironment'
                 PowerPlatformEnvironment: '${{Parameters.PowerPlatformSPN}}'
                 UseDeploymentSettingsFile: '${{Parameters.UseDeploymentSettingsFile}}'
-                DeploymentSettingsFile: '$(Agent.BuildDirectory)\${{Parameters.DeploymentSettingsFile}}'
+                DeploymentSettingsFile: '$(Build.SourcesDirectory)\${{Parameters.DeploymentSettingsFile}}'
                 SolutionInputFile: '$(Agent.BuildDirectory)\zip\${{Parameters.SolutionName}}.zip'
                 AsyncOperation: true
                 MaxAsyncWaitTime: '360'
