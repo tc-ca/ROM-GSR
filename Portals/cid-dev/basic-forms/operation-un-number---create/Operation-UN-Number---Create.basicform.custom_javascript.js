@@ -1,12 +1,11 @@
 //
 // Basic Form-Operation UN Number - Create.js
 //
-$(document).ready(function () {
+$(document).ready(function ()
+{
     debugger;
 
-    insert_tdgcore_common_js();
-    var selected_language = '{{website.selected_language.code}}';
-    sessionStorage.setItem("selected_language", selected_language);
+    page_setup();
 
     // hide controls
     tdg.c.control_hide("ovs_unnumber", true);
@@ -31,12 +30,22 @@ $(document).ready(function () {
     btn_save_new_setup();
 });
 
-function insert_tdgcore_common_js() {
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = "/tdgcore_common.js";
+function page_setup() {
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
 
-    $("body").append(script);
+    const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = file;
+
+        $("body").append(script);
+    }
+
+    // server error?
+    tdg.c.message_panel();
 }
 
 function tdg_unnumberid_selected(text, id) {
@@ -101,30 +110,8 @@ function btn_save_new_onclick() {
     if (typeof entityFormClientValidate === 'function') {
         if (entityFormClientValidate()) {
             if (typeof Page_ClientValidate === 'function') {
-                if (Page_ClientValidate('')) {
-                    clearIsDirty();
-                    //disableButtons();
-                    this.value = 'Processing...';
-                }
-            } else {
-                clearIsDirty();
-                //disableButtons();
-                this.value = 'Processing...';
+                value = Page_ClientValidate('');
             }
-        } else {
-            return false;
-        }
-    } else {
-        if (typeof Page_ClientValidate === 'function') {
-            if (Page_ClientValidate('')) {
-                clearIsDirty();
-                //disableButtons();
-                this.value = 'Processing...';
-            }
-        } else {
-            clearIsDirty();
-            //disableButtons();
-            this.value = 'Processing...';
         }
     };
 
@@ -155,16 +142,12 @@ function btn_save_new_onclick() {
         cid_annualquantityvolume,
         cid_annualnumberofshipment,
         contact_id);
-
-    // clear form
-    $("#cid_unitofmeasurement").val(null);
-    $("#cid_annualnumberofshipment").val("");
-    $("#cid_annualquantityvolume").val("");
 }
 
 function ovs_operationunnumber_insert(operation_id, ovs_unnumber,
     cid_unitofmeasurement, cid_annualquantityvolume, cid_annualnumberofshipment,
-    contact_id) {
+    contact_id)
+{
     debugger;
     var data = {
         "ovs_OperationClass@odata.bind": "/ovs_mocregistrations(" + operation_id + ")",
@@ -174,5 +157,35 @@ function ovs_operationunnumber_insert(operation_id, ovs_unnumber,
         "cid_annualquantityvolume": cid_annualquantityvolume,
         "cid_annualnumberofshipment": cid_annualnumberofshipment
     };
-    tdg.webapi.create("ovs_operationunnumbers", data);
+    tdg.webapi.create("ovs_operationunnumbers", data, success_cb, error_cb);
+}
+
+function form_clear() {
+    debugger;
+    $("#cid_unitofmeasurement").val(null);
+    $("#cid_annualnumberofshipment").val("");
+    $("#cid_annualquantityvolume").val("");
+
+    try {
+        var f = document.getElementById("tdg_unnumberid");
+        var c = f.contentWindow; c.clear_field();
+    } catch (e) { }
+}
+
+function success_cb() {
+    debugger;
+
+    msg = tdg.error_message.message("m000014"); // Record added
+    tdg.c.message_panel_set("EntityFormControl", msg);
+
+    // clear form 
+    form_clear();
+}
+
+function error_cb(msg) {
+    debugger;
+
+    var selected_language = '{{website.selected_language.code}}';
+    msg = tdg.c.text_language(msg, selected_language)
+    tdg.c.message_panel_set("EntityFormControl", msg);
 }

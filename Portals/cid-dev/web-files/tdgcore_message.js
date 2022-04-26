@@ -140,6 +140,11 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000013",
                         "message_en": m000013_EN,
                         "message_fr": m000013_FR
+                    },
+                    {
+                        "code": "m000014",
+                        "message_en": "{0} UN Number entries added successfully",
+                        "message_fr": "{0} UN Number entries added successfully_FRE"
                     }
               ];
 

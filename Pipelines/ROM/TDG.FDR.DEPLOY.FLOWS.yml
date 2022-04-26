@@ -7,8 +7,8 @@ pr:
 variables:
   - name: PowerPlatformSPN_Dev
     value: 'TDG CORE DEV 2'
-  - name: PowerPlatformSPN_QA
-    value: 'TDG CORE QA 2'
+  - name: PowerPlatformSPN_QA 
+    value: 'TDG CORE QA 2' #using basic authentication
   # - name: PowerPlatformSPN_ACC
   #   value: 'ROM ACC TDG'
   # - name: PowerPlatformSPN_ACCDATA
@@ -26,18 +26,18 @@ variables:
   - name: VersionPatch
     value: 0
   - name: StableVersionNumber
-    value: '$(VersionMajor).$(VersionMinor).$(VersionPatch)'
+    value: '$(VersionMajor).$(VersionMinor).$(VersionPatch)' #1.1.0
   - name: CounterVariable
-    value: '$(SolutionName)_$(VersionMajor).$(VersionMinor).$(VersionPatch)'
+    value: '$(SolutionName)_$(VersionMajor).$(VersionMinor).$(VersionPatch)' #FDR_Flows_1.1.0
   - name: VersionRevision
-    value: $[counter(variables['CounterVariable'], 0)]
+    value: $[counter(variables['CounterVariable'], 0)] # unique count of string 'FDR_Flows_1.1.0' globally in azure devops, starts at 0
   - name: VersionNumber
-    value: '$(StableVersionNumber).$(VersionRevision)'
+    value: '$(StableVersionNumber).$(VersionRevision)' #1.1.0.0
 
 name: #Set Dynamically in Pipeline
 
 stages:
-- stage: PrintPipelineVariables
+- stage: PrintPipelineVariables # shows all pipeline variables
   pool:
       vmImage: 'windows-latest'
   jobs:
@@ -59,17 +59,19 @@ stages:
     dependsOn: 
     - 'UpdateBuildVersion'
 #QA
-- template: templates/stage/DeploySolution.yml  # Template reference
+- template: templates/stage/DeployFlowSolution.yml  # Template reference
   parameters:
     SolutionName: $(SolutionName)
-    # PowerPlatformSPN: $(PowerPlatformSPN_QA)
-    PowerPlatformEnvironment: $(PowerPlatformSPN_QA)
+    PowerPlatformSPN: $(PowerPlatformSPN_QA)
     PowerPlatformSPN_Dev: $(PowerPlatformSPN_Dev) #used to update solution version after successful deployment to QA
+    UseDeploymentSettingsFile: true
+    DeploymentSettingsFile: 'connection_references/FDR_QA-2_Deploy_Settings.json'
     Environment: 'QA-2-TDG'
     StageName: 'DeployManagedSolutionToQA'
     DeleteSolution: false
     dependsOn: 
     - 'BuildAndPublishArtifacts'
+
 # #ACC
 # - template: templates/stage/DeploySolution.yml  # Template reference
 #   parameters:
@@ -100,3 +102,4 @@ stages:
 #     DeleteSolution: false
 #     dependsOn: 
 #     - 'DeployManagedSolutionToQA'
+

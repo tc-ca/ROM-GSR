@@ -144,7 +144,7 @@ if (typeof (tdg.c) == "undefined") {
 
             try {
                 var target = $("#" + validationSection);
-                var text = '<div id="MessagePanel" class="message alert alert-info alert-danger alert-danger" role="alert">' + msg + '</div>';
+                var text = '<div id="MessagePanel" class="message alert alert-info" role="alert">' + msg + '</div>';
                 target.append($(text));
                 target.show();
             } catch (e) {}

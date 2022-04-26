@@ -4,10 +4,7 @@
 $(document).ready(function () {
     debugger;
 
-    insert_tdgcore_common_js();
-
-    var selected_language = '{{website.selected_language.code}}';
-    sessionStorage.setItem("selected_language", selected_language);
+    page_setup();
 
     // hide controls
     control_hide("ovs_unnumber", true);
@@ -33,6 +30,24 @@ $(document).ready(function () {
     //$("#cid_annualnumberofshipment").attr("autocomplete", "new-password");
     //$("#ovs_supplychaindirection").attr("autocomplete", "new-password");
 });
+
+function page_setup() {
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
+    const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = file;
+
+        $("body").append(script);
+    }
+
+    // server error?
+    tdg.c.message_panel();
+}
 
 function tdg_unnumberid_selected(text, id) {
     debugger;
@@ -66,12 +81,4 @@ if (window.jQuery) {
             return validation;
         }
     }(window.jQuery));
-}
-
-function insert_tdgcore_common_js() {
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = "/tdgcore_common.js";
-
-    $("body").append(script);
 }
