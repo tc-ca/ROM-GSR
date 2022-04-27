@@ -55,14 +55,9 @@ stages:
                 Write-Host "Echoing Parameter Values"
                 Write-Host "Parameters.SolutionName: ${{Parameters.SolutionName}}"
                 Write-Host "Parameters.PowerPlatformSPN: ${{Parameters.PowerPlatformSPN}}"
-                Write-Host "zzzzzzzzzzzzzzzzzzzzzzz"
-                Write-Host "a: $(Build.SourcesDirectory)
-                Write-Host "yyyyyyyyyyyyyyyyyyyyyyy"
-                Write-Host "b: $(Build.SourcesDirectory)\${{Parameters.DeploymentSettingsFile}}"
-                Write-Host "00000000000000000000000"
-                Write-Host "Show all folder content"
-                Get-ChildItem -Path $(Build.SourcesDirectory)\*.* -Recurse -Force
-                Write-Host "============================================"
+                Write-Host "DeploymentSettingsFile: ${{DeploymentSettingsFile}}"
+                Write-Host "Build.SourcesDirectory Tree Structure"
+                tree "$(Build.SourcesDirectory)" /F
           - template: ../task/PrintPipelineFileDirectories.yml
           - task: PowerPlatformToolInstaller@0
             inputs:
