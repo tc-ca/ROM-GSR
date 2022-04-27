@@ -115,6 +115,11 @@
               "$filter": "(statecode eq 0 and _ovs_regionalnop_value eq @{triggerOutputs()?['body/ovs_cdregionalnopid']})"
             },
             "authentication": "@parameters('$authentication')"
+          },
+          "runtimeConfiguration": {
+            "paginationPolicy": {
+              "minimumItemCount": 20000
+            }
           }
         }
       }
