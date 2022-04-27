@@ -19,6 +19,12 @@ $(document).ready(function () {
     });
 });
 
+$(window).unload(function() {
+    console.log("in unload");
+    var wp = window.parent;
+    wp.triggerUpdate();
+});
+
 function page_setup() {
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);

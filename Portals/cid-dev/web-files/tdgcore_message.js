@@ -37,46 +37,6 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "Non",
                     },
                     {
-                        "code": "1. Start",
-                        "message_en": "1. Start",
-                        "message_fr": "1. Commencez"
-                    },
-                    {
-                        "code": "2. Company",
-                        "message_en": "2. Company",
-                        "message_fr": "2. Entreprise"
-                    },
-                    {
-                        "code": "3. Contact(s)",
-                        "message_en": "3. Contact(s)",
-                        "message_fr": "3. Contact(s)"
-                    },
-                    {
-                        "code": "4. NAICS Code(s)",
-                        "message_en": "4. NAICS Code(s)",
-                        "message_fr": "4. Code(s) SCIAN"
-                    },
-                    {
-                        "code": "5. ERAP(s)",
-                        "message_en": "5. ERAP(s)",
-                        "message_fr": "5. ERAP(s)"
-                    },
-                    {
-                        "code": "6. Attest Company",
-                        "message_en": "6. Attest Company",
-                        "message_fr": "6. Attester l'entreprise"
-                    },
-                    {
-                        "code": "7. Site(s)",
-                        "message_en": "7. Site(s)",
-                        "message_fr": "7. Site(s)"
-                    },
-                    {
-                        "code": "8. Complete",
-                        "message_en": "8. Complete",
-                        "message_fr": "8. Terminer"
-                    },
-                    {
                         "code": "m000001",
                         "message_en": "Invalid CRA Business Number",
                         "message_fr": "Numéro d'entreprise de l'ARC invalide"
@@ -145,6 +105,11 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000014",
                         "message_en": "{0} UN Number entries added successfully",
                         "message_fr": "{0} UN Number entries added successfully_FRE"
+                    },
+                    {
+                        "code": "m000100",
+                        "message_en": "Back to Company Registration Wizard",
+                        "message_fr": "Retour à l'assistant d'enregistrement de société"
                     }
               ];
 

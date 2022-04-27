@@ -4,12 +4,11 @@
 $(document).ready(function () {
 	debugger;
 
-	header();
+	header_setup();
 
 	var companyName = '{{user.parentcustomerid.name }}';
 
 	if (companyName) {
-		var companyid = '{{user.parentcustomerid.id}}';
 		var company_status = "{{entities.account[user.parentcustomerid.id].cid_cidcompanystatus.value}}";
 
 		if (company_status == '100000005') {
@@ -20,9 +19,9 @@ $(document).ready(function () {
 	var instructionBtns = $(".instruction-btn");
 
 	if (instructionBtns.length > 0) {
-		var msg = tdg.error_message.message("m000010");	// Choose the same named button found below
 		instructionBtns.click(function () {
-			alert(msg);
+			var msg = tdg.error_message.message("m000010");	// Choose the same named button found below
+			tdg.c.dialog_OK(msg);
 		});
     }
 
@@ -33,7 +32,7 @@ $(document).ready(function () {
 	});
 });
 
-function header() {
+function header_setup() {
 	var code = "m000009";
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
@@ -49,8 +48,8 @@ function header() {
 			code = "m000008";	// Company Registration Wizard
 		}
 
-		text = tdg.error_message.message(text);
-		item.innerText = text;
+		//text = tdg.error_message.message(text);
+		//item.innerText = text;
 	}
 
 	try {

@@ -17,7 +17,7 @@ $(document).ready(function() {
 						if(tdElement.attr('data-attribute') == 'cid_operationdetailsprovided')
 						{
 							if(tdElement.attr('data-value') == 'false')
-								window.location.href = "~/en-US/OperationRegistrationWizard/?id=" + operationId;
+								window.location.href = "~/en-US/OperationRegistrationWizard/?id=" + operationId + "&siteid=" + siteid;
 							else
 								$("#NextButton").click();
 						}
