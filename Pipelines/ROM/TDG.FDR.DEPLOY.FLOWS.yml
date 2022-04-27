@@ -4,12 +4,102 @@ trigger:
 pr:
 - none
 
-steps:
-- checkout: self    
-    
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: |
-      Write-Host "============================================"
-      tree "$(Build.SourcesDirectory)" /F
+variables:
+  - name: PowerPlatformSPN_Dev
+    value: 'TDG CORE DEV 2'
+  - name: PowerPlatformSPN_QA 
+    value: 'TDG CORE QA 2' #using basic authentication
+  # - name: PowerPlatformSPN_ACC
+  #   value: 'ROM ACC TDG'
+  # - name: PowerPlatformSPN_ACCDATA
+  #   value: 'ROM ACC TDG DATA'
+  # - name: PowerPlatformSPN_PREPROD
+  #   value: 'ROM PREPROD TDG'
+  # - name: PowerPlatformSPN_PROD
+  #   value: 'ROM PROD TDG'
+  - name: SolutionName
+    value: 'FDR_Flows'
+  - name: VersionMajor
+    value: 1
+  - name: VersionMinor
+    value: 1
+  - name: VersionPatch
+    value: 0
+  - name: StableVersionNumber
+    value: '$(VersionMajor).$(VersionMinor).$(VersionPatch)' #1.1.0
+  - name: CounterVariable
+    value: '$(SolutionName)_$(VersionMajor).$(VersionMinor).$(VersionPatch)' #FDR_Flows_1.1.0
+  - name: VersionRevision
+    value: $[counter(variables['CounterVariable'], 0)] # unique count of string 'FDR_Flows_1.1.0' globally in azure devops, starts at 0
+  - name: VersionNumber
+    value: '$(StableVersionNumber).$(VersionRevision)' #1.1.0.0
+
+name: #Set Dynamically in Pipeline
+
+stages:
+- stage: PrintPipelineVariables # shows all pipeline variables
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: PrintPipelineVariables
+    steps:
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: 'env | sort'
+- template: templates/stage/UpdateBuildVersion.yml  # Template reference
+  parameters:
+    StageName: 'UpdateBuildVersion'
+    VersionNumber: variables['VersionNumber']
+- template: templates/stage/CommitSolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_Dev)
+    StageName: 'BuildAndPublishArtifacts'
+    dependsOn: 
+    - 'UpdateBuildVersion'
+#QA
+- template: templates/stage/DeployFlowSolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_QA)
+    PowerPlatformSPN_Dev: $(PowerPlatformSPN_Dev) #used to update solution version after successful deployment to QA
+    UseDeploymentSettingsFile: true
+    DeploymentSettingsFile: 'Pipelines\ROM\connection_references\FDR_QA-2_Deploy_settings.json'
+    Environment: 'QA-2-TDG'
+    StageName: 'DeployManagedSolutionToQA'
+    DeleteSolution: false
+    dependsOn: 
+    - 'BuildAndPublishArtifacts'
+
+# #ACC
+# - template: templates/stage/DeploySolution.yml  # Template reference
+#   parameters:
+#     SolutionName: $(SolutionName)
+#     PowerPlatformSPN: $(PowerPlatformSPN_ACC)
+#     Environment: 'ACC-TDG'
+#     StageName: 'DeployManagedSolutionToACC'
+#     DeleteSolution: false
+#     dependsOn: 
+#     - 'DeployManagedSolutionToQA'
+# #PREPROD
+# - template: templates/stage/DeploySolution.yml  # Template reference
+#   parameters:
+#     SolutionName: $(SolutionName)
+#     PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
+#     Environment: 'PREPROD-TDG'
+#     StageName: 'DeployManagedSolutionToPREPROD'
+#     DeleteSolution: false
+#     dependsOn: 
+#     - 'DeployManagedSolutionToQA'
+# #PROD
+# - template: templates/stage/DeploySolution.yml  # Template reference
+#   parameters:
+#     SolutionName: $(SolutionName)
+#     PowerPlatformSPN: $(PowerPlatformSPN_PROD)
+#     Environment: 'PROD-TDG'
+#     StageName: 'DeployManagedSolutionToPROD'
+#     DeleteSolution: false
+#     dependsOn: 
+#     - 'DeployManagedSolutionToQA'
+
