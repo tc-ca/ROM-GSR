@@ -138,7 +138,7 @@
                 },
                 "parameters": {
                   "entityName": "ovs_workordercandidates",
-                  "$filter": "(_ovs_regionalnop_value eq '@{items('For_Each_Regional_NOP')?['ovs_cdregionalnopid']}' and _ovs_oversighttype_value eq '@{variables('GCIPTOversightType')}') and (ovs_operationid/ovs_targetedind eq true and ovs_operationid/statecode eq 0)",
+                  "$filter": "(_ovs_regionalnop_value eq '@{items('For_Each_Regional_NOP')?['ovs_cdregionalnopid']}' and _ovs_oversighttype_value eq '@{variables('GCIPTOversightType')}') and \n(statecode eq 0) and\n(ovs_operationid/ovs_targetedind eq true and ovs_operationid/statecode eq 0)",
                   "$expand": "ovs_operationid($select=ovs_hubind,ovs_name,ovs_operationtype)"
                 },
                 "authentication": {
