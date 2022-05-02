@@ -1,8 +1,9 @@
 //
 // Basic Form-Operation UN Number - Create.js
 //
-$(document).ready(function ()
-{
+var _reload = false;
+
+$(document).ready(function () {
     debugger;
 
     page_setup();
@@ -21,13 +22,18 @@ $(document).ready(function ()
     //when the page is done loading, disable autocomplete on all inputs[text]
     $('input[type="text"]').attr('autocomplete', 'off');
 
-    // autocomplete off
-    //$("#cid_unitofmeasurement").attr("autocomplete", "new-password");
-    //$("#cid_annualquantityvolume").attr("autocomplete", "new-password");
-    //$("#cid_annualnumberofshipment").attr("autocomplete", "new-password");
-    //$("#ovs_supplychaindirection").attr("autocomplete", "new-password");
-
     btn_save_new_setup();
+});
+
+$(window).unload(function () {
+    debugger;
+    if (_reload) {
+        var wp = window.parent;
+        try {
+            //wp.form_refresh();
+            wp.location.reload()
+        } catch (e) { }
+    }
 });
 
 function page_setup() {
@@ -146,8 +152,7 @@ function btn_save_new_onclick() {
 
 function ovs_operationunnumber_insert(operation_id, ovs_unnumber,
     cid_unitofmeasurement, cid_annualquantityvolume, cid_annualnumberofshipment,
-    contact_id)
-{
+    contact_id) {
     debugger;
     var data = {
         "ovs_OperationClass@odata.bind": "/ovs_mocregistrations(" + operation_id + ")",
@@ -180,6 +185,8 @@ function success_cb() {
 
     // clear form 
     form_clear();
+
+    _reload = true;
 }
 
 function error_cb(msg) {

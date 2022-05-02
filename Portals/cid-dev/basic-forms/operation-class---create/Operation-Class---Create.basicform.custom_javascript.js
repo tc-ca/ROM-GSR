@@ -1,6 +1,8 @@
 //
 // Basic Form-Operation Class- Create.js
 //
+var _reload = false;
+
 $(document).ready(function () {
     debugger;
 
@@ -11,18 +13,17 @@ $(document).ready(function () {
 
     // insert button
     btn_save_new_setup();
-
-    debugger;
-    var btn_close = $(".form-close")[0];
-    btn_close.click(function () {
-        alert("xxx");
-    });
 });
 
-$(window).unload(function() {
-    console.log("in unload");
-    var wp = window.parent;
-    wp.triggerUpdate();
+$(window).unload(function () {
+    debugger;
+    if (_reload) {
+        var wp = window.parent;
+        try {
+            //wp.form_refresh();
+            wp.location.reload()
+        } catch (e) { }
+    }
 });
 
 function page_setup() {
@@ -69,8 +70,7 @@ function btn_save_new_setup() {
     });
 }
 
-function btn_save_new_onclick()
-{
+function btn_save_new_onclick() {
     tdg.c.error_message_clear();
     if (typeof entityFormClientValidate === 'function') {
         if (entityFormClientValidate()) {
@@ -125,6 +125,8 @@ function success_cb() {
 
     // clear form
     form_clear();
+
+    _reload = true;
 }
 
 function error_cb(msg) {
