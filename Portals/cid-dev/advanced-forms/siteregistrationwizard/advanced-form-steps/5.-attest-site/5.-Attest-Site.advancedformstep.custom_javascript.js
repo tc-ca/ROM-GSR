@@ -1,6 +1,7 @@
 $(document).ready(function() {
     $('#PreviousButton').on('click', async function () {
-        ow.location.href = "~/en-US/OperationRegistrationWizard";
+        //window.location.href = "~/en-US/OperationRegistrationWizard";
+        await UpdateOperationDetailsProvided('afe2ea32-1ac5-ec11-a7b5-0022483e1d65', false);
     });
 
     $('table').each(function () {

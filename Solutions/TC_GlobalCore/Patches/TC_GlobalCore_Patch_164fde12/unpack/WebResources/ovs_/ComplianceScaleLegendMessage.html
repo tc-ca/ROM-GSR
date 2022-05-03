@@ -1,0 +1,58 @@
+﻿<html>
+<head>
+    <meta charset="utf-8" />
+    <link href="Bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+
+    <script src="../ClientGlobalContext.js.aspx"></script>
+    <script src="../qm_/Scripts/jquery_3.1.1.min.js"></script>
+    <script src="../qm_/Bootstrap/js/bootstrap.min.js"></script>
+
+    <style>
+        #ComplianceScaleLegendMessageTable {
+            border-collapse: collapse;
+            width: 100%;
+            font-variant: normal;
+            font-family: "Segoe UI",sans-serif;
+        }
+        
+        #ComplianceScaleLegendMessageTable td {
+            border: 1px solid #999;
+            padding: 8px;
+            font-variant: normal;
+            font-family: "Segoe UI",sans-serif;
+        }
+
+        #ComplianceScaleLegendMessageTable tr:nth-child(even){background-color: #f2f2f2;}
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div id="holder" class="bg-warning table-responsive" style="font-family: 'sans-serif'"></div>
+    </div>
+    <script>
+        $(document).ready(function () {
+
+            var message = "";
+            var userSettings = Xrm.Utility.getGlobalContext().userSettings;
+            LCID = userSettings.languageId;
+
+            if (LCID === 1033)
+                resexResourceName = "ovs_Labels.1033.resx";
+            else if (LCID === 1036)
+                resexResourceName = "ovs_Labels.1036.resx";
+            
+            message = "<table id='ComplianceScaleLegendMessageTable' class='table'><tbody>\n" +
+                "<tr><td>0</td><td>" + Xrm.Utility.getResourceString(resexResourceName, "qm_cepdata.ComplianceScaleLegendMessage0") + "</td></tr>\n" +
+                "<tr><td>1</td><td>" + Xrm.Utility.getResourceString(resexResourceName, "qm_cepdata.ComplianceScaleLegendMessage1") + "</td></tr>\n" +
+                "<tr><td>2</td><td>" + Xrm.Utility.getResourceString(resexResourceName, "qm_cepdata.ComplianceScaleLegendMessage2") + "</td></tr>\n" +
+                "<tr><td>3</td><td>" + Xrm.Utility.getResourceString(resexResourceName, "qm_cepdata.ComplianceScaleLegendMessage3") + "</td></tr>\n" +
+                "<tr><td>4</td><td>" + Xrm.Utility.getResourceString(resexResourceName, "qm_cepdata.ComplianceScaleLegendMessage4") + "</td></tr>\n" +
+                "<tr><td>5</td><td>" + Xrm.Utility.getResourceString(resexResourceName, "qm_cepdata.ComplianceScaleLegendMessage5") + "</td></tr>\n" +
+                "<tr><td>6</td><td>" + Xrm.Utility.getResourceString(resexResourceName, "qm_cepdata.ComplianceScaleLegendMessage6") + "</td></tr>\n" +
+            "</tbody></table>";
+            $('#holder').html(message);
+        });
+    </script>
+</body>
+</html>

@@ -505,6 +505,13 @@
     }
 
     ///to restore option set to default send arrayOfIntValues as null
+    /**
+       *to restore option set to default send arrayOfIntValues as null    
+       * @param {FORM Context} formContext
+       * @param {OptionSet attribute logical name} attr
+       * @param {Array of OptionSetValues (integers)} arrayOfIntValues
+       * @param {Flag of arrayOfIntValues's utilization: keep or revove given values} isValuesToKeep
+   */
     function filterOptionSet(formContext, attr, arrayOfIntValues = null, isValuesToKeep = true) {
         var oSet = formContext.getControl(attr);
         if (!oSet) return;

@@ -126,9 +126,6 @@ var AccountTDGmain = (function (window, document) {
             //        glHelper.SetTabVisibility(formContext, "tab_Operations", true);
             //}
 
-            //TASK 165366
-            glHelper.SetRequiredLevel(formContext, PRIMARYCONTACT, true);
-
             //filter Relationship Type
             filter_customertypecode(formContext);
 
@@ -145,6 +142,9 @@ var AccountTDGmain = (function (window, document) {
 
                 //prepare data for Violations History grid
                 getViolationHistory(formContext);
+
+                //TASK 165366
+                glHelper.SetRequiredLevel(formContext, PRIMARYCONTACT, true);
 
                 //var accountUN = formContext.getControl("Subgrid_AccountUNNumbers");
 

@@ -101,7 +101,8 @@ var WO_TDG_ReportHelper = (function (window, document) {
                     req.onreadystatechange = null;
                     if (this.status === 200) {
                         var result = JSON.parse(this.response);
-                        if (result.hasOwnProperty("primarycontactid")) {
+                        if (result.hasOwnProperty("primarycontactid")
+                            && result["primarycontactid"] != null) {
 
                             if (result["primarycontactid"]["telephone1"] == null) {
                                 setReportValidationError("Site " + site.name + " " + messagePhone);

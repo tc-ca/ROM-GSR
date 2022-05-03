@@ -1,13 +1,10 @@
 $(document).ready(function () {
 	var companyName = '{{user.parentcustomerid.name }}';
-	var header = $('.page-header h1');
+	var topNav = $('#navbar');
 
 	if(companyName)
-	{
-		if(header)
-			header.text(header.text() + ' - ' + companyName);
-		
-	}
+		if(topNav)
+			$( "<h2>TDG Site Registration Database: " + companyName + "</h2>" ).insertAfter(topNav);
 
 	$("legend").each(function() {
 		$(this).removeClass();

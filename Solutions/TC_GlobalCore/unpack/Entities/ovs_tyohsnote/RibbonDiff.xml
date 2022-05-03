@@ -1,18 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RibbonDiffXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <CustomActions>
-    <HideCustomAction HideActionId="ovs.Mscrm.Form.ovs_tyohsnote.Activate.Hide" Location="Mscrm.Form.ovs_tyohsnote.Activate" />
-    <HideCustomAction HideActionId="ovs.Mscrm.Form.ovs_tyohsnote.Deactivate.Hide" Location="Mscrm.Form.ovs_tyohsnote.Deactivate" />
     <HideCustomAction HideActionId="ovs.Mscrm.Form.ovs_tyohsnote.Delete.Hide" Location="Mscrm.Form.ovs_tyohsnote.Delete" />
     <HideCustomAction HideActionId="ovs.Mscrm.Form.ovs_tyohsnote.NewRecord.Hide" Location="Mscrm.Form.ovs_tyohsnote.NewRecord" />
-    <HideCustomAction HideActionId="ovs.Mscrm.SubGrid.ovs_tyohsnote.Activate.Hide" Location="Mscrm.SubGrid.ovs_tyohsnote.Activate" />
+    <HideCustomAction HideActionId="ovs.Mscrm.HomepageGrid.ovs_tyohsnote.DeleteMenu.Hide" Location="Mscrm.HomepageGrid.ovs_tyohsnote.DeleteMenu" />
     <HideCustomAction HideActionId="ovs.Mscrm.SubGrid.ovs_tyohsnote.AddExistingStandard.Hide" Location="Mscrm.SubGrid.ovs_tyohsnote.AddExistingStandard" />
-    <HideCustomAction HideActionId="ovs.Mscrm.SubGrid.ovs_tyohsnote.Deactivate.Hide" Location="Mscrm.SubGrid.ovs_tyohsnote.Deactivate" />
-    <CustomAction Id="tc.Mscrm.SubGrid.ovs_tyohsnote.AddNewStandard.CustomAction" Location="Mscrm.SubGrid.ovs_tyohsnote.MainTab.Management.Controls._children" Sequence="20">
+    <CustomAction Id="ovs.Mscrm.SubGrid.ovs_tyohsnote.AddNewStandard.CustomAction" Location="Mscrm.SubGrid.ovs_tyohsnote.MainTab.Management.Controls._children" Sequence="20">
       <CommandUIDefinition>
         <Button Alt="$LocLabels:Mscrm.SubGrid.ovs_tyohsnote.AddNewStandard.Alt" Command="Mscrm.AddNewRecordFromSubGridStandard" Id="Mscrm.SubGrid.ovs_tyohsnote.AddNewStandard" Image32by32="/_imgs/ribbon/newrecord32.png" Image16by16="/_imgs/ribbon/New_16.png" LabelText="$LocLabels:Mscrm.SubGrid.ovs_tyohsnote.AddNewStandard.LabelText" Sequence="20" TemplateAlias="o1" ToolTipTitle="$LocLabels:Mscrm.SubGrid.ovs_tyohsnote.AddNewStandard.ToolTipTitle" ToolTipDescription="$Resources(EntityDisplayName):Mscrm_SubGrid_EntityLogicalName_MainTab_Management_AddNewStandard_ToolTipDescription" ModernImage="New" />
       </CommandUIDefinition>
     </CustomAction>
+    <HideCustomAction HideActionId="ovs.Mscrm.SubGrid.ovs_tyohsnote.Delete.Hide" Location="Mscrm.SubGrid.ovs_tyohsnote.Delete" />
   </CustomActions>
   <Templates>
     <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
@@ -73,10 +71,68 @@
         </JavaScriptFunction>
       </Actions>
     </CommandDefinition>
+    <CommandDefinition Id="Mscrm.HomepageGrid.Activate">
+      <EnableRules>
+        <EnableRule Id="Mscrm.VisualizationPaneNotMaximized" />
+        <EnableRule Id="Mscrm.SelectionCountAtLeastOne" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.CanWriteSelected" />
+        <DisplayRule Id="Mscrm.SelectedEntityHasStatecode" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.Activate.activateRecords" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedControl" />
+          <CrmParameter Value="SelectedControlSelectedItemReferences" />
+          <CrmParameter Value="SelectedEntityTypeName" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="Mscrm.HomepageGrid.Deactivate">
+      <EnableRules>
+        <EnableRule Id="Mscrm.VisualizationPaneNotMaximized" />
+        <EnableRule Id="Mscrm.SelectionCountAtLeastOne" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.CanWriteSelected" />
+        <DisplayRule Id="Mscrm.SelectedEntityHasStatecode" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.Deactivate.deactivateRecords" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedControl" />
+          <CrmParameter Value="SelectedControlSelectedItemReferences" />
+          <CrmParameter Value="SelectedEntityTypeName" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="ovs.ovs_tyohsnote.ovs_tyohsnote.Deactivate">
+      <EnableRules>
+        <EnableRule Id="Mscrm.VisualizationPaneNotMaximized" />
+        <EnableRule Id="Mscrm.SelectionCountAtLeastOne" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.CanWriteSelected" />
+        <DisplayRule Id="Mscrm.SelectedEntityHasStatecode" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.Deactivate.deactivateRecords" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedControl" />
+          <CrmParameter Value="SelectedControlSelectedItemReferences" />
+          <CrmParameter Value="SelectedEntityTypeName" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
   </CommandDefinitions>
   <RuleDefinitions>
     <TabDisplayRules />
-    <DisplayRules />
+    <DisplayRules>
+      <DisplayRule Id="Mscrm.CanWriteSelected">
+        <EntityPrivilegeRule PrivilegeType="Write" PrivilegeDepth="Basic" AppliesTo="SelectedEntity" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.SelectedEntityHasStatecode">
+        <EntityPropertyRule AppliesTo="SelectedEntity" PropertyName="HasStateCode" PropertyValue="true" />
+      </DisplayRule>
+    </DisplayRules>
     <EnableRules>
       <EnableRule Id="Mscrm.CheckBulkEditSupportForEntity">
         <CustomRule FunctionName="XrmCore.InternalUtilities.DialogUtilities.isMobileCompanionApp" Library="$webresource:Main_system_library.js" InvertResult="true" />

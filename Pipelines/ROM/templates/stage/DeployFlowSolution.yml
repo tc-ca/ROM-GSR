@@ -1,0 +1,99 @@
+parameters:
+  - name: PowerPlatformSPN
+    type: string
+  - name: PowerPlatformSPN_Dev
+    type: string
+    default: 'ROM Dev'
+  - name: SolutionName
+    type: string
+  - name: Environment
+    type: string
+  - name: StageName
+    type: string
+  - name: DeployUnmanagedSolution
+    type: boolean
+    default: false
+  - name: IncrementVersion
+    type: boolean
+    default: true
+  - name: dependsOn
+    type: object
+    default: []
+  - name: DeleteSolution
+    type: boolean
+    default: false
+  - name: UseDeploymentSettingsFile
+    type: boolean
+    default: true
+  - name: DeploymentSettingsFile
+    type: string
+
+    
+stages:
+- stage: ${{Parameters.StageName}}
+  dependsOn:
+  - ${{ each stage in parameters.dependsOn }}:
+    - ${{ stage }}
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - deployment: Deploy
+    displayName:  ${{Parameters.StageName}}
+    environment: ${{Parameters.Environment}}
+    timeoutInMinutes: 360
+    cancelTimeoutInMinutes: 2
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self       
+          - task: PowerShell@2
+            inputs:
+              targetType: 'inline'
+              script: |
+                Write-Host "============================================"
+                Write-Host "Echoing Parameter Values"
+                Write-Host "Parameters.SolutionName: ${{Parameters.SolutionName}}"
+                Write-Host "Parameters.PowerPlatformSPN: ${{Parameters.PowerPlatformSPN}}"
+                Write-Host "Parameters.DeploymentSettingsFile: ${{Parameters.DeploymentSettingsFile}}"
+          - template: ../task/PrintPipelineFileDirectories.yml
+          - task: PowerPlatformToolInstaller@0
+            inputs:
+              DefaultVersion: true
+          - ${{ if eq(parameters.DeleteSolution, true) }}:
+            - task: PowerPlatformDeleteSolution@0
+              inputs:
+                authenticationType: 'PowerPlatformSPN'
+                PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
+                SolutionName: '${{Parameters.SolutionName}}'
+          - ${{ if eq(parameters.DeployUnmanagedSolution, false) }}:
+            - task: PowerPlatformImportSolution@0
+              inputs:
+                authenticationType: 'PowerPlatformEnvironment'
+                PowerPlatformEnvironment: '${{Parameters.PowerPlatformSPN}}'
+                UseDeploymentSettingsFile: '${{Parameters.UseDeploymentSettingsFile}}'
+                DeploymentSettingsFile: '$(Build.SourcesDirectory)\${{Parameters.DeploymentSettingsFile}}'
+                SolutionInputFile: '$(Agent.BuildDirectory)\zip\${{Parameters.SolutionName}}_Managed.zip'
+                AsyncOperation: true
+                MaxAsyncWaitTime: '360'
+                HoldingSolution: false
+                OverwriteUnmanagedCustomizations: true
+          - ${{ if eq(parameters.DeployUnmanagedSolution, true) }}:
+            - task: PowerPlatformImportSolution@0
+              inputs:
+                authenticationType: 'PowerPlatformEnvironment'
+                PowerPlatformEnvironment: '${{Parameters.PowerPlatformSPN}}'
+                UseDeploymentSettingsFile: '${{Parameters.UseDeploymentSettingsFile}}'
+                DeploymentSettingsFile: '$(Build.SourcesDirectory)\${{Parameters.DeploymentSettingsFile}}'
+                SolutionInputFile: '$(Agent.BuildDirectory)\zip\${{Parameters.SolutionName}}.zip'
+                AsyncOperation: true
+                MaxAsyncWaitTime: '360'
+                HoldingSolution: false
+                OverwriteUnmanagedCustomizations: false
+          - ${{ if and(eq(Parameters.Environment, 'QA-TDG'), eq(Parameters.IncrementVersion, true)) }}:
+            - task: PowerPlatformSetSolutionVersion@0
+              inputs:
+                authenticationType: 'PowerPlatformSPN'
+                PowerPlatformSPN: '${{Parameters.PowerPlatformSPN_DEV}}'
+                SolutionName: '${{Parameters.SolutionName}}'
+                SolutionVersionNumber: '$(Build.BuildNumber)'

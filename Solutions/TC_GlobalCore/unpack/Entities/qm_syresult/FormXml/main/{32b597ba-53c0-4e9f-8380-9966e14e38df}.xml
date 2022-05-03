@@ -5,7 +5,7 @@
     <IntroducedVersion>1.0.0.1</IntroducedVersion>
     <FormPresentation>1</FormPresentation>
     <FormActivationState>1</FormActivationState>
-    <form>
+    <form headerdensity="HighWithControls">
       <tabs>
         <tab verticallayout="true" id="{2dad496c-0e7d-4f29-919c-9afbb3299e4a}" IsUserDefined="1">
           <labels>
@@ -37,15 +37,6 @@
                           <label description="Nombre d'infractions" languagecode="1036" />
                         </labels>
                         <control id="qm_violationcount" classid="{C6D124CA-7EDA-4a60-AEA9-7FB8D318B68F}" datafieldname="qm_violationcount" disabled="false" />
-                      </cell>
-                    </row>
-                    <row>
-                      <cell id="{c46779c0-8653-d367-d79c-7d933cd42d2c}" showlabel="true" locklevel="0">
-                        <labels>
-                          <label description="Inspection" languagecode="1033" />
-                          <label description="Inspection" languagecode="1036" />
-                        </labels>
-                        <control id="qm_workorderid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="qm_workorderid" disabled="false" />
                       </cell>
                     </row>
                   </rows>
@@ -159,6 +150,22 @@
               </labels>
               <control id="header_statuscode" classid="{5D68B988-0661-4db2-BC3E-17598AD3BE6C}" datafieldname="statuscode" disabled="false" />
             </cell>
+            <cell id="{0a4105a9-e23f-48e2-9d85-8ce1026e3a4c}" locklevel="0" colspan="1" rowspan="1" showlabel="true">
+              <labels>
+                <label description="Related Work Order" languagecode="1033" />
+                <label description="Inspection" languagecode="1036" />
+              </labels>
+              <control id="header_qm_workorderid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="qm_workorderid" disabled="false" uniqueid="{9e774300-5d17-72ca-b35a-a9a0952bc5e1}">
+                <parameters>
+                  <DisableMru>false</DisableMru>
+                  <AutoResolve>true</AutoResolve>
+                  <DisableQuickFind>false</DisableQuickFind>
+                  <DisableViewPicker>false</DisableViewPicker>
+                  <DefaultViewId>{C0C4FD32-F265-497D-BFAE-546C88D5BB3B}</DefaultViewId>
+                  <AllowFilterOff>false</AllowFilterOff>
+                </parameters>
+              </control>
+            </cell>
             <cell id="{845eeebc-d08b-7a01-dbaa-dbc19bc26e37}" showlabel="true" locklevel="0">
               <labels>
                 <label description="Owner" languagecode="1033" />
@@ -170,7 +177,7 @@
         </rows>
       </header>
       <Navigation>
-        <NavBar></NavBar>
+        <NavBar />
         <NavBarAreas>
           <NavBarArea Id="Info">
             <Titles>
@@ -200,6 +207,31 @@
         </NavBarAreas>
       </Navigation>
       <controlDescriptions />
+      <footer id="{107ca566-2d83-40a5-9257-e0dc7dc720e0}" celllabelposition="Top" columns="111" labelwidth="115" celllabelalignment="Left">
+        <rows>
+          <row>
+            <cell id="{1c56e0da-58af-4346-960d-94d503aeb73e}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+            <cell id="{b139b578-a725-4e14-9e61-09688ffc15a8}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+            <cell id="{8b0ae700-de09-4d10-baa0-3985e3db3fc6}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+          </row>
+        </rows>
+      </footer>
+      <DisplayConditions Order="2" FallbackForm="false">
+        <Role Id="{627090ff-40a3-4053-8790-584edc5be201}" />
+        <Role Id="{119f245c-3cc8-4b62-b31c-d1a046ced15d}" />
+      </DisplayConditions>
     </form>
     <IsCustomizable>1</IsCustomizable>
     <CanBeDeleted>1</CanBeDeleted>

@@ -1,0 +1,800 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_sharedcommondataserviceforapps_ad109"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_azureblob": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_sharedazureblob_be2c5"
+        },
+        "api": {
+          "name": "shared_azureblob"
+        }
+      },
+      "shared_wordonlinebusiness_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_sharedwordonlinebusiness_1d9fa"
+        },
+        "api": {
+          "name": "shared_wordonlinebusiness"
+        }
+      },
+      "shared_sharepointonline": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_sharedsharepointonline_a767e"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      },
+      "shared_sharepointonline_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_sharedsharepointonline_a767e"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_Certificate_is_added_or_modified": {
+          "metadata": {
+            "operationMetadataId": "410bd6ad-e4fd-499c-8dac-f2e144a5b91a"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 1,
+              "subscriptionRequest/entityname": "fdr_certificate",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/runas": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "conditions": [
+            {
+              "expression": "@equals(triggerBody()?['statuscode'],1)"
+            }
+          ]
+        }
+      },
+      "actions": {
+        "SP_Folder_Path": {
+          "runAfter": {
+            "Format_Operation_GUID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "93ddf22f-7a42-4be9-b04b-5a913177257f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "SPfolderPath",
+                "type": "string",
+                "value": "/@{outputs('Get_Operation_data_and_include_all_fields')?['body/ovs_name']}_@{variables('OperationGuid')}"
+              }
+            ]
+          }
+        },
+        "File_Name_SharePoint": {
+          "runAfter": {
+            "SP_Folder_Path": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "514831f0-9707-4267-b3c7-5283662b89f3"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "fileNameSP",
+                "type": "string",
+                "value": "@triggerOutputs()?['body/fdr_name']"
+              }
+            ]
+          }
+        },
+        "Is_French": {
+          "runAfter": {
+            "Location_Condition": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2c9f9de7-297b-476a-a368-ffcdca2b6207"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "isFrench",
+                "type": "boolean",
+                "value": "@equals(triggerOutputs()?['body/fdr_language'],918640002)"
+              }
+            ]
+          }
+        },
+        "removeLocation": {
+          "runAfter": {
+            "Get_Site_and_Primary_Contact": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "40b19b2c-6c0a-41c2-b7fe-202ddc1e27be"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "isAddressEqLocation",
+                "type": "boolean",
+                "value": "@true"
+              }
+            ]
+          }
+        },
+        "Location_Condition": {
+          "actions": {
+            "Set_Location_flag": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "62faeedd-cc53-4970-8566-5f4e93805873"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "isAddressEqLocation",
+                "value": "@false"
+              }
+            }
+          },
+          "runAfter": {
+            "removeLocation": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@outputs('Get_Site_and_Primary_Contact')?['body/address1_line1']",
+                  ""
+                ]
+              },
+              {
+                "equals": [
+                  "@outputs('Get_Site_and_Primary_Contact')?['body/address1_city']",
+                  ""
+                ]
+              },
+              {
+                "equals": [
+                  "@outputs('Get_Site_and_Primary_Contact')?['body/address1_postalcode']",
+                  ""
+                ]
+              },
+              {
+                "equals": [
+                  "@outputs('Get_Site_and_Primary_Contact')?['body/address1_stateorprovince']",
+                  ""
+                ]
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0eb8dfff-e065-4c03-8fd8-fa63b8d02f6a"
+          },
+          "type": "If"
+        },
+        "File_Path_Blob": {
+          "runAfter": {
+            "File_Name_SharePoint": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "46c35936-746d-4ce1-a76b-79885a4897e2"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "filePathBlob",
+                "type": "string",
+                "value": "@{outputs('Get_Operation_data_and_include_all_fields')?['body/ovs_name']}_@{variables('OperationGuid')}/Certificates - Certificats"
+              }
+            ]
+          }
+        },
+        "Get_Site_and_Primary_Contact": {
+          "runAfter": {
+            "Get_Operation_data_and_include_all_fields": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a085ccba-f8f5-4e34-975b-54c40cf51030"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "accounts",
+              "recordId": "@outputs('Get_Operation_data_and_include_all_fields')?['body/_ovs_siteid_value']",
+              "$select": "name,emailaddress1,accountid,address1_composite, address1_city,address1_stateorprovince,address1_line1,address1_postalcode,address1_country,ovs_legalname",
+              "$expand": "primarycontactid($select=jobtitle,fullname,emailaddress1,telephone1)"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Get_Operation_data_and_include_all_fields": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "48233c89-f8b9-4d6e-bc39-2742201c0799"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_mocregistrations",
+              "recordId": "@triggerOutputs()?['body/_fdr_ovs_mocregistration_value']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "try": {
+          "actions": {
+            "Store_French_PDF_in_Azure_Blob_Storage": {
+              "runAfter": {
+                "Convert_Word_Document_to_PDF": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0794b977-907a-419e-9cb2-826bac9e4391"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_azureblob",
+                  "operationId": "CreateFile",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_azureblob"
+                },
+                "parameters": {
+                  "folderPath": "/ovsmocregistration",
+                  "name": "@{variables('filePathBlob')}/@{triggerOutputs()?['body/fdr_name']}_fr.pdf",
+                  "body": "@body('Convert_Word_Document_to_PDF')",
+                  "Content-Type": "application/pdf"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runtimeConfiguration": {
+                "contentTransfer": {
+                  "transferMode": "Chunked"
+                }
+              }
+            },
+            "Populate_French_Word_Template_": {
+              "runAfter": {
+                "Create_Temp_Folder": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "01QZYBJ7BMUGUJHJVZ6ZC3EN5DOGK4AQW6": "/FDR Power Automate Templates/Certificate/EN/certificate_of_registration.docx",
+                "operationMetadataId": "7a049b08-c59e-46ba-bcfe-46a7c45d5912",
+                "01QZYBJ7H5FGGGQ6ISENC27DSUPYGK3JS3": "/FDR Power Automate Templates/Certificate/FR/certificate_of_registration.docx",
+                "01QZYBJ7HVHHMCWPLAPVA35J54V5B2FUIH": "/FDR Power Automate Templates/Certificate/FR/certificate_of_registration.docx",
+                "01QZYBJ7C2GKQXGKKJCVGJAJPCJHRUY7BE": "/FDR Power Automate Templates/Certificate/FR/certificate_of_registration.docx"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_wordonlinebusiness_1",
+                  "operationId": "CreateFileItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_wordonlinebusiness"
+                },
+                "parameters": {
+                  "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
+                  "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
+                  "file": "01QZYBJ7C2GKQXGKKJCVGJAJPCJHRUY7BE",
+                  "dynamicFileSchema/342446452": "@formatDateTime(outputs('Get_Operation_data_and_include_all_fields')?['body/ovs_registrationexpiry'],'MM-dd-yyyy')",
+                  "dynamicFileSchema/847052178": "@triggerOutputs()?['body/fdr_name']",
+                  "dynamicFileSchema/1105467020": "@formatDateTime(outputs('Get_Operation_data_and_include_all_fields')?['body/ovs_mocinitialregistrationdate'],'MM-dd-yyyy')"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Populate_English_Word_Template": {
+              "runAfter": {
+                "Create_Temp_Folder": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "01QZYBJ7BV5CRCFMXEHVHIL5CDLFGQABGR": "/FDR Power Automate Templates/Certificate/EN/certificate_of_registration.docx",
+                "operationMetadataId": "1afb114a-1cf4-4706-8885-acf521832819",
+                "01QZYBJ7AM5LY45HS6TZCKVRPRWHWLMZAT": "/FDR Power Automate Templates/Certificate/EN/certificate_of_registration.docx"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_wordonlinebusiness_1",
+                  "operationId": "CreateFileItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_wordonlinebusiness"
+                },
+                "parameters": {
+                  "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
+                  "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
+                  "file": "01QZYBJ7AM5LY45HS6TZCKVRPRWHWLMZAT",
+                  "dynamicFileSchema/342446452": "@formatDateTime(outputs('Get_Operation_data_and_include_all_fields')?['body/ovs_registrationexpiry'],'MM-dd-yyyy')",
+                  "dynamicFileSchema/847052178": "@triggerOutputs()?['body/fdr_name']",
+                  "dynamicFileSchema/1105467020": "@formatDateTime(outputs('Get_Operation_data_and_include_all_fields')?['body/ovs_mocinitialregistrationdate'],'MM-dd-yyyy')"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Convert_English_Word_Document_to_PDF": {
+              "runAfter": {
+                "Create_temp_English_file_and_place_in_temp_folder": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "3a9de272-6664-4b64-be63-61481d9c022a"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_wordonlinebusiness_1",
+                  "operationId": "GetFilePDF",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_wordonlinebusiness"
+                },
+                "parameters": {
+                  "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
+                  "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
+                  "file": "/Reports@{variables('SPfolderPath')}/@{variables('fileNameSP')}_en.docx"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Store_English_PDF_in_Azure_Blob_Storage": {
+              "runAfter": {
+                "Convert_English_Word_Document_to_PDF": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0794b977-907a-419e-9cb2-826bac9e4391"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_azureblob",
+                  "operationId": "CreateFile",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_azureblob"
+                },
+                "parameters": {
+                  "folderPath": "/ovsmocregistration",
+                  "name": "@{variables('filePathBlob')}/@{triggerOutputs()?['body/fdr_name']}_en.pdf",
+                  "body": "@body('Convert_English_Word_Document_to_PDF')",
+                  "Content-Type": "application/pdf"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runtimeConfiguration": {
+                "contentTransfer": {
+                  "transferMode": "Chunked"
+                }
+              }
+            },
+            "Send_Notification": {
+              "actions": {
+                "Notify_about_success_FR_2": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "0436f517-ae24-4347-98f1-e98f106d4074"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "CreateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "appnotifications",
+                      "item/title": "Rapport d’inspection émis",
+                      "item/body": "The Certificate for @{outputs('Get_Operation_data_and_include_all_fields')?['body/ovs_name']}  was issued and can be accessed with the below link.",
+                      "item/data": "       {\n  \"actions\": [\n        {\n        \"title\": \"Open Operation \",\n        \"data\" : \n{ \"url\" :\"?&pagetype=entityrecord&etn=ovs_mocregistration&id=@{outputs('Get_Operation_data_and_include_all_fields')?['body/ovs_mocregistrationid']}\",\n        \"navigationTarget\": \"dialog\"\n      }        \n        }\n      ]\n     }",
+                      "item/ttlinseconds": 300,
+                      "item/icontype": 100000001,
+                      "item/ownerid@odata.bind": "/systemusers(@{triggerOutputs()?['body/_modifiedby_value']})",
+                      "item/priority": 200000001,
+                      "item/toasttype": 200000000
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Delete_Word_Temp_Files_from_SharePoint_": [
+                  "Succeeded"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "Notify_about_success_EN_2": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "fdd81fc6-cecb-4575-85cb-b6ab838e7673"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_commondataserviceforapps",
+                        "operationId": "CreateRecord",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      },
+                      "parameters": {
+                        "entityName": "appnotifications",
+                        "item/title": "Certificate Issued",
+                        "item/body": "The Certificate for @{outputs('Get_Operation_data_and_include_all_fields')?['body/ovs_name']}  was issued and can be accessed with the below link.",
+                        "item/data": "       {\n  \"actions\": [\n        {\n        \"title\": \"Open Operation\",\n        \"data\" : \n{ \"url\" :\"?&pagetype=entityrecord&etn=ovs_mocregistration&id=@{outputs('Get_Operation_data_and_include_all_fields')?['body/ovs_mocregistrationid']}\",\n        \"navigationTarget\": \"dialog\"\n      }        \n        }\n      ]\n     }",
+                        "item/ttlinseconds": 300,
+                        "item/icontype": 100000001,
+                        "item/ownerid@odata.bind": "/systemusers(@{triggerOutputs()?['body/_modifiedby_value']})",
+                        "item/priority": 200000001,
+                        "item/toasttype": 200000000
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  }
+                }
+              },
+              "expression": {
+                "equals": [
+                  "@variables('isFrench')",
+                  "@true"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e38533d4-d2c8-495a-8b90-88fcedce6366"
+              },
+              "type": "If"
+            },
+            "Create_Temp_Folder": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "85c941dc-2e88-49e0-99df-be6d6eaa05d8"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "CreateNewFolder",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                  "table": "ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395",
+                  "parameters/path": "/Reports@{variables('SPfolderPath')}"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Create_temp_French_file_and_place_in_temp_folder": {
+              "runAfter": {
+                "Populate_French_Word_Template_": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "2a21d5c7-5392-45cc-9605-cce4c3a4e51b"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "CreateFile",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                  "folderPath": "@outputs('Create_Temp_Folder')?['body/{FullPath}']",
+                  "name": "@{variables('fileNameSP')}_fr.docx",
+                  "body": "@body('Populate_French_Word_Template_')"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runtimeConfiguration": {
+                "contentTransfer": {
+                  "transferMode": "Chunked"
+                }
+              }
+            },
+            "Create_temp_English_file_and_place_in_temp_folder": {
+              "runAfter": {
+                "Populate_English_Word_Template": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "17f787cd-c964-4301-9b3a-09b548206d78"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "CreateFile",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                  "folderPath": "@outputs('Create_Temp_Folder')?['body/{FullPath}']",
+                  "name": "@{variables('fileNameSP')}_en.docx",
+                  "body": "@body('Populate_English_Word_Template')"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runtimeConfiguration": {
+                "contentTransfer": {
+                  "transferMode": "Chunked"
+                }
+              }
+            },
+            "Convert_Word_Document_to_PDF": {
+              "runAfter": {
+                "Create_temp_French_file_and_place_in_temp_folder": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "5e8065da-d6ed-491a-8642-f3ee831e6ead"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_wordonlinebusiness_1",
+                  "operationId": "GetFilePDF",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_wordonlinebusiness"
+                },
+                "parameters": {
+                  "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
+                  "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
+                  "file": "/Reports@{variables('SPfolderPath')}/@{variables('fileNameSP')}_fr.docx"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Delete_Word_Temp_Files_from_SharePoint_": {
+              "runAfter": {
+                "Store_French_PDF_in_Azure_Blob_Storage": [
+                  "Succeeded"
+                ],
+                "Store_English_PDF_in_Azure_Blob_Storage": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "aed3d8db-f390-43a2-b62d-6baaccfe0781"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "DeleteItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                  "table": "Documents",
+                  "id": "@outputs('Create_Temp_Folder')?['body/ID']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "File_Path_Blob": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6d68c380-1507-43af-88ce-306913340e5b"
+          },
+          "type": "Scope"
+        },
+        "catch": {
+          "actions": {
+            "Get_errors": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "2db31d7d-cd8a-4a1b-bd43-53d3f52fd5a0"
+              },
+              "type": "Compose",
+              "inputs": "@result('try')"
+            },
+            "Filter_array": {
+              "runAfter": {
+                "Get_errors": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "2e5afb44-8507-4fdb-8fc5-c42079943410"
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('Get_errors')",
+                "where": "@equals(item()?['status'], 'Failed')"
+              }
+            },
+            "Is_error": {
+              "actions": {
+                "Error_Lang": {
+                  "actions": {
+                    "Notify_about_error_FR": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "7605a0b7-dd3f-4fb4-97f5-ea081a3559d4"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "CreateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "appnotifications",
+                          "item/title": "Erreur du rapport d’inspection",
+                          "item/body": "Le rapport d'inspection n'a pas pu être généré. Veuillez réessayer dans quelques minutes ou contacter votre équipe d'assistance pour obtenir de l'aide. Veuillez inclure les détails suivants dans votre demande de support :  @{body('Filter_array')}",
+                          "item/ttlinseconds": 300,
+                          "item/icontype": 100000003,
+                          "item/ownerid@odata.bind": "/systemusers(@{triggerOutputs()?['body/_modifiedby_value']})",
+                          "item/priority": 200000001
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
+                  },
+                  "runAfter": {},
+                  "else": {
+                    "actions": {
+                      "Notify_about_error_EN": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "b848a555-f09c-4c86-b080-2487a95d2a27"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_commondataserviceforapps",
+                            "operationId": "CreateRecord",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                          },
+                          "parameters": {
+                            "entityName": "appnotifications",
+                            "item/title": "Inspection Report Error",
+                            "item/body": "The inspection report was unable to generate . Please try again in a few minutes or contact your support team for assistance. Please include the following details in your support request:  @{body('Filter_array')}",
+                            "item/ttlinseconds": 300,
+                            "item/icontype": 100000003,
+                            "item/ownerid@odata.bind": "/systemusers(@{triggerOutputs()?['body/_modifiedby_value']})",
+                            "item/priority": 200000001
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      }
+                    }
+                  },
+                  "expression": {
+                    "equals": [
+                      "@variables('isFrench')",
+                      "@true"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "777a9cfa-a76c-491d-9880-e0844ef66d3c"
+                  },
+                  "type": "If"
+                }
+              },
+              "runAfter": {
+                "Filter_array": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "greater": [
+                  "@length(body('Filter_array'))",
+                  0
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "3d73a1ac-56d1-4898-ad4c-356d888ba1f3"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "try": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4a812a77-e3d4-4b09-b21a-5b0123170ffa"
+          },
+          "type": "Scope"
+        },
+        "Format_Operation_GUID": {
+          "runAfter": {
+            "Is_French": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ce06e126-6f21-4a2f-aa59-3d630b0d0211"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "OperationGuid",
+                "type": "string",
+                "value": "@{toUpper(replace(outputs('Get_Operation_data_and_include_all_fields')?['body/ovs_mocregistrationid'], '-', ''))}"
+              }
+            ]
+          }
+        }
+      },
+      "outputs": {}
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -138,7 +138,7 @@
                 },
                 "parameters": {
                   "entityName": "ovs_workordercandidates",
-                  "$filter": "(_ovs_regionalnop_value eq '@{items('For_Each_Regional_NOP')?['ovs_cdregionalnopid']}' and _ovs_oversighttype_value eq '@{variables('GCIPTOversightType')}') and (ovs_operationid/ovs_followupind eq true and ovs_operationid/statecode eq 0)",
+                  "$filter": "(_ovs_regionalnop_value eq '@{items('For_Each_Regional_NOP')?['ovs_cdregionalnopid']}' and _ovs_oversighttype_value eq '@{variables('GCIPTOversightType')}' and statecode eq 0) and \n(ovs_operationid/ovs_followupind eq true and ovs_operationid/statecode eq 0)",
                   "$expand": "ovs_operationid($select=ovs_hubind,ovs_name)"
                 },
                 "authentication": {
@@ -339,6 +339,8 @@
                         "parameters": {
                           "entityName": "ovs_workordercandidates",
                           "recordId": "@items('For_Each_WOC')?['ovs_workordercandidateid']",
+                          "item/ovs_site@odata.bind": "/accounts/@{items('For_Each_WOC')?['_ovs_site_value']}",
+                          "item/statuscode": 1,
                           "item/ovs_hqflag": true,
                           "item/ovs_initialrecommendation": 918640000,
                           "item/ovs_oversighttype@odata.bind": "/ovs_oversighttypes/@{variables('HubOversightType')}",
@@ -401,6 +403,8 @@
                           "parameters": {
                             "entityName": "ovs_workordercandidates",
                             "recordId": "@items('For_Each_WOC')?['ovs_workordercandidateid']",
+                            "item/ovs_site@odata.bind": "/accounts/@{items('For_Each_WOC')?['_ovs_site_value']}",
+                            "item/statuscode": 1,
                             "item/ovs_hqflag": true,
                             "item/ovs_initialrecommendation": 918640000,
                             "item/ovs_oversighttype@odata.bind": "/ovs_oversighttypes/@{variables('FollowUpOversightType')}",

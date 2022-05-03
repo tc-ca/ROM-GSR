@@ -3,6 +3,66 @@ function isROMRoleAndNotSystemAdministrator() {
     return (isROMRole() && !isSystemAdministrator())
 }
 
+//  If Role === "TDG Planner" 
+function isPlannerRole() {
+    var roles = Xrm.Utility.getGlobalContext().userSettings.roles;
+    var enable = false;
+    roles.forEach(function (item) {
+        if (item.name === "TDG Planner") enable = true;
+    });
+    return enable;
+}
+
+// IF Role === "TDG Manager" 
+function isManagerRole() {
+    var roles = Xrm.Utility.getGlobalContext().userSettings.roles;
+    var enable = false;
+    roles.forEach(function (item) {
+        if (item.name === "TDG Manager") enable = true;
+    });
+    return enable;
+}
+
+// IF Role === "TDG Inspector" 
+function isInspectorRole() {
+    var roles = Xrm.Utility.getGlobalContext().userSettings.roles;
+    var enable = false;
+    roles.forEach(function (item) {
+        if (item.name === "TDG Inspector") enable = true;
+    });
+    return enable;
+}
+// isInspectorOrManagerRole
+function isInspectorOrManagerRole() {
+    romRoles = ["TDG Inspector", "TDG Manager"]
+    var userRoles = Xrm.Utility.getGlobalContext().userSettings.roles;
+    //return true when a romRole matches a userRole
+    for (var i = 0; i < romRoles.length; i++) {
+        for (var j = 0; j < userRoles.getLength(); j++) {
+            if (romRoles[i] === userRoles._getByIndex(j).name) {
+                return true;
+            }
+        }
+    }
+    //No match
+    return false;
+}
+
+
+function isAnalystOrInspectorOrManagerRole() {
+    romRoles = ["TDG Inspector", "TDG Manager","TDG Analyst"]
+    var userRoles = Xrm.Utility.getGlobalContext().userSettings.roles;
+    //return true when a romRole matches a userRole
+    for (var i = 0; i < romRoles.length; i++) {
+        for (var j = 0; j < userRoles.getLength(); j++) {
+            if (romRoles[i] === userRoles._getByIndex(j).name) {
+                return true;
+            }
+        }
+    }
+    //No match
+    return false;
+}
 
 function isManagerOrPlannerRole() {
     romRoles = ["TDG Planner", "TDG Manager"]
@@ -10,7 +70,7 @@ function isManagerOrPlannerRole() {
     //return true when a romRole matches a userRole
     for (var i = 0; i < romRoles.length; i++) {
         for (var j = 0; j < userRoles.getLength(); j++) {
-            if (romRoles[i] == userRoles._getByIndex(j).name) {
+            if (romRoles[i] === userRoles._getByIndex(j).name) {
                 return true;
             }
         }
@@ -25,7 +85,7 @@ function isROMRole() {
     //return true when a romRole matches a userRole
     for (var i = 0; i < romRoles.length; i++) {
         for (var j = 0; j < userRoles.getLength(); j++) {
-            if (romRoles[i] == userRoles._getByIndex(j).name) {
+            if (romRoles[i] === userRoles._getByIndex(j).name) {
                 return true;
             }
         }
@@ -39,7 +99,7 @@ function isSystemAdministrator() {
     var enable = false;
     roles.forEach(function (item) {
 
-        if (item.name == "System Administrator") enable = true;
+        if (item.name === "System Administrator") enable = true;
 
     });
     return enable;

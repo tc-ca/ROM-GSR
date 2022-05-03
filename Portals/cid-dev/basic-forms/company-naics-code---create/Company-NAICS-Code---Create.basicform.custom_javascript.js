@@ -81,9 +81,6 @@ function btn_save_new_onclick()
     var contact_id = '{{user.id}}';
     var cid_naicscode = $("#cid_naicscode").attr("value");
     cid_companynaicscode_insert(account_id, cid_naicscode, contact_id);
-
-    // clear form 
-    form_clear();
 }
 
 function cid_companynaicscode_insert(account_id, cid_naicscode, contact_id)
@@ -115,6 +112,9 @@ function success_cb() {
 
     msg = tdg.error_message.message("m000005"); // Record added
     tdg.c.message_panel_set("EntityFormControl", msg);
+
+    // clear form
+    form_clear();
 }
 
 function error_cb(msg) {

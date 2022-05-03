@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RibbonDiffXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <CustomActions>
+    <CustomAction Id="fdr.fdr_certificate.Button2.Button.Mscrm.SubGrid.fdr_certificate.AddNewStandard.CustomAction" Location="Mscrm.SubGrid.fdr_certificate.MainTab.Management.Controls._children" Sequence="0">
+      <CommandUIDefinition>
+        <Button Alt="$LocLabels:fdr.fdr_certificate.Button2.Button.Mscrm.SubGrid.fdr_certificate.AddNewStandard.Alt" Command="fdr.fdr_certificate.Command.SubGrid.GenerateCertificate" Id="fdr.fdr_certificate.Button2.Button.Mscrm.SubGrid.fdr_certificate.AddNewStandard" Image32by32="/_imgs/ribbon/newrecord32.png" Image16by16="/_imgs/ribbon/New_16.png" LabelText="$LocLabels:fdr.fdr_certificate.Button2.Button.Mscrm.SubGrid.fdr_certificate.AddNewStandard.LabelText" Sequence="0" TemplateAlias="o1" ToolTipTitle="$LocLabels:fdr.fdr_certificate.Button2.Button.Mscrm.SubGrid.fdr_certificate.AddNewStandard.ToolTipTitle" ToolTipDescription="$Resources(EntityDisplayName):Mscrm_SubGrid_EntityLogicalName_MainTab_Management_AddNewStandard_ToolTipDescription" ModernImage="New" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <HideCustomAction HideActionId="fdr.Mscrm.SubGrid.fdr_certificate.Activate.Hide" Location="Mscrm.SubGrid.fdr_certificate.Activate" />
+    <HideCustomAction HideActionId="fdr.Mscrm.SubGrid.fdr_certificate.AddExistingStandard.Hide" Location="Mscrm.SubGrid.fdr_certificate.AddExistingStandard" />
+    <HideCustomAction HideActionId="fdr.Mscrm.SubGrid.fdr_certificate.AddNewStandard.Hide" Location="Mscrm.SubGrid.fdr_certificate.AddNewStandard" />
+    <HideCustomAction HideActionId="fdr.Mscrm.SubGrid.fdr_certificate.Deactivate.Hide" Location="Mscrm.SubGrid.fdr_certificate.Deactivate" />
+    <HideCustomAction HideActionId="fdr.Mscrm.SubGrid.fdr_certificate.Flows.RefreshCommandBar.Hide" Location="Mscrm.SubGrid.fdr_certificate.Flows.RefreshCommandBar" />
+    <HideCustomAction HideActionId="fdr.Mscrm.SubGrid.fdr_certificate.RunReport.Hide" Location="Mscrm.SubGrid.fdr_certificate.RunReport" />
+  </CustomActions>
+  <Templates>
+    <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
+  </Templates>
+  <CommandDefinitions>
+    <CommandDefinition Id="fdr.fdr_certificate.Command.SubGrid.GenerateCertificate">
+      <EnableRules />
+      <DisplayRules />
+      <Actions>
+        <JavaScriptFunction FunctionName="CertificateRibbon.openCertificateGenerationForm" Library="$webresource:fdr_Certificate_Ribbon.js">
+          <CrmParameter Value="SelectedControl" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="Mscrm.AddNewRecordFromSubGridStandard">
+      <EnableRules>
+        <EnableRule Id="Mscrm.AppendToPrimary" />
+        <EnableRule Id="Mscrm.EntityFormIsEnabled" />
+        <EnableRule Id="Mscrm.IsEntityAvailableForUserInMocaOffline" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.ShowForOneToManyGrids" />
+        <DisplayRule Id="Mscrm.AppendToPrimary" />
+        <DisplayRule Id="Mscrm.CreateSelectedEntityPermission" />
+        <DisplayRule Id="Mscrm.AppendSelected" />
+        <DisplayRule Id="Mscrm.HideAddNewForChildEntities" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.Open.addNewFromSubGridStandard" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedEntityTypeName" />
+          <CrmParameter Value="PrimaryEntityTypeName" />
+          <CrmParameter Value="FirstPrimaryItemId" />
+          <CrmParameter Value="PrimaryControl" />
+          <CrmParameter Value="SelectedControl" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+  </CommandDefinitions>
+  <RuleDefinitions>
+    <TabDisplayRules />
+    <DisplayRules>
+      <DisplayRule Id="Mscrm.AppendSelected">
+        <EntityPrivilegeRule PrivilegeType="Append" PrivilegeDepth="Basic" AppliesTo="SelectedEntity" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.AppendToPrimary">
+        <EntityPrivilegeRule PrivilegeType="AppendTo" PrivilegeDepth="Basic" AppliesTo="PrimaryEntity" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.CreateSelectedEntityPermission">
+        <EntityPrivilegeRule PrivilegeType="Create" PrivilegeDepth="Basic" AppliesTo="SelectedEntity" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.HideAddNewForChildEntities">
+        <OrRule>
+          <Or>
+            <EntityPropertyRule AppliesTo="SelectedEntity" PropertyName="IsChildEntity" PropertyValue="false" />
+          </Or>
+          <Or>
+            <RelationshipTypeRule AppliesTo="SelectedEntity" AllowCustomRelationship="false" />
+          </Or>
+        </OrRule>
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.ShowForOneToManyGrids">
+        <RelationshipTypeRule AppliesTo="SelectedEntity" RelationshipType="OneToMany" />
+      </DisplayRule>
+    </DisplayRules>
+    <EnableRules />
+  </RuleDefinitions>
+  <LocLabels>
+    <LocLabel Id="fdr.fdr_certificate.Button2.Button.Mscrm.SubGrid.fdr_certificate.AddNewStandard.Alt">
+      <Titles>
+        <Title description="Generate Certificate" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="fdr.fdr_certificate.Button2.Button.Mscrm.SubGrid.fdr_certificate.AddNewStandard.LabelText">
+      <Titles>
+        <Title description="Generate Certificate" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="fdr.fdr_certificate.Button2.Button.Mscrm.SubGrid.fdr_certificate.AddNewStandard.ToolTipTitle">
+      <Titles>
+        <Title description="Generate Certificate" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+  </LocLabels>
+</RibbonDiffXml>
