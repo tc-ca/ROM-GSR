@@ -1,0 +1,2052 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_azureblob_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedazureblob_395e7"
+        },
+        "api": {
+          "name": "shared_azureblob"
+        }
+      },
+      "shared_sharepointonline": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceSharepointTDGCoreUser"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      },
+      "shared_excelonlinebusiness_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceExcelTDGCoreUser"
+        },
+        "api": {
+          "name": "shared_excelonlinebusiness"
+        }
+      },
+      "shared_webcontents": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedwebcontents_efbe7"
+        },
+        "api": {
+          "name": "shared_webcontents"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "4ddcee8d-9d8e-4291-9b73-9eca2b07bbc7"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "activityid": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "accountid": {
+                  "type": "string"
+                },
+                "Lang": {
+                  "type": "string"
+                },
+                "ActivityType": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "List_Environment_setting": {
+          "runAfter": {
+            "check_Language": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "55ddbf3f-4c68-4cff-aca0-eb4c71e2a24f"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "qm_environmentsettingses",
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"qm_environmentsettings\">\n    <attribute name=\"qm_environmentsettingsid\" />\n    <attribute name=\"qm_name\" />\n    <attribute name=\"qm_value\" />\n    <order attribute=\"qm_name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"qm_name\" operator=\"like\" value=\"%CID[_]%\" />\n    </filter>\n  </entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "company-name": {
+          "runAfter": {
+            "Get_Company": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "88147cd0-932d-4339-848a-55ffc9249b92"
+          },
+          "type": "Compose",
+          "inputs": "@outputs('Get_Company')?['body/ovs_legalname']"
+        },
+        "CompanyId": {
+          "runAfter": {
+            "company-name": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "99d62caf-1929-4115-8b90-eef816655c13"
+          },
+          "type": "Compose",
+          "inputs": "@outputs('Get_Company')?['body/cid_companyid']"
+        },
+        "Get_Company": {
+          "runAfter": {
+            "check_Language": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "15a64acd-8d3c-4a8a-b17b-eaeb5a6d416d"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "accounts",
+              "recordId": "@triggerBody()?['accountid']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Get_Bulk_Activity_log_Summaries": {
+          "runAfter": {
+            "check_Language": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0abf4f66-6dea-4942-a637-83047b3c2026"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "cid_bulkactivitylogsummaries",
+              "recordId": "@triggerBody()?['activityid']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "get_Attachment_conetent": {
+          "actions": {
+            "Get_Note": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "7793f97f-eebe-40e1-866e-eaaebd7ee54b"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "annotations",
+                  "$filter": "_objectid_value eq @{triggerBody()?['activityid']}"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "attachement": {
+              "runAfter": {
+                "Get_blob_content_(V2)": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "26d6e4c7-9c5e-48b5-8a86-4e89ac3c5461"
+              },
+              "type": "Compose",
+              "inputs": "@body('Get_blob_content_(V2)')"
+            },
+            "Get-Txt-file-from-attachement": {
+              "runAfter": {
+                "Get_Note": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "62e124c4-2e49-4fc2-ae92-69bcb44fc3ec"
+              },
+              "type": "Compose",
+              "inputs": "@json(base64ToString(outputs('Get_Note')?['body/value'][0].documentbody))"
+            },
+            "file-URL-in-Blob": {
+              "runAfter": {
+                "Get-Txt-file-from-attachement": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "9c7f4bb9-be7d-46bd-905b-f53f3f8e4078"
+              },
+              "type": "Compose",
+              "inputs": "@outputs('Get-Txt-file-from-attachement')['URL']"
+            },
+            "Get_blob_content_(V2)": {
+              "runAfter": {
+                "file-URL-in-Blob": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "27463fd4-1ba4-437b-aeab-f3227a9d5e9b"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_azureblob_1",
+                  "operationId": "GetFileContent_V2",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_azureblob"
+                },
+                "parameters": {
+                  "dataset": "satdgrdnprdcc",
+                  "id": "@substring(outputs('file-URL-in-Blob'), indexOf(outputs('file-URL-in-Blob'), '/blobstoragecontainer'))",
+                  "inferContentType": true
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "ActionBy": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "28bcf457-d482-4c97-8639-e70b9bcd77c1"
+          },
+          "type": "Scope"
+        },
+        "Initialize_Environment_folder_variable": {
+          "runAfter": {
+            "Scope-get-environment-setting": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "fc5c3dd6-8d62-49cb-befd-838a6faaacca"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Environment_Folder",
+                "type": "string",
+                "value": "@{body('Filter_array-GetEnvironmentVariable')?[0]['qm_value']}"
+              }
+            ]
+          }
+        },
+        "Scope-get-environment-setting": {
+          "actions": {
+            "Filter_environment-setting-get-version#": {
+              "runAfter": {
+                "Filter_array-GetEnvironmentVariable": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('List_Environment_setting')?['body/value']",
+                "where": "@equals(item()?['qm_name'], 'CID_BulkUpload_VersionNumber')"
+              }
+            },
+            "version-number": {
+              "runAfter": {
+                "Filter_environment-setting-get-version#": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "41b70b02-c1a1-45c9-8dea-3c396fb42ce3"
+              },
+              "type": "Compose",
+              "inputs": "@body('Filter_environment-setting-get-version#')[0]['qm_value']"
+            },
+            "Filter_environment-max-workbook-site": {
+              "runAfter": {
+                "version-number": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('List_Environment_setting')?['body/value']",
+                "where": "@equals(item()?['qm_name'], 'CID_Bukl_Upload_Template_Max_Allowed_Sites_Per_Company')"
+              }
+            },
+            "Filter_environment-max-workbook-UNNumber": {
+              "runAfter": {
+                "Filter_environment-max-workbook-site": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('List_Environment_setting')?['body/value']",
+                "where": "@equals(item()?['qm_name'], 'CID_Bukl_Upload_Template_Max_Allowed_UNNumbers_Per_Company')"
+              }
+            },
+            "Filter_environment-max-system-sites": {
+              "runAfter": {
+                "Filter_environment-max-workbook-UNNumber": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('List_Environment_setting')?['body/value']",
+                "where": "@equals(item()?['qm_name'], 'CID_Bukl_System_Max_Sites_Per_Company')"
+              }
+            },
+            "Filter_environment-max-system-UNNumbers": {
+              "runAfter": {
+                "Filter_environment-max-system-sites": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('List_Environment_setting')?['body/value']",
+                "where": "@equals(item()?['qm_name'], 'CID_Bukl_System_Max_UNumber_Per_Company')"
+              }
+            },
+            "Max-Workbook-sites": {
+              "runAfter": {
+                "Filter_environment-max-system-UNNumbers": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "41b70b02-c1a1-45c9-8dea-3c396fb42ce3"
+              },
+              "type": "Compose",
+              "inputs": "@int(body('Filter_environment-max-workbook-site')[0]['qm_value'])"
+            },
+            "Max-Workbook-UNnumbers": {
+              "runAfter": {
+                "Max-Workbook-sites": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "41b70b02-c1a1-45c9-8dea-3c396fb42ce3"
+              },
+              "type": "Compose",
+              "inputs": "@int(body('Filter_environment-max-workbook-site')[0]['qm_value'])"
+            },
+            "Max-system-sites": {
+              "runAfter": {
+                "Max-Workbook-UNnumbers": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "41b70b02-c1a1-45c9-8dea-3c396fb42ce3"
+              },
+              "type": "Compose",
+              "inputs": "@int(body('Filter_environment-max-system-sites')[0]['qm_value'])"
+            },
+            "Max-System-UNnumbers": {
+              "runAfter": {
+                "Max-system-sites": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "41b70b02-c1a1-45c9-8dea-3c396fb42ce3"
+              },
+              "type": "Compose",
+              "inputs": "@int(body('Filter_environment-max-system-UNNumbers')[0]['qm_value'])"
+            },
+            "Filter_array-GetEnvironmentVariable": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "41f6f1a2-74a5-40a3-8f7a-1c9d91283a64"
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('List_Environment_setting')?['body/value']",
+                "where": "@equals(item()['qm_name'], 'CID_Flow_Environment_Folder')"
+              }
+            }
+          },
+          "runAfter": {
+            "List_Environment_setting": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6f69746b-293b-4aea-84f6-03a279403372"
+          },
+          "type": "Scope"
+        },
+        "List_All_Un_numbers": {
+          "runAfter": {
+            "check_Language": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0fe38d0c-cec3-4743-98f1-b1032d9035ff"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_operationunnumbers",
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"ovs_operationunnumber\">\n    <attribute name=\"ovs_name\" />\n    <attribute name=\"createdon\" />\n    <attribute name=\"ovs_operationunnumberid\" />\n    <order attribute=\"ovs_name\" descending=\"false\" />\n    <link-entity name=\"account\" from=\"accountid\" to=\"cid_site\" link-type=\"inner\" alias=\"ac\">\n      <filter type=\"and\">\n        <condition attribute=\"parentaccountid\" operator=\"eq\" value=\"{1D9E47DF-6BF3-46BF-A129-268F5521C601}\" />\n      </filter>\n    </link-entity>\n  </entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "List_All_sites": {
+          "runAfter": {
+            "check_Language": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3794cc98-ec23-4ed0-98fb-46768f868747"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "accounts",
+              "$filter": "customertypecode eq 948010001 and _parentaccountid_value eq '@{triggerBody()?['accountid']}'"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "check_error_flag": {
+          "actions": {
+            "Update_bulk_Activity_Log_Summary": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "16c1b0ac-fdb1-4356-9768-087810cae42f"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "cid_bulkactivitylogsummaries",
+                  "recordId": "@triggerBody()?['activityid']",
+                  "item/cid_activitystarttime": "@outputs('Bulk_Activity_start_time')",
+                  "item/cid_activitytype": "@int(triggerBody()?['ActivityType'])",
+                  "item/cid_language": "@variables('Language_Index')",
+                  "item/cid_tempsharepointfilelocation": "@outputs('Create_Temp_file')?['body/Path']",
+                  "item/cid_version": "@outputs('version-number')"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Success_Response": {
+              "runAfter": {
+                "Update_bulk_Activity_Log_Summary": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "66e8a4fe-bef3-42dc-8d0c-7f1c84210141"
+              },
+              "type": "Response",
+              "kind": "Http",
+              "inputs": {
+                "statusCode": 200,
+                "headers": {
+                  "filepath": "@outputs('Create_Temp_file')?['body/Path']",
+                  "NumberOfSitesWithRequirementLevel": "@{int(outputs('Number-Of-Sites-With-Reqiurement-Level'))}"
+                },
+                "body": "<p>First of two sets of validations of the file being uploaded is now complete. \nThe workbook contains @{outputs('Number-Of-Sites')}​ rows of Site data and @{outputs('Number-of-UNs')}  rows of UN # data related to those Sites that are ready to be added or updated within CID for your Company. <br>\nDo you want continue with the Bulk Upload process? <br>\n</P>\n<ul>\n<li>@{outputs('Number-Of-Sites')} # of Sites in the Add Basic sheet.</li> \n<li>@{outputs('Number-of-UNs')} # of UN # rows in the Add Extended sheet.</li>\n</ul>"
+              }
+            }
+          },
+          "runAfter": {
+            "check_attachement": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Add-Bulk-Activity-Logs-Details": {
+                "runAfter": {
+                  "Update_bulk_Activity_Log_Summary_2": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "904e3f3f-2707-413b-9d39-eeca703a31e9"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps_1",
+                    "operationId": "CreateRecord",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "cid_bulkactivitylogsdetailses",
+                    "item/cid_BulkActivityLogSummary@odata.bind": "@concat('\\cid_bulkactivitylogsummaries\\',outputs('Get_Bulk_Activity_log_Summaries')?['body/cid_bulkactivitylogsummaryid'])",
+                    "item/cid_errordetails": "@variables('Logged_Error_Message')",
+                    "item/cid_errorwarningcode": "@variables('Error_Code')",
+                    "item/cid_type": 100000000
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              },
+              "Update_bulk_Activity_Log_Summary_2": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "16c1b0ac-fdb1-4356-9768-087810cae42f"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps_1",
+                    "operationId": "UpdateRecord",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "cid_bulkactivitylogsummaries",
+                    "recordId": "@triggerBody()?['activityid']",
+                    "item/cid_activityendtime": "@utcNow()",
+                    "item/cid_activitystarttime": "@outputs('Bulk_Activity_start_time')",
+                    "item/cid_activitystatus": 100000001,
+                    "item/cid_activitytype": "@int(triggerBody()?['ActivityType'])",
+                    "item/cid_language": "@variables('Language_Index')",
+                    "item/cid_summary": "@variables('Logged_Error_Message')",
+                    "item/cid_tempsharepointfilelocation": "@outputs('Create_Temp_file')?['body/Path']",
+                    "item/cid_version": "@outputs('version-number')"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              },
+              "Send_an_HTTP_request_to_SharePoint-Delete-File": {
+                "runAfter": {
+                  "Add-Bulk-Activity-Logs-Details": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "613190e4-0e54-402c-92ea-4d8c3d1e4a7a"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_sharepointonline",
+                    "operationId": "HttpRequest",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                  },
+                  "parameters": {
+                    "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                    "parameters/method": "DELETE",
+                    "parameters/uri": "_api/web/GetFileByServerRelativeUrl('/sites/SamuraiTeam/Shared Documents/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{triggerBody()?['activityid']}/@{outputs('Create_Temp_file')?['body/Name']}')/recycle",
+                    "parameters/headers": {
+                      "Prefer": "bypass-shared-lock"
+                    }
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              },
+              "Delete_Folder": {
+                "runAfter": {
+                  "Send_an_HTTP_request_to_SharePoint-Delete-File": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "f00e886f-145d-4890-91e5-d4fb5eacf205"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_sharepointonline",
+                    "operationId": "DeleteItem",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                  },
+                  "parameters": {
+                    "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                    "table": "Documents",
+                    "id": "@outputs('Create_new_folder')?['body/ID']"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@variables('IsErrorFree')",
+              "@true"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "65069879-0150-4e08-9d1e-e04210460358"
+          },
+          "type": "If"
+        },
+        "check_attachement": {
+          "actions": {
+            "getfilename": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "0e873c2f-544b-4f80-a0c7-10e0e9eea411"
+              },
+              "type": "Compose",
+              "inputs": "@concat(triggerBody()?['activityid'], '_', utcNow(), '.xlsx')"
+            },
+            "Create_Temp_file": {
+              "runAfter": {
+                "Create_new_folder": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d78c1ad0-cc32-4c5b-bd99-b00c092fc24f"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "CreateFile",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                  "folderPath": "@outputs('Create_new_folder')?['body/{FullPath}']",
+                  "name": "@outputs('getfilename')",
+                  "body": "@outputs('attachement')"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "runtimeConfiguration": {
+                "contentTransfer": {
+                  "transferMode": "Chunked"
+                }
+              }
+            },
+            "Create_new_folder": {
+              "runAfter": {
+                "getfilename": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d1d81464-2008-4bda-9de6-02d58454c8b0"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "CreateNewFolder",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                  "table": "ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395",
+                  "parameters/path": "/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{triggerBody()?['activityid']}"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "SharePoint-file-path": {
+              "runAfter": {
+                "Create_Temp_file": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "813f258f-a88e-4327-a661-56a540b24c1e"
+              },
+              "type": "Compose",
+              "inputs": "@outputs('Create_Temp_file')?['body/Path']"
+            },
+            "Validation_logic": {
+              "actions": {
+                "Get_tables": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "d54bf7e3-e86f-4418-8a41-6e0839a09425",
+                    "tableId": null
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_excelonlinebusiness_1",
+                      "operationId": "GetTables",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness"
+                    },
+                    "parameters": {
+                      "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
+                      "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
+                      "file": "/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{triggerBody()?['activityid']}/@{outputs('Create_Temp_file')?['body/Name']}"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Filter-array-table2": {
+                  "runAfter": {
+                    "Get_tables": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "4f6088f2-9cee-4739-9ada-9f118e232533"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@outputs('Get_tables')?['body/value']",
+                    "where": "@equals(item()['name'], 'TableAddBasic')"
+                  }
+                },
+                "Filter-array-Table4": {
+                  "runAfter": {
+                    "Filter-array-table2": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "6b2878bf-b104-467f-9d6a-3cd0583bc967"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@outputs('Get_tables')?['body/value']",
+                    "where": "@equals(item()['name'], 'TableAddExtended')"
+                  }
+                },
+                "Filter-array-Table1": {
+                  "runAfter": {
+                    "Filter-array-Table4": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "9e90dfa9-e55e-43c5-94c7-2b9f55fefa01"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@outputs('Get_tables')?['body/value']",
+                    "where": "@equals(item()['name'], 'SettingTable')"
+                  }
+                },
+                "check-If-Tables_exists-In_excel": {
+                  "actions": {
+                    "get_the_version_#": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "225ee8e6-dae1-4b5d-a9a1-992f64baec5b",
+                        "tableId": "SettingTable"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_excelonlinebusiness_1",
+                          "operationId": "GetItems",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness"
+                        },
+                        "parameters": {
+                          "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
+                          "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
+                          "file": "/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{triggerBody()?['activityid']}/@{outputs('Create_Temp_file')?['body/Name']}",
+                          "table": "SettingTable"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Get-Table-Setting": {
+                      "runAfter": {
+                        "get_the_version_#": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "8d0cbf6f-1e9d-4224-bacd-e3ad8c39d85c"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_webcontents",
+                          "operationId": "InvokeHttp",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
+                        },
+                        "parameters": {
+                          "request/method": "GET",
+                          "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/@{outputs('Get-File-Relative-Path')}:/workbook/tables/SettingTable/rows"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "check_version_Number": {
+                      "actions": {
+                        "Number_of_rows_in_each_sheet": {
+                          "actions": {
+                            "Number-Of-Sites": {
+                              "runAfter": {
+                                "Number-of-UNs": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "315d245a-50d3-4ff2-a5e6-a9c456abfcf1"
+                              },
+                              "type": "Compose",
+                              "inputs": "@length(body('List_All_Sites_with_data'))"
+                            },
+                            "Number-of-UNs": {
+                              "runAfter": {
+                                "List_All_UN_number": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "c61f60d4-dc26-49ef-9e7e-898e7f4d3fc8"
+                              },
+                              "type": "Compose",
+                              "inputs": "@length(body('List_All_UN_number'))"
+                            },
+                            "Invoke_http_Get_Sites": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "8d0cbf6f-1e9d-4224-bacd-e3ad8c39d85c"
+                              },
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_webcontents",
+                                  "operationId": "InvokeHttp",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
+                                },
+                                "parameters": {
+                                  "request/method": "GET",
+                                  "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/@{outputs('Get-File-Relative-Path')}:/workbook/tables/TableAddBasic/rows"
+                                },
+                                "authentication": "@parameters('$authentication')"
+                              }
+                            },
+                            "List_All_UN_number": {
+                              "runAfter": {
+                                "Invoke-an-HTTP-request-unnumber": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "05c212d4-bdab-4ba9-a408-cc89507d9cdd"
+                              },
+                              "type": "Query",
+                              "inputs": {
+                                "from": "@outputs('Invoke-an-HTTP-request-unnumber')?['body']['value']",
+                                "where": "@greater(length(item()['values'][0][0]), 0)"
+                              }
+                            },
+                            "Invoke-an-HTTP-request-unnumber": {
+                              "runAfter": {
+                                "List_All_Sites_with_data": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "f11d9ebe-4fb1-412e-b313-ec10ab941bb7"
+                              },
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_webcontents",
+                                  "operationId": "InvokeHttp",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
+                                },
+                                "parameters": {
+                                  "request/method": "GET",
+                                  "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/@{outputs('Get-File-Relative-Path')}:/workbook/tables/TableAddExtended/rows"
+                                },
+                                "authentication": "@parameters('$authentication')"
+                              }
+                            },
+                            "List_All_Sites_with_data": {
+                              "runAfter": {
+                                "Invoke_http_Get_Sites": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "05c212d4-bdab-4ba9-a408-cc89507d9cdd"
+                              },
+                              "type": "Query",
+                              "inputs": {
+                                "from": "@outputs('Invoke_http_Get_Sites')?['body']['value']",
+                                "where": "@greater(length(item()['values'][0][26]), 0)"
+                              }
+                            }
+                          },
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "743662eb-08f8-4616-b6a4-f7ae13f823f4"
+                          },
+                          "type": "Scope"
+                        },
+                        "CompanyID-fromSetting": {
+                          "runAfter": {
+                            "Number_of_rows_in_each_sheet": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "30a38da6-4de2-4d99-b6d7-f47cedf5ad40"
+                          },
+                          "type": "Compose",
+                          "inputs": "@outputs('Get-Table-Setting')?['body']['value'][0]['values'][0][3]"
+                        },
+                        "check-if-company-name-match": {
+                          "actions": {
+                            "Check_if_#_of_sites_is_greater_than_zero": {
+                              "actions": {
+                                "check-max-workbook-rows_": {
+                                  "actions": {
+                                    "check_max_system_record": {
+                                      "actions": {},
+                                      "runAfter": {},
+                                      "else": {
+                                        "actions": {
+                                          "Set_variable_5": {
+                                            "runAfter": {},
+                                            "metadata": {
+                                              "operationMetadataId": "d70d0913-45a3-4db4-8ebb-398fb2f9aa11"
+                                            },
+                                            "type": "SetVariable",
+                                            "inputs": {
+                                              "name": "IsErrorFree",
+                                              "value": "@false"
+                                            }
+                                          },
+                                          "Response_-_exceed_max_system": {
+                                            "runAfter": {
+                                              "Set_variable-Logged-error-Message_5": [
+                                                "Succeeded"
+                                              ]
+                                            },
+                                            "metadata": {
+                                              "operationMetadataId": "07b6d268-f617-4d10-9369-3ae227b7f852"
+                                            },
+                                            "type": "Response",
+                                            "kind": "Http",
+                                            "inputs": {
+                                              "statusCode": 402,
+                                              "body": "There are already @{length(outputs('List_All_sites')?['body'])} rows of Site data and @{length(outputs('List_All_Un_numbers')?['body'])} rows of UN data for those sites on file for this Company, so no further uploads can continue. "
+                                            }
+                                          },
+                                          "Set_variable_Error-Message_[_B1007]": {
+                                            "runAfter": {
+                                              "Set_variable_5": [
+                                                "Succeeded"
+                                              ]
+                                            },
+                                            "metadata": {
+                                              "operationMetadataId": "30cf9ef0-30f5-4857-a2ac-db5d593568f5"
+                                            },
+                                            "type": "SetVariable",
+                                            "inputs": {
+                                              "name": "Error_Message",
+                                              "value": "There are already @{outputs('Number-Of-Listed-Sites')} rows of Site data and @{outputs('Number-Of-UN-Listed')} rows of UN data for those sites on file for this Company, so no further uploads can continue. [ B1007]"
+                                            }
+                                          },
+                                          "Set_variable_6-ErrorCode__B1007": {
+                                            "runAfter": {
+                                              "Set_variable_Error-Message_[_B1007]": [
+                                                "Succeeded"
+                                              ]
+                                            },
+                                            "metadata": {
+                                              "operationMetadataId": "98df166e-a29b-461b-b4bb-f5bacaf20bdb"
+                                            },
+                                            "type": "SetVariable",
+                                            "inputs": {
+                                              "name": "Error_Code",
+                                              "value": " B1007"
+                                            }
+                                          },
+                                          "Set_variable-Logged-error-Message_5": {
+                                            "runAfter": {
+                                              "Set_variable_6-ErrorCode__B1007": [
+                                                "Succeeded"
+                                              ]
+                                            },
+                                            "metadata": {
+                                              "operationMetadataId": "bf1fa5f4-e23d-4fe2-b5e9-4c97a7b80ac7"
+                                            },
+                                            "type": "SetVariable",
+                                            "inputs": {
+                                              "name": "Logged_Error_Message",
+                                              "value": "Error - Bulk Site Registration Upload: CID for this Company has too many rows of Sites data @{length(outputs('List_All_sites')?['body'])} and/or rows of UN data  @{length(outputs('List_All_Un_numbers')?['body'])}, versus limits of @{outputs('Max-system-sites')} and @{outputs('Max-System-UNnumbers')}.[B1007]"
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "expression": {
+                                        "or": [
+                                          {
+                                            "less": [
+                                              "@outputs('Number-Of-UN-Listed')",
+                                              "@outputs('Max-system-sites')"
+                                            ]
+                                          },
+                                          {
+                                            "less": [
+                                              "@outputs('Number-Of-UN-Listed')",
+                                              "@outputs('Max-System-UNnumbers')"
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      "metadata": {
+                                        "operationMetadataId": "8db5c542-dfd8-4988-8ad5-ca6b97f6f119"
+                                      },
+                                      "type": "If"
+                                    }
+                                  },
+                                  "runAfter": {},
+                                  "else": {
+                                    "actions": {
+                                      "Set_variable_4": {
+                                        "runAfter": {},
+                                        "metadata": {
+                                          "operationMetadataId": "3cc8fb12-bb4e-4939-9646-e826b6fb19ee"
+                                        },
+                                        "type": "SetVariable",
+                                        "inputs": {
+                                          "name": "IsErrorFree",
+                                          "value": "@false"
+                                        }
+                                      },
+                                      "Response-excel-exceed-Max-Allowed-rows-in-Excel": {
+                                        "runAfter": {
+                                          "Set_variable-Logged-error-Message_4": [
+                                            "Succeeded"
+                                          ]
+                                        },
+                                        "metadata": {
+                                          "operationMetadataId": "b46fae1f-6003-49b8-b2ab-717dca013b0c"
+                                        },
+                                        "type": "Response",
+                                        "kind": "Http",
+                                        "inputs": {
+                                          "statusCode": 402,
+                                          "body": "Error - Bulk Site Registration Upload: Workbook has too many rows of Sites data @{outputs('Number-Of-Sites')} and/or rows of UN data @{outputs('Number-of-UNs')}, versus limits of @{outputs('Max-Workbook-sites')} and @{outputs('Max-Workbook-UNnumbers')}. "
+                                        }
+                                      },
+                                      "Set_variable_Error-Message_4": {
+                                        "runAfter": {
+                                          "Set_variable_4": [
+                                            "Succeeded"
+                                          ]
+                                        },
+                                        "metadata": {
+                                          "operationMetadataId": "bd737d61-1164-47aa-a89e-b32fd290bc02"
+                                        },
+                                        "type": "SetVariable",
+                                        "inputs": {
+                                          "name": "Error_Message",
+                                          "value": "This workbook contains  rows of Site data @{outputs('Number-Of-Sites')} and @{outputs('Number-of-UNs')} rows of UN data for those sites. This exceeds the acceptable limits for the bulk upload of @{outputs('Max-Workbook-sites')} rows for Site data and @{outputs('Max-Workbook-UNnumbers')} rows for UN data. <br>\n\nThe [Instructions] tab within the workbook provides guidance as to what data needs to be provided. If need be, you may consider splitting the file into two Bulk files, each under the limits, and two Bulk submissions. [B1006]\n"
+                                        }
+                                      },
+                                      "Set_variable_6-ErrorCode__B1006": {
+                                        "runAfter": {
+                                          "Set_variable_Error-Message_4": [
+                                            "Succeeded"
+                                          ]
+                                        },
+                                        "metadata": {
+                                          "operationMetadataId": "72872a57-3d8a-443b-8df8-c26a022cc8a0"
+                                        },
+                                        "type": "SetVariable",
+                                        "inputs": {
+                                          "name": "Error_Code",
+                                          "value": " B1006"
+                                        }
+                                      },
+                                      "Set_variable-Logged-error-Message_4": {
+                                        "runAfter": {
+                                          "Set_variable_6-ErrorCode__B1006": [
+                                            "Succeeded"
+                                          ]
+                                        },
+                                        "metadata": {
+                                          "operationMetadataId": "2a072103-c96f-4e07-9a91-e49f651f6826"
+                                        },
+                                        "type": "SetVariable",
+                                        "inputs": {
+                                          "name": "Logged_Error_Message",
+                                          "value": "Error - Bulk Site Registration Upload: Workbook has too many rows of Sites data @{outputs('Number-Of-Sites')} and/or rows of UN data @{outputs('Number-of-UNs')}, versus limits of @{outputs('Max-Workbook-sites')} and @{outputs('Max-Workbook-UNnumbers')}. [B1006]"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "expression": {
+                                    "or": [
+                                      {
+                                        "less": [
+                                          "@outputs('Number-Of-Sites')",
+                                          "@outputs('Max-Workbook-sites')"
+                                        ]
+                                      },
+                                      {
+                                        "less": [
+                                          "@outputs('Number-of-UNs')",
+                                          "@outputs('Max-Workbook-UNnumbers')"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "490735b9-d8a0-4ae7-ae26-eff03f1dff4b"
+                                  },
+                                  "type": "If"
+                                }
+                              },
+                              "runAfter": {},
+                              "else": {
+                                "actions": {
+                                  "Set_variable_3": {
+                                    "runAfter": {},
+                                    "metadata": {
+                                      "operationMetadataId": "da077faa-e8b0-42e3-ad6b-1029af4edf4f"
+                                    },
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                      "name": "IsErrorFree",
+                                      "value": "@false"
+                                    }
+                                  },
+                                  "Response_-_file_empty": {
+                                    "runAfter": {
+                                      "Set_variable-Logged-error-Message_B1005": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "metadata": {
+                                      "operationMetadataId": "701e7b6a-a2d5-4722-b64d-1344404671a7"
+                                    },
+                                    "type": "Response",
+                                    "kind": "Http",
+                                    "inputs": {
+                                      "statusCode": 402,
+                                      "body": "The uploaded file is empty. Please update the file with the Basic, and if required Extended, Site information, Guidance for the data entry can be found in the [Instructions] sheet of the workbook.  \nWhen that process is complete, then upload that version of the file. "
+                                    }
+                                  },
+                                  "Set_variable_Error-Message_3": {
+                                    "runAfter": {
+                                      "Set_variable_3": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "metadata": {
+                                      "operationMetadataId": "becb8a07-c9c3-48c4-a0f7-1eca08664fe9"
+                                    },
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                      "name": "Error_Message",
+                                      "value": "The uploaded file is empty. Please update the file with the Basic, and if required Extended, Site information, Guidance for the data entry can be found in the [Instructions] sheet of the workbook.  <br>\n\nWhen that process is complete, then upload that version of the file.[B1005] "
+                                    }
+                                  },
+                                  "Set_variable_6-ErrorCode_B1005": {
+                                    "runAfter": {
+                                      "Set_variable_Error-Message_3": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "metadata": {
+                                      "operationMetadataId": "23991f98-bd9d-4d32-aa8e-d5d8e6b99589"
+                                    },
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                      "name": "Error_Code",
+                                      "value": "B1005"
+                                    }
+                                  },
+                                  "Set_variable-Logged-error-Message_B1005": {
+                                    "runAfter": {
+                                      "Set_variable_6-ErrorCode_B1005": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "metadata": {
+                                      "operationMetadataId": "51765c19-e943-45c6-a40d-0a70a1f4ca1a"
+                                    },
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                      "name": "Logged_Error_Message",
+                                      "value": "Error - Bulk Site Registration Upload: Workbook’s hidden company and version is correct, but the user did not enter any data. [B1005]"
+                                    }
+                                  }
+                                }
+                              },
+                              "expression": {
+                                "greater": [
+                                  "@outputs('Number-Of-Sites')",
+                                  0
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "85996040-d468-47c0-9bfe-b248a74612e0"
+                              },
+                              "type": "If"
+                            }
+                          },
+                          "runAfter": {
+                            "CompanyName-fromSetting_": [
+                              "Succeeded"
+                            ]
+                          },
+                          "else": {
+                            "actions": {
+                              "Set_variable_false_company_not_match": {
+                                "runAfter": {},
+                                "metadata": {
+                                  "operationMetadataId": "a5e5056d-1f27-41f8-9adf-f5d840e557d2"
+                                },
+                                "type": "SetVariable",
+                                "inputs": {
+                                  "name": "IsErrorFree",
+                                  "value": "@false"
+                                }
+                              },
+                              "Response": {
+                                "runAfter": {
+                                  "Set_variable-Logged-error-Message_3": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "metadata": {
+                                  "operationMetadataId": "14021fe3-0ddb-4253-8e78-19b83b453fb1"
+                                },
+                                "type": "Response",
+                                "kind": "Http",
+                                "inputs": {
+                                  "statusCode": 402,
+                                  "body": "The uploaded file is assigned to the @{outputs('CompanyName-fromSetting_')} Company, versus your own Company. Please download and update a new version of the Site Bulk Upload Excel Template, then upload that file instead."
+                                }
+                              },
+                              "Set_variable_Error-Message_2": {
+                                "runAfter": {
+                                  "Set_variable_false_company_not_match": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "metadata": {
+                                  "operationMetadataId": "a5ca21ab-5ce9-4dff-a3aa-d059b6b19661"
+                                },
+                                "type": "SetVariable",
+                                "inputs": {
+                                  "name": "Error_Message",
+                                  "value": "The uploaded file is assigned to the @{outputs('CompanyName-fromSetting_')} Company, versus your own Company. Please download and update a new version of the Site Bulk Upload Excel Template, then upload that file instead. <br>\n\n\t@{outputs('CompanyName-fromSetting_')} is the name of Company Name stored in a hidden field in the workbook"
+                                }
+                              },
+                              "Set_variable_6-ErrorCode_B1003": {
+                                "runAfter": {
+                                  "Set_variable_Error-Message_2": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "metadata": {
+                                  "operationMetadataId": "724229d5-9c0a-4544-9ff2-23dc22506bcb"
+                                },
+                                "type": "SetVariable",
+                                "inputs": {
+                                  "name": "Error_Code",
+                                  "value": "B1003"
+                                }
+                              },
+                              "Set_variable-Logged-error-Message_3": {
+                                "runAfter": {
+                                  "Set_variable_6-ErrorCode_B1003": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "metadata": {
+                                  "operationMetadataId": "e4818f97-8f16-4544-9e48-eb41e4872005"
+                                },
+                                "type": "SetVariable",
+                                "inputs": {
+                                  "name": "Logged_Error_Message",
+                                  "value": "Error - Bulk Site Registration Upload: File for a different Company. [B1003]"
+                                }
+                              }
+                            }
+                          },
+                          "expression": {
+                            "equals": [
+                              "@outputs('CompanyId')",
+                              "@outputs('CompanyID-fromSetting')"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "34a83951-6f91-4a0c-a34e-40eaf3250b14"
+                          },
+                          "type": "If"
+                        },
+                        "CompanyName-fromSetting_": {
+                          "runAfter": {
+                            "CompanyID-fromSetting": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "30a38da6-4de2-4d99-b6d7-f47cedf5ad40"
+                          },
+                          "type": "Compose",
+                          "inputs": "@outputs('Get-Table-Setting')?['body']['value'][0]['values'][0][4]"
+                        }
+                      },
+                      "runAfter": {
+                        "Get-Table-Setting": [
+                          "Succeeded"
+                        ]
+                      },
+                      "else": {
+                        "actions": {
+                          "Set_variable": {
+                            "runAfter": {},
+                            "metadata": {
+                              "operationMetadataId": "9a3febac-5919-4293-94ac-ec6450e16553"
+                            },
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "IsErrorFree",
+                              "value": "@false"
+                            }
+                          },
+                          "Response-wrong-version": {
+                            "runAfter": {
+                              "Set_variable-Logged-error-Message_B1004": [
+                                "Succeeded"
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "1f529166-a6ec-423d-9a92-396a0ad70218"
+                            },
+                            "type": "Response",
+                            "kind": "Http",
+                            "inputs": {
+                              "statusCode": 401,
+                              "headers": {
+                                "Error": "\"The uploaded file is based on a template that is no longer current. Please download and update a new version of the Site Bulk Upload Excel Template, then upload that file instead. \""
+                              },
+                              "body": "The uploaded file is based on a template that is no longer current. Please download and update a new version of the Site Bulk Upload Excel Template, then upload that file instead. "
+                            }
+                          },
+                          "Set_variable_Error-Message": {
+                            "runAfter": {
+                              "Set_variable": [
+                                "Succeeded"
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "3cc05f8b-d916-4cf3-abb3-63f2cd66891f"
+                            },
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "Error_Message",
+                              "value": "The uploaded file is based on a template that is no longer current. Please download and update a new version of the Site Bulk Upload Excel Template, then upload that file instead. [B1004] "
+                            }
+                          },
+                          "Set_variable_6-ErrorCode_B1004": {
+                            "runAfter": {
+                              "Set_variable_Error-Message": [
+                                "Succeeded"
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "d9cc657f-ad59-482e-b6b1-6d31a09ab404"
+                            },
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "Error_Code",
+                              "value": "B1004"
+                            }
+                          },
+                          "Set_variable-Logged-error-Message_B1004": {
+                            "runAfter": {
+                              "Set_variable_6-ErrorCode_B1004": [
+                                "Succeeded"
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "a38bd09e-8950-4a84-a03b-5746b1cf2b7c"
+                            },
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "Logged_Error_Message",
+                              "value": "Error - Bulk Site Registration Upload: File’s version of  @{outputs('get_the_version_#')?['body/value'][0]?['version Number']} is less than the current minimum file version @{outputs('version-number')}. [B1004]"
+                            }
+                          }
+                        }
+                      },
+                      "expression": {
+                        "equals": [
+                          "@outputs('get_the_version_#')?['body/value'][0]?['version Number']",
+                          "@outputs('version-number')"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "a782cd03-7b79-4f14-80d5-4a9c5c6110da"
+                      },
+                      "type": "If"
+                    }
+                  },
+                  "runAfter": {
+                    "Filter-array-Table1": [
+                      "Succeeded"
+                    ]
+                  },
+                  "else": {
+                    "actions": {
+                      "Set_IsErrorFree_to_false": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "97bb35e1-166e-43b9-babc-3161cd46cc09"
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "IsErrorFree",
+                          "value": "@false"
+                        }
+                      },
+                      "Response_-_send_template_error_response": {
+                        "runAfter": {
+                          "Set_variable-Logged-error-Message_2": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "ee3c3cd2-006d-4ac8-a012-7c327fbf86fd"
+                        },
+                        "type": "Response",
+                        "kind": "Http",
+                        "inputs": {
+                          "statusCode": 401,
+                          "body": "The uploaded file is not the custom Site Bulk Upload Excel workbook. Please download and update a new version of the Site Bulk Upload Excel Template, then upload that file instead. "
+                        }
+                      },
+                      "Set_variable__flag_allTable_exists_to_false": {
+                        "runAfter": {
+                          "Set_IsErrorFree_to_false": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "62a41d5d-eae5-47bf-a918-bb2a549665e2"
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Flage_All_Table_exists",
+                          "value": "@false"
+                        }
+                      },
+                      "Set_variable-ErrorCode_B1002_": {
+                        "runAfter": {
+                          "Set_variable__flag_allTable_exists_to_false": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "d9cc657f-ad59-482e-b6b1-6d31a09ab404"
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Error_Code",
+                          "value": "B1002"
+                        }
+                      },
+                      "Set_variable_Error-Message_6": {
+                        "runAfter": {
+                          "Set_variable-ErrorCode_B1002_": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "3cc05f8b-d916-4cf3-abb3-63f2cd66891f"
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Error_Message",
+                          "value": "The uploaded file is not the custom Site Bulk Upload Excel workbook. Please download and update a new version of the Site Bulk Upload Excel Template, then upload that file instead."
+                        }
+                      },
+                      "Set_variable-Logged-error-Message_2": {
+                        "runAfter": {
+                          "Set_variable_Error-Message_6": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "419289f3-0828-4b20-aece-18c72bc35de2"
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Logged_Error_Message",
+                          "value": "Error - Bulk Site Registration Upload: File is not a Site Bulk Upload Excel workbook. [B1002]"
+                        }
+                      }
+                    }
+                  },
+                  "expression": {
+                    "and": [
+                      {
+                        "greater": [
+                          "@length(body('Filter-array-Table1'))",
+                          0
+                        ]
+                      },
+                      {
+                        "greater": [
+                          "@length(body('Filter-array-table2'))",
+                          0
+                        ]
+                      },
+                      {
+                        "greater": [
+                          "@length(body('Filter-array-Table4'))",
+                          0
+                        ]
+                      }
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "741e3a50-0416-4cc0-bacc-5794139a364c"
+                  },
+                  "type": "If"
+                }
+              },
+              "runAfter": {
+                "Get-File-Relative-Path": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "8f162a33-d8d8-4206-b291-c543bf9406ea"
+              },
+              "type": "Scope"
+            },
+            "Get-File-Relative-Path": {
+              "runAfter": {
+                "SharePoint-file-path": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "62a55140-16b9-46c5-8165-dbd9d75253d9"
+              },
+              "type": "Compose",
+              "inputs": "@substring(outputs('SharePoint-file-path'), indexOf(outputs('SharePoint-file-path'), 'CID_Bulk_Upload'))"
+            }
+          },
+          "runAfter": {
+            "CompanyId": [
+              "Succeeded"
+            ],
+            "get_Attachment_conetent": [
+              "Succeeded"
+            ],
+            "Initialize_Environment_folder_variable": [
+              "Succeeded"
+            ],
+            "Number-Of-Sites-With-Reqiurement-Level": [
+              "Succeeded"
+            ],
+            "Number-Of-UN-Listed": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Set_variable-IsErrorFree-to-false": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "6854c04f-327e-4ed5-b17e-f8a85946dc59"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "IsErrorFree",
+                  "value": "@false"
+                }
+              },
+              "Response_attachment_not_found": {
+                "runAfter": {
+                  "Set_variable-Logged-error-Message": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "1f529166-a6ec-423d-9a92-396a0ad70218"
+                },
+                "type": "Response",
+                "kind": "Http",
+                "inputs": {
+                  "statusCode": 401,
+                  "headers": {
+                    "Error": "\"Filet not found\""
+                  },
+                  "body": "File Not Found"
+                }
+              },
+              "Set_variable_6-ErrorCode": {
+                "runAfter": {
+                  "Set_variable-IsErrorFree-to-false": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "15df6c9d-8f76-47dd-9dff-a12998341d47"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "Error_Code",
+                  "value": "0"
+                }
+              },
+              "Set_variable-ErrorMessage": {
+                "runAfter": {
+                  "Set_variable_6-ErrorCode": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "9765b487-338d-496e-8bc7-9bd82cde07fb"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "Error_Message",
+                  "value": "File Not Found"
+                }
+              },
+              "Set_variable-Logged-error-Message": {
+                "runAfter": {
+                  "Set_variable-ErrorMessage": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "cc717399-1be5-4553-8b05-b013fb8b4c08"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "Logged_Error_Message",
+                  "value": "File Not Found"
+                }
+              }
+            }
+          },
+          "expression": {
+            "not": {
+              "equals": [
+                "@outputs('attachement')",
+                "Null"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "06b869e6-ecc6-4f8d-a019-d96151a0cbed"
+          },
+          "type": "If"
+        },
+        "ActionBy": {
+          "runAfter": {
+            "Get_Bulk_Activity_log_Summaries": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1c1b15c1-fa5b-476a-857a-ea18ee67282e"
+          },
+          "type": "Compose",
+          "inputs": "@outputs('Get_Bulk_Activity_log_Summaries')?['body']['_cid_actionedby_value@OData.Community.Display.V1.FormattedValue']"
+        },
+        "Error_List_Variable": {
+          "runAfter": {
+            "Initialize_variable_-_Log_Error_Message": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a10a3b39-9550-46b6-b00c-75dd826be0a2"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Error_List",
+                "type": "array",
+                "value": [
+                  {
+                    "Site_address": "",
+                    "Error": ""
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "Initialize_ProvinceCodes_variable": {
+          "runAfter": {
+            "Error_List_Variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "74815300-3912-4a4c-ad7f-1cfdca4d3ce9"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ProvinceCodes",
+                "type": "object",
+                "value": {
+                  "NL": "10",
+                  "PE": "11",
+                  "NS": "12",
+                  "NB": "13",
+                  "QC": "24",
+                  "ON": "35",
+                  "MB": "46",
+                  "SK": "47",
+                  "AB": "48",
+                  "BC": "59",
+                  "YU": "60",
+                  "NT": "61",
+                  "NU": "62",
+                  "UF": "72",
+                  "IW": "73"
+                }
+              }
+            ]
+          }
+        },
+        "All-Tables_exists-in-Excel-Flag": {
+          "runAfter": {
+            "Initialize_ProvinceCodes_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ea234297-f193-4320-b5cf-eeed009e2f42"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Flage_All_Table_exists",
+                "type": "boolean",
+                "value": "@true"
+              }
+            ]
+          }
+        },
+        "Error_flag": {
+          "runAfter": {
+            "All-Tables_exists-in-Excel-Flag": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "af9c01db-59f3-46fa-826e-e24fc2c82cca"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "IsErrorFree",
+                "type": "boolean",
+                "value": "@true"
+              }
+            ]
+          }
+        },
+        "Initialize_variable-Error-Message": {
+          "runAfter": {
+            "Error_flag": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "35b9d1fb-da0e-491e-9802-9126b6c5408c"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Error_Message",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable-ErrorCode": {
+          "runAfter": {
+            "Initialize_variable-Error-Message": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "745a4749-12a3-439a-9231-6a95cf6876bb"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Error_Code",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable-Type": {
+          "runAfter": {
+            "Initialize_variable-ErrorCode": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "cb871a38-ef64-4045-b2ea-6ca03491784d"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "LogType",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Bulk_Activity_start_time": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "6907a2ad-8951-45c7-990f-5ced90c5981a"
+          },
+          "type": "Compose",
+          "inputs": "@utcNow()"
+        },
+        "Filter_array-All_Sites_With_RequirementLevel-Contains-Data": {
+          "runAfter": {
+            "Number-Of-Listed-Sites": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "36daded1-93fb-4282-b71d-acdd36335cd4"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('List_All_sites')?['body/value']",
+            "where": "@greater(item()?['cid_requirementlevel'], 0)"
+          }
+        },
+        "Number-Of-Sites-With-Reqiurement-Level": {
+          "runAfter": {
+            "Filter_array-All_Sites_With_RequirementLevel-Contains-Data": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "574efb28-9b54-49f4-ac70-7775b4716888"
+          },
+          "type": "Compose",
+          "inputs": "@length(body('Filter_array-All_Sites_With_RequirementLevel-Contains-Data'))"
+        },
+        "Number-Of-Listed-Sites": {
+          "runAfter": {
+            "List_All_sites": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "bf0003ef-b457-4552-a231-5139af15d7bc"
+          },
+          "type": "Compose",
+          "inputs": "@length(outputs('List_All_sites')?['body/value'])"
+        },
+        "Number-Of-UN-Listed": {
+          "runAfter": {
+            "List_All_Un_numbers": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a0446023-d515-4093-99e2-c9fcbf71455b"
+          },
+          "type": "Compose",
+          "inputs": "@length(outputs('List_All_Un_numbers')?['body/value'])"
+        },
+        "Initialize_variable_-_Log_Error_Message": {
+          "runAfter": {
+            "Initialize_variable_-_Language_Index_-_default_english": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "22b9d9ec-f2ae-4346-a68c-31f80dc842d9"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Logged_Error_Message",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_-_Language_Index_-_default_english": {
+          "runAfter": {
+            "Bulk_Activity_start_time": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2e0ab909-9d77-4bf0-8692-08dd432b957d"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Language_Index",
+                "type": "integer",
+                "value": 918640001
+              }
+            ]
+          }
+        },
+        "check_Language": {
+          "actions": {
+            "Set_variable_-_Set_Language_code_to_French": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "33b646d2-8978-4fc8-9857-a59fdbc6a870"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Language_Index",
+                "value": 918640002
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_variable-Type": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "not": {
+              "equals": [
+                "@triggerBody()?['Lang']",
+                "en-US"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "949613ef-c3ae-49bf-a41e-8bd4d3467616"
+          },
+          "type": "If"
+        }
+      },
+      "outputs": {}
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}

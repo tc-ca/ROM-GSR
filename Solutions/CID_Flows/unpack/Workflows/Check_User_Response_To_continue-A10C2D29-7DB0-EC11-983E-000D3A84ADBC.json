@@ -1,0 +1,137 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "adb67e7b-1bc0-40f2-9002-aed2197ae103"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "activityid": {
+                  "type": "string"
+                },
+                "user_reponse": {
+                  "type": "string"
+                },
+                "Log_details": {
+                  "type": "string"
+                },
+                "Lang": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "Condition": {
+          "actions": {
+            "Update_bulk_summary_table_to_start_initial_validation": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "aebeb25f-7644-4368-b557-49742b195a0d"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "cid_bulkactivitylogsummaries",
+                  "recordId": "@triggerBody()?['activityid']",
+                  "item/cid_detailedvalidationstarttime": "@utcNow()"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {},
+          "else": {
+            "actions": {
+              "update_bulk_summary_table_to_close_the_activity": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "b8ceac46-25fa-4ae3-acce-228889fa4bb8"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps",
+                    "operationId": "UpdateRecord",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "cid_bulkactivitylogsummaries",
+                    "recordId": "@triggerBody()?['activityid']",
+                    "item/cid_activityendtime": "@utcNow()",
+                    "item/cid_activitystatus": 100000001
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@triggerBody()?['user_reponse']",
+              "yes"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "cc168c6e-34f3-45a6-8c01-3ddc98e6bca0"
+          },
+          "type": "If"
+        },
+        "Response": {
+          "runAfter": {
+            "Condition": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "823ebc81-3718-434b-b00f-700024b1f7cc"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": "s"
+          }
+        }
+      },
+      "outputs": {}
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}

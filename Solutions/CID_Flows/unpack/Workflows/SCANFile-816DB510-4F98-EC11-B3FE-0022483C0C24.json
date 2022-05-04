@@ -1,0 +1,252 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "5e2485f4-d0b0-46fa-bacb-838ba3c670dc"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "FileContent": {
+                  "type": "string"
+                },
+                "CompanyId": {
+                  "type": "string"
+                },
+                "ActionedBy": {
+                  "type": "string"
+                },
+                "ActivityType": {
+                  "type": "string"
+                },
+                "ExcelFileName": {
+                  "type": "string"
+                },
+                "Lang": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "HTTP-Scan-API": {
+          "runAfter": {
+            "Token": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "50bf17f0-eb4e-44fb-99df-f5851169cef1"
+          },
+          "type": "Http",
+          "inputs": {
+            "method": "POST",
+            "uri": "https://wwwapps2.tc.gc.ca/Saf-Sec-Sur/13/tc-virusscan-api/api/v1/file-scan?filename=test",
+            "headers": {
+              "Authorization": "Bearer @{outputs('Token')}",
+              "Content-Type": "application/*+json",
+              "Accept": "*/*"
+            },
+            "body": " \"data\": \"@{triggerBody()?['FileContent']}\""
+          }
+        },
+        "HTTP_-_Athenticate": {
+          "runAfter": {
+            "startTime": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "026ef383-74cc-40b3-b30c-69e6c37cc277"
+          },
+          "type": "Http",
+          "inputs": {
+            "method": "POST",
+            "uri": "https://wwwapps2.tc.gc.ca/Saf-Sec-Sur/13/tc-virusscan-api/api/v1/authenticate",
+            "headers": {
+              "Content-Type": "application/json-patch+json",
+              "Connection": "Keep-Alive"
+            },
+            "body": {
+              "username": "56cf772da1154369b877a1e3fd177da9",
+              "password": "3fa7ae5d1c8f4e37b764cf7530f4f0e8f512779b6a72440fb9e13ecd76ed2e6b"
+            }
+          }
+        },
+        "Token": {
+          "runAfter": {
+            "HTTP_-_Athenticate": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e7a3a67e-3d1f-471f-946e-b6163c60a92d"
+          },
+          "type": "Compose",
+          "inputs": "@body('HTTP_-_Athenticate')"
+        },
+        "http-request-result": {
+          "runAfter": {
+            "HTTP-Scan-API": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ae6c95d7-1789-4bc4-b1b4-18dfff1c9904"
+          },
+          "type": "Compose",
+          "inputs": "@body('HTTP-Scan-API')['process_info']['result']"
+        },
+        "check-result": {
+          "actions": {
+            "Response": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "4b393379-ef92-463a-b5df-c42c18decc46"
+              },
+              "type": "Response",
+              "kind": "Http",
+              "inputs": {
+                "statusCode": 200,
+                "headers": {
+                  "Message": "Passed"
+                },
+                "body": "@outputs('http-request-result')"
+              }
+            }
+          },
+          "runAfter": {
+            "http-request-result": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Add_Summary_Log_-bulk_Activity_failed": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "836c8ed5-48d8-4303-bfa7-3a4bc37c755e"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps",
+                    "operationId": "CreateRecord",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "cid_bulkactivitylogsummaries",
+                    "item/cid_Company@odata.bind": "@concat('/accounts/', triggerBody()?['CompanyId'])",
+                    "item/cid_Actionedby@odata.bind": "@concat('/contacts/', triggerBody()?['ActionedBy'])",
+                    "item/cid_activityendtime": "@utcNow()",
+                    "item/cid_activitystarttime": "@outputs('startTime')",
+                    "item/cid_activitystatus": 100000001,
+                    "item/cid_activitytype": "@int(triggerBody()?['ActivityType'])",
+                    "item/cid_filename": "@triggerBody()?['ExcelFileName']",
+                    "item/cid_summary": "Error - Bulk Site Registration Upload: Initial upload stopped due to a potential virus. [B1001]"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              },
+              "add_Detail_Log": {
+                "runAfter": {
+                  "Add_Summary_Log_-bulk_Activity_failed": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "f54aeeec-ffdf-4be2-837d-e73ae5062182"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps",
+                    "operationId": "CreateRecord",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "cid_bulkactivitylogsdetailses",
+                    "item/cid_BulkActivityLogSummary@odata.bind": "@concat('\\cid_bulkactivitylogsummaries\\' , outputs('Add_Summary_Log_-bulk_Activity_failed')?['body/cid_bulkactivitylogsummaryid'])",
+                    "item/cid_errordetails": "Error - Bulk Site Registration Upload: Initial upload stopped due to a potential virus. [B1001]",
+                    "item/cid_errorwarningcode": "B1001"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              },
+              "Response_-failure": {
+                "runAfter": {
+                  "add_Detail_Log": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "4b393379-ef92-463a-b5df-c42c18decc46"
+                },
+                "type": "Response",
+                "kind": "Http",
+                "inputs": {
+                  "statusCode": 200,
+                  "headers": {
+                    "MessageCode": "B1001",
+                    "Message": "A scan of the file has found a potential virus. Please download and update a new version of the Site Bulk Upload Excel Template, then upload that file instead. [B1001]"
+                  },
+                  "body": "@outputs('http-request-result')"
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@outputs('http-request-result')",
+              "Allowed"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e1d8118d-592f-442c-82f1-f00208c8cc67"
+          },
+          "type": "If"
+        },
+        "startTime": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "18f4e50d-9bf6-458d-96d9-6889896e03f2"
+          },
+          "type": "Compose",
+          "inputs": "@utcNow()"
+        }
+      },
+      "outputs": {}
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}

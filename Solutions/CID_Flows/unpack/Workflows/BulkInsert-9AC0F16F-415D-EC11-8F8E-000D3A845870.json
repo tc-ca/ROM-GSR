@@ -1,1 +1,3566 @@
-{"properties":{"connectionReferences":{"shared_excelonlinebusiness_1":{"runtimeSource":"embedded","connection":{"connectionReferenceLogicalName":"tdg_ConnectionReferenceExcelTDGCoreUser"},"api":{"name":"shared_excelonlinebusiness"}},"shared_commondataserviceforapps_1":{"runtimeSource":"embedded","connection":{"connectionReferenceLogicalName":"tdg_ConnectionReferenceDataverseServicePrinciple"},"api":{"name":"shared_commondataserviceforapps"}},"shared_webcontents":{"runtimeSource":"embedded","connection":{"connectionReferenceLogicalName":"cid_sharedwebcontents_efbe7"},"api":{"name":"shared_webcontents"}}},"definition":{"$schema":"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#","contentVersion":"1.0.0.0","parameters":{"$connections":{"defaultValue":{},"type":"Object"},"$authentication":{"defaultValue":{},"type":"SecureObject"}},"triggers":{"manual":{"metadata":{"operationMetadataId":"53048e5a-4670-4da2-bbe6-f46906d88b50"},"type":"Request","kind":"Http","inputs":{"schema":{"type":"object","properties":{"accountid":{"type":"string"},"Filelocation":{"type":"string"},"activityid":{"type":"string"}}}}}},"actions":{"List_rows_present_in_a_table":{"runAfter":{"Invoke_http_Get_Sites":["Succeeded"]},"metadata":{"operationMetadataId":"3bb92b87-e24a-4dea-884d-6514ecc43cfe","tableId":"Table2"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_excelonlinebusiness_1","operationId":"GetItems","apiId":"/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness"},"parameters":{"source":"sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211","drive":"b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV","file":"@triggerBody()?['Filelocation']","table":"Table2"},"authentication":"@parameters('$authentication')"}},"accountlookup":{"runAfter":{"List_All_Sites_with_data":["Succeeded"]},"metadata":{"operationMetadataId":"018b08e2-85b4-4259-9f95-2080218b835d"},"type":"Compose","inputs":"@concat('/','accounts','/',triggerBody()?['accountid'])"},"List_All_Sites_with_data":{"runAfter":{"List_rows_present_in_a_table":["Succeeded"]},"metadata":{"operationMetadataId":"05c212d4-bdab-4ba9-a408-cc89507d9cdd"},"type":"Query","inputs":{"from":"@outputs('List_rows_present_in_a_table')?['body/value']","where":"@greater(length(Trim(item()?['SiteFullAddress'])), 0)"}},"Get_Account_Info":{"runAfter":{"file_Ref_URL":["Succeeded"]},"metadata":{"operationMetadataId":"f328cc40-e1a3-4029-9f69-19071dc13921"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"GetItem","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"accounts","recordId":"@triggerBody()?['accountid']"},"authentication":"@parameters('$authentication')"}},"Response":{"runAfter":{"Close_Activity":["Succeeded"]},"metadata":{"operationMetadataId":"f41bb6df-5dd6-4cec-b37c-85a8978d43d1"},"type":"Response","kind":"Http","inputs":{"statusCode":200,"body":"@length(outputs('List_rows_present_in_a_table')?['body/value'])"}},"Close_Activity":{"runAfter":{"Loop_Excel_sheet_Sites_table":["Succeeded"]},"metadata":{"operationMetadataId":"0a769b87-ea0e-44ac-b803-af10cff2b5b0"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"UpdateRecord","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"cid_activityreviewlogs","recordId":"@triggerBody()?['activityid']","item/statecode":1},"authentication":"@parameters('$authentication')"}},"Loop_Excel_sheet_Sites_table":{"foreach":"@body('List_All_Sites_with_data')","actions":{"current_row":{"runAfter":{},"metadata":{"operationMetadataId":"420a8e5f-805b-440c-a13a-d5f047f098da"},"type":"Compose","inputs":"@items('Loop_Excel_sheet_Sites_table')"},"Site_Classification":{"runAfter":{"current_row":["Succeeded"]},"metadata":{"operationMetadataId":"341301d8-c2f1-4f28-8b7e-b5ceb7f72ab8"},"type":"Compose","inputs":"@outputs('current_row')?['Extended Info Site Y/N']"},"Class_List":{"runAfter":{"check_if_extended_site":["Succeeded"]},"metadata":{"operationMetadataId":"018b08e2-85b4-4259-9f95-2080218b835d"},"type":"Compose","inputs":"@split(outputs('current_row')?['Class/Division'],',')"},"Add_Mode_of_Marine_if_exist":{"actions":{"Add_Marine":{"runAfter":{},"metadata":{"operationMetadataId":"f2b77439-fca1-4e93-8f9c-d4182b222dac"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"CreateRecord","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"cid_modeoftransportations","item/cid_Company@odata.bind":"@outputs('accountlookup')","item/cid_Mode@odata.bind":"@concat('/ovs_modeses/',variables('Air'))","item/cid_Site@odata.bind":"@concat('/accounts/',outputs('account_id'))"},"authentication":"@parameters('$authentication')"}}},"runAfter":{"OperationId":["Succeeded"]},"expression":{"equals":["@items('Loop_Excel_sheet_Sites_table')?['Marine']","Yes"]},"metadata":{"operationMetadataId":"2896c688-9b3b-415d-b77a-07e999028569"},"type":"If"},"account_id":{"runAfter":{"Add_Site":["Succeeded"]},"metadata":{"operationMetadataId":"cd5817b9-00a5-4ebd-9fc2-139e037c84ea"},"type":"Compose","inputs":"@outputs('Add_Site')?['body/accountid']"},"Add_Site":{"runAfter":{"Class_List":["Succeeded"]},"metadata":{"operationMetadataId":"4183b4c2-5f46-4aee-8cd7-1e5512f2e3bb"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"CreateRecord","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"accounts","item/address1_city":"@toUpper(outputs('current_row')?['City'])","item/address1_country":"Canada","item/ovs_legalname":"@outputs('Get_Account_Info')?['body/ovs_legalname']","item/name":"@outputs('Get_Account_Info')?['body/name']","item/customertypecode":948010001,"item/ovs_romid":" ","item/address1_stateorprovince":"@toUpper(outputs('current_row')?['Province'])","item/address1_line1":"@toUpper(outputs('current_row')?['Address 1'])","item/address1_postalcode":"@toUpper(outputs('current_row')?['Postal Code'])","item/cid_cidsitestatus":100000004,"item/cid_operatingname":"@outputs('Get_Account_Info')?['body/cid_operatingname']","item/parentaccountid@odata.bind":"@outputs('accountlookup')","item/cid_requirementlevel":"@variables('CID_Site_Requirement_Level')","item/cid_sitename":"@outputs('Get_Account_Info')?['body/ovs_legalname']","item/address1_line2":"@toUpper(outputs('current_row')?['Address 2'])","item/address1_line3":"@toUpper(outputs('current_row')?['Address 3'])"},"authentication":"@parameters('$authentication')"}},"Add_operation":{"runAfter":{"account_id":["Succeeded"]},"metadata":{"operationMetadataId":"f0e14f9f-08f0-4bb9-b42d-abb8305d4693"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"CreateRecord","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"ovs_mocregistrations","item/ovs_registrationexpiry":"@addDays(utcNow(),364)","item/ovs_lineofbusiness@odata.bind":"@'/ovs_lobs/f3f10b28-a23c-ec11-8c62-0022483d7564'","item/ovs_operationtype":918640038,"item/ovs_SiteId@odata.bind":"@concat('/accounts/', outputs('account_id'))"},"authentication":"@parameters('$authentication')"}},"check_if_extended_site":{"actions":{"Filter_string_map_with_Extended":{"runAfter":{},"metadata":{"operationMetadataId":"b1543108-d7de-43e7-b374-bddc440f6daf"},"type":"Query","inputs":{"from":"@outputs('StringMap_-_CID_Requirement_level_option_set')?['body/value']","where":"@equals(item()?['value'], 'Extended')"}},"Set_requirement_level_to_extended_index":{"runAfter":{"Filter_string_map_with_Extended":["Succeeded"]},"metadata":{"operationMetadataId":"b1c39805-1722-457c-a7e5-29ba5a6da411"},"type":"SetVariable","inputs":{"name":"CID_Site_Requirement_Level","value":"@int(body('Filter_string_map_with_Extended')?[0]['attributevalue'])"}}},"runAfter":{"Site_Classification":["Succeeded"]},"else":{"actions":{"filter_string_map_with_Basic":{"runAfter":{},"metadata":{"operationMetadataId":"2d9482cd-19f2-43d9-b4ce-bfbd7392ddc8"},"type":"Query","inputs":{"from":"@outputs('StringMap_-_CID_Requirement_level_option_set')?['body/value']","where":"@equals(item()?['value'], 'Basic')"}},"Set_variable":{"runAfter":{"filter_string_map_with_Basic":["Succeeded"]},"metadata":{"operationMetadataId":"f7107a5d-bbc6-438c-bec6-ccf5b2864f3a"},"type":"SetVariable","inputs":{"name":"CID_Site_Requirement_Level","value":"@int(body('filter_string_map_with_Basic')?[0]?['attributevalue'])"}}}},"expression":{"equals":["@outputs('Site_Classification')","Yes"]},"metadata":{"operationMetadataId":"4248dcee-d3e5-46f8-a540-1c9267994d9e"},"type":"If"},"Add_Mode_Air_if_exist_in_excel_rows":{"actions":{"Add_Air":{"runAfter":{},"metadata":{"operationMetadataId":"4183b4c2-5f46-4aee-8cd7-1e5512f2e3bb"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"CreateRecord","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"cid_modeoftransportations","item/cid_Company@odata.bind":"@outputs('accountlookup')","item/cid_Mode@odata.bind":"@concat('/ovs_modeses/',variables('Air'))","item/cid_Site@odata.bind":"@concat('/accounts/',outputs('account_id'))"},"authentication":"@parameters('$authentication')"}}},"runAfter":{"OperationId":["Succeeded"]},"expression":{"equals":["@outputs('current_row')?['Air']","Yes"]},"metadata":{"operationMetadataId":"a5376aaa-2564-47f0-92b3-c1f7ae49a174"},"type":"If"},"Add_Mode_of_Road_if_exist_2":{"actions":{"Add_Road":{"runAfter":{},"metadata":{"operationMetadataId":"33f1c9ac-fd0c-487e-8d7e-45b95c1ec66f"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"CreateRecord","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"cid_modeoftransportations","item/cid_Company@odata.bind":"@outputs('accountlookup')","item/cid_Mode@odata.bind":"@concat('/ovs_modeses/', variables('Road'))","item/cid_Site@odata.bind":"@concat('/accounts/', outputs('account_id'))"},"authentication":"@parameters('$authentication')"}}},"runAfter":{"OperationId":["Succeeded"]},"expression":{"equals":["@items('Loop_Excel_sheet_Sites_table')?['Road']","Yes"]},"metadata":{"operationMetadataId":"5980f604-8f9d-4c2a-92d7-c639df25873e"},"type":"If"},"Add_Mode_of_Rail_if_exist":{"actions":{"Add_Rail":{"runAfter":{},"metadata":{"operationMetadataId":"d938db7b-82d4-44cb-8cb8-003848ed73ec"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"CreateRecord","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"cid_modeoftransportations","item/cid_Company@odata.bind":"@outputs('accountlookup')","item/cid_Mode@odata.bind":"@concat('/ovs_modeses/', variables('Rail'))","item/cid_Site@odata.bind":"@concat('/accounts/', outputs('account_id'))"},"authentication":"@parameters('$authentication')"}}},"runAfter":{"OperationId":["Succeeded"]},"expression":{"equals":["@items('Loop_Excel_sheet_Sites_table')?['Rail']","Yes"]},"metadata":{"operationMetadataId":"51aa8e06-1273-4bd3-b4b3-36e96227dcf4"},"type":"If"},"Check_if_UN_number_found":{"actions":{"For_each_UN_number":{"foreach":"@body('Filter_UnNumber_Table_with_Site')","actions":{"UN_row":{"runAfter":{},"metadata":{"operationMetadataId":"285f3692-c760-4400-8e86-c726bd09097a"},"type":"Compose","inputs":"@items('For_each_UN_number')"},"Check_if_UN_number_is_not_null":{"actions":{"UNNumber_Value":{"runAfter":{},"metadata":{"operationMetadataId":"30b2551c-eaf1-48b2-aec9-16ef692b7829"},"type":"Compose","inputs":"@Trim(Replace(substring(outputs('UN_row')?['UN Number- Numéro UN'],0,indexOf(outputs('UN_row')?['UN Number- Numéro UN'],'-')) ,'-' , '' ))"},"Get_UNNumber_GUID":{"runAfter":{"Compose":["Succeeded"]},"metadata":{"operationMetadataId":"ccece463-ad60-44bb-be52-68dc4785f3fd"},"type":"Query","inputs":{"from":"@outputs('List_UN_numbers')?['body/value']","where":"@and(equals(item()?['tdg_name'], outputs('UNNumber_Value')),equals(item()?['tdg_packinggroupcd@OData.Community.Display.V1.FormattedValue'],outputs('Packing_Group') ))\n"}},"UNNumber_GUID":{"runAfter":{"Get_UNNumber_GUID":["Succeeded"]},"metadata":{"operationMetadataId":"bb70d462-9ca9-48e2-9f4c-a8f6d7821d11"},"type":"Compose","inputs":"@body('Get_UNNumber_GUID')?[0]['tdg_unnumberid']"},"Get_Type_of_measurement_option_set_index":{"runAfter":{"UNNumber_GUID":["Succeeded"]},"metadata":{"operationMetadataId":"7471031a-5efb-4103-a623-250e404dadb1"},"type":"Query","inputs":{"from":"@outputs('StringMap_-_Type_of_measurement_list')?['body/value']","where":"@equals(item()?['value'], outputs('UN_row')?['Unit of Measure per UN - Sélectionnez l''unité de mesure'])"}},"Add_Operation_UN_number":{"runAfter":{"Index_-_unit_of_measurement_type_":["Succeeded"]},"metadata":{"operationMetadataId":"05ae44b8-6a21-4f37-b285-0ef585f2987b"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"CreateRecord","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"ovs_operationunnumbers","item/ovs_supplychaindirection":"930840000","item/ovs_UNNumber@odata.bind":"@concat('/tdg_unnumbers/',outputs('UNNumber_GUID'))","item/ovs_name":"@Replace(substring(outputs('UN_row')?['UN Number- Numéro UN'],0,indexOf(outputs('UN_row')?['UN Number- Numéro UN'],'-')) ,'-' , '' )","item/cid_annualnumberofshipment":"@outputs('UN_row')?['Annual Number of Consignments - Entrez le nombre annuel d''envois']","item/cid_annualquantityvolume":"@outputs('UN_row')?['Annual Volume/quantity - Quantité/Volume annuel']","item/ovs_OperationUNNumber@odata.bind":"@\r\nconcat('/ovs_mocregistrations/',outputs('OperationId'))","item/cid_unitofmeasurement":"@outputs('Index_-_unit_of_measurement_type_')"},"authentication":"@parameters('$authentication')"}},"Index_-_unit_of_measurement_type_":{"runAfter":{"Get_Type_of_measurement_option_set_index":["Succeeded"]},"metadata":{"operationMetadataId":"9238ee04-e629-4672-a1ad-e7684ae864e8"},"type":"Compose","inputs":"@body('Get_Type_of_measurement_option_set_index')?[0]?['attributevalue']"},"Packing_Group":{"runAfter":{"UNNumber_Value":["Succeeded"]},"metadata":{"operationMetadataId":"15e90497-30da-4521-96bf-4d32360177a6"},"type":"Compose","inputs":"@Trim( outputs('UN_row')?['Packing Group/Groupe d''emballage'])"},"Compose":{"runAfter":{"Packing_Group":["Succeeded"]},"metadata":{"operationMetadataId":"fc7c34ff-f3c5-4b2f-b222-b00a59ddaf68"},"type":"Compose","inputs":"@outputs('Packing_Group')"}},"runAfter":{"UN_row":["Succeeded"]},"expression":{"greater":["@length(trim(outputs('UN_row')?['UN Number- Numéro UN']))",0]},"metadata":{"operationMetadataId":"2ac58c16-5959-4c78-87fc-10684cfdbfb3"},"type":"If"}},"runAfter":{},"metadata":{"operationMetadataId":"eed152cc-0c52-40af-b240-b00e466d8aed"},"type":"Foreach"}},"runAfter":{"Filter_UnNumber_Table_with_Site":["Succeeded"]},"expression":{"greater":["@length(body('Filter_UnNumber_Table_with_Site'))",0]},"metadata":{"operationMetadataId":"27762c5a-e5d8-4aea-9ebc-da6d76714f03"},"type":"If"},"Loop_in_the_class_List":{"foreach":"@outputs('Class_List')","actions":{"get_option_set_index":{"runAfter":{},"metadata":{"operationMetadataId":"3874b476-84dc-4823-898f-1af674f9b7d3"},"type":"Query","inputs":{"from":"@outputs('StringMap_-_List_Class')?['body/value']","where":"@equals(item()?['value'], items('Loop_in_the_class_List'))"}},"Class_option_set_value":{"runAfter":{"get_option_set_index":["Succeeded"]},"metadata":{"operationMetadataId":"067c96d1-9269-4851-8df7-173ef3d741e2"},"type":"Compose","inputs":"@body('get_option_set_index')?[0]?['attributevalue']"},"If_class_index_found":{"actions":{"integer_value_for_the_index":{"runAfter":{},"metadata":{"operationMetadataId":"710c2984-a95a-45f4-8820-3f4eb9d36f59"},"type":"Compose","inputs":"@int(outputs('Class_option_set_value'))"},"Add_operation_class":{"runAfter":{"integer_value_for_the_index":["Succeeded"]},"metadata":{"operationMetadataId":"920c2fd2-060f-469d-b24c-0f89d3779bc4"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"CreateRecord","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"ovs_operationclasses","item/ovs_primeclass":"@int(outputs('Class_option_set_value'))","item/ovs_supplychaindirection":"930840000","item/ovs_OperationClass@odata.bind":"@\r\nconcat('/ovs_mocregistrations/',outputs('OperationId'))"},"authentication":"@parameters('$authentication')"}}},"runAfter":{"Class_option_set_value":["Succeeded"]},"expression":{"greaterOrEquals":["@outputs('Class_option_set_value')",0]},"metadata":{"operationMetadataId":"83735453-fbb6-459a-8cbd-79fdad1f0392"},"type":"If"}},"runAfter":{"Filter_UnNumber_Table_with_Site":["Succeeded"]},"metadata":{"operationMetadataId":"7ccc3b18-109a-4bdd-bc1a-c7e36794fd4b"},"type":"Foreach","runtimeConfiguration":{"concurrency":{"repetitions":23}}},"Filter_UnNumber_Table_with_Site":{"runAfter":{"Add_Mode_Air_if_exist_in_excel_rows":["Succeeded"],"Add_Mode_of_Rail_if_exist":["Succeeded"],"Add_Mode_of_Road_if_exist_2":["Succeeded"],"Add_Mode_of_Marine_if_exist":["Succeeded"]},"metadata":{"operationMetadataId":"0199dc9b-c60d-49dd-8d1c-9d2b9521333b"},"type":"Query","inputs":{"from":"@outputs('Get_Un_from_Table_4_in_excel')?['body/value']","where":"@equals(item()?['Site'], items('Loop_Excel_sheet_Sites_table')?['SiteFullAddress'])"}},"OperationId":{"runAfter":{"Add_operation":["Succeeded"]},"metadata":{"operationMetadataId":"b2c11011-6bc8-4de4-b959-2607f8180c5f"},"type":"Compose","inputs":"@outputs('Add_operation')?['body/ovs_mocregistrationid']"}},"runAfter":{"Loop_in_Retrieved_Modes_table":["Succeeded"],"accountlookup":["Succeeded"],"CID_Site_Requirement_Level":["Succeeded"],"Get_Un_from_Table_4_in_excel":["Succeeded"]},"metadata":{"operationMetadataId":"ad5faa3e-a3e7-4932-8d71-888d43b71829"},"type":"Foreach"},"List_UN_numbers":{"runAfter":{"file_Ref_URL":["Succeeded"]},"metadata":{"operationMetadataId":"dcf9fd85-9ef3-4860-802f-660f43841906"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"ListRecords","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"tdg_unnumbers","$select":"tdg_name,tdg_unnumberid,tdg_packinggroupcd"},"authentication":"@parameters('$authentication')"}},"StringMap_-_List_Class":{"runAfter":{"file_Ref_URL":["Succeeded"]},"metadata":{"operationMetadataId":"b492125b-acf1-4b7f-89ed-5390ac9fb4d2"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"ListRecords","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"stringmaps","fetchXml":"<fetch>\n  <entity name=\"stringmap\" >\n    <attribute name=\"attributevalue\" />\n    <attribute name=\"attributename\" />\n    <attribute name=\"value\" />\n    <filter>\n\n      <condition attribute=\"attributename\" operator=\"eq\" value=\"ovs_primeclass\" />\n     \n    </filter>\n  </entity>\n</fetch>"},"authentication":"@parameters('$authentication')"}},"StringMap_-_Type_of_measurement_list":{"runAfter":{"StringMap_-_List_Class":["Succeeded"]},"metadata":{"operationMetadataId":"d27310cf-dbc1-4fce-bd99-9f8768204475"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"ListRecords","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"stringmaps","fetchXml":"<fetch>\n  <entity name=\"stringmap\" >\n    <attribute name=\"attributevalue\" />\n    <attribute name=\"attributename\" />\n    <attribute name=\"value\" />\n    <filter>\n      <condition attribute=\"objecttypecode\" operator=\"eq\" value=\"10636\" />\n      <condition attribute=\"attributename\" operator=\"eq\" value=\"cid_Unitofmeasurement\" />\n    \n    </filter>\n  </entity>\n</fetch>"},"authentication":"@parameters('$authentication')"}},"Loop_in_Retrieved_Modes_table":{"foreach":"@outputs('Mode_of_Transportation_GUID')?['body/value']","actions":{"current_Mode_row":{"runAfter":{},"metadata":{"operationMetadataId":"d1567616-2137-475e-92c7-4f826991da9c"},"type":"Compose","inputs":"@items('Loop_in_Retrieved_Modes_table')"},"Switch":{"runAfter":{"current_Mode_row":["Succeeded"]},"cases":{"Case":{"case":"Air","actions":{"Set_variable_Air":{"runAfter":{},"type":"SetVariable","inputs":{"name":"Air","value":"@{outputs('current_Mode_row')?['ovs_modesid']}"}}}},"Case_2":{"case":"Marine","actions":{"Set_variable_Marine":{"runAfter":{},"type":"SetVariable","inputs":{"name":"Marine","value":"@{outputs('current_Mode_row')?['ovs_modesid']}"}}}},"Case_3":{"case":"Rail","actions":{"Set_Variable_Rail":{"runAfter":{},"type":"SetVariable","inputs":{"name":"Rail","value":"@{outputs('current_Mode_row')?['ovs_modesid']}"}}}},"Case_4":{"case":"Road","actions":{"Set_Variable_Road":{"runAfter":{},"type":"SetVariable","inputs":{"name":"Road","value":"@{outputs('current_Mode_row')?['ovs_modesid']}"}}}}},"default":{"actions":{}},"expression":"@outputs('current_Mode_row')?['ovs_name']","metadata":{"operationMetadataId":"7e6a3574-afd7-498f-9e04-0f2d4a2f0d1d"},"type":"Switch"}},"runAfter":{"Mode_of_Transportation_GUID":["Succeeded"]},"metadata":{"operationMetadataId":"bd691b6d-cdb5-4a48-8cba-2602d7d8502d"},"type":"Foreach"},"Mode_of_Transportation_GUID":{"runAfter":{"Marine":["Succeeded"]},"metadata":{"operationMetadataId":"8c1351c7-35f8-4f3e-a230-15320d7ec768"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"ListRecords","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"ovs_modeses","$select":"ovs_name"},"authentication":"@parameters('$authentication')"}},"StringMap_-_CID_Requirement_level_option_set":{"runAfter":{"List_UN_numbers":["Succeeded"]},"metadata":{"operationMetadataId":"b492125b-acf1-4b7f-89ed-5390ac9fb4d2"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_commondataserviceforapps_1","operationId":"ListRecords","apiId":"/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"},"parameters":{"entityName":"stringmaps","fetchXml":"<fetch>\n  <entity name=\"stringmap\" >\n    <attribute name=\"attributevalue\" />\n    <attribute name=\"attributename\" />\n    <attribute name=\"value\" />\n    <filter>\n      <condition attribute=\"objecttypecode\" operator=\"eq\" value=\"1\" />\n      <condition attribute=\"attributename\" operator=\"eq\" value=\"cid_requirementlevel\"/>\n     \n    </filter>\n  </entity>\n</fetch>"},"authentication":"@parameters('$authentication')"}},"CID_Site_Requirement_Level":{"runAfter":{"StringMap_-_CID_Requirement_level_option_set":["Succeeded"]},"metadata":{"operationMetadataId":"785d85ec-b4ca-460c-8e4e-d612c4eebefe"},"type":"InitializeVariable","inputs":{"variables":[{"name":"CID_Site_Requirement_Level","type":"integer","value":100000000}]}},"Get_Un_from_Table_4_in_excel":{"runAfter":{"StringMap_-_Type_of_measurement_list":["Succeeded"]},"metadata":{"operationMetadataId":"3108974b-fece-4d7b-8762-666d20d70eb0","tableId":"Table4"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_excelonlinebusiness_1","operationId":"GetItems","apiId":"/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness"},"parameters":{"source":"sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211","drive":"b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV","file":"@triggerBody()?['Filelocation']","table":"Table4"},"authentication":"@parameters('$authentication')"}},"Air":{"runAfter":{"file_Ref_URL":["Succeeded"]},"metadata":{"operationMetadataId":"f228a195-0411-4761-bf80-be026150e10f"},"type":"InitializeVariable","inputs":{"variables":[{"name":"Air","type":"string"}]}},"Rail":{"runAfter":{"Air":["Succeeded"]},"metadata":{"operationMetadataId":"f228a195-0411-4761-bf80-be026150e10f"},"type":"InitializeVariable","inputs":{"variables":[{"name":"Rail","type":"string"}]}},"Road":{"runAfter":{"Rail":["Succeeded"]},"metadata":{"operationMetadataId":"f228a195-0411-4761-bf80-be026150e10f"},"type":"InitializeVariable","inputs":{"variables":[{"name":"Road","type":"string"}]}},"Marine":{"runAfter":{"Road":["Succeeded"]},"metadata":{"operationMetadataId":"f228a195-0411-4761-bf80-be026150e10f"},"type":"InitializeVariable","inputs":{"variables":[{"name":"Marine","type":"string"}]}},"Invoke_http_Get_Sites":{"runAfter":{"Get_Account_Info":["Succeeded"]},"metadata":{"operationMetadataId":"8d0cbf6f-1e9d-4224-bacd-e3ad8c39d85c"},"type":"OpenApiConnection","inputs":{"host":{"connectionName":"shared_webcontents","operationId":"InvokeHttp","apiId":"/providers/Microsoft.PowerApps/apis/shared_webcontents"},"parameters":{"request/method":"GET","request/url":"https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload@{outputs('file_Ref_URL')}:/workbook/tables/Table2/rows"},"authentication":"@parameters('$authentication')"}},"Initialize_Environment_folder_variable_":{"runAfter":{},"metadata":{"operationMetadataId":"5ca273ca-89de-414e-ae48-1db4c68c1cb2"},"type":"InitializeVariable","inputs":{"variables":[{"name":"Environment_folder","type":"string","value":"Dev"}]}},"get_environment_folder_index":{"runAfter":{"Initialize_Environment_folder_variable_":["Succeeded"]},"metadata":{"operationMetadataId":"cac997f7-6d35-4460-bc0a-4e8cec6a876f"},"type":"Compose","inputs":"@indexOf(triggerBody()?['Filelocation'] , concat('/',variables('Environment_folder') ,'/'))"},"file_Ref_URL":{"runAfter":{"get_environment_folder_index":["Succeeded"]},"metadata":{"operationMetadataId":"d0ebb858-c069-49cc-bed9-e450d11f29e8"},"type":"Compose","inputs":"@substring(triggerBody()?['Filelocation'] , outputs('get_environment_folder_index'))"}},"outputs":{}}},"schemaVersion":"1.0.0.0"}
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_sharepointonline": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceSharepointTDGCoreUser"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      },
+      "shared_webcontents": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedwebcontents_efbe7"
+        },
+        "api": {
+          "name": "shared_webcontents"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "81beb847-f790-4030-9fef-18701d4ec075"
+          },
+          "type": "Request",
+          "kind": "Button",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "title": "accountid",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Please enter your input",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_1": {
+                  "title": "fileLocation",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Please enter your input",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_2": {
+                  "title": "activityid",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Please enter your input",
+                  "x-ms-content-hint": "TEXT"
+                }
+              },
+              "required": [
+                "text",
+                "text_1",
+                "text_2"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "StringMap_-_Type_of_measurement_list": {
+          "runAfter": {
+            "accountlookup": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d27310cf-dbc1-4fce-bd99-9f8768204475"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "stringmaps",
+              "fetchXml": "<fetch>\n  <entity name=\"stringmap\" >\n    <attribute name=\"attributevalue\" />\n    <attribute name=\"attributename\" />\n    <attribute name=\"value\" />\n    <filter>\n      <condition attribute=\"objecttypecode\" operator=\"eq\" value=\"10636\" />\n      <condition attribute=\"attributename\" operator=\"eq\" value=\"cid_Unitofmeasurement\" />\n    \n    </filter>\n  </entity>\n</fetch>"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "Initialize_Environment_folder_variable_": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "5ca273ca-89de-414e-ae48-1db4c68c1cb2"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Environment_folder",
+                "type": "string",
+                "value": "Dev"
+              }
+            ]
+          }
+        },
+        "get_environment_folder_index": {
+          "runAfter": {
+            "Initialize_variable-Province": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "cac997f7-6d35-4460-bc0a-4e8cec6a876f"
+          },
+          "type": "Compose",
+          "inputs": "@indexOf(triggerBody()['text_1'] , concat('/',variables('Environment_folder') ,'/'))"
+        },
+        "file_Ref_URL": {
+          "runAfter": {
+            "get_environment_folder_index": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d0ebb858-c069-49cc-bed9-e450d11f29e8"
+          },
+          "type": "Compose",
+          "inputs": "@substring(triggerBody()['text_1'] , outputs('get_environment_folder_index'))"
+        },
+        "Get_Account_Info": {
+          "runAfter": {
+            "file_Ref_URL": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f328cc40-e1a3-4029-9f69-19071dc13921"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "accounts",
+              "recordId": "@triggerBody()['text']"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "Loop_in_Retrieved_Modes_table": {
+          "foreach": "@outputs('Mode_of_Transportation_GUID')?['body/value']",
+          "actions": {
+            "current_Mode_row": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "d1567616-2137-475e-92c7-4f826991da9c"
+              },
+              "type": "Compose",
+              "inputs": "@items('Loop_in_Retrieved_Modes_table')"
+            },
+            "Switch": {
+              "runAfter": {
+                "current_Mode_row": [
+                  "Succeeded"
+                ]
+              },
+              "cases": {
+                "Case": {
+                  "case": "Air",
+                  "actions": {
+                    "Set_variable_Air": {
+                      "runAfter": {},
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "Air",
+                        "value": "@{outputs('current_Mode_row')?['ovs_modesid']}"
+                      }
+                    }
+                  }
+                },
+                "Case_2": {
+                  "case": "Marine",
+                  "actions": {
+                    "Set_variable_Marine": {
+                      "runAfter": {},
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "Marine",
+                        "value": "@{outputs('current_Mode_row')?['ovs_modesid']}"
+                      }
+                    }
+                  }
+                },
+                "Case_3": {
+                  "case": "Rail",
+                  "actions": {
+                    "Set_Variable_Rail": {
+                      "runAfter": {},
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "Rail",
+                        "value": "@{outputs('current_Mode_row')?['ovs_modesid']}"
+                      }
+                    }
+                  }
+                },
+                "Case_4": {
+                  "case": "Road",
+                  "actions": {
+                    "Set_Variable_Road": {
+                      "runAfter": {},
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "Road",
+                        "value": "@{outputs('current_Mode_row')?['ovs_modesid']}"
+                      }
+                    }
+                  }
+                }
+              },
+              "default": {
+                "actions": {}
+              },
+              "expression": "@outputs('current_Mode_row')?['ovs_name']",
+              "metadata": {
+                "operationMetadataId": "7e6a3574-afd7-498f-9e04-0f2d4a2f0d1d"
+              },
+              "type": "Switch"
+            }
+          },
+          "runAfter": {
+            "Mode_of_Transportation_GUID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "bd691b6d-cdb5-4a48-8cba-2602d7d8502d"
+          },
+          "type": "Foreach"
+        },
+        "Mode_of_Transportation_GUID": {
+          "runAfter": {
+            "accountlookup": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8c1351c7-35f8-4f3e-a230-15320d7ec768"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_modeses",
+              "$select": "ovs_name"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "StringMap_-_List_Class": {
+          "runAfter": {
+            "accountlookup": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b492125b-acf1-4b7f-89ed-5390ac9fb4d2"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "stringmaps",
+              "fetchXml": "<fetch>\n  <entity name=\"stringmap\" >\n    <attribute name=\"attributevalue\" />\n    <attribute name=\"attributename\" />\n    <attribute name=\"value\" />\n    <filter>\n\n      <condition attribute=\"attributename\" operator=\"eq\" value=\"ovs_primeclass\" />\n     \n    </filter>\n  </entity>\n</fetch>"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "List_UN_numbers": {
+          "runAfter": {
+            "accountlookup": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "dcf9fd85-9ef3-4860-802f-660f43841906"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "tdg_unnumbers",
+              "$select": "tdg_name,tdg_unnumberid,tdg_packinggroupcd"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "accountlookup": {
+          "runAfter": {
+            "Compose_2": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "018b08e2-85b4-4259-9f95-2080218b835d"
+          },
+          "type": "Compose",
+          "inputs": "@concat('/','accounts','/',triggerBody()['text'])"
+        },
+        "CID_Site_Requirement_Level": {
+          "runAfter": {
+            "List_UN_numbers": [
+              "Succeeded"
+            ],
+            "Loop_in_Retrieved_Modes_table": [
+              "Succeeded"
+            ],
+            "StringMap_-_CID_Requirement_level_option_set": [
+              "Succeeded"
+            ],
+            "StringMap-Quarter-Meridian": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "785d85ec-b4ca-460c-8e4e-d612c4eebefe"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CID_Site_Requirement_Level",
+                "type": "integer",
+                "value": 100000000
+              }
+            ]
+          }
+        },
+        "Loop_Excel_sheet_Sites_table": {
+          "foreach": "@body('List_All_Sites_with_data')",
+          "actions": {
+            "current_row": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "420a8e5f-805b-440c-a13a-d5f047f098da"
+              },
+              "type": "Compose",
+              "inputs": "@items('Loop_Excel_sheet_Sites_table')"
+            },
+            "Site_Classification": {
+              "runAfter": {
+                "current_row": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "341301d8-c2f1-4f28-8b7e-b5ceb7f72ab8"
+              },
+              "type": "Compose",
+              "inputs": "@outputs('current_row')['values'][0][24]"
+            },
+            "Class_List": {
+              "runAfter": {
+                "check_if_extended_site": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "018b08e2-85b4-4259-9f95-2080218b835d"
+              },
+              "type": "Compose",
+              "inputs": "@split(outputs('current_row')['values'][0][23],',')"
+            },
+            "Add_Mode_of_Marine_if_exist": {
+              "actions": {
+                "Relate_rows-modes-to-operation-Marine": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "9f0f41b5-a0ab-4bb6-9722-f171365ad42d"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "AssociateEntities",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "ovs_modeses",
+                      "recordId": "@variables('Marine')",
+                      "associationEntityRelationship": "ovs_mocregistration_ovs_modes",
+                      "item/@odata.id": "@outputs('Add_operation')?['body/@odata.id']"
+                    },
+                    "authentication": {
+                      "type": "Raw",
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "OperationId": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "contains": [
+                  "@outputs('current_row')['values'][0][16]",
+                  "Yes"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "2896c688-9b3b-415d-b77a-07e999028569"
+              },
+              "type": "If"
+            },
+            "account_id": {
+              "runAfter": {
+                "Add_Site": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "cd5817b9-00a5-4ebd-9fc2-139e037c84ea"
+              },
+              "type": "Compose",
+              "inputs": "@outputs('Add_Site')?['body/accountid']"
+            },
+            "Add_Site": {
+              "runAfter": {
+                "check_Import_flag": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "4183b4c2-5f46-4aee-8cd7-1e5512f2e3bb"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "item/address1_city": "@toUpper(outputs('current_row')['values'][0][2])",
+                  "item/address1_country": "Canada",
+                  "item/ovs_address_type": 0,
+                  "item/ovs_legalname": "@outputs('Get_Account_Info')?['body/ovs_legalname']",
+                  "item/name": "@outputs('Get_Account_Info')?['body/name']",
+                  "item/customertypecode": 948010001,
+                  "item/ovs_romid": " ",
+                  "item/address1_stateorprovince": "@toUpper(outputs('current_row')['values'][0][3])",
+                  "item/address1_line1": "@toUpper(outputs('current_row')['values'][0][1])",
+                  "item/address1_postalcode": "@toUpper(outputs('current_row')['values'][0][4])",
+                  "item/cid_requirementlevel": "@variables('CID_Site_Requirement_Level')",
+                  "item/cid_cidsitestatus": 100000004,
+                  "item/cid_handlingsitetype": "@variables('Handle')",
+                  "item/cid_importingsitetype": "@variables('Import')",
+                  "item/address1_latitude": "@variables('Latitude')",
+                  "item/address1_longitude": "@variables('Longtitud')",
+                  "item/ovs_lld_meridian": "@outputs('Meridian_value')",
+                  "item/cid_offeringfortransportsitetype": "@variables('OfferForTransport')",
+                  "item/cid_operatingname": "@outputs('Get_Account_Info')?['body/cid_operatingname']",
+                  "item/parentaccountid@odata.bind": "@outputs('accountlookup')",
+                  "item/ovs_lld_quarter": "@outputs('Quarter_value')",
+                  "item/ovs_lld_range": "@outputs('Range_value')",
+                  "item/ovs_lld_section": "@outputs('Section_value_')",
+                  "item/cid_sitename": "@outputs('current_row')['values'][0][0]",
+                  "item/address1_line2": "@outputs('current_row')['values'][0][5]",
+                  "item/address1_line3": "@outputs('current_row')['values'][0][6]",
+                  "item/ovs_lld_township": "@outputs('Township_value')",
+                  "item/cid_transportingsitetype": "@variables('Transport')"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                }
+              }
+            },
+            "Add_operation": {
+              "runAfter": {
+                "account_id": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "f0e14f9f-08f0-4bb9-b42d-abb8305d4693"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "ovs_mocregistrations",
+                  "item/ovs_registrationexpiry": "@addDays(utcNow(),364)",
+                  "item/ovs_lineofbusiness@odata.bind": "@'/ovs_lobs/f3f10b28-a23c-ec11-8c62-0022483d7564'",
+                  "item/ovs_operationtype": 918640038,
+                  "item/ovs_SiteId@odata.bind": "@concat('/accounts/', outputs('account_id'))"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                }
+              }
+            },
+            "check_if_extended_site": {
+              "actions": {
+                "Filter_string_map_with_Extended": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "b1543108-d7de-43e7-b374-bddc440f6daf"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@outputs('StringMap_-_CID_Requirement_level_option_set')?['body/value']",
+                    "where": "@equals(item()?['value'], 'Extended')"
+                  }
+                },
+                "Set_requirement_level_to_extended_index": {
+                  "runAfter": {
+                    "Filter_string_map_with_Extended": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "b1c39805-1722-457c-a7e5-29ba5a6da411"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "CID_Site_Requirement_Level",
+                    "value": "@int(body('Filter_string_map_with_Extended')?[0]['attributevalue'])"
+                  }
+                }
+              },
+              "runAfter": {
+                "check_Longtitud_is_null": [
+                  "Succeeded"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "filter_string_map_with_Basic": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "2d9482cd-19f2-43d9-b4ce-bfbd7392ddc8"
+                    },
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@outputs('StringMap_-_CID_Requirement_level_option_set')?['body/value']",
+                      "where": "@equals(item()?['value'], 'Basic')"
+                    }
+                  },
+                  "Set_variable": {
+                    "runAfter": {
+                      "filter_string_map_with_Basic": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "f7107a5d-bbc6-438c-bec6-ccf5b2864f3a"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "CID_Site_Requirement_Level",
+                      "value": "@int(body('filter_string_map_with_Basic')?[0]?['attributevalue'])"
+                    }
+                  }
+                }
+              },
+              "expression": {
+                "contains": [
+                  "@outputs('Site_Classification')",
+                  "Yes"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "4248dcee-d3e5-46f8-a540-1c9267994d9e"
+              },
+              "type": "If"
+            },
+            "Add_Mode_Air_if_exist_in_excel_rows": {
+              "actions": {
+                "Relate_rows-modes-to-operation-Air": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "9f0f41b5-a0ab-4bb6-9722-f171365ad42d"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "AssociateEntities",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "ovs_modeses",
+                      "recordId": "@variables('Air')",
+                      "associationEntityRelationship": "ovs_mocregistration_ovs_modes",
+                      "item/@odata.id": "@outputs('Add_operation')?['body/@odata.id']"
+                    },
+                    "authentication": {
+                      "type": "Raw",
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "OperationId": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "contains": [
+                  "@outputs('current_row')['values'][0][15]",
+                  "Yes"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a5376aaa-2564-47f0-92b3-c1f7ae49a174"
+              },
+              "type": "If"
+            },
+            "Add_Mode_of_Road_if_exist_2": {
+              "actions": {
+                "Relate_rows-modes-to-operation-Road": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "9f0f41b5-a0ab-4bb6-9722-f171365ad42d"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "AssociateEntities",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "ovs_modeses",
+                      "recordId": "@variables('Road')",
+                      "associationEntityRelationship": "ovs_mocregistration_ovs_modes",
+                      "item/@odata.id": "@outputs('Add_operation')?['body/@odata.id']"
+                    },
+                    "authentication": {
+                      "type": "Raw",
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "OperationId": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "contains": [
+                  "@outputs('current_row')['values'][0][18]",
+                  "Yes"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "5980f604-8f9d-4c2a-92d7-c639df25873e"
+              },
+              "type": "If"
+            },
+            "Add_Mode_of_Rail_if_exist": {
+              "actions": {
+                "Relate_rows-modes-to-operation-Rail": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "9f0f41b5-a0ab-4bb6-9722-f171365ad42d"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "AssociateEntities",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "ovs_modeses",
+                      "recordId": "@variables('Rail')",
+                      "associationEntityRelationship": "ovs_mocregistration_ovs_modes",
+                      "item/@odata.id": "@outputs('Add_operation')?['body/@odata.id']"
+                    },
+                    "authentication": {
+                      "type": "Raw",
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "OperationId": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "contains": [
+                  "@outputs('current_row')['values'][0][17]",
+                  "Yes"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "51aa8e06-1273-4bd3-b4b3-36e96227dcf4"
+              },
+              "type": "If"
+            },
+            "Check_if_UN_number_found": {
+              "actions": {
+                "For_each_UN_number": {
+                  "foreach": "@body('Filter_UnNumber_Table_with_Site')",
+                  "actions": {
+                    "UN_row": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "285f3692-c760-4400-8e86-c726bd09097a"
+                      },
+                      "type": "Compose",
+                      "inputs": "@items('For_each_UN_number')"
+                    },
+                    "Check_if_UN_number_is_not_null": {
+                      "actions": {
+                        "UNNumber_Value": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "30b2551c-eaf1-48b2-aec9-16ef692b7829"
+                          },
+                          "type": "Compose",
+                          "inputs": "@Trim(Replace(substring(outputs('UN_row')['values'][0][1],0,indexOf(outputs('UN_row')['values'][0][1],'-')) ,'-' , '' ))"
+                        },
+                        "Get_UNNumber_GUID": {
+                          "runAfter": {
+                            "Compose": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "ccece463-ad60-44bb-be52-68dc4785f3fd"
+                          },
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@outputs('List_UN_numbers')?['body/value']",
+                            "where": "@and(equals(item()?['tdg_name'], outputs('UNNumber_Value')),equals(item()?['tdg_packinggroupcd@OData.Community.Display.V1.FormattedValue'],outputs('Packing_Group') ))\n"
+                          }
+                        },
+                        "UNNumber_GUID": {
+                          "runAfter": {
+                            "Get_UNNumber_GUID": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "bb70d462-9ca9-48e2-9f4c-a8f6d7821d11"
+                          },
+                          "type": "Compose",
+                          "inputs": "@body('Get_UNNumber_GUID')?[0]['tdg_unnumberid']"
+                        },
+                        "Get_Type_of_measurement_option_set_index": {
+                          "runAfter": {
+                            "UNNumber_GUID": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "7471031a-5efb-4103-a623-250e404dadb1"
+                          },
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@outputs('StringMap_-_Type_of_measurement_list')?['body/value']",
+                            "where": "@equals(item()?['value'], outputs('UN_row')['values'][0][3])"
+                          }
+                        },
+                        "Add_Operation_UN_number": {
+                          "runAfter": {
+                            "UN_Number_name": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "05ae44b8-6a21-4f37-b285-0ef585f2987b"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_commondataserviceforapps_1",
+                              "operationId": "CreateRecord",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            },
+                            "parameters": {
+                              "entityName": "ovs_operationunnumbers",
+                              "item/ovs_supplychaindirection": "930840000",
+                              "item/ovs_UNNumber@odata.bind": "@concat('/tdg_unnumbers/',outputs('UNNumber_GUID'))",
+                              "item/ovs_name": "@outputs('UN_Number_name')",
+                              "item/cid_annualnumberofshipment": "@outputs('UN_row')['values'][0][4]",
+                              "item/cid_annualquantityvolume": "@outputs('UN_row')['values'][0][2]",
+                              "item/ovs_OperationUNNumber@odata.bind": "@\r\nconcat('/ovs_mocregistrations/',outputs('OperationId'))",
+                              "item/cid_unitofmeasurement": "@outputs('Index_-_unit_of_measurement_type_')"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            }
+                          }
+                        },
+                        "Index_-_unit_of_measurement_type_": {
+                          "runAfter": {
+                            "Get_Type_of_measurement_option_set_index": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "9238ee04-e629-4672-a1ad-e7684ae864e8"
+                          },
+                          "type": "Compose",
+                          "inputs": "@body('Get_Type_of_measurement_option_set_index')?[0]?['attributevalue']"
+                        },
+                        "Packing_Group": {
+                          "runAfter": {
+                            "UNNumber_Value": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "15e90497-30da-4521-96bf-4d32360177a6"
+                          },
+                          "type": "Compose",
+                          "inputs": "@Trim( outputs('UN_row')['values'][0][2])"
+                        },
+                        "Compose": {
+                          "runAfter": {
+                            "Packing_Group": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "fc7c34ff-f3c5-4b2f-b222-b00a59ddaf68"
+                          },
+                          "type": "Compose",
+                          "inputs": "@outputs('UN_row')['values'][0][6]"
+                        },
+                        "UN_Number_name": {
+                          "runAfter": {
+                            "Index_-_unit_of_measurement_type_": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "428c277b-7846-4481-be76-04dd8285c9c3"
+                          },
+                          "type": "Compose",
+                          "inputs": "@Replace(substring(outputs('UN_row')['values'][0][1],0,indexOf(outputs('UN_row')['values'][0][1],'-')) ,'-' , '' )"
+                        }
+                      },
+                      "runAfter": {
+                        "UN_row": [
+                          "Succeeded"
+                        ]
+                      },
+                      "expression": {
+                        "greater": [
+                          "@length(trim(outputs('UN_row')['values'][0][1]))",
+                          0
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "2ac58c16-5959-4c78-87fc-10684cfdbfb3"
+                      },
+                      "type": "If"
+                    }
+                  },
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "eed152cc-0c52-40af-b240-b00e466d8aed"
+                  },
+                  "type": "Foreach"
+                }
+              },
+              "runAfter": {
+                "Filter_UnNumber_Table_with_Site": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "greater": [
+                  "@length(body('Filter_UnNumber_Table_with_Site'))",
+                  0
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "27762c5a-e5d8-4aea-9ebc-da6d76714f03"
+              },
+              "type": "If"
+            },
+            "Loop_in_the_class_List": {
+              "foreach": "@outputs('Class_List')",
+              "actions": {
+                "get_option_set_index": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "3874b476-84dc-4823-898f-1af674f9b7d3"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@outputs('StringMap_-_List_Class')?['body/value']",
+                    "where": "@equals(item()?['value'], items('Loop_in_the_class_List'))"
+                  }
+                },
+                "Class_option_set_value": {
+                  "runAfter": {
+                    "get_option_set_index": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "067c96d1-9269-4851-8df7-173ef3d741e2"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('get_option_set_index')?[0]?['attributevalue']"
+                },
+                "If_class_index_found": {
+                  "actions": {
+                    "integer_value_for_the_index": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "710c2984-a95a-45f4-8820-3f4eb9d36f59"
+                      },
+                      "type": "Compose",
+                      "inputs": "@int(outputs('Class_option_set_value'))"
+                    },
+                    "Add_operation_class": {
+                      "runAfter": {
+                        "integer_value_for_the_index": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "920c2fd2-060f-469d-b24c-0f89d3779bc4"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "CreateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "ovs_operationclasses",
+                          "item/ovs_primeclass": "@int(outputs('Class_option_set_value'))",
+                          "item/ovs_supplychaindirection": "930840000",
+                          "item/ovs_OperationClass@odata.bind": "@\r\nconcat('/ovs_mocregistrations/',outputs('OperationId'))"
+                        },
+                        "authentication": {
+                          "type": "Raw",
+                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Class_option_set_value": [
+                      "Succeeded"
+                    ]
+                  },
+                  "expression": {
+                    "greaterOrEquals": [
+                      "@outputs('Class_option_set_value')",
+                      0
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "83735453-fbb6-459a-8cbd-79fdad1f0392"
+                  },
+                  "type": "If"
+                }
+              },
+              "runAfter": {
+                "Filter_UnNumber_Table_with_Site": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7ccc3b18-109a-4bdd-bc1a-c7e36794fd4b"
+              },
+              "type": "Foreach",
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 23
+                }
+              }
+            },
+            "Filter_UnNumber_Table_with_Site": {
+              "runAfter": {
+                "Add_Mode_Air_if_exist_in_excel_rows": [
+                  "Succeeded"
+                ],
+                "Add_Mode_of_Marine_if_exist": [
+                  "Succeeded"
+                ],
+                "Add_Mode_of_Rail_if_exist": [
+                  "Succeeded"
+                ],
+                "Add_Mode_of_Road_if_exist_2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0199dc9b-c60d-49dd-8d1c-9d2b9521333b"
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('Invoke_an_HTTP_request_-_unnumber')?['body']['value']",
+                "where": "@equals(item()['values'][0][0], outputs('current_row')['values'][0][26])"
+              }
+            },
+            "OperationId": {
+              "runAfter": {
+                "Add_operation": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b2c11011-6bc8-4de4-b959-2607f8180c5f"
+              },
+              "type": "Compose",
+              "inputs": "@outputs('Add_operation')?['body/ovs_mocregistrationid']"
+            },
+            "check_handle_flag": {
+              "actions": {
+                "set_handle_flag_to_yes": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "3c91026a-5396-4874-a753-01833c0ad131"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Handle",
+                    "value": "@true"
+                  }
+                }
+              },
+              "runAfter": {
+                "Class_List": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "contains": [
+                  "@outputs('current_row')['values'][0][19]",
+                  "Yes"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0243868a-0b92-45cf-b975-60127b55e54f"
+              },
+              "type": "If"
+            },
+            "check_offer_for_transport_flag": {
+              "actions": {
+                "set_offer_for_transport_flag_to_yes_2": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "9c4b9c63-d6b9-4270-8c9d-18b9cf140b57"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "OfferForTransport",
+                    "value": "@true"
+                  }
+                }
+              },
+              "runAfter": {
+                "check_handle_flag": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "contains": [
+                  "@outputs('current_row')['values'][0][20]",
+                  "Yes"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "f8e2f3f0-9882-44a8-9b4b-fef4751caec1"
+              },
+              "type": "If"
+            },
+            "check_Transport_flag": {
+              "actions": {
+                "set_Transport_flag_to_yes_2": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "ff8cda54-bc7e-459c-ad45-d5b6cb620fd9"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Transport",
+                    "value": "@true"
+                  }
+                }
+              },
+              "runAfter": {
+                "check_offer_for_transport_flag": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "contains": [
+                  "@outputs('current_row')['values'][0][21]",
+                  "Yes"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "59306e03-00c5-4263-8380-45bff85f4ae8"
+              },
+              "type": "If"
+            },
+            "check_Import_flag": {
+              "actions": {
+                "set_Import_flag_to_yes_": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "56fcfed0-60f1-4b5e-a3b4-8fd8e84d2453"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Import",
+                    "value": "@true"
+                  }
+                }
+              },
+              "runAfter": {
+                "check_Transport_flag": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "contains": [
+                  "@outputs('current_row')['values'][0][22]",
+                  "Yes"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "31ece6f0-0f94-4493-8047-602ac4ea9ce8"
+              },
+              "type": "If"
+            },
+            "Scope-LLD": {
+              "actions": {
+                "get_Quarter_index": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "3874b476-84dc-4823-898f-1af674f9b7d3"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@outputs('StringMap-Quarter-LLD')?['body/value']",
+                    "where": "@equals(item()?['value'], outputs('current_row')['values'][0][8])"
+                  }
+                },
+                "Quarter_value": {
+                  "runAfter": {
+                    "get_Quarter_index": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "067c96d1-9269-4851-8df7-173ef3d741e2"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('get_Quarter_index')?[0]?['attributevalue']"
+                },
+                "get_Section_index": {
+                  "runAfter": {
+                    "Quarter_value": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3874b476-84dc-4823-898f-1af674f9b7d3"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@outputs('StringMap-Section')?['body/value']",
+                    "where": "@equals(item()?['value'], outputs('current_row')['values'][0][9])"
+                  }
+                },
+                "Section_value_": {
+                  "runAfter": {
+                    "get_Section_index": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "067c96d1-9269-4851-8df7-173ef3d741e2"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('get_Section_index')?[0]?['attributevalue']"
+                },
+                "Township_value": {
+                  "runAfter": {
+                    "get_Township_index": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "067c96d1-9269-4851-8df7-173ef3d741e2"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('get_Township_index')?[0]?['attributevalue']"
+                },
+                "Range_value": {
+                  "runAfter": {
+                    "get_Range_index": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "067c96d1-9269-4851-8df7-173ef3d741e2"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('get_Range_index')?[0]?['attributevalue']"
+                },
+                "Meridian_value": {
+                  "runAfter": {
+                    "get_Meridian_index": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "067c96d1-9269-4851-8df7-173ef3d741e2"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('get_Meridian_index')?[0]?['attributevalue']"
+                },
+                "get_Township_index": {
+                  "runAfter": {
+                    "Section_value_": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3874b476-84dc-4823-898f-1af674f9b7d3"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@outputs('StringMap-TownShip')?['body/value']",
+                    "where": "@equals(item()?['value'], outputs('current_row')['values'][0][10])"
+                  }
+                },
+                "get_Range_index": {
+                  "runAfter": {
+                    "Township_value": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3874b476-84dc-4823-898f-1af674f9b7d3"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@outputs('StringMap-Range')?['body/value']",
+                    "where": "@equals(item()?['value'], outputs('current_row')['values'][0][11])"
+                  }
+                },
+                "get_Meridian_index": {
+                  "runAfter": {
+                    "Range_value": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3874b476-84dc-4823-898f-1af674f9b7d3"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@outputs('StringMap-Quarter-Meridian')?['body/value']",
+                    "where": "@equals(item()?['value'], outputs('current_row')['values'][0][12])"
+                  }
+                }
+              },
+              "runAfter": {
+                "Site_Classification": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "86fec622-8eb1-4685-8245-373c34709bc6"
+              },
+              "type": "Scope"
+            },
+            "check_if_Lat_is_null": {
+              "actions": {
+                "Set_Lat_to_null": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "a1f72aa4-cb9c-4a23-965f-001a1f00c1e6"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Latitude",
+                    "value": "@null"
+                  }
+                }
+              },
+              "runAfter": {
+                "Check_Province_source_-_address_or_LLD": [
+                  "Succeeded"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "set_Lat": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "271f9b94-90b9-46a2-90ea-23c0be67103e"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Latitude",
+                      "value": "@outputs('current_row')['values'][0][13]"
+                    }
+                  }
+                }
+              },
+              "expression": {
+                "equals": [
+                  "@outputs('current_row')['values'][0][13]",
+                  "@null"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "05059c41-a063-4ab7-8a38-8e5db727ae00"
+              },
+              "type": "If"
+            },
+            "check_Longtitud_is_null": {
+              "actions": {
+                "Set_Longtitude_to_null": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "c18ceebe-d73c-49d1-a67b-dc529e5b544e"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Longtitud",
+                    "value": "@null"
+                  }
+                }
+              },
+              "runAfter": {
+                "check_if_Lat_is_null": [
+                  "Succeeded"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "set_Long": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "b159d4a8-0d52-4c64-a1ef-258f0e697e57"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Longtitud",
+                      "value": "@outputs('current_row')['values'][0][14]"
+                    }
+                  }
+                }
+              },
+              "expression": {
+                "equals": [
+                  "@outputs('current_row')['values'][0][14]",
+                  "@null"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7e4d4ff0-87cb-457e-874b-5ab5bd4b3a5b"
+              },
+              "type": "If"
+            },
+            "Check_Province_source_-_address_or_LLD": {
+              "actions": {
+                "Set_Province": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "400cbef1-0378-4ab5-a7da-b7cc1bad18fa"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Province",
+                    "value": "@{outputs('current_row')['values'][0][7]}"
+                  }
+                }
+              },
+              "runAfter": {
+                "Scope-LLD": [
+                  "Succeeded"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "check_address_province": {
+                    "actions": {
+                      "Set_variable_province_to_address-province": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "578b7c8a-902f-4dd1-8d63-56ba0733741f"
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Province",
+                          "value": "@{outputs('current_row')['values'][0][3]}"
+                        }
+                      }
+                    },
+                    "runAfter": {},
+                    "else": {
+                      "actions": {
+                        "Set_variable_2": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "0aa27d07-883d-4b6a-9bb8-c861d6b52638"
+                          },
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Province",
+                            "value": "@{null}"
+                          }
+                        }
+                      }
+                    },
+                    "expression": {
+                      "greater": [
+                        "@length(outputs('current_row')['values'][0][3])",
+                        0
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "db37e645-34d1-40c8-a4e9-dd43c7b71838"
+                    },
+                    "type": "If"
+                  }
+                }
+              },
+              "expression": {
+                "greater": [
+                  "@length(outputs('current_row')['values'][0][7])",
+                  0
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1e2e1199-8263-4253-b8b7-fd016dc46269"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "List_All_Sites_with_data": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ad5faa3e-a3e7-4932-8d71-888d43b71829"
+          },
+          "type": "Foreach"
+        },
+        "List_All_Sites_with_data": {
+          "runAfter": {
+            "Invoke_http_Get_Sites": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "05c212d4-bdab-4ba9-a408-cc89507d9cdd"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('Invoke_http_Get_Sites')?['body']['value']",
+            "where": "@and(greater(length(item()['values'][0][26]), 0) , equals(length(item()['values'][0][27]), 0))"
+          }
+        },
+        "StringMap_-_CID_Requirement_level_option_set": {
+          "runAfter": {
+            "StringMap_-_Type_of_measurement_list": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b492125b-acf1-4b7f-89ed-5390ac9fb4d2"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "stringmaps",
+              "fetchXml": "<fetch>\n  <entity name=\"stringmap\" >\n    <attribute name=\"attributevalue\" />\n    <attribute name=\"attributename\" />\n    <attribute name=\"value\" />\n    <filter>\n      <condition attribute=\"objecttypecode\" operator=\"eq\" value=\"1\" />\n      <condition attribute=\"attributename\" operator=\"eq\" value=\"cid_requirementlevel\"/>\n     \n    </filter>\n  </entity>\n</fetch>"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "Apply_to_each_site_to_update": {
+          "foreach": "@body('List_All_updated_site')",
+          "actions": {
+            "Current_site_row_2": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "7f909a97-918e-4174-9474-7a7a30bab9fa"
+              },
+              "type": "Compose",
+              "inputs": "@items('Apply_to_each_site_to_update')"
+            },
+            "Site_ID": {
+              "runAfter": {
+                "Current_site_row_2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "3f083f13-d063-4fc0-be1d-89bab79bf7b5"
+              },
+              "type": "Compose",
+              "inputs": "@outputs('Current_site_row_2')?['values'][0][27]"
+            },
+            "Check_site_id_length": {
+              "actions": {
+                "Class": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "357efc72-d6be-449b-ae95-a6ff0dd03755"
+                  },
+                  "type": "Compose",
+                  "inputs": "@split(outputs('Current_site_row_2')?['values'][0][23], ',')"
+                },
+                "Extended": {
+                  "runAfter": {
+                    "Class": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3e73f3b8-6f8e-4da7-bafe-4208b2cf27da"
+                  },
+                  "type": "Compose",
+                  "inputs": "@outputs('Current_site_row_2')?['values'][0][7]"
+                },
+                "check_extended_flag_in_the_update_2": {
+                  "actions": {
+                    "Filter_string_map_with_Extended_3": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "b1543108-d7de-43e7-b374-bddc440f6daf"
+                      },
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@outputs('StringMap_-_CID_Requirement_level_option_set')?['body/value']",
+                        "where": "@equals(item()?['value'], 'Extended')"
+                      }
+                    },
+                    "Set_requirement_level_to_extended_index_3": {
+                      "runAfter": {
+                        "Filter_string_map_with_Extended_3": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "b1c39805-1722-457c-a7e5-29ba5a6da411"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "CID_Site_Requirement_Level",
+                        "value": "@int(body('Filter_string_map_with_Extended_3')?[0]['attributevalue'])"
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "For_each_UN_number_to_update": [
+                      "Succeeded"
+                    ]
+                  },
+                  "else": {
+                    "actions": {
+                      "filter_string_map_with_Basic_3": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "2d9482cd-19f2-43d9-b4ce-bfbd7392ddc8"
+                        },
+                        "type": "Query",
+                        "inputs": {
+                          "from": "@outputs('StringMap_-_CID_Requirement_level_option_set')?['body/value']",
+                          "where": "@equals(item()?['value'], 'Basic')"
+                        }
+                      },
+                      "Set_variable_3": {
+                        "runAfter": {
+                          "filter_string_map_with_Basic_3": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "f7107a5d-bbc6-438c-bec6-ccf5b2864f3a"
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "CID_Site_Requirement_Level",
+                          "value": "@int(body('filter_string_map_with_Basic_3')?[0]?['attributevalue'])"
+                        }
+                      }
+                    }
+                  },
+                  "expression": {
+                    "contains": [
+                      "@outputs('Extended')",
+                      "Yes"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "4248dcee-d3e5-46f8-a540-1c9267994d9e"
+                  },
+                  "type": "If"
+                },
+                "get_Site": {
+                  "runAfter": {
+                    "Opeartion_GUID": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "30894a90-dbf8-4449-b0fd-b244c426ba65"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "GetItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "accounts",
+                      "recordId": "@outputs('Site_ID')"
+                    },
+                    "authentication": {
+                      "type": "Raw",
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                    }
+                  }
+                },
+                "check_if_requirement_level_match": {
+                  "actions": {
+                    "update_site_requirement_level": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "73118e6b-102d-437c-93d3-90bfff31ae16"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "UpdateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "accounts",
+                          "recordId": "@outputs('Site_ID')",
+                          "item/address1_city": "@outputs('get_Site')?['body/address1_city']",
+                          "item/address1_country": "@outputs('get_Site')?['body/address1_country']",
+                          "item/ovs_address_type": "@outputs('get_Site')?['body/ovs_address_type']",
+                          "item/ovs_legalname": "@outputs('get_Site')?['body/ovs_legalname']",
+                          "item/name": "@outputs('get_Site')?['body/name']",
+                          "item/customertypecode": 948010001,
+                          "item/ovs_romid": "@outputs('get_Site')?['body/ovs_romid']",
+                          "item/address1_stateorprovince": "@outputs('get_Site')?['body/address1_stateorprovince']",
+                          "item/address1_line1": "@outputs('get_Site')?['body/address1_line1']",
+                          "item/address1_postalcode": "@outputs('get_Site')?['body/address1_postalcode']",
+                          "item/cid_requirementlevel": "@variables('CID_Site_Requirement_Level')"
+                        },
+                        "authentication": {
+                          "type": "Raw",
+                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "check_extended_flag_in_the_update_2": [
+                      "Succeeded"
+                    ]
+                  },
+                  "expression": {
+                    "not": {
+                      "equals": [
+                        "@variables('CID_Site_Requirement_Level')",
+                        ""
+                      ]
+                    }
+                  },
+                  "metadata": {
+                    "operationMetadataId": "e10bdbde-5191-472a-82b4-67df67a1b348"
+                  },
+                  "type": "If"
+                },
+                "Mode_of_Transportation_update_logic": {
+                  "actions": {
+                    "Transport_by_Marine": {
+                      "runAfter": {
+                        "Filter_array_-Marine": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "5880405b-bf2c-49ad-868b-d94b0c244287"
+                      },
+                      "type": "Compose",
+                      "inputs": "@outputs('Current_site_row_2')?['values'][0][3]"
+                    },
+                    "Transport_by_Rail": {
+                      "runAfter": {
+                        "Filter_array_-_Rail": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "10f5c0ce-5d9c-4217-b5a7-b5bf6f6c7443"
+                      },
+                      "type": "Compose",
+                      "inputs": "@outputs('Current_site_row_2')?['values'][0][4]"
+                    },
+                    "Transport_by_Road": {
+                      "runAfter": {
+                        "Filter_array_-_Road": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "a6383c34-4dae-4445-8076-99465053a1a8"
+                      },
+                      "type": "Compose",
+                      "inputs": "@outputs('Current_site_row_2')?['values'][0][5]"
+                    },
+                    "check_if_air": {
+                      "actions": {
+                        "Add_Transportation_Method": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "c79ecc27-6b19-4154-aa71-ef5892198269"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_commondataserviceforapps_1",
+                              "operationId": "CreateRecord",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            },
+                            "parameters": {
+                              "entityName": "cid_modeoftransportations",
+                              "item/cid_Company@odata.bind": "@outputs('accountlookup')",
+                              "item/cid_Mode@odata.bind": "@concat('/ovs_modeses/',variables('Air'))",
+                              "item/cid_Site@odata.bind": "@concat('/accounts/',outputs('Site_ID'))"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            }
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Filter_array_-_Air": [
+                          "Succeeded"
+                        ]
+                      },
+                      "else": {
+                        "actions": {
+                          "Check_if_No": {
+                            "actions": {
+                              "Update_a_row_-_Deactivate_method_of_transportation": {
+                                "runAfter": {},
+                                "metadata": {
+                                  "operationMetadataId": "7784d583-3dde-4595-9a0d-7dcc09f129d8"
+                                },
+                                "type": "OpenApiConnection",
+                                "inputs": {
+                                  "host": {
+                                    "connectionName": "shared_commondataserviceforapps_1",
+                                    "operationId": "UpdateRecord",
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                  },
+                                  "parameters": {
+                                    "entityName": "cid_modeoftransportations",
+                                    "recordId": "@body('Filter_array_-_Air')[0]['cid_modeoftransportationid']",
+                                    "item/statuscode": 2
+                                  },
+                                  "authentication": {
+                                    "type": "Raw",
+                                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                                  }
+                                }
+                              }
+                            },
+                            "runAfter": {},
+                            "expression": {
+                              "and": [
+                                {
+                                  "not": {
+                                    "contains": [
+                                      "@outputs('Transport_by_Air')",
+                                      "Yes"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "greater": [
+                                    "@length(body('Filter_array_-_Air'))",
+                                    0
+                                  ]
+                                }
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "7e6a1588-d2a6-4c8f-ab7f-41007034cfc0"
+                            },
+                            "type": "If"
+                          }
+                        }
+                      },
+                      "expression": {
+                        "and": [
+                          {
+                            "contains": [
+                              "@outputs('Transport_by_Air')",
+                              "Yes"
+                            ]
+                          },
+                          {
+                            "equals": [
+                              "@length(body('Filter_array_-_Air'))",
+                              0
+                            ]
+                          }
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "956e0af2-382c-44b9-bd79-5359c49b158e"
+                      },
+                      "type": "If"
+                    },
+                    "List_Mode_of_Transportation_with_the_site": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "444ae1f1-6711-4f8b-a77b-279a6654f812"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "ListRecords",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "cid_modeoftransportations",
+                          "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"cid_modeoftransportation\">\n    <attribute name=\"cid_modeoftransportationid\" />\n    <attribute name=\"cid_name\" />\n    <attribute name=\"createdon\" />\n    <order attribute=\"cid_name\" descending=\"false\" />\n    <filter type=\"and\">\n   <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n      <condition attribute=\"cid_company\" operator=\"eq\"  value=\"@{outputs('Get_Account_Info')?['body/accountid']}\" />\n      <condition attribute=\"cid_site\" operator=\"eq\"  value=\"@{outputs('Site_ID')}\" />\n    </filter>\n  </entity>\n</fetch>"
+                        },
+                        "authentication": {
+                          "type": "Raw",
+                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                        }
+                      }
+                    },
+                    "Transport_by_Air": {
+                      "runAfter": {
+                        "List_Mode_of_Transportation_with_the_site": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "9b8cc802-abf3-4d0c-9095-87f914a3ea8a"
+                      },
+                      "type": "Compose",
+                      "inputs": "@outputs('Current_site_row_2')?['values'][0][2]"
+                    },
+                    "Filter_array_-_Air": {
+                      "runAfter": {
+                        "Transport_by_Air": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "7233e8fe-f386-423f-9d47-f0ba3c87c983"
+                      },
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@outputs('List_Mode_of_Transportation_with_the_site')?['body/value']",
+                        "where": "@equals(item()?['cid_name'], 'Air')"
+                      }
+                    },
+                    "check_if_Marine": {
+                      "actions": {
+                        "Add_Transportation_Method_Marine": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "c79ecc27-6b19-4154-aa71-ef5892198269"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_commondataserviceforapps_1",
+                              "operationId": "CreateRecord",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            },
+                            "parameters": {
+                              "entityName": "cid_modeoftransportations",
+                              "item/cid_Company@odata.bind": "@outputs('accountlookup')",
+                              "item/cid_Mode@odata.bind": "@concat('/ovs_modeses/', variables('Marine'))",
+                              "item/cid_Site@odata.bind": "@concat('/accounts/', outputs('Site_ID'))"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            }
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Transport_by_Marine": [
+                          "Succeeded"
+                        ]
+                      },
+                      "else": {
+                        "actions": {
+                          "Check_if_No_Marine": {
+                            "actions": {
+                              "Update_a_row_-_Deactivate_method_of_transportation_Marine": {
+                                "runAfter": {},
+                                "metadata": {
+                                  "operationMetadataId": "d24289b8-4ef1-4eb9-b208-cdffa4a385d9"
+                                },
+                                "type": "OpenApiConnection",
+                                "inputs": {
+                                  "host": {
+                                    "connectionName": "shared_commondataserviceforapps_1",
+                                    "operationId": "UpdateRecord",
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                  },
+                                  "parameters": {
+                                    "entityName": "cid_modeoftransportations",
+                                    "recordId": "@body('Filter_array_-Marine')[0]['cid_modeoftransportationid']",
+                                    "item/statuscode": 2
+                                  },
+                                  "authentication": {
+                                    "type": "Raw",
+                                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                                  }
+                                }
+                              }
+                            },
+                            "runAfter": {},
+                            "expression": {
+                              "and": [
+                                {
+                                  "not": {
+                                    "contains": [
+                                      "@outputs('Transport_by_Marine')",
+                                      "Yes"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "greater": [
+                                    "@length(body('Filter_array_-Marine'))",
+                                    0
+                                  ]
+                                }
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "7e6a1588-d2a6-4c8f-ab7f-41007034cfc0"
+                            },
+                            "type": "If"
+                          }
+                        }
+                      },
+                      "expression": {
+                        "and": [
+                          {
+                            "contains": [
+                              "@outputs('Transport_by_Marine')",
+                              "Yes"
+                            ]
+                          },
+                          {
+                            "equals": [
+                              "@length(body('Filter_array_-Marine'))",
+                              0
+                            ]
+                          }
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "956e0af2-382c-44b9-bd79-5359c49b158e"
+                      },
+                      "type": "If"
+                    },
+                    "Filter_array_-Marine": {
+                      "runAfter": {
+                        "check_if_air": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "7233e8fe-f386-423f-9d47-f0ba3c87c983"
+                      },
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@outputs('List_Mode_of_Transportation_with_the_site')?['body/value']",
+                        "where": "@equals(item()?['cid_name'], 'Marine')"
+                      }
+                    },
+                    "Filter_array_-_Rail": {
+                      "runAfter": {
+                        "check_if_Marine": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "7233e8fe-f386-423f-9d47-f0ba3c87c983"
+                      },
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@outputs('List_Mode_of_Transportation_with_the_site')?['body/value']",
+                        "where": "@equals(item()?['cid_name'], 'Rail')"
+                      }
+                    },
+                    "Filter_array_-_Road": {
+                      "runAfter": {
+                        "check_if_Rail": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "7233e8fe-f386-423f-9d47-f0ba3c87c983"
+                      },
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@outputs('List_Mode_of_Transportation_with_the_site')?['body/value']",
+                        "where": "@equals(item()?['cid_name'], 'Road')"
+                      }
+                    },
+                    "check_if_Rail": {
+                      "actions": {
+                        "Add_Transportation_Method_Rail": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "c79ecc27-6b19-4154-aa71-ef5892198269"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_commondataserviceforapps_1",
+                              "operationId": "CreateRecord",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            },
+                            "parameters": {
+                              "entityName": "cid_modeoftransportations",
+                              "item/cid_Company@odata.bind": "@outputs('accountlookup')",
+                              "item/cid_Mode@odata.bind": "@concat('/ovs_modeses/', variables('Rail'))",
+                              "item/cid_Site@odata.bind": "@concat('/accounts/', outputs('Site_ID'))"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            }
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Transport_by_Rail": [
+                          "Succeeded"
+                        ]
+                      },
+                      "else": {
+                        "actions": {
+                          "Check_if_No__-_Rail": {
+                            "actions": {
+                              "Update_a_row_-_Deactivate_method_of_transportation_Rail": {
+                                "runAfter": {},
+                                "metadata": {
+                                  "operationMetadataId": "6098c1be-f2d7-45b8-9f47-e5bd0dac5d72"
+                                },
+                                "type": "OpenApiConnection",
+                                "inputs": {
+                                  "host": {
+                                    "connectionName": "shared_commondataserviceforapps_1",
+                                    "operationId": "UpdateRecord",
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                  },
+                                  "parameters": {
+                                    "entityName": "cid_modeoftransportations",
+                                    "recordId": "@body('Filter_array_-_Rail')[0]['cid_modeoftransportationid']",
+                                    "item/statuscode": 2
+                                  },
+                                  "authentication": {
+                                    "type": "Raw",
+                                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                                  }
+                                }
+                              }
+                            },
+                            "runAfter": {},
+                            "expression": {
+                              "and": [
+                                {
+                                  "not": {
+                                    "contains": [
+                                      "@outputs('Transport_by_Rail')",
+                                      "Yes"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "greater": [
+                                    "@length(body('Filter_array_-_Rail'))",
+                                    0
+                                  ]
+                                }
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "7e6a1588-d2a6-4c8f-ab7f-41007034cfc0"
+                            },
+                            "type": "If"
+                          }
+                        }
+                      },
+                      "expression": {
+                        "and": [
+                          {
+                            "contains": [
+                              "@outputs('Transport_by_Rail')",
+                              "Yes"
+                            ]
+                          },
+                          {
+                            "equals": [
+                              "@length(body('Filter_array_-_Rail'))",
+                              0
+                            ]
+                          }
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "956e0af2-382c-44b9-bd79-5359c49b158e"
+                      },
+                      "type": "If"
+                    },
+                    "check_if_Road": {
+                      "actions": {
+                        "Add_Transportation_Method__-_Road": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "c79ecc27-6b19-4154-aa71-ef5892198269"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_commondataserviceforapps_1",
+                              "operationId": "CreateRecord",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            },
+                            "parameters": {
+                              "entityName": "cid_modeoftransportations",
+                              "item/cid_Company@odata.bind": "@outputs('accountlookup')",
+                              "item/cid_Mode@odata.bind": "@concat('/ovs_modeses/', variables('Road'))",
+                              "item/cid_Site@odata.bind": "@concat('/accounts/', outputs('Site_ID'))"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            }
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Transport_by_Road": [
+                          "Succeeded"
+                        ]
+                      },
+                      "else": {
+                        "actions": {
+                          "Check_if_No__-_Road": {
+                            "actions": {
+                              "Update_a_row_-_Deactivate_method_of_transportation_road": {
+                                "runAfter": {},
+                                "metadata": {
+                                  "operationMetadataId": "7088adbd-3b14-422a-a72d-dd03649cdcc1"
+                                },
+                                "type": "OpenApiConnection",
+                                "inputs": {
+                                  "host": {
+                                    "connectionName": "shared_commondataserviceforapps_1",
+                                    "operationId": "UpdateRecord",
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                  },
+                                  "parameters": {
+                                    "entityName": "cid_modeoftransportations",
+                                    "recordId": "@body('Filter_array_-_Road')[0]['cid_modeoftransportationid']",
+                                    "item/statuscode": 2
+                                  },
+                                  "authentication": {
+                                    "type": "Raw",
+                                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                                  }
+                                }
+                              }
+                            },
+                            "runAfter": {},
+                            "expression": {
+                              "and": [
+                                {
+                                  "not": {
+                                    "contains": [
+                                      "@outputs('Transport_by_Road')",
+                                      "Yes"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "greater": [
+                                    "@length(body('Filter_array_-_Road'))",
+                                    0
+                                  ]
+                                }
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "7e6a1588-d2a6-4c8f-ab7f-41007034cfc0"
+                            },
+                            "type": "If"
+                          }
+                        }
+                      },
+                      "expression": {
+                        "and": [
+                          {
+                            "contains": [
+                              "@outputs('Transport_by_Road')",
+                              "Yes"
+                            ]
+                          },
+                          {
+                            "equals": [
+                              "@length(body('Filter_array_-_Road'))",
+                              0
+                            ]
+                          }
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "956e0af2-382c-44b9-bd79-5359c49b158e"
+                      },
+                      "type": "If"
+                    }
+                  },
+                  "runAfter": {
+                    "Opeartion_GUID": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3e960be9-bb7e-418e-85ea-703cec83bb38"
+                  },
+                  "type": "Scope"
+                },
+                "Loop_in_the_class_List__to_update": {
+                  "foreach": "@outputs('Class')",
+                  "actions": {
+                    "Class_option_set_value_2": {
+                      "runAfter": {
+                        "get_option_set_index_2": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "067c96d1-9269-4851-8df7-173ef3d741e2"
+                      },
+                      "type": "Compose",
+                      "inputs": "@body('get_option_set_index_2')?[0]?['attributevalue']"
+                    },
+                    "If_update_class_index_in_string_map": {
+                      "actions": {
+                        "class_list_index": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "710c2984-a95a-45f4-8820-3f4eb9d36f59"
+                          },
+                          "type": "Compose",
+                          "inputs": "@int(outputs('Class_option_set_value_2'))"
+                        },
+                        "List_matched_classes_with_operation_id": {
+                          "runAfter": {
+                            "class_list_index": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "68a15517-fc92-4c13-833f-38fbfc8a0e09"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_commondataserviceforapps_1",
+                              "operationId": "ListRecords",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            },
+                            "parameters": {
+                              "entityName": "ovs_operationclasses",
+                              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"ovs_operationclass\">\n    <attribute name=\"ovs_operationclassid\" />\n    <attribute name=\"ovs_name\" />\n    <attribute name=\"createdon\" />\n    <order attribute=\"ovs_name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"ovs_primeclass\" operator=\"eq\" value=\"@{outputs('class_list_index')}\" />\n      <condition attribute=\"ovs_operationclass\" operator=\"eq\" uiname=\"OP-00001063\" uitype=\"ovs_mocregistration\" value=\"@{outputs('Opeartion_GUID')}\" />\n    </filter>\n  </entity>\n</fetch>"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            }
+                          }
+                        },
+                        "check_if_class__exists_in_the_database": {
+                          "actions": {
+                            "Add_operation_class_in_the_update": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "920c2fd2-060f-469d-b24c-0f89d3779bc4"
+                              },
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_commondataserviceforapps_1",
+                                  "operationId": "CreateRecord",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                },
+                                "parameters": {
+                                  "entityName": "ovs_operationclasses",
+                                  "item/ovs_primeclass": "@outputs('class_list_index')",
+                                  "item/ovs_supplychaindirection": "930840000",
+                                  "item/ovs_OperationClass@odata.bind": "@concat('/ovs_mocregistrations/', outputs('Opeartion_GUID'))"
+                                },
+                                "authentication": {
+                                  "type": "Raw",
+                                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                                }
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "List_matched_classes_with_operation_id": [
+                              "Succeeded"
+                            ]
+                          },
+                          "expression": {
+                            "equals": [
+                              "@length(outputs('List_matched_classes_with_operation_id')?['body/value'])",
+                              0
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "5234b6b7-f6de-4265-a21d-03244f780f07"
+                          },
+                          "type": "If"
+                        }
+                      },
+                      "runAfter": {
+                        "Class_option_set_value_2": [
+                          "Succeeded"
+                        ]
+                      },
+                      "expression": {
+                        "greaterOrEquals": [
+                          "@outputs('Class_option_set_value_2')",
+                          0
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "83735453-fbb6-459a-8cbd-79fdad1f0392"
+                      },
+                      "type": "If"
+                    },
+                    "get_option_set_index_2": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "3874b476-84dc-4823-898f-1af674f9b7d3"
+                      },
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@outputs('StringMap_-_List_Class')?['body/value']",
+                        "where": "@equals(item()?['value'], items('Loop_in_the_class_List__to_update'))"
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Opeartion_GUID": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "7ccc3b18-109a-4bdd-bc1a-c7e36794fd4b"
+                  },
+                  "type": "Foreach",
+                  "runtimeConfiguration": {
+                    "concurrency": {
+                      "repetitions": 23
+                    }
+                  }
+                },
+                "Get_operation_id": {
+                  "runAfter": {
+                    "Extended": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "abf641c3-6a01-4b51-b8fd-164d3c9db6e2"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "ListRecords",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "ovs_mocregistrations",
+                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"ovs_mocregistration\">\n    <attribute name=\"ovs_name\" />\n    <attribute name=\"createdon\" />\n    <attribute name=\"ovs_registrationexpiry\" />\n    <attribute name=\"ovs_hubind\" />\n    <attribute name=\"ovs_mocregistrationid\" />\n    <order attribute=\"ovs_name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"ovs_siteid\" operator=\"eq\"  value=\"@{outputs('Site_ID')}\" />\n      <condition attribute=\"ovs_operationtype\" operator=\"eq\" value=\"918640038\" />\n    </filter>\n  </entity>\n</fetch>"
+                    },
+                    "authentication": {
+                      "type": "Raw",
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                    }
+                  }
+                },
+                "Opeartion_GUID": {
+                  "runAfter": {
+                    "Get_operation_id": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "cfb0f127-1194-4040-91d8-1e9f0c91ba50"
+                  },
+                  "type": "Compose",
+                  "inputs": "@outputs('Get_operation_id')?['body']?['value'][0]['ovs_mocregistrationid']"
+                },
+                "Filter_UnNumber_Table_with_Site_to_update": {
+                  "runAfter": {
+                    "get_Site": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "0199dc9b-c60d-49dd-8d1c-9d2b9521333b"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@outputs('Invoke_an_HTTP_request_-_unnumber')?['body']['value']",
+                    "where": "@equals(item()['values'][0][0], outputs('Current_site_row_2')['values'][0][26])"
+                  }
+                },
+                "For_each_UN_number_to_update": {
+                  "foreach": "@body('Filter_UnNumber_Table_with_Site_to_update')",
+                  "actions": {
+                    "UN_row_2": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "285f3692-c760-4400-8e86-c726bd09097a"
+                      },
+                      "type": "Compose",
+                      "inputs": "@items('For_each_UN_number_to_update')"
+                    },
+                    "Check_if_UN_number_is_not_null_2": {
+                      "actions": {
+                        "UNNumber_Value_2": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "30b2551c-eaf1-48b2-aec9-16ef692b7829"
+                          },
+                          "type": "Compose",
+                          "inputs": "@Trim(Replace(substring(outputs('UN_row_2')['values'][0][1],0,indexOf(outputs('UN_row_2')['values'][0][1],'-')) ,'-' , '' ))"
+                        },
+                        "Get_UNNumber_GUID_2": {
+                          "runAfter": {
+                            "UNNumber_Value_2": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "ccece463-ad60-44bb-be52-68dc4785f3fd"
+                          },
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@outputs('List_UN_numbers')?['body/value']",
+                            "where": "@equals(item()?['tdg_name'], outputs('UNNumber_Value_2'))"
+                          }
+                        },
+                        "UNNumber_GUID_2": {
+                          "runAfter": {
+                            "Get_UNNumber_GUID_2": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "bb70d462-9ca9-48e2-9f4c-a8f6d7821d11"
+                          },
+                          "type": "Compose",
+                          "inputs": "@body('Get_UNNumber_GUID_2')?[0]['tdg_unnumberid']"
+                        },
+                        "Get_Type_of_measurement_option_set_index_2": {
+                          "runAfter": {
+                            "UNNumber_GUID_2": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "7471031a-5efb-4103-a623-250e404dadb1"
+                          },
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@outputs('StringMap_-_Type_of_measurement_list')?['body/value']",
+                            "where": "@equals(item()?['value'], outputs('UN_row_2')['values'][0][3])"
+                          }
+                        },
+                        "Add_Operation_UN_number_2": {
+                          "runAfter": {
+                            "UN_Number_name_2": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "05ae44b8-6a21-4f37-b285-0ef585f2987b"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_commondataserviceforapps_1",
+                              "operationId": "CreateRecord",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            },
+                            "parameters": {
+                              "entityName": "ovs_operationunnumbers",
+                              "item/ovs_supplychaindirection": "930840000",
+                              "item/ovs_UNNumber@odata.bind": "@concat('/tdg_unnumbers/', outputs('UNNumber_GUID_2'))",
+                              "item/ovs_name": "@outputs('UN_Number_name_2')",
+                              "item/cid_annualnumberofshipment": "@int(outputs('UN_row_2')['values'][0][4])",
+                              "item/cid_annualquantityvolume": "@outputs('UN_row_2')['values'][0][2]",
+                              "item/ovs_OperationUNNumber@odata.bind": "@concat('/ovs_mocregistrations/', outputs('Opeartion_GUID'))",
+                              "item/cid_unitofmeasurement": "@outputs('Index_-_unit_of_measurement_type__2')"
+                            },
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            }
+                          }
+                        },
+                        "Index_-_unit_of_measurement_type__2": {
+                          "runAfter": {
+                            "Get_Type_of_measurement_option_set_index_2": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "9238ee04-e629-4672-a1ad-e7684ae864e8"
+                          },
+                          "type": "Compose",
+                          "inputs": "@body('Get_Type_of_measurement_option_set_index_2')?[0]?['attributevalue']"
+                        },
+                        "UN_Number_name_2": {
+                          "runAfter": {
+                            "Index_-_unit_of_measurement_type__2": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "428c277b-7846-4481-be76-04dd8285c9c3"
+                          },
+                          "type": "Compose",
+                          "inputs": "@Replace(substring(outputs('UN_row_2')['values'][0][1],0,indexOf(outputs('UN_row_2')['values'][0][1],'-')) ,'-' , '' )"
+                        }
+                      },
+                      "runAfter": {
+                        "UN_row_2": [
+                          "Succeeded"
+                        ]
+                      },
+                      "expression": {
+                        "greater": [
+                          "@length(trim(outputs('UN_row_2')['values'][0][1]))",
+                          0
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "2ac58c16-5959-4c78-87fc-10684cfdbfb3"
+                      },
+                      "type": "If"
+                    }
+                  },
+                  "runAfter": {
+                    "Filter_UnNumber_Table_with_Site_to_update": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "eed152cc-0c52-40af-b240-b00e466d8aed"
+                  },
+                  "type": "Foreach"
+                }
+              },
+              "runAfter": {
+                "Site_ID": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "greater": [
+                  "@length(outputs('Site_ID'))",
+                  0
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b38e10cc-6491-4d0d-b5c7-84722bf43c2b"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "List_All_updated_site": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "209f0290-423f-43ac-b727-8224bb5e6de5"
+          },
+          "type": "Foreach"
+        },
+        "Close_Activity": {
+          "runAfter": {
+            "Delete_Folder": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0a769b87-ea0e-44ac-b803-af10cff2b5b0"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "UpdateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "cid_bulkactivitylogsummaries",
+              "recordId": "@triggerBody()['text_2']",
+              "item/cid_activityendtime": "@utcNow()",
+              "item/cid_activitystatus": 100000000,
+              "item/statecode": 1
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "Air": {
+          "runAfter": {
+            "Initialize_variable-import": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f228a195-0411-4761-bf80-be026150e10f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Air",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Rail": {
+          "runAfter": {
+            "Air": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f228a195-0411-4761-bf80-be026150e10f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Rail",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Road": {
+          "runAfter": {
+            "Rail": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f228a195-0411-4761-bf80-be026150e10f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Road",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Marine": {
+          "runAfter": {
+            "Road": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f228a195-0411-4761-bf80-be026150e10f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Marine",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Apply_to_each_UNNUMBER": {
+          "foreach": "@body('List_All_UN_number_to_update')",
+          "actions": {
+            "Current_UNNumber": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "33c22be9-c4f4-4ec5-80fe-33cc00644c4a"
+              },
+              "type": "Compose",
+              "inputs": "@items('Apply_to_each_UNNUMBER')"
+            },
+            "UNGUID": {
+              "runAfter": {
+                "Current_UNNumber": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "bc2f000b-f41d-45e6-ac6b-bf7c8abf0fb5"
+              },
+              "type": "Compose",
+              "inputs": "@outputs('Current_UNNumber')?['values'][0][7]"
+            },
+            "check_if_guid_is_not_empty": {
+              "actions": {
+                "Get_index_of_unit_of_measurement": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "7471031a-5efb-4103-a623-250e404dadb1"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@outputs('StringMap_-_Type_of_measurement_list')?['body/value']",
+                    "where": "@equals(item()?['value'], outputs('Current_UNNUMBer')?['values'][0][4])"
+                  }
+                },
+                "Index_-_unit_of_measurement_type_values": {
+                  "runAfter": {
+                    "ERAP_ID": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "9238ee04-e629-4672-a1ad-e7684ae864e8"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('Get_index_of_unit_of_measurement')?[0]?['attributevalue']"
+                },
+                "UnNumber_status": {
+                  "runAfter": {
+                    "Index_-_unit_of_measurement_type_values": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "4ea294c9-8638-40c4-a69c-3879064fa4b5"
+                  },
+                  "type": "Compose",
+                  "inputs": "Active"
+                },
+                "check_if_un_number_status_active": {
+                  "actions": {
+                    "Update_operation_un_number": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "ab3fe0ac-daec-4275-b583-e60686c4279a"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "UpdateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "ovs_operationunnumbers",
+                          "recordId": "@outputs('UNGUID')",
+                          "item/ovs_supplychaindirection": "930840001",
+                          "item/ovs_UNNumber@odata.bind": "@outputs('UN-Number')",
+                          "item/cid_annualnumberofshipment": "@int(outputs('Current_UNNUMBer')?['values'][0][5])",
+                          "item/cid_annualquantityvolume": "@int(outputs('Current_UNNUMBer')?['values'][0][3])",
+                          "item/cid_unitofmeasurement": "@outputs('Index_-_unit_of_measurement_type_values')"
+                        },
+                        "authentication": {
+                          "type": "Raw",
+                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "UnNumber_status": [
+                      "Succeeded"
+                    ]
+                  },
+                  "else": {
+                    "actions": {
+                      "deactivate_unnumber_operation": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "f8b24383-853c-4293-83f0-2e2dfa729b7f"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_commondataserviceforapps_1",
+                            "operationId": "UpdateRecord",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                          },
+                          "parameters": {
+                            "entityName": "ovs_operationunnumbers",
+                            "recordId": "@outputs('UNGUID')",
+                            "item/ovs_supplychaindirection": "930840001",
+                            "item/ovs_UNNumber@odata.bind": " ",
+                            "item/statuscode": 2
+                          },
+                          "authentication": {
+                            "type": "Raw",
+                            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "expression": {
+                    "equals": [
+                      "@outputs('UnNumber_status')",
+                      "Active"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "16a92ba3-886a-487b-b7e2-3210932c1cbd"
+                  },
+                  "type": "If"
+                },
+                "ERAP_ID": {
+                  "runAfter": {
+                    "Get_index_of_unit_of_measurement": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "c1a7106a-9d13-4cbd-a410-cb2b312a6d3a"
+                  },
+                  "type": "Compose",
+                  "inputs": "@outputs('Current_UNNUMBer')?['values'][0][6]"
+                }
+              },
+              "runAfter": {
+                "UN-Number": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "greater": [
+                  "@length(Trim(outputs('UNGUID')))",
+                  0
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "799cca78-8866-46d2-9aa1-1f5c5eee827c"
+              },
+              "type": "If"
+            },
+            "UN-Number": {
+              "runAfter": {
+                "UNGUID": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "05d64e67-e935-44ec-a250-61075290a4a3"
+              },
+              "type": "Compose",
+              "inputs": "@Trim(Replace(substring(outputs('Current_UNNumber')['values'][0][1],0,indexOf(outputs('Current_UNNumber')['values'][0][1],'-')) ,'-' , '' ))"
+            }
+          },
+          "runAfter": {
+            "List_All_UN_number_to_update": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2b0d7697-57be-48a6-80d3-59957031fe08"
+          },
+          "type": "Foreach"
+        },
+        "Initialize_UnNumber_Status_variable": {
+          "runAfter": {
+            "Marine": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "aeab0991-335d-46e0-af75-175ade344754"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "UnNumberStatus",
+                "type": "integer"
+              }
+            ]
+          }
+        },
+        "Send_an_HTTP_request_to_SharePoint-Delete-File": {
+          "runAfter": {
+            "Apply_to_each_site_to_update": [
+              "Succeeded"
+            ],
+            "Apply_to_each_UNNUMBER": [
+              "Succeeded"
+            ],
+            "Loop_Excel_sheet_Sites_table": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "613190e4-0e54-402c-92ea-4d8c3d1e4a7a"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "HttpRequest",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+              "parameters/method": "DELETE",
+              "parameters/uri": "_api/web/GetFileByServerRelativeUrl('/sites/SamuraiTeam/Shared Documents/CID_Bulk_Upload@{outputs('file_Ref_URL')}')/recycle",
+              "parameters/headers": {
+                "Prefer": "bypass-shared-lock"
+              }
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "Delete_Folder": {
+          "runAfter": {
+            "Get_folder_metadata": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f00e886f-145d-4890-91e5-d4fb5eacf205"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "DeleteItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+              "table": "Documents",
+              "id": "@outputs('Get_folder_metadata')?['body/ItemId']"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "Get_folder_metadata": {
+          "runAfter": {
+            "Send_an_HTTP_request_to_SharePoint-Delete-File": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7e496e60-b685-4451-bb18-62244159694c"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetFolderMetadata",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+              "id": "/Shared Documents/CID_Bulk_Upload/@{variables('Environment_folder')}/@{triggerBody()['text_2']}"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "List_All_updated_site": {
+          "runAfter": {
+            "Invoke_http_Get_Sites": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "05c212d4-bdab-4ba9-a408-cc89507d9cdd"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('Invoke_http_Get_Sites')?['body']['value']",
+            "where": "@greater(length(item()['values'][0][27]), 0)"
+          }
+        },
+        "List_All_UN_number_to_update": {
+          "runAfter": {
+            "Get_UNNumber_to_update": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "05c212d4-bdab-4ba9-a408-cc89507d9cdd"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('Get_UNNumber_to_update')?['body']['value']",
+            "where": "@greater(length(item()['values'][0][6]), 0)"
+          }
+        },
+        "Initialize_variable-Handle": {
+          "runAfter": {
+            "Initialize_Environment_folder_variable_": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2ffb5b07-34bd-4c5e-ae68-707de7f69919"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Handle",
+                "type": "boolean",
+                "value": "@false"
+              }
+            ]
+          }
+        },
+        "Initialize_variable-Offer-for-transport": {
+          "runAfter": {
+            "Initialize_variable-Handle": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "15cad190-01a0-4c96-b464-abddf874f71c"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "OfferForTransport",
+                "type": "boolean",
+                "value": "@false"
+              }
+            ]
+          }
+        },
+        "Initialize_variable-Transport": {
+          "runAfter": {
+            "Initialize_variable-Offer-for-transport": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "61f0bbfb-843b-40e3-b51b-585b16f755f2"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Transport",
+                "type": "boolean",
+                "value": "@false"
+              }
+            ]
+          }
+        },
+        "Initialize_variable-import": {
+          "runAfter": {
+            "Initialize_variable-Transport": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3f723f3e-646b-42e4-918e-dc9525285df2"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Import",
+                "type": "boolean",
+                "value": "@false"
+              }
+            ]
+          }
+        },
+        "StringMap-Quarter-LLD": {
+          "runAfter": {
+            "StringMap_-_List_Class": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a788e1c3-895f-4e88-a3a0-143e2d6f72ac"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "stringmaps",
+              "fetchXml": "<fetch>\n  <entity name=\"stringmap\" >\n    <attribute name=\"attributevalue\" />\n    <attribute name=\"attributename\" />\n    <attribute name=\"value\" />\n    <filter>\n<condition attribute=\"attributename\" operator=\"eq\" value=\"ovs_lld_quarter\"/>\n     \n    </filter>\n  </entity>\n</fetch>"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "StringMap-Section": {
+          "runAfter": {
+            "StringMap-Quarter-LLD": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2afaf075-6b1f-4337-9f7a-2e6cd71bb1b8"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "stringmaps",
+              "fetchXml": "<fetch>\n  <entity name=\"stringmap\" >\n    <attribute name=\"attributevalue\" />\n    <attribute name=\"attributename\" />\n    <attribute name=\"value\" />\n    <filter>\n<condition attribute=\"attributename\" operator=\"eq\" value=\"ovs_lld_section\"/>\n     \n    </filter>\n  </entity>\n</fetch>"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "StringMap-TownShip": {
+          "runAfter": {
+            "StringMap-Section": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a8ab798b-6681-41c8-9a0d-fbe7b8b1f0ea"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "stringmaps",
+              "fetchXml": "<fetch>\n  <entity name=\"stringmap\" >\n    <attribute name=\"attributevalue\" />\n    <attribute name=\"attributename\" />\n    <attribute name=\"value\" />\n    <filter>\n<condition attribute=\"attributename\" operator=\"eq\" value=\"ovs_lld_township\"/>\n     \n    </filter>\n  </entity>\n</fetch>"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "StringMap-Range": {
+          "runAfter": {
+            "StringMap-TownShip": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a33d1d87-7281-4074-b092-a97691a373f0"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "stringmaps",
+              "fetchXml": "<fetch>\n  <entity name=\"stringmap\" >\n    <attribute name=\"attributevalue\" />\n    <attribute name=\"attributename\" />\n    <attribute name=\"value\" />\n    <filter>\n<condition attribute=\"attributename\" operator=\"eq\" value=\"ovs_lld_range\"/>\n     \n    </filter>\n  </entity>\n</fetch>"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "StringMap-Quarter-Meridian": {
+          "runAfter": {
+            "StringMap-Range": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "764625d0-223b-4093-81f3-285c54185a87"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "stringmaps",
+              "fetchXml": "<fetch>\n  <entity name=\"stringmap\" >\n    <attribute name=\"attributevalue\" />\n    <attribute name=\"attributename\" />\n    <attribute name=\"value\" />\n    <filter>\n<condition attribute=\"attributename\" operator=\"eq\" value=\"ovs_lld_meridian\"/>\n     \n    </filter>\n  </entity>\n</fetch>"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "Initialize_variable-Latitude": {
+          "runAfter": {
+            "Initialize_UnNumber_Status_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c8fbcf1a-355c-43b5-8b3b-9546366e5633"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Latitude",
+                "type": "float"
+              }
+            ]
+          }
+        },
+        "Initialize_variable-Longtitud": {
+          "runAfter": {
+            "Initialize_variable-Latitude": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "80877e93-45c5-4eef-93e6-d0d8f34a4f10"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Longtitud",
+                "type": "float"
+              }
+            ]
+          }
+        },
+        "Initialize_variable-Province": {
+          "runAfter": {
+            "Initialize_variable-Longtitud": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5bd7dc8f-284d-405f-8987-658f7bd56874"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Province",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Site-Sheet-columns": {
+          "runAfter": {
+            "Get_Account_Info": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "503db1c5-72ad-4244-ab40-2b84d83e687b"
+          },
+          "type": "Compose",
+          "inputs": {
+            "Site Name": "0",
+            "Address 1": "1",
+            "City": "2",
+            "Province": "3",
+            "Postal Code ": "4",
+            "Address 2": "5",
+            "Address 3": "6",
+            "Province  ": "7",
+            "Quarter ": "8",
+            "Section": "9",
+            "Township": "10",
+            "Range": "11",
+            "Meridian": "12",
+            "Latitude": "13",
+            "Longitude": "14",
+            " Air": "15",
+            "Marine": "16",
+            "Rail": "17",
+            "Road": "18",
+            "Handle": "19",
+            "Offer for Transport": "20",
+            "Transport": "21",
+            "Import": "22",
+            "Class/Division ": "23",
+            "Extended Information Site ": "24",
+            "Row number": "25",
+            "SiteFullAddress": "26",
+            "site-GUID": "27"
+          }
+        },
+        "Compose_2": {
+          "runAfter": {
+            "Site-Sheet-columns": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7d64ca55-434c-4e79-b4ca-854d6c590096"
+          },
+          "type": "Compose",
+          "inputs": "@outputs('Site-Sheet-columns')?['Province']"
+        },
+        "Response": {
+          "runAfter": {
+            "Close_Activity": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ece3c02e-5af5-4d13-a45b-8b6e707a435d"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200
+          }
+        },
+        "Get_UNNumber_to_update": {
+          "runAfter": {
+            "Invoke_http_Get_Sites": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "949208f9-3bfc-4aec-b0fa-e26b7d975c49"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_webcontents",
+              "operationId": "InvokeHttp",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
+            },
+            "parameters": {
+              "request/method": "GET",
+              "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload@{outputs('file_Ref_URL')}:/workbook/tables/TableAddExtended/rows"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "Invoke_an_HTTP_request_-_unnumber": {
+          "runAfter": {
+            "CID_Site_Requirement_Level": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f11d9ebe-4fb1-412e-b313-ec10ab941bb7"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_webcontents",
+              "operationId": "InvokeHttp",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
+            },
+            "parameters": {
+              "request/method": "GET",
+              "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload@{outputs('file_Ref_URL')}:/workbook/tables/TableAddExtended/rows"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "List_All_UN_number_to_Insert": {
+          "runAfter": {
+            "Invoke_an_HTTP_request_-_unnumber": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "05c212d4-bdab-4ba9-a408-cc89507d9cdd"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('Invoke_an_HTTP_request_-_unnumber')?['body']['value']",
+            "where": "@equals(length(item()['values'][0][6]), 0)"
+          }
+        },
+        "Invoke_http_Get_Sites": {
+          "runAfter": {
+            "List_All_UN_number_to_Insert": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8d0cbf6f-1e9d-4224-bacd-e3ad8c39d85c"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_webcontents",
+              "operationId": "InvokeHttp",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
+            },
+            "parameters": {
+              "request/method": "GET",
+              "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload@{outputs('file_Ref_URL')}:/workbook/tables/TableAddBasic/rows"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        }
+      },
+      "outputs": {}
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}
