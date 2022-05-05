@@ -11,8 +11,8 @@ variables:
     value: 'TDG CORE QA'
   - name: PowerPlatformSPN_ACC
     value: 'ROM ACC TDG'
-  - name: PowerPlatformSPN_ACCDATA
-    value: 'ROM ACC TDG DATA'
+ ## - name: PowerPlatformSPN_ACCDATA
+ ##   value: 'ROM ACC TDG DATA'
   - name: PowerPlatformSPN_PREPROD
     value: 'ROM PREPROD TDG'
   - name: PowerPlatformSPN_PROD
@@ -80,16 +80,16 @@ stages:
     dependsOn: 
     - 'DeployManagedSolutionToQA'
 #ACCDATA
-- template: templates/stage/DeploySolution.yml  # Template reference
-  parameters:
-    SolutionName: $(SolutionName)
-    PowerPlatformSPN: $(PowerPlatformSPN_ACCDATA)
-    Environment: 'ACC-TDG-DATA'
-    StageName: 'DeployUnmanagedSolutionToACCDATA'
-    DeployUnmanagedSolution: false
-    DeleteSolution: false
-    dependsOn: 
-    - 'DeployManagedSolutionToQA'
+#- template: templates/stage/DeploySolution.yml  # Template reference
+#  parameters:
+#   SolutionName: $(SolutionName)
+#    PowerPlatformSPN: $(PowerPlatformSPN_ACCDATA)
+#    Environment: 'ACC-TDG-DATA'
+#    StageName: 'DeployUnmanagedSolutionToACCDATA'
+#    DeployUnmanagedSolution: false
+#    DeleteSolution: false
+#    dependsOn: 
+#    - 'DeployManagedSolutionToQA'
 #PREPROD
 - template: templates/stage/DeploySolution.yml  # Template reference
   parameters:
