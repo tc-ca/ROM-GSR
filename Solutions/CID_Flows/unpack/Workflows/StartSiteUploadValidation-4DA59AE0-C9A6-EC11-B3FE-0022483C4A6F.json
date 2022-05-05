@@ -137,7 +137,7 @@
                 },
                 "parameters": {
                   "entityName": "accounts",
-                  "$select": "address1_city,address1_stateorprovince,address1_line1,address1_postalcode,cid_unitnumber",
+                  "$select": "address1_city,address1_stateorprovince,address1_line1,address1_postalcode,cid_unitnumber,ovs_lld_quarter,\novs_lld_section,\novs_lld_township,\novs_lld_range,\novs_lld_meridian,\naddress1_latitude,\naddress1_longitude\n",
                   "$filter": "customertypecode eq 948010001 and _parentaccountid_value eq '@{outputs('CompanyId')}'",
                   "$expand": "parentaccountid($select=name,accountid)"
                 },
@@ -651,7 +651,22 @@
                       "type": "Query",
                       "inputs": {
                         "from": "@outputs('List_All_Accounts')?['body/value']",
-                        "where": "@and(equals(length(string(outputs('current_row')['values'][0][26])), 0), equals(item()?['address1_line1'], toUpper(outputs('current_row')['values'][0][1])), equals(item()?['address1_city'], toUpper(outputs('current_row')['values'][0][2])), equals(item()?['address1_stateorprovince'], toUpper(outputs('current_row')['values'][0][3])))"
+                        "where": "@and(\nequals(item()?['ovs_lld_quarter@OData.Community.Display.V1.FormattedValue'], toUpper(outputs('current_row')['values'][0][8])), \nequals(item()?['ovs_lld_section@OData.Community.Display.V1.FormattedValue'], toUpper(outputs('current_row')['values'][0][9])), \nequals(item()?['ovs_lld_township@OData.Community.Display.V1.FormattedValue'], toUpper(outputs('current_row')['values'][0][10])), \nequals(item()?['ovs_lld_range@OData.Community.Display.V1.FormattedValue'], toUpper(outputs('current_row')['values'][0][11])), \nequals(item()?['ovs_lld_meridian@OData.Community.Display.V1.FormattedValue'], outputs('current_row')['values'][0][12])\n)"
+                      }
+                    },
+                    "Filter_array_-_Check_address_by_Lat_and_Long": {
+                      "runAfter": {
+                        "Filter_array_-_Check_address_by_Legal_land_description": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "cb6ac0c8-ddde-45cd-b7c0-2d89c9b0c0d2"
+                      },
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@outputs('List_All_Accounts')?['body/value']",
+                        "where": "@and(\nequals(item()?['address1_latitude'], outputs('current_row')['values'][0][13]), \nequals(item()?['address1_latitude'], outputs('current_row')['values'][0][14])\n)"
                       }
                     }
                   },
@@ -3190,7 +3205,7 @@
                               "value": "@{body('Filter_array_B1026')[0]['Message']}"
                             }
                           },
-                          "Add_Bulk_Log_details_Bulk024": {
+                          "Add_Bulk_Log_details_B1026": {
                             "runAfter": {
                               "Append_to_array_variable_-_Extended_column_empty": [
                                 "Succeeded"
