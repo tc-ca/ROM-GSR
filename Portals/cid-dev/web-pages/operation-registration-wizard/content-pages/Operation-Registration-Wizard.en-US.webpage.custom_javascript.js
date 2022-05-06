@@ -17,8 +17,10 @@ $(document).ready(function () {
     var instructionBtns = $(".instruction-btn");
 
     if (instructionBtns.length > 0) {
-        var msg = tdg.error_message.message("m000010");	// Choose the same named button found below
-        tdg.c.dialog_OK(msg);
+        instructionBtns.click(function () {
+			var msg = tdg.error_message.message("m000010");	// Choose the same named button found below
+			tdg.c.dialog_OK(msg);
+		});
     }
 
     $("legend").each(function () {

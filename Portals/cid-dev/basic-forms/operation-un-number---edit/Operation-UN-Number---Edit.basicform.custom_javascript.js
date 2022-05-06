@@ -6,11 +6,11 @@ $(document).ready(function () {
 
     page_setup();
 
-    // hide controls
-    control_hide("ovs_unnumber", true);
+    var tdg_unnumberid_label = tdg.error_message.message("tdg_unnumberid"); // UN Number
+    sessionStorage.setItem("tdg_unnumberid_label", tdg_unnumberid_label);
 
-    var selected_language = '{{website.selected_language.code}}';
-    sessionStorage.setItem("selected_language", selected_language);
+    // hide controls
+    tdg.c.control_hide("ovs_unnumber", true);
 
     // resize WebResource_unnumber
     $("#WebResource_unnumber").height('72px');
@@ -23,12 +23,6 @@ $(document).ready(function () {
 
     //when the page is done loading, disable autocomplete on all inputs[text]
     $('input[type="text"]').attr('autocomplete', 'off');
-
-    // autocomplete off
-    //$("#cid_unitofmeasurement").attr("autocomplete", "new-password");
-    //$("#cid_annualquantityvolume").attr("autocomplete", "new-password");
-    //$("#cid_annualnumberofshipment").attr("autocomplete", "new-password");
-    //$("#ovs_supplychaindirection").attr("autocomplete", "new-password");
 });
 
 function page_setup() {

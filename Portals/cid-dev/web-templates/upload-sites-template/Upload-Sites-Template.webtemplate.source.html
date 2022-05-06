@@ -1,6 +1,22 @@
 
 <style>
-
+.inputfile {
+  /* visibility: hidden etc. wont work */
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+.inputfile:focus + label {
+  /* keyboard navigation */
+  outline: 1px dotted #000;
+  outline: -webkit-focus-ring-color auto 5px;
+}
+.inputfile + label * {
+  pointer-events: none;
+}
     #processingMsg {
        -width: 300px;
         -text-align: center;
@@ -71,16 +87,46 @@
 {% endif %}
 
 {% endfor %}
-
+{% if {{languagecode}}  == 'fr-FR' %}
+{% assign step1 = 'Étape 1. Téléchargez le modèle Excel personnalisé de téléchargement en masse du site.' %}
+{% assign  step2 = 'Étape 2. Téléchargez le classeur Excel personnalisé de téléchargement en masse du site.' %}
+{% assign upload = 'Télécharger' %}
+{% assign downloadlableEnglishversion = 'Version anglaise' %}
+{% assign downloadlableFrenchVersion = 'Version française' %}
+{% assign choosefile = 'Choisir le fichier'  %}
+{% else %}
+{% assign step1 = 'Step 1. Download the custom Site Bulk Upload Excel template.' %}
+{% assign  step2 = 'Step 2. Upload the completed custom Site Bulk Upload Excel workbook.' %}
+{% assign choosefile = 'Choose File'  %}
+{% assign upload = 'Upload' %}
+{% assign downloadlableEnglishversion = 'English Version' %}
+{% assign downloadlableFrenchVersion = 'French Version' %}
+{% endif %}
 <script>
   $(document).ready( function() {
 
 
       //add new submit button
-      $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value='Upload' class='submit-btn btn btn-primary form-action-container-left' />");
+      $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value={{upload}} class='submit-btn btn btn-primary form-action-container-left' />");
      
       $("#InsertButton").css("display", "none");
     var langcode = '{{languagecode}}'  ;
+   
+var AttachButton = document.getElementById('AttachFile');
+AttachButton.classList.add("inputfile");
+//$("#AttachFile").before('<button style="display:block;width:120px; height:30px;" onclick="document.getElementById('AttachFile').click()">Your text here</button>');
+$("#AttachFile").before('<input id="uploadFile" placeholder="File Name here" disabled="disabled" /><label class="btn btn-primary btn-xs" for="AttachFile">{{choosefile}}</label>');
+document.getElementById("AttachFile").onchange = function () {
+    document.getElementById("uploadFile").value = this.value;
+};
+
+/*$("#AttachFile").jfilestyle({text: "Find file"});
+
+ $('#AttachFile').text("Your Text to Choose a File Here!");
+$('#AttachFile').value("value");
+$('#AttachFile').label("lable");
+*/
+
     var BulkActivitytype = '100000001' ;
     //intial validation will be executed if this is a redirect call
       call_Inital_validation(langcode , BulkActivitytype);
@@ -560,7 +606,7 @@ $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
                             <td>
                                 <div>
                                     <div>
-                                        <h3 class="blue_border">Step 1. Download the custom Site Bulk Upload Excel template</h3>
+                                        <h3 class="blue_border">{{step1}}</h3>
                                         <p> </p>
                                     </div>
                                     <div>
@@ -568,11 +614,11 @@ $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
                                         <table>
                                             <tr>
                                                 <td>
-                                                    <button type="button" id="linkdownload_English" class="submit-btn btn btn-primary form-action-container-left">English Version</button>
+                                                    <button type="button" id="linkdownload_English" class="submit-btn btn btn-primary form-action-container-left">{{downloadlableEnglishversion}}</button>
                                                 </td>
                                                 <td> &nbsp;&nbsp;</td>
                                                 <td>
-                                                    <button type="button" id="linkdownload_French" class="submit-btn btn btn-primary form-action-container-left">French Version</button>
+                                                    <button type="button" id="linkdownload_French" class="submit-btn btn btn-primary form-action-container-left">{{downloadlableFrenchVersion}}</button>
                                                 </td>
                                             </tr>
                                         </table>
@@ -583,7 +629,7 @@ $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
                         <tr>
                             <td>
 
-                                <h3 class="blue_border">Step 2. Upload the completed custom Site Bulk Upload Excel workbook.</h3>
+                                <h3 class="blue_border">{{step2}}</h3>
                                 {% entityform name: 'Insert Bulk Activity Log Summary' %}
 
                                 <div>

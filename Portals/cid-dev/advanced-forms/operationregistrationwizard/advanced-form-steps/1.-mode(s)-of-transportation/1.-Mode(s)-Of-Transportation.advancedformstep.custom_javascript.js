@@ -1,19 +1,29 @@
-if (window.jQuery) {
-   (function ($) {
-        webFormClientValidate = function() {
-            var validation = true;
-            var errorMessage = "";
+//
+// OperationRegistrationWizard-MOT.js
+//
+$(document).ready(function () {
+	debugger;
 
-            //var rows = $("#mode_of_transportations .view-grid table").find("tbody > tr");
+	var selected_language = '{{website.selected_language.code}}';
+	sessionStorage.setItem("selected_language", selected_language);
+});
+
+if (window.jQuery) {
+	(function ($) {
+		webFormClientValidate = function () {
+			var validation = true;
+			var errorMessage = "";
+
+			//var rows = $("#mode_of_transportations .view-grid table").find("tbody > tr");
 			//if (rows.length <= 0) {
 			//    errorMessage = "You cannot proceed before adding at least one mode of transportation.";
 			//    validation = false;
 			//}
 
-            //var urlParams = new URLSearchParams(window.location.search);
+			//var urlParams = new URLSearchParams(window.location.search);
 
-            //if (urlParams.has('id')) {
-            //    var operationId = urlParams.get('id');
+			//if (urlParams.has('id')) {
+			//    var operationId = urlParams.get('id');
 
 			//	if(!checkMOTExist(operationId, null)){
 			//		errorMessage = "You cannot proceed before adding at least one mode of transportation.";
@@ -21,27 +31,22 @@ if (window.jQuery) {
 			//	}
 			//}
 
-			 var checkedCheckBoxes = $('[id*="cid_"]:checkbox:checked'); 
+			var checkedCheckBoxes = $('[id*="cid_"]:checkbox:checked');
 
-			if(checkedCheckBoxes && checkedCheckBoxes.length <= 0)
-			{
-                errorMessage = "You cannot proceed before adding at least one mode of transportation.";
-                validation = false;
-            }
+			if (checkedCheckBoxes && checkedCheckBoxes.length <= 0) {
+				errorMessage = tdg.error_message.message("m000015"); // You cannot proceed before adding at least one mode of transportation
+				validation = false;
+			}
 
-
-            if(!validation)
-			{
-				$('#ValidationSummaryEntityFormView div').remove(); 
-
+			if (!validation) {
+				$('#ValidationSummaryEntityFormView div').remove();
 				var validationSection = $('#ValidationSummaryEntityFormView');
-   
-				validationSection.append($("<div class='notification alert-danger' role='alert'>"+ errorMessage + "</div>"));  
+				validationSection.append($("<div class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
 				validationSection.show();
 			}
-			return validation; 
+			return validation;
 		}
-   }(window.jQuery));
+	}(window.jQuery));
 }
 
 //async function checkMOTExist(operationId, siteId){

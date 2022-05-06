@@ -12,7 +12,7 @@ if (window.jQuery) {
                 var operationId = urlParams.get('id');
 
                 if (!SiteHasOperationClasses(operationId, null)) {
-                    errorMessage = "You cannot proceed before adding classes(s).";
+                    errorMessage = tdg.error_message.message("m000016"); // You cannot proceed before adding classes(s).
                     validation = false;
                 }
             }

@@ -12,7 +12,7 @@ $(document).ready(function () {
     $('input[type="text"]').attr('autocomplete', 'off');
 
     // insert button
-    btn_save_new_setup();
+    tdg.c.btn_save_new_setup();
 });
 
 $(window).unload(function () {
@@ -42,32 +42,6 @@ function page_setup() {
 
     // server error?
     tdg.c.message_panel();
-}
-
-function btn_save_new_setup() {
-    //debugger;
-
-    var button = $('<input type="button" name="btn_save_new" id="btn_save_new" />');
-    $("#InsertButton").after(button);
-
-    var button1 = $("#InsertButton");
-    button1.prop("value", "Submit and Close");
-    var className = button1[0].className
-    var fontSize = button1.css("fontSize");
-    var color = button1.css("color");
-    var background_color = button1.css("background-color");
-
-    var button2 = $("#btn_save_new");
-    button2.prop("value", "Submit and Add Another");
-    button2[0].className = className;
-    button2.css("fontSize", fontSize);
-    button2.css('color', color);
-    button2.css("background-color", background_color);
-
-    // bind the click event to this custom buttton
-    $("#btn_save_new").bind("click", function () {
-        btn_save_new_onclick();
-    });
 }
 
 function btn_save_new_onclick() {

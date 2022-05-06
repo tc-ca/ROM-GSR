@@ -6,15 +6,15 @@ $(document).ready(function () {
 
 	header_setup();
 
-	var companyName = '{{user.parentcustomerid.name }}';
+	//var companyName = '{{user.parentcustomerid.name }}';
 
-	if (companyName) {
-		var company_status = "{{entities.account[user.parentcustomerid.id].cid_cidcompanystatus.value}}";
+	//if (companyName) {
+	//	var company_status = "{{entities.account[user.parentcustomerid.id].cid_cidcompanystatus.value}}";
 
-		if (company_status == '100000005') {
-			window.location.href = "~/dashboard";
-		}
-	}
+	//	if (company_status == '100000005') {
+	//		window.location.href = "~/company_dashboard";
+	//	}
+	//}
 
 	var instructionBtns = $(".instruction-btn");
 

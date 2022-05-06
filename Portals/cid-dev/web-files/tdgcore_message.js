@@ -22,6 +22,16 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "Portail CID de Transports Canada"
                     },
                     {
+                        "code": "tdg_unnumberid",
+                        "message_en": "UN Display Name",
+                        "message_fr": "Nom d'affichage de l'ONU"
+                    },
+                    {
+                        "code": "cid_naicscode",
+                        "message_en": "NAICS Code",
+                        "message_fr": "Code SCIAN"
+                    },
+                    {
                         "code": "OK",
                         "message_en": "OK",
                         "message_fr": "D'accord"
@@ -58,8 +68,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000005",
-                        "message_en": "Record added",
-                        "message_fr": "Enregistrement ajouté"
+                        "message_en": "{0} record(s) added",
+                        "message_fr": "{0} information(s) ont été ajoutées"
                     },
                     {
                         "code": "m000006",
@@ -102,11 +112,20 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": m000013_FR
                     },
                     {
-                        "code": "m000014",
-                        "message_en": "{0} UN Number entries added successfully",
-                        "message_fr": "{0} UN Number entries added successfully_FRE"
+                        "code": "m000015",
+                        "message_en": "You cannot proceed before adding at least one mode of transportation.",
+                        "message_fr": "Vous ne pouvez pas continuer avant d'avoir ajouté au moins un mode de transport."
                     },
                     {
+                        "code": "m000016",
+                        "message_en": "You cannot proceed before adding class(es).",
+                        "message_fr": "Vous ne pouvez pas continuer avant d'ajouter des classes."
+                    },
+                    {
+                        "code": "m000017",
+                        "message_en": "You cannot proceed before adding UN Number(s).",
+                        "message_fr": "Vous ne pouvez pas continuer avant d'avoir ajouté le(s) numéro(s) UN."
+                    },                   {
                         "code": "m000100",
                         "message_en": "Back to Company Registration Wizard",
                         "message_fr": "Retour à l'assistant d'enregistrement de société"

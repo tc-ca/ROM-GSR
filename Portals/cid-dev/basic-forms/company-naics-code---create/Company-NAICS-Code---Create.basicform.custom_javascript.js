@@ -1,11 +1,16 @@
 // 
 // Basic Form-Company NAICS Code - Create.js 
 // 
-$(document).ready(function ()
-{
+var _reload = false;
+var _count = 0;
+
+$(document).ready(function () {
     debugger;
 
     page_setup();
+
+    var cid_naicscode_label = tdg.error_message.message("cid_naicscode"); // NAICS Code
+    sessionStorage.setItem("cid_naicscode_label", cid_naicscode_label);
 
     // hide controls 
     tdg.c.control_hide("cid_naicscode", true);
@@ -19,6 +24,17 @@ $(document).ready(function ()
     // clear form 
     $("#cid_naicscode").attr("value", null);
     $("#cid_naicscode_name").attr("value", null);
+});
+
+$(window).unload(function () {
+    debugger;
+    if (_reload) {
+        var wp = window.parent;
+        try {
+            //wp.form_refresh();
+            wp.location.reload()
+        } catch (e) { }
+    }
 });
 
 function page_setup() {
@@ -57,8 +73,7 @@ if (window.jQuery) {
 }
 
 // call back from tdg.c 
-function btn_save_new_onclick()
-{
+function btn_save_new_onclick() {
     var value = false;
 
     tdg.c.error_message_clear();
@@ -83,8 +98,7 @@ function btn_save_new_onclick()
     cid_companynaicscode_insert(account_id, cid_naicscode, contact_id);
 }
 
-function cid_companynaicscode_insert(account_id, cid_naicscode, contact_id)
-{
+function cid_companynaicscode_insert(account_id, cid_naicscode, contact_id) {
     debugger;
     var data = {
         "cid_Company@odata.bind": "/accounts(" + account_id + ")",
@@ -94,14 +108,12 @@ function cid_companynaicscode_insert(account_id, cid_naicscode, contact_id)
     tdg.webapi.create("cid_companynaicscodes", data, success_cb, error_cb);
 }
 
-function form_clear()
-{
+function form_clear() {
     debugger;
     //$("#cid_naicscode").attr("value", null); 
     //$("#cid_naicscode_name").attr("value", null); 
 
-    try
-    {
+    try {
         var f = document.getElementById("WebResource_naicscode");
         var c = f.contentWindow; c.clear_field();
     } catch (e) { }
@@ -110,11 +122,15 @@ function form_clear()
 function success_cb() {
     debugger;
 
+    _count += 1;
     msg = tdg.error_message.message("m000005"); // Record added
+    msg = msg.replace("{0}", _count);
     tdg.c.message_panel_set("EntityFormControl", msg);
 
     // clear form
     form_clear();
+
+    _reload = true;
 }
 
 function error_cb(msg) {

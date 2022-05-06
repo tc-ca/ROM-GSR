@@ -4,8 +4,10 @@
 $(document).ready(function () {
 	debugger;
 
-	header_setup();
-
+ 	var urlParams = new URLSearchParams(window.location.search);
+    if (!urlParams.has('in_year') || urlParams.get('in_year') != 'true') {
+		header_setup();
+    }
 	var instructionBtns = $(".instruction-btn");
 
 	if (instructionBtns.length > 0) {

@@ -1,6 +1,9 @@
 //
 // Basic Form-ERAP - Create.js
 //
+var _reload = false;
+var _count = 0;
+
 $(document).ready(function () {
     debugger;
 
@@ -11,6 +14,17 @@ $(document).ready(function () {
 
     // insert button
     tdg.c.btn_save_new_setup();
+});
+
+$(window).unload(function () {
+    debugger;
+    if (_reload) {
+        var wp = window.parent;
+        try {
+            //wp.form_refresh();
+            wp.location.reload()
+        } catch (e) { }
+    }
 });
 
 function page_setup() {
@@ -57,8 +71,8 @@ function btn_save_new_onclick() {
         if (entityFormClientValidate()) {
             if (typeof Page_ClientValidate === 'function') {
                 value = Page_ClientValidate('');
-                }
-        } 
+            }
+        }
     };
 
     debugger;
@@ -93,10 +107,14 @@ function form_clear() {
 function success_cb() {
     debugger;
 
+    _count += 1;
     msg = tdg.error_message.message("m000005"); // Record added
+    msg = msg.replace("{0}", _count);
     tdg.c.message_panel_set("EntityFormControl", msg);
 
     form_clear();
+
+    _reload = true;
 }
 
 function error_cb(msg) {

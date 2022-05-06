@@ -4,6 +4,9 @@
 $(document).ready(function () {
 	debugger;
 	subgrid_language();
+
+	var cid_naicscode_label = tdg.error_message.message("cid_naicscode"); // NAICS Code
+	sessionStorage.setItem("cid_naicscode_label", cid_naicscode_label);
 });
 
 function subgrid_language() {
@@ -30,7 +33,7 @@ function subgrid_language() {
 					$(tdElement).text(text);
 				}
 			}
-        }
+		}
 
 		debugger;
 

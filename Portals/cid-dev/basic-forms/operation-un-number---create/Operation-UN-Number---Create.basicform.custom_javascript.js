@@ -8,6 +8,9 @@ $(document).ready(function () {
 
     page_setup();
 
+    var tdg_unnumberid_label = tdg.error_message.message("tdg_unnumberid"); // UN Number
+    sessionStorage.setItem("tdg_unnumberid_label", tdg_unnumberid_label);
+
     // hide controls
     tdg.c.control_hide("ovs_unnumber", true);
 
@@ -22,7 +25,7 @@ $(document).ready(function () {
     //when the page is done loading, disable autocomplete on all inputs[text]
     $('input[type="text"]').attr('autocomplete', 'off');
 
-    btn_save_new_setup();
+    tdg.c.btn_save_new_setup();
 });
 
 $(window).unload(function () {
@@ -85,32 +88,6 @@ if (window.jQuery) {
     }(window.jQuery));
 }
 
-function btn_save_new_setup() {
-    //debugger;
-
-    var button = $('<input type="button" name="btn_save_new" id="btn_save_new" />');
-    $("#InsertButton").after(button);
-
-    var button1 = $("#InsertButton");
-    button1.prop("value", "Submit and Close");
-    var className = button1[0].className
-    var fontSize = button1.css("fontSize");
-    var color = button1.css("color");
-    var background_color = button1.css("background-color");
-
-    var button2 = $("#btn_save_new");
-    button2.prop("value", "Submit and Add Another");
-    button2[0].className = className;
-    button2.css("fontSize", fontSize);
-    button2.css('color', color);
-    button2.css("background-color", background_color);
-
-    // bind the click event to this custom buttton
-    $("#btn_save_new").bind("click", function () {
-        btn_save_new_onclick();
-    });
-}
-
 function btn_save_new_onclick() {
     tdg.c.error_message_clear();
     if (typeof entityFormClientValidate === 'function') {
@@ -154,8 +131,20 @@ function ovs_operationunnumber_insert(operation_id, ovs_unnumber,
     cid_unitofmeasurement, cid_annualquantityvolume, cid_annualnumberofshipment,
     contact_id) {
     debugger;
+
+    cid_annualquantityvolume = Number.parseFloat(cid_annualquantityvolume);
+    cid_annualnumberofshipment = Number.parseFloat(cid_annualnumberofshipment);
+
+    //var data = {
+    //    "ovs_OperationClass@odata.bind": "/ovs_mocregistrations(" + operation_id + ")",
+    //    "ovs_UNNumber@odata.bind": "/tdg_unnumbers(" + ovs_unnumber + ")",
+    //    "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
+    //    "cid_unitofmeasurement": cid_unitofmeasurement,
+    //    "cid_annualquantityvolume": cid_annualquantityvolume,
+    //    "cid_annualnumberofshipment": cid_annualnumberofshipment
+    //};
     var data = {
-        "ovs_OperationClass@odata.bind": "/ovs_mocregistrations(" + operation_id + ")",
+        "ovs_OperationUNNumber@odata.bind": "/ovs_mocregistrations(" + operation_id + ")",
         "ovs_UNNumber@odata.bind": "/tdg_unnumbers(" + ovs_unnumber + ")",
         "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
         "cid_unitofmeasurement": cid_unitofmeasurement,
@@ -180,7 +169,7 @@ function form_clear() {
 function success_cb() {
     debugger;
 
-    msg = tdg.error_message.message("m000014"); // Record added
+    msg = tdg.error_message.message("m000005"); // Record added
     tdg.c.message_panel_set("EntityFormControl", msg);
 
     // clear form 

@@ -5,15 +5,21 @@ $(document).ready(function () {
 			var recId = trElement.attr('data-id');
 			var firstTdElement = trElement.find('td:first');
 			var disabledRow = false;
+			
+			var detailsLink = firstTdElement.find("a:first");
 
 			trElement.find("td").each(function () {
 				var tdElement = $(this);
+
 				if (tdElement.attr('data-attribute') == 'cid_issiteattested') {
 					if (tdElement.attr('data-value') == 'true') {
 						if ($("#spn_" + recId).length <= 0) {
-							firstTdElement.prepend("<span id='spn_' + recId +' class='glyphicon glyphicon-ok' style='color: #3c763d;'></span>&nbsp;&nbsp;&nbsp;");
+							firstTdElement.prepend("<span id='spn_" + recId + "' class='glyphicon glyphicon-ok' style='color: #3c763d;'></span>&nbsp;&nbsp;&nbsp;");
 							trElement.css("background-color", "#dff0d8");
 						}
+					}
+					else{
+						detailsLink.attr("href", "/SiteRegistrationWizard/?id=" + recId + "&in_year=true");
 					}
 				}
 

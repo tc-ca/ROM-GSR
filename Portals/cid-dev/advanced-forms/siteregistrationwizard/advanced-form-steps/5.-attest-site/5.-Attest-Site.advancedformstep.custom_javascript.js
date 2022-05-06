@@ -1,51 +1,61 @@
-$(document).ready(function() {
+//
+// SiteRegistrationWizard-Attest Site.js
+//
+$(document).ready(function () {
     $('#PreviousButton').on('click', async function () {
+        var siteId = $("#EntityFormView_EntityID").val();
+
         //window.location.href = "~/en-US/OperationRegistrationWizard";
-        await UpdateOperationDetailsProvided('afe2ea32-1ac5-ec11-a7b5-0022483e1d65', false);
+        var operationId = await GetHOTIOperation(siteId);
+
+        await UpdateOperationDetailsProvided(operationId, false);
     });
 
     $('table').each(function () {
         var selectedTable = $(this);
-        if(selectedTable.attr('data-name').includes('_readonly')){
+        if (selectedTable.attr('data-name').includes('_readonly')) {
             selectedTable.find("tr").each(function () {
-		        $(this).css("background-color", "#F0F0F0");
+                $(this).css("background-color", "#F0F0F0");
             });
         }
-	});
+    });
 
     if ($("#printSummary").length <= 0)
-       $("#NextButton").parent().after("<div id='printSummary' role='group' class='btn-group entity-action-button'><input type='button' name='PrintButton' value='Print Summary' onclick='window.print();' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'></div>");
+        var msg = tdg.error_message.message("m000007"); // Print Summary
+    $("#NextButton").parent().after("<div id='printSummary' role='group' class='btn-group entity-action-button'><input type='button' name='PrintButton' value='" + msg + "' onclick='window.print();' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'></div>");
 });
 
 if (window.jQuery) {
- (function ($) {
-    webFormClientValidate = function() {
-        var validation = true;
-        var siteId = $("#EntityFormView_EntityID").val();
-        var errorMessage = "";
-       
-		//Classes validation
-		if(!SiteHasOperationClasses(null, siteId)){
-            errorMessage = errorMessage + "You cannot proceed before adding classes(s).</br>";
-            validation = false;
-        }
+    (function ($) {
+        webFormClientValidate = function () {
+            var validation = true;
+            var siteId = $("#EntityFormView_EntityID").val();
+            var errorMessage = "";
 
-		//UN Numbers validation
-        var isExtendedSite = $("#cid_requirementlevel").find(":selected").text();
+            //Classes validation
+            if (!SiteHasOperationClasses(null, siteId)) {
+                var msg = tdg.error_message.message("m000016"); // You cannot proceed before adding class(es).
+                errorMessage = errorMessage + msg + "</br>";
+                validation = false;
+            }
 
-		if(IsExtendedSite == 'Basic' && !SiteHasOperationUNNumbers(null, siteId)){
-            errorMessage = errorMessage + "You cannot proceed before adding UN Number(s).</br>";
-            validation = false;
-        }
+            //UN Numbers validation
+            var isExtendedSite = $("#cid_requirementlevel").find(":selected").text();
 
-        if (!validation){
-            $('#ValidationSummaryEntityFormView div').remove();
-            var validationSection = $('#ValidationSummaryEntityFormView');
-            validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
-            validationSection.show();
-			$('#alertMessages').focus();
+            if (IsExtendedSite == 'Basic' && !SiteHasOperationUNNumbers(null, siteId)) {
+                var msg = tdg.error_message.message("m000017"); // UN ??
+                errorMessage = errorMessage + msg + "</br>";
+                validation = false;
+            }
+
+            if (!validation) {
+                $('#ValidationSummaryEntityFormView div').remove();
+                var validationSection = $('#ValidationSummaryEntityFormView');
+                validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
+                validationSection.show();
+                $('#alertMessages').focus();
+            }
+            return validation;
         }
-		return validation;
-    }
-   }(window.jQuery));
+    }(window.jQuery));
 }

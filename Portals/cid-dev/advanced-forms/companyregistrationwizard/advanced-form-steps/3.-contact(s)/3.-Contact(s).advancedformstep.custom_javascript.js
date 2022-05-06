@@ -5,7 +5,7 @@ $(document).ready(function () {
     debugger;
     sessionStorage.setItem("step_start", 2);
 
-    //root_erap_setup();
+    root_erap_setup();
 });
 
 if (window.jQuery) {
@@ -16,7 +16,8 @@ if (window.jQuery) {
             var companyId = $("#EntityFormView_EntityID").val();
             var filter = "parentcustomerid/Id eq (guid'" + companyId + "')";
 
-            var data = ExecuteQuery("Validation_CompanyPrimarySecondaryContacts", filter);
+            //var data = ExecuteQuery("Validation_CompanyPrimarySecondaryContacts", filter);
+            var data = tdg.c.OData_List("contact", filter);
 
             if (data != null) {
                 var primaryFound = false;

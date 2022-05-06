@@ -41,7 +41,7 @@ $(document).ready(function () {
 				if (tdElement.attr('data-attribute') == 'cid_issiteattested') {
 					if (tdElement.attr('data-value') == 'true') {
 						if ($("#spn_" + recId).length <= 0) {
-							firstTdElement.prepend("<span id='spn_' + recId +' class='glyphicon glyphicon-ok' style='color: #3c763d;'></span>&nbsp;&nbsp;&nbsp;");
+							firstTdElement.prepend("<span id='spn_" + recId + "' class='glyphicon glyphicon-ok' style='color: #3c763d;'></span>&nbsp;&nbsp;&nbsp;");
 							trElement.css("background-color", "#dff0d8");
 						}
 					}

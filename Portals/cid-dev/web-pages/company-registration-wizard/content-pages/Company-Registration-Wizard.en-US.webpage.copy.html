@@ -1,3 +1,11 @@
-{% include 'RegistrationWizardsWebTemplate'%}<br>
-{% webform name: 'CompanyRegistrationWizard' %}{% include 'entity_list' key: '' %}
-
+{% assign parentCompanyId = user.parentcustomerid.id %}
+{% if parentCompanyId %}
+{% assign company = entities['account'][parentCompanyId] %}
+{{ company.cid_cidcompanystatus }}
+{% if company.cid_cidcompanystatus  and company.cid_cidcompanystatus.value == 100000005 %}
+<script>
+  window.location.replace('/company_dashboard');
+</script>
+{% endif %}
+{% endif %}
+{% include 'RegistrationWizardsWebTemplate'%}<br>{% webform name: 'CompanyRegistrationWizard' %}{% include 'entity_list' key: '' %}
