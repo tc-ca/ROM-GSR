@@ -48,8 +48,30 @@
     }
 </style>
 {% assign parentid = user.parentcustomerid.id %}
+
 {% assign contactid = user.id %}
 {% assign languagecode = website.selected_language.code %}
+{% fetchxml parentaccountrecord %}
+<fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+  <entity name="account">
+    <attribute name="name" />
+    <attribute name="primarycontactid" />
+    <attribute name="telephone1" />
+    <attribute name="accountid" />
+    <attribute name="cid_cidcompanystatus" />
+    <order attribute="name" descending="false" />
+    <filter type="and">
+      <condition attribute="accountid" operator="eq"  value="{{parentid}}" />
+    </filter>
+  </entity>
+</fetch>
+{% endfetchxml %}
+{% for acc_record in parentaccountrecord.results.entities %}
+
+
+{% assign companystatus = acc_record['cid_cidcompanystatus'].value %}
+{%endfor%}
+
 {% fetchxml environment_settings %}
 <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
     <entity name="qm_environmentsettings">
@@ -105,17 +127,18 @@
 <script>
   $(document).ready( function() {
 
-
       //add new submit button
       $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value={{upload}} class='submit-btn btn btn-primary form-action-container-left' />");
      
       $("#InsertButton").css("display", "none");
     var langcode = '{{languagecode}}'  ;
    
+   //work with attach file transalation
+   //can not use out of the box without modification the button lable will not be transalated depens only on OS system language
 var AttachButton = document.getElementById('AttachFile');
 AttachButton.classList.add("inputfile");
 //$("#AttachFile").before('<button style="display:block;width:120px; height:30px;" onclick="document.getElementById('AttachFile').click()">Your text here</button>');
-$("#AttachFile").before('<input id="uploadFile" placeholder="File Name here" disabled="disabled" /><label class="btn btn-primary btn-xs" for="AttachFile">{{choosefile}}</label>');
+$("#AttachFile").before('<label class="btn-primary btn-sm" for="AttachFile">{{choosefile}}</label><input id="uploadFile" placeholder="File Name here" disabled="disabled"  />');
 document.getElementById("AttachFile").onchange = function () {
     document.getElementById("uploadFile").value = this.value;
 };
@@ -127,7 +150,8 @@ $('#AttachFile').value("value");
 $('#AttachFile').label("lable");
 */
 
-    var BulkActivitytype = '100000001' ;
+    var BulkActivitytype ='{{companystatus}}';
+    // '100000001' ;
     //intial validation will be executed if this is a redirect call
       call_Inital_validation(langcode , BulkActivitytype);
 

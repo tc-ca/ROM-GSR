@@ -71,6 +71,7 @@ function printSummary() {
 if (window.jQuery) {
     (function ($) {
         webFormClientValidate = function () {
+
             debugger;
             var validation = false;
             var companyId = $("#EntityFormView_EntityID").val();

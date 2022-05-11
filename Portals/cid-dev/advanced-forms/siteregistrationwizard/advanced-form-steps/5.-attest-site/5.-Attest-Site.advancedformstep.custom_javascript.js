@@ -1,14 +1,18 @@
 //
 // SiteRegistrationWizard-Attest Site.js
 //
+
+async function OperationDetailsProvided(operationId, flag) {
+    await UpdateOperationDetailsProvided(operationId, flag);
+}
+
 $(document).ready(function () {
-    $('#PreviousButton').on('click', async function () {
+    $('#PreviousButton').on('click', function () {
         var siteId = $("#EntityFormView_EntityID").val();
+        
+        var operationId = GetHOTIOperation(siteId);
 
-        //window.location.href = "~/en-US/OperationRegistrationWizard";
-        var operationId = await GetHOTIOperation(siteId);
-
-        await UpdateOperationDetailsProvided(operationId, false);
+        OperationDetailsProvided(operationId, false);
     });
 
     $('table').each(function () {

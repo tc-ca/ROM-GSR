@@ -134,6 +134,20 @@ function IsExtendedSite(operationId, siteId){
     }
 }
 
+function GetHOTIOperation(siteId){
+    var operationId = "";
+
+    if(siteId){
+        var filter = "ovs_siteid/Id eq (guid'" + siteId + "')";
+        var data = ExecuteQuery("HOTIOperation", filter);
+
+        if(data.length > 0)
+            operationId = data[0]['ovs_mocregistrationid'];
+    }
+
+    return operationId;
+}
+
 function Validate(recordId, fieldName, list){
     var filter = fieldName + "/Id eq (guid'" + recordId + "')";
 	var data = ExecuteQuery(list, filter);
@@ -147,6 +161,7 @@ function Validate(recordId, fieldName, list){
 function ExecuteQuery(list, filter){
     var url = list + "?$filter=" + filter;
     var oDataUrl = "~/_odata/" + url;
+
     var response = null;
 
     $.ajax({
@@ -160,43 +175,43 @@ function ExecuteQuery(list, filter){
     return response;
 }
 
-function GetHOTIOperation(siteId)
-{
-    var operationId1 = "";
-    var operationId2 = "";
-
-    var FetchXMLQuery = " <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' > " +
-                          "<entity name='ovs_mocregistration' >" +
-                              "<attribute name='ovs_mocregistrationid' />" +
-                              "<attribute name='ovs_operationtype' />" +
-                              "<attribute name='ovs_siteid' />" +
-                          "<filter type='and' >"+
-                              "<condition attribute='ovs_operationtype' operator='eq' value='918640038' />" +
-                              "<condition attribute='ovs_siteid' operator='eq' value='7a58cde6-dacb-ec11-a81b-000d3a09e698' />" +
-                          "</filter>" +
-                          "</entity>" +
-                        "</fetch>";
-        webapi.safeAjax({
-            type: "GET",
-            url: "/_api/ovs_mocregistrations?" +
-            "fetchXml=" +encodeURIComponent(FetchXMLQuery),
-            contentType: "application/json",
-            success: function (res, status, xhr)  {
-                alert("success");
-                operationId1 = res.value[0]['ovs_mocregistrationid'];
-                operationId2 =   xhr.getResponseHeader('ovs_mocregistrationid');
-            }
-            error: function (request, message, error) {
-                alert(error);
-     }
-        });
-    //return operationId1;
-  }
+//function GetHOTIOperation(siteId)
+//{
+//    var operationId = "";
+//    var FetchXMLQuery = " <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' > " +
+//                          "<entity name='ovs_mocregistration' >" +
+//                              "<attribute name='ovs_mocregistrationid' />" +
+//                              "<attribute name='ovs_operationtype' />" +
+//                              "<attribute name='ovs_siteid' />" +
+//                         "<filter type='and' >"+
+//                              "<condition attribute='ovs_operationtype' operator='eq' value='918640038' />" +
+//                              "<condition attribute='ovs_siteid' operator='eq' value='" + siteId + "' />" +
+//                          "</filter>" +
+//                          "</entity>" +
+//                       "</fetch>";
+//                       alert(FetchXMLQuery);
+//                       //'bb8174e4-dacb-ec11-a7b5-0022483cee90'
+//    webapi.safeAjax({
+//        type: "GET",
+//        contentType: "application/json; charset=utf-8",
+//        datatype: "json",
+//        //async: true,
+//        url: "/_api/ovs_mocregistrations?fetchXml=" + encodeURIComponent(FetchXMLQuery),
+//        success: function (data, textStatus, xhr) {
+//            operationId = data.value[0]['ovs_mocregistrationid'];
+//        },
+//        error: function (xhr, textStatus, errorThrown) {
+//            alert("Fail: " + errorThrown);
+//        }
+//    });               
+//    return operationId; //'bb8174e4-dacb-ec11-a7b5-0022483cee90';
+//}
 
 
 function UpdateOperationDetailsProvided(operationId, value){
     webapi.safeAjax({
      type: "PATCH",
+     //async: true,
      url: "/_api/ovs_mocregistrations(" + operationId + ")",
      contentType: "application/json",
      data: JSON.stringify({
@@ -205,10 +220,29 @@ function UpdateOperationDetailsProvided(operationId, value){
      success: function (res) {
      },
      error: function (request, message, error) {
-        //alert(error);
+        alert(error);
      }
    });
 }
+
+//function UpdateHOTIOperationDetailsProvided(siteId, value){
+//    var operationId = GetHOTIOperation(siteId);
+//alert(operationId);
+//    webapi.safeAjax({
+//     type: "PATCH",
+//     url: "/_api/ovs_mocregistrations(" + operationId + ")",
+//     contentType: "application/json",
+//     data: JSON.stringify({
+//        "cid_operationdetailsprovided": value
+//     }),
+//     success: function (res) {
+//         alert("success");
+//     },
+//     error: function (request, message, error) {
+//        alert(error + message +"X");
+//     }
+//   });
+//}
 
 </script>
 
