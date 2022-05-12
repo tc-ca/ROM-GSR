@@ -1,0 +1,233 @@
+<HTML>
+<HEAD>
+    <TITLE></TITLE>
+    <style>
+        body {
+            background-color: white;
+            display: block;
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+
+        text {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            padding: 6px 12px;
+        }
+
+        label {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            margin: 0px 0px 5px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            display: block;
+            font-size: 14px;
+            line-height: 1.4375;
+            color: #555;
+            border: 1px solid #949494;
+            border-radius: 4px;
+            box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+            font-family: "Noto Sans",sans-serif;
+            padding: 6px 12px;
+            height: auto;
+            max-width: 100%;
+            min-height: 37px;
+            background-image: none;
+            margin-top: 7px;
+            width: 100%;
+        }
+    </style>
+    <!-- Using jquery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+</HEAD>
+<BODY>
+    <script type="text/javascript">
+        function form_clear() {
+            parent.$("#ovs_primaryclass_lk").attr("value", null);
+            parent.$("#ovs_primaryclass_lk_name").attr("value", null);
+        }
+
+        function item_selected(text, id) {
+            debugger;
+
+            var index1 = text.indexOf(" - ");
+            text = text.substr(0, index1);
+            parent.$("#ovs_primaryclass_lk").attr("value", id);
+            parent.$("#ovs_primaryclass_lk_name").attr("value", text);
+            parent.$("#ovs_primaryclass_lk_entityname").attr("value", 'ovs_primaryclass_group');
+       }
+
+        // How to call this from web portal page             
+        // var f = document.getElementById("WebResource_naicscode");
+        // var c = f.contentWindow;
+        // c.clear_field();
+        function clear_field() {
+            debugger;
+            document.getElementById("ovs_primaryclass_lk").value = "";
+
+            form_clear();
+        }
+
+        function search() {
+            form_clear();
+
+            var ovs_primaryclass_lk = document.getElementById("ovs_primaryclass_lk").value;
+            if (ovs_primaryclass_lk.length < 2) return;
+
+            debugger;
+
+            var selected_language = sessionStorage.getItem("selected_language");
+            selected_language = (selected_language == null ? "en-US" : selected_language);
+            var ovs_primaryclass_lk = document.getElementById("ovs_primaryclass_lk").value;
+            //var filter = "substringof('" + ovs_primaryclass_lk + "', ovs_name) or substringof('" + ovs_primaryclass_lk + "', ovs_primaryclass-ovs_class_en)";
+            var filter = "substringof('" + ovs_primaryclass_lk + "', ovs_name)";
+            var items = common.OData_List("ovs_primaryclass_group", filter);
+
+            var ovs_primaryclass_lk_list = document.getElementById('ovs_primaryclass_lk_list');
+
+            // remove options
+            $('#ovs_primaryclass_lk_list').empty();
+
+            var ovs_primaryclass_lk_list_id = "";
+            var ovs_name = "";
+            for (i = 0; i < items.length; i++) {
+                var item = items[i];
+                if (ovs_name != item.ovs_name) {
+                    ovs_name = item.ovs_name;
+                    var value = item.ovs_primaryclass_groupid;
+                    //var text = ovs_name + ' - ' +
+                    //    common.text_language(item["ovs_primaryclass-ovs_class_en"], selected_language);
+                    var text = ovs_name + ' - ' + item["ovs_primaryclass-ovs_class_en"];
+
+                    ovs_primaryclass_lk_list_id += value + ";";
+
+                    const option = document.createElement('option');
+                    option.value = text;
+                    ovs_primaryclass_lk_list.appendChild(option);
+                }
+            }
+            document.getElementById('ovs_primaryclass_lk_list_id').value = ovs_primaryclass_lk_list_id;
+        }
+
+        function onInput(e) {
+            //debugger;
+
+            var input = e.target;
+            var val = input.value;
+            var list = input.getAttribute('list');
+            var options = document.getElementById(list).childNodes;
+            var found = false;
+            var index = 0;
+            var text = "";
+
+            for (var i = 0; i < options.length; i++) {
+                var current = options[i].value;
+                if (current === val) {
+                    found = true;
+                    index = i;
+                    text = current;
+                    break;
+                }
+            }
+
+            if (found) {
+                var id = $('#ovs_primaryclass_lk_list_id').val();
+                var list = id.split(";");
+                id = list[index];
+
+                try {
+                    debugger;
+
+                    // transfer control back to parent form
+                    parent.ovs_primaryclass_group_selected(text, id);
+
+                } catch (e) { }
+            }
+            else {
+                search();
+            }
+        }
+    </script>
+
+    <label for="ovs_primaryclass_lk" class="field-label">UN Number</label>
+    <span id="ovs_primaryclass_lk_required" style="color: red;font-weight: bold"> *</span>
+    <br>
+    <input list="ovs_primaryclass_lk_list" id="ovs_primaryclass_lk" class="text form-control" />
+    <br>
+    <datalist id="ovs_primaryclass_lk_list">
+    </datalist>
+    <br />
+
+    <input type="text" id="ovs_primaryclass_lk_list_id" hidden />
+    <script>
+
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            debugger;
+            var ovs_primaryclass_lk = sessionStorage.getItem("ovs_primaryclass_lk");
+            document.getElementById("ovs_primaryclass_lk").value = ovs_primaryclass_lk;
+
+            document.getElementById("ovs_primaryclass_lk").setAttribute("autocomplete", "off");
+
+            document.querySelector('input[list="ovs_primaryclass_lk_list"]').addEventListener('input', onInput);
+
+            // language
+            try {
+                var ovs_primaryclass_lk_label = sessionStorage.getItem("ovs_primaryclass_lk_label");
+
+                var selected_language = sessionStorage.getItem("selected_language");
+                var value = (selected_language == "en-US" ? "Class/Division/Group" : "Class/Division/Group");
+                $("#ovs_primaryclass_lk")[0].labels[0].innerHTML = value;    // ovs_primaryclass_lk_label;
+            } catch (e) { }
+        })
+
+    </script>
+
+    <script>
+        // tdgcore_common.js
+
+        if (typeof (common) == "undefined") {
+            common = {
+                text_language: function (text, language) {
+                    //var selected_language = '{{website.selected_language.code}}';
+                    //sessionStorage.setItem("selected_language", selected_language);
+
+                    var value = "";
+                    var index1 = text.indexOf("::");
+                    if (language == "en-US") {
+                        value = text.substr(0, index1);
+                    }
+                    else {
+                        value = text.substr(index1+2);
+                    }
+                    return value;
+                },
+
+                // odata
+                OData_List: function (entity, filter) {
+                    var url = entity + "?$filter=" + filter;
+                    var oDataUrl = "~/_odata/" + url;
+                    //var oDataUrl = "https://rd-tdgcore-dev.powerappsportals.com/_odata/" + url;
+                    var response = null;
+
+                    $.ajax({
+                        type: "GET",
+                        url: oDataUrl,
+                        dataType: "json",
+                        async: false
+                    }).done(function (json) {
+                        response = json.value;
+                    });
+                    return response;
+                }
+            }
+        }
+    </script>
+</BODY>
+</HTML>
