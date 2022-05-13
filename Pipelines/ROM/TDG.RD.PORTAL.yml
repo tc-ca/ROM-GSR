@@ -42,7 +42,7 @@ stages:
             --applicationId ${env:PowerPlatformAadApplicationId} `
             --clientSecret ${env:PowerPlatformAadApplicationSecret}
           pac auth select --name PORTAL_DEV
-          pac paportal download --path $(Build.ArtifactStagingDirectory)\Portal --webSiteId ${env:PowerPlatformDevPortalWebSiteId}
+          pac paportal download --path $(Build.ArtifactStagingDirectory) --webSiteId ${env:PowerPlatformDevPortalWebSiteId}
     - task: PowerShell@2
       displayName: Push code to GitHub
       env:
@@ -50,7 +50,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\Portal\* -Destination $(Build.SourcesDirectory)\Portals
+          Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\* -Destination $(Build.SourcesDirectory)\Portals
           git config user.email "nepasrepondre-noreply@tc.gc.ca"
           git config user.name "tc-buildbot"
           git checkout development
