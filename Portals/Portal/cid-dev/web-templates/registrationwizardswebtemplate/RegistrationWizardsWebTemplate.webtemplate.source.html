@@ -1,0 +1,255 @@
+<script>
+(function(webapi, $){
+		function safeAjax(ajaxOptions) {
+			var deferredAjax = $.Deferred();
+	
+			shell.getTokenDeferred().done(function (token) {
+				// add headers for AJAX
+				if (!ajaxOptions.headers) {
+					$.extend(ajaxOptions, {
+						headers: {
+							"__RequestVerificationToken": token
+						}
+					}); 
+				} else {
+					ajaxOptions.headers["__RequestVerificationToken"] = token;
+				}
+				$.ajax(ajaxOptions)
+					.done(function(data, textStatus, jqXHR) {
+						validateLoginSession(data, textStatus, jqXHR, deferredAjax.resolve);
+					}).fail(deferredAjax.reject); //AJAX
+			}).fail(function () {
+				deferredAjax.rejectWith(this, arguments); // on token failure pass the token AJAX and args
+			});
+	
+			return deferredAjax.promise();	
+		}
+		webapi.safeAjax = safeAjax;
+	})(window.webapi = window.webapi || {}, jQuery)
+
+function CompanyHasNAICSCodes(companyId){
+    return Validate(companyId, 'cid_company', 'Validation_CompanyNAICSCodes');
+}
+
+function CompanyHasERAPs(companyId){
+    return Validate(companyId, 'cid_company', 'Validation_CompanyERAPs');
+}
+
+function SiteHasOperationClasses(operationId, siteId){
+    if(operationId != null)
+        return Validate(operationId, 'ovs_operationclass', 'Validation_SiteClasses');
+    else if(siteId != null)
+        return Validate(siteId, 'cid_site', 'Validation_SiteClasses');
+    else
+        return false;
+}
+
+function SiteHasOperationUNNumbers(operationId, siteId){
+    if(operationId != null)
+        return Validate(operationId, 'ovs_operationunnumber', 'Validation_SiteUNNumbers');
+    else if(siteId != null)
+        return Validate(siteId, 'cid_site', 'Validation_SiteUNNumbers');
+    else
+        return false;
+}
+
+ 
+ function SiteHasModesOfTransportation(operationId, siteId){
+    var FetchXMLQuery = " <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' > " +
+                          "<entity name='ovs_mocregistration_ovs_modes'>" +
+                              "<attribute name='ovs_mocregistrationid' />" +
+                              "<filter type='and' >"+
+                                  "<condition attribute='ovs_mocregistrationid' operator='eq' value=" + operationId + " />" +
+                              "</filter>" +
+                          "</entity>" +
+                        "</fetch>";
+						
+webapi.safeAjax({
+type: "GET",
+
+contentType: "application/json; charset=utf-8",
+
+datatype: "json",
+
+//async: false,
+
+url: "https://tdgcore-dev-tcd365.crm3.dynamics.com/api/data/v9.0/ovs_mocregistration_ovs_modesset?fetchXml=" + encodeURIComponent(FetchXMLQuery),
+
+beforeSend: function (xhr) {
+
+//Specifying this header ensures that the results will be returned as JSON.
+
+xhr.setRequestHeader("Accept", "application/json");
+
+xhr.setRequestHeader("Content-Type", "application/json; odata.metadata=minimal");
+
+xhr.setRequestHeader("OData-MaxVersion", "4.0");
+
+xhr.setRequestHeader("OData-Version", "4.0");
+
+xhr.setRequestHeader("Prefer", "odata.include-annotations=*");
+
+},
+
+success: function (data, textStatus, xhr) {
+
+ alert("Success");
+
+},
+
+error: function (xhr, textStatus, errorThrown) {
+
+alert("Fail");
+alert(textStatus);
+alert(errorThrown);
+
+}
+
+    });               
+}
+
+function XOperationDetailsProvided(operationId){
+    return Validate(operationId, 'ovs_siteid', 'Validation_OperationDetailsList');
+}
+
+function IsExtendedSite(operationId, siteId){
+    //if(siteId){
+    //    var filter = "accountid eq guid'" + siteId + "'";
+    //    var data = ExecuteQuery("Validation_OperationDetailsList", filter);
+
+    //    if(data.length > 0)
+    //        return data[0]['cid_requirementlevel'];
+    //    else
+    //        return false;
+    //}
+
+    if(operationId){
+        var filter = "ovs_mocregistrationid eq guid'" + operationId + "'";
+        var data = ExecuteQuery("Validation_OperationDetailsList", filter);
+
+        if(data.length > 0)
+            return data[0]['cid_extendedsite'];
+        else
+            return false;
+    }
+}
+
+function GetHOTIOperation(siteId){
+    var operationId = "";
+
+    if(siteId){
+        var filter = "ovs_siteid/Id eq (guid'" + siteId + "')";
+        var data = ExecuteQuery("HOTIOperation", filter);
+
+        if(data.length > 0)
+            operationId = data[0]['ovs_mocregistrationid'];
+    }
+
+    return operationId;
+}
+
+function Validate(recordId, fieldName, list){
+    var filter = fieldName + "/Id eq (guid'" + recordId + "')";
+	var data = ExecuteQuery(list, filter);
+
+    if(data != null && data.length > 0)
+        return true;
+    else
+        return false;
+}
+
+function ExecuteQuery(list, filter){
+    var url = list + "?$filter=" + filter;
+    var oDataUrl = "~/_odata/" + url;
+
+    var response = null;
+
+    $.ajax({
+        type: "GET",
+        url: oDataUrl,
+        dataType: "json",
+        async: false
+    }).done(function (json) {
+        response = json.value;
+    });
+    return response;
+}
+
+//function GetHOTIOperation(siteId)
+//{
+//    var operationId = "";
+//    var FetchXMLQuery = " <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' > " +
+//                          "<entity name='ovs_mocregistration' >" +
+//                              "<attribute name='ovs_mocregistrationid' />" +
+//                              "<attribute name='ovs_operationtype' />" +
+//                              "<attribute name='ovs_siteid' />" +
+//                         "<filter type='and' >"+
+//                              "<condition attribute='ovs_operationtype' operator='eq' value='918640038' />" +
+//                              "<condition attribute='ovs_siteid' operator='eq' value='" + siteId + "' />" +
+//                          "</filter>" +
+//                          "</entity>" +
+//                       "</fetch>";
+//                       alert(FetchXMLQuery);
+//                       //'bb8174e4-dacb-ec11-a7b5-0022483cee90'
+//    webapi.safeAjax({
+//        type: "GET",
+//        contentType: "application/json; charset=utf-8",
+//        datatype: "json",
+//        //async: true,
+//        url: "/_api/ovs_mocregistrations?fetchXml=" + encodeURIComponent(FetchXMLQuery),
+//        success: function (data, textStatus, xhr) {
+//            operationId = data.value[0]['ovs_mocregistrationid'];
+//        },
+//        error: function (xhr, textStatus, errorThrown) {
+//            alert("Fail: " + errorThrown);
+//        }
+//    });               
+//    return operationId; //'bb8174e4-dacb-ec11-a7b5-0022483cee90';
+//}
+
+
+function UpdateOperationDetailsProvided(operationId, value){
+    webapi.safeAjax({
+     type: "PATCH",
+     //async: true,
+     url: "/_api/ovs_mocregistrations(" + operationId + ")",
+     contentType: "application/json",
+     data: JSON.stringify({
+        "cid_operationdetailsprovided": value
+     }),
+     success: function (res) {
+     },
+     error: function (request, message, error) {
+        alert(error);
+     }
+   });
+}
+
+//function UpdateHOTIOperationDetailsProvided(siteId, value){
+//    var operationId = GetHOTIOperation(siteId);
+//alert(operationId);
+//    webapi.safeAjax({
+//     type: "PATCH",
+//     url: "/_api/ovs_mocregistrations(" + operationId + ")",
+//     contentType: "application/json",
+//     data: JSON.stringify({
+//        "cid_operationdetailsprovided": value
+//     }),
+//     success: function (res) {
+//         alert("success");
+//     },
+//     error: function (request, message, error) {
+//        alert(error + message +"X");
+//     }
+//   });
+//}
+
+</script>
+
+<script type="text/javascript" src="~/tdgcore_common.js" ></script>
+<script type="text/javascript" src="~/tdgcore_message.js" ></script>
+
+<script>
+	var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+</script>

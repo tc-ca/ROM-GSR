@@ -1,0 +1,680 @@
+
+<style>
+.inputfile {
+  /* visibility: hidden etc. wont work */
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+.inputfile:focus + label {
+  /* keyboard navigation */
+  outline: 1px dotted #000;
+  outline: -webkit-focus-ring-color auto 5px;
+}
+.inputfile + label * {
+  pointer-events: none;
+}
+    #processingMsg {
+       -width: 300px;
+        -text-align: center;
+        -padding: 6px 10px;
+        -z-index: 9999;
+        -top: 15%;
+        -left: 40%;
+        -position: fixed;
+        -webkit-border-radius: 0 0 2px 2px;
+        -border-radius: 0 0 2px 2px;
+        -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        -box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        display: none;
+    }
+
+    #infoMsg {
+        -width: 300px;
+        -text-align: center;
+       -padding: 6px 10px;
+        -z-index: 9999;
+        -top: 15%;
+        -left: 40%;
+        -position: fixed;
+        -webkit-border-radius: 0 0 2px 2px;
+        -border-radius: 0 0 2px 2px;
+        -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        -box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        display: none;
+    }
+</style>
+{% assign parentid = user.parentcustomerid.id %}
+
+{% assign contactid = user.id %}
+{% assign languagecode = website.selected_language.code %}
+{% fetchxml parentaccountrecord %}
+<fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+  <entity name="account">
+    <attribute name="name" />
+    <attribute name="primarycontactid" />
+    <attribute name="telephone1" />
+    <attribute name="accountid" />
+    <attribute name="cid_cidcompanystatus" />
+    <order attribute="name" descending="false" />
+    <filter type="and">
+      <condition attribute="accountid" operator="eq"  value="{{parentid}}" />
+    </filter>
+  </entity>
+</fetch>
+{% endfetchxml %}
+{% for acc_record in parentaccountrecord.results.entities %}
+
+
+{% assign companystatus = acc_record['cid_cidcompanystatus'].value %}
+{%endfor%}
+
+{% fetchxml environment_settings %}
+<fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+    <entity name="qm_environmentsettings">
+        <attribute name="qm_environmentsettingsid" />
+        <attribute name="qm_name" />
+        <attribute name="createdon" />
+        <attribute name="qm_value" />
+        <order attribute="qm_name" descending="false" />
+        <filter type="and">
+            <condition attribute="qm_name" operator="like" value="%CID[_]%" />
+        </filter>
+    </entity>
+</fetch>
+{% endfetchxml %}
+{% for env_setting in environment_settings.results.entities %}
+{% if {{env_setting.qm_name}}  == 'CID_Upload_Excel_Flow' %}
+{% assign excelload_Flow_URL = env_setting.qm_value %}
+{% endif %}
+{% if {{env_setting.qm_name}}  == 'CID_Bulk_Upload' %}
+{% assign Bulk_flow_URL = env_setting.qm_value %}
+{% endif %}
+
+{% if {{env_setting.qm_name}}  == 'CID_Download_Template_Flow' %}
+{% assign download_flow_URL = env_setting.qm_value %}
+{% endif %}
+
+{% if {{env_setting.qm_name}}  == 'CID_Flow_FileScan' %}
+{% assign Scan_flow_URL = env_setting.qm_value %}
+{% endif %}
+
+
+
+{% if {{env_setting.qm_name}}  == 'CID_Check_User_Response_To_continue' %}
+{% assign CID_Check_User_Response_To_continue = env_setting.qm_value %}
+{% endif %}
+
+{% endfor %}
+{% if {{languagecode}}  == 'fr-FR' %}
+{% assign step1 = 'Étape 1. Téléchargez le modèle Excel personnalisé de téléchargement en masse du site.' %}
+{% assign  step2 = 'Étape 2. Téléchargez le classeur Excel personnalisé de téléchargement en masse du site.' %}
+{% assign upload = 'Télécharger' %}
+{% assign downloadlableEnglishversion = 'Version anglaise' %}
+{% assign downloadlableFrenchVersion = 'Version française' %}
+{% assign choosefile = 'Choisir le fichier'  %}
+{% else %}
+{% assign step1 = 'Step 1. Download the custom Site Bulk Upload Excel template.' %}
+{% assign  step2 = 'Step 2. Upload the completed custom Site Bulk Upload Excel workbook.' %}
+{% assign choosefile = 'Choose File'  %}
+{% assign upload = 'Upload' %}
+{% assign downloadlableEnglishversion = 'English Version' %}
+{% assign downloadlableFrenchVersion = 'French Version' %}
+{% endif %}
+<script>
+  $(document).ready( function() {
+
+      //add new submit button
+      $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value={{upload}} class='submit-btn btn btn-primary form-action-container-left' />");
+     
+      $("#InsertButton").css("display", "none");
+    var langcode = '{{languagecode}}'  ;
+   
+   //work with attach file transalation
+   //can not use out of the box without modification the button lable will not be transalated depens only on OS system language
+var AttachButton = document.getElementById('AttachFile');
+AttachButton.classList.add("inputfile");
+//$("#AttachFile").before('<button style="display:block;width:120px; height:30px;" onclick="document.getElementById('AttachFile').click()">Your text here</button>');
+$("#AttachFile").before('<label class="btn-primary btn-sm" for="AttachFile">{{choosefile}}</label><input id="uploadFile" placeholder="File Name here" disabled="disabled"  />');
+document.getElementById("AttachFile").onchange = function () {
+    document.getElementById("uploadFile").value = this.value;
+};
+
+/*$("#AttachFile").jfilestyle({text: "Find file"});
+
+ $('#AttachFile').text("Your Text to Choose a File Here!");
+$('#AttachFile').value("value");
+$('#AttachFile').label("lable");
+*/
+
+    var BulkActivitytype ='{{companystatus}}';
+    // '100000001' ;
+    //intial validation will be executed if this is a redirect call
+      call_Inital_validation(langcode , BulkActivitytype);
+
+
+
+
+    $(window).load(function() {
+    //call_Inital_validation();
+    });
+   // var pageURL = window.location.href;
+
+$('#btn_attachfile_and_scan').click(function(e)
+{
+
+    if (document.getElementById('AttachFile').files.length == 0)
+   {
+       // call the submit button to show error message
+    $("#InsertButton").click();
+   }
+   else
+   {
+   // $("#mainContent").before("<div class='validation' style='color:black;margin-bottom: 20px;'>File is sent for scaning</div>");
+    var DocumentbodyContents;
+  // Get the name of the selected file
+    var FileName = $('#AttachFile')[0].files[0].name;
+
+    // Get the mime type of the selected file
+    var MimeType = $('#AttachFile')[0].files[0].type;
+
+    // Get the content of the selected file
+    var file = document.getElementById('AttachFile').files[0];
+
+
+
+    if (MimeType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+   {
+
+ // call the submit button to show error message
+    $("#InsertButton").click();
+   }
+
+  else if (file) {
+
+       // $('#processingMsg').css('display', 'block');
+        //$('#processingMsg').text("Workbook is being scanned….");
+
+      //  $('#warnningMessage').css('display', 'block');
+       // $('#warnningMessage').text("Workbook is being scanned….");
+        // Read the file
+
+        var reader = new FileReader();
+
+        reader.readAsDataURL(file);
+
+        // The browser has finished reading the file, we can now do something with it...
+
+        reader.onload = function (e) {
+
+            // The browser has finished reading the file, we can now do something with it...
+
+            DocumentbodyContents = e.target.result;
+
+            // Split the string at the first comma (removing the base64 prefix)
+
+            DocumentbodyContents = DocumentbodyContents.substring(DocumentbodyContents.indexOf(',') + 1);
+
+
+            var Scan_API_URL = '{{Scan_flow_URL}}';
+
+
+          Call_Virsu_Scan_API(Scan_API_URL
+            // ,btoa(c));
+            ,DocumentbodyContents , BulkActivitytype ,FileName,langcode );
+
+
+        // call_Metadefender_Api();
+
+
+
+
+        }//end loader
+    }///end if file
+   }// end check file length
+
+
+//btoa(c) );
+});
+
+
+    $('#linkdownload_English').on('click', async function() {
+
+          //$('#processingMsg').css('display','block');
+       // $('#processingMsg').text(');
+  $('#infoMsg').css('display', 'block');
+               $('#infoMsg').html( '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>');
+
+      var companyid = '{{parentid}}';
+     var flowparamaters =
+        '{ "accountid": "' + companyid + '",'  + '"Language": "English" }';
+
+
+      var req = new XMLHttpRequest();
+
+      var url = '{{download_flow_URL}}';
+      console.log(url);
+
+      req.open("POST", url, true);
+      req.setRequestHeader('Content-Type', 'application/json');
+      req.onreadystatechange = function() {
+        if (this.readyState === 4) {
+          req.onreadystatechange = null;
+          if (this.status === 200) {
+               $('#processingMsg').html("<p> Download complete </p>");
+            var result = this.response;
+           // $('#ll').hide();
+            //https://rd-tdgcore-dev.powerappsportals.com/_entity/annotation/
+            var fileattachementURL = "~/_entity/annotation/" + result;
+            window.location.replace(fileattachementURL);
+             $("#infoMsg").css("display", "none");
+           // $("#processingMsg").hide();
+          } else {
+              $('#processingMsg').text("Download was not completed due to system issue, please contact system support");
+            var result = this.response;
+            alert("Error " + result);
+          }
+        }
+      }
+      req.send(flowparamaters);
+    });
+
+
+ $('#linkdownload_French').on('click', async function() {
+
+          $('#processingMsg').css('display','block');
+        $('#processingMsg').html('<p>System is downloading site info ...</p>');
+
+     // notificationMsg.show("System is downloading site info ...");
+
+     // $('#ll').show();
+      var companyid = '{{parentid}}';
+
+
+      var flowparamaters =
+        '{ "accountid": "' + companyid + '",'  + '"Language": "French" }';
+
+
+      var req = new XMLHttpRequest();
+
+      var url = '{{download_flow_URL}}';
+      console.log(url);
+      //"https://prod-17.canadacentral.logic.azure.com:443/workflows/900f6e70915a4cddbb65b3c79da14581/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LZveFQ8DXIDobQOPzgoc0LgOcSOPpqVcnCEicN1lvEQ";
+      req.open("POST", url, true);
+      req.setRequestHeader('Content-Type', 'application/json');
+      req.onreadystatechange = function() {
+        if (this.readyState === 4) {
+          req.onreadystatechange = null;
+          if (this.status === 200) {
+               $('#processingMsg').text("Download complete");
+            var result = this.response;
+           // $('#ll').hide();
+            //https://rd-tdgcore-dev.powerappsportals.com/_entity/annotation/
+            var fileattachementURL = "~/_entity/annotation/" + result;
+            window.location.replace(fileattachementURL);
+             $("#processingMsg").css("display", "none");
+            $("#processingMsg").hide();
+          } else {
+              $('#processingMsg').text("Download was not completed due to system issue, please contact system support");
+            var result = this.response;
+            alert("Error " + result);
+          }
+        }
+      }
+      req.send(flowparamaters);
+    });
+
+
+
+});//end document ready
+
+
+
+
+function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls , Lang)
+{
+    var useremail = '{{user.emailaddress1}}';
+ var url = '{{CID_Check_User_Response_To_continue}}' ;
+
+  var acupdate =
+  ' { "activityid":"' + activityid  + '", "user_reponse":"' + UserResponse +'", "Log_details": "' +Logdetaisls + '","Lang":"' + Lang+ '"}' ;
+ 
+    
+      var req = new XMLHttpRequest();
+      req.open("POST", url, true);
+      req.setRequestHeader('Content-Type', 'application/json');
+      req.onreadystatechange = function() {
+        if (this.readyState === 4) {
+          req.onreadystatechange = null;
+          if (this.status === 200) {
+             //  $('#processingMsg').text(this.response);
+
+            var result = this.response;
+            var responseMessage ;
+         if (UserResponse == 'yes')
+         {
+             responseMessage  = '<p>The CID system will now begin the second of two sets of validations of the file being uploaded. An email will be sent to your email address of ' + useremail +', indicating the results the second set of validations and the subsequent steps to take. <br><br>' +
+             'At this point you can wait for the notification email and proceed with the next step described from within it. Alternatively, you can leave the Registration process temporarily and the system will return you to the spot where you left off when you return. <br> </p>' 
+            + '<ul> <li>' + useremail +' is the email address from the current user’s profile </li> </ul>';
+
+         }
+         else{
+             responseMessage='<p>Initial request for Bulk Upload is now complete based on an early cancellation. <br>' + 
+'The original request to bulk upload sites is cancelled. Please proceed with the remainder of the Registration process.</p>';
+
+         }
+        
+
+
+
+               $('#infoMsg').css('display', 'block');
+               $('#infoMsg').html( responseMessage);
+            
+
+         }
+         else {
+              $('#processingMsg').text("Error Please Try again Later.");
+            var result = this.response;
+            alert("Error " + result);
+          }
+        }
+      }
+
+      req.send(acupdate);
+
+}
+
+
+function Call_Virsu_Scan_API(url, fileContent, activitytype , excelfilename , language)
+{
+
+var companyid = '{{parentid}}';
+var contactid = '{{contactid}}'
+      $('#infoMsg').css('display', 'block');
+        $('#infoMsg').html("<p> Workbook is being scanned…. </p>");
+
+  var acupdate =
+        '{"FileContent" :"' + fileContent  + '", "CompanyId" : "' + companyid + '" , "ActionedBy" :"' + contactid +  '", "ActivityType" : "'+ activitytype +'" ,"ExcelFileName" : "' + excelfilename + '" , "Lang" : "' + language + '" }';
+
+
+      var req = new XMLHttpRequest();
+      req.open("POST", url, true);
+      req.setRequestHeader('Content-Type', 'application/json');
+      req.onreadystatechange = function() {
+        if (this.readyState === 4) {
+          req.onreadystatechange = null;
+          if (this.status === 200) {
+             //  $('#processingMsg').text(this.response);
+
+            var result = this.response;
+
+         if (result.toLowerCase().trim() == "allowed")
+         {
+
+               $('#infoMsg').css('display', 'block');
+               $('#infoMsg').html("<p> Preliminary analysis of the uploaded workbook has begun…</p>");
+              $("#InsertButton").click();
+
+         }
+         else
+         {
+             $("#processingMsg").css("display", "none");
+           // alert ( req.getResponseHeader('MessageCode') );
+             alert ( req.getResponseHeader('Message') );
+            // alert("Error - Bulk Site Registration Upload: Initial upload stopped due to a potential virus.");
+         }
+
+             $("#infoMsg").css("display", "none");
+
+          } else {
+              $('#processingMsg').text("Error Please Try again Later.");
+            var result = this.response;
+            alert("Error " + result);
+          }
+        }
+      }
+
+      req.send(acupdate);
+}
+
+
+function call_Inital_validation(Language , bulkactivitytype)
+{
+
+  var URLs = new URLSearchParams(window.location.search);
+        var newrecordid = URLs.get('id');
+        var companyid = URLs.get('companyid');
+        var companyname = '{{ user.parentcustomerid.Name }}';
+        if  ( companyid != null  )
+{
+
+
+//var url = window.location.search;
+//url.searchParams.delete('id');
+//url.searchParams.delete('companyid');
+//history.pushState(null, document.title, url);
+
+       // $('#processingMsg').css('display', 'block');
+        //$('#processingMsg').text("Preliminary analysis of the uploaded workbook has begun…");
+
+         $('#infoMsg').css('display', 'block');
+        $('#infoMsg').html("<p>Preliminary analysis of the uploaded workbook has begun…</p>");
+
+        //notificationMsg.show("System is validating uploaded List ...");
+
+
+        var URLs = new URLSearchParams(window.location.search);
+
+        var newrecordid = URLs.get('id');
+        var companyid = URLs.get('companyid');
+        var acupdate =
+            '{ "activityid":"' + newrecordid + '" , "name": "'+ companyname +'", "accountid": "' + companyid + '" , "Lang" : "' + Language + '" ,"ActivityType" : "' + bulkactivitytype +  '" }';
+
+        var req = new XMLHttpRequest();
+        var url = '{{excelload_Flow_URL}}';
+
+       
+        req.open("POST", url, true);
+        req.setRequestHeader('Content-Type', 'application/json');
+
+        req.onreadystatechange = function () {
+
+            if (this.readyState === 4) {
+
+                req.onreadystatechange = null;
+                  $('#infoMsg').css('display', 'none');
+                if (this.status === 200) {
+                    var result = this.response;
+                    $('#infoMsg').css('display', 'none');
+                  // $('#warnningMessage').css('display', 'none');
+                    // alert (this.response);
+                     //alert(req.getResponseHeader('DetailMessage'));
+
+
+
+                    var result = this.response;
+                    confirmDialog(result, (ans) => {
+                            if (ans) {
+                               // console.log("Yes");
+                                Call_Check_User_Response_flow(newrecordid , 'yes' , '' , Language);
+                            
+                                }else {
+                                 Call_Check_User_Response_flow(newrecordid , 'No' , '' , Language);
+                                //console.log("No");
+                            }
+                            });
+
+
+
+                 
+
+
+                } else if (this.status === 402) {
+
+                 $('#processingMsg').css('display', 'none');
+                  $('#warnningMessage').css('display', 'none');
+               // alert ("Uploaded List did not pass validation, please check the errors list.");
+              // alert (this.response) ;
+                    var result = this.response;
+
+                     $('#processingMsg').css('display', 'block');
+                     $('#processingMsg').text(result);
+
+
+                       //document.getElementById("errortable").innerHTML = result;
+
+                } else {
+ 
+                  // $('#warnningMessage').css('display', 'none');
+                  $('#processingMsg').css('display', 'none');
+                    var result = this.response;
+                     $('#processingMsg').css('display', 'block');
+                     $('#processingMsg').text(result);
+
+                 //   alert(result);
+                       // window.location.replace("~/Bulk_Site_Upload");
+                }
+            }
+        }
+        req.send(acupdate);
+
+
+}//end if
+else{
+      $('#processingMsg').css('display', 'none');
+}
+}//end function
+
+function confirmDialog(message, handler)
+{
+
+$(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
+    <header class="modal-header">
+        <h2 class="modal-title">CID Portal</h2>
+    </header>
+    <div class="modal-body">
+        ${message}
+      
+    </div>
+  <div class="modal-footer">
+     <button id="btnYes" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">Yes</button>
+    <button  id="btnNo" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" data-dismiss="modal">No</button>
+  
+</section>
+`).appendTo('body');
+
+
+
+     $("#myModal").css('top' , '15%');
+        $("#myModal").css('left' , '40%');
+        $("#myModal").css('position', 'fixed'); 
+        $("#myModal").css('z-index', '9999');
+
+
+ $("#btnYes").click(function () {
+     
+           // handler(true);
+          //  $("#myModal").modal("hide");
+          $("#myModal").remove();
+           handler(true);
+        });
+
+        //Pass false to callback function
+        $("#btnNo").click(function () {
+            
+            //handler(lse);
+            $("#myModal").remove();
+             handler(false);
+        });
+
+
+
+}
+
+ 
+
+</script>
+<div class="container ">
+    <div class="container">
+        {% block breadcrumbs %}
+        {% include 'Breadcrumbs' %}
+        {% endblock %}
+        {% block title %}
+        {% include 'Page Header' %}
+        {% endblock %}
+    </div>
+
+    <div id="mainContent" class="row">
+
+        <div class="col-md-12">
+            {% block main %}
+
+            {% include 'Page Copy' %}
+
+
+
+            <div class="row sectionBlockLayout" style="display: flex; flex-wrap: wrap; padding: 8px; margin: 0px; text-align: left; min-height: 100px;">
+
+
+
+                <div id="processingMsg" class="alert alert-warning" role="alert">
+           
+                </div>
+                   <div id="infoMsg" class="alert alert-info"></div>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div>
+                                    <div>
+                                        <h3 class="blue_border">{{step1}}</h3>
+                                        <p> </p>
+                                    </div>
+                                    <div>
+
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <button type="button" id="linkdownload_English" class="submit-btn btn btn-primary form-action-container-left">{{downloadlableEnglishversion}}</button>
+                                                </td>
+                                                <td> &nbsp;&nbsp;</td>
+                                                <td>
+                                                    <button type="button" id="linkdownload_French" class="submit-btn btn btn-primary form-action-container-left">{{downloadlableFrenchVersion}}</button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+
+                                <h3 class="blue_border">{{step2}}</h3>
+                                {% entityform name: 'Insert Bulk Activity Log Summary' %}
+
+                                <div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div>
+                    <p></p>
+                    <h2 class="blue_border">List of Sites</h2>{% include 'entity_list' key: 'Parent company site list' %}
+                </div>
+
+
+
+
+                {% endblock %}
+
+
+            </div>
+        </div>
+    </div>
+
+</div>

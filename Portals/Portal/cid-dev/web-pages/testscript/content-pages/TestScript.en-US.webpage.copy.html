@@ -1,0 +1,354 @@
+{% include 'WebAPIAJAX'%}
+{% assign is_valid = true %}
+<section class="modal-dialog modal-content overlay-def" id="myModal" tabindex="-1" role="dialog">
+  <div class="modal-content">
+    <div class="modal-header ">
+      <h5 class="modal-title">CID Portal</h5>
+    </div>
+    <div class="modal-body">
+      <ol>${message}</ol>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary">Yes</button>
+      <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+    </div>
+  </div>
+</section>
+<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
+  <header class="modal-header">
+    <h2 class="modal-title">CID Portal</h2>
+  </header>
+  <div class="modal-body">
+    <ol>${message}</ol>
+  </div>
+  <div class="modal-footer">
+    <button title="Close overlay" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" type="button">Close<span class="wb-inv">Close overlay</span></button>
+  </div>
+</section>
+<section class="modal-dialog modal-content overlay-def">
+  <header class="modal-header">
+    <h2 class="modal-title">Title</h2>
+  </header>
+  <div class="modal-body">
+    <table>
+      <caption>Table caption default appearance</caption>
+      <thead>
+        <tr>
+          <th scope="col">Table header (<code>th</code>) default appearance</th>
+          <th scope="col">Table header (<code>th</code>) default appearance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Table data (<code>td</code>) default appearance</td>
+          <td>Table data (<code>td</code>) default appearance</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><a href="#">Link default appearance</a></p>
+  </div>
+</section>
+<section class="modal-dialog modal-content overlay-def">
+  <header class="modal-header">
+    <h2 class="modal-title">AJAX - Example 2</h2>
+  </header>
+  <div class="modal-body">
+    <ol>
+      <li>ordered list (<code>ol</code>) - level 1 - default appearance</li>
+      <li>ordered list (<code>ol</code>) - level 1 - default appearance
+        <ol>
+          <li>ordered list (<code>ol</code>) - level 2 - default appearance</li>
+          <li>ordered list (<code>ol</code>) - level 2 - default appearance
+            <ol>
+              <li>ordered list (<code>ol</code>) - level 3 - default appearance</li>
+              <li>ordered list (<code>ol</code>) - level 3 - default appearance</li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+    </ol>
+    <button>close</button>
+  </div>
+</section>
+<div class="row sectionBlockLayout" style="display: flex; flex-wrap: wrap; padding: 8px; margin: 0px; text-align: left; min-height: 100px;">
+  <div class="container" style="display: flex; flex-wrap: wrap;">
+    <div class="col-md-12 columnBlockLayout" style="display: flex; flex-direction: column;"></div>
+  </div><button id="download">download</button><button id="callapi">call api</button>
+</div>
+<script>
+  $(document).ready(async function() {
+    alert('start');
+    let token = await getTokenwithClientid();
+    alert("after function call");
+    alert(token);
+    $('#callapi').on('click', async function() {
+      alert('before functioncall');
+      // Add_Operation_entity
+      let opId = await Add_Operation_entity('88d2bf38-006f-ec11-a81b-0022486da668');
+      console.log(opId);
+      alert("alert id " + opId);
+    });
+  });
+  function getTokenwithClientid() {
+    var t;
+    (function(auth, $) {
+      "use strict";
+      var callback = null;
+      //Force Login for Anonymous users. Below line can be commented if force login is not needed.
+      //    $.cookie("ImplicitGrantForceLogin", 1);
+      let clientId = "2e6b3c9c-0a5a-4651-8913-1aa1267a19ef"; //Add the Client ID registered on CRM.
+      auth.getAuthenticationToken = function(callbackFn) {
+        callback = callbackFn;
+        $.ajax({
+          type: 'GET',
+          url: `/_services/auth/token?client_id=${clientId}`,
+          cache: false,
+          success: handleGetAuthenticationTokenSuccess,
+          error: jqXHR => callback(null, jqXHR)
+        });
+      }
+      function handleGetAuthenticationTokenSuccess(data, status, jqXHR) {
+        t = data;
+        var jsonResult = JSON.parse(jqXHR.getResponseHeader('X-Responded-JSON'));
+        if (jsonResult && jsonResult.status == 401) {
+          var forceLogin = Number($.cookie("ImplicitGrantForceLogin")) === 1;
+          if (forceLogin) {
+            // If the user is not logged in, redirect to login page
+            redirectToLogin();
+          } else {
+            callback(null, jsonResult); //Run callback method with error message
+          }
+        } else {
+          // Pass the token to the callback function
+          callback(data);
+        }
+      }
+      function redirectToLogin() {
+        var redirectUrl = window.location;
+        var loginUrl = window.location.origin + '/SignIn?returnUrl=' + encodeURIComponent(redirectUrl);
+        window.location = loginUrl;
+      }
+    }(window.auth || (window.auth = {}), window.jQuery));
+    // Part 2: Define Callback function and call window.auth.getAuthenticationToken to fetch the token.
+    var callbackFn = function(data, err) {
+      if (data) {
+        alert("calling authenticate");
+        call_old_scanAPI(data);
+        authenticate_MetaDefender_Api(data);
+        call_Metadefender_Api(data);
+        //Token received
+        console.log(data);
+      } else {
+        console.log("Error");
+        if (err) {
+          // 401 is returned for anonymous users.
+          if (err.status == 401) {
+            console.log("Login required");
+          }
+          // To handle any other error
+          else {
+            console.log(err.responseJSON.ErrorId + " : " + err.responseJSON.ErrorMessage);
+          }
+        }
+      }
+    }
+    // Fetch Token Call
+    window.auth.getAuthenticationToken(callbackFn);
+    return t;
+  }
+  function authenticate_MetaDefender_Api(token) {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "text/json");
+    //"application/json-patch+json");
+    myHeaders.append("Connection", "Keep-Alive");
+    myHeaders.append("Accept", "*/*");
+    myHeaders.append("Access-Control-Allow-Origin", "*");
+    //myHeaders.append("Authorization", "Bearer " + token);
+    var raw = JSON.stringify({
+      "username": "56cf772da1154369b877a1e3fd177da9",
+      "password": "3fa7ae5d1c8f4e37b764cf7530f4f0e8f512779b6a72440fb9e13ecd76ed2e6b",
+      "Authorization": "Bearer " + token
+    });
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+      //,
+      //mode: 'no-cors'
+    };
+    fetch("https://wwwapps2.tc.gc.ca/Saf-Sec-Sur/13/tc-virusscan-api/api/v1/authenticate?Authorization Value=" + token, requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+  }
+  function call_Metadefender_Api(token) {
+    //var token = authenticate_MetaDefender_Api();
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "text/json");
+    myHeaders.append("Accept", "*/*");
+    myHeaders.append("Access-Control-Allow-Origin", "*");
+    myHeaders.append("Authorization", "Bearer " + token);
+    var raw = "'xxxx'";
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow',
+      mode: 'no-cors'
+    };
+    fetch("https://wwwapps2.tc.gc.ca/Saf-Sec-Sur/13/tc-virusscan-api/api/v1/file-scan?filename=test&Authorization Value=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjU2Y2Y3NzJkYTExNTQzNjliODc3YTFlM2ZkMTc3ZGE5IiwibmJmIjoxNjQ3NDgwNjYxLCJleHAiOjE2NDc0ODA2OTEsImlhdCI6MTY0NzQ4MDY2MX0.kDLgLXMmX7dRpbAEFldkBBNpqeTxVOAjE-4CD_T58yA&mode= 'no-cors'", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+  }
+  function call_old_scanAPI(token) {
+    var myHeaders = new Headers();
+    // myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+    myHeaders.append("Content-Type", "text/json");
+    //myHeaders.append("Cookie", "_mtoa_session=6c7f8ebb4ebc400baebd733898da0c87");
+    // myHeaders.append("Content-Type", "text/json");
+    myHeaders.append("Accept", "*/*");
+    myHeaders.append("Access-Control-Allow-Origin", "*");
+    //myHeaders.append("Authorization", "Bearer " + token);
+    var urlencoded = new URLSearchParams();
+    urlencoded.append("value", "X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*");
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: 'follow',
+      mode: 'no-cors'
+    };
+    fetch("https://wwwapps.tc.gc.ca/Saf-Sec-Sur/13/MTAPI/api/v1/file-scan-status?filename=test", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+    console.log("after fetch");
+  }
+  const fetch_getScanResult = async () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/octet-stream");
+    //myHeaders.append("access-Control-Allow-Origin", "*");
+    const raw = "X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*";
+    const requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+    let repsponse = await fetch("https://wwwapps.tc.gc.ca/Saf-Sec-Sur/13/MTAPI/api/v1/file-scan-status?filename=test", requestOptions);
+    //  .then(response => response.text())
+    // .then(result => console.log(result))
+    //.catch(error => console.log('error', error));
+    if (response.status === 200) {
+      console.log(await response.text());
+      alert(await response.text());
+    }
+  }
+  function calladdresscomplete() {
+    alert("started");
+    var url = 'https://ws1.postescanada-canadapost.ca/AddressComplete/Interactive/Find/v2.10/json3.ws';
+    var params = '';
+    params += "&Key=" + encodeURIComponent("MM95-DM44-MP35-XM79");
+    params += "&SearchTerm=" + encodeURIComponent("675 holly avenue");
+    //   params += "&LastId=" + encodeURIComponent(LastId);
+    // params += "&SearchFor=" + encodeURIComponent("675 holly avenue , milton Ontario");
+    params += "&Country=" + encodeURIComponent("CAN");
+    params += "&LanguagePreference=" + encodeURIComponent("en");
+    // params += "&MaxSuggestions=" + encodeURIComponent(7);
+    params += "&MaxResults=" + encodeURIComponent(7);
+    var http = new XMLHttpRequest();
+    http.open('POST', url, true);
+    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    http.onreadystatechange = function() {
+      if (http.readyState == 4 && http.status == 200) {
+        var response = JSON.parse(http.responseText);
+        // Test for an error
+        if (response.Items.length == 1 && typeof(response.Items[0].Error) != "undefined") {
+          // Show the error message
+          alert(response.Items[0].Description);
+        } else {
+          // Check if there were any items found
+          if (response.Items.length == 0)
+            alert("Sorry, there were no results");
+          else {
+            alert(response.Items.length);
+            alert("else " + response.Items[0].Id);
+            alert("else " + response.Items[0].Text);
+            alert("else " + response.Items[0].Description);
+            // PUT YOUR CODE HERE
+            //FYI: The output is an array of key value pairs (e.g. response.Items[0].Id), the keys being:
+            //Id
+            //Text
+            //Highlight
+            //Cursor
+            //Description
+            //Next
+          }
+        }
+      }
+    }
+    http.send(params);
+  }
+  function callhttpscanapi() {
+    var data = "abc";
+    var xhr = new XMLHttpRequest();
+    //xhr.withCredentials = true;
+    xhr.addEventListener("readystatechange", function() {
+      if (this.readyState === 4) {
+        console.log(this.responseText);
+        alert(this.responseText);
+        alert(this.response);
+      }
+    });
+    xhr.open("POST", "https://wwwapps.tc.gc.ca/Saf-Sec-Sur/13/MTAPI/api/v1/file-scan-status?filename=test.txt");
+    //xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    //xhr.overrideMimeType("application/octet-stream");
+    xhr.setRequestHeader("Accept", "application/octet-stream");
+    //xhr.responseType = "application/json";
+    xhr.send(data);
+  }
+  function authenticate_MetaDefender_Api() {
+    var settings = {
+      "url": "https://wwwapps2.tc.gc.ca/Saf-Sec-Sur/13/tc-virusscan-api/api/v1/authenticate",
+      "method": "POST",
+      "timeout": 0,
+      "mode": 'no-cors',
+      "headers": {
+        "Content-Type": "application/json-patch+json",
+        "Connection": "Keep-Alive",
+        "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsIm5vbmNlIjoiIn0.eyJzdWIiOiIwMzkzMmQxOS00MDYzLWVjMTEtOGY4ZS0wMDBkM2FmZjExNDIiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiI2MWZjMjkxZS0zZTMwLTQzY2EtYWNkMS0zZTAzNDQyZDNmOTQiLCJwaG9uZV9udW1iZXIiOiIiLCJnaXZlbl9uYW1lIjoiTWFyd2EiLCJmYW1pbHlfbmFtZSI6IlNhbGVoIiwiZW1haWwiOiJtYXJ3YS5zYWxlaEB0Yy5nYy5jYSIsImxwX3NkZXMiOlt7InR5cGUiOiJjdG1yaW5mbyIsImluZm8iOnsiY3N0YXR1cyI6bnVsbCwiY3R5cGUiOiJjb250YWN0IiwiY3VzdG9tZXJJZCI6IjAzOTMyZDE5LTQwNjMtZWMxMS04ZjhlLTAwMGQzYWZmMTE0MiIsImJhbGFuY2UiOm51bGwsInNvY2lhbElkIjpudWxsLCJpbWVpIjoiIiwidXNlck5hbWUiOiI2MWZjMjkxZS0zZTMwLTQzY2EtYWNkMS0zZTAzNDQyZDNmOTQiLCJjb21wYW55U2l6ZSI6bnVsbCwiYWNjb3VudE5hbWUiOm51bGwsInJvbGUiOm51bGwsImxhc3RQYXltZW50RGF0ZSI6eyJkYXkiOjAsIm1vbnRoIjowLCJ5ZWFyIjowfSwicmVnaXN0cmF0aW9uRGF0ZSI6eyJkYXkiOjAsIm1vbnRoIjowLCJ5ZWFyIjowfX19XSwiYXVkIjoiMmU2YjNjOWMtMGE1YS00NjUxLTg5MTMtMWFhMTI2N2ExOWVmIiwiYXBwaWQiOiIyZTZiM2M5Yy0wYTVhLTQ2NTEtODkxMy0xYWExMjY3YTE5ZWYiLCJzY3AiOiI3MDA4MjM0Ny02NWU4LTQxMDEtYTBmMi1lZTE3OWVmYzJhZDIiLCJpYXQiOjE2NDc0NjY4MDYsIm5iZiI6MTY0NzQ2NjgwNywiZXhwIjoxNjQ3NDY3NzA3LCJpc3MiOiJyZC10ZGdjb3JlLWRldi5wb3dlcmFwcHNwb3J0YWxzLmNvbSJ9.Im5yVUJBMoTSpGKti73yYx9CWY4S9BRnul9kgpNn848JHD2NqmZtbidvLixGkqVRwJCT7iCWh0pEU-I1qLCIdW2euWUVE5L2Lt8rrkO6bUVir94OnCIsRxpuGzfRdeIssPpy73WYZ-tZWIJ4x6nffKbwYVFdRpbQgXnduZ3FDn-1F5Msu7l2Uo7kH9oX1aaRBQ6DHKAgF60bFyxPQnITE7wyn0cQIrS9ooxnCxAAZXUVqraLYa_-j4uFu7WcjyAyDzLmbFLW4zIku4p7jBqhh1BtXrbFnETvboms2IBut-NG-3HvRbrRGfwhsJ9uLml2T30KHFS-FftWuwJzpOYTrQ&mode= 'no-cors'"
+      },
+      "data": JSON.stringify({
+        "username": "56cf772da1154369b877a1e3fd177da9",
+        "password": "3fa7ae5d1c8f4e37b764cf7530f4f0e8f512779b6a72440fb9e13ecd76ed2e6b"
+      }),
+    };
+    $.ajax(settings).done(function(response) {
+      console.log(response);
+      alert(response);
+      return (response);
+    });
+  }
+  function call_Metadefender_Api() {
+    var token = authenticate_MetaDefender_Api();
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "text/json");
+    myHeaders.append("Accept", "*/*");
+    myHeaders.append("Access-Control-Allow-Origin", "*");
+    myHeaders.append("Authorization", "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsIm5vbmNlIjoiIn0.eyJzdWIiOiIwMzkzMmQxOS00MDYzLWVjMTEtOGY4ZS0wMDBkM2FmZjExNDIiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiI2MWZjMjkxZS0zZTMwLTQzY2EtYWNkMS0zZTAzNDQyZDNmOTQiLCJwaG9uZV9udW1iZXIiOiIiLCJnaXZlbl9uYW1lIjoiTWFyd2EiLCJmYW1pbHlfbmFtZSI6IlNhbGVoIiwiZW1haWwiOiJtYXJ3YS5zYWxlaEB0Yy5nYy5jYSIsImxwX3NkZXMiOlt7InR5cGUiOiJjdG1yaW5mbyIsImluZm8iOnsiY3N0YXR1cyI6bnVsbCwiY3R5cGUiOiJjb250YWN0IiwiY3VzdG9tZXJJZCI6IjAzOTMyZDE5LTQwNjMtZWMxMS04ZjhlLTAwMGQzYWZmMTE0MiIsImJhbGFuY2UiOm51bGwsInNvY2lhbElkIjpudWxsLCJpbWVpIjoiIiwidXNlck5hbWUiOiI2MWZjMjkxZS0zZTMwLTQzY2EtYWNkMS0zZTAzNDQyZDNmOTQiLCJjb21wYW55U2l6ZSI6bnVsbCwiYWNjb3VudE5hbWUiOm51bGwsInJvbGUiOm51bGwsImxhc3RQYXltZW50RGF0ZSI6eyJkYXkiOjAsIm1vbnRoIjowLCJ5ZWFyIjowfSwicmVnaXN0cmF0aW9uRGF0ZSI6eyJkYXkiOjAsIm1vbnRoIjowLCJ5ZWFyIjowfX19XSwiYXVkIjoiMmU2YjNjOWMtMGE1YS00NjUxLTg5MTMtMWFhMTI2N2ExOWVmIiwiYXBwaWQiOiIyZTZiM2M5Yy0wYTVhLTQ2NTEtODkxMy0xYWExMjY3YTE5ZWYiLCJzY3AiOiI3MDA4MjM0Ny02NWU4LTQxMDEtYTBmMi1lZTE3OWVmYzJhZDIiLCJpYXQiOjE2NDc0NjY4MDYsIm5iZiI6MTY0NzQ2NjgwNywiZXhwIjoxNjQ3NDY3NzA3LCJpc3MiOiJyZC10ZGdjb3JlLWRldi5wb3dlcmFwcHNwb3J0YWxzLmNvbSJ9.Im5yVUJBMoTSpGKti73yYx9CWY4S9BRnul9kgpNn848JHD2NqmZtbidvLixGkqVRwJCT7iCWh0pEU-I1qLCIdW2euWUVE5L2Lt8rrkO6bUVir94OnCIsRxpuGzfRdeIssPpy73WYZ-tZWIJ4x6nffKbwYVFdRpbQgXnduZ3FDn-1F5Msu7l2Uo7kH9oX1aaRBQ6DHKAgF60bFyxPQnITE7wyn0cQIrS9ooxnCxAAZXUVqraLYa_-j4uFu7WcjyAyDzLmbFLW4zIku4p7jBqhh1BtXrbFnETvboms2IBut-NG-3HvRbrRGfwhsJ9uLml2T30KHFS-FftWuwJzpOYTrQ&mode= 'no-cors'");
+    var raw = "'xxxx'";
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow',
+      mode: 'no-cors'
+    };
+    fetch("https://wwwapps2.tc.gc.ca/Saf-Sec-Sur/13/tc-virusscan-api/api/v1/file-scan?filename=test&Authorization Value=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsIm5vbmNlIjoiIn0.eyJzdWIiOiIwMzkzMmQxOS00MDYzLWVjMTEtOGY4ZS0wMDBkM2FmZjExNDIiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiI2MWZjMjkxZS0zZTMwLTQzY2EtYWNkMS0zZTAzNDQyZDNmOTQiLCJwaG9uZV9udW1iZXIiOiIiLCJnaXZlbl9uYW1lIjoiTWFyd2EiLCJmYW1pbHlfbmFtZSI6IlNhbGVoIiwiZW1haWwiOiJtYXJ3YS5zYWxlaEB0Yy5nYy5jYSIsImxwX3NkZXMiOlt7InR5cGUiOiJjdG1yaW5mbyIsImluZm8iOnsiY3N0YXR1cyI6bnVsbCwiY3R5cGUiOiJjb250YWN0IiwiY3VzdG9tZXJJZCI6IjAzOTMyZDE5LTQwNjMtZWMxMS04ZjhlLTAwMGQzYWZmMTE0MiIsImJhbGFuY2UiOm51bGwsInNvY2lhbElkIjpudWxsLCJpbWVpIjoiIiwidXNlck5hbWUiOiI2MWZjMjkxZS0zZTMwLTQzY2EtYWNkMS0zZTAzNDQyZDNmOTQiLCJjb21wYW55U2l6ZSI6bnVsbCwiYWNjb3VudE5hbWUiOm51bGwsInJvbGUiOm51bGwsImxhc3RQYXltZW50RGF0ZSI6eyJkYXkiOjAsIm1vbnRoIjowLCJ5ZWFyIjowfSwicmVnaXN0cmF0aW9uRGF0ZSI6eyJkYXkiOjAsIm1vbnRoIjowLCJ5ZWFyIjowfX19XSwiYXVkIjoiMmU2YjNjOWMtMGE1YS00NjUxLTg5MTMtMWFhMTI2N2ExOWVmIiwiYXBwaWQiOiIyZTZiM2M5Yy0wYTVhLTQ2NTEtODkxMy0xYWExMjY3YTE5ZWYiLCJzY3AiOiI3MDA4MjM0Ny02NWU4LTQxMDEtYTBmMi1lZTE3OWVmYzJhZDIiLCJpYXQiOjE2NDc0NDY2NjksIm5iZiI6MTY0NzQ0NjY2OSwiZXhwIjoxNjQ3NDQ3NTY5LCJpc3MiOiJyZC10ZGdjb3JlLWRldi5wb3dlcmFwcHNwb3J0YWxzLmNvbSJ9.LRUJ83yutpcNtby6BlGeyhhfRwzuOtgvxvDTSiuv25rV1jHSGm_-UTDgoFPNDgt-Kh2xmcUlplypAwZifzNSUMMHoyD0qcnuvsJdaYs67FnTJwYiO0aEbFtFH1uQYu-v04IiV_xF5X3PROyWq9IJ5WuME18R2zNGEIB7-LJIB9tGxWEbSIZljfAiRBARNU6a-LzM0-EniPV_Cu-hzATr3kHkV7hBu0hlPKtASmvnO3q9STHjOR2w0Tm2Dz-zdBnEYl_-Eg5CgV_Q6PTRNwe5rVqILSSPoUMWgy8If64C2MF9dp_I3o_LDOXtJ6vmgcYvNwSFc2CmYuQNYGujkEOAmw&mode= 'no-cors'", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+  }
+</script>

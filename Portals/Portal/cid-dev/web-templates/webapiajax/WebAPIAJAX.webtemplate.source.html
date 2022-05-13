@@ -1,0 +1,317 @@
+{% fetchxml environment_settings %}
+<fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+    <entity name="qm_environmentsettings">
+        <attribute name="qm_environmentsettingsid" />
+        <attribute name="qm_name" />
+        <attribute name="createdon" />
+        <attribute name="qm_value" />
+        <order attribute="qm_name" descending="false" />
+        <filter type="and">
+            <condition attribute="qm_name" operator="like" value="%CID[_]%" />
+        </filter>
+    </entity>
+</fetch>
+{% endfetchxml %}
+
+
+<style>
+    #processingMsg {
+        width: 150px;
+        text-align: center;
+        padding: 6px 10px;
+        z-index: 9999;
+        top: 0;
+        left: 40%;
+        position: fixed;
+        -webkit-border-radius: 0 0 2px 2px;
+        border-radius: 0 0 2px 2px;
+        -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        display: none;
+    }
+
+    table td[data-attribute] .glyphicon-pencil {
+        margin-left: 5px;
+        opacity: 0;
+    }
+
+    table td[data-attribute]:hover .glyphicon-pencil {
+        opacity: 0.7;
+    }
+</style>
+<script>
+(function(webapi, $){
+		function safeAjax(ajaxOptions) {
+			var deferredAjax = $.Deferred();
+	
+			shell.getTokenDeferred().done(function (token) {
+				// add headers for AJAX
+				if (!ajaxOptions.headers) {
+					$.extend(ajaxOptions, {
+						headers: {
+							"__RequestVerificationToken": token
+						}
+					}); 
+				} else {
+					ajaxOptions.headers["__RequestVerificationToken"] = token;
+				}
+				$.ajax(ajaxOptions)
+					.done(function(data, textStatus, jqXHR) {
+						validateLoginSession(data, textStatus, jqXHR, deferredAjax.resolve);
+					}).fail(deferredAjax.reject); //AJAX
+			}).fail(function () {
+				deferredAjax.rejectWith(this, arguments); // on token failure pass the token AJAX and args
+			});
+	
+			return deferredAjax.promise();	
+		}
+		webapi.safeAjax = safeAjax;
+	})(window.webapi = window.webapi || {}, jQuery)
+
+// Notification component
+    var notificationMsg = (function() {
+      var $processingMsgEl = $('#processingMsg'),
+        _msg = 'Processing...',
+        _stack = 0,
+        _endTimeout;
+      return {
+        show: function(msg) {
+          $processingMsgEl.text(msg || _msg);
+          if (_stack === 0) {
+            clearTimeout(_endTimeout);
+            $processingMsgEl.show();
+          }
+          _stack++;
+        },
+        hide: function() {
+          _stack--;
+          if (_stack <= 0) {
+            _stack = 0;
+            clearTimeout(_endTimeout);
+            _endTimeout = setTimeout(function() {
+              $processingMsgEl.hide();
+            }, 500);
+          }
+        }
+      }
+    })();
+
+ //Applicaton ajax wrapper 
+    function appAjax(processingMsg, ajaxOptions) {
+      notificationMsg.show(processingMsg);
+      return webapi.safeAjax(ajaxOptions)
+        .fail(function(response) {
+          if (response.responseJSON) {
+            alert("Error: " + response.responseJSON.error.message)
+          } else {
+            alert("Error: Web API is not available... ")
+          }
+        }).always(notificationMsg.hide);
+    }
+
+function add_site_operation1(siteid) 
+ {
+   alert(siteid);
+ }
+
+ function Check_If_Operation_exists (siteid) 
+ {
+var operationid ;
+
+
+  	
+       var FetchXMLQuery = " <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' > " +
+    "<entity name='ovs_mocregistration' >" +
+        "<attribute name='ovs_name' />" +
+        "<attribute name='createdon' />" +
+        "<order attribute='ovs_name' descending='false' />" +
+   "<filter type='and' >"+
+            "<condition attribute='ovs_operationtype' operator='eq' value='918640038' />" +
+            "<condition attribute='ovs_siteid' operator='eq' value='88d2bf38-006f-ec11-a81b-0022486da668' />" +
+        "</filter>" +
+    "</entity>" +
+"</fetch>";
+
+ webapi.safeAjax({
+                type: "GET",
+                url: "/_api/ovs_mocregistrations?" +
+								//$select=name,createdon&$filter=accountid eq 88d2bf38-006f-ec11-a81b-0022486da668",
+								"fetchXml=" +encodeURIComponent(FetchXMLQuery),
+                contentType: "application/json",
+                
+								type: "GET",
+       // url: "/_api/contacts?$select=fullname,firstname,lastname,emailaddress1,telephone1",
+       // contentType: "application/json",
+								success: function (res) {
+                  
+										 operationid = res.value[0]['ovs_mocregistrationid'];
+                
+									
+                }
+            });
+
+
+
+
+
+
+  }
+
+
+
+	function Add_Operation_entity  (siteid)  {
+   
+
+      	
+       return new Promise((resolve, reject) => {
+
+     // resolve("Promise resolved");
+ 
+     // reject("Promise rejected");
+   
+
+			var operationid = "" ;
+       var FetchXMLQuery = " <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' > " +
+    "<entity name='ovs_mocregistration' >" +
+        "<attribute name='ovs_name' />" +
+        "<attribute name='createdon' />" +
+        "<order attribute='ovs_name' descending='false' />" +
+   "<filter type='and' >"+
+            "<condition attribute='ovs_operationtype' operator='eq' value='918640038' />" +
+            "<condition attribute='ovs_siteid' operator='eq' value= " + siteid + " />" +
+        "</filter>" +
+    "</entity>" +
+"</fetch>";
+
+ webapi.safeAjax({
+                type: "GET",
+                url: "/_api/ovs_mocregistrations?" +
+								//$select=name,createdon&$filter=accountid eq 88d2bf38-006f-ec11-a81b-0022486da668",
+								"fetchXml=" +encodeURIComponent(FetchXMLQuery),
+                contentType: "application/json",
+                
+								type: "GET",
+       // url: "/_api/contacts?$select=fullname,firstname,lastname,emailaddress1,telephone1",
+       // contentType: "application/json",
+								success: function (res, status, xhr)  {
+                  
+										 const retrived_opid =   xhr.getResponseHeader('ovs_mocregistrationid'); //res.value[0]['ovs_mocregistrationid'];
+                    
+                   //  return retrived_opid;
+                  
+                       
+                     //if (retrived_opid == null)
+                     //{
+                       webapi.safeAjax({
+        type: "POST",
+          url: "/_api/ovs_mocregistrations",
+        contentType: "application/json",
+        data: JSON.stringify({
+          "ovs_operationtype": 918640038 , 
+          "ovs_SiteId@odata.bind": "/accounts(" + siteid + ")",
+          "ovs_lineofbusiness@odata.bind": "/ovs_lobs(f3f10b28-a23c-ec11-8c62-0022483d7564)" // Setting Logged In User(Lookup)
+        }),
+        success: function(res, status, xhr) {
+        
+					console.log("entityID: " + xhr.getResponseHeader("entityid"));
+         const opid =  xhr.getResponseHeader("entityid");
+    //  return 
+       resolve(opid);
+     
+        }
+      });
+                    // }//end if
+                    // else
+                     //{
+                    
+                      
+                          //resolve(retrived_opid);
+                       // return retrived_opid;
+                     //}
+									
+                }
+            });
+      
+	
+
+  });
+}
+
+
+  function create_site_operation(siteid)  {
+    var operationId = "";
+    var FetchXMLQuery = " <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' > " +
+                          "<entity name='ovs_mocregistration' >" +
+                              "<attribute name='ovs_mocregistrationid' />" +
+                              "<attribute name='ovs_operationtype' />" +
+                              "<attribute name='ovs_siteid' />" +
+                          "<filter type='and' >"+
+                              "<condition attribute='ovs_operationtype' operator='eq' value='918640038' />" +
+                              "<condition attribute='ovs_siteid' operator='eq' value=" + siteid + " />" +
+                          "</filter>" +
+                          "</entity>" +
+                        "</fetch>";
+      webapi.safeAjax({
+                  type: "GET",
+                  url: "/_api/ovs_mocregistrations?" +
+                  "fetchXml=" +encodeURIComponent(FetchXMLQuery),
+                  contentType: "application/json",
+                      success: function (res, status, xhr)  {
+                          operationId =   xhr.getResponseHeader('ovs_mocregistrationid');
+                      }
+                  });
+
+    if(operationId == "")
+    {
+        webapi.safeAjax({
+            type: "POST",
+            url: "/_api/ovs_mocregistrations",
+            contentType: "application/json",
+            data: JSON.stringify({
+                "ovs_operationtype": 918640038,
+                "ovs_SiteId@odata.bind": "/accounts(" + siteid + ")"
+            }),
+            success: function (res, status, xhr) {
+                //alert('Success');
+            },
+            error: function(){
+                //alert('Fail');
+            }
+        });
+    }
+  }
+
+
+function site_has_mode_of_transportation(siteid)  {
+  var id = "";
+    var FetchXMLQuery = " <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' > " +
+                          "<entity name='cid_modeoftransportation' >" +
+                              "<attribute name='cid_site' />" +
+                              "<filter type='and' >"+
+                                  "<condition attribute='cid_site' operator='eq' value=" + siteid + " />" +
+                              "</filter>" +
+                          "</entity>" +
+                        "</fetch>";
+                        
+              webapi.safeAjax({
+                  type: "GET",
+                  url: "/_api/cid_modeoftransportation?" +
+                  "fetchXml=" +encodeURIComponent(FetchXMLQuery),
+                  contentType: "application/json",
+                      success: function (res, status, xhr)  {
+                         id = "success";
+                          //id =   xhr.getResponseHeader('cid_modeoftransportationid');
+                      },
+                       error: function(){
+                          id = "fail";
+                      }
+                  });
+
+
+      return id;
+  
+     }
+
+
+</script>
+<script type="text/javascript" src="~/tdgcore_common.js" ></script>
