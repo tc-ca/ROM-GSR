@@ -42,9 +42,24 @@ stages:
             --applicationId ${env:PowerPlatformAadApplicationId} `
             --clientSecret ${env:PowerPlatformAadApplicationSecret}
           pac auth select --name PORTAL_DEV
-          pac paportal download --path $(Build.ArtifactStagingDirectory) --webSiteId ${env:PowerPlatformDevPortalWebSiteId}
+          pac paportal download --path $(Build.ArtifactStagingDirectory)\Portal --webSiteId ${env:PowerPlatformDevPortalWebSiteId}
     - task: PowerShell@2
       displayName: Push code to GitHub
+      env:
+        PowerPlatformAadApplicationSecret: $(PowerPlatformAadApplicationSecret)
+      inputs:
+        targetType: 'inline'
+        script: |
+          Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\Portal\* -Destination $(Build.SourcesDirectory)\Portals
+          git config user.email "nepasrepondre-noreply@tc.gc.ca"
+          git config user.name "tc-buildbot"
+          git checkout development
+          git add --all
+          git commit -m "Update portal"
+          echo "Push solution changes to the remote repository"
+          git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
+    - task: PowerShell@2
+      displayName: Pull code from GitHub into artifact staging
       env:
         PowerPlatformAadApplicationSecret: $(PowerPlatformAadApplicationSecret)
       inputs:
@@ -65,7 +80,6 @@ stages:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)\cid-dev'
         ArtifactName: 'cid-dev'
         publishLocation: 'Container'
-  #TODO Store the config folder in repo
 
   #Deploy to QA
 - stage: DeployToQA
@@ -106,7 +120,7 @@ stages:
                   --applicationId ${env:PowerPlatformAadApplicationId} `
                   --clientSecret ${env:PowerPlatformAadApplicationSecret}
                 pac auth select --name PORTAL_QA
-                pac paportal upload --path $(Agent.BuildDirectory)\cid-dev --deploymentProfile qa
+                pac paportal upload --path $(Agent.BuildDirectory)\cid-dev #--deploymentProfile qa
 
   #Deploy to ACC
 - stage: DeployToACC
@@ -147,7 +161,7 @@ stages:
                   --applicationId ${env:PowerPlatformAadApplicationId} `
                   --clientSecret ${env:PowerPlatformAadApplicationSecret}
                 pac auth select --name PORTAL_ACC
-                pac paportal upload --path $(Agent.BuildDirectory)\cid-dev --deploymentProfile acc
+                pac paportal upload --path $(Agent.BuildDirectory)\cid-dev #--deploymentProfile acc
 
   #Deploy to PREPROD
 - stage: DeployToPREPROD
