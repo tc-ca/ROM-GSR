@@ -59,9 +59,9 @@
             parent.$("#ovs_unnumber").attr("value", id);
             parent.$("#ovs_unnumber_name").attr("value", text);
             parent.$("#ovs_unnumber_entityname").attr("value", 'tdg_unnumber');
-       }
+        }
 
-        // How to call this from web portal page             
+        // How to call this from web portal page
         // var f = document.getElementById("WebResource_naicscode");
         // var c = f.contentWindow;
         // c.clear_field();
@@ -78,7 +78,7 @@
             var tdg_unnumberid = document.getElementById("tdg_unnumberid").value;
             if (tdg_unnumberid.length < 2) return;
 
-            debugger;
+            //debugger;
 
             var selected_language = sessionStorage.getItem("selected_language");
             selected_language = (selected_language == null ? "en-US" : selected_language);
@@ -92,17 +92,21 @@
             $('#tdg_unnumberid_list').empty();
 
             var tdg_unnumberid_list_id = "";
+            var tdg_name = "";
             for (i = 0; i < items.length; i++) {
                 var item = items[i];
-                var value = item.tdg_unnumberid;
-                var text = item.tdg_undisplayname + ' - ' +
-                    common.text_language(item.tdg_shippingnamedescriptiontxt, selected_language);
+                if (tdg_name != item.tdg_name) {
+                    tdg_name = item.tdg_undisplayname;
+                    var value = item.tdg_unnumberid;
+                    var text = tdg_name + ' - ' +
+                        common.text_language(item.tdg_shippingnamedescriptiontxt, selected_language);
 
-                tdg_unnumberid_list_id += value + ";";
+                    tdg_unnumberid_list_id += value + ";";
 
-                const option = document.createElement('option');
-                option.value = text;
-                tdg_unnumberid_list.appendChild(option);
+                    const option = document.createElement('option');
+                    option.value = text;
+                    tdg_unnumberid_list.appendChild(option);
+                }
             }
             document.getElementById('tdg_unnumberid_list_id').value = tdg_unnumberid_list_id;
         }
@@ -161,7 +165,15 @@
 
     </script>
 
-    <label for="tdg_unnumberid" class="field-label">UN Number</label>
+    <label for="x" class="field-label">x</label>
+    <span id="x_required" style="color: red;font-weight: bold"> *</span>
+    <br>
+    <input list="x_list" id="x" class="text form-control" />
+    <br>
+    <datalist id="x_list">
+    </datalist>
+    <br />
+    <label for="tdg_unnumberid" class="field-label">UN Display Name</label>
     <span id="tdg_unnumberid_required" style="color: red;font-weight: bold"> *</span>
     <br>
     <input list="tdg_unnumberid_list" id="tdg_unnumberid" class="text form-control" />
@@ -184,6 +196,15 @@
             document.getElementById("tdg_unnumberid").setAttribute("autocomplete", "off");
 
             document.querySelector('input[list="tdg_unnumberid_list"]').addEventListener('input', onInput);
+
+            // language
+            try {
+                var tdg_unnumberid_label = sessionStorage.getItem("tdg_unnumberid_label");
+
+                var selected_language = sessionStorage.getItem("selected_language");
+                var value = (selected_language == "en-US" ? "UN Display Name" : "Nom d'affichage de l'ONU");
+                $("#tdg_unnumberid")[0].labels[0].innerHTML = tdg_unnumberid_label;
+            } catch (e) { }
         })
 
     </script>

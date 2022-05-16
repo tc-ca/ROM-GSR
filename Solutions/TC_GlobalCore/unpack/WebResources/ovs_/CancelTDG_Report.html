@@ -98,8 +98,6 @@
             var JustifyLabel = Xrm.Utility.getResourceString(resexResourceName, "tdgReport.Cancel.JustifyLabel");
             var CancelButtonLabel = Xrm.Utility.getResourceString(resexResourceName, "tdgReport.Cancel.CancelButton");
 
-            var yesNo = LCID === 1033 ? "Yes" : "Oui";
-
             $('#lblJustify').text(JustifyLabel);
             $('#submitCancelation').text(CancelButtonLabel);
 
@@ -139,7 +137,7 @@
                             var updatedEntityId = result.id;
 
                             //to do localize
-                            var alertStrings = { confirmButtonLabel: yesNo, text: successMessage };
+                            var alertStrings = { confirmButtonLabel: "OK", text: successMessage };
                             Xrm.Navigation.openAlertDialog(alertStrings).then(
                                 function success(result) {
                                     window.returnValue = updatedEntityId;

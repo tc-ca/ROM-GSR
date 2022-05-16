@@ -445,7 +445,7 @@ var IReportRibbon = (function (window, document) {
             resexResourceName = "ovs_Labels.1036.resx";
 
         var LCID = globalContext.userSettings.languageId;
-        var yesNo = LCID === 1033 ? "Yes" : "Oui";
+        //var yesNo = LCID === 1033 ? "Yes" : "Oui";
 
         var notIssuedMessage = Xrm.Utility.getResourceString(resexResourceName, "tdgReport.Cancel.NotIssued");
         var popupTitleMessage = Xrm.Utility.getResourceString(resexResourceName, "tdgReport.Cancel.PopupTitle");
@@ -457,7 +457,7 @@ var IReportRibbon = (function (window, document) {
                 var statuscode = result["statuscode"];
                 if (statuscode != 2) {
 
-                    var alertStrings = { confirmButtonLabel: yesNo, text: notIssuedMessage };
+                    var alertStrings = { confirmButtonLabel: "OK", text: notIssuedMessage };
                     Xrm.Navigation.openAlertDialog(alertStrings);
                     return;
                 }

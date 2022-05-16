@@ -144,7 +144,7 @@ var AccountTDGmain = (function (window, document) {
                 getViolationHistory(formContext);
 
                 //TASK 165366
-                glHelper.SetRequiredLevel(formContext, PRIMARYCONTACT, true);
+              //  glHelper.SetRequiredLevel(formContext, PRIMARYCONTACT, true);
 
                 //var accountUN = formContext.getControl("Subgrid_AccountUNNumbers");
 

@@ -1,6 +1,5 @@
-<HTML>
-<HEAD>
-    <TITLE></TITLE>
+<html><head>
+    <title></title>
     <style>
         body {
             background-color: white;
@@ -43,8 +42,8 @@
     </style>
     <!-- Using jquery library -->
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-</HEAD>
-<BODY>
+<meta></head>
+<body onfocusout="parent.setEmailRange();" style="overflow-wrap: break-word;">
     <script type="text/javascript">
         function search() {
             //debugger;
@@ -56,8 +55,6 @@
         }
 
         function onInput(e) {
-            debugger;
-
             var input = e.target;
             var val = input.value;
             var list = input.getAttribute('list');
@@ -86,6 +83,7 @@
                 //debugger;
                 var id = AddressComplete.GetId(index);
                 var list = id.split(";");
+                //No sublist meaning the desired address is found
                 if (list[1] == "Retrieve") {
                     //document.getElementById('address_list').value = list[0];
                     AddressComplete.Retrieve(list[0]);
@@ -93,12 +91,16 @@
                     document.getElementById('address_list_id').value = list[0] + ";";
                     document.getElementById('address_list_next').value = list[1] + ";";
                 }
+                //Sublist selected meaning the dropdown must now show the sublist
                 else {
-                    debugger;
+                    //debugger;
                     var LanguagePreference = 'en';
                     var LastId = list[0];
 
-                    document.getElementById('address1_line1').value = ""; // list[0];
+                    
+                    var commonAddress = address1_line1.split(",")[0];
+
+                    document.getElementById('address1_line1').value = commonAddress; // list[0];
 
                     AddressComplete.Find(LastId, LanguagePreference, true);
                 }
@@ -112,19 +114,19 @@
     <label for="address1_line1" class="field-label">Street 1</label>
     <span id="address1_line1_required" style="color: red;font-weight: bold"> *</span>
     <br>
-    <input list="address_list" id="address1_line1" class="text form-control" />
+    <input list="address_list" id="address1_line1" class="text form-control">
     <br>
     <datalist id="address_list">
     </datalist>
     <datalist id="address_list2">
     </datalist>
 
-    <input type="text" id="address_list_id" hidden />
-    <input type="text" id="address_list_next" hidden />
+    <input type="text" id="address_list_id" hidden="">
+    <input type="text" id="address_list_next" hidden="">
 
     <script type="text/javascript">
         $(document).ready(function () {
-            debugger;
+            //debugger;
             document.getElementById("address1_line1").setAttribute("autocomplete", "off");
 
             document.querySelector('input[list="address_list"]').addEventListener('input', onInput);
@@ -151,7 +153,7 @@
 
     <script>
         function readonly(value) {
-            debugger;
+            //debugger;
 
             document.getElementById("address_list").prop('readonly', value);
 
@@ -180,7 +182,7 @@
             },
 
             Find: function (SearchTerm, LanguagePreference, LastId_ind) {
-                debugger;
+                //debugger;
 
                 var listname = (!LastId_ind ? "address_list" : "address_list2");
                 this.removeOptions(listname);
@@ -223,7 +225,7 @@
                                 //alert("Sorry, there were no results");
                             }
                             else {
-                                debugger;
+                                //debugger;
                                 var items = response.Items;
 
                                 var address_list = document.getElementById(listname);
@@ -258,12 +260,12 @@
                 try {
                     http.send(params);
                 } catch (e) {
-                    debugger;
+                    //debugger;
                 }
             },
 
             Retrieve: function (Id) {
-                debugger;
+                //debugger;
 
                 var url = 'https://ws1.postescanada-canadapost.ca/AddressComplete/Interactive/Retrieve/v2.11/json3.ws';
                 var params = '';
@@ -306,7 +308,7 @@
             },
 
             Selected: function (data) {
-                debugger;
+                //debugger;
 
                 var item_e = data[0]; // english
 
@@ -332,5 +334,6 @@
             }
         }
     </script>
-</BODY>
-</HTML>
+
+
+</body></html>

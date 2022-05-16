@@ -161,6 +161,15 @@
             document.getElementById("cid_naicscode").setAttribute("autocomplete", "off");
 
             document.querySelector('input[list="cid_naicscode_list"]').addEventListener('input', onInput);
+
+            // language
+            try {
+                var cid_naicscode_label = sessionStorage.getItem("cid_naicscode_label");
+
+                var selected_language = sessionStorage.getItem("selected_language");
+                var value = (selected_language == "en-US" ? "NAICS Code" : "Code SCIAN");
+                $("#cid_naicscode")[0].labels[0].innerHTML = cid_naicscode_label;
+            } catch (e) { }
         })
 
     </script>

@@ -11,9 +11,9 @@
       <grid name="resultset" jump="ovs_name" select="1" preview="1" icon="1">
         <row name="result" id="ovs_operationunnumberid">
           <cell name="ovs_unnumber" width="100" />
-          <cell name="a_b375e71a6743ec118c600022483c3ed3.tdg_packinggroupcd" width="100" disableSorting="1" />
-          <cell name="cid_annualquantityvolume" width="200" />
-          <cell name="cid_unitofmeasurement" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="a_b375e71a6743ec118c600022483c3ed3.tdg_packinggroupcd" width="125" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="cid_unitofmeasurement" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="cid_annualquantityvolume" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="cid_annualnumberofshipment" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="createdon" width="100" />
         </row>
@@ -23,15 +23,15 @@
     <fetchxml>
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="ovs_operationunnumber">
-          <attribute name="cid_unitofmeasurement" />
           <attribute name="cid_annualnumberofshipment" />
           <attribute name="createdon" />
           <attribute name="cid_annualquantityvolume" />
-          <order attribute="cid_annualnumberofshipment" descending="false" />
+          <order attribute="ovs_unnumber" descending="false" />
           <filter type="and">
             <condition attribute="statuscode" operator="eq" value="1" />
           </filter>
           <attribute name="ovs_unnumber" />
+          <attribute name="cid_unitofmeasurement" />
           <link-entity alias="a_b375e71a6743ec118c600022483c3ed3" name="tdg_unnumber" from="tdg_unnumberid" to="ovs_unnumber" link-type="outer" visible="false">
             <attribute name="tdg_packinggroupcd" />
           </link-entity>
