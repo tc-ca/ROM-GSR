@@ -2,46 +2,44 @@
 <savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <savedquery>
     <IsCustomizable>1</IsCustomizable>
-    <CanBeDeleted>0</CanBeDeleted>
+    <CanBeDeleted>1</CanBeDeleted>
     <isquickfindquery>0</isquickfindquery>
     <isprivate>0</isprivate>
-    <isdefault>1</isdefault>
-    <savedqueryid>{b7f1b00e-7ee0-41ff-b007-2fefddbd6280}</savedqueryid>
+    <isdefault>0</isdefault>
+    <savedqueryid>{cdd83e49-9dd5-ec11-a7b5-0022483c547f}</savedqueryid>
     <layoutxml>
-      <grid name="resultset" jump="cid_name" select="1" icon="1" preview="1">
+      <grid name="resultset" jump="cid_name" select="1" preview="1" icon="1">
         <row name="result" id="cid_audithistorylogid">
           <cell name="cid_auditcode" width="100" />
           <cell name="cid_companysite" width="100" />
-          <cell name="cid_createdbyregistrant" width="100" />
-          <cell name="cid_externallyvisible" width="100" />
           <cell name="cid_memoen" width="100" />
           <cell name="cid_memofr" width="100" />
-          <cell name="createdon" width="125" />
+          <cell name="createdon" width="100" />
+          <cell name="cid_createdbyregistrant" width="100" />
         </row>
       </grid>
     </layoutxml>
     <querytype>0</querytype>
     <fetchxml>
-      <fetch version="1.0" mapping="logical">
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="cid_audithistorylog">
-          <attribute name="createdon" />
-          <order attribute="createdon" descending="false" />
+          <attribute name="cid_companysite" />
+          <order attribute="cid_companysite" descending="false" />
           <filter type="and">
-            <condition attribute="statecode" operator="eq" value="0" />
+            <condition attribute="cid_externallyvisible" operator="eq" value="1" />
           </filter>
           <attribute name="cid_memofr" />
           <attribute name="cid_memoen" />
-          <attribute name="cid_externallyvisible" />
+          <attribute name="createdon" />
           <attribute name="cid_createdbyregistrant" />
-          <attribute name="cid_companysite" />
           <attribute name="cid_auditcode" />
           <attribute name="cid_audithistorylogid" />
         </entity>
       </fetch>
     </fetchxml>
-    <IntroducedVersion>2021.09.22.7</IntroducedVersion>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
     <LocalizedNames>
-      <LocalizedName description="Active Audit History Logs" languagecode="1033" />
+      <LocalizedName description="CID Portal - Audit History Logs" languagecode="1033" />
     </LocalizedNames>
   </savedquery>
 </savedqueries>

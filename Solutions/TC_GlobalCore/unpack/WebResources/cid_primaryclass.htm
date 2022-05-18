@@ -45,151 +45,297 @@
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 </HEAD>
 <BODY>
-    <script type="text/javascript">
-        function form_clear() {
-            parent.$("#ovs_primaryclass_group").attr("value", null);
-            parent.$("#ovs_primaryclass_group_name").attr("value", null);
-        }
+    <label for="ovs_primaryclass" class="field-label">Class/Division</label>
+    <span id="ovs_primaryclass_required" style="color: red;font-weight: bold"> *</span>
+    <br />
+    <input list="ovs_primaryclass_list" id="ovs_primaryclass" class="text form-control" />
+    <br />
+    <datalist id="ovs_primaryclass_list">
+    </datalist>
+    <textarea readonly class="text form-control" id="ovs_primaryclass_description" rows="4" cols="100%"> 
+    </textarea>
+    <br>
+    <span id="group">
+        <label for="ovs_compatibility_group" class="field-label">Compatibility Group</label>
+        <span id="ovs_compatibility_group_required" style="color: red;font-weight: bold"> *</span>
+        <br />
+        <input list="ovs_compatibility_group_list" id="ovs_compatibility_group" class="text form-control" />
+        <br />
+        <datalist id="ovs_compatibility_group_list">
+        </datalist>
+        <textarea readonly class="text form-control" id="ovs_compatibility_group_description" rows="4" cols="100%"> 
+        </textarea>
+        <br />
+    </span>
+    
+    <input type="text" id="ovs_primaryclass_list_id" hidden />
+    
+        <script type="text/javascript">
+            var _group_list;
 
-        function item_selected(text, id) {
-            debugger;
+            $(document).ready(function () {
+                debugger;
+                group_hide(true);
 
-            var index1 = text.indexOf(" - ");
-            text = text.substr(0, index1);
-            parent.$("#ovs_primaryclass_group").attr("value", id);
-            parent.$("#ovs_primaryclass_group_name").attr("value", text);
-            parent.$("#ovs_primaryclass_group_entityname").attr("value", 'ovs_primaryclass_group');
-       }
+                var ovs_primaryclass = sessionStorage.getItem("ovs_primaryclass");
+                document.getElementById("ovs_primaryclass").value = ovs_primaryclass;
 
-        // How to call this from web portal page             
-        // var f = document.getElementById("WebResource_naicscode");
-        // var c = f.contentWindow;
-        // c.clear_field();
-        function clear_field() {
-            debugger;
-            document.getElementById("ovs_primaryclass_group").value = "";
+                document.getElementById("ovs_primaryclass").setAttribute("autocomplete", "off");
+                document.getElementById("ovs_compatibility_group").setAttribute("autocomplete", "off");
 
-            form_clear();
-        }
+                document.querySelector('input[list="ovs_primaryclass_list"]').addEventListener('input', onInput);
+                document.querySelector('input[list="ovs_compatibility_group_list"]').addEventListener('input', onInput_group);
 
-        function search() {
-            form_clear();
-
-            var ovs_primaryclass_group = document.getElementById("ovs_primaryclass_group").value;
-            if (ovs_primaryclass_group.length < 2) return;
-
-            debugger;
-
-            var selected_language = sessionStorage.getItem("selected_language");
-            selected_language = (selected_language == null ? "en-US" : selected_language);
-            var ovs_primaryclass_group = document.getElementById("ovs_primaryclass_group").value;
-            //var filter = "substringof('" + ovs_primaryclass_lk + "', ovs_name) or substringof('" + ovs_primaryclass_lk + "', ovs_primaryclass-ovs_class_en)";
-            var filter = "substringof('" + ovs_primaryclass_group + "', ovs_name)";
-            var items = common.OData_List("ovs_primaryclass_group", filter);
-
-            var ovs_primaryclass_group_list = document.getElementById('ovs_primaryclass_group_list');
-
-            // remove options
-            $('#ovs_primaryclass_group_list').empty();
-
-            var ovs_primaryclass_group_list_id = "";
-            var ovs_name = "";
-            for (i = 0; i < items.length; i++) {
-                var item = items[i];
-                if (ovs_name != item.ovs_name) {
-                    ovs_name = item.ovs_name;
-                    var value = item.ovs_primaryclass_groupid;
-                    //var text = ovs_name + ' - ' +
-                    //    common.text_language(item["ovs_primaryclass-ovs_class_en"], selected_language);
-                    var text = ovs_name + ' - ' + item["ovs_primaryclass-ovs_class_en"];
-
-                    ovs_primaryclass_group_list_id += value + ";";
-
-                    const option = document.createElement('option');
-                    option.value = text;
-                    ovs_primaryclass_group_list.appendChild(option);
-                }
-            }
-            document.getElementById('ovs_primaryclass_group_list_id').value = ovs_primaryclass_group_list_id;
-        }
-
-        function onInput(e) {
-            //debugger;
-
-            var input = e.target;
-            var val = input.value;
-            var list = input.getAttribute('list');
-            var options = document.getElementById(list).childNodes;
-            var found = false;
-            var index = 0;
-            var text = "";
-
-            for (var i = 0; i < options.length; i++) {
-                var current = options[i].value;
-                if (current === val) {
-                    found = true;
-                    index = i;
-                    text = current;
-                    break;
-                }
-            }
-
-            if (found) {
-                var id = $('#ovs_primaryclass_group_list_id').val();
-                var list = id.split(";");
-                id = list[index];
-
+                // language
                 try {
-                    debugger;
+                    var ovs_primaryclass_label = sessionStorage.getItem("ovs_primaryclass_label");
+                    var selected_language = sessionStorage.getItem("selected_language");
+                    var value = (selected_language == "en-US" ? "Class/Division" : "Classe/Division");
+                    $("#ovs_primaryclass")[0].labels[0].innerHTML = value;    // ovs_primaryclass_label;
 
-                    // transfer control back to parent form
-                    parent.ovs_primaryclass_group_selected(text, id);
+                    var ovs_compatibility_group_label = sessionStorage.getItem("ovs_compatibility_group_label");
+                    var value = (selected_language == "en-US" ? "Compatibility Group" : "Groupe de compatibilit�");
+                    $("#ovs_compatibility_group")[0].labels[0].innerHTML = value;    // ovs_compatibility_group_label;
 
                 } catch (e) { }
+
+                // get group list
+                _group_list = ovs_class_compatibility_group_list();
+            })
+
+            function groups(class_value) {
+                var value = "";
+                switch (class_value) {
+                    case "1.1":
+                        value = "ABCDEFGJL";
+                        break;
+                    case "1.2":
+                        value = "BCDEFGHJKL";
+                        break;
+                    case "1.3":
+                        value = "CFGHJKL";
+                        break;
+                    case "1.4":
+                        value = "CDEFGS";
+                        break;
+                    case "1.5":
+                        value = "D";
+                    case "1.6":
+                        value = "N";
+                        break;
+                }
+                return value;
             }
-            else {
-                search();
+
+            function ovs_class_compatibility_group_list() {
+                var selected_language = sessionStorage.getItem("selected_language");
+                selected_language = (selected_language == null ? "en-US" : selected_language);
+                var items = common.OData_List("ovs_class_compatibility_group", "");
+                return items;
             }
-        }
-    </script>
 
-    <label for="ovs_primaryclass_group" class="field-label">Class/Division</label>
-    <span id="ovs_primaryclass_group_required" style="color: red;font-weight: bold"> *</span>
-    <br>
-    <input list="ovs_primaryclass_group_list" id="ovs_primaryclass_group" class="text form-control" />
-    <br>
-    <datalist id="ovs_primaryclass_group_list">
-    </datalist>
-    <br />
+            function group_hide(value) {
+                if (value) {
+                    $("#group").hide();
+                }
+                else {
+                    $("#group").show();
+                }
+            }
 
-    <input type="text" id="ovs_primaryclass_group_list_id" hidden />
-    <script>
+            function form_clear() {
+                parent.$("#ovs_primaryclass").attr("value", null);
+                parent.$("#ovs_primaryclass_name").attr("value", null);
+            }
 
-    </script>
+            function form_group_clear() {
+                parent.$("#ovs_compatibility_group").attr("value", null);
+                parent.$("#ovs_compatibility_group_name").attr("value", null);
+            }
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            debugger;
-            var ovs_primaryclass_group = sessionStorage.getItem("ovs_primaryclass_group");
-            document.getElementById("ovs_primaryclass_group").value = ovs_primaryclass_group;
-
-            document.getElementById("ovs_primaryclass_group").setAttribute("autocomplete", "off");
-
-            document.querySelector('input[list="ovs_primaryclass_group_list"]').addEventListener('input', onInput);
-
-            // language
-            try {
-                var ovs_primaryclass_group_label = sessionStorage.getItem("ovs_primaryclass_group_label");
+            function item_selected(text, id) {
+                debugger;
 
                 var selected_language = sessionStorage.getItem("selected_language");
-                var value = (selected_language == "en-US" ? "Class/Division" : "Classe/Division");
-                $("#ovs_primaryclass_group")[0].labels[0].innerHTML = value;    // ovs_primaryclass_group_label;
-            } catch (e) { }
-        })
+                selected_language = (selected_language == null ? "en-US" : selected_language);
 
-    </script>
+                //var index1 = text.indexOf(" - ");
+                //var text1 = text.substr(0, index1);
+                //parent.$("#ovs_class_division").attr("value", id);
+                //parent.$("#ovs_class_division_name").attr("value", text1);
+                //parent.$("#ovs_class_division_entityname").attr("value", 'ovs_primaryclass');
 
-    <script>
+                // transfer control back to parent form
+                parent.ovs_primaryclass_selected(text, id);
+
+                var index1 = text.indexOf(" - ");
+                var text1 = text.substr(index1 + 3);
+                document.getElementById('ovs_primaryclass_description').value = text1;
+                var class_division = text.substr(0, index1);
+
+                index1 = text.indexOf(".");
+                var class_value = text.substr(0, index1);
+
+                // load compatibility group if class 1
+                if (class_value == "1") {
+                    group_hide(false);
+                    var group_list = groups(class_division);
+
+                    var ovs_compatibility_group_list = document.getElementById('ovs_compatibility_group_list');
+                    $('#ovs_compatibility_group_list').empty();
+                    for (var i = 0; i < _group_list.length; i++) {
+                        var item = _group_list[i];
+                        ovs_name = item.ovs_name;
+                        if (group_list.indexOf(ovs_name) != -1) {
+                            var text = ovs_name + ' - ' +
+                                common.text_language(item["ovs_description"], selected_language);
+
+                            const option = document.createElement('option');
+                            option.value = text;
+                            ovs_compatibility_group_list.appendChild(option);
+                        }
+                    }
+                }
+                else {
+                    group_hide(true);
+                }
+            }
+
+            // How to call this from web portal page
+            // var f = document.getElementById("WebResource_naicscode");
+            // var c = f.contentWindow;
+            // c.clear_field();
+            function clear_field() {
+                debugger;
+                document.getElementById("ovs_primaryclass").value = "";
+                document.getElementById("ovs_compatibility_group").value = "";
+
+                form_clear();
+                form_group_clear();
+            }
+
+            function search() {
+                form_clear();
+
+                var ovs_primaryclass = document.getElementById("ovs_primaryclass").value;
+                //if (ovs_primaryclass.length < 2) return;
+
+                //debugger;
+
+                var selected_language = sessionStorage.getItem("selected_language");
+                selected_language = (selected_language == null ? "en-US" : selected_language);
+                var ovs_primaryclass = document.getElementById("ovs_primaryclass").value;
+                var filter = "substringof('" + ovs_primaryclass + "', ovs_class) or substringof('" + ovs_primaryclass + "', ovs_class_description)";
+                var items = common.OData_List("ovs_primaryclass", filter);
+
+                var ovs_primaryclass_list = document.getElementById('ovs_primaryclass_list');
+
+                // remove options
+                $('#ovs_primaryclass_list').empty();
+
+                var ovs_primaryclass_list_id = "";
+                var ovs_name = "";
+                for (i = 0; i < items.length; i++) {
+                    var item = items[i];
+                    if (item.ovs_parent != null) {
+                        ovs_name = item.ovs_class;
+                        var value = item.ovs_primaryclassid;
+                        var text = ovs_name + ' - ' +
+                            common.text_language(item["ovs_class_description"], selected_language);
+
+                        ovs_primaryclass_list_id += value + ";";
+
+                        const option = document.createElement('option');
+                        option.value = text;
+                        ovs_primaryclass_list.appendChild(option);
+                    }
+                }
+                document.getElementById('ovs_primaryclass_list_id').value = ovs_primaryclass_list_id;
+            }
+
+            function onInput(e) {
+                //debugger;
+
+                document.getElementById('ovs_primaryclass_description').value = "";
+
+                var input = e.target;
+                var val = input.value;
+                var list = input.getAttribute('list');
+                var options = document.getElementById(list).childNodes;
+                var found = false;
+                var index = 0;
+                var text = "";
+
+                for (var i = 0; i < options.length; i++) {
+                    var current = options[i].value;
+                    if (current === val) {
+                        found = true;
+                        index = i;
+                        text = current;
+                        break;
+                    }
+                }
+
+                if (found) {
+                    var id = $('#ovs_primaryclass_list_id').val();
+                    var list = id.split(";");
+                    id = list[index];
+
+                    try {
+                        item_selected(text, id);
+                    } catch (e) { }
+                }
+                else {
+                    search();
+                }
+            }
+
+            function onInput_group(e) {
+                debugger;
+
+                document.getElementById('ovs_compatibility_group_description').value = "";
+
+                var input = e.target;
+                var val = input.value;
+                var list = input.getAttribute('list');
+                var options = document.getElementById(list).childNodes;
+                var found = false;
+                var index = 0;
+                var text = "";
+
+                for (var i = 0; i < options.length; i++) {
+                    var current = options[i].value;
+                    if (current === val) {
+                        found = true;
+                        index = i;
+                        text = current;
+                        break;
+                    }
+                }
+
+                if (found) {
+                    debugger;
+                    id = _group_list[index].ovs_class_compatibility_groupid;
+
+                    try {
+                        //item_selected(text, id);
+                        parent.$("#ovs_compatibility_group").attr("value", id);
+                        parent.$("#ovs_compatibility_group_name").attr("value", text);
+                        parent.$("#ovs_compatibility_group_entityname").attr("value", 'ovs_class_compatibility_group');
+
+                        var index1 = text.indexOf(" - ");
+                        var text1 = text.substr(index1 + 3);
+                        document.getElementById('ovs_compatibility_group_description').value = text1;
+                    } catch (e) { }
+                }
+                else {
+                    document.getElementById('ovs_compatibility_group').value = "";
+                    form_group_clear();
+                }
+            }
+        </script>
+
+        <script>
         // tdgcore_common.js
 
         if (typeof (common) == "undefined") {
@@ -211,7 +357,10 @@
 
                 // odata
                 OData_List: function (entity, filter) {
-                    var url = entity + "?$filter=" + filter;
+                    var url = entity;
+                    if (filter != "") {
+                        url += "?$filter=" + filter;
+                    }
                     var oDataUrl = "~/_odata/" + url;
                     //var oDataUrl = "https://rd-tdgcore-dev.powerappsportals.com/_odata/" + url;
                     var response = null;
@@ -228,6 +377,6 @@
                 }
             }
         }
-    </script>
+        </script>
 </BODY>
 </HTML>

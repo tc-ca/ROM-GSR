@@ -112,7 +112,11 @@
         }
 
         function onInput(e) {
-            //debugger;
+            debugger;
+            var data_source = document.getElementById("data_source").value;
+            if (data_source == 1) {
+                return;
+            }
 
             var input = e.target;
             var val = input.value;
@@ -242,7 +246,10 @@
 
                 // odata
                 OData_List: function (entity, filter) {
-                    var url = entity + "?$filter=" + filter;
+                    var url = entity;
+                    if (filter != "") {
+                        url += "?$filter=" + filter;
+                    }
                     var oDataUrl = "~/_odata/" + url;
                     //var oDataUrl = "https://rd-tdgcore-dev.powerappsportals.com/_odata/" + url;
                     var response = null;

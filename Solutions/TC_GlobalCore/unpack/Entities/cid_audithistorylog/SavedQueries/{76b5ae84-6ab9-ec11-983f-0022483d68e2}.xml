@@ -10,16 +10,12 @@
     <layoutxml>
       <grid name="resultset" jump="cid_name" select="1" preview="1" icon="1">
         <row name="result" id="cid_audithistorylogid">
-          <cell name="cid_name" width="150" />
-          <cell name="cid_activity" width="100" />
-          <cell name="cid_changedfield" width="100" />
+          <cell name="cid_auditcode" width="100" />
           <cell name="cid_companysite" width="100" />
-          <cell name="cid_externallyvisible" width="100" />
-          <cell name="cid_memo" width="100" disableSorting="1" />
-          <cell name="cid_newvalue" width="100" />
-          <cell name="cid_oldvalue" width="100" />
-          <cell name="cid_operation" width="100" />
-          <cell name="cid_parentcompany" width="100" />
+          <cell name="cid_memoen" width="100" />
+          <cell name="cid_memofr" width="100" />
+          <cell name="createdon" width="100" />
+          <cell name="cid_createdbyregistrant" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -27,20 +23,16 @@
     <fetchxml>
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="cid_audithistorylog">
-          <attribute name="cid_name" />
-          <attribute name="cid_parentcompany" />
-          <attribute name="cid_operation" />
-          <attribute name="cid_oldvalue" />
-          <attribute name="cid_newvalue" />
-          <attribute name="cid_memo" />
-          <attribute name="cid_externallyvisible" />
           <attribute name="cid_companysite" />
-          <attribute name="cid_changedfield" />
-          <attribute name="cid_activity" />
-          <order attribute="cid_name" descending="false" />
+          <order attribute="cid_companysite" descending="false" />
           <filter type="and">
             <condition attribute="cid_externallyvisible" operator="eq" value="1" />
           </filter>
+          <attribute name="cid_memofr" />
+          <attribute name="cid_memoen" />
+          <attribute name="createdon" />
+          <attribute name="cid_createdbyregistrant" />
+          <attribute name="cid_auditcode" />
           <attribute name="cid_audithistorylogid" />
         </entity>
       </fetch>

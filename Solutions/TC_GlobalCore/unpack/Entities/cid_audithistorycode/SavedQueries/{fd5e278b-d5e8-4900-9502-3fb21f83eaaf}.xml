@@ -6,11 +6,13 @@
     <isquickfindquery>0</isquickfindquery>
     <isprivate>0</isprivate>
     <isdefault>1</isdefault>
-    <savedqueryid>{7f917798-9134-4ad1-be81-258048aad040}</savedqueryid>
+    <savedqueryid>{fd5e278b-d5e8-4900-9502-3fb21f83eaaf}</savedqueryid>
     <layoutxml>
-      <grid name="resultset" jump="fdr_name" select="1" icon="1" preview="1">
-        <row name="result" id="fdr_certificateid">
-          <cell name="fdr_name" width="300" />
+      <grid name="resultset" jump="cid_name" select="1" icon="1" preview="1">
+        <row name="result" id="cid_audithistorycodeid">
+          <cell name="cid_name" width="300" />
+          <cell name="cid_activityen" width="100" />
+          <cell name="cid_activityfr" width="100" />
           <cell name="createdon" width="125" />
         </row>
       </grid>
@@ -18,20 +20,22 @@
     <querytype>0</querytype>
     <fetchxml>
       <fetch version="1.0" mapping="logical">
-        <entity name="fdr_certificate">
-          <attribute name="fdr_certificateid" />
-          <attribute name="fdr_name" />
+        <entity name="cid_audithistorycode">
+          <attribute name="cid_name" />
           <attribute name="createdon" />
-          <order attribute="fdr_name" descending="false" />
+          <order attribute="cid_name" descending="false" />
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="0" />
           </filter>
+          <attribute name="cid_activityfr" />
+          <attribute name="cid_activityen" />
+          <attribute name="cid_audithistorycodeid" />
         </entity>
       </fetch>
     </fetchxml>
-    <IntroducedVersion>1.0</IntroducedVersion>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
     <LocalizedNames>
-      <LocalizedName description="Active Certificates" languagecode="1033" />
+      <LocalizedName description="Active Audit History Codes" languagecode="1033" />
     </LocalizedNames>
   </savedquery>
 </savedqueries>

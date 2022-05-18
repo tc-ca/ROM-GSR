@@ -114,7 +114,10 @@ if (typeof (tdg.c) == "undefined") {
 
         // odata
         OData_List: function (entity, filter) {
-            var url = entity + "?$filter=" + filter;
+            var url = entity;
+            if (filter != "") {
+                url += "?$filter=" + filter;
+            }
             var oDataUrl = "~/_odata/" + url;
             //var oDataUrl = "https://rd-tdgcore-dev.powerappsportals.com/_odata/" + url;
             var response = null;
@@ -441,7 +444,8 @@ if (typeof (tdg.webapi) == "undefined") {
 
                 error: function (res, status, errorThrown) {
                     debugger;
-                    var msg = res.responseJSON.error.innererror.message;
+                    //var msg = res.responseJSON.error.innererror.message;
+                    var msg = res.responseJSON.error.message;
                     console.log(msg);
                     try {
                         error_cb(msg);
