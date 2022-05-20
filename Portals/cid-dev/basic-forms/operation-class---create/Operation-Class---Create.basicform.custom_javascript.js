@@ -2,6 +2,7 @@
 // Basic Form-Operation Class- Create.js
 //
 var _reload = false;
+var _count = 0;
 
 $(document).ready(function () {
     debugger;
@@ -11,8 +12,17 @@ $(document).ready(function () {
     //when the page is done loading, disable autocomplete on all inputs[text]
     $('input[type="text"]').attr('autocomplete', 'off');
 
+    // hide controls 
+    tdg.c.control_hide("ovs_class_division", true);
+    tdg.c.control_hide("ovs_compatibility_group", true);
+
+    // resize WebResource_unnumber
+    $("#WebResource_primaryclass").height('400px');
+
     // insert button
     tdg.c.btn_save_new_setup();
+
+    //tdg.c.addValidator("ovs_class_division");
 });
 
 $(window).unload(function () {
@@ -68,42 +78,55 @@ function btn_save_new_onclick() {
     if (operation_id == null) return;
     debugger;
 
+    var ovs_class_division = $("#ovs_class_division").val();
+    if (ovs_class_division == null) return;
+
     // insert
     var contact_id = '{{user.id}}';
-    var ovs_primaryclass_group = $("#ovs_primaryclass_group").val();
+    var ovs_compatibility_group = $("#ovs_compatibility_group").val();
 
-    ovs_operationclass_insert(operation_id, ovs_primaryclass_group, contact_id);
+    ovs_operationclass_insert(operation_id, ovs_class_division, ovs_compatibility_group, contact_id);
 }
 
-function ovs_primaryclass_group_selected(text, id) {
+function ovs_primaryclass_selected(text, id) {
     debugger;
 
     var index1 = text.indexOf(" - ");
     text = text.substr(0, index1);
-    $("#ovs_primaryclass_group").attr("value", id);
-    $("#ovs_primaryclass_group_name").attr("value", text);
-    $("#ovs_primaryclass_group_entityname").attr("value", 'ovs_primaryclass_group');
+    $("#ovs_class_division").attr("value", id);
+    $("#ovs_class_division_name").attr("value", text);
+    $("#ovs_class_division_entityname").attr("value", 'ovs_primaryclass');
 }
 
-function ovs_operationclass_insert(operation_id, ovs_primaryclass_group, contact_id) {
+function ovs_operationclass_insert(operation_id, ovs_primaryclass, ovs_compatibility_group, contact_id) {
     debugger;
     var data = {
         "ovs_OperationClass@odata.bind": "/ovs_mocregistrations(" + operation_id + ")",
         "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
-        "ovs_primaryclass_group@odata.bind": "/ovs_primaryclass_groups(" + ovs_primaryclass_group + ")"
+        "ovs_primaryclass@odata.bind": "/ovs_primaryclasses(" + ovs_primaryclass + ")"
     };
+    if (ovs_compatibility_group != "") {
+        data.ovs_compatibility_group = "/ovs_class_compatibility_groups(" + ovs_compatibility_group + ")";
+    }
     tdg.webapi.create("ovs_operationclasses", data, success_cb, error_cb);
 }
 
 function form_clear() {
     debugger;
-    $("#ovs_primeclass").val("");
+
+    try {
+        var f = document.getElementById("WebResource_primaryclass");
+        var c = f.contentWindow;
+        c.clear_field(true);
+    } catch (e) { }
 }
 
 function success_cb() {
     debugger;
 
+    _count = _count + 1;
     msg = tdg.error_message.message("m000005"); // Record added
+    msg = msg.replace("{0}", _count);
     tdg.c.message_panel_set("EntityFormControl", msg);
 
     // clear form

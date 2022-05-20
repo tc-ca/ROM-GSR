@@ -31,8 +31,24 @@ if (window.jQuery) {
                 validationSection.show();
                 $('#alertMessages').focus();
             }
+            else {
+                OperationDetailsProvided(operationId, true);
+                if (urlParams.has('siteid')) {
 
-            return validation;
+                    var siteId = urlParams.get('siteid');
+
+                     if (urlParams.has('in_year')) {
+                            window.location.href = "~/en-US/my-sites/in-year-site/?id=" + siteId;
+                        }
+                        else{
+                            window.location.href = "~/en-US/SiteRegistrationWizard/?id=" + siteId;
+                        }
+                }
+            }
+            //return validation;
         }
     }(window.jQuery));
+}
+async function OperationDetailsProvided(operationId, flag) {
+    await UpdateOperationDetailsProvided(operationId, flag);
 }

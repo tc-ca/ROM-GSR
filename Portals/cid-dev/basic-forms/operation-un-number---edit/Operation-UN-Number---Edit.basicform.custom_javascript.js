@@ -13,7 +13,7 @@ $(document).ready(function () {
     tdg.c.control_hide("ovs_unnumber", true);
 
     // resize WebResource_unnumber
-    $("#WebResource_unnumber").height('72px');
+    $("#WebResource_unnumber").height('120px');
 
     var ovs_unnumber = $("#ovs_unnumber").val();
     var item = tdg_unnumber_get(ovs_unnumber);

@@ -32,6 +32,11 @@
         display: none;
     }
 
+#ErrorMessageDiv
+{
+    display :none;
+}
+
     #infoMsg {
         -width: 300px;
         -text-align: center;
@@ -132,7 +137,7 @@
      
       $("#InsertButton").css("display", "none");
     var langcode = '{{languagecode}}'  ;
-   
+  
    //work with attach file transalation
    //can not use out of the box without modification the button lable will not be transalated depens only on OS system language
 var AttachButton = document.getElementById('AttachFile');
@@ -245,8 +250,18 @@ $('#btn_attachfile_and_scan').click(function(e)
 
           //$('#processingMsg').css('display','block');
        // $('#processingMsg').text(');
-  $('#infoMsg').css('display', 'block');
-               $('#infoMsg').html( '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>');
+        var langcode = '{{languagecode}}'  ;
+       var downloadMessage = '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>' ;
+        var DownloadMessageCompleted = '<p>Download completed.</p>';
+      if (langcode != "en-US")
+      {
+          downloadMessage = "<p>Le classeur Excel personnalisé de téléchargement en masse du site est en cours de téléchargement…</p>"
+         DownloadMessageCompleted  = '<p>Téléchargement terminé.</p>' ;
+      }
+      
+      
+       $('#infoMsg').css('display', 'block');
+       $('#infoMsg').html(downloadMessage );
 
       var companyid = '{{parentid}}';
      var flowparamaters =
@@ -264,7 +279,7 @@ $('#btn_attachfile_and_scan').click(function(e)
         if (this.readyState === 4) {
           req.onreadystatechange = null;
           if (this.status === 200) {
-               $('#processingMsg').html("<p> Download complete </p>");
+               $('#processingMsg').html(DownloadMessageCompleted);
             var result = this.response;
            // $('#ll').hide();
             //https://rd-tdgcore-dev.powerappsportals.com/_entity/annotation/
@@ -285,8 +300,20 @@ $('#btn_attachfile_and_scan').click(function(e)
 
  $('#linkdownload_French').on('click', async function() {
 
+       
+        var langcode = '{{languagecode}}'  ;
+        var downloadMessage = '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>' ;
+        var DownloadMessageCompleted = 'Download Completed.' ;
+      if (langcode != "en-US")
+      {
+          downloadMessage = "<p>Le classeur Excel personnalisé de téléchargement en masse du site est en cours de téléchargement…</p>"
+         DownloadMessageCompleted  = '<p>Téléchargement terminé.</p>' ;
+      }
+       
           $('#processingMsg').css('display','block');
-        $('#processingMsg').html('<p>System is downloading site info ...</p>');
+       
+       
+        $('#processingMsg').html(downloadMessage);
 
      // notificationMsg.show("System is downloading site info ...");
 
@@ -309,7 +336,7 @@ $('#btn_attachfile_and_scan').click(function(e)
         if (this.readyState === 4) {
           req.onreadystatechange = null;
           if (this.status === 200) {
-               $('#processingMsg').text("Download complete");
+               $('#processingMsg').text(DownloadMessageCompleted);
             var result = this.response;
            // $('#ll').hide();
             //https://rd-tdgcore-dev.powerappsportals.com/_entity/annotation/
@@ -334,13 +361,13 @@ $('#btn_attachfile_and_scan').click(function(e)
 
 
 
-function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls , Lang)
+function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls , Lang , Logwarrning , Warnningdetails)
 {
     var useremail = '{{user.emailaddress1}}';
  var url = '{{CID_Check_User_Response_To_continue}}' ;
 
   var acupdate =
-  ' { "activityid":"' + activityid  + '", "user_reponse":"' + UserResponse +'", "Log_details": "' +Logdetaisls + '","Lang":"' + Lang+ '"}' ;
+  ' { "activityid":"' + activityid  + '", "user_reponse":"' + UserResponse +'", "Log_details": "' +Logdetaisls + '","Lang":"' + Lang+ '" , "LogWarningYN" : "' + Logwarrning + '" , "WarrningDetails": "' + Warnningdetails + '" }' ;
  
     
       var req = new XMLHttpRequest();
@@ -356,14 +383,27 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
             var responseMessage ;
          if (UserResponse == 'yes')
          {
-             responseMessage  = '<p>The CID system will now begin the second of two sets of validations of the file being uploaded. An email will be sent to your email address of ' + useremail +', indicating the results the second set of validations and the subsequent steps to take. <br><br>' +
-             'At this point you can wait for the notification email and proceed with the next step described from within it. Alternatively, you can leave the Registration process temporarily and the system will return you to the spot where you left off when you return. <br> </p>' 
-            + '<ul> <li>' + useremail +' is the email address from the current user’s profile </li> </ul>';
+             responseMessage  = "<p>The CID system will now begin the second of two sets of validations of the file being uploaded. An email will be sent to your email address of " + useremail + ", indicating the results the second set of validations and the subsequent steps to take. <br><br>" +
+             "At this point you can wait for the notification email and proceed with the next step described from within it. Alternatively, you can leave the Registration process temporarily and the system will return you to the spot where you left off when you return. <br> </p>" 
+            + "<ul> <li>" + useremail +"is the email address from the current user’s profile </li> </ul>";
+            if ( Lang != 'en-US')
+            {
+              responseMessage  =  "<p> Le système CID va maintenant commencer la deuxième des deux séries de validations du fichier en cours de téléchargement. Un e-mail sera envoyé à votre adresse e-mail de ' + useremail +', indiquant les résultats de la deuxième série de validations et les étapes ultérieures à suivre. <br><br>" +
+             "À ce stade, vous pouvez attendre l'e-mail de notification et passer à l'étape suivante décrite à partir de celui-ci. Alternativement, vous pouvez quitter temporairement le processus d'inscription et le système vous ramènera à l'endroit où vous vous étiez arrêté à votre retour. <br> <br></p>" 
+            + "<ul> <li>" + useremail +" est l'adresse e-mail du profil de l'utilisateur actuel. </li> </ul>"; 
+            }
+
 
          }
          else{
-             responseMessage='<p>Initial request for Bulk Upload is now complete based on an early cancellation. <br>' + 
-'The original request to bulk upload sites is cancelled. Please proceed with the remainder of the Registration process.</p>';
+             responseMessage="<p>Initial request for Bulk Upload is now complete based on an early cancellation. <br>" + 
+"The original request to bulk upload sites is cancelled. Please proceed with the remainder of the Registration process.</p>";
+             if ( Lang != 'en-US')
+            {
+                 responseMessage="<p>La demande initiale de transfert groupé est maintenant terminée en raison d'une annulation anticipée. <br>" + 
+"La demande initiale de sites de téléchargement groupé est annulée. Veuillez poursuivre le reste du processus d'inscription.</p>";
+
+            }
 
          }
         
@@ -393,8 +433,13 @@ function Call_Virsu_Scan_API(url, fileContent, activitytype , excelfilename , la
 
 var companyid = '{{parentid}}';
 var contactid = '{{contactid}}'
+var scanningMessage = "<p> Workbook is being scanned…. </p>";
+if ( language != 'en-US')
+   {
+        scanningMessage ="<p>Le classeur est en cours de numérisation….</p>";
+    }
       $('#infoMsg').css('display', 'block');
-        $('#infoMsg').html("<p> Workbook is being scanned…. </p>");
+        $('#infoMsg').html(scanningMessage);
 
   var acupdate =
         '{"FileContent" :"' + fileContent  + '", "CompanyId" : "' + companyid + '" , "ActionedBy" :"' + contactid +  '", "ActivityType" : "'+ activitytype +'" ,"ExcelFileName" : "' + excelfilename + '" , "Lang" : "' + language + '" }';
@@ -445,31 +490,36 @@ function call_Inital_validation(Language , bulkactivitytype)
 {
 
   var URLs = new URLSearchParams(window.location.search);
-        var newrecordid = URLs.get('id');
+
+        var URLs = new URLSearchParams(window.location.search);
+
+      //  var newrecordid = URLs.get('id');
         var companyid = URLs.get('companyid');
+        var newrecordid = URLs.get('id');
+      //  var companyid = URLs.get('companyid');
         var companyname = '{{ user.parentcustomerid.Name }}';
         if  ( companyid != null  )
 {
 
+ //document.getElementById("content").innerHTML = response.html;
+     var urlPath = "https://rd-tdgcore-dev.powerappsportals.com/Bulk_Site_Upload" ;
+  
+    window.history.replaceState({}, document.title, urlPath);
 
-//var url = window.location.search;
-//url.searchParams.delete('id');
-//url.searchParams.delete('companyid');
-//history.pushState(null, document.title, url);
 
-       // $('#processingMsg').css('display', 'block');
-        //$('#processingMsg').text("Preliminary analysis of the uploaded workbook has begun…");
+var IntialvalidationBegunMessage = "<p>Preliminary analysis of the uploaded workbook has begun…</p>" ;
+ if ( Language != 'en-US')
+ {
+    IntialvalidationBegunMessage = "<p>L'analyse préliminaire du classeur téléchargé a commencé…</p>";
+
+ }
 
          $('#infoMsg').css('display', 'block');
-        $('#infoMsg').html("<p>Preliminary analysis of the uploaded workbook has begun…</p>");
+        $('#infoMsg').html(IntialvalidationBegunMessage);
 
         //notificationMsg.show("System is validating uploaded List ...");
 
 
-        var URLs = new URLSearchParams(window.location.search);
-
-        var newrecordid = URLs.get('id');
-        var companyid = URLs.get('companyid');
         var acupdate =
             '{ "activityid":"' + newrecordid + '" , "name": "'+ companyname +'", "accountid": "' + companyid + '" , "Lang" : "' + Language + '" ,"ActivityType" : "' + bulkactivitytype +  '" }';
 
@@ -492,36 +542,73 @@ function call_Inital_validation(Language , bulkactivitytype)
                   // $('#warnningMessage').css('display', 'none');
                     // alert (this.response);
                      //alert(req.getResponseHeader('DetailMessage'));
+                     var warrning_Message  = "<p>Detail Site data has already been assigned manually, or via a previous Bulk Upload. If you proceed, then any Site referenced in the workbook that is already in CID, will first be completed deleted from CID, with no possibility to recover the related data. Those Site(s) will then be re-created based on the workbook values here. <br><br>Are you sure you want to continue with this upload and potentially override existing Site data? [B1035]</P>";
+                     if ( Language != 'en-US')
+                     {
+                          warrning_Message  = "<p>Les données détaillées du site ont déjà été attribuées manuellement ou via un précédent chargement en bloc. Si vous continuez, tout site référencé dans le classeur qui est déjà dans CID sera d'abord complètement supprimé de CID, sans possibilité de récupérer les données associées. Ces sites seront ensuite recréés en fonction des valeurs du classeur ici. <br><br>Voulez-vous vraiment continuer avec ce téléchargement et éventuellement remplacer les données existantes du site ?[B1035] </P>";
 
 
+                     }
+                     
+                     var NumberOfSiteswithRequirementLevel = req.getResponseHeader('NumberOfSitesWithRequirementLevel');
+                    
+                     if (NumberOfSiteswithRequirementLevel > 0)
+                     {
+                          confirmDialog(warrning_Message, (ans) => {
+                            if (ans) {
+                               // console.log("Yes");
+                               // Call_Check_User_Response_flow(newrecordid , 'yes' , '' , Language);
+                               //********call Confirmation Message to proceed*****************************
+                                 var result = this.response;
+                    confirmDialog(result, (ans) => {
+                            if (ans) {
+                               // console.log("Yes");
+                               
+                                Call_Check_User_Response_flow(newrecordid , 'yes' , '' , Language , "Y" , "Note - Bulk Site Registration Upload: CID Site data already exists. User chose to proceed with the upload and in doing so they may potentially override existing Site data. [B1008]-Yes");
+                            
+                                }else {
+                                 Call_Check_User_Response_flow(newrecordid , 'No' , '' , Language , "Y", "Error - Bulk Site Registration Upload: CID Site data already exists. User chose not to proceed with the upload. [B1035]-No");
+                                //console.log("No");
+                            }
+                            });
+                            //*****************************************************************************
+                            
+                                }
+                                else {
+                                     Call_Check_User_Response_flow(newrecordid , 'NoDelete' , '' , Language , "Y", "Error - Bulk Site Registration Upload: CID Site data already exists. User chose not to proceed with the upload. [B1035]-No");
+                                 //Call_Check_User_Response_flow(newrecordid , 'No' , '' , Language);
+                                //console.log("No");
+                            }
+                            });
+
+                     }
+                    
+
+else{
 
                     var result = this.response;
                     confirmDialog(result, (ans) => {
                             if (ans) {
                                // console.log("Yes");
-                                Call_Check_User_Response_flow(newrecordid , 'yes' , '' , Language);
+                                Call_Check_User_Response_flow(newrecordid , 'yes' , '' , Language,"N","");
                             
                                 }else {
-                                 Call_Check_User_Response_flow(newrecordid , 'No' , '' , Language);
+                                 Call_Check_User_Response_flow(newrecordid , 'No' , '' , Language,"N" , "");
                                 //console.log("No");
                             }
                             });
+                            }
+                        } 
+                else if (this.status === 402) {
 
-
-
-                 
-
-
-                } else if (this.status === 402) {
-
-                 $('#processingMsg').css('display', 'none');
+                 $('#ErrorMessageDiv').css('display', 'none');
                   $('#warnningMessage').css('display', 'none');
                // alert ("Uploaded List did not pass validation, please check the errors list.");
               // alert (this.response) ;
                     var result = this.response;
-
-                     $('#processingMsg').css('display', 'block');
-                     $('#processingMsg').text(result);
+                 
+                     $('#ErrorMessageDiv').css('display', 'block');
+                     $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  result + "</p>");
 
 
                        //document.getElementById("errortable").innerHTML = result;
@@ -529,10 +616,10 @@ function call_Inital_validation(Language , bulkactivitytype)
                 } else {
  
                   // $('#warnningMessage').css('display', 'none');
-                  $('#processingMsg').css('display', 'none');
+                  $('#ErrorMessageDiv').css('display', 'none');
                     var result = this.response;
-                     $('#processingMsg').css('display', 'block');
-                     $('#processingMsg').text(result);
+                     $('#ErrorMessageDiv').css('display', 'block');
+                     $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  result + "</p>");
 
                  //   alert(result);
                        // window.location.replace("~/Bulk_Site_Upload");
@@ -612,7 +699,7 @@ $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
         <div class="col-md-12">
             {% block main %}
 
-            {% include 'Page Copy' %}
+         
 
 
 
@@ -623,17 +710,19 @@ $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
                 <div id="processingMsg" class="alert alert-warning" role="alert">
            
                 </div>
+
+               <div id="ErrorMessageDiv" class= "alert alert-danger" role="alert">  </div>
                    <div id="infoMsg" class="alert alert-info"></div>
                 <table>
                     <tbody>
                         <tr>
                             <td>
-                                <div>
+                               
                                     <div>
                                         <h3 class="blue_border">{{step1}}</h3>
                                         <p> </p>
                                     </div>
-                                    <div>
+                                  
 
                                         <table>
                                             <tr>
