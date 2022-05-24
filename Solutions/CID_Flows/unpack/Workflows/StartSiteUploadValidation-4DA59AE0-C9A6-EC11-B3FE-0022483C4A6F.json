@@ -28,6 +28,15 @@
           "name": "shared_sendmail"
         }
       },
+      "shared_sendmail_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedsendmail_2ba8f"
+        },
+        "api": {
+          "name": "shared_sendmail"
+        }
+      },
       "shared_commondataserviceforapps": {
         "runtimeSource": "embedded",
         "connection": {
@@ -146,7 +155,7 @@
             },
             "Invoke_an_HTTP_request_Get_Site_Table": {
               "runAfter": {
-                "List_All_Accounts": [
+                "define_extended_columns_in_excel_sheet": [
                   "Succeeded"
                 ]
               },
@@ -182,12 +191,12 @@
               "type": "Query",
               "inputs": {
                 "from": "@outputs('Invoke_an_HTTP_request_Get_Site_Table')?['body']['value']",
-                "where": "@greater(length(item()['values'][0][26]), 0)"
+                "where": "@greater(length(item()['values'][0][int(outputs('SiteFullAddress'))]), 0)"
               }
             },
             "Invoke_an_HTTP_request_Get_Extended_info_table": {
               "runAfter": {
-                "List_All_Accounts": [
+                "define_extended_columns_in_excel_sheet": [
                   "Succeeded"
                 ]
               },
@@ -247,7 +256,7 @@
                       "type": "Query",
                       "inputs": {
                         "from": "@outputs('List_All_Accounts')?['body/value']",
-                        "where": "@and( equals( length(string(outputs('current_row')['values'][0][26])),0)  , equals(item()?['address1_line1'], toUpper(outputs('current_row')['values'][0][1])), equals(item()?['address1_city'], toUpper(outputs('current_row')['values'][0][2])), equals(item()?['address1_stateorprovince'], toUpper(outputs('current_row')['values'][0][3])))"
+                        "where": "@and( equals( length(string(outputs('current_row')['values'][0][int(outputs('SiteGUID'))])),0) \n , equals(item()?['address1_line1'], toUpper(outputs('current_row')['values'][0][int(outputs('Address1'))])),\n equals(item()?['address1_city'], toUpper(outputs('current_row')['values'][0][int(outputs('City'))])), \nequals(item()?['address1_stateorprovince'], toUpper(outputs('current_row')['values'][0][int(outputs('Province'))])))"
                       }
                     },
                     "Check_if_address_exists_in_the_database": {
@@ -336,7 +345,7 @@
                                       "operationMetadataId": "7eab0b76-4c57-41ae-b81a-9d1db24be760"
                                     },
                                     "type": "Compose",
-                                    "inputs": "@outputs('current_row')['values'][0][3]"
+                                    "inputs": "@outputs('current_row')['values'][0][int(outputs('Province'))]"
                                   },
                                   "Get_call_Canada_Geo_Api_to_get_province_2": {
                                     "runAfter": {
@@ -350,7 +359,7 @@
                                     "type": "Http",
                                     "inputs": {
                                       "method": "GET",
-                                      "uri": "https://geogratis.gc.ca/services/geoname/en/geonames.json?q=@{outputs('current_row')['values'][0][2]}",
+                                      "uri": "https://geogratis.gc.ca/services/geoname/en/geonames.json?q=@{outputs('current_row')['values'][0][int(outputs('City'))]}",
                                       "headers": {
                                         "accept": "application/json"
                                       }
@@ -421,7 +430,7 @@
                                                 }
                                               }
                                             },
-                                            "Filter_array_Bulk008": {
+                                            "Filter_array_B1013": {
                                               "runAfter": {
                                                 "Set_is_error_free_to_false_for_city_match_with_province_2": [
                                                   "Succeeded"
@@ -433,12 +442,12 @@
                                               "type": "Query",
                                               "inputs": {
                                                 "from": "@variables('Messages_Array')",
-                                                "where": "@equals(item()['code'], 'Bulk008')"
+                                                "where": "@equals(item()['code'], 'B1013')"
                                               }
                                             },
                                             "Set_variable_Error_Message_8": {
                                               "runAfter": {
-                                                "Filter_array_Bulk008": [
+                                                "Filter_array_B1013": [
                                                   "Succeeded"
                                                 ]
                                               },
@@ -448,7 +457,7 @@
                                               "type": "SetVariable",
                                               "inputs": {
                                                 "name": "Error_Message",
-                                                "value": "@{body('Filter_array_Bulk008')[0]['Message']}"
+                                                "value": "@{body('Filter_array_B1013')[0]['Message']}"
                                               }
                                             },
                                             "Add_Bulk_Log_details_Bulk008": {
@@ -469,9 +478,9 @@
                                                 },
                                                 "parameters": {
                                                   "entityName": "cid_bulkactivitylogsdetailses",
-                                                  "item/cid_BulkActivityLogSummary@odata.bind": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_bulkactivitylogsummaryid']",
+                                                  "item/cid_BulkActivityLogSummary@odata.bind": "@concat('\\cid_bulkactivitylogsummaries\\',triggerOutputs()?['body/cid_bulkactivitylogsummaryid'])",
                                                   "item/cid_errordetails": "@variables('Error_Message')",
-                                                  "item/cid_errorwarningcode": "Bulk008",
+                                                  "item/cid_errorwarningcode": "B1013",
                                                   "item/cid_excelcolumnname": "City",
                                                   "item/cid_excelrownumber": "@outputs('Current_Row_number')",
                                                   "item/cid_excelsheetname": "Add Basic Info",
@@ -496,7 +505,7 @@
                                       }
                                     },
                                     "runAfter": {
-                                      "Get_call_Canada_Geo_Api_to_get_province_2": [
+                                      "CityName": [
                                         "Succeeded"
                                       ]
                                     },
@@ -533,7 +542,7 @@
                                             }
                                           }
                                         },
-                                        "Filter_array_Bulk007": {
+                                        "Filter_array_B1012": {
                                           "runAfter": {
                                             "Set_variable_error_free_to_false_for_city_not_correct_2": [
                                               "Succeeded"
@@ -545,12 +554,12 @@
                                           "type": "Query",
                                           "inputs": {
                                             "from": "@variables('Messages_Array')",
-                                            "where": "@equals(item()['code'], 'Bulk007')"
+                                            "where": "@equals(item()['code'], 'B1012')"
                                           }
                                         },
                                         "Set_variable_Error_Message_Bulk007": {
                                           "runAfter": {
-                                            "Filter_array_Bulk007": [
+                                            "Filter_array_B1012": [
                                               "Succeeded"
                                             ]
                                           },
@@ -560,7 +569,7 @@
                                           "type": "SetVariable",
                                           "inputs": {
                                             "name": "Error_Message",
-                                            "value": "@{Replace(body('Filter_array_Bulk007')[0]['Message'] , '{0}' , outputs('current_row')['values'][0][2])}"
+                                            "value": "@{Replace(body('Filter_array_B1012')[0]['Message'] , '{0}' , outputs('CityName'))}"
                                           }
                                         },
                                         "Add_Bulk_Log_details_Bulk007": {
@@ -581,9 +590,9 @@
                                             },
                                             "parameters": {
                                               "entityName": "cid_bulkactivitylogsdetailses",
-                                              "item/cid_BulkActivityLogSummary@odata.bind": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_bulkactivitylogsummaryid']",
+                                              "item/cid_BulkActivityLogSummary@odata.bind": "@concat('\\cid_bulkactivitylogsummaries\\',triggerOutputs()?['body/cid_bulkactivitylogsummaryid'])",
                                               "item/cid_errordetails": "@variables('Error_Message')",
-                                              "item/cid_errorwarningcode": "Bulk007",
+                                              "item/cid_errorwarningcode": "B1012",
                                               "item/cid_excelcolumnname": "City",
                                               "item/cid_excelrownumber": "@outputs('Current_Row_number')",
                                               "item/cid_excelsheetname": "Add Basic Info",
@@ -605,6 +614,18 @@
                                       "operationMetadataId": "a9eea2f4-9c8d-4417-b0cc-5f707635bfcc"
                                     },
                                     "type": "If"
+                                  },
+                                  "CityName": {
+                                    "runAfter": {
+                                      "Get_call_Canada_Geo_Api_to_get_province_2": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "metadata": {
+                                      "operationMetadataId": "81202c9c-928b-469b-ae91-bff4c2633e78"
+                                    },
+                                    "type": "Compose",
+                                    "inputs": "@outputs('current_row')['values'][0][int(outputs('City'))]"
                                   }
                                 },
                                 "runAfter": {},
@@ -617,7 +638,7 @@
                             "runAfter": {},
                             "expression": {
                               "greater": [
-                                "@length(outputs('current_row')['values'][0][2])",
+                                "@length(outputs('current_row')['values'][0][int(outputs('City'))])",
                                 0
                               ]
                             },
@@ -639,35 +660,327 @@
                       },
                       "type": "If"
                     },
-                    "Filter_array_-_Check_address_by_Legal_land_description": {
+                    "Check_lat_and_long_is_entered": {
+                      "actions": {
+                        "Filter_array_-_Check_address_by_Lat_and_Long": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "cb6ac0c8-ddde-45cd-b7c0-2d89c9b0c0d2"
+                          },
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@outputs('List_All_Accounts')?['body/value']",
+                            "where": "@and(\nequals(item()?['address1_latitude'], outputs('current_row')['values'][0][13]), \nequals(item()?['address1_latitude'], outputs('current_row')['values'][0][14])\n)"
+                          }
+                        },
+                        "Check_if_Lat_and_Long_already_exists": {
+                          "actions": {
+                            "Set_variable_error_free_B1022": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "3e23e089-210a-4907-8ba3-fb9fc8b12b3d"
+                              },
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "IsErrorFree",
+                                "value": "@false"
+                              }
+                            },
+                            "Filter_array_B1022": {
+                              "runAfter": {
+                                "Set_variable_error_free_B1022": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "80b29c84-7347-4907-bf75-cb1f1f4e2161"
+                              },
+                              "type": "Query",
+                              "inputs": {
+                                "from": "@variables('Messages_Array')",
+                                "where": "@equals(item()['code'], 'B1022')"
+                              }
+                            },
+                            "Set_variable_Error_Message_B1022": {
+                              "runAfter": {
+                                "Filter_array_B1022": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "cf2c55e7-ed16-4aa6-b13e-61c36959a8f5"
+                              },
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "Error_Message",
+                                "value": "@{body('Filter_array_B1022')[0]['Message']}"
+                              }
+                            },
+                            "Append_to_array_-_B1022": {
+                              "runAfter": {
+                                "Set_variable_Error_Message_B1022": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "0721f40e-9313-4b23-ac3a-e7e03fce1613"
+                              },
+                              "type": "AppendToArrayVariable",
+                              "inputs": {
+                                "name": "Error_List",
+                                "value": {
+                                  "SheetName": "Add Basic Info",
+                                  "Row#": "@{outputs('Current_Row_number')}",
+                                  "Site": "@{outputs('Current_Site_Address')}",
+                                  "Error": "@{variables('Error_Message')}"
+                                }
+                              }
+                            },
+                            "Add_Bulk_Log_details_B1022": {
+                              "runAfter": {
+                                "Append_to_array_-_B1022": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "7bd2c7c8-5212-4031-85a3-3de92b775314"
+                              },
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_commondataserviceforapps_1",
+                                  "operationId": "CreateRecord",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                },
+                                "parameters": {
+                                  "entityName": "cid_bulkactivitylogsdetailses",
+                                  "item/cid_BulkActivityLogSummary@odata.bind": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_bulkactivitylogsummaryid']",
+                                  "item/cid_errordetails": "@variables('Error_Message')",
+                                  "item/cid_errorwarningcode": "B1022",
+                                  "item/cid_excelrownumber": "@outputs('Current_Row_number')",
+                                  "item/cid_excelsheetname": "Add Basic Info",
+                                  "item/cid_sitelocation": "@outputs('Current_Site_Address')",
+                                  "item/cid_type": 100000000
+                                },
+                                "authentication": "@parameters('$authentication')"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Filter_array_-_Check_address_by_Lat_and_Long": [
+                              "Succeeded"
+                            ]
+                          },
+                          "expression": {
+                            "greater": [
+                              "@length(body('Filter_array_-_Check_address_by_Lat_and_Long'))",
+                              0
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "d7e399d1-4f8a-41a9-8794-90af77dd6e57"
+                          },
+                          "type": "If"
+                        }
+                      },
+                      "runAfter": {
+                        "Check_Legal_Land_description_": [
+                          "Succeeded"
+                        ]
+                      },
+                      "expression": {
+                        "and": [
+                          {
+                            "greater": [
+                              "@length(string(outputs('current_row')['values'][0][int(outputs('Lat'))]))",
+                              0
+                            ]
+                          },
+                          {
+                            "greater": [
+                              "@length(string(outputs('current_row')['values'][0][int(outputs('Long'))]))",
+                              0
+                            ]
+                          },
+                          {
+                            "lessOrEquals": [
+                              "@length(string(outputs('current_row')['values'][0][int(outputs('SiteGUID'))]))",
+                              0
+                            ]
+                          }
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "13085156-71dc-4e0a-9271-2067f2045a7c"
+                      },
+                      "type": "If"
+                    },
+                    "Check_Legal_Land_description_": {
+                      "actions": {
+                        "Check_if_Legal_land_description_already_exists": {
+                          "actions": {
+                            "Set_variable_error_free_B1019": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "3e23e089-210a-4907-8ba3-fb9fc8b12b3d"
+                              },
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "IsErrorFree",
+                                "value": "@false"
+                              }
+                            },
+                            "Filter_array_B1019": {
+                              "runAfter": {
+                                "Set_variable_error_free_B1019": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "80b29c84-7347-4907-bf75-cb1f1f4e2161"
+                              },
+                              "type": "Query",
+                              "inputs": {
+                                "from": "@variables('Messages_Array')",
+                                "where": "@equals(item()['code'], 'B1022')"
+                              }
+                            },
+                            "Set_variable_Error_Message_B1019": {
+                              "runAfter": {
+                                "Filter_array_B1019": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "cf2c55e7-ed16-4aa6-b13e-61c36959a8f5"
+                              },
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "Error_Message",
+                                "value": "@{body('Filter_array_B1019')[0]['Message']}"
+                              }
+                            },
+                            "Append_to_array_-_B1019": {
+                              "runAfter": {
+                                "Set_variable_Error_Message_B1019": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "0721f40e-9313-4b23-ac3a-e7e03fce1613"
+                              },
+                              "type": "AppendToArrayVariable",
+                              "inputs": {
+                                "name": "Error_List",
+                                "value": {
+                                  "SheetName": "Add Basic Info",
+                                  "Row#": "@{outputs('Current_Row_number')}",
+                                  "Site": "@{outputs('Current_Site_Address')}",
+                                  "Error": "@{variables('Error_Message')}"
+                                }
+                              }
+                            },
+                            "Add_Bulk_Log_details_B1019": {
+                              "runAfter": {
+                                "Append_to_array_-_B1019": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "7bd2c7c8-5212-4031-85a3-3de92b775314"
+                              },
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_commondataserviceforapps_1",
+                                  "operationId": "CreateRecord",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                },
+                                "parameters": {
+                                  "entityName": "cid_bulkactivitylogsdetailses",
+                                  "item/cid_BulkActivityLogSummary@odata.bind": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_bulkactivitylogsummaryid']",
+                                  "item/cid_errordetails": "@variables('Error_Message')",
+                                  "item/cid_errorwarningcode": "B1019",
+                                  "item/cid_excelrownumber": "@outputs('Current_Row_number')",
+                                  "item/cid_excelsheetname": "Add Basic Info",
+                                  "item/cid_sitelocation": "@outputs('Current_Site_Address')",
+                                  "item/cid_type": 100000000
+                                },
+                                "authentication": "@parameters('$authentication')"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Filter_array_-_Check_address_by_Legal_land_description": [
+                              "Succeeded"
+                            ]
+                          },
+                          "expression": {
+                            "greater": [
+                              "@length(body('Filter_array_-_Check_address_by_Legal_land_description'))",
+                              0
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "109a3c27-c25a-444b-9204-3d8cae3fb146"
+                          },
+                          "type": "If"
+                        },
+                        "Filter_array_-_Check_address_by_Legal_land_description": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "cb6ac0c8-ddde-45cd-b7c0-2d89c9b0c0d2"
+                          },
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@outputs('List_All_Accounts')?['body/value']",
+                            "where": "@and\n(\nequals(item()?['ovs_lld_quarter@OData.Community.Display.V1.FormattedValue'], toUpper(outputs('current_row')['values'][0][int(outputs('Quarter'))])),\nequals(item()?['ovs_lld_section@OData.Community.Display.V1.FormattedValue'], toUpper(outputs('current_row')['values'][0][int(outputs('Section'))])),\nequals(item()?['ovs_lld_township@OData.Community.Display.V1.FormattedValue'],toUpper(outputs('current_row')['values'][0][int(outputs('TownShip'))])),\nequals(item()?['ovs_lld_range@OData.Community.Display.V1.FormattedValue'],toUpper(outputs('current_row')['values'][0][int(outputs('Range'))])) ,\nequals(item()?['ovs_lld_meridian@OData.Community.Display.V1.FormattedValue'], outputs('current_row')['values'][0][int(outputs('Meridian'))])\n)"
+                          }
+                        }
+                      },
                       "runAfter": {
                         "Check_if_address_exists_in_the_database": [
                           "Succeeded"
                         ]
                       },
-                      "metadata": {
-                        "operationMetadataId": "cb6ac0c8-ddde-45cd-b7c0-2d89c9b0c0d2"
-                      },
-                      "type": "Query",
-                      "inputs": {
-                        "from": "@outputs('List_All_Accounts')?['body/value']",
-                        "where": "@and(\nequals(item()?['ovs_lld_quarter@OData.Community.Display.V1.FormattedValue'], toUpper(outputs('current_row')['values'][0][8])), \nequals(item()?['ovs_lld_section@OData.Community.Display.V1.FormattedValue'], toUpper(outputs('current_row')['values'][0][9])), \nequals(item()?['ovs_lld_township@OData.Community.Display.V1.FormattedValue'], toUpper(outputs('current_row')['values'][0][10])), \nequals(item()?['ovs_lld_range@OData.Community.Display.V1.FormattedValue'], toUpper(outputs('current_row')['values'][0][11])), \nequals(item()?['ovs_lld_meridian@OData.Community.Display.V1.FormattedValue'], outputs('current_row')['values'][0][12])\n)"
-                      }
-                    },
-                    "Filter_array_-_Check_address_by_Lat_and_Long": {
-                      "runAfter": {
-                        "Filter_array_-_Check_address_by_Legal_land_description": [
-                          "Succeeded"
+                      "expression": {
+                        "and": [
+                          {
+                            "greater": [
+                              "@length(string(outputs('current_row')['values'][0][int(outputs('Section'))]))",
+                              0
+                            ]
+                          },
+                          {
+                            "greater": [
+                              "@length(string(outputs('current_row')['values'][0][int(outputs('TownShip'))]))",
+                              0
+                            ]
+                          },
+                          {
+                            "lessOrEquals": [
+                              "@length(string(outputs('current_row')['values'][0][int(outputs('SiteGUID'))]))",
+                              0
+                            ]
+                          },
+                          {
+                            "greater": [
+                              "@length(string(outputs('current_row')['values'][0][int(outputs('Range'))]))",
+                              0
+                            ]
+                          },
+                          {
+                            "greater": [
+                              "@length(string(outputs('current_row')['values'][0][int(outputs('Meridian'))]))",
+                              0
+                            ]
+                          }
                         ]
                       },
                       "metadata": {
-                        "operationMetadataId": "cb6ac0c8-ddde-45cd-b7c0-2d89c9b0c0d2"
+                        "operationMetadataId": "13085156-71dc-4e0a-9271-2067f2045a7c"
                       },
-                      "type": "Query",
-                      "inputs": {
-                        "from": "@outputs('List_All_Accounts')?['body/value']",
-                        "where": "@and(\nequals(item()?['address1_latitude'], outputs('current_row')['values'][0][13]), \nequals(item()?['address1_latitude'], outputs('current_row')['values'][0][14])\n)"
-                      }
+                      "type": "If"
                     }
                   },
                   "runAfter": {
@@ -776,7 +1089,7 @@
                             "runAfter": {},
                             "expression": {
                               "lessOrEquals": [
-                                "@length(outputs('current_row')['values'][0][1])",
+                                "@length(outputs('current_row')['values'][0][int(outputs('Address1'))])",
                                 0
                               ]
                             },
@@ -886,7 +1199,7 @@
                             },
                             "expression": {
                               "lessOrEquals": [
-                                "@length(outputs('current_row')['values'][0][3])",
+                                "@length(outputs('current_row')['values'][0][int(outputs('Province'))])",
                                 0
                               ]
                             },
@@ -996,7 +1309,7 @@
                             },
                             "expression": {
                               "lessOrEquals": [
-                                "@length(outputs('current_row')['values'][0][4])",
+                                "@length(outputs('current_row')['values'][0][int(outputs('PostalCode'))])",
                                 0
                               ]
                             },
@@ -1091,7 +1404,7 @@
                             },
                             "expression": {
                               "lessOrEquals": [
-                                "@length(outputs('current_row')['values'][0][2])",
+                                "@length(outputs('current_row')['values'][0][int(outputs('City'))])",
                                 0
                               ]
                             },
@@ -1203,7 +1516,7 @@
                                   "runAfter": {},
                                   "expression": {
                                     "lessOrEquals": [
-                                      "@length(outputs('current_row')['values'][0][9])",
+                                      "@length(string(outputs('current_row')['values'][0][int(outputs('Section'))]))",
                                       0
                                     ]
                                   },
@@ -1313,7 +1626,7 @@
                                   },
                                   "expression": {
                                     "lessOrEquals": [
-                                      "@length(outputs('current_row')['values'][0][10])",
+                                      "@length(string(outputs('current_row')['values'][0][int(outputs('TownShip'))]))",
                                       0
                                     ]
                                   },
@@ -1423,7 +1736,7 @@
                                   },
                                   "expression": {
                                     "lessOrEquals": [
-                                      "@length(outputs('current_row')['values'][0][11])",
+                                      "@length(string(outputs('current_row')['values'][0][int(outputs('Range'))]))",
                                       0
                                     ]
                                   },
@@ -1533,7 +1846,7 @@
                                   },
                                   "expression": {
                                     "lessOrEquals": [
-                                      "@length(outputs('current_row')['values'][0][12])",
+                                      "@length(string(outputs('current_row')['values'][0][int(outputs('Meridian'))]))",
                                       0
                                     ]
                                   },
@@ -1558,7 +1871,7 @@
                                             "type": "Query",
                                             "inputs": {
                                               "from": "@variables('Messages_Array')",
-                                              "where": "@equals(item()['code'], 'Bulk016')"
+                                              "where": "@equals(item()['code'], 'B1020')"
                                             }
                                           },
                                           "Append_to_array_variable_4_Errorlist_7": {
@@ -1755,7 +2068,7 @@
                                         },
                                         "expression": {
                                           "lessOrEquals": [
-                                            "@length(outputs('current_row')['values'][0][14])",
+                                            "@length(string(outputs('current_row')['values'][0][14]))",
                                             0
                                           ]
                                         },
@@ -1770,13 +2083,13 @@
                                       "or": [
                                         {
                                           "greater": [
-                                            "@length(string(outputs('current_row')['values'][0][13]))",
+                                            "@length(string(outputs('current_row')['values'][0][int(outputs('Lat'))]))",
                                             0
                                           ]
                                         },
                                         {
                                           "greater": [
-                                            "@length(string(outputs('current_row')['values'][0][14]))",
+                                            "@length(string(outputs('current_row')['values'][0][int(outputs('Long'))]))",
                                             0
                                           ]
                                         }
@@ -1793,25 +2106,25 @@
                                 "or": [
                                   {
                                     "greater": [
-                                      "@length(string(outputs('current_row')['values'][0][9]))",
+                                      "@length(string(outputs('current_row')['values'][0][int(outputs('Section'))]))",
                                       0
                                     ]
                                   },
                                   {
                                     "greater": [
-                                      "@length(string(outputs('current_row')['values'][0][10]))",
+                                      "@length(string(outputs('current_row')['values'][0][int(outputs('TownShip'))]))",
                                       0
                                     ]
                                   },
                                   {
                                     "greater": [
-                                      "@length(string(outputs('current_row')['values'][0][11]))",
+                                      "@length(string(outputs('current_row')['values'][0][int(outputs('Range'))]))",
                                       0
                                     ]
                                   },
                                   {
                                     "greater": [
-                                      "@length(string(outputs('current_row')['values'][0][12]))",
+                                      "@length(string(outputs('current_row')['values'][0][int(outputs('Meridian'))]))",
                                       0
                                     ]
                                   }
@@ -1830,35 +2143,27 @@
                               "or": [
                                 {
                                   "greater": [
-                                    "@length(outputs('current_row')['values'][0][1])",
+                                    "@length(outputs('current_row')['values'][0][int(outputs('Address1'))])",
                                     0
                                   ]
                                 },
                                 {
                                   "greater": [
-                                    "@length(outputs('current_row')['values'][0][2])",
+                                    "@length(outputs('current_row')['values'][0][int(outputs('City'))])",
                                     0
                                   ]
                                 },
                                 {
                                   "greater": [
-                                    "@length(outputs('current_row')['values'][0][3])",
+                                    "@length(outputs('current_row')['values'][0][int(outputs('Province'))])",
                                     0
                                   ]
                                 },
                                 {
                                   "greater": [
-                                    "@length(outputs('current_row')['values'][0][4])",
+                                    "@length(outputs('current_row')['values'][0][int(outputs('PostalCode'))])",
                                     0
                                   ]
-                                },
-                                {
-                                  "not": {
-                                    "equals": [
-                                      "@outputs('current_row')['values'][0][23]",
-                                      "@null"
-                                    ]
-                                  }
                                 }
                               ]
                             }
@@ -1877,32 +2182,32 @@
                         "and": [
                           {
                             "greater": [
-                              "@length(outputs('current_row')['values'][0][1])",
+                              "@length(outputs('current_row')['values'][0][int(outputs('Address1'))])",
                               0
                             ]
                           },
                           {
                             "greater": [
-                              "@length(outputs('current_row')['values'][0][2])",
+                              "@length(outputs('current_row')['values'][0][int(outputs('City'))])",
                               0
                             ]
                           },
                           {
                             "greater": [
-                              "@length(outputs('current_row')['values'][0][3])",
+                              "@length(outputs('current_row')['values'][0][int(outputs('Province'))])",
                               0
                             ]
                           },
                           {
                             "greater": [
-                              "@length(outputs('current_row')['values'][0][4])",
+                              "@length(outputs('current_row')['values'][0][outputs('PostalCode')])",
                               0
                             ]
                           },
                           {
                             "not": {
                               "equals": [
-                                "@outputs('current_row')['values'][0][23]",
+                                "@outputs('current_row')['values'][0][int(outputs('Class'))]",
                                 "@null"
                               ]
                             }
@@ -1913,25 +2218,25 @@
                         "and": [
                           {
                             "greater": [
-                              "@length(string(outputs('current_row')['values'][0][9]))",
+                              "@length(string(outputs('current_row')['values'][0][int(outputs('Range'))]))",
                               0
                             ]
                           },
                           {
                             "greater": [
-                              "@length(string(outputs('current_row')['values'][0][10]))",
+                              "@length(string(outputs('current_row')['values'][0][int(outputs('Section'))]))",
                               0
                             ]
                           },
                           {
                             "greater": [
-                              "@length(string(outputs('current_row')['values'][0][11]))",
+                              "@length(string(outputs('current_row')['values'][0][int(outputs('TownShip'))]))",
                               0
                             ]
                           },
                           {
                             "greater": [
-                              "@length(string(outputs('current_row')['values'][0][12]))",
+                              "@length(string(outputs('current_row')['values'][0][outputs('Meridian')]))",
                               0
                             ]
                           }
@@ -1941,13 +2246,13 @@
                         "and": [
                           {
                             "greater": [
-                              "@length(string(outputs('current_row')['values'][0][13]))",
+                              "@length(string(outputs('current_row')['values'][0][int(outputs('Lat'))]))",
                               0
                             ]
                           },
                           {
                             "greater": [
-                              "@length( string(outputs('current_row')['values'][0][14]))",
+                              "@length( string(outputs('current_row')['values'][0][int(outputs('Long'))]))",
                               0
                             ]
                           }
@@ -1968,7 +2273,7 @@
                         "operationMetadataId": "83a95fc0-dcc2-41e7-a5e1-312025c479b4"
                       },
                       "type": "Compose",
-                      "inputs": "@length(Trim(outputs('current_row')['values'][0][23]))"
+                      "inputs": "@length(Trim(outputs('current_row')['values'][0][int(outputs('Class'))]))"
                     },
                     "Check_Class_Length": {
                       "actions": {
@@ -1978,7 +2283,7 @@
                             "operationMetadataId": "e0dca524-c854-4512-87a5-c52c0631f446"
                           },
                           "type": "Compose",
-                          "inputs": "@split(outputs('current_row')['values'][0][23], ',')"
+                          "inputs": "@split(outputs('current_row')['values'][0][int(outputs('Class'))], ',')"
                         },
                         "Loop_in_Classes": {
                           "foreach": "@outputs('Split_classes')",
@@ -2354,49 +2659,49 @@
                         "or": [
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][15]",
+                              "@outputs('current_row')['values'][0][int(outputs('Air'))]",
                               "Yes"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][16]",
+                              "@outputs('current_row')['values'][0][int(outputs('Marine'))]",
                               "Yes"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][17]",
+                              "@outputs('current_row')['values'][0][int(outputs('Rail'))]",
                               "Yes"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][18]",
+                              "@outputs('current_row')['values'][0][int(outputs('Road'))]",
                               "Yes"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][15]",
+                              "@outputs('current_row')['values'][0][int(outputs('Air'))]",
                               "oui"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][16]",
+                              "@outputs('current_row')['values'][0][int(outputs('Marine'))]",
                               "oui"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][17]",
+                              "@outputs('current_row')['values'][0][int(outputs('Rail'))]",
                               "oui"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][18]",
+                              "@outputs('current_row')['values'][0][int(outputs('Road'))]",
                               "oui"
                             ]
                           }
@@ -2522,49 +2827,49 @@
                         "or": [
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][19]",
+                              "@outputs('current_row')['values'][0][int(outputs('Handle'))]",
                               "Yes"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][20]",
+                              "@outputs('current_row')['values'][0][int(outputs('OfferForTransport'))]",
                               "Yes"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][21]",
+                              "@outputs('current_row')['values'][0][int(outputs('Transport'))]",
                               "Yes"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][22]",
+                              "@outputs('current_row')['values'][0][int(outputs('Import'))]",
                               "Yes"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][19]",
+                              "@outputs('current_row')['values'][0][int(outputs('Handle'))]",
                               "oui"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][20]",
+                              "@outputs('current_row')['values'][0][int(outputs('OfferForTransport'))]",
                               "oui"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][21]",
+                              "@outputs('current_row')['values'][0][int(outputs('Transport'))]",
                               "oui"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][22]",
+                              "@outputs('current_row')['values'][0][int(outputs('Import'))]",
                               "oui"
                             ]
                           }
@@ -2590,7 +2895,7 @@
                   "actions": {
                     "Check_if_Extended_information_specified": {
                       "actions": {
-                        "check_if_at_least_one_UN_number_added_to_extended_info": {
+                        "check_if_site_is_extneded": {
                           "actions": {
                             "Check_if_site_exists_in_extended_table": {
                               "runAfter": {},
@@ -2600,7 +2905,7 @@
                               "type": "Query",
                               "inputs": {
                                 "from": "@body('Filter_table_-_Get_None_empty_cells_Extended_Table')",
-                                "where": "@and (equals(item()['values'][0][0], outputs('current_row')['values'][0][26]) ,  greater(length(item()['values'][0][1]), 0) )"
+                                "where": "@and (equals(item()['values'][0][int(outputs('ExtendedSite'))], outputs('current_row')['values'][0][int(outputs('SiteFullAddress'))]) ,  \ngreater(length(item()['values'][0][int(outputs('ExtendedUNNumber'))]), 0) )"
                               }
                             },
                             "Check_if_at_least_one_Unnumber_exists_for_extended_site": {
@@ -2626,7 +2931,7 @@
                                         "operationMetadataId": "0d5a29eb-dfea-4fd2-8580-ff502eb17755"
                                       },
                                       "type": "Compose",
-                                      "inputs": "@outputs('Current_extended_row')['values'][0][2]"
+                                      "inputs": "@outputs('Current_extended_row')['values'][0][int(outputs('ExtendedQuantity'))]"
                                     },
                                     "Unit_of_Measure": {
                                       "runAfter": {
@@ -2638,7 +2943,7 @@
                                         "operationMetadataId": "63ea7799-fd21-4413-a3c4-87b64d5c3658"
                                       },
                                       "type": "Compose",
-                                      "inputs": "@outputs('Current_extended_row')['values'][0][3]"
+                                      "inputs": "@outputs('Current_extended_row')['values'][0][int(outputs('ExtendedUnitOfMeasure'))]"
                                     },
                                     "Annual_number_of__Consignments": {
                                       "runAfter": {
@@ -2650,7 +2955,7 @@
                                         "operationMetadataId": "ef42a387-8f12-40a2-945b-39841bc0a9a7"
                                       },
                                       "type": "Compose",
-                                      "inputs": "@outputs('Current_extended_row')['values'][0][4]"
+                                      "inputs": "@outputs('Current_extended_row')['values'][0][int(outputs('ExtendedAnnulaConsignment'))]"
                                     },
                                     "Check_quantity": {
                                       "actions": {},
@@ -3013,7 +3318,7 @@
                                         "operationMetadataId": "61796b69-662d-48b5-9067-a5cee179fe74"
                                       },
                                       "type": "Compose",
-                                      "inputs": "@outputs('Current_extended_row')['values'][0][0]"
+                                      "inputs": "@outputs('Current_extended_row')['values'][0][int(outputs('ExtendedSite'))]"
                                     }
                                   },
                                   "runAfter": {},
@@ -3135,10 +3440,26 @@
                             }
                           },
                           "runAfter": {},
-                          "metadata": {
-                            "operationMetadataId": "532bec31-07e5-4e56-88ba-48f3c1a8f96f"
+                          "expression": {
+                            "or": [
+                              {
+                                "equals": [
+                                  "@outputs('current_row')['values'][0][int(outputs('extendedYN'))]",
+                                  "Yes"
+                                ]
+                              },
+                              {
+                                "equals": [
+                                  "@outputs('current_row')['values'][0][int(outputs('extendedYN'))]",
+                                  "oui"
+                                ]
+                              }
+                            ]
                           },
-                          "type": "Scope"
+                          "metadata": {
+                            "operationMetadataId": "5ef93ea8-33d9-4c86-afa0-b34fc5c07991"
+                          },
+                          "type": "If"
                         }
                       },
                       "runAfter": {},
@@ -3153,26 +3474,6 @@
                             "inputs": {
                               "name": "IsErrorFree",
                               "value": "@false"
-                            }
-                          },
-                          "Append_to_array_variable_-_Extended_column_empty": {
-                            "runAfter": {
-                              "Set_variable_Error_Message_11": [
-                                "Succeeded"
-                              ]
-                            },
-                            "metadata": {
-                              "operationMetadataId": "4f55e617-31bd-44ed-bb0a-b526c97f332f"
-                            },
-                            "type": "AppendToArrayVariable",
-                            "inputs": {
-                              "name": "Error_List",
-                              "value": {
-                                "SheetName": "Add Basic Info",
-                                "Row#": "@{outputs('Current_Row_number')}",
-                                "Site": "@{outputs('Current_Site_Address')}",
-                                "Error": "@{variables('Error_Message')}"
-                              }
                             }
                           },
                           "Filter_array_B1026": {
@@ -3203,6 +3504,26 @@
                             "inputs": {
                               "name": "Error_Message",
                               "value": "@{body('Filter_array_B1026')[0]['Message']}"
+                            }
+                          },
+                          "Append_to_array_variable_-_Extended_column_empty": {
+                            "runAfter": {
+                              "Set_variable_Error_Message_11": [
+                                "Succeeded"
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "4f55e617-31bd-44ed-bb0a-b526c97f332f"
+                            },
+                            "type": "AppendToArrayVariable",
+                            "inputs": {
+                              "name": "Error_List",
+                              "value": {
+                                "SheetName": "Add Basic Info",
+                                "Row#": "@{outputs('Current_Row_number')}",
+                                "Site": "@{outputs('Current_Site_Address')}",
+                                "Error": "@{variables('Error_Message')}"
+                              }
                             }
                           },
                           "Add_Bulk_Log_details_B1026": {
@@ -3239,7 +3560,7 @@
                       },
                       "expression": {
                         "greater": [
-                          "@length(outputs('current_row')['values'][0][24])",
+                          "@length(outputs('current_row')['values'][0][int(outputs('extendedYN'))])",
                           0
                         ]
                       },
@@ -3269,7 +3590,7 @@
                     "operationMetadataId": "c8231cfb-e9e8-482c-bdc3-da88465785e4"
                   },
                   "type": "Compose",
-                  "inputs": "@add( int(outputs('current_row')['values'][0][25]) ,5) "
+                  "inputs": "@add( int(outputs('Current_row')['Index']), 5)"
                 },
                 "Current_Site_Address": {
                   "runAfter": {
@@ -3281,14 +3602,14 @@
                     "operationMetadataId": "d07cd0a9-7e62-4379-be92-c323f2fba582"
                   },
                   "type": "Compose",
-                  "inputs": "@outputs('current_row')['values'][0][26]"
+                  "inputs": "@outputs('current_row')['values'][0][int(outputs('SiteFullAddress'))]"
                 }
               },
               "runAfter": {
-                "Filter_table_-_get_none_empty_cells_sites_for_insert_": [
+                "Filter_table_-_Get_None_empty_cells_Extended_Table": [
                   "Succeeded"
                 ],
-                "Filter_table_-_Get_None_empty_cells_Extended_Table": [
+                "Filter_table_-_get_none_empty_cells_sites_for_insert_": [
                   "Succeeded"
                 ]
               },
@@ -3309,8 +3630,458 @@
               "type": "Query",
               "inputs": {
                 "from": "@outputs('Invoke_an_HTTP_request_Get_Extended_info_table')?['body']['value']",
-                "where": "@and(greater(length(item()['values'][0][0]), 0) , greater(length(item()['values'][0][1]), 0))"
+                "where": "@and(greater(length(item()['values'][0][ int(outputs('ExtendedSite')) ]), 0) , greater(length(item()['values'][0][int(outputs('ExtendedUNNumber'))]), 0))"
               }
+            },
+            "define_basic_info_sheet_columns": {
+              "actions": {
+                "userAction": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "a1598679-b359-4995-8082-c3ab58b5ce7b"
+                  },
+                  "type": "Compose",
+                  "inputs": 0
+                },
+                "SiteName": {
+                  "runAfter": {
+                    "userAction": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "0b319d79-94cf-4ca6-bb49-3374fdd972f0"
+                  },
+                  "type": "Compose",
+                  "inputs": 1
+                },
+                "Address1": {
+                  "runAfter": {
+                    "SiteName": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "1f93a4c9-5519-4834-b9a6-fb3d5764c2eb"
+                  },
+                  "type": "Compose",
+                  "inputs": 2
+                },
+                "City": {
+                  "runAfter": {
+                    "Address1": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "dbe26cc1-4c9c-4ba8-b85d-cb64eef8faef"
+                  },
+                  "type": "Compose",
+                  "inputs": 3
+                },
+                "Province": {
+                  "runAfter": {
+                    "City": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "e975e0f1-f06a-4dca-9047-e47503e2782b"
+                  },
+                  "type": "Compose",
+                  "inputs": 4
+                },
+                "PostalCode": {
+                  "runAfter": {
+                    "Province": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "75282f2f-4b8b-4689-9ea9-3782d51058df"
+                  },
+                  "type": "Compose",
+                  "inputs": 5
+                },
+                "Address2": {
+                  "runAfter": {
+                    "PostalCode": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3f6a122f-c20c-4d83-b063-3be620089848"
+                  },
+                  "type": "Compose",
+                  "inputs": 6
+                },
+                "Address3": {
+                  "runAfter": {
+                    "Address2": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "4026d79c-ae18-4b94-8b1d-296b3690cda9"
+                  },
+                  "type": "Compose",
+                  "inputs": 7
+                },
+                "LLDProvince": {
+                  "runAfter": {
+                    "Address3": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "6cdb4c23-56ba-41ce-a13f-03aebdcb78b7"
+                  },
+                  "type": "Compose",
+                  "inputs": 8
+                },
+                "Quarter": {
+                  "runAfter": {
+                    "LLDProvince": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "a29b5c9a-fe60-4d35-be55-454356d40e4f"
+                  },
+                  "type": "Compose",
+                  "inputs": 9
+                },
+                "Section": {
+                  "runAfter": {
+                    "Quarter": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "42869346-d816-4923-b26b-e3ac7c3bb620"
+                  },
+                  "type": "Compose",
+                  "inputs": 10
+                },
+                "TownShip": {
+                  "runAfter": {
+                    "Section": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "cdc284ff-1f84-471b-95da-6eddcc7e3427"
+                  },
+                  "type": "Compose",
+                  "inputs": 11
+                },
+                "Range": {
+                  "runAfter": {
+                    "TownShip": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "f5b44d03-0ea1-4322-ad2e-ea6a9fda2fd5"
+                  },
+                  "type": "Compose",
+                  "inputs": 12
+                },
+                "Meridian": {
+                  "runAfter": {
+                    "Range": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "794f7754-6314-4932-bb63-f299ce9974c5"
+                  },
+                  "type": "Compose",
+                  "inputs": 13
+                },
+                "Lat": {
+                  "runAfter": {
+                    "Meridian": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3abf2572-b339-4126-a607-688e09d752f9"
+                  },
+                  "type": "Compose",
+                  "inputs": 14
+                },
+                "Long": {
+                  "runAfter": {
+                    "Lat": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "855c0461-a4e4-4454-8a28-ead74c94fb7a"
+                  },
+                  "type": "Compose",
+                  "inputs": 15
+                },
+                "Air": {
+                  "runAfter": {
+                    "Long": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "129357ef-35ce-4762-8f3f-2f1339fcc145"
+                  },
+                  "type": "Compose",
+                  "inputs": 16
+                },
+                "Marine": {
+                  "runAfter": {
+                    "Air": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "33fb1f99-04f8-4e73-b7c2-71a74178883b"
+                  },
+                  "type": "Compose",
+                  "inputs": 17
+                },
+                "Rail": {
+                  "runAfter": {
+                    "Marine": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "b70f0b0e-5265-4b61-8963-fc1b4b8f8b4e"
+                  },
+                  "type": "Compose",
+                  "inputs": 18
+                },
+                "Road": {
+                  "runAfter": {
+                    "Rail": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "67efa3fd-0019-4731-ab45-38562b1c3afe"
+                  },
+                  "type": "Compose",
+                  "inputs": 19
+                },
+                "Handle": {
+                  "runAfter": {
+                    "Road": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "87ed0437-464f-4d68-8884-f0aaa8cc4909"
+                  },
+                  "type": "Compose",
+                  "inputs": 20
+                },
+                "OfferForTransport": {
+                  "runAfter": {
+                    "Handle": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "a075538b-4938-451b-aa5c-b0b909e8bceb"
+                  },
+                  "type": "Compose",
+                  "inputs": 21
+                },
+                "Transport": {
+                  "runAfter": {
+                    "OfferForTransport": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "4be5c4d6-7fd5-425e-9fd7-93ec3d499774"
+                  },
+                  "type": "Compose",
+                  "inputs": 22
+                },
+                "Import": {
+                  "runAfter": {
+                    "Transport": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "b5d428ee-008d-48b7-af90-7003164339a4"
+                  },
+                  "type": "Compose",
+                  "inputs": 23
+                },
+                "Class": {
+                  "runAfter": {
+                    "Import": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "b8301325-ecf8-44e1-addf-9c005e8daae5"
+                  },
+                  "type": "Compose",
+                  "inputs": 24
+                },
+                "extendedYN": {
+                  "runAfter": {
+                    "Class": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "a3f56429-de62-4db0-8ac3-2f7dba91b8e2"
+                  },
+                  "type": "Compose",
+                  "inputs": 25
+                },
+                "LineNumber": {
+                  "runAfter": {
+                    "extendedYN": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "87e59482-f129-418f-b5a6-66cf15fa34a4"
+                  },
+                  "type": "Compose",
+                  "inputs": 26
+                },
+                "SiteFullAddress": {
+                  "runAfter": {
+                    "LineNumber": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "097c3321-7f83-4634-9681-c902ac84dd3a"
+                  },
+                  "type": "Compose",
+                  "inputs": 27
+                },
+                "SiteGUID": {
+                  "runAfter": {
+                    "SiteFullAddress": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "5f6eb9ca-7a27-41e2-b0a5-851101b1f606"
+                  },
+                  "type": "Compose",
+                  "inputs": 28
+                }
+              },
+              "runAfter": {
+                "List_All_Accounts": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d4375930-3c4d-472c-a8b9-7d72d1b358f5"
+              },
+              "type": "Scope"
+            },
+            "define_extended_columns_in_excel_sheet": {
+              "actions": {
+                "ExtendedAction": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "a1598679-b359-4995-8082-c3ab58b5ce7b"
+                  },
+                  "type": "Compose",
+                  "inputs": 0
+                },
+                "ExtendedSite": {
+                  "runAfter": {
+                    "ExtendedAction": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "0b319d79-94cf-4ca6-bb49-3374fdd972f0"
+                  },
+                  "type": "Compose",
+                  "inputs": 1
+                },
+                "ExtendedUNNumber": {
+                  "runAfter": {
+                    "ExtendedSite": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "1f93a4c9-5519-4834-b9a6-fb3d5764c2eb"
+                  },
+                  "type": "Compose",
+                  "inputs": 2
+                },
+                "ExtendedQuantity": {
+                  "runAfter": {
+                    "ExtendedUNNumber": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "dbe26cc1-4c9c-4ba8-b85d-cb64eef8faef"
+                  },
+                  "type": "Compose",
+                  "inputs": 3
+                },
+                "ExtendedUnitOfMeasure": {
+                  "runAfter": {
+                    "ExtendedQuantity": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "e975e0f1-f06a-4dca-9047-e47503e2782b"
+                  },
+                  "type": "Compose",
+                  "inputs": 4
+                },
+                "ExtendedAnnulaConsignment": {
+                  "runAfter": {
+                    "ExtendedUnitOfMeasure": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "75282f2f-4b8b-4689-9ea9-3782d51058df"
+                  },
+                  "type": "Compose",
+                  "inputs": 5
+                },
+                "ExtendedGUID": {
+                  "runAfter": {
+                    "ExtendedAnnulaConsignment": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3f6a122f-c20c-4d83-b063-3be620089848"
+                  },
+                  "type": "Compose",
+                  "inputs": 6
+                }
+              },
+              "runAfter": {
+                "define_basic_info_sheet_columns": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d4375930-3c4d-472c-a8b9-7d72d1b358f5"
+              },
+              "type": "Scope"
             }
           },
           "runAfter": {
@@ -3442,14 +4213,7 @@
               {
                 "name": "Error_List",
                 "type": "array",
-                "value": [
-                  {
-                    "SheetName": "",
-                    "Row#": "",
-                    "Site": "",
-                    "Error": ""
-                  }
-                ]
+                "value": []
               }
             ]
           }
@@ -3524,8 +4288,34 @@
         },
         "check_error_flag": {
           "actions": {
-            "Run_Bulk_Insert_Flow": {
+            "Update_Bulk_activity_log_summary_2": {
               "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "b9fd40b4-ad5c-476a-a72c-c9247d363b8a"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "cid_bulkactivitylogsummaries",
+                  "recordId": "@triggerOutputs()?['body/cid_bulkactivitylogsummaryid']",
+                  "item/cid_numberofsites": "@outputs('totalNumberOfSites')",
+                  "item/cid_numberofunnumbers": "@outputs('NumberOfUnNumbers')",
+                  "item/cid_validationcompletedstage": 100000001
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Run_Bulk_Insert_Flow": {
+              "runAfter": {
+                "Update_Bulk_activity_log_summary_2": [
+                  "Succeeded"
+                ]
+              },
               "metadata": {
                 "operationMetadataId": "1646db8d-85fe-43d1-b9b3-e0c2ec13f78f"
               },
@@ -3537,71 +4327,178 @@
                 "body": {
                   "text": "@triggerOutputs()?['body/_cid_company_value']",
                   "text_1": "@triggerOutputs()?['body/cid_tempsharepointfilelocation']",
-                  "text_2": "@triggerOutputs()?['body/cid_bulkactivitylogsummaryid']"
+                  "text_2": "@triggerOutputs()?['body/cid_bulkactivitylogsummaryid']",
+                  "text_3": "@outputs('get_contact_email')?['body/contactid']"
                 }
               }
             }
           },
           "runAfter": {
-            "Check_if_Validation_should_start_on_the_Modified_event": [
+            "NumberOfUnNumbers": [
               "Succeeded"
             ]
           },
           "else": {
             "actions": {
-              "Create_HTML_table": {
-                "runAfter": {},
-                "metadata": {
-                  "operationMetadataId": "3d5b95c3-0259-4f2b-a767-b20b99174ec1"
+              "if_language_is_english": {
+                "actions": {
+                  "Select_Error_List_Variable_columns_English": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "091d13e2-41c8-49ec-afa7-5073e00c8921"
+                    },
+                    "type": "Select",
+                    "inputs": {
+                      "from": "@variables('Error_List')",
+                      "select": {
+                        "Worksheet": "@item()['SheetName']",
+                        "Row #": "@item()['Row#']",
+                        "Error": "@item()['Error']",
+                        "Site": "@item()['Site']"
+                      }
+                    }
+                  },
+                  "Send_an_email_notification_to_portal_users_with_errors": {
+                    "runAfter": {
+                      "html_table_with_style": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "94e1b98e-5051-4132-b512-028ad4bd7d96"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_sendmail",
+                        "operationId": "SendEmailV3",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                      },
+                      "parameters": {
+                        "request/to": "@{outputs('get_contact_email')?['body/emailaddress1']};",
+                        "request/subject": "workbook was not successfully uploaded",
+                        "request/text": "<p>Hello @{outputs('get_contact_email')?['body/firstname']},<br>\n<br>\nworkbook for @{outputs('get_contact_email')?['body']['_parentcustomerid_value@OData.Community.Display.V1.FormattedValue']} was not successfully uploaded, Please address the following errors first and try the upload again.<br>\n- Upload Date: @{outputs('Get_bulk_activities_log_summary_by_ID')?['body/createdon']}<br>\n- Total # of Sites in the workbook : @{outputs('totalNumberOfSites')}<br>\n- Total # of UNs in the workbook : @{outputs('totalNumberOferrors')}<br>\n- Total # of Errors: @{outputs('totalNumberOferrors')}<br>\n- File Name: @{outputs('Update_Bulk_activity_log_summary')?['body/cid_filename']}<br>\n<br>\nThe following are the Number of Errors found in the uploaded workbook:<br>\n<br>\n@{replace( outputs('html_table_with_style') ,'<table>' , '  <table><col style=\"width:15%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:50%\">\r\n        <col style=\"width:25%\">')}<br>\n</p>"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "html_table_with_style": {
+                    "runAfter": {
+                      "Create_HTML_table": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "920beb59-130c-4895-ab0c-490a0d32e827"
+                    },
+                    "type": "Compose",
+                    "inputs": "<style>\ntable {\n  border: 1px solid #1C6EA4;\n  background-color: #EEEEEE;\n  width: 100%;\n  text-align: left;\n  border-collapse: collapse;\n}\ntable td, table th {\n  border: 1px solid #AAAAAA;\n  padding: 3px 2px;\n}\ntable tbody td {\n  font-size: 13px;\n}\ntable thead {\n  background: #1C6EA4;\n  border-bottom: 2px solid #444444;\n}\ntable thead th {\n  font-size: 15px;\n  font-weight: bold;\n  color: #FFFFFF;\n  border-left: 2px solid #D0E4F5;\n}\ntable thead th:first-child {\n  border-left: none;\n}\n</style>\n@{body('Create_HTML_table')}"
+                  },
+                  "Create_HTML_table": {
+                    "runAfter": {
+                      "Select_Error_List_Variable_columns_English": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "3d5b95c3-0259-4f2b-a767-b20b99174ec1"
+                    },
+                    "type": "Table",
+                    "inputs": {
+                      "from": "@body('Select_Error_List_Variable_columns_English')",
+                      "format": "HTML"
+                    }
+                  }
                 },
-                "type": "Table",
-                "inputs": {
-                  "from": "@variables('Error_List')",
-                  "format": "HTML"
-                }
-              },
-              "html_table_with_style": {
-                "runAfter": {
-                  "Create_HTML_table": [
-                    "Succeeded"
-                  ]
-                },
-                "metadata": {
-                  "operationMetadataId": "920beb59-130c-4895-ab0c-490a0d32e827"
-                },
-                "type": "Compose",
-                "inputs": "<style>\ntable {\n  border: 1px solid #1C6EA4;\n  background-color: #EEEEEE;\n  width: 100%;\n  text-align: left;\n  border-collapse: collapse;\n}\ntable td, table th {\n  border: 1px solid #AAAAAA;\n  padding: 3px 2px;\n}\ntable tbody td {\n  font-size: 13px;\n}\ntable thead {\n  background: #1C6EA4;\n  border-bottom: 2px solid #444444;\n}\ntable thead th {\n  font-size: 15px;\n  font-weight: bold;\n  color: #FFFFFF;\n  border-left: 2px solid #D0E4F5;\n}\ntable thead th:first-child {\n  border-left: none;\n}\n</style>\n@{body('Create_HTML_table')}"
-              },
-              "Send_an_email_notification_(V3)": {
                 "runAfter": {
                   "Update_Bulk_activity_log_summary": [
                     "Succeeded"
                   ]
                 },
-                "metadata": {
-                  "operationMetadataId": "94e1b98e-5051-4132-b512-028ad4bd7d96"
+                "else": {
+                  "actions": {
+                    "Create_HTML_table-French": {
+                      "runAfter": {
+                        "Select_Error_List_Variable_columns": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "16f727a6-fe5f-4fe3-b56d-ae277f2a3eec"
+                      },
+                      "type": "Table",
+                      "inputs": {
+                        "from": "@body('Select_Error_List_Variable_columns')",
+                        "format": "HTML"
+                      }
+                    },
+                    "Select_Error_List_Variable_columns": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "091d13e2-41c8-49ec-afa7-5073e00c8921"
+                      },
+                      "type": "Select",
+                      "inputs": {
+                        "from": "@variables('Error_List')",
+                        "select": {
+                          "Feuille de travail": "@item()['SheetName']",
+                          "Rangée #": "@item()['Row#']",
+                          "Erreur": "@item()['Error']",
+                          "Site": "@item()['Site']"
+                        }
+                      }
+                    },
+                    "Send_an_email_notification_with_errors_to_portal_user_in_English": {
+                      "runAfter": {
+                        "html_table_with_style-French": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "661155db-9f65-4f0b-af70-fa25633e3684"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sendmail_1",
+                          "operationId": "SendEmailV3",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                        },
+                        "parameters": {
+                          "request/to": "@{outputs('get_contact_email')?['body/emailaddress1']};",
+                          "request/subject": "le classeur n'a pas été téléchargé avec succès",
+                          "request/text": "<p>Bonjour @{outputs('get_contact_email')?['body/firstname']},<br>\n<br>\ncahier d'exercices pour &nbsp;@{outputs('get_contact_email')?['body']['_parentcustomerid_value@OData.Community.Display.V1.FormattedValue']} n'a pas été téléchargé avec succès, veuillez d'abord résoudre les erreurs suivantes et réessayez le téléchargement.<br>\n<br>\n- Date de dépôt: @{outputs('Get_bulk_activities_log_summary_by_ID')?['body/createdon']}<br>\n- Nombre total de sites dans le classeur : @{outputs('totalNumberOfSites')}<br>\n- Nombre total d'ONU dans le classeur : @{outputs('totalNumberOferrors')}<br>\n- Nombre total d'erreurs: @{outputs('totalNumberOferrors')}<br>\n- Nom de fichier: @{outputs('Update_Bulk_activity_log_summary')?['body/cid_filename']}<br>\n<br>\nVoici le nombre d'erreurs trouvées dans le classeur téléchargé:<br>\n<br>\n@{replace( outputs('html_table_with_style-French') ,'<table>' , '  <table><col style=\"width:20%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:45%\">\r\n        <col style=\"width:25%\">')}<br>\n<br>\n<br>\n</p>"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "html_table_with_style-French": {
+                      "runAfter": {
+                        "Create_HTML_table-French": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "920beb59-130c-4895-ab0c-490a0d32e827"
+                      },
+                      "type": "Compose",
+                      "inputs": "<style>\ntable {\n  border: 1px solid #1C6EA4;\n  background-color: #EEEEEE;\n  width: 100%;\n  text-align: left;\n  border-collapse: collapse;\ntable-layout: fixed;\n}\ntable td, table th {\n  border: 1px solid #AAAAAA;\n  padding: 3px 2px;\noverflow: hidden;\n}\ntable tbody td {\n  font-size: 13px;\n}\ntable thead {\n  background: #1C6EA4;\n  border-bottom: 2px solid #444444;\n}\ntable thead th {\n  font-size: 15px;\n  font-weight: bold;\n  color: #FFFFFF;\n  border-left: 2px solid #D0E4F5;\n}\ntable thead th:first-child {\n  border-left: none;\n}\n</style>\n@{replace(replace(body('Create_HTML_table-French'),'Add Extended Info','Ajouter des informations étendues'),'Add Basic Info' ,'Ajouter des informations de base')}\n"
+                    }
+                  }
                 },
-                "type": "OpenApiConnection",
-                "inputs": {
-                  "host": {
-                    "connectionName": "shared_sendmail",
-                    "operationId": "SendEmailV3",
-                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
-                  },
-                  "parameters": {
-                    "request/to": "@{outputs('get_contact_email')?['body/emailaddress1']};",
-                    "request/subject": "workbook was not successfully uploaded",
-                    "request/text": "<p>Hello @{outputs('get_contact_email')?['body/firstname']},<br>\n<br>\nworkbook for @{outputs('get_contact_email')?['body/_parentcustomerid_value']} was not successfully uploaded, Please address the following errors first and try the upload again.<br>\n<br>\n@{outputs('html_table_with_style')}<br>\n</p>"
-                  },
-                  "authentication": "@parameters('$authentication')"
-                }
-              },
-              "Update_Bulk_activity_log_summary": {
-                "runAfter": {
-                  "html_table_with_style": [
-                    "Succeeded"
+                "expression": {
+                  "equals": [
+                    "@outputs('get_contact_email')?['body/cid_languageofcorrespondence']",
+                    918640001
                   ]
                 },
+                "metadata": {
+                  "operationMetadataId": "2ab86d82-d594-432b-a24a-8da1b7311ea6"
+                },
+                "type": "If"
+              },
+              "Update_Bulk_activity_log_summary": {
+                "runAfter": {},
                 "metadata": {
                   "operationMetadataId": "b9fd40b4-ad5c-476a-a72c-c9247d363b8a"
                 },
@@ -3616,7 +4513,10 @@
                     "entityName": "cid_bulkactivitylogsummaries",
                     "recordId": "@triggerOutputs()?['body/cid_bulkactivitylogsummaryid']",
                     "item/cid_activityendtime": "@utcNow()",
-                    "item/cid_activitystatus": 100000001
+                    "item/cid_activitystatus": 100000001,
+                    "item/cid_numberofsites": "@outputs('totalNumberOfSites')",
+                    "item/cid_numberofunnumbers": "@outputs('NumberOfUnNumbers')",
+                    "item/cid_totalruntime": "@div(sub(ticks(utcNow()),ticks(outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_activitystarttime'])),10000000)"
                   },
                   "authentication": "@parameters('$authentication')"
                 }
@@ -3833,8 +4733,8 @@
               },
               "expression": {
                 "equals": [
-                  "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_language@OData.Community.Display.V1.FormattedValue']",
-                  "English"
+                  "@outputs('get_contact_email')?['body/cid_languageofcorrespondence']",
+                  918640001
                 ]
               },
               "metadata": {
@@ -3909,6 +4809,42 @@
               }
             ]
           }
+        },
+        "totalNumberOferrors": {
+          "runAfter": {
+            "Check_if_Validation_should_start_on_the_Modified_event": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "28a8735f-bcb1-4554-b08a-6e429977b8d7"
+          },
+          "type": "Compose",
+          "inputs": "@ length(variables('Error_List')) "
+        },
+        "totalNumberOfSites": {
+          "runAfter": {
+            "totalNumberOferrors": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6e482b88-0e20-4cfb-9a9d-59d8799d6efa"
+          },
+          "type": "Compose",
+          "inputs": "@length(body('Filter_table_-_get_none_empty_cells_sites_for_insert_'))"
+        },
+        "NumberOfUnNumbers": {
+          "runAfter": {
+            "totalNumberOfSites": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "958aedd2-980b-4aeb-806d-5de021c93c57"
+          },
+          "type": "Compose",
+          "inputs": "@length(body('Filter_table_-_Get_None_empty_cells_Extended_Table'))"
         }
       }
     }

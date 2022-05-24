@@ -46,6 +46,12 @@
                 },
                 "Lang": {
                   "type": "string"
+                },
+                "LogWarningYN": {
+                  "type": "string"
+                },
+                "WarrningDetails": {
+                  "type": "string"
                 }
               }
             }
@@ -76,7 +82,11 @@
               }
             }
           },
-          "runAfter": {},
+          "runAfter": {
+            "check_warning_log_is_required": [
+              "Succeeded"
+            ]
+          },
           "else": {
             "actions": {
               "update_bulk_summary_table_to_close_the_activity": {
@@ -95,7 +105,8 @@
                     "entityName": "cid_bulkactivitylogsummaries",
                     "recordId": "@triggerBody()?['activityid']",
                     "item/cid_activityendtime": "@utcNow()",
-                    "item/cid_activitystatus": 100000001
+                    "item/cid_activitystatus": 100000001,
+                    "item/cid_validationcompletedstage": 100000000
                   },
                   "authentication": "@parameters('$authentication')"
                 }
@@ -128,6 +139,41 @@
             "statusCode": 200,
             "body": "s"
           }
+        },
+        "check_warning_log_is_required": {
+          "actions": {
+            "Add_bulk_log_details": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "a416fe14-2092-4b4e-af8e-bb9461c8a21c"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "cid_bulkactivitylogsdetailses",
+                  "item/cid_BulkActivityLogSummary@odata.bind": "@concat('\\cid_bulkactivitylogsummaries\\' , triggerBody()?['activityid'])",
+                  "item/cid_errordetails": "@triggerBody()?['WarrningDetails']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {},
+          "expression": {
+            "equals": [
+              "@triggerBody()?['LogWarningYN']",
+              "Y"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "308f7eec-c009-468a-98f1-c4f0af43c357"
+          },
+          "type": "If"
         }
       },
       "outputs": {}

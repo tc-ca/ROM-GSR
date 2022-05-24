@@ -67,7 +67,7 @@
       "actions": {
         "Perform_a_bound_action": {
           "runAfter": {
-            "Get_Company": [
+            "downloadTemplate": [
               "Succeeded"
             ]
           },
@@ -85,8 +85,9 @@
               "entityName": "accounts",
               "actionName": "Microsoft.Dynamics.CRM.cid_Get_Sites",
               "recordId": "@triggerBody()?['accountid']",
-              "item/RootOrgID": "@outputs('Get_Company')?['body/root_organization_id']",
+              "item/RootOrgID": "@string(outputs('Get_Company')?['body/root_organization_id'])",
               "item/Language": "@triggerBody()?['Language']",
+              "item/IntialRegYN": true,
               "item/ID": "@triggerBody()?['accountid']"
             },
             "authentication": "@parameters('$authentication')"
@@ -171,15 +172,15 @@
             "variables": [
               {
                 "name": "Language",
-                "type": "string",
-                "value": "@triggerBody()?['Language']"
+                "type": "integer",
+                "value": 918640001
               }
             ]
           }
         },
         "Initialize_AddSiteGraphAPI_Variable": {
           "runAfter": {
-            "Initialize_variable": [
+            "check_if_language_is_french": [
               "Succeeded"
             ]
           },
@@ -217,7 +218,7 @@
         },
         "Filter_environment-setting-get-version#": {
           "runAfter": {
-            "Get_Company": [
+            "downloadTemplate": [
               "Succeeded"
             ]
           },
@@ -432,7 +433,7 @@
         },
         "Add_bulk_activity_review_Log": {
           "runAfter": {
-            "Get_Company": [
+            "downloadTemplate": [
               "Succeeded"
             ]
           },
@@ -468,7 +469,8 @@
                 "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fDev%252fCID_Sites_Template_2022_EnFr_V1.0.xlsx": "/Shared Documents/CID_Bulk_Upload/Dev/CID_Sites_Template_2022_EnFr_V1.0.xlsx",
                 "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_March%2b2022%2bv11.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_March 2022 v11.xlsx",
                 "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fDev%252fCID_Sites_Template_2022_ENG_March%2b2022%2bv11.xlsx": "/Shared Documents/CID_Bulk_Upload/Dev/CID_Sites_Template_2022_ENG_March 2022 v11.xlsx",
-                "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fDev%252fCID_Sites_Template_2022_ENG_April%2b2022%2bv12.xlsx": "/Shared Documents/CID_Bulk_Upload/Dev/CID_Sites_Template_2022_ENG_April 2022 v12.xlsx"
+                "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fDev%252fCID_Sites_Template_2022_ENG_April%2b2022%2bv12.xlsx": "/Shared Documents/CID_Bulk_Upload/Dev/CID_Sites_Template_2022_ENG_April 2022 v12.xlsx",
+                "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fDev%252fCID_Sites_Template_2022_ENG_May%2b2022%2bv12.xlsx": "/Shared Documents/CID_Bulk_Upload/Dev/CID_Sites_Template_2022_ENG_May 2022 v12.xlsx"
               },
               "type": "OpenApiConnection",
               "inputs": {
@@ -479,7 +481,7 @@
                 },
                 "parameters": {
                   "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
-                  "id": "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fDev%252fCID_Sites_Template_2022_ENG_April%2b2022%2bv12.xlsx",
+                  "id": "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fDev%252fCID_Sites_Template_2022_ENG_May%2b2022%2bv12.xlsx",
                   "inferContentType": true
                 },
                 "authentication": "@parameters('$authentication')"
@@ -707,7 +709,7 @@
                     },
                     "parameters": {
                       "request/method": "POST",
-                      "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{outputs('Create_new_folder')?['body/{Name}']}/@{outputs('Create_file')?['body/Name']}:/workbook/worksheets('Add Basic Info')/protection/protect",
+                      "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{outputs('Create_new_folder')?['body/{Name}']}/@{outputs('Create_file')?['body/Name']}:/workbook/worksheets('Basic Site info')/protection/protect",
                       "request/headers": {
                         "accept": "application/json"
                       },
@@ -832,7 +834,7 @@
                     },
                     "parameters": {
                       "request/method": "POST",
-                      "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{outputs('Create_new_folder')?['body/{Name}']}/@{outputs('Create_file')?['body/Name']}:/workbook/worksheets('Add Extended Info')/protection/protect",
+                      "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{outputs('Create_new_folder')?['body/{Name}']}/@{outputs('Create_file')?['body/Name']}:/workbook/worksheets('Extended Site info')/protection/protect",
                       "request/headers": {
                         "accept": "application/json"
                       },
@@ -868,6 +870,38 @@
                 "operationMetadataId": "462fb74a-1b5c-4dc4-ad87-4627d38df78d"
               },
               "type": "Scope"
+            },
+            "Update_a_row": {
+              "runAfter": {
+                "Insert_Data_to_Basic_Sheet": [
+                  "Succeeded"
+                ],
+                "Insert_Data_to_Add_extended_Sheet": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e0f774e5-53f3-47de-b653-05797908c7ce"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "cid_bulkactivitylogsummaries",
+                  "recordId": "@outputs('Add_bulk_activity_review_Log')?['body/cid_bulkactivitylogsummaryid']",
+                  "item/cid_activityendtime": "@utcNow()",
+                  "item/cid_activitystatus": 100000000,
+                  "item/cid_filename": "@outputs('Create_file')?['body/Name']",
+                  "item/cid_language": "@variables('Language')",
+                  "item/cid_numberofsites": "@length(outputs('SiteList'))",
+                  "item/cid_numberofunnumbers": "@length(outputs('UN_Number_List'))"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
             }
           },
           "runAfter": {
@@ -907,7 +941,7 @@
               },
               "Response_2": {
                 "runAfter": {
-                  "Add_attachment_temp_to_activity": [
+                  "Update_a_row_2": [
                     "Succeeded"
                   ]
                 },
@@ -992,6 +1026,35 @@
                   },
                   "authentication": "@parameters('$authentication')"
                 }
+              },
+              "Update_a_row_2": {
+                "runAfter": {
+                  "Add_attachment_temp_to_activity": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "a6e6bd1b-d54e-4849-b60c-810ca6e22a8a"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps",
+                    "operationId": "UpdateRecord",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "cid_bulkactivitylogsummaries",
+                    "recordId": "@outputs('Add_bulk_activity_review_Log')?['body/cid_bulkactivitylogsummaryid']",
+                    "item/cid_activityendtime": "@utcNow()",
+                    "item/cid_activitystatus": 100000000,
+                    "item/cid_filename": "@outputs('Create_file')?['body/Name']",
+                    "item/cid_language": "@variables('Language')",
+                    "item/cid_numberofsites": 0,
+                    "item/cid_numberofunnumbers": 0
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
               }
             }
           },
@@ -1054,6 +1117,48 @@
             },
             "authentication": "@parameters('$authentication')"
           }
+        },
+        "downloadTemplate": {
+          "runAfter": {
+            "Get_Company": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "03519b11-e6d3-4098-a7bd-9dccfa8b02e3"
+          },
+          "type": "Compose",
+          "inputs": "/Shared Documents/CID_Bulk_Upload/Dev/CID_Sites_Template_2022_ENG_April 2022 v12.xlsx"
+        },
+        "check_if_language_is_french": {
+          "actions": {
+            "Set_variable_language_to_French_index": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "e4376b0a-29bf-4f2b-bfb6-3fa0cf10aba5"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Language",
+                "value": 918640002
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_variable": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "equals": [
+              "@triggerBody()?['Language']",
+              "French"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6ddd7dac-d14e-4ba2-b153-271ac62add29"
+          },
+          "type": "If"
         }
       },
       "outputs": {}
