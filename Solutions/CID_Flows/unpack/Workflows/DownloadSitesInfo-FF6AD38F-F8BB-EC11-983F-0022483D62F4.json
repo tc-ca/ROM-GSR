@@ -1059,10 +1059,12 @@
             }
           },
           "expression": {
-            "greater": [
-              "@length(outputs('SiteList'))",
-              0
-            ]
+            "not": {
+              "equals": [
+                "@trim(outputs('SiteList'))",
+                "@'[]'"
+              ]
+            }
           },
           "metadata": {
             "operationMetadataId": "a783de8a-947a-48dc-9f77-3c226a747f09"
