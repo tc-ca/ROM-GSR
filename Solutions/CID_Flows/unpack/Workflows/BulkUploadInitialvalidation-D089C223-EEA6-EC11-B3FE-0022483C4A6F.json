@@ -612,7 +612,7 @@
             }
           },
           "runAfter": {
-            "check_attachement": [
+            "Check_Activity_Type": [
               "Succeeded"
             ]
           },
@@ -2298,7 +2298,7 @@
         },
         "Initialize_variable_-_Language_Index_-_default_english": {
           "runAfter": {
-            "Bulk_Activity_start_time": [
+            "Initialize_variable_-_Activity_type": [
               "Succeeded"
             ]
           },
@@ -2558,6 +2558,43 @@
             },
             "authentication": "@parameters('$authentication')"
           }
+        },
+        "Initialize_variable_-_Activity_type": {
+          "runAfter": {
+            "Bulk_Activity_start_time": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "43c9ef86-4039-4c10-90b0-9aad7a106d5b"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ActivityType",
+                "type": "integer"
+              }
+            ]
+          }
+        },
+        "Check_Activity_Type": {
+          "actions": {},
+          "runAfter": {
+            "check_attachement": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "greater": [
+              "@length(triggerBody()?['ActivityType'])",
+              0
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ebe18e27-10ef-4939-b53e-f2209c83753f"
+          },
+          "type": "If"
         }
       },
       "outputs": {}
