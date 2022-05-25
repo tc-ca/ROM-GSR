@@ -155,6 +155,7 @@
 
             function item_selected(text, id) {
                 debugger;
+                clear_field(false);
 
                 var selected_language = sessionStorage.getItem("selected_language");
                 selected_language = (selected_language == null ? "en-US" : selected_language);
@@ -205,12 +206,17 @@
             // var f = document.getElementById("WebResource_naicscode");
             // var c = f.contentWindow;
             // c.clear_field();
-            function clear_field() {
+            function clear_field(value) {
                 debugger;
-                document.getElementById("ovs_primaryclass").value = "";
-                document.getElementById("ovs_compatibility_group").value = "";
 
-                form_clear();
+                document.getElementById('ovs_primaryclass_description').value = "";
+                document.getElementById('ovs_compatibility_group_description').value = "";
+
+                if (value) {
+                    document.getElementById("ovs_primaryclass").value = "";
+                    form_clear();
+                }
+                document.getElementById("ovs_compatibility_group").value = "";
                 form_group_clear();
             }
 
@@ -255,8 +261,6 @@
 
             function onInput(e) {
                 //debugger;
-
-                document.getElementById('ovs_primaryclass_description').value = "";
 
                 var input = e.target;
                 var val = input.value;

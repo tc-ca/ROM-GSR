@@ -45,7 +45,63 @@
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 </HEAD>
 <BODY>
+    <style>
+        .option-indigo {
+            font-size: 16px;
+            padding: 5px;
+        }
+
+        select {
+            font-size: 16px;
+        }
+    </style>
+
+    <label for="data_source" class="field-label">Select UN Numbers from</label>
+    <span id="data_source_required" style="color: red;font-weight: bold"> *</span>
+    <br>
+    <input list="data_source_list" id="data_source" class="text form-control" />
+    <br>
+    <datalist id="data_source_list">
+        <option value="UN Number Master List" >
+        <option value="Company's existing ERAP's">
+    </datalist>
+    <br>
+    <label for="tdg_unnumberid" class="field-label">UN Display Name</label>
+    <span id="tdg_unnumberid_required" style="color: red;font-weight: bold"> *</span>
+    <br>
+    <input list="tdg_unnumberid_list" id="tdg_unnumberid" class="text form-control" />
+    <br>
+    <datalist id="tdg_unnumberid_list">
+    </datalist>
+    <br>
+    <input type="text" id="tdg_unnumberid_list_id" hidden />
+
     <script type="text/javascript">
+        var _data_source_1 = "UN Number Master List";
+        var _data_source_2 = "Company's existing ERAP's";
+
+        $(document).ready(function () {
+            debugger;
+            var tdg_unnumberid = sessionStorage.getItem("tdg_unnumberid");
+            document.getElementById("tdg_unnumberid").value = tdg_unnumberid;
+
+            document.getElementById("tdg_unnumberid").setAttribute("autocomplete", "off");
+
+            document.querySelector('input[list="tdg_unnumberid_list"]').addEventListener('input', onInput);
+
+            // language
+            try {
+                var tdg_unnumberid_label = sessionStorage.getItem("tdg_unnumberid_label");
+
+                var selected_language = sessionStorage.getItem("selected_language");
+                var value = (selected_language == "en-US" ? "UN Display Name" : "Nom d'affichage de l'ONU");
+                $("#tdg_unnumberid")[0].labels[0].innerHTML = tdg_unnumberid_label;
+            } catch (e) { }
+
+            // default
+            document.getElementById('data_source').value = _data_source_1;
+        })
+
         function unnumber_clear() {
             parent.$("#ovs_unnumber").attr("value", null);
             parent.$("#ovs_unnumber_name").attr("value", null);
@@ -166,61 +222,6 @@
             var filter = "substringof('" + tdg_unnumberid + "', tdg_undisplayname) or substringof('" + tdg_unnumberid + "', tdg_shippingnamedescriptiontxt)";
             var items = common.OData_List("tdg_unnumber", filter);
         }
-
-    </script>
-
-    <style>
-        .option-indigo {
-            font-size: 16px;
-            padding: 5px;
-        }
-
-        select {
-            font-size: 16px;
-        }
-    </style>
-
-    <label for="data_source" class="field-label">Select UN Numbers from</label>
-    <span id="data_source_required" style="color: red;font-weight: bold"> *</span>
-    <br>
-    <select id="data_source">
-        <option class="option-indigo" value="0" selected>UN Number Master List</option>
-        <option class="option-indigo" value="1">Company's existing ERAP's</option>
-    </select>
-    <br />
-    <label for="tdg_unnumberid" class="field-label">UN Display Name</label>
-    <span id="tdg_unnumberid_required" style="color: red;font-weight: bold"> *</span>
-    <br>
-    <input list="tdg_unnumberid_list" id="tdg_unnumberid" class="text form-control" />
-    <br>
-    <datalist id="tdg_unnumberid_list">
-    </datalist>
-    <br />
-
-    <input type="text" id="tdg_unnumberid_list_id" hidden />
-    <script>
-
-    </script>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            debugger;
-            var tdg_unnumberid = sessionStorage.getItem("tdg_unnumberid");
-            document.getElementById("tdg_unnumberid").value = tdg_unnumberid;
-
-            document.getElementById("tdg_unnumberid").setAttribute("autocomplete", "off");
-
-            document.querySelector('input[list="tdg_unnumberid_list"]').addEventListener('input', onInput);
-
-            // language
-            try {
-                var tdg_unnumberid_label = sessionStorage.getItem("tdg_unnumberid_label");
-
-                var selected_language = sessionStorage.getItem("selected_language");
-                var value = (selected_language == "en-US" ? "UN Display Name" : "Nom d'affichage de l'ONU");
-                $("#tdg_unnumberid")[0].labels[0].innerHTML = tdg_unnumberid_label;
-            } catch (e) { }
-        })
 
     </script>
 

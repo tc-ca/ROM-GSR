@@ -66,11 +66,11 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{b134dfb3-fc7e-4ad1-94a4-278b13f8667a}" locklevel="0" colspan="1" rowspan="1">
+                      <cell id="{6f171490-d682-4797-9123-91b7caed4995}" locklevel="0" colspan="1" rowspan="1">
                         <labels>
-                          <label description="Certificate Issue Date" languagecode="1033" />
+                          <label description="MOC Registration Issue Date" languagecode="1033" />
                         </labels>
-                        <control id="fdr_certificateissuedate" classid="{5B773807-9FB2-42DB-97C3-7A91EFF8ADFF}" datafieldname="fdr_certificateissuedate" disabled="false" />
+                        <control id="fdr_registrationissuedate" classid="{5B773807-9FB2-42DB-97C3-7A91EFF8ADFF}" datafieldname="fdr_registrationissuedate" disabled="false" />
                       </cell>
                     </row>
                     <row>
@@ -98,6 +98,20 @@
                           <label description="Secteur d’activité" languagecode="1036" />
                         </labels>
                         <control id="ovs_lineofbusiness" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ovs_lineofbusiness" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{6552e5f9-1576-43b1-95db-bf11bc5cc3a0}" locklevel="0" colspan="1" rowspan="1">
+                        <labels>
+                          <label description="Primary Operation Contact" languagecode="1033" />
+                        </labels>
+                        <control id="fdr_primarycontact" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="fdr_primarycontact" disabled="false">
+                          <parameters>
+                            <DisableViewPicker>true</DisableViewPicker>
+                            <DisableMru>true</DisableMru>
+                            <IsInlineNewEnabled>false</IsInlineNewEnabled>
+                          </parameters>
+                        </control>
                       </cell>
                     </row>
                     <row>
@@ -493,52 +507,6 @@
             </column>
           </columns>
         </tab>
-        <tab name="tab_certificates" id="6334ced0-946e-4c7b-a788-0fa47577f21c" IsUserDefined="0" locklevel="0" showlabel="true">
-          <labels>
-            <label description="Certificates" languagecode="1033" />
-            <label description="Certificats" languagecode="1036" />
-          </labels>
-          <columns>
-            <column width="100%">
-              <sections>
-                <section name="tab_4_section_1" id="de221bb3-4eb5-4a2f-bd80-9bd8d108d920" IsUserDefined="0" locklevel="0" showlabel="true" showbar="false" layout="varwidth" celllabelalignment="Left" celllabelposition="Left" columns="1" labelwidth="115">
-                  <labels>
-                    <label description="Certificates" languagecode="1033" />
-                    <label description="Certificats" languagecode="1036" />
-                  </labels>
-                  <rows>
-                    <row>
-                      <cell id="{5295d697-d953-48d6-b765-b894b6fa2f50}" showlabel="false">
-                        <labels>
-                          <label description="" languagecode="1033" />
-                        </labels>
-                      </cell>
-                    </row>
-                    <row>
-                      <cell locklevel="0" id="{03dd2170-e4e0-4bb0-919a-5e6b3343a9fc}" rowspan="1" colspan="1" auto="false" showlabel="false">
-                        <labels>
-                          <label description="Certificates" languagecode="1033" />
-                          <label description="Certificats" languagecode="1036" />
-                        </labels>
-                        <control id="subgrid_certificates" classid="{E7A81278-8635-4D9E-8D4D-59480B391C5B}" indicationOfSubgrid="true">
-                          <parameters>
-                            <RecordsPerPage>4</RecordsPerPage>
-                            <AutoExpand>Fixed</AutoExpand>
-                            <TargetEntityType>fdr_certificate</TargetEntityType>
-                            <ViewId>{7F917798-9134-4AD1-BE81-258048AAD040}</ViewId>
-                            <ViewIds>{7F917798-9134-4AD1-BE81-258048AAD040}</ViewIds>
-                            <EnableViewPicker>false</EnableViewPicker>
-                            <RelationshipName>fdr_ovs_mocregistration_fdr_certificate</RelationshipName>
-                          </parameters>
-                        </control>
-                      </cell>
-                    </row>
-                  </rows>
-                </section>
-              </sections>
-            </column>
-          </columns>
-        </tab>
         <tab name="tab_5" id="b283af79-9ada-4914-ad65-c432caadce71" IsUserDefined="0" locklevel="0" showlabel="true">
           <labels>
             <label description="Documents" languagecode="1033" />
@@ -665,17 +633,17 @@
       <controlDescriptions />
       <formLibraries>
         <Library name="qm_globalHelper.js" libraryUniqueId="{3f1d6e2e-f948-4e84-a9f4-7fa0c0730c9f}" />
-        <Library name="fdr_Operation_Form.js" libraryUniqueId="{115a9c9a-40ba-8d3d-4695-ab769c8e5e5d}" />
+        <Library name="fdr_operation_fdr_main.js" libraryUniqueId="{f9c57ae1-ae5b-408c-9a50-f02eba71794d}" />
       </formLibraries>
       <events>
-        <event name="onload" application="true" active="true">
+        <event name="onchange" application="true" active="true" attribute="fdr_primarycontact">
           <Handlers>
-            <Handler functionName="OnLoad" libraryName="qm_globalHelper.js" handlerUniqueId="{b8d49a15-0350-1b2a-aa2a-6a1ed42e60e9}" enabled="true" parameters="" passExecutionContext="true" />
+            <Handler functionName="Operation_FDR_main.OnLoad" libraryName="fdr_operation_fdr_main.js" handlerUniqueId="{90ea5c02-2465-4082-978e-693f3d85c61b}" enabled="true" parameters="" passExecutionContext="true" />
           </Handlers>
         </event>
-        <event name="onchange" application="true" active="true" attribute="ovs_operationtype">
+        <event name="onload" application="true" active="true">
           <Handlers>
-            <Handler functionName="OperationType_OnChange" libraryName="fdr_Operation_Form.js" handlerUniqueId="{3be8d00f-a1ad-4e8b-9c5c-4ce7aed43859}" enabled="true" parameters="" passExecutionContext="true" />
+            <Handler functionName="Operation_FDR_main.OnLoad" libraryName="fdr_operation_fdr_main.js" handlerUniqueId="{dcfe7d59-6126-4cb1-b94b-195dd327bae2}" enabled="true" parameters="" passExecutionContext="true" />
           </Handlers>
         </event>
       </events>
