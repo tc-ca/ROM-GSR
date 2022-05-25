@@ -5043,7 +5043,7 @@
                 "parameters": {
                   "request/to": "@{outputs('Get_Contact')?['body/emailaddress1']};",
                   "request/subject": "The uploaded workbook has been processed successfully",
-                  "request/text": "<p>Hi @{outputs('Get_Contact')?['body/firstname']},<br>\nThe uploaded workbook for @{outputs('Get_Account_Info')?['body/ovs_legalname']} &nbsp;has been processed successfully:<br>\nThe following are summary of the upload:<br>\nDate of the upload: @{outputs('get_bulk_upload_summary_record')?['body/createdon']}<br>\n# Sites in the workbook:@{length(body('List_All_Sites'))}<br>\n# UN in the workbook: @{length(body('List_All_UNs'))}<br>\nFile Name:@{outputs('get_bulk_upload_summary_record')?['body/cid_filename']}<br>\n</p>"
+                  "request/text": "<p>Hi @{outputs('Get_Contact')?['body/firstname']},<br>\nThe uploaded workbook for @{outputs('Get_Account_Info')?['body/ovs_legalname']} &nbsp;has been processed successfully:<br>\nThe following are summary of the upload:<br>\nDate of the upload: @{body('Convert_time_zone')}<br>\n# Sites in the workbook:@{length(body('List_All_Sites'))}<br>\n# UN in the workbook: @{length(body('List_All_UNs'))}<br>\nFile Name:@{outputs('get_bulk_upload_summary_record')?['body/cid_filename']}<br>\n</p>"
                 },
                 "authentication": {
                   "type": "Raw",
@@ -5053,7 +5053,7 @@
             }
           },
           "runAfter": {
-            "List_All_UNs": [
+            "Convert_time_zone": [
               "Succeeded"
             ]
           },
@@ -5074,7 +5074,7 @@
                   "parameters": {
                     "request/to": "@{outputs('Get_Contact')?['body/emailaddress1']};",
                     "request/subject": "The uploaded workbook has been processed successfully",
-                    "request/text": "<p><br>\nSalut @{outputs('Get_Contact')?['body/firstname']},<br>\nLe classeur importé pour @{outputs('Get_Account_Info')?['body/ovs_legalname']} a été traité avec succès :<br>\nVoici un résumé du téléchargement :<br>\nDate du téléchargement :@{outputs('get_bulk_upload_summary_record')?['body/createdon']}<br>\n# Sites dans le classeur :@{length(body('List_All_Sites'))}<br>\n# ONU dans le classeur :@{length(body('List_All_UNs'))}<br>\nNom de fichier:@{outputs('get_bulk_upload_summary_record')?['body/cid_filename']}</p>"
+                    "request/text": "<p><br>\nSalut @{outputs('Get_Contact')?['body/firstname']},<br>\nLe classeur importé pour @{outputs('Get_Account_Info')?['body/ovs_legalname']} a été traité avec succès :<br>\nVoici un résumé du téléchargement :<br>\nDate du téléchargement :@{body('Convert_time_zone')}<br>\n# Sites dans le classeur :@{length(body('List_All_Sites'))}<br>\n# ONU dans le classeur :@{length(body('List_All_UNs'))}<br>\nNom de fichier:@{outputs('get_bulk_upload_summary_record')?['body/cid_filename']}</p>"
                   },
                   "authentication": {
                     "type": "Raw",
@@ -5654,6 +5654,24 @@
                 "type": "boolean"
               }
             ]
+          }
+        },
+        "Convert_time_zone": {
+          "runAfter": {
+            "List_All_UNs": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f74cfa7b-9df9-43ef-a39a-8f7a83c4e844"
+          },
+          "type": "Expression",
+          "kind": "ConvertTimeZone",
+          "inputs": {
+            "baseTime": "@outputs('get_bulk_upload_summary_record')?['body/createdon']",
+            "formatString": "yyyy-MM-dd hh:mm",
+            "sourceTimeZone": "Eastern Standard Time",
+            "destinationTimeZone": "Eastern Standard Time"
           }
         }
       },

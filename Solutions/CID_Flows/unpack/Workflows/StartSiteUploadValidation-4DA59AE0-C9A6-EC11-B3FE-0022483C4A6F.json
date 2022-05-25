@@ -4334,7 +4334,7 @@
             }
           },
           "runAfter": {
-            "NumberOfUnNumbers": [
+            "Convert_time_zone": [
               "Succeeded"
             ]
           },
@@ -4377,7 +4377,7 @@
                       "parameters": {
                         "request/to": "@{outputs('get_contact_email')?['body/emailaddress1']};",
                         "request/subject": "workbook was not successfully uploaded",
-                        "request/text": "<p>Hello @{outputs('get_contact_email')?['body/firstname']},<br>\n<br>\nworkbook for @{outputs('get_contact_email')?['body']['_parentcustomerid_value@OData.Community.Display.V1.FormattedValue']} was not successfully uploaded, Please address the following errors first and try the upload again.<br>\n- Upload Date: @{outputs('Get_bulk_activities_log_summary_by_ID')?['body/createdon']}<br>\n- Total # of Sites in the workbook : @{outputs('totalNumberOfSites')}<br>\n- Total # of UNs in the workbook : @{outputs('totalNumberOferrors')}<br>\n- Total # of Errors: @{outputs('totalNumberOferrors')}<br>\n- File Name: @{outputs('Update_Bulk_activity_log_summary')?['body/cid_filename']}<br>\n<br>\nThe following are the Number of Errors found in the uploaded workbook:<br>\n<br>\n@{replace( outputs('html_table_with_style') ,'<table>' , '  <table><col style=\"width:15%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:50%\">\r\n        <col style=\"width:25%\">')}<br>\n</p>"
+                        "request/text": "<p>Hello @{outputs('get_contact_email')?['body/firstname']},<br>\n<br>\nworkbook for @{outputs('get_contact_email')?['body']['_parentcustomerid_value@OData.Community.Display.V1.FormattedValue']} was not successfully uploaded, Please address the following errors first and try the upload again.<br>\n- Upload Date: @{body('Convert_time_zone')}<br>\n- Total # of Sites in the workbook : @{outputs('totalNumberOfSites')}<br>\n- Total # of UNs in the workbook : @{outputs('totalNumberOferrors')}<br>\n- Total # of Errors: @{outputs('totalNumberOferrors')}<br>\n- File Name: @{outputs('Update_Bulk_activity_log_summary')?['body/cid_filename']}<br>\n<br>\nThe following are the Number of Errors found in the uploaded workbook:<br>\n<br>\n@{replace( outputs('html_table_with_style') ,'<table>' , '  <table><col style=\"width:15%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:50%\">\r\n        <col style=\"width:25%\">')}<br>\n</p>"
                       },
                       "authentication": "@parameters('$authentication')"
                     }
@@ -4392,7 +4392,7 @@
                       "operationMetadataId": "920beb59-130c-4895-ab0c-490a0d32e827"
                     },
                     "type": "Compose",
-                    "inputs": "<style>\ntable {\n  border: 1px solid #1C6EA4;\n  background-color: #EEEEEE;\n  width: 100%;\n  text-align: left;\n  border-collapse: collapse;\n}\ntable td, table th {\n  border: 1px solid #AAAAAA;\n  padding: 3px 2px;\n}\ntable tbody td {\n  font-size: 13px;\n}\ntable thead {\n  background: #1C6EA4;\n  border-bottom: 2px solid #444444;\n}\ntable thead th {\n  font-size: 15px;\n  font-weight: bold;\n  color: #FFFFFF;\n  border-left: 2px solid #D0E4F5;\n}\ntable thead th:first-child {\n  border-left: none;\n}\n</style>\n@{body('Create_HTML_table')}"
+                    "inputs": "  <style>\n        table {\n            border: 1px solid #1C6EA4;\n            background-color: #EEEEEE;\n            width: 100%;\n    \n            border-collapse: collapse;\n        }\n\n            table td, table th {\n                border: 1px solid #AAAAAA;\n                padding: 3px 2px;\n         \n            }\n\n           \n            table tbody tr :nth-child(2) {\n                text-align: center;\n                font-size: 13px;\n            }\n\n           \n           \n            table thead {\n                background: #1C6EA4;\n                border-bottom: 2px solid #444444;\n            }\n\n                table thead th {\n                    font-size: 15px;\n                    font-weight: bold;\n                    color: #FFFFFF;\n                    border-left: 2px solid #D0E4F5;\n                    text-align: center;\n                }\n\n                    table thead th:first-child {\n                        border-left: none;\n                    }\n    </style>\n\n@{body('Create_HTML_table')}"
                   },
                   "Create_HTML_table": {
                     "runAfter": {
@@ -4467,7 +4467,7 @@
                         "parameters": {
                           "request/to": "@{outputs('get_contact_email')?['body/emailaddress1']};",
                           "request/subject": "le classeur n'a pas été téléchargé avec succès",
-                          "request/text": "<p>Bonjour @{outputs('get_contact_email')?['body/firstname']},<br>\n<br>\ncahier d'exercices pour &nbsp;@{outputs('get_contact_email')?['body']['_parentcustomerid_value@OData.Community.Display.V1.FormattedValue']} n'a pas été téléchargé avec succès, veuillez d'abord résoudre les erreurs suivantes et réessayez le téléchargement.<br>\n<br>\n- Date de dépôt: @{outputs('Get_bulk_activities_log_summary_by_ID')?['body/createdon']}<br>\n- Nombre total de sites dans le classeur : @{outputs('totalNumberOfSites')}<br>\n- Nombre total d'ONU dans le classeur : @{outputs('totalNumberOferrors')}<br>\n- Nombre total d'erreurs: @{outputs('totalNumberOferrors')}<br>\n- Nom de fichier: @{outputs('Update_Bulk_activity_log_summary')?['body/cid_filename']}<br>\n<br>\nVoici le nombre d'erreurs trouvées dans le classeur téléchargé:<br>\n<br>\n@{replace( outputs('html_table_with_style-French') ,'<table>' , '  <table><col style=\"width:20%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:45%\">\r\n        <col style=\"width:25%\">')}<br>\n<br>\n<br>\n</p>"
+                          "request/text": "<p>Bonjour @{outputs('get_contact_email')?['body/firstname']},<br>\n<br>\ncahier d'exercices pour &nbsp;@{outputs('get_contact_email')?['body']['_parentcustomerid_value@OData.Community.Display.V1.FormattedValue']} n'a pas été téléchargé avec succès, veuillez d'abord résoudre les erreurs suivantes et réessayez le téléchargement.<br>\n<br>\n- Date de dépôt: @{body('Convert_time_zone')}<br>\n- Nombre total de sites dans le classeur : @{outputs('totalNumberOfSites')}<br>\n- Nombre total d'ONU dans le classeur : @{outputs('totalNumberOferrors')}<br>\n- Nombre total d'erreurs: @{outputs('totalNumberOferrors')}<br>\n- Nom de fichier: @{outputs('Update_Bulk_activity_log_summary')?['body/cid_filename']}<br>\n<br>\nVoici le nombre d'erreurs trouvées dans le classeur téléchargé:<br>\n<br>\n@{replace( outputs('html_table_with_style-French') ,'<table>' , '  <table><col style=\"width:20%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:45%\">\r\n        <col style=\"width:25%\">')}<br>\n<br>\n<br>\n</p>"
                         },
                         "authentication": "@parameters('$authentication')"
                       }
@@ -4482,7 +4482,7 @@
                         "operationMetadataId": "920beb59-130c-4895-ab0c-490a0d32e827"
                       },
                       "type": "Compose",
-                      "inputs": "<style>\ntable {\n  border: 1px solid #1C6EA4;\n  background-color: #EEEEEE;\n  width: 100%;\n  text-align: left;\n  border-collapse: collapse;\ntable-layout: fixed;\n}\ntable td, table th {\n  border: 1px solid #AAAAAA;\n  padding: 3px 2px;\noverflow: hidden;\n}\ntable tbody td {\n  font-size: 13px;\n}\ntable thead {\n  background: #1C6EA4;\n  border-bottom: 2px solid #444444;\n}\ntable thead th {\n  font-size: 15px;\n  font-weight: bold;\n  color: #FFFFFF;\n  border-left: 2px solid #D0E4F5;\n}\ntable thead th:first-child {\n  border-left: none;\n}\n</style>\n@{replace(replace(body('Create_HTML_table-French'),'Add Extended Info','Ajouter des informations étendues'),'Add Basic Info' ,'Ajouter des informations de base')}\n"
+                      "inputs": " <style>\n        table {\n            border: 1px solid #1C6EA4;\n            background-color: #EEEEEE;\n            width: 100%;\n    \n            border-collapse: collapse;\n        }\n\n            table td, table th {\n                border: 1px solid #AAAAAA;\n                padding: 3px 2px;\n                text-align: center;\n            }\n\n            table tbody tr td:nth-child(1) {\n                text-align: left;\n                font-size: 13px;\n            }\n            table tbody tr td:nth-child(2) {\n                text-align: center;\n                font-size: 13px;\n            }\n           \n            table tbody tr td:nth-child(3) {\n                text-align: left;\n                font-size: 13px;\n            }\n            table tbody tr td:nth-child(4) {\n                text-align: left;\n                font-size: 13px;\n            }\n            table thead {\n                background: #1C6EA4;\n                border-bottom: 2px solid #444444;\n            }\n\n                table thead th {\n                    font-size: 15px;\n                    font-weight: bold;\n                    color: #FFFFFF;\n                    border-left: 2px solid #D0E4F5;\n                }\n\n                    table thead th:first-child {\n                        border-left: none;\n                    }\n    </style>\n\n\n@{replace(replace(body('Create_HTML_table-French'),'Add Extended Info','Ajouter des informations étendues'),'Add Basic Info' ,'Ajouter des informations de base')}\n"
                     }
                   }
                 },
@@ -4845,6 +4845,24 @@
           },
           "type": "Compose",
           "inputs": "@length(body('Filter_table_-_Get_None_empty_cells_Extended_Table'))"
+        },
+        "Convert_time_zone": {
+          "runAfter": {
+            "NumberOfUnNumbers": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f74cfa7b-9df9-43ef-a39a-8f7a83c4e844"
+          },
+          "type": "Expression",
+          "kind": "ConvertTimeZone",
+          "inputs": {
+            "baseTime": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/createdon']",
+            "formatString": "yyyy-MM-dd hh:mm",
+            "sourceTimeZone": "Eastern Standard Time",
+            "destinationTimeZone": "Eastern Standard Time"
+          }
         }
       }
     }
