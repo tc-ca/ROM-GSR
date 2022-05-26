@@ -10,15 +10,6 @@
           "name": "shared_commondataserviceforapps"
         }
       },
-      "shared_commondataserviceforapps": {
-        "runtimeSource": "embedded",
-        "connection": {
-          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
-        },
-        "api": {
-          "name": "shared_commondataserviceforapps"
-        }
-      },
       "shared_sharepointonline": {
         "runtimeSource": "embedded",
         "connection": {
@@ -35,6 +26,15 @@
         },
         "api": {
           "name": "shared_webcontents"
+        }
+      },
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
         }
       },
       "shared_sendmail": {
@@ -1611,7 +1611,7 @@
                           "type": "Query",
                           "inputs": {
                             "from": "@outputs('List_UN_numbers')?['body/value']",
-                            "where": "@equals(item()['tdg_undisplayname'], variables('UNDisplayName'))"
+                            "where": "@equals(Trim(item()['tdg_name']), outputs('UNNumber_Value'))"
                           }
                         },
                         "Set_variable_UNGUID": {
