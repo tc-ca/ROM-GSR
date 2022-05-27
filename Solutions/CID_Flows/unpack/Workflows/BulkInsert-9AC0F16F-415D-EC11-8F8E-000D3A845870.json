@@ -1537,16 +1537,71 @@
                                 },
                                 "check_if_shipping_name_match_English_or_French": {
                                   "actions": {
-                                    "Set_variable_UNGUID_match_by_shippingname": {
-                                      "runAfter": {},
-                                      "metadata": {
-                                        "operationMetadataId": "065330c3-171e-482c-b379-c893c488e806"
+                                    "check_if_need_to_match_by_packing_group": {
+                                      "actions": {
+                                        "Set_variable_UNGUID_match_by_shippingname_2": {
+                                          "runAfter": {},
+                                          "metadata": {
+                                            "operationMetadataId": "065330c3-171e-482c-b379-c893c488e806"
+                                          },
+                                          "type": "SetVariable",
+                                          "inputs": {
+                                            "name": "UN_GUID",
+                                            "value": "@{outputs('currentRow-UN')['tdg_unnumberid']}"
+                                          }
+                                        }
                                       },
-                                      "type": "SetVariable",
-                                      "inputs": {
-                                        "name": "UN_GUID",
-                                        "value": "@{outputs('currentRow-UN')['tdg_unnumberid']}"
-                                      }
+                                      "runAfter": {},
+                                      "expression": {
+                                        "and": [
+                                          {
+                                            "equals": [
+                                              "@outputs('UNNumber_Length')",
+                                              3
+                                            ]
+                                          },
+                                          {
+                                            "equals": [
+                                              "@outputs('currentRow-UN')['tdg_packinggroupcd@OData.Community.Display.V1.FormattedValue']",
+                                              "@Trim(outputs('UNNumber_Split')[1])"
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      "metadata": {
+                                        "operationMetadataId": "e80a7099-dcd1-447b-ac6b-4bd1653af1d4"
+                                      },
+                                      "type": "If"
+                                    },
+                                    "check_if_no_packing_group_available": {
+                                      "actions": {
+                                        "Set_variable_UNGUID_match_by_shippingname": {
+                                          "runAfter": {},
+                                          "metadata": {
+                                            "operationMetadataId": "065330c3-171e-482c-b379-c893c488e806"
+                                          },
+                                          "type": "SetVariable",
+                                          "inputs": {
+                                            "name": "UN_GUID",
+                                            "value": "@{outputs('currentRow-UN')['tdg_unnumberid']}"
+                                          }
+                                        }
+                                      },
+                                      "runAfter": {
+                                        "check_if_need_to_match_by_packing_group": [
+                                          "Succeeded"
+                                        ]
+                                      },
+                                      "expression": {
+                                        "equals": [
+                                          "@outputs('UNNumber_Length')",
+                                          2
+                                        ]
+                                      },
+                                      "metadata": {
+                                        "operationMetadataId": "ba825a90-0ba4-4426-a1cd-b0d4e46ca66b"
+                                      },
+                                      "type": "If"
                                     }
                                   },
                                   "runAfter": {
@@ -4932,7 +4987,7 @@
                           "type": "Query",
                           "inputs": {
                             "from": "@outputs('List_UN_numbers')?['body/value']",
-                            "where": "@equals(item()['tdg_undisplayname'], outputs('UNDisplayName-UpdatedSite'))"
+                            "where": "@equals(item()['tdg_name'], outputs('UNNumber-Value-updatedSite'))"
                           }
                         },
                         "UNDisplayName-UpdatedSite": {
