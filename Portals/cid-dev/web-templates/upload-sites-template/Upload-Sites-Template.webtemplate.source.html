@@ -117,7 +117,7 @@
 {% if {{languagecode}}  == 'fr-FR' %}
 {% assign step1 = 'Étape 1. Téléchargez le modèle Excel personnalisé de téléchargement en masse du site.' %}
 {% assign  step2 = 'Étape 2. Téléchargez le classeur Excel personnalisé de téléchargement en masse du site.' %}
-{% assign upload = 'Télécharger' %}
+{% assign upload = 'Commence le téléchargement' %}
 {% assign downloadlableEnglishversion = 'Version anglaise' %}
 {% assign downloadlableFrenchVersion = 'Version française' %}
 {% assign choosefile = 'Choisir le fichier'  %}
@@ -125,7 +125,7 @@
 {% assign step1 = 'Step 1. Download the custom Site Bulk Upload Excel template.' %}
 {% assign  step2 = 'Step 2. Upload the completed custom Site Bulk Upload Excel workbook.' %}
 {% assign choosefile = 'Choose File'  %}
-{% assign upload = 'Upload' %}
+{% assign upload = 'Start Upload' %}
 {% assign downloadlableEnglishversion = 'English Version' %}
 {% assign downloadlableFrenchVersion = 'French Version' %}
 {% endif %}
@@ -133,8 +133,9 @@
   $(document).ready( function() {
 
       //add new submit button
-      $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value={{upload}} class='submit-btn btn btn-primary form-action-container-left' />");
-     
+      //var upload-button ="<label>2B. Start Upload</label><br> <br><input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value={{Upload}} class='submit-btn btn btn-primary' />";
+    // $("div.actions").append(upload-button);
+       $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value={{upload}} class='btn btn-primary' />");
       $("#InsertButton").css("display", "none");
     var langcode = '{{languagecode}}'  ;
   
@@ -142,18 +143,16 @@
    //can not use out of the box without modification the button lable will not be transalated depens only on OS system language
 var AttachButton = document.getElementById('AttachFile');
 AttachButton.classList.add("inputfile");
-//$("#AttachFile").before('<button style="display:block;width:120px; height:30px;" onclick="document.getElementById('AttachFile').click()">Your text here</button>');
-$("#AttachFile").before('<label class="btn-primary btn-sm" for="AttachFile">{{choosefile}}</label><input id="uploadFile" placeholder="File Name here" disabled="disabled"  />');
+
+
+//$("#AttachFile").after('<div class="input-group input-group-sm"><div class="input-group-btn"><label class="btn btn-primary" for="AttachFile">'{{ choosefile }}'</label></div><input class="form-control" id="uploadFile" placeholder="File Name here" disabled="disabled" /></div>' );
+//$("div.tr").append(); 
+$("#AttachFile").after('<div class="input-group input-group-sm"><div class="input-group-btn"><label class="btn btn-primary" for="AttachFile">{{ choosefile }}</label></div><input type="text" class="form-control" id="uploadFile" placeholder="File Name here" disabled="disabled" /></div>');
 document.getElementById("AttachFile").onchange = function () {
     document.getElementById("uploadFile").value = this.value;
 };
 
-/*$("#AttachFile").jfilestyle({text: "Find file"});
 
- $('#AttachFile').text("Your Text to Choose a File Here!");
-$('#AttachFile').value("value");
-$('#AttachFile').label("lable");
-*/
 
     var BulkActivitytype ='{{companystatus}}';
     // '100000001' ;
@@ -502,7 +501,25 @@ function call_Inital_validation(Language , bulkactivitytype)
 {
 
  //document.getElementById("content").innerHTML = response.html;
-     var urlPath = "https://rd-tdgcore-dev.powerappsportals.com/Bulk_Site_Upload" ;
+     
+   
+        var urlPath = window.location.href;
+        
+        urlPath = urlPath.split('?')[0];
+       
+        // window.location.href.split('?')[0]
+      //  var idexofParamaterstart =  urlPath.indexOf("?") - 1;
+      //alert (idexofParamaterstart);
+  //alert ( urlPath.substring (0,idexofParamaterstart ) );
+
+// set search property to blank
+//urlPath.search = '';
+//var newURL = urlPath.substring (0,idexofParamaterstart ) ;
+//"https://rd-tdgcore-dev.powerappsportals.com/Bulk_Site_Upload";
+//urlPath.toString();
+
+
+     //"https://rd-tdgcore-dev.powerappsportals.com/Bulk_Site_Upload" ;
   
     window.history.replaceState({}, document.title, urlPath);
 
@@ -576,9 +593,20 @@ var IntialvalidationBegunMessage = "<p>Preliminary analysis of the uploaded work
                                 }
                                 else {
                                      Call_Check_User_Response_flow(newrecordid , 'NoDelete' , '' , Language , "Y", "Error - Bulk Site Registration Upload: CID Site data already exists. User chose not to proceed with the upload. [B1035]-No");
+                                 
+                               var   responseMessageaftercancel="<p>Initial request for Bulk Upload is now complete based on an early cancellation. <br>" + 
+"The original request to bulk upload sites is cancelled. Please proceed with the remainder of the Registration process.</p>";
+             if ( Lang != 'en-US')
+            {
+                 responseMessageaftercancel="<p>La demande initiale de transfert groupé est maintenant terminée en raison d'une annulation anticipée. <br>" + 
+"La demande initiale de sites de téléchargement groupé est annulée. Veuillez poursuivre le reste du processus d'inscription.</p>";
                                  //Call_Check_User_Response_flow(newrecordid , 'No' , '' , Language);
                                 //console.log("No");
                             }
+
+                             $('#infoMsg').css('display', 'block');
+                              $('#infoMsg').html(responseMessageaftercancel);
+                                }
                             });
 
                      }

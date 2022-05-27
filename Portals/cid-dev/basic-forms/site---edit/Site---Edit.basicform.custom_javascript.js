@@ -1,22 +1,8 @@
 //
-// Basic Form - Site - Create.js
+// Basic Form - Site - Edit.js
 //
 $(document).ready(function () {
     debugger;
-
-    //$('#InsertButton').on('click', function (e) {
-    //    debugger;
-    //    // default address1
-    //    var ovs_address_type = $("#ovs_address_type").val();
-    //    switch (ovs_address_type) {
-    //        case "1":   // legal land description
-    //            address1_default("N/A");
-    //            break;
-    //        case "2":   // lat/long
-    //            address1_default("N/A");
-    //            break;
-    //    }
-    //});
 
     clear_address_type_required_fields();
 
@@ -256,5 +242,4 @@ function AddressComplete_Selected() {
     $("#address1_stateorprovince").val(sessionStorage.getItem("ProvinceName"));
     $("#address1_postalcode").val(sessionStorage.getItem("PostalCode"));
     $("#address1_country").val(sessionStorage.getItem("CountryName"));
-    $("#cid_addressoverwritten").val(0);
 }
