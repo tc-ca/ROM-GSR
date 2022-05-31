@@ -1,12 +1,13 @@
 $(document).ready(function () {
     var urlParams = new URLSearchParams(window.location.search);
-	if (urlParams.has('id')) {
+	if (urlParams.has('operationid')) {
 		var siteId = urlParams.get('id');   
-        var operationId = GetHOTIOperation(siteId);
+        var operationId = urlParams.get('operationid');
 
-        if ($(".workflow-link").length > 0) {
+        if ($("#openOperationWizard").length > 0) {
             $('#openOperationWizard').remove();
         }
-     	$("<div id='openOperationWizard' class='input-group pull-right'><a href='~/en-US/OperationRegistrationWizard/?id=" + operationId + "&siteid=" + siteId + "&in_year=true' class='entitylist-create btn btn-info pull-right action' title='Back'>Update Site HOTI Details</a><br><br></div>").insertAfter($('.workflow-link'));
-     }
+
+        $("<br><div id='openOperationWizard' class='input-group pull-left'><a href='~/en-US/OperationRegistrationWizard/?id=" + operationId + "&siteid=" + siteId + "&in_year=true' class='entitylist-create btn btn-info action'>Update Site HOTI Details</a><br><br></div><br><br><br>" ).insertBefore($("#sitedetails"));
+    }
 });

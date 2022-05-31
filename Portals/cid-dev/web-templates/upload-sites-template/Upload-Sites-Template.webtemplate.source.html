@@ -132,10 +132,12 @@
 <script>
   $(document).ready( function() {
 
+//alert ( browser.downloads.showDefaultFolder());
       //add new submit button
-      //var upload-button ="<label>2B. Start Upload</label><br> <br><input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value={{Upload}} class='submit-btn btn btn-primary' />";
+     //var upload-button ="<label>2B. Start Upload</label><br> <br><input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value={{upload}} class='btn btn-primary' />";
     // $("div.actions").append(upload-button);
-       $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value={{upload}} class='btn btn-primary' />");
+      // $("div.actions").append("");
+      // $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value={{upload}} class='submit-btn btn btn-primary form-action-container-left' />");
       $("#InsertButton").css("display", "none");
     var langcode = '{{languagecode}}'  ;
   
@@ -147,7 +149,9 @@ AttachButton.classList.add("inputfile");
 
 //$("#AttachFile").after('<div class="input-group input-group-sm"><div class="input-group-btn"><label class="btn btn-primary" for="AttachFile">'{{ choosefile }}'</label></div><input class="form-control" id="uploadFile" placeholder="File Name here" disabled="disabled" /></div>' );
 //$("div.tr").append(); 
-$("#AttachFile").after('<div class="input-group input-group-sm"><div class="input-group-btn"><label class="btn btn-primary" for="AttachFile">{{ choosefile }}</label></div><input type="text" class="form-control" id="uploadFile" placeholder="File Name here" disabled="disabled" /></div>');
+$("#AttachFile").before('<div class="input-group input-group-sm"><div class="input-group-btn"><label class="btn btn-primary" for="AttachFile">{{ choosefile }}</label></div><input type="text" class="form-control" id="uploadFile" placeholder="File Name here" disabled="disabled" /></div>');
+$("#AttachFile").after('<br><label>2B. Start Upload</label><br><button type="button" id="btn_attachfile_and_scan" class="submit-btn btn btn-primary form-action-container-left">{{upload}}</button>');
+//$("#AttachFile").after(upload-button);
 document.getElementById("AttachFile").onchange = function () {
     document.getElementById("uploadFile").value = this.value;
 };
@@ -261,6 +265,7 @@ $('#btn_attachfile_and_scan').click(function(e)
       
        $('#infoMsg').css('display', 'block');
        $('#infoMsg').html(downloadMessage );
+      
 
       var companyid = '{{parentid}}';
      var flowparamaters =
@@ -278,18 +283,18 @@ $('#btn_attachfile_and_scan').click(function(e)
         if (this.readyState === 4) {
           req.onreadystatechange = null;
           if (this.status === 200) {
-               $('#processingMsg').html(DownloadMessageCompleted);
+                   $('#infoMsg').html(DownloadMessageCompleted );
             var result = this.response;
            // $('#ll').hide();
             //https://rd-tdgcore-dev.powerappsportals.com/_entity/annotation/
             var fileattachementURL = "~/_entity/annotation/" + result;
             window.location.replace(fileattachementURL);
-             $("#infoMsg").css("display", "none");
+            // $("#infoMsg").css("display", "none");
            // $("#processingMsg").hide();
           } else {
               $('#processingMsg').text("Download was not completed due to system issue, please contact system support");
             var result = this.response;
-            alert("Error " + result);
+           // alert("Error " + result);
           }
         }
       }
@@ -341,8 +346,8 @@ $('#btn_attachfile_and_scan').click(function(e)
             //https://rd-tdgcore-dev.powerappsportals.com/_entity/annotation/
             var fileattachementURL = "~/_entity/annotation/" + result;
             window.location.replace(fileattachementURL);
-             $("#processingMsg").css("display", "none");
-            $("#processingMsg").hide();
+            // $("#processingMsg").css("display", "none");
+            //$("#processingMsg").hide();
           } else {
               $('#processingMsg').text("Download was not completed due to system issue, please contact system support");
             var result = this.response;
@@ -382,14 +387,14 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
             var responseMessage ;
          if (UserResponse == 'yes')
          {
-             responseMessage  = "<p>The CID system will now begin the second of two sets of validations of the file being uploaded. An email will be sent to your email address of " + useremail + ", indicating the results the second set of validations and the subsequent steps to take. <br><br>" +
-             "At this point you can wait for the notification email and proceed with the next step described from within it. Alternatively, you can leave the Registration process temporarily and the system will return you to the spot where you left off when you return. <br> </p>" 
-            + "<ul> <li>" + useremail +"is the email address from the current user’s profile </li> </ul>";
+             responseMessage  = "<p>The CID system will now begin the second of two sets of validations of the file being uploaded. An email will be sent to your email address of " + useremail + " (as set via your user profile), indicating the results the second set of validations and the subsequent steps to take. <br><br>" +
+             "At this point you can wait for the notification email and proceed with the next step described from within it. Alternatively, you can leave the Registration process temporarily and the system will return you to the spot where you left off when you return.[B1037]  </p>" 
+           // + "<ul> <li>" + useremail +"is the email address from the current user’s profile </li> </ul>";
             if ( Lang != 'en-US')
             {
-              responseMessage  =  "<p> Le système CID va maintenant commencer la deuxième des deux séries de validations du fichier en cours de téléchargement. Un e-mail sera envoyé à votre adresse e-mail de ' + useremail +', indiquant les résultats de la deuxième série de validations et les étapes ultérieures à suivre. <br><br>" +
-             "À ce stade, vous pouvez attendre l'e-mail de notification et passer à l'étape suivante décrite à partir de celui-ci. Alternativement, vous pouvez quitter temporairement le processus d'inscription et le système vous ramènera à l'endroit où vous vous étiez arrêté à votre retour. <br> <br></p>" 
-            + "<ul> <li>" + useremail +" est l'adresse e-mail du profil de l'utilisateur actuel. </li> </ul>"; 
+              responseMessage  =  "<p> Le système CID va maintenant commencer la deuxième des deux séries de validations du fichier en cours de téléchargement. Un e-mail sera envoyé à votre adresse e-mail de " + useremail +"(tel que défini via votre profil utilisateur), indiquant les résultats de la deuxième série de validations et les étapes ultérieures à suivre. <br><br>" +
+             "À ce stade, vous pouvez attendre l'e-mail de notification et passer à l'étape suivante décrite à partir de celui-ci. Alternativement, vous pouvez quitter temporairement le processus d'inscription et le système vous ramènera à l'endroit où vous vous étiez arrêté à votre retour.[B1037]</p>" 
+           // + "<ul> <li>" + useremail +" est l'adresse e-mail du profil de l'utilisateur actuel. </li> </ul>"; 
             }
 
 
@@ -432,10 +437,10 @@ function Call_Virsu_Scan_API(url, fileContent, activitytype , excelfilename , la
 
 var companyid = '{{parentid}}';
 var contactid = '{{contactid}}'
-var scanningMessage = "<p> Workbook is being scanned…. </p>";
+var scanningMessage = "<p>Preliminary analysis of the uploaded workbook has begun…</p>";
 if ( language != 'en-US')
    {
-        scanningMessage ="<p>Le classeur est en cours de numérisation….</p>";
+        scanningMessage ="<p>L'analyse préliminaire du classeur téléchargé a commencé…</p>";
     }
       $('#infoMsg').css('display', 'block');
         $('#infoMsg').html(scanningMessage);
@@ -471,12 +476,12 @@ if ( language != 'en-US')
             // alert("Error - Bulk Site Registration Upload: Initial upload stopped due to a potential virus.");
          }
 
-             $("#infoMsg").css("display", "none");
+           //  $("#infoMsg").css("display", "none");
 
           } else {
               $('#processingMsg').text("Error Please Try again Later.");
             var result = this.response;
-            alert("Error " + result);
+           // alert("Error " + result);
           }
         }
       }
@@ -779,12 +784,11 @@ $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
                         </tr>
                     </tbody>
                 </table>
-                <div>
-                    <p></p>
-                    <h2 class="blue_border">List of Sites</h2>{% include 'entity_list' key: 'Parent company site list' %}
-                </div>
-
-
+                <!--<div>
+                    -<p></p>
+                    -<h2 class="blue_border">List of Sites</h2>{% include 'entity_list' key: 'Parent company site list' %}
+                -</div>
+!-->
 
 
                 {% endblock %}
