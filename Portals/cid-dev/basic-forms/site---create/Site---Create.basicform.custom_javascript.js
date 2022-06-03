@@ -74,6 +74,13 @@ $(document).ready(function () {
         ovs_address_type_change(true);
     });
     ovs_address_type_change(false);
+
+    //Add listeners for the address fields to change the "manually entered" flag
+    $("#address1_line1").attr("oninput", "setManualAddressEntryFlag()");
+    $("#address1_city").attr("oninput", "setManualAddressEntryFlag()");
+    $("#address1_stateorprovince").attr("oninput", "setManualAddressEntryFlag()");
+    $("#address1_postalcode").attr("oninput", "setManualAddressEntryFlag()");
+    $("#address1_country").attr("oninput", "setManualAddressEntryFlag()");
 });
 
 function clear_address_type_required_fields() {
@@ -246,6 +253,11 @@ function AddressComplete_Hide_address1_line1() {
 
 function AddressComplete_address1_line1() {
     $("#address1_line1").val(sessionStorage.getItem("Line1"));
+}
+
+//toggles the manual entry flag to on
+function setManualAddressEntryFlag(){
+    $("#cid_addressoverwritten").val(1);
 }
 
 function AddressComplete_Selected() {

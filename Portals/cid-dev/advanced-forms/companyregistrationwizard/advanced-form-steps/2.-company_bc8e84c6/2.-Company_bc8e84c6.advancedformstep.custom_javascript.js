@@ -107,6 +107,13 @@ $(document).ready(function () {
     $("#fax").attr("autocomplete", "new-password");
     $("#cid_reasonfornobnnumber_other").attr("autocomplete", "new-password");
     $("#websiteurl").attr("autocomplete", "new-password");
+
+    //Add listeners for the address fields to change the "manually entered" flag
+    $("#address1_line1").attr("oninput", "setManualAddressEntryFlag()");
+    $("#address1_city").attr("oninput", "setManualAddressEntryFlag()");
+    $("#address1_stateorprovince").attr("oninput", "setManualAddressEntryFlag()");
+    $("#address1_postalcode").attr("oninput", "setManualAddressEntryFlag()");
+    $("#address1_country").attr("oninput", "setManualAddressEntryFlag()");
 });
 
 if (window.jQuery) {
@@ -138,4 +145,5 @@ function AddressComplete_Selected() {
     $("#address1_stateorprovince").val(sessionStorage.getItem("ProvinceName"));
     $("#address1_postalcode").val(sessionStorage.getItem("PostalCode"));
     $("#address1_country").val(sessionStorage.getItem("CountryName"));
+    $("#cid_addressoverwritten").val(0);
 }

@@ -1,24 +1,27 @@
 
 <style>
-.inputfile {
-  /* visibility: hidden etc. wont work */
-  width: 0.1px;
-  height: 0.1px;
-  opacity: 0;
-  overflow: hidden;
-  position: absolute;
-  z-index: -1;
-}
-.inputfile:focus + label {
-  /* keyboard navigation */
-  outline: 1px dotted #000;
-  outline: -webkit-focus-ring-color auto 5px;
-}
-.inputfile + label * {
-  pointer-events: none;
-}
+    .inputfile {
+        /* visibility: hidden etc. wont work */
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+
+        .inputfile:focus + label {
+            /* keyboard navigation */
+            outline: 1px dotted #000;
+            outline: -webkit-focus-ring-color auto 5px;
+        }
+
+        .inputfile + label * {
+            pointer-events: none;
+        }
+
     #processingMsg {
-       -width: 300px;
+        -width: 300px;
         -text-align: center;
         -padding: 6px 10px;
         -z-index: 9999;
@@ -32,15 +35,14 @@
         display: none;
     }
 
-#ErrorMessageDiv
-{
-    display :none;
-}
+    #ErrorMessageDiv {
+        display: none;
+    }
 
     #infoMsg {
         -width: 300px;
         -text-align: center;
-       -padding: 6px 10px;
+        -padding: 6px 10px;
         -z-index: 9999;
         -top: 15%;
         -left: 40%;
@@ -58,17 +60,17 @@
 {% assign languagecode = website.selected_language.code %}
 {% fetchxml parentaccountrecord %}
 <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
-  <entity name="account">
-    <attribute name="name" />
-    <attribute name="primarycontactid" />
-    <attribute name="telephone1" />
-    <attribute name="accountid" />
-    <attribute name="cid_cidcompanystatus" />
-    <order attribute="name" descending="false" />
-    <filter type="and">
-      <condition attribute="accountid" operator="eq"  value="{{parentid}}" />
-    </filter>
-  </entity>
+    <entity name="account">
+        <attribute name="name" />
+        <attribute name="primarycontactid" />
+        <attribute name="telephone1" />
+        <attribute name="accountid" />
+        <attribute name="cid_cidcompanystatus" />
+        <order attribute="name" descending="false" />
+        <filter type="and">
+            <condition attribute="accountid" operator="eq" value="{{parentid}}" />
+        </filter>
+    </entity>
 </fetch>
 {% endfetchxml %}
 {% for acc_record in parentaccountrecord.results.entities %}
@@ -138,25 +140,25 @@
     // $("div.actions").append(upload-button);
       // $("div.actions").append("");
       // $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value={{upload}} class='submit-btn btn btn-primary form-action-container-left' />");
-      $("#InsertButton").css("display", "none");
-    var langcode = '{{languagecode}}'  ;
-  
-   //work with attach file transalation
-   //can not use out of the box without modification the button lable will not be transalated depens only on OS system language
-var AttachButton = document.getElementById('AttachFile');
-AttachButton.classList.add("inputfile");
-
-
-//$("#AttachFile").after('<div class="input-group input-group-sm"><div class="input-group-btn"><label class="btn btn-primary" for="AttachFile">'{{ choosefile }}'</label></div><input class="form-control" id="uploadFile" placeholder="File Name here" disabled="disabled" /></div>' );
-//$("div.tr").append(); 
-$("#AttachFile").before('<div class="input-group input-group-sm"><div class="input-group-btn"><label class="btn btn-primary" for="AttachFile">{{ choosefile }}</label></div><input type="text" class="form-control" id="uploadFile" placeholder="File Name here" disabled="disabled" /></div>');
+$(".section[data-name='General']").closest("fieldset").hide();
 $("#AttachFile").after('<br><label>2B. Start Upload</label><br><button type="button" id="btn_attachfile_and_scan" class="submit-btn btn btn-primary form-action-container-left">{{upload}}</button>');
+$("#AttachFile").before('<div id="Div2A" class="input-group input-group-sm"><div class="input-group-btn"><label class="submit-btn btn btn-primary form-action-container-left" for="AttachFile">{{choosefile}}</label></div><input type="text" class="form-control" id="uploadFile" placeholder="Select File Name here" disabled="disabled" /></div>');
+
 //$("#AttachFile").after(upload-button);
 document.getElementById("AttachFile").onchange = function () {
     document.getElementById("uploadFile").value = this.value;
 };
 
+ $("#InsertButton").css("display", "none");
+    var langcode = '{{languagecode}}'  ;
 
+   //work with attach file transalation
+   //can not use out of the box without modification the button lable will not be transalated depens only on OS system language
+var AttachButton = document.getElementById('AttachFile');
+AttachButton.classList.add("inputfile");
+
+//$("#AttachFile").after('<div class="input-group input-group-sm"><div class="input-group-btn"><label class="btn btn-primary" for="AttachFile">'{{ choosefile }}'</label></div><input class="form-control" id="uploadFile" placeholder="File Name here" disabled="disabled" /></div>' );
+//$("div.tr").append();
 
     var BulkActivitytype ='{{companystatus}}';
     // '100000001' ;
@@ -261,11 +263,11 @@ $('#btn_attachfile_and_scan').click(function(e)
           downloadMessage = "<p>Le classeur Excel personnalisé de téléchargement en masse du site est en cours de téléchargement…</p>"
          DownloadMessageCompleted  = '<p>Téléchargement terminé.</p>' ;
       }
-      
-      
+
+
        $('#infoMsg').css('display', 'block');
        $('#infoMsg').html(downloadMessage );
-      
+
 
       var companyid = '{{parentid}}';
      var flowparamaters =
@@ -304,7 +306,7 @@ $('#btn_attachfile_and_scan').click(function(e)
 
  $('#linkdownload_French').on('click', async function() {
 
-       
+
         var langcode = '{{languagecode}}'  ;
         var downloadMessage = '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>' ;
         var DownloadMessageCompleted = 'Download Completed.' ;
@@ -313,10 +315,10 @@ $('#btn_attachfile_and_scan').click(function(e)
           downloadMessage = "<p>Le classeur Excel personnalisé de téléchargement en masse du site est en cours de téléchargement…</p>"
          DownloadMessageCompleted  = '<p>Téléchargement terminé.</p>' ;
       }
-       
+
           $('#processingMsg').css('display','block');
-       
-       
+
+
         $('#processingMsg').html(downloadMessage);
 
      // notificationMsg.show("System is downloading site info ...");
@@ -372,8 +374,8 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
 
   var acupdate =
   ' { "activityid":"' + activityid  + '", "user_reponse":"' + UserResponse +'", "Log_details": "' +Logdetaisls + '","Lang":"' + Lang+ '" , "LogWarningYN" : "' + Logwarrning + '" , "WarrningDetails": "' + Warnningdetails + '" }' ;
- 
-    
+
+
       var req = new XMLHttpRequest();
       req.open("POST", url, true);
       req.setRequestHeader('Content-Type', 'application/json');
@@ -388,35 +390,35 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
          if (UserResponse == 'yes')
          {
              responseMessage  = "<p>The CID system will now begin the second of two sets of validations of the file being uploaded. An email will be sent to your email address of " + useremail + " (as set via your user profile), indicating the results the second set of validations and the subsequent steps to take. <br><br>" +
-             "At this point you can wait for the notification email and proceed with the next step described from within it. Alternatively, you can leave the Registration process temporarily and the system will return you to the spot where you left off when you return.[B1037]  </p>" 
+             "At this point you can wait for the notification email and proceed with the next step described from within it. Alternatively, you can leave the Registration process temporarily and the system will return you to the spot where you left off when you return.[B1037]  </p>"
            // + "<ul> <li>" + useremail +"is the email address from the current user’s profile </li> </ul>";
             if ( Lang != 'en-US')
             {
               responseMessage  =  "<p> Le système CID va maintenant commencer la deuxième des deux séries de validations du fichier en cours de téléchargement. Un e-mail sera envoyé à votre adresse e-mail de " + useremail +"(tel que défini via votre profil utilisateur), indiquant les résultats de la deuxième série de validations et les étapes ultérieures à suivre. <br><br>" +
-             "À ce stade, vous pouvez attendre l'e-mail de notification et passer à l'étape suivante décrite à partir de celui-ci. Alternativement, vous pouvez quitter temporairement le processus d'inscription et le système vous ramènera à l'endroit où vous vous étiez arrêté à votre retour.[B1037]</p>" 
-           // + "<ul> <li>" + useremail +" est l'adresse e-mail du profil de l'utilisateur actuel. </li> </ul>"; 
+             "À ce stade, vous pouvez attendre l'e-mail de notification et passer à l'étape suivante décrite à partir de celui-ci. Alternativement, vous pouvez quitter temporairement le processus d'inscription et le système vous ramènera à l'endroit où vous vous étiez arrêté à votre retour.[B1037]</p>"
+           // + "<ul> <li>" + useremail +" est l'adresse e-mail du profil de l'utilisateur actuel. </li> </ul>";
             }
 
 
          }
          else{
-             responseMessage="<p>Initial request for Bulk Upload is now complete based on an early cancellation. <br>" + 
+             responseMessage="<p>Initial request for Bulk Upload is now complete based on an early cancellation. <br>" +
 "The original request to bulk upload sites is cancelled. Please proceed with the remainder of the Registration process.</p>";
              if ( Lang != 'en-US')
             {
-                 responseMessage="<p>La demande initiale de transfert groupé est maintenant terminée en raison d'une annulation anticipée. <br>" + 
+                 responseMessage="<p>La demande initiale de transfert groupé est maintenant terminée en raison d'une annulation anticipée. <br>" +
 "La demande initiale de sites de téléchargement groupé est annulée. Veuillez poursuivre le reste du processus d'inscription.</p>";
 
             }
 
          }
-        
+
 
 
 
                $('#infoMsg').css('display', 'block');
                $('#infoMsg').html( responseMessage);
-            
+
 
          }
          else {
@@ -506,12 +508,12 @@ function call_Inital_validation(Language , bulkactivitytype)
 {
 
  //document.getElementById("content").innerHTML = response.html;
-     
-   
+
+
         var urlPath = window.location.href;
-        
+
         urlPath = urlPath.split('?')[0];
-       
+
         // window.location.href.split('?')[0]
       //  var idexofParamaterstart =  urlPath.indexOf("?") - 1;
       //alert (idexofParamaterstart);
@@ -525,7 +527,7 @@ function call_Inital_validation(Language , bulkactivitytype)
 
 
      //"https://rd-tdgcore-dev.powerappsportals.com/Bulk_Site_Upload" ;
-  
+
     window.history.replaceState({}, document.title, urlPath);
 
 
@@ -548,7 +550,7 @@ var IntialvalidationBegunMessage = "<p>Preliminary analysis of the uploaded work
         var req = new XMLHttpRequest();
         var url = '{{excelload_Flow_URL}}';
 
-       
+
         req.open("POST", url, true);
         req.setRequestHeader('Content-Type', 'application/json');
 
@@ -567,13 +569,13 @@ var IntialvalidationBegunMessage = "<p>Preliminary analysis of the uploaded work
                      var warrning_Message  = "<p>Detail Site data has already been assigned manually, or via a previous Bulk Upload. If you proceed, then any Site referenced in the workbook that is already in CID, will first be completed deleted from CID, with no possibility to recover the related data. Those Site(s) will then be re-created based on the workbook values here. <br><br>Are you sure you want to continue with this upload and potentially override existing Site data? [B1035]</P>";
                      if ( Language != 'en-US')
                      {
-                          warrning_Message  = "<p>Les données détaillées du site ont déjà été attribuées manuellement ou via un précédent chargement en bloc. Si vous continuez, tout site référencé dans le classeur qui est déjà dans CID sera d'abord complètement supprimé de CID, sans possibilité de récupérer les données associées. Ces sites seront ensuite recréés en fonction des valeurs du classeur ici. <br><br>Voulez-vous vraiment continuer avec ce téléchargement et éventuellement remplacer les données existantes du site ?[B1035] </P>";
+                          warrning_Message  = "<p>Les données détaillées du site ont déjà été attribuées manuellement ou via un précédent chargement en bloc. Si vous continuez, tout site référencé dans le classeur qui est déjà dans CID sera d'abord complètement supprimé de CID, sans possibilité de récupérer les données associées. Ces sites seront ensuite recréés en fonction des valeurs du classeur ici. <br><br>Voulez-vous vraiment continuer avec ce téléchargement et éventuellement remplacer les données existantes du site ? [B1035] </P>";
 
 
                      }
-                     
+
                      var NumberOfSiteswithRequirementLevel = req.getResponseHeader('NumberOfSitesWithRequirementLevel');
-                    
+
                      if (NumberOfSiteswithRequirementLevel > 0)
                      {
                           confirmDialog(warrning_Message, (ans) => {
@@ -585,25 +587,25 @@ var IntialvalidationBegunMessage = "<p>Preliminary analysis of the uploaded work
                     confirmDialog(result, (ans) => {
                             if (ans) {
                                // console.log("Yes");
-                               
+
                                 Call_Check_User_Response_flow(newrecordid , 'yes' , '' , Language , "Y" , "Note - Bulk Site Registration Upload: CID Site data already exists. User chose to proceed with the upload and in doing so they may potentially override existing Site data. [B1008]-Yes");
-                            
+
                                 }else {
                                  Call_Check_User_Response_flow(newrecordid , 'No' , '' , Language , "Y", "Error - Bulk Site Registration Upload: CID Site data already exists. User chose not to proceed with the upload. [B1035]-No");
                                 //console.log("No");
                             }
                             });
                             //*****************************************************************************
-                            
+
                                 }
                                 else {
                                      Call_Check_User_Response_flow(newrecordid , 'NoDelete' , '' , Language , "Y", "Error - Bulk Site Registration Upload: CID Site data already exists. User chose not to proceed with the upload. [B1035]-No");
-                                 
-                               var   responseMessageaftercancel="<p>Initial request for Bulk Upload is now complete based on an early cancellation. <br>" + 
+
+                               var   responseMessageaftercancel="<p>Initial request for Bulk Upload is now complete based on an early cancellation. <br>" +
 "The original request to bulk upload sites is cancelled. Please proceed with the remainder of the Registration process.</p>";
              if ( Lang != 'en-US')
             {
-                 responseMessageaftercancel="<p>La demande initiale de transfert groupé est maintenant terminée en raison d'une annulation anticipée. <br>" + 
+                 responseMessageaftercancel="<p>La demande initiale de transfert groupé est maintenant terminée en raison d'une annulation anticipée. <br>" +
 "La demande initiale de sites de téléchargement groupé est annulée. Veuillez poursuivre le reste du processus d'inscription.</p>";
                                  //Call_Check_User_Response_flow(newrecordid , 'No' , '' , Language);
                                 //console.log("No");
@@ -615,7 +617,7 @@ var IntialvalidationBegunMessage = "<p>Preliminary analysis of the uploaded work
                             });
 
                      }
-                    
+
 
 else{
 
@@ -624,14 +626,14 @@ else{
                             if (ans) {
                                // console.log("Yes");
                                 Call_Check_User_Response_flow(newrecordid , 'yes' , '' , Language,"N","");
-                            
+
                                 }else {
                                  Call_Check_User_Response_flow(newrecordid , 'No' , '' , Language,"N" , "");
                                 //console.log("No");
                             }
                             });
                             }
-                        } 
+                        }
                 else if (this.status === 402) {
 
                  $('#ErrorMessageDiv').css('display', 'none');
@@ -639,7 +641,7 @@ else{
                // alert ("Uploaded List did not pass validation, please check the errors list.");
               // alert (this.response) ;
                     var result = this.response;
-                 
+
                      $('#ErrorMessageDiv').css('display', 'block');
                      $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  result + "</p>");
 
@@ -647,7 +649,7 @@ else{
                        //document.getElementById("errortable").innerHTML = result;
 
                 } else {
- 
+
                   // $('#warnningMessage').css('display', 'none');
                   $('#ErrorMessageDiv').css('display', 'none');
                     var result = this.response;
@@ -677,25 +679,26 @@ $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
     </header>
     <div class="modal-body">
         ${message}
-      
+
     </div>
   <div class="modal-footer">
      <button id="btnYes" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">Yes</button>
     <button  id="btnNo" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" data-dismiss="modal">No</button>
-  
+
 </section>
 `).appendTo('body');
 
+$('#btnNo').focus();
 
 
      $("#myModal").css('top' , '15%');
         $("#myModal").css('left' , '40%');
-        $("#myModal").css('position', 'fixed'); 
+        $("#myModal").css('position', 'fixed');
         $("#myModal").css('z-index', '9999');
 
 
  $("#btnYes").click(function () {
-     
+
            // handler(true);
           //  $("#myModal").modal("hide");
           $("#myModal").remove();
@@ -704,7 +707,7 @@ $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
 
         //Pass false to callback function
         $("#btnNo").click(function () {
-            
+
             //handler(lse);
             $("#myModal").remove();
              handler(false);
@@ -714,7 +717,7 @@ $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
 
 }
 
- 
+
 
 </script>
 <div class="container ">
@@ -732,70 +735,59 @@ $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
         <div class="col-md-12">
             {% block main %}
 
-         
+            <div id="processingMsg" class="alert alert-warning" role="alert"></div>
+            <div id="ErrorMessageDiv" class="alert alert-danger" role="alert">  </div>
+            <div id="infoMsg" class="alert alert-info"></div>
 
 
 
             <div class="row sectionBlockLayout" style="display: flex; flex-wrap: wrap; padding: 8px; margin: 0px; text-align: left; min-height: 100px;">
-
-
-
-                <div id="processingMsg" class="alert alert-warning" role="alert">
-           
-                </div>
-
-               <div id="ErrorMessageDiv" class= "alert alert-danger" role="alert">  </div>
-                   <div id="infoMsg" class="alert alert-info"></div>
                 <table>
                     <tbody>
                         <tr>
                             <td>
-                               
-                                    <div>
-                                        <h3 class="blue_border">{{step1}}</h3>
-                                        <p> </p>
-                                    </div>
-                                  
-
-                                        <table>
-                                            <tr>
-                                                <td>
-                                                    <button type="button" id="linkdownload_English" class="submit-btn btn btn-primary form-action-container-left">{{downloadlableEnglishversion}}</button>
-                                                </td>
-                                                <td> &nbsp;&nbsp;</td>
-                                                <td>
-                                                    <button type="button" id="linkdownload_French" class="submit-btn btn btn-primary form-action-container-left">{{downloadlableFrenchVersion}}</button>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-
-                                <h3 class="blue_border">{{step2}}</h3>
-                                {% entityform name: 'Insert Bulk Activity Log Summary' %}
 
                                 <div>
+                                    <h3 class="blue_border">{{step1}}</h3>
+                                    <p> </p>
                                 </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <!--<div>
-                    -<p></p>
-                    -<h2 class="blue_border">List of Sites</h2>{% include 'entity_list' key: 'Parent company site list' %}
-                -</div>
-!-->
 
 
-                {% endblock %}
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <button type="button" id="linkdownload_English" class="submit-btn btn btn-primary form-action-container-left">{{downloadlableEnglishversion}}</button>
+                                        </td>
+                                        <td> &nbsp;&nbsp;</td>
+                                        <td>
+                                            <button type="button" id="linkdownload_French" class="submit-btn btn btn-primary form-action-container-left">{{downloadlableFrenchVersion}}</button>
+                                        </td>
 
-
+                                    </tr>
+                                </table>
+                                <br>
             </div>
         </div>
+        </td>
+        </tr>
+        <tr>
+            <td>
+
+                <h3 class="blue_border">{{step2}}</h3>
+                {% entityform name: 'Insert Bulk Activity Log Summary' %}
+
+                <div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+        </table>
+
+        {% endblock %}
+
+
+    </div>
+</div>
     </div>
 
 </div>

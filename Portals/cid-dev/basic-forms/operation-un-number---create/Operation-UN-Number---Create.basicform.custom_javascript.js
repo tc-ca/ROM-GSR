@@ -16,7 +16,7 @@ $(document).ready(function () {
     tdg.c.control_hide("ovs_unnumber", true);
 
     // resize WebResource_unnumber
-    $("#WebResource_unnumber").height('175px');
+    $("#WebResource_unnumber").height('172px');
 
     sessionStorage.setItem("tdg_unnumberid", "");
 
