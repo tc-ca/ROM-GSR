@@ -51,6 +51,7 @@ stages:
         targetType: 'inline'
         script: |
           Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\* -Destination $(Build.SourcesDirectory)\Portals
+          
           git config user.email "nepasrepondre-noreply@tc.gc.ca"
           git config user.name "tc-buildbot"
           git checkout development
