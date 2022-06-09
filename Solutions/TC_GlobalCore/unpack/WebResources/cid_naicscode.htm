@@ -45,7 +45,33 @@
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 </HEAD>
 <BODY>
+    <label for="cid_naicscode" class="field-label">NAICS Code</label>
+    <span id="cid_naicscode_required" style="color: red;font-weight: bold"> *</span>
+    <br>
+    <input list="cid_naicscode_list" id="cid_naicscode" class="text form-control" />
+    <br>
+    <datalist id="cid_naicscode_list">
+    </datalist>
+
+    <input type="text" id="cid_naicscode_list_id" hidden />
+
     <script type="text/javascript">
+        $(document).ready(function () {
+            debugger;
+            document.getElementById("cid_naicscode").setAttribute("autocomplete", "off");
+
+            document.querySelector('input[list="cid_naicscode_list"]').addEventListener('input', onInput);
+
+            // language
+            try {
+                var cid_naicscode_label = sessionStorage.getItem("cid_naicscode_label");
+
+                var selected_language = sessionStorage.getItem("selected_language");
+                var value = (selected_language == "en-US" ? "NAICS Code" : "Code SCIAN");
+                $("#cid_naicscode")[0].labels[0].innerHTML = cid_naicscode_label;
+            } catch (e) { }
+        })
+
         function naicscode_clear() {
             parent.$("#cid_naicscode").attr("value", null);
             parent.$("#cid_naicscode_name").attr("value", null);
@@ -61,7 +87,7 @@
             parent.$("#cid_naicscode_entityname").attr("value", 'cid_naicscode');
         }
 
-        // How to call this from web portal page             
+        // How to call this from web portal page
         // var f = document.getElementById("WebResource_naicscode");
         // var c = f.contentWindow;
         // c.clear_field();
@@ -72,8 +98,7 @@
             naicscode_clear();
         }
 
-        function search()
-        {
+        function search() {
             naicscode_clear();
 
             var cid_naicscode = document.getElementById("cid_naicscode").value;
@@ -143,34 +168,6 @@
                 search();
             }
         }
-    </script>
-
-    <label for="cid_naicscode" class="field-label">NAICS Code</label>
-    <span id="cid_naicscode_required" style="color: red;font-weight: bold"> *</span>
-    <br>
-    <input list="cid_naicscode_list" id="cid_naicscode" class="text form-control" />
-    <br>
-    <datalist id="cid_naicscode_list">
-    </datalist>
-
-    <input type="text" id="cid_naicscode_list_id" hidden />
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            debugger;
-            document.getElementById("cid_naicscode").setAttribute("autocomplete", "off");
-
-            document.querySelector('input[list="cid_naicscode_list"]').addEventListener('input', onInput);
-
-            // language
-            try {
-                var cid_naicscode_label = sessionStorage.getItem("cid_naicscode_label");
-
-                var selected_language = sessionStorage.getItem("selected_language");
-                var value = (selected_language == "en-US" ? "NAICS Code" : "Code SCIAN");
-                $("#cid_naicscode")[0].labels[0].innerHTML = cid_naicscode_label;
-            } catch (e) { }
-        })
 
     </script>
 
