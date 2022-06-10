@@ -17,7 +17,7 @@ $(document).ready(function () {
     tdg.c.control_hide("ovs_compatibility_group", true);
 
     // resize WebResource_unnumber
-    $("#WebResource_primaryclass").height('400px');
+    $("#WebResource_primaryclass").height('450px');
 
     // insert button
     tdg.c.btn_save_new_setup();

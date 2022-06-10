@@ -54,8 +54,8 @@ $(document).ready(function () {
     tdg.c.control_hide("cid_has_cra_bn");
     sessionStorage.setItem("AddressLine1Text", address1_line1);
 
-    tdg.c.replace_special_char(cid_legalname);
-    tdg.c.replace_special_char(cid_operatingname);
+    cid_legalname = tdg.c.replace_special_char(cid_legalname);
+    cid_operatingname = tdg.c.replace_special_char(cid_operatingname);
 
     // do not have a business number?
     if (cid_has_cra_bn != "1") {

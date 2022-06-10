@@ -28,8 +28,8 @@ $(document).ready(function () {
     var cid_legalname = "{{user.cid_legalname}}";
     var cid_operatingname = "{{user.cid_operatingname}}";
 
-    tdg.c.replace_special_char(cid_legalname);
-    tdg.c.replace_special_char(cid_operatingname);
+    cid_legalname = tdg.c.replace_special_char(cid_legalname);
+    cid_operatingname = tdg.c.replace_special_char(cid_operatingname);
 
     $('#cid_has_cra_bn').val(cid_has_cra_bn);
     tdg.c.control_hide("cid_has_cra_bn");

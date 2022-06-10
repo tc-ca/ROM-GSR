@@ -125,10 +125,16 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000017",
                         "message_en": "You cannot proceed before adding UN Number(s).",
                         "message_fr": "Vous ne pouvez pas continuer avant d'avoir ajouté le(s) numéro(s) UN."
-                    },                   {
+                    },
+                    {
                         "code": "m000100",
                         "message_en": "Back to Company Registration Wizard",
                         "message_fr": "Retour à l'assistant d'enregistrement de société"
+                    },
+                    {
+                        "code": "m000101",
+                        "message_en": "As seen below your ERAP(s) from the TC ROOT systems have been transferred over If necessary add any remaining ERAPs, or choose the [Next] button to continue.",
+                        "message_fr": "As seen below your ERAP(s) from the TC ROOT systems have been transferred over If necessary add any remaining ERAPs, or choose the [Next] button to continue."
                     }
               ];
 

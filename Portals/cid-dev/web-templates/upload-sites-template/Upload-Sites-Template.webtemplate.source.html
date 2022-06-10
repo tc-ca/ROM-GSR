@@ -175,7 +175,12 @@ AttachButton.classList.add("inputfile");
 
 $('#btn_attachfile_and_scan').click(function(e)
 {
-
+    //validation-summary alert alert-error alert-danger alert-block
+    //hide validation summary    
+    $("Div.validation-summary").css('display', 'none');
+    $("Div.alert").css('display', 'none');
+    //$("#alert-danger").css('display', 'none');
+   
     if (document.getElementById('AttachFile').files.length == 0)
    {
        // call the submit button to show error message
@@ -253,6 +258,8 @@ $('#btn_attachfile_and_scan').click(function(e)
 
     $('#linkdownload_English').on('click', async function() {
 
+        $("Div.validation-summary").css('display', 'none');
+           $("Div.alert").css('display', 'none');
           //$('#processingMsg').css('display','block');
        // $('#processingMsg').text(');
         var langcode = '{{languagecode}}'  ;
@@ -306,7 +313,8 @@ $('#btn_attachfile_and_scan').click(function(e)
 
  $('#linkdownload_French').on('click', async function() {
 
-
+        $("Div.validation-summary").css('display', 'none');
+           $("Div.alert").css('display', 'none');
         var langcode = '{{languagecode}}'  ;
         var downloadMessage = '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>' ;
         var DownloadMessageCompleted = 'Download Completed.' ;
