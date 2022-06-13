@@ -631,7 +631,7 @@
                         },
                         "parameters": {
                           "entityName": "ovs_operationclasses",
-                          "item/ovs_primeclass": 48,
+                          "item/ovs_primeclass": "@outputs('integer_value_for_the_index')",
                           "item/ovs_supplychaindirection": "930840000",
                           "item/ovs_OperationClass@odata.bind": "@\r\nconcat('/ovs_mocregistrations/',outputs('OperationId'))"
                         },
@@ -1710,7 +1710,7 @@
                 }
               },
               "runAfter": {
-                "Filter_UnNumber_Table_with_Site": [
+                "Perform_a_bound_action": [
                   "Succeeded"
                 ]
               },
@@ -1724,6 +1724,36 @@
                 "operationMetadataId": "27762c5a-e5d8-4aea-9ebc-da6d76714f03"
               },
               "type": "If"
+            },
+            "Perform_a_bound_action": {
+              "runAfter": {
+                "Filter_UnNumber_Table_with_Site": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "9fde1249-99a0-4725-a454-76ffe29bf03d"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "PerformBoundAction",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "actionName": "Microsoft.Dynamics.CRM.cid_Insert_and_Update_Site_and_Related_UNs",
+                  "recordId": "@outputs('Get_Account_Info')?['body/accountid']",
+                  "item/SiteInfo": "@outputs('current_row')",
+                  "item/UNList": "@body('Filter_UnNumber_Table_with_Site')",
+                  "item/ActivityID": "@triggerBody()['text_2']"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                }
+              }
             }
           },
           "runAfter": {
@@ -1777,7 +1807,8 @@
               "recordId": "@triggerBody()['text_2']",
               "item/cid_activityendtime": "@utcNow()",
               "item/cid_activitystatus": 100000000,
-              "item/statecode": 1
+              "item/statecode": 1,
+              "item/cid_totalruntime": "@div(sub(ticks(utcNow()),ticks(outputs('get_bulk_upload_summary_record')?['body/cid_activitystarttime'])),600000000)"
             },
             "authentication": {
               "type": "Raw",
