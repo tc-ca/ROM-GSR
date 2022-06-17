@@ -541,7 +541,7 @@
                   "entityName": "cid_bulkactivitylogsummaries",
                   "recordId": "@triggerBody()?['activityid']",
                   "item/cid_activitystarttime": "@outputs('Bulk_Activity_start_time')",
-                  "item/cid_activitytype": "@int(triggerBody()?['ActivityType'])",
+                  "item/cid_activitytype": 100000001,
                   "item/cid_filename": "@outputs('OrigionalFileName')",
                   "item/cid_language": "@variables('Language_Index')",
                   "item/cid_numberofsites": "@outputs('Number-Of-Sites')",
@@ -731,7 +731,7 @@
                     "item/cid_activityendtime": "@utcNow()",
                     "item/cid_activitystarttime": "@outputs('Bulk_Activity_start_time')",
                     "item/cid_activitystatus": 100000001,
-                    "item/cid_activitytype": "@int(triggerBody()?['ActivityType'])",
+                    "item/cid_activitytype": 100000001,
                     "item/cid_filename": "@outputs('OrigionalFileName')",
                     "item/cid_language": "@variables('Language_Index')",
                     "item/cid_numberofsites": "@outputs('Number-Of-Sites')",
@@ -2307,7 +2307,7 @@
           "type": "Query",
           "inputs": {
             "from": "@outputs('List_All_sites')?['body/value']",
-            "where": "@greater(item()?['cid_requirementlevel'], 0)"
+            "where": "@not(equals(item()?['cid_requirementlevel'], null))"
           }
         },
         "Number-Of-Sites-With-Reqiurement-Level": {

@@ -295,7 +295,8 @@
                 "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fDev%252fCID_Sites_Template_2022_ENG_March%2b2022%2bv11.xlsx": "/Shared Documents/CID_Bulk_Upload/Dev/CID_Sites_Template_2022_ENG_March 2022 v11.xlsx",
                 "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fDev%252fCID_Sites_Template_2022_ENG_April%2b2022%2bv12.xlsx": "/Shared Documents/CID_Bulk_Upload/Dev/CID_Sites_Template_2022_ENG_April 2022 v12.xlsx",
                 "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fDev%252fCID_Sites_Template_2022_ENG_May%2b2022%2bv12.xlsx": "/Shared Documents/CID_Bulk_Upload/Dev/CID_Sites_Template_2022_ENG_May 2022 v12.xlsx",
-                "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_May%2b2022%2bv13.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_May 2022 v13.xlsx"
+                "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_May%2b2022%2bv13.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_May 2022 v13.xlsx",
+                "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_June_2022%2bv14.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_June_2022 v14.xlsx"
               },
               "type": "OpenApiConnection",
               "inputs": {
@@ -306,7 +307,7 @@
                 },
                 "parameters": {
                   "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
-                  "id": "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_May%2b2022%2bv13.xlsx",
+                  "id": "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_June_2022%2bv14.xlsx",
                   "inferContentType": true
                 },
                 "authentication": "@parameters('$authentication')"
@@ -444,7 +445,7 @@
               "request/headers": {
                 "accept": "application/json"
               },
-              "request/body": "{\n\n  \"values\": [ \n    [\n\"@{outputs('version-number')}\"  ,   \n\"English\",\n\"@{utcNow()}\"\n,\n\"@{outputs('Get_Company')?['body/cid_companyid']}\",\n\"@{outputs('Get_Company')?['body/ovs_legalname']}\"\n]\n   \n  ],\n \"index\": 0\n}"
+              "request/body": "{\n\n  \"values\": [ \n    [\n\"@{outputs('version-number')}\"  ,   \n\"English\",\n\"@{utcNow()}\"\n,\n\"@{outputs('Get_Company')?['body/cid_companyid']}\",\n\"@{outputs('Get_Company')?['body/ovs_legalname']}\",\n\"@{outputs('Add_bulk_activity_review_Log')?['body/cid_bulkactivitylogsummaryid']}\"\n]\n   \n  ],\n \"index\": 0\n}"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -749,7 +750,8 @@
                   "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{outputs('Create_new_folder')?['body/{Name}']}/@{outputs('Create_file')?['body/Name']}:/workbook/worksheets('Instructions')/protection/protect",
                   "request/headers": {
                     "accept": "application/json"
-                  }
+                  },
+                  "request/body": "{\n\"password\" : \"123\"\n}"
                 },
                 "authentication": "@parameters('$authentication')"
               }
@@ -932,7 +934,7 @@
             }
           },
           "runAfter": {
-            "Invoke_an_HTTP_request_-_Add_settings": [
+            "Check_if_Root_data_exists": [
               "Succeeded"
             ]
           },
@@ -1289,6 +1291,48 @@
           },
           "metadata": {
             "operationMetadataId": "6ddd7dac-d14e-4ba2-b153-271ac62add29"
+          },
+          "type": "If"
+        },
+        "Check_if_Root_data_exists": {
+          "actions": {
+            "Invoke_an_HTTP_request_-_Add_settings_2": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "af830d4e-9a7d-459a-9b0c-b6ed1321a6ae"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_webcontents",
+                  "operationId": "InvokeHttp",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
+                },
+                "parameters": {
+                  "request/method": "POST",
+                  "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{outputs('Create_new_folder')?['body/{Name}']}/@{outputs('Create_file')?['body/Name']}:/workbook/tables/RootUNsTable/rows",
+                  "request/headers": {
+                    "accept": "application/json"
+                  },
+                  "request/body": "{\n\n  \"values\": [ \n    \n@{outputs('Perform_a_bound_action')?['body/RootUNNumberList']}\n\n\n   \n  ],\n \"index\": 0\n}"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "Invoke_an_HTTP_request_-_Add_settings": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "greater": [
+              "@length(trim(outputs('Perform_a_bound_action')?['body/RootUNNumberList']))",
+              0
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6d400a04-8efc-43d3-bcea-1d50dd7c4c3b"
           },
           "type": "If"
         }

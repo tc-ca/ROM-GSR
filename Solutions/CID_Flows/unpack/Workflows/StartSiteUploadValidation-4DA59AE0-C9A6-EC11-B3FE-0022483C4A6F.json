@@ -3474,7 +3474,6 @@
               "inputs": {
                 "from": "@body('Filter_table_-_get_none_empty_cells_sites_for_insert_')",
                 "select": {
-                  "action": "@item()['values'][0][int(outputs('userAction'))]",
                   "SiteName": "@item()['values'][0][int(outputs('SiteName'))]",
                   "Address1": "@item()['values'][0][int(outputs('Address1'))]",
                   "City": "@item()['values'][0][int(outputs('City'))]",
@@ -3919,7 +3918,7 @@
               "expression": {
                 "equals": [
                   "@variables('Language')",
-                  918640001
+                  "@'918640001'"
                 ]
               },
               "metadata": {
@@ -4083,8 +4082,8 @@
                 },
                 "expression": {
                   "equals": [
-                    "@outputs('get_contact_email')?['body/cid_languageofcorrespondence']",
-                    918640001
+                    "@variables('Language')",
+                    "@'918640001'"
                   ]
                 },
                 "metadata": {
@@ -4314,7 +4313,7 @@
               "expression": {
                 "equals": [
                   "@variables('Language')",
-                  918640001
+                  "@'918640001'"
                 ]
               },
               "metadata": {
@@ -4452,7 +4451,7 @@
           "actions": {
             "SiteName": {
               "runAfter": {
-                "userAction": [
+                "Parse_JSON": [
                   "Succeeded"
                 ]
               },
@@ -4785,18 +4784,6 @@
               },
               "type": "Compose",
               "inputs": "@body('Parse_JSON')['site-GUID']"
-            },
-            "userAction": {
-              "runAfter": {
-                "Parse_JSON": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "a1598679-b359-4995-8082-c3ab58b5ce7b"
-              },
-              "type": "Compose",
-              "inputs": "@body('Parse_JSON')['UserAction']"
             },
             "Parse_JSON": {
               "runAfter": {
