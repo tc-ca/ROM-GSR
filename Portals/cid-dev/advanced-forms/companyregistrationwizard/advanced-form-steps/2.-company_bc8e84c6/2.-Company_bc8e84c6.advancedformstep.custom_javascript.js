@@ -14,6 +14,7 @@ $(document).ready(function () {
     $("#websiteurl").width('100%');
 
     $("#telephone1").attr("placeholder", "");
+    tdg.c.control_hide("cid_reasonfornobnnumber_other");
 
     var step_start = sessionStorage.getItem("step_start");
     step_start = (step_start == "null" ? "" : step_start);
@@ -24,9 +25,9 @@ $(document).ready(function () {
     var cid_has_cra_bn = (cid_has_cra_bn == "true" ? 1 : 0);
     var cid_crabusinessnumber = '{{user.cid_crabusinessnumber}}';
     var cid_reasonfornobnnumber = "{{user.cid_reasonfornobnnumber.Value}}";
-    var cid_reasonfornobnnumber_other = "{{user.cid_reasonfornobnnumber_other}}";
-    var cid_legalname = "{{user.cid_legalname}}";
-    var cid_operatingname = "{{user.cid_operatingname}}";
+    var cid_reasonfornobnnumber_other = "{{user.cid_reasonfornobnnumber_other | url_encode }}";
+    var cid_legalname = "{{user.cid_legalname | url_encode  }}";
+    var cid_operatingname = "{{user.cid_operatingname | url_encode  }}";
 
     cid_legalname = tdg.c.replace_special_char(cid_legalname);
     cid_operatingname = tdg.c.replace_special_char(cid_operatingname);
@@ -47,7 +48,7 @@ $(document).ready(function () {
             $("#cid_reasonfornobnnumber_other").val(cid_reasonfornobnnumber_other);
         }
         else {
-            tdg.c.control_show("cid_reasonfornobnnumber_other");
+            tdg.c.control_hide("cid_reasonfornobnnumber_other");
         }
     }
     else {
@@ -58,8 +59,13 @@ $(document).ready(function () {
         $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
     }
 
-    $("#ovs_legalname").val(cid_legalname);
-    $("#name").val(cid_operatingname);
+    if (step_start != "2") {
+        $("#ovs_legalname").val(cid_legalname);
+        $("#name").val(cid_operatingname);
+        debugger;
+        var value = $("#address1_line1").val();
+        address1_line1_set(value);
+    }
 
     $('#cid_crabusinessnumber').attr("readonly", true);
     $('#ovs_legalname').attr("readonly", true);
@@ -114,6 +120,10 @@ $(document).ready(function () {
     $("#address1_stateorprovince").attr("oninput", "setManualAddressEntryFlag()");
     $("#address1_postalcode").attr("oninput", "setManualAddressEntryFlag()");
     $("#address1_country").attr("oninput", "setManualAddressEntryFlag()");
+
+    // default canada
+    $('#address1_country').attr("readonly", true);
+    $('#address1_country').val("Canada");
 });
 
 if (window.jQuery) {
@@ -134,6 +144,16 @@ function AddressComplete_Hide_address1_line1() {
 function AddressComplete_address1_line1() {
     debugger;
     $("#address1_line1").val(sessionStorage.getItem("Line1"));
+}
+
+function address1_line1_set(value) {
+    debugger;
+
+    try {
+        var f = document.getElementById("WebResource_address_complete");
+        var c = f.contentWindow;
+        c.document.getElementById("address1_line1").value = value;
+    } catch (e) { }
 }
 
 function AddressComplete_Selected() {

@@ -4,9 +4,42 @@
 $(document).ready(function () {
     debugger;
 
+	var selected_language = '{{website.selected_language.code}}';
+	sessionStorage.setItem("selected_language", selected_language);
+
     var tdg_unnumberid_label = tdg.error_message.message("tdg_unnumberid"); // UN Number
-    sessionStorage.setItem("tdg_unnumberid_label", tdg_unnumberid_label);
+	sessionStorage.setItem("tdg_unnumberid_label", tdg_unnumberid_label);
+
+	subgrid_language();
 });
+
+function subgrid_language() {
+	var selected_language = sessionStorage.getItem("selected_language");
+
+	var entityList = $(".entity-grid").eq(0);
+
+	entityList.on("loaded", function () {
+		debugger;
+
+		// header
+		let header = entityList.find("table thead > tr");
+		for (var index1 = 0; index1 < header.length; index1++) {
+			debugger;
+			let tr = header[index1];
+
+			let cols = $(tr).find('th');
+			for (var i = 0; i < cols.length; i++) {
+				var tdElement = cols[i];
+				var className = $(tdElement)[0].className;
+				if (className.indexOf("sort-enabled") == -1) {
+					var text = $(tdElement).text();
+					text = tdg.c.text_language(text, selected_language);
+					$(tdElement).text(text);
+				}
+			}
+		}
+	});
+}
 
 if (window.jQuery) {
     (function ($) {
@@ -37,18 +70,19 @@ if (window.jQuery) {
 
                     var siteId = urlParams.get('siteid');
 
-                     if (urlParams.has('in_year')) {
-                            window.location.href = "~/en-US/my-sites/in-year-site/?id=" + siteId;
-                        }
-                        else{
-                            window.location.href = "~/en-US/SiteRegistrationWizard/?id=" + siteId;
-                        }
+                    if (urlParams.has('in_year')) {
+                        window.location.href = "~/en-US/my-sites/in-year-site/?id=" + siteId;
+                    }
+                    else {
+                        window.location.href = "~/en-US/SiteRegistrationWizard/?id=" + siteId;
+                    }
                 }
             }
             //return validation;
         }
     }(window.jQuery));
 }
+
 async function OperationDetailsProvided(operationId, flag) {
     await UpdateOperationDetailsProvided(operationId, flag);
 }

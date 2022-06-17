@@ -21,7 +21,7 @@ if (typeof (tdg.c) == "undefined") {
             c.targetFunction();
         },
 
-        btn_save_new_setup: function() {
+        btn_save_new_setup: function () {
             var button = $('<input type="button" name="btn_save_new" id="btn_save_new" />');
             $("#InsertButton").after(button);
 
@@ -95,7 +95,7 @@ if (typeof (tdg.c) == "undefined") {
                 // Wire-up the click event handler of the validation summary link
                 $("a[href='#" + fieldName + "_label']").on("click", function () { scrollToAndFocus(fieldName + '_label', fieldName); });
 
-            } catch (e) {}
+            } catch (e) { }
         },
 
         // setRequiredLevel("none");
@@ -108,7 +108,7 @@ if (typeof (tdg.c) == "undefined") {
                 });
 
                 $("#" + fieldName + "_label").parent().removeClass("required");
-            } catch (e) {}
+            } catch (e) { }
 
         },
 
@@ -136,7 +136,7 @@ if (typeof (tdg.c) == "undefined") {
         message_panel_clear: function () {
             try {
                 $("#MessagePanel")[0].innerText = "";
-            } catch (e) {}
+            } catch (e) { }
         },
 
         message_panel_set: function (validationSection, msg) {
@@ -150,7 +150,7 @@ if (typeof (tdg.c) == "undefined") {
                 var text = '<div id="MessagePanel" class="message alert alert-info" role="alert">' + msg + '</div>';
                 target.append($(text));
                 target.show();
-            } catch (e) {}
+            } catch (e) { }
         },
 
         message_panel: function () {
@@ -291,14 +291,14 @@ if (typeof (tdg.c) == "undefined") {
 
         // sample calling dialog_YN
         //dialog_YN(message, (ans) => {
-	    //	if (ans) {
-	    //		// console.log("Yes");
-	    //		Call_Check_User_Response_flow(newrecordid, 'yes', '', Language);
-	    //	} else {
-	    //		Call_Check_User_Response_flow(newrecordid, 'No', '', Language);
-	    //		//console.log("No");
-	    //	}
-	    //});
+        //	if (ans) {
+        //		// console.log("Yes");
+        //		Call_Check_User_Response_flow(newrecordid, 'yes', '', Language);
+        //	} else {
+        //		Call_Check_User_Response_flow(newrecordid, 'No', '', Language);
+        //		//console.log("No");
+        //	}
+        //});
         dialog_YN: function (message, handler) {
             message = message.replaceAll("\n", "<br>");
             var header = tdg.error_message.message("CID_PORTAL");
@@ -439,7 +439,7 @@ if (typeof (tdg.webapi) == "undefined") {
                     console.log("webapi.safeAjax.create->record_id: " + xhr.getResponseHeader("entityid"));
                     try {
                         success_cb();
-                    } catch (e) {}
+                    } catch (e) { }
                 },
 
                 error: function (res, status, errorThrown) {
@@ -498,8 +498,23 @@ if (typeof (tdg.webapi) == "undefined") {
 // tdg.error_message = tdgcore.error_message
 if (typeof (tdg.error_message) == "undefined") {
     tdg.error_message = {
-        k_english: "en-US",
+        k_english: "en",
+        k_english_US: "en-US",
         k_tdgcore_error_message: "tdgcore_error_message",
+
+        is_english: function (selected_language) {
+            //debugger;
+            var value = false;
+            switch (selected_language) {
+                case this.k_english:
+                    value = true;
+                    break;
+                case this.k_english_US:
+                    value = true;
+                    break;
+            }
+            return value;
+        },
 
         message: function (code) {
             //debugger;
@@ -511,7 +526,7 @@ if (typeof (tdg.error_message) == "undefined") {
             for (var index1 = 0; index1 < list.length; index1++) {
                 var item = list[index1];
                 if (item.code == code) {
-                    value = (selected_language == this.k_english ? item.message_en : item.message_fr);
+                    value = (this.is_english(selected_language) ? item.message_en : item.message_fr);
                     break;
                 }
             }
@@ -629,4 +644,3 @@ if (typeof (tdg.root) == "undefined") {
         }
     }
 }
-

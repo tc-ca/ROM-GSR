@@ -4,6 +4,12 @@
 $(document).ready(function () {
     debugger;
 
+    //$("cid_modifiedbyregistrant_id").attr("value",'{{user.contactid}}');
+    //$("cid_modifiedbyregistrant_name").attr("value",'{{user.fullname}}');
+    //$("#cid_modifiedbyregistrant_entityname").attr("value","contact");
+
+    //$("#cid_modifiedbyregistrant") = '{{user}}';
+
     var companyName = '{{user.parentcustomerid.name }}';
     if (companyName) {
         $(".previous-btn").attr('disabled', true);
