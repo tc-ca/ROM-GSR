@@ -25,17 +25,14 @@ $(document).ready(function () {
     var cid_has_cra_bn = (cid_has_cra_bn == "true" ? 1 : 0);
     var cid_crabusinessnumber = '{{user.cid_crabusinessnumber}}';
     var cid_reasonfornobnnumber = "{{user.cid_reasonfornobnnumber.Value}}";
-    var cid_reasonfornobnnumber_other = "{{user.cid_reasonfornobnnumber_other | url_encode }}";
-    var cid_legalname = "{{user.cid_legalname | url_encode  }}";
-    var cid_operatingname = "{{user.cid_operatingname | url_encode  }}";
+    var cid_reasonfornobnnumber_other = "{{user.cid_reasonfornobnnumber_other}}";
+    var cid_legalname = "{{user.cid_legalname}}";
+    var cid_operatingname = "{{user.cid_operatingname}}";
 
     // testing
     debugger;
-    var cid_legalname = "{{user.cid_legalname }}";
-    cid_legalname = decodeURI(cid_legalname);
-    var cid_legalname = "{{user.cid_legalname | url_encode }}";
-    var cid_legalname = "{{user.cid_legalname | url_decode }}";
-
+    //var cid_legalname = "{{user.cid_legalname }}";  // à -> &#224;
+    //cid_legalname = unescape(cid_legalname);
     // end testing
 
     cid_legalname = tdg.c.replace_special_char(cid_legalname);
