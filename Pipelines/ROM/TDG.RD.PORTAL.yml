@@ -62,7 +62,7 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: Publish Configuration Artifact
       inputs:
-        PathtoPublish: '$(Build.SourcesDirectory)\Portals\cid-dev'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)' #'$(Build.SourcesDirectory)\Portals\cid-dev'
         ArtifactName: 'cid-dev'
         publishLocation: 'Container'
 
@@ -105,7 +105,7 @@ stages:
                   --applicationId ${env:PowerPlatformAadApplicationId} `
                   --clientSecret ${env:PowerPlatformAadApplicationSecret}
                 pac auth select --name PORTAL_QA
-                pac paportal upload --path $(Agent.BuildDirectory)\cid-dev --deploymentProfile qa
+                pac paportal upload --path $(Agent.BuildDirectory)\cid-dev #--deploymentProfile qa
 
   #Deploy to ACC
 - stage: DeployToACC
@@ -146,7 +146,7 @@ stages:
                   --applicationId ${env:PowerPlatformAadApplicationId} `
                   --clientSecret ${env:PowerPlatformAadApplicationSecret}
                 pac auth select --name PORTAL_ACC
-                pac paportal upload --path $(Agent.BuildDirectory)\cid-dev --deploymentProfile acc
+                pac paportal upload --path $(Agent.BuildDirectory)\cid-dev #--deploymentProfile acc
 
   #Deploy to PREPROD
 - stage: DeployToPREPROD
