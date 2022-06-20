@@ -29,6 +29,15 @@ $(document).ready(function () {
     var cid_legalname = "{{user.cid_legalname | url_encode  }}";
     var cid_operatingname = "{{user.cid_operatingname | url_encode  }}";
 
+    // testing
+    debugger;
+    var cid_legalname = "{{user.cid_legalname }}";
+    cid_legalname = decodeURI(cid_legalname);
+    var cid_legalname = "{{user.cid_legalname | url_encode }}";
+    var cid_legalname = "{{user.cid_legalname | url_decode }}";
+
+    // end testing
+
     cid_legalname = tdg.c.replace_special_char(cid_legalname);
     cid_operatingname = tdg.c.replace_special_char(cid_operatingname);
 

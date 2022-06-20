@@ -41,7 +41,7 @@ $(document).ready(function() {
 				{
 					if(tdElement.attr('data-value') == 'false')
 					{
-						validation = false;
+						//validation = false;
 						//alert('You cannot proceed before completing site operation details.');
 					}
 				}
