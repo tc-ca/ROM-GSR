@@ -105,7 +105,7 @@ stages:
                   --applicationId ${env:PowerPlatformAadApplicationId} `
                   --clientSecret ${env:PowerPlatformAadApplicationSecret}
                 pac auth select --name PORTAL_QA
-                pac paportal upload --path $(Agent.BuildDirectory)\cid-dev #--deploymentProfile qa
+                pac paportal upload --path $(Pipeline.Workspace)\cid-dev #--deploymentProfile qa
 
   #Deploy to ACC
 - stage: DeployToACC
