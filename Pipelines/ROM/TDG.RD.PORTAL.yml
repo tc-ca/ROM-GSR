@@ -81,6 +81,8 @@ stages:
       runOnce:
         deploy:
           steps:
+          - download: current
+            artifact: cid-dev
           #Install the Power Platform CLI
           - task: PowerShell@2
             displayName: Download Power Platform CLI
@@ -122,6 +124,8 @@ stages:
       runOnce:
         deploy:
           steps:
+          - download: current
+            artifact: cid-dev
           #Install the Power Platform CLI
           - task: PowerShell@2
             displayName: Download Power Platform CLI
@@ -146,7 +150,7 @@ stages:
                   --applicationId ${env:PowerPlatformAadApplicationId} `
                   --clientSecret ${env:PowerPlatformAadApplicationSecret}
                 pac auth select --name PORTAL_ACC
-                pac paportal upload --path $(Agent.BuildDirectory)\cid-dev #--deploymentProfile acc
+                pac paportal upload --path $(Pipeline.Workspace)\cid-dev #--deploymentProfile acc
 
   #Deploy to PREPROD
 - stage: DeployToPREPROD
