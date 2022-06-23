@@ -296,7 +296,8 @@
                 "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fDev%252fCID_Sites_Template_2022_ENG_April%2b2022%2bv12.xlsx": "/Shared Documents/CID_Bulk_Upload/Dev/CID_Sites_Template_2022_ENG_April 2022 v12.xlsx",
                 "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fDev%252fCID_Sites_Template_2022_ENG_May%2b2022%2bv12.xlsx": "/Shared Documents/CID_Bulk_Upload/Dev/CID_Sites_Template_2022_ENG_May 2022 v12.xlsx",
                 "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_May%2b2022%2bv13.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_May 2022 v13.xlsx",
-                "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_June_2022%2bv14.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_June_2022 v14.xlsx"
+                "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_June_2022%2bv14.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_June_2022 v14.xlsx",
+                "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_June_2022%2bv15.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_June_2022 v15.xlsx"
               },
               "type": "OpenApiConnection",
               "inputs": {
@@ -307,7 +308,7 @@
                 },
                 "parameters": {
                   "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
-                  "id": "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_June_2022%2bv14.xlsx",
+                  "id": "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_June_2022%2bv15.xlsx",
                   "inferContentType": true
                 },
                 "authentication": "@parameters('$authentication')"
@@ -693,7 +694,10 @@
             },
             "Update_a_row": {
               "runAfter": {
-                "hide_Root_UN_Number_List": [
+                "Insert_Data_to_Add_extended_Sheet": [
+                  "Succeeded"
+                ],
+                "Insert_Data_to_Basic_Sheet": [
                   "Succeeded"
                 ]
               },
@@ -921,36 +925,6 @@
                 "operationMetadataId": "ed5c83c0-aae5-4d67-b9b2-52420758be65"
               },
               "type": "Scope"
-            },
-            "hide_Root_UN_Number_List": {
-              "runAfter": {
-                "Insert_Data_to_Add_extended_Sheet": [
-                  "Succeeded"
-                ],
-                "Insert_Data_to_Basic_Sheet": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "2588d12e-85cc-4f36-9d27-05bc388020f4"
-              },
-              "type": "OpenApiConnection",
-              "inputs": {
-                "host": {
-                  "connectionName": "shared_webcontents",
-                  "operationId": "InvokeHttp",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
-                },
-                "parameters": {
-                  "request/method": "PATCH",
-                  "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{outputs('Create_new_folder')?['body/{Name}']}/@{outputs('Create_file')?['body/Name']}:/workbook/worksheets('Instructions')",
-                  "request/headers": {
-                    "accept": "application/json"
-                  },
-                  "request/body": "\n{\n  \"position\": 0,\n  \"name\": \"Instructions\",\n  \"visibility\": \"Hidden\"\n}"
-                },
-                "authentication": "@parameters('$authentication')"
-              }
             }
           },
           "runAfter": {
@@ -1316,7 +1290,7 @@
         },
         "Check_if_Root_data_exists": {
           "actions": {
-            "Invoke_an_HTTP_request_-_Add_settings_2": {
+            "Invoke_an_HTTP_request_-_Add_Root_UN": {
               "runAfter": {},
               "metadata": {
                 "operationMetadataId": "af830d4e-9a7d-459a-9b0c-b6ed1321a6ae"
@@ -1335,6 +1309,33 @@
                     "accept": "application/json"
                   },
                   "request/body": "{\n\n  \"values\": [ \n    \n@{outputs('Perform_a_bound_action')?['body/RootUNNumberList']}\n\n\n   \n  ],\n \"index\": 0\n}"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "hide_Root_UN_Number_List": {
+              "runAfter": {
+                "Invoke_an_HTTP_request_-_Add_Root_UN": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "2588d12e-85cc-4f36-9d27-05bc388020f4"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_webcontents",
+                  "operationId": "InvokeHttp",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
+                },
+                "parameters": {
+                  "request/method": "PATCH",
+                  "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{outputs('Create_new_folder')?['body/{Name}']}/@{outputs('Create_file')?['body/Name']}:/workbook/worksheets('UNs from ERAPs')",
+                  "request/headers": {
+                    "accept": "application/json"
+                  },
+                  "request/body": "\n{\n  \"position\": 4,\n  \"name\": \"UNs from ERAPs\",\n  \"visibility\": \"Visible\"\n}"
                 },
                 "authentication": "@parameters('$authentication')"
               }
@@ -1372,36 +1373,12 @@
             "operationMetadataId": "84296d6c-b939-4cd9-922b-307658101d6b"
           },
           "type": "Compose",
-          "inputs": "@'Remove UN#'"
+          "inputs": "Remove UN"
         },
         "Condition": {
-          "actions": {
-            "get_sheet": {
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "2588d12e-85cc-4f36-9d27-05bc388020f4"
-              },
-              "type": "OpenApiConnection",
-              "inputs": {
-                "host": {
-                  "connectionName": "shared_webcontents",
-                  "operationId": "InvokeHttp",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
-                },
-                "parameters": {
-                  "request/method": "PATCH",
-                  "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{outputs('Create_new_folder')?['body/{Name}']}/@{outputs('Create_file')?['body/Name']}:/workbook/tables/TableAddExtended/columns/@{outputs('columnname')}/range",
-                  "request/headers": {
-                    "accept": "application/json"
-                  },
-                  "request/body": "{\n\"columnHidden\" : true\n}\n"
-                },
-                "authentication": "@parameters('$authentication')"
-              }
-            }
-          },
+          "actions": {},
           "runAfter": {
-            "columnname": [
+            "unHide_Column_Remove_UN": [
               "Succeeded"
             ]
           },
@@ -1415,6 +1392,33 @@
             "operationMetadataId": "0d201ed4-ed59-4ed2-ba93-8133ceebf4e8"
           },
           "type": "If"
+        },
+        "unHide_Column_Remove_UN": {
+          "runAfter": {
+            "columnname": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2588d12e-85cc-4f36-9d27-05bc388020f4"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_webcontents",
+              "operationId": "InvokeHttp",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
+            },
+            "parameters": {
+              "request/method": "PATCH",
+              "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{outputs('Create_new_folder')?['body/{Name}']}/@{outputs('Create_file')?['body/Name']}:/workbook/tables/TableAddExtended/columns/@{outputs('columnname')}/range",
+              "request/headers": {
+                "accept": "application/json"
+              },
+              "request/body": "{\n\"columnHidden\" : true\n}\n"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
         }
       },
       "outputs": {}
