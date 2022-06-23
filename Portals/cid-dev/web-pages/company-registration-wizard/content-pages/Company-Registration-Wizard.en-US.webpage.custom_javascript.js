@@ -45,7 +45,7 @@ function header_setup() {
 
 		// 1st step?
 		if ((i == 0 || i == 1) && (className == "list-group-item active")) {
-			code = "m000008";	// Company Registration Wizard
+			code = "m000009";	// Company Registration Wizard
 		}
 
 		//text = tdg.error_message.message(text);

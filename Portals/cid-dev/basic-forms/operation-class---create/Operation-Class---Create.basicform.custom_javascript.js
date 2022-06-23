@@ -12,17 +12,15 @@ $(document).ready(function () {
     //when the page is done loading, disable autocomplete on all inputs[text]
     $('input[type="text"]').attr('autocomplete', 'off');
 
-    // hide controls 
-    tdg.c.control_hide("ovs_class_division", true);
-    tdg.c.control_hide("ovs_compatibility_group", true);
-
     // resize WebResource_unnumber
     $("#WebResource_primaryclass").height('450px');
 
     // insert button
     tdg.c.btn_save_new_setup();
 
-    //tdg.c.addValidator("ovs_class_division");
+    // hide controls 
+    tdg.c.control_hide("ovs_class_division", true);
+    tdg.c.control_hide("ovs_compatibility_group", true);
 });
 
 $(window).unload(function () {
@@ -35,6 +33,22 @@ $(window).unload(function () {
         } catch (e) { }
     }
 });
+
+//Function called on form submit
+if (window.jQuery) {
+    (function ($) {
+
+        entityFormClientValidate = function () {
+            debugger;
+            var validation = true;
+
+            //var ovs_class_division = $("#ovs_class_division").val();
+            //var ovs_compatibility_group = $("#ovs_compatibility_group").val();
+
+            return validation;
+        }
+    }(window.jQuery));
+}
 
 function page_setup() {
     var selected_language = '{{website.selected_language.code}}';
@@ -91,11 +105,20 @@ function btn_save_new_onclick() {
 function ovs_primaryclass_selected(text, id) {
     debugger;
 
+    tdg.c.removeValidator("ovs_compatibility_group");
+
     var index1 = text.indexOf(" - ");
     text = text.substr(0, index1);
     $("#ovs_class_division").attr("value", id);
     $("#ovs_class_division_name").attr("value", text);
     $("#ovs_class_division_entityname").attr("value", 'ovs_primaryclass');
+
+    if (text.substr(0,2) == "1.") {
+        tdg.c.addValidator("ovs_compatibility_group");
+    }
+    else {
+        tdg.c.removeValidator("ovs_compatibility_group");
+    }
 }
 
 function ovs_operationclass_insert(operation_id, ovs_primaryclass, ovs_compatibility_group, contact_id) {

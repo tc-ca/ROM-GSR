@@ -13,7 +13,7 @@ $(document).ready(function () {
     sessionStorage.setItem("tdg_unnumberid_label", tdg_unnumberid_label);
 
     // hide controls
-    tdg.c.control_hide("ovs_unnumber", true);
+    //tdg.c.control_hide("ovs_unnumber", true);
 
     // resize WebResource_unnumber
     $("#WebResource_unnumber").height('175px');
