@@ -113,7 +113,7 @@ function ovs_primaryclass_selected(text, id) {
     $("#ovs_class_division_name").attr("value", text);
     $("#ovs_class_division_entityname").attr("value", 'ovs_primaryclass');
 
-    if (text.substr(0,2) == "1.") {
+    if (text.substr(0, 2) == "1.") {
         tdg.c.addValidator("ovs_compatibility_group");
     }
     else {
@@ -123,13 +123,21 @@ function ovs_primaryclass_selected(text, id) {
 
 function ovs_operationclass_insert(operation_id, ovs_primaryclass, ovs_compatibility_group, contact_id) {
     debugger;
-    var data = {
-        "ovs_OperationClass@odata.bind": "/ovs_mocregistrations(" + operation_id + ")",
-        "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
-        "ovs_primaryclass@odata.bind": "/ovs_primaryclasses(" + ovs_primaryclass + ")"
-    };
-    if (ovs_compatibility_group != "") {
-        data.ovs_compatibility_group = "/ovs_class_compatibility_groups(" + ovs_compatibility_group + ")";
+
+    if (ovs_compatibility_group == "") {
+        var data = {
+            "ovs_OperationClass@odata.bind": "/ovs_mocregistrations(" + operation_id + ")",
+            "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
+            "ovs_class_division@odata.bind": "/ovs_primaryclasses(" + ovs_primaryclass + ")"
+        };
+    }
+    else {
+        var data = {
+            "ovs_OperationClass@odata.bind": "/ovs_mocregistrations(" + operation_id + ")",
+            "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
+            "ovs_class_division@odata.bind": "/ovs_primaryclasses(" + ovs_primaryclass + ")",
+            "ovs_compatibility_group@odata.bind": "/ovs_class_compatibility_groups(" + ovs_compatibility_group + ")"
+        };
     }
     tdg.webapi.create("ovs_operationclasses", data, success_cb, error_cb);
 }
@@ -138,6 +146,12 @@ function form_clear() {
     debugger;
 
     try {
+        $("#ovs_class_division").attr("value", null);
+        $("#ovs_class_division_name").attr("value", null);
+
+        $("#ovs_compatibility_group").attr("value", null);
+        $("#ovs_compatibility_group_name").attr("value", null);
+
         var f = document.getElementById("WebResource_primaryclass");
         var c = f.contentWindow;
         c.clear_field(true);
