@@ -4,7 +4,7 @@
 $(document).ready(function () {
     debugger;
 
-    var companyName = '{{user.parentcustomerid.name }}';
+    var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name }}');
     if (companyName) {
         $(".previous-btn").attr('disabled', true);
     }
@@ -25,18 +25,9 @@ $(document).ready(function () {
     var cid_has_cra_bn = (cid_has_cra_bn == "true" ? 1 : 0);
     var cid_crabusinessnumber = '{{user.cid_crabusinessnumber}}';
     var cid_reasonfornobnnumber = "{{user.cid_reasonfornobnnumber.Value}}";
-    var cid_reasonfornobnnumber_other = "{{user.cid_reasonfornobnnumber_other}}";
-    var cid_legalname = "{{user.cid_legalname}}";
-    var cid_operatingname = "{{user.cid_operatingname}}";
-
-    // testing
-    debugger;
-    //var cid_legalname = "{{user.cid_legalname }}";  // à -> &#224;
-    //cid_legalname = unescape(cid_legalname);
-    // end testing
-
-    cid_legalname = tdg.c.replace_special_char(cid_legalname);
-    cid_operatingname = tdg.c.replace_special_char(cid_operatingname);
+    var cid_reasonfornobnnumber_other = tdg.c.replace_special_char("{{user.cid_reasonfornobnnumber_other}}");
+    var cid_legalname = tdg.c.replace_special_char("{{user.cid_legalname}}");
+    var cid_operatingname = tdg.c.replace_special_char("{{user.cid_operatingname}}");
 
     $('#cid_has_cra_bn').val(cid_has_cra_bn);
     tdg.c.control_hide("cid_has_cra_bn");
@@ -86,13 +77,13 @@ $(document).ready(function () {
     tdg.c.addValidator("address1_country");
 
     if (step_start == "1") {
-        var address1_line1 = "{{user.address1_line1}}";
-        var address1_line2 = "{{user.address1_line2}}";
-        var address1_line3 = "{{user.address1_line3}}";
-        var address1_city = "{{user.address1_city}}";
-        var address1_stateorprovince = "{{user.address1_stateorprovince}}";
-        var address1_postalcode = "{{user.address1_postalcode}}";
-        var address1_country = "{{user.address1_country}}";
+        var address1_line1 = tdg.c.replace_special_char("{{user.address1_line1}}");
+        var address1_line2 = tdg.c.replace_special_char("{{user.address1_line2}}");
+        var address1_line3 = tdg.c.replace_special_char("{{user.address1_line3}}");
+        var address1_city = tdg.c.replace_special_char("{{user.address1_city}}");
+        var address1_stateorprovince = tdg.c.replace_special_char("{{user.address1_stateorprovince}}");
+        var address1_postalcode = tdg.c.replace_special_char("{{user.address1_postalcode}}");
+        var address1_country = tdg.c.replace_special_char("{{user.address1_country}}");
 
         $("#address1_line1").val(address1_line1);
         $("#address1_line2").val(address1_line2);

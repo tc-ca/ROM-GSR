@@ -7,7 +7,7 @@ $(document).ready(function () {
     // header
     advanced_form_header();
 
-    var companyName = '{{user.parentcustomerid.name }}';
+    var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name }}');
     if (companyName) {
         $(".previous-btn").attr('disabled', true);
     }
@@ -36,16 +36,16 @@ $(document).ready(function () {
         cid_has_cra_bn = (cid_has_cra_bn == "true" ? 1 : 0);
         var cid_crabusinessnumber = '{{user.cid_crabusinessnumber}}';
         var cid_reasonfornobnnumber = "{{user.cid_reasonfornobnnumber.Value}}";
-        var cid_reasonfornobnnumber_other = "{{user.cid_reasonfornobnnumber_other}}";
-        var cid_legalname = "{{user.cid_legalname}}";
-        var cid_operatingname = "{{user.cid_operatingname}}";
-        var address1_line1 = "{{user.address1_line1}}";
-        var address1_line2 = "{{user.address1_line2}}";
-        var address1_line3 = "{{user.address1_line3}}";
-        var address1_city = "{{user.address1_city}}";
-        var address1_stateorprovince = "{{user.address1_stateorprovince}}";
-        var address1_postalcode = "{{user.address1_postalcode}}";
-        var address1_country = "{{user.address1_country}}";
+        var cid_reasonfornobnnumber_other = tdg.c.replace_special_char("{{user.cid_reasonfornobnnumber_other}}");
+        var cid_legalname = tdg.c.replace_special_char("{{user.cid_legalname}}");
+        var cid_operatingname = tdg.c.replace_special_char("{{user.cid_operatingname}}");
+        var address1_line1 = tdg.c.replace_special_char("{{user.address1_line1}}");
+        var address1_line2 = tdg.c.replace_special_char("{{user.address1_line2}}");
+        var address1_line3 = tdg.c.replace_special_char("{{user.address1_line3}}");
+        var address1_city = tdg.c.replace_special_char("{{user.address1_city}}");
+        var address1_stateorprovince = tdg.c.replace_special_char("{{user.address1_stateorprovince}}");
+        var address1_postalcode = tdg.c.replace_special_char("{{user.address1_postalcode}}");
+        var address1_country = tdg.c.replace_special_char("{{user.address1_country}}");
 
         $("#address1_line1").val(address1_line1);
         $("#address1_line2").val(address1_line2);
@@ -134,7 +134,7 @@ function advanced_form_header() {
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
-    var companyName = '{{user.parentcustomerid.name }}';
+    var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name}}');
 
     try {
         var value = tdg.error_message.message("m000009");

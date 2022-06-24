@@ -284,8 +284,9 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         replace_special_char: function (value) {
-            var k_char_apostrophe = "&#39;";
-            value = value.replaceAll(k_char_apostrophe, "'");
+            value = $('<textarea />').html(value).text();
+            // for apostrophe, use two apostrophe to escape it:
+            value = value.replace("'", "''");
             return value;
         },
 

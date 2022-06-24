@@ -23,7 +23,7 @@ $(document).ready(function () {
 			var msg = tdg.error_message.message("m000010");	// Choose the same named button found below
 			tdg.c.dialog_OK(msg);
 		});
-    }
+	}
 
 	$("legend").each(function () {
 		$(this).removeClass();
@@ -54,7 +54,7 @@ function header_setup() {
 
 	try {
 		var selected = $('.li.list-group-item active');
-		var companyName = '{{user.parentcustomerid.name}}';
+		var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name}}');
 		var value = tdg.error_message.message(code);
 		value = value.replace("{0}", companyName);
 		$('.page-header h1').text(value);
@@ -93,8 +93,8 @@ function top_menu() {
 					var text = "\n  <a " + href[0].attributes[0] + " title='" + text + "'>" + text + "</a>\n ";
 					item2.innerHTML = text;
 				}
-            }
-        }
+			}
+		}
 	}
 
 	return;
@@ -115,5 +115,4 @@ function top_menu() {
 			}
 		}
 	}
-
 }
