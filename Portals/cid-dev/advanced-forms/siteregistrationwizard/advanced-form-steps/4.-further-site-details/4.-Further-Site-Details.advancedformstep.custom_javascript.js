@@ -18,7 +18,7 @@ $(document).ready(function() {
 						if(tdElement.attr('data-attribute') == 'cid_operationdetailsprovided')
 						{
 							if ($("#HOTI_Details").length <= 0)
-								$("#PreviousButton").parent().after("<div id='HOTI_Details' role='group' class='btn-group entity-action-button'><a href='~/en-US/OperationRegistrationWizard/?id=" + operationId + "&siteid=" + siteid + "'><input type='button' name='HOTI_Details' value='HOTI Details' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'></a></div>");
+								$("#PreviousButton").parent().after("<div id='HOTI_Details' role='group' class='btn-group entity-action-button'><a href='~/en-US/OperationRegistrationWizard/?id=" + operationId + "&siteid=" + siteid + "'><input type='button' name='further_site_details' value='Further Site Details' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'></a></div>");
 							
 							if((!IsExtendedSite(operationId, null) && SiteHasOperationClasses(operationId, null)) ||
 								(IsExtendedSite(operationId, null) && SiteHasOperationUNNumbers(operationId, null)))
