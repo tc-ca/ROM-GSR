@@ -129,26 +129,18 @@ function ovs_operationunnumber_insert(operation_id, ovs_unnumber,
     cid_unitofmeasurement, cid_annualquantityvolume, cid_annualnumberofshipment,
     contact_id) {
     debugger;
-return;
+
+    cid_unitofmeasurement = Number(cid_unitofmeasurement);    // 100000008
     cid_annualquantityvolume = Number.parseFloat(cid_annualquantityvolume);
     cid_annualnumberofshipment = Number.parseFloat(cid_annualnumberofshipment);
-
-    // original
-    //var data = {
-    //    "ovs_OperationUNNumber@odata.bind": "/ovs_mocregistrations(" + operation_id + ")",
-    //    "ovs_UNNumber@odata.bind": "/tdg_unnumbers(" + ovs_unnumber + ")",
-    //    "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
-    //    "cid_Unitofmeasurement": cid_unitofmeasurement,
-    //    "cid_AnnualQuantityVolume": cid_annualquantityvolume,
-    //    "cid_AnnualNumberofshipment": cid_annualnumberofshipment
-    //};
 
     var data = {
         "ovs_OperationUNNumber@odata.bind": "/ovs_mocregistrations(" + operation_id + ")",
         "ovs_UNNumber@odata.bind": "/tdg_unnumbers(" + ovs_unnumber + ")",
         "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
-        "cid_AnnualQuantityVolume": cid_annualquantityvolume,
-        "cid_AnnualNumberofshipment": cid_annualnumberofshipment
+        "cid_unitofmeasurement": cid_unitofmeasurement,
+        "cid_annualquantityvolume": cid_annualquantityvolume,
+        "cid_annualnumberofshipment": cid_annualnumberofshipment
     };
 
     tdg.webapi.create("ovs_operationunnumbers", data, success_cb, error_cb);
