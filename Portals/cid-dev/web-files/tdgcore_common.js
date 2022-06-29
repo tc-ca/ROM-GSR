@@ -445,8 +445,15 @@ if (typeof (tdg.webapi) == "undefined") {
 
                 error: function (res, status, errorThrown) {
                     debugger;
-                    //var msg = res.responseJSON.error.innererror.message;
-                    var msg = res.responseJSON.error.message;
+
+                    sessionStorage.setItem("innererror",false);
+                    try {
+                        var msg = res.responseJSON.error.innererror.message;
+                        sessionStorage.setItem("innererror", true);
+                    } catch (e) {
+                        var msg = res.responseJSON.error.message;
+                    }
+                    
                     console.log(msg);
                     try {
                         error_cb(msg);
