@@ -3,10 +3,44 @@
 //
 $(document).ready(function () {
     debugger;
+   
+   //hide modified on by field
+   $("#cid_portalrecordmodificationdetails").hide();
+   $("#cid_portalrecordmodificationdetails_label").hide();
+//get the form contact id (please note this is differnt than login user id)
+//this will be used to check if user updated the contact is the same user or not
+  var currentRecordID = document.getElementById("EntityFormControl_EntityFormView_EntityID").value;
+  //id="EntityFormControl_EntityFormView_EntityID"
+//  $('#EntityFormControl_EntityFormView_EntityID').val();
+  console.log(currentRecordID);
+  var currentUserId = '{{user.contactid}}' ;
+  var userfullname = '{{user.fullname}}';
+  var today = new Date();
+  var dd = String(today.getDate());
+  //.padStart(2, '0');
+  var mm = String(today.getMonth() + 1);
+  //.padStart(2, '0'); //January is 0!
+  console.log(mm);
+  var yyyy = today.getFullYear();
 
-    //$("cid_modifiedbyregistrant_id").attr("value",'{{user.contactid}}');
-    //$("cid_modifiedbyregistrant_name").attr("value",'{{user.fullname}}');
-    //$("#cid_modifiedbyregistrant_entityname").attr("value","contact");
+  today = mm + '/' + dd + '/' + yyyy;
+  var modificationDetails = today + ", " + userfullname;
+  console.log('before check');
+  if (currentRecordID != currentUserId )
+  {
+      console.log('not the same user as form contact');
+    $("cid_modifiedbyregistrant_id").attr("value",'{{user.contactid}}');
+    $("cid_modifiedbyregistrant_name").attr("value",'{{user.fullname}}');
+    $("#cid_modifiedbyregistrant_entityname").attr("value","contact");
+  }
+  else
+  {
+
+    $("#cid_portalrecordmodificationdetails").val(modificationDetails);
+  
+   console.log('the same user as form contact');
+  }
+  console.log(modificationDetails);
 
     //$("#cid_modifiedbyregistrant") = '{{user}}';
 
