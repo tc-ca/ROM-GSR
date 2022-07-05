@@ -85,6 +85,7 @@ var WO_TDG_ReportHelper = (function (window, document) {
             var messageWorkOrderNoBookings = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.Bookings.ErrorMessage");
             var messageWorkOrderFewBookings = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.FewBookings.ErrorMessage");
             var titlePrimaryInspector = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.PrimaryInspector.Title");
+            var messageTimeTracking = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.TimeTracking.ErrorMessage");
 
 
             //check primary contact
@@ -209,6 +210,43 @@ var WO_TDG_ReportHelper = (function (window, document) {
                 }
             };
             req.send();
+
+
+            //check time tracking, only validate travel, pre-inspection and execution at this stage
+            var parameters = {};
+            var travel = "CA3A829A-E917-EC11-B6E7-000D3AE8EF7B";
+            var preInspection = "88FD30AD-E917-EC11-B6E7-000D3AE8EF7B";
+            var execution = "794A29B3-E917-EC11-B6E7-000D3AE8EF7B";
+
+            parameters.workOrderId = formContext.data.entity.getId().replace("{", "").replace("}", "");
+            parameters.taskTypesToValidate = `${travel},${preInspection},${execution}`;
+
+            var req = new XMLHttpRequest();
+            req.open("POST", clientUrl + "/api/data/v9.1/ovs_TimeEntryValidation", false);
+            req.setRequestHeader("OData-MaxVersion", "4.0");
+            req.setRequestHeader("OData-Version", "4.0");
+            req.setRequestHeader("Accept", "application/json");
+            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+            req.onreadystatechange = function() {
+                if (this.readyState === 4) {
+                    req.onreadystatechange = null;
+                    if (this.status === 200) {
+                        var results = JSON.parse(this.response);
+                         if (results["isValidToSave"] == false)
+                         {
+                            isValid = false;
+                            setReportValidationError(messageTimeTracking);
+
+                         };
+                    } else {
+                        Xrm.Utility.alertDialog(this.statusText);
+                    }
+                }
+            };
+            req.send(JSON.stringify(parameters));
+
+
+
 
             errorObject.isValid = isValid;
 

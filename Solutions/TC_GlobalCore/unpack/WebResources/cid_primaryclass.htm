@@ -111,16 +111,41 @@
 
             var ovs_primaryclass_list_id = "";
             var ovs_name = "";
+            var ovs_class = "";
+            var parent_description = "";
             for (i = 0; i < items.length; i++) {
                 var item = items[i];
-                if (item.ovs_parent != null) {
-                    ovs_name = item.ovs_class;
-                    var value = item.ovs_primaryclassid;
+                if (item.ovs_parent == null) {
+                    parent_description = common.text_language(item.ovs_class_description, selected_language);
+                }
+
+                ovs_name = item.ovs_class;
+
+                var value = item.ovs_primaryclassid;
+                var insert_ind = false;
+
+                if (item.ovs_parent == null) {
+                    ovs_class = item.ovs_class + ".";
+
+                    var text = ovs_name + ' - ' + parent_description;
+                    try {
+                        var item2 = items[i + 1];
+                        if (item2.ovs_class.indexOf(ovs_class) == -1) {
+                            insert_ind = true;
+                        }
+                    } catch (e) {
+                        insert_ind = true;
+                    }
+                }
+                else {
+                    insert_ind = true;
                     var text = ovs_name + ' - ' +
+                        parent_description + ' / ' +
                         common.text_language(item["ovs_class_description"], selected_language);
+                }
 
+                if (insert_ind) {
                     ovs_primaryclass_list_id += value + ";";
-
                     option_insert("ovs_primaryclass", value, text);
                 }
             }
@@ -302,13 +327,16 @@
                 //var selected_language = '{{website.selected_language.code}}';
                 //sessionStorage.setItem("selected_language", selected_language);
 
-                var value = "";
+                var value = text;
                 var index1 = text.indexOf("::");
-                if (language == "en-US") {
-                    value = text.substr(0, index1);
-                }
-                else {
-                    value = text.substr(index1+2);
+                if (index1 != -1) {
+                    if (language == "en-US") {
+
+                        value = text.substr(0, index1);
+                    }
+                    else {
+                        value = text.substr(index1 + 2);
+                    }
                 }
                 return value;
             },

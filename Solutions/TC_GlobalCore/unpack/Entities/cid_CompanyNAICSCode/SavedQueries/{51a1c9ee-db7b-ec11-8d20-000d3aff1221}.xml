@@ -12,8 +12,7 @@
         <row name="result" id="cid_companynaicscodeid">
           <cell name="cid_naicscode" width="50" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="a_328065ce7948ec118c60000d3a84fcd9.cid_naicsclasstitle" width="200" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
-          <cell name="createdon" width="75" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
-          <cell name="cid_createdbyregistrant" width="75" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="cid_portalrecordcreationdetails" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
         </row>
       </grid>
     </layoutxml>
@@ -22,8 +21,6 @@
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="cid_companynaicscode">
           <attribute name="cid_naicscode" />
-          <attribute name="createdon" />
-          <attribute name="cid_createdbyregistrant" />
           <order attribute="cid_naicscode" descending="false" />
           <filter type="and">
             <condition attribute="statuscode" operator="eq" value="1" />
@@ -31,6 +28,7 @@
           <link-entity name="cid_naicscode" from="cid_naicscodeid" to="cid_naicscode" visible="false" link-type="outer" alias="a_328065ce7948ec118c60000d3a84fcd9">
             <attribute name="cid_naicsclasstitle" />
           </link-entity>
+          <attribute name="cid_portalrecordcreationdetails" />
           <attribute name="cid_companynaicscodeid" />
         </entity>
       </fetch>

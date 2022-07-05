@@ -11,8 +11,7 @@
       <grid name="resultset" jump="cid_erapid" select="1" preview="1" icon="1">
         <row name="result" id="cid_companyerapid">
           <cell name="cid_erapid" width="150" />
-          <cell name="createdon" width="100" />
-          <cell name="cid_createdbyregistrant" width="100" />
+          <cell name="cid_portalrecordcreationdetails" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
         </row>
       </grid>
     </layoutxml>
@@ -21,12 +20,11 @@
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="cid_companyerap">
           <attribute name="cid_erapid" />
-          <attribute name="createdon" />
-          <attribute name="cid_createdbyregistrant" />
           <order attribute="cid_erapid" descending="false" />
           <filter type="and">
             <condition attribute="statuscode" operator="eq" value="1" />
           </filter>
+          <attribute name="cid_portalrecordcreationdetails" />
           <attribute name="cid_companyerapid" />
         </entity>
       </fetch>

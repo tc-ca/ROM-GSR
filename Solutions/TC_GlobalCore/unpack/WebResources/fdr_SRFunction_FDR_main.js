@@ -1,4 +1,4 @@
-///<reference path="../../Utilities/GlobalHelper.js"/>
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
 ///<reference path="../../Utilities/RNOP_ValidationFunctions.js"/>
 
 
@@ -62,7 +62,7 @@ var SRFunctions_FDR_main = (function (window, document) {
                         for (var i = 0; i < results.value.length; i++) {
 
                             containerFunctions.push(results.value[i]["CF.fdr_containerfunctionid"]);
-                        }                    
+                        }
                     else {
                         console.log("Cannot find Container Type relate Container Functions");
                         containerFunctions = new Array();
@@ -100,17 +100,28 @@ var SRFunctions_FDR_main = (function (window, document) {
             // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
             formType = glHelper.GetFormType(formContext);
 
-            //if Service Request is populated check for its container type
-            var SR_id = glHelper.GetLookupAttrId(formContext, "fdr_servicerequest");
-            if (SR_id != null)
-                getSRs_ContainerType(formContext, SR_id);
-            else {
-                Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "No Service Request is associated with current Service Request Function" });
+            var cf = formContext.getAttribute("fdr_containerfunction");
+            cf.removeOnChange(SRFunctions_FDR_main.On_ContainerFunctionChange);
+            cf.addOnChange(SRFunctions_FDR_main.On_ContainerFunctionChange);
+
+            if (formType == 1) {
+
+                //if Service Request is populated check for its container type
+                var SR_id = glHelper.GetLookupAttrId(formContext, "fdr_servicerequest");
+                if (SR_id != null)
+                    getSRs_ContainerType(formContext, SR_id);
+                else {
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "No Service Request is associated with current Service Request Function" });
+                }
+            }
+            else if (formType == 2) {
+
+                //make container function read only
+                glHelper.SetControlReadOnly(formContext, "fdr_containerfunction", true);
+                //set design or specs visible
+                cf.fireOnChange();
             }
 
-
-            //fdr_servicerequest
-            //fdr_containerfunction
         },
 
         Pre_filterContainerFunction: function () {
@@ -136,6 +147,38 @@ var SRFunctions_FDR_main = (function (window, document) {
 
         },
 
+        On_ContainerFunctionChange: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+            //get container f
+            var containerId = glHelper.GetLookupAttrId(formContext, "fdr_containerfunction");
+
+            if (containerId != null) {
+
+                Xrm.WebApi.online.retrieveRecord("fdr_containerfunction", containerId, "?$select=fdr_supportsdesignregistration").then(
+                    function success(result) {
+
+                        var sdr_bool = result["fdr_supportsdesignregistration"];
+                        //var sdr_value = result["fdr_supportsdesignregistration@OData.Community.Display.V1.FormattedValue"];
+                        glHelper.SetSectionVisibility(formContext, "General", "section_design", sdr_bool);
+                        glHelper.SetControlVisibility(formContext, "Subgrid_Designs", sdr_bool);
+                        glHelper.SetSectionVisibility(formContext, "General", "section_specs", !sdr_bool);
+                        glHelper.SetControlVisibility(formContext, "GRID_SPECS", !sdr_bool);
+                    },
+                    function (error) {
+                        Xrm.Navigation.openErrorDialog({ message: "Something went wrong with Container Function query. Error: " + error.message });
+                    }
+                );
+            }
+            else {
+                //hide both
+                glHelper.SetSectionVisibility(formContext, "General", "section_design", false);
+                glHelper.SetControlVisibility(formContext, "Subgrid_Designs", false);
+                glHelper.SetSectionVisibility(formContext, "General", "section_specs", false);
+                glHelper.SetControlVisibility(formContext, "GRID_SPECS", false);
+                //throw a message?
+            }
+        },
     }
 
 })(window, document)

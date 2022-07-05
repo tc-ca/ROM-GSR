@@ -111,17 +111,15 @@
                 option_insert("data_source", 1, _data_source_2);
             }
             else {
-                //document.getElementById("div_data_source").style.display = "none";
                 document.getElementById('data_source').selectedIndex = 1;
+                data_source_onchange();
             }
 
             var tdg_unnumberid = sessionStorage.getItem("tdg_unnumberid");
             document.getElementById("tdg_unnumberid").value = tdg_unnumberid;
 
             document.getElementById("tdg_unnumberid").setAttribute("autocomplete", "off");
-
             document.querySelector('input[list="tdg_unnumberid_list"]').addEventListener('input', onInput);
-
             // language
             try {
                 var tdg_unnumberid_label = sessionStorage.getItem("tdg_unnumberid_label");
@@ -130,6 +128,15 @@
                 var value = (selected_language == "en-US" ? "UN Display Name" : "Nom d'affichage de l'ONU");
                 $("#tdg_unnumberid")[0].labels[0].innerHTML = tdg_unnumberid_label;
             } catch (e) { }
+
+            if (tdg_unnumberid == "")   // create
+            {
+            }
+            else {
+                //debugger;
+                document.getElementById('data_source').selectedIndex = 1;
+                data_source_onchange();
+            }
         })
 
         function detail_show(value) {
@@ -146,7 +153,7 @@
         }
 
         function data_source_onchange() {
-            debugger;
+            //debugger;
 
             // clear
             unnumber_clear();
@@ -209,7 +216,7 @@
         }
 
         function erap_unnumberid_list_onchange() {
-            debugger;
+            //debugger;
             var index1 = document.getElementById('erap_unnumberid_list').selectedIndex;
             var item = document.getElementById('erap_unnumberid_list')[index1];
             if (item.value != 0) {
@@ -217,7 +224,7 @@
                 id = item.value;
 
                 try {
-                    debugger;
+                    //debugger;
 
                     // transfer control back to parent form
                     parent.tdg_unnumberid_selected(text, id);
@@ -383,13 +390,16 @@
                     //var selected_language = '{{website.selected_language.code}}';
                     //sessionStorage.setItem("selected_language", selected_language);
 
-                    var value = "";
+                    var value = text;
                     var index1 = text.indexOf("::");
-                    if (language == "en-US") {
-                        value = text.substr(0, index1);
-                    }
-                    else {
-                        value = text.substr(index1+2);
+                    if (index1 != -1) {
+                        if (language == "en-US") {
+
+                            value = text.substr(0, index1);
+                        }
+                        else {
+                            value = text.substr(index1 + 2);
+                        }
                     }
                     return value;
                 },
@@ -407,7 +417,7 @@
                 },
 
                 control_show: function (fieldName, is_lookup) {
-                    debugger;
+                    //debugger;
 
                     if (is_lookup) {
                         parent.$("#" + fieldName).parent().parent().parent().show();
