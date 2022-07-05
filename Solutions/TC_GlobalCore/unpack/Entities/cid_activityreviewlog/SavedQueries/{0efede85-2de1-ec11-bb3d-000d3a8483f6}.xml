@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{0efede85-2de1-ec11-bb3d-000d3a8483f6}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="subject" select="1" preview="1" icon="1">
+        <row name="result" id="activityid">
+          <cell name="subject" width="150" />
+          <cell name="cid_arlcategory" width="100" />
+          <cell name="cid_cidexternalviewable" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="cid_conflictstatus" width="100" />
+          <cell name="cid_logentrytype" width="100" />
+          <cell name="cid_priority" width="100" />
+          <cell name="cid_createdbyregistrant" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="createdon" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+        <entity name="cid_activityreviewlog">
+          <attribute name="subject" />
+          <attribute name="cid_priority" />
+          <attribute name="cid_logentrytype" />
+          <attribute name="cid_createdbyregistrant" />
+          <attribute name="cid_conflictstatus" />
+          <attribute name="cid_cidexternalviewable" />
+          <attribute name="cid_arlcategory" />
+          <attribute name="createdon" />
+          <order attribute="subject" descending="false" />
+          <filter type="and">
+            <condition attribute="cid_cidexternalviewable" operator="eq" value="1" />
+          </filter>
+          <attribute name="activityid" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="CID Portal - Activity Review Log" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

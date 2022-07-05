@@ -6,6 +6,8 @@ $(document).ready(function () {
 
     page_setup();
 
+    var selected_language = sessionStorage.getItem("selected_language");
+
     var tdg_unnumberid_label = tdg.error_message.message("tdg_unnumberid"); // UN Number
     sessionStorage.setItem("tdg_unnumberid_label", tdg_unnumberid_label);
 
@@ -13,12 +15,12 @@ $(document).ready(function () {
     tdg.c.control_hide("ovs_unnumber", true);
 
     // resize WebResource_unnumber
-    $("#WebResource_unnumber").height('72px');
+    $("#WebResource_unnumber").height('175px');
 
     var ovs_unnumber = $("#ovs_unnumber").val();
     var item = tdg_unnumber_get(ovs_unnumber);
     var text = item.tdg_undisplayname + ' - ' +
-        common.text_language(item.tdg_shippingnamedescriptiontxt, selected_language);
+        tdg.c.text_language(item.tdg_shippingnamedescriptiontxt, selected_language);
     sessionStorage.setItem("tdg_unnumberid", text);
 
     //when the page is done loading, disable autocomplete on all inputs[text]
@@ -55,7 +57,7 @@ function tdg_unnumberid_selected(text, id) {
 
 function tdg_unnumber_get(id) {
     var filter = "tdg_unnumberid eq guid'" + id + "'";
-    var item = common.OData_List("tdg_unnumber", filter);
+    var item = tdg.c.OData_List("tdg_unnumber", filter);
     return item[0];
 }
 

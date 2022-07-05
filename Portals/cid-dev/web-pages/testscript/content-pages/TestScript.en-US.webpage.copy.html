@@ -1,5 +1,9 @@
 {% include 'WebAPIAJAX'%}
 {% assign is_valid = true %}
+{{user.cid_legalname}}
+{% assign u = user.cid_legalname %}
+{{u}}
+<meta charset="utf-8" />
 <section class="modal-dialog modal-content overlay-def" id="myModal" tabindex="-1" role="dialog">
   <div class="modal-content">
     <div class="modal-header ">
@@ -75,12 +79,21 @@
     <div class="col-md-12 columnBlockLayout" style="display: flex; flex-direction: column;"></div>
   </div><button id="download">download</button><button id="callapi">call api</button>
 </div>
-<script>
+<script charset="utf-8">
   $(document).ready(async function() {
-    alert('start');
-    let token = await getTokenwithClientid();
-    alert("after function call");
-    alert(token);
+    var cid_legalname = "{{user.cid_legalname  }}";
+    // alert(URLEncoder.encode(cid_legalname, "UTF-8"));
+    alert(cid_legalname);
+    var Title = $('<textarea />').html(cid_legalname).text();
+    alert(" text area " + Title);
+    var div = document.createElement("div");
+    div.innerHTML = cid_legalname;
+    alert(div.innerHTML);
+    var u = cid_legalname.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+    alert(u);
+    //let token = await getTokenwithClientid();
+    //alert("after function call");
+    //alert(token);
     $('#callapi').on('click', async function() {
       alert('before functioncall');
       // Add_Operation_entity

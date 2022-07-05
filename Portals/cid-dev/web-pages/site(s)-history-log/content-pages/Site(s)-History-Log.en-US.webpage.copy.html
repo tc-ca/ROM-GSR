@@ -1,2 +1,138 @@
-{% entityform name: 'In Year Sites History Logs' %}
+<div class="col-md-12 columnBlockLayout" style="display: flex; flex-direction: column;">
+  <h2 class="tab-title">Sites Audit History</h2>
+  {% assign parentid = user.parentcustomerid.id %}
+  {% fetchxml logFetch %}
+<fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
+  <entity name="cid_audithistorylog" alias="X">
+    <attribute name="cid_audithistorylogid">
+    <attribute name="createdon">
+    <attribute name="cid_memofr">
+    <attribute name="cid_memoen">
+    <order attribute="createdon" descending="false">
+    <filter type="and">
+      <condition attribute="statuscode" operator="eq" value="1">
+    </condition></filter>
+    <link-entity name="account" from="accountid" to="cid_companysite" link-type="inner" alias="accountalias">
+      <attribute name="cid_siteid">
+      <filter type="and">
+        <condition attribute="customertypecode" operator="eq" value="948010001">
+        <condition attribute="parentaccountid" operator="eq" value="{241B2649-66DB-EC11-A81B-000D3AF4D3DF}">
+      </condition></condition></filter>
+    </attribute></link-entity>
+    <link-entity name="cid_audithistorycode" from="cid_audithistorycodeid" to="cid_auditcode" visible="false" link-type="outer" alias="codealias">
+      <attribute name="cid_name">
+      <attribute name="cid_activityfr">
+      <attribute name="cid_activityen">
+    </attribute></attribute></attribute></link-entity>
+  </order></attribute></attribute></attribute></attribute></entity>
+</fetch>
+  {% endfetchxml %}
+  <div>
+    <div class="view-grid" id="GridDiv">
+      
 
+        
+                    {% for log in logFetch.results.entities %}
+          
+
+          
+                    {% endfor %}
+          <table id="accountTable" aria-relevant="additions" role="grid" class="table table-striped table-fluid">
+        <thead>
+          <tr>
+            <th scope="col" style="width:26.31578947368421%;" class="sort-enabled">
+              <a href="#" role="button" aria-label="Site ID" tabindex="0">memoEN</a>
+            </th>
+           
+          </tr>
+        </thead>
+        <tbody><tr>
+            <td>
+              {{ X.cid_audithistorylogid }}
+            </td>
+          
+          </tr></tbody>
+      </table>
+    </div>
+  </div>
+  <link href="/bootstrap.min.css" rel="stylesheet">
+  <link href="https://content.powerapps.com/resource/powerappsportal/dist/preform.bundle-b2e8a2143a.css" rel="stylesheet">
+  <link href="/css/glyphicons-font-awesome-migrate.min.css" rel="stylesheet">
+  <style>
+    .loader {
+      content: '';
+      box-sizing: border-box;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 30px;
+      height: 30px;
+      margin-top: -15px;
+      margin-left: -15px;
+      border-radius: 50%;
+      border: 1px solid #ccc;
+      border-top-color: #07d;
+      animation: spinner .6s linear infinite;
+    }
+    @keyframes spinner {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+  <script language="javascript">
+    $(document).ready(function() {});
+    $(window).load(function() {
+      $('#ll').hide();
+    });
+    function updateclaim(listcontrol, id) {
+      $('#ll').show();
+      alert("update process started");
+      Updateclaim(id, listcontrol.value);
+    }
+    //Web API ajax wrapper
+    (function(webapi, $) {
+      function safeAjax(ajaxOptions) {
+        var deferredAjax = $.Deferred();
+        shell.getTokenDeferred().done(function(token) {
+          // Add headers for ajax
+          if (!ajaxOptions.headers) {
+            $.extend(ajaxOptions, {
+              headers: {
+                "__RequestVerificationToken": token
+              }
+            });
+          } else {
+            ajaxOptions.headers["__RequestVerificationToken"] = token;
+          }
+          $.ajax(ajaxOptions)
+            .done(function(data, textStatus, jqXHR) {
+              validateLoginSession(data, textStatus, jqXHR, deferredAjax.resolve);
+            }).fail(deferredAjax.reject); //ajax
+        }).fail(function() {
+          deferredAjax.rejectWith(this, arguments); // On token failure pass the token ajax and args
+        });
+        return deferredAjax.promise();
+      }
+      webapi.safeAjax = safeAjax;
+    })(window.webapi = window.webapi || {}, jQuery)
+    function Updateclaim(accountId, newoption) {
+      webapi.safeAjax({
+        type: "PATCH",
+        url: "/_api/accounts(" + accountId + ")",
+        contentType: "application/json",
+        data: JSON.stringify({
+          "cid_siteclaim": newoption
+        }),
+        success: function(res) {
+          alert("The record has been updated successfully.");
+          $('#ll').hide();
+        },
+        error: function() {
+          $('#ll').hide();
+          //   $("#loader").style.display = "none";
+        }
+      });
+    }
+  </script>
+</div>

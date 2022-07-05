@@ -83,13 +83,13 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000008",
-                        "message_en": "Company Registration Wizard",
-                        "message_fr": "Assistant d'enregistrement de société"
+                        "message_en": "Company Registration",
+                        "message_fr": "Enregistrement de la société"
                     },
                     {
                         "code": "m000009",
-                        "message_en": "Company Registration Wizard for {0}",
-                        "message_fr": "Assistant d'enregistrement de société pour {0}"
+                        "message_en": "Company Registration for {0}",
+                        "message_fr": "Enregistrement de la société pour {0}"
                     },
                     {
                         "code": "m000010",
@@ -125,10 +125,21 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000017",
                         "message_en": "You cannot proceed before adding UN Number(s).",
                         "message_fr": "Vous ne pouvez pas continuer avant d'avoir ajouté le(s) numéro(s) UN."
-                    },                   {
+                    },
+                    {
+                        "code": "m000018",
+                        "message_en": "Invalid province",
+                        "message_fr": "Invalid province_F"
+                    },
+                    {
                         "code": "m000100",
-                        "message_en": "Back to Company Registration Wizard",
-                        "message_fr": "Retour à l'assistant d'enregistrement de société"
+                        "message_en": "Back to Company Registration",
+                        "message_fr": "Retour à l'enregistrement de société"
+                    },
+                    {
+                        "code": "m000101",
+                        "message_en": "As seen below your ERAP(s) from the TC ROOT systems have been transferred over If necessary add any remaining ERAPs, or choose the [Next] button to continue.",
+                        "message_fr": "As seen below your ERAP(s) from the TC ROOT systems have been transferred over If necessary add any remaining ERAPs, or choose the [Next] button to continue."
                     }
               ];
 

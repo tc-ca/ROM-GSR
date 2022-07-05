@@ -2,6 +2,7 @@
 // Basic Form-Operation UN Number - Create.js
 //
 var _reload = false;
+var _count = 0;
 
 $(document).ready(function () {
     debugger;
@@ -14,11 +15,8 @@ $(document).ready(function () {
     // hide controls
     tdg.c.control_hide("ovs_unnumber", true);
 
-    var selected_language = '{{website.selected_language.code}}';
-    sessionStorage.setItem("selected_language", selected_language);
-
     // resize WebResource_unnumber
-    $("#WebResource_unnumber").height('72px');
+    $("#WebResource_unnumber").height('175px');
 
     sessionStorage.setItem("tdg_unnumberid", "");
 
@@ -132,17 +130,10 @@ function ovs_operationunnumber_insert(operation_id, ovs_unnumber,
     contact_id) {
     debugger;
 
+    cid_unitofmeasurement = Number(cid_unitofmeasurement);    // 100000008
     cid_annualquantityvolume = Number.parseFloat(cid_annualquantityvolume);
     cid_annualnumberofshipment = Number.parseFloat(cid_annualnumberofshipment);
 
-    //var data = {
-    //    "ovs_OperationClass@odata.bind": "/ovs_mocregistrations(" + operation_id + ")",
-    //    "ovs_UNNumber@odata.bind": "/tdg_unnumbers(" + ovs_unnumber + ")",
-    //    "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
-    //    "cid_unitofmeasurement": cid_unitofmeasurement,
-    //    "cid_annualquantityvolume": cid_annualquantityvolume,
-    //    "cid_annualnumberofshipment": cid_annualnumberofshipment
-    //};
     var data = {
         "ovs_OperationUNNumber@odata.bind": "/ovs_mocregistrations(" + operation_id + ")",
         "ovs_UNNumber@odata.bind": "/tdg_unnumbers(" + ovs_unnumber + ")",
@@ -151,6 +142,7 @@ function ovs_operationunnumber_insert(operation_id, ovs_unnumber,
         "cid_annualquantityvolume": cid_annualquantityvolume,
         "cid_annualnumberofshipment": cid_annualnumberofshipment
     };
+
     tdg.webapi.create("ovs_operationunnumbers", data, success_cb, error_cb);
 }
 
@@ -161,15 +153,18 @@ function form_clear() {
     $("#cid_annualquantityvolume").val("");
 
     try {
-        var f = document.getElementById("tdg_unnumberid");
-        var c = f.contentWindow; c.clear_field();
+        var f = document.getElementById("WebResource_unnumber");
+        var c = f.contentWindow;
+        c.clear_field();
     } catch (e) { }
 }
 
 function success_cb() {
     debugger;
 
+    _count = _count + 1;
     msg = tdg.error_message.message("m000005"); // Record added
+    msg = msg.replace("{0}", _count);
     tdg.c.message_panel_set("EntityFormControl", msg);
 
     // clear form 

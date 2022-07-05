@@ -7,7 +7,7 @@ $(document).ready(function () {
     // header
     advanced_form_header();
 
-    var companyName = '{{user.parentcustomerid.name }}';
+    var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name }}');
     if (companyName) {
         $(".previous-btn").attr('disabled', true);
     }
@@ -17,6 +17,7 @@ $(document).ready(function () {
     $("#websiteurl").width('100%');
 
     $("#telephone1").attr("placeholder", "");
+    tdg.c.control_hide("cid_reasonfornobnnumber_other");
 
     var step_start = sessionStorage.getItem("step_start");
     step_start = (step_start == "null" ? "" : step_start);
@@ -26,22 +27,25 @@ $(document).ready(function () {
         var address1_line1 = $("#address1_line1").val();
         var cid_legalname = $('#ovs_legalname').val();
         var cid_operatingname = $('#name').val();
+        var cid_has_cra_bn = $('#cid_has_cra_bn').val();
+        var cid_reasonfornobnnumber = $('#cid_reasonfornobnnumber').val();
+        var cid_reasonfornobnnumber_other = $('#cid_reasonfornobnnumber_other').val();
     }
     else {
         var cid_has_cra_bn = '{{user.cid_has_cra_bn}}';
         cid_has_cra_bn = (cid_has_cra_bn == "true" ? 1 : 0);
         var cid_crabusinessnumber = '{{user.cid_crabusinessnumber}}';
         var cid_reasonfornobnnumber = "{{user.cid_reasonfornobnnumber.Value}}";
-        var cid_reasonfornobnnumber_other = "{{user.cid_reasonfornobnnumber_other}}";
-        var cid_legalname = "{{user.cid_legalname}}";
-        var cid_operatingname = "{{user.cid_operatingname}}";
-        var address1_line1 = "{{user.address1_line1}}";
-        var address1_line2 = "{{user.address1_line2}}";
-        var address1_line3 = "{{user.address1_line3}}";
-        var address1_city = "{{user.address1_city}}";
-        var address1_stateorprovince = "{{user.address1_stateorprovince}}";
-        var address1_postalcode = "{{user.address1_postalcode}}";
-        var address1_country = "{{user.address1_country}}";
+        var cid_reasonfornobnnumber_other = tdg.c.replace_special_char("{{user.cid_reasonfornobnnumber_other}}");
+        var cid_legalname = tdg.c.replace_special_char("{{user.cid_legalname}}");
+        var cid_operatingname = tdg.c.replace_special_char("{{user.cid_operatingname}}");
+        var address1_line1 = tdg.c.replace_special_char("{{user.address1_line1}}");
+        var address1_line2 = tdg.c.replace_special_char("{{user.address1_line2}}");
+        var address1_line3 = tdg.c.replace_special_char("{{user.address1_line3}}");
+        var address1_city = tdg.c.replace_special_char("{{user.address1_city}}");
+        var address1_stateorprovince = tdg.c.replace_special_char("{{user.address1_stateorprovince}}");
+        var address1_postalcode = tdg.c.replace_special_char("{{user.address1_postalcode}}");
+        var address1_country = tdg.c.replace_special_char("{{user.address1_country}}");
 
         $("#address1_line1").val(address1_line1);
         $("#address1_line2").val(address1_line2);
@@ -54,8 +58,8 @@ $(document).ready(function () {
     tdg.c.control_hide("cid_has_cra_bn");
     sessionStorage.setItem("AddressLine1Text", address1_line1);
 
-    tdg.c.replace_special_char(cid_legalname);
-    tdg.c.replace_special_char(cid_operatingname);
+    cid_legalname = tdg.c.replace_special_char(cid_legalname);
+    cid_operatingname = tdg.c.replace_special_char(cid_operatingname);
 
     // do not have a business number?
     if (cid_has_cra_bn != "1") {
@@ -89,6 +93,9 @@ $(document).ready(function () {
     if (step_start != "2") {
         $("#ovs_legalname").val(cid_legalname);
         $("#name").val(cid_operatingname);
+        debugger;
+        var value = $("#address1_line1").val();
+        address1_line1_set(value);
     }
 
     $('#cid_crabusinessnumber').attr("readonly", true);
@@ -117,13 +124,17 @@ $(document).ready(function () {
     $("#fax").attr("autocomplete", "new-password");
     $("#cid_reasonfornobnnumber_other").attr("autocomplete", "new-password");
     $("#websiteurl").attr("autocomplete", "new-password");
+
+    // default canada
+    $('#address1_country').attr("readonly", true);
+    $('#address1_country').val("Canada");
 });
 
 function advanced_form_header() {
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
-    var companyName = '{{user.parentcustomerid.name }}';
+    var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name}}');
 
     try {
         var value = tdg.error_message.message("m000009");
@@ -158,6 +169,16 @@ function AddressComplete_Hide_address1_line1() {
 function AddressComplete_address1_line1() {
     debugger;
     $("#address1_line1").val(sessionStorage.getItem("Line1"));
+}
+
+function address1_line1_set(value) {
+    debugger;
+
+    try {
+        var f = document.getElementById("WebResource_address_complete");
+        var c = f.contentWindow;
+        c.document.getElementById("address1_line1").value = value;
+    } catch (e) { }
 }
 
 function AddressComplete_Selected() {

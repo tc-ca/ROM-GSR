@@ -23,7 +23,7 @@ $(document).ready(function () {
 			var msg = tdg.error_message.message("m000010");	// Choose the same named button found below
 			tdg.c.dialog_OK(msg);
 		});
-    }
+	}
 
 	$("legend").each(function () {
 		$(this).removeClass();
@@ -43,77 +43,19 @@ function header_setup() {
 		var text = item.innerText;
 		var className = item.className;
 
-		// 1st step?
+		// 1st step + 2nd step?
 		if ((i == 0 || i == 1) && (className == "list-group-item active")) {
-			code = "m000008";	// Company Registration Wizard
+			code = "m000008";	// Company Registration
+			break;
 		}
-
 		//text = tdg.error_message.message(text);
 		//item.innerText = text;
 	}
 
 	try {
-		var selected = $('.li.list-group-item active');
-		var companyName = '{{user.parentcustomerid.name}}';
+		var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name}}');
 		var value = tdg.error_message.message(code);
 		value = value.replace("{0}", companyName);
 		$('.page-header h1').text(value);
 	} catch (e) { }
-
-	top_menu();
-}
-
-function top_menu() {
-	debugger;
-
-	return;
-
-	// top menu
-	var list = $("ul.nav.navbar-nav.weblinks");
-	for (var i = 0; i < list.length; i++) {
-		var item = list[i];
-
-		var list_set1 = $(item).find('li');
-		for (var j = 0; j < list_set1.length; j++) {
-			var item2 = list_set1[j];
-			if (item2.innerText != "") {
-				var href = $(item2).find("a");
-
-				// no href?
-				if (href.length == 0) {
-					var text = item2.innerText;
-					if (text != "") {
-						text = text + " _FR";
-						//text = tdg.error_message.message(text);
-						item2.outerText = text;
-					}
-				}
-				else {
-					var text = item2.innerText + "_FR";
-					var text = "\n  <a " + href[0].attributes[0] + " title='" + text + "'>" + text + "</a>\n ";
-					item2.innerHTML = text;
-				}
-            }
-        }
-	}
-
-	return;
-
-	// breadcrumb
-	var list = $("ul.breadcrumb");
-	for (var i = 0; i < list.length; i++) {
-		var item = list[i];
-
-		var list_set1 = $(item).find('li');
-		for (var j = 0; j < list_set1.length; j++) {
-			var item2 = list_set1[j];
-			var text = item2.outerText;
-			if (text != "") {
-				text = text + " _FR";
-				//text = tdg.error_message.message(text);
-				item2.outerText = text;
-			}
-		}
-	}
-
 }

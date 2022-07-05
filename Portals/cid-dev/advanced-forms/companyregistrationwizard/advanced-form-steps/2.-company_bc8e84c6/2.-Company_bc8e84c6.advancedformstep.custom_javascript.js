@@ -4,7 +4,7 @@
 $(document).ready(function () {
     debugger;
 
-    var companyName = '{{user.parentcustomerid.name }}';
+    var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name }}');
     if (companyName) {
         $(".previous-btn").attr('disabled', true);
     }
@@ -14,6 +14,7 @@ $(document).ready(function () {
     $("#websiteurl").width('100%');
 
     $("#telephone1").attr("placeholder", "");
+    tdg.c.control_hide("cid_reasonfornobnnumber_other");
 
     var step_start = sessionStorage.getItem("step_start");
     step_start = (step_start == "null" ? "" : step_start);
@@ -24,12 +25,9 @@ $(document).ready(function () {
     var cid_has_cra_bn = (cid_has_cra_bn == "true" ? 1 : 0);
     var cid_crabusinessnumber = '{{user.cid_crabusinessnumber}}';
     var cid_reasonfornobnnumber = "{{user.cid_reasonfornobnnumber.Value}}";
-    var cid_reasonfornobnnumber_other = "{{user.cid_reasonfornobnnumber_other}}";
-    var cid_legalname = "{{user.cid_legalname}}";
-    var cid_operatingname = "{{user.cid_operatingname}}";
-
-    tdg.c.replace_special_char(cid_legalname);
-    tdg.c.replace_special_char(cid_operatingname);
+    var cid_reasonfornobnnumber_other = tdg.c.replace_special_char("{{user.cid_reasonfornobnnumber_other}}");
+    var cid_legalname = tdg.c.replace_special_char("{{user.cid_legalname}}");
+    var cid_operatingname = tdg.c.replace_special_char("{{user.cid_operatingname}}");
 
     $('#cid_has_cra_bn').val(cid_has_cra_bn);
     tdg.c.control_hide("cid_has_cra_bn");
@@ -47,7 +45,7 @@ $(document).ready(function () {
             $("#cid_reasonfornobnnumber_other").val(cid_reasonfornobnnumber_other);
         }
         else {
-            tdg.c.control_show("cid_reasonfornobnnumber_other");
+            tdg.c.control_hide("cid_reasonfornobnnumber_other");
         }
     }
     else {
@@ -58,8 +56,13 @@ $(document).ready(function () {
         $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
     }
 
-    $("#ovs_legalname").val(cid_legalname);
-    $("#name").val(cid_operatingname);
+    if (step_start != "2") {
+        $("#ovs_legalname").val(cid_legalname);
+        $("#name").val(cid_operatingname);
+        debugger;
+        var value = $("#address1_line1").val();
+        address1_line1_set(value);
+    }
 
     $('#cid_crabusinessnumber').attr("readonly", true);
     $('#ovs_legalname').attr("readonly", true);
@@ -74,13 +77,13 @@ $(document).ready(function () {
     tdg.c.addValidator("address1_country");
 
     if (step_start == "1") {
-        var address1_line1 = "{{user.address1_line1}}";
-        var address1_line2 = "{{user.address1_line2}}";
-        var address1_line3 = "{{user.address1_line3}}";
-        var address1_city = "{{user.address1_city}}";
-        var address1_stateorprovince = "{{user.address1_stateorprovince}}";
-        var address1_postalcode = "{{user.address1_postalcode}}";
-        var address1_country = "{{user.address1_country}}";
+        var address1_line1 = tdg.c.replace_special_char("{{user.address1_line1}}");
+        var address1_line2 = tdg.c.replace_special_char("{{user.address1_line2}}");
+        var address1_line3 = tdg.c.replace_special_char("{{user.address1_line3}}");
+        var address1_city = tdg.c.replace_special_char("{{user.address1_city}}");
+        var address1_stateorprovince = tdg.c.replace_special_char("{{user.address1_stateorprovince}}");
+        var address1_postalcode = tdg.c.replace_special_char("{{user.address1_postalcode}}");
+        var address1_country = tdg.c.replace_special_char("{{user.address1_country}}");
 
         $("#address1_line1").val(address1_line1);
         $("#address1_line2").val(address1_line2);
@@ -107,6 +110,17 @@ $(document).ready(function () {
     $("#fax").attr("autocomplete", "new-password");
     $("#cid_reasonfornobnnumber_other").attr("autocomplete", "new-password");
     $("#websiteurl").attr("autocomplete", "new-password");
+
+    //Add listeners for the address fields to change the "manually entered" flag
+    $("#address1_line1").attr("oninput", "setManualAddressEntryFlag()");
+    $("#address1_city").attr("oninput", "setManualAddressEntryFlag()");
+    $("#address1_stateorprovince").attr("oninput", "setManualAddressEntryFlag()");
+    $("#address1_postalcode").attr("oninput", "setManualAddressEntryFlag()");
+    $("#address1_country").attr("oninput", "setManualAddressEntryFlag()");
+
+    // default canada
+    $('#address1_country').attr("readonly", true);
+    $('#address1_country').val("Canada");
 });
 
 if (window.jQuery) {
@@ -129,6 +143,16 @@ function AddressComplete_address1_line1() {
     $("#address1_line1").val(sessionStorage.getItem("Line1"));
 }
 
+function address1_line1_set(value) {
+    debugger;
+
+    try {
+        var f = document.getElementById("WebResource_address_complete");
+        var c = f.contentWindow;
+        c.document.getElementById("address1_line1").value = value;
+    } catch (e) { }
+}
+
 function AddressComplete_Selected() {
     debugger;
     $("#address1_line1").val(sessionStorage.getItem("Line1"));
@@ -138,4 +162,5 @@ function AddressComplete_Selected() {
     $("#address1_stateorprovince").val(sessionStorage.getItem("ProvinceName"));
     $("#address1_postalcode").val(sessionStorage.getItem("PostalCode"));
     $("#address1_country").val(sessionStorage.getItem("CountryName"));
+    $("#cid_addressoverwritten").val(0);
 }

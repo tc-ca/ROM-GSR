@@ -127,7 +127,12 @@ if (window.jQuery) {
                 debugger;
 
                 legalname = $("#cid_legalname").val();
+
+                // for apostrophe, use two apostrophe to escape it:
+                legalname = legalname.replace("'", "''");
+
                 filter = "ovs_legalname eq '" + legalname + "'";
+                filter = filter.replace("&", "%26");
                 rom_data = tdg.c.OData_List("account", filter);
                 if (rom_data.length > 0) {
                     rom_data = rom_data[0];

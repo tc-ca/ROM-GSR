@@ -19,6 +19,15 @@
           "name": "shared_webcontents"
         }
       },
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
       "shared_sendmail": {
         "runtimeSource": "embedded",
         "connection": {
@@ -28,13 +37,13 @@
           "name": "shared_sendmail"
         }
       },
-      "shared_commondataserviceforapps": {
+      "shared_sendmail_1": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+          "connectionReferenceLogicalName": "cid_sharedsendmail_2ba8f"
         },
         "api": {
-          "name": "shared_commondataserviceforapps"
+          "name": "shared_sendmail"
         }
       }
     },
@@ -96,32 +105,9 @@
                 "authentication": "@parameters('$authentication')"
               }
             },
-            "List_Classes": {
-              "runAfter": {
-                "List_rows_UNNumber": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "a286252a-94ac-4046-9988-64bbb54ee813"
-              },
-              "type": "OpenApiConnection",
-              "inputs": {
-                "host": {
-                  "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "ListRecords",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                },
-                "parameters": {
-                  "entityName": "stringmaps",
-                  "fetchXml": "<fetch>\n  <entity name=\"stringmap\" >\n    <attribute name=\"attributevalue\" />\n    <attribute name=\"attributename\" />\n    <attribute name=\"value\" />\n    <filter>\n\n      <condition attribute=\"attributename\" operator=\"eq\" value=\"ovs_primeclass\" />\n     \n    </filter>\n  </entity>\n</fetch>"
-                },
-                "authentication": "@parameters('$authentication')"
-              }
-            },
             "List_All_Accounts": {
               "runAfter": {
-                "List_Classes": [
+                "List-rows-division-classes": [
                   "Succeeded"
                 ]
               },
@@ -182,7 +168,7 @@
               "type": "Query",
               "inputs": {
                 "from": "@outputs('Invoke_an_HTTP_request_Get_Site_Table')?['body']['value']",
-                "where": "@greater(length(item()['values'][0][26]), 0)"
+                "where": "@greater(length(item()['values'][0][int(outputs('SiteFullAddress'))]), 0)"
               }
             },
             "Invoke_an_HTTP_request_Get_Extended_info_table": {
@@ -212,7 +198,7 @@
               }
             },
             "For_each_site_from_http_request": {
-              "foreach": "@body('Filter_table_-_get_none_empty_cells_sites_for_insert_')",
+              "foreach": "@body('Select_Site_List')",
               "actions": {
                 "Current_row": {
                   "runAfter": {},
@@ -247,7 +233,7 @@
                       "type": "Query",
                       "inputs": {
                         "from": "@outputs('List_All_Accounts')?['body/value']",
-                        "where": "@and( equals( length(string(outputs('current_row')['values'][0][26])),0)  , equals(item()?['address1_line1'], toUpper(outputs('current_row')['values'][0][1])), equals(item()?['address1_city'], toUpper(outputs('current_row')['values'][0][2])), equals(item()?['address1_stateorprovince'], toUpper(outputs('current_row')['values'][0][3])))"
+                        "where": "@and(equals(length(string(outputs('current_row')['SiteGUID'])),0) , equals(item()?['address1_line1'], toUpper(outputs('current_row')['Address1'])),\nequals(item()?['address1_city'], toUpper(outputs('current_row')['City'])), \nequals(item()?['address1_stateorprovince'], toUpper(outputs('current_row')['Province'])))"
                       }
                     },
                     "Check_if_address_exists_in_the_database": {
@@ -336,7 +322,7 @@
                                       "operationMetadataId": "7eab0b76-4c57-41ae-b81a-9d1db24be760"
                                     },
                                     "type": "Compose",
-                                    "inputs": "@outputs('current_row')['values'][0][3]"
+                                    "inputs": "@outputs('current_row')['Province']"
                                   },
                                   "Get_call_Canada_Geo_Api_to_get_province_2": {
                                     "runAfter": {
@@ -350,7 +336,7 @@
                                     "type": "Http",
                                     "inputs": {
                                       "method": "GET",
-                                      "uri": "https://geogratis.gc.ca/services/geoname/en/geonames.json?q=@{outputs('current_row')['values'][0][2]}",
+                                      "uri": "https://geogratis.gc.ca/services/geoname/en/geonames.json?q=@{Trim(toLower(outputs('current_row')['City']))}",
                                       "headers": {
                                         "accept": "application/json"
                                       }
@@ -398,7 +384,7 @@
                                               "type": "SetVariable",
                                               "inputs": {
                                                 "name": "IsErrorFree",
-                                                "value": "@false"
+                                                "value": "@true"
                                               }
                                             },
                                             "Append_to_array_-_City_doesn't_belong_to_province": {
@@ -421,7 +407,7 @@
                                                 }
                                               }
                                             },
-                                            "Filter_array_Bulk008": {
+                                            "Filter_array_B1013": {
                                               "runAfter": {
                                                 "Set_is_error_free_to_false_for_city_match_with_province_2": [
                                                   "Succeeded"
@@ -433,12 +419,12 @@
                                               "type": "Query",
                                               "inputs": {
                                                 "from": "@variables('Messages_Array')",
-                                                "where": "@equals(item()['code'], 'Bulk008')"
+                                                "where": "@equals(item()['code'], 'B1013')"
                                               }
                                             },
                                             "Set_variable_Error_Message_8": {
                                               "runAfter": {
-                                                "Filter_array_Bulk008": [
+                                                "Filter_array_B1013": [
                                                   "Succeeded"
                                                 ]
                                               },
@@ -448,7 +434,7 @@
                                               "type": "SetVariable",
                                               "inputs": {
                                                 "name": "Error_Message",
-                                                "value": "@{body('Filter_array_Bulk008')[0]['Message']}"
+                                                "value": "@{body('Filter_array_B1013')[0]['Message']}"
                                               }
                                             },
                                             "Add_Bulk_Log_details_Bulk008": {
@@ -469,9 +455,9 @@
                                                 },
                                                 "parameters": {
                                                   "entityName": "cid_bulkactivitylogsdetailses",
-                                                  "item/cid_BulkActivityLogSummary@odata.bind": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_bulkactivitylogsummaryid']",
+                                                  "item/cid_BulkActivityLogSummary@odata.bind": "@concat('\\cid_bulkactivitylogsummaries\\',triggerOutputs()?['body/cid_bulkactivitylogsummaryid'])",
                                                   "item/cid_errordetails": "@variables('Error_Message')",
-                                                  "item/cid_errorwarningcode": "Bulk008",
+                                                  "item/cid_errorwarningcode": "B1013",
                                                   "item/cid_excelcolumnname": "City",
                                                   "item/cid_excelrownumber": "@outputs('Current_Row_number')",
                                                   "item/cid_excelsheetname": "Add Basic Info",
@@ -496,13 +482,13 @@
                                       }
                                     },
                                     "runAfter": {
-                                      "Get_call_Canada_Geo_Api_to_get_province_2": [
+                                      "CityName": [
                                         "Succeeded"
                                       ]
                                     },
                                     "else": {
                                       "actions": {
-                                        "Set_variable_error_free_to_false_for_city_not_correct_2": {
+                                        "Set_variable_error_free_to_false_for_city_not_correct_2_#": {
                                           "runAfter": {},
                                           "metadata": {
                                             "operationMetadataId": "3e23e089-210a-4907-8ba3-fb9fc8b12b3d"
@@ -510,7 +496,7 @@
                                           "type": "SetVariable",
                                           "inputs": {
                                             "name": "IsErrorFree",
-                                            "value": "@false"
+                                            "value": "@true"
                                           }
                                         },
                                         "Append_to_array_-_City_doesn't_belong_to_province_2": {
@@ -533,9 +519,9 @@
                                             }
                                           }
                                         },
-                                        "Filter_array_Bulk007": {
+                                        "Filter_array_B1012": {
                                           "runAfter": {
-                                            "Set_variable_error_free_to_false_for_city_not_correct_2": [
+                                            "Set_variable_error_free_to_false_for_city_not_correct_2_#": [
                                               "Succeeded"
                                             ]
                                           },
@@ -545,12 +531,12 @@
                                           "type": "Query",
                                           "inputs": {
                                             "from": "@variables('Messages_Array')",
-                                            "where": "@equals(item()['code'], 'Bulk007')"
+                                            "where": "@equals(item()['code'], 'B1012')"
                                           }
                                         },
                                         "Set_variable_Error_Message_Bulk007": {
                                           "runAfter": {
-                                            "Filter_array_Bulk007": [
+                                            "Filter_array_B1012": [
                                               "Succeeded"
                                             ]
                                           },
@@ -560,7 +546,7 @@
                                           "type": "SetVariable",
                                           "inputs": {
                                             "name": "Error_Message",
-                                            "value": "@{Replace(body('Filter_array_Bulk007')[0]['Message'] , '{0}' , outputs('current_row')['values'][0][2])}"
+                                            "value": "@{Replace(body('Filter_array_B1012')[0]['Message'] , '{0}' , outputs('CityName'))}"
                                           }
                                         },
                                         "Add_Bulk_Log_details_Bulk007": {
@@ -581,9 +567,9 @@
                                             },
                                             "parameters": {
                                               "entityName": "cid_bulkactivitylogsdetailses",
-                                              "item/cid_BulkActivityLogSummary@odata.bind": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_bulkactivitylogsummaryid']",
+                                              "item/cid_BulkActivityLogSummary@odata.bind": "@concat('\\cid_bulkactivitylogsummaries\\',triggerOutputs()?['body/cid_bulkactivitylogsummaryid'])",
                                               "item/cid_errordetails": "@variables('Error_Message')",
-                                              "item/cid_errorwarningcode": "Bulk007",
+                                              "item/cid_errorwarningcode": "B1012",
                                               "item/cid_excelcolumnname": "City",
                                               "item/cid_excelrownumber": "@outputs('Current_Row_number')",
                                               "item/cid_excelsheetname": "Add Basic Info",
@@ -605,6 +591,18 @@
                                       "operationMetadataId": "a9eea2f4-9c8d-4417-b0cc-5f707635bfcc"
                                     },
                                     "type": "If"
+                                  },
+                                  "CityName": {
+                                    "runAfter": {
+                                      "Get_call_Canada_Geo_Api_to_get_province_2": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "metadata": {
+                                      "operationMetadataId": "81202c9c-928b-469b-ae91-bff4c2633e78"
+                                    },
+                                    "type": "Compose",
+                                    "inputs": "@outputs('current_row')['City']"
                                   }
                                 },
                                 "runAfter": {},
@@ -617,7 +615,7 @@
                             "runAfter": {},
                             "expression": {
                               "greater": [
-                                "@length(outputs('current_row')['values'][0][2])",
+                                "@length(outputs('current_row')['City'])",
                                 0
                               ]
                             },
@@ -639,39 +637,331 @@
                       },
                       "type": "If"
                     },
-                    "Filter_array_-_Check_address_by_Legal_land_description": {
+                    "Check_lat_and_long_is_entered": {
+                      "actions": {
+                        "Filter_array_-_Check_address_by_Lat_and_Long": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "cb6ac0c8-ddde-45cd-b7c0-2d89c9b0c0d2"
+                          },
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@outputs('List_All_Accounts')?['body/value']",
+                            "where": "@and(\nequals(item()?['address1_latitude'], outputs('current_row')['Lat']), \nequals(item()?['address1_longitude'], outputs('current_row')['Long'])\n)"
+                          }
+                        },
+                        "Check_if_Lat_and_Long_already_exists": {
+                          "actions": {
+                            "Set_variable_error_free_B1022": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "3e23e089-210a-4907-8ba3-fb9fc8b12b3d"
+                              },
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "IsErrorFree",
+                                "value": "@false"
+                              }
+                            },
+                            "Filter_array_B1022": {
+                              "runAfter": {
+                                "Set_variable_error_free_B1022": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "80b29c84-7347-4907-bf75-cb1f1f4e2161"
+                              },
+                              "type": "Query",
+                              "inputs": {
+                                "from": "@variables('Messages_Array')",
+                                "where": "@equals(item()['code'], 'B1022')"
+                              }
+                            },
+                            "Set_variable_Error_Message_B1022": {
+                              "runAfter": {
+                                "Filter_array_B1022": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "cf2c55e7-ed16-4aa6-b13e-61c36959a8f5"
+                              },
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "Error_Message",
+                                "value": "@{body('Filter_array_B1022')[0]['Message']}"
+                              }
+                            },
+                            "Append_to_array_-_B1022": {
+                              "runAfter": {
+                                "Set_variable_Error_Message_B1022": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "0721f40e-9313-4b23-ac3a-e7e03fce1613"
+                              },
+                              "type": "AppendToArrayVariable",
+                              "inputs": {
+                                "name": "Error_List",
+                                "value": {
+                                  "SheetName": "Add Basic Info",
+                                  "Row#": "@{outputs('Current_Row_number')}",
+                                  "Site": "@{outputs('Current_Site_Address')}",
+                                  "Error": "@{variables('Error_Message')}"
+                                }
+                              }
+                            },
+                            "Add_Bulk_Log_details_B1022": {
+                              "runAfter": {
+                                "Append_to_array_-_B1022": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "7bd2c7c8-5212-4031-85a3-3de92b775314"
+                              },
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_commondataserviceforapps_1",
+                                  "operationId": "CreateRecord",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                },
+                                "parameters": {
+                                  "entityName": "cid_bulkactivitylogsdetailses",
+                                  "item/cid_BulkActivityLogSummary@odata.bind": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_bulkactivitylogsummaryid']",
+                                  "item/cid_errordetails": "@variables('Error_Message')",
+                                  "item/cid_errorwarningcode": "B1022",
+                                  "item/cid_excelrownumber": "@outputs('Current_Row_number')",
+                                  "item/cid_excelsheetname": "Add Basic Info",
+                                  "item/cid_sitelocation": "@outputs('Current_Site_Address')",
+                                  "item/cid_type": 100000000
+                                },
+                                "authentication": "@parameters('$authentication')"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Filter_array_-_Check_address_by_Lat_and_Long": [
+                              "Succeeded"
+                            ]
+                          },
+                          "expression": {
+                            "greater": [
+                              "@length(body('Filter_array_-_Check_address_by_Lat_and_Long'))",
+                              0
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "d7e399d1-4f8a-41a9-8794-90af77dd6e57"
+                          },
+                          "type": "If"
+                        }
+                      },
+                      "runAfter": {
+                        "Check_Legal_Land_description_": [
+                          "Succeeded"
+                        ]
+                      },
+                      "expression": {
+                        "and": [
+                          {
+                            "greater": [
+                              "@length(string(outputs('current_row')['Lat']))",
+                              0
+                            ]
+                          },
+                          {
+                            "greater": [
+                              "@length(string(outputs('current_row')['Long']))",
+                              0
+                            ]
+                          },
+                          {
+                            "lessOrEquals": [
+                              "@length(string(outputs('current_row')['SiteGUID']))",
+                              0
+                            ]
+                          }
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "13085156-71dc-4e0a-9271-2067f2045a7c"
+                      },
+                      "type": "If"
+                    },
+                    "Check_Legal_Land_description_": {
+                      "actions": {
+                        "Check_if_Legal_land_description_already_exists": {
+                          "actions": {
+                            "Set_variable_error_free_B1019": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "3e23e089-210a-4907-8ba3-fb9fc8b12b3d"
+                              },
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "IsErrorFree",
+                                "value": "@false"
+                              }
+                            },
+                            "Filter_array_B1019": {
+                              "runAfter": {
+                                "Set_variable_error_free_B1019": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "80b29c84-7347-4907-bf75-cb1f1f4e2161"
+                              },
+                              "type": "Query",
+                              "inputs": {
+                                "from": "@variables('Messages_Array')",
+                                "where": "@equals(item()['code'], 'B1022')"
+                              }
+                            },
+                            "Set_variable_Error_Message_B1019": {
+                              "runAfter": {
+                                "Filter_array_B1019": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "cf2c55e7-ed16-4aa6-b13e-61c36959a8f5"
+                              },
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "Error_Message",
+                                "value": "@{body('Filter_array_B1019')[0]['Message']}"
+                              }
+                            },
+                            "Append_to_array_-_B1019": {
+                              "runAfter": {
+                                "Set_variable_Error_Message_B1019": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "0721f40e-9313-4b23-ac3a-e7e03fce1613"
+                              },
+                              "type": "AppendToArrayVariable",
+                              "inputs": {
+                                "name": "Error_List",
+                                "value": {
+                                  "SheetName": "Add Basic Info",
+                                  "Row#": "@{outputs('Current_Row_number')}",
+                                  "Site": "@{outputs('Current_Site_Address')}",
+                                  "Error": "@{variables('Error_Message')}"
+                                }
+                              }
+                            },
+                            "Add_Bulk_Log_details_B1019": {
+                              "runAfter": {
+                                "Append_to_array_-_B1019": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "7bd2c7c8-5212-4031-85a3-3de92b775314"
+                              },
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_commondataserviceforapps_1",
+                                  "operationId": "CreateRecord",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                },
+                                "parameters": {
+                                  "entityName": "cid_bulkactivitylogsdetailses",
+                                  "item/cid_BulkActivityLogSummary@odata.bind": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_bulkactivitylogsummaryid']",
+                                  "item/cid_errordetails": "@variables('Error_Message')",
+                                  "item/cid_errorwarningcode": "B1019",
+                                  "item/cid_excelrownumber": "@outputs('Current_Row_number')",
+                                  "item/cid_excelsheetname": "Add Basic Info",
+                                  "item/cid_sitelocation": "@outputs('Current_Site_Address')",
+                                  "item/cid_type": 100000000
+                                },
+                                "authentication": "@parameters('$authentication')"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Filter_array_-_Check_address_by_Legal_land_description": [
+                              "Succeeded"
+                            ]
+                          },
+                          "expression": {
+                            "greater": [
+                              "@length(body('Filter_array_-_Check_address_by_Legal_land_description'))",
+                              0
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "109a3c27-c25a-444b-9204-3d8cae3fb146"
+                          },
+                          "type": "If"
+                        },
+                        "Filter_array_-_Check_address_by_Legal_land_description": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "cb6ac0c8-ddde-45cd-b7c0-2d89c9b0c0d2"
+                          },
+                          "type": "Query",
+                          "inputs": {
+                            "from": "@outputs('List_All_Accounts')?['body/value']",
+                            "where": "@and\n(\nequals(item()?['ovs_lld_quarter@OData.Community.Display.V1.FormattedValue'], toUpper(outputs('current_row')['Quarter'])),\nequals(item()?['ovs_lld_section@OData.Community.Display.V1.FormattedValue'], toUpper(outputs('current_row')['Section'])),\nequals(item()?['ovs_lld_township@OData.Community.Display.V1.FormattedValue'],toUpper(outputs('current_row')['TownShip'])),\nequals(item()?['ovs_lld_range@OData.Community.Display.V1.FormattedValue'],toUpper(outputs('current_row')['Range'])) ,\nequals(item()?['ovs_lld_meridian@OData.Community.Display.V1.FormattedValue'], outputs('current_row')['Meridian'])\n)\n"
+                          }
+                        }
+                      },
                       "runAfter": {
                         "Check_if_address_exists_in_the_database": [
                           "Succeeded"
                         ]
                       },
-                      "metadata": {
-                        "operationMetadataId": "cb6ac0c8-ddde-45cd-b7c0-2d89c9b0c0d2"
-                      },
-                      "type": "Query",
-                      "inputs": {
-                        "from": "@outputs('List_All_Accounts')?['body/value']",
-                        "where": "@and(\nequals(item()?['ovs_lld_quarter@OData.Community.Display.V1.FormattedValue'], toUpper(outputs('current_row')['values'][0][8])), \nequals(item()?['ovs_lld_section@OData.Community.Display.V1.FormattedValue'], toUpper(outputs('current_row')['values'][0][9])), \nequals(item()?['ovs_lld_township@OData.Community.Display.V1.FormattedValue'], toUpper(outputs('current_row')['values'][0][10])), \nequals(item()?['ovs_lld_range@OData.Community.Display.V1.FormattedValue'], toUpper(outputs('current_row')['values'][0][11])), \nequals(item()?['ovs_lld_meridian@OData.Community.Display.V1.FormattedValue'], outputs('current_row')['values'][0][12])\n)"
-                      }
-                    },
-                    "Filter_array_-_Check_address_by_Lat_and_Long": {
-                      "runAfter": {
-                        "Filter_array_-_Check_address_by_Legal_land_description": [
-                          "Succeeded"
+                      "expression": {
+                        "and": [
+                          {
+                            "greater": [
+                              "@length(string(outputs('current_row')['Section']))",
+                              0
+                            ]
+                          },
+                          {
+                            "greater": [
+                              "@length(string(outputs('current_row')['TownShip']))",
+                              0
+                            ]
+                          },
+                          {
+                            "lessOrEquals": [
+                              "@length(string(outputs('current_row')['SiteGUID']))",
+                              0
+                            ]
+                          },
+                          {
+                            "greater": [
+                              "@length(string(outputs('current_row')['Range']))",
+                              0
+                            ]
+                          },
+                          {
+                            "greater": [
+                              "@length(string(outputs('current_row')['Meridian']))",
+                              0
+                            ]
+                          }
                         ]
                       },
                       "metadata": {
-                        "operationMetadataId": "cb6ac0c8-ddde-45cd-b7c0-2d89c9b0c0d2"
+                        "operationMetadataId": "13085156-71dc-4e0a-9271-2067f2045a7c"
                       },
-                      "type": "Query",
-                      "inputs": {
-                        "from": "@outputs('List_All_Accounts')?['body/value']",
-                        "where": "@and(\nequals(item()?['address1_latitude'], outputs('current_row')['values'][0][13]), \nequals(item()?['address1_latitude'], outputs('current_row')['values'][0][14])\n)"
-                      }
+                      "type": "If"
                     }
                   },
                   "runAfter": {
-                    "Current_Site_Address": [
+                    "Class_Check_Logic": [
                       "Succeeded"
                     ]
                   },
@@ -776,7 +1066,7 @@
                             "runAfter": {},
                             "expression": {
                               "lessOrEquals": [
-                                "@length(outputs('current_row')['values'][0][1])",
+                                "@length(outputs('current_row')['Address1'])",
                                 0
                               ]
                             },
@@ -886,7 +1176,7 @@
                             },
                             "expression": {
                               "lessOrEquals": [
-                                "@length(outputs('current_row')['values'][0][3])",
+                                "@length(outputs('current_row')['Province'])",
                                 0
                               ]
                             },
@@ -996,7 +1286,7 @@
                             },
                             "expression": {
                               "lessOrEquals": [
-                                "@length(outputs('current_row')['values'][0][4])",
+                                "@length(outputs('current_row')['PostalCode'])",
                                 0
                               ]
                             },
@@ -1091,7 +1381,7 @@
                             },
                             "expression": {
                               "lessOrEquals": [
-                                "@length(outputs('current_row')['values'][0][2])",
+                                "@length(outputs('current_row')['City'])",
                                 0
                               ]
                             },
@@ -1203,7 +1493,7 @@
                                   "runAfter": {},
                                   "expression": {
                                     "lessOrEquals": [
-                                      "@length(outputs('current_row')['values'][0][9])",
+                                      "@length(string(outputs('current_row')['Section']))",
                                       0
                                     ]
                                   },
@@ -1313,7 +1603,7 @@
                                   },
                                   "expression": {
                                     "lessOrEquals": [
-                                      "@length(outputs('current_row')['values'][0][10])",
+                                      "@length(string(outputs('current_row')['TownShip']))",
                                       0
                                     ]
                                   },
@@ -1423,7 +1713,7 @@
                                   },
                                   "expression": {
                                     "lessOrEquals": [
-                                      "@length(outputs('current_row')['values'][0][11])",
+                                      "@length(string(outputs('current_row')['Range']))",
                                       0
                                     ]
                                   },
@@ -1533,7 +1823,7 @@
                                   },
                                   "expression": {
                                     "lessOrEquals": [
-                                      "@length(outputs('current_row')['values'][0][12])",
+                                      "@length(string(outputs('current_row')['Meridian']))",
                                       0
                                     ]
                                   },
@@ -1558,7 +1848,7 @@
                                             "type": "Query",
                                             "inputs": {
                                               "from": "@variables('Messages_Array')",
-                                              "where": "@equals(item()['code'], 'Bulk016')"
+                                              "where": "@equals(item()['code'], 'B1020')"
                                             }
                                           },
                                           "Append_to_array_variable_4_Errorlist_7": {
@@ -1645,7 +1935,7 @@
                                         "runAfter": {},
                                         "expression": {
                                           "lessOrEquals": [
-                                            "@length(outputs('current_row')['values'][0][13])",
+                                            "@length(string(outputs('current_row')['Lat']))",
                                             0
                                           ]
                                         },
@@ -1755,7 +2045,7 @@
                                         },
                                         "expression": {
                                           "lessOrEquals": [
-                                            "@length(outputs('current_row')['values'][0][14])",
+                                            "@length(string(outputs('current_row')['Long']))",
                                             0
                                           ]
                                         },
@@ -1770,13 +2060,13 @@
                                       "or": [
                                         {
                                           "greater": [
-                                            "@length(string(outputs('current_row')['values'][0][13]))",
+                                            "@length(string(outputs('current_row')['Lat']))",
                                             0
                                           ]
                                         },
                                         {
                                           "greater": [
-                                            "@length(string(outputs('current_row')['values'][0][14]))",
+                                            "@length(string(outputs('current_row')['Long']))",
                                             0
                                           ]
                                         }
@@ -1793,25 +2083,25 @@
                                 "or": [
                                   {
                                     "greater": [
-                                      "@length(string(outputs('current_row')['values'][0][9]))",
+                                      "@length(string(outputs('current_row')['Section']))",
                                       0
                                     ]
                                   },
                                   {
                                     "greater": [
-                                      "@length(string(outputs('current_row')['values'][0][10]))",
+                                      "@length(string(outputs('current_row')['TownShip']))",
                                       0
                                     ]
                                   },
                                   {
                                     "greater": [
-                                      "@length(string(outputs('current_row')['values'][0][11]))",
+                                      "@length(string(outputs('current_row')['Range']))",
                                       0
                                     ]
                                   },
                                   {
                                     "greater": [
-                                      "@length(string(outputs('current_row')['values'][0][12]))",
+                                      "@length(string(outputs('current_row')['Meridian']))",
                                       0
                                     ]
                                   }
@@ -1830,35 +2120,27 @@
                               "or": [
                                 {
                                   "greater": [
-                                    "@length(outputs('current_row')['values'][0][1])",
+                                    "@length(outputs('current_row')['Address1'])",
                                     0
                                   ]
                                 },
                                 {
                                   "greater": [
-                                    "@length(outputs('current_row')['values'][0][2])",
+                                    "@length(outputs('current_row')['City'])",
                                     0
                                   ]
                                 },
                                 {
                                   "greater": [
-                                    "@length(outputs('current_row')['values'][0][3])",
+                                    "@length(outputs('current_row')['Province'])",
                                     0
                                   ]
                                 },
                                 {
                                   "greater": [
-                                    "@length(outputs('current_row')['values'][0][4])",
+                                    "@length(outputs('current_row')['PostalCode'])",
                                     0
                                   ]
-                                },
-                                {
-                                  "not": {
-                                    "equals": [
-                                      "@outputs('current_row')['values'][0][23]",
-                                      "@null"
-                                    ]
-                                  }
                                 }
                               ]
                             }
@@ -1877,32 +2159,32 @@
                         "and": [
                           {
                             "greater": [
-                              "@length(outputs('current_row')['values'][0][1])",
+                              "@length(outputs('current_row')['Address1'])",
                               0
                             ]
                           },
                           {
                             "greater": [
-                              "@length(outputs('current_row')['values'][0][2])",
+                              "@length(outputs('current_row')['City'])",
                               0
                             ]
                           },
                           {
                             "greater": [
-                              "@length(outputs('current_row')['values'][0][3])",
+                              "@length(outputs('current_row')['Province'])",
                               0
                             ]
                           },
                           {
                             "greater": [
-                              "@length(outputs('current_row')['values'][0][4])",
+                              "@length(outputs('current_row')['PostalCode'])",
                               0
                             ]
                           },
                           {
                             "not": {
                               "equals": [
-                                "@outputs('current_row')['values'][0][23]",
+                                "@outputs('current_row')['Class']",
                                 "@null"
                               ]
                             }
@@ -1913,25 +2195,25 @@
                         "and": [
                           {
                             "greater": [
-                              "@length(string(outputs('current_row')['values'][0][9]))",
+                              "@length(string(outputs('current_row')['Range']))",
                               0
                             ]
                           },
                           {
                             "greater": [
-                              "@length(string(outputs('current_row')['values'][0][10]))",
+                              "@length(string(outputs('current_row')['Section']))",
                               0
                             ]
                           },
                           {
                             "greater": [
-                              "@length(string(outputs('current_row')['values'][0][11]))",
+                              "@length(string(outputs('current_row')['TownShip']))",
                               0
                             ]
                           },
                           {
                             "greater": [
-                              "@length(string(outputs('current_row')['values'][0][12]))",
+                              "@length(string(outputs('current_row')['Meridian']))",
                               0
                             ]
                           }
@@ -1941,13 +2223,13 @@
                         "and": [
                           {
                             "greater": [
-                              "@length(string(outputs('current_row')['values'][0][13]))",
+                              "@length(string(outputs('current_row')['Lat']))",
                               0
                             ]
                           },
                           {
                             "greater": [
-                              "@length( string(outputs('current_row')['values'][0][14]))",
+                              "@length( string(outputs('current_row')['Long']))",
                               0
                             ]
                           }
@@ -1959,296 +2241,6 @@
                     "operationMetadataId": "74bae040-97ca-4985-9ad3-540d32283954"
                   },
                   "type": "If"
-                },
-                "Class_Check_Logic": {
-                  "actions": {
-                    "Class_Field_Length": {
-                      "runAfter": {},
-                      "metadata": {
-                        "operationMetadataId": "83a95fc0-dcc2-41e7-a5e1-312025c479b4"
-                      },
-                      "type": "Compose",
-                      "inputs": "@length(Trim(outputs('current_row')['values'][0][23]))"
-                    },
-                    "Check_Class_Length": {
-                      "actions": {
-                        "Split_classes": {
-                          "runAfter": {},
-                          "metadata": {
-                            "operationMetadataId": "e0dca524-c854-4512-87a5-c52c0631f446"
-                          },
-                          "type": "Compose",
-                          "inputs": "@split(outputs('current_row')['values'][0][23], ',')"
-                        },
-                        "Loop_in_Classes": {
-                          "foreach": "@outputs('Split_classes')",
-                          "actions": {
-                            "Current_Class_-_Add_site_sheet": {
-                              "runAfter": {},
-                              "metadata": {
-                                "operationMetadataId": "cd482863-072d-464f-9106-d280ae25998e"
-                              },
-                              "type": "Compose",
-                              "inputs": "@items('Loop_in_Classes')"
-                            },
-                            "Filter_array-Class-insert-sheet": {
-                              "runAfter": {
-                                "Current_Class_-_Add_site_sheet": [
-                                  "Succeeded"
-                                ]
-                              },
-                              "metadata": {
-                                "operationMetadataId": "22054bd7-c034-4375-845f-d7750e34a672"
-                              },
-                              "type": "Query",
-                              "inputs": {
-                                "from": "@outputs('List_Classes')?['body/value']",
-                                "where": "@equals(item()?['value'], trim(outputs('Current_Class_-_Add_site_sheet')))"
-                              }
-                            },
-                            "Check_if_class_doesn't_exists_in_database": {
-                              "actions": {
-                                "Set_variable_Error_free_to_false_for_Class_check": {
-                                  "runAfter": {},
-                                  "metadata": {
-                                    "operationMetadataId": "6854c04f-327e-4ed5-b17e-f8a85946dc59"
-                                  },
-                                  "type": "SetVariable",
-                                  "inputs": {
-                                    "name": "IsErrorFree",
-                                    "value": "@false"
-                                  }
-                                },
-                                "Append_to_array_variable_2": {
-                                  "runAfter": {
-                                    "Set_variable_Error_Message_10": [
-                                      "Succeeded"
-                                    ]
-                                  },
-                                  "metadata": {
-                                    "operationMetadataId": "e32a0cd3-5a79-4e05-a40b-2b6a328f57fa"
-                                  },
-                                  "type": "AppendToArrayVariable",
-                                  "inputs": {
-                                    "name": "Error_List",
-                                    "value": {
-                                      "SheetName": "Add Basic Info",
-                                      "Row#": "@{outputs('Current_Row_number')}",
-                                      "Site": "@{outputs('Current_Site_Address')}",
-                                      "Error": "@{variables('Error_Message')}"
-                                    }
-                                  }
-                                },
-                                "Filter_array_B1025": {
-                                  "runAfter": {
-                                    "Set_variable_Error_free_to_false_for_Class_check": [
-                                      "Succeeded"
-                                    ]
-                                  },
-                                  "metadata": {
-                                    "operationMetadataId": "80b29c84-7347-4907-bf75-cb1f1f4e2161"
-                                  },
-                                  "type": "Query",
-                                  "inputs": {
-                                    "from": "@variables('Messages_Array')",
-                                    "where": "@equals(item()['code'], 'B1025')"
-                                  }
-                                },
-                                "Set_variable_Error_Message_10": {
-                                  "runAfter": {
-                                    "Filter_array_B1025": [
-                                      "Succeeded"
-                                    ]
-                                  },
-                                  "metadata": {
-                                    "operationMetadataId": "cf2c55e7-ed16-4aa6-b13e-61c36959a8f5"
-                                  },
-                                  "type": "SetVariable",
-                                  "inputs": {
-                                    "name": "Error_Message",
-                                    "value": "@{Replace(body('Filter_array_B1025')[0]['Message'],'{0}' , outputs('Current_Class_-_Add_site_sheet'))}"
-                                  }
-                                },
-                                "Add_Bulk_Log_details_B1025": {
-                                  "runAfter": {
-                                    "Append_to_array_variable_2": [
-                                      "Succeeded"
-                                    ]
-                                  },
-                                  "metadata": {
-                                    "operationMetadataId": "31afab0a-9b91-40ca-ae1a-3cd7c9aeccb2"
-                                  },
-                                  "type": "OpenApiConnection",
-                                  "inputs": {
-                                    "host": {
-                                      "connectionName": "shared_commondataserviceforapps_1",
-                                      "operationId": "CreateRecord",
-                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                                    },
-                                    "parameters": {
-                                      "entityName": "cid_bulkactivitylogsdetailses",
-                                      "item/cid_BulkActivityLogSummary@odata.bind": "@concat('\\cid_bulkactivitylogsummaries\\',triggerOutputs()?['body/cid_bulkactivitylogsummaryid'])",
-                                      "item/cid_errordetails": "@variables('Error_Message')",
-                                      "item/cid_errorwarningcode": "B1025",
-                                      "item/cid_excelcolumnname": "Class",
-                                      "item/cid_excelrownumber": "@outputs('Current_Row_number')",
-                                      "item/cid_excelsheetname": "Add Basic Info",
-                                      "item/cid_sitelocation": "@outputs('Current_Site_Address')",
-                                      "item/cid_type": 100000000
-                                    },
-                                    "authentication": "@parameters('$authentication')"
-                                  }
-                                }
-                              },
-                              "runAfter": {
-                                "Filter_array-Class-insert-sheet": [
-                                  "Succeeded"
-                                ]
-                              },
-                              "expression": {
-                                "equals": [
-                                  "@length(body('Filter_array-Class-insert-sheet'))",
-                                  0
-                                ]
-                              },
-                              "metadata": {
-                                "operationMetadataId": "9ed023a3-88d2-4445-9ac0-28b90c20853c"
-                              },
-                              "type": "If"
-                            }
-                          },
-                          "runAfter": {
-                            "Split_classes": [
-                              "Succeeded"
-                            ]
-                          },
-                          "metadata": {
-                            "operationMetadataId": "20f34ebd-ca6a-4dab-83f7-fe482fd75ed5"
-                          },
-                          "type": "Foreach"
-                        }
-                      },
-                      "runAfter": {
-                        "Class_Field_Length": [
-                          "Succeeded"
-                        ]
-                      },
-                      "else": {
-                        "actions": {
-                          "Set_variable_isErrorFree_false": {
-                            "runAfter": {},
-                            "metadata": {
-                              "operationMetadataId": "b7b2bd46-8af9-49a7-9d4d-94935a8a52cb"
-                            },
-                            "type": "SetVariable",
-                            "inputs": {
-                              "name": "IsErrorFree",
-                              "value": "@false"
-                            }
-                          },
-                          "Filter_array_B1024": {
-                            "runAfter": {
-                              "Set_variable_isErrorFree_false": [
-                                "Succeeded"
-                              ]
-                            },
-                            "metadata": {
-                              "operationMetadataId": "80b29c84-7347-4907-bf75-cb1f1f4e2161"
-                            },
-                            "type": "Query",
-                            "inputs": {
-                              "from": "@variables('Messages_Array')",
-                              "where": "@equals(item()['code'], 'B1024')"
-                            }
-                          },
-                          "Set_variable_Error_Message_9": {
-                            "runAfter": {
-                              "Filter_array_B1024": [
-                                "Succeeded"
-                              ]
-                            },
-                            "metadata": {
-                              "operationMetadataId": "cf2c55e7-ed16-4aa6-b13e-61c36959a8f5"
-                            },
-                            "type": "SetVariable",
-                            "inputs": {
-                              "name": "Error_Message",
-                              "value": "@{body('Filter_array_B1024')[0]['Message']}"
-                            }
-                          },
-                          "Append_to_array_variable": {
-                            "runAfter": {
-                              "Set_variable_Error_Message_9": [
-                                "Succeeded"
-                              ]
-                            },
-                            "metadata": {
-                              "operationMetadataId": "3c6a8e4a-648b-4317-b99e-f2cb63f87df5"
-                            },
-                            "type": "AppendToArrayVariable",
-                            "inputs": {
-                              "name": "Error_List",
-                              "value": {
-                                "SheetName": "Add Basic Info",
-                                "Row#": "@{outputs('Current_Row_number')}",
-                                "Site": "@{outputs('Current_Site_Address')}",
-                                "Error": "@{variables('Error_Message')}"
-                              }
-                            }
-                          },
-                          "Add_Bulk_Log_details_Bulk005_2": {
-                            "runAfter": {
-                              "Append_to_array_variable": [
-                                "Succeeded"
-                              ]
-                            },
-                            "metadata": {
-                              "operationMetadataId": "6400dadc-a966-4c90-a510-2232709a5494"
-                            },
-                            "type": "OpenApiConnection",
-                            "inputs": {
-                              "host": {
-                                "connectionName": "shared_commondataserviceforapps_1",
-                                "operationId": "CreateRecord",
-                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                              },
-                              "parameters": {
-                                "entityName": "cid_bulkactivitylogsdetailses",
-                                "item/cid_BulkActivityLogSummary@odata.bind": "@concat('\\cid_bulkactivitylogsummaries\\',triggerOutputs()?['body/cid_bulkactivitylogsummaryid'])",
-                                "item/cid_errordetails": "@variables('Error_Message')",
-                                "item/cid_errorwarningcode": "B1024",
-                                "item/cid_excelcolumnname": "Class",
-                                "item/cid_excelrownumber": "@outputs('Current_Row_number')",
-                                "item/cid_excelsheetname": "Add Basic Info",
-                                "item/cid_sitelocation": "@outputs('Current_Site_Address')",
-                                "item/cid_type": 100000000
-                              },
-                              "authentication": "@parameters('$authentication')"
-                            }
-                          }
-                        }
-                      },
-                      "expression": {
-                        "greater": [
-                          "@outputs('Class_Field_Length')",
-                          0
-                        ]
-                      },
-                      "metadata": {
-                        "operationMetadataId": "bbe454f7-3873-41a1-82a7-595eb52d9ba4"
-                      },
-                      "type": "If"
-                    }
-                  },
-                  "runAfter": {
-                    "Check_if_all_required_address_information_is_entered": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "535fc6fd-165b-4dcb-b9c3-e2af382e3a6f"
-                  },
-                  "type": "Scope"
                 },
                 "Mode_of_Transportation_Logic": {
                   "actions": {
@@ -2354,49 +2346,49 @@
                         "or": [
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][15]",
+                              "@outputs('current_row')['Air']",
                               "Yes"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][16]",
+                              "@outputs('current_row')['Marine']",
                               "Yes"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][17]",
+                              "@outputs('current_row')['Rail']",
                               "Yes"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][18]",
+                              "@outputs('current_row')['Road']",
                               "Yes"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][15]",
+                              "@outputs('current_row')['Air']",
                               "oui"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][16]",
+                              "@outputs('current_row')['Marine']",
                               "oui"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][17]",
+                              "@outputs('current_row')['Rail']",
                               "oui"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][18]",
+                              "@outputs('current_row')['Road']",
                               "oui"
                             ]
                           }
@@ -2409,7 +2401,7 @@
                     }
                   },
                   "runAfter": {
-                    "Class_Check_Logic": [
+                    "Check_if_all_required_address_information_is_entered": [
                       "Succeeded"
                     ]
                   },
@@ -2522,49 +2514,49 @@
                         "or": [
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][19]",
+                              "@outputs('current_row')['Handle']",
                               "Yes"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][20]",
+                              "@outputs('current_row')['OfferForTransport']",
                               "Yes"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][21]",
+                              "@outputs('current_row')['Transport']",
                               "Yes"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][22]",
+                              "@outputs('current_row')['Import']",
                               "Yes"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][19]",
+                              "@outputs('current_row')['Handle']",
                               "oui"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][20]",
+                              "@outputs('current_row')['OfferForTransport']",
                               "oui"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][21]",
+                              "@outputs('current_row')['Transport']",
                               "oui"
                             ]
                           },
                           {
                             "equals": [
-                              "@outputs('current_row')['values'][0][22]",
+                              "@outputs('current_row')['Import']",
                               "oui"
                             ]
                           }
@@ -2590,7 +2582,7 @@
                   "actions": {
                     "Check_if_Extended_information_specified": {
                       "actions": {
-                        "check_if_at_least_one_UN_number_added_to_extended_info": {
+                        "check_if_site_is_extneded": {
                           "actions": {
                             "Check_if_site_exists_in_extended_table": {
                               "runAfter": {},
@@ -2599,14 +2591,14 @@
                               },
                               "type": "Query",
                               "inputs": {
-                                "from": "@body('Filter_table_-_Get_None_empty_cells_Extended_Table')",
-                                "where": "@and (equals(item()['values'][0][0], outputs('current_row')['values'][0][26]) ,  greater(length(item()['values'][0][1]), 0) )"
+                                "from": "@body('Select_extended_info')",
+                                "where": "@and (equals(item()['ExtendedSite'], outputs('current_row')['SiteFullAddress']) ,  \ngreater(length(item()['ExtendedUNNumber']), 0) )"
                               }
                             },
                             "Check_if_at_least_one_Unnumber_exists_for_extended_site": {
                               "actions": {
                                 "Apply_to_each_-_extended_rows_for_current_site": {
-                                  "foreach": "@body('Check_if_site_exists_in_extended_table')",
+                                  "foreach": "@body('Select_extended_info')",
                                   "actions": {
                                     "Current_extended_row": {
                                       "runAfter": {},
@@ -2626,7 +2618,7 @@
                                         "operationMetadataId": "0d5a29eb-dfea-4fd2-8580-ff502eb17755"
                                       },
                                       "type": "Compose",
-                                      "inputs": "@outputs('Current_extended_row')['values'][0][2]"
+                                      "inputs": "@outputs('Current_extended_row')['Quantity']"
                                     },
                                     "Unit_of_Measure": {
                                       "runAfter": {
@@ -2638,7 +2630,7 @@
                                         "operationMetadataId": "63ea7799-fd21-4413-a3c4-87b64d5c3658"
                                       },
                                       "type": "Compose",
-                                      "inputs": "@outputs('Current_extended_row')['values'][0][3]"
+                                      "inputs": "@outputs('Current_extended_row')['UnitOfMeasure']"
                                     },
                                     "Annual_number_of__Consignments": {
                                       "runAfter": {
@@ -2650,7 +2642,7 @@
                                         "operationMetadataId": "ef42a387-8f12-40a2-945b-39841bc0a9a7"
                                       },
                                       "type": "Compose",
-                                      "inputs": "@outputs('Current_extended_row')['values'][0][4]"
+                                      "inputs": "@outputs('Current_extended_row')['AnnualNumberOfConsignment']"
                                     },
                                     "Check_quantity": {
                                       "actions": {},
@@ -3001,7 +2993,7 @@
                                         "operationMetadataId": "1d7f7640-ce2c-4ad9-9b47-270993d7b4f6"
                                       },
                                       "type": "Compose",
-                                      "inputs": "@add( int(outputs('Current_extended_row')['Index']), 5)"
+                                      "inputs": "@add( int(outputs('Current_extended_row')['LinNumber']), 5)"
                                     },
                                     "Site": {
                                       "runAfter": {
@@ -3013,7 +3005,7 @@
                                         "operationMetadataId": "61796b69-662d-48b5-9067-a5cee179fe74"
                                       },
                                       "type": "Compose",
-                                      "inputs": "@outputs('Current_extended_row')['values'][0][0]"
+                                      "inputs": "@outputs('Current_extended_row')['ExtendedSite']"
                                     }
                                   },
                                   "runAfter": {},
@@ -3135,10 +3127,26 @@
                             }
                           },
                           "runAfter": {},
-                          "metadata": {
-                            "operationMetadataId": "532bec31-07e5-4e56-88ba-48f3c1a8f96f"
+                          "expression": {
+                            "or": [
+                              {
+                                "equals": [
+                                  "@outputs('current_row')['extendedYN']",
+                                  "Yes"
+                                ]
+                              },
+                              {
+                                "equals": [
+                                  "@outputs('current_row')['extendedYN']",
+                                  "oui"
+                                ]
+                              }
+                            ]
                           },
-                          "type": "Scope"
+                          "metadata": {
+                            "operationMetadataId": "5ef93ea8-33d9-4c86-afa0-b34fc5c07991"
+                          },
+                          "type": "If"
                         }
                       },
                       "runAfter": {},
@@ -3153,26 +3161,6 @@
                             "inputs": {
                               "name": "IsErrorFree",
                               "value": "@false"
-                            }
-                          },
-                          "Append_to_array_variable_-_Extended_column_empty": {
-                            "runAfter": {
-                              "Set_variable_Error_Message_11": [
-                                "Succeeded"
-                              ]
-                            },
-                            "metadata": {
-                              "operationMetadataId": "4f55e617-31bd-44ed-bb0a-b526c97f332f"
-                            },
-                            "type": "AppendToArrayVariable",
-                            "inputs": {
-                              "name": "Error_List",
-                              "value": {
-                                "SheetName": "Add Basic Info",
-                                "Row#": "@{outputs('Current_Row_number')}",
-                                "Site": "@{outputs('Current_Site_Address')}",
-                                "Error": "@{variables('Error_Message')}"
-                              }
                             }
                           },
                           "Filter_array_B1026": {
@@ -3203,6 +3191,26 @@
                             "inputs": {
                               "name": "Error_Message",
                               "value": "@{body('Filter_array_B1026')[0]['Message']}"
+                            }
+                          },
+                          "Append_to_array_variable_-_Extended_column_empty": {
+                            "runAfter": {
+                              "Set_variable_Error_Message_11": [
+                                "Succeeded"
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "4f55e617-31bd-44ed-bb0a-b526c97f332f"
+                            },
+                            "type": "AppendToArrayVariable",
+                            "inputs": {
+                              "name": "Error_List",
+                              "value": {
+                                "SheetName": "Add Basic Info",
+                                "Row#": "@{outputs('Current_Row_number')}",
+                                "Site": "@{outputs('Current_Site_Address')}",
+                                "Error": "@{variables('Error_Message')}"
+                              }
                             }
                           },
                           "Add_Bulk_Log_details_B1026": {
@@ -3239,7 +3247,7 @@
                       },
                       "expression": {
                         "greater": [
-                          "@length(outputs('current_row')['values'][0][24])",
+                          "@length(outputs('current_row')['extendedYN'])",
                           0
                         ]
                       },
@@ -3261,7 +3269,7 @@
                 },
                 "Current_Row_number": {
                   "runAfter": {
-                    "Current_row": [
+                    "Current_Site_Address": [
                       "Succeeded"
                     ]
                   },
@@ -3269,11 +3277,11 @@
                     "operationMetadataId": "c8231cfb-e9e8-482c-bdc3-da88465785e4"
                   },
                   "type": "Compose",
-                  "inputs": "@add( int(outputs('current_row')['values'][0][25]) ,5) "
+                  "inputs": "@add( int(outputs('Current_row')['LineNumber']),5)"
                 },
                 "Current_Site_Address": {
                   "runAfter": {
-                    "Current_Row_number": [
+                    "Current_row": [
                       "Succeeded"
                     ]
                   },
@@ -3281,14 +3289,155 @@
                     "operationMetadataId": "d07cd0a9-7e62-4379-be92-c323f2fba582"
                   },
                   "type": "Compose",
-                  "inputs": "@outputs('current_row')['values'][0][26]"
+                  "inputs": "@outputs('current_row')['SiteFullAddress']"
+                },
+                "Class_Check_Logic": {
+                  "actions": {
+                    "Validate_Class": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "d187d377-b0b0-451d-807d-778c5f6062b1"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "PerformUnboundAction",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "actionName": "cid_CID_BulkUpload_Validate_ClassDivision",
+                          "item/Language": "@variables('Language')",
+                          "item/SiteInfo": "@outputs('Current_row')",
+                          "item/MessageList": "@body('Parse_Messages_to_JSON')",
+                          "item/ClassList": "@outputs('List-rows-division-classes')?['body']['value']"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "check_if_error_found": {
+                      "actions": {
+                        "Set_variable_isErrorFree_false": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "b7b2bd46-8af9-49a7-9d4d-94935a8a52cb"
+                          },
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "IsErrorFree",
+                            "value": "@false"
+                          }
+                        },
+                        "Add_Bulk_Log_details_B1024-B1025": {
+                          "runAfter": {
+                            "Append_to_array_variable": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "6400dadc-a966-4c90-a510-2232709a5494"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_commondataserviceforapps_1",
+                              "operationId": "CreateRecord",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            },
+                            "parameters": {
+                              "entityName": "cid_bulkactivitylogsdetailses",
+                              "item/cid_BulkActivityLogSummary@odata.bind": "@concat('\\cid_bulkactivitylogsummaries\\',triggerOutputs()?['body/cid_bulkactivitylogsummaryid'])",
+                              "item/cid_errordetails": "@body('Parse_JSON_ErrorList')?['Error']",
+                              "item/cid_errorwarningcode": "@outputs('Validate_Class')?['body/ErrorCode']",
+                              "item/cid_excelcolumnname": "Class",
+                              "item/cid_excelrownumber": "@outputs('Current_Row_number')",
+                              "item/cid_excelsheetname": "Add Basic Info",
+                              "item/cid_sitelocation": "@outputs('Current_Site_Address')",
+                              "item/cid_type": 100000000
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          }
+                        },
+                        "Parse_JSON_ErrorList": {
+                          "runAfter": {
+                            "Set_variable_isErrorFree_false": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "2c61b077-5461-4ecf-ab87-42ef66a0e4de"
+                          },
+                          "type": "ParseJson",
+                          "inputs": {
+                            "content": "@outputs('Validate_Class')?['body/ErrorList']",
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "SheetName": {
+                                  "type": "string"
+                                },
+                                "Row#": {
+                                  "type": "string"
+                                },
+                                "Site": {
+                                  "type": "string"
+                                },
+                                "Error": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "Append_to_array_variable": {
+                          "runAfter": {
+                            "Parse_JSON_ErrorList": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "3c6a8e4a-648b-4317-b99e-f2cb63f87df5"
+                          },
+                          "type": "AppendToArrayVariable",
+                          "inputs": {
+                            "name": "Error_List",
+                            "value": "@body('Parse_JSON_ErrorList')"
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Validate_Class": [
+                          "Succeeded"
+                        ]
+                      },
+                      "expression": {
+                        "equals": [
+                          "@outputs('Validate_Class')?['body/ErrorFound']",
+                          "@true"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "d1ed63ac-4fd0-4851-9a51-b4a823c508f4"
+                      },
+                      "type": "If"
+                    }
+                  },
+                  "runAfter": {
+                    "Current_Row_number": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "535fc6fd-165b-4dcb-b9c3-e2af382e3a6f"
+                  },
+                  "type": "Scope"
                 }
               },
               "runAfter": {
-                "Filter_table_-_get_none_empty_cells_sites_for_insert_": [
+                "Select_extended_info": [
                   "Succeeded"
                 ],
-                "Filter_table_-_Get_None_empty_cells_Extended_Table": [
+                "Select_Site_List": [
                   "Succeeded"
                 ]
               },
@@ -3309,7 +3458,98 @@
               "type": "Query",
               "inputs": {
                 "from": "@outputs('Invoke_an_HTTP_request_Get_Extended_info_table')?['body']['value']",
-                "where": "@and(greater(length(item()['values'][0][0]), 0) , greater(length(item()['values'][0][1]), 0))"
+                "where": "@and(greater(length(item()['values'][0][ int(outputs('ExtendedSite')) ]), 0) , greater(length(item()['values'][0][int(outputs('ExtendedUNNumber'))]), 0))"
+              }
+            },
+            "Select_Site_List": {
+              "runAfter": {
+                "Filter_table_-_get_none_empty_cells_sites_for_insert_": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "77d59626-6f22-4a0b-8be5-f1f0cb206b3d"
+              },
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Filter_table_-_get_none_empty_cells_sites_for_insert_')",
+                "select": {
+                  "SiteName": "@item()['values'][0][int(outputs('SiteName'))]",
+                  "Address1": "@item()['values'][0][int(outputs('Address1'))]",
+                  "City": "@item()['values'][0][int(outputs('City'))]",
+                  "Province": "@item()['values'][0][int(outputs('Province'))]",
+                  "Postalcode": "@item()['values'][0][int(outputs('PostalCode'))]",
+                  "Address2": "@item()['values'][0][int(outputs('Address2'))]",
+                  "Address3": "@item()['values'][0][int(outputs('Address3'))]",
+                  "LLDProvince": "@item()['values'][0][int(outputs('LLDProvince'))]",
+                  "Quarter": "@item()['values'][0][int(outputs('Quarter'))]",
+                  "Section": "@item()['values'][0][int(outputs('Section'))]",
+                  "TownShip": "@item()['values'][0][int(outputs('TownShip'))]",
+                  "Range": "@item()['values'][0][int(outputs('Range'))]",
+                  "Meridian": "@item()['values'][0][int(outputs('Meridian'))]",
+                  "Lat": "@item()['values'][0][int(outputs('Lat'))]",
+                  "Long": "@item()['values'][0][int(outputs('Long'))]",
+                  "Air": "@item()['values'][0][int(outputs('Air'))]",
+                  "Marine": "@item()['values'][0][int(outputs('Marine'))]",
+                  "Rail": "@item()['values'][0][int(outputs('Rail'))]",
+                  "Road": "@item()['values'][0][int(outputs('Road'))]",
+                  "Handle": "@item()['values'][0][int(outputs('Handle'))]",
+                  "OfferForTransport": "@item()['values'][0][int(outputs('OfferForTransport'))]",
+                  "Transport": "@item()['values'][0][int(outputs('Transport'))]",
+                  "Import": "@item()['values'][0][int(outputs('Import'))]",
+                  "Class": "@item()['values'][0][int(outputs('Class'))]",
+                  "ExtendedYN": "@item()['values'][0][int(outputs('extendedYN'))]",
+                  "LineNumber": "@item()['index']",
+                  "SiteFullAddress": "@item()['values'][0][int(outputs('SiteFullAddress'))]",
+                  "SiteGUID": "@item()['values'][0][int(outputs('SiteGUID'))]"
+                }
+              }
+            },
+            "Select_extended_info": {
+              "runAfter": {
+                "Filter_table_-_Get_None_empty_cells_Extended_Table": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1dcf797c-658a-41e7-bf42-afd1e950fbfd"
+              },
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Filter_table_-_Get_None_empty_cells_Extended_Table')",
+                "select": {
+                  "ExtendedAction": "@item()['values'][0][int(outputs('ExtendedAction'))]",
+                  "ExtendedSite": "@item()['values'][0][int(outputs('ExtendedSite'))]",
+                  "ExtendedUNnumber": "@item()['values'][0][int(outputs('ExtendedUNNumber'))]",
+                  "Quantity": "@item()['values'][0][int(outputs('ExtendedQuantity'))]",
+                  "UnitOfMeasure": "@item()['values'][0][int(outputs('ExtendedUnitOfMeasure'))]",
+                  "AnnualNumberOfConsignment": "@item()['values'][0][int(outputs('ExtendedAnnulaConsignment'))]",
+                  "ExtendedGUID": "@item()['values'][0][int(outputs('ExtendedGUID'))]",
+                  "LinNumber": "@item()['index']"
+                }
+              }
+            },
+            "List-rows-division-classes": {
+              "runAfter": {
+                "List_rows_UNNumber": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a7d3ec09-bede-4093-9912-32bc0c48b914"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "ovs_primaryclasses",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"ovs_primaryclass\">\n<attribute name=\"ovs_primaryclassid\"/>\n<attribute name=\"ovs_class\"/>\n<order attribute=\"ovs_class\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\n</filter>\n</entity>\n</fetch>"
+                },
+                "authentication": "@parameters('$authentication')"
               }
             }
           },
@@ -3341,7 +3581,7 @@
         },
         "SharePoint-file-path": {
           "runAfter": {
-            "Error_flag": [
+            "Initialize_ProvinceCodes_variable": [
               "Succeeded"
             ]
           },
@@ -3387,76 +3627,9 @@
           "type": "Compose",
           "inputs": "@triggerOutputs()?['body/_cid_company_value']"
         },
-        "Initialize_Environment_folder_variable": {
-          "runAfter": {
-            "Filter_environment-CID_Flow_Environment_Folder": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "fc5c3dd6-8d62-49cb-befd-838a6faaacca"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "Environment_Folder",
-                "type": "string",
-                "value": "@{body('Filter_environment-CID_Flow_Environment_Folder')[0]['qm_value']}"
-              }
-            ]
-          }
-        },
-        "Row_Number_vailable": {
-          "runAfter": {
-            "Initialize_Environment_folder_variable": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "396871f6-9db7-4572-ac20-9b39cc12d51a"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "RowNumber",
-                "type": "integer",
-                "value": 3
-              }
-            ]
-          }
-        },
-        "Error_List_Variable": {
-          "runAfter": {
-            "Row_Number_vailable": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "a10a3b39-9550-46b6-b00c-75dd826be0a2"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "Error_List",
-                "type": "array",
-                "value": [
-                  {
-                    "SheetName": "",
-                    "Row#": "",
-                    "Site": "",
-                    "Error": ""
-                  }
-                ]
-              }
-            ]
-          }
-        },
         "Initialize_ProvinceCodes_variable": {
           "runAfter": {
-            "Error_List_Variable": [
+            "Scope_-_Language_logic_for_Messages": [
               "Succeeded"
             ]
           },
@@ -3490,26 +3663,6 @@
             ]
           }
         },
-        "Error_flag": {
-          "runAfter": {
-            "Initialize_ProvinceCodes_variable": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "af9c01db-59f3-46fa-826e-e24fc2c82cca"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "IsErrorFree",
-                "type": "boolean",
-                "value": "@true"
-              }
-            ]
-          }
-        },
         "Get-File-Relative-Path": {
           "runAfter": {
             "CompanyId": [
@@ -3524,84 +3677,422 @@
         },
         "check_error_flag": {
           "actions": {
-            "Run_Bulk_Insert_Flow": {
+            "Update_Bulk_activity_log_summary_2": {
               "runAfter": {},
               "metadata": {
-                "operationMetadataId": "1646db8d-85fe-43d1-b9b3-e0c2ec13f78f"
+                "operationMetadataId": "b9fd40b4-ad5c-476a-a72c-c9247d363b8a"
               },
-              "type": "Workflow",
+              "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "workflowReferenceName": "9ac0f16f-415d-ec11-8f8e-000d3a845870"
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
-                "body": {
-                  "text": "@triggerOutputs()?['body/_cid_company_value']",
-                  "text_1": "@triggerOutputs()?['body/cid_tempsharepointfilelocation']",
-                  "text_2": "@triggerOutputs()?['body/cid_bulkactivitylogsummaryid']"
-                }
+                "parameters": {
+                  "entityName": "cid_bulkactivitylogsummaries",
+                  "recordId": "@triggerOutputs()?['body/cid_bulkactivitylogsummaryid']",
+                  "item/cid_numberofsites": "@outputs('totalNumberOfSites')",
+                  "item/cid_numberofunnumbers": "@outputs('NumberOfUnNumbers')",
+                  "item/cid_validationcompletedstage": 100000001
+                },
+                "authentication": "@parameters('$authentication')"
               }
+            },
+            "Loop_in_each_site_to_insert_or_Update": {
+              "foreach": "@body('Select_Site_List')",
+              "actions": {
+                "Current_row_Site": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "692703f0-6bc6-4bc1-8199-14e43dfe7f6a"
+                  },
+                  "type": "Compose",
+                  "inputs": "@items('Loop_in_each_site_to_insert_or_Update')"
+                },
+                "UNList": {
+                  "runAfter": {
+                    "Current_row_Site": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3c730080-51de-459b-8861-551d06758084"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Select_extended_info')",
+                    "where": "@and(equals(item()['ExtendedSite'], outputs('Current_row_Site')['SiteFullAddress']), greater(length(item()['ExtendedUNnumber']), 0))"
+                  }
+                },
+                "Insert-Update_Sites_and_related_data": {
+                  "runAfter": {
+                    "UNList": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "9019f374-1b71-47df-adc5-7089dc352e8e"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "PerformBoundAction",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "accounts",
+                      "actionName": "Microsoft.Dynamics.CRM.cid_Insert_and_Update_Site_and_Related_UNs",
+                      "recordId": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/_cid_company_value']",
+                      "item/ActionedBy": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/_cid_actionedby_value']",
+                      "item/LegalName": "@outputs('Get_a_account_by_ID')?['body/ovs_legalname']",
+                      "item/OperatingName": "@outputs('Get_a_account_by_ID')?['body/name']",
+                      "item/SiteInfo": "@outputs('Current_row_Site')",
+                      "item/UNList": "@body('UNList')",
+                      "item/ActivityID": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_bulkactivitylogsummaryid']"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "check_if_delete_UN_number_is_required": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a13dfb1a-1128-4977-9f3a-295db5d71229"
+              },
+              "type": "Foreach"
+            },
+            "check_if_delete_UN_number_is_required": {
+              "actions": {
+                "List_All_UN_rows_under_parent_account": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "1f5d0802-0ff1-4931-8759-52ff00665346"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "ListRecords",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "ovs_operationunnumbers",
+                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"ovs_operationunnumber\">\n<attribute name=\"ovs_name\"/>\n<attribute name=\"ovs_operationunnumberid\"/>\n<order attribute=\"ovs_name\" descending=\"false\"/>\n<link-entity name=\"ovs_mocregistration\" from=\"ovs_mocregistrationid\" to=\"ovs_operationunnumber\" link-type=\"inner\" alias=\"ac\">\n<link-entity name=\"account\" from=\"accountid\" to=\"ovs_siteid\" link-type=\"inner\" alias=\"ad\">\n<filter type=\"and\">\n<condition attribute=\"parentaccountid\" operator=\"eq\"  value=\"@{outputs('Get_a_account_by_ID')?['body/accountid']}\"/>\n</filter>\n</link-entity>\n</link-entity>\n</entity>\n</fetch>"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Apply_to_each_UN_row_to_delete": {
+                  "foreach": "@outputs('List_All_UN_rows_under_parent_account')?['body/value']",
+                  "actions": {
+                    "Delete_UN_Row": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "8d369b03-04b2-41e0-b59e-6d9170217202"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "DeleteRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "ovs_operationunnumbers",
+                          "recordId": "@items('Apply_to_each_UN_row_to_delete')?['ovs_operationunnumberid']"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "List_All_UN_rows_under_parent_account": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "cec00236-1701-42f0-bba2-406e1d856876"
+                  },
+                  "type": "Foreach"
+                }
+              },
+              "runAfter": {
+                "Update_Bulk_activity_log_summary_2": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "equals": [
+                  1,
+                  1
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "03f7da4b-e6a8-4420-a708-a2e797cb5f7e"
+              },
+              "type": "If"
+            },
+            "Update_Bulk_activity_log_summary_end_activity_time": {
+              "runAfter": {
+                "Loop_in_each_site_to_insert_or_Update": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b9fd40b4-ad5c-476a-a72c-c9247d363b8a"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "cid_bulkactivitylogsummaries",
+                  "recordId": "@triggerOutputs()?['body/cid_bulkactivitylogsummaryid']",
+                  "item/cid_activityendtime": "@utcNow()",
+                  "item/cid_activitystatus": 100000000,
+                  "item/cid_totalruntime": "@div(sub(ticks(utcNow()),ticks(outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_activitystarttime'])),600000000)"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Language_is_English": {
+              "actions": {
+                "Send_summary_email_to_portal_contact_in_English": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "03fa68c2-eaef-45a3-a78e-77053dd96194"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sendmail",
+                      "operationId": "SendEmailV3",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                    },
+                    "parameters": {
+                      "request/to": "@{outputs('get_contact_email')?['body/emailaddress1']};",
+                      "request/subject": "The uploaded workbook has been processed successfully",
+                      "request/text": "<p>Hi @{outputs('get_contact_email')?['body/firstname']},<br>\nThe uploaded workbook for @{outputs('Get_a_account_by_ID')?['body/ovs_legalname']} &nbsp;has been processed successfully:<br>\nThe following are summary of the upload:<br>\nDate of the upload: @{body('Convert_time_zone')}<br>\n# Sites in the workbook:@{outputs('totalNumberOfSites')}<br>\n# UN in the workbook: @{outputs('NumberOfUnNumbers')}<br>\nFile Name:@{outputs('Update_Bulk_activity_log_summary_end_activity_time')?['body/cid_filename']}<br>\n</p>"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Update_Bulk_activity_log_summary_end_activity_time": [
+                  "Succeeded"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "Send_summary_email_to_portal_contact_in_French": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "87209241-078e-426d-9663-566b2623e814"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_sendmail",
+                        "operationId": "SendEmailV3",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                      },
+                      "parameters": {
+                        "request/to": "@{outputs('get_contact_email')?['body/emailaddress1']};",
+                        "request/subject": "The uploaded workbook has been processed successfully",
+                        "request/text": "<p><br>\nSalut @{outputs('get_contact_email')?['body/firstname']},<br>\nLe classeur importé pour @{outputs('Get_a_account_by_ID')?['body/ovs_legalname']} a été traité avec succès :<br>\nVoici un résumé du téléchargement :<br>\nDate du téléchargement :@{body('Convert_time_zone')}<br>\n# Sites dans le classeur :@{outputs('totalNumberOfSites')}<br>\n# ONU dans le classeur :@{outputs('NumberOfUnNumbers')}<br>\nNom de fichier:@{outputs('Update_Bulk_activity_log_summary_end_activity_time')?['body/cid_filename']}</p>"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  }
+                }
+              },
+              "expression": {
+                "equals": [
+                  "@variables('Language')",
+                  "@'918640001'"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "37c9cb98-e82d-47d1-8288-e5279e81d2d6"
+              },
+              "type": "If"
             }
           },
           "runAfter": {
-            "Check_if_Validation_should_start_on_the_Modified_event": [
+            "Convert_time_zone": [
               "Succeeded"
             ]
           },
           "else": {
             "actions": {
-              "Create_HTML_table": {
-                "runAfter": {},
-                "metadata": {
-                  "operationMetadataId": "3d5b95c3-0259-4f2b-a767-b20b99174ec1"
+              "if_language_is_english": {
+                "actions": {
+                  "Select_Error_List_Variable_columns_English": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "091d13e2-41c8-49ec-afa7-5073e00c8921"
+                    },
+                    "type": "Select",
+                    "inputs": {
+                      "from": "@variables('Error_List')",
+                      "select": {
+                        "Worksheet": "@item()['SheetName']",
+                        "Row #": "@item()['Row#']",
+                        "Error": "@item()['Error']",
+                        "Site": "@item()['Site']"
+                      }
+                    }
+                  },
+                  "Send_an_email_notification_to_portal_users_with_errors": {
+                    "runAfter": {
+                      "html_table_with_style": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "94e1b98e-5051-4132-b512-028ad4bd7d96"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_sendmail",
+                        "operationId": "SendEmailV3",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                      },
+                      "parameters": {
+                        "request/to": "@{outputs('get_contact_email')?['body/emailaddress1']};",
+                        "request/subject": "workbook was not successfully uploaded",
+                        "request/text": "<p>Hello @{outputs('get_contact_email')?['body/firstname']},<br>\n<br>\nworkbook for @{outputs('get_contact_email')?['body']['_parentcustomerid_value@OData.Community.Display.V1.FormattedValue']} was not successfully uploaded, Please address the following errors first and try the upload again.<br>\n- Upload Date: @{body('Convert_time_zone')}<br>\n- Total # of Sites in the workbook : @{outputs('totalNumberOfSites')}<br>\n- Total # of UNs in the workbook : @{outputs('totalNumberOferrors')}<br>\n- Total # of Errors: @{outputs('totalNumberOferrors')}<br>\n- File Name: @{outputs('Update_Bulk_activity_log_summary')?['body/cid_filename']}<br>\n<br>\nThe following are the Number of Errors found in the uploaded workbook:<br>\n<br>\n@{replace( outputs('html_table_with_style') ,'<table>' , '  <table><col style=\"width:15%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:50%\">\r\n        <col style=\"width:25%\">')}<br>\n</p>"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "html_table_with_style": {
+                    "runAfter": {
+                      "Create_HTML_table": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "920beb59-130c-4895-ab0c-490a0d32e827"
+                    },
+                    "type": "Compose",
+                    "inputs": "  <style>\n        table {\n            border: 1px solid #1C6EA4;\n            background-color: #EEEEEE;\n            width: 100%;\n    \n            border-collapse: collapse;\n        }\n\n            table td, table th {\n                border: 1px solid #AAAAAA;\n                padding: 3px 2px;\n         \n            }\n\n           \n            table tbody tr :nth-child(2) {\n                text-align: center;\n                font-size: 13px;\n            }\n\n           \n           \n            table thead {\n                background: #1C6EA4;\n                border-bottom: 2px solid #444444;\n            }\n\n                table thead th {\n                    font-size: 15px;\n                    font-weight: bold;\n                    color: #FFFFFF;\n                    border-left: 2px solid #D0E4F5;\n                    text-align: center;\n                }\n\n                    table thead th:first-child {\n                        border-left: none;\n                    }\n    </style>\n\n@{body('Create_HTML_table')}"
+                  },
+                  "Create_HTML_table": {
+                    "runAfter": {
+                      "Select_Error_List_Variable_columns_English": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "3d5b95c3-0259-4f2b-a767-b20b99174ec1"
+                    },
+                    "type": "Table",
+                    "inputs": {
+                      "from": "@body('Select_Error_List_Variable_columns_English')",
+                      "format": "HTML"
+                    }
+                  }
                 },
-                "type": "Table",
-                "inputs": {
-                  "from": "@variables('Error_List')",
-                  "format": "HTML"
-                }
-              },
-              "html_table_with_style": {
-                "runAfter": {
-                  "Create_HTML_table": [
-                    "Succeeded"
-                  ]
-                },
-                "metadata": {
-                  "operationMetadataId": "920beb59-130c-4895-ab0c-490a0d32e827"
-                },
-                "type": "Compose",
-                "inputs": "<style>\ntable {\n  border: 1px solid #1C6EA4;\n  background-color: #EEEEEE;\n  width: 100%;\n  text-align: left;\n  border-collapse: collapse;\n}\ntable td, table th {\n  border: 1px solid #AAAAAA;\n  padding: 3px 2px;\n}\ntable tbody td {\n  font-size: 13px;\n}\ntable thead {\n  background: #1C6EA4;\n  border-bottom: 2px solid #444444;\n}\ntable thead th {\n  font-size: 15px;\n  font-weight: bold;\n  color: #FFFFFF;\n  border-left: 2px solid #D0E4F5;\n}\ntable thead th:first-child {\n  border-left: none;\n}\n</style>\n@{body('Create_HTML_table')}"
-              },
-              "Send_an_email_notification_(V3)": {
                 "runAfter": {
                   "Update_Bulk_activity_log_summary": [
                     "Succeeded"
                   ]
                 },
-                "metadata": {
-                  "operationMetadataId": "94e1b98e-5051-4132-b512-028ad4bd7d96"
+                "else": {
+                  "actions": {
+                    "Create_HTML_table-French": {
+                      "runAfter": {
+                        "Select_Error_List_Variable_columns": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "16f727a6-fe5f-4fe3-b56d-ae277f2a3eec"
+                      },
+                      "type": "Table",
+                      "inputs": {
+                        "from": "@body('Select_Error_List_Variable_columns')",
+                        "format": "HTML"
+                      }
+                    },
+                    "Select_Error_List_Variable_columns": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "091d13e2-41c8-49ec-afa7-5073e00c8921"
+                      },
+                      "type": "Select",
+                      "inputs": {
+                        "from": "@variables('Error_List')",
+                        "select": {
+                          "Feuille de travail": "@item()['SheetName']",
+                          "Rangée #": "@item()['Row#']",
+                          "Erreur": "@item()['Error']",
+                          "Site": "@item()['Site']"
+                        }
+                      }
+                    },
+                    "Send_an_email_notification_with_errors_to_portal_user_in_English": {
+                      "runAfter": {
+                        "html_table_with_style-French": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "661155db-9f65-4f0b-af70-fa25633e3684"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sendmail_1",
+                          "operationId": "SendEmailV3",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                        },
+                        "parameters": {
+                          "request/to": "@{outputs('get_contact_email')?['body/emailaddress1']};",
+                          "request/subject": "le classeur n'a pas été téléchargé avec succès",
+                          "request/text": "<p>Bonjour @{outputs('get_contact_email')?['body/firstname']},<br>\n<br>\ncahier d'exercices pour &nbsp;@{outputs('get_contact_email')?['body']['_parentcustomerid_value@OData.Community.Display.V1.FormattedValue']} n'a pas été téléchargé avec succès, veuillez d'abord résoudre les erreurs suivantes et réessayez le téléchargement.<br>\n<br>\n- Date de dépôt: @{body('Convert_time_zone')}<br>\n- Nombre total de sites dans le classeur : @{outputs('totalNumberOfSites')}<br>\n- Nombre total d'ONU dans le classeur : @{outputs('totalNumberOferrors')}<br>\n- Nombre total d'erreurs: @{outputs('totalNumberOferrors')}<br>\n- Nom de fichier: @{outputs('Update_Bulk_activity_log_summary')?['body/cid_filename']}<br>\n<br>\nVoici le nombre d'erreurs trouvées dans le classeur téléchargé:<br>\n<br>\n@{replace( outputs('html_table_with_style-French') ,'<table>' , '  <table><col style=\"width:20%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:45%\">\r\n        <col style=\"width:25%\">')}<br>\n<br>\n<br>\n</p>"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "html_table_with_style-French": {
+                      "runAfter": {
+                        "Create_HTML_table-French": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "920beb59-130c-4895-ab0c-490a0d32e827"
+                      },
+                      "type": "Compose",
+                      "inputs": " <style>\n        table {\n            border: 1px solid #1C6EA4;\n            background-color: #EEEEEE;\n            width: 100%;\n    \n            border-collapse: collapse;\n        }\n\n            table td, table th {\n                border: 1px solid #AAAAAA;\n                padding: 3px 2px;\n                text-align: center;\n            }\n\n            table tbody tr td:nth-child(1) {\n                text-align: left;\n                font-size: 13px;\n            }\n            table tbody tr td:nth-child(2) {\n                text-align: center;\n                font-size: 13px;\n            }\n           \n            table tbody tr td:nth-child(3) {\n                text-align: left;\n                font-size: 13px;\n            }\n            table tbody tr td:nth-child(4) {\n                text-align: left;\n                font-size: 13px;\n            }\n            table thead {\n                background: #1C6EA4;\n                border-bottom: 2px solid #444444;\n            }\n\n                table thead th {\n                    font-size: 15px;\n                    font-weight: bold;\n                    color: #FFFFFF;\n                    border-left: 2px solid #D0E4F5;\n                }\n\n                    table thead th:first-child {\n                        border-left: none;\n                    }\n    </style>\n\n\n@{replace(replace(body('Create_HTML_table-French'),'Add Extended Info','Ajouter des informations étendues'),'Add Basic Info' ,'Ajouter des informations de base')}\n"
+                    }
+                  }
                 },
-                "type": "OpenApiConnection",
-                "inputs": {
-                  "host": {
-                    "connectionName": "shared_sendmail",
-                    "operationId": "SendEmailV3",
-                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
-                  },
-                  "parameters": {
-                    "request/to": "@{outputs('get_contact_email')?['body/emailaddress1']};",
-                    "request/subject": "workbook was not successfully uploaded",
-                    "request/text": "<p>Hello @{outputs('get_contact_email')?['body/firstname']},<br>\n<br>\nworkbook for @{outputs('get_contact_email')?['body/_parentcustomerid_value']} was not successfully uploaded, Please address the following errors first and try the upload again.<br>\n<br>\n@{outputs('html_table_with_style')}<br>\n</p>"
-                  },
-                  "authentication": "@parameters('$authentication')"
-                }
-              },
-              "Update_Bulk_activity_log_summary": {
-                "runAfter": {
-                  "html_table_with_style": [
-                    "Succeeded"
+                "expression": {
+                  "equals": [
+                    "@variables('Language')",
+                    "@'918640001'"
                   ]
                 },
+                "metadata": {
+                  "operationMetadataId": "2ab86d82-d594-432b-a24a-8da1b7311ea6"
+                },
+                "type": "If"
+              },
+              "Update_Bulk_activity_log_summary": {
+                "runAfter": {},
                 "metadata": {
                   "operationMetadataId": "b9fd40b4-ad5c-476a-a72c-c9247d363b8a"
                 },
@@ -3616,7 +4107,10 @@
                     "entityName": "cid_bulkactivitylogsummaries",
                     "recordId": "@triggerOutputs()?['body/cid_bulkactivitylogsummaryid']",
                     "item/cid_activityendtime": "@utcNow()",
-                    "item/cid_activitystatus": 100000001
+                    "item/cid_activitystatus": 100000001,
+                    "item/cid_numberofsites": "@outputs('totalNumberOfSites')",
+                    "item/cid_numberofunnumbers": "@outputs('NumberOfUnNumbers')",
+                    "item/cid_totalruntime": "@div(sub(ticks(utcNow()),ticks(outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_activitystarttime'])),600000000)"
                   },
                   "authentication": "@parameters('$authentication')"
                 }
@@ -3678,21 +4172,6 @@
               "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"qm_environmentsettings\">\n<attribute name=\"qm_environmentsettingsid\"/>\n<attribute name=\"qm_name\"/>\n<attribute name=\"qm_value\"/>\n<order attribute=\"qm_name\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"qm_name\" operator=\"like\" value=\"%CID[_]%\"/>\n</filter>\n</entity>\n</fetch>"
             },
             "authentication": "@parameters('$authentication')"
-          }
-        },
-        "Filter_environment-CID_Flow_Environment_Folder": {
-          "runAfter": {
-            "Scope_-_Language_logic_for_Messages": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
-          },
-          "type": "Query",
-          "inputs": {
-            "from": "@outputs('get-environment-settings')?['body/value']",
-            "where": "@equals(item()?['qm_name'], 'CID_Flow_Environment_Folder')"
           }
         },
         "Scope_-_Language_logic_for_Messages": {
@@ -3833,8 +4312,8 @@
               },
               "expression": {
                 "equals": [
-                  "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_language@OData.Community.Display.V1.FormattedValue']",
-                  "English"
+                  "@variables('Language')",
+                  "@'918640001'"
                 ]
               },
               "metadata": {
@@ -3844,7 +4323,7 @@
             }
           },
           "runAfter": {
-            "Initialize_Message_Array": [
+            "check_if_language_is_null": [
               "Succeeded"
             ]
           },
@@ -3873,7 +4352,11 @@
           }
         },
         "Get_bulk_activities_log_summary_by_ID": {
-          "runAfter": {},
+          "runAfter": {
+            "Get_a_account_by_ID": [
+              "Succeeded"
+            ]
+          },
           "metadata": {
             "operationMetadataId": "ac95dd8f-6edc-4bfd-975a-6c9c22d7f655"
           },
@@ -3893,7 +4376,7 @@
         },
         "Initialize_variable_-_Error_Message": {
           "runAfter": {
-            "get-environment-settings": [
+            "Error_flag": [
               "Succeeded"
             ]
           },
@@ -3908,6 +4391,940 @@
                 "type": "string"
               }
             ]
+          }
+        },
+        "totalNumberOferrors": {
+          "runAfter": {
+            "Check_if_Validation_should_start_on_the_Modified_event": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "28a8735f-bcb1-4554-b08a-6e429977b8d7"
+          },
+          "type": "Compose",
+          "inputs": "@ length(variables('Error_List')) "
+        },
+        "totalNumberOfSites": {
+          "runAfter": {
+            "totalNumberOferrors": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6e482b88-0e20-4cfb-9a9d-59d8799d6efa"
+          },
+          "type": "Compose",
+          "inputs": "@length(body('Filter_table_-_get_none_empty_cells_sites_for_insert_'))"
+        },
+        "NumberOfUnNumbers": {
+          "runAfter": {
+            "totalNumberOfSites": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "958aedd2-980b-4aeb-806d-5de021c93c57"
+          },
+          "type": "Compose",
+          "inputs": "@length(body('Filter_table_-_Get_None_empty_cells_Extended_Table'))"
+        },
+        "Convert_time_zone": {
+          "runAfter": {
+            "NumberOfUnNumbers": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f74cfa7b-9df9-43ef-a39a-8f7a83c4e844"
+          },
+          "type": "Expression",
+          "kind": "ConvertTimeZone",
+          "inputs": {
+            "baseTime": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/createdon']",
+            "formatString": "yyyy-MM-dd hh:mm",
+            "sourceTimeZone": "Eastern Standard Time",
+            "destinationTimeZone": "Eastern Standard Time"
+          }
+        },
+        "define_basic_info_sheet_columns_2": {
+          "actions": {
+            "SiteName": {
+              "runAfter": {
+                "Parse_JSON": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0b319d79-94cf-4ca6-bb49-3374fdd972f0"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Site']"
+            },
+            "Address1": {
+              "runAfter": {
+                "SiteName": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1f93a4c9-5519-4834-b9a6-fb3d5764c2eb"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Address 1']"
+            },
+            "City": {
+              "runAfter": {
+                "Address1": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "dbe26cc1-4c9c-4ba8-b85d-cb64eef8faef"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['City']"
+            },
+            "Province": {
+              "runAfter": {
+                "City": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e975e0f1-f06a-4dca-9047-e47503e2782b"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Province']"
+            },
+            "PostalCode": {
+              "runAfter": {
+                "Province": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "75282f2f-4b8b-4689-9ea9-3782d51058df"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Postal Code']"
+            },
+            "Address2": {
+              "runAfter": {
+                "PostalCode": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "3f6a122f-c20c-4d83-b063-3be620089848"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Address 2']"
+            },
+            "Address3": {
+              "runAfter": {
+                "Address2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "4026d79c-ae18-4b94-8b1d-296b3690cda9"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Address 3']"
+            },
+            "LLDProvince": {
+              "runAfter": {
+                "Address3": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "6cdb4c23-56ba-41ce-a13f-03aebdcb78b7"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['ProvinceLLD']"
+            },
+            "Quarter": {
+              "runAfter": {
+                "LLDProvince": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a29b5c9a-fe60-4d35-be55-454356d40e4f"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Quarter']"
+            },
+            "Section": {
+              "runAfter": {
+                "Quarter": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "42869346-d816-4923-b26b-e3ac7c3bb620"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Section']"
+            },
+            "TownShip": {
+              "runAfter": {
+                "Section": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "cdc284ff-1f84-471b-95da-6eddcc7e3427"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Township']"
+            },
+            "Range": {
+              "runAfter": {
+                "TownShip": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "f5b44d03-0ea1-4322-ad2e-ea6a9fda2fd5"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Range']"
+            },
+            "Meridian": {
+              "runAfter": {
+                "Range": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "794f7754-6314-4932-bb63-f299ce9974c5"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Meridian']"
+            },
+            "Lat": {
+              "runAfter": {
+                "Meridian": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "3abf2572-b339-4126-a607-688e09d752f9"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Latitude']"
+            },
+            "Long": {
+              "runAfter": {
+                "Lat": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "855c0461-a4e4-4454-8a28-ead74c94fb7a"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Longitude']"
+            },
+            "Air": {
+              "runAfter": {
+                "Long": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "129357ef-35ce-4762-8f3f-2f1339fcc145"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Air']"
+            },
+            "Marine": {
+              "runAfter": {
+                "Air": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "33fb1f99-04f8-4e73-b7c2-71a74178883b"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Marine']"
+            },
+            "Rail": {
+              "runAfter": {
+                "Marine": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b70f0b0e-5265-4b61-8963-fc1b4b8f8b4e"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Rail']"
+            },
+            "Road": {
+              "runAfter": {
+                "Rail": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "67efa3fd-0019-4731-ab45-38562b1c3afe"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Road']"
+            },
+            "Handle": {
+              "runAfter": {
+                "Road": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "87ed0437-464f-4d68-8884-f0aaa8cc4909"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Handle']"
+            },
+            "OfferForTransport": {
+              "runAfter": {
+                "Handle": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a075538b-4938-451b-aa5c-b0b909e8bceb"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Offer for Transport']"
+            },
+            "Transport": {
+              "runAfter": {
+                "OfferForTransport": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "4be5c4d6-7fd5-425e-9fd7-93ec3d499774"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Transport']"
+            },
+            "Import": {
+              "runAfter": {
+                "Transport": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b5d428ee-008d-48b7-af90-7003164339a4"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Import']"
+            },
+            "Class": {
+              "runAfter": {
+                "Import": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b8301325-ecf8-44e1-addf-9c005e8daae5"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Class']"
+            },
+            "extendedYN": {
+              "runAfter": {
+                "Class": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a3f56429-de62-4db0-8ac3-2f7dba91b8e2"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Extended-Information-Site']"
+            },
+            "LineNumber": {
+              "runAfter": {
+                "extendedYN": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "87e59482-f129-418f-b5a6-66cf15fa34a4"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Row number']"
+            },
+            "SiteFullAddress": {
+              "runAfter": {
+                "LineNumber": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "097c3321-7f83-4634-9681-c902ac84dd3a"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['SiteFullAddress']"
+            },
+            "SiteGUID": {
+              "runAfter": {
+                "SiteFullAddress": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "5f6eb9ca-7a27-41e2-b0a5-851101b1f606"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['site-GUID']"
+            },
+            "Parse_JSON": {
+              "runAfter": {
+                "ExclJsonStringColumns": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "3f62b9eb-4bd6-419b-953f-ba6f2c27ef27"
+              },
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@outputs('ExclJsonStringColumns')",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "UserAction": {
+                      "type": "string"
+                    },
+                    "Site Name": {
+                      "type": "string"
+                    },
+                    "Address 1": {
+                      "type": "string"
+                    },
+                    "City": {
+                      "type": "string"
+                    },
+                    "Province": {
+                      "type": "string"
+                    },
+                    "Postal Code ": {
+                      "type": "string"
+                    },
+                    "Address 2": {
+                      "type": "string"
+                    },
+                    "Address 3": {
+                      "type": "string"
+                    },
+                    "Province  ": {
+                      "type": "string"
+                    },
+                    "Quarter ": {
+                      "type": "string"
+                    },
+                    "Section": {
+                      "type": "string"
+                    },
+                    "Township": {
+                      "type": "string"
+                    },
+                    "Range": {
+                      "type": "string"
+                    },
+                    "Meridian": {
+                      "type": "string"
+                    },
+                    "Latitude": {
+                      "type": "string"
+                    },
+                    "Longitude": {
+                      "type": "string"
+                    },
+                    " Air": {
+                      "type": "string"
+                    },
+                    "Marine": {
+                      "type": "string"
+                    },
+                    "Rail": {
+                      "type": "string"
+                    },
+                    "Road": {
+                      "type": "string"
+                    },
+                    "Handle": {
+                      "type": "string"
+                    },
+                    "Offer for Transport": {
+                      "type": "string"
+                    },
+                    "Transport": {
+                      "type": "string"
+                    },
+                    "Import": {
+                      "type": "string"
+                    },
+                    "Class/Division ": {
+                      "type": "string"
+                    },
+                    "Extended Information Site ": {
+                      "type": "string"
+                    },
+                    "Row number": {
+                      "type": "string"
+                    },
+                    "SiteFullAddress": {
+                      "type": "string"
+                    },
+                    "site-GUID": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "ExclJsonStringColumns": {
+              "runAfter": {
+                "Filter_array-environmentsetting-getExcelSiteColumns": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "6c280618-ef32-4af0-90e1-8d8d3ad762f4"
+              },
+              "type": "Compose",
+              "inputs": "@body('Filter_array-environmentsetting-getExcelSiteColumns')?[0]['qm_value']"
+            },
+            "Filter_array-environmentsetting-getExcelSiteColumns": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "41f6f1a2-74a5-40a3-8f7a-1c9d91283a64"
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('get-environment-settings')?['body/value']",
+                "where": "@equals(item()['qm_name'], 'CID_BulkUpload_Sites_Columns_In_Excel')"
+              }
+            }
+          },
+          "runAfter": {
+            "Filter_environment-CID_Flow_Environment_Folder": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d4375930-3c4d-472c-a8b9-7d72d1b358f5"
+          },
+          "type": "Scope"
+        },
+        "define_extended_columns_in_excel_sheet_2": {
+          "actions": {
+            "ExtendedSite": {
+              "runAfter": {
+                "ExtendedAction": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0b319d79-94cf-4ca6-bb49-3374fdd972f0"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON-ExtendedColumns')['Site']"
+            },
+            "ExtendedUNNumber": {
+              "runAfter": {
+                "ExtendedSite": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1f93a4c9-5519-4834-b9a6-fb3d5764c2eb"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON-ExtendedColumns')['unnumber']"
+            },
+            "ExtendedQuantity": {
+              "runAfter": {
+                "ExtendedUNNumber": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "dbe26cc1-4c9c-4ba8-b85d-cb64eef8faef"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON-ExtendedColumns')['Quantity']"
+            },
+            "ExtendedUnitOfMeasure": {
+              "runAfter": {
+                "ExtendedQuantity": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e975e0f1-f06a-4dca-9047-e47503e2782b"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON-ExtendedColumns')['Unit of Measure']"
+            },
+            "ExtendedAnnulaConsignment": {
+              "runAfter": {
+                "ExtendedUnitOfMeasure": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "75282f2f-4b8b-4689-9ea9-3782d51058df"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON-ExtendedColumns')['Consignments']"
+            },
+            "ExtendedGUID": {
+              "runAfter": {
+                "ExtendedAnnulaConsignment": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "3f6a122f-c20c-4d83-b063-3be620089848"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON-ExtendedColumns')['UN-GUID']"
+            },
+            "Filter_array-environmentsetting-getExcelUNColumns": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "41f6f1a2-74a5-40a3-8f7a-1c9d91283a64"
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('get-environment-settings')?['body/value']",
+                "where": "@equals(item()['qm_name'], 'CID_BulkUpload_Extended_Columns_In_Excel')"
+              }
+            },
+            "ExtendedAction": {
+              "runAfter": {
+                "Parse_JSON-ExtendedColumns": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a1598679-b359-4995-8082-c3ab58b5ce7b"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON-ExtendedColumns')['UserAction']"
+            },
+            "ExclJsonUNStringColumns": {
+              "runAfter": {
+                "Filter_array-environmentsetting-getExcelUNColumns": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "6c280618-ef32-4af0-90e1-8d8d3ad762f4"
+              },
+              "type": "Compose",
+              "inputs": "@body('Filter_array-environmentsetting-getExcelUNColumns')?[0]['qm_value']"
+            },
+            "Parse_JSON-ExtendedColumns": {
+              "runAfter": {
+                "ExclJsonUNStringColumns": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "3f62b9eb-4bd6-419b-953f-ba6f2c27ef27"
+              },
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@outputs('ExclJsonUNStringColumns')",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "UserAction": {
+                      "type": "string"
+                    },
+                    "Site": {
+                      "type": "string"
+                    },
+                    "unnumber": {
+                      "type": "string"
+                    },
+                    "Quantity": {
+                      "type": "string"
+                    },
+                    "Unit of Measure": {
+                      "type": "string"
+                    },
+                    "Consignments": {
+                      "type": "string"
+                    },
+                    "UN-GUID": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "define_basic_info_sheet_columns_2": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d4375930-3c4d-472c-a8b9-7d72d1b358f5"
+          },
+          "type": "Scope"
+        },
+        "Get_a_account_by_ID": {
+          "runAfter": {
+            "countNumberOfAlphainClassNumber": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "bb1a479b-b31f-40f5-be89-cc058b06769e"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "accounts",
+              "recordId": "@triggerOutputs()?['body/_cid_company_value']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_variable_-_ClassNumber": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "335e1cf3-05de-4895-aad8-a3fcc6fe240e"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ClassNumber",
+                "type": "string",
+                "value": "1.1A"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_Language": {
+          "runAfter": {
+            "Initialize_Message_Array": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d2b5b076-4638-4722-bf77-d73e9f825659"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Language",
+                "type": "string",
+                "value": "@{outputs('get_contact_email')?['body/cid_languageofcorrespondence']}"
+              }
+            ]
+          }
+        },
+        "check_if_language_is_null": {
+          "actions": {
+            "Set_variable_set_language_to_english": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "424cc111-ee2e-411b-95f1-56cd7b0c8997"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Language",
+                "value": "918640001"
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_Environment_folder_variable": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "equals": [
+              "@length(trim(variables('Language')))",
+              0
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "04cbdb0a-9a6d-4a06-ba70-c4e67bd5e67c"
+          },
+          "type": "If"
+        },
+        "Initialize_variable-_Alph-Char": {
+          "runAfter": {
+            "Initialize_variable_-_ClassNumber": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7496f90b-f1be-4d52-bb32-81c983492cf0"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AlphaCharArray",
+                "type": "array",
+                "value": "@createArray('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z')"
+              }
+            ]
+          }
+        },
+        "Initialize_variable-ClassGroup": {
+          "runAfter": {
+            "Initialize_variable-_Alph-Char": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c6da49bf-deb0-4c45-864d-cb601b95a6b1"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ClassGroup",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "countNumberOfAlphainClassNumber": {
+          "runAfter": {
+            "Initialize_variable-ClassGroup": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a04d1f7f-53cf-4961-847c-4450ca3b9bb7"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "countNumberOfAlphainClassNumber",
+                "type": "integer"
+              }
+            ]
+          }
+        },
+        "Error_flag": {
+          "runAfter": {
+            "define_extended_columns_in_excel_sheet_2": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "af9c01db-59f3-46fa-826e-e24fc2c82cca"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "IsErrorFree",
+                "type": "boolean",
+                "value": "@true"
+              }
+            ]
+          }
+        },
+        "Row_Number_vailable": {
+          "runAfter": {
+            "Initialize_variable_Language": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "396871f6-9db7-4572-ac20-9b39cc12d51a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RowNumber",
+                "type": "integer",
+                "value": 3
+              }
+            ]
+          }
+        },
+        "Error_List_Variable": {
+          "runAfter": {
+            "Row_Number_vailable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a10a3b39-9550-46b6-b00c-75dd826be0a2"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Error_List",
+                "type": "array",
+                "value": []
+              }
+            ]
+          }
+        },
+        "Initialize_Environment_folder_variable": {
+          "runAfter": {
+            "Error_List_Variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "fc5c3dd6-8d62-49cb-befd-838a6faaacca"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Environment_Folder",
+                "type": "string",
+                "value": "@{body('Filter_environment-CID_Flow_Environment_Folder')[0]['qm_value']}"
+              }
+            ]
+          }
+        },
+        "Filter_environment-CID_Flow_Environment_Folder": {
+          "runAfter": {
+            "get-environment-settings": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('get-environment-settings')?['body/value']",
+            "where": "@equals(item()?['qm_name'], 'CID_Flow_Environment_Folder')"
           }
         }
       }
