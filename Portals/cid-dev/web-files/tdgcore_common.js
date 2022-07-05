@@ -286,7 +286,7 @@ if (typeof (tdg.c) == "undefined") {
         replace_special_char: function (value) {
             value = $('<textarea />').html(value).text();
             // for apostrophe, use two apostrophe to escape it:
-            value = value.replace("'", "''");
+            // value = value.replace("'", "''");
             return value;
         },
 

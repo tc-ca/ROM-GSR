@@ -87,6 +87,7 @@ if (window.jQuery) {
 }
 
 function btn_save_new_onclick() {
+    $("#btn_save_new").prop('disabled', true);
     tdg.c.error_message_clear();
     if (typeof entityFormClientValidate === 'function') {
         if (entityFormClientValidate()) {
@@ -171,6 +172,7 @@ function success_cb() {
     form_clear();
 
     _reload = true;
+    $("#btn_save_new").prop('disabled', false);
 }
 
 function error_cb(msg) {
@@ -179,4 +181,5 @@ function error_cb(msg) {
     var selected_language = '{{website.selected_language.code}}';
     msg = tdg.c.text_language(msg, selected_language)
     tdg.c.message_panel_set("EntityFormControl", msg);
+    $("#btn_save_new").prop('disabled', false);
 }

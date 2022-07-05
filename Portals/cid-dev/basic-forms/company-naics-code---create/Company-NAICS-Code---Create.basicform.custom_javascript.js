@@ -74,6 +74,8 @@ if (window.jQuery) {
 
 // call back from tdg.c 
 function btn_save_new_onclick() {
+    //disable button to prevent adding duplicate classes by double click
+     $("#btn_save_new").prop('disabled', true);
     var value = false;
 
     tdg.c.error_message_clear();
@@ -131,6 +133,7 @@ function success_cb() {
     form_clear();
 
     _reload = true;
+    $("#btn_save_new").prop('disabled', false);
 }
 
 function error_cb(msg) {
@@ -139,4 +142,5 @@ function error_cb(msg) {
     var selected_language = '{{website.selected_language.code}}';
     msg = tdg.c.text_language(msg, selected_language)
     tdg.c.message_panel_set("EntityFormControl", msg);
+    $("#btn_save_new").prop('disabled', false);
 }

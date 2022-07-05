@@ -69,6 +69,8 @@ function page_setup() {
 }
 
 function btn_save_new_onclick() {
+     //disable button to prevent adding duplicate classes by double click
+     $("#btn_save_new").prop('disabled', true);
     tdg.c.error_message_clear();
     if (typeof entityFormClientValidate === 'function') {
         if (entityFormClientValidate()) {
@@ -100,6 +102,7 @@ function btn_save_new_onclick() {
     var ovs_compatibility_group = $("#ovs_compatibility_group").val();
 
     ovs_operationclass_insert(operation_id, ovs_class_division, ovs_compatibility_group, contact_id);
+
 }
 
 function ovs_primaryclass_selected(text, id) {
@@ -140,6 +143,7 @@ function ovs_operationclass_insert(operation_id, ovs_primaryclass, ovs_compatibi
         };
     }
     tdg.webapi.create("ovs_operationclasses", data, success_cb, error_cb);
+   
 }
 
 function form_clear() {
@@ -155,6 +159,8 @@ function form_clear() {
         var f = document.getElementById("WebResource_primaryclass");
         var c = f.contentWindow;
         c.clear_field(true);
+        //enable button after all operations are finished
+      $("#btn_save_new").prop('disabled', false);
     } catch (e) { }
 }
 
@@ -178,4 +184,6 @@ function error_cb(msg) {
     var selected_language = '{{website.selected_language.code}}';
     msg = tdg.c.text_language(msg, selected_language)
     tdg.c.message_panel_set("EntityFormControl", msg);
+    //enable button after all operations are finished
+      $("#btn_save_new").prop('disabled', false);
 }
