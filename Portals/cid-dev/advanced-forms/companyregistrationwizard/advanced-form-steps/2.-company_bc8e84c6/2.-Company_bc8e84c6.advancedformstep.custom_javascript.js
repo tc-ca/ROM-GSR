@@ -126,6 +126,10 @@ $(document).ready(function () {
 if (window.jQuery) {
     (function ($) {
         webFormClientValidate = function () {
+            debugger;
+            var address1_line1 = $("#address1_line1").val();
+            sessionStorage.setItem("AddressLine1Text", address1_line1);
+
             sessionStorage.setItem("step_start", "");
 
             return true;
