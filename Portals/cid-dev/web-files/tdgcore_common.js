@@ -364,9 +364,105 @@ if (typeof (tdg.c) == "undefined") {
             $("#btnOK").click(function () {
                 $("#myModal").remove();
             });
+        },
+
+        validate_address: function (language, country, province, postalCode, city){
+            var provinceValid = false;
+            var postalcodeFormatValid = false;
+            var provinceMatchesPostalcode = false;
+
+            var localizedProvince;
+
+            var postalRegex = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ ]?\d[ABCEGHJ-NPRSTV-Z]\d$/i;
+
+            //TODO Add logic so that the response can indicate the point of failure instead of a bool
+
+            if (country.localeCompare("Canada", undefined, {sensitivity: 'accent'})){
+                //Validate the province
+                for (var prov of canProvinces){
+                    localizedProvince = this.text_language(prov, language);
+                    if(province.localeCompare(localizedProvince, undefined, {sensitivity: 'accent'}) == 0){
+                        provinceValid = true;
+                        break;
+                    }
+                }
+                if (provinceValid == false) return false;
+
+                //Validate the postal code format with regex
+                if (!postalRegex.test(postalCode)){
+                    postalcodeFormatValid = false;
+                    return false;
+                }
+
+                //Validate that postal code matches
+                switch(postalCode.toUpperCase().charAt(0)) {
+                    //NL&L
+                    case "A":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[4], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+                    //NS
+                    case "B":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[6], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+                    //PEI
+                    case "C":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[9], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+                    //NB
+                    case "E":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[3], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+                    //QC
+                    case "G":
+                    case "H":
+                    case "J":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[10], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+					//ON
+                    case "K":
+					case "L":
+					case "M":
+					case "N":
+					case "P":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[8], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+					//MB
+                    case "R":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[2], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+					//SK
+                    case "S":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[11], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+					//AB
+                    case "T":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[0], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+					//BC
+                    case "V":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[1], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+					//NT & NU
+                    case "X":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[5], language)) == 0 || 
+							localizedProvince.localeCompare(this.text_language(canProvinces[7], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+					//YT
+                    case "Y":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[12], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+                    default:
+                      //Postal Code is invalid
+                  }
+				  
+				  return provinceMatchesPostalcode;
+            } else{
+                return false;
+            }
         }
     }
 }
+
 
 // Wrapper AJAX function
 (function (webapi, $) {
