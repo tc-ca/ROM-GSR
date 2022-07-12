@@ -140,6 +140,26 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000101",
                         "message_en": "As seen below your ERAP(s) from the TC ROOT systems have been transferred over If necessary add any remaining ERAPs, or choose the [Next] button to continue.",
                         "message_fr": "As seen below your ERAP(s) from the TC ROOT systems have been transferred over If necessary add any remaining ERAPs, or choose the [Next] button to continue."
+                    },
+                    {
+                        "code": "m000102",
+                        "message_en": "Air",
+                        "message_fr": "Aérien"
+                    },
+                     {
+                        "code": "m000103",
+                        "message_en": "Maritime",
+                        "message_fr": "Maritime"
+                    },
+                     {
+                        "code": "m000104",
+                        "message_en": "Rail",
+                        "message_fr": "Ferroviaire"
+                    },
+                       {
+                        "code": "m000105",
+                        "message_en": "Road",
+                        "message_fr": "Route"
                     }
               ];
 

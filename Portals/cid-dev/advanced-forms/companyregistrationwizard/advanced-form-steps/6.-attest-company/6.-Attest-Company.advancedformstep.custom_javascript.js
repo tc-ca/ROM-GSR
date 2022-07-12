@@ -4,6 +4,8 @@
 $(document).ready(function () {
     debugger;
 
+    subgrid_language();
+
     var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
     cid_crabusinessnumber = (cid_crabusinessnumber != "null" ? cid_crabusinessnumber : "");
 
@@ -12,19 +14,11 @@ $(document).ready(function () {
         tdg.c.control_hide("cid_crabusinessnumber");
         tdg.c.control_show("cid_reasonfornobnnumber");
         tdg.c.control_hide("cid_reasonfornobnnumber_other");
-
-        //$("#cid_crabusinessnumber").parent().parent().hide();
-        //$("#cid_reasonfornobnnumber").parent().parent().show();
-        //$("#cid_reasonfornobnnumber_other").parent().parent().hide();
     }
     else {
         tdg.c.control_show("cid_crabusinessnumber");
         tdg.c.control_hide("cid_reasonfornobnnumber");
         tdg.c.control_hide("cid_reasonfornobnnumber_other");
-
-        //$("#cid_crabusinessnumber").parent().parent().show();
-        //$("#cid_reasonfornobnnumber").parent().parent().hide();
-        //$("#cid_reasonfornobnnumber_other").parent().parent().hide();
     }
 
     $('table').each(function () {
@@ -37,8 +31,6 @@ $(document).ready(function () {
     });
 
     if ($("#printSummary").length <= 0) {
-        //var label = tdg.error_message.message("m000007");
-        //$('#NextButton').parentnode().append("<div id='printSummary' role='group' class='btn-group entity-action-button'><input type='button' name='PrintButton' value='Print Summary' onclick='window.print();' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'></div>");
         printSummary();
     }
 });
@@ -79,7 +71,6 @@ if (window.jQuery) {
             //Contacts validation
             var filter = "parentcustomerid/Id eq (guid'" + companyId + "')";
             var data = ExecuteQuery("Validation_CompanyPrimarySecondaryContacts", filter);
-            //var data = tdg.c.OData_List("contact", filter);
 
             if (data != null) {
                 var primaryFound = false;
@@ -100,14 +91,57 @@ if (window.jQuery) {
             if (!validation) {
                 // "You cannot attest company before adding primary and secondary contacts.</br>";
                 tdg.c.error_message_advanced_form("m000006", true);   // You cannot proceed before adding at least one secondary contact.
-
-                //$('#ValidationSummaryEntityFormView div').remove();
-                //var validationSection = $('#ValidationSummaryEntityFormView');
-                //validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
-                //validationSection.show();
-                //$('#alertMessages').focus();
             }
             return validation;
         }
     }(window.jQuery));
+}
+
+function subgrid_language() {
+    var selected_language = '{{website.selected_language.code}}';
+
+    var cid_account_companynaicscode = $(".entity-grid").eq(1);
+    cid_account_companynaicscode.on("loaded", function () {
+        debugger;
+
+        // header
+        let header = cid_account_companynaicscode.find("table thead > tr");
+        for (var index1 = 0; index1 < header.length; index1++) {
+            //debugger;
+            let tr = header[index1];
+
+            let cols = $(tr).find('th');
+            for (var i = 0; i < cols.length; i++) {
+                var tdElement = cols[i];
+                var className = $(tdElement)[0].className;
+                if (className.indexOf("sort-enabled") == -1) {
+                    var text = $(tdElement).text();
+                    text = tdg.c.text_language(text, selected_language);
+                    $(tdElement).text(text);
+                }
+            }
+        }
+
+        debugger;
+
+        let rows = cid_account_companynaicscode.find("table tbody > tr");
+        rows.each(function (index, tr) {
+            //debugger;
+
+            let cols = $(tr).find('td');
+            cols.each(function (index, td) {
+                debugger;
+                var tdElement = $(this);
+                var value = tdElement.attr('data-attribute');
+                if (value != null) {
+                    var index1 = value.indexOf('.cid_naicsclasstitle');
+                    if (index1 != -1) {
+                        var cellValue = $(td).text();
+                        cellValue = tdg.c.text_language(cellValue, selected_language);
+                        $(td).text(cellValue);
+                    }
+                }
+            });
+        });
+    });
 }

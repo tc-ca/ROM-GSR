@@ -1,6 +1,9 @@
 //
 // Basic Form-Contact - New.js
 //
+
+var _reload = false;
+
 $(document).ready(function () {
     debugger;
 
@@ -26,6 +29,31 @@ $(document).ready(function () {
         $("#fax").attr("autocomplete", "new-password");
     } catch (e) { }
 });
+
+$(window).unload(function () {
+    debugger;
+    if (_reload) {
+        var wp = window.parent;
+        try {
+            //wp.form_refresh();
+            wp.location.reload()
+        } catch (e) { }
+    }
+});
+
+if (window.jQuery) {
+    (function ($) {
+
+        entityFormClientValidate = function () {
+            debugger;
+            var validation = true;
+
+            _reload = true;
+
+            return validation;
+        }
+    }(window.jQuery));
+}
 
 function page_setup() {
     var selected_language = '{{website.selected_language.code}}';
