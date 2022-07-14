@@ -366,7 +366,7 @@ if (typeof (tdg.c) == "undefined") {
             });
         },
 
-        validate_address: function (language, country, province, postalCode, city){
+        validate_address: function (language, country, province, postalCode, city) {
             var provinceValid = false;
             var postalcodeFormatValid = false;
             var provinceMatchesPostalcode = false;
@@ -377,11 +377,11 @@ if (typeof (tdg.c) == "undefined") {
 
             //TODO Add logic so that the response can indicate the point of failure instead of a bool
 
-            if (country.localeCompare("Canada", undefined, {sensitivity: 'accent'})){
+            if (country.localeCompare("Canada", undefined, { sensitivity: 'accent' })) {
                 //Validate the province
-                for (var prov of canProvinces){
+                for (var prov of canProvinces) {
                     localizedProvince = this.text_language(prov, language);
-                    if(province.localeCompare(localizedProvince, undefined, {sensitivity: 'accent'}) == 0){
+                    if (province.localeCompare(localizedProvince, undefined, { sensitivity: 'accent' }) == 0) {
                         provinceValid = true;
                         break;
                     }
@@ -389,13 +389,13 @@ if (typeof (tdg.c) == "undefined") {
                 if (provinceValid == false) return false;
 
                 //Validate the postal code format with regex
-                if (!postalRegex.test(postalCode)){
+                if (!postalRegex.test(postalCode)) {
                     postalcodeFormatValid = false;
                     return false;
                 }
 
                 //Validate that postal code matches
-                switch(postalCode.toUpperCase().charAt(0)) {
+                switch (postalCode.toUpperCase().charAt(0)) {
                     //NL&L
                     case "A":
                         if (localizedProvince.localeCompare(this.text_language(canProvinces[4], language)) == 0) provinceMatchesPostalcode = true;
@@ -418,51 +418,50 @@ if (typeof (tdg.c) == "undefined") {
                     case "J":
                         if (localizedProvince.localeCompare(this.text_language(canProvinces[10], language)) == 0) provinceMatchesPostalcode = true;
                         break;
-					//ON
+                    //ON
                     case "K":
-					case "L":
-					case "M":
-					case "N":
-					case "P":
+                    case "L":
+                    case "M":
+                    case "N":
+                    case "P":
                         if (localizedProvince.localeCompare(this.text_language(canProvinces[8], language)) == 0) provinceMatchesPostalcode = true;
                         break;
-					//MB
+                    //MB
                     case "R":
                         if (localizedProvince.localeCompare(this.text_language(canProvinces[2], language)) == 0) provinceMatchesPostalcode = true;
                         break;
-					//SK
+                    //SK
                     case "S":
                         if (localizedProvince.localeCompare(this.text_language(canProvinces[11], language)) == 0) provinceMatchesPostalcode = true;
                         break;
-					//AB
+                    //AB
                     case "T":
                         if (localizedProvince.localeCompare(this.text_language(canProvinces[0], language)) == 0) provinceMatchesPostalcode = true;
                         break;
-					//BC
+                    //BC
                     case "V":
                         if (localizedProvince.localeCompare(this.text_language(canProvinces[1], language)) == 0) provinceMatchesPostalcode = true;
                         break;
-					//NT & NU
+                    //NT & NU
                     case "X":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[5], language)) == 0 || 
-							localizedProvince.localeCompare(this.text_language(canProvinces[7], language)) == 0) provinceMatchesPostalcode = true;
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[5], language)) == 0 ||
+                            localizedProvince.localeCompare(this.text_language(canProvinces[7], language)) == 0) provinceMatchesPostalcode = true;
                         break;
-					//YT
+                    //YT
                     case "Y":
                         if (localizedProvince.localeCompare(this.text_language(canProvinces[12], language)) == 0) provinceMatchesPostalcode = true;
                         break;
                     default:
-                      //Postal Code is invalid
-                  }
-				  
-				  return provinceMatchesPostalcode;
-            } else{
+                    //Postal Code is invalid
+                }
+
+                return provinceMatchesPostalcode;
+            } else {
                 return false;
             }
         }
     }
 }
-
 
 // Wrapper AJAX function
 (function (webapi, $) {
@@ -542,14 +541,14 @@ if (typeof (tdg.webapi) == "undefined") {
                 error: function (res, status, errorThrown) {
                     debugger;
 
-                    sessionStorage.setItem("innererror",false);
+                    sessionStorage.setItem("innererror", false);
                     try {
                         var msg = res.responseJSON.error.innererror.message;
                         sessionStorage.setItem("innererror", true);
                     } catch (e) {
                         var msg = res.responseJSON.error.message;
                     }
-                    
+
                     console.log(msg);
                     try {
                         error_cb(msg);
@@ -748,164 +747,138 @@ if (typeof (tdg.root) == "undefined") {
         }
     }
 }
-function Append_Modes_html_checkboxes(air, marine, rail, road) {
-    //get Air translation from file
-    console.log("function called");
-    var cid_Air_label = tdg.error_message.message("m000102");
-    var cid_Maritime_label = tdg.error_message.message("m000103");
-    var cid_Rail_label = tdg.error_message.message("m000104");
-    var cid_Road_label = tdg.error_message.message("m000105");
 
+// tdg.cid = tdgcore.cid
+if (typeof (tdg.cid) == "undefined") {
+    tdg.cid = {
+        Append_Modes_html_checkboxes: function (air, marine, rail, road) {
+            debugger;
 
-    console.log("after messages retrive");
+            //get Air translation from file
+            console.log("function called");
+            var cid_Air_label = tdg.error_message.message("m000102");
+            var cid_Maritime_label = tdg.error_message.message("m000103");
+            var cid_Rail_label = tdg.error_message.message("m000104");
+            var cid_Road_label = tdg.error_message.message("m000105");
 
+            console.log("after messages retrive");
 
-    //check if air is selected
-    var airchecked = "";
-    if (air == true) {
-        airchecked = 'checked="checked"';
-    }
-    //check if rail
-    var railchecked = "";
-    if (rail == true) {
-        railchecked = 'checked="checked"';
-    }
-    //check if marine
-    var marinechecked = "";
-    if (marine == true) {
-        marinechecked = 'checked="checked"';
-    }
-    //check if road
-    var roadchecked = "";
-    if (road == true) {
-        roadchecked = 'checked="checked"';
-    }
+            //check if air is selected
+            var airchecked = "";
+            if (air == true) {
+                airchecked = 'checked="checked"';
+            }
+            //check if rail
+            var railchecked = "";
+            if (rail == true) {
+                railchecked = 'checked="checked"';
+            }
+            //check if marine
+            var marinechecked = "";
+            if (marine == true) {
+                marinechecked = 'checked="checked"';
+            }
+            //check if road
+            var roadchecked = "";
+            if (road == true) {
+                roadchecked = 'checked="checked"';
+            }
 
+            var row1 = ' <tr style="background-color: rgb(240, 240, 240);">' +
+                '<td colspan="1" rowspan="1" class="clearfix cell checkbox-cell">' +
+                '<div class="info">' +
+                '<label for="cid_Road" id="cid_Road_label" class="field-label" role="none">' + cid_Road_label + '</label>' +
+                '</div>' +
+                '<div class="control">' +
+                '<span class="checkbox ">' +
+                '<input id="cid_Road" type="checkbox" name="cid_Road" ' + roadchecked + ' class="checkbox readonly" disabled="disabled" aria-disabled="true">' +
+                '</span>' +
+                '<input type="hidden" name="cid_Road_Value" id="cid_Road_Value" value="' + road + '">' +
+                '</div>' +
+                '</td>' +
+                '<td class="cell zero-cell"></td>' +
+                '<td colspan = "1" rowspan = "1" class="clearfix cell checkbox-cell" >' +
+                '<div class="info">' +
+                '<label for="cid_Rail" id="cid_Rail_label" class="field-label" role="none">' + cid_Rail_label + '</label>' +
+                '</div>' +
+                '<div class="control">' +
+                '<span class="checkbox ">' +
+                '<input id="cid_Rail" type="checkbox" name="cid_Rail" ' + railchecked + '   class="checkbox readonly" disabled="disabled" aria-disabled="true">' +
+                '</span>' +
+                '<input type="hidden" name="cid_Rail_Value" id="cid_Rail_Value" value="' + rail + '">' +
+                '</div>' +
+                '</td>' +
+                '</tr>';
+            console.log("row 1");
+            var row2 = ' <tr style="background-color: rgb(240, 240, 240);">' +
+                '<td colspan = "1" rowspan = "1" class="clearfix cell checkbox-cell" >' +
+                '<div class="info">' +
+                '<label for="cid_Air" id="cid_Air_label" class="field-label" role="none">' + cid_Air_label + '</label>' +
+                '</div>' +
+                '<div class="control">' +
+                '<span class="checkbox ">' +
+                '<input id="cid_Air" type="checkbox" name="cid_Air" ' + airchecked + ' class="checkbox readonly" disabled="disabled" aria-disabled="true">' +
+                '</span>' +
+                '<input type="hidden" name="cid_Air_Value" id="cid_Air_Value" value="' + air + '">' +
+                '</div>' +
+                '</td>' +
+                '<td colspan="1" rowspan="1" class="clearfix cell checkbox-cell">' +
+                '<div class="info">' +
+                '<label for="cid_Maritime" id="cid_Maritime_label" class="field-label" role="none">' + cid_Maritime_label + '</label>' +
+                '</div>' +
+                '<div class="control">' +
+                '<span class="checkbox ">' +
+                '<input id="cid_Marine" type="checkbox" name="cid_Marine" ' + marinechecked + ' class="checkbox readonly" disabled="disabled" aria-disabled="true">' +
+                '</span>' +
+                '<input type="hidden" name="cid_Marine_Value" id="cid_Marine_Value" value="' + marine + '">' +
+                '</div>' +
+                '</td>' +
+                '<td class="cell zero-cell"></td>' +
+                '</tr>';
+            console.log("row 2");
+            $("[data-name='site_attestation_section_Modes']").each(function () {
+                var selectedTable = $(this);
+                $(this).append(row2);
+                console.log("after row 2 modified");
+                $(this).append(row1);
+                console.log("after row 1 modified");
+            })
+        },
 
-    var row1 = ' <tr style="background-color: rgb(240, 240, 240);">' +
+        Display_Modes: function (siteid) {
+            debugger;
 
-        '<td colspan="1" rowspan="1" class="clearfix cell checkbox-cell">' +
-        '<div class="info">' +
-        '<label for="cid_Road" id="cid_Road_label" class="field-label" role="none">' + cid_Road_label + '</label>' +
-        '</div>' +
-        '<div class="control">' +
-        '<span class="checkbox ">' +
-        '<input id="cid_Road" type="checkbox" name="cid_Road" ' + roadchecked + ' class="checkbox readonly" disabled="disabled" aria-disabled="true">' +
-        '</span>' +
-        '<input type="hidden" name="cid_Road_Value" id="cid_Road_Value" value="' + road + '">' +
-        '</div>' +
-        '</td>' +
-        '<td class="cell zero-cell"></td>' +
-        '<td colspan = "1" rowspan = "1" class="clearfix cell checkbox-cell" >' +
-        '<div class="info">' +
-        '<label for="cid_Rail" id="cid_Rail_label" class="field-label" role="none">' + cid_Rail_label + '</label>' +
-        '</div>' +
-        '<div class="control">' +
-        '<span class="checkbox ">' +
-        '<input id="cid_Rail" type="checkbox" name="cid_Rail" ' + railchecked + '   class="checkbox readonly" disabled="disabled" aria-disabled="true">' +
-        '</span>' +
-        '<input type="hidden" name="cid_Rail_Value" id="cid_Rail_Value" value="' + rail + '">' +
-        '</div>' +
-        '</td>' +
-        '</tr>';
-    console.log("row 1");
-    var row2 = ' <tr style="background-color: rgb(240, 240, 240);">' +
-        '<td colspan = "1" rowspan = "1" class="clearfix cell checkbox-cell" >' +
-        '<div class="info">' +
-        '<label for="cid_Air" id="cid_Air_label" class="field-label" role="none">' + cid_Air_label + '</label>' +
-        '</div>' +
-        '<div class="control">' +
-        '<span class="checkbox ">' +
-        '<input id="cid_Air" type="checkbox" name="cid_Air" ' + airchecked + ' class="checkbox readonly" disabled="disabled" aria-disabled="true">' +
-        '</span>' +
-        '<input type="hidden" name="cid_Air_Value" id="cid_Air_Value" value="' + air + '">' +
-        '</div>' +
-        '</td>' +
+            var operationid;
+            console.log("input site id " + siteid);
+            //cid_ModeOfTransportationAir,Marine,cid_ModeOfTransportationRoad,cid_modeoftransportationrail
+            var queryURL = "$select=cid_modeoftransportationair,cid_modeoftransportationmarine,cid_modeoftransportationroad,cid_modeoftransportationrail&$filter=ovs_operationtype eq 918640038 and ovs_SiteId/accountid eq " + siteid;
 
-        '<td colspan="1" rowspan="1" class="clearfix cell checkbox-cell">' +
-        '<div class="info">' +
-        '<label for="cid_Maritime" id="cid_Maritime_label" class="field-label" role="none">' + cid_Maritime_label + '</label>' +
-        '</div>' +
-        '<div class="control">' +
-        '<span class="checkbox ">' +
-        '<input id="cid_Marine" type="checkbox" name="cid_Marine" ' + marinechecked + ' class="checkbox readonly" disabled="disabled" aria-disabled="true">' +
-        '</span>' +
-        '<input type="hidden" name="cid_Marine_Value" id="cid_Marine_Value" value="' + marine + '">' +
-        '</div>' +
-        '</td>' +
-        '<td class="cell zero-cell"></td>' +
-        '</tr>';
-    console.log("row 2");
-    $("[data-name='site_attestation_section_Modes']").each(function () {
-        var selectedTable = $(this);
-        $(this).append(row2);
-        console.log("after row 2 modified");
-        $(this).append(row1);
-        console.log("after row 1 modified");
-        /* selectedTable.find("tbody").each(function () {
-       
-                   $(this).after(row2);
-                   console.log("after row 2");
-                    $(this).after(row1);
-                   console.log("after row 1");
-       
-               });*/
-    })
+            webapi.safeAjax({
+                type: "GET",
+                url: "/_api/ovs_mocregistrations?" + queryURL,
+                contentType: "application/json",
+                type: "GET",
+                success: function (res) {
+                    debugger;
+                    operationid = res.value[0]['ovs_mocregistrationid'];
+                    var air = false;
+                    if (res.value[0]['cid_modeoftransportationair'] == true)
+                        air = true;
+                    var road = false;
+                    if (res.value[0]['cid_modeoftransportationroad'] == true)
+                        road = true;
+                    var marine = false;
+                    if (res.value[0]['cid_modeoftransportationmarine'] == true)
+                        marine = true;
+                    var rail = false;
+                    if (res.value[0]['cid_modeoftransportationrail'] == true)
+                        rail = true;
 
-    // JavaScript source code
-    /*$('table').each(function () {
-        var selectedTable = $(this);
-        if (selectedTable.attr('data-name').includes('site_attestation_section_Modes')) {
-           // $(this).innerHTML += ModesCheckBox_HtmlTags;
-            selectedTable.find("tbody").each(function () {
-    
-                $(this).after(row2);
-                 $(this).after(row1);
-                
-    
+                    //cid_modeoftransportationmarine
+                    console.log("Operation query results for Modes " + " Air " + air + " Road " + road + " Marine " + marine + " Rail " + rail);
+                    tdg.cid.Append_Modes_html_checkboxes(air, marine, rail, road);
+                }
             });
-    
-    
-    
-           
         }
-    });*/
-}
-
-function Display_Modes(siteid) {
-    var operationid;
-    console.log("input site id " + siteid);
-    //cid_ModeOfTransportationAir,Marine,cid_ModeOfTransportationRoad,cid_modeoftransportationrail
-    var queryURL = "$select=cid_modeoftransportationair,cid_modeoftransportationmarine,cid_modeoftransportationroad,cid_modeoftransportationrail&$filter=ovs_operationtype eq 918640038 and ovs_SiteId/accountid eq " + siteid;
-
-    webapi.safeAjax({
-        type: "GET",
-        url: "/_api/ovs_mocregistrations?" + queryURL
-        ,
-        contentType: "application/json",
-
-        type: "GET",
-
-        success: function (res) {
-
-            operationid = res.value[0]['ovs_mocregistrationid'];
-            var air = false;
-            if (res.value[0]['cid_modeoftransportationair'] == true)
-                air = true;
-            var road = false;
-            if (res.value[0]['cid_modeoftransportationroad'] == true)
-                road = true;
-            var marine = false;
-            if (res.value[0]['cid_modeoftransportationmarine'] == true)
-                marine = true;
-            var rail = false;
-            if (res.value[0]['cid_modeoftransportationrail'] == true)
-                rail = true;
-
-            //cid_modeoftransportationmarine
-            console.log("Operation query results for Modes " + " Air " + air + " Road " + road + " Marine " + marine + " Rail " + rail);
-            Append_Modes_html_checkboxes(air, marine, rail, road);
-        }
-    });
-
+    }
 }
