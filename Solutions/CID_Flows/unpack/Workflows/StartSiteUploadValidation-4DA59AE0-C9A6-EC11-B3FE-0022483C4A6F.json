@@ -897,7 +897,7 @@
                   },
                   "Send_an_email_notification_to_portal_users_with_errors": {
                     "runAfter": {
-                      "html_table_with_style": [
+                      "Eng-Localization-Error": [
                         "Succeeded"
                       ]
                     },
@@ -913,8 +913,8 @@
                       },
                       "parameters": {
                         "request/to": "@{outputs('get_contact_email')?['body/emailaddress1']};",
-                        "request/subject": "workbook was not successfully uploaded",
-                        "request/text": "<p>Hello @{outputs('get_contact_email')?['body/firstname']},<br>\n<br>\nworkbook for @{outputs('get_contact_email')?['body']['_parentcustomerid_value@OData.Community.Display.V1.FormattedValue']} was not successfully uploaded, Please address the following errors first and try the upload again.<br>\n- Upload Date: @{body('Convert_time_zone')}<br>\n- Total # of Sites in the workbook : @{outputs('totalNumberOfSites')}<br>\n- Total # of UNs in the workbook : @{outputs('totalNumberOferrors')}<br>\n- Total # of Errors: @{outputs('totalNumberOferrors')}<br>\n- File Name: @{outputs('Update_Bulk_activity_log_summary')?['body/cid_filename']}<br>\n<br>\nThe following are the Number of Errors found in the uploaded workbook:<br>\n<br>\n@{replace( outputs('html_table_with_style') ,'<table>' , '  <table><col style=\"width:15%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:50%\">\r\n        <col style=\"width:25%\">')}<br>\n</p>"
+                        "request/subject": "Unsuccessful Bulk Data Upload during the processing of the Registration in the Transport Canada CID Data Platform. Please see the details for the next steps ",
+                        "request/text": "<p>Hello @{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']},<br>\n&nbsp;<br>\nThe Bulk Data Upload processing of the Registration for the @{outputs('Get_a_account_by_ID')?['body/ovs_legalname']} company, within the Transport Canada CID Data Platform, was not successful. No data was updated within the Transport Canada CID Data Platform. &nbsp;<br>\n&nbsp;<br>\nPlease: &nbsp;<br>\n• address the @{outputs('totalNumberOferrors')} @{outputs('Eng-Localization-Error')} that are as detailed below<br>\n• save a copy of the workbook with those updates<br>\n• use that new copy as the file source of another Registration Bulk Upload process.<br>\nRegards<br>\n&nbsp;<br>\n{7}<br>\n<br>\n@{replace( outputs('html_table_with_style') ,'<table>' , '  <table><col style=\"width:15%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:50%\">\r\n        <col style=\"width:25%\">')}<br>\n</p>"
                       },
                       "authentication": "@parameters('$authentication')"
                     }
@@ -945,6 +945,18 @@
                       "from": "@body('Select_Error_List_Variable_columns_English')",
                       "format": "HTML"
                     }
+                  },
+                  "Eng-Localization-Error": {
+                    "runAfter": {
+                      "html_table_with_style": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "c0c7a486-a2cb-4b3a-94c7-50459974329f"
+                    },
+                    "type": "Compose",
+                    "inputs": "@if( greater( outputs('totalNumberOferrors'),1)  , 'errors' , 'error')"
                   }
                 },
                 "runAfter": {
@@ -987,7 +999,7 @@
                     },
                     "Send_an_email_notification_with_errors_to_portal_user_in_English": {
                       "runAfter": {
-                        "html_table_with_style-French": [
+                        "French-Localization-Error": [
                           "Succeeded"
                         ]
                       },
@@ -1003,8 +1015,8 @@
                         },
                         "parameters": {
                           "request/to": "@{outputs('get_contact_email')?['body/emailaddress1']};",
-                          "request/subject": "le classeur n'a pas été téléchargé avec succès",
-                          "request/text": "<p>Bonjour @{outputs('get_contact_email')?['body/firstname']},<br>\n<br>\ncahier d'exercices pour &nbsp;@{outputs('get_contact_email')?['body']['_parentcustomerid_value@OData.Community.Display.V1.FormattedValue']} n'a pas été téléchargé avec succès, veuillez d'abord résoudre les erreurs suivantes et réessayez le téléchargement.<br>\n<br>\n- Date de dépôt: @{body('Convert_time_zone')}<br>\n- Nombre total de sites dans le classeur : @{outputs('totalNumberOfSites')}<br>\n- Nombre total d'ONU dans le classeur : @{outputs('totalNumberOferrors')}<br>\n- Nombre total d'erreurs: @{outputs('totalNumberOferrors')}<br>\n- Nom de fichier: @{outputs('Update_Bulk_activity_log_summary')?['body/cid_filename']}<br>\n<br>\nVoici le nombre d'erreurs trouvées dans le classeur téléchargé:<br>\n<br>\n@{replace( outputs('html_table_with_style-French') ,'<table>' , '  <table><col style=\"width:20%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:45%\">\r\n        <col style=\"width:25%\">')}<br>\n<br>\n<br>\n</p>"
+                          "request/subject": "Échec du téléchargement de données en bloc lors du traitement de l'enregistrement dans la plate-forme de données CID de Transports Canada. Veuillez consulter les détails pour les prochaines étapes",
+                          "request/text": "<p>Bonjour @{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']}, <br>\n<br>\nLe traitement de téléchargement de données en bloc de l'enregistrement pour la société @{outputs('Get_a_account_by_ID')?['body/ovs_legalname']}, au sein de la plate-forme de données CID de Transports Canada, n'a pas abouti. Aucune donnée n'a été mise à jour dans la plateforme de données CID de Transports Canada.<br>\n &nbsp;<br>\nS'il vous plaît:<br>\n• adressez @{outputs('totalNumberOferrors')} &nbsp;{5} qui sont détaillés ci-dessous<br>\n• enregistrer une copie du classeur avec ces mises à jour<br>\n• utiliser cette nouvelle copie comme fichier source d'un autre processus de téléchargement en masse Inscription.<br>\n<br>\nSalutations<br>\n<br>\n<br>\n<br>\nBonjour @{outputs('get_contact_email')?['body/firstname']},<br>\n<br>\ncahier d'exercices pour &nbsp;@{outputs('get_contact_email')?['body']['_parentcustomerid_value@OData.Community.Display.V1.FormattedValue']} n'a pas été téléchargé avec succès, veuillez d'abord résoudre les erreurs suivantes et réessayez le téléchargement.<br>\n<br>\n- Date de dépôt: @{body('Convert_time_zone')}<br>\n- Nombre total de sites dans le classeur : @{outputs('totalNumberOfSites')}<br>\n- Nombre total d'ONU dans le classeur : @{outputs('totalNumberOferrors')}<br>\n- Nombre total d'erreurs: @{outputs('totalNumberOferrors')}<br>\n- Nom de fichier: @{outputs('Update_Bulk_activity_log_summary')?['body/cid_filename']}<br>\n<br>\nVoici le nombre d'erreurs trouvées dans le classeur téléchargé:<br>\n<br>\n@{replace( outputs('html_table_with_style-French') ,'<table>' , '  <table><col style=\"width:20%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:45%\">\r\n        <col style=\"width:25%\">')}<br>\n<br>\n<br>\n</p>"
                         },
                         "authentication": "@parameters('$authentication')"
                       }
@@ -1020,6 +1032,18 @@
                       },
                       "type": "Compose",
                       "inputs": " <style>\n        table {\n            border: 1px solid #1C6EA4;\n            background-color: #EEEEEE;\n            width: 100%;\n    \n            border-collapse: collapse;\n        }\n\n            table td, table th {\n                border: 1px solid #AAAAAA;\n                padding: 3px 2px;\n                text-align: center;\n            }\n\n            table tbody tr td:nth-child(1) {\n                text-align: left;\n                font-size: 13px;\n            }\n            table tbody tr td:nth-child(2) {\n                text-align: center;\n                font-size: 13px;\n            }\n           \n            table tbody tr td:nth-child(3) {\n                text-align: left;\n                font-size: 13px;\n            }\n            table tbody tr td:nth-child(4) {\n                text-align: left;\n                font-size: 13px;\n            }\n            table thead {\n                background: #1C6EA4;\n                border-bottom: 2px solid #444444;\n            }\n\n                table thead th {\n                    font-size: 15px;\n                    font-weight: bold;\n                    color: #FFFFFF;\n                    border-left: 2px solid #D0E4F5;\n                }\n\n                    table thead th:first-child {\n                        border-left: none;\n                    }\n    </style>\n\n\n@{replace(replace(body('Create_HTML_table-French'),'Add Extended Info','Ajouter des informations étendues'),'Add Basic Info' ,'Ajouter des informations de base')}\n"
+                    },
+                    "French-Localization-Error": {
+                      "runAfter": {
+                        "html_table_with_style-French": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "3064f8a1-78f8-4759-8cc5-beb7926cb870"
+                      },
+                      "type": "Compose",
+                      "inputs": "@if(greater(outputs('totalNumberOferrors'), 1), 'les erreurs', 'Erreur')"
                     }
                   }
                 },
@@ -2365,7 +2389,7 @@
             }
           }
         },
-        "For_each_site_from_http_request": {
+        "For_each_site_from_http_request_-_do_not_use": {
           "foreach": "@body('Select_Site_List')",
           "actions": {
             "Current_row": {
@@ -2374,7 +2398,7 @@
                 "operationMetadataId": "692703f0-6bc6-4bc1-8199-14e43dfe7f6a"
               },
               "type": "Compose",
-              "inputs": "@items('For_each_site_from_http_request')"
+              "inputs": "@items('For_each_site_from_http_request_-_do_not_use')"
             },
             "Current_Row_number": {
               "runAfter": {
