@@ -1191,7 +1191,7 @@
                   }
                 },
                 "runAfter": {
-                  "Invoke_an_HTTP_request_-_Protect_Instruction_Sheet_2": [
+                  "Update_bulk_activity_log": [
                     "Succeeded"
                   ]
                 },
@@ -1222,6 +1222,35 @@
                     "request/headers": {
                       "accept": "application/json"
                     }
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              },
+              "Update_bulk_activity_log": {
+                "runAfter": {
+                  "Invoke_an_HTTP_request_-_Protect_Instruction_Sheet_2": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "e0f774e5-53f3-47de-b653-05797908c7ce"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps",
+                    "operationId": "UpdateRecord",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "cid_bulkactivitylogsummaries",
+                    "recordId": "@outputs('Add_bulk_activity_review_Log')?['body/cid_bulkactivitylogsummaryid']",
+                    "item/cid_activityendtime": "@utcNow()",
+                    "item/cid_activitystatus": 100000000,
+                    "item/cid_filename": "@outputs('Create_file')?['body/Name']",
+                    "item/cid_language": "@variables('Language')",
+                    "item/cid_numberofsites": "@length(outputs('SiteList'))",
+                    "item/cid_numberofunnumbers": "@length(outputs('UN_Number_List'))"
                   },
                   "authentication": "@parameters('$authentication')"
                 }
