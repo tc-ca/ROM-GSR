@@ -3,17 +3,17 @@ if (typeof (tdg.message) == "undefined") {
     tdg.message = {
         list: function () {
             var m000013_EN = "The Sites shown in the datagrid below, with a Site Claim of 'Site Claim Pending', " +
-                             "are understood to belong to your company.\n" +
-                             "Using the button (V) to the right of each of those Sites, please choose one of following actions:\n" +
-                             "- Set as My Site Active\n" +
-                             "- Set and Attest as My Site Inactive\n" +
-                             "- Set and Attest Not My Site\n";
+                "are understood to belong to your company.\n" +
+                "Using the button (V) to the right of each of those Sites, please choose one of following actions:\n" +
+                "- Set as My Site Active\n" +
+                "- Set and Attest as My Site Inactive\n" +
+                "- Set and Attest Not My Site\n";
             var m000013_FR = "Les sites affichés dans la grille de données ci-dessous, avec une revendication de site de 'Revendication de site en attente', " +
-                             "sont considérés comme appartenant à votre entreprise.\n" +
-                             "À l'aide du bouton (V) à droite de chacun de ces sites, veuillez choisir l'une des actions suivantes :\n" +
-                             "- Définir comme Mon site actif\n" +
-                             "- Définir et attester comme mon site inactif\n" +
-                             "- Définir et attester qu'il ne s'agit pas de mon site\n";
+                "sont considérés comme appartenant à votre entreprise.\n" +
+                "À l'aide du bouton (V) à droite de chacun de ces sites, veuillez choisir l'une des actions suivantes :\n" +
+                "- Définir comme Mon site actif\n" +
+                "- Définir et attester comme mon site inactif\n" +
+                "- Définir et attester qu'il ne s'agit pas de mon site\n";
             var list =
                 [
                     {
@@ -56,7 +56,7 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "You cannot proceed before adding at least one secondary contact.",
                         "message_fr": "Vous ne pouvez pas continuer avant d'avoir ajouté au moins un contact secondaire."
                     },
-                      {
+                    {
                         "code": "m000003",
                         "message_en": "Submit and Close",
                         "message_fr": "Soumettre et fermer"
@@ -139,29 +139,34 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000101",
                         "message_en": "As seen below your ERAP(s) from the TC ROOT systems have been transferred over If necessary add any remaining ERAPs, or choose the [Next] button to continue.",
-                        "message_fr": "As seen below your ERAP(s) from the TC ROOT systems have been transferred over If necessary add any remaining ERAPs, or choose the [Next] button to continue."
+                        "message_fr": "As seen below your ERAP(s) from the TC ROOT systems have been transferred over If necessary add any remaining ERAPs, or choose the [Next] button to continue._FR"
                     },
                     {
                         "code": "m000102",
                         "message_en": "Air",
                         "message_fr": "Aérien"
                     },
-                     {
+                    {
                         "code": "m000103",
                         "message_en": "Maritime",
                         "message_fr": "Maritime"
                     },
-                     {
+                    {
                         "code": "m000104",
                         "message_en": "Rail",
                         "message_fr": "Ferroviaire"
                     },
-                       {
+                    {
                         "code": "m000105",
                         "message_en": "Road",
                         "message_fr": "Route"
+                    },
+                    {
+                        "code": "m000106",
+                        "message_en": "<h2>TDG Site Registration Database: {0}</h2>",
+                        "message_fr": "<h2>TDG Site Registration Database: {0}_FR</h2>"
                     }
-              ];
+                ];
 
             return list;
         }

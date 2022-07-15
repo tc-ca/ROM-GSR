@@ -212,11 +212,7 @@ $('#btn_attachfile_and_scan').click(function(e)
 
   else if (file) {
 
-       // $('#processingMsg').css('display', 'block');
-        //$('#processingMsg').text("Workbook is being scanned….");
-
-      //  $('#warnningMessage').css('display', 'block');
-       // $('#warnningMessage').text("Workbook is being scanned….");
+  
         // Read the file
 
         var reader = new FileReader();
@@ -280,7 +276,7 @@ $('#btn_attachfile_and_scan').click(function(e)
 
       var companyid = '{{parentid}}';
      var flowparamaters =
-        '{ "accountid": "' + companyid + '",'  + '"Language": "English" }';
+        '{ "accountid": "' + companyid + '",'  + '"Language": "English" , "UiLanguage":"'+ langcode+'" }';
 
 
       var req = new XMLHttpRequest();
@@ -294,14 +290,42 @@ $('#btn_attachfile_and_scan').click(function(e)
         if (this.readyState === 4) {
           req.onreadystatechange = null;
           if (this.status === 200) {
-                   $('#infoMsg').html(DownloadMessageCompleted );
+           $('#infoMsg').html(DownloadMessageCompleted );
+          
             var result = this.response;
-           // $('#ll').hide();
-            //https://rd-tdgcore-dev.powerappsportals.com/_entity/annotation/
-            var fileattachementURL = "~/_entity/annotation/" + result;
+          
+           
+            
+          //assign result to noteid intially
+            var NoteGUID =result;
+             console.log("NoteGUID " + NoteGUID) ;
+           
+           
+        
+         if (req.getResponseHeader('RootMessag') != null && req.getResponseHeader('RootMessag') != "")
+         {
+              var SeperatorIndex =   result.indexOf("|");
+              NoteGUID = result.substring(0, SeperatorIndex ).trim();
+            
+               var rootMessage = result.substring( SeperatorIndex + 1); 
+              $('#infoMsg').html("<p>" + DownloadMessageCompleted +  "</p> <br> <p>"+ rootMessage
+          
+              + "</p>");
+         }
+         
+       
+        //  $('<textarea/>').text(req.getResponseHeader('RootMessag')).html();
+      
+
+           //annotation url
+            var fileattachementURL = "~/_entity/annotation/"  + NoteGUID;
+      
+         
+
+            //result;
+            //download the file from the url
             window.location.replace(fileattachementURL);
-            // $("#infoMsg").css("display", "none");
-           // $("#processingMsg").hide();
+        
           } else {
               $('#processingMsg').text("Download was not completed due to system issue, please contact system support");
             var result = this.response;
@@ -337,8 +361,9 @@ $('#btn_attachfile_and_scan').click(function(e)
       var companyid = '{{parentid}}';
 
 
-      var flowparamaters =
-        '{ "accountid": "' + companyid + '",'  + '"Language": "French" }';
+   
+       var flowparamaters =
+        '{ "accountid": "' + companyid + '",'  + '"Language": "English" , "UiLanguage":"'+ langcode+'" }';
 
 
       var req = new XMLHttpRequest();
@@ -354,9 +379,34 @@ $('#btn_attachfile_and_scan').click(function(e)
           if (this.status === 200) {
                $('#processingMsg').text(DownloadMessageCompleted);
             var result = this.response;
-           // $('#ll').hide();
-            //https://rd-tdgcore-dev.powerappsportals.com/_entity/annotation/
-            var fileattachementURL = "~/_entity/annotation/" + result;
+             var NoteGUID =result;
+             console.log("NoteGUID " + NoteGUID) ;
+           
+           
+        
+         if (req.getResponseHeader('RootMessag') != null && req.getResponseHeader('RootMessag') != "")
+         {
+              var SeperatorIndex =   result.indexOf("|");
+              NoteGUID = result.substring(0, SeperatorIndex ).trim();
+             
+               var rootMessage = result.substring( SeperatorIndex + 1); 
+              $('#infoMsg').html("<p>" + DownloadMessageCompleted +  "</p> <br> <p>"+ rootMessage
+          
+              + "</p>");
+         }
+         
+       
+        //  $('<textarea/>').text(req.getResponseHeader('RootMessag')).html();
+      
+
+           //annotation url
+            var fileattachementURL = "~/_entity/annotation/"  + NoteGUID;
+           
+         
+           
+
+
+
             window.location.replace(fileattachementURL);
             // $("#processingMsg").css("display", "none");
             //$("#processingMsg").hide();
@@ -423,9 +473,6 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
 
          }
 
-
-
-
                $('#infoMsg').css('display', 'block');
                $('#infoMsg').html( responseMessage);
 
@@ -484,7 +531,7 @@ if ( language != 'en-US')
          {
              $("#processingMsg").css("display", "none");
            // alert ( req.getResponseHeader('MessageCode') );
-             alert ( req.getResponseHeader('Message') );
+            // alert ( req.getResponseHeader('Message') );
             // alert("Error - Bulk Site Registration Upload: Initial upload stopped due to a potential virus.");
          }
 
@@ -524,19 +571,6 @@ function call_Inital_validation(Language , bulkactivitytype)
 
         urlPath = urlPath.split('?')[0];
 
-        // window.location.href.split('?')[0]
-      //  var idexofParamaterstart =  urlPath.indexOf("?") - 1;
-      //alert (idexofParamaterstart);
-  //alert ( urlPath.substring (0,idexofParamaterstart ) );
-
-// set search property to blank
-//urlPath.search = '';
-//var newURL = urlPath.substring (0,idexofParamaterstart ) ;
-//"https://rd-tdgcore-dev.powerappsportals.com/Bulk_Site_Upload";
-//urlPath.toString();
-
-
-     //"https://rd-tdgcore-dev.powerappsportals.com/Bulk_Site_Upload" ;
 
     window.history.replaceState({}, document.title, urlPath);
 
@@ -729,7 +763,19 @@ $('#btnNo').focus();
 
 }
 
+function decode (str)
+{
+       return str.replace(/&#(\d+);/g, function(match, dec) {
+				return String.fromCharCode(dec);
+			});
+}
 
+function htmldecode (str){
+
+  var txt = document.createElement('textarea');
+  txt.innerHTML = str;
+  return txt.value;
+}
 
 </script>
 <div class="container ">

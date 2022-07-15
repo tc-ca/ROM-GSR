@@ -4,9 +4,20 @@
 $(document).ready(function () {
     debugger;
 
-    var companyName = $("#ovs_legalname").val(); // '{{user.parentcustomerid.name }}';
     var topNav = $('#navbar');
-    if (companyName) {
-        if (topNav) $("<h2>TDG Site Registration Database: " + companyName + "</h2>").insertAfter(topNav);
+    if (topNav) {
+        var companyName = $("#ovs_legalname").val();
+        var value = tdg.error_message.message("m000106");
+        value = value.replace("{0}", companyName);
+        $(value).insertAfter(topNav);
+    }
+
+    var cid_crabusinessnumber = $('#cid_crabusinessnumber').val();
+    if (cid_crabusinessnumber != "") {
+        tdg.c.control_hide("cid_reasonfornobnnumber");
+        tdg.c.control_hide("cid_reasonfornobnnumber_other");
+    }
+    else {
+        tdg.c.control_hide("cid_crabusinessnumber");
     }
 });
