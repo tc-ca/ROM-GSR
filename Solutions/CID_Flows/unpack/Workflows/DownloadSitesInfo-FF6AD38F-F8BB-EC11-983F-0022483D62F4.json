@@ -27,6 +27,15 @@
         "api": {
           "name": "shared_webcontents"
         }
+      },
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
       }
     },
     "definition": {
@@ -58,6 +67,9 @@
                 },
                 "Language": {
                   "type": "string"
+                },
+                "UiLanguage": {
+                  "type": "string"
                 }
               }
             }
@@ -67,7 +79,7 @@
       "actions": {
         "Perform_a_bound_action": {
           "runAfter": {
-            "downloadTemplate": [
+            "Apply_to_each_English_Message": [
               "Succeeded"
             ]
           },
@@ -218,7 +230,7 @@
         },
         "Filter_environment-setting-get-version#": {
           "runAfter": {
-            "downloadTemplate": [
+            "Apply_to_each_English_Message": [
               "Succeeded"
             ]
           },
@@ -257,7 +269,7 @@
         },
         "Add_bulk_activity_review_Log": {
           "runAfter": {
-            "downloadTemplate": [
+            "Apply_to_each_English_Message": [
               "Succeeded"
             ]
           },
@@ -780,7 +792,10 @@
                       "kind": "Http",
                       "inputs": {
                         "statusCode": 200,
-                        "body": "@outputs('Add_attachment_to_activity')?['body/annotationid']"
+                        "headers": {
+                          "RootMessag": "@variables('RooTMessage')"
+                        },
+                        "body": "@{outputs('Add_attachment_to_activity')?['body/annotationid']}|@{variables('RooTMessage')}"
                       }
                     },
                     "Get_full_file_content": {
@@ -1036,7 +1051,10 @@
                         "kind": "Http",
                         "inputs": {
                           "statusCode": 200,
-                          "body": "@outputs('Add_attachment_to_activity_2')?['body/annotationid']"
+                          "headers": {
+                            "RootMessag": "@variables('RooTMessage')"
+                          },
+                          "body": "@{outputs('Add_attachment_to_activity_2')?['body/annotationid']}|@{variables('RooTMessage')}"
                         }
                       },
                       "Get_full_file_content_2": {
@@ -1339,17 +1357,162 @@
                 },
                 "authentication": "@parameters('$authentication')"
               }
+            },
+            "check_if_company_doesn't_have_sites_or_has_un_number": {
+              "actions": {
+                "Filter_array_M53": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "80b29c84-7347-4907-bf75-cb1f1f4e2161"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@variables('Messages_Array')",
+                    "where": "@equals(item()['id'], 'M53')"
+                  }
+                },
+                "check_language": {
+                  "actions": {
+                    "Set_Root_English_Message": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "9b80d64f-1d78-4fee-93f8-fd66964f73ab"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "RooTMessage",
+                        "value": "@concat(body('Filter_array_M53')[0] ['Message'],'[',body('Filter_array_M53')[0] ['code'],']')"
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Filter_array_M53": [
+                      "Succeeded"
+                    ]
+                  },
+                  "else": {
+                    "actions": {
+                      "Set_Root_French_Message": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "f7dfffcd-8d98-47d9-aba6-1ea797c1ffc3"
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "RooTMessage",
+                          "value": "@concat(body('Filter_array_M53')[0] ['MessageInFrench'],'[',body('Filter_array_M53')[0] ['code'],']')"
+                        }
+                      }
+                    }
+                  },
+                  "expression": {
+                    "contains": [
+                      "@triggerBody()?['UiLanguage']",
+                      "@'en'"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3b4bd231-4e2d-40e3-81c8-49c9cef46458"
+                  },
+                  "type": "If"
+                }
+              },
+              "runAfter": {
+                "hide_Root_UN_Number_List": [
+                  "Succeeded"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "Filter_array_M54": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "80b29c84-7347-4907-bf75-cb1f1f4e2161"
+                    },
+                    "type": "Query",
+                    "inputs": {
+                      "from": "@variables('Messages_Array')",
+                      "where": "@equals(item()['id'], 'M54')"
+                    }
+                  },
+                  "check_language_for_M54_Message": {
+                    "actions": {
+                      "Set_Root_English_Message_2": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "9b80d64f-1d78-4fee-93f8-fd66964f73ab"
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "RooTMessage",
+                          "value": "@{concat(body('Filter_array_M54')[0]['Message'], '[', body('Filter_array_M54')[0]['code'], ']')}"
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Filter_array_M54": [
+                        "Succeeded"
+                      ]
+                    },
+                    "else": {
+                      "actions": {
+                        "Set_Root_French_Message_2": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "f7dfffcd-8d98-47d9-aba6-1ea797c1ffc3"
+                          },
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "RooTMessage",
+                            "value": "@{concat(body('Filter_array_M54')[0]['MessageInFrench'], '[', body('Filter_array_M54')[0]['code'], ']')}"
+                          }
+                        }
+                      }
+                    },
+                    "expression": {
+                      "contains": [
+                        "@triggerBody()?['UiLanguage']",
+                        "en"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "3b4bd231-4e2d-40e3-81c8-49c9cef46458"
+                    },
+                    "type": "If"
+                  }
+                }
+              },
+              "expression": {
+                "equals": [
+                  "@trim(outputs('SiteList'))",
+                  "@'[]'"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "bc1fbfff-ec63-4495-9202-fb1ccf4caf37"
+              },
+              "type": "If"
             }
           },
           "runAfter": {
-            "Invoke_an_HTTP_request_-_Add_settings": [
+            "Compose": [
               "Succeeded"
             ]
           },
           "expression": {
-            "greater": [
-              "@length(trim(outputs('Perform_a_bound_action')?['body/RootUNNumberList']))",
-              0
+            "or": [
+              {
+                "greater": [
+                  "@length(trim(outputs('Perform_a_bound_action')?['body/RootUNNumberList']))",
+                  0
+                ]
+              },
+              {
+                "greater": [
+                  "@length(outputs('List_Existing_UN_number')?['body/value'])",
+                  0
+                ]
+              }
             ]
           },
           "metadata": {
@@ -1419,6 +1582,221 @@
             },
             "authentication": "@parameters('$authentication')"
           }
+        },
+        "Initialize_variable_-_Messages_Array": {
+          "runAfter": {
+            "Initialize_variable_Root_Message": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "499f5dda-1202-4d2e-9116-d73467858d68"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Messages_Array",
+                "type": "array"
+              }
+            ]
+          }
+        },
+        "Get_Bulk_Upload_Messages": {
+          "runAfter": {
+            "Initialize_variable_-_Messages_Array": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e6ba2658-3ccd-4e8b-9e91-5ff910d21c81"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "annotations",
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"annotation\">\n<attribute name=\"subject\"/>\n<attribute name=\"notetext\"/>\n<attribute name=\"filename\"/>\n<attribute name=\"documentbody\"/>\n<attribute name=\"annotationid\"/>\n<order attribute=\"subject\" descending=\"false\"/>\n<link-entity name=\"adx_webfile\" from=\"adx_webfileid\" to=\"objectid\" link-type=\"inner\" alias=\"ab\">\n<filter type=\"and\">\n<condition attribute=\"adx_name\" operator=\"eq\" value=\"Sites_Bulk_Upload_Messages\"/>\n</filter>\n</link-entity>\n</entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Bulk-Messages-From-webFile": {
+          "runAfter": {
+            "Get_Bulk_Upload_Messages": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ddf0f80b-60bc-48e8-acae-bbbf45c463c5"
+          },
+          "type": "Compose",
+          "inputs": "@base64ToString(outputs('Get_Bulk_Upload_Messages')?['body/value'][0]['documentbody'])"
+        },
+        "Parse_Messages_to_JSON": {
+          "runAfter": {
+            "Bulk-Messages-From-webFile": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7167db6-5d1d-4c49-8959-e8ed51425a00"
+          },
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@outputs('Bulk-Messages-From-webFile')",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "Eng-Message": {
+                    "type": "string"
+                  },
+                  "Fr-Message": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "order": {
+                    "type": "string"
+                  },
+                  "MessageType": {
+                    "type": "string"
+                  },
+                  "SheetNameInEnglish": {
+                    "type": "string"
+                  },
+                  "SheetNameInFrench": {
+                    "type": "string"
+                  },
+                  "ErrorLog": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "code",
+                  "Eng-Message",
+                  "Fr-Message",
+                  "id",
+                  "order",
+                  "MessageType",
+                  "SheetNameInEnglish",
+                  "SheetNameInFrench",
+                  "ErrorLog"
+                ]
+              }
+            }
+          }
+        },
+        "Select-Messages": {
+          "runAfter": {
+            "Parse_Messages_to_JSON": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2f87aa54-460c-45c4-a069-00ea3dbd7bf2"
+          },
+          "type": "Select",
+          "inputs": {
+            "from": "@body('Parse_Messages_to_JSON')",
+            "select": {
+              "code": "@item()['code']",
+              "Message": "@item()['Eng-Message']",
+              "id": "@item()['id']",
+              "ErrorLog": "@item()['ErrorLog']",
+              "MessageInFrench": "@item()['Fr-Message']"
+            }
+          }
+        },
+        "Apply_to_each_English_Message": {
+          "foreach": "@body('Select-Messages')",
+          "actions": {
+            "Append_to_Message_Array": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "e34d2bba-d320-4f5a-9b95-0e2454bf437e"
+              },
+              "type": "AppendToArrayVariable",
+              "inputs": {
+                "name": "Messages_Array",
+                "value": "@items('Apply_to_each_English_Message')"
+              }
+            }
+          },
+          "runAfter": {
+            "List_Existing_UN_number": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "21b64a4a-96fd-4540-b578-86cee5235ab6"
+          },
+          "type": "Foreach"
+        },
+        "Initialize_variable_Root_Message": {
+          "runAfter": {
+            "downloadTemplate": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "13e857e4-e878-4acc-bb23-3c277c442b4f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RooTMessage",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "List_Existing_UN_number": {
+          "runAfter": {
+            "Select-Messages": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e67a47c-23a1-4366-be04-464c2a2d3d56"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_operationunnumbers",
+              "fetchXml": "<?xml version=\"1.0\"?>\n\n<fetch distinct=\"false\" mapping=\"logical\" output-format=\"xml-platform\" version=\"1.0\">\n<entity name=\"ovs_operationunnumber\">\n<attribute name=\"ovs_name\"/>\n<attribute name=\"createdon\"/>\n<attribute name=\"ovs_operationunnumberid\"/>\n<order descending=\"false\" attribute=\"ovs_name\"/>\n<filter type=\"and\">\n<condition attribute=\"statecode\" value=\"0\" operator=\"eq\"/>\n</filter>\n<link-entity name=\"account\" alias=\"ac\" link-type=\"inner\" to=\"cid_site\" from=\"accountid\">\n<filter type=\"and\">\n\n<condition attribute=\"parentaccountid\" value=\"@{triggerBody()?['accountid']}\" operator=\"eq\" />\n\n</filter>\n\n</link-entity>\n\n</entity>\n\n</fetch>",
+              "$top": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Compose": {
+          "runAfter": {
+            "Invoke_an_HTTP_request_-_Add_settings": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c0be7afa-c726-4d62-af84-763503dcb559"
+          },
+          "type": "Compose",
+          "inputs": "@length(outputs('List_Existing_UN_number')?['body/value'])"
         }
       },
       "outputs": {}
