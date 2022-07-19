@@ -17,6 +17,7 @@ steps:
       Write-Host "$(Build.SourcesDirectory)\ConfigurationMigration\Logs\Export folder created."
     }
 - task: MSCRMExportCMData@12
+  continueOnError: true
   inputs:
     crmConnectionString: '$(ConnectionStringDev)'
     schemaFile: '../../../ConfigurationMigration/schema/ReferenceDataMigration-CostRecoveryAttributes.xml'
@@ -24,6 +25,7 @@ steps:
     crmConnectionTimeout: '999'
     logsDirectory: '$(Build.SourcesDirectory)/ConfigurationMigration/Logs/Export'
 - task: MSCRMExtractCMData@12
+  continueOnError: true
   inputs:
     dataFile: '../../../ConfigurationMigration/data/ReferenceDataMigration-CostRecoveryAttributes.zip'
     extractFolder: '../../../ConfigurationMigration/data/unpacked'
