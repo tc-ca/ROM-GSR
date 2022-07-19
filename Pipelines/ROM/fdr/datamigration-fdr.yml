@@ -16,7 +16,12 @@ steps:
     dataFile: '../../../ConfigurationMigration/data/ReferenceDataMigration-CostRecoveryAttributes.zip'
     crmConnectionTimeout: '999'
     logsDirectory: '../../../ConfigurationMigration/Logs/Export'
-    
+- task: MSCRMExtractCMData@12
+  inputs:
+    dataFile: '../../../ConfigurationMigration/data/ReferenceDataMigration-CostRecoveryAttributes.zip'
+    extractFolder: '../../../ConfigurationMigration/data/unpacked'
+    sortExtractedData: true
+    splitExtractedData: true
 - script: |
     ls
   displayName: 'Run a multi-line script'
