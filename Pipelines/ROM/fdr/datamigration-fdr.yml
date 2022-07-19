@@ -31,6 +31,9 @@ steps:
     extractFolder: '../../../ConfigurationMigration/data/unpacked'
     sortExtractedData: true
     splitExtractedData: true
-- script: |
-    ls -R
-  displayName: 'Run a multi-line script'
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      cd /ConfigurationMigration/Logs/Export
+      cat *
