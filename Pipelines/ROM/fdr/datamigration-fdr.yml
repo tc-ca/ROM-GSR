@@ -5,7 +5,10 @@ pool:
   vmImage: windows-latest
 
 steps:
-
+- task: MSCRMToolInstaller@12
+  inputs:
+    nugetFeed: 'official'
+    psFeed: 'official'
 - task: MSCRMExportCMData@12
   inputs:
     crmConnectionString: '$(ConnectionStringDev)'
