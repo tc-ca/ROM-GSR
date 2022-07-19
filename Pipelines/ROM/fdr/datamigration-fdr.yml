@@ -1,0 +1,19 @@
+trigger:
+- none
+
+pool:
+  vmImage: windows-latest
+
+steps:
+
+- task: MSCRMExportCMData@12
+  inputs:
+    crmConnectionString: '$(ConnectionStringDev)'
+    schemaFile: '../../../ConfigurationMigration/schema/ReferenceDataMigration-CostRecoveryAttributes.xml'
+    dataFile: '../../../ConfigurationMigration/data/ReferenceDataMigration-CostRecoveryAttributes.zip'
+    crmConnectionTimeout: '999'
+    logsDirectory: '../../../ConfigurationMigration/Logs/Export'
+    
+- script: |
+    ls
+  displayName: 'Run a multi-line script'
