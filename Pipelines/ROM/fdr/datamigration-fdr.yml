@@ -16,21 +16,28 @@ steps:
       New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\ConfigurationMigration\Logs\Export'
       Write-Host "$(Build.SourcesDirectory)\ConfigurationMigration\Logs\Export folder created."
     }
-- task: MSCRMExportCMData@12
-  continueOnError: true
+- task: PowerShell@2
   inputs:
-    crmConnectionString: '$(ConnectionStringDev)'
-    schemaFile: '../../../ConfigurationMigration/schema/ReferenceDataMigration-CostRecoveryAttributes.xml'
-    #dataFile: '../../../ConfigurationMigration/data/ReferenceDataMigration-CostRecoveryAttributes.zip'
-    crmConnectionTimeout: '999'
-    logsDirectory: '$(Build.SourcesDirectory)/ConfigurationMigration/Logs/Export'
-- task: MSCRMExtractCMData@12
-  continueOnError: true
-  inputs:
-    dataFile: '../../../ConfigurationMigration/data/ReferenceDataMigration-CostRecoveryAttributes.zip'
-    extractFolder: '../../../ConfigurationMigration/data/unpacked'
-    sortExtractedData: true
-    splitExtractedData: true
+    targetType: 'inline'
+    script: |
+      Install-Module -Name Microsoft.Xrm.Tooling.ConfigurationMigration -force
+      
+      Export -CrmDataFile -SchemaFile "../../../ConfigurationMigration/schema/ReferenceDataMigration-CostRecoveryAttributes.xml" -DataFile "../../../ConfigurationMigration/data/ReferenceDataMigration-CostRecoveryAttributes.zip" -CrmConnection "$(ConnectionStringDev)" -Verbose
+# - task: MSCRMExportCMData@12
+#   continueOnError: true
+#   inputs:
+#     crmConnectionString: '$(ConnectionStringDev)'
+#     schemaFile: '../../../ConfigurationMigration/schema/ReferenceDataMigration-CostRecoveryAttributes.xml'
+#     #dataFile: '../../../ConfigurationMigration/data/ReferenceDataMigration-CostRecoveryAttributes.zip'
+#     crmConnectionTimeout: '999'
+#     logsDirectory: '$(Build.SourcesDirectory)/ConfigurationMigration/Logs/Export'
+# - task: MSCRMExtractCMData@12
+#   continueOnError: true
+#   inputs:
+#     dataFile: '../../../ConfigurationMigration/data/ReferenceDataMigration-CostRecoveryAttributes.zip'
+#     extractFolder: '../../../ConfigurationMigration/data/unpacked'
+#     sortExtractedData: true
+#     splitExtractedData: true
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
