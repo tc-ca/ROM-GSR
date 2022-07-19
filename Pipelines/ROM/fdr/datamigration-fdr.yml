@@ -9,6 +9,13 @@ steps:
   inputs:
     nugetFeed: 'official'
     psFeed: 'official'
+- powershell: |
+    If(!(test-path '$(Build.SourcesDirectory)\ConfigurationMigration\Logs\Export'))
+    {
+      Write-Host "$(Build.SourcesDirectory)\ConfigurationMigration\Logs\Export folder does not exists."
+      New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\ConfigurationMigration\Logs\Export'
+      Write-Host "$(Build.SourcesDirectory)\ConfigurationMigration\Logs\Export folder created."
+    }
 - task: MSCRMExportCMData@12
   inputs:
     crmConnectionString: '$(ConnectionStringDev)'
