@@ -1,5 +1,21 @@
-trigger:
-- none
+trigger: none
+pr: none
+
+variables:
+  - name: basePath
+    value: "$(Build.SourcesDirectory)/ConfigurationMigration"
+  - name: schemaFile
+    value: "$(basepath)/schema/CostRecoveryAttributes.xml"
+  - name: dataFile
+    value: "$(Agent.TempDirectory)/CostRecoveryAttributes.zip"
+  - name: logWriteDirectory
+    value: "$(basepath)/logs/export/"
+  - name: extractFolder
+    value: "$(basepath)/data-unpacked"
+  - name: splitDataXmlFile
+    value: $true
+  - name: sortDataXmlFile
+    value: $true
 
 pool:
   vmImage: windows-latest
@@ -20,32 +36,23 @@ steps:
       Install-Module -Name Microsoft.Xrm.Tooling.ConfigurationMigration -force
       Install-Module -Name Xrm.Framework.CI.PowerShell.Cmdlets -Force
       
-      $basepath = "$(Build.SourcesDirectory)/ConfigurationMigration"
-      $schemaFile = "$basepath/schema/CostRecoveryAttributes.xml"
-      $dataFile = "$(Agent.TempDirectory)/CostRecoveryAttributes.zip"
-      $crmConnection = "$(ConnectionStringDev)"
-      $logWriteDirectory = "$basepath/logs/export/"
-      $splitDataXmlFile = $true
-      $sortDataXmlFile = $true
-      $extractFolder = "$basepath/data-unpacked"
-
-      If(!(test-path "$logWriteDirectory"))
+      If(!(test-path "$(logWriteDirectory)"))
       {
-          Write-Host "$logWriteDirectory folder does not exists."
-          New-Item -ItemType Directory -Force -Path "$logWriteDirectory"
-          Write-Host "$logWriteDirectory folder created."
+          Write-Host "$(logWriteDirectory) folder does not exists."
+          New-Item -ItemType Directory -Force -Path "$(logWriteDirectory)"
+          Write-Host "$(logWriteDirectory) folder created."
       }   
       
-      If(!(test-path "$extractFolder"))
+      If(!(test-path "$(extractFolder)"))
       {
-          Write-Host "$extractFolder folder does not exists."
-          New-Item -ItemType Directory -Force -Path "$extractFolder"
-          Write-Host "$extractFolder folder created."
+          Write-Host "$(extractFolder) folder does not exists."
+          New-Item -ItemType Directory -Force -Path "$(extractFolder)"
+          Write-Host "$(extractFolder) folder created."
       }
 
-      Export-CrmDataFile -SchemaFile $schemaFile -DataFile $dataFile -CrmConnection $crmConnection -Verbose -EmitLogToConsole -LogWriteDirectory $logWriteDirectory
+      Export-CrmDataFile -SchemaFile $(schemaFile) -DataFile $(dataFile) -CrmConnection $(crmConnection) -Verbose -EmitLogToConsole -LogWriteDirectory $(logWriteDirectory)
       
-      Expand-XrmCMData -DataZip $dataFile -Folder $extractFolder -SplitDataXmlFile $splitDataXmlFile -SortDataXmlFile $sortDataXmlFile
+      Expand-XrmCMData -DataZip $(dataFile) -Folder $(extractFolder) -SplitDataXmlFile $(splitDataXmlFile) -SortDataXmlFile $(sortDataXmlFile)
 
 - task: PowerShell@2
   inputs:
