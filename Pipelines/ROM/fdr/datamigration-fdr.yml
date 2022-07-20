@@ -30,11 +30,11 @@ steps:
     psFeed: 'official'
 
 - task: PowerShell@2
+  name: "Export_Master_Data"
   inputs:
     targetType: 'inline'
     script: |
       Install-Module -Name Microsoft.Xrm.Tooling.ConfigurationMigration -force
-      Install-Module -Name Xrm.Framework.CI.PowerShell.Cmdlets -Force
       
       If(!(test-path "$(logWriteDirectory)"))
       {
@@ -42,6 +42,15 @@ steps:
           New-Item -ItemType Directory -Force -Path "$(logWriteDirectory)"
           Write-Host "$(logWriteDirectory) folder created."
       }   
+
+      Export-CrmDataFile -SchemaFile $(schemaFile) -DataFile $(dataFile) -CrmConnection $(crmConnection) -Verbose -EmitLogToConsole -LogWriteDirectory $(logWriteDirectory)
+
+- task: PowerShell@2
+  name: "Unpack_Master_Data"
+  inputs:
+    targetType: 'inline'
+    script: |
+      Install-Module -Name Xrm.Framework.CI.PowerShell.Cmdlets -Force
       
       If(!(test-path "$(extractFolder)"))
       {
@@ -49,25 +58,28 @@ steps:
           New-Item -ItemType Directory -Force -Path "$(extractFolder)"
           Write-Host "$(extractFolder) folder created."
       }
-
-      Export-CrmDataFile -SchemaFile $(schemaFile) -DataFile $(dataFile) -CrmConnection $(crmConnection) -Verbose -EmitLogToConsole -LogWriteDirectory $(logWriteDirectory)
       
       Expand-XrmCMData -DataZip $(dataFile) -Folder $(extractFolder) -SplitDataXmlFile $(splitDataXmlFile) -SortDataXmlFile $(sortDataXmlFile)
 
 - task: PowerShell@2
+  name: "Print_Logs"
   inputs:
     targetType: 'inline'
     script: |
       cd $(Build.SourcesDirectory)/ConfigurationMigration/Logs/Export
       cat *
 
-- powershell: |
-    echo "Committing all CDS solution changes"
-    git config user.email "nepasrepondre-noreply@tc.gc.ca"
-    git config user.name "tc-buildbot"
-    git checkout development
-    git add --all
-    git commit -m "Committing Reference Data - $env:COMMITMESSAGE"
-    
-    echo "Push solution changes to the remote repository"
-    git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
+- task: PowerShell@2
+  name: "Commit_Unpacked_Data_To_Source_Control"
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo "Committing all CDS solution changes"
+      git config user.email "nepasrepondre-noreply@tc.gc.ca"
+      git config user.name "tc-buildbot"
+      git checkout development
+      git add --all
+      git commit -m "Committing Reference Data - $env:COMMITMESSAGE"
+      
+      echo "Push solution changes to the remote repository"
+      git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
