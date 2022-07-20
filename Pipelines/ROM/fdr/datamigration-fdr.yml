@@ -5,6 +5,9 @@ pool:
   vmImage: windows-latest
 
 steps:
+- checkout: self
+  persistCredentials: true
+  clean: true
 - task: MSCRMToolInstaller@12
   inputs:
     nugetFeed: 'official'
@@ -16,20 +19,32 @@ steps:
     script: |
       Install-Module -Name Microsoft.Xrm.Tooling.ConfigurationMigration -force
       
-      $basepath = "$(Build.SourcesDirectory)"
-      $schemaFile = "$basepath/ConfigurationMigration/schema/CostRecoveryAttributes.xml"
+      $basepath = "$(Build.SourcesDirectory)/ConfigurationMigration"
+      $schemaFile = "$basepath/schema/CostRecoveryAttributes.xml"
       $dataFile = "$(Agent.TempDirectory)/CostRecoveryAttributes.zip"
       $crmConnection = "$(ConnectionStringDev)"
-      $logWriteDirectory = "$basepath\logs\export\"
-      
-      If(!(test-path "$basepath/ConfigurationMigration/logs/export"))
+      $logWriteDirectory = "$basepath/logs/export/"
+      $splitDataXmlFile = $true
+      $sortDataXmlFile = $true
+      $extractFolder = "$basepath/data-unpacked"
+
+      If(!(test-path "$logWriteDirectory"))
       {
-          Write-Host "$basepath/ConfigurationMigration/logs/export folder does not exists."
-          New-Item -ItemType Directory -Force -Path "$basepath/ConfigurationMigration/logs/export"
-          Write-Host "$basepath/ConfigurationMigration/logs/export folder created."
+          Write-Host "$logWriteDirectory folder does not exists."
+          New-Item -ItemType Directory -Force -Path "$logWriteDirectory"
+          Write-Host "$logWriteDirectory folder created."
       }   
       
+      If(!(test-path "$extractFolder"))
+      {
+          Write-Host "$extractFolder folder does not exists."
+          New-Item -ItemType Directory -Force -Path "$extractFolder"
+          Write-Host "$extractFolder folder created."
+      }
+
       Export-CrmDataFile -SchemaFile $schemaFile -DataFile $dataFile -CrmConnection $crmConnection -Verbose -EmitLogToConsole -LogWriteDirectory $logWriteDirectory
+      
+      Expand-XrmCMData -DataZip $dataFile -Folder $extractFolder -SplitDataXmlFile $splitDataXmlFile -SortDataXmlFile $sortDataXmlFile
 
 # - task: MSCRMExportCMData@12
 #   continueOnError: true
@@ -52,3 +67,14 @@ steps:
     script: |
       cd $(Build.SourcesDirectory)/ConfigurationMigration/Logs/Export
       cat *
+
+- powershell: |
+    echo "Committing all CDS solution changes"
+    git config user.email "nepasrepondre-noreply@tc.gc.ca"
+    git config user.name "tc-buildbot"
+    git checkout development
+    git add --all
+    git commit -m "Committing Reference Data - $env:COMMITMESSAGE"
+    
+    echo "Push solution changes to the remote repository"
+    git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
