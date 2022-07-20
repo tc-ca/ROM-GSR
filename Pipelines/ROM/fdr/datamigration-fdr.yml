@@ -9,19 +9,27 @@ steps:
   inputs:
     nugetFeed: 'official'
     psFeed: 'official'
-- powershell: |
-    If(!(test-path '$(Build.SourcesDirectory)\ConfigurationMigration\Logs\Export'))
-    {
-      Write-Host "$(Build.SourcesDirectory)\ConfigurationMigration\Logs\Export folder does not exists."
-      New-Item -ItemType Directory -Force -Path '$(Build.SourcesDirectory)\ConfigurationMigration\Logs\Export'
-      Write-Host "$(Build.SourcesDirectory)\ConfigurationMigration\Logs\Export folder created."
-    }
+
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
     script: |
       Install-Module -Name Microsoft.Xrm.Tooling.ConfigurationMigration -force
-      Export-CrmDataFile -SchemaFile "$(Build.SourcesDirectory)/ConfigurationMigration/schema/ReferenceDataMigration-CostRecoveryAttributes.xml" -DataFile  "$(Build.SourcesDirectory)/ConfigurationMigration/data/ReferenceDataMigration-CostRecoveryAttributes.zip" -CrmConnection "$(ConnectionStringDev)" -Verbose
+      
+      $basepath = "$(Build.SourcesDirectory)"
+      $schemaFile = "$basepath/ConfigurationMigration/schema/CostRecoveryAttributes.xml"
+      $dataFile = "$(Agent.TempDirectory)/CostRecoveryAttributes.zip"
+      $crmConnection = "$(ConnectionStringDev)"
+      $logWriteDirectory = "$basepath\logs\export\"
+      
+      If(!(test-path "$basepath/ConfigurationMigration/logs/export"))
+      {
+          Write-Host "$basepath/ConfigurationMigration/logs/export folder does not exists."
+          New-Item -ItemType Directory -Force -Path "$basepath/ConfigurationMigration/logs/export"
+          Write-Host "$basepath/ConfigurationMigration/logs/export folder created."
+      }   
+      
+      Export-CrmDataFile -SchemaFile $schemaFile -DataFile $dataFile -CrmConnection $crmConnection -Verbose -EmitLogToConsole -LogWriteDirectory $logWriteDirectory
 
 # - task: MSCRMExportCMData@12
 #   continueOnError: true
