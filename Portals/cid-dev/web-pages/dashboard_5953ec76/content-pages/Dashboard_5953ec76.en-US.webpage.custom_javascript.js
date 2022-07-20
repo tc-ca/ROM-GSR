@@ -19,5 +19,14 @@ $(document).ready(function () {
     }
     else {
         tdg.c.control_hide("cid_crabusinessnumber");
+        var cid_reasonfornobnnumber = $('#cid_reasonfornobnnumber').val();
+
+        if (cid_reasonfornobnnumber == "3")   // other
+        {
+            tdg.c.control_show("cid_reasonfornobnnumber_other");
+        }
+        else {
+            tdg.c.control_hide("cid_reasonfornobnnumber_other");
+        }
     }
 });
