@@ -46,21 +46,6 @@ steps:
       
       Expand-XrmCMData -DataZip $dataFile -Folder $extractFolder -SplitDataXmlFile $splitDataXmlFile -SortDataXmlFile $sortDataXmlFile
 
-# - task: MSCRMExportCMData@12
-#   continueOnError: true
-#   inputs:
-#     crmConnectionString: '$(ConnectionStringDev)'
-#     schemaFile: '$(Build.SourcesDirectory)/ConfigurationMigration/schema/ReferenceDataMigration-CostRecoveryAttributes.xml'
-#     #dataFile: $(Build.SourcesDirectory)/ConfigurationMigration/data/ReferenceDataMigration-CostRecoveryAttributes.zip'
-#     crmConnectionTimeout: '999'
-#     logsDirectory: '$(Build.SourcesDirectory)/ConfigurationMigration/Logs/Export'
-# - task: MSCRMExtractCMData@12
-#   continueOnError: true
-#   inputs:
-#     dataFile: '../../../ConfigurationMigration/data/ReferenceDataMigration-CostRecoveryAttributes.zip'
-#     extractFolder: '../../../ConfigurationMigration/data/unpacked'
-#     sortExtractedData: true
-#     splitExtractedData: true
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
