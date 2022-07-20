@@ -43,7 +43,7 @@ steps:
           Write-Host "$(logWriteDirectory) folder created."
       }   
 
-      Export-CrmDataFile -SchemaFile $(schemaFile) -DataFile $(dataFile) -CrmConnection $(crmConnection) -Verbose -EmitLogToConsole -LogWriteDirectory $(logWriteDirectory)
+      Export-CrmDataFile -SchemaFile $(schemaFile) -DataFile $(dataFile) -CrmConnection $(ConnectionStringDev) -Verbose -EmitLogToConsole -LogWriteDirectory $(logWriteDirectory)
 
 - task: PowerShell@2
   name: "Unpack_Master_Data"
