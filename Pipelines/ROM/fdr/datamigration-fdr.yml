@@ -21,14 +21,14 @@ steps:
     targetType: 'inline'
     script: |
       Install-Module -Name Microsoft.Xrm.Tooling.ConfigurationMigration -force
-      
-      Export -CrmDataFile -SchemaFile "../../../ConfigurationMigration/schema/ReferenceDataMigration-CostRecoveryAttributes.xml" -DataFile "../../../ConfigurationMigration/data/ReferenceDataMigration-CostRecoveryAttributes.zip" -CrmConnection "$(ConnectionStringDev)" -Verbose
+      Export-CrmDataFile -SchemaFile "$(Build.SourcesDirectory)/ConfigurationMigration/schema/ReferenceDataMigration-CostRecoveryAttributes.xml" -DataFile  "$(Build.SourcesDirectory)/ConfigurationMigration/data/ReferenceDataMigration-CostRecoveryAttributes.zip" -CrmConnection "$(ConnectionStringDev)" -Verbose
+
 # - task: MSCRMExportCMData@12
 #   continueOnError: true
 #   inputs:
 #     crmConnectionString: '$(ConnectionStringDev)'
-#     schemaFile: '../../../ConfigurationMigration/schema/ReferenceDataMigration-CostRecoveryAttributes.xml'
-#     #dataFile: '../../../ConfigurationMigration/data/ReferenceDataMigration-CostRecoveryAttributes.zip'
+#     schemaFile: '$(Build.SourcesDirectory)/ConfigurationMigration/schema/ReferenceDataMigration-CostRecoveryAttributes.xml'
+#     #dataFile: $(Build.SourcesDirectory)/ConfigurationMigration/data/ReferenceDataMigration-CostRecoveryAttributes.zip'
 #     crmConnectionTimeout: '999'
 #     logsDirectory: '$(Build.SourcesDirectory)/ConfigurationMigration/Logs/Export'
 # - task: MSCRMExtractCMData@12
