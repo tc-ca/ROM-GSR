@@ -43,7 +43,7 @@ steps:
           Write-Host "$(logWriteDirectory) folder created."
       }   
 
-      Export-CrmDataFile -SchemaFile $(schemaFile) -DataFile $(dataFile) -CrmConnection $(ConnectionStringDev) -Verbose -EmitLogToConsole -LogWriteDirectory $(logWriteDirectory)
+      Export-CrmDataFile -SchemaFile "$(schemaFile)" -DataFile "$(dataFile)" -CrmConnection "$(ConnectionStringDev)" -Verbose -EmitLogToConsole -LogWriteDirectory "$(logWriteDirectory)"
 
 - task: PowerShell@2
   name: "Unpack_Master_Data"
@@ -59,7 +59,7 @@ steps:
           Write-Host "$(extractFolder) folder created."
       }
       
-      Expand-XrmCMData -DataZip $(dataFile) -Folder $(extractFolder) -SplitDataXmlFile $(splitDataXmlFile) -SortDataXmlFile $(sortDataXmlFile)
+      Expand-XrmCMData -DataZip "$(dataFile)" -Folder "$(extractFolder)" -SplitDataXmlFile "$(splitDataXmlFile)" -SortDataXmlFile "$(sortDataXmlFile)"
 
 - task: PowerShell@2
   name: "Print_Logs"
