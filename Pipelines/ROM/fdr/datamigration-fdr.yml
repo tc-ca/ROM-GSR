@@ -24,11 +24,7 @@ steps:
 - checkout: self
   persistCredentials: true
   clean: true
-- task: MSCRMToolInstaller@12
-  inputs:
-    nugetFeed: 'official'
-    psFeed: 'official'
-
+  
 - task: PowerShell@2
   name: "Export_Master_Data"
   inputs:
@@ -41,7 +37,7 @@ steps:
           Write-Host "$(logWriteDirectory) folder does not exists."
           New-Item -ItemType Directory -Force -Path "$(logWriteDirectory)"
           Write-Host "$(logWriteDirectory) folder created."
-      }   
+      }
 
       Export-CrmDataFile -SchemaFile "$(schemaFile)" -DataFile "$(dataFile)" -CrmConnection "$(ConnectionStringDev)" -Verbose -EmitLogToConsole -LogWriteDirectory "$(logWriteDirectory)"
 
