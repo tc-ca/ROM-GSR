@@ -4,6 +4,9 @@
 $(document).ready(function () {
     debugger;
 
+    //tdg.c.control_hide("address1_stateorprovince");
+    tdg.c.addValidator("ovs_lld_province");
+
     var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name }}');
     if (companyName) {
         $(".previous-btn").attr('disabled', true);
