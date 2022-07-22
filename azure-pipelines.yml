@@ -40,7 +40,7 @@ jobs:
       publishLocation: 'Container'
 
 - job: Deploy_MasterData_to_QA
-
+  dependsOn: Pack_Data_and_Publish_Artifact
   pool:
     vmImage: windows-latest
 
@@ -70,18 +70,3 @@ jobs:
       script: |
         cd $(Build.SourcesDirectory)/ConfigurationMigration/Logs/import
         cat *
-
-  - task: PowerShell@2
-    name: "Commit_Unpacked_Data_To_Source_Control"
-    inputs:
-      targetType: 'inline'
-      script: |
-        echo "Committing all CDS solution changes"
-        git config user.email "nepasrepondre-noreply@tc.gc.ca"
-        git config user.name "tc-buildbot"
-        git checkout development
-        git add --all
-        git commit -m "Committing Reference Data - $env:COMMITMESSAGE"
-        
-        echo "Push solution changes to the remote repository"
-        git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
