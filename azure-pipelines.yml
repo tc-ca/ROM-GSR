@@ -1,18 +1,87 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+trigger: none
+pr: none
 
-trigger:
-- development
+variables:
+  - name: basePath
+    value: "$(Build.SourcesDirectory)/ConfigurationMigration"
+  - name: dataFile
+    value: "$(Agent.TempDirectory)/MasterData-FDR.zip"
+  - name: logWriteDirectory
+    value: "$(basepath)/logs/import"
+  - name: extractFolder
+    value: "$(basepath)/data/fdr"
+  - name: combineDataXmlFile
+    value: $true
 
-pool:
-  vmImage: ubuntu-latest
+jobs:
+- job: Pack_Data_and_Publish_Artifact
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+  pool:
+    vmImage: windows-latest
 
-- script: |
-    ls
-  displayName: 'Run a multi-line script'
+  steps:
+  - checkout: self
+    persistCredentials: true
+    clean: true
+    
+  - task: PowerShell@2
+    name: "Pack_Master_Data_From_SC"
+    inputs:
+      targetType: 'inline'
+      script: |
+        Install-Module -Name Xrm.Framework.CI.PowerShell.Cmdlets -Force
+        Compress-XrmCMData -DataZip "$(dataFile)" -Folder "$(extractFolder)" -CombineDataXmlFile "$(combineDataXmlFile)"
+
+  - task: PublishBuildArtifacts@1
+    name: Create_Artifact_Packed_Data
+    inputs:
+      PathtoPublish: '$(dataFile)'
+      ArtifactName: 'PackedData'
+      publishLocation: 'Container'
+
+- job: Deploy_MasterData_to_QA
+
+  pool:
+    vmImage: windows-latest
+
+  steps:
+  - checkout: none
+
+  - task: PowerShell@2
+    name: "Import_Data"
+    inputs:
+      targetType: 'inline'
+      script: |
+        Install-Module -Name Microsoft.Xrm.Tooling.ConfigurationMigration -force
+        
+        If(!(test-path "$(logWriteDirectory)"))
+        {
+            Write-Host "$(logWriteDirectory) folder does not exists."
+            New-Item -ItemType Directory -Force -Path "$(logWriteDirectory)"
+            Write-Host "$(logWriteDirectory) folder created."
+        }
+        
+        Import-CrmDataFile -CrmConnection "$(ConnectionStringDev2)" -Datafile "$(dataFile)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
+
+  - task: PowerShell@2
+    name: "Print_Logs"
+    inputs:
+      targetType: 'inline'
+      script: |
+        cd $(Build.SourcesDirectory)/ConfigurationMigration/Logs/import
+        cat *
+
+  - task: PowerShell@2
+    name: "Commit_Unpacked_Data_To_Source_Control"
+    inputs:
+      targetType: 'inline'
+      script: |
+        echo "Committing all CDS solution changes"
+        git config user.email "nepasrepondre-noreply@tc.gc.ca"
+        git config user.name "tc-buildbot"
+        git checkout development
+        git add --all
+        git commit -m "Committing Reference Data - $env:COMMITMESSAGE"
+        
+        echo "Push solution changes to the remote repository"
+        git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
