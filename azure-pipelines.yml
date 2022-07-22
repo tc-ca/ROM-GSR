@@ -30,7 +30,7 @@ jobs:
       targetType: 'inline'
       script: |
         Install-Module -Name Xrm.Framework.CI.PowerShell.Cmdlets -Force
-        Compress-XrmCMData -DataZip "$(dataFile)" -Folder "$(extractFolder)" -CombineDataXmlFile "$(combineDataXmlFile)"
+        Compress-XrmCMData -DataZip "$(dataFile)" -Folder "$(extractFolder)" -CombineDataXmlFile $(combineDataXmlFile)
 
   - task: PublishBuildArtifacts@1
     name: Create_Artifact_Packed_Data
