@@ -71,7 +71,7 @@ jobs:
             Write-Host "$(logWriteDirectory) folder created."
         }
         
-        Import-CrmDataFile -CrmConnection "$(ConnectionStringDev2)" -Datafile "$(System.ArtifactsDirectory)\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
+        Import-CrmDataFile -CrmConnection "$(ConnectionStringDev2)" -Datafile "$(System.ArtifactsDirectory)\PackedData\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
 
   - task: PowerShell@2
     name: "Print_Logs"
