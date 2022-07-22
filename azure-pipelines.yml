@@ -4,8 +4,10 @@ pr: none
 variables:
   - name: basePath
     value: "$(Build.SourcesDirectory)/ConfigurationMigration"
-  - name: dataFile
-    value: "$(Agent.TempDirectory)/MasterData-FDR.zip"
+  - name: tempDirectory
+    value: "$(Agent.TempDirectory)"
+  - name: dataFileName
+    value: "MasterData-FDR.zip"
   - name: logWriteDirectory
     value: "$(basepath)/logs/import"
   - name: extractFolder
@@ -30,7 +32,7 @@ jobs:
       targetType: 'inline'
       script: |
         Install-Module -Name Xrm.Framework.CI.PowerShell.Cmdlets -Force
-        Compress-XrmCMData -DataZip "$(dataFile)" -Folder "$(extractFolder)" -CombineDataXmlFile $(combineDataXmlFile)
+        Compress-XrmCMData -DataZip "$(tempDirectory)/$(dataFileName)" -Folder "$(extractFolder)" -CombineDataXmlFile $(combineDataXmlFile)
 
   - task: PublishBuildArtifacts@1
     name: Create_Artifact_Packed_Data
@@ -47,6 +49,13 @@ jobs:
   steps:
   - checkout: none
 
+  - task: DownloadBuildArtifacts@1
+    inputs:
+      buildType: 'current'
+      downloadType: 'single'
+      artifactName: 'PackedData'
+      downloadPath: '$(System.ArtifactsDirectory)'
+
   - task: PowerShell@2
     name: "Import_Data"
     continueOnError: true
@@ -62,7 +71,7 @@ jobs:
             Write-Host "$(logWriteDirectory) folder created."
         }
         
-        Import-CrmDataFile -CrmConnection "$(ConnectionStringDev2)" -Datafile "$(dataFile)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
+        Import-CrmDataFile -CrmConnection "$(ConnectionStringDev2)" -Datafile "$(System.ArtifactsDirectory)\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
 
   - task: PowerShell@2
     name: "Print_Logs"
