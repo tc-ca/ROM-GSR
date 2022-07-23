@@ -1,0 +1,144 @@
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+
+var QuickCreateHelper = QuickCreateHelper || {};
+window.top.QuickCreateHelper = QuickCreateHelper;
+var filterXML = "";
+
+var Function_Limitation_Main = (function (window, document)
+{ 
+   
+
+    function limitations_PreSearchFilter(executionContext)
+    {
+        //Apply pre-filter
+
+        var formContext = executionContext.getFormContext();
+
+        formContext.getControl("fdr_limitation").addCustomFilter(filterXML, "fdr_limitation")
+    }
+    
+    return {
+
+        OnLoad: function (executionContext)
+        {
+            //get context
+            globalContext = glHelper.getGlobalContext();
+            var formContext = executionContext.getFormContext();
+            var id = glHelper.GetCurrentRecordId(formContext);
+
+            // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+            formType = glHelper.GetFormType(formContext);
+
+            userSettings = Xrm.Utility.getGlobalContext().userSettings;
+
+            //Attach Events
+            var limitation = formContext.getAttribute("fdr_limitation");
+            limitation.removeOnChange(Function_Limitation_Main.Limitation_OnChange);
+            limitation.addOnChange(Function_Limitation_Main.Limitation_OnChange);
+
+            var serviceRequestFunction = glHelper.GetLookupAttrId(formContext, "fdr_servicerequestfunction");
+            var serviceRequestFunctionId = serviceRequestFunction.replace("{", "").replace("}", "");
+
+
+           
+                Xrm.WebApi.online
+                    .retrieveRecord("fdr_servicerequestfunction", serviceRequestFunction, "?$select=_fdr_containerfunction_value")
+                    .then(
+                        function success(result)
+                        {
+                            var containerFunction = result["_fdr_containerfunction_value"];
+
+                            //Get fdr_containerfunction_limitation records for this Container Function
+                            Xrm.WebApi.online.retrieveMultipleRecords("fdr_containerfunction_limitation", "?$select=fdr_limitationid&$filter=(fdr_containerfunctionid eq " + containerFunction + ")").then(
+                                function success(results)
+                                {
+                                    if (results.entities != undefined
+                                        && results.entities != null
+                                        && results.entities.length > 0)
+                                    {
+                                        filterXML = "<filter type = 'or' >";
+
+                                        for (var i = 0; i < results.entities.length; i++)
+                                        {
+                                            filterXML += "<condition attribute='fdr_limitationid' operator='eq' value='" + results.entities[i]["fdr_limitationid"] + "' />";
+
+                                        }
+
+                                        filterXML += "</filter>";
+
+                                        glHelper.SetControlReadOnly(formContext, "fdr_limitation", false);
+
+                                        formContext.getControl("fdr_limitation").addPreSearch(limitations_PreSearchFilter);
+                                    }
+                                    else
+                                    {
+                                        //There are now defined limitations for this Container Function so lock out the lookup
+                                        glHelper.SetControlReadOnly(formContext, "fdr_limitation", true);
+                                    }
+                                },
+                                function (error)
+                                {
+                                    Xrm.Utility.alertDialog(error.message);
+                                }
+                            );
+
+
+                        }
+                        ,
+                        function (error)
+                        {
+                            Xrm.Utility.alertDialog(error.message);
+                        });
+
+            
+
+        },
+
+
+         Limitation_OnChange: function (executionContext)
+         {
+             if (formType == glHelper.FORMTYPE_CREATE)
+             {
+                 var formContext = executionContext.getFormContext();
+
+                 var parentLimitation = glHelper.GetLookupAttrId(formContext, "fdr_limitation");
+
+                 if (parentLimitation == undefined)
+                 {
+                     //Clear out description fields and abort.
+                     glHelper.SetValue(formContext, "fdr_description", "");
+                     glHelper.SetValue(formContext, "fdr_descriptionfr", "");
+
+                     return;
+                 }
+
+                 //Create Form, allow user to grab text from the parent limitation.
+                 
+                 var limitationId = parentLimitation.replace("{", "").replace("}", "");
+
+                 Xrm.WebApi.online
+                     .retrieveRecord("fdr_limitation", limitationId, "?$select=fdr_englishdescription,fdr_frenchdescription")
+                     .then(
+                         function success(result)
+                         {
+                             if (result != undefined
+                                 && result != null)
+                             {
+                                 glHelper.SetValue(formContext, "fdr_description", result["fdr_englishdescription"]);
+                                 glHelper.SetValue(formContext, "fdr_descriptionfr", result["fdr_frenchdescription"]);
+                             }
+
+                            
+
+
+                         }
+                         ,
+                         function (error)
+                         {
+                             Xrm.Utility.alertDialog(error.message);
+                         });
+             }
+         }
+    }
+
+})(window, document)
