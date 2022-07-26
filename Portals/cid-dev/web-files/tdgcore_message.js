@@ -47,6 +47,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "Non",
                     },
                     {
+                        "code": "NAICS Class (NAICS Code)",
+                        "message_en": "Title",
+                        "message_fr": "Titre",
+                    },
+                    {
                         "code": "m000001",
                         "message_en": "Invalid CRA Business Number",
                         "message_fr": "Numéro d'entreprise de l'ARC invalide"

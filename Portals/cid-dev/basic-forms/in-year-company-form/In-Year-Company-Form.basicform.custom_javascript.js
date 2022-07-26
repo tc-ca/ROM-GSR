@@ -13,11 +13,8 @@ $(document).ready(function () {
 
     var cid_has_cra_bn = $('#cid_has_cra_bn').val();
     var address1_line1 = $("#address1_line1").val();
-    var cid_legalname = $('#ovs_legalname').val();
-    var cid_operatingname = $('#name').val();
     var cid_has_cra_bn = $('#cid_has_cra_bn').val();
     var cid_reasonfornobnnumber = $('#cid_reasonfornobnnumber').val();
-    var cid_reasonfornobnnumber_other = $('#cid_reasonfornobnnumber_other').val();
 
     tdg.c.control_hide("cid_has_cra_bn");
     sessionStorage.setItem("AddressLine1Text", address1_line1);
@@ -69,6 +66,8 @@ $(document).ready(function () {
     // readonly
     $('#statuscode').attr("readonly", true);
     $('#address1_country').attr("readonly", true);
+
+    subgrid_language();
 });
 
 if (window.jQuery) {
@@ -112,4 +111,59 @@ function AddressComplete_Selected() {
     $("#address1_stateorprovince").val(sessionStorage.getItem("ProvinceName"));
     $("#address1_postalcode").val(sessionStorage.getItem("PostalCode"));
     $("#address1_country").val(sessionStorage.getItem("CountryName"));
+}
+
+function subgrid_language() {
+    debugger;
+    var selected_language = sessionStorage.getItem("selected_language");
+
+    var entityList = $(".entity-grid");
+    var naicscode = entityList.eq(1);   // cid_account_companynaicscode
+    var refRel = naicscode[0].dataset.refRel;
+    if (refRel == "cid_account_companynaicscode") {
+        naicscode.on("loaded", function () {
+            debugger;
+
+            // header
+            let header = naicscode.find("table thead > tr");
+            for (var index1 = 0; index1 < header.length; index1++) {
+                //debugger;
+                let tr = header[index1];
+
+                let cols = $(tr).find('th');
+                for (var i = 0; i < cols.length; i++) {
+                    var tdElement = cols[i];
+                    var className = $(tdElement)[0].className;
+                    if (className.indexOf("sort-enabled") == -1) {
+                        var text = $(tdElement).text();
+                        //text = tdg.c.text_language(text, selected_language);
+                        text = tdg.error_message.message(text);
+                        $(tdElement).text(text);
+                    }
+                }
+            }
+
+            debugger;
+
+            let rows = naicscode.find("table tbody > tr");
+            rows.each(function (index, tr) {
+                debugger;
+
+                let cols = $(tr).find('td');
+                cols.each(function (index, td) {
+                    //debugger;
+                    var tdElement = $(this);
+                    var value = tdElement.attr('data-attribute');
+                    if (value != null) {
+                        var index1 = value.indexOf('.cid_naicsclasstitle');
+                        if (index1 != -1) {
+                            var cellValue = $(td).text();
+                            cellValue = tdg.c.text_language(cellValue, selected_language);
+                            $(td).text(cellValue);
+                        }
+                    }
+                });
+            });
+        });
+    }
 }
