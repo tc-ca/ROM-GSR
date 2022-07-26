@@ -71,11 +71,19 @@ steps:
     targetType: 'inline'
     script: |
       echo "Committing all CDS solution changes"
+      
+      $localCommitMessage = "${env:COMMITMESSAGE}"
+      $commitMessage = "Committing Reference Data"
+      if (-not ($localCommitMessage -eq $null -or $localCommitMessage -eq ""))
+      {
+          $commitMessage += " - " + $localCommitMessage
+      }
+
       git config user.email "nepasrepondre-noreply@tc.gc.ca"
       git config user.name "tc-buildbot"
       git checkout development
       git add --all
-      git commit -m "Committing Reference Data - $env:COMMITMESSAGE"
+      git commit -m "$commitMessage"
       
       echo "Push solution changes to the remote repository"
       git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
