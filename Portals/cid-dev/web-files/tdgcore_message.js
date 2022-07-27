@@ -168,8 +168,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000106",
-                        "message_en": "<h2>TDG Site Registration Database: {0}</h2>",
-                        "message_fr": "<h2>TDG Site Registration Database: {0}_FR</h2>"
+                        "message_en": "<h2>Transport Canada CID Portal: {0}</h2>",
+                        "message_fr": "<h2>Portail CID de Transports Canada: {0}</h2>"
                     }
                 ];
 

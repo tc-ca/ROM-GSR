@@ -225,6 +225,7 @@ function cid_same_as_company_change() {
         $("#address1_stateorprovince").val(address1_stateorprovince);
         $("#address1_postalcode").val(address1_postalcode);
         $("#address1_country").val(address1_country);
+        sessionStorage.setItem("AddressLine1Text", address1_line1);
     }
     else {
         //$("#WebResource_address_complete").show();
@@ -256,7 +257,7 @@ function AddressComplete_address1_line1() {
 }
 
 //toggles the manual entry flag to on
-function setManualAddressEntryFlag(){
+function setManualAddressEntryFlag() {
     $("#cid_addressoverwritten").val(1);
 }
 

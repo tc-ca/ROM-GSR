@@ -15,13 +15,13 @@ $(document).ready(function () {
     // hide controls
     tdg.c.control_hide("name");
     tdg.c.control_hide("cid_siteclaim");
+    AddressComplete_Hide_address1_line1();
 
     // cid_same_as_company
     $("#cid_same_as_company").change(function () {
         cid_same_as_company_change();
     });
     cid_same_as_company_change();
-
 
     $("#cid_sitename").attr("autocomplete", "new-password");
     $("#telephone1").attr("autocomplete", "new-password");
@@ -52,6 +52,10 @@ $(document).ready(function () {
         ovs_address_type_change(true);
     });
     ovs_address_type_change(false);
+
+    $('#ovs_legalname').attr("readonly", true);
+
+    subgrid_language();
 });
 
 function clear_address_type_required_fields() {
@@ -196,6 +200,8 @@ function cid_same_as_company_change() {
         $("#address1_stateorprovince").val(address1_stateorprovince);
         $("#address1_postalcode").val(address1_postalcode);
         $("#address1_country").val(address1_country);
+
+        sessionStorage.setItem("AddressLine1Text", address1_line1);
     }
     else {
         //$("#WebResource_address_complete").show();
@@ -234,4 +240,83 @@ function AddressComplete_Selected() {
     $("#address1_stateorprovince").val(sessionStorage.getItem("ProvinceName"));
     $("#address1_postalcode").val(sessionStorage.getItem("PostalCode"));
     $("#address1_country").val(sessionStorage.getItem("CountryName"));
+}
+
+function subgrid_language() {
+    debugger;
+    var selected_language = sessionStorage.getItem("selected_language");
+
+    var entityList = $(".entity-grid").eq(1);
+    var refRel = entityList[0].dataset.refRel;
+    if (refRel == "cid_account_ovs_operationunnumber_Site") {
+        entityList.on("loaded", function () {
+            debugger;
+
+            // header
+            let header = entityList.find("table thead > tr");
+            for (var index1 = 0; index1 < header.length; index1++) {
+                debugger;
+                let tr = header[index1];
+
+                let cols = $(tr).find('th');
+                for (var i = 0; i < cols.length; i++) {
+                    var tdElement = cols[i];
+                    var className = $(tdElement)[0].className;
+                    if (className.indexOf("sort-enabled") == -1) {
+                        var text = $(tdElement).text();
+                        text = tdg.c.text_language(text, selected_language);
+                        $(tdElement).text(text);
+                    }
+
+                    switch (i) {
+                        case 0:
+                            tdElement.ariaLabel = "UN Number Display";
+                            break;
+                        case 1: // Packing Group
+                            tdElement.style.display = "none";
+                            break;
+                        case 2: // Shipping
+                            tdElement.style.display = "none";
+                            break;
+                    }
+                }
+            }
+
+            debugger
+            let rows = entityList.find("table tbody > tr");
+
+            rows.each(function (index, tr) {
+                debugger;
+
+                let cols = $(tr).find('td');
+                for (var i = 0; i < cols.length; i++) {
+                    tdElement = $(cols[i]).eq(0);
+                    var value = tdElement.attr('data-attribute');
+                    if (value != null) {
+                        var index1 = value.indexOf('.tdg_shippingnamedescriptiontxt');
+                        if (index1 != -1) {
+                            var cellValue = tdElement.text();
+                            cellValue = tdg.c.text_language(cellValue, selected_language);
+                            tdElement.text(cellValue);
+                        }
+
+                        switch (i) {
+                            case 0:
+                                var cellValue = tdElement.text();
+                                var f1 = $(cols[i + 1]).eq(0);
+                                var f2 = $(cols[i + 2]).eq(0);
+                                var text = cellValue + " - " +
+                                    f1.text() + " - " +
+                                    tdg.c.text_language(f2.text(), selected_language);
+                                tdElement.text(text);
+
+                                f1[0].style.display = "none";
+                                f2[0].style.display = "none";
+                                break;
+                        }
+                    }
+                }
+            });
+        });
+    }
 }
