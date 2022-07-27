@@ -1,0 +1,820 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "4d2088cc-780b-472b-87ef-ffd89df806a7"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "ovs_cdnop",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "ovs_rungenerateworkordercandidates",
+              "subscriptionRequest/filterexpression": "ovs_rungenerateworkordercandidates eq true",
+              "subscriptionRequest/runas": 3
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "conditions": []
+        }
+      },
+      "actions": {
+        "Initialize_GC_IPT_Type": {
+          "runAfter": {
+            "Initialize_Oversight_Type": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9e7dc138-1cd7-453c-b6cf-03842120dcc9"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "GCIPTOversightType",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Get_Oversight_Type_-_GC_IPT": {
+          "runAfter": {
+            "Initialize_TargetRegionalNOP": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "689bd39b-071f-4265-8af9-3a238f303208"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_oversighttypes",
+              "$select": "ovs_oversighttypeid",
+              "$filter": "(ovs_oversighttypenameenglish eq 'GC IPT')"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Set_GC_IPT": {
+          "runAfter": {
+            "Get_RegionalNOPES": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "77873698-468c-4132-9c7f-e05394183a3e"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "GCIPTOversightType",
+            "value": "@{first(outputs('Get_Oversight_Type_-_GC_IPT')?['body/value'])?['ovs_oversighttypeid']}"
+          }
+        },
+        "Initialize_IsCurrentlyPlanned": {
+          "runAfter": {
+            "Initialize_MOC_IPT_Type": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "eb048ccd-4268-4598-90a2-4aeafe6f1693"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "IsCurrentlyPlanned",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        "Initialize_CurrentFiscalYear": {
+          "runAfter": {
+            "Initialize_IsCurrentlyPlanned": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "437ce927-7a69-45f0-ba7c-3b9560ab01b5"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CurrentFiscalYear",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Get_CurrentFiscalYear": {
+          "runAfter": {
+            "Get_Oversight_Type_-_MOC_IPT": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "689bd39b-071f-4265-8af9-3a238f303208"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "tc_tcfiscalyears",
+              "$select": "tc_tcfiscalyearid",
+              "$filter": "(tc_iscurrentfiscalyear eq true)"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Set_CurrentFiscalYear": {
+          "runAfter": {
+            "Set_MOC_IPT": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "77873698-468c-4132-9c7f-e05394183a3e"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "CurrentFiscalYear",
+            "value": "@{first(outputs('Get_CurrentFiscalYear')?['body/value'])?['tc_tcfiscalyearid']}"
+          }
+        },
+        "Initialize_MOC_IPT_Type": {
+          "runAfter": {
+            "Initialize_GC_IPT_Type": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9e7dc138-1cd7-453c-b6cf-03842120dcc9"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "MOCIPTOversightType",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Get_Oversight_Type_-_MOC_IPT": {
+          "runAfter": {
+            "Get_Oversight_Type_-_GC_IPT": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "689bd39b-071f-4265-8af9-3a238f303208"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_oversighttypes",
+              "$select": "ovs_oversighttypeid",
+              "$filter": "(ovs_oversighttypenameenglish eq 'MOC Facility IPT')"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Set_MOC_IPT": {
+          "runAfter": {
+            "Set_GC_IPT": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "77873698-468c-4132-9c7f-e05394183a3e"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "MOCIPTOversightType",
+            "value": "@{first(outputs('Get_Oversight_Type_-_MOC_IPT')?['body/value'])?['ovs_oversighttypeid']}"
+          }
+        },
+        "Initialize_Oversight_Type": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "9e7dc138-1cd7-453c-b6cf-03842120dcc9"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FinalOversightType",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_EngineeringServiceLOB": {
+          "runAfter": {
+            "Initialize_CurrentFiscalYear": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "186c9482-e1b6-4b34-be39-a561ff3494c4"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "EngineeringServiceLOB",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Get_EngineeringServiceLOB": {
+          "runAfter": {
+            "Get_CurrentFiscalYear": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "689bd39b-071f-4265-8af9-3a238f303208"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_lobs",
+              "$filter": "(ovs_lineofbusinessnameenglish eq 'Engineering Services')"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_RegionalNOP_ES": {
+          "runAfter": {
+            "Initialize_EngineeringServiceLOB": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "82ab69b8-d237-4694-8f85-fac9c6f10806"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RegionalNOP_ES",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Get_RegionalNOPES": {
+          "runAfter": {
+            "Get_EngineeringServiceLOB": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "689bd39b-071f-4265-8af9-3a238f303208"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_cdregionalnops",
+              "$filter": "(_ovs_cdfiscalyearid_value eq '@{triggerOutputs()?['body/_ovs_cdfiscalyearid_value']}' and ovs_CDRegionId/ovs_territorynameenglish eq 'HQ-ES')"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_TargetRegionalNOP": {
+          "runAfter": {
+            "Initialize_RegionalNOP_ES": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "44dbf849-f9ff-4ce2-bf10-bd1296c5c65b"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "TargetRegionalNOP",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Set_EngineeringServiceLoB": {
+          "runAfter": {
+            "Set_CurrentFiscalYear": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "77873698-468c-4132-9c7f-e05394183a3e"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "EngineeringServiceLOB",
+            "value": "@{first(outputs('Get_EngineeringServiceLOB')?['body/value'])?['ovs_lobid']}"
+          }
+        },
+        "Set_TargetRegionalNOP": {
+          "runAfter": {
+            "Set_EngineeringServiceLoB": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "77873698-468c-4132-9c7f-e05394183a3e"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "RegionalNOP_ES",
+            "value": "@{first(outputs('Get_RegionalNOPES')?['body/value'])?['ovs_cdregionalnopid']}"
+          }
+        },
+        "Try": {
+          "actions": {
+            "Get_All_Active_Region_NOPs_by_NOP": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "bad5f53b-c90f-4f7c-ae16-1cbc25bdeb1d"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "ovs_cdregionalnops",
+                  "$filter": "(statecode eq 0) and (_ovs_cdnopid_value eq @{triggerOutputs()?['body/ovs_cdnopid']})"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "For_Each_Region_NOP": {
+              "foreach": "@outputs('Get_All_Active_Region_NOPs_by_NOP')?['body/value']",
+              "actions": {
+                "Get_All_Active_Operations_By_Region": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "c8918218-8097-4942-8c5c-58f099f3bf4a"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "ListRecords",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "ovs_mocregistrations",
+                      "$select": "ovs_name,_ovs_siteid_value,ovs_mocregistrationid,ovs_cdriskscore,ovs_cdpriorityscore,ovs_cdriskcategory,ovs_operationtype,_ovs_lineofbusiness_value",
+                      "$filter": "(statecode eq 0) and (ovs_SiteId/_territoryid_value eq @{items('For_Each_Region_NOP')?['_ovs_cdregionid_value']})"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  },
+                  "runtimeConfiguration": {
+                    "paginationPolicy": {
+                      "minimumItemCount": 100000
+                    }
+                  }
+                },
+                "For_Each_Operation": {
+                  "foreach": "@outputs('Get_All_Active_Operations_By_Region')?['body/value']",
+                  "actions": {
+                    "If_LoB_Is_Engineering_Services": {
+                      "actions": {
+                        "Set_Target_Regional_NOP_To_ES": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "77873698-468c-4132-9c7f-e05394183a3e"
+                          },
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "TargetRegionalNOP",
+                            "value": "@variables('RegionalNOP_ES')"
+                          }
+                        }
+                      },
+                      "runAfter": {},
+                      "else": {
+                        "actions": {
+                          "Set_Target_Regional_NOP_To_Current": {
+                            "runAfter": {},
+                            "metadata": {
+                              "operationMetadataId": "77873698-468c-4132-9c7f-e05394183a3e"
+                            },
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "TargetRegionalNOP",
+                              "value": "@items('For_Each_Region_NOP')?['ovs_cdregionalnopid']"
+                            }
+                          }
+                        }
+                      },
+                      "expression": {
+                        "equals": [
+                          "@items('For_Each_Operation')?['_ovs_lineofbusiness_value']",
+                          "@variables('EngineeringServiceLOB')"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "6762a348-1487-4f2c-9c3a-a111c4ae6f08"
+                      },
+                      "type": "If"
+                    },
+                    "Is_Not_Civ_Av_Or_HOTI_GOA": {
+                      "actions": {
+                        "Is_HOTI": {
+                          "actions": {
+                            "Set_variable_5": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "29c3c305-a684-4e61-822e-ee37b446cae4"
+                              },
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "FinalOversightType",
+                                "value": "@variables('GCIPTOversightType')"
+                              }
+                            }
+                          },
+                          "runAfter": {},
+                          "else": {
+                            "actions": {
+                              "Set_variable_6": {
+                                "runAfter": {},
+                                "metadata": {
+                                  "operationMetadataId": "4250a1bb-6315-4d21-bdcb-259ff1def99f"
+                                },
+                                "type": "SetVariable",
+                                "inputs": {
+                                  "name": "FinalOversightType",
+                                  "value": "@variables('MOCIPTOversightType')"
+                                }
+                              }
+                            }
+                          },
+                          "expression": {
+                            "equals": [
+                              "@items('For_Each_Operation')?['ovs_operationtype']",
+                              918640038
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "5d417a44-fc18-4974-9916-ebe90aa0c5c1"
+                          },
+                          "type": "If"
+                        },
+                        "Get_Incomplete_Inspections_For_Site": {
+                          "runAfter": {
+                            "Is_HOTI": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "a86c06ae-3473-4e5a-867d-26e466619ee8"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_commondataserviceforapps",
+                              "operationId": "ListRecords",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            },
+                            "parameters": {
+                              "entityName": "msdyn_workorders",
+                              "$filter": "(_msdyn_serviceaccount_value eq '@{items('For_Each_Operation')?['_ovs_siteid_value']}' and (msdyn_systemstatus eq 690970001 or msdyn_systemstatus eq 690970000)) and (ovs_FiscalYear/tc_iscurrentfiscalyear eq true)",
+                              "$expand": "ovs_FiscalYear($select=tc_tcfiscalyearid)"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          }
+                        },
+                        "If_Site_Has_Current_Planned_Inspections": {
+                          "actions": {
+                            "Set_variable_7": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "2b971ecb-e165-4ea8-ab45-3fd63fb6787b"
+                              },
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "IsCurrentlyPlanned",
+                                "value": true
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Get_Incomplete_Inspections_For_Site": [
+                              "Succeeded"
+                            ]
+                          },
+                          "else": {
+                            "actions": {
+                              "Set_variable_8": {
+                                "runAfter": {},
+                                "metadata": {
+                                  "operationMetadataId": "9cb2232f-7f40-48a4-ad14-63e392586210"
+                                },
+                                "type": "SetVariable",
+                                "inputs": {
+                                  "name": "IsCurrentlyPlanned",
+                                  "value": false
+                                }
+                              }
+                            }
+                          },
+                          "expression": {
+                            "greater": [
+                              "@length(body('Get_Incomplete_Inspections_For_Site')?['value'])",
+                              0
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "84883ccc-86a1-42e9-adaf-2104e683ab1b"
+                          },
+                          "type": "If"
+                        },
+                        "Get_Current_WOCs_For_Operation": {
+                          "runAfter": {
+                            "If_Site_Has_Current_Planned_Inspections": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "a86c06ae-3473-4e5a-867d-26e466619ee8"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_commondataserviceforapps",
+                              "operationId": "ListRecords",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            },
+                            "parameters": {
+                              "entityName": "ovs_workordercandidates",
+                              "$filter": "(_ovs_operationid_value eq '@{items('For_Each_Operation')['ovs_mocregistrationid']}'  and _ovs_plannedfiscalyear_value eq '@{items('For_Each_Region_NOP')?['_ovs_cdfiscalyearid_value']}')"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          }
+                        },
+                        "If_Operation_Has_WOC_Already": {
+                          "actions": {
+                            "For_Each_WOC": {
+                              "foreach": "@outputs('Get_Current_WOCs_For_Operation')?['body/value']",
+                              "actions": {
+                                "Update_a_row_2": {
+                                  "runAfter": {},
+                                  "metadata": {
+                                    "operationMetadataId": "e76b849a-b6f7-4f60-8ebe-5609225113f6"
+                                  },
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "host": {
+                                      "connectionName": "shared_commondataserviceforapps",
+                                      "operationId": "UpdateRecord",
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                    },
+                                    "parameters": {
+                                      "entityName": "ovs_workordercandidates",
+                                      "recordId": "@items('For_Each_WOC')?['ovs_workordercandidateid']",
+                                      "item/ovs_currentlyplanned": "@variables('IsCurrentlyPlanned')",
+                                      "item/ownerid@odata.bind": "/teams/@{items('For_Each_Region_NOP')?['_ownerid_value']}",
+                                      "item/ovs_regionalnop@odata.bind": "/ovs_cdregionalnops/@{variables('TargetRegionalNOP')}"
+                                    },
+                                    "authentication": "@parameters('$authentication')"
+                                  }
+                                }
+                              },
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "cd250bfb-fe2a-4daa-a46f-20624729a2fd"
+                              },
+                              "type": "Foreach"
+                            }
+                          },
+                          "runAfter": {
+                            "Get_Current_WOCs_For_Operation": [
+                              "Succeeded"
+                            ]
+                          },
+                          "else": {
+                            "actions": {
+                              "Add_a_new_row": {
+                                "runAfter": {},
+                                "metadata": {
+                                  "operationMetadataId": "0b54c7b5-6639-4362-b9d1-bd47f9dbd9a0"
+                                },
+                                "type": "OpenApiConnection",
+                                "inputs": {
+                                  "host": {
+                                    "connectionName": "shared_commondataserviceforapps",
+                                    "operationId": "CreateRecord",
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                  },
+                                  "parameters": {
+                                    "entityName": "ovs_workordercandidates",
+                                    "item/ovs_site@odata.bind": "/accounts/@{items('For_Each_Operation')?['_ovs_siteid_value']}",
+                                    "item/statuscode": 1,
+                                    "item/ovs_currentlyplanned": "@variables('IsCurrentlyPlanned')",
+                                    "item/ovs_name": "WOC - @{items('For_Each_Operation')?['ovs_name']}",
+                                    "item/ovs_operationid@odata.bind": "/ovs_mocregistrations/@{items('For_Each_Operation')?['ovs_mocregistrationid']}",
+                                    "item/ovs_oversighttype@odata.bind": "/ovs_oversighttypes/@{variables('FinalOversightType')}",
+                                    "item/ownerid@odata.bind": "/teams/@{items('For_Each_Region_NOP')?['_ownerid_value']}",
+                                    "item/ovs_plannedfiscalyear@odata.bind": "/tc_tcfiscalyears/@{items('For_Each_Region_NOP')?['_ovs_cdfiscalyearid_value']}",
+                                    "item/ovs_cdpriorityscore": "@items('For_Each_Operation')?['ovs_cdpriorityscore']",
+                                    "item/ovs_regionalnop@odata.bind": "/ovs_cdregionalnops/@{variables('TargetRegionalNOP')}",
+                                    "item/ovs_cdriskcategory": "@items('For_Each_Operation')?['ovs_cdriskcategory']",
+                                    "item/ovs_cdriskscore": "@items('For_Each_Operation')?['ovs_cdriskscore']"
+                                  },
+                                  "authentication": "@parameters('$authentication')"
+                                }
+                              }
+                            }
+                          },
+                          "expression": {
+                            "greater": [
+                              "@length(body('Get_Current_WOCs_For_Operation')?['value'])",
+                              0
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "a08f5106-b107-4d7d-a2b8-9e72f3bf39b2"
+                          },
+                          "type": "If"
+                        }
+                      },
+                      "runAfter": {
+                        "If_LoB_Is_Engineering_Services": [
+                          "Succeeded"
+                        ]
+                      },
+                      "expression": {
+                        "and": [
+                          {
+                            "not": {
+                              "equals": [
+                                "@items('For_Each_Operation')?['ovs_operationtype']",
+                                918640040
+                              ]
+                            }
+                          },
+                          {
+                            "not": {
+                              "equals": [
+                                "@items('For_Each_Operation')?['ovs_operationtype']",
+                                918640042
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "6222e0d3-86c6-4532-8981-ebdb42bd52e4"
+                      },
+                      "type": "If"
+                    }
+                  },
+                  "runAfter": {
+                    "Get_All_Active_Operations_By_Region": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "ecb78762-a632-4892-9f7c-175e0d3f648c"
+                  },
+                  "type": "Foreach"
+                }
+              },
+              "runAfter": {
+                "Get_All_Active_Region_NOPs_by_NOP": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "dccbfd14-124b-4f75-9327-aa659a32ec82"
+              },
+              "type": "Foreach"
+            }
+          },
+          "runAfter": {
+            "Set_TargetRegionalNOP": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e47d0276-7977-4b2b-acae-522113e96604"
+          },
+          "type": "Scope"
+        },
+        "Catch": {
+          "actions": {},
+          "runAfter": {
+            "Try": [
+              "Failed"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d82b52b0-2876-4931-b2e9-5871b2c7a604"
+          },
+          "type": "Scope"
+        },
+        "Reset_\"Run_Generate_Work_Order_Candidates\"_value_": {
+          "runAfter": {
+            "Catch": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "bdbac58a-835f-41ae-a2e7-605c0357072f"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "UpdateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_cdnops",
+              "recordId": "@triggerOutputs()?['body/ovs_cdnopid']",
+              "item/ovs_rungenerateworkordercandidates": false
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}
