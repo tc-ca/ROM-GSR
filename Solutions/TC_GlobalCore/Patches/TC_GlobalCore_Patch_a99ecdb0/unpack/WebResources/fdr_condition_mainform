@@ -1,0 +1,116 @@
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+
+
+var Condition_Main = (function (window, document)
+{ 
+
+    const VALUE_CERT = 794600000;
+    const VALUE_PERSONNEL = 794600002;
+    const VALUE_LOCATION = 794600001;
+
+    const FIELD_CONDITION_TYPE = "fdr_conditiontype";
+    const FIELD_PERSONNEL_TRAINING_ENGLISH = "fdr_personneltrainingenglish";
+    const FIELD_PERSONNEL_TRAINING_FRENCH = "fdr_personneltrainingfrench";
+    const FIELD_AUTHORIZED_LOCATION_LOOKUP = "fdr_authorizedlocation";
+
+    function toggleRequiredLevel(formContext)
+    {
+        var conditionType = glHelper.GetValue(formContext, FIELD_CONDITION_TYPE);
+
+        var fieldsRequired = true;
+
+        if (conditionType == VALUE_CERT)
+        {
+            glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Certification", true);
+
+            glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Personnel", false);
+            glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Location", false);
+
+            glHelper.SetRequiredLevel(formContext, FIELD_AUTHORIZED_LOCATION_LOOKUP, false);
+            
+        }
+
+        if (conditionType == VALUE_LOCATION)
+        {
+            glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Certification", false);
+
+            glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Personnel", false);
+            glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Location", true);
+
+            glHelper.SetRequiredLevel(formContext, FIELD_AUTHORIZED_LOCATION_LOOKUP, true);
+
+        }
+
+        if (conditionType == VALUE_PERSONNEL)
+        {
+            glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Certification", false);
+
+            glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Personnel", true);
+            glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Location", false);
+
+            getEnvironmentVariable(formContext, FIELD_PERSONNEL_TRAINING_ENGLISH,"fdr_PersonnelTrainingEnglishText");
+            getEnvironmentVariable(formContext, FIELD_PERSONNEL_TRAINING_FRENCH, "fdr_PersonnelTrainingFrenchText");
+
+            glHelper.SetRequiredLevel(formContext, FIELD_AUTHORIZED_LOCATION_LOOKUP, false);
+
+        }
+
+    }
+
+    function getEnvironmentVariable(formContext,fieldName ,varName)
+    {
+        var currentWebApi = Xrm.WebApi.online;
+
+        "use strict";
+        var json = null;
+        currentWebApi.retrieveMultipleRecords("environmentvariabledefinition", "?$select=defaultvalue,displayname&$expand=environmentvariabledefinition_environmentvariablevalue($select=value)&$filter=schemaname eq '" + varName + "'").then(
+            function success(result)
+            {
+                //&& result.entities[0]["environmentvariabledefinition_environmentvariablevalue"].length > 0)
+
+                if (typeof (result.entities[0].defaultvalue) != "undefined")
+                {
+                    glHelper.SetValue(formContext, fieldName, result.entities[0].defaultvalue);
+                }
+              
+            },
+            function (error)
+            {
+                console.log(error.message);
+            }
+        );
+    }
+
+
+    return {
+        OnLoad: function (executionContext)
+        {
+            globalContext = glHelper.getGlobalContext();
+            var formContext = executionContext.getFormContext();
+
+            var id = glHelper.GetCurrentRecordId(formContext);
+
+            // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+            formType = glHelper.GetFormType(formContext);
+
+            var conditionType = formContext.getAttribute(FIELD_CONDITION_TYPE);
+            conditionType.removeOnChange(Condition_Main.ConditionType_OnChange);
+            conditionType.addOnChange(Condition_Main.ConditionType_OnChange);
+
+            toggleRequiredLevel(formContext);
+
+
+        },
+
+        
+        ConditionType_OnChange: function (executionContext)
+        {
+
+            var formContext = executionContext.getFormContext();
+
+            toggleRequiredLevel(formContext);
+        }
+
+    }
+
+})(window, document)
