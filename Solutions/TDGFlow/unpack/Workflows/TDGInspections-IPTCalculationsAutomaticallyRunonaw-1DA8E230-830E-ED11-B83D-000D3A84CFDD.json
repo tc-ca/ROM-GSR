@@ -1,0 +1,363 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "impersonation": {},
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_commondataserviceforapps_1": {
+        "impersonation": {},
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_teams_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceMSTeamsTDGCoreUser"
+        },
+        "api": {
+          "name": "shared_teams"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "Recurrence": {
+          "recurrence": {
+            "frequency": "Week",
+            "interval": 1,
+            "timeZone": "Central Standard Time",
+            "startTime": "2022-07-28T05:00:00Z",
+            "schedule": {
+              "weekDays": [
+                "Sunday",
+                "Friday"
+              ],
+              "hours": [
+                "1"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "03fec618-a67b-4ea6-b2a3-e50208d09b70"
+          },
+          "type": "Recurrence"
+        }
+      },
+      "actions": {
+        "Add_a_new_row:_IPT_Run": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "fe5fef56-af88-45ae-9571-c4d37bb34098"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord"
+            },
+            "parameters": {
+              "entityName": "ovs_iptruns",
+              "item/ovs_fromdate": "@utcNow()",
+              "item/ovs_forgettingfactor": 1,
+              "item/ovs_populationdensitylb": 100,
+              "item/ovs_modebaseconstant": 1.15,
+              "item/ovs_startyear": 2,
+              "item/ovs_yearscyclemax": 9,
+              "item/ovs_yearscyclemin": 2
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Condition:_validateNoOtherRun": {
+          "actions": {
+            "Perform_an_unbound_action:_ovs_IPTRun_": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "608b479f-6299-44b2-a2ee-63998fba4b26"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "PerformUnboundAction"
+                },
+                "parameters": {
+                  "actionName": "ovs_IPTRun",
+                  "item/runid": "@outputs('Add_a_new_row:_IPT_Run')?['body/ovs_iptrunid']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Set_variable": {
+              "runAfter": {
+                "Perform_an_unbound_action:_ovs_IPTRun_": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "2a8d3d3d-264c-45b3-85ed-398d9ea45b8e"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Message",
+                "value": "The IPT calculation process has started. You will be notified of progress and results via emails and MS Teams messaging."
+              }
+            }
+          },
+          "runAfter": {
+            "List_rows:_All_IPT_Run_records_with_Status_=_'InProcess'": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Update_a_row": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "6447a5e7-df61-4e65-bef4-1160dd498c41"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                    "connectionName": "shared_commondataserviceforapps",
+                    "operationId": "UpdateRecord"
+                  },
+                  "parameters": {
+                    "entityName": "ovs_iptruns",
+                    "recordId": "@outputs('Add_a_new_row:_IPT_Run')?['body/ovs_iptrunid']",
+                    "item/ovs_testvalues": "The process cannot be started because another IPT run is in process."
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              },
+              "Set_variable_2": {
+                "runAfter": {
+                  "Update_a_row": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "b37488bb-79fd-4720-b12e-68e0fe62f2f4"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "Message",
+                  "value": "The process cannot be started because another IPT run is in process."
+                }
+              }
+            }
+          },
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@empty(outputs('List_rows:_All_IPT_Run_records_with_Status_=_''InProcess''')?['body/value'])",
+                  "@false"
+                ]
+              },
+              {
+                "equals": [
+                  "@length(outputs('List_rows:_All_IPT_Run_records_with_Status_=_''InProcess''')?['body/value'])",
+                  0
+                ]
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "02885ad8-6417-4bb1-964e-1d13de2e7b5c"
+          },
+          "type": "If"
+        },
+        "List_rows:_All_IPT_Run_records_with_Status_=_'InProcess'": {
+          "runAfter": {
+            "Message": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5477d9e4-0910-49e7-a1ec-3d46e1347423"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords"
+            },
+            "parameters": {
+              "entityName": "ovs_iptruns",
+              "$filter": "statuscode eq 918640000"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Message": {
+          "runAfter": {
+            "Add_a_new_row:_IPT_Run": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9f41f6ec-951a-4d08-9a1b-5fc81fb37a52"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Message",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Get_Customer_Support_team": {
+          "runAfter": {
+            "Condition:_validateNoOtherRun": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b1640843-3d94-485e-ae24-a3f5a9f39521"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords"
+            },
+            "parameters": {
+              "entityName": "qm_environmentsettingses",
+              "$filter": "(qm_name eq 'IPT_Notification_list')",
+              "$top": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "SupportTeam": {
+          "runAfter": {
+            "Get_Customer_Support_team": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "38b12fb8-26a7-4f00-99ec-a16fcbfcc76a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": " SupportTeam",
+                "type": "string",
+                "value": "@{first(body('Get_Customer_Support_team')?['value'])?['qm_value']}"
+              }
+            ]
+          }
+        },
+        "_Support_Team_As_Array": {
+          "runAfter": {
+            "SupportTeam": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6367cddc-4b00-4660-8776-5762c4de3fb5"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "SupportTeamAsArray",
+                "type": "array",
+                "value": "@split(variables(' SupportTeam'), ';')"
+              }
+            ]
+          }
+        },
+        "Support_Team_Filtered_unique_values": {
+          "runAfter": {
+            "_Support_Team_As_Array": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6e7ad749-db2f-4462-8236-6aaeb8826941"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "SupportTeamFiltered",
+                "type": "array",
+                "value": "@union(variables('SupportTeamAsArray'), variables('SupportTeamAsArray'))"
+              }
+            ]
+          }
+        },
+        "Send_to_each": {
+          "foreach": "@variables('SupportTeamFiltered')",
+          "actions": {
+            "Post_a_message_as_the_Flow_bot_to_a_user": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "a5d978d5-79cb-4fd1-afdf-c58634b08e55"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
+                  "connectionName": "shared_teams_1",
+                  "operationId": "PostUserNotification"
+                },
+                "parameters": {
+                  "PostNotificationRequest/recipient/to": "@{items('Send_to_each')};",
+                  "PostNotificationRequest/messageBody": "Hello/Bonjour,\n@{variables('Message')}",
+                  "PostNotificationRequest/messageTitle": "IPT Auto Run status update/La mise à jour de l'état de l'exécution de l'OPRI",
+                  "PostNotificationRequest/recipient/isAlert": true
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "Support_Team_Filtered_unique_values": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "82a02db9-a529-4942-9927-43eae1efb7d8"
+          },
+          "type": "Foreach"
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}
