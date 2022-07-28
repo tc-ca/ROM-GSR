@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{d880b077-b0ae-ec11-983e-000d3a8476c5}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="name" select="1" icon="1" preview="1">
+        <row name="result" id="bookableresourceid">
+          <cell name="name" width="200" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
+        <entity name="bookableresource">
+          <attribute name="name" />
+          <attribute name="bookableresourceid" />
+          <link-entity name="bookableresourcecategoryassn" alias="aa" link-type="inner" from="resource" to="bookableresourceid">
+            <filter type="and">
+              <condition attribute="resourcecategory" operator="in">
+                <value uiname="FDR Engineer" uitype="bookableresourcecategory">{da67c6f2-aeae-ec11-983e-000d3a84adbc}</value>
+                <value uiname="FDR Program Officer" uitype="bookableresourcecategory">{a370d405-afae-ec11-983e-000d3a84adbc}</value>
+              </condition>
+            </filter>
+          </link-entity>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="FDR Internal Users" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
