@@ -1,10 +1,13 @@
 $(document).ready(function () {
-	var companyName = '{{user.parentcustomerid.name }}';
-	var topNav = $('#navbar');
+    debugger;
 
-	if(companyName)
-		if(topNav)
-			$( "<h2>TDG Site Registration Database: " + companyName + "</h2>" ).insertAfter(topNav);
+    var topNav = $('#navbar');
+    if (topNav) {
+        var companyName = $("#ovs_legalname").val();
+        var value = tdg.error_message.message("m000106");
+        value = value.replace("{0}", companyName);
+        $(value).insertAfter(topNav);
+    }
 
 	$("legend").each(function() {
 		$(this).removeClass();

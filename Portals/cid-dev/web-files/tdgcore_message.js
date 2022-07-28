@@ -18,8 +18,8 @@ if (typeof (tdg.message) == "undefined") {
                 [
                     {
                         "code": "CID_PORTAL",
-                        "message_en": "Transport Canada CID Portal",
-                        "message_fr": "Portail CID de Transports Canada"
+                        "message_en": "TDG CLIENT IDENTIFICATION DATABASE",
+                        "message_fr": "TDG CLIENT IDENTIFICATION DATABASE_FR"
                     },
                     {
                         "code": "tdg_unnumberid",
@@ -168,8 +168,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000106",
-                        "message_en": "<h2>Transport Canada CID Portal: {0}</h2>",
-                        "message_fr": "<h2>Portail CID de Transports Canada: {0}</h2>"
+                        "message_en": "<h2>TDG CLIENT IDENTIFICATION DATABASE: {0}</h2>",
+                        "message_fr": "<h2>TDG CLIENT IDENTIFICATION DATABASE_FR: {0}</h2>"
                     }
                 ];
 
