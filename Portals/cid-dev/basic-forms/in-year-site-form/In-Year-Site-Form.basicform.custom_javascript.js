@@ -3,7 +3,6 @@
 //
 $(document).ready(function () {
     debugger;
-
     clear_address_type_required_fields();
 
     $("#telephone1").attr("placeholder", "");
@@ -11,6 +10,7 @@ $(document).ready(function () {
     // resize WebResource_address_complete
     $("#WebResource_address_complete").height('72px');
     sessionStorage.setItem("AddressLine1Text", "");
+    sessionStorage.setItem("AddressComplete_readonly", false);
 
     // hide controls
     tdg.c.control_hide("name");
@@ -138,7 +138,7 @@ function ovs_address_type_change(reset_data) {
 }
 
 function WebResource_address_complete_readonly(value) {
-    //debugger;
+    debugger;
     try {
         var f = document.getElementById("WebResource_address_complete");
         var c = f.contentWindow;
@@ -156,8 +156,10 @@ function WebResource_address_complete_address1_line1(value) {
 }
 
 function cid_same_as_company_change() {
-    //debugger;
+    debugger;
     var value = $("#cid_same_as_company")[0].checked;
+    sessionStorage.setItem("AddressComplete_readonly", value);
+
     if (value) {
         //$("#WebResource_address_complete").hide();
         WebResource_address_complete_readonly(true);
@@ -213,14 +215,14 @@ function cid_same_as_company_change() {
         $("#address1_stateorprovince").prop('readonly', false);
         $("#address1_postalcode").prop('readonly', false);
 
-        WebResource_address_complete_address1_line1("");
-        $("#address1_line1").val("");
-        $("#address1_line2").val("");
-        $("#address1_line3").val("");
-        $("#address1_city").val("");
-        $("#address1_stateorprovince").val("");
-        $("#address1_postalcode").val("");
-        $("#address1_country").val("Canada");
+        //WebResource_address_complete_address1_line1("");
+        //$("#address1_line1").val("");
+        //$("#address1_line2").val("");
+        //$("#address1_line3").val("");
+        //$("#address1_city").val("");
+        //$("#address1_stateorprovince").val("");
+        //$("#address1_postalcode").val("");
+        //$("#address1_country").val("Canada");
     }
 }
 
@@ -243,19 +245,19 @@ function AddressComplete_Selected() {
 }
 
 function subgrid_language() {
-    debugger;
+    //debugger;
     var selected_language = sessionStorage.getItem("selected_language");
 
     var entityList = $(".entity-grid").eq(1);
     var refRel = entityList[0].dataset.refRel;
     if (refRel == "cid_account_ovs_operationunnumber_Site") {
         entityList.on("loaded", function () {
-            debugger;
+            //debugger;
 
             // header
             let header = entityList.find("table thead > tr");
             for (var index1 = 0; index1 < header.length; index1++) {
-                debugger;
+                //debugger;
                 let tr = header[index1];
 
                 let cols = $(tr).find('th');
@@ -282,11 +284,11 @@ function subgrid_language() {
                 }
             }
 
-            debugger
+            //debugger
             let rows = entityList.find("table tbody > tr");
 
             rows.each(function (index, tr) {
-                debugger;
+                //debugger;
 
                 let cols = $(tr).find('td');
                 for (var i = 0; i < cols.length; i++) {

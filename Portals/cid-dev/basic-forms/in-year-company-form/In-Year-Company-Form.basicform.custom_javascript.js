@@ -11,9 +11,8 @@ $(document).ready(function () {
     $("#telephone1").attr("placeholder", "");
     tdg.c.control_hide("cid_reasonfornobnnumber_other");
 
-    var cid_has_cra_bn = $('#cid_has_cra_bn').val();
+    var cid_has_cra_bn = ($('#cid_crabusinessnumber').val() != ""? "1":"0");
     var address1_line1 = $("#address1_line1").val();
-    var cid_has_cra_bn = $('#cid_has_cra_bn').val();
     var cid_reasonfornobnnumber = $('#cid_reasonfornobnnumber').val();
 
     tdg.c.control_hide("cid_has_cra_bn");
@@ -84,12 +83,12 @@ if (window.jQuery) {
 }
 
 function AddressComplete_Hide_address1_line1() {
-    debugger;
+    //debugger;
     tdg.c.control_hide("address1_line1");
 }
 
 function AddressComplete_address1_line1() {
-    debugger;
+    //debugger;
     $("#address1_line1").val(sessionStorage.getItem("Line1"));
 }
 
@@ -114,7 +113,7 @@ function AddressComplete_Selected() {
 }
 
 function subgrid_language() {
-    debugger;
+    //debugger;
     var selected_language = sessionStorage.getItem("selected_language");
 
     var entityList = $(".entity-grid");
@@ -122,7 +121,7 @@ function subgrid_language() {
     var refRel = naicscode[0].dataset.refRel;
     if (refRel == "cid_account_companynaicscode") {
         naicscode.on("loaded", function () {
-            debugger;
+            //debugger;
 
             // header
             let header = naicscode.find("table thead > tr");
@@ -143,11 +142,11 @@ function subgrid_language() {
                 }
             }
 
-            debugger;
+            //debugger;
 
             let rows = naicscode.find("table tbody > tr");
             rows.each(function (index, tr) {
-                debugger;
+                //debugger;
 
                 let cols = $(tr).find('td');
                 cols.each(function (index, td) {
