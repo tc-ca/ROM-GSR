@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{da3e59fa-4e01-ed11-82e6-000d3a848097}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="msdyn_name" select="1" icon="1" preview="1">
+        <row name="result" id="msdyn_workorderid">
+          <cell name="msdyn_name" width="300" />
+          <cell name="msdyn_serviceaccount" width="100" />
+          <cell name="msdyn_address1" width="100" />
+          <cell name="msdyn_city" width="100" />
+          <cell name="msdyn_stateorprovince" width="100" />
+          <cell name="msdyn_postalcode" width="100" />
+          <cell name="msdyn_systemstatus" width="100" />
+          <cell name="ovs_oversighttype" width="100" />
+          <cell name="ovs_primaryinspector" width="100" />
+          <cell name="ovs_fiscalyear" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
+        <entity name="msdyn_workorder">
+          <attribute name="msdyn_name" />
+          <attribute name="msdyn_workorderid" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <link-entity name="team" alias="aa" link-type="inner" from="teamid" to="owningteam">
+            <filter type="and">
+              <condition attribute="businessunitid" operator="eq-businessid" />
+            </filter>
+          </link-entity>
+          <attribute name="msdyn_serviceaccount" />
+          <attribute name="msdyn_address1" />
+          <attribute name="msdyn_city" />
+          <attribute name="msdyn_stateorprovince" />
+          <attribute name="msdyn_postalcode" />
+          <attribute name="msdyn_systemstatus" />
+          <attribute name="ovs_oversighttype" />
+          <attribute name="ovs_primaryinspector" />
+          <attribute name="ovs_fiscalyear" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="My Region's Unassigned Work Orders" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
