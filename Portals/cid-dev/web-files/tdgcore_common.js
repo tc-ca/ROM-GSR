@@ -1,4 +1,4 @@
-﻿//To apply the Asterisk(*) Sign using custom JS:
+//To apply the Asterisk(*) Sign using custom JS:
 //$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
 
 // tdgcore_common.js
@@ -751,6 +751,196 @@ if (typeof (tdg.root) == "undefined") {
 // tdg.cid = tdgcore.cid
 if (typeof (tdg.cid) == "undefined") {
     tdg.cid = {
+        address_init: function (site_ind)
+        {
+            debugger;
+
+            this.clear_address_type_required_fields();
+
+            // default
+            $("#address1_country").val("Canada");
+            $('#address1_country').attr("readonly", true);
+    
+            tdg.c.control_hide("address1_line1");
+
+            // resize WebResource_address_complete
+            $("#WebResource_address_complete").height('72px');
+
+            var address1_line1 = $("#address1_line1").val();
+            sessionStorage.setItem("AddressLine1Text", address1_line1);
+            sessionStorage.setItem("AddressComplete_readonly", false);
+
+            // address
+            $("#address1_line2").attr("autocomplete", "new-password");
+            $("#address1_line3").attr("autocomplete", "new-password");
+            $("#address1_city").attr("autocomplete", "new-password");
+            $("#address1_stateorprovince").attr("autocomplete", "new-password");
+            $("#address1_postalcode").attr("autocomplete", "new-password");
+            $("#address1_longitude").attr("autocomplete", "new-password");
+            $("#address1_latitude").attr("autocomplete", "new-password");
+
+            if (site_ind) {
+                // legal land description
+                $("#ovs_lld_quarter").attr("autocomplete", "new-password");
+                $("#ovs_lld_section").attr("autocomplete", "new-password");
+                $("#ovs_lld_township").attr("autocomplete", "new-password");
+                $("#ovs_lld_range").attr("autocomplete", "new-password");
+                $("#ovs_lld_meridian").attr("autocomplete", "new-password");
+                $("#ovs_lld_province").attr("autocomplete", "new-password");
+
+                // lat/long
+                $("#address1_latitude").attr("autocomplete", "new-password");
+                $("#address1_longitude").attr("autocomplete", "new-password");
+            }
+        },
+
+        address_same_as_company: function (parent_id)
+        {
+            debugger;
+
+            var value = $("#cid_same_as_company")[0].checked;
+            sessionStorage.setItem("AddressComplete_readonly", value);
+
+            if (value) {
+                $("#address1_line2").prop('readonly', true);
+                $("#address1_line3").prop('readonly', true);
+                $("#address1_city").prop('readonly', true);
+                $("#address1_stateorprovince").prop('readonly', true);
+                $("#address1_postalcode").prop('readonly', true);
+
+                var filter = "accountid eq guid'" + parent_id + "'";
+                var data = tdg.c.OData_List("account", filter);
+
+                var address1_line1 = "N/A";
+                var address1_city = "N/A";
+                var address1_stateorprovince = "N/A";
+                var address1_postalcode = "N/A";
+                var address1_country = "Canada";
+
+                if (data.length > 0) {
+                    var item = data[0];
+                    address1_line1 = item.address1_line1;
+                    address1_line2 = item.address1_line2;
+                    address1_line2 = (address1_line2 == null ? "" : address1_line2);
+                    address1_line3 = item.address1_line3;
+                    address1_line3 = (address1_line3 == null ? "" : address1_line3);
+                    address1_city = item.address1_city;
+                    address1_stateorprovince = item.address1_stateorprovince;
+                    address1_postalcode = item.address1_postalcode;
+                    address1_country = item.address1_country;
+                }
+
+                $("#address1_line1").val(address1_line1);
+                $("#address1_line2").val(address1_line2);
+                $("#address1_line3").val(address1_line3);
+                $("#address1_city").val(address1_city);
+                $("#address1_stateorprovince").val(address1_stateorprovince);
+                $("#address1_postalcode").val(address1_postalcode);
+                $("#address1_country").val(address1_country);
+            }
+            else {
+                $("#address1_line2").prop('readonly', false);
+                $("#address1_line3").prop('readonly', false);
+                $("#address1_city").prop('readonly', false);
+                $("#address1_stateorprovince").prop('readonly', false);
+                $("#address1_postalcode").prop('readonly', false);
+            }
+
+            var address1_line1 = $("#address1_line1").val();
+            sessionStorage.setItem("AddressLine1Text", address1_line1);
+
+            this.WebResource_address_complete_readonly(value);
+        },
+
+        address_type_change: function (reset_data) {
+            debugger;
+
+            // hide sections
+            tdg.c.section_hide("section_address");
+            tdg.c.section_hide("section_legal_land_description");
+            tdg.c.section_hide("section_latitude_longitude");
+
+            this.clear_address_type_required_fields();
+
+            var ovs_address_type = $("#ovs_address_type").val();
+            switch (ovs_address_type) {
+                case "1": // legal land description
+                    tdg.c.section_show("section_legal_land_description");
+
+                    //tdg.c.addValidator("ovs_lld_quarter","Quarter/LSC");
+                    tdg.c.addValidator("ovs_lld_section", "Section");
+                    tdg.c.addValidator("ovs_lld_township", "Township");
+                    tdg.c.addValidator("ovs_lld_range", "Range");
+                    tdg.c.addValidator("ovs_lld_meridian", "Meridian");
+                    tdg.c.addValidator("ovs_lld_province", "Province / Territory");
+
+                    if (reset_data) {
+                        thhis.address1_default("N/A");
+                    }
+                    break;
+                case "2": // lat/long
+                    tdg.c.section_show("section_latitude_longitude");
+
+                    tdg.c.addValidator("address1_latitude", "Latitude");
+                    tdg.c.addValidator("address1_longitude", "Longitude");
+
+                    if (reset_data) {
+                        this.address1_default("N/A");
+                    }
+                    break;
+                default:
+                    tdg.c.section_show("section_address");
+
+                    tdg.c.addValidator("address1_line1", "Street 1");
+                    tdg.c.addValidator("address1_city", "City");
+                    tdg.c.addValidator("address1_stateorprovince", "Province");
+                    tdg.c.addValidator("address1_postalcode", "Postal Code");
+
+                    if (reset_data) {
+                        this.address1_default("");
+                    }
+            }
+        },
+
+        clear_address_type_required_fields: function () {
+            for (var i = 0; i < 2; i++) {
+                // address
+                tdg.c.removeValidator("address1_line1");
+                tdg.c.removeValidator("address1_city");
+                tdg.c.removeValidator("address1_stateorprovince");
+                tdg.c.removeValidator("address1_postalcode");
+
+                // legal land description
+                //tdg.c.removeValidator("ovs_lld_quarter");
+                tdg.c.removeValidator("ovs_lld_section");
+                tdg.c.removeValidator("ovs_lld_township");
+                tdg.c.removeValidator("ovs_lld_range");
+                tdg.c.removeValidator("ovs_lld_meridian");
+                tdg.c.removeValidator("ovs_lld_province");
+
+                // lat/long
+                tdg.c.removeValidator("address1_latitude");
+                tdg.c.removeValidator("address1_longitude");
+            }
+        },
+
+        address1_default: function (value) {
+            $("#address1_line1").val(value);
+            $("#address1_city").val(value);
+            $("#address1_stateorprovince").val(value);
+            $("#address1_postalcode").val(value);
+        },
+
+        WebResource_address_complete_readonly: function (value) {
+            debugger;
+
+            try {
+                var f = document.getElementById("WebResource_address_complete");
+                var c = f.contentWindow;
+                c.readonly(value);
+            } catch (e) { }
+        },
+
         Append_Modes_html_checkboxes: function (air, marine, rail, road) {
             debugger;
 
