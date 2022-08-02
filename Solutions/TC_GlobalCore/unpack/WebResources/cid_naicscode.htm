@@ -1,6 +1,5 @@
-<HTML>
-<HEAD>
-    <TITLE></TITLE>
+<html><head>
+    <title></title>
     <style>
         body {
             background-color: white;
@@ -43,17 +42,17 @@
     </style>
     <!-- Using jquery library -->
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-</HEAD>
-<BODY>
+<meta></head>
+<body>
     <label for="cid_naicscode" class="field-label">NAICS Code</label>
     <span id="cid_naicscode_required" style="color: red;font-weight: bold"> *</span>
     <br>
-    <input list="cid_naicscode_list" id="cid_naicscode" class="text form-control" />
+    <input list="cid_naicscode_list" id="cid_naicscode" class="text form-control">
     <br>
     <datalist id="cid_naicscode_list">
     </datalist>
 
-    <input type="text" id="cid_naicscode_list_id" hidden />
+    <input type="text" id="cid_naicscode_list_id" hidden="">
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -119,8 +118,9 @@
             for (i = 0; i < items.length; i++) {
                 var item = items[i];
                 var value = item.cid_naicscodeid;
+                var cid_naicsclasstitle = item.cid_naicsclasstitle.replaceAll("\n"," ");
                 var text = item.cid_name + ' - ' +
-                    tdg.c.text_language(item.cid_naicsclasstitle, selected_language);
+                    tdg.c.text_language(cid_naicsclasstitle, selected_language);
 
                 cid_naicscode_list_id += value + ";";
 
@@ -144,11 +144,13 @@
 
             for (var i = 0; i < options.length; i++) {
                 var current = options[i].value;
-                if (current === val) {
-                    found = true;
-                    index = i;
-                    text = current;
-                    break;
+                if (current != null) {
+                    if (current === val) {
+                        found = true;
+                        index = i;
+                        text = current;
+                        break;
+                    }
                 }
             }
 
@@ -303,12 +305,11 @@
                 },
 
                 replace_special_char: function (value) {
-                    var k_char_apostrophe = "&#39;";
-                    value = value.replace(k_char_apostrophe, "'");
-                    return value;
+                    return $('<textarea />').html(value).text();
                 }
             }
         }
     </script>
-</BODY>
-</HTML>
+
+
+</body></html>

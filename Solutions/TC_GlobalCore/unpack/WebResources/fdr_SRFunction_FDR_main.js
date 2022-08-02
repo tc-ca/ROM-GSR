@@ -79,9 +79,6 @@ var SRFunctions_FDR_main = (function (window, document) {
             }
         };
         req.send();
-
-        //fdr_servicerequest
-        //fdr_containerfunction
     }
 
 
@@ -105,6 +102,8 @@ var SRFunctions_FDR_main = (function (window, document) {
             cf.addOnChange(SRFunctions_FDR_main.On_ContainerFunctionChange);
 
             if (formType == 1) {
+
+                glHelper.SetControlReadOnly(formContext, "fdr_containerfunction", false);
 
                 //if Service Request is populated check for its container type
                 var SR_id = glHelper.GetLookupAttrId(formContext, "fdr_servicerequest");
@@ -150,10 +149,13 @@ var SRFunctions_FDR_main = (function (window, document) {
         On_ContainerFunctionChange: function (executionContext) {
 
             var formContext = executionContext.getFormContext();
-            //get container f
+            //get container function id
             var containerId = glHelper.GetLookupAttrId(formContext, "fdr_containerfunction");
 
             if (containerId != null) {
+
+                //populate Service Request Function name
+                glHelper.SetValue(formContext, "fdr_name", glHelper.GetLookupName(formContext, "fdr_containerfunction"));
 
                 Xrm.WebApi.online.retrieveRecord("fdr_containerfunction", containerId, "?$select=fdr_supportsdesignregistration").then(
                     function success(result) {

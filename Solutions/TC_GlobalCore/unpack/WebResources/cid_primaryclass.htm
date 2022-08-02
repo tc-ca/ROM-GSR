@@ -1,6 +1,5 @@
-<HTML>
-<HEAD>
-    <TITLE></TITLE>
+<html><head>
+    <title></title>
     <style>
         body {
             background-color: white;
@@ -43,35 +42,38 @@
     </style>
     <!-- Using jquery library -->
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-</HEAD>
-<BODY>
+<meta></head>
+<body>
     <label for="ovs_primaryclass" class="field-label">Class/Division</label>
     <span id="ovs_primaryclass_required" style="color: red;font-weight: bold"> *</span>
-    <br />
+    <br>
     <select name="ovs_primaryclass" id="ovs_primaryclass" class="form-control picklist " onchange="ovs_primaryclass_onchange();">
         <option value="0" selected="selected"></option>
     </select>
-    <br />
-    <textarea readonly class="text form-control" id="ovs_primaryclass_description" rows="5" cols="100%"> 
+    <br>
+    <textarea readonly="" class="text form-control" id="ovs_primaryclass_description" rows="5" cols="100%"> 
     </textarea>
-    <br />
-    <span id="group" hidden>
+    <br>
+    <span id="group" hidden="">
         <label for="ovs_compatibility_group" class="field-label">Compatibility Group</label>
         <span id="ovs_compatibility_group_required" style="color: red;font-weight: bold"> *</span>
-        <br />
+        <br>
         <select name="ovs_compatibility_group" id="ovs_compatibility_group" class="form-control picklist " onchange="ovs_compatibility_group_onchange();">
             <option value="0" selected="selected"></option>
         </select>
-        <br />
-        <textarea readonly class="text form-control" id="ovs_compatibility_group_description" rows="5" cols="100%"> 
+        <br>
+        <textarea readonly="" class="text form-control" id="ovs_compatibility_group_description" rows="5" cols="100%"> 
         </textarea>
-        <br />
+        <br>
     </span>
 
-    <input type="text" id="ovs_primaryclass_list_id" hidden />
+    <input type="text" id="ovs_primaryclass_list_id" hidden="">
 
     <script type="text/javascript">
         var _group_list;
+        var _ovs_class_description = null;
+        var _group_description = null;
+        var _k_len = 150;
 
         $(document).ready(function () {
             debugger;
@@ -104,6 +106,7 @@
 
         function ovs_primaryclass_list() {
             debugger;
+            _ovs_class_description = [];
             var selected_language = sessionStorage.getItem("selected_language");
             selected_language = (selected_language == null ? "en-US" : selected_language);
             var filter = "";
@@ -115,6 +118,7 @@
             var parent_description = "";
             for (i = 0; i < items.length; i++) {
                 var item = items[i];
+                item.ovs_class_description = item.ovs_class_description.replaceAll("\n", " ");
                 if (item.ovs_parent == null) {
                     parent_description = common.text_language(item.ovs_class_description, selected_language);
                 }
@@ -142,9 +146,12 @@
                     var text = ovs_name + ' - ' +
                         parent_description + ' / ' +
                         common.text_language(item["ovs_class_description"], selected_language);
+                    text = text.replaceAll("\n", " ");
                 }
 
                 if (insert_ind) {
+                    _ovs_class_description.push(text);
+                    text = text.substr(0, _k_len);
                     ovs_primaryclass_list_id += value + ";";
                     option_insert("ovs_primaryclass", value, text);
                 }
@@ -161,7 +168,9 @@
                 clear_field(true);
             }
             else {
-                item_selected(item.text, item.value);
+                //var text = item.text;
+                var text = _ovs_class_description[index1-1];
+                item_selected(text, item.value);
             }
         }
 
@@ -177,7 +186,8 @@
                 form_group_clear();
             }
             else {
-                var text = item.text;
+                //var text = item.text;
+                var text = _group_description[index1-1];
                 var index1 = text.indexOf(" - ");
                 var text1 = text.substr(0, index1);
 
@@ -280,14 +290,17 @@
 
                 $('#ovs_compatibility_group').empty();
                 option_insert("ovs_compatibility_group", "0", "");
-
+                _group_description = [];
                 for (var i = 0; i < _group_list.length; i++) {
                     var item = _group_list[i];
                     ovs_name = item.ovs_name;
                     if (group_list.indexOf(ovs_name) != -1) {
                         var text = ovs_name + ' - ' +
                             common.text_language(item["ovs_description"], selected_language);
+                        text = text.replaceAll("\n", " ");
 
+                        _group_description.push(text);
+                        text = text.substr(0, _k_len);
                         option_insert("ovs_compatibility_group", item.ovs_class_compatibility_groupid, text);
                     }
                 }
@@ -364,5 +377,6 @@
         }
     }
     </script>
-</BODY>
-</HTML>
+
+
+</body></html>

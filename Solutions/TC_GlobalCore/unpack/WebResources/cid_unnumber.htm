@@ -60,7 +60,7 @@
         <label for="data_source" class="field-label">Select UN Number from</label>
         <span id="data_source_required" style="color: red;font-weight: bold"> *</span>
         <br>
-        <select name="data_source" id="data_source" class="form-control picklist " onchange="data_source_onchange();">
+        <select name="data_source" id="data_source" class="form-control picklist " onchange="data_source_onchange(true);">
             <option value="-1" selected="selected"></option>
         </select>
         <br><br>
@@ -97,6 +97,9 @@
 
         $(document).ready(function () {
             debugger;
+
+            // tony-july 27, 2022
+
             detail_show(false);
             document.getElementById("div_tdg_unnumberid").style.display = "none";
             document.getElementById("div_erap_unnumberid_list").style.display = "none";
@@ -112,7 +115,7 @@
             }
             else {
                 document.getElementById('data_source').selectedIndex = 1;
-                data_source_onchange();
+                data_source_onchange(false);
             }
 
             var tdg_unnumberid = sessionStorage.getItem("tdg_unnumberid");
@@ -135,7 +138,7 @@
             else {
                 //debugger;
                 document.getElementById('data_source').selectedIndex = 1;
-                data_source_onchange();
+                data_source_onchange(false);
             }
         })
 
@@ -152,11 +155,13 @@
             }
         }
 
-        function data_source_onchange() {
+        function data_source_onchange(clear) {
             //debugger;
 
             // clear
-            unnumber_clear();
+            if (clear) {
+                unnumber_clear();
+            }
 
             var selected_language = sessionStorage.getItem("selected_language");
             selected_language = (selected_language == null ? "en-US" : selected_language);
@@ -200,7 +205,7 @@
                                         var item4 = _tdg_unnumber_list[l];
                                         var text = item4.tdg_undisplayname + ' - ' +
                                             common.text_language(item4.tdg_shippingnamedescriptiontxt, selected_language);
-
+                                        text = text.replaceAll("\n", " ");
                                         option_insert("erap_unnumberid_list", item4.tdg_unnumberid, text);
                                     }
                                 }
@@ -312,6 +317,7 @@
                     var value = item.tdg_unnumberid;
                     var text = tdg_name + ' - ' +
                         common.text_language(item.tdg_shippingnamedescriptiontxt, selected_language);
+                    text = text.replaceAll("\n", " ");
 
                     tdg_unnumberid_list_id += value + ";";
 
@@ -340,11 +346,13 @@
 
             for (var i = 0; i < options.length; i++) {
                 var current = options[i].value;
-                if (current === val) {
-                    found = true;
-                    index = i;
-                    text = current;
-                    break;
+                if (current != null) {
+                    if (current === val) {
+                        found = true;
+                        index = i;
+                        text = current;
+                        break;
+                    }
                 }
             }
 

@@ -545,6 +545,70 @@
     }
 
     /****************************************************************************************
+    CONTROLS and ATTRIBUTES
+    ****************************************************************************************/
+
+    /**
+   *The function returns control type name.
+   *Its main purpose to display all types to developer
+   * @param {FORM Context} formContext
+   * @param {Control control logical name} controlName
+    */
+    function getControlType(formContext, controlName) {
+       
+        switch (formContext.getControl(arg).getControlType()) {
+
+            case "standard": return "standard"; break;
+            case "iframe": return "iframe"; break;
+            case "kbsearch": return "kbsearch"; break;
+            case "lookup": return "lookup"; break;
+            case "choices": return "choices"; break;
+            case "notes": return "notes"; break;
+            case "choice": return "choice"; break;
+            case "quickform": return "quickform"; break;
+            case "subgrid": return "subgrid"; break;
+            case "timercontrol": return "timercontrol"; break;
+            case "timelinewall": return "timelinewall"; break;
+            case "webresource	": return "webresource	"; break;
+            //customcontrol: <namespace>.<name>  - may not work
+            case "customcontrol": return "customcontrol"; break;
+            //customsubgrid:<namespace>.<name>   - may not work
+            case "customsubgrid": return "customsubgrid"; break;
+
+            default: return "";
+        }
+    }
+
+    /**
+       *The function returns attribute type name. 
+       *Its main purpose to display all types to developer 
+       * @param {FORM Context} formContext
+       * @param {Attribute attribute logical name} attributeName
+   */
+    function getAttributeType(formContext, attributeName) { 
+        
+        switch (formContext.getAttribute(attributeName).getAttributeType()) {
+
+            case "boolean": return "boolean"; break;
+            case "datetime": return "datetime"; break;
+            case "decimal": return "decimal"; break;
+            case "double": return "double"; break;
+            case "integer": return "integer"; break;
+            case "lookup": return "lookup"; break;
+            case "memo": return "memo"; break;
+            case "money": return "money"; break;
+            case "multiselectoptionset": return "multiselectoptionset"; break;
+            case "optionset": return "optionset"; break;
+            case "string": return "string"; break;
+
+            default: return "";
+        }
+
+
+    }
+
+
+    /****************************************************************************************
     MOBILE 
     ****************************************************************************************/
 

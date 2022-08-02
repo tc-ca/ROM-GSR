@@ -20,6 +20,23 @@ var Operation_main_Planner = (function (window, document) {
     const FIELD_FOLLOW_UP_INDICATOR = "ovs_followupind";
     const FIELD_RISK_SCORE = "ovs_cdriskscore";
 
+    const TAB_CEP_PROFILE = "tab_4_cep_profile";
+    const SECTION_CEP_SAMPLING = "tab_4_section_cep_sampling";
+    const FIELD_INSPECTEDINPREVFISCALYEAR = "ovs_cepsampling_inspectedinprevfiscalyear";
+    const FIELD_ISPECTEDINPREVFISCALYEARNAME = "ovs_cepsampling_inspectedinprevfiscalyearname";
+    const FIELD_N1 = "ovs_cepsampling_n1";
+    const FIELD_N2 = "ovs_cepsampling_n2";
+    const FIELD_STRATANEMA = "ovs_cepsampling_strataname";
+    const FIELD_RECIDIVISM = "ovs_cepsampling_recidivism";
+    const FIELD_RECIDIVISMNAME =  "ovs_cepsampling_recidivismname";
+    const FIELD_AREA = "ovs_cepsampling_area";
+    const FIELD_N = "ovs_cepsampling_n";
+    const FIELD_RANDOMODERING = "ovs_cepsampling_randomordering";
+    const FIELD_STRATA = "ovs_cepsampling_strata";
+    const FIELD_RECIDIVISMCOUNT = "ovs_cepsampling_recidivismcount";
+    const FIELD_N2SUM =  "ovs_ovs_cepsampling_n2sum";
+    const FIELD_RANDOMLYSELECTEDBYSYSTEM = "ovs_cepsampling_randomlyselectedbysystem";
+    const FIELD_RANDOMLYSELECTEDBYSYSTEMNAME = "ovs_cepsampling_randomlyselectedbysystemname";
 
     const VALUE_HOTI = 918640038;
     const VALUE_HOTI_GOA = 918640042;
@@ -42,6 +59,23 @@ var Operation_main_Planner = (function (window, document) {
 
     }
 
+    function setTabPermission(formContext){
+        
+        var isPlanner = (glHelper.hasCurrentUserRole("TDG Planner")) 
+        glHelper.SetSectionVisibility(formContext, TAB_CEP_PROFILE, SECTION_CEP_SAMPLING, isPlanner);
+        glHelper.SetDisabled(formContext, FIELD_AREA, true );
+        glHelper.SetDisabled(formContext, FIELD_INSPECTEDINPREVFISCALYEAR, true );
+        glHelper.SetDisabled(formContext, FIELD_N, true );
+        glHelper.SetDisabled(formContext, FIELD_N1, true );
+        glHelper.SetDisabled(formContext, FIELD_N2, true );
+        glHelper.SetDisabled(formContext, FIELD_N2SUM, true );
+        glHelper.SetDisabled(formContext, FIELD_RANDOMLYSELECTEDBYSYSTEM, true );
+        glHelper.SetDisabled(formContext, FIELD_STRATA, true );
+        glHelper.SetDisabled(formContext, FIELD_STRATANEMA, true );
+        glHelper.SetDisabled(formContext, FIELD_RECIDIVISM, true );
+        glHelper.SetDisabled(formContext, FIELD_RECIDIVISMCOUNT, true);
+     }    
+
     return {
 
         OnLoad: function (executionContext) {
@@ -52,10 +86,10 @@ var Operation_main_Planner = (function (window, document) {
 
             // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
             let formType = glHelper.GetFormType(formContext);
-
-
+            
             //Toggle required level based on Operation Type
             toggleRequiredLevel(formContext);
+            setTabPermission(formContext);
 
             //Add function to Refresh Operation Class when UNCode is added
             if (formType > 1) {

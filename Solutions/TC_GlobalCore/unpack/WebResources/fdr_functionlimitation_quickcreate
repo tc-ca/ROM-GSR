@@ -31,6 +31,11 @@ var Function_Limitation_Main = (function (window, document)
 
             userSettings = Xrm.Utility.getGlobalContext().userSettings;
 
+            //Attach Events
+            var limitation = formContext.getAttribute("fdr_limitation");
+            limitation.removeOnChange(Function_Limitation_Main.Limitation_OnChange);
+            limitation.addOnChange(Function_Limitation_Main.Limitation_OnChange);
+
             var serviceRequestFunction = glHelper.GetLookupAttrId(formContext, "fdr_servicerequestfunction");
             var serviceRequestFunctionId = serviceRequestFunction.replace("{", "").replace("}", "");
 
@@ -51,7 +56,7 @@ var Function_Limitation_Main = (function (window, document)
                                         && results.entities != null
                                         && results.entities.length > 0)
                                     {
-                                        filterXML = "<filter type = 'and' >";
+                                        filterXML = "<filter type = 'or' >";
 
                                         for (var i = 0; i < results.entities.length; i++)
                                         {
@@ -61,7 +66,14 @@ var Function_Limitation_Main = (function (window, document)
 
                                         filterXML += "</filter>";
 
+                                        glHelper.SetControlReadOnly(formContext, "fdr_limitation", false);
+
                                         formContext.getControl("fdr_limitation").addPreSearch(limitations_PreSearchFilter);
+                                    }
+                                    else
+                                    {
+                                        //There are now defined limitations for this Container Function so lock out the lookup
+                                        glHelper.SetControlReadOnly(formContext, "fdr_limitation", true);
                                     }
                                 },
                                 function (error)
@@ -77,9 +89,56 @@ var Function_Limitation_Main = (function (window, document)
                         {
                             Xrm.Utility.alertDialog(error.message);
                         });
+
             
 
-        }
+        },
+
+
+         Limitation_OnChange: function (executionContext)
+         {
+             if (formType == glHelper.FORMTYPE_CREATE)
+             {
+                 var formContext = executionContext.getFormContext();
+
+                 var parentLimitation = glHelper.GetLookupAttrId(formContext, "fdr_limitation");
+
+                 if (parentLimitation == undefined)
+                 {
+                     //Clear out description fields and abort.
+                     glHelper.SetValue(formContext, "fdr_description", "");
+                     glHelper.SetValue(formContext, "fdr_descriptionfr", "");
+
+                     return;
+                 }
+
+                 //Create Form, allow user to grab text from the parent limitation.
+                 
+                 var limitationId = parentLimitation.replace("{", "").replace("}", "");
+
+                 Xrm.WebApi.online
+                     .retrieveRecord("fdr_limitation", limitationId, "?$select=fdr_englishdescription,fdr_frenchdescription")
+                     .then(
+                         function success(result)
+                         {
+                             if (result != undefined
+                                 && result != null)
+                             {
+                                 glHelper.SetValue(formContext, "fdr_description", result["fdr_englishdescription"]);
+                                 glHelper.SetValue(formContext, "fdr_descriptionfr", result["fdr_frenchdescription"]);
+                             }
+
+                            
+
+
+                         }
+                         ,
+                         function (error)
+                         {
+                             Xrm.Utility.alertDialog(error.message);
+                         });
+             }
+         }
     }
 
 })(window, document)

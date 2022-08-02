@@ -86,6 +86,7 @@ var WO_TDG_ReportHelper = (function (window, document) {
             var messageWorkOrderFewBookings = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.FewBookings.ErrorMessage");
             var titlePrimaryInspector = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.PrimaryInspector.Title");
             var messageTimeTracking = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.TimeTracking.ErrorMessage");
+            var genericErrorMsg = Xrm.Utility.getResourceString(resexResourceName, "generic.error.message");
 
 
             //check primary contact
@@ -130,8 +131,8 @@ var WO_TDG_ReportHelper = (function (window, document) {
                         //Xrm.Utility.closeProgressIndicator();
 
                     } else {
-                        //Xrm.Utility.closeProgressIndicator();
-                        Xrm.Navigation.openErrorDialog({ message: this.statusText });
+                        isValid = false;
+                        setReportValidationError(genericErrorMsg, this.status);
                     }
                 }
             };
@@ -177,8 +178,8 @@ var WO_TDG_ReportHelper = (function (window, document) {
                             isValid = false;
                         }
                     } else {
-                        //Xrm.Utility.closeProgressIndicator();
-                        Xrm.Navigation.openErrorDialog({ message: this.statusText });
+                        isValid = false;
+                        setReportValidationError(genericErrorMsg, this.status);
                     }
                 }
             };
@@ -202,8 +203,8 @@ var WO_TDG_ReportHelper = (function (window, document) {
                             setReportValidationError(messageWorkOrderNoBookings);
                         }
                     } else {
-                        //Xrm.Utility.closeProgressIndicator();
-                        Xrm.Navigation.openErrorDialog({ message: this.statusText });
+                    isValid = false;
+                    setReportValidationError(genericErrorMsg, this.status);
                     }
 
                     //Xrm.Utility.closeProgressIndicator();
@@ -211,7 +212,43 @@ var WO_TDG_ReportHelper = (function (window, document) {
             };
             req.send();
 
+            
+            var enableTimeTrackingValidationCheck = false; //set to false only the environment variable can turn this time tracking validation on
+            var req = new XMLHttpRequest();
+            req.open( "GET", clientUrl  +"/api/data/v9.1/qm_environmentsettingses?$select=ovs_enableforuser&$filter=qm_name eq 'FDR_EnableTimeTrackingPreInspectionReportValidation'",false);
+            req.setRequestHeader("OData-MaxVersion", "4.0");
+            req.setRequestHeader("OData-Version", "4.0");
+            req.setRequestHeader("Accept", "application/json");
+            req.setRequestHeader(
+              "Content-Type",
+              "application/json; charset=utf-8"
+            );
+            req.setRequestHeader("Prefer", 'odata.include-annotations="*"');
+            req.onreadystatechange = function () {
+              if (this.readyState === 4) {
+                req.onreadystatechange = null;
+                if (this.status === 200) {
+                 var results = JSON.parse(this.response);
+                 
+                 if (results.value.length > 0)
+                 {
+                    enableTimeTrackingValidationCheck = results.value[0]["ovs_enableforuser"];
+                 }
+                 else{
+                    console.log(genericErrorMsg, 'environemnt setting not found');
+                 }
+              
+                
+                } else {
+                  enableTimeTrackingValidationCheck = false;
+                  console.log(genericErrorMsg, this.status)
+                }
+              }
+            };
+            req.send();
 
+            if (enableTimeTrackingValidationCheck)
+            {
             //check time tracking, only validate travel, pre-inspection and execution at this stage
             var parameters = {};
             var travel = "CA3A829A-E917-EC11-B6E7-000D3AE8EF7B";
@@ -239,14 +276,14 @@ var WO_TDG_ReportHelper = (function (window, document) {
 
                          };
                     } else {
-                        Xrm.Utility.alertDialog(this.statusText);
+                      isValid = false;
+                      setReportValidationError(genericErrorMsg, this.status);
                     }
                 }
             };
             req.send(JSON.stringify(parameters));
-
-
-
+            }
+             
 
             errorObject.isValid = isValid;
 

@@ -367,6 +367,12 @@ var WO_TDG_main = (function (window, document) {
             //glHelper.SetRequiredLevel(formContext, "ovs_mocoperationid", true);
             //pre-filter Oversith Type and Region
             operation.fireOnChange();
+
+            //Lock the source if user is not using the planner app
+            //========================================================
+            if (!isPlannerRole()) {
+                glHelper.SetDisabled(formContext, "ovs_source", true);
+            }
         },
 
         SubgridSafetyAssessment_OnLoad: function (executionContext) {

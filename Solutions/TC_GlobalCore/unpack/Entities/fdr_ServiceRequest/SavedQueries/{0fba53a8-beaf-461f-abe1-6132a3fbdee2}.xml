@@ -11,7 +11,18 @@
       <grid name="resultset" jump="fdr_name" select="1" icon="1" preview="1">
         <row name="result" id="fdr_servicerequestid">
           <cell name="fdr_name" width="300" />
-          <cell name="createdon" width="125" />
+          <cell name="fdr_site" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="a_82f50132c2d6ec11a7b50022483c5d62.ovs_legalname" width="200" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="a_82f50132c2d6ec11a7b50022483c5d62.name" width="200" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="fdr_operation" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="a_6af50132c2d6ec11a7b50022483c5d62.fdr_registrationissuedate" width="200" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="a_6af50132c2d6ec11a7b50022483c5d62.ovs_registrationexpiry" width="200" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ownerid" width="100" />
+          <cell name="fdr_relatedworkorder" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="a_72f50132c2d6ec11a7b50022483c5d62.statecode" width="150" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="fdr_tgs_duration" width="300" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="fdr_tss_duration" width="300" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="statuscode" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
         </row>
       </grid>
     </layoutxml>
@@ -19,13 +30,30 @@
     <fetchxml>
       <fetch version="1.0" mapping="logical">
         <entity name="fdr_servicerequest">
-          <attribute name="fdr_servicerequestid" />
           <attribute name="fdr_name" />
-          <attribute name="createdon" />
           <order attribute="fdr_name" descending="false" />
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="0" />
           </filter>
+          <attribute name="fdr_site" />
+          <attribute name="ownerid" />
+          <link-entity alias="a_6af50132c2d6ec11a7b50022483c5d62" name="ovs_mocregistration" from="ovs_mocregistrationid" to="fdr_operation" link-type="outer" visible="false">
+            <attribute name="fdr_registrationissuedate" />
+            <attribute name="ovs_registrationexpiry" />
+          </link-entity>
+          <link-entity alias="a_82f50132c2d6ec11a7b50022483c5d62" name="account" from="accountid" to="fdr_site" link-type="outer" visible="false">
+            <attribute name="ovs_legalname" />
+            <attribute name="name" />
+          </link-entity>
+          <attribute name="fdr_relatedworkorder" />
+          <attribute name="fdr_tss_duration" />
+          <attribute name="fdr_tgs_duration" />
+          <attribute name="statuscode" />
+          <link-entity alias="a_72f50132c2d6ec11a7b50022483c5d62" name="msdyn_workorder" from="msdyn_workorderid" to="fdr_relatedworkorder" link-type="outer" visible="false">
+            <attribute name="statecode" />
+          </link-entity>
+          <attribute name="fdr_operation" />
+          <attribute name="fdr_servicerequestid" />
         </entity>
       </fetch>
     </fetchxml>

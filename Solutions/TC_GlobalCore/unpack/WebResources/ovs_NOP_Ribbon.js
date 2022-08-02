@@ -307,7 +307,87 @@ var NOPRibbon = (function (window, document) {
         }
     };
 
+
+
+
+    const generateWOConDemand = {
+
+        getConfigValues: async function (nopId) {
+            let statecode = null;
+            let ovs_rungenerateworkordercandidates = null;
+          
+
+            let ovs_cdfiscalyear = null;
+
+            await Xrm.WebApi.online.retrieveRecord("ovs_cdnop", nopId, "?$select=ovs_rungenerateworkordercandidates,statecode").then(
+                async function success(result) {
+                    statecode = result["statecode"];
+                    ovs_rungenerateworkordercandidates = result["ovs_rungenerateworkordercandidates"];
+                },
+                function (error) {
+
+                    Xrm.Navigation.openErrorDialog({ message: error.message });
+                }
+
+            );
+
+
+            return {
+                statecode: statecode,
+                runGenerateWOC: ovs_rungenerateworkordercandidates,
+            };
+        },
+
+        runGenerateWOC: async function (primaryControl) {
+
+            if (primaryControl == null) { return };
+
+            const formContext = primaryControl;
+
+            let formType = glHelper.GetFormType(formContext);
+            if (formType == 1) { return }; //on create
+
+            let nopId = formContext.data.entity.getId().replace("{", "").replace("}", "");
+
+            //add progress as there is a little delay in retrieving data from web api
+            Xrm.Utility.showProgressIndicator('Validating Data');
+            let GWOCConfigValues = await generateWOConDemand.getConfigValues(nopId);
+            Xrm.Utility.closeProgressIndicator();
+
+            var active = 0;
+            if (GWOCConfigValues.statecode != active) {
+                glHelper.DisplayFormNotification(
+                    "Error! Generating Work Order Candidates can only run when NOP is active",
+                    "ERROR",
+                    10000
+                );
+                return;
+                //exit early
+            }
+
+            if (GWOCConfigValues.runGenerateWOC) {
+                glHelper.DisplayFormNotification(
+                    "The Generating Work Order Candidates is already running, please wait, when the process has been completed.",
+                    "ERROR",
+                    10000
+                );
+                return;
+                //exit early
+            }
+
+            formContext.getAttribute("ovs_rungenerateworkordercandidates").setValue(true);
+                formContext.data.entity.save();
+                glHelper.DisplayFormNotification(
+                    "The Work Order Candidates Generation process has started.",
+                    "WARNING",
+                    10000
+                );
+        }
+    };
+
+
     return {
-        runCEPSelection: cepSamplingFunctions.runCEPSelection
+        runCEPSelection: cepSamplingFunctions.runCEPSelection,
+        runGenerateWOC: generateWOConDemand.runGenerateWOC
     };
 })(window, document);

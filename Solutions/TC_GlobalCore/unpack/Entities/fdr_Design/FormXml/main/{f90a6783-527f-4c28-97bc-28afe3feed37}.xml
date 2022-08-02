@@ -7,7 +7,7 @@
     <FormActivationState>1</FormActivationState>
     <form headerdensity="HighWithControls">
       <tabs>
-        <tab verticallayout="true" id="{f07cee3b-5491-472c-bcb2-51dad2da384d}" IsUserDefined="1">
+        <tab verticallayout="true" id="{f07cee3b-5491-472c-bcb2-51dad2da384d}" IsUserDefined="1" name="General">
           <labels>
             <label description="General" languagecode="1033" />
             <label description="Général" languagecode="1036" />
@@ -69,7 +69,7 @@
                         <labels>
                           <label description="New QV control 1656006688639" languagecode="1033" />
                         </labels>
-                        <control id="QuickviewControl1656006688639" classid="{5C5600E0-1D6E-4205-A272-BE80DA87FD42}" datafieldname="fdr_designmarkingrequirement">
+                        <control id="QVC_DMR" classid="{5C5600E0-1D6E-4205-A272-BE80DA87FD42}" datafieldname="fdr_designmarkingrequirement">
                           <parameters>
                             <DisplayAsCustomer360Tile>false</DisplayAsCustomer360Tile>
                             <QuickForms>&lt;QuickFormIds&gt;&lt;QuickFormId entityname="fdr_designmarkingrequirement"&gt;763a1be5-6911-4ae6-b47c-e62f31b2135d&lt;/QuickFormId&gt;&lt;/QuickFormIds&gt;</QuickForms>
@@ -441,19 +441,6 @@
                         </labels>
                       </cell>
                     </row>
-                    <row>
-                      <cell id="{ba284a28-a34e-4ef4-b5fb-bc5c92c96692}" locklevel="0" colspan="1" rowspan="1">
-                        <labels>
-                          <label description="Design Registration Number" languagecode="1033" />
-                        </labels>
-                        <control id="fdr_designregistrationnumber" classid="{4273EDBD-AC1D-40D3-9FB2-095C621B552D}" datafieldname="fdr_designregistrationnumber" disabled="true" />
-                      </cell>
-                      <cell locklevel="0" id="{0698f53c-7723-4af0-934c-6e19d0dcb023}">
-                        <labels>
-                          <label description="" languagecode="1033" />
-                        </labels>
-                      </cell>
-                    </row>
                   </rows>
                 </section>
                 <section name="null_section_3" id="aac7ca5b-f0d5-4c89-b1f8-e8f9138d972b" IsUserDefined="0" locklevel="0" showlabel="true" showbar="false" layout="varwidth" celllabelalignment="Left" celllabelposition="Left" columns="1" labelwidth="115">
@@ -555,6 +542,17 @@
       <DisplayConditions Order="0" FallbackForm="true">
         <Everyone />
       </DisplayConditions>
+      <formLibraries>
+        <Library name="qm_globalHelper.js" libraryUniqueId="{503fc3ea-91d8-4eed-8fb5-9208f9ff0c9c}" />
+        <Library name="fdr_design_main.js" libraryUniqueId="{4a5204e7-8646-4bd4-90ad-4433269a0ce2}" />
+      </formLibraries>
+      <events>
+        <event name="onload" application="false" active="false">
+          <Handlers>
+            <Handler functionName="Design_main.OnLoad" libraryName="fdr_design_main.js" handlerUniqueId="{66073843-2dd8-44a4-abf4-716496068aa5}" enabled="true" parameters="" passExecutionContext="true" />
+          </Handlers>
+        </event>
+      </events>
     </form>
     <IsCustomizable>1</IsCustomizable>
     <CanBeDeleted>1</CanBeDeleted>

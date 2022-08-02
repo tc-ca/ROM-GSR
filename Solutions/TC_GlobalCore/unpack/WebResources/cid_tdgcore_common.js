@@ -21,7 +21,7 @@ if (typeof (tdg.c) == "undefined") {
             c.targetFunction();
         },
 
-        btn_save_new_setup: function() {
+        btn_save_new_setup: function () {
             var button = $('<input type="button" name="btn_save_new" id="btn_save_new" />');
             $("#InsertButton").after(button);
 
@@ -95,7 +95,7 @@ if (typeof (tdg.c) == "undefined") {
                 // Wire-up the click event handler of the validation summary link
                 $("a[href='#" + fieldName + "_label']").on("click", function () { scrollToAndFocus(fieldName + '_label', fieldName); });
 
-            } catch (e) {}
+            } catch (e) { }
         },
 
         // setRequiredLevel("none");
@@ -108,7 +108,7 @@ if (typeof (tdg.c) == "undefined") {
                 });
 
                 $("#" + fieldName + "_label").parent().removeClass("required");
-            } catch (e) {}
+            } catch (e) { }
 
         },
 
@@ -136,7 +136,7 @@ if (typeof (tdg.c) == "undefined") {
         message_panel_clear: function () {
             try {
                 $("#MessagePanel")[0].innerText = "";
-            } catch (e) {}
+            } catch (e) { }
         },
 
         message_panel_set: function (validationSection, msg) {
@@ -150,7 +150,7 @@ if (typeof (tdg.c) == "undefined") {
                 var text = '<div id="MessagePanel" class="message alert alert-info" role="alert">' + msg + '</div>';
                 target.append($(text));
                 target.show();
-            } catch (e) {}
+            } catch (e) { }
         },
 
         message_panel: function () {
@@ -284,21 +284,22 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         replace_special_char: function (value) {
-            var k_char_apostrophe = "&#39;";
-            value = value.replaceAll(k_char_apostrophe, "'");
+            value = $('<textarea />').html(value).text();
+            // for apostrophe, use two apostrophe to escape it:
+            // value = value.replace("'", "''");
             return value;
         },
 
         // sample calling dialog_YN
         //dialog_YN(message, (ans) => {
-	    //	if (ans) {
-	    //		// console.log("Yes");
-	    //		Call_Check_User_Response_flow(newrecordid, 'yes', '', Language);
-	    //	} else {
-	    //		Call_Check_User_Response_flow(newrecordid, 'No', '', Language);
-	    //		//console.log("No");
-	    //	}
-	    //});
+        //	if (ans) {
+        //		// console.log("Yes");
+        //		Call_Check_User_Response_flow(newrecordid, 'yes', '', Language);
+        //	} else {
+        //		Call_Check_User_Response_flow(newrecordid, 'No', '', Language);
+        //		//console.log("No");
+        //	}
+        //});
         dialog_YN: function (message, handler) {
             message = message.replaceAll("\n", "<br>");
             var header = tdg.error_message.message("CID_PORTAL");
@@ -363,6 +364,101 @@ if (typeof (tdg.c) == "undefined") {
             $("#btnOK").click(function () {
                 $("#myModal").remove();
             });
+        },
+
+        validate_address: function (language, country, province, postalCode, city) {
+            var provinceValid = false;
+            var postalcodeFormatValid = false;
+            var provinceMatchesPostalcode = false;
+
+            var localizedProvince;
+
+            var postalRegex = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ ]?\d[ABCEGHJ-NPRSTV-Z]\d$/i;
+
+            //TODO Add logic so that the response can indicate the point of failure instead of a bool
+
+            if (country.localeCompare("Canada", undefined, { sensitivity: 'accent' })) {
+                //Validate the province
+                for (var prov of canProvinces) {
+                    localizedProvince = this.text_language(prov, language);
+                    if (province.localeCompare(localizedProvince, undefined, { sensitivity: 'accent' }) == 0) {
+                        provinceValid = true;
+                        break;
+                    }
+                }
+                if (provinceValid == false) return false;
+
+                //Validate the postal code format with regex
+                if (!postalRegex.test(postalCode)) {
+                    postalcodeFormatValid = false;
+                    return false;
+                }
+
+                //Validate that postal code matches
+                switch (postalCode.toUpperCase().charAt(0)) {
+                    //NL&L
+                    case "A":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[4], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+                    //NS
+                    case "B":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[6], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+                    //PEI
+                    case "C":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[9], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+                    //NB
+                    case "E":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[3], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+                    //QC
+                    case "G":
+                    case "H":
+                    case "J":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[10], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+                    //ON
+                    case "K":
+                    case "L":
+                    case "M":
+                    case "N":
+                    case "P":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[8], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+                    //MB
+                    case "R":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[2], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+                    //SK
+                    case "S":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[11], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+                    //AB
+                    case "T":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[0], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+                    //BC
+                    case "V":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[1], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+                    //NT & NU
+                    case "X":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[5], language)) == 0 ||
+                            localizedProvince.localeCompare(this.text_language(canProvinces[7], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+                    //YT
+                    case "Y":
+                        if (localizedProvince.localeCompare(this.text_language(canProvinces[12], language)) == 0) provinceMatchesPostalcode = true;
+                        break;
+                    default:
+                    //Postal Code is invalid
+                }
+
+                return provinceMatchesPostalcode;
+            } else {
+                return false;
+            }
         }
     }
 }
@@ -439,13 +535,20 @@ if (typeof (tdg.webapi) == "undefined") {
                     console.log("webapi.safeAjax.create->record_id: " + xhr.getResponseHeader("entityid"));
                     try {
                         success_cb();
-                    } catch (e) {}
+                    } catch (e) { }
                 },
 
                 error: function (res, status, errorThrown) {
                     debugger;
-                    //var msg = res.responseJSON.error.innererror.message;
-                    var msg = res.responseJSON.error.message;
+
+                    sessionStorage.setItem("innererror", false);
+                    try {
+                        var msg = res.responseJSON.error.innererror.message;
+                        sessionStorage.setItem("innererror", true);
+                    } catch (e) {
+                        var msg = res.responseJSON.error.message;
+                    }
+
                     console.log(msg);
                     try {
                         error_cb(msg);
@@ -498,8 +601,23 @@ if (typeof (tdg.webapi) == "undefined") {
 // tdg.error_message = tdgcore.error_message
 if (typeof (tdg.error_message) == "undefined") {
     tdg.error_message = {
-        k_english: "en-US",
+        k_english: "en",
+        k_english_US: "en-US",
         k_tdgcore_error_message: "tdgcore_error_message",
+
+        is_english: function (selected_language) {
+            //debugger;
+            var value = false;
+            switch (selected_language) {
+                case this.k_english:
+                    value = true;
+                    break;
+                case this.k_english_US:
+                    value = true;
+                    break;
+            }
+            return value;
+        },
 
         message: function (code) {
             //debugger;
@@ -511,7 +629,7 @@ if (typeof (tdg.error_message) == "undefined") {
             for (var index1 = 0; index1 < list.length; index1++) {
                 var item = list[index1];
                 if (item.code == code) {
-                    value = (selected_language == this.k_english ? item.message_en : item.message_fr);
+                    value = (this.is_english(selected_language) ? item.message_en : item.message_fr);
                     break;
                 }
             }
@@ -630,3 +748,327 @@ if (typeof (tdg.root) == "undefined") {
     }
 }
 
+// tdg.cid = tdgcore.cid
+if (typeof (tdg.cid) == "undefined") {
+    tdg.cid = {
+        address_init: function (site_ind)
+        {
+            debugger;
+
+            this.clear_address_type_required_fields();
+
+            // default
+            $("#address1_country").val("Canada");
+            $('#address1_country').attr("readonly", true);
+    
+            tdg.c.control_hide("address1_line1");
+
+            // resize WebResource_address_complete
+            $("#WebResource_address_complete").height('72px');
+
+            var address1_line1 = $("#address1_line1").val();
+            sessionStorage.setItem("AddressLine1Text", address1_line1);
+            sessionStorage.setItem("AddressComplete_readonly", false);
+
+            // address
+            $("#address1_line2").attr("autocomplete", "new-password");
+            $("#address1_line3").attr("autocomplete", "new-password");
+            $("#address1_city").attr("autocomplete", "new-password");
+            $("#address1_stateorprovince").attr("autocomplete", "new-password");
+            $("#address1_postalcode").attr("autocomplete", "new-password");
+            $("#address1_longitude").attr("autocomplete", "new-password");
+            $("#address1_latitude").attr("autocomplete", "new-password");
+
+            if (site_ind) {
+                // legal land description
+                $("#ovs_lld_quarter").attr("autocomplete", "new-password");
+                $("#ovs_lld_section").attr("autocomplete", "new-password");
+                $("#ovs_lld_township").attr("autocomplete", "new-password");
+                $("#ovs_lld_range").attr("autocomplete", "new-password");
+                $("#ovs_lld_meridian").attr("autocomplete", "new-password");
+                $("#ovs_lld_province").attr("autocomplete", "new-password");
+
+                // lat/long
+                $("#address1_latitude").attr("autocomplete", "new-password");
+                $("#address1_longitude").attr("autocomplete", "new-password");
+            }
+        },
+
+        address_same_as_company: function (parent_id)
+        {
+            debugger;
+
+            var value = $("#cid_same_as_company")[0].checked;
+            sessionStorage.setItem("AddressComplete_readonly", value);
+
+            if (value) {
+                $("#address1_line2").prop('readonly', true);
+                $("#address1_line3").prop('readonly', true);
+                $("#address1_city").prop('readonly', true);
+                $("#address1_stateorprovince").prop('readonly', true);
+                $("#address1_postalcode").prop('readonly', true);
+
+                var filter = "accountid eq guid'" + parent_id + "'";
+                var data = tdg.c.OData_List("account", filter);
+
+                var address1_line1 = "N/A";
+                var address1_city = "N/A";
+                var address1_stateorprovince = "N/A";
+                var address1_postalcode = "N/A";
+                var address1_country = "Canada";
+
+                if (data.length > 0) {
+                    var item = data[0];
+                    address1_line1 = item.address1_line1;
+                    address1_line2 = item.address1_line2;
+                    address1_line2 = (address1_line2 == null ? "" : address1_line2);
+                    address1_line3 = item.address1_line3;
+                    address1_line3 = (address1_line3 == null ? "" : address1_line3);
+                    address1_city = item.address1_city;
+                    address1_stateorprovince = item.address1_stateorprovince;
+                    address1_postalcode = item.address1_postalcode;
+                    address1_country = item.address1_country;
+                }
+
+                $("#address1_line1").val(address1_line1);
+                $("#address1_line2").val(address1_line2);
+                $("#address1_line3").val(address1_line3);
+                $("#address1_city").val(address1_city);
+                $("#address1_stateorprovince").val(address1_stateorprovince);
+                $("#address1_postalcode").val(address1_postalcode);
+                $("#address1_country").val(address1_country);
+            }
+            else {
+                $("#address1_line2").prop('readonly', false);
+                $("#address1_line3").prop('readonly', false);
+                $("#address1_city").prop('readonly', false);
+                $("#address1_stateorprovince").prop('readonly', false);
+                $("#address1_postalcode").prop('readonly', false);
+            }
+
+            var address1_line1 = $("#address1_line1").val();
+            sessionStorage.setItem("AddressLine1Text", address1_line1);
+
+            this.WebResource_address_complete_readonly(value);
+        },
+
+        address_type_change: function (reset_data) {
+            debugger;
+
+            // hide sections
+            tdg.c.section_hide("section_address");
+            tdg.c.section_hide("section_legal_land_description");
+            tdg.c.section_hide("section_latitude_longitude");
+
+            this.clear_address_type_required_fields();
+
+            var ovs_address_type = $("#ovs_address_type").val();
+            switch (ovs_address_type) {
+                case "1": // legal land description
+                    tdg.c.section_show("section_legal_land_description");
+
+                    //tdg.c.addValidator("ovs_lld_quarter","Quarter/LSC");
+                    tdg.c.addValidator("ovs_lld_section", "Section");
+                    tdg.c.addValidator("ovs_lld_township", "Township");
+                    tdg.c.addValidator("ovs_lld_range", "Range");
+                    tdg.c.addValidator("ovs_lld_meridian", "Meridian");
+                    tdg.c.addValidator("ovs_lld_province", "Province / Territory");
+
+                    if (reset_data) {
+                        thhis.address1_default("N/A");
+                    }
+                    break;
+                case "2": // lat/long
+                    tdg.c.section_show("section_latitude_longitude");
+
+                    tdg.c.addValidator("address1_latitude", "Latitude");
+                    tdg.c.addValidator("address1_longitude", "Longitude");
+
+                    if (reset_data) {
+                        this.address1_default("N/A");
+                    }
+                    break;
+                default:
+                    tdg.c.section_show("section_address");
+
+                    tdg.c.addValidator("address1_line1", "Street 1");
+                    tdg.c.addValidator("address1_city", "City");
+                    tdg.c.addValidator("address1_stateorprovince", "Province");
+                    tdg.c.addValidator("address1_postalcode", "Postal Code");
+
+                    if (reset_data) {
+                        this.address1_default("");
+                    }
+            }
+        },
+
+        clear_address_type_required_fields: function () {
+            for (var i = 0; i < 2; i++) {
+                // address
+                tdg.c.removeValidator("address1_line1");
+                tdg.c.removeValidator("address1_city");
+                tdg.c.removeValidator("address1_stateorprovince");
+                tdg.c.removeValidator("address1_postalcode");
+
+                // legal land description
+                //tdg.c.removeValidator("ovs_lld_quarter");
+                tdg.c.removeValidator("ovs_lld_section");
+                tdg.c.removeValidator("ovs_lld_township");
+                tdg.c.removeValidator("ovs_lld_range");
+                tdg.c.removeValidator("ovs_lld_meridian");
+                tdg.c.removeValidator("ovs_lld_province");
+
+                // lat/long
+                tdg.c.removeValidator("address1_latitude");
+                tdg.c.removeValidator("address1_longitude");
+            }
+        },
+
+        address1_default: function (value) {
+            $("#address1_line1").val(value);
+            $("#address1_city").val(value);
+            $("#address1_stateorprovince").val(value);
+            $("#address1_postalcode").val(value);
+        },
+
+        WebResource_address_complete_readonly: function (value) {
+            debugger;
+
+            try {
+                var f = document.getElementById("WebResource_address_complete");
+                var c = f.contentWindow;
+                c.readonly(value);
+            } catch (e) { }
+        },
+
+        Append_Modes_html_checkboxes: function (air, marine, rail, road) {
+            debugger;
+
+            //get Air translation from file
+            console.log("function called");
+            var cid_Air_label = tdg.error_message.message("m000102");
+            var cid_Maritime_label = tdg.error_message.message("m000103");
+            var cid_Rail_label = tdg.error_message.message("m000104");
+            var cid_Road_label = tdg.error_message.message("m000105");
+
+            console.log("after messages retrive");
+
+            //check if air is selected
+            var airchecked = "";
+            if (air == true) {
+                airchecked = 'checked="checked"';
+            }
+            //check if rail
+            var railchecked = "";
+            if (rail == true) {
+                railchecked = 'checked="checked"';
+            }
+            //check if marine
+            var marinechecked = "";
+            if (marine == true) {
+                marinechecked = 'checked="checked"';
+            }
+            //check if road
+            var roadchecked = "";
+            if (road == true) {
+                roadchecked = 'checked="checked"';
+            }
+
+            var row1 = ' <tr style="background-color: rgb(240, 240, 240);">' +
+                '<td colspan="1" rowspan="1" class="clearfix cell checkbox-cell">' +
+                '<div class="info">' +
+                '<label for="cid_Road" id="cid_Road_label" class="field-label" role="none">' + cid_Road_label + '</label>' +
+                '</div>' +
+                '<div class="control">' +
+                '<span class="checkbox ">' +
+                '<input id="cid_Road" type="checkbox" name="cid_Road" ' + roadchecked + ' class="checkbox readonly" disabled="disabled" aria-disabled="true">' +
+                '</span>' +
+                '<input type="hidden" name="cid_Road_Value" id="cid_Road_Value" value="' + road + '">' +
+                '</div>' +
+                '</td>' +
+                '<td class="cell zero-cell"></td>' +
+                '<td colspan = "1" rowspan = "1" class="clearfix cell checkbox-cell" >' +
+                '<div class="info">' +
+                '<label for="cid_Rail" id="cid_Rail_label" class="field-label" role="none">' + cid_Rail_label + '</label>' +
+                '</div>' +
+                '<div class="control">' +
+                '<span class="checkbox ">' +
+                '<input id="cid_Rail" type="checkbox" name="cid_Rail" ' + railchecked + '   class="checkbox readonly" disabled="disabled" aria-disabled="true">' +
+                '</span>' +
+                '<input type="hidden" name="cid_Rail_Value" id="cid_Rail_Value" value="' + rail + '">' +
+                '</div>' +
+                '</td>' +
+                '</tr>';
+            console.log("row 1");
+            var row2 = ' <tr style="background-color: rgb(240, 240, 240);">' +
+                '<td colspan = "1" rowspan = "1" class="clearfix cell checkbox-cell" >' +
+                '<div class="info">' +
+                '<label for="cid_Air" id="cid_Air_label" class="field-label" role="none">' + cid_Air_label + '</label>' +
+                '</div>' +
+                '<div class="control">' +
+                '<span class="checkbox ">' +
+                '<input id="cid_Air" type="checkbox" name="cid_Air" ' + airchecked + ' class="checkbox readonly" disabled="disabled" aria-disabled="true">' +
+                '</span>' +
+                '<input type="hidden" name="cid_Air_Value" id="cid_Air_Value" value="' + air + '">' +
+                '</div>' +
+                '</td>' +
+                '<td colspan="1" rowspan="1" class="clearfix cell checkbox-cell">' +
+                '<div class="info">' +
+                '<label for="cid_Maritime" id="cid_Maritime_label" class="field-label" role="none">' + cid_Maritime_label + '</label>' +
+                '</div>' +
+                '<div class="control">' +
+                '<span class="checkbox ">' +
+                '<input id="cid_Marine" type="checkbox" name="cid_Marine" ' + marinechecked + ' class="checkbox readonly" disabled="disabled" aria-disabled="true">' +
+                '</span>' +
+                '<input type="hidden" name="cid_Marine_Value" id="cid_Marine_Value" value="' + marine + '">' +
+                '</div>' +
+                '</td>' +
+                '<td class="cell zero-cell"></td>' +
+                '</tr>';
+            console.log("row 2");
+            $("[data-name='site_attestation_section_Modes']").each(function () {
+                var selectedTable = $(this);
+                $(this).append(row2);
+                console.log("after row 2 modified");
+                $(this).append(row1);
+                console.log("after row 1 modified");
+            })
+        },
+
+        Display_Modes: function (siteid) {
+            debugger;
+
+            var operationid;
+            console.log("input site id " + siteid);
+            //cid_ModeOfTransportationAir,Marine,cid_ModeOfTransportationRoad,cid_modeoftransportationrail
+            var queryURL = "$select=cid_modeoftransportationair,cid_modeoftransportationmarine,cid_modeoftransportationroad,cid_modeoftransportationrail&$filter=ovs_operationtype eq 918640038 and ovs_SiteId/accountid eq " + siteid;
+
+            webapi.safeAjax({
+                type: "GET",
+                url: "/_api/ovs_mocregistrations?" + queryURL,
+                contentType: "application/json",
+                type: "GET",
+                success: function (res) {
+                    debugger;
+                    operationid = res.value[0]['ovs_mocregistrationid'];
+                    var air = false;
+                    if (res.value[0]['cid_modeoftransportationair'] == true)
+                        air = true;
+                    var road = false;
+                    if (res.value[0]['cid_modeoftransportationroad'] == true)
+                        road = true;
+                    var marine = false;
+                    if (res.value[0]['cid_modeoftransportationmarine'] == true)
+                        marine = true;
+                    var rail = false;
+                    if (res.value[0]['cid_modeoftransportationrail'] == true)
+                        rail = true;
+
+                    //cid_modeoftransportationmarine
+                    console.log("Operation query results for Modes " + " Air " + air + " Road " + road + " Marine " + marine + " Rail " + rail);
+                    tdg.cid.Append_Modes_html_checkboxes(air, marine, rail, road);
+                }
+            });
+        }
+    }
+}

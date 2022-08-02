@@ -6,6 +6,11 @@
         <Button Alt="$LocLabels:ovs.ovs_cdnop.RunCEPSelection.Alt" Command="ovs.ovs_cdnop.RunCEPSelection.Command" Id="ovs.ovs_cdnop.RunCEPSelection" LabelText="$LocLabels:ovs.ovs_cdnop.RunCEPSelection.LabelText" Sequence="38" TemplateAlias="o1" ToolTipTitle="$LocLabels:ovs.ovs_cdnop.RunCEPSelection.ToolTipTitle" ToolTipDescription="$LocLabels:ovs.ovs_cdnop.RunCEPSelection.ToolTipDescription" ModernImage="" />
       </CommandUIDefinition>
     </CustomAction>
+    <CustomAction Id="ovs.ovs_cdnop.RunWOCGeneration.CustomAction" Location="Mscrm.Form.ovs_cdnop.MainTab.Workflow.Controls._children" Sequence="43">
+      <CommandUIDefinition>
+        <Button Alt="$LocLabels:ovs.ovs_cdnop.RunWOCGeneration.Alt" Command="ovs.ovs_cdnop.RunWOCGeneration.Command" Id="ovs.ovs_cdnop.RunWOCGeneration" LabelText="$LocLabels:ovs.ovs_cdnop.RunWOCGeneration.LabelText" Sequence="43" TemplateAlias="o1" ToolTipTitle="$LocLabels:ovs.ovs_cdnop.RunWOCGeneration.ToolTipTitle" ToolTipDescription="$LocLabels:ovs.ovs_cdnop.RunWOCGeneration.ToolTipDescription" />
+      </CommandUIDefinition>
+    </CustomAction>
   </CustomActions>
   <Templates>
     <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
@@ -25,6 +30,15 @@
       </DisplayRules>
       <Actions>
         <JavaScriptFunction FunctionName="NOPRibbon.runCEPSelection" Library="$webresource:ovs_NOP_Ribbon.js">
+          <CrmParameter Value="PrimaryControl" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="ovs.ovs_cdnop.RunWOCGeneration.Command">
+      <EnableRules />
+      <DisplayRules />
+      <Actions>
+        <JavaScriptFunction FunctionName="NOPRibbon.runGenerateWOC" Library="$webresource:ovs_NOP_Ribbon.js">
           <CrmParameter Value="PrimaryControl" />
         </JavaScriptFunction>
       </Actions>
@@ -58,6 +72,26 @@
     <LocLabel Id="ovs.ovs_cdnop.RunCEPSelection.ToolTipTitle">
       <Titles>
         <Title description="Run CEP Selection" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="ovs.ovs_cdnop.RunWOCGeneration.Alt">
+      <Titles>
+        <Title description="Update NOP" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="ovs.ovs_cdnop.RunWOCGeneration.LabelText">
+      <Titles>
+        <Title description="Update NOP" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="ovs.ovs_cdnop.RunWOCGeneration.ToolTipDescription">
+      <Titles>
+        <Title description="Run WOC Generation" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="ovs.ovs_cdnop.RunWOCGeneration.ToolTipTitle">
+      <Titles>
+        <Title description="Run WOC Generation" languagecode="1033" />
       </Titles>
     </LocLabel>
   </LocLabels>
