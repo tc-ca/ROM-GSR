@@ -407,7 +407,7 @@ if (typeof (tdg.c) == "undefined") {
                 //Validate the postal code format with regex
                 if (postalRegex.test(postalCode)) {
                     postalcodeFormatValid = true;
-                    
+
                 } else return false;
 
                 //Validate that postal code matches
@@ -767,8 +767,7 @@ if (typeof (tdg.root) == "undefined") {
 // tdg.cid = tdgcore.cid
 if (typeof (tdg.cid) == "undefined") {
     tdg.cid = {
-        address_init: function (site_ind)
-        {
+        address_init: function (site_ind) {
             debugger;
 
             this.clear_address_type_required_fields();
@@ -776,12 +775,13 @@ if (typeof (tdg.cid) == "undefined") {
             // default
             $("#address1_country").val("Canada");
             $('#address1_country').attr("readonly", true);
-            
+
             //Setup province dropdown
             tdg.c.addValidator("ovs_lld_province");
-            //tdg.c.control_hide("address1_stateorprovince");
+            tdg.c.control_hide("address1_line1");
+            tdg.c.control_hide("address1_stateorprovince");
 
-            $("#ovs_lld_province").on("change", function(i, val){
+            $("#ovs_lld_province").on("change", function (i, val) {
                 debugger
                 var ovs_lld_province = $("#ovs_lld_province :selected").text()
                 $("#address1_stateorprovince").val(ovs_lld_province);
@@ -816,10 +816,15 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#address1_latitude").attr("autocomplete", "new-password");
                 $("#address1_longitude").attr("autocomplete", "new-password");
             }
+            else {
+                tdg.c.addValidator("address1_line1", "Street 1");
+                tdg.c.addValidator("address1_city", "City");
+                tdg.c.addValidator("address1_stateorprovince", "Province");
+                tdg.c.addValidator("address1_postalcode", "Postal Code");
+            }
         },
 
-        address_same_as_company: function (parent_id)
-        {
+        address_same_as_company: function (parent_id) {
             debugger;
 
             var value = $("#cid_same_as_company")[0].checked;
@@ -948,14 +953,14 @@ if (typeof (tdg.cid) == "undefined") {
             }
         },
 
-        convert_province_to_code: function (language){
+        convert_province_to_code: function (language) {
             var address1_stateorprovince = $("#address1_stateorprovince").val();
 
             // If there is no value that is prepopulated, this function exits
             if (address1_stateorprovince == "") {
                 return;
             }
-            for (var i = 0; i< 13; i++){
+            for (var i = 0; i < 13; i++) {
                 var localizedProvince = this.text_language(canProvinces[i], language);
                 if (localizedProvince.localeCompare(address1_stateorprovince), undefined, { sensitivity: 'accent' } == 0) { //finds match
                     $("#ovs_lld_province").val(i);
