@@ -1,0 +1,356 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_mytc-20ext-5f699e017eef0aedad-5f67a955a02db86277": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_sharedmytc20ext5f699e017eef0aedad5f67a955a02db86277_e92a5"
+        },
+        "api": {
+          "name": "shared_fdr-5fmytc-20ext-5f5cf23ef0bee9f3b2",
+          "logicalName": "fdr_mytc-20ext"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "FDR_MTOA_JWT (fdr_FDR_MTOA_JWT)": {
+          "defaultValue": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJGRFIiLCJ1bmlxdWVfbmFtZSI6IkZhY2lsaXRpZXMgYW5kIERlc2lnbiBSZWdpc3RlciAoRkRSKSIsInJvbGUiOiJVc2VyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMi4wIiwiQ29ycmVsYXRpb25LZXkiOiI1YTkwYzkxNzdkYTMiLCJuYmYiOjE2NTM5NDA3NTgsImV4cCI6MTcxNzA5OTE1OCwiaWF0IjoxNjUzOTQwNzU4LCJpc3MiOiJUcmFuc3BvcnQgQ2FuYWRhIiwiYXVkIjoiVHJhbnNwb3J0IENhbmFkYSJ9.0CPTpmLiz29jJ4cpopnV9CtuPmrUuUqHolMh2Yqot0I",
+          "type": "String",
+          "metadata": {
+            "schemaName": "fdr_FDR_MTOA_JWT"
+          }
+        }
+      },
+      "triggers": {
+        "Service_Request_created": {
+          "metadata": {
+            "operationMetadataId": "92ccff9b-e032-465e-b265-eec126fbc2dc"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 1,
+              "subscriptionRequest/entityname": "fdr_servicerequest",
+              "subscriptionRequest/scope": 4
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "conditions": [
+            {
+              "expression": "@not(empty(triggerBody()?['_fdr_portalcontact_value']))"
+            }
+          ],
+          "description": "Trigger Conditions: Portal Contact is in presence"
+        }
+      },
+      "actions": {
+        "Get_user": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "b422159c-18ed-4546-9c67-d23230882508"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "systemusers",
+              "recordId": "@triggerOutputs()?['body/_modifiedby_value']",
+              "$select": "domainname"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "FDR_Service_ID": {
+          "runAfter": {
+            "Get_user": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3d67fcf9-a90e-4c2b-bf27-10669789acbe"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ServiceID",
+                "type": "integer",
+                "value": 251
+              }
+            ]
+          }
+        },
+        "Host_Url": {
+          "runAfter": {
+            "Parse_JSON": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "39cd5650-59c4-4b19-95d2-a97902306160"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "HostUri",
+                "type": "string",
+                "value": "@{uriHost(body('Parse_JSON')?['@odata.id'])}"
+              }
+            ]
+          }
+        },
+        "Parse_JSON": {
+          "runAfter": {
+            "SR_Status_Value": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6f2b3da1-ba12-4df1-bcbb-a940e2183e8b"
+          },
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@body('Get_user')",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "@@odata.id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "SR_Status_Label": {
+          "runAfter": {
+            "CRSD_Label": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "618c8cf0-885b-4f79-b412-67d285d9abc1"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "requestStatusLabel",
+                "type": "string",
+                "value": "@{triggerOutputs()?['body/_statuscode_label']}"
+              }
+            ]
+          }
+        },
+        "SR_Status_Value": {
+          "runAfter": {
+            "SR_Status_Label": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "691385c0-893f-49db-9c01-7f580f21e305"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "requestStatusValue",
+                "type": "integer",
+                "value": "@triggerOutputs()?['body/statuscode']"
+              }
+            ]
+          }
+        },
+        "Is_Prod": {
+          "runAfter": {
+            "Host_Url": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "285771f9-554d-4501-a6dc-cc4ee56bd194"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "isProd",
+                "type": "boolean",
+                "value": "@equals(variables('HostUri'),'rom-prod-tdg-tcd365.crm3.dynamics.com')"
+              }
+            ]
+          }
+        },
+        "Get_Portal_Contact_owning_SR": {
+          "runAfter": {
+            "Is_Prod": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a1c02007-6a5d-4701-979a-168b236089cb"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "contacts",
+              "recordId": "@triggerOutputs()?['body/_fdr_portalcontact_value']",
+              "$select": "ovs_mban,ovs_my_tc_id,emailaddress1,fdr_mtoa_id"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Select_connector": {
+          "actions": {},
+          "runAfter": {
+            "Get_Portal_Contact_owning_SR": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Get_a_user_by_it's_id._2": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "8d90acc4-0922-4805-8fdb-f896190205b1"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_mytc-20ext-5f699e017eef0aedad-5f67a955a02db86277",
+                    "operationId": "Users_GetById",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_fdr-5fmytc-20ext-5f5cf23ef0bee9f3b2"
+                  },
+                  "parameters": {
+                    "id": "@outputs('Get_Portal_Contact_owning_SR')?['body/fdr_mtoa_id']",
+                    "app-jwt": "@parameters('FDR_MTOA_JWT (fdr_FDR_MTOA_JWT)')"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              },
+              "Add_a_new_service_request": {
+                "runAfter": {
+                  "Get_a_user_by_it's_id._2": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "39f851e8-5b06-46f9-9acc-eb18c677f2bb"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_mytc-20ext-5f699e017eef0aedad-5f67a955a02db86277",
+                    "operationId": "ServiceRequests_AddServiceRequest",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_fdr-5fmytc-20ext-5f5cf23ef0bee9f3b2"
+                  },
+                  "parameters": {
+                    "userId": "@outputs('Get_Portal_Contact_owning_SR')?['body/fdr_mtoa_id']",
+                    "serviceId": "@variables('ServiceID')",
+                    "englishName": "@triggerOutputs()?['body/fdr_name']",
+                    "frenchName": "@triggerOutputs()?['body/fdr_name']",
+                    "app-jwt": "@parameters('FDR_MTOA_JWT (fdr_FDR_MTOA_JWT)')",
+                    "serviceRequestStatus": "@variables('CRSD_label')",
+                    "serviceStandardId": 98
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              },
+              "Set_MTOA_SR_ID": {
+                "runAfter": {
+                  "Add_a_new_service_request": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "5497c840-966f-4823-8d26-f3b68fdf68ad"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps_1",
+                    "operationId": "UpdateRecord",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "fdr_servicerequests",
+                    "recordId": "@triggerOutputs()?['body/fdr_servicerequestid']",
+                    "item/fdr_mtoa_sr_id": "@outputs('Add_a_new_service_request')?['body/ServiceRequestId']"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@variables('isProd')",
+              "@true"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "65582db7-141e-4ed2-a640-09359ae021fa"
+          },
+          "type": "If",
+          "description": "Select which Custom Connector to choose"
+        },
+        "CRSD_Label": {
+          "runAfter": {
+            "FDR_Service_ID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a2c17f88-10eb-4f4b-9e84-4d953b7ce130"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CRSD_label",
+                "type": "string",
+                "value": "@{triggerOutputs()?['body/_fdr_crsd_status_label']}"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}
