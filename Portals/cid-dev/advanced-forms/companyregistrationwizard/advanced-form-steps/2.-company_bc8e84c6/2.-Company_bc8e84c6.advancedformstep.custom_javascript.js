@@ -4,13 +4,13 @@
 $(document).ready(function () {
     debugger;
 
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
     // address
     tdg.cid.address_init(false);
 
     tdg.cid.WebResource_address_complete_readonly(false);
-
-    //tdg.c.control_hide("address1_stateorprovince");
-    tdg.c.addValidator("ovs_lld_province");
 
     var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name }}');
     if (companyName) {
@@ -110,6 +110,8 @@ $(document).ready(function () {
     $("#address1_stateorprovince").attr("oninput", "setManualAddressEntryFlag()");
     $("#address1_postalcode").attr("oninput", "setManualAddressEntryFlag()");
     $("#address1_country").attr("oninput", "setManualAddressEntryFlag()");
+
+    tdg.cid.convert_province_to_code(selected_language);
 });
 
 if (window.jQuery) {

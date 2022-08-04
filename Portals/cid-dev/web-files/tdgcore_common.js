@@ -4,6 +4,22 @@
 // tdgcore_common.js
 
 // tdg = tdgcore
+const canProvinces = [
+    "Alberta::Alberta",
+    "British Columbia::Colombie-Britannique",
+    "Manitoba::Manitoba",
+    "New Brunswick::Nouveau-Brunswick",
+    "Newfoundland and Labrador::Terre‑Neuve‑et‑Labrador",
+    "Northwest Territories::Territoires du Nord‑Ouest",
+    "Nova Scotia::Nouvelle-Écosse",
+    "Nunavut::Nunavut",
+    "Ontario::Ontario",
+    "Prince Edward Island::Île-du-Prince-Édouard",
+    "Quebec::Québec",
+    "Saskatchewan::Saskatchewan",
+    "Yukon::Yukon",
+];
+
 if (typeof (tdg) == "undefined") {
     tdg = {
         __namespace: true
@@ -389,10 +405,10 @@ if (typeof (tdg.c) == "undefined") {
                 if (provinceValid == false) return false;
 
                 //Validate the postal code format with regex
-                if (!postalRegex.test(postalCode)) {
-                    postalcodeFormatValid = false;
-                    return false;
-                }
+                if (postalRegex.test(postalCode)) {
+                    postalcodeFormatValid = true;
+                    
+                } else return false;
 
                 //Validate that postal code matches
                 switch (postalCode.toUpperCase().charAt(0)) {
@@ -760,8 +776,16 @@ if (typeof (tdg.cid) == "undefined") {
             // default
             $("#address1_country").val("Canada");
             $('#address1_country').attr("readonly", true);
-    
-            tdg.c.control_hide("address1_line1");
+            
+            //Setup province dropdown
+            tdg.c.addValidator("ovs_lld_province");
+            //tdg.c.control_hide("address1_stateorprovince");
+
+            $("#ovs_lld_province").on("change", function(i, val){
+                debugger
+                var ovs_lld_province = $("#ovs_lld_province :selected").text()
+                $("#address1_stateorprovince").val(ovs_lld_province);
+            });
 
             // resize WebResource_address_complete
             $("#WebResource_address_complete").height('72px');
@@ -922,6 +946,23 @@ if (typeof (tdg.cid) == "undefined") {
                 tdg.c.removeValidator("address1_latitude");
                 tdg.c.removeValidator("address1_longitude");
             }
+        },
+
+        convert_province_to_code: function (language){
+            var address1_stateorprovince = $("#address1_stateorprovince").val();
+
+            // If there is no value that is prepopulated, this function exits
+            if (address1_stateorprovince == "") {
+                return;
+            }
+            for (var i = 0; i< 13; i++){
+                var localizedProvince = this.text_language(canProvinces[i], language);
+                if (localizedProvince.localeCompare(address1_stateorprovince), undefined, { sensitivity: 'accent' } == 0) { //finds match
+                    $("#ovs_lld_province").val(i);
+                    return;
+                }
+            }
+            $("#ovs_lld_province").val("");
         },
 
         address1_default: function (value) {
