@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{4eb0e3ba-061b-ec11-b6e7-000d3ae9b59b}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="msdyn_name" select="1" icon="1" preview="1">
+        <row name="result" id="msdyn_workorderservicetaskid">
+          <cell name="msdyn_tasktype" width="100" />
+          <cell name="ovs_hour" width="100" />
+          <cell name="ovs_minute" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical">
+        <entity name="msdyn_workorderservicetask">
+          <attribute name="msdyn_workorderservicetaskid" />
+          <attribute name="msdyn_tasktype" />
+          <attribute name="ovs_hour" />
+          <attribute name="ovs_minute" />
+          <filter type="and">
+            <filter type="or">
+              <filter type="and">
+                <condition attribute="ovs_remote" operator="eq" value="0" />
+                <filter type="and">
+                  <condition attribute="msdyn_tasktype" operator="eq" value="{ca3a829a-e917-ec11-b6e7-000d3ae8ef7b}" uiname="Travel" uitype="msdyn_servicetasktype" />
+                </filter>
+              </filter>
+              <condition attribute="msdyn_tasktype" operator="in">
+                <value uiname="Pre-Inspection" uitype="msdyn_servicetasktype">{88fd30ad-e917-ec11-b6e7-000d3ae8ef7b}</value>
+                <value uiname="Execution" uitype="msdyn_servicetasktype">{794a29b3-e917-ec11-b6e7-000d3ae8ef7b}</value>
+                <value uiname="Post-Inspection" uitype="msdyn_servicetasktype">{371391bf-e917-ec11-b6e7-000d3ae8ef7b}</value>
+              </condition>
+            </filter>
+          </filter>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Time Tracking" languagecode="1033" />
+      <LocalizedName description="Suivi du temps" languagecode="1036" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="Time tracking subgrid view " languagecode="1033" />
+    </Descriptions>
+  </savedquery>
+</savedqueries>
