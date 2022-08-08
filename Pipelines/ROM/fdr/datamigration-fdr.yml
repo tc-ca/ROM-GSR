@@ -59,10 +59,11 @@ steps:
 
 - task: PowerShell@2
   name: "Print_Logs"
+  condition: always()
   inputs:
     targetType: 'inline'
     script: |
-      cd $(Build.SourcesDirectory)/ConfigurationMigration/Logs/Export
+      cd $(logWriteDirectory)
       cat *
 
 - task: PowerShell@2
