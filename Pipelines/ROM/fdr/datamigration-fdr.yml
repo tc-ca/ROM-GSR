@@ -59,12 +59,12 @@ steps:
 
 - task: PowerShell@2
   name: "Print_Logs"
+  condition: always()
   inputs:
     targetType: 'inline'
     script: |
-      cd $(Build.SourcesDirectory)/ConfigurationMigration/Logs/Export
+      cd $(logWriteDirectory)
       cat *
-    errorActionPreference: 'continue'
 
 - task: PowerShell@2
   name: "Commit_Unpacked_Data_To_Source_Control"
