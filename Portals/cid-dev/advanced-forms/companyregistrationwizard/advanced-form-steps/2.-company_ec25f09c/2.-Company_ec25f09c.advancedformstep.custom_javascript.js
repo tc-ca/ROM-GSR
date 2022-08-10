@@ -20,6 +20,7 @@ $(document).ready(function () {
     $("#websiteurl").width('100%');
     $("#telephone1").attr("placeholder", "");
     tdg.c.control_hide("cid_reasonfornobnnumber_other");
+    tdg.c.control_hide("cid_companyclaim");
 
     var step_start = sessionStorage.getItem("step_start");
     step_start = (step_start == "null" ? "" : step_start);
@@ -146,8 +147,20 @@ if (window.jQuery) {
 
             sessionStorage.setItem("step_start", "");
 
+            // cid claim company
+            $('#cid_companyclaim').val(1);
+
             return true;
         }
     }(window.jQuery));
 }
 
+function address1_line1_set(value) {
+    debugger;
+
+    try {
+        var f = document.getElementById("WebResource_address_complete");
+        var c = f.contentWindow;
+        c.document.getElementById("address1_line1").value = value;
+    } catch (e) { }
+}
