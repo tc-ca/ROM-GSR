@@ -777,14 +777,13 @@ if (typeof (tdg.cid) == "undefined") {
             $('#address1_country').attr("readonly", true);
 
             //Setup province dropdown
-            tdg.c.addValidator("ovs_lld_province");
             tdg.c.control_hide("address1_line1");
             tdg.c.control_hide("address1_stateorprovince");
 
-            $("#ovs_lld_province").on("change", function (i, val) {
+            $("#ovs_address1_province").on("change", function (i, val) {
                 debugger
-                var ovs_lld_province = $("#ovs_lld_province :selected").text()
-                $("#address1_stateorprovince").val(ovs_lld_province);
+                var ovs_address1_province = $("#ovs_address1_province :selected").text()
+                $("#address1_stateorprovince").val(ovs_address1_province);
             });
 
             // resize WebResource_address_complete
@@ -817,10 +816,11 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#address1_longitude").attr("autocomplete", "new-password");
             }
             else {
-                tdg.c.addValidator("address1_line1", "Street 1");
-                tdg.c.addValidator("address1_city", "City");
-                tdg.c.addValidator("address1_stateorprovince", "Province");
-                tdg.c.addValidator("address1_postalcode", "Postal Code");
+                tdg.c.addValidator("address1_line1");
+                tdg.c.addValidator("address1_city");
+                tdg.c.addValidator("address1_stateorprovince");
+                tdg.c.addValidator("ovs_address1_province");
+                tdg.c.addValidator("address1_postalcode");
             }
         },
 
@@ -835,6 +835,7 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#address1_line3").prop('readonly', true);
                 $("#address1_city").prop('readonly', true);
                 $("#address1_stateorprovince").prop('readonly', true);
+                $("#ovs_address1_province").prop('readonly', true);
                 $("#address1_postalcode").prop('readonly', true);
 
                 var filter = "accountid eq guid'" + parent_id + "'";
@@ -872,6 +873,7 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#address1_line3").prop('readonly', false);
                 $("#address1_city").prop('readonly', false);
                 $("#address1_stateorprovince").prop('readonly', false);
+                $("#ovs_address1_province").prop('readonly', false);
                 $("#address1_postalcode").prop('readonly', false);
             }
 
@@ -896,12 +898,12 @@ if (typeof (tdg.cid) == "undefined") {
                 case "1": // legal land description
                     tdg.c.section_show("section_legal_land_description");
 
-                    //tdg.c.addValidator("ovs_lld_quarter","Quarter/LSC");
-                    tdg.c.addValidator("ovs_lld_section", "Section");
-                    tdg.c.addValidator("ovs_lld_township", "Township");
-                    tdg.c.addValidator("ovs_lld_range", "Range");
-                    tdg.c.addValidator("ovs_lld_meridian", "Meridian");
-                    tdg.c.addValidator("ovs_lld_province", "Province / Territory");
+                    //tdg.c.addValidator("ovs_lld_quarter");
+                    tdg.c.addValidator("ovs_lld_section");
+                    tdg.c.addValidator("ovs_lld_township");
+                    tdg.c.addValidator("ovs_lld_range");
+                    tdg.c.addValidator("ovs_lld_meridian");
+                    tdg.c.addValidator("ovs_lld_province");
 
                     if (reset_data) {
                         thhis.address1_default("N/A");
@@ -910,8 +912,8 @@ if (typeof (tdg.cid) == "undefined") {
                 case "2": // lat/long
                     tdg.c.section_show("section_latitude_longitude");
 
-                    tdg.c.addValidator("address1_latitude", "Latitude");
-                    tdg.c.addValidator("address1_longitude", "Longitude");
+                    tdg.c.addValidator("address1_latitude");
+                    tdg.c.addValidator("address1_longitude");
 
                     if (reset_data) {
                         this.address1_default("N/A");
@@ -920,10 +922,11 @@ if (typeof (tdg.cid) == "undefined") {
                 default:
                     tdg.c.section_show("section_address");
 
-                    tdg.c.addValidator("address1_line1", "Street 1");
-                    tdg.c.addValidator("address1_city", "City");
-                    tdg.c.addValidator("address1_stateorprovince", "Province");
-                    tdg.c.addValidator("address1_postalcode", "Postal Code");
+                    tdg.c.addValidator("address1_line1");
+                    tdg.c.addValidator("address1_city");
+                    tdg.c.addValidator("address1_stateorprovince");
+                    tdg.c.addValidator("ovs_address1_province");
+                    tdg.c.addValidator("address1_postalcode");
 
                     if (reset_data) {
                         this.address1_default("");
@@ -937,6 +940,7 @@ if (typeof (tdg.cid) == "undefined") {
                 tdg.c.removeValidator("address1_line1");
                 tdg.c.removeValidator("address1_city");
                 tdg.c.removeValidator("address1_stateorprovince");
+                tdg.c.removeValidator("ovs_address1_province");
                 tdg.c.removeValidator("address1_postalcode");
 
                 // legal land description
@@ -963,7 +967,7 @@ if (typeof (tdg.cid) == "undefined") {
             for (var i = 0; i < 13; i++) {
                 var localizedProvince = this.text_language(canProvinces[i], language);
                 if (localizedProvince.localeCompare(address1_stateorprovince), undefined, { sensitivity: 'accent' } == 0) { //finds match
-                    $("#ovs_lld_province").val(i);
+                    $("#ovs_address1_province").val(i);
                     return;
                 }
             }
