@@ -2,7 +2,6 @@
   "properties": {
     "connectionReferences": {
       "shared_commondataserviceforapps_1": {
-        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
@@ -60,17 +59,16 @@
           "type": "OpenApiConnectionWebhook",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "SubscribeWebhookTrigger"
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "subscriptionRequest/message": 3,
               "subscriptionRequest/entityname": "ovs_mocregistration",
               "subscriptionRequest/scope": 4,
               "subscriptionRequest/filteringattributes": "ovs_followupind",
-              "subscriptionRequest/filterexpression": "ovs_followupind eq true",
-              "subscriptionRequest/name": "47a895f4-7c17-ed11-b83e-000d3a0c8551"
+              "subscriptionRequest/filterexpression": "ovs_followupind eq true"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -89,9 +87,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "ListRecords"
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "systemusers",
@@ -160,9 +158,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "GetItem"
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "systemusers",
@@ -264,9 +262,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_powerplatformforadmins",
               "connectionName": "shared_powerplatformforadmins",
-              "operationId": "GetSingleEnvironment"
+              "operationId": "GetSingleEnvironment",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_powerplatformforadmins"
             },
             "parameters": {
               "environment": "@workflow()['tags']['environmentName']",
@@ -318,14 +316,14 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
                   "connectionName": "shared_office365",
-                  "operationId": "SendEmailV2"
+                  "operationId": "SendEmailV2",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                 },
                 "parameters": {
                   "emailMessage/To": "@items('Apply_to_each_2')?['internalemailaddress']",
-                  "emailMessage/Subject": "@concat('DEV Test: Operation ', triggerOutputs()?['body/ovs_name'], ' has been flagged for follow-up')",
-                  "emailMessage/Body": "<p>Hello @{items('Apply_to_each_2')?['fullname']},<br>\n<br>\nOperation @{triggerOutputs()?['body/ovs_name']} follow up inspection required.<br>\nPlease use the following link to navigate directly to the flagged operation: @{variables('Operation Link')}<br>\n</p>",
+                  "emailMessage/Subject": "@concat('Operation ', triggerOutputs()?['body/ovs_name'], ' has been flagged for follow-up')",
+                  "emailMessage/Body": "<p>Hello/Bonjour &nbsp;@{items('Apply_to_each_2')?['fullname']},<br>\n<br>\nOperation @{triggerOutputs()?['body/ovs_name']} follow up inspection required.<br>\nPlease use the following link to navigate directly to the flagged operation: @{variables('Operation Link')}<br>\n___________________________________________________________________________________<br>\n<br>\nOpération @{triggerOutputs()?['body/ovs_name']} inspection de suivi requise.<br>\nVeuillez utiliser le lien suivant pour accéder directement à l’opération signalée: @{variables('Operation Link')}<br>\n<br>\n</p>",
                   "emailMessage/Importance": "Normal"
                 },
                 "authentication": "@parameters('$authentication')"
@@ -343,15 +341,15 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
                   "connectionName": "shared_teams",
-                  "operationId": "PostMessageToConversation"
+                  "operationId": "PostMessageToConversation",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams"
                 },
                 "parameters": {
                   "poster": "Flow bot",
                   "location": "Chat with Flow bot",
                   "body/recipient": "@{items('Apply_to_each_2')?['internalemailaddress']};",
-                  "body/messageBody": "<p><u><strong></strong></u><u><strong>@{concat('DEV Test: Operation ', triggerOutputs()?['body/ovs_name'], ' has been flagged for follow-up')}</strong></u><u><strong></strong></u><strong><br>\n<br>\n</strong>Hello/Bonjour @{items('Apply_to_each_2')?['fullname']},<br>\nOperation @{triggerOutputs()?['body/ovs_name']} follow up inspection required.<br>\nPlease use the following link to navigate directly to the flagged operation: @{variables('Operation Link')}</p>",
+                  "body/messageBody": "<p><u><strong></strong></u><u><strong>@{concat('Operation ', triggerOutputs()?['body/ovs_name'], ' has been flagged for follow-up')}</strong></u><u><strong></strong></u><strong><br>\n<br>\n</strong>Hello/Bonjour @{items('Apply_to_each_2')?['fullname']},<br>\n<br>\nOperation @{triggerOutputs()?['body/ovs_name']} follow up inspection required.<br>\nPlease use the following link to navigate directly to the flagged operation: @{variables('Operation Link')}<br>\n___________________________________________________________________________________<br>\n<br>\nOpération @{triggerOutputs()?['body/ovs_name']} inspection de suivi requise.<br>\nVeuillez utiliser le lien suivant pour accéder directement à l’opération signalée: @{variables('Operation Link')}<br>\n</p>",
                   "body/isAlert": true
                 },
                 "authentication": "@parameters('$authentication')"
