@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ImportExportXml version="9.2.22073.162" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ImportExportXml version="9.2.22074.142" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <UniqueName>FDR_Plugins</UniqueName>
     <LocalizedNames>
       <LocalizedName description="FDR.Plugins" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.2.0.10</Version>
+    <Version>1.2.0.12</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>FDR</UniqueName>
@@ -91,11 +91,14 @@
       <RootComponent type="92" id="{74ca1650-90db-ec11-bb3c-000d3a8483f6}" behavior="0" />
       <RootComponent type="92" id="{756319d4-2b09-ed11-82e5-000d3a84cfdd}" behavior="0" />
       <RootComponent type="92" id="{7a33bb73-7fe6-ec11-bb3c-000d3a8483f6}" behavior="0" />
+      <RootComponent type="92" id="{7fc06b3a-f314-ed11-b83e-000d3a0c8551}" behavior="0" />
       <RootComponent type="92" id="{973442ed-f0d5-ec11-a7b5-0022483c5609}" behavior="0" />
       <RootComponent type="92" id="{afc69748-f2d5-ec11-a7b5-0022483c5609}" behavior="0" />
       <RootComponent type="92" id="{b9235644-f0d5-ec11-a7b5-0022483c5609}" behavior="0" />
+      <RootComponent type="92" id="{b9a1f16e-7919-ed11-b83f-000d3a84cfdd}" behavior="0" />
       <RootComponent type="92" id="{bb550471-e3ec-ec11-bb3c-000d3a8483f6}" behavior="0" />
       <RootComponent type="92" id="{bc99160c-2a09-ed11-82e5-000d3a0c8551}" behavior="0" />
+      <RootComponent type="92" id="{ea8cc241-f314-ed11-b83e-000d3a0c8551}" behavior="0" />
     </RootComponents>
     <MissingDependencies>
       <MissingDependency>
@@ -148,11 +151,19 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="fdr_servicerequest" displayName="Service Request" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.FDR.Plugins.Entities.ServiceRequest.SR_PeUpdate_RequestOutcome: Update of fdr_servicerequest" id="{b9a1f16e-7919-ed11-b83f-000d3a84cfdd}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="fdr_servicerequest" displayName="Service Request" solution="Active" />
         <Dependent type="92" displayName="TC.PowerApps.FDR.Plugins.Entities.ServiceRequest.SR_PreUpdate_TimeEntryValidation: Update of fdr_servicerequest" id="{bb550471-e3ec-ec11-bb3c-000d3a8483f6}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="fdr_servicerequest" displayName="Service Request" solution="Active" />
         <Dependent type="92" displayName="TC.PowerApps.FDR.Plugins.Entities.ServiceRequest.SR_PostAssign_AddTimeEntry: Assign of fdr_servicerequest" id="{bc99160c-2a09-ed11-82e5-000d3a0c8551}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="fdr_servicerequest" displayName="Service Request" solution="Active" />
+        <Dependent type="93" id="{3ec750b9-7919-ed11-b83f-000d3a84cfdd}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="fdr_servicerequest" displayName="Service Request" solution="Active" />
@@ -184,9 +195,17 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="msdyn_workorder" displayName="Work Order" solution="FieldService (8.8.0.88)">
-          <package>FieldService_Anchor (8.8.70.26)</package>
+          <package>FieldService_Anchor (8.8.71.41)</package>
         </Required>
         <Dependent type="92" displayName="TC.PowerApps.FDR.Plugins.Entities.ServiceRequest.SR_PostWorkOrderCompleteEvent: fdr_WorkOrderCompleteEvent of msdyn_workorder" id="{473d0dde-430f-ed11-b83d-000d3a0c8551}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="ovs_mocregistration" displayName="Operation" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.FDR.Plugins.Entities.Operation.Operation_PreCreate_FDR: Create of ovs_mocregistration" id="{7fc06b3a-f314-ed11-b83e-000d3a0c8551}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="ovs_mocregistration" displayName="Operation" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.FDR.Plugins.Entities.Operation.Operation_PreUpdate_FDR: Update of ovs_mocregistration" id="{ea8cc241-f314-ed11-b83e-000d3a0c8551}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="statuscode" displayName="Status Reason" parentSchemaName="fdr_design" parentDisplayName="Design" solution="Active" />
@@ -219,6 +238,14 @@
       <MissingDependency>
         <Required type="2" schemaName="fdr_relatedworkorder" displayName="Related Work Order" parentSchemaName="fdr_servicerequest" parentDisplayName="Service Request" solution="Active" />
         <Dependent type="93" id="{89c7f25c-3ff3-ec11-bb3c-000d3a848097}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="fdr_requestoutcome" displayName="Request Outcome" parentSchemaName="fdr_servicerequest" parentDisplayName="Service Request" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.FDR.Plugins.Entities.ServiceRequest.SR_PeUpdate_RequestOutcome: Update of fdr_servicerequest" id="{b9a1f16e-7919-ed11-b83f-000d3a84cfdd}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="fdr_requestoutcome" displayName="Request Outcome" parentSchemaName="fdr_servicerequest" parentDisplayName="Service Request" solution="Active" />
+        <Dependent type="93" id="{3ec750b9-7919-ed11-b83f-000d3a84cfdd}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="fdr_site" displayName="Account" parentSchemaName="fdr_servicerequest" parentDisplayName="Service Request" solution="Active" />
@@ -274,6 +301,14 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="statecode" displayName="Status" parentSchemaName="fdr_servicerequest" parentDisplayName="Service Request" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.FDR.Plugins.Entities.ServiceRequest.SR_PeUpdate_RequestOutcome: Update of fdr_servicerequest" id="{b9a1f16e-7919-ed11-b83f-000d3a84cfdd}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="statecode" displayName="Status" parentSchemaName="fdr_servicerequest" parentDisplayName="Service Request" solution="Active" />
+        <Dependent type="93" id="{3ec750b9-7919-ed11-b83f-000d3a84cfdd}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="statecode" displayName="Status" parentSchemaName="fdr_servicerequest" parentDisplayName="Service Request" solution="Active" />
         <Dependent type="93" id="{6eab085b-f1d5-ec11-a7b5-0022483c5609}" />
       </MissingDependency>
       <MissingDependency>
@@ -306,7 +341,19 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="statuscode" displayName="Status Reason" parentSchemaName="fdr_servicerequest" parentDisplayName="Service Request" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.FDR.Plugins.Entities.ServiceRequest.SR_PeUpdate_RequestOutcome: Update of fdr_servicerequest" id="{b9a1f16e-7919-ed11-b83f-000d3a84cfdd}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="statuscode" displayName="Status Reason" parentSchemaName="fdr_servicerequest" parentDisplayName="Service Request" solution="Active" />
         <Dependent type="92" displayName="TC.PowerApps.FDR.Plugins.Entities.ServiceRequest.SR_PreUpdate_TimeEntryValidation: Update of fdr_servicerequest" id="{bb550471-e3ec-ec11-bb3c-000d3a8483f6}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="statuscode" displayName="Status Reason" parentSchemaName="fdr_servicerequest" parentDisplayName="Service Request" solution="Active" />
+        <Dependent type="93" id="{3ec750b9-7919-ed11-b83f-000d3a84cfdd}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="statuscode" displayName="Status Reason" parentSchemaName="fdr_servicerequest" parentDisplayName="Service Request" solution="Active" />
+        <Dependent type="93" id="{53e7e9f7-f0d5-ec11-a7b5-0022483c5609}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="statuscode" displayName="Status Reason" parentSchemaName="fdr_servicerequest" parentDisplayName="Service Request" solution="Active" />
