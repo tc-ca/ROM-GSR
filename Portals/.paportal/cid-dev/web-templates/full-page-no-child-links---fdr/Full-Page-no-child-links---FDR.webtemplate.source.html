@@ -1,0 +1,25 @@
+{% extends 'Layout 1 Column' %}
+
+{% block main %}
+  {% include 'Page Copy' %}
+  {% if page.adx_entitylist %}
+    {% include 'entity_list' key: page.adx_entitylist.id %}
+  {% endif %}
+
+  {% if page.adx_entityform %}
+    {% entityform id: page.adx_entityform.id %}
+  {% endif %}
+
+  {% if page.adx_webform %}
+    {% webform id: page.adx_webform.id %}
+  {% endif %}
+
+<script type="text/javascript" src="~/tdgcore_common.js" ></script>
+<script type="text/javascript" src="~/tdgcore_message.js" ></script>
+
+<script>
+	var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+</script>
+
+{% endblock %}
