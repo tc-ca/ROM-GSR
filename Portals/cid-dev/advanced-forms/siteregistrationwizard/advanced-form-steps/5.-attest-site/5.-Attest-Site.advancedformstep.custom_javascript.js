@@ -9,6 +9,10 @@ $(document).ready(function () {
     debugger;
 
     page_setup();
+
+    tdg.c.control_hide("ovs_address_type");
+    tdg.cid.address_type_change(false);
+
     $('#PreviousButton').on('click', function () {
         var siteId = $("#EntityFormView_EntityID").val();
         var operationId = GetHOTIOperation(siteId);

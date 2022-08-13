@@ -905,9 +905,8 @@ if (typeof (tdg.cid) == "undefined") {
                     tdg.c.addValidator("ovs_lld_meridian");
                     tdg.c.addValidator("ovs_lld_province");
 
-                    if (reset_data) {
-                        thhis.address1_default("N/A");
-                    }
+                    this.address1_default("N/A");
+
                     break;
                 case "2": // lat/long
                     tdg.c.section_show("section_latitude_longitude");
@@ -915,9 +914,8 @@ if (typeof (tdg.cid) == "undefined") {
                     tdg.c.addValidator("address1_latitude");
                     tdg.c.addValidator("address1_longitude");
 
-                    if (reset_data) {
-                        this.address1_default("N/A");
-                    }
+                    this.address1_default("N/A");
+
                     break;
                 default:
                     tdg.c.section_show("section_address");
@@ -932,6 +930,16 @@ if (typeof (tdg.cid) == "undefined") {
                         this.address1_default("");
                     }
             }
+        },
+
+        address1_default: function (value) {
+            $("#address1_line1").val(value);
+            $("#address1_line2").val(value);
+            $("#address1_line3").val(value);
+            $("#address1_city").val(value);
+            $("#address1_stateorprovince").val(value);
+            $("#ovs_address1_province").val("");
+            $("#address1_postalcode").val(value);
         },
 
         clear_address_type_required_fields: function () {

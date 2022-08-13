@@ -134,6 +134,9 @@
 <script>
   $(document).ready( function() {
 
+
+    ReadBulkMessagesFile();
+
 //alert ( browser.downloads.showDefaultFolder());
       //add new submit button
      //var upload-button ="<label>2B. Start Upload</label><br> <br><input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value={{upload}} class='btn btn-primary' />";
@@ -201,13 +204,26 @@ $('#btn_attachfile_and_scan').click(function(e)
     // Get the content of the selected file
     var file = document.getElementById('AttachFile').files[0];
 
-
-
+  console.log("mime type " + MimeType);
+                console.log("file name " + FileName);
+                  var langcode = '{{languagecode}}'  ;
+debugger ;
     if (MimeType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
    {
-
- // call the submit button to show error message
-    $("#InsertButton").click();
+       //get error message in english
+       var FileTypeErrorMessage = filter_BulkMessageArray("M2" , "en");
+           // check language if not english assign french transation
+            if ( langcode != 'en-US' && langcode !="en")
+            {
+             // responseMessage  =  "<p> Le système CID va maintenant commencer la deuxième des deux séries de validations du fichier en cours de téléchargement. Un e-mail sera envoyé à votre adresse e-mail de " + useremail +"(tel que défini via votre profil utilisateur), indiquant les résultats de la deuxième série de validations et les étapes ultérieures à suivre. <br><br>" +
+             //"À ce stade, vous pouvez attendre l'e-mail de notification et passer à l'étape suivante décrite à partir de celui-ci. Alternativement, vous pouvez quitter temporairement le processus d'inscription et le système vous ramènera à l'endroit où vous vous étiez arrêté à votre retour.[B1037]</p>"
+           FileTypeErrorMessage = filter_BulkMessageArray("M2" , "fr");
+         
+            }//end check language
+          $('#ErrorMessageDiv').css('display', 'block');
+          $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  FileTypeErrorMessage + "</p>");
+         // call the submit button to show error message
+         // $("#InsertButton").click();
    }
 
   else if (file) {
@@ -228,8 +244,13 @@ $('#btn_attachfile_and_scan').click(function(e)
             DocumentbodyContents = e.target.result;
 
             // Split the string at the first comma (removing the base64 prefix)
+        
 
+
+          // console.log(DocumentbodyContents);
+        
             DocumentbodyContents = DocumentbodyContents.substring(DocumentbodyContents.indexOf(',') + 1);
+
 
 
             var Scan_API_URL = '{{Scan_flow_URL}}';
@@ -261,11 +282,13 @@ $('#btn_attachfile_and_scan').click(function(e)
           //$('#processingMsg').css('display','block');
        // $('#processingMsg').text(');
         var langcode = '{{languagecode}}'  ;
-       var downloadMessage = '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>' ;
-        var DownloadMessageCompleted = '<p>Download completed.</p>';
+       var downloadMessage ='<p>Downloading the custom Site Bulk Upload template.  Please wait a moment...</p>';
+       // '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>' ;
+        var DownloadMessageCompleted =  '<p>Download completed.</p>';
       if (langcode != "en-US")
       {
-          downloadMessage = "<p>Le classeur Excel personnalisé de téléchargement en masse du site est en cours de téléchargement…</p>"
+          downloadMessage = "<p>Téléchargement du modèle de téléchargement en masse de site personnalisé. Patientez s'il-vous-plait...</p>";
+          //"<p>Le classeur Excel personnalisé de téléchargement en masse du site est en cours de téléchargement…</p>"
          DownloadMessageCompleted  = '<p>Téléchargement terminé.</p>' ;
       }
 
@@ -452,13 +475,20 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
             var responseMessage ;
          if (UserResponse == 'yes')
          {
-             responseMessage  = "<p>The CID system will now begin the second of two sets of validations of the file being uploaded. An email will be sent to your email address of " + useremail + " (as set via your user profile), indicating the results the second set of validations and the subsequent steps to take. <br><br>" +
-             "At this point you can wait for the notification email and proceed with the next step described from within it. Alternatively, you can leave the Registration process temporarily and the system will return you to the spot where you left off when you return.[B1037]  </p>"
+
+    
+
+             //responseMessage  = "<p>The CID system will now begin the second of two sets of validations of the file being uploaded. An email will be sent to your email address of " + useremail + " (as set via your user profile), indicating the results the second set of validations and the subsequent steps to take. <br><br>" +
+            // "At this point you can wait for the notification email and proceed with the next step described from within it. Alternatively, you can leave the Registration process temporarily and the system will return you to the spot where you left off when you return.[B1037]  </p>"
+          
+          responseMessage = filter_BulkMessageArray("M14" , "en");
            // + "<ul> <li>" + useremail +"is the email address from the current user’s profile </li> </ul>";
-            if ( Lang != 'en-US')
+            if ( Lang != 'en-US' && Lang !="en")
             {
-              responseMessage  =  "<p> Le système CID va maintenant commencer la deuxième des deux séries de validations du fichier en cours de téléchargement. Un e-mail sera envoyé à votre adresse e-mail de " + useremail +"(tel que défini via votre profil utilisateur), indiquant les résultats de la deuxième série de validations et les étapes ultérieures à suivre. <br><br>" +
-             "À ce stade, vous pouvez attendre l'e-mail de notification et passer à l'étape suivante décrite à partir de celui-ci. Alternativement, vous pouvez quitter temporairement le processus d'inscription et le système vous ramènera à l'endroit où vous vous étiez arrêté à votre retour.[B1037]</p>"
+             // responseMessage  =  "<p> Le système CID va maintenant commencer la deuxième des deux séries de validations du fichier en cours de téléchargement. Un e-mail sera envoyé à votre adresse e-mail de " + useremail +"(tel que défini via votre profil utilisateur), indiquant les résultats de la deuxième série de validations et les étapes ultérieures à suivre. <br><br>" +
+             //"À ce stade, vous pouvez attendre l'e-mail de notification et passer à l'étape suivante décrite à partir de celui-ci. Alternativement, vous pouvez quitter temporairement le processus d'inscription et le système vous ramènera à l'endroit où vous vous étiez arrêté à votre retour.[B1037]</p>"
+           responseMessage = filter_BulkMessageArray("M14" , "fr");
+           //BMessage[0]["Fr-Message"] + BMessage[0]["code"] ;
            // + "<ul> <li>" + useremail +" est l'adresse e-mail du profil de l'utilisateur actuel. </li> </ul>";
             }
 
@@ -498,11 +528,13 @@ function Call_Virsu_Scan_API(url, fileContent, activitytype , excelfilename , la
 {
 
 var companyid = '{{parentid}}';
-var contactid = '{{contactid}}'
-var scanningMessage = "<p>Preliminary analysis of the uploaded workbook has begun…</p>";
+var contactid = '{{contactid}}';
+
+
+var scanningMessage = "<p>Uploading and processing the Site Bulk Upload Excel workbook.  Please wait a moment...</p>";
 if ( language != 'en-US')
    {
-        scanningMessage ="<p>L'analyse préliminaire du classeur téléchargé a commencé…</p>";
+        scanningMessage ="Téléchargement et traitement du classeur Excel de téléchargement en masse du site. Patientez s'il-vous-plait...";
     }
       $('#infoMsg').css('display', 'block');
         $('#infoMsg').html(scanningMessage);
@@ -526,16 +558,25 @@ if ( language != 'en-US')
          {
 
                $('#infoMsg').css('display', 'block');
-               $('#infoMsg').html("<p> Preliminary analysis of the uploaded workbook has begun…</p>");
+               $('#infoMsg').html("<p>Uploading and processing the Site Bulk Upload Excel workbook.  Please wait a moment...</p>");
               $("#InsertButton").click();
 
          }
          else
          {
              $("#processingMsg").css("display", "none");
-           // alert ( req.getResponseHeader('MessageCode') );
-            // alert ( req.getResponseHeader('Message') );
-            // alert("Error - Bulk Site Registration Upload: Initial upload stopped due to a potential virus.");
+              var ErrorMessage_fileScan = filter_BulkMessageArray("M3" , "en");
+           // check language if not english assign french transation
+            if ( language != 'en-US' && language !="en")
+            {
+             // responseMessage  =  "<p> Le système CID va maintenant commencer la deuxième des deux séries de validations du fichier en cours de téléchargement. Un e-mail sera envoyé à votre adresse e-mail de " + useremail +"(tel que défini via votre profil utilisateur), indiquant les résultats de la deuxième série de validations et les étapes ultérieures à suivre. <br><br>" +
+             //"À ce stade, vous pouvez attendre l'e-mail de notification et passer à l'étape suivante décrite à partir de celui-ci. Alternativement, vous pouvez quitter temporairement le processus d'inscription et le système vous ramènera à l'endroit où vous vous étiez arrêté à votre retour.[B1037]</p>"
+           ErrorMessage_fileScan = filter_BulkMessageArray("M3" , "fr");
+         
+            }//end check language
+          $('#ErrorMessageDiv').css('display', 'block');
+          $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  ErrorMessage_fileScan + "</p>");
+       
          }
 
            //  $("#infoMsg").css("display", "none");
@@ -578,10 +619,12 @@ function call_Inital_validation(Language , bulkactivitytype)
     window.history.replaceState({}, document.title, urlPath);
 
 
-var IntialvalidationBegunMessage = "<p>Preliminary analysis of the uploaded workbook has begun…</p>" ;
+var IntialvalidationBegunMessage = "<p>Uploading and processing the Site Bulk Upload Excel workbook.  Please wait a moment...</p>";
+//"<p>Preliminary analysis of the uploaded workbook has begun…</p>" ;
  if ( Language != 'en-US')
  {
-    IntialvalidationBegunMessage = "<p>L'analyse préliminaire du classeur téléchargé a commencé…</p>";
+    IntialvalidationBegunMessage = "<p>Téléchargement et traitement du classeur Excel de téléchargement en masse du site. Patientez s'il-vous-plait...</p>";
+    //"<p>L'analyse préliminaire du classeur téléchargé a commencé…</p>";
 
  }
 
@@ -613,11 +656,14 @@ var IntialvalidationBegunMessage = "<p>Preliminary analysis of the uploaded work
                   // $('#warnningMessage').css('display', 'none');
                     // alert (this.response);
                      //alert(req.getResponseHeader('DetailMessage'));
-                     var warrning_Message  = "<p>Detail Site data has already been assigned manually, or via a previous Bulk Upload. If you proceed, then any Site referenced in the workbook that is already in CID, will first be completed deleted from CID, with no possibility to recover the related data. Those Site(s) will then be re-created based on the workbook values here. <br><br>Are you sure you want to continue with this upload and potentially override existing Site data? [B1035]</P>";
-                     if ( Language != 'en-US')
+                   //  var warrning_Message  = "<p>Detail Site data has already been assigned manually, or via a previous Bulk Upload. If you proceed, then any Site referenced in the workbook that is already in CID, will first be completed deleted from CID, with no possibility to recover the related data. Those Site(s) will then be re-created based on the workbook values here. <br><br>Are you sure you want to continue with this upload and potentially override existing Site data? [B1035]</P>";
+                     var warrning_Message  = filter_BulkMessageArray("M12" , "en");
+                     console.log (warrning_Message);
+                     debugger;
+                     if ( Language != 'en-US' &&  Language != 'en')
                      {
-                          warrning_Message  = "<p>Les données détaillées du site ont déjà été attribuées manuellement ou via un précédent chargement en bloc. Si vous continuez, tout site référencé dans le classeur qui est déjà dans CID sera d'abord complètement supprimé de CID, sans possibilité de récupérer les données associées. Ces sites seront ensuite recréés en fonction des valeurs du classeur ici. <br><br>Voulez-vous vraiment continuer avec ce téléchargement et éventuellement remplacer les données existantes du site ? [B1035] </P>";
-
+                         // warrning_Message  = "<p>Les données détaillées du site ont déjà été attribuées manuellement ou via un précédent chargement en bloc. Si vous continuez, tout site référencé dans le classeur qui est déjà dans CID sera d'abord complètement supprimé de CID, sans possibilité de récupérer les données associées. Ces sites seront ensuite recréés en fonction des valeurs du classeur ici. <br><br>Voulez-vous vraiment continuer avec ce téléchargement et éventuellement remplacer les données existantes du site ? [B1035] </P>";
+                           warrning_Message  = filter_BulkMessageArray("M12" , "fr");
 
                      }
 
@@ -780,6 +826,54 @@ function htmldecode (str){
   return txt.value;
 }
 
+
+ function  ReadBulkMessagesFile() {
+   
+    var messageList ;
+    var url = window.document.URL;
+    url = url.replace("https://", "");
+    var index1 = url.indexOf("/");
+    var file = "https://" + url.substring(0, index1);
+     file += "/BulkUpload_Messages";
+     console.log(file);
+
+    fetch(file)
+        .then(response => {
+          
+    
+            return response.json();
+            
+        })
+         .then(jsondata =>(storeMessageListInSession(jsondata)))
+        ;
+     
+     
+     
+}
+function storeMessageListInSession(data)
+{
+    //store messages in session
+   sessionStorage.setItem('MessagesJsonArray',JSON.stringify(data));
+  
+  
+
+}
+
+function filter_BulkMessageArray(id , lang)
+{ 
+    debugger ;
+     const messageList =JSON.parse( sessionStorage.getItem('MessagesJsonArray'));
+     const BMessage = messageList.filter(x =>x["id"]== id ) ;
+     var responseMessage = "<p>" + BMessage[0]["Eng-Message"] + "[" + BMessage[0]["code"] + "] </p>" ;
+
+ if (lang != "en")
+   { 
+       responseMessage = "<p>" + BMessage[0]["Fr-Message"] + "[" + BMessage[0]["code"] + "] </p>";
+   }
+   console.log (responseMessage);
+   debugger;
+   return responseMessage ;
+}
 </script>
 <div class="container ">
     <div class="container">

@@ -4,6 +4,10 @@
 $(document).ready(function () {
 	debugger;
 
+	//tdg.c.weblink_hide("/RegistrationWizard/");
+	//tdg.c.weblink_hide("/company_dashboard/");
+	//tdg.c.weblink_hide("/Bulk_Site_Upload/");
+
 	var companyId = $("#EntityFormView_EntityID").val();
 	var filter = "parentaccountid/Id eq (guid'" + companyId + "')";
 	var data = ExecuteQuery("Validation_UnclaimedSites", filter);
@@ -41,7 +45,7 @@ $(document).ready(function () {
 				if (tdElement.attr('data-attribute') == 'cid_issiteattested') {
 					if (tdElement.attr('data-value') == 'true') {
 						if ($("#spn_" + recId).length <= 0) {
-							firstTdElement.prepend("<span id='spn_" + recId + "' class='glyphicon glyphicon-ok' style='color: #3c763d;'></span>&nbsp;&nbsp;&nbsp;");
+							firstTdElement.prepend("<span id='spn_' + recId +' class='glyphicon glyphicon-ok' style='color: #3c763d;'></span>&nbsp;&nbsp;&nbsp;");
 							trElement.css("background-color", "#dff0d8");
 						}
 					}
@@ -65,7 +69,7 @@ $(document).ready(function () {
 
 	webFormClientValidate = function () {
 		var validation = true;
-		var errorMessage = "";
+		var errorMessage = "Company Dashboard";	// Bulk Site Upload
 		var companyId = $("#EntityFormView_EntityID").val();
 		var filter = "parentaccountid/Id eq (guid'" + companyId + "')";
 		var data = ExecuteQuery("Validation_CompanySites", filter);
