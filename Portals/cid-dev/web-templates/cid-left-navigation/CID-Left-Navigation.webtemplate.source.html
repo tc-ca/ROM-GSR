@@ -1,2 +1,28 @@
-{% extends 'CID Two Column Layout' %} {% block sidebar %} {% assign weblinkset_id = page.adx_navigation.id %} {% if weblinkset_id %} {% assign nav = weblinks[page.adx_navigation.id] %} {% if nav %} <div class="list-group"> {% for link in nav.weblinks %} <a class="list-group-item" href={{ link.url }}> {{ link.name }} </a> {% endfor %} </div> {% endif %} {% endif %} {% endblock %} {% block content %} <div> {% block main %} {% include 'Page Copy' %} {% endblock %} </div> {% endblock %}
+{% extends 'CID Two Column Layout' %} 
+{% block sidebar %} 
+{% assign weblinkset_id = page.adx_navigation.id %} 
+{% if weblinkset_id %} {% assign nav = weblinks[page.adx_navigation.id] %} 
+{% if nav %} 
+<div class="list-group"> 
+{% for link in nav.weblinks %} <a class="list-group-item" href={{ link.url }}> {{ link.name }} </a> 
+{% endfor %} 
+</div> 
+{% endif %} 
+{% endif %} 
+
+<script type="text/javascript" src="~/tdgcore_common.js" ></script>
+<script type="text/javascript" src="~/tdgcore_message.js" ></script>
+
+<script>
+    debugger;
+	tdg.c.weblink_hide("/RegistrationWizard/");
+	tdg.c.weblink_hide("/Bulk_Site_Upload/");
+
+	var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+</script>
+
+{% endblock %} 
+{% block content %} <div> {% block main %} {% include 'Page Copy' %} {% endblock %} </div> 
+{% endblock %}
 

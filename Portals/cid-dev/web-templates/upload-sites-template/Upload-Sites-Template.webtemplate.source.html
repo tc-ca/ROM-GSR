@@ -1,4 +1,3 @@
-
 <style>
     .inputfile {
         /* visibility: hidden etc. wont work */
@@ -54,6 +53,15 @@
         display: none;
     }
 </style>
+
+<script type="text/javascript" src="~/tdgcore_common.js" ></script>
+<script type="text/javascript" src="~/tdgcore_message.js" ></script>
+
+<script>
+	var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+</script>
+
 {% assign parentid = user.parentcustomerid.id %}
 
 {% assign contactid = user.id %}
@@ -136,13 +144,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
   $(document).ready( function() {
-
-
     //read all messages in json array
     ReadBulkMessagesFile();
- 
-  
-   debugger ;
+
+    debugger ;
 
 //insert lables and buttons
 $(".section[data-name='General']").closest("fieldset").hide();
@@ -227,14 +232,43 @@ debugger ;
       //check excel content match file type
       debugger ;
       console.log("before calling excel function");
-      var CheckResult =ExcelToJSON(file)
-      debugger;
-      console.log(CheckResult);
+     
+        
+            // Get the dependency, which we've added to node via "npm install file-type":
+       
+        
+        var reader = new FileReader();
+    
+  
+    
+        reader.onload = function(e) {
+             try {
+            //get data from reader
+            var data = e.target.result;
+        
+                //parese file as excel
+                var workbook = XLSX.read(data, {
+                    type: 'binary'
+                });
+                //get number of sheets
+                var numberOfSheets = workbook.SheetNames.length;
+                if (numberOfSheets > 0)
+                {
+                  
+                 var Scan_API_URL = '{{Scan_flow_URL}}';
+                 debugger;
 
-           if (CheckResult == false)
-         {
+                 console.log (Scan_API_URL); 
+                //call antivirus URL
+                Call_Virsu_Scan_API(Scan_API_URL
+                ,data , BulkActivitytype ,FileName,langcode );
+          
+                }
 
-           //get error message in english
+
+               }
+            catch (error) {
+                    //get error message in english
              var FileTypeErrorMessage = filter_BulkMessageArray("M2" , "en");
            // check language if not english assign french transation
              if ( langcode != 'en-US' && langcode !="en")
@@ -243,51 +277,67 @@ debugger ;
              FileTypeErrorMessage = filter_BulkMessageArray("M2" , "fr");
          
              }//end check language
-               // console.log( "error ..... " + error);
+              //show file type error message
                  $('#ErrorMessageDiv').css('display', 'block');
                  $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  FileTypeErrorMessage + "</p>");
-                 CheckResult = false;
-       
-           }
+                console.log( "error ..... " + error);
+            }           
+          
+        };
 
-           else
-           {
+        reader.readAsBinaryString(file);
+      
+
+
+      debugger;
+  
+
+         
+         
+
+        
+               
+       
+           
+
+           //else
+           //{
 
 debugger ;
 console.log (CheckResult);
 console.log ("before reading again");
 debugger;
             // Read the file
-        var reader = new FileReader();
+       // var reader = new FileReader();
 
-        reader.readAsDataURL(file);
+      //  reader.readAsDataURL(file);
 
         // The browser has finished reading the file, we can now do something with it...
 
-        reader.onload = function (e) {
+      //  reader.onload = function (e) {
 
             // The browser has finished reading the file, we can now do something with it...
 
-            DocumentbodyContents = e.target.result;
+         //   DocumentbodyContents = e.target.result;
 
             // Split the string at the first comma (removing the base64 prefix)
-            DocumentbodyContents = DocumentbodyContents.substring(DocumentbodyContents.indexOf(',') + 1);
-            debugger;
+          //  DocumentbodyContents = DocumentbodyContents.substring(DocumentbodyContents.indexOf(',') + 1);
+           // debugger;
          
-              var Scan_API_URL = '{{Scan_flow_URL}}';
-              debugger;
+            //  var Scan_API_URL = '{{Scan_flow_URL}}';
+           //   debugger;
 
           //call antivirus URL
-          Call_Virsu_Scan_API(Scan_API_URL
-            ,DocumentbodyContents , BulkActivitytype ,FileName,langcode );
+         // Call_Virsu_Scan_API(Scan_API_URL
+          //  ,DocumentbodyContents , BulkActivitytype ,FileName,langcode );
           
 
        // ,btoa(c));
     
 
         
-         }//end loader
-        }//end else if file content match file type
+        // }//end loader
+        //}//end else if file content match file type
 
 
     }///end if file
@@ -369,16 +419,13 @@ debugger;
            //annotation url
             var fileattachementURL = "~/_entity/annotation/"  + NoteGUID;
       
-         
-
-            //result;
             //download the file from the url
             window.location.replace(fileattachementURL);
         
           } else {
               $('#processingMsg').text("Download was not completed due to system issue, please contact system support");
             var result = this.response;
-           // alert("Error " + result);
+          
           }
         }
       }
@@ -399,14 +446,11 @@ debugger;
          DownloadMessageCompleted  = '<p>Téléchargement terminé.</p>' ;
       }
 
+         //showing download message
           $('#processingMsg').css('display','block');
-
-
         $('#processingMsg').html(downloadMessage);
 
-     // notificationMsg.show("System is downloading site info ...");
-
-     // $('#ll').show();
+   
       var companyid = '{{parentid}}';
 
 
@@ -419,8 +463,7 @@ debugger;
 
       var url = '{{download_flow_URL}}';
       console.log(url);
-      //"https://prod-17.canadacentral.logic.azure.com:443/workflows/900f6e70915a4cddbb65b3c79da14581/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LZveFQ8DXIDobQOPzgoc0LgOcSOPpqVcnCEicN1lvEQ";
-      req.open("POST", url, true);
+       req.open("POST", url, true);
       req.setRequestHeader('Content-Type', 'application/json');
       req.onreadystatechange = function() {
         if (this.readyState === 4) {
@@ -453,10 +496,6 @@ debugger;
             var fileattachementURL = "~/_entity/annotation/"  + NoteGUID;
            
          
-           
-
-
-
             window.location.replace(fileattachementURL);
             // $("#processingMsg").css("display", "none");
             //$("#processingMsg").hide();
@@ -493,7 +532,7 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
         if (this.readyState === 4) {
           req.onreadystatechange = null;
           if (this.status === 200) {
-             //  $('#processingMsg').text(this.response);
+            
 
             var result = this.response;
             var responseMessage ;
@@ -506,14 +545,12 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
             // "At this point you can wait for the notification email and proceed with the next step described from within it. Alternatively, you can leave the Registration process temporarily and the system will return you to the spot where you left off when you return.[B1037]  </p>"
           
           responseMessage = filter_BulkMessageArray("M14" , "en");
-           // + "<ul> <li>" + useremail +"is the email address from the current user’s profile </li> </ul>";
+          
             if ( Lang != 'en-US' && Lang !="en")
             {
-             // responseMessage  =  "<p> Le système CID va maintenant commencer la deuxième des deux séries de validations du fichier en cours de téléchargement. Un e-mail sera envoyé à votre adresse e-mail de " + useremail +"(tel que défini via votre profil utilisateur), indiquant les résultats de la deuxième série de validations et les étapes ultérieures à suivre. <br><br>" +
-             //"À ce stade, vous pouvez attendre l'e-mail de notification et passer à l'étape suivante décrite à partir de celui-ci. Alternativement, vous pouvez quitter temporairement le processus d'inscription et le système vous ramènera à l'endroit où vous vous étiez arrêté à votre retour.[B1037]</p>"
+             
            responseMessage = filter_BulkMessageArray("M14" , "fr");
-           //BMessage[0]["Fr-Message"] + BMessage[0]["code"] ;
-           // + "<ul> <li>" + useremail +" est l'adresse e-mail du profil de l'utilisateur actuel. </li> </ul>";
+           
             }
 
 
@@ -550,7 +587,7 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
 
 function Call_Virsu_Scan_API(url, fileContent, activitytype , excelfilename , language)
 {
-
+console.log ("inside scan api function");
 var companyid = '{{parentid}}';
 var contactid = '{{contactid}}';
 
@@ -564,7 +601,7 @@ if ( language != 'en-US')
         $('#infoMsg').html(scanningMessage);
 
   var acupdate =
-        '{"FileContent" :"' + fileContent  + '", "CompanyId" : "' + companyid + '" , "ActionedBy" :"' + contactid +  '", "ActivityType" : "'+ activitytype +'" ,"ExcelFileName" : "' + excelfilename + '" , "Lang" : "' + language + '" }';
+        '{"FileContent" :"' + btoa(fileContent)  + '", "CompanyId" : "' + companyid + '" , "ActionedBy" :"' + contactid +  '", "ActivityType" : "'+ activitytype +'" ,"ExcelFileName" : "' + excelfilename + '" , "Lang" : "' + language + '" }';
 
 
       var req = new XMLHttpRequest();
@@ -608,6 +645,8 @@ if ( language != 'en-US')
           } else {
               $('#processingMsg').text("Error Please Try again Later.");
             var result = this.response;
+            console.log (this.response);
+            debugger;
            // alert("Error " + result);
           }
         }
@@ -902,51 +941,9 @@ function filter_BulkMessageArray(id , lang)
 //this to fix the bug when user change file extension to .xlsx but file is actually not excel
 //the file type proporty doens show the real file name
 //solution to parse the file as excel and check for error
-   function ExcelToJSON (file) {
+   function ExcelToJSON (file, BulkActivitytype ,FileName,langcode) {
       
-      var flag ;
-      //= true;
-        
-            // Get the dependency, which we've added to node via "npm install file-type":
-       
-        
-        var reader2 = new FileReader();
-        console.log ("reader");
-       debugger ;
-  
     
-        reader2.onload = function(e) {
-             try {
-            var data = e.target.result;
-            console.log(data);
-          
-
-            
-                var workbook = XLSX.read(data, {
-                    type: 'binary'
-                });
-                
-               }
-            catch (error) {
-                   flag = true;
-                return false;
-                console.log( "error ..... " + error);
-            } 
-
-               
-          
-          
-        };
-
-    
-
-        reader2.readAsBinaryString(file);
-         console.log(flag);
-      
-               
-          debugger ;
-
-            return flag;
       }
 
 </script>
