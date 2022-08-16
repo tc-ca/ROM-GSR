@@ -53,7 +53,6 @@ jobs:
   displayName: Deploy_MasterData_to_QA
   dependsOn: Pack_Data_and_Publish_Artifact
   environment: QA-TDG
-  timeoutInMinutes: 3
   cancelTimeoutInMinutes: 2
   pool:
     vmImage: windows-latest
@@ -87,6 +86,7 @@ jobs:
               
               Import-CrmDataFile -CrmConnection "$(ConnectionStringQA)" -Datafile "$(System.ArtifactsDirectory)\PackedData\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
             failOnStderr: true
+            showWarnings: true
 
         - task: PowerShell@2
           name: "Print_Logs"
