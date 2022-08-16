@@ -11,20 +11,35 @@ $(document).ready(function() {
 			var firstRow = $("#Operations .view-grid table tbody").find("tr:first");
 			if(firstRow){
 				var operationId = firstRow.attr('data-id');
+
 				if(operationId){
-					firstRow.find('td').each(function(){
-						var tdElement = $(this);
-								
-						if(tdElement.attr('data-attribute') == 'cid_operationdetailsprovided')
-						{
-							if ($("#HOTI_Details").length <= 0)
-								$("#PreviousButton").parent().after("<div id='HOTI_Details' role='group' class='btn-group entity-action-button'><a href='~/en-US/OperationRegistrationWizard/?id=" + operationId + "&siteid=" + siteid + "'><input type='button' name='further_site_details' value='Further Site Details' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'></a></div>");
+					var extendedSite = IsExtendedSite(operationId, null);							
+					var operationWizardURL = "~/OperationRegistrationWizard/?id=" + operationId + "&siteid=" + siteid + (extendedSite ? "&isExtended=true" : "&isExtended=false");
+
+					if ($("#HOTI_Details").length <= 0)
+						$("#PreviousButton").parent().after("<div id='HOTI_Details' role='group' class='btn-group entity-action-button'><a href='" + operationWizardURL + "'><input type='button' name='further_site_details' value='Further Site Details' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'></a></div>");
 							
-							if((!IsExtendedSite(operationId, null) && SiteHasOperationClasses(operationId, null)) ||
-								(IsExtendedSite(operationId, null) && SiteHasOperationUNNumbers(operationId, null)))
-								$("#NextButton").prop('disabled', false);
-						}
-					})
+					if((! extendedSite && SiteHasOperationClasses(operationId, null)) || (extendedSite && SiteHasOperationUNNumbers(operationId, null))){
+						$("#NextButton").prop('disabled', false);
+					}
+					else{
+						window.location.href = "~/OperationRegistrationWizard/?id=" + operationId;
+					}
+						
+
+					//firstRow.find('td').each(function(){
+						//var tdElement = $(this);
+								
+						//if(tdElement.attr('data-attribute') == 'cid_operationdetailsprovided')
+						//{
+						//	if ($("#HOTI_Details").length <= 0)
+						//		$("#PreviousButton").parent().after("<div id='HOTI_Details' role='group' class='btn-group entity-action-button'><a href='~/OperationRegistrationWizard/?id=" + operationId + "&siteid=" + siteid + "'><input type='button' name='further_site_details' value='Further Site Details' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'></a></div>");
+						//	
+						//	if((! extendedSite && SiteHasOperationClasses(operationId, null)) ||
+						//		(extendedSite && SiteHasOperationUNNumbers(operationId, null)))
+						//		$("#NextButton").prop('disabled', false);
+						//}
+					//})
 				}
 			}
 		});

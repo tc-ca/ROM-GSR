@@ -8,6 +8,12 @@ async function OperationDetailsProvided(operationId, flag) {
 $(document).ready(function () {
     debugger;
 
+    var isExtendedSite = $("#cid_requirementlevel").find(":selected").text();
+
+    if (isExtendedSite == 'Basic') {
+        $('table[data-name="un_numbers_readonly"]').parent().addClass("hidden");
+    }
+
     page_setup();
 
     tdg.c.control_hide("ovs_address_type");

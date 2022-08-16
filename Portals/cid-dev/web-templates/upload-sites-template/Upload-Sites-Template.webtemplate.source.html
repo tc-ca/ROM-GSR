@@ -131,23 +131,25 @@
 {% assign downloadlableEnglishversion = 'English Version' %}
 {% assign downloadlableFrenchVersion = 'French Version' %}
 {% endif %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
   $(document).ready( function() {
 
 
+    //read all messages in json array
     ReadBulkMessagesFile();
+ 
+  
+   debugger ;
 
-//alert ( browser.downloads.showDefaultFolder());
-      //add new submit button
-     //var upload-button ="<label>2B. Start Upload</label><br> <br><input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value={{upload}} class='btn btn-primary' />";
-    // $("div.actions").append(upload-button);
-      // $("div.actions").append("");
-      // $("div.actions").append("<input type='button' id='btn_attachfile_and_scan' name='btn_attachfile_and_scan' value={{upload}} class='submit-btn btn btn-primary form-action-container-left' />");
+//insert lables and buttons
 $(".section[data-name='General']").closest("fieldset").hide();
 $("#AttachFile").after('<br><label>2B. Start Upload</label><br><button type="button" id="btn_attachfile_and_scan" class="submit-btn btn btn-primary form-action-container-left">{{upload}}</button>');
 $("#AttachFile").before('<div id="Div2A" class="input-group input-group-sm"><div class="input-group-btn"><label class="submit-btn btn btn-primary form-action-container-left" for="AttachFile">{{choosefile}}</label></div><input type="text" class="form-control" id="uploadFile" placeholder="Select File Name here" disabled="disabled" /></div>');
 
-//$("#AttachFile").after(upload-button);
+//attach file event
 document.getElementById("AttachFile").onchange = function () {
     console.log("attach file event");
    console.log( this.value);
@@ -166,21 +168,14 @@ AttachButton.classList.add("inputfile");
 //$("div.tr").append();
 
     var BulkActivitytype ='{{companystatus}}';
-    // '100000001' ;
+  
     //intial validation will be executed if this is a redirect call
       call_Inital_validation(langcode , BulkActivitytype);
 
-
-
-
-    $(window).load(function() {
-    //call_Inital_validation();
-    });
-   // var pageURL = window.location.href;
-
+//upload button click event
 $('#btn_attachfile_and_scan').click(function(e)
 {
-    //validation-summary alert alert-error alert-danger alert-block
+    
     //hide validation summary    
     $("Div.validation-summary").css('display', 'none');
     $("Div.alert").css('display', 'none');
@@ -228,9 +223,41 @@ debugger ;
 
   else if (file) {
 
-  
-        // Read the file
 
+      //check excel content match file type
+      debugger ;
+      console.log("before calling excel function");
+      var CheckResult =ExcelToJSON(file)
+      debugger;
+      console.log(CheckResult);
+
+           if (CheckResult == false)
+         {
+
+           //get error message in english
+             var FileTypeErrorMessage = filter_BulkMessageArray("M2" , "en");
+           // check language if not english assign french transation
+             if ( langcode != 'en-US' && langcode !="en")
+             {
+                 //get french message
+             FileTypeErrorMessage = filter_BulkMessageArray("M2" , "fr");
+         
+             }//end check language
+               // console.log( "error ..... " + error);
+                 $('#ErrorMessageDiv').css('display', 'block');
+                 $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  FileTypeErrorMessage + "</p>");
+                 CheckResult = false;
+       
+           }
+
+           else
+           {
+
+debugger ;
+console.log (CheckResult);
+console.log ("before reading again");
+debugger;
+            // Read the file
         var reader = new FileReader();
 
         reader.readAsDataURL(file);
@@ -244,30 +271,27 @@ debugger ;
             DocumentbodyContents = e.target.result;
 
             // Split the string at the first comma (removing the base64 prefix)
-        
-
-
-          // console.log(DocumentbodyContents);
-        
             DocumentbodyContents = DocumentbodyContents.substring(DocumentbodyContents.indexOf(',') + 1);
+            debugger;
+         
+              var Scan_API_URL = '{{Scan_flow_URL}}';
+              debugger;
 
-
-
-            var Scan_API_URL = '{{Scan_flow_URL}}';
-
-
+          //call antivirus URL
           Call_Virsu_Scan_API(Scan_API_URL
-            // ,btoa(c));
             ,DocumentbodyContents , BulkActivitytype ,FileName,langcode );
+          
+
+       // ,btoa(c));
+    
+
+        
+         }//end loader
+        }//end else if file content match file type
 
 
-        // call_Metadefender_Api();
-
-
-
-
-        }//end loader
     }///end if file
+
    }// end check file length
 
 
@@ -844,8 +868,7 @@ function htmldecode (str){
             return response.json();
             
         })
-         .then(jsondata =>(storeMessageListInSession(jsondata)))
-        ;
+         .then(jsondata =>(storeMessageListInSession(jsondata)));
      
      
      
@@ -874,6 +897,58 @@ function filter_BulkMessageArray(id , lang)
    debugger;
    return responseMessage ;
 }
+
+//read execl file to check if file type in the extensionis correct
+//this to fix the bug when user change file extension to .xlsx but file is actually not excel
+//the file type proporty doens show the real file name
+//solution to parse the file as excel and check for error
+   function ExcelToJSON (file) {
+      
+      var flag ;
+      //= true;
+        
+            // Get the dependency, which we've added to node via "npm install file-type":
+       
+        
+        var reader2 = new FileReader();
+        console.log ("reader");
+       debugger ;
+  
+    
+        reader2.onload = function(e) {
+             try {
+            var data = e.target.result;
+            console.log(data);
+          
+
+            
+                var workbook = XLSX.read(data, {
+                    type: 'binary'
+                });
+                
+               }
+            catch (error) {
+                   flag = true;
+                return false;
+                console.log( "error ..... " + error);
+            } 
+
+               
+          
+          
+        };
+
+    
+
+        reader2.readAsBinaryString(file);
+         console.log(flag);
+      
+               
+          debugger ;
+
+            return flag;
+      }
+
 </script>
 <div class="container ">
     <div class="container">

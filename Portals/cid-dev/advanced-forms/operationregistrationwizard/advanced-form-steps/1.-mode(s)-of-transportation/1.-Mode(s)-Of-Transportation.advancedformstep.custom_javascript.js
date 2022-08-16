@@ -4,6 +4,15 @@
 $(document).ready(function () {
 	debugger;
 
+	var urlParams = new URLSearchParams(window.location.search);
+
+	if (urlParams.has('siteid')) {
+		var siteId = urlParams.get('siteid');
+
+		var siteWizardURL = "~/SiteRegistrationWizard/?id=" + siteId;
+
+		$("#NextButton").parent().before("<div id='previousButton' role='group' class='btn-group entity-action-button'><a href='" + siteWizardURL + "'><input type='button' value='Previous' onclick='' id='PreviousButton' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>");
+	}
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 });
