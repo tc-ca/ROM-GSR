@@ -41,42 +41,55 @@ jobs:
       ArtifactName: 'PackedData'
       publishLocation: 'Container'
 
-- job: Deploy_MasterData_to_QA
+# - job: Deploy_MasterData_to_QA
+#   dependsOn: Pack_Data_and_Publish_Artifact
+#   pool:
+#     vmImage: windows-latest
+#   steps:
+#  -  checkout: none
+
+- deployment: Deploy
+  displayName: Deploy_MasterData_to_QA
   dependsOn: Pack_Data_and_Publish_Artifact
+  environment: QA-TDG
+  timeoutInMinutes: 500
+  cancelTimeoutInMinutes: 2
   pool:
     vmImage: windows-latest
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - checkout: none
 
-  steps:
-  - checkout: none
+        - task: DownloadBuildArtifacts@1
+          inputs:
+            buildType: 'current'
+            downloadType: 'single'
+            artifactName: 'PackedData'
+            downloadPath: '$(System.ArtifactsDirectory)'
 
-  - task: DownloadBuildArtifacts@1
-    inputs:
-      buildType: 'current'
-      downloadType: 'single'
-      artifactName: 'PackedData'
-      downloadPath: '$(System.ArtifactsDirectory)'
+        - task: PowerShell@2
+          name: "Import_Data_QA"
+          continueOnError: true
+          inputs:
+            targetType: 'inline'
+            script: |
+              Install-Module -Name Microsoft.Xrm.Tooling.ConfigurationMigration -force
+              
+              If(!(test-path "$(logWriteDirectory)"))
+              {
+                  Write-Host "$(logWriteDirectory) folder does not exists."
+                  New-Item -ItemType Directory -Force -Path "$(logWriteDirectory)"
+                  Write-Host "$(logWriteDirectory) folder created."
+              }
+              
+              Import-CrmDataFile -CrmConnection "$(ConnectionStringQA)" -Datafile "$(System.ArtifactsDirectory)\PackedData\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
 
-  - task: PowerShell@2
-    name: "Import_Data"
-    continueOnError: true
-    inputs:
-      targetType: 'inline'
-      script: |
-        Install-Module -Name Microsoft.Xrm.Tooling.ConfigurationMigration -force
-        
-        If(!(test-path "$(logWriteDirectory)"))
-        {
-            Write-Host "$(logWriteDirectory) folder does not exists."
-            New-Item -ItemType Directory -Force -Path "$(logWriteDirectory)"
-            Write-Host "$(logWriteDirectory) folder created."
-        }
-        
-        Import-CrmDataFile -CrmConnection "$(ConnectionStringDev2)" -Datafile "$(System.ArtifactsDirectory)\PackedData\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
-
-  - task: PowerShell@2
-    name: "Print_Logs"
-    inputs:
-      targetType: 'inline'
-      script: |
-        cd $(Build.SourcesDirectory)/ConfigurationMigration/Logs/import
-        cat *
+        - task: PowerShell@2
+          name: "Print_Logs"
+          inputs:
+            targetType: 'inline'
+            script: |
+              cd $(Build.SourcesDirectory)/ConfigurationMigration/Logs/import
+              cat *
