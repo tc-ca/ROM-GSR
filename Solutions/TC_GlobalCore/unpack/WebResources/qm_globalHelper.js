@@ -461,6 +461,15 @@
         formContext.getAttribute(attr).setSubmitMode("always");
     }
 
+    function SetHeaderLookup(formContext, attr, entityType, id, name) {
+        var setLookupValue = new Array();
+        setLookupValue[0] = new Object();
+        setLookupValue[0].id = id;
+        setLookupValue[0].entityType = entityType;
+        if (name) setLookupValue[0].name = name;
+        formContext.getControl(attr).getAttribute().setValue(setLookupValue);
+        formContext.getAttribute(attr).setSubmitMode("always");
+    }
 
     /****************************************************************************************
     CHOICE
@@ -543,6 +552,49 @@
             }
         }
     }
+
+    ///to restore option set to default send arrayOfIntValues as null
+    /**
+       * Use to filter array multiple times on the same form and make sure arryOfOptions is an original list of options
+       * to restore option set to default send arrayOfIntValues as null    
+       * @param {FORM Context} formContext
+       * @param {OptionSet attribute logical name} attr
+       * @param {Array of Object - options} arryOfOptions
+       * @param {Array of OptionSetValues (integers)} arrayOfIntValues
+       * @param {Flag of arrayOfIntValues's utilization: keep or revove given values} isValuesToKeep
+   */
+    function filterOptionSetUsingOrigin(formContext, attr, arryOfOptions, arrayOfIntValues = null, isValuesToKeep = true) {
+        var oSet = formContext.getControl(attr);
+        if (!oSet) return;
+
+        var options = arryOfOptions;
+        if (isValuesToKeep) {
+            var optionsToKeep = new Array();
+            for (var i = 0; i < options.length; i++) {
+
+                var toKeep = false;
+                for (var j = 0; j < arrayOfIntValues.length; j++) {
+                    if (options[i].value == arrayOfIntValues[j]) {
+                        toKeep = true;
+                        break;
+                    }
+                }
+                if (toKeep) optionsToKeep.push(options[i]);
+            }
+
+            oSet.clearOptions();
+            for (var i = 0; i < optionsToKeep.length; i++) {
+                oSet.addOption(optionsToKeep[i]);
+            }
+        }
+        else {
+            for (var i = 0; i < arrayOfIntValues.length; i++) {
+
+                oSet.removeOption(arrayOfIntValues[i]);
+            }
+        }
+    }
+    
 
     /****************************************************************************************
     CONTROLS and ATTRIBUTES
@@ -761,6 +813,7 @@
         SwitchFormByName: SwitchFormByName,
         RemoveOptionSetOption: RemoveOptionSetOption,
         SetLookup: SetLookup,
+        SetHeaderLookup: SetHeaderLookup,
         GetCurrentUserId: GetCurrentUserId,
         GetCurrentUserName: GetCurrentUserName,
         GetCurrentRecordId: GetCurrentRecordId,
@@ -778,6 +831,7 @@
         isNetworkAvailable: isNetworkAvailable,
         isOffline: isOffline,
         getFiscalYearFromCurrentDate: getFiscalYearFromCurrentDate,
+        filterOptionSetUsingOrigin: filterOptionSetUsingOrigin,
     };
 
     //********************public methods end***************

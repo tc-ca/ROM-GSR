@@ -36,7 +36,15 @@
                           <label description="Operation Type" languagecode="1033" />
                           <label description="Type d'opération" languagecode="1036" />
                         </labels>
-                        <control id="ovs_operationtype" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="ovs_operationtype" disabled="false" uniqueid="{d2059b79-807e-7732-da4e-29a74a6d0aca}" />
+                        <control id="ovs_operationtype" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="ovs_operationtype" disabled="true" uniqueid="{d2059b79-807e-7732-da4e-29a74a6d0aca}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{8a7305d5-7975-109d-e83a-24c66c488739}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="Registration Type" languagecode="1033" />
+                        </labels>
+                        <control id="fdr_registrationtype" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="fdr_registrationtype" disabled="false" />
                       </cell>
                     </row>
                     <row>
@@ -561,6 +569,48 @@
             </column>
           </columns>
         </tab>
+        <tab name="tab_sr" id="ea9d008b-dee2-467c-939f-b3a651043462" IsUserDefined="0" locklevel="0" showlabel="true">
+          <labels>
+            <label description="Service Requests" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section name="tab_6_section_1" id="add751e0-a481-4ab8-ba93-0dc3473bfd9e" IsUserDefined="0" locklevel="0" showlabel="false" showbar="false" layout="varwidth" celllabelalignment="Left" celllabelposition="Left" columns="1" labelwidth="115">
+                  <labels>
+                    <label description="New Section" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell locklevel="0" id="{a3aa5c5c-6be6-4258-be00-85a3cf628f9c}" rowspan="4" colspan="1" auto="false" showlabel="false">
+                        <labels>
+                          <label description="New SG control 1660310985698" languagecode="1033" />
+                        </labels>
+                        <control indicationOfSubgrid="true" id="Subgrid_sr" classid="{E7A81278-8635-4D9E-8D4D-59480B391C5B}">
+                          <parameters>
+                            <RecordsPerPage>20</RecordsPerPage>
+                            <AutoExpand>Fixed</AutoExpand>
+                            <EnableQuickFind>true</EnableQuickFind>
+                            <EnableViewPicker>false</EnableViewPicker>
+                            <EnableChartPicker>false</EnableChartPicker>
+                            <ChartGridMode>Grid</ChartGridMode>
+                            <TargetEntityType>fdr_servicerequest</TargetEntityType>
+                            <ViewId>{7D4F25CD-401A-ED11-B83E-000D3A0C8551}</ViewId>
+                            <ViewIds>{0FBA53A8-BEAF-461F-ABE1-6132A3FBDEE2},{7D4F25CD-401A-ED11-B83E-000D3A0C8551}</ViewIds>
+                            <RelationshipName>fdr_ServiceRequest_Operation_ovs_MOCRegis</RelationshipName>
+                          </parameters>
+                        </control>
+                      </cell>
+                    </row>
+                    <row />
+                    <row />
+                    <row />
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
       </tabs>
       <header id="{20384781-d055-490c-8deb-ed175a012815}" celllabelposition="Top" columns="1111" labelwidth="115" celllabelalignment="Left">
         <rows>
@@ -617,7 +667,7 @@
         </rows>
       </footer>
       <Navigation>
-        <NavBar></NavBar>
+        <NavBar />
         <NavBarAreas>
           <NavBarArea Id="Info">
             <Titles>
@@ -666,8 +716,6 @@
       <DisplayConditions Order="3" FallbackForm="false">
         <Role Id="{278A7197-D1C0-EC11-983E-0022483DB1C0}" />
         <Role Id="{51CB2F5B-C7AE-EC11-983E-000D3A84ADBC}" />
-        <Role Id="{627090ff-40a3-4053-8790-584edc5be201}" />
-        <Role Id="{119f245c-3cc8-4b62-b31c-d1a046ced15d}" />
       </DisplayConditions>
     </form>
     <IsCustomizable>1</IsCustomizable>

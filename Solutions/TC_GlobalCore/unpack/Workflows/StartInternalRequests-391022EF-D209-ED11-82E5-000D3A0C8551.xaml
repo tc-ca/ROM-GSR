@@ -1,14 +1,14 @@
-<Activity x:Class="XrmWorkflow391022efd209ed1182e5000d3a0c8551" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mcwc="clr-namespace:Microsoft.Crm.Workflow.ClientActivities;assembly=Microsoft.Crm.Workflow, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" xmlns:mxs="clr-namespace:Microsoft.Xrm.Sdk;assembly=Microsoft.Xrm.Sdk, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" xmlns:mxsq="clr-namespace:Microsoft.Xrm.Sdk.Query;assembly=Microsoft.Xrm.Sdk, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" xmlns:mxswa="clr-namespace:Microsoft.Xrm.Sdk.Workflow.Activities;assembly=Microsoft.Xrm.Sdk.Workflow, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" xmlns:s="clr-namespace:System;assembly=mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" xmlns:srs="clr-namespace:System.Runtime.Serialization;assembly=System.Runtime.Serialization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" xmlns:this="clr-namespace:" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity x:Class="XrmWorkflow00000000000000000000000000000000" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mcwc="clr-namespace:Microsoft.Crm.Workflow.ClientActivities;assembly=Microsoft.Crm.Workflow, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" xmlns:mxs="clr-namespace:Microsoft.Xrm.Sdk;assembly=Microsoft.Xrm.Sdk, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" xmlns:mxsq="clr-namespace:Microsoft.Xrm.Sdk.Query;assembly=Microsoft.Xrm.Sdk, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" xmlns:mxswa="clr-namespace:Microsoft.Xrm.Sdk.Workflow.Activities;assembly=Microsoft.Xrm.Sdk.Workflow, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" xmlns:s="clr-namespace:System;assembly=mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" xmlns:srs="clr-namespace:System.Runtime.Serialization;assembly=System.Runtime.Serialization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" xmlns:this="clr-namespace:" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
     <x:Property Name="InputEntities" Type="InArgument(scg:IDictionary(x:String, mxs:Entity))" />
     <x:Property Name="CreatedEntities" Type="InArgument(scg:IDictionary(x:String, mxs:Entity))" />
   </x:Members>
-  <this:XrmWorkflow391022efd209ed1182e5000d3a0c8551.InputEntities>
+  <this:XrmWorkflow00000000000000000000000000000000.InputEntities>
     <InArgument x:TypeArguments="scg:IDictionary(x:String, mxs:Entity)" />
-  </this:XrmWorkflow391022efd209ed1182e5000d3a0c8551.InputEntities>
-  <this:XrmWorkflow391022efd209ed1182e5000d3a0c8551.CreatedEntities>
+  </this:XrmWorkflow00000000000000000000000000000000.InputEntities>
+  <this:XrmWorkflow00000000000000000000000000000000.CreatedEntities>
     <InArgument x:TypeArguments="scg:IDictionary(x:String, mxs:Entity)" />
-  </this:XrmWorkflow391022efd209ed1182e5000d3a0c8551.CreatedEntities>
+  </this:XrmWorkflow00000000000000000000000000000000.CreatedEntities>
   <mva:VisualBasic.Settings>Assembly references and imported namespaces for internal implementation</mva:VisualBasic.Settings>
   <mxswa:Workflow>
     <mxswa:ActivityReference AssemblyQualifiedName="Microsoft.Crm.Workflow.Activities.ConditionSequence, Microsoft.Crm.Workflow, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" DisplayName="ConditionStep1">
@@ -57,7 +57,7 @@
                       <Assign x:TypeArguments="s:Guid" To="[CreatedEntities(&quot;primaryEntity#Temp&quot;).Id]" Value="[InputEntities(&quot;primaryEntity&quot;).Id]" />
                       <mcwc:SetFieldRequiredLevel ControlId="fdr_submissiondate" ControlType="standard" DisplayName="SetFieldRequiredLevelStep4" Entity="[InputEntities(&quot;primaryEntity&quot;)]" EntityName="fdr_servicerequest" RequiredLevel="Required" />
                     </Sequence>
-                    <Sequence DisplayName="SetAttributeValueStep2: Set Admin Review">
+                    <Sequence DisplayName="SetAttributeValueStep2: Set Submitted">
                       <Sequence.Variables>
                         <Variable x:TypeArguments="x:Object" Name="SetAttributeValueStep2_1" />
                       </Sequence.Variables>
@@ -66,7 +66,7 @@
                       <mxswa:ActivityReference AssemblyQualifiedName="Microsoft.Crm.Workflow.Activities.EvaluateExpression, Microsoft.Crm.Workflow, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" DisplayName="EvaluateExpression">
                         <mxswa:ActivityReference.Arguments>
                           <InArgument x:TypeArguments="x:String" x:Key="ExpressionOperator">CreateCrmType</InArgument>
-                          <InArgument x:TypeArguments="s:Object[]" x:Key="Parameters">[New Object() { Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.OptionSetValue, "794600006", "Status" }]</InArgument>
+                          <InArgument x:TypeArguments="s:Object[]" x:Key="Parameters">[New Object() { Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.OptionSetValue, "794600010", "Status" }]</InArgument>
                           <InArgument x:TypeArguments="s:Type" x:Key="TargetType">
                             <mxswa:ReferenceLiteral x:TypeArguments="s:Type" Value="mxs:OptionSetValue" />
                           </InArgument>
@@ -83,7 +83,7 @@
                       <mcwc:SetAttributeValue DisplayName="SetAttributeValueStep2" Entity="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" EntityName="fdr_servicerequest" />
                       <Assign x:TypeArguments="mxs:Entity" To="[InputEntities(&quot;primaryEntity&quot;)]" Value="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" />
                     </Sequence>
-                    <Sequence DisplayName="SetDisplayModeStep2: Keep Admin review status">
+                    <Sequence DisplayName="SetDisplayModeStep2: Keep Submitted status">
                       <mcwc:SetDisplayMode ControlId="statuscode" ControlType="standard" Entity="[InputEntities(&quot;primaryEntity&quot;)]" EntityName="fdr_servicerequest" IsReadOnly="True" />
                     </Sequence>
                   </sco:Collection>
@@ -96,7 +96,7 @@
           <mxswa:ActivityReference AssemblyQualifiedName="Microsoft.Crm.Workflow.Activities.EvaluateExpression, Microsoft.Crm.Workflow, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" DisplayName="EvaluateExpression">
             <mxswa:ActivityReference.Arguments>
               <InArgument x:TypeArguments="x:String" x:Key="ExpressionOperator">CreateCrmType</InArgument>
-              <InArgument x:TypeArguments="s:Object[]" x:Key="Parameters">[New Object() { Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.Boolean, "True" }]</InArgument>
+              <InArgument x:TypeArguments="s:Object[]" x:Key="Parameters">[New Object() { Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.Boolean, "true" }]</InArgument>
               <InArgument x:TypeArguments="s:Type" x:Key="TargetType">
                 <mxswa:ReferenceLiteral x:TypeArguments="s:Type" Value="x:Boolean" />
               </InArgument>
@@ -117,6 +117,18 @@
                     </Sequence>
                     <Sequence DisplayName="SetDisplayModeStep3: Unlock status for saved requests">
                       <mcwc:SetDisplayMode ControlId="statuscode" ControlType="standard" Entity="[InputEntities(&quot;primaryEntity&quot;)]" EntityName="fdr_servicerequest" IsReadOnly="False" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep7: Lock SR type">
+                      <mcwc:SetDisplayMode ControlId="fdr_srtype" ControlType="standard" Entity="[InputEntities(&quot;primaryEntity&quot;)]" EntityName="fdr_servicerequest" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep8: Lock Registration Type">
+                      <mcwc:SetDisplayMode ControlId="fdr_containertype" ControlType="standard" Entity="[InputEntities(&quot;primaryEntity&quot;)]" EntityName="fdr_servicerequest" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep_SetDisplayModeStep8_10: Lock Site">
+                      <mcwc:SetDisplayMode ControlId="fdr_site" ControlType="standard" Entity="[InputEntities(&quot;primaryEntity&quot;)]" EntityName="fdr_servicerequest" IsReadOnly="True" />
+                    </Sequence>
+                    <Sequence DisplayName="SetDisplayModeStep9: Lock Operation">
+                      <mcwc:SetDisplayMode ControlId="fdr_operation" ControlType="standard" Entity="[InputEntities(&quot;primaryEntity&quot;)]" EntityName="fdr_servicerequest" IsReadOnly="True" />
                     </Sequence>
                   </sco:Collection>
                 </mxswa:ActivityReference.Properties>

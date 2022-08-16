@@ -75,7 +75,7 @@
                 // transfer control back to parent form
                 //parent.AddressComplete_address1_line1();
 
-                $("#address1_line1").val(sessionStorage.getItem("Line1"));
+                parent.$("#address1_line1").val(sessionStorage.getItem("Line1"));
             } catch (e) { }
 
             debugger;
@@ -164,6 +164,9 @@
     <script type="text/javascript">
         $(document).ready(function () {
             debugger;
+
+            // read/hide
+            parent.$('#address1_stateorprovince').attr("readonly", true);
 
             document.querySelector('input[list="address_list"]').addEventListener('input', onInput);
             AddressComplete.removeOptions('address_list');
@@ -357,8 +360,25 @@
                 return sessionStorage.getItem(field);
             },
 
-            ovs_lld_province: function (stateorprovince) {
+            ovs_lld_province: function (stateorprovince, selected_language) {
                 debugger;
+
+                // let currentVal = $("#ovs_lld_province option:selected").val();
+
+                if (selected_language = "en-US") {
+                    var list = ["AB", "BC", "MB", "NB", "NL", "NT", "NS", "NT", "ON", "PE", "QC", "SK", "YT"];
+                }
+                else {
+                    var list = ["AB", "BC", "MB", "NB", "NL", "NT", "NS", "NT", "ON", "PE", "QC", "SK", "YT"];
+                }
+
+                //var value = list.find(stateorprovince);
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i] == stateorprovince) {
+                        parent.$("#ovs_lld_province").val(i);
+                        break;
+                    }
+                }
             },
 
             Selected: function (data) {
@@ -377,8 +397,6 @@
                 sessionStorage.setItem("CountryName", item_e.CountryName);
                 sessionStorage.setItem("Label", item_e.Label);
 
-                this.ovs_lld_province(item_e.ProvinceCode);
-
                 try {
                     // transfer control back to parent form
                     //window.parent.Xrm.Page.AddressComplete_Selected;
@@ -394,6 +412,7 @@
                     parent.$("#address1_country").val(item_e.CountryName);
                     parent.$("#cid_addressoverwritten").val(0);
                     
+                    this.ovs_lld_province(item_e.ProvinceCode, selected_language);
 
                     // set address1
                     document.getElementById('address1_line1').value = item_e.Line1;

@@ -6,7 +6,7 @@
     <isquickfindquery>0</isquickfindquery>
     <isprivate>0</isprivate>
     <isdefault>0</isdefault>
-    <savedqueryid>{a83a7ea4-ba7e-ec11-8d20-0022483dbafc}</savedqueryid>
+    <savedqueryid>{8e1f1c91-5017-ed11-b83f-000d3a84cfdd}</savedqueryid>
     <layoutxml>
       <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
         <row name="result" id="ovs_mocregistrationid">
@@ -21,8 +21,10 @@
           <cell name="ovs_cepsampling_n1" width="100" />
           <cell name="ovs_cepsampling_n2" width="100" />
           <cell name="ovs_ovs_cepsampling_n2sum" width="100" />
-          <cell name="ovs_cepind" width="100" />
           <cell name="ovs_cepsampling_randomlyselectedbysystem" width="100" />
+          <cell name="ovs_cepsampling_newselectionbysystem" width="100" />
+          <cell name="ovs_cepind" width="100" />
+          <cell name="ovs_cepsampling_repeatedcepselection" width="100" />
           <cell name="statecode" width="100" />
           <cell name="a_4c5f151cc68c412ca6a53afb172ea5b7.statecode" width="100" />
           <cell name="modifiedon" width="100" />
@@ -48,24 +50,25 @@
           <attribute name="ovs_cepind" />
           <attribute name="ovs_cepsampling_randomlyselectedbysystem" />
           <attribute name="statecode" />
-          <filter type="and">
-            <filter type="or">
-              <condition attribute="ovs_cepsampling_randomlyselectedbysystem" operator="eq" value="1" />
-              <condition attribute="ovs_cepind" operator="eq" value="1" />
-            </filter>
-          </filter>
           <attribute name="modifiedon" />
           <order attribute="ovs_cepsampling_strataname" descending="false" />
           <order attribute="modifiedon" descending="true" />
+          <filter type="and">
+            <filter type="or">
+              <condition attribute="ovs_cepsampling_newselectionbysystem" operator="eq" value="1" />
+            </filter>
+          </filter>
           <link-entity alias="a_4c5f151cc68c412ca6a53afb172ea5b7" name="account" to="ovs_siteid" from="accountid" link-type="outer" visible="false">
             <attribute name="statecode" />
           </link-entity>
+          <attribute name="ovs_cepsampling_repeatedcepselection" />
+          <attribute name="ovs_cepsampling_newselectionbysystem" />
         </entity>
       </fetch>
     </fetchxml>
     <IntroducedVersion>1.0.0.0</IntroducedVersion>
     <LocalizedNames>
-      <LocalizedName description="CEP - Selection" languagecode="1033" />
+      <LocalizedName description="CEP - Selections (After Replacements)" languagecode="1033" />
     </LocalizedNames>
   </savedquery>
 </savedqueries>
