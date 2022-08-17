@@ -71,7 +71,6 @@ jobs:
 
         - task: PowerShell@2
           name: "Import_Data_QA"
-          continueOnError: true
           inputs:
             targetType: 'inline'
             script: |
@@ -90,6 +89,7 @@ jobs:
 
         - task: PowerShell@2
           name: "Print_Logs"
+          condition: always()
           inputs:
             targetType: 'inline'
             script: |
