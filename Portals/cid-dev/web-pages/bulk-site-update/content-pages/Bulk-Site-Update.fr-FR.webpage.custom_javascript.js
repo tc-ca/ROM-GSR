@@ -1,11 +1,11 @@
 //
-// Web Page-Bulk Site Upload.js
+// Web Page-Bulk Site Update.js
 //
 $(document).ready(function () {
     debugger;
 
-    weblink_hide("/company_dashboard/");
-    weblink_hide("/Bulk_Site_Update/");
+    weblink_hide("/RegistrationWizard/");
+    weblink_hide("/Bulk_Site_Upload/");
 });
 
 function weblink_hide(url) {

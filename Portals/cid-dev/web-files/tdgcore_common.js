@@ -1,5 +1,6 @@
 //To apply the Asterisk(*) Sign using custom JS:
 //$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
+// August 16, 2022 Tony Nguyen
 
 // tdgcore_common.js
 
@@ -35,6 +36,20 @@ if (typeof (tdg.c) == "undefined") {
             var f = document.getElementById("WebResource_address_complete");
             var c = f.contentWindow;
             c.targetFunction();
+        },
+
+        weblink_hide: function (url) {
+            debugger;
+            $("#navbar li.weblink")
+                .each(function () {
+                    debugger;
+                    var item = $(this).find("a")[0];
+                    var href = item.href;
+                    if (href.indexOf(url) != -1) {
+                        $(this).remove();
+                        return;
+                    }
+                });
         },
 
         btn_save_new_setup: function () {
