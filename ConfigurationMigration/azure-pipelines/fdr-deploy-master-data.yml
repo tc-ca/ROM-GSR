@@ -85,9 +85,11 @@ jobs:
         }
         
         Import-CrmDataFile -CrmConnection "$(ConnectionStringQA)" -Datafile "$(System.ArtifactsDirectory)\PackedData\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
+      warningPreference: 'stop'
+      verbosePreference: 'stop'
+      debugPreference: 'stop'
       failOnStderr: true
       showWarnings: true
-      pwsh: true
 
   - task: PowerShell@2
     name: "Print_Logs"
