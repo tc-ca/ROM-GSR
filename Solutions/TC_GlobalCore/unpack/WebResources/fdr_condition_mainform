@@ -4,9 +4,9 @@
 var Condition_Main = (function (window, document)
 { 
 
-    const VALUE_CERT = 794600000;
+    //const VALUE_CERT = 794600000;
     const VALUE_PERSONNEL = 794600002;
-    const VALUE_LOCATION = 794600001;
+    //const VALUE_LOCATION = 794600001;
 
     const FIELD_CONDITION_TYPE = "fdr_conditiontype";
     const FIELD_PERSONNEL_TRAINING_ENGLISH = "fdr_personneltrainingenglish";
@@ -19,41 +19,41 @@ var Condition_Main = (function (window, document)
 
         var fieldsRequired = true;
 
-        if (conditionType == VALUE_CERT)
-        {
-            glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Certification", true);
+        //if (conditionType == VALUE_CERT)
+        //{
+        //    glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Certification", true);
 
-            glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Personnel", false);
-            glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Location", false);
+        //    glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Personnel", false);
+        //    glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Location", false);
 
-            glHelper.SetRequiredLevel(formContext, FIELD_AUTHORIZED_LOCATION_LOOKUP, false);
+        //    glHelper.SetRequiredLevel(formContext, FIELD_AUTHORIZED_LOCATION_LOOKUP, false);
             
-        }
+        //}
 
-        if (conditionType == VALUE_LOCATION)
-        {
-            glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Certification", false);
+        //if (conditionType == VALUE_LOCATION)
+        //{
+        //    glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Certification", false);
 
-            glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Personnel", false);
-            glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Location", true);
+        //    glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Personnel", false);
+        //    glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Location", true);
 
-            glHelper.SetRequiredLevel(formContext, FIELD_AUTHORIZED_LOCATION_LOOKUP, true);
+        //    glHelper.SetRequiredLevel(formContext, FIELD_AUTHORIZED_LOCATION_LOOKUP, true);
 
-        }
+        //}
 
-        if (conditionType == VALUE_PERSONNEL)
-        {
-            glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Certification", false);
+        //if (conditionType == VALUE_PERSONNEL)
+        ////{
+        //    glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Certification", false);
 
             glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Personnel", true);
-            glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Location", false);
+        //    glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Location", false);
 
             getEnvironmentVariable(formContext, FIELD_PERSONNEL_TRAINING_ENGLISH,"fdr_PersonnelTrainingEnglishText");
             getEnvironmentVariable(formContext, FIELD_PERSONNEL_TRAINING_FRENCH, "fdr_PersonnelTrainingFrenchText");
 
-            glHelper.SetRequiredLevel(formContext, FIELD_AUTHORIZED_LOCATION_LOOKUP, false);
+            //glHelper.SetRequiredLevel(formContext, FIELD_AUTHORIZED_LOCATION_LOOKUP, false);
 
-        }
+        //}
 
     }
 
@@ -94,10 +94,17 @@ var Condition_Main = (function (window, document)
             formType = glHelper.GetFormType(formContext);
 
             var conditionType = formContext.getAttribute(FIELD_CONDITION_TYPE);
-            conditionType.removeOnChange(Condition_Main.ConditionType_OnChange);
-            conditionType.addOnChange(Condition_Main.ConditionType_OnChange);
 
-            toggleRequiredLevel(formContext);
+            //conditionType.removeOnChange(Condition_Main.ConditionType_OnChange);
+            //conditionType.addOnChange(Condition_Main.ConditionType_OnChange);
+
+
+            glHelper.SetSectionVisibility(formContext, "tabGeneral", "section_Personnel", true);
+
+            getEnvironmentVariable(formContext, FIELD_PERSONNEL_TRAINING_ENGLISH, "fdr_PersonnelTrainingEnglishText");
+            getEnvironmentVariable(formContext, FIELD_PERSONNEL_TRAINING_FRENCH, "fdr_PersonnelTrainingFrenchText");
+
+            //toggleRequiredLevel(formContext);
 
 
         },

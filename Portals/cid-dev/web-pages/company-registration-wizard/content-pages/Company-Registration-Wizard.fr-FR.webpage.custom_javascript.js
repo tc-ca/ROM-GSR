@@ -5,17 +5,6 @@ $(document).ready(function () {
 	debugger;
 
 	header_setup();
-
-	//var companyName = '{{user.parentcustomerid.name }}';
-
-	//if (companyName) {
-	//	var company_status = "{{entities.account[user.parentcustomerid.id].cid_cidcompanystatus.value}}";
-
-	//	if (company_status == '100000005') {
-	//		window.location.href = "~/company_dashboard";
-	//	}
-	//}
-
 	var instructionBtns = $(".instruction-btn");
 
 	if (instructionBtns.length > 0) {
@@ -32,7 +21,15 @@ $(document).ready(function () {
 	});
 });
 
-function header_setup() {
+function header_setup()
+{
+	//var cid_cidcompanystatus = '{{account.cid_cidcompanystatus.code}}';
+
+	//tdg.c.weblink_hide("/RegistrationWizard/");
+	//tdg.c.weblink_hide("/Bulk_Site_Upload/");
+	//tdg.c.weblink_hide("/company_dashboard/");
+	//tdg.c.weblink_hide("/Bulk_Site_Update/");
+
 	var code = "m000009";
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);

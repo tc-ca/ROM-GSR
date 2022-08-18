@@ -118,27 +118,27 @@ if (window.jQuery) {
                     errorMessage = tdg.error_message.message("m000017"); // "You cannot proceed before adding UN Number(s).";
                     validation = false;
                 }
-            }
+          
+                if (!validation) {
+                    $('#ValidationSummaryEntityFormView div').remove();
+                    var validationSection = $('#ValidationSummaryEntityFormView');
 
-            if (!validation) {
-                $('#ValidationSummaryEntityFormView div').remove();
-                var validationSection = $('#ValidationSummaryEntityFormView');
+                    validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
+                    validationSection.show();
+                    $('#alertMessages').focus();
+                }
+                else {
+                    OperationDetailsProvided(operationId, true);
+                    if (urlParams.has('siteid')) {
 
-                validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
-                validationSection.show();
-                $('#alertMessages').focus();
-            }
-            else {
-                OperationDetailsProvided(operationId, true);
-                if (urlParams.has('siteid')) {
+                        var siteId = urlParams.get('siteid');
 
-                    var siteId = urlParams.get('siteid');
-
-                    if (urlParams.has('in_year')) {
-                        window.location.href = "~/en-US/my-sites/in-year-site/?id=" + siteId;
-                    }
-                    else {
-                        window.location.href = "~/en-US/SiteRegistrationWizard/?id=" + siteId;
+                        if (urlParams.has('in_year')) {
+                            window.location.href = "~/my-sites/in-year-site/?id=" + siteId;
+                        }
+                        else {
+                            window.location.href = "~/SiteRegistrationWizard/?id=" + siteId;
+                        }
                     }
                 }
             }

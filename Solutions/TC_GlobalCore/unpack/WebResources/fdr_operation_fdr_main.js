@@ -15,6 +15,7 @@ var Operation_FDR_main = (function (window, document) {
     const FIELD_SITE = "ovs_siteid";
     const FIELD_PrimaryContact = "fdr_primarycontact";
     const FIELD_OPERATION_TYPE = "ovs_operationtype";
+    const FIELD_REGISTRATION_TYPE = "fdr_registrationtype";
     const FIELD_MOC_REGISTRATION_ID = "ovs_mocregistrationname";
     const FIELD_MOC_FACILITY_TYPE = "ovs_operationfacilitytype";
     const FIELD_MOC_REGISTRATION_EXPIRY_DATE = "ovs_registrationexpiry";
@@ -42,7 +43,7 @@ var Operation_FDR_main = (function (window, document) {
             fieldsRequired = false;
 
         glHelper.SetRequiredLevel(formContext, FIELD_SITE, true);
-        glHelper.SetRequiredLevel(formContext, FIELD_OPERATION_TYPE, fieldsRequired);
+        //glHelper.SetRequiredLevel(formContext, FIELD_OPERATION_TYPE, fieldsRequired);
         //glHelper.SetRequiredLevel(formContext, FIELD_MOC_FACILITY_TYPE, fieldsRequired);
         glHelper.SetRequiredLevel(formContext, FIELD_MOC_REGISTRATION_EXPIRY_DATE, fieldsRequired);
         glHelper.SetRequiredLevel(formContext, FIELD_MOC_REGISTRATION_ID, fieldsRequired);
@@ -114,6 +115,12 @@ var Operation_FDR_main = (function (window, document) {
                 globalObj = window.top.QuickCreateHelper;
                 globalObj.formContext = formContext;
             }
+
+            //For FDR only we need to make the Operation Type not required and the Registration Type required
+            //later on this will be done on the entity level for all applications.
+            glHelper.SetRequiredLevel(formContext, FIELD_OPERATION_TYPE, false);
+            glHelper.SetRequiredLevel(formContext, FIELD_REGISTRATION_TYPE, true);
+
 
             //Toggle required level based on Operation Type
             toggleRequiredLevel(formContext);

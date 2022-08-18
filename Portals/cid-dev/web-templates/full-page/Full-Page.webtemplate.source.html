@@ -1,6 +1,33 @@
 {% extends 'Layout 1 Column' %}
 
 {% block main %}
+<script type="text/javascript" src="~/tdgcore_common.js"></script>
+<script type="text/javascript" src="~/tdgcore_message.js"></script>
+
+<script>
+    debugger;
+
+    tdg.c.weblink_hide("/company_dashboard/");
+    tdg.c.weblink_hide("/Bulk_Site_Update/");
+
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
+    function weblink_hide(url) {
+    debugger;
+    $("#navbar li.weblink")
+        .each(function () {
+            debugger;
+            var item = $(this).find("a")[0];
+            var href = item.href;
+            if (href.indexOf(url) != -1) {
+                $(this).remove();
+                return;
+            }
+        });
+}
+</script>
+
   {% include 'Page Copy' %}
   {% include 'Child Navigation' showdescriptions: true %}
   {% if page.adx_entitylist %}
@@ -15,13 +42,4 @@
     {% webform id: page.adx_webform.id %}
   {% endif %}
 
-<script type="text/javascript" src="~/tdgcore_common.js" ></script>
-<script type="text/javascript" src="~/tdgcore_message.js" ></script>
-
-<script>
-	var selected_language = '{{website.selected_language.code}}';
-    sessionStorage.setItem("selected_language", selected_language);
-</script>
-
 {% endblock %}
-

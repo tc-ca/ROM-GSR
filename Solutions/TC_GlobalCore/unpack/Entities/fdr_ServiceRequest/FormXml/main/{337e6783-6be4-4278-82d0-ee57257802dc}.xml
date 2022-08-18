@@ -267,44 +267,6 @@
                     </row>
                   </rows>
                 </section>
-                <section name="{ff127529-3ddd-471a-b98e-ea0e68fb1e34}_section_5" showlabel="true" showbar="false" locklevel="0" id="{e8c0ccd0-aa40-730a-2cec-40c3162db0a3}" IsUserDefined="0" layout="varwidth" columns="1" labelwidth="115" celllabelalignment="Left" celllabelposition="Left">
-                  <labels>
-                    <label description="EQUIVALENCY CERTIFICATES" languagecode="1033" />
-                  </labels>
-                  <rows>
-                    <row>
-                      <cell id="{cb6477de-a422-8d62-67ce-590713e81228}" showlabel="false" colspan="1" auto="false" rowspan="6">
-                        <labels>
-                          <label description="Request Equivalency Certificate (Service Request)" languagecode="1033" />
-                        </labels>
-                        <control id="grdEquivalencyCertificates" classid="{E7A81278-8635-4d9e-8D4D-59480B391C5B}" indicationOfSubgrid="true">
-                          <parameters>
-                            <ViewId>{7F272FDB-6E12-4C73-9CCD-8634970E4D35}</ViewId>
-                            <IsUserView>false</IsUserView>
-                            <RelationshipName>fdr_fdr_servicerequest_fdr_requestequivalencycertificate_servicerequest</RelationshipName>
-                            <TargetEntityType>fdr_requestequivalencycertificate</TargetEntityType>
-                            <AutoExpand>Fixed</AutoExpand>
-                            <EnableQuickFind>false</EnableQuickFind>
-                            <EnableViewPicker>false</EnableViewPicker>
-                            <ViewIds>{7F272FDB-6E12-4C73-9CCD-8634970E4D35}</ViewIds>
-                            <EnableJumpBar>false</EnableJumpBar>
-                            <ChartGridMode>All</ChartGridMode>
-                            <VisualizationId />
-                            <IsUserChart>false</IsUserChart>
-                            <EnableChartPicker>true</EnableChartPicker>
-                            <RecordsPerPage>4</RecordsPerPage>
-                            <HeaderColorCode>#F3F3F3</HeaderColorCode>
-                          </parameters>
-                        </control>
-                      </cell>
-                    </row>
-                    <row />
-                    <row />
-                    <row />
-                    <row />
-                    <row />
-                  </rows>
-                </section>
                 <section name="General_section_5" showlabel="true" showbar="false" locklevel="0" id="{0177d059-8488-5abe-b87d-d8e7258d9250}" IsUserDefined="0" layout="varwidth" columns="1" labelwidth="115" celllabelalignment="Left" celllabelposition="Left">
                   <labels>
                     <label description="CONDITIONS" languagecode="1033" />
@@ -645,11 +607,10 @@
                 <label description="" languagecode="1033" />
               </labels>
             </cell>
-            <cell id="{c9770b7b-1b21-696d-b05d-b51e65892957}" showlabel="true" locklevel="0">
+            <cell locklevel="0" id="{59081760-7884-46c7-9e99-8cd79057d683}" showlabel="false">
               <labels>
-                <label description="Service Request ID" languagecode="1033" />
+                <label description="" languagecode="1033" />
               </labels>
-              <control id="header_fdr_name" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="fdr_name" disabled="true" uniqueid="{e4423e30-d6a3-ae44-c4cb-0e9495252b70}" />
             </cell>
             <cell id="{16577e36-9094-41c1-a8bc-205877982c56}" locklevel="0" colspan="1" rowspan="1">
               <labels>
@@ -668,13 +629,30 @@
               <labels>
                 <label description="Operation" languagecode="1033" />
               </labels>
-              <control id="header_fdr_operation" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="fdr_operation" disabled="false" uniqueid="{7bd819d2-036c-e28a-ee7d-4e1dec424450}" />
+              <control id="header_fdr_operation" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="fdr_operation" disabled="false" uniqueid="{7bd819d2-036c-e28a-ee7d-4e1dec424450}">
+                <parameters>
+                  <DependentAttributeName>fdr_servicerequest.fdr_site</DependentAttributeName>
+                  <DependentAttributeType>account</DependentAttributeType>
+                  <FilterRelationshipName>ovs_MOCRegistration_Site</FilterRelationshipName>
+                  <DisableViewPicker>true</DisableViewPicker>
+                </parameters>
+              </control>
+            </cell>
+            <cell locklevel="0" id="{f986cd00-c111-4c0e-aa7a-90ea212046ec}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
             </cell>
             <cell id="{a1bfbb70-f34d-4870-90a2-dc52fc01596d}" locklevel="0" colspan="1" rowspan="1" showlabel="true">
               <labels>
                 <label description="Current Operation Status" languagecode="1033" />
               </labels>
               <control id="header_fdr_operationstatus" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="fdr_operationstatus" disabled="true" uniqueid="{422d0d64-e279-4740-4eec-b987431a946b}" />
+            </cell>
+            <cell id="{8833338b-987e-dec7-a542-bedec67e6b98}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
             </cell>
             <cell id="{7e0b3029-ed87-49a8-91e8-e857f71e6e35}" locklevel="0" colspan="1" rowspan="1">
               <labels>
@@ -690,10 +668,11 @@
               </labels>
               <control id="header_statecode" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="statecode" disabled="false" />
             </cell>
-            <cell locklevel="0" id="{2d4dfa2e-c74a-4f5e-9351-1a81a1da1fcf}" showlabel="false">
+            <cell id="{c9770b7b-1b21-696d-b05d-b51e65892957}" showlabel="true" locklevel="0" colspan="1" rowspan="1">
               <labels>
-                <label description="" languagecode="1033" />
+                <label description="Service Request ID" languagecode="1033" />
               </labels>
+              <control id="header_fdr_name" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="fdr_name" disabled="true" uniqueid="{e4423e30-d6a3-ae44-c4cb-0e9495252b70}" />
             </cell>
             <cell locklevel="0" id="{ef08cacb-db2a-4b6b-9cf8-2aaaa6433ebf}" showlabel="false">
               <labels>
@@ -725,7 +704,7 @@
         </rows>
       </footer>
       <Navigation>
-        <NavBar></NavBar>
+        <NavBar />
         <NavBarAreas>
           <NavBarArea Id="Info">
             <Titles>
@@ -805,10 +784,22 @@
       </controlDescriptions>
       <formLibraries>
         <Library name="qm_globalHelper.js" libraryUniqueId="{98524737-ebc2-8612-bc84-7b6c344c3817}" />
+        <Library name="fdr_SR_Main.js" libraryUniqueId="{1f688366-b202-426e-8e64-c8b576eb54e3}" />
       </formLibraries>
       <DisplayConditions Order="0" FallbackForm="true">
         <Everyone />
       </DisplayConditions>
+      <events>
+        <event name="onload" application="false" active="false">
+          <Handlers>
+            <Handler functionName="SR_main.OnLoad" libraryName="fdr_SR_Main.js" handlerUniqueId="{5e1a0b3f-7f5d-4f43-9d3f-5abb2e11caf3}" enabled="true" parameters="" passExecutionContext="true" />
+          </Handlers>
+          <dependencies>
+            <dependency id="statecode" />
+            <dependency id="statuscode" />
+          </dependencies>
+        </event>
+      </events>
     </form>
     <IsCustomizable>1</IsCustomizable>
     <CanBeDeleted>1</CanBeDeleted>

@@ -367,12 +367,7 @@ var WO_TDG_main = (function (window, document) {
             //glHelper.SetRequiredLevel(formContext, "ovs_mocoperationid", true);
             //pre-filter Oversith Type and Region
             operation.fireOnChange();
-
-            //Lock the source if user is not using the planner app
-            //========================================================
-            if (!isPlannerRole()) {
-                glHelper.SetDisabled(formContext, "ovs_source", true);
-            }
+                        
         },
 
         SubgridSafetyAssessment_OnLoad: function (executionContext) {
@@ -480,8 +475,6 @@ var WO_TDG_main = (function (window, document) {
                 isInspector = appName.indexOf("Inspections") != -1 || appName.indexOf("Inspector") != -1;
                 isAnalytic = appName.indexOf("Analytics") != -1;
 
-
-
                 if (isAnalytic || isPlanner) return;
 
                 if (formType == 1) {
@@ -508,7 +501,7 @@ var WO_TDG_main = (function (window, document) {
                                 if (userSettings.languageId == 1033)
                                     glHelper.SetLookup(formContext, "ovs_rational", "ovs_tyrational", ovs_tyrationalid, ovs_rationalelbl);
 
-                                readOnlyArray = new Array("ovs_rational", "msdyn_closedby", "msdyn_timeclosed", "ovs_qcreviewcomments", "ovs_qcreviewcompletedind", "msdyn_workordertype");
+                                readOnlyArray = new Array("ovs_rational", "msdyn_closedby", "msdyn_timeclosed", "ovs_qcreviewcomments", "ovs_qcreviewcompletedind", "msdyn_workordertype", "ovs_source");
 
                                 if (readOnlyArray.length > 0)
                                     for (var i = 0; i < readOnlyArray.length; i++) {
@@ -532,24 +525,23 @@ var WO_TDG_main = (function (window, document) {
                         //    break;
                         case "TDG Management / Gestion TMD":
                             if (isPlanned) {
-                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_mocoperationid", "ovs_oversighttype", "ovs_fiscalyear", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed"); //"ovs_fiscalquarter", "msdyn_serviceterritory",
+                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_mocoperationid", "ovs_oversighttype", "ovs_fiscalyear", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed", "ovs_source"); //"ovs_fiscalquarter", "msdyn_serviceterritory",
                                 editableArray = new Array("qm_remote");
                             }
                             else {
-                                readOnlyArray = new Array("msdyn_workordertype", "ovs_rational");
+                                readOnlyArray = new Array("msdyn_workordertype", "ovs_rational", "ovs_source");
                                 editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_serviceterritory");
                             }
                             break;
                         case "Inspector Offline":
                         case "TDG Inspections / Inspections TMD":
                             if (isPlanned && formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
-                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_mocoperationid", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed", "ovs_qcreviewcomments", "ovs_qcreviewcompletedind", "ovs_primaryinspector",); //"msdyn_serviceterritory",
+                                readOnlyArray = new Array("msdyn_serviceaccount", "ovs_mocoperationid", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed", "ovs_qcreviewcomments", "ovs_qcreviewcompletedind", "ovs_primaryinspector", "ovs_source"); //"msdyn_serviceterritory",
                                 editableArray = new Array("qm_remote");
                             }
                             else {
-                                readOnlyArray = new Array("msdyn_workordertype", "ovs_rational");
+                                readOnlyArray = new Array("msdyn_workordertype", "ovs_rational", "ovs_source");
                                 editableArray = new Array("msdyn_serviceaccount", "ovs_mocoperationid", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_serviceterritory"); //"ovs_rational" - cannot set editable => will set all fields editable
-
                             }
 
                             ////hiddenArray = new Array("msdyn_serviceterritory", "msdyn_workordertype");

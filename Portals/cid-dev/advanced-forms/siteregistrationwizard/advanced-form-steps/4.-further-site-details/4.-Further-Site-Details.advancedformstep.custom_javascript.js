@@ -19,11 +19,11 @@ $(document).ready(function() {
 					if ($("#HOTI_Details").length <= 0)
 						$("#PreviousButton").parent().after("<div id='HOTI_Details' role='group' class='btn-group entity-action-button'><a href='" + operationWizardURL + "'><input type='button' name='further_site_details' value='Further Site Details' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'></a></div>");
 							
-					if((! extendedSite && SiteHasOperationClasses(operationId, null)) || (extendedSite && SiteHasOperationUNNumbers(operationId, null))){
+					if((!extendedSite && SiteHasOperationClasses(operationId, null)) || (extendedSite && SiteHasOperationClasses(operationId, null) && SiteHasOperationUNNumbers(operationId, null))){
 						$("#NextButton").prop('disabled', false);
 					}
 					else{
-						window.location.href = "~/OperationRegistrationWizard/?id=" + operationId;
+						window.location.href = operationWizardURL;
 					}
 						
 
