@@ -4,22 +4,14 @@
 $(document).ready(function () {
 	debugger;
 
-	var companyId = $("#EntityFormView_EntityID").val();
-	var filter = "parentaccountid/Id eq (guid'" + companyId + "')";
-	var data = ExecuteQuery("Validation_UnclaimedSites", filter);
+	//var companyId = $("#EntityFormView_EntityID").val();
+	//var filter = "parentaccountid/Id eq (guid'" + companyId + "')";
+	//var data = ExecuteQuery("Validation_UnclaimedSites", filter);
 
-	if (data.length > 0) {
-		//var message = "The Sites shown in the datagrid below, with a Site Claim of 'Site Claim Pending', " +
-		//	"are understood to belong to your company.\n" +
-		//	"Using the button (V) to the right of each of those Sites, please choose one of following actions:\n" +
-		//	"- Set as My Site Active\n" +
-		//	"- Set and Attest as My Site Inactive\n" +
-		//	"- Set and Attest Not My Site\n";
-		message = tdg.error_message.message("m000013");
-
-		tdg.c.dialog_OK(data.length + "-" + message);
-		//alert(data.length + "-" + message);
-	}
+	//if (data.length > 0) {
+	//	message = tdg.error_message.message("m000013");
+	//	tdg.c.dialog_OK(data.length + "-" + message);
+	//}
 
 	$(".entity-grid").on("loaded", function () {
 		$(".info").hide();
@@ -61,6 +53,26 @@ $(document).ready(function () {
 				}
 			});
 		});
+
+		debugger;
+
+		// popup message
+		var k_existing_sites = "already_have_existing_sites";
+		var existing_sites = sessionStorage.getItem(k_existing_sites);
+		var row_count = tdg.grid.rows("CompanySites");
+		if ((row_count > 0) && (existing_sites == null)) {
+			var m000020 = tdg.error_message.message("m000020");
+			var m000021 = tdg.error_message.message("m000021");
+			m000021 = m000021.replaceAll("\n", "<br>");
+
+			tdg.c.dialog_OK(m000020);
+			try {
+				// change instruction text
+				tdg.c.page_instructions(m000021);
+            } catch (e) {}
+
+			sessionStorage.setItem(k_existing_sites, row_count);
+        }
 	});
 
 	webFormClientValidate = function () {
@@ -92,28 +104,8 @@ $(document).ready(function () {
 
 		if (!validation) {
 			tdg.c.error_message_advanced_form(errorMessage, true);
-
-			//$('#ValidationSummaryEntityFormView div').remove();
-			//var validationSection = $('#ValidationSummaryEntityFormView');
-			//validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
-			//validationSection.show();
-			//$('#alertMessages').focus();
 		}
 		return validation;
 	}
 });
 
-function sample_dialog_YN(message) {
-	debugger;
-
-	tdg.c.dialog_OK(message);
-	//dialog_YN(message, (ans) => {
-	//	if (ans) {
-	//		// console.log("Yes");
-	//		Call_Check_User_Response_flow(newrecordid, 'yes', '', Language);
-	//	} else {
-	//		Call_Check_User_Response_flow(newrecordid, 'No', '', Language);
-	//		//console.log("No");
-	//	}
-	//});
-}

@@ -1,6 +1,6 @@
 //To apply the Asterisk(*) Sign using custom JS:
 //$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
-// August 16, 2022 Tony Nguyen
+// August 17, 2022 Tony Nguyen
 
 // tdgcore_common.js
 
@@ -39,10 +39,8 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         weblink_hide: function (url) {
-            debugger;
             $("#navbar li.weblink")
                 .each(function () {
-                    debugger;
                     var item = $(this).find("a")[0];
                     var href = item.href;
                     if (href.indexOf(url) != -1) {
@@ -50,6 +48,12 @@ if (typeof (tdg.c) == "undefined") {
                         return;
                     }
                 });
+        },
+
+        page_instructions: function (message) {
+            // $(".instructions").eq(0).find("p")[0].innerHTML = m000021;
+            var value = "<div class='alert alert-info' style='background:#d7faff'>" + message + "</div>";
+            $(".instructions").html(value);
         },
 
         btn_save_new_setup: function () {
@@ -490,6 +494,20 @@ if (typeof (tdg.c) == "undefined") {
             } else {
                 return false;
             }
+        }
+    }
+}
+
+// tdg.grid
+if (typeof (tdg.grid) == "undefined") {
+    tdg.grid = {
+        // 	$(".entity-grid").on("loaded", function () { 	
+        //      var rows = tdg.grid.rows("grid_name);
+        //  });
+        rows: function (name) {
+            var value = "#" + name + " table tbody tr"
+            var row_count = $(value).length;
+            return row_count;
         }
     }
 }
