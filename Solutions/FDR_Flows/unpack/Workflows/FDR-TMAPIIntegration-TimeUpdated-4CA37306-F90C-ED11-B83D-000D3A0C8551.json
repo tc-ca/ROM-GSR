@@ -1,0 +1,183 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_dataverse_fdrsp"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_tmapi_v1"
+        },
+        "api": {
+          "name": "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc",
+          "logicalName": "fdr_tmapi-20v1-20connector"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_hour_or_minute_field_is_updated_on_Service_Request_Service_task": {
+          "metadata": {
+            "operationMetadataId": "2f8d9010-30b0-44b6-8244-661499c94009"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "fdr_servicerequestservicetask",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "fdr_hour,fdr_minute"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Get_Service_Request_By_Id": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "f7482a12-a314-4f50-a48b-315825778e9d"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "fdr_servicerequests",
+              "recordId": "@triggerOutputs()?['body/_fdr_servicerequest_value']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Try": {
+          "actions": {
+            "Update_Service_Task_Sync_Field_to_True": {
+              "runAfter": {
+                "Update_an_existing_Time_Entry": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "ce5398d2-21ae-4517-b993-84144a8f5596"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "fdr_servicerequestservicetasks",
+                  "recordId": "@triggerOutputs()?['body/fdr_servicerequestservicetaskid']",
+                  "item/fdr_syncwithtmapi": true
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Update_an_existing_Time_Entry": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "0e09cc6a-7571-4c81-b25d-5b0342b242f4"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc",
+                  "operationId": "timeentryUpdateTimeEntry",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc"
+                },
+                "parameters": {
+                  "id": "@triggerOutputs()?['body/fdr_tmtimeentryid']",
+                  "body/ServiceRequestId": "@outputs('Get_Service_Request_By_Id')?['body/fdr_mtoa_sr_id']",
+                  "body/Hours": [
+                    {
+                      "HourId": "@triggerOutputs()?['body/fdr_tmhourid']",
+                      "Quantity": "@triggerOutputs()?['body/fdr_totaltimeinhours']",
+                      "TypeCode": "REG",
+                      "TimeEntryId": "@triggerOutputs()?['body/fdr_tmtimeentryid']",
+                      "StatusId": 3
+                    }
+                  ]
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "Get_Service_Request_By_Id": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4c0c0132-fc21-4932-86c5-2a03f85e72cf"
+          },
+          "type": "Scope"
+        },
+        "Catch": {
+          "actions": {
+            "Update_Service_Task_Sync_Field_to_False": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "ce5398d2-21ae-4517-b993-84144a8f5596"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "fdr_servicerequestservicetasks",
+                  "recordId": "@triggerOutputs()?['body/fdr_servicerequestservicetaskid']",
+                  "item/fdr_syncwithtmapi": false
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "Try": [
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "287ef2c6-faca-430d-9bc8-27b1ef67e555"
+          },
+          "type": "Scope"
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,171 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_dataverse_fdrsp"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_tmapi_v1"
+        },
+        "api": {
+          "name": "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc",
+          "logicalName": "fdr_tmapi-20v1-20connector"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_Approve_field_on_Service_Request_Service_Tasks_is_Modified": {
+          "metadata": {
+            "operationMetadataId": "1239fbb5-ed5b-4bc0-bb0b-4577de7a6944"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "fdr_servicerequestservicetask",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "fdr_approvetime"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Try": {
+          "actions": {
+            "Set_a_set_of_hours_to_approved_or_rejected_status": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "f81b99ba-cf4d-4d87-b9bc-20ef08b71b72"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc",
+                  "operationId": "timeentryApproveOrRejectHours",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc"
+                },
+                "parameters": {
+                  "body/HourIds": [
+                    "@triggerOutputs()?['body/fdr_tmhourid']"
+                  ],
+                  "body/Approve": "@triggerOutputs()?['body/fdr_approvetime']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Update_Service_Task_Sync_Field_to_True": {
+              "runAfter": {
+                "Set_a_set_of_hours_to_approved_or_rejected_status": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "ce5398d2-21ae-4517-b993-84144a8f5596"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "fdr_servicerequestservicetasks",
+                  "recordId": "@triggerOutputs()?['body/fdr_servicerequestservicetaskid']",
+                  "item/fdr_syncwithtmapi": true
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "82e3af13-315d-4c71-a25c-18638e01608c"
+          },
+          "type": "Scope"
+        },
+        "Catch": {
+          "actions": {
+            "Update_Service_Task_Sync_Field_to_False": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "ce5398d2-21ae-4517-b993-84144a8f5596"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "fdr_servicerequestservicetasks",
+                  "recordId": "@triggerOutputs()?['body/fdr_servicerequestservicetaskid']",
+                  "item/fdr_syncwithtmapi": false
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Terminate": {
+              "runAfter": {
+                "Update_Service_Task_Sync_Field_to_False": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "182345f6-7101-4e11-8a15-ae16d0b58b02"
+              },
+              "type": "Terminate",
+              "inputs": {
+                "runStatus": "Failed",
+                "runError": {
+                  "code": "@{outputs('Set_a_set_of_hours_to_approved_or_rejected_status')?['body/StatusCode']}",
+                  "message": "@{body('Set_a_set_of_hours_to_approved_or_rejected_status')}"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Try": [
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "09cb40c0-fd98-494d-b0dc-5406f2ed83c0"
+          },
+          "type": "Scope"
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}
