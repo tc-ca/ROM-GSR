@@ -1,0 +1,486 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_dataverse_fdrsp"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_tmapi_v1"
+        },
+        "api": {
+          "name": "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc",
+          "logicalName": "fdr_tmapi-20v1-20connector"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_Service_Request_Service_Task_is_added": {
+          "metadata": {
+            "operationMetadataId": "856460a1-ca3a-46d5-bcf5-dcda0769a0c4"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 1,
+              "subscriptionRequest/entityname": "fdr_servicerequestservicetask",
+              "subscriptionRequest/scope": 4
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Get_Service_Request_By_Id": {
+          "runAfter": {
+            "Get_Service_Request_Service_Task_Type": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f7482a12-a314-4f50-a48b-315825778e9d"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "fdr_servicerequests",
+              "recordId": "@triggerOutputs()?['body/_fdr_servicerequest_value']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Get_User_by_Id": {
+          "runAfter": {
+            "Get_Service_Request_By_Id": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "18f6ec4f-28c4-47cf-ab49-5d27da7fbb65"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "systemusers",
+              "recordId": "@outputs('Get_Service_Request_By_Id')?['body/_ownerid_value']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_variable_serviceId_": {
+          "runAfter": {
+            "Get_User_by_Id": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3f64da31-907a-4a38-a908-b5aeab5c9995"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "serviceId",
+                "type": "integer",
+                "value": 251
+              }
+            ]
+          },
+          "description": "251 is the id for FDR"
+        },
+        "Switch_Statement,_initialize_data_based_on_task_type": {
+          "runAfter": {
+            "Submitted_for_Approval_Status": [
+              "Succeeded"
+            ]
+          },
+          "cases": {
+            "Case_-_Admin_Review": {
+              "case": "794600006",
+              "actions": {
+                "Set_activityId_(admin_review)": {
+                  "runAfter": {},
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "activityId",
+                    "value": 10
+                  },
+                  "description": "Admin Review maps to TM Type Id 10"
+                },
+                "Set_hours_(admin_review)": {
+                  "runAfter": {
+                    "Set_activityId_(admin_review)": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Hours",
+                    "value": 0
+                  },
+                  "description": "Since Trigger is on create, no hours has been set yet in system, therefore set to 0"
+                }
+              }
+            },
+            "Case_-_Technical_Review": {
+              "case": "794600002",
+              "actions": {
+                "Set_activityId_(technical_review)": {
+                  "runAfter": {},
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "activityId",
+                    "value": 11
+                  },
+                  "description": "Technical Review maps to TM Type Id 11"
+                },
+                "Set_hours_(technical_review)": {
+                  "runAfter": {
+                    "Set_activityId_(technical_review)": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "hours",
+                    "value": 0
+                  },
+                  "description": "Since Trigger is on create, no hours has been set yet in system, therefore set to 0"
+                }
+              }
+            },
+            "Case_-_Pending_Inspection": {
+              "case": "794600003",
+              "actions": {
+                "Set_activityId_(pending_inspection)": {
+                  "runAfter": {},
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "activityId",
+                    "value": 17
+                  },
+                  "description": "Pending Inspection maps to TM Type Id 17"
+                },
+                "Set_variable": {
+                  "runAfter": {
+                    "Set_activityId_(pending_inspection)": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "hours",
+                    "value": "@triggerOutputs()?['body/fdr_totaltimeinhours']"
+                  },
+                  "description": "Pending Inspection Service Task will have hours set when it is created since the value is pulled from work order time tracking"
+                }
+              }
+            },
+            "Case_-_Post_Inspection": {
+              "case": "794600004",
+              "actions": {
+                "Set_activityId_(post_inspection)": {
+                  "runAfter": {},
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "activityId",
+                    "value": 23
+                  },
+                  "description": "Post Inspection maps to TM Type Id 23"
+                },
+                "Set_hours_(post_inspection)": {
+                  "runAfter": {
+                    "Set_activityId_(post_inspection)": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "hours",
+                    "value": 0
+                  },
+                  "description": "Since Trigger is on create, no hours has been set yet in system, therefore set to 0"
+                }
+              }
+            }
+          },
+          "default": {
+            "actions": {}
+          },
+          "expression": "@outputs('Get_Service_Request_Service_Task_Type')?['body/fdr_lookupcode']",
+          "metadata": {
+            "operationMetadataId": "879d0eb6-79a4-46ee-b618-db2175f2f4d6"
+          },
+          "type": "Switch"
+        },
+        "Get_Service_Request_Service_Task_Type": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "09ba6ee4-b400-4ed9-b2f6-64c6f90c1878"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "msdyn_servicetasktypes",
+              "recordId": "@triggerOutputs()?['body/_fdr_tasktype_value']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_activityId": {
+          "runAfter": {
+            "Initialize_variable_serviceId_": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ad22467c-9618-4c43-bed9-cc124715633e"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "activityId",
+                "type": "integer"
+              }
+            ]
+          }
+        },
+        "Try": {
+          "actions": {
+            "Add_a_new_Time_Entry": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "12468216-707e-4ee3-a098-1bfab22482b8"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc",
+                  "operationId": "timeentryAddTimeEntry",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc"
+                },
+                "parameters": {
+                  "serviceRequestId": "@outputs('Get_Service_Request_By_Id')?['body/fdr_mtoa_sr_id']",
+                  "dateTime": "@triggerOutputs()?['body/createdon']",
+                  "user": "@outputs('Get_User_by_Id')?['body/domainname']",
+                  "serviceId": "@variables('serviceId')",
+                  "activityId": "@variables('activityId')"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Add_hours_to_a_Time_Entry": {
+              "runAfter": {
+                "Add_a_new_Time_Entry": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "08df8996-bc55-4926-927c-7404c9974985"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc",
+                  "operationId": "timeentryAddHours",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc"
+                },
+                "parameters": {
+                  "id": "@outputs('Add_a_new_Time_Entry')?['body/Id']",
+                  "quantity": "@variables('hours')",
+                  "typeCode": "REG",
+                  "isBillable": false
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Update_an_existing_Time_Entry": {
+              "runAfter": {
+                "Add_hours_to_a_Time_Entry": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b2fbcaad-03b7-4e46-adf6-cbe9bc77d7a8"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc",
+                  "operationId": "timeentryUpdateTimeEntry",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc"
+                },
+                "parameters": {
+                  "id": "@outputs('Add_a_new_Time_Entry')?['body/Id']",
+                  "body/ServiceRequestId": "@outputs('Get_Service_Request_By_Id')?['body/fdr_mtoa_sr_id']",
+                  "body/Hours": [
+                    {
+                      "HourId": "@outputs('Add_hours_to_a_Time_Entry')?['body/HourId']",
+                      "TypeCode": "REG",
+                      "TimeEntryId": "@outputs('Add_a_new_Time_Entry')?['body/Id']",
+                      "StatusId": "@variables('Submitted for Approval')"
+                    }
+                  ]
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Update_Service_Request_Service_Tasks": {
+              "runAfter": {
+                "Update_an_existing_Time_Entry": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "c404eee9-6b9c-4cb9-a710-0d69cb177dd6"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "fdr_servicerequestservicetasks",
+                  "recordId": "@triggerOutputs()?['body/fdr_servicerequestservicetaskid']",
+                  "item/fdr_syncwithtmapi": true,
+                  "item/fdr_tmhourid": "@outputs('Add_hours_to_a_Time_Entry')?['body/HourId']",
+                  "item/fdr_tmtimeentryid": "@outputs('Add_a_new_Time_Entry')?['body/Id']"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "description": "Update entity with TimeEntryId and HourId from response for reference."
+            }
+          },
+          "runAfter": {
+            "Switch_Statement,_initialize_data_based_on_task_type": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "85363abf-bfa0-41ea-9caf-281c5fb16976"
+          },
+          "type": "Scope"
+        },
+        "Catch": {
+          "actions": {
+            "Update_Service_Task_Sync_Field_to_False": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "ce5398d2-21ae-4517-b993-84144a8f5596"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "fdr_servicerequestservicetasks",
+                  "recordId": "@triggerOutputs()?['body/fdr_servicerequestservicetaskid']",
+                  "item/fdr_syncwithtmapi": false
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "Try": [
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6b31ac3e-50c6-4bb0-ad10-ce0cd213171d"
+          },
+          "type": "Scope"
+        },
+        "Initialize_variable": {
+          "runAfter": {
+            "Initialize_activityId": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a25850fe-22d8-468a-a652-e8f80ff4ae53"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "hours",
+                "type": "float",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "Submitted_for_Approval_Status": {
+          "runAfter": {
+            "Initialize_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6a372073-66a6-4926-9c64-9d9fea3abbbd"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Submitted for Approval",
+                "type": "integer",
+                "value": 3
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}
