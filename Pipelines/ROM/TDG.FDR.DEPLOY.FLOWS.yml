@@ -8,7 +8,7 @@ variables:
   - name: PowerPlatformSPN_Dev
     value: 'TDG CORE DEV 2'
   - name: PowerPlatformSPN_QA 
-    value: 'TDG CORE QA 2' #using basic authentication
+    value: 'TDG CORE QA' #using basic authentication
   # - name: PowerPlatformSPN_ACC
   #   value: 'ROM ACC TDG'
   # - name: PowerPlatformSPN_ACCDATA
@@ -58,6 +58,7 @@ stages:
     StageName: 'BuildAndPublishArtifacts'
     dependsOn: 
     - 'UpdateBuildVersion'
+
 #QA
 - template: templates/stage/DeployFlowSolution.yml  # Template reference
   parameters:
@@ -65,8 +66,8 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_QA)
     PowerPlatformSPN_Dev: $(PowerPlatformSPN_Dev) #used to update solution version after successful deployment to QA
     UseDeploymentSettingsFile: true
-    DeploymentSettingsFile: 'Pipelines\ROM\connection_references\FDR_QA-2_Deploy_settings.json'
-    Environment: 'QA-2-TDG'
+    DeploymentSettingsFile: 'Pipelines\ROM\connection_references\FDRFlows_SolutionSettings_QA.json'
+    Environment: 'QA-TDG'
     StageName: 'DeployManagedSolutionToQA'
     DeleteSolution: false
     dependsOn: 
