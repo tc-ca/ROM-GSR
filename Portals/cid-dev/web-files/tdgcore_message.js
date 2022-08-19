@@ -25,45 +25,43 @@ if (typeof (tdg.message) == "undefined") {
                 "or all at once via Excel, by choosing the <b>[Bulk Add/Update]</b> button._FR";
 
             var m000021_EN = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of " +
-                "the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested " +
-                "before the Bulk option can be chosen.\n\n" +
+                "the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.\n\n" +
                 "To add additional Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> " +
                 "button to add all new Sites at once via Excel.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
                 "If required, choose the <b>[Previous]</b> button below to return to the Attest Company screen."
             var m000021_FR = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of " +
-                "the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested " +
-                "before the Bulk option can be chosen.\n\n" +
+                "the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.\n\n" +
                 "To add additional Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> " +
                 "button to add all new Sites at once via Excel.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
                 "If required, choose the <b>[Previous]</b> button below to return to the Attest Company screen._FR"
 
-            var m000022_EN = "To add Sites individually, choose the[+Add] button. Alternatively, choose the[Bulk Add/Update] button to add all new Sites at once via Excel.\n\n" +
-                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the[V] button at the end.\n\n" +
-                "Choose the[Next] button, once all Sites are added and attested.\n\n" +
-                "If required, choose the[Previous] button below to return to the Attest Company screen."
-            var m000022_FR = "To add Sites individually, choose the [+Add] button. Alternatively, choose the [Bulk Add/Update] button to add all new Sites at once via Excel.\n\n" +
-                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the [V] button at the end.\n\n" +
-                "Choose the [Next] button, once all Sites are added and attested.\n\n" +
-                "If required, choose the [Previous] button below to return to the Attest Company screen._FR"
+            var m000022_EN = "To add Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.\n\n" +
+                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
+                "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
+                "If required, choose the <b>[Previous]</b> button below to return to the Attest Company screen."
+            var m000022_FR = "To add Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.\n\n" +
+                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
+                "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
+                "If required, choose the <b>[Previous]</b> button below to return to the Attest Company screen._FR"
 
-            var m000023_EN = "To add Sites individually, choose the [+Add] button below.\n\n" +
-                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the [V] button at the end.\n\n" +
-                "Alternatively, choose the [Bulk Add/Update] button to edit existing, and add new, Sites all at once via Excel.\n\n" +
-                "If required, choose the 'Deactivate / Reactivate' option via the [V] button at the end of a Site's row.\n\n" +
+            var m000023_EN = "To add Sites individually, choose the <b>[+Add]</b> button below.\n\n" +
+                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
+                "Alternatively, choose the <b>[Bulk Add/Update]</b> button to edit existing, and add new, Sites all at once via Excel.\n\n" +
+                "If required, choose the 'Deactivate / Reactivate' option via the <b>[V]</b> button at the end of a Site's row.\n\n" +
                 "Note:\n" +
-                "- [Bulk Add/Update] will appear to the right of the [+Add] button\n" +
-                "- For In Year / Annual Compliance, the [V] options will be 'Open Site Details', 'Deactivate / Reactivate'"
-            var m000023_FR = "To add Sites individually, choose the [+Add] button below.\n\n" +
-                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the [V] button at the end.\n\n" +
-                "Alternatively, choose the [Bulk Add/Update] button to edit existing, and add new, Sites all at once via Excel.\n\n" +
-                "If required, choose the 'Deactivate / Reactivate' option via the [V] button at the end of a Site's row.\n\n" +
+                "- <b>[Bulk Add/Update]</b> will appear to the right of the <b>[+Add]</b> button\n" +
+                "- For In Year / Annual Compliance, the <b>[V]</b> options will be 'Open Site Details', 'Deactivate / Reactivate'"
+            var m000023_FR = "To add Sites individually, choose the <b>[+Add]</b> button below.\n\n" +
+                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
+                "Alternatively, choose the <b>[Bulk Add/Update]</b> button to edit existing, and add new, Sites all at once via Excel.\n\n" +
+                "If required, choose the 'Deactivate / Reactivate' option via the <b>[V]</b> button at the end of a Site's row.\n\n" +
                 "Note:\n" +
-                "- [Bulk Add/Update] will appear to the right of the [+Add] button\n" +
-                "- For In Year / Annual Compliance, the [V] options will be 'Open Site Details', 'Deactivate / Reactivate'"
+                "- <b>[Bulk Add/Update]</b> will appear to the right of the <b>[+Add]</b> button\n" +
+                "- For In Year / Annual Compliance, the <b>[V]</b> options will be 'Open Site Details', 'Deactivate / Reactivate'_FR"
 
             var list =
                 [

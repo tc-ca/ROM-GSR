@@ -58,21 +58,30 @@ $(document).ready(function () {
 
 		// popup message
 		var k_existing_sites = "already_have_existing_sites";
-		var existing_sites = sessionStorage.getItem(k_existing_sites);
-		var row_count = tdg.grid.rows("CompanySites");
-		// 		if ((row_count > 0) && (existing_sites == null)) {
+		var existing_sites = sessionStorage.getItem(k_existing_sites) + "";	// "null"
+		existing_sites = (existing_sites == "null" ? "null" : existing_sites);
+		if (existing_sites == "null") {
+			var row_count = tdg.grid.rows("CompanySites");
+			sessionStorage.setItem(k_existing_sites, row_count);
+		}
+		else {
+			var row_count = parseInt(existing_sites);
+		}
+
 		if (row_count > 0) {
 			var m000020 = tdg.error_message.message("m000020");
 			var m000021 = tdg.error_message.message("m000021");
 			m000021 = m000021.replaceAll("\n", "<br>");
 
 			tdg.c.dialog_OK(m000020);
-			try {
-				// change instruction text
-				tdg.c.page_instructions(m000021);
-            } catch (e) {}
-
-			sessionStorage.setItem(k_existing_sites, row_count);
+			// change instruction text
+			tdg.c.page_instructions(m000021);
+		}
+		else {
+			var m000022 = tdg.error_message.message("m000022");
+			m000022 = m000022.replaceAll("\n", "<br>");
+			// change instruction text
+			tdg.c.page_instructions(m000022);
         }
 	});
 

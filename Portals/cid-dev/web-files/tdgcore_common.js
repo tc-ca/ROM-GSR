@@ -1,6 +1,8 @@
 //To apply the Asterisk(*) Sign using custom JS:
 //$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
 // August 17, 2022 Tony Nguyen
+// August 18, 2022 Lauzon, Olivier
+// August 19, 2022 Tony Nguyen
 
 // tdgcore_common.js
 
@@ -218,19 +220,6 @@ if (typeof (tdg.c) == "undefined") {
             } catch (e) { }
 
             this.message_panel_clear();
-
-            //$v.hide();
-
-            //$('#ValidationSummaryEntityFormView div').remove();
-            //try {
-            //    $('#ValidationSummaryEntityFormView')[0].remove();
-            //} catch (e) {}
-            //$('#ValidationSummaryEntityFormView').hide();
-
-            //try {
-            //    $('#ValidationSummaryEntityFormControl_EntityFormView')[0].innerHTML = "";
-            //} catch (e) {}
-            //$('#ValidationSummaryEntityFormControl_EntityFormView').hide();
         },
 
         ValidationSummary: function () {
@@ -251,10 +240,6 @@ if (typeof (tdg.c) == "undefined") {
             if (clear) {
                 v.remove();
             }
-
-            //v.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + message + "</div>"));
-            //v.show();
-            //$('#alertMessages').focus();
         },
 
         error_message_advanced_form: function (message, clear) {
@@ -300,22 +285,6 @@ if (typeof (tdg.c) == "undefined") {
 
         control_autocomplete: function () {
             $("input").attr("autocomplete", "new-password");
-
-            //$('input, select, textarea').each(
-            //    function (index) {
-            //        var input = this;
-            //        var index1 = input.name.indexOf("ctl00$");
-            //        var index2 = input.name.lastIndexOf("$");
-            //        var ctrl = input.name.substr(index2+1);
-            //        var type = this.getAttribute("type");
-            //        if ((index1 >= 0) && (type != "hidden")) {
-            //            debugger;
-            //            $("#" + ctrl).autocomplete({
-            //                disabled: true
-            //            });
-            //        }
-            //    }
-            //);
         },
 
         replace_special_char: function (value) {
@@ -360,8 +329,6 @@ if (typeof (tdg.c) == "undefined") {
             $("#myModal").css('z-index', '9999');
 
             $("#btnYes").click(function () {
-                // handler(true);
-                // $("#myModal").modal("hide");
                 $("#myModal").remove();
                 handler(true);
             });
@@ -812,7 +779,6 @@ if (typeof (tdg.cid) == "undefined") {
             $('#address1_country').attr("readonly", true);
 
             //Setup province dropdown
-            tdg.c.addValidator("ovs_lld_province");
             tdg.c.control_hide("address1_line1");
             tdg.c.control_hide("address1_stateorprovince");
 
@@ -823,7 +789,7 @@ if (typeof (tdg.cid) == "undefined") {
             });
 
             $("#address1_postalcode").attr("maxlength", "6");
-            $("#address1_postalcode").on('keyup', function() {
+            $("#address1_postalcode").on('keyup', function () {
                 var n = $(this).val().replace(/\W/g, '');
                 $(this).val(n);
                 var match = n.match(/^(\w{3})(\w{3})$/);
@@ -862,10 +828,11 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#address1_longitude").attr("autocomplete", "new-password");
             }
             else {
-                tdg.c.addValidator("address1_line1", "Street 1");
-                tdg.c.addValidator("address1_city", "City");
-                tdg.c.addValidator("address1_stateorprovince", "Province");
-                tdg.c.addValidator("address1_postalcode", "Postal Code");
+                tdg.c.addValidator("address1_line1");
+                tdg.c.addValidator("address1_city");
+                tdg.c.addValidator("ovs_address1_province");
+                tdg.c.addValidator("address1_stateorprovince");
+                tdg.c.addValidator("address1_postalcode");
             }
         },
 
@@ -879,6 +846,7 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#address1_line2").prop('readonly', true);
                 $("#address1_line3").prop('readonly', true);
                 $("#address1_city").prop('readonly', true);
+                $("#ovs_address1_province").prop('readonly', true);
                 $("#address1_stateorprovince").prop('readonly', true);
                 $("#address1_postalcode").prop('readonly', true);
 
@@ -916,6 +884,7 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#address1_line2").prop('readonly', false);
                 $("#address1_line3").prop('readonly', false);
                 $("#address1_city").prop('readonly', false);
+                $("#ovs_address1_province").prop('readonly', false);
                 $("#address1_stateorprovince").prop('readonly', false);
                 $("#address1_postalcode").prop('readonly', false);
             }
@@ -941,34 +910,32 @@ if (typeof (tdg.cid) == "undefined") {
                 case "1": // legal land description
                     tdg.c.section_show("section_legal_land_description");
 
-                    //tdg.c.addValidator("ovs_lld_quarter","Quarter/LSC");
-                    tdg.c.addValidator("ovs_lld_section", "Section");
-                    tdg.c.addValidator("ovs_lld_township", "Township");
-                    tdg.c.addValidator("ovs_lld_range", "Range");
-                    tdg.c.addValidator("ovs_lld_meridian", "Meridian");
-                    tdg.c.addValidator("ovs_lld_province", "Province / Territory");
+                    //tdg.c.addValidator("ovs_lld_quarter");
+                    tdg.c.addValidator("ovs_lld_section");
+                    tdg.c.addValidator("ovs_lld_township");
+                    tdg.c.addValidator("ovs_lld_range");
+                    tdg.c.addValidator("ovs_lld_meridian");
+                    tdg.c.addValidator("ovs_lld_province");
 
-                    if (reset_data) {
-                        thhis.address1_default("N/A");
-                    }
+                    this.address1_default("N/A");
                     break;
                 case "2": // lat/long
                     tdg.c.section_show("section_latitude_longitude");
 
-                    tdg.c.addValidator("address1_latitude", "Latitude");
-                    tdg.c.addValidator("address1_longitude", "Longitude");
+                    tdg.c.addValidator("address1_latitude");
+                    tdg.c.addValidator("address1_longitude");
 
-                    if (reset_data) {
-                        this.address1_default("N/A");
-                    }
+                    this.address1_default("N/A");
+
                     break;
                 default:
                     tdg.c.section_show("section_address");
 
-                    tdg.c.addValidator("address1_line1", "Street 1");
-                    tdg.c.addValidator("address1_city", "City");
-                    tdg.c.addValidator("address1_stateorprovince", "Province");
-                    tdg.c.addValidator("address1_postalcode", "Postal Code");
+                    tdg.c.addValidator("address1_line1");
+                    tdg.c.addValidator("address1_city");
+                    tdg.c.addValidator("ovs_address1_province");
+                    tdg.c.addValidator("address1_stateorprovince");
+                    tdg.c.addValidator("address1_postalcode");
 
                     if (reset_data) {
                         this.address1_default("");
@@ -981,6 +948,7 @@ if (typeof (tdg.cid) == "undefined") {
                 // address
                 tdg.c.removeValidator("address1_line1");
                 tdg.c.removeValidator("address1_city");
+                tdg.c.removeValidator("ovs_address1_province");
                 tdg.c.removeValidator("address1_stateorprovince");
                 tdg.c.removeValidator("address1_postalcode");
 
@@ -1019,6 +987,7 @@ if (typeof (tdg.cid) == "undefined") {
             $("#address1_line1").val(value);
             $("#address1_city").val(value);
             $("#address1_stateorprovince").val(value);
+            $("#ovs_address1_province").val(0);
             $("#address1_postalcode").val(value);
         },
 

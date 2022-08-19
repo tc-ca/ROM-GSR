@@ -4,6 +4,10 @@
 $(document).ready(function () {
     debugger;
 
+    // init var to use in CompanyRegistrationWizard-Site.js
+    var k_existing_sites = "already_have_existing_sites";
+    sessionStorage.setItem(k_existing_sites, "null");
+
     tdg.c.section_hide("section_address_1");
 
     // default current use is "Primary"
