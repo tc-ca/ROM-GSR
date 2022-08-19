@@ -1,3 +1,4 @@
+
 //
 // Web Page-Profile.js
 //
@@ -6,23 +7,29 @@ $(document).ready(function () {
 
     var parent_id = '{{user.parentcustomerid.Id}}';
     var filter = "accountid eq guid'" + parent_id + "'";
-    var data = tdg.c.OData_List("account", filter)
-    var cid_cidcompanystatus = data[0].cid_cidcompanystatus.Value;
-    if (cid_cidcompanystatus == 100000005)  // Active: Registration complete, part of CID Reporting
-    {
-	    tdg.c.weblink_hide("/RegistrationWizard/");
-	    tdg.c.weblink_hide("/Bulk_Site_Upload/");
+    var data = tdg.c.OData_List("account", filter);
+    if (data == null) {
+        tdg.c.weblink_hide("/RegistrationWizard/");
+        tdg.c.weblink_hide("/Bulk_Site_Upload/");
+        tdg.c.weblink_hide("/company_dashboard/");
+        tdg.c.weblink_hide("/Bulk_Site_Update/");
     }
     else {
-	    tdg.c.weblink_hide("/company_dashboard/");
-	    tdg.c.weblink_hide("/Bulk_Site_Update/");
+        var cid_cidcompanystatus = data[0].cid_cidcompanystatus.Value;
+        if (cid_cidcompanystatus == 100000005)  // Active: Registration complete, part of CID Reporting
+        {
+            tdg.c.weblink_hide("/RegistrationWizard/");
+            tdg.c.weblink_hide("/Bulk_Site_Upload/");
+        }
+        else {
+            tdg.c.weblink_hide("/company_dashboard/");
+            tdg.c.weblink_hide("/Bulk_Site_Update/");
+        }
     }
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
-    // resize WebResource_address_complete
-    //$("#WebResource_address_complete").height('72px');
     $("#emailaddress1").width('100%');
 
     $("#telephone1").attr("placeholder", "");

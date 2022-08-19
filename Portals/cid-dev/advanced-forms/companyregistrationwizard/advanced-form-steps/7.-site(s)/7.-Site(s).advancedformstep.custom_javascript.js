@@ -60,7 +60,8 @@ $(document).ready(function () {
 		var k_existing_sites = "already_have_existing_sites";
 		var existing_sites = sessionStorage.getItem(k_existing_sites);
 		var row_count = tdg.grid.rows("CompanySites");
-		if ((row_count > 0) && (existing_sites == null)) {
+		// 		if ((row_count > 0) && (existing_sites == null)) {
+		if (row_count > 0) {
 			var m000020 = tdg.error_message.message("m000020");
 			var m000021 = tdg.error_message.message("m000021");
 			m000021 = m000021.replaceAll("\n", "<br>");

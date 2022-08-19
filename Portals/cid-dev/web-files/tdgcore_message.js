@@ -18,29 +18,28 @@ if (typeof (tdg.message) == "undefined") {
             var m000020_EN = "The data grid below lists the Sites that are understood to be associated to your Company. " +
                 "Please choose the <b>[V]</b> button on each row to update Attest each Site, or flag it as not your Company's Site.\n\n" +
                 "When those updates are Complete, please add any remaining Sites individually by choosing the <b>[+Add]</b> button," +
-                "or all at once via Excel, by choosing the <b>[Bulk Add/Update]</b> button.\n"
-
+                "or all at once via Excel, by choosing the <b>[Bulk Add/Update]</b> button."
             var m000020_FR = "The data grid below lists the Sites that are understood to be associated to your Company. " +
                 "Please choose the <b>[V]</b> button on each row to update Attest each Site, or flag it as not your Company's Site.\n\n" +
                 "When those updates are Complete, please add any remaining Sites individually by choosing the <b>[+Add]</b> button," +
-                "or all at once via Excel, by choosing the <b>[Bulk Add/Update]</b> button._FR\n";
+                "or all at once via Excel, by choosing the <b>[Bulk Add/Update]</b> button._FR";
 
             var m000021_EN = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of " +
-                "the options via the<b>[V]</b> button at the far right of those rows. All sites need to be attested " +
+                "the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested " +
                 "before the Bulk option can be chosen.\n\n" +
-                "To add additional Sites individually, choose the<b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> " +
+                "To add additional Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> " +
                 "button to add all new Sites at once via Excel.\n\n" +
-                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the<b>[V]</b> button at the end.\n\n" +
-                "Choose the<b>[Next]</b> button, once all Sites are added and attested.\n\n" +
-                "If required, choose the<b>[Previous]</b> button below to return to the Attest Company screen.\n"
+                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
+                "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
+                "If required, choose the <b>[Previous]</b> button below to return to the Attest Company screen."
             var m000021_FR = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of " +
-                "the options via the<b>[V]</b> button at the far right of those rows. All sites need to be attested " +
+                "the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested " +
                 "before the Bulk option can be chosen.\n\n" +
-                "To add additional Sites individually, choose the<b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> " +
+                "To add additional Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> " +
                 "button to add all new Sites at once via Excel.\n\n" +
-                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the<b>[V]</b> button at the end.\n\n" +
-                "Choose the<b>[Next]</b> button, once all Sites are added and attested.\n\n" +
-                "If required, choose the<b>[Previous]</b> button below to return to the Attest Company screen.\n"
+                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
+                "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
+                "If required, choose the <b>[Previous]</b> button below to return to the Attest Company screen._FR"
 
             var m000022_EN = "To add Sites individually, choose the[+Add] button. Alternatively, choose the[Bulk Add/Update] button to add all new Sites at once via Excel.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the[V] button at the end.\n\n" +

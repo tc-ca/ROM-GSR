@@ -19,6 +19,28 @@ $(document).ready(function () {
 
     $("#websiteurl").width('100%');
     $("#telephone1").attr("placeholder", "");
+    //phone field formatting
+    $("#telephone1").attr("maxlength", "10");
+    $("#fax").attr("maxlength", "10");
+
+    $("#telephone1").on('keyup', function() {
+        var n = $(this).val().replace(/\D/g, '');
+        $(this).val(n);
+        var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
+        if (match) {
+            $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
+        }
+    });
+    $("#fax").on('keyup', function() {
+        var n = $(this).val().replace(/\D/g, '');
+        $(this).val(n);
+        var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
+        if (match) {
+            $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
+        }
+    });
+
+    
     tdg.c.control_hide("cid_reasonfornobnnumber_other");
     tdg.c.control_hide("cid_companyclaim");
 

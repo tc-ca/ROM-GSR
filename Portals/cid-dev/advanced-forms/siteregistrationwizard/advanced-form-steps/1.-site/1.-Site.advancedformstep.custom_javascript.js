@@ -23,6 +23,27 @@ $(document).ready(function () {
     clear_address_type_required_fields();
     $("#telephone1").attr("placeholder", "");
 
+    //Phone masking
+    $("#telephone1").attr("maxlength", "10");
+    $("#fax").attr("maxlength", "10");
+
+    $("#telephone1").on('keyup', function() {
+        var n = $(this).val().replace(/\D/g, '');
+        $(this).val(n);
+        var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
+        if (match) {
+            $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
+        }
+    });
+    $("#fax").on('keyup', function() {
+        var n = $(this).val().replace(/\D/g, '');
+        $(this).val(n);
+        var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
+        if (match) {
+            $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
+        }
+    });
+
     // default operating name to legalname
     tdg.c.control_hide("name");
     tdg.c.control_hide("cid_same_as_company");

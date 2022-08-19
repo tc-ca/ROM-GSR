@@ -52,7 +52,7 @@ if (typeof (tdg.c) == "undefined") {
 
         page_instructions: function (message) {
             // $(".instructions").eq(0).find("p")[0].innerHTML = m000021;
-            var value = "<div class='alert alert-info' style='background:#d7faff'>" + message + "</div>";
+            var value = "<div class='alert alert-info' style='background:#d7faff'><p>" + message + "</p></div>";
             $(".instructions").html(value);
         },
 
@@ -433,25 +433,25 @@ if (typeof (tdg.c) == "undefined") {
                 switch (postalCode.toUpperCase().charAt(0)) {
                     //NL&L
                     case "A":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[4], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "NL") provinceMatchesPostalcode = true;
                         break;
                     //NS
                     case "B":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[6], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "NS") provinceMatchesPostalcode = true;
                         break;
                     //PEI
                     case "C":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[9], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "PE") provinceMatchesPostalcode = true;
                         break;
                     //NB
                     case "E":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[3], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "NB") provinceMatchesPostalcode = true;
                         break;
                     //QC
                     case "G":
                     case "H":
                     case "J":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[10], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "QC") provinceMatchesPostalcode = true;
                         break;
                     //ON
                     case "K":
@@ -459,38 +459,40 @@ if (typeof (tdg.c) == "undefined") {
                     case "M":
                     case "N":
                     case "P":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[8], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "ON") provinceMatchesPostalcode = true;
                         break;
                     //MB
                     case "R":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[2], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "MB") provinceMatchesPostalcode = true;
                         break;
                     //SK
                     case "S":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[11], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "SK") provinceMatchesPostalcode = true;
                         break;
                     //AB
                     case "T":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[0], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "AB") provinceMatchesPostalcode = true;
                         break;
                     //BC
                     case "V":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[1], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "BC") provinceMatchesPostalcode = true;
                         break;
                     //NT & NU
                     case "X":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[5], language)) == 0 ||
-                            localizedProvince.localeCompare(this.text_language(canProvinces[7], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "NT" || province == "NU") provinceMatchesPostalcode = true;
                         break;
                     //YT
                     case "Y":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[12], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "YT") provinceMatchesPostalcode = true;
                         break;
                     default:
                     //Postal Code is invalid
                 }
 
                 return provinceMatchesPostalcode;
+
+                //TODO Logic for checking if city belongs to province
+                //TODO Logic for checking duplicate address in cid
             } else {
                 return false;
             }
@@ -818,6 +820,16 @@ if (typeof (tdg.cid) == "undefined") {
                 debugger
                 var ovs_address1_province = $("#ovs_address1_province :selected").text()
                 $("#address1_stateorprovince").val(ovs_address1_province);
+            });
+
+            $("#address1_postalcode").attr("maxlength", "6");
+            $("#address1_postalcode").on('keyup', function() {
+                var n = $(this).val().replace(/\W/g, '');
+                $(this).val(n);
+                var match = n.match(/^(\w{3})(\w{3})$/);
+                if (match) {
+                    $(this).val(match[1] + ' ' + match[2]);
+                }
             });
 
             // resize WebResource_address_complete

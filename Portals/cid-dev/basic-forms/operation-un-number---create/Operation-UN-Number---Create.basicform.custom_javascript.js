@@ -23,6 +23,16 @@ $(document).ready(function () {
     //when the page is done loading, disable autocomplete on all inputs[text]
     $('input[type="text"]').attr('autocomplete', 'off');
 
+    //Add comma formatting
+    $("#cid_annualquantityvolume").on('keyup', function(){
+        var n = $(this).val().replace(/[^0-9\.]/g,'');
+        $(this).val(n.toLocaleString());
+    });
+    $("#cid_annualnumberofshipment").on('keyup', function(){
+        var n = $(this).val().replace(/\D/g,'');
+        $(this).val(n.toLocaleString());
+    });
+
     tdg.c.btn_save_new_setup();
 });
 

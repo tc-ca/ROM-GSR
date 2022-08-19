@@ -9,6 +9,7 @@ $(document).ready(function () {
     var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
     cid_crabusinessnumber = (cid_crabusinessnumber != "null" ? cid_crabusinessnumber : "");
 
+    $("#telephone1").attr("placeholder", "—");
     // do not have a business number?
     if (cid_crabusinessnumber == "") {
         tdg.c.control_hide("cid_crabusinessnumber");
