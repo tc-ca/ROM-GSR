@@ -14,6 +14,58 @@ if (typeof (tdg.message) == "undefined") {
                 "- Définir comme Mon site actif\n" +
                 "- Définir et attester comme mon site inactif\n" +
                 "- Définir et attester qu'il ne s'agit pas de mon site\n";
+
+            var m000020_EN = "The data grid below lists the Sites that are understood to be associated to your Company. " +
+                "Please choose the <b>[V]</b> button on each row to update Attest each Site, or flag it as not your Company's Site.\n\n" +
+                "When those updates are Complete, please add any remaining Sites individually by choosing the <b>[+Add]</b> button," +
+                "or all at once via Excel, by choosing the <b>[Bulk Add/Update]</b> button.\n"
+
+            var m000020_FR = "The data grid below lists the Sites that are understood to be associated to your Company. " +
+                "Please choose the <b>[V]</b> button on each row to update Attest each Site, or flag it as not your Company's Site.\n\n" +
+                "When those updates are Complete, please add any remaining Sites individually by choosing the <b>[+Add]</b> button," +
+                "or all at once via Excel, by choosing the <b>[Bulk Add/Update]</b> button._FR\n";
+
+            var m000021_EN = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of " +
+                "the options via the<b>[V]</b> button at the far right of those rows. All sites need to be attested " +
+                "before the Bulk option can be chosen.\n\n" +
+                "To add additional Sites individually, choose the<b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> " +
+                "button to add all new Sites at once via Excel.\n\n" +
+                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the<b>[V]</b> button at the end.\n\n" +
+                "Choose the<b>[Next]</b> button, once all Sites are added and attested.\n\n" +
+                "If required, choose the<b>[Previous]</b> button below to return to the Attest Company screen.\n"
+            var m000021_FR = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of " +
+                "the options via the<b>[V]</b> button at the far right of those rows. All sites need to be attested " +
+                "before the Bulk option can be chosen.\n\n" +
+                "To add additional Sites individually, choose the<b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> " +
+                "button to add all new Sites at once via Excel.\n\n" +
+                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the<b>[V]</b> button at the end.\n\n" +
+                "Choose the<b>[Next]</b> button, once all Sites are added and attested.\n\n" +
+                "If required, choose the<b>[Previous]</b> button below to return to the Attest Company screen.\n"
+
+            var m000022_EN = "To add Sites individually, choose the[+Add] button. Alternatively, choose the[Bulk Add/Update] button to add all new Sites at once via Excel.\n\n" +
+                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the[V] button at the end.\n\n" +
+                "Choose the[Next] button, once all Sites are added and attested.\n\n" +
+                "If required, choose the[Previous] button below to return to the Attest Company screen."
+            var m000022_FR = "To add Sites individually, choose the [+Add] button. Alternatively, choose the [Bulk Add/Update] button to add all new Sites at once via Excel.\n\n" +
+                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the [V] button at the end.\n\n" +
+                "Choose the [Next] button, once all Sites are added and attested.\n\n" +
+                "If required, choose the [Previous] button below to return to the Attest Company screen._FR"
+
+            var m000023_EN = "To add Sites individually, choose the [+Add] button below.\n\n" +
+                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the [V] button at the end.\n\n" +
+                "Alternatively, choose the [Bulk Add/Update] button to edit existing, and add new, Sites all at once via Excel.\n\n" +
+                "If required, choose the 'Deactivate / Reactivate' option via the [V] button at the end of a Site's row.\n\n" +
+                "Note:\n" +
+                "- [Bulk Add/Update] will appear to the right of the [+Add] button\n" +
+                "- For In Year / Annual Compliance, the [V] options will be 'Open Site Details', 'Deactivate / Reactivate'"
+            var m000023_FR = "To add Sites individually, choose the [+Add] button below.\n\n" +
+                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the [V] button at the end.\n\n" +
+                "Alternatively, choose the [Bulk Add/Update] button to edit existing, and add new, Sites all at once via Excel.\n\n" +
+                "If required, choose the 'Deactivate / Reactivate' option via the [V] button at the end of a Site's row.\n\n" +
+                "Note:\n" +
+                "- [Bulk Add/Update] will appear to the right of the [+Add] button\n" +
+                "- For In Year / Annual Compliance, the [V] options will be 'Open Site Details', 'Deactivate / Reactivate'"
+
             var list =
                 [
                     {
@@ -135,6 +187,26 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000018",
                         "message_en": "Invalid province",
                         "message_fr": "Invalid province_F"
+                    },
+                    {
+                        "code": "m000020",
+                        "message_en": m000020_EN,
+                        "message_fr": m000020_FR
+                    },
+                    {
+                        "code": "m000021",
+                        "message_en": m000021_EN,
+                        "message_fr": m000021_FR
+                    },
+                    {
+                        "code": "m000022",
+                        "message_en": m000022_EN,
+                        "message_fr": m000022_FR
+                    },
+                    {
+                        "code": "m000023",
+                        "message_en": m000023_EN,
+                        "message_fr": m000023_FR
                     },
                     {
                         "code": "m000100",
