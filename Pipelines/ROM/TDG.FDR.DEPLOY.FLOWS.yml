@@ -74,16 +74,19 @@ stages:
     dependsOn: 
     - 'BuildAndPublishArtifacts'
 
-# #ACC
-# - template: templates/stage/DeploySolution.yml  # Template reference
-#   parameters:
-#     SolutionName: $(SolutionName)
-#     PowerPlatformSPN: $(PowerPlatformSPN_ACC)
-#     Environment: 'ACC-TDG'
-#     StageName: 'DeployManagedSolutionToACC'
-#     DeleteSolution: false
-#     dependsOn: 
-#     - 'DeployManagedSolutionToQA'
+#ACC
+- template: templates/stage/DeployFlowSolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_ACC)
+    UseDeploymentSettingsFile: true
+    DeploymentSettingsFile: 'Pipelines\ROM\connection_references\FDRFlows_SolutionSettings_ACC.json'
+    Environment: 'ACC-TDG'
+    StageName: 'DeployManagedSolutionToACC'
+    DeleteSolution: false
+    dependsOn: 
+    - 'DeployManagedSolutionToQA'
+
 # #PREPROD
 # - template: templates/stage/DeploySolution.yml  # Template reference
 #   parameters:
