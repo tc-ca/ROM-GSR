@@ -846,7 +846,7 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#address1_line2").prop('readonly', true);
                 $("#address1_line3").prop('readonly', true);
                 $("#address1_city").prop('readonly', true);
-                $("#ovs_address1_province").prop('readonly', true);
+                $("#ovs_address1_province").prop('disabled', true);
                 $("#address1_stateorprovince").prop('readonly', true);
                 $("#address1_postalcode").prop('readonly', true);
 
@@ -855,6 +855,7 @@ if (typeof (tdg.cid) == "undefined") {
 
                 var address1_line1 = "N/A";
                 var address1_city = "N/A";
+                var ovs_address1_province = "";
                 var address1_stateorprovince = "N/A";
                 var address1_postalcode = "N/A";
                 var address1_country = "Canada";
@@ -867,6 +868,7 @@ if (typeof (tdg.cid) == "undefined") {
                     address1_line3 = item.address1_line3;
                     address1_line3 = (address1_line3 == null ? "" : address1_line3);
                     address1_city = item.address1_city;
+                    ovs_address1_province = item.ovs_address1_province.Value;
                     address1_stateorprovince = item.address1_stateorprovince;
                     address1_postalcode = item.address1_postalcode;
                     address1_country = item.address1_country;
@@ -876,6 +878,7 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#address1_line2").val(address1_line2);
                 $("#address1_line3").val(address1_line3);
                 $("#address1_city").val(address1_city);
+                $("#ovs_address1_province").val(ovs_address1_province);
                 $("#address1_stateorprovince").val(address1_stateorprovince);
                 $("#address1_postalcode").val(address1_postalcode);
                 $("#address1_country").val(address1_country);
@@ -884,7 +887,7 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#address1_line2").prop('readonly', false);
                 $("#address1_line3").prop('readonly', false);
                 $("#address1_city").prop('readonly', false);
-                $("#ovs_address1_province").prop('readonly', false);
+                $("#ovs_address1_province").prop('disabled', false);
                 $("#address1_stateorprovince").prop('readonly', false);
                 $("#address1_postalcode").prop('readonly', false);
             }

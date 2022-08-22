@@ -2,7 +2,7 @@
 (function(webapi, $){
 		function safeAjax(ajaxOptions) {
 			var deferredAjax = $.Deferred();
-	
+
 			shell.getTokenDeferred().done(function (token) {
 				// add headers for AJAX
 				if (!ajaxOptions.headers) {
@@ -10,7 +10,7 @@
 						headers: {
 							"__RequestVerificationToken": token
 						}
-					}); 
+					});
 				} else {
 					ajaxOptions.headers["__RequestVerificationToken"] = token;
 				}
@@ -21,8 +21,8 @@
 			}).fail(function () {
 				deferredAjax.rejectWith(this, arguments); // on token failure pass the token AJAX and args
 			});
-	
-			return deferredAjax.promise();	
+
+			return deferredAjax.promise();
 		}
 		webapi.safeAjax = safeAjax;
 	})(window.webapi = window.webapi || {}, jQuery)
@@ -53,7 +53,7 @@ function SiteHasOperationUNNumbers(operationId, siteId){
         return false;
 }
 
- 
+
  function SiteHasModesOfTransportation(operationId, siteId){
     var FetchXMLQuery = " <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' > " +
                           "<entity name='ovs_mocregistration_ovs_modes'>" +
@@ -63,7 +63,7 @@ function SiteHasOperationUNNumbers(operationId, siteId){
                               "</filter>" +
                           "</entity>" +
                         "</fetch>";
-						
+
 webapi.safeAjax({
 type: "GET",
 
@@ -105,7 +105,7 @@ alert(errorThrown);
 
 }
 
-    });               
+    });
 }
 
 function XOperationDetailsProvided(operationId){
@@ -203,7 +203,7 @@ function ExecuteQuery(list, filter){
 //        error: function (xhr, textStatus, errorThrown) {
 //            alert("Fail: " + errorThrown);
 //        }
-//    });               
+//    });
 //    return operationId; //'bb8174e4-dacb-ec11-a7b5-0022483cee90';
 //}
 
@@ -225,31 +225,19 @@ function UpdateOperationDetailsProvided(operationId, value){
    });
 }
 
-//function UpdateHOTIOperationDetailsProvided(siteId, value){
-//    var operationId = GetHOTIOperation(siteId);
-//alert(operationId);
-//    webapi.safeAjax({
-//     type: "PATCH",
-//     url: "/_api/ovs_mocregistrations(" + operationId + ")",
-//     contentType: "application/json",
-//     data: JSON.stringify({
-//        "cid_operationdetailsprovided": value
-//     }),
-//     success: function (res) {
-//         alert("success");
-//     },
-//     error: function (request, message, error) {
-//        alert(error + message +"X");
-//     }
-//   });
-//}
 
 </script>
 
-<script type="text/javascript" src="~/tdgcore_common.js" ></script>
-<script type="text/javascript" src="~/tdgcore_message.js" ></script>
+<script type="text/javascript" src="~/tdgcore_common.js"></script>
+<script type="text/javascript" src="~/tdgcore_message.js"></script>
 
 <script>
+    debugger;
+
+    tdg.c.weblink_hide("/company_dashboard/");
+    tdg.c.weblink_hide("/Bulk_Site_Update/");
+
 	var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
+
 </script>

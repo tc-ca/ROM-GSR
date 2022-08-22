@@ -1,42 +1,29 @@
-{% extends 'CID Two Column Layout' %} 
-{% block sidebar %} 
-{% assign weblinkset_id = page.adx_navigation.id %} 
-{% if weblinkset_id %} {% assign nav = weblinks[page.adx_navigation.id] %} 
-{% if nav %} 
-<div class="list-group"> 
-{% for link in nav.weblinks %} <a class="list-group-item" href={{ link.url }}> {{ link.name }} </a> 
-{% endfor %} 
-</div> 
-{% endif %} 
-{% endif %} 
+{% extends 'CID Two Column Layout' %}
+{% block sidebar %}
+{% assign weblinkset_id = page.adx_navigation.id %}
+{% if weblinkset_id %} {% assign nav = weblinks[page.adx_navigation.id] %}
+{% if nav %}
+<div class="list-group">
+    {% for link in nav.weblinks %} <a class="list-group-item" href={{ link.url }}> {{ link.name }} </a>
+    {% endfor %}
+</div>
+{% endif %}
+{% endif %}
 
-<script type="text/javascript" src="~/tdgcore_common.js" ></script>
-<script type="text/javascript" src="~/tdgcore_message.js" ></script>
+<script type="text/javascript" src="~/tdgcore_common.js"></script>
+<script type="text/javascript" src="~/tdgcore_message.js"></script>
 
 <script>
+    // Web Template - CID Left Navigation
     debugger;
-	weblink_hide("/RegistrationWizard/");
-	weblink_hide("/Bulk_Site_Upload/");
+    tdg.c.weblink_hide("/RegistrationWizard/");
+    tdg.c.weblink_hide("/Bulk_Site_Upload/");
 
 	var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
-
-	function weblink_hide(url) {
-    debugger;
-    $("#navbar li.weblink")
-        .each(function () {
-            debugger;
-            var item = $(this).find("a")[0];
-            var href = item.href;
-            if (href.indexOf(url) != -1) {
-                $(this).remove();
-                return;
-            }
-        });
-}
 </script>
 
-{% endblock %} 
-{% block content %} <div> {% block main %} {% include 'Page Copy' %} {% endblock %} </div> 
+{% endblock %}
+{% block content %} <div> {% block main %} {% include 'Page Copy' %} {% endblock %} </div>
 {% endblock %}
 

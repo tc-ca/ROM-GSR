@@ -8,6 +8,6 @@ $(document).ready(function () {
             $('#openOperationWizard').remove();
         }
 
-        $("<br><div id='openOperationWizard' class='input-group pull-left'><a href='~/en-US/OperationRegistrationWizard/?id=" + operationId + "&siteid=" + siteId + "&in_year=true' class='entitylist-create btn btn-info action'>Update Site HOTI Details</a><br><br></div><br><br><br>" ).insertBefore($("#sitedetails"));
+        $("<br><div id='openOperationWizard' class='input-group pull-left'><a href='~/OperationRegistrationWizard/?id=" + operationId + "&siteid=" + siteId + "&in_year=true' class='entitylist-create btn btn-info action'>Further Site Details</a><br><br></div><br><br><br>" ).insertBefore($("#sitedetails"));
     }
 });

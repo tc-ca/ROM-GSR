@@ -1,5 +1,5 @@
 //
-// Web Page-In Year Site Form
+// Basic Form-In Year Site Form
 //
 var _busy = false;
 
