@@ -4,6 +4,8 @@
 $(document).ready(function () {
     debugger;
 
+    $("#cid_iscompanyattested").prop( "checked", false );
+
     // address
     tdg.cid.address_init(false);
 
@@ -58,10 +60,21 @@ $(document).ready(function () {
 
 if (window.jQuery) {
     (function ($) {
-        webFormClientValidate = function () {
+        entityFormClientValidate = function () {
             debugger;
 
-            return true;
+            if($("#cid_iscompanyattested").prop('checked')){
+                return true;
+            }
+            else{
+                var errorMessage = 'You cannot proceed before attesting your company deactivation'; 
+                $('.validation-summary div').remove();
+                var validationSection = $('.validation-summary'); 
+				validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>")); 
+				validationSection.show(); 
+
+                return false;
+            }
         }
     }(window.jQuery));
 }
