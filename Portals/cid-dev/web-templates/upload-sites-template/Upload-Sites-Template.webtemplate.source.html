@@ -144,6 +144,25 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
   $(document).ready( function() {
+
+      var Page_Partial_URL = '{{page.adx_partialurl}}';
+      var pagename = '{{page.adx_name}}' ;
+      var UploadType = "" ;
+    
+      console.log (pagename);
+ 
+  if (Page_Partial_URL ==  "Bulk_Site_Upload")
+  {
+
+   UploadType = "Initial";
+
+  }
+  else
+  {
+
+   UploadType = "Update";
+  }
+       
     //read all messages in json array
     ReadBulkMessagesFile();
 
@@ -229,9 +248,6 @@ debugger ;
   else if (file) {
 
 
-      //check excel content match file type
-      debugger ;
-      console.log("before calling excel function");
      
         
             // Get the dependency, which we've added to node via "npm install file-type":
@@ -289,24 +305,9 @@ debugger ;
       
 
 
-      debugger;
-  
-
-         
-         
-
-        
-               
-       
-           
-
            //else
            //{
 
-debugger ;
-console.log (CheckResult);
-console.log ("before reading again");
-debugger;
             // Read the file
        // var reader = new FileReader();
 
@@ -351,162 +352,15 @@ debugger;
 
     $('#linkdownload_English').on('click', async function() {
 
-        $("Div.validation-summary").css('display', 'none');
-           $("Div.alert").css('display', 'none');
-          //$('#processingMsg').css('display','block');
-       // $('#processingMsg').text(');
-        var langcode = '{{languagecode}}'  ;
-       var downloadMessage ='<p>Downloading the custom Site Bulk Upload template.  Please wait a moment...</p>';
-       // '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>' ;
-        var DownloadMessageCompleted =  '<p>Download completed.</p>';
-      if (langcode != "en-US")
-      {
-          downloadMessage = "<p>Téléchargement du modèle de téléchargement en masse de site personnalisé. Patientez s'il-vous-plait...</p>";
-          //"<p>Le classeur Excel personnalisé de téléchargement en masse du site est en cours de téléchargement…</p>"
-         DownloadMessageCompleted  = '<p>Téléchargement terminé.</p>' ;
-      }
-
-
-       $('#infoMsg').css('display', 'block');
-       $('#infoMsg').html(downloadMessage );
-
-
-      var companyid = '{{parentid}}';
-     var flowparamaters =
-        '{ "accountid": "' + companyid + '",'  + '"Language": "English" , "UiLanguage":"'+ langcode+'" }';
-
-
-      var req = new XMLHttpRequest();
-
-      var url = '{{download_flow_URL}}';
-      console.log(url);
-
-      req.open("POST", url, true);
-      req.setRequestHeader('Content-Type', 'application/json');
-      req.onreadystatechange = function() {
-        if (this.readyState === 4) {
-          req.onreadystatechange = null;
-          if (this.status === 200) {
-           $('#infoMsg').html(DownloadMessageCompleted );
-          
-            var result = this.response;
-          
-           
-            
-          //assign result to noteid intially
-           var SeperatorIndex =   result.indexOf("|");
-            var  NoteGUID = result.substring(0, SeperatorIndex ).trim();
-            // NoteGUID =result.replace('|' , '').trim();
-             console.log("NoteGUID " + NoteGUID) ;
-           
-           
-        
-         if (req.getResponseHeader('RootMessag') != null && req.getResponseHeader('RootMessag') != "")
-         {
-            
-              NoteGUID = result.substring(0, SeperatorIndex ).trim();
-            
-               var rootMessage = result.substring( SeperatorIndex + 1); 
-              $('#infoMsg').html("<p>" + DownloadMessageCompleted +  "</p> <br> <p>"+ rootMessage
-          
-              + "</p>");
-         }
-         
-       
-        //  $('<textarea/>').text(req.getResponseHeader('RootMessag')).html();
-      
-
-           //annotation url
-            var fileattachementURL = "~/_entity/annotation/"  + NoteGUID;
-      
-            //download the file from the url
-            window.location.replace(fileattachementURL);
-        
-          } else {
-              $('#processingMsg').text("Download was not completed due to system issue, please contact system support");
-            var result = this.response;
-          
-          }
-        }
-      }
-      req.send(flowparamaters);
+       //call download flow to download excel sheet
+      Download_ExcelTemplate("English") ;
     });
 
 
  $('#linkdownload_French').on('click', async function() {
 
-        $("Div.validation-summary").css('display', 'none');
-           $("Div.alert").css('display', 'none');
-        var langcode = '{{languagecode}}'  ;
-        var downloadMessage = '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>' ;
-        var DownloadMessageCompleted = 'Download Completed.' ;
-      if (langcode != "en-US")
-      {
-          downloadMessage = "<p>Le classeur Excel personnalisé de téléchargement en masse du site est en cours de téléchargement…</p>"
-         DownloadMessageCompleted  = '<p>Téléchargement terminé.</p>' ;
-      }
-
-         //showing download message
-          $('#processingMsg').css('display','block');
-        $('#processingMsg').html(downloadMessage);
-
-   
-      var companyid = '{{parentid}}';
-
-
-   
-       var flowparamaters =
-        '{ "accountid": "' + companyid + '",'  + '"Language": "English" , "UiLanguage":"'+ langcode+'" }';
-
-
-      var req = new XMLHttpRequest();
-
-      var url = '{{download_flow_URL}}';
-      console.log(url);
-       req.open("POST", url, true);
-      req.setRequestHeader('Content-Type', 'application/json');
-      req.onreadystatechange = function() {
-        if (this.readyState === 4) {
-          req.onreadystatechange = null;
-          if (this.status === 200) {
-               $('#processingMsg').text(DownloadMessageCompleted);
-            var result = this.response;
-             var SeperatorIndex =   result.indexOf("|");
-            var  NoteGUID = result.substring(0, SeperatorIndex ).trim();
-            // NoteGUID =result.replace('|' , '').trim();
-             console.log("NoteGUID " + NoteGUID) ;
-           
-        
-         if (req.getResponseHeader('RootMessag') != null && req.getResponseHeader('RootMessag') != "")
-         {
-             // var SeperatorIndex =   result.indexOf("|");
-              NoteGUID = result.substring(0, SeperatorIndex ).trim();
-             
-               var rootMessage = result.substring( SeperatorIndex + 1); 
-              $('#infoMsg').html("<p>" + DownloadMessageCompleted +  "</p> <br> <p>"+ rootMessage
-          
-              + "</p>");
-         }
-         
-       
-        //  $('<textarea/>').text(req.getResponseHeader('RootMessag')).html();
-      
-
-           //annotation url
-            var fileattachementURL = "~/_entity/annotation/"  + NoteGUID;
-           
-         
-            window.location.replace(fileattachementURL);
-            // $("#processingMsg").css("display", "none");
-            //$("#processingMsg").hide();
-          } else {
-              $('#processingMsg').text("Download was not completed due to system issue, please contact system support");
-            var result = this.response;
-            alert("Error " + result);
-          }
-        }
-      }
-      req.send(flowparamaters);
+            //call download flow to download excel sheet
+      Download_ExcelTemplate("French") ;
     });
 
 
@@ -558,7 +412,7 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
          else{
              responseMessage="<p>Initial request for Bulk Upload is now complete based on an early cancellation. <br>" +
 "The original request to bulk upload sites is cancelled. Please proceed with the remainder of the Registration process.</p>";
-             if ( Lang != 'en-US')
+             if ( Lang != 'en-US' & Lang != 'en' )
             {
                  responseMessage="<p>La demande initiale de transfert groupé est maintenant terminée en raison d'une annulation anticipée. <br>" +
 "La demande initiale de sites de téléchargement groupé est annulée. Veuillez poursuivre le reste du processus d'inscription.</p>";
@@ -593,7 +447,7 @@ var contactid = '{{contactid}}';
 
 
 var scanningMessage = "<p>Uploading and processing the Site Bulk Upload Excel workbook.  Please wait a moment...</p>";
-if ( language != 'en-US')
+if ( language != 'en-US'&& language != 'en')
    {
         scanningMessage ="Téléchargement et traitement du classeur Excel de téléchargement en masse du site. Patientez s'il-vous-plait...";
     }
@@ -684,7 +538,7 @@ function call_Inital_validation(Language , bulkactivitytype)
 
 var IntialvalidationBegunMessage = "<p>Uploading and processing the Site Bulk Upload Excel workbook.  Please wait a moment...</p>";
 //"<p>Preliminary analysis of the uploaded workbook has begun…</p>" ;
- if ( Language != 'en-US')
+ if ( Language != 'en-US' && Language != 'en')
  {
     IntialvalidationBegunMessage = "<p>Téléchargement et traitement du classeur Excel de téléchargement en masse du site. Patientez s'il-vous-plait...</p>";
     //"<p>L'analyse préliminaire du classeur téléchargé a commencé…</p>";
@@ -759,7 +613,7 @@ var IntialvalidationBegunMessage = "<p>Uploading and processing the Site Bulk Up
 
                                var   responseMessageaftercancel="<p>Initial request for Bulk Upload is now complete based on an early cancellation. <br>" +
 "The original request to bulk upload sites is cancelled. Please proceed with the remainder of the Registration process.</p>";
-             if ( Lang != 'en-US')
+             if ( Lang != 'en-US' && Lang != 'en')
             {
                  responseMessageaftercancel="<p>La demande initiale de transfert groupé est maintenant terminée en raison d'une annulation anticipée. <br>" +
 "La demande initiale de sites de téléchargement groupé est annulée. Veuillez poursuivre le reste du processus d'inscription.</p>";
@@ -920,6 +774,99 @@ function storeMessageListInSession(data)
   
 
 }
+
+function Download_ExcelTemplate (TemplateLanguage)
+{
+  $("Div.validation-summary").css('display', 'none');
+        
+        $("Div.alert").css('display', 'none');
+          
+        var langcode = '{{languagecode}}'  ;
+        var downloadMessage ='<p>Downloading the custom Site Bulk Upload template.  Please wait a moment...</p>';
+       // '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>' ;
+        var DownloadMessageCompleted =  '<p>Download completed.</p>';
+      if (langcode != "en-US" && langcode != "en")
+      {
+          downloadMessage = "<p>Téléchargement du modèle de téléchargement en masse de site personnalisé. Patientez s'il-vous-plait...</p>";
+          //"<p>Le classeur Excel personnalisé de téléchargement en masse du site est en cours de téléchargement…</p>"
+         DownloadMessageCompleted  = '<p>Téléchargement terminé.</p>' ;
+      }
+
+    // check upload type by page partial url
+      var Page_Partial_URL = '{{page.adx_partialurl}}';
+      var UploadType = "" ;
+      if (Page_Partial_URL ==  "Bulk_Site_Upload")
+      {
+
+      UploadType = "Initial";
+
+      }
+      else
+      {
+
+       UploadType = "Update";
+      }
+       $('#infoMsg').css('display', 'block');
+       $('#infoMsg').html(downloadMessage );
+
+
+      var companyid = '{{parentid}}';
+
+
+     var flowparamaters =
+        '{ "accountid": "' + companyid + '",'  + '"Language": "' + TemplateLanguage + '" , "UiLanguage":"'+ langcode+'" , "UploadType" : "' + UploadType + '" }';
+
+
+      var req = new XMLHttpRequest();
+
+      var url = '{{download_flow_URL}}';
+      console.log(url);
+
+      req.open("POST", url, true);
+      req.setRequestHeader('Content-Type', 'application/json');
+      req.onreadystatechange = function() {
+        if (this.readyState === 4) {
+          req.onreadystatechange = null;
+          if (this.status === 200) {
+           $('#infoMsg').html(DownloadMessageCompleted );
+          
+            var result = this.response;
+                      
+          //assign result to noteid intially
+           var SeperatorIndex =   result.indexOf("|");
+            var  NoteGUID = result.substring(0, SeperatorIndex ).trim();
+            // NoteGUID =result.replace('|' , '').trim();
+             console.log("NoteGUID " + NoteGUID) ;
+           
+         if (req.getResponseHeader('RootMessag') != null && req.getResponseHeader('RootMessag') != "")
+         {
+            
+              NoteGUID = result.substring(0, SeperatorIndex ).trim();
+            
+               var rootMessage = result.substring( SeperatorIndex + 1); 
+              $('#infoMsg').html("<p>" + DownloadMessageCompleted +  "</p> <br> <p>"+ rootMessage
+          
+              + "</p>");
+         }
+            
+        //  $('<textarea/>').text(req.getResponseHeader('RootMessag')).html();
+    
+           //annotation url
+            var fileattachementURL = "~/_entity/annotation/"  + NoteGUID;
+                  //download the file from the url
+            window.location.replace(fileattachementURL);
+        
+          } else {
+              $('#processingMsg').text("Download was not completed due to system issue, please contact system support");
+            var result = this.response;
+          
+          }
+        }
+      }
+      req.send(flowparamaters);
+
+}
+
 
 function filter_BulkMessageArray(id , lang)
 { 

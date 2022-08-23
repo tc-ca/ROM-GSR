@@ -41,6 +41,9 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         weblink_hide: function (url) {
+
+            var value = "#navbar li.weblink";   // out of box template
+            var value = "#def-top li.weblink";
             $("#navbar li.weblink")
                 .each(function () {
                     var item = $(this).find("a")[0];
@@ -89,7 +92,8 @@ if (typeof (tdg.c) == "undefined") {
             var value = text;
             var index1 = text.indexOf("::");
             if (index1 > -1) {
-                if (language == "en-US") {
+                //if (language == "en-US") {
+                if (language == "en") {
                     value = text.substr(0, index1);
                 }
                 else {
@@ -202,7 +206,8 @@ if (typeof (tdg.c) == "undefined") {
                     text = text + "::" + text;
                     index1 = text.indexOf("::");
                 }
-                if (language == "en-US") {
+                //if (language == "en-US") {
+                if (language == "en") {
                     value = text.substr(0, index1);
                 }
                 else {

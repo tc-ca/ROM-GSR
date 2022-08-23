@@ -1,0 +1,11 @@
+<span>Company Registration</span><br>
+<br>
+{% assign parentCompany = user.parentcustomerid.id %}
+{% if parentCompany %}
+{% entityform name: 'ManageCompany' %}
+{% else %}
+{% entityform name: 'NewCompany' %}
+{% comment %}
+{% webform name: 'RegistrationLandingPage' %}
+{% endcomment %}
+{% endif %}{% entityform name: '' %}{% include 'entity_list' key: '' %}{% include 'entity_list' key: '' %}

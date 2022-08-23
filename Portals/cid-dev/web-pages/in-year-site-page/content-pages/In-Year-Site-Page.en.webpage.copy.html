@@ -1,0 +1,49 @@
+{% entityform name: 'In Year Site Form' %}<br>
+{% entityform name:'In Year Site Activity Form'%}<br>
+<script>
+  $(document).ready(function() {
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('id')) {
+      var siteId = urlParams.get('id');
+      var operationId = GetHOTIOperation(siteId);
+      if (!urlParams.has('operationid')) {
+        urlParams.set('operationid', operationId);
+        window.location.search = urlParams;
+      }
+    }
+  });
+</script> {% assign operationId = request.params.operationid %} {% assign oper = entities.ovs_mocregistration[operationId] %} {% if oper %}
+<h2 class="tab-title">Further Site Details</h2>
+
+<fieldset><legend class="section-title show-bar">Mode(s) of transportation</legend>
+
+<table class="section" role="presentation" style="width:90%;">
+	<tbody>
+		<tr>
+			<td class="clearfix cell checkbox-cell " style="width:50%;">
+			<div><span>{% if oper.cid_modeoftransportationroad %} <input checked="checked" disabled="disabled" type="checkbox"> {% else %} <input disabled="disabled" type="checkbox"> {% endif %} </span> <label class="field-label" role="none">Road</label></div>
+			</td>
+			<td class="clearfix cell checkbox-cell" style="width:50%;">
+			<div><span>{% if oper.cid_modeoftransportationrail %} <input checked="checked" disabled="disabled" type="checkbox"> {% else %} <input disabled="disabled" type="checkbox"> {% endif %} </span> <label class="field-label" role="none">Rail</label></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="clearfix cell checkbox-cell" style="width:50%;">
+			<div><span>{% if oper.cid_modeoftransportationmarine %} <input checked="checked" disabled="disabled" type="checkbox"> {% else %} <input disabled="disabled" type="checkbox"> {% endif %} </span> <label class="field-label" role="none">Marine</label></div>
+			</td>
+			<td class="clearfix cell checkbox-cell" style="width:50%;">
+			<div><span>{% if oper.cid_modeoftransportationair %} <input checked="checked" disabled="disabled" type="checkbox"> {% else %} <input disabled="disabled" type="checkbox"> {% endif %} </span> <label class="field-label" role="none">Air</label></div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</fieldset>
+<br>
+<br>
+{% endif %}<br>
+{% entityform name: 'In Year Site Details Form' %}
+<div id="sitedetails"></div>
+<br>
+<br>
+{% include 'RegistrationWizardsWebTemplate'%}
+
