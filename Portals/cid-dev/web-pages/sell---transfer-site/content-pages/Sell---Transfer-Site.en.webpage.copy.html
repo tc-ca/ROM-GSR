@@ -1,2 +1,13 @@
-Under construction
-
+<span>Under construction</span>
+<script>
+  $(document).ready(function() {
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('id')) {
+      var siteId = urlParams.get('id');
+      $(".list-group-item").each(function() {
+        var _href = $(this).attr("href");
+        $(this).attr("href", _href + '?id=' + siteId);
+      });
+    }
+  });
+</script>

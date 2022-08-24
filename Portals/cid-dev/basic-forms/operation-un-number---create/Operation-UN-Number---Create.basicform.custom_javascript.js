@@ -25,11 +25,11 @@ $(document).ready(function () {
 
     //Add comma formatting
     $("#cid_annualquantityvolume").on('keyup', function(){
-        var n = $(this).val().replace(/[^0-9\.]/g,'');
+        var n = parseInt($(this).val().replace(/\D/g,''), 10);
         $(this).val(n.toLocaleString());
     });
     $("#cid_annualnumberofshipment").on('keyup', function(){
-        var n = $(this).val().replace(/\D/g,'');
+        var n = parseInt($(this).val().replace(/\D/g,''), 10);
         $(this).val(n.toLocaleString());
     });
 

@@ -41,10 +41,9 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         weblink_hide: function (url) {
-
-            var value = "#navbar li.weblink";   // out of box template
-            var value = "#def-top li.weblink";
-            $("#navbar li.weblink")
+            //var value = "#navbar li.weblink";     // out of box template
+            var value = "#def-top li.weblink";      // Canada government template
+            $(value)
                 .each(function () {
                     var item = $(this).find("a")[0];
                     var href = item.href;

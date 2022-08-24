@@ -4,10 +4,10 @@
 $(document).ready(function () {
 	debugger;
 
- 	var urlParams = new URLSearchParams(window.location.search);
-    if (!urlParams.has('in_year') || urlParams.get('in_year') != 'true') {
+	var urlParams = new URLSearchParams(window.location.search);
+	if (!urlParams.has('in_year') || urlParams.get('in_year') != 'true') {
 		header_setup();
-    }
+	}
 	var instructionBtns = $(".instruction-btn");
 
 	if (instructionBtns.length > 0) {
@@ -15,7 +15,7 @@ $(document).ready(function () {
 			var msg = tdg.error_message.message("m000010");	// Choose the same named button found below
 			tdg.c.dialog_OK(msg);
 		});
-    }
+	}
 
 	$("legend").each(function () {
 		$(this).removeClass();
@@ -24,8 +24,7 @@ $(document).ready(function () {
 	});
 });
 
-function header_setup()
-{
+function header_setup() {
 	debugger;
 
 	var selected_language = '{{website.selected_language.code}}';
@@ -36,7 +35,7 @@ function header_setup()
 		$('#mainContent').remove();
 		//$('#mainContent').prepend("<div id='backToCompanyWizard' class='input-group pull-left'><p><a href='~/en-US/RegistrationWizard' class='entitylist-create btn btn-info pull-right action' title='Back'>" + msg + "</a><br><br></p></div>");
 	}
-	$('#mainContent').prepend("<div id='backToCompanyWizard' class='input-group pull-left'><p><a href='~/en-US/RegistrationWizard' class='entitylist-create btn btn-info pull-right action' title='Back'>" + msg + "</a><br><br></p></div>");
+	$('#mainContent').prepend("<div id='backToCompanyWizard' class='input-group pull-left'><p><a href='~/RegistrationWizard' class='entitylist-create btn btn-info pull-right action' title='Back'>" + msg + "</a><br><br></p></div>");
 
 	//var steps = $('li.list-group-item');
 	//for (var i = 0; i < steps.length; i++) {
@@ -48,7 +47,7 @@ function header_setup()
 
 	try {
 		var code = "m000009";
-		var companyName = '{{user.parentcustomerid.name}}';
+		var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name}}');
 		var value = tdg.error_message.message(code);
 		value = value.replace("{0}", companyName);
 		$('.page-header h1').text(value);

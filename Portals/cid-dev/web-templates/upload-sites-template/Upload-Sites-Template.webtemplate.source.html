@@ -146,22 +146,11 @@
   $(document).ready( function() {
 
       var Page_Partial_URL = '{{page.adx_partialurl}}';
-      var pagename = '{{page.adx_name}}' ;
+     
       var UploadType = "" ;
-    
-      console.log (pagename);
+
  
-  if (Page_Partial_URL ==  "Bulk_Site_Upload")
-  {
-
-   UploadType = "Initial";
-
-  }
-  else
-  {
-
-   UploadType = "Update";
-  }
+ 
        
     //read all messages in json array
     ReadBulkMessagesFile();
@@ -173,12 +162,37 @@ $(".section[data-name='General']").closest("fieldset").hide();
 $("#AttachFile").after('<br><label>2B. Start Upload</label><br><button type="button" id="btn_attachfile_and_scan" class="submit-btn btn btn-primary form-action-container-left">{{upload}}</button>');
 $("#AttachFile").before('<div id="Div2A" class="input-group input-group-sm"><div class="input-group-btn"><label class="submit-btn btn btn-primary form-action-container-left" for="AttachFile">{{choosefile}}</label></div><input type="text" class="form-control" id="uploadFile" placeholder="Select File Name here" disabled="disabled" /></div>');
 
+
+//insert previous and next button if initial registeration
+ if (Page_Partial_URL ==  "Bulk_Site_Upload")
+  {
+
+   UploadType = "Initial";
+   //add div 
+   //$("div.actions")
+   //$("#Row_PreviousNextButton").append('<br><div id="DivNavbuttonGroup"  class="col-sm-6 clearfix"> </div>');
+   //add previous and next inside the div
+   $("#DivNavbuttonGroup").append('<div role="group" class= "btn-group entity-action-button"><button type="button" id="btn_Previous" class="btn btn-default button previous previous-btn">Previous</button></div>');
+   $("#DivNavbuttonGroup").append('<div role="group" class= "btn-group entity-action-button">&nbsp;&nbsp;</div>');
+   $("#DivNavbuttonGroup").append('<div role="group" class = "btn-group entity-action-button" ><button type="button" id="btn_Next" class="submit-btn btn btn-primary form-action-container-left">Next</button></div>');
+
+
+  }
+  else
+  {
+
+   UploadType = "Update";
+  }
+
 //attach file event
 document.getElementById("AttachFile").onchange = function () {
     console.log("attach file event");
    console.log( this.value);
     document.getElementById("uploadFile").value = this.value.replace("C:\\fakepath\\", "");;
 };
+
+
+
 
  $("#InsertButton").css("display", "none");
     var langcode = '{{languagecode}}'  ;
@@ -203,7 +217,7 @@ $('#btn_attachfile_and_scan').click(function(e)
     //hide validation summary    
     $("Div.validation-summary").css('display', 'none');
     $("Div.alert").css('display', 'none');
-    //$("#alert-danger").css('display', 'none');
+  
    
     if (document.getElementById('AttachFile').files.length == 0)
    {
@@ -364,6 +378,10 @@ debugger ;
     });
 
 
+ $('#btn_Next').on('click', async function() {
+  //redirect to registeration wizard
+  window.location.href = "~/RegistrationWizard";
+    });
 
 });//end document ready
 
@@ -548,11 +566,21 @@ var IntialvalidationBegunMessage = "<p>Uploading and processing the Site Bulk Up
          $('#infoMsg').css('display', 'block');
         $('#infoMsg').html(IntialvalidationBegunMessage);
 
-        //notificationMsg.show("System is validating uploaded List ...");
+         var Page_Partial_URL = '{{page.adx_partialurl}}';
+         var UploadType = "" ;
+         if (Page_Partial_URL ==  "Bulk_Site_Upload")
+         {
+              UploadType = "Initial";
+              }
+        else
+         {
+
+         UploadType = "Update";
+         }
 
 
         var acupdate =
-            '{ "activityid":"' + newrecordid + '" , "name": "'+ companyname +'", "accountid": "' + companyid + '" , "Lang" : "' + Language + '" ,"ActivityType" : "' + bulkactivitytype +  '" }';
+            '{ "activityid":"' + newrecordid + '" , "name": "'+ companyname +'", "accountid": "' + companyid + '" , "Lang" : "' + Language + '" ,"ActivityType" : "' + UploadType +  '" }';
 
         var req = new XMLHttpRequest();
         var url = '{{excelload_Flow_URL}}';
@@ -954,14 +982,20 @@ function filter_BulkMessageArray(id , lang)
                 </div>
             </td>
         </tr>
+        
         </tbody>
         </table>
+        <br>
+      
 
         {% endblock %}
 
 
     </div>
 </div>
+  <div id="DivNavbuttonGroup"  class="col-sm-6 clearfix"> 
+        
+   </div>
     </div>
 
 </div>

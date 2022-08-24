@@ -43,6 +43,7 @@ $(document).ready(function () {
   console.log(modificationDetails);
 
     //$("#cid_modifiedbyregistrant") = '{{user}}';
+	EnableDisable_ContactTypeFields(currentUserId); 
 
     var companyName = '{{user.parentcustomerid.name }}';
     if (companyName) {
@@ -184,6 +185,8 @@ $(document).ready(function () {
     $("#fax").attr("autocomplete", "new-password");
     $("#cid_reasonfornobnnumber_other").attr("autocomplete", "new-password");
     $("#websiteurl").attr("autocomplete", "new-password");
+	
+	 $('#cid_contacttype').attr("disabled", true);
 });
 
 if (window.jQuery) {
@@ -214,4 +217,42 @@ function AddressComplete_Selected() {
     $("#address1_stateorprovince").val(sessionStorage.getItem("ProvinceName"));
     $("#address1_postalcode").val(sessionStorage.getItem("PostalCode"));
     $("#address1_country").val(sessionStorage.getItem("CountryName"));
+}
+
+
+function EnableDisable_ContactTypeFields(currentuserId) 
+{
+	if(currentuserId == null)
+		return;
+	
+	var filteroption = "contactid eq (guid'" + currentuserId + "')";  
+    var odataUri = window.location.protocol+ "//" + window.location.host + "/_odata/contact";  
+	odataUri += "?$filter=" + encodeURIComponent(filteroption);  
+	
+	//Get user contact record
+	$.ajax({
+    type: "GET",
+    contentType: "application/json; charset=utf-8",
+    datatype: "json",
+    url: odataUri,
+    beforeSend: function(XMLHttpRequest) {
+        XMLHttpRequest.setRequestHeader("Accept", "application/json");
+    },
+    async: false,
+    success: function(data, textStatus, xhr) {
+        var result = data;	
+        var cid_UserContactType = result.value[0].cid_contacttype.Value;
+		
+		//if proimary contact and not the promary contact record
+		if(cid_UserContactType != 100000000 || $('#cid_contacttype').val() == 100000000)
+		{
+			 $("#cid_contacttype").prop( "disabled", true );
+		}
+
+    },
+    error: function(xhr, textStatus, errorThrown) {
+       alert(textStatus + ' ' + errorThrown);
+    }
+});
+	 
 }
