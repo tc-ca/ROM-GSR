@@ -16,15 +16,35 @@ $(document).ready(function() {
 					var extendedSite = IsExtendedSite(operationId, null);							
 					var operationWizardURL = "~/OperationRegistrationWizard/?id=" + operationId + "&siteid=" + siteid + (extendedSite ? "&isExtended=true" : "&isExtended=false");
 
-					if ($("#HOTI_Details").length <= 0)
-						$("#PreviousButton").parent().after("<div id='HOTI_Details' role='group' class='btn-group entity-action-button'><a href='" + operationWizardURL + "'><input type='button' name='further_site_details' value='Further Site Details' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'></a></div>");
-							
+					if ($("#further_site_details").length <= 0){
+						$("#PreviousButton").parent().after("<div id='further_site_details' role='group' class='btn-group entity-action-button'><a href='" + operationWizardURL + "'><input type='button' name='Previous' value='Previous' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>");
+						$("#PreviousButton").hide();	
+					}
+
+					if (!urlParams.has('frOpWzd')) {
+						//if((!extendedSite && SiteHasOperationClasses(operationId, null)) || (extendedSite && SiteHasOperationClasses(operationId, null) && SiteHasOperationUNNumbers(operationId, null))){
+						//	var test="test";
+						//}
+						//else{
+window.location.href = operationWizardURL;
+						//}
+					}
+					else{
+						$("#PreviousButton").click();
+						//window.location.href = "~/SiteRegistrationWizard/?id=" + siteid;// + "&stepid=ed4377eb-f997-ec11-b3fe-0022483c0c24";
+					}
+
 					if((!extendedSite && SiteHasOperationClasses(operationId, null)) || (extendedSite && SiteHasOperationClasses(operationId, null) && SiteHasOperationUNNumbers(operationId, null))){
 						$("#NextButton").prop('disabled', false);
 					}
-					else{
-						window.location.href = operationWizardURL;
-					}
+					//else{
+					//	if (!urlParams.has('frOpWzd')) {
+					//		window.location.href = operationWizardURL;
+					//	}
+					//	else{
+					//		$("#PreviousButton").click();
+					//	}
+					//}
 						
 
 					//firstRow.find('td').each(function(){

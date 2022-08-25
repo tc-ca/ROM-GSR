@@ -16,8 +16,6 @@ $(document).ready(function () {
     cid_legalname = tdg.c.replace_special_char(cid_legalname);
 
     $("#ovs_legalname").val(cid_legalname);
-    $("#name").val(cid_legalname);
-    $("#cid_sitename").val(cid_legalname);
 
     // hide controls
     tdg.c.control_hide("name");

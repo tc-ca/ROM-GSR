@@ -4,6 +4,9 @@
 $(document).ready(function () {
     debugger;
 
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
     // address
     tdg.cid.address_init(false);
 
@@ -23,7 +26,7 @@ $(document).ready(function () {
     $("#telephone1").attr("maxlength", "10");
     $("#fax").attr("maxlength", "10");
 
-    $("#telephone1").on('keyup', function() {
+    $("#telephone1").on('keyup', function () {
         var n = $(this).val().replace(/\D/g, '');
         $(this).val(n);
         var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
@@ -31,7 +34,7 @@ $(document).ready(function () {
             $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
         }
     });
-    $("#fax").on('keyup', function() {
+    $("#fax").on('keyup', function () {
         var n = $(this).val().replace(/\D/g, '');
         $(this).val(n);
         var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
@@ -135,6 +138,8 @@ $(document).ready(function () {
     $("#fax").attr("autocomplete", "new-password");
     $("#cid_reasonfornobnnumber_other").attr("autocomplete", "new-password");
     $("#websiteurl").attr("autocomplete", "new-password");
+
+    tdg.cid.convert_province_to_code(selected_language);
 });
 
 function advanced_form_header() {

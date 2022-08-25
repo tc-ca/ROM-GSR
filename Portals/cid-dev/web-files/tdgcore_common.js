@@ -981,7 +981,7 @@ if (typeof (tdg.cid) == "undefined") {
                 return;
             }
             for (var i = 0; i < 13; i++) {
-                var localizedProvince = this.text_language(canProvinces[i], language);
+                var localizedProvince = tdg.c.text_language(canProvinces[i], language);
                 if (localizedProvince.localeCompare(address1_stateorprovince), undefined, { sensitivity: 'accent' } == 0) { //finds match
                     $("#ovs_address1_province").val(i);
                     return;
