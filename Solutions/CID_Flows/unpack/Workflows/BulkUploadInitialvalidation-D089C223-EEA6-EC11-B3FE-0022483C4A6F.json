@@ -518,7 +518,7 @@
                   "entityName": "cid_bulkactivitylogsummaries",
                   "recordId": "@triggerBody()?['activityid']",
                   "item/cid_activitystarttime": "@outputs('Bulk_Activity_start_time')",
-                  "item/cid_activitytype": 100000001,
+                  "item/cid_activitytype": "@variables('ActivityType')",
                   "item/cid_filename": "@outputs('OrigionalFileName')",
                   "item/cid_language": "@variables('Language_Index')",
                   "item/cid_numberofsites": "@outputs('Number-Of-Sites')",
@@ -708,7 +708,7 @@
                     "item/cid_activityendtime": "@utcNow()",
                     "item/cid_activitystarttime": "@outputs('Bulk_Activity_start_time')",
                     "item/cid_activitystatus": 100000001,
-                    "item/cid_activitytype": 100000001,
+                    "item/cid_activitytype": "@variables('ActivityType')",
                     "item/cid_filename": "@outputs('OrigionalFileName')",
                     "item/cid_language": "@variables('Language_Index')",
                     "item/cid_numberofsites": "@outputs('Number-Of-Sites')",
@@ -2622,7 +2622,7 @@
         },
         "Initialize_variable_-_Language_Index_-_default_english": {
           "runAfter": {
-            "Initialize_variable_-_Activity_type": [
+            "Condition": [
               "Succeeded"
             ]
           },
@@ -2999,6 +2999,51 @@
           },
           "type": "Compose",
           "inputs": "@base64ToString(outputs('Get_Bulk_Upload_Messages')?['body/value'][0]['documentbody'])"
+        },
+        "Condition": {
+          "actions": {
+            "set_Activity_type_to_Registeration": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "5c208046-5636-4386-8db9-20b339d3bf09"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ActivityType",
+                "value": 100000001
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_variable_-_Activity_type": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Set_Activity_type_to_in_year": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "5d1661dc-b491-4591-a0b3-288bdc64256c"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "ActivityType",
+                  "value": 100000003
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@triggerBody()?['ActivityType']",
+              "@'Initial'"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6c3594a2-3429-4fed-b5d2-2f430b1d9cbd"
+          },
+          "type": "If"
         }
       },
       "outputs": {}

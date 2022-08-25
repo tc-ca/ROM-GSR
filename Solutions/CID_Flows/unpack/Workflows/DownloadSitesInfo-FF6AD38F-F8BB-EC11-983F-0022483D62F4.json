@@ -70,6 +70,9 @@
                 },
                 "UiLanguage": {
                   "type": "string"
+                },
+                "UploadType": {
+                  "type": "string"
                 }
               }
             }
@@ -99,7 +102,7 @@
               "recordId": "@triggerBody()?['accountid']",
               "item/RootOrgID": "@string(outputs('Get_Company')?['body/root_organization_id'])",
               "item/Language": "@triggerBody()?['Language']",
-              "item/IntialRegYN": true,
+              "item/IntialRegYN": "@variables('Initial_Registeration')",
               "item/ID": "@triggerBody()?['accountid']"
             },
             "authentication": "@parameters('$authentication')"
@@ -287,7 +290,7 @@
               "entityName": "cid_bulkactivitylogsummaries",
               "item/cid_Company@odata.bind": "@concat('/accounts/', triggerBody()?['accountid'])",
               "item/cid_activitystarttime": "@utcNow()",
-              "item/cid_activitytype": 100000000
+              "item/cid_activitytype": "@variables('DownloadType')"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -392,7 +395,11 @@
           "type": "Scope"
         },
         "get-environment-settings": {
-          "runAfter": {},
+          "runAfter": {
+            "Check_upload_type": [
+              "Succeeded"
+            ]
+          },
           "metadata": {
             "operationMetadataId": "7ed63b1d-9cf8-403e-9d9c-56cdd03f198e"
           },
@@ -432,7 +439,7 @@
         },
         "Invoke_an_HTTP_request_-_Add_settings": {
           "runAfter": {
-            "Condition": [
+            "unHide_Column_Remove_UN": [
               "Succeeded"
             ]
           },
@@ -1557,27 +1564,9 @@
           "type": "Compose",
           "inputs": "Remove UN"
         },
-        "Condition": {
-          "actions": {},
-          "runAfter": {
-            "unHide_Column_Remove_UN": [
-              "Succeeded"
-            ]
-          },
-          "expression": {
-            "equals": [
-              1,
-              2
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "0d201ed4-ed59-4ed2-ba93-8133ceebf4e8"
-          },
-          "type": "If"
-        },
         "unHide_Column_Remove_UN": {
           "runAfter": {
-            "columnname": [
+            "Compose_2": [
               "Succeeded"
             ]
           },
@@ -1597,7 +1586,7 @@
               "request/headers": {
                 "accept": "application/json"
               },
-              "request/body": "{\n\"columnHidden\" : true\n}\n"
+              "request/body": "{\n\"columnHidden\" : @{toLower( string(variables('HideRemoveColumn')))}\n}\n"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -1816,6 +1805,179 @@
           },
           "type": "Compose",
           "inputs": "@length(outputs('List_Existing_UN_number')?['body/value'])"
+        },
+        "Initil_Initial_Registeration": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "369b1661-118d-40cb-8a75-db6ad73c47c9"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Initial_Registeration",
+                "type": "boolean",
+                "value": "@true"
+              }
+            ]
+          }
+        },
+        "Check_upload_type": {
+          "actions": {
+            "Set_Initial_Registration_to_Yes": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "b0541a73-cad7-4b17-8cca-c7ec9d9e43a9"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Initial_Registeration",
+                "value": "@true"
+              }
+            },
+            "Set_variable_download_type_Initial_registeration": {
+              "runAfter": {
+                "Set_Initial_Registration_to_Yes": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d2542982-9619-4fff-b7ff-39f8b036c2e2"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "DownloadType",
+                "value": 100000000
+              }
+            },
+            "Set_variable_Hide_column_to_True": {
+              "runAfter": {
+                "Set_variable_download_type_Initial_registeration": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d77ea6ef-296a-4a4f-84dd-8c0864f4a124"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "HideRemoveColumn",
+                "value": "@true"
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_HideRemoveColumn": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Set_Initial_registration_to_No": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "c74c7895-433b-442f-a76f-371ce2b5fc17"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "Initial_Registeration",
+                  "value": "@false"
+                }
+              },
+              "Set_variable_download_type_In_year_update": {
+                "runAfter": {
+                  "Set_Initial_registration_to_No": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "872f6840-6a1a-4869-b0dd-2cbd4196a5b8"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "DownloadType",
+                  "value": 100000002
+                }
+              },
+              "Set_variable_Hide_column_to_false": {
+                "runAfter": {
+                  "Set_variable_download_type_In_year_update": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "ebc5e987-b272-4fbe-be0c-e0eae79878a2"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "HideRemoveColumn",
+                  "value": "@false"
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@triggerBody()?['UploadType']",
+              "@'Initial'"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d591a3a8-ee44-4bca-a750-0fd81555f5a6"
+          },
+          "type": "If"
+        },
+        "Initialize_Download_Type": {
+          "runAfter": {
+            "Initil_Initial_Registeration": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ca089154-b4e6-47f8-9525-c9dcb430223a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "DownloadType",
+                "type": "integer",
+                "value": 100000000
+              }
+            ]
+          }
+        },
+        "Initialize_HideRemoveColumn": {
+          "runAfter": {
+            "Initialize_Download_Type": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8aab2a23-b2a3-4f29-b34e-28bacd1bce09"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "HideRemoveColumn",
+                "type": "boolean",
+                "value": "@true"
+              }
+            ]
+          }
+        },
+        "Compose_2": {
+          "runAfter": {
+            "columnname": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4766ae57-7657-469f-8644-8e92c360e8a7"
+          },
+          "type": "Compose",
+          "inputs": "@variables('HideRemoveColumn')"
         }
       },
       "outputs": {}

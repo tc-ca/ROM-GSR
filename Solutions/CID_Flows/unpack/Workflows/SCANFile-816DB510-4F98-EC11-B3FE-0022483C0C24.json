@@ -61,7 +61,7 @@
       "actions": {
         "HTTP-Scan-API": {
           "runAfter": {
-            "Token": [
+            "fileConverted": [
               "Succeeded"
             ]
           },
@@ -71,13 +71,13 @@
           "type": "Http",
           "inputs": {
             "method": "POST",
-            "uri": "https://wwwapps2.tc.gc.ca/Saf-Sec-Sur/13/tc-virusscan-api/api/v1/file-scan?filename=test",
+            "uri": "https://wwwapps2.tc.gc.ca/Saf-Sec-Sur/13/tc-virusscan-api/api/v1/file-scan?filename=@{triggerBody()?['ExcelFileName']}",
             "headers": {
               "Authorization": "Bearer @{outputs('Token')}",
               "Content-Type": "application/*+json",
               "Accept": "*/*"
             },
-            "body": " \"data\": \"@{triggerBody()?['FileContent']}\""
+            "body": " \"data\": \"@{outputs('fileConverted')}\""
           }
         },
         "HTTP_-_Athenticate": {
@@ -243,6 +243,18 @@
           },
           "type": "Compose",
           "inputs": "@utcNow()"
+        },
+        "fileConverted": {
+          "runAfter": {
+            "Token": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9399fb76-b6df-4376-8270-8d50b646139d"
+          },
+          "type": "Compose",
+          "inputs": "@binary(triggerBody()?['FileContent'])"
         }
       },
       "outputs": {}

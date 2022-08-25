@@ -49,7 +49,8 @@
               "subscriptionRequest/message": 3,
               "subscriptionRequest/entityname": "account",
               "subscriptionRequest/scope": 4,
-              "subscriptionRequest/filteringattributes": "cid_cidcompanystatus"
+              "subscriptionRequest/filteringattributes": "cid_cidcompanystatus",
+              "subscriptionRequest/runas": 3
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -77,29 +78,62 @@
                 "authentication": "@parameters('$authentication')"
               }
             },
-            "Send_an_email_notification_(V3)": {
+            "List_All_Child_Contacts": {
               "runAfter": {
                 "get_primary_contact": [
                   "Succeeded"
                 ]
               },
               "metadata": {
-                "operationMetadataId": "3b1fbad3-2579-401c-8189-5825940d6dfb"
+                "operationMetadataId": "db101c9b-f799-46e3-8cd6-c41994636d19"
               },
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "connectionName": "shared_sendmail",
-                  "operationId": "SendEmailV3",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
-                  "request/to": "@{outputs('get_primary_contact')?['body/emailaddress1']};",
-                  "request/subject": "Your registration is complete",
-                  "request/text": "<p>Dear @{outputs('get_primary_contact')?['body/fullname']},<br>\n<br>\nCongratulations! Your registration is complete.<br>\n<br>\nLegal Name: @{triggerOutputs()?['body/ovs_legalname']}<br>\nOperating Name: @{triggerOutputs()?['body/name']}<br>\nCompanry Anniversary date: @{triggerOutputs()?['body/cid_companyanniversarydate']}<br>\nSite(s): @{variables('sSiteList')}<br>\n</p>"
+                  "entityName": "contacts",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <attribute name=\"emailaddress1\" />\n    <attribute name=\"cid_contacttype\" />\n    <attribute name=\"cid_portalrecordcreationdetails\" />\n    <attribute name=\"cid_portalrecordmodificationdetails\" />\n    <attribute name=\"contactid\" />\n    <order attribute=\"cid_contacttype\" descending=\"false\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\" />\n      <condition attribute=\"cid_contacttype\" operator=\"not-null\" />\n      <condition attribute=\"emailaddress1\" operator=\"not-null\" />\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" value=\"@{triggerOutputs()?['body/accountid']}\" />\n    </filter>\n  </entity>\n</fetch>"
                 },
                 "authentication": "@parameters('$authentication')"
               }
+            },
+            "Apply_to_each": {
+              "foreach": "@outputs('List_All_Child_Contacts')?['body/value']",
+              "actions": {
+                "Send_an_email_notification_(V3)": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "3b1fbad3-2579-401c-8189-5825940d6dfb"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sendmail",
+                      "operationId": "SendEmailV3",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                    },
+                    "parameters": {
+                      "request/to": "@{items('Apply_to_each')?['emailaddress1']};;",
+                      "request/subject": "Your registration is complete",
+                      "request/text": "<p>Dear @{items('Apply_to_each')?['fullname']},<br>\n<br>\nCongratulations! Your registration is complete.<br>\n<br>\nLegal Name: @{triggerOutputs()?['body/ovs_legalname']}<br>\nOperating Name: @{triggerOutputs()?['body/name']}<br>\nCompanry Anniversary date: @{triggerOutputs()?['body/cid_companyanniversarydate']}<br>\nSite(s): @{variables('sSiteList')}<br>\n</p>"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "List_All_Child_Contacts": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "2656d1ed-ce3b-43ed-b2ab-752ff98b553a"
+              },
+              "type": "Foreach"
             }
           },
           "runAfter": {
