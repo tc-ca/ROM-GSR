@@ -1,14 +1,3 @@
-$(document).ready(function () {
-	debugger;
-
-	var urlParams = new URLSearchParams(window.location.search);
-
-	if (urlParams.has('id') && urlParams.has('frOpWzd')) {
-		var siteId = urlParams.get('id');
-        window.location.href = "~/SiteRegistrationWizard/?id=" + siteId ;
-    }
-});
-
 if (window.jQuery) {
     (function ($) {
         webFormClientValidate = function () {

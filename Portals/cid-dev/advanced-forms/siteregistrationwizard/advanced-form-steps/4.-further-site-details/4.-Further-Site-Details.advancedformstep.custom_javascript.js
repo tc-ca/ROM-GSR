@@ -21,31 +21,24 @@ $(document).ready(function() {
 						$("#PreviousButton").hide();	
 					}
 
-					if (!urlParams.has('frOpWzd')) {
-						//if((!extendedSite && SiteHasOperationClasses(operationId, null)) || (extendedSite && SiteHasOperationClasses(operationId, null) && SiteHasOperationUNNumbers(operationId, null))){
-						//	var test="test";
-						//}
-						//else{
-window.location.href = operationWizardURL;
-						//}
+					var prev_from_mot = sessionStorage.getItem("prev_from_mot");
+					//alert(prev_from_mot + ": from mot");
+					if(prev_from_mot == 'true'){
+						sessionStorage.setItem('prev_from_mot', 'false');
+						$("#PreviousButton").click();
 					}
 					else{
-						$("#PreviousButton").click();
-						//window.location.href = "~/SiteRegistrationWizard/?id=" + siteid;// + "&stepid=ed4377eb-f997-ec11-b3fe-0022483c0c24";
+						var from_op_wzrd = sessionStorage.getItem("from_op_wzrd");
+						//alert(from_op_wzrd + ": from op wzrd");
+						if(from_op_wzrd == null || from_op_wzrd == 'false')
+							window.location.href = operationWizardURL;
+						else
+							sessionStorage.setItem('from_op_wzrd', 'false');
 					}
-
+		
 					if((!extendedSite && SiteHasOperationClasses(operationId, null)) || (extendedSite && SiteHasOperationClasses(operationId, null) && SiteHasOperationUNNumbers(operationId, null))){
 						$("#NextButton").prop('disabled', false);
 					}
-					//else{
-					//	if (!urlParams.has('frOpWzd')) {
-					//		window.location.href = operationWizardURL;
-					//	}
-					//	else{
-					//		$("#PreviousButton").click();
-					//	}
-					//}
-						
 
 					//firstRow.find('td').each(function(){
 						//var tdElement = $(this);
