@@ -21,6 +21,10 @@ $(document).ready(function () {
     tdg.c.control_hide("name");
     tdg.c.control_hide("cid_siteclaim");
 
+    $("#ovs_legalname").attr("readonly", "true");
+    $("#address1_country").attr("readonly", "true");
+    $("#name").attr("readonly", "true");
+
     // cid_same_as_company
     $("#cid_same_as_company").change(function () {
         cid_same_as_company_change();
