@@ -720,7 +720,12 @@
                   "metadata": {
                     "operationMetadataId": "ecb78762-a632-4892-9f7c-175e0d3f648c"
                   },
-                  "type": "Foreach"
+                  "type": "Foreach",
+                  "runtimeConfiguration": {
+                    "concurrency": {
+                      "repetitions": 25
+                    }
+                  }
                 }
               },
               "runAfter": {
@@ -731,7 +736,12 @@
               "metadata": {
                 "operationMetadataId": "dccbfd14-124b-4f75-9327-aa659a32ec82"
               },
-              "type": "Foreach"
+              "type": "Foreach",
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 20
+                }
+              }
             }
           },
           "runAfter": {
@@ -760,7 +770,10 @@
         "Reset_\"Run_Generate_Work_Order_Candidates\"_value_": {
           "runAfter": {
             "Catch": [
-              "Succeeded"
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
             ]
           },
           "metadata": {
