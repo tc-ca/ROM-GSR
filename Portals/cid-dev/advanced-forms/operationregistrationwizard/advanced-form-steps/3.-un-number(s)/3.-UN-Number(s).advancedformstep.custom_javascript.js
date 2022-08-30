@@ -3,7 +3,6 @@
 //
 $(document).ready(function () {
     debugger;
-	sessionStorage.setItem('from_op_wzrd', 'true');
     
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);

@@ -1,10 +1,3 @@
-$(document).ready(function () {
-	debugger;
-	sessionStorage.setItem('prev_from_mot', 'false');
-	sessionStorage.setItem('from_op_wzrd', 'true');
-});
-
-
 // // OperationRegistrationWizard-Class.js // 
 if (window.jQuery) { 
 	(function ($) { 

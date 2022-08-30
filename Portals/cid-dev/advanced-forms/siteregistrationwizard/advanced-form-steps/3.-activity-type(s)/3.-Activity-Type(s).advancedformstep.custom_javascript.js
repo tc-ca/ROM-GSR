@@ -1,6 +1,8 @@
 if (window.jQuery) {
     (function ($) {
         webFormClientValidate = function () {
+            sessionStorage.setItem('to_oprtn_wzrd', 'true');
+            
             var validation = true;
             var errorMessage = "";
             var checkedCheckBoxes = $('[id*="cid_"]:checkbox:checked'); 

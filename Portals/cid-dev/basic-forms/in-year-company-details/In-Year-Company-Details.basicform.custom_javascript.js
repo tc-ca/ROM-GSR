@@ -56,16 +56,6 @@ $(document).ready(function () {
     subgrid_language();
 });
 
-if (window.jQuery) {
-    (function ($) {
-        webFormClientValidate = function () {
-            debugger;
-
-            return true;
-        }
-    }(window.jQuery));
-}
-
 function subgrid_language() {
     //debugger;
     var selected_language = sessionStorage.getItem("selected_language");

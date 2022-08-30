@@ -2,6 +2,9 @@
 // Web Page-Operation Registration Wizard.js
 //
 $(document).ready(function () {
+    sessionStorage.setItem('to_actvt_stp', 'false');
+    sessionStorage.setItem('to_oprtn_wzrd', 'false');
+
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('isExtended')) {
     	var isExtended = urlParams.get('isExtended');
@@ -9,9 +12,20 @@ $(document).ready(function () {
         if(isExtended =='false'){
             $('.progress li').last().addClass("hidden");
         }
+    }
 
-    //if ($("#backToSiteWizard").length <= 0)
-    //  $('#mainContent').prepend("<div id='backToSiteWizard' class='input-group pull-left'><p><a href='~/en-US/SiteRegistrationWizard/?id=" + siteid + " class='entitylist-create btn btn-info pull-right action' title='Back'>Back to Site Registration Wizard</a><br><br></p></div>");
+    if (urlParams.has('siteid')) {
+        var siteId = urlParams.get('siteid');
+
+ 	    if ($("#backToActivityTypesStep").length > 0) {
+		    $('#mainContent').remove();
+        }
+        $('#mainContent').prepend("<div id='backToActivityTypesStep' class='input-group pull-left'><p><input type='button' id='backToActivityTypes' name='Back' value='Back to Activity Types Screen' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'><br><br></p></div>");
+    
+        $("#backToActivityTypes").click(function(){
+            sessionStorage.setItem('to_actvt_stp', 'true');
+            window.location.href = "~/SiteRegistrationWizard/?id=" + siteId;
+        });
     }
 
     debugger;

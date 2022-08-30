@@ -1,25 +1,22 @@
 //
 // CompanyRegistrationWizard-Contact.js
 //
-$(document).ready(function () {
-
-        $(".create-action").click(function(){
-        alert("Test");
+$(document).ready(function ()
+{
+    $(".create-action").click(function () {
+        //alert("Test");
         $('#ValidationSummaryEntityFormView div').remove();
     });
 
-    $('.create-action').on("click",function(){
-        alert("Test");
-        $('#ValidationSummaryEntityFormView div').remove();
-    })
-    
+    //$('.create-action').on("click", function () {
+    //    //alert("Test");
+    //    $('#ValidationSummaryEntityFormView div').remove();
+    //})
+
     debugger;
     sessionStorage.setItem("step_start", 2);
 
     root_erap_setup();
-
-
-
 });
 
 if (window.jQuery) {

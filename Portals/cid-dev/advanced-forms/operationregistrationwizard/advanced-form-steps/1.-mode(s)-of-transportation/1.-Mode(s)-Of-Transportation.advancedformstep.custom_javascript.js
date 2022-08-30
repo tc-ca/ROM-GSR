@@ -15,7 +15,7 @@ $(document).ready(function () {
 		else 
 			sitePageURL = "~/SiteRegistrationWizard/?id=" + siteId; 
 
-		sessionStorage.setItem('prev_from_mot', 'true');
+		sessionStorage.setItem('to_actvt_stp', 'true');
 
 		$("#NextButton").parent().before("<div id='previousButton' role='group' class='btn-group entity-action-button'><a href='" + sitePageURL + "'><input type='button' value='Previous' onclick='' id='PreviousButton' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>");
 	}

@@ -1,4 +1,10 @@
+$(document).load(function() {
+	$('#loader').hide();
+});
 $(document).ready(function() {
+	  //document.getElementById("loader").style.display = "block";
+
+
 	//$('#instructions').hide();
     $('#EntityFormView').hide();
 	//$('#redirectInstruction').show();
@@ -21,19 +27,17 @@ $(document).ready(function() {
 						$("#PreviousButton").hide();	
 					}
 
-					var prev_from_mot = sessionStorage.getItem("prev_from_mot");
-					//alert(prev_from_mot + ": from mot");
-					if(prev_from_mot == 'true'){
-						sessionStorage.setItem('prev_from_mot', 'false');
+					var to_actvt_stp = sessionStorage.getItem("to_actvt_stp");
+					var to_oprtn_wzrd = sessionStorage.getItem("to_oprtn_wzrd");
+
+					if(to_actvt_stp == 'true'){
+						sessionStorage.setItem('to_actvt_stp', 'false');
 						$("#PreviousButton").click();
 					}
-					else{
-						var from_op_wzrd = sessionStorage.getItem("from_op_wzrd");
-						//alert(from_op_wzrd + ": from op wzrd");
-						if(from_op_wzrd == null || from_op_wzrd == 'false')
-							window.location.href = operationWizardURL;
-						else
-							sessionStorage.setItem('from_op_wzrd', 'false');
+
+					if(to_oprtn_wzrd == 'true'){
+						sessionStorage.setItem('to_oprtn_wzrd', 'false');
+						window.location.href = operationWizardURL;
 					}
 		
 					if((!extendedSite && SiteHasOperationClasses(operationId, null)) || (extendedSite && SiteHasOperationClasses(operationId, null) && SiteHasOperationUNNumbers(operationId, null))){
@@ -57,6 +61,8 @@ $(document).ready(function() {
 			}
 		});
 	}
+
+	  //document.getElementById("loader").style.display = "none";
 
 	webFormClientValidate = function() {
     var validation = true;
