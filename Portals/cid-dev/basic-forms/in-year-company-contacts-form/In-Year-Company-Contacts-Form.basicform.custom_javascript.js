@@ -9,7 +9,7 @@ if (window.jQuery) {
                 return true;
             }
             else{
-                var errorMessage = 'You cannot proceed before attesting your company contacts changes';  
+                var errorMessage = 'You cannot proceed before attesting your company contacts changes, please check the "Attestation" box'; 
                 $('.validation-summary div').remove();
                 var validationSection = $('.validation-summary'); 
 				validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>")); 

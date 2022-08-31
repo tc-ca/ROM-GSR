@@ -3,6 +3,7 @@
 //
 $(document).ready(function () {
     debugger;
+    $("#cid_iscompanyattested").prop( "checked", false );
 
     // address
     tdg.cid.address_init(false);
@@ -109,4 +110,24 @@ function subgrid_language() {
             });
         });
     }
+}
+
+if (window.jQuery) {
+    (function ($) {
+        entityFormClientValidate = function () {
+            if($("#cid_iscompanyattested").prop('checked')){
+                return true;
+            }
+            else{
+                var errorMessage = 'You cannot proceed before attesting your company data changes, please check the "Attestation" box';  
+                $('.validation-summary div').remove();
+                var validationSection = $('.validation-summary').eq(1); 
+				validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>")); 
+				validationSection.show(); 
+                $('.validation-summary div').focus(); 
+
+                return false;
+            }
+        }
+    }(window.jQuery));
 }
