@@ -86,18 +86,18 @@ function btn_save_new_onclick() {
     var contact_id = '{{user.id}}';
     var cid_erapid = $("#cid_erapid").val();
 
-    cid_companyerap_insert(parent_id, cid_erapid, contact_id);
+    tdg.root.cid_companyeraps_insert(parent_id, cid_erapid, contact_id, false);
 }
 
-function cid_companyerap_insert(account_id, cid_erapid, contact_id) {
-    debugger;
-    var data = {
-        "cid_Company@odata.bind": "/accounts(" + account_id + ")",
-        "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
-        "cid_erapid": cid_erapid
-    };
-    tdg.webapi.create("cid_companyeraps", data, success_cb, error_cb);
-}
+//function cid_companyeraps_insert(account_id, cid_erapid, contact_id) {
+//    debugger;
+//    var data = {
+//        "cid_Company@odata.bind": "/accounts(" + account_id + ")",
+//        "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
+//        "cid_erapid": cid_erapid
+//    };
+//    tdg.webapi.create("cid_companyeraps", data, success_cb, error_cb);
+//}
 
 function form_clear() {
     debugger;

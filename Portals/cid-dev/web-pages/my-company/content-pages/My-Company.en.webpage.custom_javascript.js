@@ -18,19 +18,7 @@ $(document).ready(function () {
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
 
     if (cidCompanyStatus.indexOf("Inactive") >= 0){
-        $(".submit-btn").prop("disabled", true);
-  
-        //$(".create-action").prop("disabled", true);
-        
-        //$(".entitylist-download").prop("disabled", true);
-        //$(":button").prop("disabled", true);
-
-        
-        //$("a").removeAttr("href");  
-        //$(':a').prop('disabled', true);
-        //$('a').prop('disabled', true);
-        //$(':input').prop('disabled', true);
+        $(".submit-btn").prop("disabled", true); 
+        $(".create-action").hide();
     }
-
-
 });

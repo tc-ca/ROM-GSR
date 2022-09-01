@@ -4,6 +4,16 @@
 $(document).ready(function () {
     debugger;
 
+    var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
+    //$('#cid_cidcompanystatus').hide();
+    //$('#cid_cidcompanystatus_label').hide();
+
+    if (cidCompanyStatus.indexOf("Inactive") >= 0){
+        $(".submit-btn").prop("disabled", true); 
+                 $(".dropdown").addClass('hidden');
+         $('.dropdown').css('visibility','hidden')
+    }
+
     $("#cid_iscompanyattested").prop( "checked", false );
 
     // address

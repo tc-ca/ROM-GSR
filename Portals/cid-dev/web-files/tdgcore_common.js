@@ -719,7 +719,7 @@ if (typeof (tdg.root) == "undefined") {
                 for (var i = 0; i < data.length; i++) {
                     var item = data[i];
                     var root_name = item.root_name;
-                    tdg.root.cid_companyeraps_insert(parentcustomerid, root_name, contact_id);
+                    tdg.root.cid_companyeraps_insert(parentcustomerid, root_name, contact_id, true);
                 }
             }
         },
@@ -746,11 +746,12 @@ if (typeof (tdg.root) == "undefined") {
             return data;
         },
 
-        cid_companyeraps_insert: function (parent_id, cid_erapid, contact_id) {
+        cid_companyeraps_insert: function (parent_id, cid_erapid, contact_id, cid_root_ind) {
             debugger;
             var data = {
                 "cid_Company@odata.bind": "/accounts(" + parent_id + ")",
                 "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
+                "cid_root_ind": cid_root_ind,
                 "cid_erapid": cid_erapid
             };
             tdg.webapi.create("cid_companyeraps", data);

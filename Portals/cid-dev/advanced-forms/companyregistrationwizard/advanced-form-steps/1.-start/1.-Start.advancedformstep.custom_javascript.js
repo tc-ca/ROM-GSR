@@ -141,6 +141,13 @@ if (window.jQuery) {
                 if (rom_data.length > 0) {
                     rom_data = rom_data[0];
 
+                    // the company is currently in the process of registration and stop the user from registering this company.
+                    if (rom_data.cid_cidcompanystatus != null) {
+                        var message = tdg.error_message.message("m000014");
+                        tdg.c.dialog_OK(message);
+                        return false;
+                    }
+
                     $("#parentcustomerid").attr("value", rom_data.accountid);
                     $("#parentcustomerid_name").attr("value", legalname);
                     $("#parentcustomerid_entityname").attr("value", 'account');
@@ -170,6 +177,13 @@ if (window.jQuery) {
                     rom_data = tdg.c.OData_List("account", filter);
                     if (rom_data.length > 0) {
                         rom_data = rom_data[0];
+
+                        // the company is currently in the process of registration and stop the user from registering this company.
+                        if (rom_data.cid_cidcompanystatus != null) {
+                            var message = tdg.error_message.message("m000014");
+                            tdg.c.dialog_OK(message);
+                            return false;
+                        }
 
                         $("#parentcustomerid").attr("value", rom_data.accountid);
                         $("#parentcustomerid_name").attr("value", legalname);

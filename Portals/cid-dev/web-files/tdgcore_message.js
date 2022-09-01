@@ -166,6 +166,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": m000013_FR
                     },
                     {
+                        "code": "m000014",
+                        "message_en": "The company is currently in the process of registration.",
+                        "message_fr": "La société est actuellement en cours d'enregistrement."
+                    },
+                    {
                         "code": "m000015",
                         "message_en": "You cannot proceed before adding at least one mode of transportation.",
                         "message_fr": "Vous ne pouvez pas continuer avant d'avoir ajouté au moins un mode de transport."

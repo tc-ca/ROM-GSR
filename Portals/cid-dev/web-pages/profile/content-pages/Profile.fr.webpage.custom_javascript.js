@@ -1,9 +1,10 @@
-
 //
 // Web Page-Profile.js
 //
 $(document).ready(function () {
     debugger;
+
+    page_setup();
 
     var parent_id = '{{user.parentcustomerid.Id}}';
     var filter = "accountid eq guid'" + parent_id + "'";
@@ -46,3 +47,17 @@ $(document).ready(function () {
     $("#fax").attr("autocomplete", "new-password");
 });
 
+function page_setup() {
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
+    const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = file;
+
+        $("body").append(script);
+    }
+}

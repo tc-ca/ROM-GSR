@@ -16,6 +16,7 @@ $(document).ready(function () {
     cid_legalname = tdg.c.replace_special_char(cid_legalname);
 
     $("#ovs_legalname").val(cid_legalname);
+    $("#name").val(cid_legalname);
 
     // hide controls
     tdg.c.control_hide("name");
@@ -39,7 +40,7 @@ $(document).ready(function () {
     $("#telephone1").attr("maxlength", "10");
     $("#fax").attr("maxlength", "10");
 
-    $("#telephone1").on('keyup', function() {
+    $("#telephone1").on('keyup', function () {
         var n = $(this).val().replace(/\D/g, '');
         $(this).val(n);
         var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
@@ -47,7 +48,8 @@ $(document).ready(function () {
             $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
         }
     });
-    $("#fax").on('keyup', function() {
+
+    $("#fax").on('keyup', function () {
         var n = $(this).val().replace(/\D/g, '');
         $(this).val(n);
         var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);

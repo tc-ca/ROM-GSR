@@ -3,7 +3,17 @@
 //
 $(document).ready(function () {
     debugger;
+ var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
+    $('#cid_cidcompanystatus').hide();
+    $('#cid_cidcompanystatus_label').hide();
 
+    if (cidCompanyStatus.indexOf("Inactive") >= 0){
+        $(".submit-btn").prop("disabled", true); 
+        $(".create-action").hide();
+                 $(".dropdown").addClass('hidden');
+         $('.dropdown').css('visibility','hidden')
+    }
+    
     clear_address_type_required_fields();
 
     $("#telephone1").attr("placeholder", "");
