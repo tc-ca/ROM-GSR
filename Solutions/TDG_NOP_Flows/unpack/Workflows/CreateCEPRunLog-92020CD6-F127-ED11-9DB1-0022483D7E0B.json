@@ -1,0 +1,665 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "2f23ddd3-3b56-41f5-9b39-c2b174a38df3"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "ovs_cdnop",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "ovs_cepsampling_runcepselection",
+              "subscriptionRequest/runas": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Initialize_variable:_CEP_Run_Status:_Start_or_End": {
+          "runAfter": {
+            "Set_variable:_Operation_Type": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "339672ce-9ff9-4f83-a080-78bb2761e386"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CEP Run Status",
+                "type": "boolean",
+                "value": "@if(equals(triggerOutputs()?['body/ovs_cepsampling_runcepselection'], bool('True')), true, false)"
+              }
+            ]
+          }
+        },
+        "Condition:_Check_if_process_started_": {
+          "actions": {
+            "Add_a_new_row:_CEP_Run": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "fb39f547-74bc-4b77-aaec-0f20d2b64934"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "ovs_cepruns",
+                  "item/ovs_excludehub": "@triggerOutputs()?['body/ovs_cepsampling_excludehub']",
+                  "item/ovs_cepsamplesize": "@triggerOutputs()?['body/ovs_cepsampling_samplesize']",
+                  "item/ovs_excludeincorrectpostalcode": "@triggerOutputs()?['body/ovs_cepsampling_excludebadpostalcode']",
+                  "item/ovs_excluderiskcategory": "@triggerOutputs()?['body/ovs_cepsampling_excluderiskcategory']",
+                  "item/ovs_NOPreference@odata.bind": "/ovs_cdnops(@{triggerOutputs()?['body/ovs_cdnopid']})",
+                  "item/ovs_onlyactivesites": "@triggerOutputs()?['body/ovs_cepsampling_onlyactivesites']",
+                  "item/ovs_operationtype": "@variables('Operation Types')",
+                  "item/ovs_recidivismsamplesize": "@triggerOutputs()?['body/ovs_cepsampling_recidivismsamplesize']",
+                  "item/ovs_recidivismwhenviolationcountequals": "@triggerOutputs()?['body/ovs_cepsampling_recidivismviolationcount']",
+                  "item/statuscode": 918640000,
+                  "item/ovs_violationfoundduringthelastnyears": "@triggerOutputs()?['body/ovs_cepsampling_violationfoundlastnyears']",
+                  "item/ovs_violationfoundpriortodate": "@convertToUtc(triggerOutputs()?['body/ovs_cepsampling_violationfoundbeforedate'],'Central Standard Time')"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_variable:_CEP_RUN_ID": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "List_rows:_CEP_Run_by_NOP_id_and_Status_-_InProgress": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "226c52cc-f20e-4d46-bbec-5351847a3e8e"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps",
+                    "operationId": "ListRecords",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "ovs_cepruns",
+                    "$filter": "(_ovs_nopreference_value eq @{triggerOutputs()?['body/ovs_cdnopid']}) and (statuscode eq 918640000)",
+                    "$orderby": " createdon desc",
+                    "$top": 1
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              },
+              "Condition:_Check_if_CEP_run_exists_for_this_NOP_and_status_=_InProgress": {
+                "actions": {
+                  "Compose:_get_first_record": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "248d3835-1683-49d1-a599-318f350dd82d"
+                    },
+                    "type": "Compose",
+                    "inputs": "@first(outputs('List_rows:_CEP_Run_by_NOP_id_and_Status_-_InProgress')?['body/value'])"
+                  },
+                  "List_rows:_Operations_from_CEP_-_Frame_view": {
+                    "runAfter": {
+                      "Set_variable_2": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "b36d911b-1867-4df7-b5e0-95bb2d0d7d45"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_commondataserviceforapps",
+                        "operationId": "ListRecords",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      },
+                      "parameters": {
+                        "entityName": "ovs_mocregistrations",
+                        "$filter": "(ovs_cepsampling_strataname ne null)  and (ovs_cepind eq true)"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Set_variable:_Total_CEP_Selection": {
+                    "runAfter": {
+                      "List_rows:_Operations_from_CEP_-_Frame_view": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "bedecc32-4e03-408c-a073-75d9865fb277"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Total CEP Selection",
+                      "value": "@length(outputs('List_rows:_Operations_from_CEP_-_Frame_view')?['body/value'])"
+                    }
+                  },
+                  "List_rows:_Operations_from_CEP_-_recidivism": {
+                    "runAfter": {
+                      "Set_variable_2": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "b0281513-2cee-4f61-a921-6af0c48a3f99"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_commondataserviceforapps",
+                        "operationId": "ListRecords",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      },
+                      "parameters": {
+                        "entityName": "ovs_mocregistrations",
+                        "$filter": "ovs_cepsampling_strataname ne null  and ovs_cepind eq true and ovs_cepsampling_recidivism eq true"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Set_variable": {
+                    "runAfter": {
+                      "List_rows:_Operations_from_CEP_-_recidivism": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "0136bc43-e9bf-4b25-92ed-86ce4f0b1f41"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Total Recidivism - Yes",
+                      "value": "@length(outputs('List_rows:_Operations_from_CEP_-_recidivism')?['body/value'])"
+                    }
+                  },
+                  "List_rows_Get_Many_to_Many:_NOP_and_oversighttype": {
+                    "runAfter": {
+                      "Set_variable:_Total_CEP_Selection": [
+                        "Succeeded"
+                      ],
+                      "Set_variable": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "a80260f3-f9c7-4f55-a19a-778f763633b4"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_commondataserviceforapps",
+                        "operationId": "ListRecords",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      },
+                      "parameters": {
+                        "entityName": "@concat('ovs_cepsampling_cdnop_ovs_oversighttypeset','')",
+                        "$select": "ovs_oversighttypeid",
+                        "$filter": "ovs_cdnopid eq '@{triggerOutputs()?['body/ovs_cdnopid']}'"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Condition": {
+                    "actions": {
+                      "Apply_to_each": {
+                        "foreach": "@outputs('List_rows_Get_Many_to_Many:_NOP_and_oversighttype')?['body/value']",
+                        "actions": {
+                          "Get_a_row_by_ID:__Oversight_Types": {
+                            "runAfter": {},
+                            "metadata": {
+                              "operationMetadataId": "00ed8ea4-6b21-45e9-819f-4e9cc19f7df2"
+                            },
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "host": {
+                                "connectionName": "shared_commondataserviceforapps",
+                                "operationId": "GetItem",
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                              },
+                              "parameters": {
+                                "entityName": "ovs_oversighttypes",
+                                "recordId": "@items('Apply_to_each')?['ovs_oversighttypeid']",
+                                "$select": "ovs_name"
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            }
+                          },
+                          "Append_to_string_variable": {
+                            "runAfter": {
+                              "Get_a_row_by_ID:__Oversight_Types": [
+                                "Succeeded"
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "466c345d-bd01-4d50-849e-476c779d0fb7"
+                            },
+                            "type": "AppendToStringVariable",
+                            "inputs": {
+                              "name": "Exclude inspections of type",
+                              "value": " @{outputs('Get_a_row_by_ID:__Oversight_Types')?['body/ovs_name']};"
+                            }
+                          }
+                        },
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "b0292719-c6ec-4c5e-8a4b-b91cbff917df"
+                        },
+                        "type": "Foreach"
+                      }
+                    },
+                    "runAfter": {
+                      "List_rows_Get_Many_to_Many:_NOP_and_oversighttype": [
+                        "Succeeded"
+                      ]
+                    },
+                    "expression": {
+                      "and": [
+                        {
+                          "not": {
+                            "equals": [
+                              "@empty(outputs('List_rows_Get_Many_to_Many:_NOP_and_oversighttype')?['body/value'])",
+                              "@true"
+                            ]
+                          }
+                        },
+                        {
+                          "greater": [
+                            "@length(outputs('List_rows_Get_Many_to_Many:_NOP_and_oversighttype')?['body/value'])",
+                            0
+                          ]
+                        }
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "a3bb1f45-92fd-4a71-9d0d-235d7433d599"
+                    },
+                    "type": "If"
+                  },
+                  "List_rows_Get_Many_to_Many:_NOP_and_legislation_": {
+                    "runAfter": {
+                      "List_rows_Get_Many_to_Many:_NOP_and_oversighttype": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "44b63a70-ba3b-4a51-85da-75ed72ae7ae8"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_commondataserviceforapps",
+                        "operationId": "ListRecords",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      },
+                      "parameters": {
+                        "entityName": "@concat('ovs_cepsampling_cdnop_qm_rclegislationset', '')",
+                        "$select": "qm_rclegislationid",
+                        "$filter": "ovs_cdnopid eq '@{triggerOutputs()?['body/ovs_cdnopid']}'"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Condition_2": {
+                    "actions": {
+                      "Apply_to_each_2": {
+                        "foreach": "@outputs('List_rows_Get_Many_to_Many:_NOP_and_legislation_')?['body/value']",
+                        "actions": {
+                          "Get_a_row_by_ID:__Legislation": {
+                            "runAfter": {},
+                            "metadata": {
+                              "operationMetadataId": "00ed8ea4-6b21-45e9-819f-4e9cc19f7df2"
+                            },
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "host": {
+                                "connectionName": "shared_commondataserviceforapps",
+                                "operationId": "GetItem",
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                              },
+                              "parameters": {
+                                "entityName": "qm_rclegislations",
+                                "recordId": "@items('Apply_to_each_2')?['qm_rclegislationid']",
+                                "$select": "qm_name"
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            }
+                          },
+                          "Append_to_string_variable_2": {
+                            "runAfter": {
+                              "Get_a_row_by_ID:__Legislation": [
+                                "Succeeded"
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "466c345d-bd01-4d50-849e-476c779d0fb7"
+                            },
+                            "type": "AppendToStringVariable",
+                            "inputs": {
+                              "name": "Exclude violation of type",
+                              "value": " @{outputs('Get_a_row_by_ID:__Legislation')?['body/qm_name']}; "
+                            }
+                          }
+                        },
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "b0292719-c6ec-4c5e-8a4b-b91cbff917df"
+                        },
+                        "type": "Foreach"
+                      }
+                    },
+                    "runAfter": {
+                      "List_rows_Get_Many_to_Many:_NOP_and_legislation_": [
+                        "Succeeded"
+                      ]
+                    },
+                    "expression": {
+                      "and": [
+                        {
+                          "not": {
+                            "equals": [
+                              "@empty(outputs('List_rows_Get_Many_to_Many:_NOP_and_legislation_')?['body/value'])",
+                              "@true"
+                            ]
+                          }
+                        },
+                        {
+                          "greater": [
+                            "@length(outputs('List_rows_Get_Many_to_Many:_NOP_and_legislation_')?['body/value'])",
+                            0
+                          ]
+                        }
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "a3bb1f45-92fd-4a71-9d0d-235d7433d599"
+                    },
+                    "type": "If"
+                  },
+                  "Set_variable_2": {
+                    "runAfter": {
+                      "Compose:_get_first_record": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "b63c407b-d4a4-4dba-9837-fb3d3d56a7c1"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "CEP RUN ID",
+                      "value": "@{outputs('Compose:_get_first_record')?['ovs_ceprunid']}"
+                    }
+                  },
+                  "Update_a_row": {
+                    "runAfter": {
+                      "Condition": [
+                        "Succeeded"
+                      ],
+                      "Condition_2": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "7fa8b63a-dd6f-43ec-bec9-2f218d3c5873"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_commondataserviceforapps",
+                        "operationId": "UpdateRecord",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      },
+                      "parameters": {
+                        "entityName": "ovs_cepruns",
+                        "recordId": "@variables('CEP RUN ID')",
+                        "item/ovs_excludeinspectionsoftype": "@variables('Exclude inspections of type')",
+                        "item/ovs_excludeviolationoftype": "@variables('Exclude violation of type')",
+                        "item/statuscode": 918640001,
+                        "item/ovs_totalcepselection": "@variables('Total CEP Selection')",
+                        "item/ovs_totalrecidivismyes": "@variables('Total Recidivism - Yes')"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  }
+                },
+                "runAfter": {
+                  "List_rows:_CEP_Run_by_NOP_id_and_Status_-_InProgress": [
+                    "Succeeded"
+                  ]
+                },
+                "expression": {
+                  "and": [
+                    {
+                      "not": {
+                        "equals": [
+                          "@empty(outputs('List_rows:_CEP_Run_by_NOP_id_and_Status_-_InProgress')?['body/value'])",
+                          "@true"
+                        ]
+                      }
+                    },
+                    {
+                      "greater": [
+                        "@length(outputs('List_rows:_CEP_Run_by_NOP_id_and_Status_-_InProgress')?['body/value'])",
+                        0
+                      ]
+                    }
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "d40fb305-d917-4f7e-88e7-3fca5788a729"
+                },
+                "type": "If"
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@variables('CEP Run Status')",
+              "@true"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0b5cf67a-98c7-4bdb-b253-47335917e576"
+          },
+          "type": "If"
+        },
+        "Initialize_variable:_Total_CEP_Selection": {
+          "runAfter": {
+            "Initialize_variable:_CEP_Run_Status:_Start_or_End": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9290b2e9-3728-4047-9d62-bcdb38a26128"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Total CEP Selection",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_Total_Recidivism_-_Yes": {
+          "runAfter": {
+            "Initialize_variable:_Total_CEP_Selection": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3846d4dd-29d4-43e3-bb3c-7c9b6e467466"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Total Recidivism - Yes",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_Exclude_inspections_of_type": {
+          "runAfter": {
+            "Initialize_variable:_Total_Recidivism_-_Yes": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "cd39a45e-f579-458b-97e7-7eb210025817"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Exclude inspections of type",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_Exclude_violation_of_type": {
+          "runAfter": {
+            "Initialize_variable:_Exclude_inspections_of_type": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0c96f8da-27cb-4a95-a83a-671242ba21cd"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Exclude violation of type",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_Operation_Type": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "92a738a4-6549-47ee-846c-5070ae05df7e"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Operation Types",
+                "type": "string",
+                "value": " "
+              }
+            ]
+          }
+        },
+        "Get_a_row_by_ID:_NOP_to_get_Operation_Type_as_a_multi_select_": {
+          "runAfter": {
+            "Initialize_variable:_Operation_Type": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5ba83fa2-25fc-4f6c-9af4-84d4b895308a"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_cdnops",
+              "recordId": "@triggerOutputs()?['body/ovs_cdnopid']",
+              "$select": "ovs_cepsampling_operationtype"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Set_variable:_Operation_Type": {
+          "runAfter": {
+            "Get_a_row_by_ID:_NOP_to_get_Operation_Type_as_a_multi_select_": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f6bf6261-9fed-4c26-9d39-53dd0ba2bff3"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "Operation Types",
+            "value": "@{outputs('Get_a_row_by_ID:_NOP_to_get_Operation_Type_as_a_multi_select_')?['body/ovs_cepsampling_operationtype@OData.Community.Display.V1.FormattedValue']}"
+          }
+        },
+        "Initialize_variable:_CEP_RUN_ID": {
+          "runAfter": {
+            "Initialize_variable:_Exclude_violation_of_type": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "cbafc2b3-73dd-4ea0-a4e2-b82f6b8cccc0"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CEP RUN ID",
+                "type": "string"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}
