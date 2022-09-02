@@ -1,23 +1,21 @@
-//$(document).ready(function () {
-//    $("#cid_iscompanyattested").prop( "checked", false );
-//});
+$(document).ready(function () {
+    var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
 
-//if (window.jQuery) {
-//    (function ($) {
-//        entityFormClientValidate = function () {
-//            if($("#cid_iscompanyattested").prop('checked')){
-//                return true;
-//            }
-//            else{
-//                var errorMessage = 'You cannot proceed before attesting your company NAIC(s) and/or ERAP(s) changes';
-//                $('.validation-summary div').remove();
-//                var validationSection = $('.validation-summary').eq(2); 
-//				validationSection.append($("<div id='alertMessages2' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>")); 
-//				validationSection.show();
-//                $('.validation-summary div').focus(); 
+    if (cidCompanyStatus.indexOf("Inactive") >= 0){       
+        $(".submit-btn").prop("disabled", true); 
+        $(".create-action").hide();
+         
+        $("#CompanyNAICSCodes").on("loaded", function () {
+		    $(this).find("tbody").find("tr").each(function () {
+                $(this).find('td:last').remove();
+            });
+        });
 
-//                return false;
-//            }
-//        }
-//    }(window.jQuery));
-//}
+        $("#eraps").on("loaded", function () {
+		    $(this).find("tbody").find("tr").each(function () {
+                $(this).find('td:last').remove();
+            });
+        });
+        $('.crmEntityFormView').find('input, textarea, button, select').attr('disabled','disabled'); 
+    }
+});

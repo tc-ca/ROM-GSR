@@ -14,11 +14,4 @@ $(document).ready(function () {
 		$(this).css("font-size", "24px");
 		$(this).css("font-weight", "bold");
     });
-
-    var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
-
-    if (cidCompanyStatus.indexOf("Inactive") >= 0){
-        $(".submit-btn").prop("disabled", true); 
-        $(".create-action").hide();
-    }
 });
