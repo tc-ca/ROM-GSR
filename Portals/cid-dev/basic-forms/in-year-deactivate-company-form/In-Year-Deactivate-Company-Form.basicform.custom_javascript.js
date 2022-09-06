@@ -9,10 +9,6 @@ $(document).ready(function () {
     $('#cid_cidcompanystatus_label').hide();
 
     if (cidCompanyStatus.indexOf("Inactive") >= 0){
-        //$(".submit-btn").prop("disabled", true); 
-        //$("#cid_reasonforcompanydeactivation").prop("disabled", true); 
-        //$("#cid_memoforcompanydeactivation").prop("disabled", true); 
-        //$("#cid_iscompanyattested").prop("disabled", true);    
         $('#EntityFormPanel').find('input, textarea, button, select').attr('disabled','disabled');    
     }
 

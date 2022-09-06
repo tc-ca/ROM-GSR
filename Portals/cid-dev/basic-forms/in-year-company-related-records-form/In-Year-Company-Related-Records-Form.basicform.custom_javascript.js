@@ -16,6 +16,6 @@ $(document).ready(function () {
                 $(this).find('td:last').remove();
             });
         });
-        $('.crmEntityFormView').find('input, textarea, button, select').attr('disabled','disabled'); 
+        $('.crmEntityFormView').find('input, textarea, select').attr('disabled','disabled'); 
     }
 });

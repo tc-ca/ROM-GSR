@@ -3,6 +3,17 @@
 //
 $(document).ready(function () {
     debugger;
+    
+    var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
+    var activationButon = $("#EntityFormPanel").find(".workflow-link");
+
+    if (cidCompanyStatus.indexOf("Inactive") < 0){
+        activationButon.hide();
+    }
+    else{
+        activationButon.css("color","#000000");
+        activationButon.css("background-color","#4CAF50");
+    }
 
     // address
     tdg.cid.address_init(false);
