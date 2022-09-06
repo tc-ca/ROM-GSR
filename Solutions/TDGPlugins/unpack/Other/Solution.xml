@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ImportExportXml version="9.2.22083.144" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ImportExportXml version="9.2.22084.162" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <UniqueName>TDGPlugins</UniqueName>
     <LocalizedNames>
@@ -8,7 +8,7 @@
     <Descriptions>
       <Description description="Main solution for TDG Inspection Related Plugins&#xA;1.0.0.1 - WO Pre Create and Pre Update were modified." languagecode="1033" />
     </Descriptions>
-    <Version>1.2.0.45</Version>
+    <Version>1.2.0.46</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>transportationofdangerousgoods</UniqueName>
@@ -108,6 +108,7 @@
       <RootComponent type="92" id="{996c5873-dc3c-ec11-8c62-0022483d7564}" behavior="0" />
       <RootComponent type="92" id="{99d0165c-0694-ec11-b3fe-000d3a0c0174}" behavior="0" />
       <RootComponent type="92" id="{a872a6be-72fb-eb11-94ef-0022483bb3ca}" behavior="0" />
+      <RootComponent type="92" id="{ac43cdf5-4e2d-ed11-9db0-0022483cb62f}" behavior="0" />
       <RootComponent type="92" id="{aebee8b6-753e-ec11-8c62-0022483d71b4}" behavior="0" />
       <RootComponent type="92" id="{b17bde4d-3a84-ec11-8d20-000d3a84c476}" behavior="0" />
       <RootComponent type="92" id="{bb80f9e9-6179-ec11-8d20-000d3aff1221}" behavior="0" />
@@ -164,6 +165,12 @@
           <package>FieldService_Anchor (8.8.72.55)</package>
         </Required>
         <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.WorkOrder.WorkOrder_PreCreate: Create of msdyn_workorder" id="{72f5d924-08a2-eb11-b1ac-000d3ae8b93a}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="msdyn_workorder" displayName="Work Order" solution="FieldService (8.8.0.88)">
+          <package>FieldService_Anchor (8.8.72.55)</package>
+        </Required>
+        <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.WorkOrder.WorkOrder_PostUpdateOwnerSetForAllRelated: Update of msdyn_workorder" id="{ac43cdf5-4e2d-ed11-9db0-0022483cb62f}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="msdyn_workorder" displayName="Work Order" solution="FieldService (8.8.0.88)">
@@ -430,6 +437,10 @@
       <MissingDependency>
         <Required type="2" schemaName="ovs_revisedquarterid" displayName="Revised Quarter" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="Active" />
         <Dependent type="93" id="{67d320d4-65c6-eb11-bacc-000d3af39889}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ownerid" displayName="Owner" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.WorkOrder.WorkOrder_PostUpdateOwnerSetForAllRelated: Update of msdyn_workorder" id="{ac43cdf5-4e2d-ed11-9db0-0022483cb62f}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="statecode" displayName="Status" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)">
