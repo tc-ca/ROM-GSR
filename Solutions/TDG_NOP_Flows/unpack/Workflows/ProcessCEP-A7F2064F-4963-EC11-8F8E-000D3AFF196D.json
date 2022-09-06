@@ -1,10 +1,10 @@
 {
   "properties": {
     "connectionReferences": {
-      "shared_commondataservice_1": {
+      "shared_commondataservice": {
         "runtimeSource": "invoker",
         "connection": {
-          "connectionReferenceLogicalName": "tdg_sharedcommondataservice_4ca28"
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseLegacyServicePrinciple"
         },
         "api": {
           "name": "shared_commondataservice"
@@ -82,7 +82,7 @@
             },
             "host": {
               "connection": {
-                "name": "@parameters('$connections')['shared_commondataservice_1']['connectionId']"
+                "name": "@parameters('$connections')['shared_commondataservice']['connectionId']"
               }
             },
             "operationId": "GetOnNewItems_V2",
@@ -182,7 +182,10 @@
                               "item/ovs_regionflag": true,
                               "item/ovs_regionalnop@odata.bind": "/ovs_cdregionalnops/@{items('For_Each_WOC')?['_ovs_regionalnop_value']}"
                             },
-                            "authentication": "@parameters('$authentication')"
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            }
                           }
                         }
                       },
@@ -226,7 +229,10 @@
                               "item/ovs_regionflag": true,
                               "item/ovs_regionalnop@odata.bind": "/ovs_cdregionalnops/@{items('For_Each_WOC')?['_ovs_regionalnop_value']}"
                             },
-                            "authentication": "@parameters('$authentication')"
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            }
                           }
                         }
                       },
@@ -301,7 +307,10 @@
                               "item/ovs_regionflag": true,
                               "item/ovs_regionalnop@odata.bind": "/ovs_cdregionalnops/@{items('For_Each_WOC')?['_ovs_regionalnop_value']}"
                             },
-                            "authentication": "@parameters('$authentication')"
+                            "authentication": {
+                              "type": "Raw",
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                            }
                           }
                         }
                       },
@@ -338,7 +347,10 @@
                           "item/ovs_plannedquarter@odata.bind": "/tc_tcfiscalquarters/@{variables('Q4 Id')}",
                           "item/ovs_regionflag": true
                         },
-                        "authentication": "@parameters('$authentication')"
+                        "authentication": {
+                          "type": "Raw",
+                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                        }
                       }
                     }
                   },
@@ -398,7 +410,10 @@
                             "item/ovs_oversighttype@odata.bind": "/ovs_oversighttypes/@{variables('CEPOversightType')}",
                             "item/ovs_regionflag": true
                           },
-                          "authentication": "@parameters('$authentication')"
+                          "authentication": {
+                            "type": "Raw",
+                            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                          }
                         }
                       }
                     }
@@ -819,7 +834,10 @@
               "item/subject": "CEP Flow Ran Successfully",
               "item/objectid_ovs_cdnop@odata.bind": "/ovs_cdnops/@{triggerBody()?['entity']?['ovs_cdnopid']}"
             },
-            "authentication": "@parameters('$authentication')"
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
           }
         },
         "Initialize_GC_IPT_Type": {
