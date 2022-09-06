@@ -6,6 +6,7 @@ var _busy = false;
 $(document).ready(function ()
 {
     debugger;
+    $('table[data-name="SUMMARY_TAB_section_5"]').find("#cid_issiteattested").prop('checked',false);
 
     // address
     tdg.cid.address_init(true);
@@ -36,7 +37,7 @@ $(document).ready(function ()
 
     // hide controls
     tdg.c.control_hide("name");
-    tdg.c.control_hide("cid_siteclaim");
+    //tdg.c.control_hide("cid_siteclaim");
 
     // cid_same_as_company
     $("#cid_same_as_company").change(function () {
@@ -139,4 +140,24 @@ function subgrid_language() {
             });
         });
     }
+}
+
+if (window.jQuery) {
+    (function ($) {
+        entityFormClientValidate = function () {
+            if($("#cid_issiteattested").prop('checked')){
+                return true;
+            }
+            else{
+                var errorMessage = 'You cannot proceed before attesting your site data changes, please check the "Attestation" box';  
+                $('.validation-summary div').remove();
+                var validationSection = $('.validation-summary').eq(1); 
+				validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>")); 
+				validationSection.show(); 
+                $('.validation-summary div').focus(); 
+
+                return false;
+            }
+        }
+    }(window.jQuery));
 }

@@ -8,16 +8,13 @@ $(document).ready(function () {
     $('#cid_cidcompanystatus_label').hide();
 
     if (cidCompanyStatus.indexOf("Inactive") >= 0){
-        //$(".submit-btn").prop("disabled", true); 
         $(".create-action").hide();
-         
-        //$(".view-grid").find('table')
-        $(".table-striped").on("loaded", function () {
+
+        $(".entity-grid").on("loaded", function () {
 		    $(this).find("tbody").find("tr").each(function () {
                 $(this).find('td:last').remove();
             });
         });
-        //$('#EntityFormPanel').find('input, textarea, button, select').attr('disabled','disabled');
     }
 
     clear_address_type_required_fields();
