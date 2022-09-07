@@ -3,6 +3,9 @@ $(document).ready(function ()
     debugger;
    
    $('div[data-name="tdg_activity_types"]').find("#cid_issiteattested").prop('checked',false);
+
+    $('div[data-name="tdg_activity_types"]').find("#cid_cidsitestatus").hide();
+    $('div[data-name="tdg_activity_types"]').find("#cid_cidsitestatus").hide();
 });
 
 if (window.jQuery) {

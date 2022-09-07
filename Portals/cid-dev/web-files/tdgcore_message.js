@@ -191,6 +191,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "Invalid province_F"
                     },
                     {
+                        "code": "m000019",
+                        "message_en": "ERAP {0} is assigned to another Company. Are you sure you want to complete the add?",
+                        "message_fr": "ERAP {0} is assigned to another Company. Are you sure you want to complete the add?_F"
+                    },
+                    {
                         "code": "m000020",
                         "message_en": m000020_EN,
                         "message_fr": m000020_FR

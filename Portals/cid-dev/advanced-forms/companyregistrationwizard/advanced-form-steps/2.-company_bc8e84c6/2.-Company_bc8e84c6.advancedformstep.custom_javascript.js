@@ -23,7 +23,7 @@ $(document).ready(function () {
     $("#telephone1").attr("maxlength", "10");
     $("#fax").attr("maxlength", "10");
 
-    $("#telephone1").on('keyup', function() {
+    $("#telephone1").on('keyup', function () {
         var n = $(this).val().replace(/\D/g, '');
         $(this).val(n);
         var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
@@ -31,7 +31,7 @@ $(document).ready(function () {
             $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
         }
     });
-    $("#fax").on('keyup', function() {
+    $("#fax").on('keyup', function () {
         var n = $(this).val().replace(/\D/g, '');
         $(this).val(n);
         var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
@@ -40,7 +40,7 @@ $(document).ready(function () {
         }
     });
 
-    
+
     tdg.c.control_hide("cid_reasonfornobnnumber_other");
     tdg.c.control_hide("cid_companyclaim");
 
@@ -113,7 +113,7 @@ $(document).ready(function () {
         $("#address1_city").val(address1_city);
         $("#address1_stateorprovince").val(address1_stateorprovince);
         $("#address1_postalcode").val(address1_postalcode);
-        $("#address1_country").val(address1_country);
+        //$("#address1_country").val(address1_country);
 
         sessionStorage.setItem("AddressLine1Text", address1_line1);
     }

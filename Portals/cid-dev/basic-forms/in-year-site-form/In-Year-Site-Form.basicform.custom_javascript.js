@@ -16,6 +16,10 @@ $(document).ready(function ()
     else{
         activationButon.css("color","#000000");
         activationButon.css("background-color","#4CAF50");
+
+        $(".submit-btn").prop("disabled", true); 
+        $(".create-action").hide();
+        $('.crmEntityFormView').find('input, textarea, select, a').attr('disabled','disabled'); 
     }
 
 

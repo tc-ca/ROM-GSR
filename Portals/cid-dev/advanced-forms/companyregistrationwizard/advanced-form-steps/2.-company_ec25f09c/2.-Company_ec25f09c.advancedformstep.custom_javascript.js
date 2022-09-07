@@ -80,7 +80,7 @@ $(document).ready(function () {
         $("#address1_city").val(address1_city);
         $("#address1_stateorprovince").val(address1_stateorprovince);
         $("#address1_postalcode").val(address1_postalcode);
-        $("#address1_country").val(address1_country);
+        //$("#address1_country").val(address1_country);
     }
     tdg.c.control_hide("cid_has_cra_bn");
 
