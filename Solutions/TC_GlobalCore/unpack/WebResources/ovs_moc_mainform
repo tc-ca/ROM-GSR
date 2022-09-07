@@ -25,6 +25,8 @@ var Operation_main = (function (window, document) {
     const VALUE_HOTI_GOA = 918640042;
     const VALUE_CIV_AV = 918640040;
 
+    var LCID;
+    var messageNoSite;
 
     function setFieldPermissions(formContext) {
 
@@ -69,10 +71,17 @@ var Operation_main = (function (window, document) {
             globalContext = glHelper.getGlobalContext();
             var formContext = executionContext.getFormContext();
             globalFormContext = formContext;
+            LCID = globalContext.userSettings.languageId;
 
+            messageNoSite = LCID === 1033 ? "Site: No Site is associated with current operation." : "Site: Les champs obligatoires doivent être renseignés.";
             // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
             let formType = glHelper.GetFormType(formContext);
 
+            //check if there is a site associated with current operation
+            var accountid = glHelper.GetLookupAttrId(formContext, FIELD_SITE);
+            if (accountid == null)
+                Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageNoSite });
+            
 
             //Toggle required level based on Operation Type
             toggleRequiredLevel(formContext);
@@ -89,6 +98,10 @@ var Operation_main = (function (window, document) {
             operationType.removeOnChange(Operation_main.OperationType_OnChange);
             operationType.addOnChange(Operation_main.OperationType_OnChange);
 
+            formContext.data.entity.removeOnSave(Operation_main.OnSave);
+            formContext.data.entity.addOnSave(Operation_main.OnSave);
+             
+
         },
 
         Refresh_OperationClass: function () {
@@ -101,6 +114,23 @@ var Operation_main = (function (window, document) {
 
             var formContext = executionContext.getFormContext();
             toggleRequiredLevel(formContext);
+        },
+
+         OnSave: function (executionContext) {
+
+             var formContext = executionContext.getFormContext();
+             let formType = glHelper.GetFormType(formContext);
+             var accountid = glHelper.GetLookupAttrId(formContext, FIELD_SITE);
+           
+             // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+
+             if (formType == 1 && accountid == null) {
+
+                 glHelper.DisplayFormNotification(messageNoSite, "ERROR", 5000);
+                 executionContext.getEventArgs().preventDefault();//will prevent CRM form save
+                 return;
+             }
+            
         }
 
     }

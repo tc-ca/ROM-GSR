@@ -1,4 +1,5 @@
-<html><head>
+<html>
+<head>
     <title></title>
     <style>
         body {
@@ -42,8 +43,9 @@
     </style>
     <!-- Using jquery library -->
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-<meta></head>
-<body style="overflow-wrap: break-word;">
+    <meta>
+</head>
+<body style="overflow-wrap: break-word;" onfocusout="parent.setEmailRange();">
     <script type="text/javascript">
         function search() {
 
@@ -55,7 +57,7 @@
             var address1_line1 = document.getElementById("address1_line1").value
             var SearchTerm = address1_line1;
             //var LanguagePreference = 'en';
-            var LanguagePreference = (selected_language == "en-US" ? "en" : "fr");
+            var LanguagePreference = (selected_language != "fr" ? "en" : "fr");
 
             AddressComplete.Find(SearchTerm, LanguagePreference, false);
         }
@@ -115,7 +117,9 @@
 
                         break;
                     case "Find":
-                        var LanguagePreference = 'en';
+                        var selected_language = sessionStorage.getItem("selected_language");
+                        var LanguagePreference = (selected_language != "fr" ? "en" : "fr");
+
                         var LastId = list[0];
                         if (LastId != "") {
                             console.log("Find->LastId = " + LastId);
@@ -147,18 +151,18 @@
     <label for="address1_line1" class="field-label">Street 1</label>
     <span id="address1_line1_required" style="color: red;font-weight: bold"> *</span>
     <br>
-    <div id="div1" hidden>
+    <div id="div1" hidden="">
         <input list="address_list" id="address1_line1" class="text form-control" autocomplete="off">
         <br>
         <datalist id="address_list">
         </datalist>
         <datalist id="address_list2">
         </datalist>
-        <select id="address_list_id" name="address_list_id" hidden>
+        <select id="address_list_id" name="address_list_id" hidden="">
         </select>
     </div>
-    <div id="div2" hidden>
-        <input type="text" id="txt_address1_line1" class="text form-control" readonly>
+    <div id="div2" hidden="">
+        <input type="text" id="txt_address1_line1" class="text form-control" readonly="">
     </div>
 
     <script type="text/javascript">
@@ -174,7 +178,8 @@
             // language
             try {
                 var selected_language = sessionStorage.getItem("selected_language");
-                var value = (selected_language == "en-US" ? "Street 1" :"Rue 1");
+                //var value = (selected_language == "en-US" ? "Street 1" : "Rue 1");
+                var value = (selected_language == "en" ? "Street 1" : "Rue 1");
                 $("#address1_line1")[0].labels[0].innerHTML = value;
             } catch (e) { }
 
@@ -239,7 +244,7 @@
                 //debugger;
 
                 var listname = (!LastId_ind ? "address_list" : "address_list2");
-                var listname2 =  "address_list_id";
+                var listname2 = "address_list_id";
 
                 this.removeOptions(listname);
                 this.removeOptions(listname2);
@@ -360,12 +365,11 @@
                 return sessionStorage.getItem(field);
             },
 
-            ovs_lld_province: function (stateorprovince, selected_language) {
+            ovs_address1_province: function (stateorprovince, selected_language) {
                 debugger;
 
-                // let currentVal = $("#ovs_lld_province option:selected").val();
-
-                if (selected_language = "en-US") {
+                //if (selected_language = "en-US") {
+                if (selected_language = "en") {
                     var list = ["AB", "BC", "MB", "NB", "NL", "NT", "NS", "NT", "ON", "PE", "QC", "SK", "YT"];
                 }
                 else {
@@ -375,7 +379,7 @@
                 //var value = list.find(stateorprovince);
                 for (var i = 0; i < list.length; i++) {
                     if (list[i] == stateorprovince) {
-                        parent.$("#ovs_lld_province").val(i);
+                        parent.$("#ovs_address1_province").val(i);
                         break;
                     }
                 }
@@ -385,7 +389,8 @@
                 debugger;
 
                 var selected_language = sessionStorage.getItem("selected_language");
-                var item_e = (selected_language == "en-US" ? data[0] : data[1]);
+                //var item_e = (selected_language == "en-US" ? data[0] : data[1]);
+                var item_e = (selected_language == "en" ? data[0] : data[1]);
 
                 sessionStorage.setItem("POBoxNumber", item_e.POBoxNumber);
                 sessionStorage.setItem("Line1", item_e.Line1);
@@ -411,8 +416,8 @@
                     parent.$("#address1_postalcode").val(item_e.PostalCode);
                     parent.$("#address1_country").val(item_e.CountryName);
                     parent.$("#cid_addressoverwritten").val(0);
-                    
-                    this.ovs_lld_province(item_e.ProvinceCode, selected_language);
+
+                    this.ovs_address1_province(item_e.ProvinceCode, selected_language);
 
                     // set address1
                     document.getElementById('address1_line1').value = item_e.Line1;
@@ -422,4 +427,5 @@
         }
     </script>
 
-</body></html>
+</body>
+</html>

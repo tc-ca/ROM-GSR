@@ -1,9 +1,28 @@
 //To apply the Asterisk(*) Sign using custom JS:
 //$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
+// August 17, 2022 Tony Nguyen
+// August 18, 2022 Lauzon, Olivier
+// August 19, 2022 Tony Nguyen
 
 // tdgcore_common.js
 
 // tdg = tdgcore
+var canProvinces = [
+    "Alberta::Alberta",
+    "British Columbia::Colombie-Britannique",
+    "Manitoba::Manitoba",
+    "New Brunswick::Nouveau-Brunswick",
+    "Newfoundland and Labrador::Terre‑Neuve‑et‑Labrador",
+    "Northwest Territories::Territoires du Nord‑Ouest",
+    "Nova Scotia::Nouvelle-Écosse",
+    "Nunavut::Nunavut",
+    "Ontario::Ontario",
+    "Prince Edward Island::Île-du-Prince-Édouard",
+    "Quebec::Québec",
+    "Saskatchewan::Saskatchewan",
+    "Yukon::Yukon"
+];
+
 if (typeof (tdg) == "undefined") {
     tdg = {
         __namespace: true
@@ -19,6 +38,26 @@ if (typeof (tdg.c) == "undefined") {
             var f = document.getElementById("WebResource_address_complete");
             var c = f.contentWindow;
             c.targetFunction();
+        },
+
+        weblink_hide: function (url) {
+            //var value = "#navbar li.weblink";     // out of box template
+            var value = "#def-top li.weblink";      // Canada government template
+            $(value)
+                .each(function () {
+                    var item = $(this).find("a")[0];
+                    var href = item.href;
+                    if (href.indexOf(url) != -1) {
+                        $(this).remove();
+                        return;
+                    }
+                });
+        },
+
+        page_instructions: function (message) {
+            // $(".instructions").eq(0).find("p")[0].innerHTML = m000021;
+            var value = "<div class='alert alert-info' style='background:#d7faff'><p>" + message + "</p></div>";
+            $(".instructions").html(value);
         },
 
         btn_save_new_setup: function () {
@@ -52,7 +91,8 @@ if (typeof (tdg.c) == "undefined") {
             var value = text;
             var index1 = text.indexOf("::");
             if (index1 > -1) {
-                if (language == "en-US") {
+                //if (language == "en-US") {
+                if (language == "en") {
                     value = text.substr(0, index1);
                 }
                 else {
@@ -165,7 +205,8 @@ if (typeof (tdg.c) == "undefined") {
                     text = text + "::" + text;
                     index1 = text.indexOf("::");
                 }
-                if (language == "en-US") {
+                //if (language == "en-US") {
+                if (language == "en") {
                     value = text.substr(0, index1);
                 }
                 else {
@@ -183,19 +224,6 @@ if (typeof (tdg.c) == "undefined") {
             } catch (e) { }
 
             this.message_panel_clear();
-
-            //$v.hide();
-
-            //$('#ValidationSummaryEntityFormView div').remove();
-            //try {
-            //    $('#ValidationSummaryEntityFormView')[0].remove();
-            //} catch (e) {}
-            //$('#ValidationSummaryEntityFormView').hide();
-
-            //try {
-            //    $('#ValidationSummaryEntityFormControl_EntityFormView')[0].innerHTML = "";
-            //} catch (e) {}
-            //$('#ValidationSummaryEntityFormControl_EntityFormView').hide();
         },
 
         ValidationSummary: function () {
@@ -216,10 +244,6 @@ if (typeof (tdg.c) == "undefined") {
             if (clear) {
                 v.remove();
             }
-
-            //v.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + message + "</div>"));
-            //v.show();
-            //$('#alertMessages').focus();
         },
 
         error_message_advanced_form: function (message, clear) {
@@ -265,22 +289,6 @@ if (typeof (tdg.c) == "undefined") {
 
         control_autocomplete: function () {
             $("input").attr("autocomplete", "new-password");
-
-            //$('input, select, textarea').each(
-            //    function (index) {
-            //        var input = this;
-            //        var index1 = input.name.indexOf("ctl00$");
-            //        var index2 = input.name.lastIndexOf("$");
-            //        var ctrl = input.name.substr(index2+1);
-            //        var type = this.getAttribute("type");
-            //        if ((index1 >= 0) && (type != "hidden")) {
-            //            debugger;
-            //            $("#" + ctrl).autocomplete({
-            //                disabled: true
-            //            });
-            //        }
-            //    }
-            //);
         },
 
         replace_special_char: function (value) {
@@ -325,8 +333,6 @@ if (typeof (tdg.c) == "undefined") {
             $("#myModal").css('z-index', '9999');
 
             $("#btnYes").click(function () {
-                // handler(true);
-                // $("#myModal").modal("hide");
                 $("#myModal").remove();
                 handler(true);
             });
@@ -389,34 +395,34 @@ if (typeof (tdg.c) == "undefined") {
                 if (provinceValid == false) return false;
 
                 //Validate the postal code format with regex
-                if (!postalRegex.test(postalCode)) {
-                    postalcodeFormatValid = false;
-                    return false;
-                }
+                if (postalRegex.test(postalCode)) {
+                    postalcodeFormatValid = true;
+
+                } else return false;
 
                 //Validate that postal code matches
                 switch (postalCode.toUpperCase().charAt(0)) {
                     //NL&L
                     case "A":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[4], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "NL") provinceMatchesPostalcode = true;
                         break;
                     //NS
                     case "B":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[6], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "NS") provinceMatchesPostalcode = true;
                         break;
                     //PEI
                     case "C":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[9], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "PE") provinceMatchesPostalcode = true;
                         break;
                     //NB
                     case "E":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[3], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "NB") provinceMatchesPostalcode = true;
                         break;
                     //QC
                     case "G":
                     case "H":
                     case "J":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[10], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "QC") provinceMatchesPostalcode = true;
                         break;
                     //ON
                     case "K":
@@ -424,41 +430,57 @@ if (typeof (tdg.c) == "undefined") {
                     case "M":
                     case "N":
                     case "P":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[8], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "ON") provinceMatchesPostalcode = true;
                         break;
                     //MB
                     case "R":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[2], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "MB") provinceMatchesPostalcode = true;
                         break;
                     //SK
                     case "S":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[11], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "SK") provinceMatchesPostalcode = true;
                         break;
                     //AB
                     case "T":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[0], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "AB") provinceMatchesPostalcode = true;
                         break;
                     //BC
                     case "V":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[1], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "BC") provinceMatchesPostalcode = true;
                         break;
                     //NT & NU
                     case "X":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[5], language)) == 0 ||
-                            localizedProvince.localeCompare(this.text_language(canProvinces[7], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "NT" || province == "NU") provinceMatchesPostalcode = true;
                         break;
                     //YT
                     case "Y":
-                        if (localizedProvince.localeCompare(this.text_language(canProvinces[12], language)) == 0) provinceMatchesPostalcode = true;
+                        if (province == "YT") provinceMatchesPostalcode = true;
                         break;
                     default:
                     //Postal Code is invalid
                 }
 
                 return provinceMatchesPostalcode;
+
+                //TODO Logic for checking if city belongs to province
+                //TODO Logic for checking duplicate address in cid
             } else {
                 return false;
             }
+        }
+    }
+}
+
+// tdg.grid
+if (typeof (tdg.grid) == "undefined") {
+    tdg.grid = {
+        // 	$(".entity-grid").on("loaded", function () { 	
+        //      var rows = tdg.grid.rows("grid_name);
+        //  });
+        rows: function (name) {
+            var value = "#" + name + " table tbody tr"
+            var row_count = $(value).length;
+            return row_count;
         }
     }
 }
@@ -697,7 +719,7 @@ if (typeof (tdg.root) == "undefined") {
                 for (var i = 0; i < data.length; i++) {
                     var item = data[i];
                     var root_name = item.root_name;
-                    tdg.root.cid_companyeraps_insert(parentcustomerid, root_name, contact_id);
+                    tdg.root.cid_companyeraps_insert(parentcustomerid, root_name, contact_id, true);
                 }
             }
         },
@@ -724,11 +746,12 @@ if (typeof (tdg.root) == "undefined") {
             return data;
         },
 
-        cid_companyeraps_insert: function (parent_id, cid_erapid, contact_id) {
+        cid_companyeraps_insert: function (parent_id, cid_erapid, contact_id, cid_root_ind) {
             debugger;
             var data = {
                 "cid_Company@odata.bind": "/accounts(" + parent_id + ")",
                 "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
+                "cid_root_ind": cid_root_ind,
                 "cid_erapid": cid_erapid
             };
             tdg.webapi.create("cid_companyeraps", data);
@@ -751,8 +774,7 @@ if (typeof (tdg.root) == "undefined") {
 // tdg.cid = tdgcore.cid
 if (typeof (tdg.cid) == "undefined") {
     tdg.cid = {
-        address_init: function (site_ind)
-        {
+        address_init: function (site_ind) {
             debugger;
 
             this.clear_address_type_required_fields();
@@ -760,8 +782,26 @@ if (typeof (tdg.cid) == "undefined") {
             // default
             $("#address1_country").val("Canada");
             $('#address1_country').attr("readonly", true);
-    
+
+            //Setup province dropdown
             tdg.c.control_hide("address1_line1");
+            tdg.c.control_hide("address1_stateorprovince");
+
+            $("#ovs_address1_province").on("change", function (i, val) {
+                debugger
+                var ovs_address1_province = $("#ovs_address1_province :selected").text()
+                $("#address1_stateorprovince").val(ovs_address1_province);
+            });
+
+            $("#address1_postalcode").attr("maxlength", "6");
+            $("#address1_postalcode").on('keyup', function () {
+                var n = $(this).val().replace(/\W/g, '');
+                $(this).val(n);
+                var match = n.match(/^(\w{3})(\w{3})$/);
+                if (match) {
+                    $(this).val(match[1] + ' ' + match[2]);
+                }
+            });
 
             // resize WebResource_address_complete
             $("#WebResource_address_complete").height('72px');
@@ -792,10 +832,16 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#address1_latitude").attr("autocomplete", "new-password");
                 $("#address1_longitude").attr("autocomplete", "new-password");
             }
+            else {
+                tdg.c.addValidator("address1_line1");
+                tdg.c.addValidator("address1_city");
+                tdg.c.addValidator("ovs_address1_province");
+                tdg.c.addValidator("address1_stateorprovince");
+                tdg.c.addValidator("address1_postalcode");
+            }
         },
 
-        address_same_as_company: function (parent_id)
-        {
+        address_same_as_company: function (parent_id) {
             debugger;
 
             var value = $("#cid_same_as_company")[0].checked;
@@ -805,6 +851,7 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#address1_line2").prop('readonly', true);
                 $("#address1_line3").prop('readonly', true);
                 $("#address1_city").prop('readonly', true);
+                $("#ovs_address1_province").prop('disabled', true);
                 $("#address1_stateorprovince").prop('readonly', true);
                 $("#address1_postalcode").prop('readonly', true);
 
@@ -813,6 +860,7 @@ if (typeof (tdg.cid) == "undefined") {
 
                 var address1_line1 = "N/A";
                 var address1_city = "N/A";
+                var ovs_address1_province = "";
                 var address1_stateorprovince = "N/A";
                 var address1_postalcode = "N/A";
                 var address1_country = "Canada";
@@ -825,6 +873,7 @@ if (typeof (tdg.cid) == "undefined") {
                     address1_line3 = item.address1_line3;
                     address1_line3 = (address1_line3 == null ? "" : address1_line3);
                     address1_city = item.address1_city;
+                    ovs_address1_province = item.ovs_address1_province.Value;
                     address1_stateorprovince = item.address1_stateorprovince;
                     address1_postalcode = item.address1_postalcode;
                     address1_country = item.address1_country;
@@ -834,6 +883,7 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#address1_line2").val(address1_line2);
                 $("#address1_line3").val(address1_line3);
                 $("#address1_city").val(address1_city);
+                $("#ovs_address1_province").val(ovs_address1_province);
                 $("#address1_stateorprovince").val(address1_stateorprovince);
                 $("#address1_postalcode").val(address1_postalcode);
                 $("#address1_country").val(address1_country);
@@ -842,6 +892,7 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#address1_line2").prop('readonly', false);
                 $("#address1_line3").prop('readonly', false);
                 $("#address1_city").prop('readonly', false);
+                $("#ovs_address1_province").prop('disabled', false);
                 $("#address1_stateorprovince").prop('readonly', false);
                 $("#address1_postalcode").prop('readonly', false);
             }
@@ -867,34 +918,32 @@ if (typeof (tdg.cid) == "undefined") {
                 case "1": // legal land description
                     tdg.c.section_show("section_legal_land_description");
 
-                    //tdg.c.addValidator("ovs_lld_quarter","Quarter/LSC");
-                    tdg.c.addValidator("ovs_lld_section", "Section");
-                    tdg.c.addValidator("ovs_lld_township", "Township");
-                    tdg.c.addValidator("ovs_lld_range", "Range");
-                    tdg.c.addValidator("ovs_lld_meridian", "Meridian");
-                    tdg.c.addValidator("ovs_lld_province", "Province / Territory");
+                    //tdg.c.addValidator("ovs_lld_quarter");
+                    tdg.c.addValidator("ovs_lld_section");
+                    tdg.c.addValidator("ovs_lld_township");
+                    tdg.c.addValidator("ovs_lld_range");
+                    tdg.c.addValidator("ovs_lld_meridian");
+                    tdg.c.addValidator("ovs_lld_province");
 
-                    if (reset_data) {
-                        thhis.address1_default("N/A");
-                    }
+                    this.address1_default("N/A");
                     break;
                 case "2": // lat/long
                     tdg.c.section_show("section_latitude_longitude");
 
-                    tdg.c.addValidator("address1_latitude", "Latitude");
-                    tdg.c.addValidator("address1_longitude", "Longitude");
+                    tdg.c.addValidator("address1_latitude");
+                    tdg.c.addValidator("address1_longitude");
 
-                    if (reset_data) {
-                        this.address1_default("N/A");
-                    }
+                    this.address1_default("N/A");
+
                     break;
                 default:
                     tdg.c.section_show("section_address");
 
-                    tdg.c.addValidator("address1_line1", "Street 1");
-                    tdg.c.addValidator("address1_city", "City");
-                    tdg.c.addValidator("address1_stateorprovince", "Province");
-                    tdg.c.addValidator("address1_postalcode", "Postal Code");
+                    tdg.c.addValidator("address1_line1");
+                    tdg.c.addValidator("address1_city");
+                    tdg.c.addValidator("ovs_address1_province");
+                    tdg.c.addValidator("address1_stateorprovince");
+                    tdg.c.addValidator("address1_postalcode");
 
                     if (reset_data) {
                         this.address1_default("");
@@ -907,6 +956,7 @@ if (typeof (tdg.cid) == "undefined") {
                 // address
                 tdg.c.removeValidator("address1_line1");
                 tdg.c.removeValidator("address1_city");
+                tdg.c.removeValidator("ovs_address1_province");
                 tdg.c.removeValidator("address1_stateorprovince");
                 tdg.c.removeValidator("address1_postalcode");
 
@@ -924,10 +974,28 @@ if (typeof (tdg.cid) == "undefined") {
             }
         },
 
+        convert_province_to_code: function (language) {
+            var address1_stateorprovince = $("#address1_stateorprovince").val();
+
+            // If there is no value that is prepopulated, this function exits
+            if (address1_stateorprovince == "") {
+                return;
+            }
+            for (var i = 0; i < 13; i++) {
+                var localizedProvince = tdg.c.text_language(canProvinces[i], language);
+                if (localizedProvince.localeCompare(address1_stateorprovince), undefined, { sensitivity: 'accent' } == 0) { //finds match
+                    $("#ovs_address1_province").val(i);
+                    return;
+                }
+            }
+            $("#ovs_lld_province").val("");
+        },
+
         address1_default: function (value) {
             $("#address1_line1").val(value);
             $("#address1_city").val(value);
             $("#address1_stateorprovince").val(value);
+            $("#ovs_address1_province").val(0);
             $("#address1_postalcode").val(value);
         },
 

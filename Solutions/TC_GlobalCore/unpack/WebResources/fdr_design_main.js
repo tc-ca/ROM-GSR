@@ -10,6 +10,7 @@ var Design_main = (function (window, document) {
     var globalContext;
     var formType;
     var clientUrl;
+    var DMRs_IDs = new Array();
     var globalObj = {};
     globalObj.Mapping = {};
     globalObj.Mapping.fdr_maincontainerdrawing = new Array("fdr_maincontainerdrawing", "fdr_maincontainerdrawingrevision", "fdr_maincontainerdrawingdate");
@@ -19,6 +20,72 @@ var Design_main = (function (window, document) {
 
 
     //**************** Private methods
+
+    function getAllowedDMRfromSpecs(DMR_control, SRF_id) {
+
+        var fetchData = {
+            fdr_servicerequestfunctionid: SRF_id
+        };
+        var fetchXml = [
+        "<fetch>",
+            "<entity name='fdr_servicerequestfunction'>",
+                "<filter>",
+            "<condition attribute='fdr_servicerequestfunctionid' operator='eq' value='", fetchData.fdr_servicerequestfunctionid, "' />",
+                "</filter>",
+                "<link-entity name='fdr_containerfunction' from='fdr_containerfunctionid' to='fdr_containerfunction' alias='CF'>",
+                    "<link-entity name='fdr_containerfunction_specification' from='fdr_containerfunctionid' to='fdr_containerfunctionid' alias='CFS' intersect='true'>",
+                        "<link-entity name='fdr_specification' from='fdr_specificationid' to='fdr_specificationid' alias='Spec' intersect='true'>",
+                            "<link-entity name='fdr_designmarkingrequirement' from='fdr_specification' to='fdr_specificationid' alias='DMR'>",
+                                "<attribute name='fdr_designmarkingrequirementid' />",
+                            "</link-entity>",
+                        "</link-entity>",
+                    "</link-entity>",
+                "</link-entity>",
+            "</entity>",
+            "</fetch>",
+        ].join("");
+
+        var encodedFetchXML = encodeURIComponent(fetchXml);
+
+        var req = new XMLHttpRequest();
+        req.open("GET", clientUrl + "/api/data/v9.2/fdr_servicerequestfunctions?fetchXml=" + encodedFetchXML, true);
+        req.setRequestHeader("OData-MaxVersion", "4.0");
+        req.setRequestHeader("OData-Version", "4.0");
+        req.setRequestHeader("Accept", "application/json");
+
+        req.setRequestHeader("Prefer", "odata.include-annotations=\"*\"");
+        req.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                req.onreadystatechange = null;
+                if (this.status === 200) {
+
+                    var results = JSON.parse(this.response);
+                    //if Specs with DMRs related to Container function are found  => get DMRs IDs
+                    if (results.value != null && results.value != undefined && results.value.length > 0)
+                        for (var i = 0; i < results.value.length; i++) {
+
+                            DMRs_IDs.push(results.value[i]["DMR.fdr_designmarkingrequirementid"]);
+                        }
+                    else {
+                        console.log("Cannot find Specs related");
+                        DMRs_IDs = new Array();
+                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Cannot find Specifications and its Design Marking Requirements" });
+                    }
+
+                } else {
+                    console.log("Something went wrong " + this.statusText);
+                    containerFunctions = new Array();
+                    Xrm.Navigation.openErrorDialog({ message: "Something went wrong " + this.statusText });
+                }
+
+                DMR_control.addPreSearch(Design_main.DMR_Pre_filter);
+            }
+        };
+        req.send();
+
+
+    }
+
     function initilizeDataObj(formContext, qvName) {
 
         if (glHelper.GetLookupAttrId(formContext, "fdr_designmarkingrequirement") == null) {
@@ -73,10 +140,16 @@ var Design_main = (function (window, document) {
         globalObj.qvControls.forEach(function (qvControl, i) {
 
             var dmrName = qvControl.getName();
-            var dmrAttrType = qvControl.getAttribute().getAttributeType();
-            //boolean for yes/no, array for multiselectoptionset, etc ...
-            var dmrAttrValue = qvControl.getAttribute().getValue();
-
+            var dmrAttr = qvControl.getAttribute();
+            var dmrAttrType = "";
+            var dmrAttrValue;
+            var isRequired = false;
+            if (dmrAttr != null) {
+                dmrAttrType = dmrAttr.getAttributeType();
+                //boolean for yes/no, array for multiselectoptionset, etc ...
+                dmrAttrValue = dmrAttr.getValue();
+                isRequired = dmrAttr.getRequiredLevel() == 'required';
+            }
             //var currentDesignControl = globalObj.sctControls.find(control => control.getName() == dmrName);
             var currentDesignControl = globalObj.sctControls.getByName(dmrName);
 
@@ -145,7 +218,7 @@ var Design_main = (function (window, document) {
 
                             currentDesignControl.clearOptions();
                             options.forEach(option => currentDesignControl.addOption(option));
-                            glHelper.SetRequiredLevel(formContext, dmrName, dmrAttrValue.length > 1);
+                            glHelper.SetRequiredLevel(formContext, dmrName, isRequired);
                             glHelper.SetControlReadOnly(formContext, dmrName, !(dmrAttrValue.length > 1));
                         }
                         //if none - hide
@@ -172,7 +245,7 @@ var Design_main = (function (window, document) {
                         if (dmrAttrValue != null && dmrAttrValue.length > 1) {
 
                             glHelper.filterOptionSet(formContext, dmrName, dmrAttrValue, dmrAttrValue.length > 1);
-                            glHelper.SetRequiredLevel(formContext, dmrName, dmrAttrValue.length > 1);
+                            glHelper.SetRequiredLevel(formContext, dmrName, isRequired);
                         }
                         //if none - hide
                         if (dmrAttrValue == null || dmrAttrValue.length == 0) {
@@ -200,6 +273,37 @@ var Design_main = (function (window, document) {
         });
     }
 
+    function SetTCRNOnlyBasedOnType(formContext) {
+        var drId = glHelper.GetLookupAttrId(formContext, "fdr_designmarkingrequirement");
+        if (drId != null) {
+            Xrm.WebApi.online.retrieveRecord("fdr_designmarkingrequirement", drId, "?$select=fdr_designmarkingrequirementid,_fdr_containertype_value&$expand=fdr_ContainerType($select=_fdr_standard_value)").then(
+                function success(result) {
+                    var fdr_designmarkingrequirementid = result["fdr_designmarkingrequirementid"]; // Guid
+                    var fdr_containertype = result["_fdr_containertype_value"]; // Lookup
+                    var fdr_containertype_formatted = result["_fdr_containertype_value@OData.Community.Display.V1.FormattedValue"];
+                    var fdr_containertype_lookuplogicalname = result["_fdr_containertype_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                    if (result.hasOwnProperty("fdr_ContainerType") && result["fdr_ContainerType"] !== null) {
+                        var fdr_ContainerType_fdr_standard = result["fdr_ContainerType"]["_fdr_standard_value"]; // Lookup
+                        var fdr_ContainerType_fdr_standard_formatted = result["fdr_ContainerType"]["_fdr_standard_value@OData.Community.Display.V1.FormattedValue"];
+                        var fdr_ContainerType_fdr_standard_lookuplogicalname = result["fdr_ContainerType"]["_fdr_standard_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+
+                        if (fdr_ContainerType_fdr_standard_formatted.indexOf("B620") > 0) {
+                            glHelper.SetSectionVisibility(formContext, "General", "section_TCRN", true);
+                            glHelper.SetSectionVisibility(formContext, "General", "section_designRequirement", false);
+                      } else {
+                            glHelper.SetSectionVisibility(formContext, "General", "section_TCRN", false);
+                            glHelper.SetSectionVisibility(formContext, "General", "section_designRequirement", true);
+
+                        }
+                    }
+                },
+                function (error) {
+                    console.log(error.message);
+                }
+            );
+        }
+    }
+
     //**************** Public methods
     return {
 
@@ -215,6 +319,26 @@ var Design_main = (function (window, document) {
             // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
             formType = glHelper.GetFormType(formContext);
 
+            //check if form has parrent Service Request function
+            var SFR_id = glHelper.GetLookupAttrId(formContext,"fdr_servicerequestfunction");
+            if (SFR_id == null) {
+
+                //notify customer 
+                Xrm.Navigation.openErrorDialog({ message: "Design cannot be created without Service Request Function. Please create design from the grid in Service Request Function form." }).then(
+                    function (success) {
+                        //lock the form
+                        glHelper.disableAllFields(formContext);
+                    },
+                    function (error) {
+                        console.log(error);
+                    });
+                
+
+                return;
+            }
+            //pre-filter DMR lookup
+            var DMR_control = formContext.getControl("fdr_designmarkingrequirement");
+            getAllowedDMRfromSpecs(DMR_control, SFR_id.replace('{', '').replace('}',''));
 
             if (formType == 1) {
 
@@ -230,6 +354,8 @@ var Design_main = (function (window, document) {
                 //lock dmr 
                 glHelper.SetDisabled(formContext, "fdr_designmarkingrequirement", true);
                 initilizeDataObj(globalFormContext, "QVC_DMR");
+                //Design Marking Requirement=B620, TCRN only
+                SetTCRNOnlyBasedOnType(formContext);
             }
         },
 
@@ -246,6 +372,30 @@ var Design_main = (function (window, document) {
 
 
         },
+
+        DMR_Pre_filter: function () {
+
+            var strTemplate = "<value>{0}</value>";
+            var currentLine = "";
+
+            //no specs with DMR
+            if (DMRs_IDs.length == 0) {
+                // filter have to return an empty result
+                var functionFilter = "<filter type='and'><condition attribute='fdr_designmarkingrequirementid' operator='eq' value='00000000-0000-0000-0000-000000000000'></condition></filter>";
+
+            }
+            else {
+
+                for (var i = 0; i < DMRs_IDs.length; i++) {
+
+                    currentLine = currentLine + strTemplate.replace("{0}", DMRs_IDs[i]);
+                }
+                var functionFilter = "<filter type='and'><condition attribute='fdr_designmarkingrequirementid' operator='in'>" + currentLine + "</condition></filter>";
+            }
+            globalFormContext.getControl("fdr_designmarkingrequirement").addCustomFilter(functionFilter, "fdr_designmarkingrequirement");
+
+        },
+
     }
 
 })(window, document)

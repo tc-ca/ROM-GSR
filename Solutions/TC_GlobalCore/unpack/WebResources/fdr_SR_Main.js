@@ -16,6 +16,7 @@ var SR_main = (function (window, document) {
     var SR_status;
     var SR_state;
     var SR_Status_origin;
+    var serviceRquestTypeOptions;
 
     var statusMappingActive = {
 
@@ -25,10 +26,12 @@ var SR_main = (function (window, document) {
         "794600010": [794600010, 794600006, 794600009],
         "Admin Review": ["Admin Review", "Additional Info Required", "Technical Review", "Cancellation Pending"],
         "794600006": [794600006, 794600000, 794600002, 794600009],
-        "Additional Info Required": ["Additional Info Required", "Admin Review", "Technical Review"],
-        "794600000": [794600000, 794600006, 794600002],
-        "Technical Review": ["Technical Review", "Additional Info Required", "Pending Inspection", "Cancellation Pending", "Refused", "Approved"],
-        "794600002": [794600002, 794600000, 794600003, 794600009, 794600008, 794600007],
+        "Additional Info Required": ["Additional Info Required", "Admin Review"],
+        "794600000": [794600000, 794600006],
+        "Technical Info Required": ["Technical Info Required", "Technical Review"],
+        "794600011": [794600011, 794600002],
+        "Technical Review": ["Technical Review", "Technical Info Required", "Pending Inspection", "Cancellation Pending", "Refused", "Approved"],
+        "794600002": [794600002, 794600011, 794600003, 794600009, 794600008, 794600007],
         "Pending Inspection": ["Pending Inspection", "Cancellation Pending", "Post Inspection Review"],
         "794600003": [794600003, 794600009, 794600004],
         "Post Inspection Review": ["Post Inspection Review", "Cancellation Pending", "Refused", "Approved"],
@@ -53,10 +56,26 @@ var SR_main = (function (window, document) {
         "794600005": [2]
     };
 
+    var ServiceRquestType2OperationType = {
+
+        " ": ["New Registration"],
+        "0": [794600000],
+        "Expired": ["Renewal", "Close Expired Registration"],
+        "794600000": [794600001, 794600006],
+        "Registered": ["Renewal", "Partial Revocation", "Amendment", "Full Revocation", "Close Active Registration"],
+        "794600001": [794600001, 794600003, 794600002, 794600004, 794600005],
+        "Unregistered": ["New Registration"],
+        "794600002": [794600000],
+        "Closed": ["Reactivation"],
+        "794600003": [794600007]
+    };
+   
+    // "Unregistered": ["New Registration", "Renewal", "Partial Revocation", "Amendment", "Full Revocation", "Close Active Registration", "Close Expired Registration", "Reactivation"],
+    //"794600002": [794600000, 794600001, 794600002, 794600003, 794600004, 794600005, 794600006, 794600007],
 
     //********************private methods*******************
 
-    function SetStateChangebility (formContext) {
+    function SetStateChangebility(formContext) {
 
         SR_status = glHelper.GetOptionsetValue(formContext, "statuscode");
         SR_state = glHelper.GetOptionsetValue(formContext, "statecode");
@@ -67,6 +86,24 @@ var SR_main = (function (window, document) {
             glHelper.SetDisabled(formContext, "header_statecode", false);
         //else state is read only
         else glHelper.SetDisabled(formContext, "header_statecode", true);
+    }
+
+    function ServiceRquestTypeFilter(formContext, operationstatus) {
+
+        ////"Unregistered","794600002"  - set SR Type to null, no options available. Notify user SR cannot be created due to opeartion type 
+        //if (operationstatus == 794600002) {
+
+        //    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "No Service Request couls be created for and Operation of type 'Unregistered'. Please select another operation" });
+        //    glHelper.filterOptionSetUsingOrigin(formContext, "fdr_srtype", serviceRquestTypeOptions, ServiceRquestType2OperationType[operationstatus], false);
+        //    return;
+        //}
+
+        if (!operationstatus) operationstatus = 0;
+        glHelper.filterOptionSetUsingOrigin(formContext, "fdr_srtype", serviceRquestTypeOptions, ServiceRquestType2OperationType[operationstatus], true);
+
+        if (ServiceRquestType2OperationType[operationstatus].length == 1) glHelper.SetOptionsetByValue(formContext, "fdr_srtype", ServiceRquestType2OperationType[operationstatus][0]);
+        else 
+            glHelper.SetValue(formContext, "fdr_srtype", null);
     }
 
 
@@ -125,6 +162,7 @@ var SR_main = (function (window, document) {
             formState.addOnChange(SR_main.OnState_Change);
 
             var formStatus = formContext.getAttribute("statuscode");
+            //get original list of options to keep
             SR_Status_origin = formStatus.getOptions();
             formStatus.removeOnChange(SR_main.OnStatusReason_Change);
             formStatus.addOnChange(SR_main.OnStatusReason_Change);
@@ -142,13 +180,14 @@ var SR_main = (function (window, document) {
             //on create
             if (formType == 1) {
 
+                serviceRquestTypeOptions = formContext.getAttribute("fdr_srtype").getOptions();
                 operation.fireOnChange();
             }
 
-            //on update etc
-            if (formType > 1) {
+            ////on update etc
+            //if (formType > 1) {
 
-            }
+            //}
         },
 
         OnStatusReason_Change: function (executionContext) {
@@ -189,6 +228,7 @@ var SR_main = (function (window, document) {
             if (hSite == null) formContext.getControl("header_fdr_operation").getAttribute().setValue(null);
         },
 
+        //the event happens only on create as Operation field is readonly rest of the time
         OnOperation_Change: function (executionContext) {
 
             var formContext = executionContext.getFormContext();
@@ -197,25 +237,35 @@ var SR_main = (function (window, document) {
             var hSite = formContext.getControl("header_fdr_site").getAttribute().getValue();
             var hOperation = formContext.getControl("header_fdr_operation").getAttribute().getValue();
 
-            if (hOperation != null && hSite == null) {
+            if (hOperation != null) {
 
-                var opperationid = hOperation[0].id.replace('{', '').replace('}','');
+                var opperationid = hOperation[0].id.replace('{', '').replace('}', '');
 
-                Xrm.WebApi.online.retrieveRecord("ovs_mocregistration", opperationid, "?$select=_ovs_siteid_value&$expand=ovs_SiteId($select=accountid,name)").then(
+                Xrm.WebApi.online.retrieveRecord("ovs_mocregistration", opperationid, "?$select=fdr_operationstatus,_ovs_siteid_value").then(
                     function success(result) {
+                        var fdr_operationstatus = result["fdr_operationstatus"];
+                        var fdr_operationstatus_formatted = result["fdr_operationstatus@OData.Community.Display.V1.FormattedValue"];
+
+                        //set Service Rquest Type based on Operation Status
+                        ServiceRquestTypeFilter(formContext, fdr_operationstatus);
+
+
                         var siteid = result["_ovs_siteid_value"];
                         var name = result["_ovs_siteid_value@OData.Community.Display.V1.FormattedValue"];
                         var logicalname = result["_ovs_siteid_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
 
                         //set site lookup
-                        glHelper.SetHeaderLookup(formContext, "header_fdr_site", logicalname, siteid, name);
-
+                        if (hSite == null) {
+                            glHelper.SetHeaderLookup(formContext, "header_fdr_site", logicalname, siteid, name);
+                        }
                     },
                     function (error) {
                         Xrm.Navigation.openErrorDialog({ message: error.message });
                     }
                 );
-            }            
+            }// no operation
+            else ServiceRquestTypeFilter(formContext, null);
+
         },
 
     }

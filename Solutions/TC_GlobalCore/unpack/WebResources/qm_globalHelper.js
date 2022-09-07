@@ -312,6 +312,19 @@
     /****************************************************************************************
     Notifications
     ****************************************************************************************/
+    //Set field validation message
+    function SetFieldNotification(formContext, controlname, messeageText) {
+        if (formContext.getControl(controlname)) {
+            formContext.getControl(controlname).setNotification(messeageText);
+        }
+    }
+
+    //Clear field validation message
+    function ClearFieldNotification(formContext, controlname) {
+        if (formContext.getControl(controlname)) {
+            formContext.getControl(controlname).clearNotification();
+        }
+    }
 
     function alertDialogText(messeageText, confirmaionText) {
         var mt = (messeageText != null && messeageText != undefined && messeageText.length > 0) ? messeageText : "A message from form";
@@ -832,6 +845,8 @@
         isOffline: isOffline,
         getFiscalYearFromCurrentDate: getFiscalYearFromCurrentDate,
         filterOptionSetUsingOrigin: filterOptionSetUsingOrigin,
+        SetFieldNotification: SetFieldNotification,
+        ClearFieldNotification: ClearFieldNotification,
     };
 
     //********************public methods end***************

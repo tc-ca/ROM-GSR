@@ -16,15 +16,6 @@ var AccountFDRmain = (function (window, document) {
     };
     var formContextGlobalRef;
 
-    const STREET1 = "address1_line1";
-    const CITY = "address1_city";
-    const STATE_PROVINCE = "address1_stateorprovince";
-    const ZIP_POSTALCODE = "address1_postalcode";
-    const COUNTRY = "address1_country";
-    const PRIMARYCONTACT = "primarycontactid";
-
-
-
 
     //********************private methods*******************
 
@@ -67,18 +58,6 @@ var AccountFDRmain = (function (window, document) {
                     }, function (error) {
                             console.log("getViolationHistory error: " + error.message);
                     });
-
-                    //result.json().then(function (i) {
-                    //    var data = i;
-                    //    if (data != null || typeof data !== 'undefined') {
-
-                    //        if (data.violationsHistory != null && typeof data.violationsHistory !== 'undefined' && data.violationsHistory != "") {
-                    //            window.top.localStorage.setItem('_violationsHistory', data.violationsHistory);
-                    //        }
-                    //    }
-                    //}, function (error) {
-                    //        console.log("getViolationHistory error: " + error.message);
-                    //});
                     
                 }
             },
@@ -96,20 +75,6 @@ var AccountFDRmain = (function (window, document) {
         
     }
 
-
-
-
-    //composite control fields manipulation
-    //function setAddressFieldsLevel(formContext) {
-        
-    //    glHelper.SetRequiredLevel(formContext, STREET1, true);
-    //    glHelper.SetRequiredLevel(formContext, CITY, true);
-    //    glHelper.SetRequiredLevel(formContext, STATE_PROVINCE, true);
-    //    glHelper.SetRequiredLevel(formContext, ZIP_POSTALCODE, true);
-    //    glHelper.SetRequiredLevel(formContext, COUNTRY, true);
-
-    //}
-
     //********************private methods end***************
 
     //********************public methods***************
@@ -120,11 +85,6 @@ var AccountFDRmain = (function (window, document) {
             
             const formContext = executionContext.getFormContext();
             formContextGlobalRef = formContext;
-
-            //if (AccountFDRmain.hasCurrentUserRole("TDG QA")) {
-            //    if (formContext.ui.tabs.get("tab_Operations") != null)
-            //        glHelper.SetTabVisibility(formContext, "tab_Operations", true);
-            //}
 
             //filter Relationship Type
             filter_customertypecode(formContext);
@@ -143,40 +103,11 @@ var AccountFDRmain = (function (window, document) {
                 //prepare data for Violations History grid
                 getViolationHistory(formContext);
 
-                //TASK 165366
-              //  glHelper.SetRequiredLevel(formContext, PRIMARYCONTACT, true);
-
-                //var accountUN = formContext.getControl("Subgrid_AccountUNNumbers");
-
-                //if (accountUN != null)
-                //    accountUN.addOnLoad(AccountFDRmain.Refresh_AccountClass);
-
             }
 
-            //setAddressFieldsLevel(formContext);
-
-            // This info needed for Contact-Quick create form i.e. Contact_QuickCreate.js
-            //TO Do: re-engeenir for mobile
-            try {
-                window.top.QuickCreateHelper = {};
-                window.top.QuickCreateHelper.site = {};
-                window.top.QuickCreateHelper.site.id = formContext.entityReference.id;
-                window.top.QuickCreateHelper.site.et = formContext.entityReference.entityType;
-                window.top.QuickCreateHelper.site.name = formContext.getAttribute("name").getValue();
-
-            } catch (e) {
-                console.log("Site_OnChange failed - lookup is empty");
-            }
-            
+            //setAddressFieldsLevel(formContext);            
             
         },
-
-
-        //Refresh_AccountClass: function () {
-
-        //    var accountClass = formContextGlobalRef.getControl("Subgrid_AccountClasses");
-        //    accountClass.refresh();
-        //},
 
 
         relationShip_OnChange: function (executionContext) {

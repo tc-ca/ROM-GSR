@@ -10,6 +10,7 @@ var SRFunctions_FDR_main = (function (window, document) {
     var globalContext;
     var formType;
     var clientUrl;
+    var isDesignRegSupported = false;
 
     var containerFunctions = new Array();
 
@@ -101,6 +102,8 @@ var SRFunctions_FDR_main = (function (window, document) {
             cf.removeOnChange(SRFunctions_FDR_main.On_ContainerFunctionChange);
             cf.addOnChange(SRFunctions_FDR_main.On_ContainerFunctionChange);
 
+            isDesignRegSupported = glHelper.GetValue(formContext, "fdr_supportsdesignregistration");
+
             if (formType == 1) {
 
                 glHelper.SetControlReadOnly(formContext, "fdr_containerfunction", false);
@@ -157,20 +160,82 @@ var SRFunctions_FDR_main = (function (window, document) {
                 //populate Service Request Function name
                 glHelper.SetValue(formContext, "fdr_name", glHelper.GetLookupName(formContext, "fdr_containerfunction"));
 
+
+                //select Container Functions that have already been added to a Service Request.
+                if (formType == 1) {
+                    var SR_id = glHelper.GetLookupAttrId(formContext, "fdr_servicerequest");
+                    if (SR_id != null) {
+                        var filter = "?$select=_fdr_containerfunction_value&$filter=(_fdr_containerfunction_value eq " + containerId;
+                        filter = filter + " and _fdr_servicerequest_value eq " + SR_id + " and statecode eq 0) ";
+                        Xrm.WebApi.online.retrieveMultipleRecords("fdr_servicerequestfunction", filter).then(
+                            function success(results) {
+                                if (results.entities.length > 0) {
+                                    glHelper.SetFieldNotification(formContext, "fdr_containerfunction", "Selected Container Function has already been added to the current Service Request.");
+                                } else {
+                                    glHelper.ClearFieldNotification(formContext, "fdr_containerfunction");
+
+                                }
+                            },
+                            function (error) {
+                                console.log(error.message);
+                            }
+                        );
+                    }
+
+                }
+                //update, Michael. September 1, 2022
+                //logic changed to make design registration option to change on Container function level, task 198729
+                //get and save design allowence value on create only, nio futher mutations!
                 Xrm.WebApi.online.retrieveRecord("fdr_containerfunction", containerId, "?$select=fdr_supportsdesignregistration").then(
                     function success(result) {
 
-                        var sdr_bool = result["fdr_supportsdesignregistration"];
+                        isDesignRegSupported = result["fdr_supportsdesignregistration"];
                         //var sdr_value = result["fdr_supportsdesignregistration@OData.Community.Display.V1.FormattedValue"];
-                        glHelper.SetSectionVisibility(formContext, "General", "section_design", sdr_bool);
-                        glHelper.SetControlVisibility(formContext, "Subgrid_Designs", sdr_bool);
-                        glHelper.SetSectionVisibility(formContext, "General", "section_specs", !sdr_bool);
-                        glHelper.SetControlVisibility(formContext, "GRID_SPECS", !sdr_bool);
+                        glHelper.SetValue(formContext, "fdr_supportsdesignregistration", isDesignRegSupported);
+
+                        glHelper.SetSectionVisibility(formContext, "General", "section_design", isDesignRegSupported);
+                        glHelper.SetControlVisibility(formContext, "Subgrid_Designs", isDesignRegSupported);
+                        glHelper.SetSectionVisibility(formContext, "General", "section_specs", !isDesignRegSupported);
+                        glHelper.SetControlVisibility(formContext, "GRID_SPECS", !isDesignRegSupported);
+                        //199424 : Hide Specs grid in Service Request Function if the selected Container Function record does not support Designs AND has no specifications 
+                        if (!isDesignRegSupported) {
+                            var originalFetchXML = `<fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
+                              <entity name="fdr_specification">
+                                <attribute name="fdr_specificationid" />
+                                <filter type="and">
+                                  <condition attribute="statecode" operator="eq" value="0" />
+                                </filter>
+                                <link-entity name="fdr_containerfunction_specification" from="fdr_specificationid" to="fdr_specificationid" visible="false" intersect="true">
+                                  <link-entity name="fdr_containerfunction" from="fdr_containerfunctionid" to="fdr_containerfunctionid" alias="ad">
+                                    <filter type="and">
+                                      <condition attribute="fdr_containerfunctionid" operator="eq" uiname="Thickness test (T)" uitype="fdr_containerfunction" value="{SFID}" />
+                                    </filter>
+                                  </link-entity>
+                                </link-entity>
+                              </entity>
+                            </fetch>`;
+                            originalFetchXML = originalFetchXML.replace("{SFID}", containerId)
+                            var escapedFetchXML = encodeURIComponent(originalFetchXML);
+                            var hasSpec = true;
+                            Xrm.WebApi.online.retrieveMultipleRecords("fdr_specification", "?fetchXml=" + escapedFetchXML).then(
+                                function success(results) {
+
+                                    if (results.entities.length <= 0) {
+                                        hasSpec = false;
+                                    }
+                                    glHelper.SetSectionVisibility(formContext, "General", "section_specs", hasSpec);
+                                },
+                                function (error) {
+                                    console.log(error.message);
+                                }
+                            );
+                        }
                     },
                     function (error) {
                         Xrm.Navigation.openErrorDialog({ message: "Something went wrong with Container Function query. Error: " + error.message });
                     }
                 );
+
             }
             else {
                 //hide both

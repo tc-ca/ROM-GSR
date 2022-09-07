@@ -10,13 +10,12 @@
     <layoutxml>
       <grid name="resultset" jump="cid_name" select="1" preview="1" icon="1">
         <row name="result" id="cid_audithistorylogid">
-          <cell name="cid_name" width="150" />
-          <cell name="cid_changedfield" width="100" />
-          <cell name="cid_operation" width="100" />
-          <cell name="cid_oldvalue" width="100" />
-          <cell name="cid_newvalue" width="100" />
-          <cell name="modifiedon" width="100" />
-          <cell name="cid_modifiedbyregistrant" width="100" />
+          <cell name="cid_effectivedate" width="100" />
+          <cell name="cid_createdbyregistrant" width="100" />
+          <cell name="a_dabd53fd95d5ec11a7b50022483c547f.cid_activityen" width="100" disableSorting="1" />
+          <cell name="cid_memoen" width="100" />
+          <cell name="a_dabd53fd95d5ec11a7b50022483c547f.cid_activityfr" width="100" disableSorting="1" />
+          <cell name="cid_memofr" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -24,29 +23,26 @@
     <fetchxml>
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="cid_audithistorylog">
-          <attribute name="cid_name" />
-          <attribute name="cid_operation" />
-          <attribute name="cid_oldvalue" />
-          <attribute name="cid_newvalue" />
-          <attribute name="modifiedon" />
-          <attribute name="cid_modifiedbyregistrant" />
-          <attribute name="cid_changedfield" />
-          <order attribute="cid_name" descending="false" />
+          <order attribute="cid_memoen" descending="false" />
           <filter type="and">
+            <condition attribute="cid_site" operator="not-null" />
             <condition attribute="cid_externallyvisible" operator="eq" value="1" />
           </filter>
-          <link-entity name="account" from="accountid" to="cid_companysite" alias="aa">
-            <filter type="and">
-              <condition attribute="customertypecode" operator="eq" value="948010001" />
-            </filter>
+          <attribute name="cid_memofr" />
+          <attribute name="cid_memoen" />
+          <link-entity alias="a_dabd53fd95d5ec11a7b50022483c547f" name="cid_audithistorycode" from="cid_audithistorycodeid" to="cid_auditcode" link-type="outer" visible="false">
+            <attribute name="cid_activityfr" />
+            <attribute name="cid_activityen" />
           </link-entity>
+          <attribute name="cid_effectivedate" />
+          <attribute name="cid_createdbyregistrant" />
           <attribute name="cid_audithistorylogid" />
         </entity>
       </fetch>
     </fetchxml>
     <IntroducedVersion>1.0.0.0</IntroducedVersion>
     <LocalizedNames>
-      <LocalizedName description="CID Portal - Company Sites History Logs" languagecode="1033" />
+      <LocalizedName description="CID Portal - Site History Logs" languagecode="1033" />
     </LocalizedNames>
   </savedquery>
 </savedqueries>

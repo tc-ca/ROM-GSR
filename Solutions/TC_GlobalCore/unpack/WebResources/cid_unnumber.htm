@@ -128,7 +128,8 @@
                 var tdg_unnumberid_label = sessionStorage.getItem("tdg_unnumberid_label");
 
                 var selected_language = sessionStorage.getItem("selected_language");
-                var value = (selected_language == "en-US" ? "UN Display Name" : "Nom d'affichage de l'ONU");
+                //var value = (selected_language == "en-US" ? "UN Display Name" : "Nom d'affichage de l'ONU");
+                var value = (selected_language == "en" ? "UN Display Name" : "Nom d'affichage de l'ONU");
                 $("#tdg_unnumberid")[0].labels[0].innerHTML = tdg_unnumberid_label;
             } catch (e) { }
 
@@ -164,7 +165,8 @@
             }
 
             var selected_language = sessionStorage.getItem("selected_language");
-            selected_language = (selected_language == null ? "en-US" : selected_language);
+            //selected_language = (selected_language == null ? "en-US" : selected_language);
+            selected_language = (selected_language == null ? "en" : selected_language);
 
             var index1 = document.getElementById('data_source').selectedIndex;
 
@@ -189,6 +191,7 @@
                     if (_root_erap_list == null) {
                         for (var i = 0; i < _cid_companyerap_list.length; i++) {
                             var item = _cid_companyerap_list[i];
+
                             var filter = "root_name eq '{0}'".replace("{0}", item.cid_erapid);
                             _root_erap_list = common.OData_List("root_erap", filter);
                             for (var j = 0; j < _root_erap_list.length; j++) {
@@ -298,7 +301,8 @@
             //debugger;
 
             var selected_language = sessionStorage.getItem("selected_language");
-            selected_language = (selected_language == null ? "en-US" : selected_language);
+            //selected_language = (selected_language == null ? "en-US" : selected_language);
+            selected_language = (selected_language == null ? "en" : selected_language);
             var tdg_unnumberid = document.getElementById("tdg_unnumberid").value;
             var filter = "substringof('" + tdg_unnumberid + "', tdg_undisplayname) or substringof('" + tdg_unnumberid + "', tdg_shippingnamedescriptiontxt)";
             var items = common.OData_List("tdg_unnumber", filter);
@@ -381,7 +385,8 @@
 
         function erap_list(site_id) {
             var selected_language = sessionStorage.getItem("selected_language");
-            selected_language = (selected_language == null ? "en-US" : selected_language);
+            //selected_language = (selected_language == null ? "en-US" : selected_language);
+            selected_language = (selected_language == null ? "en" : selected_language);
             var tdg_unnumberid = document.getElementById("tdg_unnumberid").value;
             var filter = "substringof('" + tdg_unnumberid + "', tdg_undisplayname) or substringof('" + tdg_unnumberid + "', tdg_shippingnamedescriptiontxt)";
             var items = common.OData_List("tdg_unnumber", filter);
@@ -401,8 +406,8 @@
                     var value = text;
                     var index1 = text.indexOf("::");
                     if (index1 != -1) {
-                        if (language == "en-US") {
-
+                        //if (language == "en-US") {
+                        if (language == "en") {
                             value = text.substr(0, index1);
                         }
                         else {

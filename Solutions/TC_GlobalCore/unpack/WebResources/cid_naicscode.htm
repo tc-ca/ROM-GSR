@@ -1,5 +1,6 @@
-<html><head>
-    <title></title>
+<HTML>
+<HEAD>
+    <TITLE></TITLE>
     <style>
         body {
             background-color: white;
@@ -42,21 +43,24 @@
     </style>
     <!-- Using jquery library -->
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-<meta></head>
-<body>
+</HEAD>
+<BODY>
     <label for="cid_naicscode" class="field-label">NAICS Code</label>
     <span id="cid_naicscode_required" style="color: red;font-weight: bold"> *</span>
     <br>
-    <input list="cid_naicscode_list" id="cid_naicscode" class="text form-control">
+    <input list="cid_naicscode_list" id="cid_naicscode" class="text form-control" />
     <br>
     <datalist id="cid_naicscode_list">
     </datalist>
 
-    <input type="text" id="cid_naicscode_list_id" hidden="">
+    <input type="text" id="cid_naicscode_list_id" hidden />
 
     <script type="text/javascript">
         $(document).ready(function () {
             debugger;
+
+            // tony-july 27, 2022
+
             document.getElementById("cid_naicscode").setAttribute("autocomplete", "off");
 
             document.querySelector('input[list="cid_naicscode_list"]').addEventListener('input', onInput);
@@ -66,7 +70,8 @@
                 var cid_naicscode_label = sessionStorage.getItem("cid_naicscode_label");
 
                 var selected_language = sessionStorage.getItem("selected_language");
-                var value = (selected_language == "en-US" ? "NAICS Code" : "Code SCIAN");
+                //var value = (selected_language == "en-US" ? "NAICS Code" : "Code SCIAN");
+                var value = (selected_language == "en" ? "NAICS Code" : "Code SCIAN");
                 $("#cid_naicscode")[0].labels[0].innerHTML = cid_naicscode_label;
             } catch (e) { }
         })
@@ -201,7 +206,8 @@
                     var value = text;
                     var index1 = text.indexOf("::");
                     if (index1 != -1) {
-                        if (language == "en-US") {
+                        //if (language == "en-US") {
+                        if (language == "en") {
 
                             value = text.substr(0, index1);
                         }
@@ -310,6 +316,5 @@
             }
         }
     </script>
-
-
-</body></html>
+</BODY>
+</HTML>

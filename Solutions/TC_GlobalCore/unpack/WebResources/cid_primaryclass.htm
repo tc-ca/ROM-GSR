@@ -1,5 +1,6 @@
-<html><head>
-    <title></title>
+<HTML>
+<HEAD>
+    <TITLE></TITLE>
     <style>
         body {
             background-color: white;
@@ -42,32 +43,32 @@
     </style>
     <!-- Using jquery library -->
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-<meta></head>
-<body>
+</HEAD>
+<BODY>
     <label for="ovs_primaryclass" class="field-label">Class/Division</label>
     <span id="ovs_primaryclass_required" style="color: red;font-weight: bold"> *</span>
-    <br>
+    <br />
     <select name="ovs_primaryclass" id="ovs_primaryclass" class="form-control picklist " onchange="ovs_primaryclass_onchange();">
         <option value="0" selected="selected"></option>
     </select>
-    <br>
-    <textarea readonly="" class="text form-control" id="ovs_primaryclass_description" rows="5" cols="100%"> 
+    <br />
+    <textarea readonly class="text form-control" id="ovs_primaryclass_description" rows="5" cols="100%"> 
     </textarea>
-    <br>
-    <span id="group" hidden="">
+    <br />
+    <span id="group" hidden>
         <label for="ovs_compatibility_group" class="field-label">Compatibility Group</label>
         <span id="ovs_compatibility_group_required" style="color: red;font-weight: bold"> *</span>
-        <br>
+        <br />
         <select name="ovs_compatibility_group" id="ovs_compatibility_group" class="form-control picklist " onchange="ovs_compatibility_group_onchange();">
             <option value="0" selected="selected"></option>
         </select>
-        <br>
-        <textarea readonly="" class="text form-control" id="ovs_compatibility_group_description" rows="5" cols="100%"> 
+        <br />
+        <textarea readonly class="text form-control" id="ovs_compatibility_group_description" rows="5" cols="100%"> 
         </textarea>
-        <br>
+        <br />
     </span>
 
-    <input type="text" id="ovs_primaryclass_list_id" hidden="">
+    <input type="text" id="ovs_primaryclass_list_id" hidden />
 
     <script type="text/javascript">
         var _group_list;
@@ -77,6 +78,9 @@
 
         $(document).ready(function () {
             debugger;
+
+            // tony-july 27, 2022
+
             group_hide(true);
 
             var ovs_primaryclass = sessionStorage.getItem("ovs_primaryclass");
@@ -91,11 +95,13 @@
             try {
                 var ovs_primaryclass_label = sessionStorage.getItem("ovs_primaryclass_label");
                 var selected_language = sessionStorage.getItem("selected_language");
-                var value = (selected_language == "en-US" ? "Class/Division" : "Classe/Division");
+                //var value = (selected_language == "en-US" ? "Class/Division" : "Classe/Division");
+                var value = (selected_language == "en" ? "Class/Division" : "Classe/Division");
                 $("#ovs_primaryclass")[0].labels[0].innerHTML = value;    // ovs_primaryclass_label;
 
                 var ovs_compatibility_group_label = sessionStorage.getItem("ovs_compatibility_group_label");
-                var value = (selected_language == "en-US" ? "Compatibility Group" : "Groupe de compatibilit�");
+                //var value = (selected_language == "en-US" ? "Compatibility Group" : "Groupe de compatibilit�");
+                var value = (selected_language == "en" ? "Compatibility Group" : "Groupe de compatibilit�");
                 $("#ovs_compatibility_group")[0].labels[0].innerHTML = value;    // ovs_compatibility_group_label;
 
             } catch (e) { }
@@ -108,7 +114,8 @@
             debugger;
             _ovs_class_description = [];
             var selected_language = sessionStorage.getItem("selected_language");
-            selected_language = (selected_language == null ? "en-US" : selected_language);
+            //selected_language = (selected_language == null ? "en-US" : selected_language);
+            selected_language = (selected_language == null ? "en" : selected_language);
             var filter = "";
             var items = common.OData_List("ovs_primaryclass", filter);
 
@@ -235,8 +242,9 @@
 
         function ovs_class_compatibility_group_list() {
             var selected_language = sessionStorage.getItem("selected_language");
-            selected_language = (selected_language == null ? "en-US" : selected_language);
-            var items = common.OData_List("ovs_class_compatibility_group", "");
+            //selected_language = (selected_language == null ? "en-US" : selected_language);
+            selected_language = (selected_language == null ? "en" : selected_language);
+           var items = common.OData_List("ovs_class_compatibility_group", "");
             return items;
         }
 
@@ -264,7 +272,8 @@
             clear_field(false);
 
             var selected_language = sessionStorage.getItem("selected_language");
-            selected_language = (selected_language == null ? "en-US" : selected_language);
+            //selected_language = (selected_language == null ? "en-US" : selected_language);
+            selected_language = (selected_language == null ? "en" : selected_language);
 
             //var index1 = text.indexOf(" - ");
             //var text1 = text.substr(0, index1);
@@ -343,7 +352,8 @@
                 var value = text;
                 var index1 = text.indexOf("::");
                 if (index1 != -1) {
-                    if (language == "en-US") {
+                    //if (language == "en-US") {
+                    if (language == "en") {
 
                         value = text.substr(0, index1);
                     }
@@ -377,6 +387,5 @@
         }
     }
     </script>
-
-
-</body></html>
+</BODY>
+</HTML>

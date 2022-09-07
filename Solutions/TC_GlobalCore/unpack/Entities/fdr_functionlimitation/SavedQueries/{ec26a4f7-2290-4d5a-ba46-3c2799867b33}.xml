@@ -10,12 +10,14 @@
     <layoutxml>
       <grid name="resultset" jump="fdr_name" select="1" icon="1" preview="1">
         <row name="result" id="fdr_functionlimitationid">
+          <cell name="fdr_name" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="fdr_description" width="150" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="fdr_limitation" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
-          <cell name="fdr_maximumpressure" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
-          <cell name="fdr_minimumpressure" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="fdr_texten" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="fdr_textfr" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
-          <cell name="fdr_description" width="150" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="fdr_dimensions" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="fdr_maximumpressure" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="fdr_minimumpressure" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
         </row>
       </grid>
     </layoutxml>
@@ -23,16 +25,18 @@
     <fetchxml>
       <fetch version="1.0" mapping="logical">
         <entity name="fdr_functionlimitation">
-          <order attribute="fdr_limitation" descending="false" />
+          <order attribute="fdr_name" descending="false" />
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="0" />
           </filter>
           <attribute name="fdr_minimumpressure" />
           <attribute name="fdr_maximumpressure" />
           <attribute name="fdr_textfr" />
-          <attribute name="fdr_texten" />
           <attribute name="fdr_limitation" />
           <attribute name="fdr_description" />
+          <attribute name="fdr_dimensions" />
+          <attribute name="fdr_name" />
+          <attribute name="fdr_texten" />
           <attribute name="fdr_functionlimitationid" />
         </entity>
       </fetch>
