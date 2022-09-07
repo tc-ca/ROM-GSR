@@ -746,6 +746,20 @@ if (typeof (tdg.root) == "undefined") {
             return data;
         },
 
+        erap_get_by_root_name: function (root_name) {
+            debugger;
+
+            var data;
+            var filter = "root_name eq '" + root_name + "'";
+
+            data = tdg.c.OData_List("root_erap", filter);
+            if (data.length == 0) {
+                return data;
+            }
+
+            return data;
+        },
+
         cid_companyeraps_insert: function (parent_id, cid_erapid, contact_id, cid_root_ind) {
             debugger;
             var data = {

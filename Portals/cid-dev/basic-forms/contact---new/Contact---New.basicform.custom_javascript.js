@@ -63,8 +63,9 @@ $(window).unload(function () {
     if (_reload) {
         var wp = window.parent;
         try {
-            //wp.form_refresh();
-            wp.location.reload()
+            wp.form_refresh();
+            // this will close the dialog even there is any validation erros. Therefore form_refresh() was reinstated. 
+            //wp.location.reload()
         } catch (e) { }
     }
 });

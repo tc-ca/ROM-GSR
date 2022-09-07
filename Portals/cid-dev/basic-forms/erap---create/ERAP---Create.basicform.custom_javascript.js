@@ -51,6 +51,9 @@ if (window.jQuery) {
             debugger;
             tdg.c.message_panel_clear();
             var validation = true;
+
+            validation = check_erap_from_other_company();
+
             return validation;
         }
 
@@ -89,15 +92,28 @@ function btn_save_new_onclick() {
     tdg.root.cid_companyeraps_insert(parent_id, cid_erapid, contact_id, false);
 }
 
-//function cid_companyeraps_insert(account_id, cid_erapid, contact_id) {
-//    debugger;
-//    var data = {
-//        "cid_Company@odata.bind": "/accounts(" + account_id + ")",
-//        "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
-//        "cid_erapid": cid_erapid
-//    };
-//    tdg.webapi.create("cid_companyeraps", data, success_cb, error_cb);
-//}
+function check_erap_from_other_company() {
+    debugger;
+    var root_organization_id = '{{account.root_organization_id}}';
+    var value = true;
+    var cid_erapid = $("#cid_erapid").val();
+    var data = tdg.root.erap_get_by_root_name(cid_erapid);
+    if (data != null) {
+        var msg = tdg.error_message.message("m000019");	// ERAP {0} is assigned to another Company. Are you sure you want to complete the add?
+        msg = msg.replace("{0}", cid_erapid);
+
+        tdg.c.dialog_YN(msg, (ans) => {
+            if (ans) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        value = false;
+    }
+    return value;
+}
 
 function form_clear() {
     debugger;

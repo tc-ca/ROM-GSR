@@ -1,21 +1,31 @@
 $(document).ready(function () {
 	
+//$("#site_annual_compliance_update_2 table").find("thead").hide();
+//$("#site_annual_compliance_update_3 table").find("thead").hide();
+//$("#site_annual_compliance_update_4 table").find("thead").hide();
+//$("#site_annual_compliance_update_5 table").find("thead").hide();
+
+		$("#site_annual_compliance_update_2 table thead").find("tr").each(function () {
+			$(this).find('th').text(""); $(this).find('a').hide();
+		});	
+		$("#site_annual_compliance_update_3 table thead").find("tr").each(function () {
+			$(this).find('th').text(""); $(this).find('a').hide();
+		});
+		$("#site_annual_compliance_update_4 table thead").find("tr").each(function () {
+			$(this).find('th').text(""); $(this).find('a').hide();
+		});
+		$("#site_annual_compliance_update_5 table thead").find("tr").each(function () {
+			$(this).find('th').text(""); $(this).find('a').hide();
+		});
 
 	$(".entity-grid").on("loaded", function () {
-		//$("#company_annual_compliance_update table tbody").find("tr").each(function () {
-		//	if($(this).attr('data-name') == "Completed")
-		//		$(this).css("background-color", "#dff0d8");
-		//});
+
+
 
 		$("#company_annual_compliance_update_1 table tbody").find("tr").each(function () {
 			if($(this).attr('data-name') == "Completed")
 				$(this).css("background-color", "#dff0d8");
 		});	
-
-		//$("#site_annual_compliance_update table tbody").find("tr").each(function () {
-		//	if($(this).attr('data-name') == "Completed")
-		//		$(this).css("background-color", "#dff0d8");
-		//});
 		$("#site_annual_compliance_update_1 table tbody").find("tr").each(function () {
 			if($(this).attr('data-name') == "Completed")
 				$(this).css("background-color", "#dff0d8");
@@ -47,59 +57,42 @@ $(document).ready(function () {
 		var secondErrorFound = false;
 
         if($("#cid_iscompanyattested").prop('checked')){
-			//$("#company_annual_compliance_update table tbody").find("tr").each(function () {
-			//	if(!firstErrorFound && $(this).attr('data-name') != "Completed"){
-			//		validation = false;
-			//		errorMessage = errorMessage + "You cannot proceed before completing the checklist items in the Company Management section<br>"; 
-			//		firstErrorFound = true;
-			//	}
-			//});
-
-			$("#company_annual_compliance_update1 table tbody").find("tr").each(function () {
+			$("#company_annual_compliance_update_1 table tbody").find("tr").each(function () {
 				if(!firstErrorFound && $(this).attr('data-name') != "Completed"){
 					validation = false;
 					errorMessage = errorMessage + "You cannot proceed before completing the checklist items in the Company Management section<br>"; 
 					firstErrorFound = true;
 				}
 			});		
-
-			//$("#site_annual_compliance_update table tbody").find("tr").each(function () {
-			//	if(!secondErrorFound && $(this).attr('data-name') != "Completed"){
-			//		validation = false;
-			//		errorMessage = errorMessage + "You cannot proceed before completing the checklist items in the Sites Management section<br>";
-			//		secondErrorFound = true;
-			//	}
-			//});
-
-			$("#site_annual_compliance_update1 table tbody").find("tr").each(function () {
+			$("#site_annual_compliance_update_1 table tbody").find("tr").each(function () {
 				if(!secondErrorFound && $(this).attr('data-name') != "Completed"){
 					validation = false;
 					errorMessage = errorMessage + "You cannot proceed before completing the checklist items in the Sites Management section<br>";
 					secondErrorFound = true;
 				}
 			});	
-			$("#site_annual_compliance_update2 table tbody").find("tr").each(function () {
+			$("#site_annual_compliance_update_2 table tbody").find("tr").each(function () {
 				if(!secondErrorFound && $(this).attr('data-name') != "Completed"){
 					validation = false;
 					errorMessage = errorMessage + "You cannot proceed before completing the checklist items in the Sites Management section<br>";
 					secondErrorFound = true;
 				}
 			});	
-			$("#site_annual_compliance_update3 table tbody").find("tr").each(function () {
+			$("#site_annual_compliance_update_3 table tbody").find("tr").each(function () {
 				if(!secondErrorFound && $(this).attr('data-name') != "Completed"){
 					validation = false;
 					errorMessage = errorMessage + "You cannot proceed before completing the checklist items in the Sites Management section<br>";
 					secondErrorFound = true;
 				}
 			});	
-			$("#site_annual_compliance_update4 table tbody").find("tr").each(function () {
+			$("#site_annual_compliance_update_4 table tbody").find("tr").each(function () {
 				if(!secondErrorFound && $(this).attr('data-name') != "Completed"){
 					validation = false;
 					errorMessage = errorMessage + "You cannot proceed before completing the checklist items in the Sites Management section<br>";
 					secondErrorFound = true;
 				}
 			});	
-			$("#site_annual_compliance_update5 table tbody").find("tr").each(function () {
+			$("#site_annual_compliance_update_5 table tbody").find("tr").each(function () {
 				if(!secondErrorFound && $(this).attr('data-name') != "Completed"){
 					validation = false;
 					errorMessage = errorMessage + "You cannot proceed before completing the checklist items in the Sites Management section<br>";
