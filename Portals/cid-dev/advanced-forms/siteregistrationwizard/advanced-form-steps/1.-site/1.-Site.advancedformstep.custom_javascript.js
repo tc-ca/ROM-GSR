@@ -1,6 +1,7 @@
 //
 // SiteRegistrationWizard-Site.js
 //
+
 $(document).ready(function () {
     debugger;
 
@@ -155,12 +156,12 @@ function ovs_address_type_change(reset_data) {
         case "1": // legal land description
             tdg.c.section_show("section_legal_land_description");
 
-            //tdg.c.addValidator("ovs_lld_quarter","Quarter/LSC");
-            tdg.c.addValidator("ovs_lld_section", "Section");
-            tdg.c.addValidator("ovs_lld_township", "Township");
-            tdg.c.addValidator("ovs_lld_range", "Range");
-            tdg.c.addValidator("ovs_lld_meridian", "Meridian");
-            tdg.c.addValidator("ovs_lld_province", "Province / Territory");
+            //tdg.c.addValidator("ovs_lld_quarter");
+            tdg.c.addValidator("ovs_lld_section");
+            tdg.c.addValidator("ovs_lld_township");
+            tdg.c.addValidator("ovs_lld_range");
+            tdg.c.addValidator("ovs_lld_meridian");
+            tdg.c.addValidator("ovs_lld_province");
 
             if (reset_data) {
                 address1_default("N/A");
@@ -169,8 +170,8 @@ function ovs_address_type_change(reset_data) {
         case "2": // lat/long
             tdg.c.section_show("section_latitude_longitude");
 
-            tdg.c.addValidator("address1_latitude", "Latitude");
-            tdg.c.addValidator("address1_longitude", "Longitude");
+            tdg.c.addValidator("address1_latitude");
+            tdg.c.addValidator("address1_longitude");
 
             if (reset_data) {
                 address1_default("N/A");
@@ -179,10 +180,10 @@ function ovs_address_type_change(reset_data) {
         default:
             tdg.c.section_show("section_address");
 
-            tdg.c.addValidator("address1_line1", "Street 1");
-            tdg.c.addValidator("address1_city", "City");
-            tdg.c.addValidator("address1_stateorprovince", "Province");
-            tdg.c.addValidator("address1_postalcode", "Postal Code");
+            tdg.c.addValidator("address1_line1");
+            tdg.c.addValidator("address1_city");
+            tdg.c.addValidator("address1_stateorprovince");
+            tdg.c.addValidator("address1_postalcode");
 
             if (reset_data) {
                 address1_default("");
