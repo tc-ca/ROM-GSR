@@ -53,6 +53,9 @@ if (window.jQuery) {
             var validation = true;
 
             validation = check_erap_from_other_company();
+        
+            console.log("validation result");
+            console.log (validation);
 
             return validation;
         }
@@ -92,23 +95,98 @@ function btn_save_new_onclick() {
     tdg.root.cid_companyeraps_insert(parent_id, cid_erapid, contact_id, false);
 }
 
-function check_erap_from_other_company() {
+
+ 
+
+async function check_erap_from_other_company() {
+  
+   
+    var msg = "hello Test 444";
+    var val = false;
+     var  answered = false ;
+  
+     await tdg.c.dialog_YN(msg, (ans) => {
+     
+      //return new  Promise((resolve ,reject)=>{
+      var answer = ans;
+      console.log ("inherited answer " + answer);
+ 
+        if ( answer) {
+
+          
+          //  resolve (true);
+          
+            answered = true;
+            return true;
+        }
+        else {
+           
+            return false;
+          //  reject(false);
+            answered = true ;
+        }
+      
+     // });
+    });
+    //.then( alert ("test"));
+    console.log  (ans);
+    alert ("test");
+  
+   
+
+    alert("xxx "  + val);
+    return val;
+}
+
+ async function check_erap_from_other_company2() {
     debugger;
     var root_organization_id = '{{account.root_organization_id}}';
     var value = true;
     var cid_erapid = $("#cid_erapid").val();
-    var data = tdg.root.erap_get_by_root_name(cid_erapid);
-    if (data != null) {
+    var data =
+        //await 
+        tdg.root.erap_get_by_root_name(cid_erapid);
+    console.log("data length " + data.length);
+    debugger;
+    console.log("Before data display");
+
+    console.log(data);
+    if (data.length > 0)
+    //(data != null) 
+    {
         var msg = tdg.error_message.message("m000019");	// ERAP {0} is assigned to another Company. Are you sure you want to complete the add?
         msg = msg.replace("{0}", cid_erapid);
+        console.log("before dialog");
+        console.log(data.length);
 
-        tdg.c.dialog_YN(msg, (ans) => {
-            if (ans) {
-                return true;
-            } else {
-                return false;
-            }
-        });
+             var  answered = false ;
+    await tdg.c.dialog_YN(msg, (ans) => {
+  
+       return new  Promise((resolve ,reject)=>{
+          
+              setInterval(function(){
+
+        if ( ans) {
+
+         
+            resolve (true);
+           
+            return true;
+            answered = true;
+        }
+        else {
+            return false;
+            reject(false);
+            answered = true ;
+        }
+       	}, 2000);
+			
+              
+       
+      });
+    })
+
+        console.log(value);
 
         value = false;
     }
@@ -139,4 +217,51 @@ function error_cb(msg) {
     var selected_language = '{{website.selected_language.code}}';
     msg = tdg.c.text_language(msg, selected_language)
     tdg.c.message_panel_set("EntityFormControl", msg);
+}
+
+function confirmDialog(message, handler)
+{
+
+$(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
+    <header class="modal-header">
+        <h2 class="modal-title">CID Portal</h2>
+    </header>
+    <div class="modal-body">
+        ${message}
+
+    </div>
+  <div class="modal-footer">
+     <button id="btnYes" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">Yes</button>
+    <button  id="btnNo" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" data-dismiss="modal">No</button>
+
+</section>
+`).appendTo('body');
+
+$('#btnNo').focus();
+
+
+     $("#myModal").css('top' , '15%');
+        $("#myModal").css('left' , '40%');
+        $("#myModal").css('position', 'fixed');
+        $("#myModal").css('z-index', '9999');
+
+
+ $("#btnYes").click(function () {
+
+           // handler(true);
+          //  $("#myModal").modal("hide");
+          $("#myModal").remove();
+           handler(true);
+        });
+
+        //Pass false to callback function
+        $("#btnNo").click(function () {
+
+            //handler(lse);
+            $("#myModal").remove();
+             handler(false);
+        });
+
+
+
 }

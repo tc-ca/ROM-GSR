@@ -415,19 +415,24 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
          if (UserResponse == 'yes')
          {
 
-    
+              var emailaddress1 = '{{user.emailaddress1}}' ;
 
              //responseMessage  = "<p>The CID system will now begin the second of two sets of validations of the file being uploaded. An email will be sent to your email address of " + useremail + " (as set via your user profile), indicating the results the second set of validations and the subsequent steps to take. <br><br>" +
             // "At this point you can wait for the notification email and proceed with the next step described from within it. Alternatively, you can leave the Registration process temporarily and the system will return you to the spot where you left off when you return.[B1037]  </p>"
           
-          responseMessage = filter_BulkMessageArray("M14" , "en");
+          responseMessage = filter_BulkMessageArray("M14" , "en").replace("{0}" , emailaddress1);
           
             if ( Lang != 'en-US' && Lang !="en")
             {
              
-           responseMessage = filter_BulkMessageArray("M14" , "fr");
+           responseMessage = filter_BulkMessageArray("M14" , "fr").replace("{0}" , emailaddress1);
            
             }
+            
+          
+          console.log(responseMessage);
+           responseMessage.replace('{0}' , emailaddress1);
+
 
 
          }

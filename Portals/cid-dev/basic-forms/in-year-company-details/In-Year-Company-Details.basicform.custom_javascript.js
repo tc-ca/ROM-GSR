@@ -1,9 +1,10 @@
 //
-// Basic Form-In Year Company Form.js
+// Basic Form-In Year Company Details.js
 //
+
 $(document).ready(function () {
     debugger;
-    $("#cid_iscompanyattested").prop( "checked", false );
+    $("#cid_iscompanyattested").prop("checked", false);
 
     // address
     tdg.cid.address_init(false);
@@ -13,7 +14,28 @@ $(document).ready(function () {
     $("#telephone1").attr("placeholder", "");
     tdg.c.control_hide("cid_reasonfornobnnumber_other");
 
-    var cid_has_cra_bn = ($('#cid_crabusinessnumber').val() != ""? "1":"0");
+        //phone field formatting
+    $("#telephone1").attr("maxlength", "10");
+    $("#fax").attr("maxlength", "10");
+
+    $("#telephone1").on('keyup', function () {
+        var n = $(this).val().replace(/\D/g, '');
+        $(this).val(n);
+        var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
+        if (match) {
+            $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
+        }
+    });
+    $("#fax").on('keyup', function () {
+        var n = $(this).val().replace(/\D/g, '');
+        $(this).val(n);
+        var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
+        if (match) {
+            $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
+        }
+    });
+
+    var cid_has_cra_bn = ($('#cid_crabusinessnumber').val() != "" ? "1" : "0");
     var cid_reasonfornobnnumber = $('#cid_reasonfornobnnumber').val();
 
     tdg.c.control_hide("cid_has_cra_bn");
@@ -58,20 +80,19 @@ $(document).ready(function () {
 });
 
 function subgrid_language() {
-    //debugger;
+    debugger;
     var selected_language = sessionStorage.getItem("selected_language");
 
     var entityList = $(".entity-grid");
-    var naicscode = entityList.eq(1);   // cid_account_companynaicscode
+    var naicscode = entityList.eq(0);   // cid_account_companynaicscode
     var refRel = naicscode[0].dataset.refRel;
     if (refRel == "cid_account_companynaicscode") {
         naicscode.on("loaded", function () {
-            //debugger;
+            debugger;
 
             // header
             let header = naicscode.find("table thead > tr");
             for (var index1 = 0; index1 < header.length; index1++) {
-                //debugger;
                 let tr = header[index1];
 
                 let cols = $(tr).find('th');
@@ -91,11 +112,11 @@ function subgrid_language() {
 
             let rows = naicscode.find("table tbody > tr");
             rows.each(function (index, tr) {
-                //debugger;
+                debugger;
 
                 let cols = $(tr).find('td');
                 cols.each(function (index, td) {
-                    //debugger;
+                    debugger;
                     var tdElement = $(this);
                     var value = tdElement.attr('data-attribute');
                     if (value != null) {
@@ -115,16 +136,16 @@ function subgrid_language() {
 if (window.jQuery) {
     (function ($) {
         entityFormClientValidate = function () {
-            if($("#cid_iscompanyattested").prop('checked')){
+            if ($("#cid_iscompanyattested").prop('checked')) {
                 return true;
             }
-            else{
-                var errorMessage = 'You cannot proceed before attesting your company data changes, please check the "Attestation" box';  
+            else {
+                var errorMessage = 'You cannot proceed before attesting your company data changes, please check the "Attestation" box';
                 $('.validation-summary div').remove();
-                var validationSection = $('.validation-summary').eq(1); 
-				validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>")); 
-				validationSection.show(); 
-                $('.validation-summary div').focus(); 
+                var validationSection = $('.validation-summary').eq(1);
+                validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
+                validationSection.show();
+                $('.validation-summary div').focus();
 
                 return false;
             }
