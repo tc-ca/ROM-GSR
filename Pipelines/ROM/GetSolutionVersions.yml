@@ -15,11 +15,8 @@ variables:
 - name: 'CoreLocalization'
   value: 'CoreLocalization'
   readonly: true
-- name: 'FieldService'
-  value: 'FieldService'
-  readonly: true
-- name: 'PowerBIReports'
-  value: 'PowerBIReports'
+- name: 'TDG_NOP_Flows'
+  value: 'TDG_NOP_Flows'
   readonly: true
 - name: 'TC_CustomActions'
   value: 'TC_CustomActions'
@@ -29,9 +26,6 @@ variables:
   readonly: true
 - name: 'TDGConnectionReferences'
   value: 'TDGConnectionReferences'
-  readonly: true
-- name: 'TDGEnvironmentVariables'
-  value: 'TDGEnvironmentVariables'
   readonly: true
 - name: 'TDGFlow'
   value: 'TDGFlow'
@@ -59,12 +53,10 @@ steps:
   parameters:
     Solutions:
       - $(CoreLocalization)
-      - $(FieldService)
-      - $(PowerBIReports)
+      - $(TDG_NOP_Flows)
       - $(TC_CustomActions)
       - $(TC_GlobalCore)
       - $(TDGConnectionReferences)
-      - $(TDGEnvironmentVariables)
       - $(TDGFlow)
       - $(TDGFlowInspectionReport)
       - $(TDGPlugins)
@@ -76,12 +68,10 @@ steps:
     targetType: 'inline'
     script: |
       Write-Host "${env:CORELOCALIZATION} Version: ${env:CORELOCALIZATIONVERSION}"
-      Write-Host "${env:FIELDSERVICE} Version: ${env:FIELDSERVICEVERSION}"
-      Write-Host "${env:POWERBIREPORTS} Version: ${env:POWERBIREPORTSVERSION}"
+      Write-Host "${env:TDG_NOP_FLOWS} Version: ${env:FIELDSERVICEVERSION}"
       Write-Host "${env:TC_CUSTOMACTIONS} Version: ${env:TC_CUSTOMACTIONSVERSION}"
       Write-Host "${env:TC_GLOBALCORE} Version: ${env:TC_GLOBALCOREVERSION}"
       Write-Host "${env:TDGCONNECTIONREFERENCES} Version: ${env:TDGCONNECTIONREFERENCESVERSION}"
-      Write-Host "${env:TDGENVIRONMENTVARIABLES} Version: ${env:TDGENVIRONMENTVARIABLESVERSION}"
       Write-Host "${env:TDGFLOW} Version: ${env:TDGFLOWVERSION}"
       Write-Host "${env:TDGFLOWINSPECTIONREPORT} Version: ${env:TDGFLOWINSPECTIONREPORTVERSION}"
       Write-Host "${env:TDGPLUGINS} Version: ${env:TDGPLUGINSVERSION}"
