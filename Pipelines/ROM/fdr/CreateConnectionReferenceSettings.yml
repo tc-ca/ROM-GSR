@@ -1,0 +1,65 @@
+variables:
+- name: pacPath
+  value: empty
+
+steps:
+- task: NuGetToolInstaller@1
+  inputs:
+    versionSpec: 
+
+- task: NuGetCommand@2
+  inputs:
+    command: 'custom'
+    arguments: 'install Microsoft.PowerApps.CLI -OutputDirectory pac'
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $pacNugetFolder = Get-ChildItem "pac" | Where-Object {$_.Name -match "Microsoft.PowerApps.CLI."}
+      $pacPath = $pacNugetFolder.FullName + "\tools"
+      echo "##vso[task.setvariable variable=pacPath]$pacPath"
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      Write-Host "$env:PATH"
+      Write-Host "$(pacPath)"
+      $env:PATH = $env:PATH + ";" + "$(pacPath)"
+
+      $PowerPlatformDEVURL = "https://tdgcore-dev-tcd365.crm3.dynamics.com"
+      $PowerPlatformAadDirectoryId = "2008ffa9-c9b2-4d97-9ad9-4ace25386be7"
+      $PowerPlatformAadApplicationId = "a6adc57f-f130-4e0e-8cab-c0d6a26f8273"
+      $PowerPlatformAadApplicationSecret = "${env:POWERPLATFORMAADAPPLICATIONSECRET}"
+      
+      $extractFolder = "$(Build.SourcesDirectory)\SolutionConnectionReferences"
+      $fullzipPath = "$extractFolder\FDR_Flows.zip"
+      $fullJsonPath = "$extractFolder\FDR_Flows.json"
+      
+      If(!(test-path "$extractFolder"))
+      {
+          Write-Host "$extractFolder folder does not exists."
+          New-Item -ItemType Directory -Force -Path "$extractFolder"
+          Write-Host "$extractFolder folder created."
+      }
+      
+      if (test-path "$fullzipPath")
+      {
+          "deleting existing $fullzipPath file"
+           Remove-Item "$fullzipPath"
+      }
+      
+      if (test-path "$fullJsonPath")
+      {
+          "deleting existing $fullJsonPath file"
+           Remove-Item "$fullJsonPath"
+      }
+      
+      pac install latest
+      
+      pac auth create --name TDGCORE_DEV --url $PowerPlatformDEVURL --tenant $PowerPlatformAadDirectoryId --applicationId $PowerPlatformAadApplicationId --clientSecret $PowerPlatformAadApplicationSecret
+      
+      pac solution export --path $fullzipPath --name FDR_Flows --managed false --include general
+      
+      pac solution create-settings --solution-zip $fullzipPath --settings-file $fullJsonPath
