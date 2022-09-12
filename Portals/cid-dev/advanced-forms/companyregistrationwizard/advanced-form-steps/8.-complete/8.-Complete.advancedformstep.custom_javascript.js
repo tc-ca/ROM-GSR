@@ -39,6 +39,28 @@ $(document).ready(function () {
     $("#websiteurl").attr("placeholder", "");
 
     subgrid_language();
+
+//$('#NextButton').on('click', function(){
+//   
+//});
+
+// 	(function ($) {
+//		webFormClientValidate = function () {
+//			var validation = true;
+
+//			if (!validation) {
+//				$('#ValidationSummaryEntityFormView div').remove();
+//				var validationSection = $('#ValidationSummaryEntityFormView');
+//				validationSection.append($("<div class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
+//				validationSection.show();
+//			}
+//			return validation;
+//		}
+//	}(window.jQuery));
+
+
+
+
 });
 
 function printSummary() {
