@@ -96,7 +96,7 @@
                 },
                 "parameters": {
                   "entityName": "contacts",
-                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <attribute name=\"emailaddress1\" />\n    <attribute name=\"cid_contacttype\" />\n    <attribute name=\"cid_portalrecordcreationdetails\" />\n    <attribute name=\"cid_portalrecordmodificationdetails\" />\n    <attribute name=\"contactid\" />\n    <order attribute=\"cid_contacttype\" descending=\"false\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\" />\n      <condition attribute=\"cid_contacttype\" operator=\"not-null\" />\n      <condition attribute=\"emailaddress1\" operator=\"not-null\" />\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" value=\"@{triggerOutputs()?['body/accountid']}\" />\n    </filter>\n  </entity>\n</fetch>"
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <attribute name=\"emailaddress1\" />\n    <attribute name=\"cid_contacttype\" />\n    <attribute name=\"cid_portalrecordcreationdetails\" />\n    <attribute name=\"cid_portalrecordmodificationdetails\" />\n    <attribute name=\"cid_languageofcorrespondence\" />\n    <attribute name=\"contactid\" />\n    <order attribute=\"cid_contacttype\" descending=\"false\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\" />\n      <condition attribute=\"cid_contacttype\" operator=\"not-null\" />\n      <condition attribute=\"emailaddress1\" operator=\"not-null\" />\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" value=\"@{triggerOutputs()?['body/accountid']}\" />\n    </filter>\n  </entity>\n</fetch>"
                 },
                 "authentication": "@parameters('$authentication')"
               }
@@ -104,25 +104,64 @@
             "Apply_to_each": {
               "foreach": "@outputs('List_All_Child_Contacts')?['body/value']",
               "actions": {
-                "Send_an_email_notification_(V3)": {
-                  "runAfter": {},
-                  "metadata": {
-                    "operationMetadataId": "3b1fbad3-2579-401c-8189-5825940d6dfb"
+                "Condition": {
+                  "actions": {
+                    "Send_completion_email_French": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "3b1fbad3-2579-401c-8189-5825940d6dfb"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sendmail",
+                          "operationId": "SendEmailV3",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                        },
+                        "parameters": {
+                          "request/to": "@{items('Apply_to_each')?['emailaddress1']};;",
+                          "request/subject": "FRENCH - Successful completion of the registration process of the @{triggerOutputs()?['body/name']} Company in the Transport Canada CID Data Platform",
+                          "request/text": "<p>FRENCH<br>\n<br>\nHello @{items('Apply_to_each')?['fullname']},<br>\n<br>\nThe registration process of the @{triggerOutputs()?['body/name']} Company in the Transport Canada CID Data Platform has been successfully completed.<br>\n<br>\nPer the xxxx regulations, you are required to update your Company’s information in the Platform during the year, if a material change has occurred involving the data being managed here for your Company and its Sites.<br>\n<br>\nFurther, your Company’s data is required to be fully updated on an annual basis, with the initial update being required on @{variables('companyanniversarydate')}.<br>\n<br>\nRegards,<br>\n<br>\nTransport Canada CID Data Platform Team<br>\n</p>"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
                   },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "host": {
-                      "connectionName": "shared_sendmail",
-                      "operationId": "SendEmailV3",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
-                    },
-                    "parameters": {
-                      "request/to": "@{items('Apply_to_each')?['emailaddress1']};;",
-                      "request/subject": "Your registration is complete",
-                      "request/text": "<p>Dear @{items('Apply_to_each')?['fullname']},<br>\n<br>\nCongratulations! Your registration is complete.<br>\n<br>\nLegal Name: @{triggerOutputs()?['body/ovs_legalname']}<br>\nOperating Name: @{triggerOutputs()?['body/name']}<br>\nCompanry Anniversary date: @{triggerOutputs()?['body/cid_companyanniversarydate']}<br>\nSite(s): @{variables('sSiteList')}<br>\n</p>"
-                    },
-                    "authentication": "@parameters('$authentication')"
-                  }
+                  "runAfter": {},
+                  "else": {
+                    "actions": {
+                      "Send_completion_email_English": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "3b1fbad3-2579-401c-8189-5825940d6dfb"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_sendmail",
+                            "operationId": "SendEmailV3",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                          },
+                          "parameters": {
+                            "request/to": "@{items('Apply_to_each')?['emailaddress1']};;",
+                            "request/subject": "Successful completion of the registration process of the @{triggerOutputs()?['body/name']} Company in the Transport Canada CID Data Platform",
+                            "request/text": "<p>Hello @{items('Apply_to_each')?['fullname']},<br>\n<br>\nThe registration process of the @{triggerOutputs()?['body/name']} Company in the Transport Canada CID Data Platform has been successfully completed.<br>\n<br>\nPer the xxxx regulations, you are required to update your Company’s information in the Platform during the year, if a material change has occurred involving the data being managed here for your Company and its Sites.<br>\n<br>\nFurther, your Company’s data is required to be fully updated on an annual basis, with the initial update being required on @{variables('companyanniversarydate')}.<br>\n<br>\nRegards,<br>\n<br>\nTransport Canada CID Data Platform Team<br>\n</p>"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      }
+                    }
+                  },
+                  "expression": {
+                    "equals": [
+                      "@items('Apply_to_each')?['cid_languageofcorrespondence']",
+                      918640002
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "69b7b7e3-05f9-47fa-a93e-4b9c0ce33a97"
+                  },
+                  "type": "If"
                 }
               },
               "runAfter": {
@@ -137,7 +176,7 @@
             }
           },
           "runAfter": {
-            "Initialize_variable": [
+            "Set_variable": [
               "Succeeded"
             ]
           },
@@ -167,16 +206,44 @@
         "Initialize_variable": {
           "runAfter": {},
           "metadata": {
-            "operationMetadataId": "d9c0f6ce-b655-416e-9858-d26bd2c60bd6"
+            "operationMetadataId": "65f39bbf-dd29-45ba-81aa-b9b568813338"
           },
           "type": "InitializeVariable",
           "inputs": {
             "variables": [
               {
-                "name": "sSiteList",
-                "type": "string"
+                "name": "companyanniversarydate",
+                "type": "string",
+                "value": "@triggerOutputs()?['body/cid_companyanniversarydate']"
               }
             ]
+          }
+        },
+        "Compose": {
+          "runAfter": {
+            "Initialize_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1056f663-947b-42d8-a6b9-a29f3ff6fbed"
+          },
+          "type": "Compose",
+          "inputs": "@split(variables('companyanniversarydate'), 'T')[0]"
+        },
+        "Set_variable": {
+          "runAfter": {
+            "Compose": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "04c5d9a2-5e03-462a-b1b2-f51a41d338b8"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "companyanniversarydate",
+            "value": "@{outputs('Compose')}"
           }
         }
       }

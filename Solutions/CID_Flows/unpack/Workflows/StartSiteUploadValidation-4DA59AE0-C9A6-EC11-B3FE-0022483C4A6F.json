@@ -37,6 +37,15 @@
           "name": "shared_sendmail"
         }
       },
+      "shared_commondataserviceforapps_2": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "new_sharedcommondataserviceforapps_013a2"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
       "shared_sendmail_1": {
         "runtimeSource": "embedded",
         "connection": {
@@ -132,7 +141,7 @@
             },
             "Invoke_an_HTTP_request_Get_Site_Table": {
               "runAfter": {
-                "List_All_Accounts": [
+                "Invoke_an_HTTP_request_Get_SettingTable_": [
                   "Succeeded"
                 ]
               },
@@ -173,7 +182,7 @@
             },
             "Invoke_an_HTTP_request_Get_Extended_info_table": {
               "runAfter": {
-                "List_All_Accounts": [
+                "Invoke_an_HTTP_request_Get_SettingTable_": [
                   "Succeeded"
                 ]
               },
@@ -305,10 +314,10 @@
             },
             "Perform_an_unbound_action_-_Site_Validation": {
               "runAfter": {
-                "Select_extended_info": [
+                "Select_Site_List": [
                   "Succeeded"
                 ],
-                "Select_Site_List": [
+                "Check_Excel_Language": [
                   "Succeeded"
                 ]
               },
@@ -494,6 +503,74 @@
                 "operationMetadataId": "8b61dc6c-c924-4c77-9728-632936580450"
               },
               "type": "If"
+            },
+            "Check_Excel_Language": {
+              "actions": {
+                "Set_variable_Language_Code_to_French_Code_1036": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "65de2f6a-a637-44af-b9d1-1eab09e5c7a6"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "LanguageCode",
+                    "value": 1036
+                  }
+                }
+              },
+              "runAfter": {
+                "ExcelLanguage": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "equals": [
+                  "@outputs('ExcelLanguage')",
+                  "@'French'"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d3246979-c8a1-4ecb-bec1-0162ff654f12"
+              },
+              "type": "If"
+            },
+            "Invoke_an_HTTP_request_Get_SettingTable_": {
+              "runAfter": {
+                "List_All_Accounts": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "59c6048d-c4f6-4e9a-8a0d-1df0e3d03d91"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_webcontents",
+                  "operationId": "InvokeHttp",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
+                },
+                "parameters": {
+                  "request/method": "GET",
+                  "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/@{outputs('Get-File-Relative-Path')}:/workbook/tables/SettingTable/rows",
+                  "request/headers": {
+                    "accept": "application/json"
+                  }
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "ExcelLanguage": {
+              "runAfter": {
+                "Select_extended_info": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "bf827cb9-4709-4a91-aa62-5da177a21fb9"
+              },
+              "type": "Compose",
+              "inputs": "@outputs('Invoke_an_HTTP_request_Get_SettingTable_')?['body']['value'][0]['values'][0][1]"
             }
           },
           "runAfter": {
@@ -688,6 +765,7 @@
                       "entityName": "accounts",
                       "actionName": "Microsoft.Dynamics.CRM.cid_Insert_and_Update_Site_and_Related_UNs",
                       "recordId": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/_cid_company_value']",
+                      "item/LanguageCode": "@variables('LanguageCode')",
                       "item/ActionedBy": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/_cid_actionedby_value']",
                       "item/LegalName": "@outputs('Get_a_account_by_ID')?['body/ovs_legalname']",
                       "item/OperatingName": "@outputs('Get_a_account_by_ID')?['body/name']",
@@ -765,7 +843,7 @@
                 }
               },
               "runAfter": {
-                "Update_Bulk_activity_log_summary_2": [
+                "Compose_2": [
                   "Succeeded"
                 ]
               },
@@ -868,6 +946,43 @@
                 "operationMetadataId": "37c9cb98-e82d-47d1-8288-e5279e81d2d6"
               },
               "type": "If"
+            },
+            "Compare_System_Site_and_uploaded_excel_site_list": {
+              "runAfter": {
+                "Update_Bulk_activity_log_summary_2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e390d35d-66d1-41d6-83c1-8a61e37d7fd9"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_2",
+                  "operationId": "PerformBoundAction",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "actionName": "Microsoft.Dynamics.CRM.cid_CID_BulkUpload_CompareSystemSites_WithExcelSite",
+                  "recordId": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/_cid_company_value']",
+                  "item/SiteInfo": "@body('Select_Site_List')"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Compose_2": {
+              "runAfter": {
+                "Compare_System_Site_and_uploaded_excel_site_list": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "ce05a605-a441-4f63-bbf7-0f633be2f2d7"
+              },
+              "type": "Compose",
+              "inputs": "@{outputs('Compare_System_Site_and_uploaded_excel_site_list')?['body/MissingSiteFound']}\n\n\n\n@{outputs('Compare_System_Site_and_uploaded_excel_site_list')?['body/MissingSiteList']}"
             }
           },
           "runAfter": {
@@ -1290,7 +1405,7 @@
             }
           },
           "runAfter": {
-            "check_if_language_is_null": [
+            "check_if__contact_language_is_null": [
               "Succeeded"
             ]
           },
@@ -2053,11 +2168,7 @@
           "type": "Scope"
         },
         "Get_a_account_by_ID": {
-          "runAfter": {
-            "countNumberOfAlphainClassNumber": [
-              "Succeeded"
-            ]
-          },
+          "runAfter": {},
           "metadata": {
             "operationMetadataId": "bb1a479b-b31f-40f5-be89-cc058b06769e"
           },
@@ -2073,22 +2184,6 @@
               "recordId": "@triggerOutputs()?['body/_cid_company_value']"
             },
             "authentication": "@parameters('$authentication')"
-          }
-        },
-        "Initialize_variable_-_ClassNumber": {
-          "runAfter": {},
-          "metadata": {
-            "operationMetadataId": "335e1cf3-05de-4895-aad8-a3fcc6fe240e"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "ClassNumber",
-                "type": "string",
-                "value": "1.1A"
-              }
-            ]
           }
         },
         "Initialize_variable_Language": {
@@ -2111,7 +2206,7 @@
             ]
           }
         },
-        "check_if_language_is_null": {
+        "check_if__contact_language_is_null": {
           "actions": {
             "Set_variable_set_language_to_english": {
               "runAfter": {},
@@ -2141,67 +2236,9 @@
           },
           "type": "If"
         },
-        "Initialize_variable-_Alph-Char": {
-          "runAfter": {
-            "Initialize_variable_-_ClassNumber": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "7496f90b-f1be-4d52-bb32-81c983492cf0"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "AlphaCharArray",
-                "type": "array",
-                "value": "@createArray('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z')"
-              }
-            ]
-          }
-        },
-        "Initialize_variable-ClassGroup": {
-          "runAfter": {
-            "Initialize_variable-_Alph-Char": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "c6da49bf-deb0-4c45-864d-cb601b95a6b1"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "ClassGroup",
-                "type": "string"
-              }
-            ]
-          }
-        },
-        "countNumberOfAlphainClassNumber": {
-          "runAfter": {
-            "Initialize_variable-ClassGroup": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "a04d1f7f-53cf-4961-847c-4450ca3b9bb7"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "countNumberOfAlphainClassNumber",
-                "type": "integer"
-              }
-            ]
-          }
-        },
         "Error_flag": {
           "runAfter": {
-            "Parse_JSON_Messages_From_Web": [
+            "Initialize_variable_LanguageCode": [
               "Succeeded"
             ]
           },
@@ -5667,6 +5704,26 @@
           "type": "Terminate",
           "inputs": {
             "runStatus": "Succeeded"
+          }
+        },
+        "Initialize_variable_LanguageCode": {
+          "runAfter": {
+            "Parse_JSON_Messages_From_Web": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6242064e-36ce-42ef-b72c-2a48e9250e8b"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "LanguageCode",
+                "type": "integer",
+                "value": 1033
+              }
+            ]
           }
         }
       }

@@ -1,0 +1,377 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "new_sharedcommondataserviceforapps_013a2"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_commondataserviceforapps_4": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "new_sharedcommondataserviceforapps_013a2"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_office365_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceOutlookTDGCoreUser"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "Recurrence": {
+          "recurrence": {
+            "frequency": "Day",
+            "interval": 1,
+            "startTime": "2022-08-17T08:00:00Z"
+          },
+          "metadata": {
+            "operationMetadataId": "ef625b5d-963c-47ff-a0ee-c8744a9932d5"
+          },
+          "type": "Recurrence"
+        }
+      },
+      "actions": {
+        "GetAccounts": {
+          "runAfter": {
+            "Initialize_Primary_Contact_First_Name": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "fa117ff1-c407-47a3-88c5-4b322d470cb0"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "accounts",
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"account\">\n    <attribute name=\"name\" />\n    <attribute name=\"ovs_legalname\" />\n    <attribute name=\"primarycontactid\" />\n    <attribute name=\"cid_crabusinessnumber\" />\n    <attribute name=\"root_organization_id\" />\n    <attribute name=\"ovs_address_display\" />\n    <attribute name=\"cid_rootcompany\" />\n    <attribute name=\"accountid\" />\n    <attribute name=\"cid_attestationdate\" />\n    <attribute name=\"cid_annualcomplianceupdatesremindersenddate\" />\n    <order attribute=\"ovs_legalname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n      <condition attribute=\"cid_attestationdate\" operator=\"on\" value=\"@{addDays(utcNow(), -380 ,'yyyy-MM-dd')}\" />\n      <filter type=\"or\">\n        <condition attribute=\"cid_annualcomplianceupdatesremindersenddate\" operator=\"null\" />\n        <condition attribute=\"cid_annualcomplianceupdatesremindersenddate\" operator=\"on-or-before\" value=\"2022-08-17\" />\n      </filter>\n    </filter>\n  </entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Condition": {
+          "actions": {
+            "Apply_to_each": {
+              "foreach": "@outputs('GetAccounts')?['body/value']",
+              "actions": {
+                "GetEmailRecipients": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "747bddcb-cdac-4976-8bf9-5eb29d723233"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_4",
+                      "operationId": "ListRecords",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "contacts",
+                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <attribute name=\"firstname\" />\n    <attribute name=\"telephone1\" />\n    <attribute name=\"contactid\" />\n    <attribute name=\"emailaddress1\" />\n    <attribute name=\"cid_contacttype\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" uitype=\"account\" value=\"@{items('Apply_to_each')?['accountid']}\" />\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n    </filter>\n  </entity>\n</fetch>"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Apply_to_each_2": {
+                  "foreach": "@outputs('GetEmailRecipients')?['body/value']",
+                  "actions": {
+                    "If_Primary_Contact": {
+                      "actions": {
+                        "Set_To_Email_Recipients": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "53a06a09-3428-4240-8e1f-0983659c54a7"
+                          },
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "ToEmailRecipients",
+                            "value": "@items('Apply_to_each_2')?['emailaddress1']"
+                          }
+                        },
+                        "Set_variable_2": {
+                          "runAfter": {
+                            "Set_To_Email_Recipients": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "3dee6fe7-285e-4082-a4a8-994565757f30"
+                          },
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Primary Contact First Name",
+                            "value": "@items('Apply_to_each_2')?['firstname']"
+                          }
+                        }
+                      },
+                      "runAfter": {},
+                      "else": {
+                        "actions": {
+                          "Condition_2": {
+                            "actions": {
+                              "Apply_to_each_3": {
+                                "foreach": "@outputs('GetEmailRecipients')?['body/value']",
+                                "actions": {
+                                  "Set_variable": {
+                                    "runAfter": {},
+                                    "metadata": {
+                                      "operationMetadataId": "4e5ae564-2e7f-45d3-94e3-12f39f652eb5"
+                                    },
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                      "name": "Temp CC Recipients",
+                                      "value": "@variables('CCEmailRecipients')"
+                                    }
+                                  },
+                                  "Concat_CCEmailRecipients_variable_if_not_empty": {
+                                    "runAfter": {
+                                      "Set_variable": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "metadata": {
+                                      "operationMetadataId": "f4a01aa2-2fd2-4b2a-922f-63e1d556a09b"
+                                    },
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                      "name": "CCEmailRecipients",
+                                      "value": "@{concat(variables('Temp CC Recipients'), ';' , items('Apply_to_each_3')?['emailaddress1'])}"
+                                    }
+                                  }
+                                },
+                                "runAfter": {},
+                                "metadata": {
+                                  "operationMetadataId": "5027a906-3e0f-41e1-a7c1-34cec4669cfa"
+                                },
+                                "type": "Foreach"
+                              }
+                            },
+                            "runAfter": {},
+                            "else": {
+                              "actions": {
+                                "Apply_to_each_4": {
+                                  "foreach": "@outputs('GetEmailRecipients')?['body/value']",
+                                  "actions": {
+                                    "Set_CC_list_if_its_empty": {
+                                      "runAfter": {},
+                                      "metadata": {
+                                        "operationMetadataId": "fefbec20-6ec8-4b33-8ebd-7fc3c762b1f6"
+                                      },
+                                      "type": "SetVariable",
+                                      "inputs": {
+                                        "name": "CCEmailRecipients",
+                                        "value": "@items('Apply_to_each_4')?['emailaddress1']"
+                                      }
+                                    }
+                                  },
+                                  "runAfter": {},
+                                  "metadata": {
+                                    "operationMetadataId": "80c61f12-02c2-447c-8296-49dd160d2f21"
+                                  },
+                                  "type": "Foreach"
+                                }
+                              }
+                            },
+                            "expression": {
+                              "greater": [
+                                "@length(variables('CCEmailRecipients'))",
+                                0
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "794dff1f-0703-4bd2-a46f-c8cb08877300"
+                            },
+                            "type": "If"
+                          }
+                        }
+                      },
+                      "expression": {
+                        "equals": [
+                          "@items('Apply_to_each_2')?['cid_contacttype']",
+                          100000000
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "4fd5894a-2fdc-4494-ac7a-99d52071e743"
+                      },
+                      "type": "If"
+                    }
+                  },
+                  "runAfter": {
+                    "GetEmailRecipients": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3b7fc09e-16da-4109-971e-ebfd8088a1e0"
+                  },
+                  "type": "Foreach"
+                }
+              },
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "c67dcd6a-d820-4898-807c-20d1863951d6"
+              },
+              "type": "Foreach"
+            },
+            "Apply_to_each_5": {
+              "foreach": "@outputs('GetAccounts')?['body/value']",
+              "actions": {
+                "Send_an_email_(V2)": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "cd420056-f88b-4159-98b5-fb3ec975a945"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_office365_1",
+                      "operationId": "SendEmailV2",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                    },
+                    "parameters": {
+                      "emailMessage/To": "@variables('ToEmailRecipients')",
+                      "emailMessage/Subject": "Annual Compliance Reminder",
+                      "emailMessage/Body": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['ovs_accountnameenglish']}was expired 15 days ago. <a href=\"https://rd-tdgcore-dev.powerappsportals.com/en-US/\">Please log into your account</a> &nbsp;and initialise Annual Compliance.<br>\n<strong>Transport Canada / Government of Canada</strong><br>\n<br>\n<br>\nThis is auto genarated email.</p>",
+                      "emailMessage/Cc": "@variables('CCEmailRecipients')",
+                      "emailMessage/Importance": "Normal"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Apply_to_each": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "182ab6d0-95a5-4efe-9ab5-510e6a39a843"
+              },
+              "type": "Foreach"
+            }
+          },
+          "runAfter": {
+            "GetAccounts": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "greater": [
+              "@length(outputs('GetAccounts')?['body/value'])",
+              0
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9fd4c9b4-c8aa-46bd-8060-133cc8a00a21"
+          },
+          "type": "If"
+        },
+        "Initialize_To_Email_Recipients": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "9058c756-6243-4980-a304-83ef8af504a9"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ToEmailRecipients",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_CC_Email_Recipients": {
+          "runAfter": {
+            "Initialize_To_Email_Recipients": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "44b5133c-59e0-4ae7-ba27-efd2cffd30b4"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CCEmailRecipients",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable": {
+          "runAfter": {
+            "Initialize_CC_Email_Recipients": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4eeb6aba-5d6e-43c2-ba22-4aa36a0c1990"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Temp CC Recipients",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_Primary_Contact_First_Name": {
+          "runAfter": {
+            "Initialize_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "13e73bb1-7dbe-4f25-9f10-58baf5b36765"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Primary Contact First Name",
+                "type": "string"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}
