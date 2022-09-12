@@ -1,4 +1,12 @@
 {% include 'WebAPIAJAX'%}
+{% assign primary_nav = weblinks["Primary Navigation"] %}
+<html>
+  <body>
+    <div id="def">
+      {%include  'BetaHeader' %}
+    </div>
+  </body>
+</html>
 {% assign is_valid = true %}
 {{user.cid_legalname}}
 {% assign u = user.cid_legalname %}
@@ -84,23 +92,23 @@
   $(document).ready(async function() {
     var cid_legalname = "{{user.cid_legalname  }}";
     // alert(URLEncoder.encode(cid_legalname, "UTF-8"));
-    alert(cid_legalname);
+    // alert(cid_legalname);
     var Title = $('<textarea />').html(cid_legalname).text();
-    alert(" text area " + Title);
+    // alert(" text area " + Title);
     var div = document.createElement("div");
     div.innerHTML = cid_legalname;
     alert(div.innerHTML);
     var u = cid_legalname.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
-    alert(u);
+    // alert(u);
     //let token = await getTokenwithClientid();
     //alert("after function call");
     //alert(token);
     $('#callapi').on('click', async function() {
-      alert('before functioncall');
+      // alert('before functioncall');
       // Add_Operation_entity
-      let opId = await Add_Operation_entity('88d2bf38-006f-ec11-a81b-0022486da668');
-      console.log(opId);
-      alert("alert id " + opId);
+      //  let opId = await Add_Operation_entity('88d2bf38-006f-ec11-a81b-0022486da668');
+      //  console.log(opId);
+      //  alert("alert id " + opId);
     });
   });
   function getTokenwithClientid() {

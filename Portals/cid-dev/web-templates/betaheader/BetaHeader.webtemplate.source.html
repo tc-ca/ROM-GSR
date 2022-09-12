@@ -1,13 +1,5 @@
-{% assign primary_nav = weblinks["Primary Navigation"] %}
-
-<html>
-
-<body>
-  {% include 'WET4 - Header' %}
-    <div id="def-top">
-
- {% if  request.url contains "rd-tdgcore-dev" or request.url contains "tdgcore-qa"  %}
-    <header>
+ 
+ <header>
      
         <nav id="wb-sm" data-trgt="mb-pnl" class="wb-menu visible-md visible-lg wb-init wb-menu-inited wb-navcurr-inited" typeof="SiteNavigationElement" aria-labelledby="appNavMenu">
         <div class="pnl-strt container nvbar">
@@ -27,7 +19,10 @@
           {% else %}
           {% assign sublinks = link.weblinks %}
           {% endif %}
+          {%if  link.url contains "Bulk_Site_Upload" or link.url contains "Bulk_Site_Update" or link.url contains "company_dashboard"  %}
+          {%else%}
           <li role="none" class="weblink {% if sublinks.size > 0 %} dropdown{% endif %}">
+          
             <a role="menuitem" aria-label="{{ link.name | escape }}" {% if sublinks.size > 0 -%} href="#" class="dropdown-toggle" data-toggle="dropdown" {%- else -%} href="{{ link.url | escape }}" {%- endif -%} {%- if link.Open_In_New_Window %} target="_blank" {% endif -%} {%- if link.nofollow %} rel="nofollow" {% endif -%} {%- if link.tooltip %} title="{{ link.tooltip | escape }}" {% endif %}>
               {%- if link.image -%}
               {%- if link.image.url startswith '.' -%}
@@ -61,6 +56,7 @@
             </ul>
             {% endif %}
           </li>
+          {%endif%}
           {% endfor %}
             </ul>
             <!--</div> !-->
@@ -68,13 +64,3 @@
         </div>
         </nav>
         </header>
-    {%else%}
-
-       {% include 'BetaHeader' %}
-    {%endif%}
-        </div>
-        <br>
-
-</body>
-</html>
-

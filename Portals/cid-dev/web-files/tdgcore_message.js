@@ -167,8 +167,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000014",
-                        "message_en": "The company is currently in the process of registration.",
-                        "message_fr": "La société est actuellement en cours d'enregistrement."
+                        "message_en": "This company is either in the process of being registered, or is fully registered. If you would like to register this company, then please email the request to monica.blaney@tc.gc.ca and we will email you back when the process is complete, so that you may begin.",
+                        "message_fr": "This company is either in the process of being registered, or is fully registered. If you would like to register this company, then please email the request to monica.blaney@tc.gc.ca and we will email you back when the process is complete, so that you may begin._FR"
                     },
                     {
                         "code": "m000015",

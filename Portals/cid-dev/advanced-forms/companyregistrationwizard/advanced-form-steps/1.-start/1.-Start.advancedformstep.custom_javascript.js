@@ -180,9 +180,24 @@ if (window.jQuery) {
 
                         // the company is currently in the process of registration and stop the user from registering this company.
                         if (rom_data.cid_cidcompanystatus != null) {
-                            var message = tdg.error_message.message("m000014");
-                            tdg.c.dialog_OK(message);
-                            return false;
+                            var current_registering = false
+                            switch (rom_data.cid_cidcompanystatus.Value) {
+                                case 100000002: // Unknown: Pending classification as ROM only, or CID registered
+                                    break;
+                                case 100000003: // Pending Active: Pending registration, no email invitation sent
+                                    break;
+                                case 100000004: // Pending Active: Pending registration, email invitation sent
+                                    break;
+                                default:
+                                    current_registering = true;
+                                    break;
+                            }
+
+                            if (current_registering) {
+                                var message = tdg.error_message.message("m000014");
+                                tdg.c.dialog_OK(message);
+                                return false;
+                            }
                         }
 
                         $("#parentcustomerid").attr("value", rom_data.accountid);
