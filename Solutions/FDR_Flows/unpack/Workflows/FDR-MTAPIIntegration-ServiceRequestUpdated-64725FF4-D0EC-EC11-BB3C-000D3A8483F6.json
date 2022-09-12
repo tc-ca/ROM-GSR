@@ -369,11 +369,12 @@
                           },
                           "parameters": {
                             "serviceRequestId": "@triggerOutputs()?['body/fdr_mtoa_sr_id']",
-                            "userId": "@variables('MTOA ID')",
+                            "userId": "@variables('FDR App User')",
                             "ogdInd": false
                           },
                           "authentication": "@parameters('$authentication')"
-                        }
+                        },
+                        "description": "Always calculate Performance as App User"
                       }
                     },
                     "runAfter": {
@@ -535,7 +536,7 @@
         },
         "Get_Portal_Contact_owning_SR": {
           "runAfter": {
-            "MTOA_ID": [
+            "FDR_App_User_ID": [
               "Succeeded"
             ]
           },
@@ -631,7 +632,7 @@
                       "type": "SetVariable",
                       "inputs": {
                         "name": "MTOA ID",
-                        "value": 102
+                        "value": "@variables('FDR App User')"
                       },
                       "description": "Stop flow: Set specific status on Service Request? Notify customer?"
                     }
@@ -773,6 +774,26 @@
               {
                 "name": "ss_minutes",
                 "type": "integer"
+              }
+            ]
+          }
+        },
+        "FDR_App_User_ID": {
+          "runAfter": {
+            "MTOA_ID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3f052e73-4981-4a67-ab99-67f61be4dba1"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FDR App User",
+                "type": "integer",
+                "value": 102
               }
             ]
           }
