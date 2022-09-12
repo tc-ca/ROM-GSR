@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{6eac3ccc-01b7-ec11-983e-002248add3fe}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="cid_name" select="1" preview="1" icon="1">
+        <row name="result" id="cid_audithistorylogid">
+          <cell name="cid_effectivedate" width="100" />
+          <cell name="cid_createdbyregistrant" width="100" />
+          <cell name="a_dabd53fd95d5ec11a7b50022483c547f.cid_activityen" width="100" disableSorting="1" />
+          <cell name="cid_memoen" width="100" />
+          <cell name="a_dabd53fd95d5ec11a7b50022483c547f.cid_activityfr" width="100" disableSorting="1" />
+          <cell name="cid_memofr" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+        <entity name="cid_audithistorylog">
+          <order attribute="cid_memoen" descending="false" />
+          <filter type="and">
+            <condition attribute="cid_site" operator="not-null" />
+            <condition attribute="cid_externallyvisible" operator="eq" value="1" />
+          </filter>
+          <attribute name="cid_memofr" />
+          <attribute name="cid_memoen" />
+          <link-entity alias="a_dabd53fd95d5ec11a7b50022483c547f" name="cid_audithistorycode" from="cid_audithistorycodeid" to="cid_auditcode" link-type="outer" visible="false">
+            <attribute name="cid_activityfr" />
+            <attribute name="cid_activityen" />
+          </link-entity>
+          <attribute name="cid_effectivedate" />
+          <attribute name="cid_createdbyregistrant" />
+          <attribute name="cid_audithistorylogid" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="CID Portal - Site History Logs" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
