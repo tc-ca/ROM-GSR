@@ -33,6 +33,8 @@ stages:
           echo "##vso[task.setvariable variable=pacPath]$pacPath"
 
     - task: PowerShell@2
+      env:
+        CLIENT_SECRET: $(PowerPlatformAadApplicationSecret)
       inputs:
         targetType: 'inline'
         script: |
@@ -43,7 +45,7 @@ stages:
           $PowerPlatformDEVURL = "https://tdgcore-dev-tcd365.crm3.dynamics.com"
           $PowerPlatformAadDirectoryId = "2008ffa9-c9b2-4d97-9ad9-4ace25386be7"
           $PowerPlatformAadApplicationId = "a6adc57f-f130-4e0e-8cab-c0d6a26f8273"
-          $PowerPlatformAadApplicationSecret = "${env:POWERPLATFORMAADAPPLICATIONSECRET}"
+          $PowerPlatformAadApplicationSecret = "$env:CLIENT_SECRET"
           
           $extractFolder = "$(Build.SourcesDirectory)\SolutionConnectionReferences"
           $fullzipPath = "$extractFolder\FDR_Flows.zip"
