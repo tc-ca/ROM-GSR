@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{8a8ad56d-43cd-eb11-bacc-0022483c0d29}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="subject" select="1" icon="1" preview="1">
+        <row name="result" id="activityid">
+          <cell name="ovs_actionnumber" width="200" />
+          <cell name="subject" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_provisiontxt" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="regardingobjectid" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_actiontype" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="statecode" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="createdon" width="125" />
+          <cell name="modifiedon" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+        <entity name="ovs_cyaction">
+          <attribute name="subject" />
+          <attribute name="createdon" />
+          <attribute name="ovs_actionnumber" />
+          <attribute name="statecode" />
+          <attribute name="regardingobjectid" />
+          <attribute name="ovs_provisiontxt" />
+          <attribute name="ovs_actiontype" />
+          <attribute name="modifiedon" />
+          <order attribute="subject" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="not-null" />
+          </filter>
+          <link-entity name="msdyn_workorder" from="msdyn_workorderid" to="regardingobjectid" alias="aa" />
+          <attribute name="activityid" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.18.1.1</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="All ROM Enforcement Actions" languagecode="1033" />
+      <LocalizedName description="Toutes les actions d'exécution de l'application GSR" languagecode="1036" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
