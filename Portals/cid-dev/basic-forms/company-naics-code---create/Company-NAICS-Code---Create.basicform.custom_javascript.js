@@ -59,7 +59,20 @@ if (window.jQuery) {
     (function ($) {
         entityFormClientValidate = function () {
             debugger;
-            tdg.c.message_panel_clear();
+            //tdg.c.error_message.value = message; 
+            var naicsCodeVal = $("#cid_naicscode").attr("value");
+            if(naicsCodeVal== null || !isValidGUID(naicsCodeVal))
+            {
+                //$('.validation-summary div').remove();
+                var message = "You must choose a valid NAICS Code from the NAICS Code drop-down list to continue";
+                var validationSection = $('.validation-summary'); 
+                validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + message + "</div>")); 
+			    validationSection.show();
+                $('.validation-summary div').focus(); 
+
+                var validation = false;
+                return validation;
+            }
             var validation = true;
             return validation;
         }
@@ -78,7 +91,7 @@ function btn_save_new_onclick() {
      $("#btn_save_new").prop('disabled', true);
     var value = false;
 
-    tdg.c.error_message_clear();
+    //tdg.c.error_message_clear();
     if (typeof entityFormClientValidate === 'function') {
         if (entityFormClientValidate()) {
             if (typeof Page_ClientValidate === 'function') {
@@ -143,4 +156,13 @@ function error_cb(msg) {
     msg = tdg.c.text_language(msg, selected_language)
     tdg.c.message_panel_set("EntityFormControl", msg);
     $("#btn_save_new").prop('disabled', false);
+}
+
+function isValidGUID(value) {
+    if (value.length > 0) {
+        if (!(/^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$/).test(value)) {
+            return false;
+        }
+    }
+    return true;
 }

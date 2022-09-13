@@ -1,6 +1,4 @@
 <div id="loader"></div>
-<div class="panel panel-default">
-</div>
 <div>
   <script>
     $('#loader').show();
@@ -8,24 +6,27 @@
   {% assign parentCompanyId = user.parentcustomerid.id %}
   {% if parentCompanyId %}
   {% assign company = entities['account'][parentCompanyId] %}
-  {{ company.cid_cidcompanystatus }}
-  {% if company.cid_cidcompanystatus  and company.cid_cidcompanystatus.value == 100000005 %}
-  You will be redirected to the registration page.
-  Please wait ...
+  {% if company.cid_cidcompanystatus and company.cid_cidcompanystatus.value == 100000005 and (request.url contains "tdgcore-qa" or request.url contains "rd-tdgcore-devv")%}
+  <h2>You will be redirected to the company dashboard page.</h2>
+  <h2>Please wait ...</h2>
   <script>
     window.location.replace('/company_dashboard');
   </script>
   {% else %}
+  <h2>You will be redirected to the company registartion page.</h2>
+  <h2>Please wait ...</h2>
   <script>
     window.location.replace('/RegistrationWizard');
   </script>
   {% endif %}
   {% else %}
+  You will be redirected to the company registartion page.
+  Please wait ...
   <script>
     window.location.replace('/RegistrationWizard');
   </script>
   {% endif %}
   <script>
-    $('#loader').show();
+    $('#loader').hide();
   </script>
 </div>
