@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RibbonDiffXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <CustomActions>
+    <HideCustomAction HideActionId="fdr.Mscrm.HomepageGrid.fdr_servicerequest.Deactivate.Hide" Location="Mscrm.HomepageGrid.fdr_servicerequest.Deactivate" />
+    <HideCustomAction HideActionId="fdr.Mscrm.SubGrid.fdr_servicerequest.Deactivate.Hide" Location="Mscrm.SubGrid.fdr_servicerequest.Deactivate" />
+  </CustomActions>
+  <Templates>
+    <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
+  </Templates>
+  <CommandDefinitions>
+    <CommandDefinition Id="Mscrm.Form.Deactivate">
+      <EnableRules>
+        <EnableRule Id="Mscrm.CanWritePrimary" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.CanWritePrimary" />
+        <DisplayRule Id="Mscrm.PrimaryIsActive" />
+        <DisplayRule Id="Mscrm.PrimaryEntityHasStatecode" />
+        <DisplayRule Id="Mscrm.PrimaryIsNotActivity" />
+        <DisplayRule Id="fdr.fdr_servicerequest.Form.Deactivate.DisplayRule." />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.Deactivate.deactivatePrimaryRecord" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="FirstPrimaryItemId" />
+          <CrmParameter Value="PrimaryEntityTypeName" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+  </CommandDefinitions>
+  <RuleDefinitions>
+    <TabDisplayRules />
+    <DisplayRules>
+      <DisplayRule Id="fdr.fdr_servicerequest.Form.Deactivate.DisplayRule.">
+        <OrRule>
+          <Or>
+            <ValueRule Field="statuscode" Value="1" />
+          </Or>
+          <Or>
+            <ValueRule Field="statuscode" Value="794600000" />
+          </Or>
+          <Or>
+            <ValueRule Field="statuscode" Value="794600001" />
+          </Or>
+          <Or>
+            <ValueRule Field="statuscode" Value="794600002" />
+          </Or>
+          <Or>
+            <ValueRule Field="statuscode" Value="794600003" />
+          </Or>
+          <Or>
+            <ValueRule Field="statuscode" Value="794600004" />
+          </Or>
+          <Or>
+            <ValueRule Field="statuscode" Value="794600006" />
+          </Or>
+          <Or>
+            <ValueRule Field="statuscode" Value="794600009" />
+          </Or>
+          <Or>
+            <ValueRule Field="statuscode" Value="794600010" />
+          </Or>
+          <Or>
+            <ValueRule Field="statuscode" Value="794600011" />
+          </Or>
+        </OrRule>
+      </DisplayRule>
+    </DisplayRules>
+    <EnableRules />
+  </RuleDefinitions>
+  <LocLabels />
+</RibbonDiffXml>
