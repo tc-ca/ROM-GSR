@@ -26,7 +26,7 @@
           "connectionReferenceLogicalName": "fdr_conref_spapi_v2"
         },
         "api": {
-          "name": "shared_fdr-5Fspapi-20v2-20connector-5F5cf23ef0bee9f3b2",
+          "name": "shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2",
           "logicalName": "fdr_5Fspapi-20v2-20connector"
         }
       }
@@ -365,7 +365,7 @@
                           "host": {
                             "connectionName": "shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2",
                             "operationId": "servicerequestcontrollervCalculateServiceRequestPerformance",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_fdr-5Fspapi-20v2-20connector-5F5cf23ef0bee9f3b2"
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2"
                           },
                           "parameters": {
                             "serviceRequestId": "@triggerOutputs()?['body/fdr_mtoa_sr_id']",
@@ -375,6 +375,47 @@
                           "authentication": "@parameters('$authentication')"
                         },
                         "description": "Always calculate Performance as App User"
+                      },
+                      "Add_a_new_row": {
+                        "runAfter": {
+                          "Update_a_row": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "a3a1dac3-e464-478a-b682-bee6df7f5454"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_commondataserviceforapps",
+                            "operationId": "CreateRecord",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                          },
+                          "parameters": {
+                            "entityName": "fdr_servicerequestperformances",
+                            "item/fdr_name": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/ServiceRequestPerformanceId']",
+                            "item/fdr_adjustmentapplicableunitnbr": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/AdjustmentApplicableUnitNbr']",
+                            "item/fdr_adjustmentjustificationtxt": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/AdjustmentJustificationTxt']",
+                            "item/fdr_adjustmentnbr": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/AdjustmentNbr']",
+                            "item/fdr_adjustmentnetworkid": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/AdjustmentNetworkId']",
+                            "item/fdr_applicableunitnbr": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/ApplicableUnitNbr']",
+                            "item/fdr_approvernetworkid": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/ApproverNetworkId']",
+                            "item/fdr_completeddte": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/CompletedDte']",
+                            "item/fdr_errorcd": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/ErrorCd']",
+                            "item/fdr_holidaydaynbr": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/HolidayDayNbr']",
+                            "item/fdr_onholddaynbr": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/OnHoldDayNbr']",
+                            "item/fdr_remittanceamt": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/RemittanceAmt']",
+                            "item/fdr_ServiceRequestId@odata.bind": "fdr_servicerequests(@{triggerOutputs()?['body/fdr_servicerequestid']})",
+                            "item/fdr_servicerequestperformanceidnumber": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/ServiceRequestPerformanceId']",
+                            "item/fdr_standardassessmentpct": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/StandardAssessmentPct']",
+                            "item/fdr_standardmetind": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/StandardMetInd']",
+                            "item/fdr_startdte": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/StartDte']",
+                            "item/fdr_totalfeeamt": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/TotalFeeAmt']",
+                            "item/fdr_weekenddaynbr": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/WeekendDayNbr']"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
                       }
                     },
                     "runAfter": {

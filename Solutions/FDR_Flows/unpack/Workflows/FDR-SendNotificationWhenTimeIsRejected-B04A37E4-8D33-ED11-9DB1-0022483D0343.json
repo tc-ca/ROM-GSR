@@ -1,0 +1,487 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_powerplatformforadmins": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "ovs_sharedpowerplatformforadmins_bd483"
+        },
+        "api": {
+          "name": "shared_powerplatformforadmins"
+        }
+      },
+      "shared_teams": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceMSTeamsTDGCoreUser"
+        },
+        "api": {
+          "name": "shared_teams"
+        }
+      },
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "53ecf944-9233-4488-afc8-864ebe09d964"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "fdr_servicerequestservicetask",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "fdr_approvetime"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Condition:_If_Time_Entry_Is_Rejected,_Send_Notification": {
+          "actions": {
+            "Get_Modified_User_email": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "302200e7-9fe2-4133-a73b-7da775522ffb"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "systemusers",
+                  "recordId": "@triggerOutputs()?['body/_ownerid_value']",
+                  "$select": "domainname,fullname"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Set_ownerUserEmail": {
+              "runAfter": {
+                "Get_Modified_User_email": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "76a276da-40c7-474c-862a-aa0a4491d309"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ownerUserEmail",
+                "value": "@outputs('Get_Modified_User_email')?['body/domainname']"
+              }
+            },
+            "Get_Environment_as_Admin": {
+              "runAfter": {
+                "Set_ownerUserEmail": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "21e13561-c80a-4c1e-9910-13dacabd670e"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_powerplatformforadmins",
+                  "operationId": "GetSingleEnvironment",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_powerplatformforadmins"
+                },
+                "parameters": {
+                  "environment": "@workflow()['tags']['environmentName']",
+                  "api-version": "2018-10-01"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Set_Environment_Name": {
+              "runAfter": {
+                "Get_Environment_as_Admin": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0e08f995-6bf7-4dce-a4a7-ccafe1710190"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Environment Name",
+                "value": "@{body('Get_Environment_as_Admin')?['properties']?['displayName']}"
+              }
+            },
+            "Set_Time_Entry_URL": {
+              "runAfter": {
+                "Get_Service_Task_Type": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "2cbfa626-7adb-4f1d-8fcf-a6612cf66e21"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "D365 Time Entry URL",
+                "value": "@{concat('https://', variables('Environment Name'), '.crm3.dynamics.com/main.aspx?pagetype=entityrecord&etn=fdr_servicerequestservicetask&id=', triggerOutputs()?['body/fdr_servicerequestservicetaskid'])}"
+              }
+            },
+            "Compose_Time_Entry_Link_(English_Name)": {
+              "runAfter": {
+                "Set_Time_Entry_URL": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "cd6c001b-0ca7-4960-b9a3-eedc4797f60f"
+              },
+              "type": "Compose",
+              "inputs": "<a href = \"@{variables('D365 Time Entry URL')}\">@{outputs('Get_Service_Task_Type')?['body/ovs_servicetasktypenameenglish']}</a>"
+            },
+            "Post_message_in_a_chat_or_channel": {
+              "runAfter": {
+                "Set_Service_Request_Link": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0b55c90c-b3ae-44ff-8ec6-8fa8a9cae738"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_teams",
+                  "operationId": "PostMessageToConversation",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams"
+                },
+                "parameters": {
+                  "poster": "Flow bot",
+                  "location": "Chat with Flow bot",
+                  "body/recipient": "@{variables('ownerUserEmail')};",
+                  "body/messageBody": "<p><span style=\"font-family: arial\"><u><strong>FDR Time Rejected</strong></u></span><span style=\"font-family: arial\"><u><br>\n</u></span><span style=\"font-family: arial\"><br>\nHello, </span><span style=\"font-family: arial\"><em></em></span><span style=\"font-family: arial\"><em>@{outputs('Get_Modified_User_email')?['body/fullname']}</em></span><span style=\"font-family: arial\"><em></em></span><span style=\"font-family: arial\"><br>\nYour FDR time entry has been rejected and needs adjustment. Please use the links to navigate directly to your time entry.<br>\n<br>\n</span><span style=\"font-family: arial\"><strong>Time Entry:</strong></span><span style=\"font-family: arial\"> </span><span style=\"font-family: arial\">@{variables('Time Entry Link')}</span><span style=\"font-family: arial\"><br>\n</span><span style=\"font-family: arial\"><strong>Service Request:</strong></span><span style=\"font-family: arial\"> </span><span style=\"font-family: arial\">@{variables('Service Request Link')}</span><span style=\"font-family: arial\"><br>\n</span><span style=\"font-family: arial\"><strong>Reason:</strong></span><span style=\"font-family: arial\"> </span><span style=\"font-family: arial\">@{triggerOutputs()?['body/fdr_rejectionreason']}</span><span style=\"font-family: arial\"><br>\n</span><br>\n___________________________________________________________________________________<br>\n<br>\n<u><strong>S</strong></u><span style=\"font-family: arial\"><u><strong>aisie de Temps RIC Rejetée<br>\n</strong></u></span><span style=\"font-family: arial\"><br>\nBonjour,</span><span style=\"font-family: arial\"><em> </em></span><span style=\"font-family: arial\"><em>@{outputs('Get_Modified_User_email')?['body/fullname']}</em></span><span style=\"font-family: arial\"><em></em></span><span style=\"font-family: arial\"><br>\nVotre saisie de temps RIC a été rejetée et doit être ajustée. Veuillez utiliser les liens pour accéder directement à votre saisie des temps<br>\n<br>\n</span><span style=\"font-family: arial\"><strong>Saisie de Temps:</strong></span><span style=\"font-family: arial\"> </span><span style=\"font-family: arial\">@{variables('Time Entry Link (French Name)')}</span><span style=\"font-family: arial\"><br>\n</span><span style=\"font-family: arial\"><strong>Demande de service:</strong></span><span style=\"font-family: arial\"> </span><span style=\"font-family: arial\">@{variables('Service Request Link')}</span><span style=\"font-family: arial\"><br>\n</span><span style=\"font-family: arial\"><strong>Raison:</strong></span><span style=\"font-family: arial\"> </span><span style=\"font-family: arial\">@{triggerOutputs()?['body/fdr_rejectionreason']}</span><span style=\"font-family: arial\"></span><br>\n</p>",
+                  "body/isAlert": true
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Compose_Service_Request_Link": {
+              "runAfter": {
+                "Set_Service_Request_URL": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "cd6c001b-0ca7-4960-b9a3-eedc4797f60f"
+              },
+              "type": "Compose",
+              "inputs": "<a href = \"@{variables('D365 Service Request URL')}\">@{outputs('Get_Time_Entry_Associated_Service_Request')?['body/fdr_name']}</a>"
+            },
+            "Set_Service_Request_Link": {
+              "runAfter": {
+                "Compose_Service_Request_Link": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a4f525b3-a4b1-4ce1-ab17-0b7de0d0b4e8"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Service Request Link",
+                "value": "@{outputs('Compose_Service_Request_Link')}"
+              }
+            },
+            "Set_Service_Request_URL": {
+              "runAfter": {
+                "Get_Time_Entry_Associated_Service_Request": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "2cbfa626-7adb-4f1d-8fcf-a6612cf66e21"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "D365 Service Request URL",
+                "value": "@{concat('https://', variables('Environment Name'), '.crm3.dynamics.com/main.aspx?pagetype=entityrecord&etn=fdr_servicerequest&id=', triggerOutputs()?['body/_fdr_servicerequest_value'])}"
+              }
+            },
+            "Set_Time_Entry_Link_(English_Name)": {
+              "runAfter": {
+                "Compose_Time_Entry_Link_(English_Name)": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "ead12efe-807c-4c6c-b870-340f02b80aa7"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Time Entry Link",
+                "value": "@{outputs('Compose_Time_Entry_Link_(English_Name)')}"
+              }
+            },
+            "Get_Time_Entry_Associated_Service_Request": {
+              "runAfter": {
+                "Set_Time_Entry_Link_(French_Name)": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "bb068bfd-f22a-4321-9389-5900e6acff00"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "fdr_servicerequests",
+                  "recordId": "@triggerOutputs()?['body/_fdr_servicerequest_value']",
+                  "$select": "fdr_name"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Get_Service_Task_Type": {
+              "runAfter": {
+                "Set_Environment_Name": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "84517fa8-7f5c-4b83-9a48-327a3e543c1b"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "msdyn_servicetasktypes",
+                  "recordId": "@triggerOutputs()?['body/_fdr_tasktype_value']",
+                  "$select": "ovs_servicetasktypenameenglish,ovs_servicetasktypenamefrench"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Compose_Time_Entry_Link_(French_Name)": {
+              "runAfter": {
+                "Set_Time_Entry_Link_(English_Name)": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "cd6c001b-0ca7-4960-b9a3-eedc4797f60f"
+              },
+              "type": "Compose",
+              "inputs": "<a href = \"@{variables('D365 Time Entry URL')}\">@{outputs('Get_Service_Task_Type')?['body/ovs_servicetasktypenamefrench']}</a>"
+            },
+            "Set_Time_Entry_Link_(French_Name)": {
+              "runAfter": {
+                "Compose_Time_Entry_Link_(French_Name)": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "67978144-dfe3-4cd8-870a-b0d53972bded"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Time Entry Link (French Name)",
+                "value": "@{outputs('Compose_Time_Entry_Link_(French_Name)')}"
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_variable:_Service_Request_Link_": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "equals": [
+              "@triggerOutputs()?['body/fdr_approvetime']",
+              false
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a2a9138b-4443-4bfb-81b2-18e04c082d51"
+          },
+          "type": "If"
+        },
+        "Initialize_variable:_ownerUserEmail": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "a43806f2-df7b-4d03-8cc0-15a29ac80d31"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ownerUserEmail",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_Environment_Name": {
+          "runAfter": {
+            "Initialize_variable:_ownerUserEmail": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "775d6e44-0dd0-4dda-9277-05c30311025e"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Environment Name",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_D365_Time_Entry_URL_": {
+          "runAfter": {
+            "Initialize_variable:_Environment_Name": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6d8ece02-aab5-42b4-9830-9f87333e489a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "D365 Time Entry URL",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_Time_Entry_Link": {
+          "runAfter": {
+            "Initialize_variable:_D365_Service_Request_URL": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "412ac43f-596d-42f4-91b4-42e14bfa13e2"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Time Entry Link",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_D365_Service_Request_URL": {
+          "runAfter": {
+            "Initialize_variable:_D365_Time_Entry_URL_": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c69189dc-78e6-4c8a-b26d-47f0599d4310"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "D365 Service Request URL",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_Service_Request_Link_": {
+          "runAfter": {
+            "Initialize_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "412ac43f-596d-42f4-91b4-42e14bfa13e2"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Service Request Link",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable": {
+          "runAfter": {
+            "Initialize_variable:_Time_Entry_Link": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4ac60ef9-c29e-45f6-b046-8abdc101c5ca"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Time Entry Link (French Name)",
+                "type": "string"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}
