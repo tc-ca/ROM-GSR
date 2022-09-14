@@ -139,28 +139,27 @@
 {% assign downloadlableEnglishversion = 'English Version' %}
 {% assign downloadlableFrenchVersion = 'French Version' %}
 {% endif %}
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
   $(document).ready( function() {
 
+      var uploadTootTipe = "Please upload file first";
       var Page_Partial_URL = '{{page.adx_partialurl}}';
      
       var UploadType = "" ;
 
- 
- 
-       
     //read all messages in json array
     ReadBulkMessagesFile();
 
-    debugger ;
 
-//insert lables and buttons
-$(".section[data-name='General']").closest("fieldset").hide();
-$("#AttachFile").after('<br><label>2B. Start Upload</label><br><button type="button" id="btn_attachfile_and_scan" class="submit-btn btn btn-primary form-action-container-left">{{upload}}</button>');
-$("#AttachFile").before('<div id="Div2A" class="input-group input-group-sm"><div class="input-group-btn"><label class="submit-btn btn btn-primary form-action-container-left" for="AttachFile">{{choosefile}}</label></div><input type="text" class="form-control" id="uploadFile" placeholder="Select File Name here" disabled="disabled" /></div>');
+    //insert lables and buttons
+    $(".section[data-name='General']").closest("fieldset").hide();
+    $("#AttachFile").after('<br><label>2B. Start Upload</label><br><button type="button" id="btn_attachfile_and_scan" class="submit-btn btn btn-primary form-action-container-left">{{upload}}</button>');
+    $("#AttachFile").before('<div id="Div2A" class="input-group input-group-sm"><div class="input-group-btn"><label class="submit-btn btn btn-primary form-action-container-left" for="AttachFile">{{choosefile}}</label></div><input type="text" class="form-control" id="uploadFile" placeholder="Select File Name here" disabled="disabled" /></div>');
 
 
 //insert previous and next button if initial registeration
@@ -174,33 +173,32 @@ $("#AttachFile").before('<div id="Div2A" class="input-group input-group-sm"><div
    //add previous and next inside the div
    $("#DivNavbuttonGroup").append('<div role="group" class= "btn-group entity-action-button"><button type="button" id="btn_Previous" class="btn btn-default button previous previous-btn">Previous</button></div>');
    $("#DivNavbuttonGroup").append('<div role="group" class= "btn-group entity-action-button">&nbsp;&nbsp;</div>');
-   $("#DivNavbuttonGroup").append('<div role="group" class = "btn-group entity-action-button" ><button type="button" id="btn_Next" class="submit-btn btn btn-primary form-action-container-left">Next</button></div>');
+   $("#DivNavbuttonGroup").append('<div role="group" class = "btn-group entity-action-button" > <button type="button" id="btn_Next" class="submit-btn btn btn-primary form-action-container-left" disabled>Next</button></div>');
 
+    
 
+ 
+ 
   }
   else
   {
-
    UploadType = "Update";
   }
 
-//attach file event
-document.getElementById("AttachFile").onchange = function () {
-    console.log("attach file event");
-   console.log( this.value);
+    //attach file event
+    document.getElementById("AttachFile").onchange = function () {
+    
     document.getElementById("uploadFile").value = this.value.replace("C:\\fakepath\\", "");;
 };
 
-
-
-
+//hide form button
  $("#InsertButton").css("display", "none");
     var langcode = '{{languagecode}}'  ;
 
    //work with attach file transalation
    //can not use out of the box without modification the button lable will not be transalated depens only on OS system language
-var AttachButton = document.getElementById('AttachFile');
-AttachButton.classList.add("inputfile");
+  var AttachButton = document.getElementById('AttachFile');
+  AttachButton.classList.add("inputfile");
 
 //$("#AttachFile").after('<div class="input-group input-group-sm"><div class="input-group-btn"><label class="btn btn-primary" for="AttachFile">'{{ choosefile }}'</label></div><input class="form-control" id="uploadFile" placeholder="File Name here" disabled="disabled" /></div>' );
 //$("div.tr").append();
@@ -213,16 +211,20 @@ AttachButton.classList.add("inputfile");
 //upload button click event
 $('#btn_attachfile_and_scan').click(function(e)
 {
-    
+
+  Disable_all_Buttons();
     //hide validation summary    
     $("Div.validation-summary").css('display', 'none');
     $("Div.alert").css('display', 'none');
   
-   
     if (document.getElementById('AttachFile').files.length == 0)
    {
        // call the submit button to show error message
     $("#InsertButton").click();
+            Enable_Button('btn_attachfile_and_scan');
+            Enable_Button('linkdownload_English');
+            Enable_Button('linkdownload_French');
+            
    }
    else
    {
@@ -237,10 +239,9 @@ $('#btn_attachfile_and_scan').click(function(e)
     // Get the content of the selected file
     var file = document.getElementById('AttachFile').files[0];
 
-  console.log("mime type " + MimeType);
                 console.log("file name " + FileName);
                   var langcode = '{{languagecode}}'  ;
-debugger ;
+
     if (MimeType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
    {
        //get error message in english
@@ -260,17 +261,10 @@ debugger ;
    }
 
   else if (file) {
-
-
-     
-        
-            // Get the dependency, which we've added to node via "npm install file-type":
-       
-        
+           
+       //start reading uploaded file
         var reader = new FileReader();
-    
   
-    
         reader.onload = function(e) {
              try {
             //get data from reader
@@ -282,13 +276,12 @@ debugger ;
                 });
                 //get number of sheets
                 var numberOfSheets = workbook.SheetNames.length;
+                //if file is excel at least one excel sheet will be there.
                 if (numberOfSheets > 0)
                 {
-                  
+                    //get the scan flow url from fetch xml  stored in liquid variable
                  var Scan_API_URL = '{{Scan_flow_URL}}';
-                 debugger;
-
-                 console.log (Scan_API_URL); 
+                
                 //call antivirus URL
                 Call_Virsu_Scan_API(Scan_API_URL
                 ,data , BulkActivitytype ,FileName,langcode );
@@ -310,15 +303,13 @@ debugger ;
               //show file type error message
                  $('#ErrorMessageDiv').css('display', 'block');
                  $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  FileTypeErrorMessage + "</p>");
-                console.log( "error ..... " + error);
+           
             }           
           
         };
 
         reader.readAsBinaryString(file);
       
-
-
            //else
            //{
 
@@ -363,17 +354,20 @@ debugger ;
 //btoa(c) );
 });
 
+ 
+$('#linkdownload_English').on('click', async function() {
 
-   
-    $('#linkdownload_English').on('click', async function() {
-
-       //call download flow to download excel sheet
-      Download_ExcelTemplate("English") ;
+        Disable_all_Buttons();
+        //call download flow to download excel sheet
+        Download_ExcelTemplate("English") ;
     });
+
+
 
 //download french button
  $('#linkdownload_French').on('click', async function() {
 
+      Disable_all_Buttons();
       //call download flow to download excel sheet
        Download_ExcelTemplate("French") ;
     });
@@ -384,13 +378,8 @@ debugger ;
     //go previous page
     history.back()
   });
-
     
-
 });//end document ready
-
-
-
 
 function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls , Lang , Logwarrning , Warnningdetails)
 {
@@ -433,7 +422,7 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
           console.log(responseMessage);
            responseMessage.replace('{0}' , emailaddress1);
 
-
+            Enabled_all_Buttons();
 
          }
          else{
@@ -451,12 +440,15 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
                $('#infoMsg').css('display', 'block');
                $('#infoMsg').html( responseMessage);
 
+               Enabled_all_Buttons();
+
 
          }
          else {
               $('#processingMsg').text("Error Please Try again Later.");
             var result = this.response;
-            alert("Error " + result);
+            Enabled_all_Buttons();
+           
           }
         }
       }
@@ -518,6 +510,7 @@ if ( language != 'en-US'&& language != 'en')
             }//end check language
           $('#ErrorMessageDiv').css('display', 'block');
           $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  ErrorMessage_fileScan + "</p>");
+          Enabled_all_Buttons();
        
          }
 
@@ -549,28 +542,26 @@ function call_Inital_validation(Language , bulkactivitytype)
         var newrecordid = URLs.get('id');
       //  var companyid = URLs.get('companyid');
         var companyname = '{{ user.parentcustomerid.Name }}';
-        if  ( companyid != null  )
-{
+     if  ( companyid != null  )
+       {
 
- //document.getElementById("content").innerHTML = response.html;
-
+      //document.getElementById("content").innerHTML = response.html;
+      
+        Disable_all_Buttons();
 
         var urlPath = window.location.href;
-
         urlPath = urlPath.split('?')[0];
+        window.history.replaceState({}, document.title, urlPath);
 
 
-    window.history.replaceState({}, document.title, urlPath);
+        var IntialvalidationBegunMessage = "<p>Uploading and processing the Site Bulk Upload Excel workbook.  Please wait a moment...</p>";
+        //"<p>Preliminary analysis of the uploaded workbook has begun…</p>" ;
+        if ( Language != 'en-US' && Language != 'en')
+        {
+            IntialvalidationBegunMessage = "<p>Téléchargement et traitement du classeur Excel de téléchargement en masse du site. Patientez s'il-vous-plait...</p>";
+            //"<p>L'analyse préliminaire du classeur téléchargé a commencé…</p>";
 
-
-var IntialvalidationBegunMessage = "<p>Uploading and processing the Site Bulk Upload Excel workbook.  Please wait a moment...</p>";
-//"<p>Preliminary analysis of the uploaded workbook has begun…</p>" ;
- if ( Language != 'en-US' && Language != 'en')
- {
-    IntialvalidationBegunMessage = "<p>Téléchargement et traitement du classeur Excel de téléchargement en masse du site. Patientez s'il-vous-plait...</p>";
-    //"<p>L'analyse préliminaire du classeur téléchargé a commencé…</p>";
-
- }
+        }
 
          $('#infoMsg').css('display', 'block');
         $('#infoMsg').html(IntialvalidationBegunMessage);
@@ -649,25 +640,25 @@ var IntialvalidationBegunMessage = "<p>Uploading and processing the Site Bulk Up
                                      Call_Check_User_Response_flow(newrecordid , 'NoDelete' , '' , Language , "Y", "Error - Bulk Site Registration Upload: CID Site data already exists. User chose not to proceed with the upload. [B1035]-No");
 
                                var   responseMessageaftercancel="<p>Initial request for Bulk Upload is now complete based on an early cancellation. <br>" +
-"The original request to bulk upload sites is cancelled. Please proceed with the remainder of the Registration process.</p>";
+                                  "The original request to bulk upload sites is cancelled. Please proceed with the remainder of the Registration process.</p>";
              if ( Lang != 'en-US' && Lang != 'en')
             {
                  responseMessageaftercancel="<p>La demande initiale de transfert groupé est maintenant terminée en raison d'une annulation anticipée. <br>" +
-"La demande initiale de sites de téléchargement groupé est annulée. Veuillez poursuivre le reste du processus d'inscription.</p>";
+                  "La demande initiale de sites de téléchargement groupé est annulée. Veuillez poursuivre le reste du processus d'inscription.</p>";
                                  //Call_Check_User_Response_flow(newrecordid , 'No' , '' , Language);
                                 //console.log("No");
                             }
 
                              $('#infoMsg').css('display', 'block');
                               $('#infoMsg').html(responseMessageaftercancel);
+                              Enabled_all_Buttons();
+
                                 }
                             });
-
                      }
 
-
-else{
-
+                    else
+                    {
                     var result = this.response;
                     confirmDialog(result, (ans) => {
                             if (ans) {
@@ -693,7 +684,7 @@ else{
 
                      $('#ErrorMessageDiv').css('display', 'block');
                      $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  result + "</p>");
-
+                     Enabled_all_Buttons();
 
                        //document.getElementById("errortable").innerHTML = result;
 
@@ -704,6 +695,7 @@ else{
                     var result = this.response;
                      $('#ErrorMessageDiv').css('display', 'block');
                      $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  result + "</p>");
+                     Enabled_all_Buttons();
 
                  //   alert(result);
                        // window.location.replace("~/Bulk_Site_Upload");
@@ -711,43 +703,39 @@ else{
             }
         }
         req.send(acupdate);
-
-
-}//end if
-else{
-      $('#processingMsg').css('display', 'none');
-}
-}//end function
+    }//end if
+    else{
+        $('#processingMsg').css('display', 'none');
+    }
+    }//end function
 
 function confirmDialog(message, handler)
 {
 
-$(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
-    <header class="modal-header">
-        <h2 class="modal-title">CID Portal</h2>
-    </header>
-    <div class="modal-body">
-        ${message}
+        $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
+            <header class="modal-header">
+                <h2 class="modal-title">CID Portal</h2>
+            </header>
+            <div class="modal-body">
+                ${message}
 
-    </div>
-  <div class="modal-footer">
-     <button id="btnYes" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">Yes</button>
-    <button  id="btnNo" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" data-dismiss="modal">No</button>
+            </div>
+        <div class="modal-footer">
+            <button id="btnYes" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">Yes</button>
+            <button  id="btnNo" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" data-dismiss="modal">No</button>
 
-</section>
-`).appendTo('body');
+        </section>
+        `).appendTo('body');
 
-$('#btnNo').focus();
+       $('#btnNo').focus();
 
-
-     $("#myModal").css('top' , '15%');
+       $("#myModal").css('top' , '15%');
         $("#myModal").css('left' , '40%');
         $("#myModal").css('position', 'fixed');
         $("#myModal").css('z-index', '9999');
 
 
- $("#btnYes").click(function () {
-
+    $("#btnYes").click(function () {
            // handler(true);
           //  $("#myModal").modal("hide");
           $("#myModal").remove();
@@ -761,9 +749,7 @@ $('#btnNo').focus();
             $("#myModal").remove();
              handler(false);
         });
-
-
-
+    
 }
 
 function decode (str)
@@ -789,27 +775,18 @@ function htmldecode (str){
     var index1 = url.indexOf("/");
     var file = "https://" + url.substring(0, index1);
      file += "/BulkUpload_Messages";
-     console.log(file);
-
+     
     fetch(file)
         .then(response => {
-          
-    
             return response.json();
-            
         })
          .then(jsondata =>(storeMessageListInSession(jsondata)));
-     
-     
-     
-}
+  }
+
 function storeMessageListInSession(data)
 {
     //store messages in session
    sessionStorage.setItem('MessagesJsonArray',JSON.stringify(data));
-  
-  
-
 }
 
 function Download_ExcelTemplate (TemplateLanguage)
@@ -892,11 +869,18 @@ function Download_ExcelTemplate (TemplateLanguage)
             var fileattachementURL = "~/_entity/annotation/"  + NoteGUID;
                   //download the file from the url
             window.location.replace(fileattachementURL);
-        
+            //enabled button
+            Enable_Button('btn_attachfile_and_scan');
+            Enable_Button('linkdownload_English');
+            Enable_Button('linkdownload_French');
+            Enable_Button('btn_Previous');
           } else {
               $('#processingMsg').text("Download was not completed due to system issue, please contact system support");
             var result = this.response;
-          
+           Enable_Button('btn_attachfile_and_scan');
+            Enable_Button('linkdownload_English');
+            Enable_Button('linkdownload_French');
+            Enable_Button('btn_Previous');
           }
         }
       }
@@ -904,6 +888,36 @@ function Download_ExcelTemplate (TemplateLanguage)
 
 }
 
+//disable button. pass button id to the function
+function Disable_Button (buttonID)
+{
+    document.getElementById(buttonID).disabled = true;
+}
+//enable button. pass button id to the function
+function Enable_Button (buttonID)
+{
+    document.getElementById(buttonID).disabled = false;
+}
+//diable all buttons in the form
+function Disable_all_Buttons()
+{
+      Disable_Button('btn_Previous');
+      Disable_Button('btn_Next');
+      Disable_Button('btn_attachfile_and_scan');
+      
+      Disable_Button('linkdownload_English');
+      Disable_Button('linkdownload_French');
+}
+
+//diable all buttons in the form
+function Enabled_all_Buttons()
+{
+      Enable_Button('btn_Previous');
+      Enable_Button('btn_Next');
+      Enable_Button('btn_attachfile_and_scan');
+      Enable_Button('linkdownload_English');
+      Enable_Button('linkdownload_French');
+}
 
 function filter_BulkMessageArray(id , lang)
 { 
@@ -967,7 +981,9 @@ function filter_BulkMessageArray(id , lang)
                                 <table>
                                     <tr>
                                         <td>
+                                        <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Download">
                                             <button type="button" id="linkdownload_English" class="submit-btn btn btn-primary form-action-container-left">{{downloadlableEnglishversion}}</button>
+                                        </span>
                                         </td>
                                         <td> &nbsp;&nbsp;</td>
                                         <td>

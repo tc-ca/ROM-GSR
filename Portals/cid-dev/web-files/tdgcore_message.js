@@ -216,6 +216,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": m000023_FR
                     },
                     {
+                        "code": "m000099",
+                        "message_en": "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen",
+                        "message_fr": "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen_FR"
+                    },
+                    {
                         "code": "m000100",
                         "message_en": "Back to Company Registration",
                         "message_fr": "Retour à l'enregistrement de société"

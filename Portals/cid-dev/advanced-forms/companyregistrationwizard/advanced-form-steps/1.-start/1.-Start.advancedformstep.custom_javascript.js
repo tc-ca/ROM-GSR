@@ -1,6 +1,7 @@
 //
 // CompanyRegistrationWizard-Start.js
 //
+
 $(document).ready(function () {
     debugger;
 
@@ -30,6 +31,31 @@ $(document).ready(function () {
     $("#cid_crabusinessnumber").attr("autocomplete", "new-password");
     $("#cid_legalname").attr("autocomplete", "new-password");
     $("#cid_reasonfornobnnumber_other").attr("autocomplete", "new-password");
+
+    // user has invitation code?
+    sessionStorage.setItem("cid_suppress_error", "");
+    var account_id = '{{user.parentcustomerid.Id}}';
+    if (account_id != "") {
+        debugger;
+        
+        var invitation = tdg.c.OData_List("adx_invitation", "");
+        if (invitation.length > 0) {
+            sessionStorage.setItem("cid_suppress_error", "true");
+
+            var filter = "accountid eq guid'" + account_id + "'";
+            var account = tdg.c.OData_List("account", filter)[0];
+
+            if (account.cid_crabusinessnumber != null) {
+                $("#cid_crabusinessnumber").val(account.cid_crabusinessnumber);
+            }
+            else {
+                $("#cid_has_cra_bn").val("0");
+                $("#cid_legalname").val(account.ovs_legalname);
+            }
+
+            $("#NextButton").click();
+        }
+    }
 });
 
 function error_message_advanced_form(message, clear) {
@@ -103,7 +129,6 @@ function cid_reasonfornobnnumber_onchange() {
 
 // clear parentcustomerid
 function clear_parentcustomerid() {
-    // clear data
     $("#cid_crabusinessnumber").val("");
     $("#cid_reasonfornobnnumber").val("");
     $("#cid_reasonfornobnnumber_other").val("");
@@ -117,6 +142,9 @@ function clear_parentcustomerid() {
 if (window.jQuery) {
     (function ($) {
         webFormClientValidate = function () {
+            debugger;
+            var suppress_error = sessionStorage.getItem("cid_suppress_error");
+            suppress_error = (suppress_error != "" ? true : fase);
             sessionStorage.setItem("step_start", "1");
             debugger;
             var cid_has_cra_bn = $("#cid_has_cra_bn").val();
@@ -126,7 +154,7 @@ if (window.jQuery) {
 
             tdg.c.error_message_clear();
 
-            // do not have a business number?
+            // business number?
             if (cid_has_cra_bn == 0) {
                 debugger;
 
@@ -141,28 +169,20 @@ if (window.jQuery) {
                 if (rom_data.length > 0) {
                     rom_data = rom_data[0];
 
-                    // the company is currently in the process of registration and stop the user from registering this company.
-                    if (rom_data.cid_cidcompanystatus != null) {
-                        var message = tdg.error_message.message("m000014");
-                        tdg.c.dialog_OK(message);
-                        return false;
-                    }
-
-                    $("#parentcustomerid").attr("value", rom_data.accountid);
-                    $("#parentcustomerid_name").attr("value", legalname);
-                    $("#parentcustomerid_entityname").attr("value", 'account');
+                    // currently in the process of registration?
+                    validation = in_current_registration(rom_data, suppress_error);
 
                     $("#cid_operatingname").val(rom_data.name);
                 }
-
-                validation = true;
+                else {
+                    validation = true;
+                }
             }
             else {
                 debugger;
                 var data = cid_crabusinessnumber_onchange();
 
                 if (data == "") {
-                    //tdg.c.error_message(msg);
                     tdg.c.error_message_advanced_form("m000001", true);   // "Invalid CRA Business Number"
                 }
                 else {
@@ -178,38 +198,55 @@ if (window.jQuery) {
                     if (rom_data.length > 0) {
                         rom_data = rom_data[0];
 
-                        // the company is currently in the process of registration and stop the user from registering this company.
-                        if (rom_data.cid_cidcompanystatus != null) {
-                            var current_registering = false
-                            switch (rom_data.cid_cidcompanystatus.Value) {
-                                case 100000002: // Unknown: Pending classification as ROM only, or CID registered
-                                    break;
-                                case 100000003: // Pending Active: Pending registration, no email invitation sent
-                                    break;
-                                case 100000004: // Pending Active: Pending registration, email invitation sent
-                                    break;
-                                default:
-                                    current_registering = true;
-                                    break;
-                            }
-
-                            if (current_registering) {
-                                var message = tdg.error_message.message("m000014");
-                                tdg.c.dialog_OK(message);
-                                return false;
-                            }
-                        }
-
-                        $("#parentcustomerid").attr("value", rom_data.accountid);
-                        $("#parentcustomerid_name").attr("value", legalname);
-                        $("#parentcustomerid_entityname").attr("value", 'account');
+                        // currently in the process of registration?
+                        validation = in_current_registration(rom_data, suppress_error);
                     }
-                    validation = true;
+                    else {
+                        validation = true;
+                    }
                 }
             }
             return validation;
         }
     }(window.jQuery));
+}
+
+function in_current_registration(rom_data, suppress_error) {
+    var value = true;
+    if (rom_data.cid_cidcompanystatus != null) {
+        var current_registering = false
+        switch (rom_data.cid_cidcompanystatus.Value) {
+            case 100000002:
+                break;
+            case 100000003:
+                break;
+            case 100000004:
+                break;
+            default:
+                current_registering = true;
+                break;
+        }
+
+        if (current_registering) {
+            var message_code = "";
+            if (!suppress_error) {
+                message_code = "m000014";
+                value = false;
+            }
+            else {
+                message_code = "m000099";
+                value = true;
+            }
+            var message = tdg.error_message.message(message_code);
+            tdg.c.dialog_OK(message);
+
+            return value;
+        }
+        $("#parentcustomerid").attr("value", rom_data.accountid);
+        $("#parentcustomerid_name").attr("value", legalname);
+        $("#parentcustomerid_entityname").attr("value", 'account');
+    }
+    return value;
 }
 
 function cid_crabusinessnumber_onchange() {
@@ -237,15 +274,15 @@ function Retrieve_cra(bn) {
     data_fake.LegalName = data.cid_legalname;
     data_fake.OperatingName = data.cid_legalname;
     data_fake.BusinessRegistrationNumber = bn;
-    var PhysicalLocationAddress = {};
-    PhysicalLocationAddress.AddressLine1Text = data.cid_addressline1text;
-    PhysicalLocationAddress.AddressLine2Text = data.cid_addressline2text;
-    PhysicalLocationAddress.CityName = data.cid_cityname;
-    PhysicalLocationAddress.ProvinceStateCode = data.cid_provincestatecode;
-    PhysicalLocationAddress.PostalZipCode = data.cid_postalzipcode;
-    PhysicalLocationAddress.CountryCode = data.cid_countrycode;
+    var address = {};
+    address.AddressLine1Text = data.cid_addressline1text;
+    address.AddressLine2Text = data.cid_addressline2text;
+    address.CityName = data.cid_cityname;
+    address.ProvinceStateCode = data.cid_provincestatecode;
+    address.PostalZipCode = data.cid_postalzipcode;
+    address.CountryCode = data.cid_countrycode;
 
-    data_fake.PhysicalLocationAddress = PhysicalLocationAddress;
+    data_fake.PhysicalLocationAddress = address;
 
     BN_Selected(data_fake);
 
