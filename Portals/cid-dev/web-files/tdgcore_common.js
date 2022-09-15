@@ -23,6 +23,8 @@ var canProvinces = [
     "Yukon::Yukon"
 ];
 
+var canProvincesCodes = ["AB", "BC", "MB", "NB", "NL", "NT", "NS", "NU", "ON", "PE", "QC", "SK", "YT"];
+
 if (typeof (tdg) == "undefined") {
     tdg = {
         __namespace: true
@@ -997,7 +999,8 @@ if (typeof (tdg.cid) == "undefined") {
             }
             for (var i = 0; i < 13; i++) {
                 var localizedProvince = tdg.c.text_language(canProvinces[i], language);
-                if (localizedProvince.localeCompare(address1_stateorprovince), undefined, { sensitivity: 'accent' } == 0) { //finds match
+                if (localizedProvince.localeCompare(address1_stateorprovince), undefined, { sensitivity: 'accent' } == 0
+                    || canProvincesCodes[i].localeCompare(address1_stateorprovince.toLowerCase())) { //finds match
                     $("#ovs_address1_province").val(i);
                     return;
                 }

@@ -138,12 +138,12 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000008",
                         "message_en": "Company Registration",
-                        "message_fr": "Enregistrement de la société"
+                        "message_fr": "Enregistrement de l'entreprise"
                     },
                     {
                         "code": "m000009",
                         "message_en": "Company Registration for {0}",
-                        "message_fr": "Enregistrement de la société pour {0}"
+                        "message_fr": "Enregistrement de l'entreprise pour {0}"
                     },
                     {
                         "code": "m000010",
@@ -216,6 +216,20 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": m000023_FR
                     },
                     {
+                        "code": "m000024",
+                        "message_en": "Site Registration for {0}",
+                        "message_fr": "Enregistrement du site pour {0}"
+                    },
+                    {
+                        "code": "m000025",
+                        "message_en": "Operation Registration for {0}",
+                        "message_fr": "Enregistrement de l'opération pour {0}"
+                    },
+                    {
+                        "code": "m000098",
+                        "message_en": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
+                        "message_fr": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID._FR"
+                    },                    {
                         "code": "m000099",
                         "message_en": "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen",
                         "message_fr": "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen_FR"

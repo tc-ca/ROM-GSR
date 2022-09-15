@@ -36,27 +36,18 @@ $(document).ready(function () {
     sessionStorage.setItem("cid_suppress_error", "");
     var account_id = '{{user.parentcustomerid.Id}}';
     if (account_id != "") {
-        debugger;
-        
-        var invitation = tdg.c.OData_List("adx_invitation", "");
-        if (invitation.length > 0) {
-            sessionStorage.setItem("cid_suppress_error", "true");
-
-            var filter = "accountid eq guid'" + account_id + "'";
-            var account = tdg.c.OData_List("account", filter)[0];
-
-            if (account.cid_crabusinessnumber != null) {
-                $("#cid_crabusinessnumber").val(account.cid_crabusinessnumber);
-            }
-            else {
-                $("#cid_has_cra_bn").val("0");
-                $("#cid_legalname").val(account.ovs_legalname);
-            }
-
-            $("#NextButton").click();
-        }
+        // copy code in CompanyRegistrationWizard-Start.Invitation.js
     }
 });
+
+function clear_contact_address() {
+    $("#address1_line1").val("");
+    $("#address1_line2").val("");
+    $("#address1_line3").val("");
+    $("#address1_city").val("");
+    $("#address1_stateorprovince").val("");
+    $("#address1_postalcode").val("");
+}
 
 function error_message_advanced_form(message, clear) {
     debugger;
@@ -143,8 +134,11 @@ if (window.jQuery) {
     (function ($) {
         webFormClientValidate = function () {
             debugger;
+
+            clear_contact_address();
+
             var suppress_error = sessionStorage.getItem("cid_suppress_error");
-            suppress_error = (suppress_error != "" ? true : fase);
+            suppress_error = (suppress_error != "" ? true : false);
             sessionStorage.setItem("step_start", "1");
             debugger;
             var cid_has_cra_bn = $("#cid_has_cra_bn").val();
@@ -161,10 +155,10 @@ if (window.jQuery) {
                 legalname = $("#cid_legalname").val();
 
                 // for apostrophe, use two apostrophe to escape it:
-                legalname = legalname.replace("'", "''");
+                legalname = legalname.replaceAll("'", "''");
 
                 filter = "ovs_legalname eq '" + legalname + "'";
-                filter = filter.replace("&", "%26");
+                filter = filter.replaceAll("&", "%26");
                 rom_data = tdg.c.OData_List("account", filter);
                 if (rom_data.length > 0) {
                     rom_data = rom_data[0];
@@ -265,8 +259,13 @@ function Retrieve_cra(bn) {
     var filter = "cid_businessregistrationnumber eq '" + bn + "'";
 
     data = tdg.c.OData_List("cid_fake_cra_bn_api", filter);
+
+    if (data == null) {
+        return "";
+    }
+
     if (data.length == 0) {
-        return data;
+        return "";
     }
 
     data = data[0];
@@ -307,6 +306,5 @@ function BN_Selected(data) {
     $("#address1_city").val(address.CityName);
     $("#address1_stateorprovince").val(address.ProvinceStateCode);
     $("#address1_postalcode").val(address.PostalZipCode);
-    $("#address1_country").val(address.CountryCode);
 }
 

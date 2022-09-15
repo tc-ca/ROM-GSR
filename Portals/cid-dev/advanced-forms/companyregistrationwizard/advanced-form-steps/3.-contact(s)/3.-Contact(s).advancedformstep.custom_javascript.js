@@ -17,6 +17,13 @@ $(document).ready(function ()
     sessionStorage.setItem("step_start", 2);
 
     root_erap_setup();
+
+    $(".create-action").prop("disabled", true);
+    $(".create-action").attr("readonly", true);
+    $(".create-action").css("pointer-events", "none");
+
+    $(".btn.btn-default.btn-xs").prop("disabled", true):
+
 });
 
 if (window.jQuery) {

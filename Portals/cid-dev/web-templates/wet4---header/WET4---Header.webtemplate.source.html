@@ -64,11 +64,16 @@
                       {% endif %}
                {% endfor %}
 
+               
+
                {%- if website.selected_language.code == "en" -%}
+               {% if request.url contains "rd-tdgcore-dev" or  request.url contains "tdgcore-qa"  %}
                    "lngLinks": [{"href":"/{{fr_url_substitution}}","lang":"fr","text":"Français"}],
+               {%endif%}
                {%- else -%}
                  "lngLinks": [{"href":"/{{en_url_substitution}}","lang":"en","text":"English"}],
                {%- endif -%}
+              
              "customSearch": [{
                 "action" : "https://www.canada.ca/{{ website.selected_language.code }}/sr/srb.html", 
                 "placeholder" : "Canada.ca",
