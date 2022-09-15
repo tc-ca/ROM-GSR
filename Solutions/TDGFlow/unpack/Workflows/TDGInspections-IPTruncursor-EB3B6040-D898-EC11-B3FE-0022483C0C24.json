@@ -340,6 +340,62 @@
               }
             ]
           }
+        },
+        "Delay_7_hours": {
+          "runAfter": {
+            "Send_an_email_(V2)": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "07b59107-a423-48bf-bcf7-03b183c6636f"
+          },
+          "type": "Wait",
+          "inputs": {
+            "interval": {
+              "count": 6,
+              "unit": "Minute"
+            }
+          }
+        },
+        "Condition": {
+          "actions": {
+            "Update_a_row": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "4b2661ae-5958-4905-92a5-0164fa4ef2d2"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "ovs_iptruns",
+                  "recordId": "@triggerOutputs()?['body/ovs_iptrunid']",
+                  "item/statuscode": 918640002
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "Delay_7_hours": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "equals": [
+              "@triggerOutputs()?['body/statuscode']",
+              918640000
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "08ed0bf3-5ae1-474f-bf6a-ec5d883e76aa"
+          },
+          "type": "If"
         }
       }
     }
