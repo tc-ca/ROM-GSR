@@ -1,8 +1,5 @@
 //To apply the Asterisk(*) Sign using custom JS:
 //$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
-// August 17, 2022 Tony Nguyen
-// August 18, 2022 Lauzon, Olivier
-// August 19, 2022 Tony Nguyen
 
 // tdgcore_common.js
 
@@ -1154,6 +1151,48 @@ if (typeof (tdg.cid) == "undefined") {
                     tdg.cid.Append_Modes_html_checkboxes(air, marine, rail, road);
                 }
             });
+        }
+    }
+}
+
+// CompanyRegistrationWizard
+if (typeof (tdg.cid.crw) == "undefined") {
+    tdg.cid.crw = {
+        // start
+        start_clear_contact_address: function () {
+            $("#address1_line1").val("");
+            $("#address1_line2").val("");
+            $("#address1_line3").val("");
+            $("#address1_city").val("");
+            $("#address1_stateorprovince").val("");
+            $("#address1_postalcode").val("");
+        },
+
+        start_parentcustomerid_setup: function (accountid, legalname) {
+            debugger;
+            $("#parentcustomerid").attr("value", accountid);
+            $("#parentcustomerid_name").attr("value", legalname);
+            $("#parentcustomerid_entityname").attr("value", 'account');
+        },
+
+        start_BN_Selected: function (data) {
+            debugger;
+
+            var LegalName = data.LegalName
+            var OperatingName = data.OperatingName
+            OperatingName = (OperatingName == "" ? LegalName : OperatingName);
+
+            var address = data.PhysicalLocationAddress;
+
+            $("#cid_legalname").val(LegalName);
+            $("#cid_operatingname").val(OperatingName);
+
+            $("#address1_line1").val(address.AddressLine1Text);
+            $("#address1_line2").val(address.AddressLine2Text);
+            $("#address1_line3").val("");
+            $("#address1_city").val(address.CityName);
+            $("#address1_stateorprovince").val(address.ProvinceStateCode);
+            $("#address1_postalcode").val(address.PostalZipCode);
         }
     }
 }

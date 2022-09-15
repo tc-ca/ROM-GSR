@@ -1,41 +1,39 @@
 //
 // CompanyRegistrationWizard-Company Create.js
 //
-$(document).ready(function ()
-{
+
+$(document).ready(function () {
 	debugger;
+
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
+
 	// address
 	tdg.cid.address_init(false);
 	tdg.cid.WebResource_address_complete_readonly(false);
 	var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name }}');
-	if (companyName)
-	{
+	if (companyName) {
 		$(".previous-btn").attr('disabled', true);
 	}
 	$("#websiteurl").width('100%');
 	$("#telephone1").attr("placeholder", "");
+
 	//phone field formatting
 	$("#telephone1").attr("maxlength", "10");
 	$("#fax").attr("maxlength", "10");
-	$("#telephone1").on('keyup', function ()
-	{
+	$("#telephone1").on('keyup', function () {
 		var n = $(this).val().replace(/\D/g, '');
 		$(this).val(n);
 		var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
-		if (match)
-		{
+		if (match) {
 			$(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
 		}
 	});
-	$("#fax").on('keyup', function ()
-	{
+	$("#fax").on('keyup', function () {
 		var n = $(this).val().replace(/\D/g, '');
 		$(this).val(n);
 		var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
-		if (match)
-		{
+		if (match) {
 			$(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
 		}
 	});
@@ -53,9 +51,9 @@ $(document).ready(function ()
 	var cid_operatingname = tdg.c.replace_special_char("{{user.cid_operatingname}}");
 	$('#cid_has_cra_bn').val(cid_has_cra_bn);
 	tdg.c.control_hide("cid_has_cra_bn");
+
 	// do not have a business number?
-	if (cid_has_cra_bn != 1)
-	{
+	if (cid_has_cra_bn != 1) {
 		tdg.c.control_hide("cid_crabusinessnumber");
 		tdg.c.control_show("cid_reasonfornobnnumber");
 		$("#cid_reasonfornobnnumber").val(cid_reasonfornobnnumber);
@@ -64,20 +62,17 @@ $(document).ready(function ()
 			tdg.c.control_show("cid_reasonfornobnnumber_other");
 			$("#cid_reasonfornobnnumber_other").val(cid_reasonfornobnnumber_other);
 		}
-		else
-		{
+		else {
 			tdg.c.control_hide("cid_reasonfornobnnumber_other");
 		}
 	}
-	else
-	{
+	else {
 		tdg.c.control_show("cid_crabusinessnumber");
 		tdg.c.control_hide("cid_reasonfornobnnumber");
 		tdg.c.control_hide("cid_reasonfornobnnumber_other");
 		$("#cid_crabusinessnumber").val(cid_crabusinessnumber);
 	}
-	if (step_start != "2")
-	{
+	if (step_start != "2") {
 		$("#ovs_legalname").val(cid_legalname);
 		$("#name").val(cid_operatingname);
 		debugger;
@@ -89,8 +84,7 @@ $(document).ready(function ()
 	$('#cid_reasonfornobnnumber').attr("readonly", true);
 	$('#cid_reasonfornobnnumber').css("pointer-events", "none");
 	$('#cid_reasonfornobnnumber_other').attr("readonly", true);
-	if (step_start == "1")
-	{
+	if (step_start == "1") {
 		var address1_line1 = tdg.c.replace_special_char("{{user.address1_line1}}");
 		var address1_line2 = tdg.c.replace_special_char("{{user.address1_line2}}");
 		var address1_line3 = tdg.c.replace_special_char("{{user.address1_line3}}");
@@ -121,16 +115,15 @@ $(document).ready(function ()
 	$("#address1_stateorprovince").attr("oninput", "setManualAddressEntryFlag()");
 	$("#address1_postalcode").attr("oninput", "setManualAddressEntryFlag()");
 	$("#address1_country").attr("oninput", "setManualAddressEntryFlag()");
+
 	tdg.cid.convert_province_to_code(selected_language);
+
 	var currentUserId = '{{user.contactid}}';
 	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
 });
-if (window.jQuery)
-{
-	(function ($)
-	{
-		webFormClientValidate = function ()
-		{
+if (window.jQuery) {
+	(function ($) {
+		webFormClientValidate = function () {
 			debugger;
 			var address1_line1 = $("#address1_line1").val();
 			sessionStorage.setItem("AddressLine1Text", address1_line1);
@@ -142,21 +135,17 @@ if (window.jQuery)
 	}(window.jQuery));
 }
 
-function address1_line1_set(value)
-{
+function address1_line1_set(value) {
 	debugger;
-	try
-	{
+	try {
 		var f = document.getElementById("WebResource_address_complete");
 		var c = f.contentWindow;
 		c.document.getElementById("address1_line1").value = value;
 	}
-	catch (e)
-	{}
+	catch (e) { }
 }
 
-function Disable_ContactTypeFieldsForSecondaryUser(currentuserId)
-{
+function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 	debugger;
 	if (currentuserId == null) return;
 	var filteroption = "contactid eq (guid'" + currentuserId + "')";
@@ -164,49 +153,49 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId)
 	odataUri += "?$filter=" + encodeURIComponent(filteroption);
 	//Get user contact record
 	$.ajax(
-	{
-		type: "GET",
-		contentType: "application/json; charset=utf-8",
-		datatype: "json",
-		url: odataUri,
-		beforeSend: function (XMLHttpRequest)
 		{
-			XMLHttpRequest.setRequestHeader("Accept", "application/json");
-		},
-		async: false,
-		success: function (data, textStatus, xhr)
-		{
-			var result = data;
-			var cid_UserContactType = result.value[0].cid_contacttype.Value;
-			//if not primary contact
-			if (cid_UserContactType != 100000000)
-			{
-				$("#name").attr("readonly", true);
-				$("#address1_line2").attr("readonly", true);
-				$("#address1_line3").attr("readonly", true);
-				$("#address1_city").attr("readonly", true);
-				$("#address1_postalcode").attr("readonly", true);
-				$("#ovs_address1_province").attr("readonly", true);
-				$("#ovs_address1_province").css("pointer-events", "none");
-				$("#address1_country").attr("readonly", true);
-				$("#telephone1").attr("readonly", true);
-				$("#websiteurl").attr("readonly", true);
-				$("#fax").attr("readonly", true);
-				$('#cid_crabusinessnumber').attr("readonly", true);
-				$('#ovs_legalname').attr("readonly", true);
-				$('#cid_reasonfornobnnumber').attr("readonly", true);
-				$('#cid_reasonfornobnnumber').css("pointer-events", "none");
-				$('#cid_reasonfornobnnumber_other').attr("readonly", true);
-				
-                 //Disable address lookup web resource
- 				$('#WebResource_address_complete').on('load', function(){
-                     tdg.cid.WebResource_address_complete_readonly(true);
-                });			
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			datatype: "json",
+			url: odataUri,
+			beforeSend: function (XMLHttpRequest) {
+				XMLHttpRequest.setRequestHeader("Accept", "application/json");
+			},
+			async: false,
+			success: function (data, textStatus, xhr) {
+				var result = data;
+				var cid_UserContactType = result.value[0].cid_contacttype.Value;
+				//if not primary contact
+				if (cid_UserContactType != 100000000) {
+
+					var message = "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen.";
+					tdg.c.dialog_OK(message);
+
+					$("#name").attr("readonly", true);
+					$("#address1_line2").attr("readonly", true);
+					$("#address1_line3").attr("readonly", true);
+					$("#address1_city").attr("readonly", true);
+					$("#address1_postalcode").attr("readonly", true);
+					$("#ovs_address1_province").attr("readonly", true);
+					$("#ovs_address1_province").css("pointer-events", "none");
+					$("#address1_country").attr("readonly", true);
+					$("#telephone1").attr("readonly", true);
+					$("#websiteurl").attr("readonly", true);
+					$("#fax").attr("readonly", true);
+					$('#cid_crabusinessnumber').attr("readonly", true);
+					$('#ovs_legalname').attr("readonly", true);
+					$('#cid_reasonfornobnnumber').attr("readonly", true);
+					$('#cid_reasonfornobnnumber').css("pointer-events", "none");
+					$('#cid_reasonfornobnnumber_other').attr("readonly", true);
+
+					//Disable address lookup web resource
+					$('#WebResource_address_complete').on('load', function () {
+						tdg.cid.WebResource_address_complete_readonly(true);
+					});
+				}
+			},
+			error: function (xhr, textStatus, errorThrown) {
+				alert(textStatus + ' ' + errorThrown);
 			}
-		},
-		error: function (xhr, textStatus, errorThrown)
-		{
-			alert(textStatus + ' ' + errorThrown);
-		}
-	});
+		});
 }

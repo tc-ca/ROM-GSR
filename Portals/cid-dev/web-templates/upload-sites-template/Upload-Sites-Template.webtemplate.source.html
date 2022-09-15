@@ -148,13 +148,38 @@
 {% assign downloadlableFrenchVersion = 'French Version' %}
 {% endif %}
 
+{% fetchxml UnclaimedSite %}
+<fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false" returntotalrecordcount='true'>
+<entity name="account">
+<attribute name="parentaccountid"/>
+<attribute name="accountid"/>
+<attribute name="address1_composite"/>
+<attribute name="ovs_accountnameenglish"/>
+<order attribute="parentaccountid" descending="false"/>
+<filter type="and">
+<condition attribute="statuscode" operator="eq" value="1"/>
+<filter type="or">
+<condition attribute="cid_siteclaim" operator="eq" value="100000003"/>
+<condition attribute="cid_siteclaim" operator="null"/>
+</filter>
+<condition attribute="parentaccountid" operator="eq"  value="{{parentid}}"/>
+</filter>
+</entity>
+</fetch>
+{% endfetchxml %}
 
+
+{% assign UnClaimedSitesResultsize = UnclaimedSite.results.entities.size %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
   $(document).ready( function() {
+   var NumberOfUnClaimedSites= '{{UnClaimedSitesResultsize}}';
 
+    
+      console.log ("started counting") ;
+      console.log (NumberOfUnClaimedSites);
       
       var Page_Partial_URL = '{{page.adx_partialurl}}';
      
@@ -207,8 +232,30 @@
     //attach file event
     document.getElementById("AttachFile").onchange = function () {
     
-    document.getElementById("uploadFile").value = this.value.replace("C:\\fakepath\\", "");;
-};
+    document.getElementById("uploadFile").value = this.value.replace("C:\\fakepath\\", "");
+   };
+      //if any unclaimed site is found
+      if (NumberOfUnClaimedSites > 0)
+      {
+
+          //disable all controls in the form
+          $("#Div2A").children().attr("disabled","disabled");
+          Disable_all_Buttons();
+          var   errorMessage  = "Before choose the Bulk option, each Site where 'Is Site Attested' is set to 'No', need to be attested by choosing one of the options via the [V] button at the far right of that row." ;
+          /*   errorMessage = filter_BulkMessageArray("M14" , "en").replace("{0}" , emailaddress1);
+            if ( Lang != 'en-US' && Lang !="en")
+            {
+           errorMessage = filter_BulkMessageArray("M14" , "fr").replace("{0}" , emailaddress1);
+            }*/
+        // $('#ErrorMessageDiv').css('display', 'block');
+        // $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  errorMessage + "</p>");
+        //show popup message;
+        Popup_Message(errorMessage, (ans) => {
+                            if (ans) {
+                                window.location.href='~/RegistrationWizard/';
+                                }
+                            });
+            }
 
 //hide form button
  $("#InsertButton").css("display", "none");
@@ -709,8 +756,8 @@ function call_Inital_validation(Language , bulkactivitytype)
                                 //console.log("No");
                             }
                             });
-                            }
-                        }
+                    }//end else
+                }
                 else if (this.status === 402) {
 
                  $('#ErrorMessageDiv').css('display', 'none');
@@ -791,6 +838,50 @@ function confirmDialog(message, handler)
     
 }
 
+//popu message
+function Popup_Message(message, handler)
+{
+
+        $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
+            <header class="modal-header">
+                <h2 class="modal-title">CID Portal</h2>
+            </header>
+            <div class="modal-body">
+                ${message}
+
+            </div>
+        <div class="modal-footer">
+            <button id="btnYes" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">Ok</button>
+            
+        </section>
+        `).appendTo('body');
+
+       //$('#btnNo').focus();
+
+       $("#myModal").css('top' , '25%');
+        $("#myModal").css('left' , '40%');
+        $("#myModal").css('position', 'fixed');
+        $("#myModal").css('z-index', '9999');
+
+
+    $("#btnYes").click(function () {
+           // handler(true);
+          //  $("#myModal").modal("hide");
+          $("#myModal").remove();
+           handler(true);
+        });
+
+        //Pass false to callback function
+      //  $("#btnNo").click(function () {
+            //handler(lse);
+           // $("#myModal").remove();
+          //   handler(false);
+        //});
+    
+}
+
+
+
 function decode (str)
 {
        return str.replace(/&#(\d+);/g, function(match, dec) {
@@ -798,12 +889,7 @@ function decode (str)
 			});
 }
 
-function htmldecode (str){
 
-  var txt = document.createElement('textarea');
-  txt.innerHTML = str;
-  return txt.value;
-}
 
 
  function  ReadBulkMessagesFile() {
