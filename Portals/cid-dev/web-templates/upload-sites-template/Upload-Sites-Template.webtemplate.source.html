@@ -1,4 +1,12 @@
 <style>
+
+.tool-tip {
+  display: inline-block;
+}
+
+.tool-tip [disabled] {
+  pointer-events: none;
+}
     .inputfile {
         /* visibility: hidden etc. wont work */
         width: 0.1px;
@@ -147,7 +155,7 @@
 <script>
   $(document).ready( function() {
 
-      var uploadTootTipe = "Please upload file first";
+      
       var Page_Partial_URL = '{{page.adx_partialurl}}';
      
       var UploadType = "" ;
@@ -171,11 +179,22 @@
    //$("div.actions")
    //$("#Row_PreviousNextButton").append('<br><div id="DivNavbuttonGroup"  class="col-sm-6 clearfix"> </div>');
    //add previous and next inside the div
-   $("#DivNavbuttonGroup").append('<div role="group" class= "btn-group entity-action-button"><button type="button" id="btn_Previous" class="btn btn-default button previous previous-btn">Previous</button></div>');
+   $("#DivNavbuttonGroup").append('<div role="group" class= "btn-group entity-action-button"><span id="Div_Previous_next" class="tool-tip" tabindex="0" data-toggle="tooltip" data-placement="bottom"  > <button type="button" id="btn_Previous" class="btn btn-default button previous previous-btn">Previous</button></span></div>');
    $("#DivNavbuttonGroup").append('<div role="group" class= "btn-group entity-action-button">&nbsp;&nbsp;</div>');
-   $("#DivNavbuttonGroup").append('<div role="group" class = "btn-group entity-action-button" > <button type="button" id="btn_Next" class="submit-btn btn btn-primary form-action-container-left" disabled>Next</button></div>');
-
-    
+   $("#DivNavbuttonGroup").append('<div role="group" class = "btn-group entity-action-button" > <span id="Div_btn_next" class="tool-tip" tabindex="0" data-toggle="tooltip" data-placement="bottom"  > <button type="button" id="btn_Next" class="submit-btn btn btn-primary form-action-container-left" disabled >Next</button></span></div>');
+//class="d-inline-block" tabindex="0" data-toggle="tooltip" 
+             //data-placement="bottom" title="This button is disabled
+                $('#Div_btn_next').tooltip({
+                 trigger: 'hover',
+                   placement: 'right',
+                   container: 'body',
+                   title : "Please first complete the Steps before choosing the [Next] option. Alternatively, choose the [Previous] button to return to the Wizard."
+                    });
+           // $("#btn_Next").tooltip();
+            //setTooltip('Please upload file first' , '#Div_btn_next') ;
+           // hideTooltip();
+            //$("#btn_Next").tooltip({title: "Please upload file first", placement: "top"}); 
+            //$("#btn_Next").addEventListener("mouseover", setTooltip('Please upload file first'));
 
  
  
@@ -224,6 +243,7 @@ $('#btn_attachfile_and_scan').click(function(e)
             Enable_Button('btn_attachfile_and_scan');
             Enable_Button('linkdownload_English');
             Enable_Button('linkdownload_French');
+          
             
    }
    else
@@ -256,8 +276,13 @@ $('#btn_attachfile_and_scan').click(function(e)
             }//end check language
           $('#ErrorMessageDiv').css('display', 'block');
           $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  FileTypeErrorMessage + "</p>");
+          Enable_Button('btn_attachfile_and_scan');
+          Enable_Button('btn_attachfile_and_scan');
+            Enable_Button('linkdownload_English');
+            Enable_Button('linkdownload_French');
          // call the submit button to show error message
          // $("#InsertButton").click();
+        
    }
 
   else if (file) {
@@ -378,6 +403,13 @@ $('#linkdownload_English').on('click', async function() {
     //go previous page
     history.back()
   });
+
+
+  //next button click event
+ $('#btn_Next').on('click', async function() {
+    //go to registeration wizard
+  window.location.href='~/RegistrationWizard/';
+  });
     
 });//end document ready
 
@@ -440,14 +472,18 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
                $('#infoMsg').css('display', 'block');
                $('#infoMsg').html( responseMessage);
 
-               Enabled_all_Buttons();
+               Enable_Button('btn_attachfile_and_scan');
+            Enable_Button('linkdownload_English');
+            Enable_Button('linkdownload_French');
 
 
          }
          else {
               $('#processingMsg').text("Error Please Try again Later.");
             var result = this.response;
-            Enabled_all_Buttons();
+          Enable_Button('btn_attachfile_and_scan');
+            Enable_Button('linkdownload_English');
+            Enable_Button('linkdownload_French');
            
           }
         }
@@ -510,7 +546,10 @@ if ( language != 'en-US'&& language != 'en')
             }//end check language
           $('#ErrorMessageDiv').css('display', 'block');
           $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  ErrorMessage_fileScan + "</p>");
-          Enabled_all_Buttons();
+          //Enabled_all_Buttons();
+            Enable_Button('btn_attachfile_and_scan');
+            Enable_Button('linkdownload_English');
+            Enable_Button('linkdownload_French');
        
          }
 
@@ -917,6 +956,17 @@ function Enabled_all_Buttons()
       Enable_Button('btn_attachfile_and_scan');
       Enable_Button('linkdownload_English');
       Enable_Button('linkdownload_French');
+      //hideTooltip();
+
+      $('#Div_btn_next').tooltip('hide')
+    .attr('data-original-title', 'Next');
+
+      /* $('#Div_btn_next'#Div_btn_next').tooltip({
+                 trigger: 'hover',
+                   placement: 'right',
+                   container: 'body',
+                   title : "Next"
+                    });*/
 }
 
 function filter_BulkMessageArray(id , lang)
@@ -935,14 +985,7 @@ function filter_BulkMessageArray(id , lang)
    return responseMessage ;
 }
 
-//read execl file to check if file type in the extensionis correct
-//this to fix the bug when user change file extension to .xlsx but file is actually not excel
-//the file type proporty doens show the real file name
-//solution to parse the file as excel and check for error
-   function ExcelToJSON (file, BulkActivitytype ,FileName,langcode) {
-      
-    
-      }
+
 
 </script>
 <div class="container ">
@@ -981,9 +1024,10 @@ function filter_BulkMessageArray(id , lang)
                                 <table>
                                     <tr>
                                         <td>
-                                        <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Download">
-                                            <button type="button" id="linkdownload_English" class="submit-btn btn btn-primary form-action-container-left">{{downloadlableEnglishversion}}</button>
-                                        </span>
+                                       
+                                            <button type="button" id="linkdownload_English" 
+                                            class="submit-btn btn btn-primary form-action-container-left" data-toggle="popover" data-content title="download">{{downloadlableEnglishversion}}</button>
+                                      
                                         </td>
                                         <td> &nbsp;&nbsp;</td>
                                         <td>

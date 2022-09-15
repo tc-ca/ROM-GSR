@@ -26,6 +26,9 @@ $(document).ready(function () {
   today = mm + '/' + dd + '/' + yyyy;
   var modificationDetails = today + ", " + userfullname;
   console.log('before check');
+
+	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
+
   if (currentRecordID != currentUserId )
   {
       console.log('not the same user as form contact');
@@ -247,6 +250,51 @@ function EnableDisable_ContactTypeFields(currentuserId)
 		if(cid_UserContactType != 100000000 || $('#cid_contacttype').val() == 100000000)
 		{
 			 $("#cid_contacttype").prop( "disabled", true );
+		}
+
+    },
+    error: function(xhr, textStatus, errorThrown) {
+       alert(textStatus + ' ' + errorThrown);
+    }
+});
+	 
+}
+
+function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) 
+{ 
+
+debugger; 
+	if(currentuserId == null)
+		return;
+	
+	var filteroption = "contactid eq (guid'" + currentuserId + "')";  
+    var odataUri = window.location.protocol+ "//" + window.location.host + "/_odata/contact";  
+	odataUri += "?$filter=" + encodeURIComponent(filteroption);  
+	
+	//Get user contact record
+	$.ajax({
+    type: "GET",
+    contentType: "application/json; charset=utf-8",
+    datatype: "json",
+    url: odataUri,
+    beforeSend: function(XMLHttpRequest) {
+        XMLHttpRequest.setRequestHeader("Accept", "application/json");
+    },
+    async: false,
+    success: function(data, textStatus, xhr) {
+        var result = data;	
+        var cid_UserContactType = result.value[0].cid_contacttype.Value;
+		
+		//if not primary contact
+		if(cid_UserContactType == 100000000)
+		{
+			 $("#name").prop( "disabled", true );
+			 $("#address1_line1").prop( "disabled", true );
+			 $("#address1_line2").prop( "disabled", true );
+			 $("#address1_line3").prop( "disabled", true );
+			 $("#address1_city").prop( "disabled", true );
+			 $("#address1_postalcode").prop( "disabled", true );
+			 $("#telephone1").prop( "disabled", true );	 
 		}
 
     },
