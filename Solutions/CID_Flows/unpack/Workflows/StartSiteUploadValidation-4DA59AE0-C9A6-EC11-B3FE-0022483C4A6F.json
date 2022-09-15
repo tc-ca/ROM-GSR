@@ -324,6 +324,7 @@
                 },
                 "parameters": {
                   "actionName": "cid_BulkSitUploadValidation",
+                  "item/UploadType": "@triggerOutputs()?['body/cid_activitytype']",
                   "item/ClassList": "@outputs('List-rows-division-classes')?['body']['value']",
                   "item/SiteInfo": "@body('Select_Site_List')",
                   "item/UNList": "@body('Select_extended_info')",
@@ -756,6 +757,7 @@
                       "entityName": "accounts",
                       "actionName": "Microsoft.Dynamics.CRM.cid_Insert_and_Update_Site_and_Related_UNs",
                       "recordId": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/_cid_company_value']",
+                      "item/UploadType": "@triggerOutputs()?['body/cid_activitytype']",
                       "item/LanguageCode": "@variables('LanguageCode')",
                       "item/ActionedBy": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/_cid_actionedby_value']",
                       "item/LegalName": "@outputs('Get_a_account_by_ID')?['body/ovs_legalname']",
