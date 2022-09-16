@@ -192,7 +192,7 @@
     //insert lables and buttons
     $(".section[data-name='General']").closest("fieldset").hide();
     $("#AttachFile").after('<br><label>2B. Start Upload</label><br><button type="button" id="btn_attachfile_and_scan" class="submit-btn btn btn-primary form-action-container-left">{{upload}}</button>');
-    $("#AttachFile").before('<div id="Div2A" class="input-group input-group-sm"><div class="input-group-btn"><label class="submit-btn btn btn-primary form-action-container-left" for="AttachFile">{{choosefile}}</label></div><input type="text" class="form-control" id="uploadFile" placeholder="Select File Name here" disabled="disabled" /></div>');
+    $("#AttachFile").before('<div id="Div2A" class="input-group input-group-sm"><div id ="Div_BrowseButton" class="input-group-btn"><label class="submit-btn btn btn-primary form-action-container-left" for="AttachFile">{{choosefile}}</label></div><input type="text" class="form-control" id="uploadFile" placeholder="Select File Name here" disabled="disabled" /></div>');
 
 
 //insert previous and next button if initial registeration
@@ -215,11 +215,7 @@
                    container: 'body',
                    title : "Please first complete the Steps before choosing the [Next] option. Alternatively, choose the [Previous] button to return to the Wizard."
                     });
-           // $("#btn_Next").tooltip();
-            //setTooltip('Please upload file first' , '#Div_btn_next') ;
-           // hideTooltip();
-            //$("#btn_Next").tooltip({title: "Please upload file first", placement: "top"}); 
-            //$("#btn_Next").addEventListener("mouseover", setTooltip('Please upload file first'));
+        
 
  
  
@@ -239,7 +235,9 @@
       {
 
           //disable all controls in the form
-          $("#Div2A").children().attr("disabled","disabled");
+          $("#Div_BrowseButton").children().attr("disabled","true");
+          Div_BrowseButton
+          $("#Div_BrowseButton").prop('disabled',true);
           Disable_all_Buttons();
           var   errorMessage  = "Before choose the Bulk option, each Site where 'Is Site Attested' is set to 'No', need to be attested by choosing one of the options via the [V] button at the far right of that row." ;
           /*   errorMessage = filter_BulkMessageArray("M14" , "en").replace("{0}" , emailaddress1);
@@ -247,12 +245,12 @@
             {
            errorMessage = filter_BulkMessageArray("M14" , "fr").replace("{0}" , emailaddress1);
             }*/
-        // $('#ErrorMessageDiv').css('display', 'block');
-        // $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  errorMessage + "</p>");
+       
         //show popup message;
         Popup_Message(errorMessage, (ans) => {
                             if (ans) {
-                                window.location.href='~/RegistrationWizard/';
+                                //window.location.href='~/RegistrationWizard/';
+                                 history.back() ;
                                 }
                             });
             }

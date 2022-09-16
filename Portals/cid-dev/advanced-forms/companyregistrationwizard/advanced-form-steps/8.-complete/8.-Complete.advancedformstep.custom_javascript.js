@@ -7,6 +7,9 @@ $(document).ready(function () {
     var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
     cid_crabusinessnumber = (cid_crabusinessnumber != "null" ? cid_crabusinessnumber : "");
 
+    var currentUserId = '{{user.contactid}}';
+	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
+
     // do not have a business number?
     if (cid_crabusinessnumber == "") {
         tdg.c.control_hide("cid_crabusinessnumber");
@@ -57,9 +60,6 @@ $(document).ready(function () {
 //			return validation;
 //		}
 //	}(window.jQuery));
-
-
-
 
 });
 
@@ -141,3 +141,43 @@ function subgrid_language() {
         });
     }
 }
+
+function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
+	debugger;
+	if (currentuserId == null) return;
+	var filteroption = "contactid eq (guid'" + currentuserId + "')";
+	var odataUri = window.location.protocol + "//" + window.location.host + "/_odata/contact";
+	odataUri += "?$filter=" + encodeURIComponent(filteroption);
+	//Get user contact record
+	$.ajax(
+		{
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			datatype: "json",
+			url: odataUri,
+			beforeSend: function (XMLHttpRequest) {
+				XMLHttpRequest.setRequestHeader("Accept", "application/json");
+			},
+			async: false,
+			success: function (data, textStatus, xhr) {
+				var result = data;
+				var cid_UserContactType = result.value[0].cid_contacttype.Value;
+				//if not primary contact
+				if (cid_UserContactType != 100000000) {
+                    $("#NextButton").attr("disabled", true);
+                    $("#NextButton").css("pointer-events", "none");
+//                    //Wait till subgrid load
+//                    $("#Contacts").on("loaded", function () {
+//                        $(".btn.btn-default.btn-xs").prop("disabled", true);
+//                        $(".details-link").prop("disabled", true);
+//                        $(".details-link").css("pointer-events", "none");
+//                    });
+				}
+			},
+			error: function (xhr, textStatus, errorThrown) {
+				alert(textStatus + ' ' + errorThrown);
+			}
+		});
+}
+
+
