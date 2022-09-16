@@ -1,10 +1,10 @@
 //
 // CompanyRegistrationWizard-Company Edit.js
 //
-$(document).ready(function ()
-{
+
+$(document).ready(function () {
 	var message = "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen.";
-	message_advanced_form(message);
+	//message_advanced_form(message);
 
 	debugger;
 	var selected_language = '{{website.selected_language.code}}';
@@ -15,8 +15,7 @@ $(document).ready(function ()
 	// header
 	advanced_form_header();
 	var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name }}');
-	if (companyName)
-	{
+	if (companyName) {
 		$(".previous-btn").attr('disabled', true);
 	}
 	$("#websiteurl").width('100%');
@@ -24,23 +23,19 @@ $(document).ready(function ()
 	//Phone masking
 	$("#telephone1").attr("maxlength", "10");
 	$("#fax").attr("maxlength", "10");
-	$("#telephone1").on('keyup', function ()
-	{
+	$("#telephone1").on('keyup', function () {
 		var n = $(this).val().replace(/\D/g, '');
 		$(this).val(n);
 		var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
-		if (match)
-		{
+		if (match) {
 			$(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
 		}
 	});
-	$("#fax").on('keyup', function ()
-	{
+	$("#fax").on('keyup', function () {
 		var n = $(this).val().replace(/\D/g, '');
 		$(this).val(n);
 		var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
-		if (match)
-		{
+		if (match) {
 			$(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
 		}
 	});
@@ -48,8 +43,7 @@ $(document).ready(function ()
 	tdg.c.control_hide("cid_companyclaim");
 	var step_start = sessionStorage.getItem("step_start");
 	step_start = (step_start == "null" ? "" : step_start);
-	if (step_start == "2")
-	{
+	if (step_start == "2") {
 		var cid_has_cra_bn = $('#cid_has_cra_bn').val();
 		var address1_line1 = $("#address1_line1").val();
 		var cid_legalname = $('#ovs_legalname').val();
@@ -58,8 +52,7 @@ $(document).ready(function ()
 		var cid_reasonfornobnnumber = $('#cid_reasonfornobnnumber').val();
 		var cid_reasonfornobnnumber_other = $('#cid_reasonfornobnnumber_other').val();
 	}
-	else
-	{
+	else {
 		var cid_has_cra_bn = '{{user.cid_has_cra_bn}}';
 		cid_has_cra_bn = (cid_has_cra_bn == "true" ? 1 : 0);
 		var cid_crabusinessnumber = '{{user.cid_crabusinessnumber}}';
@@ -86,39 +79,32 @@ $(document).ready(function ()
 	cid_legalname = tdg.c.replace_special_char(cid_legalname);
 	cid_operatingname = tdg.c.replace_special_char(cid_operatingname);
 	// do not have a business number?
-	if (cid_has_cra_bn != "1")
-	{
+	if (cid_has_cra_bn != "1") {
 		tdg.c.control_hide("cid_crabusinessnumber");
 		tdg.c.control_show("cid_reasonfornobnnumber");
-		if (step_start != "2")
-		{
+		if (step_start != "2") {
 			$("#cid_reasonfornobnnumber").val(cid_reasonfornobnnumber);
 		}
 		if (cid_reasonfornobnnumber == "3") // other
 		{
 			tdg.c.control_show("cid_reasonfornobnnumber_other");
-			if (step_start != "2")
-			{
+			if (step_start != "2") {
 				$("#cid_reasonfornobnnumber_other").val(cid_reasonfornobnnumber_other);
 			}
 		}
-		else
-		{
+		else {
 			tdg.c.control_hide("cid_reasonfornobnnumber_other");
 		}
 	}
-	else
-	{
-		if (step_start != "2")
-		{
+	else {
+		if (step_start != "2") {
 			$("#cid_crabusinessnumber").val(cid_crabusinessnumber);
 		}
 		tdg.c.control_show("cid_crabusinessnumber");
 		tdg.c.control_hide("cid_reasonfornobnnumber");
 		tdg.c.control_hide("cid_reasonfornobnnumber_other");
 	}
-	if (step_start != "2")
-	{
+	if (step_start != "2") {
 		$("#ovs_legalname").val(cid_legalname);
 		$("#name").val(cid_operatingname);
 		debugger;
@@ -143,34 +129,27 @@ $(document).ready(function ()
 	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
 });
 
-function advanced_form_header()
-{
+function advanced_form_header() {
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 	var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name}}');
-	try
-	{
+	try {
 		var value = tdg.error_message.message("m000009");
 		value = value.replace("{0}", companyName);
 		$('h1:first')[0].innerHTML = value;
 	}
-	catch (e)
-	{}
+	catch (e) { }
 	var steps = $('li.list-group-item');
-	for (var i = 0; i < steps.length; i++)
-	{
+	for (var i = 0; i < steps.length; i++) {
 		var item = steps[i];
 		var text = item.innerText;
 		text = tdg.error_message.message(text);
 		item.innerText = text;
 	}
 }
-if (window.jQuery)
-{
-	(function ($)
-	{
-		webFormClientValidate = function ()
-		{
+if (window.jQuery) {
+	(function ($) {
+		webFormClientValidate = function () {
 			debugger;
 			var address1_line1 = $("#address1_line1").val();
 			sessionStorage.setItem("AddressLine1Text", address1_line1);
@@ -182,21 +161,17 @@ if (window.jQuery)
 	}(window.jQuery));
 }
 
-function address1_line1_set(value)
-{
+function address1_line1_set(value) {
 	debugger;
-	try
-	{
+	try {
 		var f = document.getElementById("WebResource_address_complete");
 		var c = f.contentWindow;
 		c.document.getElementById("address1_line1").value = value;
 	}
-	catch (e)
-	{}
+	catch (e) { }
 }
 
-function Disable_ContactTypeFieldsForSecondaryUser(currentuserId)
-{
+function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 	debugger;
 	if (currentuserId == null) return;
 	var filteroption = "contactid eq (guid'" + currentuserId + "')";
@@ -204,59 +179,55 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId)
 	odataUri += "?$filter=" + encodeURIComponent(filteroption);
 	//Get user contact record
 	$.ajax(
-	{
-		type: "GET",
-		contentType: "application/json; charset=utf-8",
-		datatype: "json",
-		url: odataUri,
-		beforeSend: function (XMLHttpRequest)
 		{
-			XMLHttpRequest.setRequestHeader("Accept", "application/json");
-		},
-		async: false,
-		success: function (data, textStatus, xhr)
-		{
-			var result = data;
-			var cid_UserContactType = result.value[0].cid_contacttype.Value;
-			//if not primary contact
-			if (cid_UserContactType != 100000000)
-			{
-				$("#name").prop("disabled", true);
-//				$("#address1_line1").prop( "disabled", true );
-                $("#address1_line1").css("pointer-events", "none");
-                $("#WebResource_address_complete").css("pointer-events", "none");
-				$("#address1_line2").attr("readonly", true);
-				$("#address1_line3").prop("disabled", true);
-				$("#address1_city").prop("disabled", true);
-				$("#address1_postalcode").prop("disabled", true);
-				$("#ovs_address1_province").prop("disabled", true);
-				$("#address1_country").prop("disabled", true);
-				$("#telephone1").prop("disabled", true);
-				$("#websiteurl").prop("disabled", true);
-				$("#fax").prop("disabled", true);
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			datatype: "json",
+			url: odataUri,
+			beforeSend: function (XMLHttpRequest) {
+				XMLHttpRequest.setRequestHeader("Accept", "application/json");
+			},
+			async: false,
+			success: function (data, textStatus, xhr) {
+				var result = data;
+				var cid_UserContactType = result.value[0].cid_contacttype.Value;
+				//if not primary contact
+				if (cid_UserContactType != 100000000) {
+					$("#name").prop("disabled", true);
+					//				$("#address1_line1").prop( "disabled", true );
+					$("#address1_line1").css("pointer-events", "none");
+					$("#WebResource_address_complete").css("pointer-events", "none");
+					$("#address1_line2").attr("readonly", true);
+					$("#address1_line3").prop("disabled", true);
+					$("#address1_city").prop("disabled", true);
+					$("#address1_postalcode").prop("disabled", true);
+					$("#ovs_address1_province").prop("disabled", true);
+					$("#address1_country").prop("disabled", true);
+					$("#telephone1").prop("disabled", true);
+					$("#websiteurl").prop("disabled", true);
+					$("#fax").prop("disabled", true);
 
-                //Disable address lookup web resource
- 				$('#WebResource_address_complete').on('load', function(){
-                     tdg.cid.WebResource_address_complete_readonly(true);
-                });			  
+					//Disable address lookup web resource
+					$('#WebResource_address_complete').on('load', function () {
+						tdg.cid.WebResource_address_complete_readonly(true);
+					});
+				}
+			},
+			error: function (xhr, textStatus, errorThrown) {
+				alert(textStatus + ' ' + errorThrown);
 			}
-		},
-		error: function (xhr, textStatus, errorThrown)
-		{
-			alert(textStatus + ' ' + errorThrown);
-		}
-	});
+		});
 }
 
 
 function message_advanced_form(message, clear) {
-    debugger;
-    message = tdg.error_message.message(message);
-    if (clear) {
-        $('#ValidationSummaryEntityFormView div').remove();
-    }
-    var validationSection = $('#ValidationSummaryEntityFormView');
-    validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + message + "</div>"));
-    validationSection.show();
-    $('#alertMessages').focus();
+	debugger;
+	message = tdg.error_message.message(message);
+	if (clear) {
+		$('#ValidationSummaryEntityFormView div').remove();
+	}
+	var validationSection = $('#ValidationSummaryEntityFormView');
+	validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + message + "</div>"));
+	validationSection.show();
+	$('#alertMessages').focus();
 }
