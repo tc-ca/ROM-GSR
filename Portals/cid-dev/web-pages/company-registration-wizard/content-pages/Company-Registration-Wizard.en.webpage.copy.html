@@ -2,7 +2,7 @@
 {% if parentCompanyId %}
 {% assign company = entities['account'][parentCompanyId] %}
 {{ company.cid_cidcompanystatus }}
-{% if company.cid_cidcompanystatus  and company.cid_cidcompanystatus.value == 100000005 and (request.url contains "tdgcore-qa" or request.url contains "rd-tdgcore-dev")%}
+{% if company.cid_registrationasof and (request.url contains "tdgcore-qa" or request.url contains "rd-tdgcore-dev")%}
 <script>
   window.location.replace('/company_dashboard');
 </script>

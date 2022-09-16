@@ -995,9 +995,16 @@ if (typeof (tdg.cid) == "undefined") {
                 return;
             }
             for (var i = 0; i < 13; i++) {
+                // console.log(a.localeCompare(b));
+                // console.log(a.localeCompare(b, 'en', { sensitivity: 'base' }));
                 var localizedProvince = tdg.c.text_language(canProvinces[i], language);
-                if (localizedProvince.localeCompare(address1_stateorprovince), undefined, { sensitivity: 'accent' } == 0
-                    || canProvincesCodes[i].localeCompare(address1_stateorprovince.toLowerCase())) { //finds match
+                //if (localizedProvince.localeCompare(address1_stateorprovince), undefined, { sensitivity: 'accent' } == 0
+                //    || canProvincesCodes[i].localeCompare(address1_stateorprovince.toLowerCase()))
+
+                if (localizedProvince.localeCompare(address1_stateorprovince, undefined, { sensitivity: 'accent' }) == 0
+                    || canProvincesCodes[i] == address1_stateorprovince)
+                { 
+                    //finds match
                     $("#ovs_address1_province").val(i);
                     return;
                 }

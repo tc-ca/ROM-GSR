@@ -1,12 +1,16 @@
 //
 // SiteRegistrationWizard-Attest Site.js
 //
+
 async function OperationDetailsProvided(operationId, flag) {
     await UpdateOperationDetailsProvided(operationId, flag);
 }
 
 $(document).ready(function () {
     debugger;
+
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
 
     var isExtendedSite = $("#cid_requirementlevel").find(":selected").text();
 
@@ -18,6 +22,10 @@ $(document).ready(function () {
 
     tdg.c.control_hide("ovs_address_type");
     tdg.cid.address_type_change(false);
+
+    tdg.cid.convert_province_to_code(selected_language);
+    tdg.c.control_hide("address1_stateorprovince");
+    $('#ovs_address1_province').attr("disabled", true);
 
     $('#PreviousButton').on('click', function () {
         var siteId = $("#EntityFormView_EntityID").val();
