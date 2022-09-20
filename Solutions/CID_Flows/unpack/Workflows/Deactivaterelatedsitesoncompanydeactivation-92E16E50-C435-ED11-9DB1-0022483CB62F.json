@@ -1,0 +1,222 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataservice": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseLegacyServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataservice"
+        }
+      },
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_modified": {
+          "metadata": {
+            "operationMetadataId": "c187651d-adf8-4ddf-847c-4630046ebc6b"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataservice",
+              "operationId": "SubscribeOnUpdatedItems",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataservice"
+            },
+            "parameters": {
+              "dataset": "https://tdgcore-dev-tcd365.crm3.dynamics.com",
+              "table": "accounts",
+              "scope": "Organization",
+              "subscriptionRequest/AttributeFilters": [
+                "cid_cidcompanystatus"
+              ]
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Condition": {
+          "actions": {
+            "List_rows": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "5f2fd663-1a9f-435c-b46f-33ccb07ff0b2"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"account\">\n    <attribute name=\"accountid\" />\n    <attribute name=\"cid_cidsitestatus\" />\n    <order attribute=\"cid_cidsitestatus\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"customertypecode\" operator=\"eq\" value=\"948010001\" />\n      <condition attribute=\"parentaccountid\" operator=\"eq\" value=\"@{triggerOutputs()?['body/accountid']}\" />\n    </filter>\n  </entity>\n</fetch>"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Apply_to_each": {
+              "foreach": "@outputs('List_rows')?['body/value']",
+              "actions": {
+                "Check_if_site_is_not_inactive": {
+                  "actions": {
+                    "Apply_to_each_2": {
+                      "foreach": "@outputs('List_rows')?['body/value']",
+                      "actions": {
+                        "Update_a_row": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "0b420993-e15f-47c7-a9e1-48a688d41984"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_commondataserviceforapps",
+                              "operationId": "UpdateRecord",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            },
+                            "parameters": {
+                              "entityName": "accounts",
+                              "recordId": "@items('Apply_to_each_2')?['accountid']",
+                              "item/cid_cidsitestatus": 100000015
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          }
+                        }
+                      },
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "96ad31ea-d1fb-4843-a138-8ac562308ca7"
+                      },
+                      "type": "Foreach"
+                    }
+                  },
+                  "runAfter": {},
+                  "expression": {
+                    "and": [
+                      {
+                        "not": {
+                          "equals": [
+                            "@items('Apply_to_each')?['cid_siteclaim']",
+                            100000015
+                          ]
+                        }
+                      },
+                      {
+                        "not": {
+                          "equals": [
+                            "@items('Apply_to_each')?['cid_siteclaim']",
+                            100000019
+                          ]
+                        }
+                      },
+                      {
+                        "not": {
+                          "equals": [
+                            "@items('Apply_to_each')?['cid_siteclaim']",
+                            100000020
+                          ]
+                        }
+                      },
+                      {
+                        "not": {
+                          "equals": [
+                            "@items('Apply_to_each')?['cid_siteclaim']",
+                            100000021
+                          ]
+                        }
+                      },
+                      {
+                        "not": {
+                          "equals": [
+                            "@items('Apply_to_each')?['cid_siteclaim']",
+                            100000022
+                          ]
+                        }
+                      },
+                      {
+                        "not": {
+                          "equals": [
+                            "@items('Apply_to_each')?['cid_siteclaim']",
+                            100000023
+                          ]
+                        }
+                      },
+                      {
+                        "not": {
+                          "equals": [
+                            "@items('Apply_to_each')?['cid_siteclaim']",
+                            100000024
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "6e8cdfb4-2803-4335-a992-a89b72fa1feb"
+                  },
+                  "type": "If"
+                }
+              },
+              "runAfter": {
+                "List_rows": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "48bffbb7-dca7-416d-8f5e-c5254efa119e"
+              },
+              "type": "Foreach"
+            }
+          },
+          "runAfter": {},
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/customertypecode']",
+                  948010000
+                ]
+              },
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/cid_cidcompanystatus']",
+                  100000007
+                ]
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "fa332fc5-68c9-4911-acdf-4c6479f1df91"
+          },
+          "type": "If"
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}

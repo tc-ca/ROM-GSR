@@ -65,7 +65,7 @@
             },
             "parameters": {
               "entityName": "accounts",
-              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"account\">\n    <attribute name=\"name\" />\n    <attribute name=\"ovs_legalname\" />\n    <attribute name=\"primarycontactid\" />\n    <attribute name=\"cid_crabusinessnumber\" />\n    <attribute name=\"root_organization_id\" />\n    <attribute name=\"ovs_address_display\" />\n    <attribute name=\"cid_rootcompany\" />\n    <attribute name=\"accountid\" />\n    <attribute name=\"cid_attestationdate\" />\n    <attribute name=\"cid_annualcomplianceupdatesremindersenddate\" />\n    <order attribute=\"ovs_legalname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n      <condition attribute=\"cid_attestationdate\" operator=\"on\" value=\"@{addDays(utcNow(), -350 ,'yyyy-MM-dd')}\" />\n      <filter type=\"or\">\n        <condition attribute=\"cid_annualcomplianceupdatesremindersenddate\" operator=\"null\" />\n        <condition attribute=\"cid_annualcomplianceupdatesremindersenddate\" operator=\"on-or-before\" value=\"2022-08-17\" />\n      </filter>\n    </filter>\n  </entity>\n</fetch>"
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"account\">\n    <attribute name=\"name\" />\n    <attribute name=\"ovs_legalname\" />\n    <attribute name=\"primarycontactid\" />\n    <attribute name=\"cid_crabusinessnumber\" />\n    <attribute name=\"root_organization_id\" />\n    <attribute name=\"ovs_address_display\" />\n    <attribute name=\"cid_rootcompany\" />\n    <attribute name=\"accountid\" />\n    <attribute name=\"cid_attestationdate\" />\n    <attribute name=\"cid_annualcomplianceupdatesremindersenddate\" />\n    <order attribute=\"ovs_legalname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n      <condition attribute=\"cid_attestationdate\" operator=\"on\" value=\"@{addDays(utcNow(), -350 ,'yyyy-MM-dd')}\" />\n      <filter type=\"or\">\n        <condition attribute=\"cid_annualcomplianceupdatesremindersenddate\" operator=\"null\" />\n        <condition attribute=\"cid_annualcomplianceupdatesremindersenddate\" operator=\"on-or-before\" value=\"@{addDays(utcNow(), -365 ,'yyyy-MM-dd')}\" />\n      </filter>\n    </filter>\n  </entity>\n</fetch>"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -110,7 +110,7 @@
                             "value": "@items('Apply_to_each_2')?['emailaddress1']"
                           }
                         },
-                        "Set_variable_2": {
+                        "Set_variable_Primary_Contact_First_Name": {
                           "runAfter": {
                             "Set_To_Email_Recipients": [
                               "Succeeded"
@@ -220,7 +220,7 @@
                     }
                   },
                   "runAfter": {
-                    "GetEmailRecipients": [
+                    "Update_a_row": [
                       "Succeeded"
                     ]
                   },
@@ -228,6 +228,30 @@
                     "operationMetadataId": "3b7fc09e-16da-4109-971e-ebfd8088a1e0"
                   },
                   "type": "Foreach"
+                },
+                "Update_a_row": {
+                  "runAfter": {
+                    "GetEmailRecipients": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "dbc59d64-e4ff-4f61-be2a-279b3464420f"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "UpdateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "accounts",
+                      "recordId": "@items('Apply_to_each')?['accountid']",
+                      "item/cid_annualcomplianceupdatesremindersenddate": "@utcNow()"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
                 }
               },
               "runAfter": {},
@@ -254,7 +278,7 @@
                     "parameters": {
                       "emailMessage/To": "@variables('ToEmailRecipients')",
                       "emailMessage/Subject": "Annual Compliance Renewal Reminder",
-                      "emailMessage/Body": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['accountnumber']}will be expire in 15 days. <a href=\"https://rd-tdgcore-dev.powerappsportals.com/en/SignIn?returnUrl=%2Fen%2F\">Please log into your account</a> &nbsp;and initialise Annual Compliance.<br>\n<br>\n<strong>Transport Canada / Government of Canada</strong><br>\n<br>\n<br>\nThis is auto genarated email.</p>",
+                      "emailMessage/Body": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['accountnumber']}will be expire in 15 days. <a href=\"https://rd-tdgcore-dev.powerappsportals.com/en/SignIn?returnUrl=%2Fen%2F\">Please log into your account</a> &nbsp;and initialize Annual Compliance.<br>\n<br>\n<strong>Transport Canada / Government of Canada</strong><br>\n<br>\n<br>\nThis is auto generated email.</p>",
                       "emailMessage/Cc": "@variables('CCEmailRecipients')",
                       "emailMessage/Importance": "Normal"
                     },

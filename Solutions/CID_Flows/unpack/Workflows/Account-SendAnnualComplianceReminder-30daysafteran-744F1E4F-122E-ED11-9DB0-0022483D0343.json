@@ -49,7 +49,7 @@
       "actions": {
         "GetAccounts": {
           "runAfter": {
-            "Initialize_variable": [
+            "Initialize_variable_Primary_Contact_First_Name": [
               "Succeeded"
             ]
           },
@@ -65,7 +65,7 @@
             },
             "parameters": {
               "entityName": "accounts",
-              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"account\">\n    <attribute name=\"name\" />\n    <attribute name=\"ovs_legalname\" />\n    <attribute name=\"primarycontactid\" />\n    <attribute name=\"cid_crabusinessnumber\" />\n    <attribute name=\"root_organization_id\" />\n    <attribute name=\"ovs_address_display\" />\n    <attribute name=\"cid_rootcompany\" />\n    <attribute name=\"accountid\" />\n    <attribute name=\"cid_attestationdate\" />\n    <attribute name=\"cid_annualcomplianceupdatesremindersenddate\" />\n    <order attribute=\"ovs_legalname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n      <condition attribute=\"cid_attestationdate\" operator=\"on\" value=\"@{addDays(utcNow(), -30 ,'yyyy-MM-dd')}\" />\n      <filter type=\"or\">\n        <condition attribute=\"cid_annualcomplianceupdatesremindersenddate\" operator=\"null\" />\n        <condition attribute=\"cid_annualcomplianceupdatesremindersenddate\" operator=\"on-or-before\" value=\"2022-08-17\" />\n      </filter>\n    </filter>\n  </entity>\n</fetch>"
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"account\">\n    <attribute name=\"name\" />\n    <attribute name=\"ovs_legalname\" />\n    <attribute name=\"primarycontactid\" />\n    <attribute name=\"cid_crabusinessnumber\" />\n    <attribute name=\"root_organization_id\" />\n    <attribute name=\"ovs_address_display\" />\n    <attribute name=\"cid_rootcompany\" />\n    <attribute name=\"accountid\" />\n    <attribute name=\"cid_attestationdate\" />\n    <attribute name=\"cid_annualcomplianceupdatesremindersenddate\" />\n    <order attribute=\"ovs_legalname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n      <condition attribute=\"cid_attestationdate\" operator=\"on\" value=\"@{addDays(utcNow(), -395 ,'yyyy-MM-dd')}\" />\n    </filter>\n  </entity>\n</fetch>"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -108,6 +108,21 @@
                           "inputs": {
                             "name": "ToEmailRecipients",
                             "value": "@items('Apply_to_each_2')?['emailaddress1']"
+                          }
+                        },
+                        "Set_variable_Primary_Contact_First_Name": {
+                          "runAfter": {
+                            "Set_To_Email_Recipients": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "edc751a4-9c9e-40db-848d-b2e2c1f26f5c"
+                          },
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Primary Contact First Name",
+                            "value": "@items('Apply_to_each_2')?['firstname']"
                           }
                         }
                       },
@@ -238,8 +253,8 @@
                     },
                     "parameters": {
                       "emailMessage/To": "@variables('ToEmailRecipients')",
-                      "emailMessage/Subject": "This is Test Email",
-                      "emailMessage/Body": "<p>Hello @{items('Apply_to_each_5')?['_primarycontactid_value']},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['ovs_accountnameenglish']} was expireed 30 days ago. Please log into your account and initialise Annual Compliance.<br>\n<br>\n<strong>Transport Canada / Government of Canada</strong><br>\n<br>\n<br>\nThis is auto genarated email.</p>",
+                      "emailMessage/Subject": "Annual Compliance Reminder",
+                      "emailMessage/Body": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['ovs_accountnameenglish']} was expired 30 days ago. Please log into your account and initialize Annual Compliance.<br>\n<br>\n<strong>Transport Canada / Government of Canada</strong><br>\n<br>\n<br>\nThis is auto generated email.</p>",
                       "emailMessage/Cc": "@variables('CCEmailRecipients')",
                       "emailMessage/Importance": "Normal"
                     },
@@ -323,6 +338,26 @@
               {
                 "name": "Temp CC Recipients",
                 "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_Primary_Contact_First_Name": {
+          "runAfter": {
+            "Initialize_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e58d10f7-d2be-4f07-9248-4da6b284c07f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Primary Contact First Name",
+                "type": "string",
+                "value": "Sir/Madam"
               }
             ]
           }
