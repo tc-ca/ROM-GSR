@@ -103,6 +103,8 @@ function btn_save_new_onclick() {
     debugger;
 
     if (!value) {
+        // clear form
+        $("#btn_save_new").prop('disabled', false);
         return;
     }
 
@@ -121,6 +123,7 @@ function cid_companynaicscode_insert(account_id, cid_naicscode, contact_id) {
         "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")"
     };
     tdg.webapi.create("cid_companynaicscodes", data, success_cb, error_cb);
+
 }
 
 function form_clear() {
