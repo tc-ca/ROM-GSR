@@ -89,8 +89,22 @@ function btn_save_new_onclick() {
     var contact_id = '{{user.id}}';
     var cid_erapid = $("#cid_erapid").val();
 
-    tdg.root.cid_companyeraps_insert(parent_id, cid_erapid, contact_id, false);
+   // tdg.root.cid_companyeraps_insert(parent_id, cid_erapid, contact_id, false);
+    cid_companyeraps_insert(parent_id, cid_erapid, contact_id);
 }
+
+function cid_companyeraps_insert(account_id, cid_erapid, contact_id) {
+    debugger;
+    var data = {
+                "cid_Company@odata.bind": "/accounts(" + account_id + ")",
+                "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
+                "cid_root_ind": false,
+                "cid_erapid": cid_erapid
+            };
+
+    tdg.webapi.create("cid_companyeraps", data, success_cb, error_cb);
+}
+
 
 function check_erap_from_other_company() {
     debugger;

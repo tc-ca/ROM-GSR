@@ -3,12 +3,16 @@
 //
 
 $(document).ready(function () {
-	var message = "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen.";
-	//message_advanced_form(message);
-
 	debugger;
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
+
+	var code = sessionStorage.getItem("cid_suppress_error_code") + "";
+	if (code != "") {
+		var msg = tdg.error_message.message(code);
+		tdg.c.dialog_OK(msg);
+	}
+
 	// address
 	tdg.cid.address_init(false);
 	tdg.cid.WebResource_address_complete_readonly(false);
@@ -217,17 +221,4 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 				alert(textStatus + ' ' + errorThrown);
 			}
 		});
-}
-
-
-function message_advanced_form(message, clear) {
-	debugger;
-	message = tdg.error_message.message(message);
-	if (clear) {
-		$('#ValidationSummaryEntityFormView div').remove();
-	}
-	var validationSection = $('#ValidationSummaryEntityFormView');
-	validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + message + "</div>"));
-	validationSection.show();
-	$('#alertMessages').focus();
 }

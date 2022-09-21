@@ -1,10 +1,16 @@
 //
 // Web Page-Profile.js
 //
+
 $(document).ready(function () {
     debugger;
 
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
     page_setup();
+
+    tdg.c.control_hide("cid_contacttype");
 
     var parent_id = '{{user.parentcustomerid.Id}}';
     var filter = "accountid eq guid'" + parent_id + "'";
@@ -28,9 +34,6 @@ $(document).ready(function () {
         }
     }
 
-    var selected_language = '{{website.selected_language.code}}';
-    sessionStorage.setItem("selected_language", selected_language);
-
     $("#emailaddress1").width('100%');
 
     $("#telephone1").attr("placeholder", "");
@@ -45,6 +48,12 @@ $(document).ready(function () {
     $("#telephone1").attr("autocomplete", "new-password");
     $("#mobilephone").attr("autocomplete", "new-password");
     $("#fax").attr("autocomplete", "new-password");
+
+    // default primary if 1st time
+    var firstname = $("#firstname").val();
+    if (firstname == "") {
+        $("#cid_contacttype").val(100000000);
+    }
 });
 
 function page_setup() {

@@ -12,7 +12,7 @@ $(document).ready(function () {
     tdg.c.section_hide("section_address_1");
 
     // default current use is "Primary"
-    $("#cid_contacttype").val(100000000);
+    //$("#cid_contacttype").val(100000000);
     tdg.c.control_hide("cid_contacttype");
 
     // default has a cra bn
@@ -34,41 +34,36 @@ $(document).ready(function () {
 
     // user has invitation code?
     sessionStorage.setItem("cid_suppress_error", "");
-        //var account_id = '{{user.parentcustomerid.Id}}';
-    //if (account_id != "") {
-    //    debugger;
+    sessionStorage.setItem("cid_suppress_error_code", "");
 
-    //    var invitation = tdg.c.OData_List("adx_invitation", "");
-    //    if (invitation.length > 0) {
-    //        sessionStorage.setItem("cid_suppress_error", "true");
+    var cid_contacttype = '{{user.cid_contacttype.Value}}';
+    if (cid_contacttype != 100000000)  // not primary
+    {
+        var account_id = '{{user.parentcustomerid.Id}}';
+        if (account_id != "") {
+            debugger;
 
-    //        var filter = "accountid eq guid'" + account_id + "'";
-    //        var account = tdg.c.OData_List("account", filter)[0];
+            var invitation = tdg.c.OData_List("adx_invitation", "");
+            if (invitation.length > 0) {
+                sessionStorage.setItem("cid_suppress_error", "true");
 
-    //        if (account.cid_crabusinessnumber != null) {
-    //            $("#cid_crabusinessnumber").val(account.cid_crabusinessnumber);
-    //        }
-    //        else {
-    //            $("#cid_has_cra_bn").val("0");
-    //            $("#cid_legalname").val(account.ovs_legalname);
-    //        }
+                var filter = "accountid eq guid'" + account_id + "'";
+                var account = tdg.c.OData_List("account", filter)[0];
 
-    //        //$("#NextButton").click();
-    //    }
-    //}
-});
+                if (account.cid_crabusinessnumber != null) {
+                    $("#cid_crabusinessnumber").val(account.cid_crabusinessnumber);
+                }
+                else {
+                    $("#cid_has_cra_bn").val("0");
+                    $("#cid_legalname").val(account.ovs_legalname);
+                }
 
-function error_message_advanced_form(message, clear) {
-    debugger;
-    message = tdg.error_message.message(message);
-    if (clear) {
-        $('#ValidationSummaryEntityFormView div').remove();
+                sessionStorage.setItem("cid_suppress_error_code", "m000099");
+                $("#NextButton").click();
+            }
+        }
     }
-    var validationSection = $('#ValidationSummaryEntityFormView');
-    validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + message + "</div>"));
-    validationSection.show();
-    $('#alertMessages').focus();
-}
+});
 
 function cid_has_cra_bn_onchange() {
     debugger;
@@ -238,14 +233,15 @@ function in_current_registration(rom_data, suppress_error) {
             var message_code = "";
             if (!suppress_error) {
                 message_code = "m000014";
+
+                var message = tdg.error_message.message(message_code);
+                tdg.c.dialog_OK(message);
+
                 value = false;
             }
             else {
-                message_code = "m000099";
                 value = true;
             }
-            var message = tdg.error_message.message(message_code);
-            tdg.c.dialog_OK(message);
 
             return value;
         }
@@ -300,5 +296,3 @@ function Retrieve_cra(bn) {
 
     return data;
 }
-
-

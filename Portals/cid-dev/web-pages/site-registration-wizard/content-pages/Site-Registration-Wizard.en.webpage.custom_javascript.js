@@ -35,7 +35,7 @@ function header_setup() {
 		$('#mainContent').remove();
 		//$('#mainContent').prepend("<div id='backToCompanyWizard' class='input-group pull-left'><p><a href='~/en-US/RegistrationWizard' class='entitylist-create btn btn-info pull-right action' title='Back'>" + msg + "</a><br><br></p></div>");
 	}
-	$('#mainContent').prepend("<div id='backToCompanyWizard' class='input-group pull-left'><p><a href='~/RegistrationWizard' class='entitylist-create btn btn-info pull-right action' title='Back'>" + msg + "</a><br><br></p></div>");
+	$('#mainContent').prepend("<div id='backToCompanyWizard' class='input-group'><p><a href='~/RegistrationWizard' class='entitylist-create btn btn-info pull-right action' title='Back'>" + msg + "</a><br><br></p></div>");
 
 	//var steps = $('li.list-group-item');
 	//for (var i = 0; i < steps.length; i++) {
