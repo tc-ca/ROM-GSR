@@ -2227,12 +2227,22 @@
                     ]
                   },
                   "expression": {
-                    "not": {
-                      "equals": [
-                        "@variables('IsErrorFree')",
-                        "@false"
-                      ]
-                    }
+                    "and": [
+                      {
+                        "not": {
+                          "equals": [
+                            "@variables('IsErrorFree')",
+                            "@false"
+                          ]
+                        }
+                      },
+                      {
+                        "greater": [
+                          "@int(outputs('bulkupload-List-Length'))",
+                          0
+                        ]
+                      }
+                    ]
                   },
                   "metadata": {
                     "operationMetadataId": "2c39164c-9e8d-4f4d-b286-d5cdbb4ec612"
@@ -2866,7 +2876,7 @@
         },
         "ContactID": {
           "runAfter": {
-            "Bulk-Last-Upload-Type": [
+            "Check_if_last_activity_length_is_greater_than_zero": [
               "Succeeded"
             ]
           },
@@ -2940,30 +2950,6 @@
             },
             "authentication": "@parameters('$authentication')"
           }
-        },
-        "Bulk-Last-Upload-GUID": {
-          "runAfter": {
-            "List_Last_Successful_bulk_upload_activity": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "5c35949f-fa71-4e55-82a3-3ac18b62bf2e"
-          },
-          "type": "Compose",
-          "inputs": "@outputs('List_Last_Successful_bulk_upload_activity')?['body']['value'][0]['cid_bulkactivitylogsummaryid']"
-        },
-        "Bulk-Last-Upload-Type": {
-          "runAfter": {
-            "Bulk-Last-Upload-GUID": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "ce97332f-a42a-44d0-81fe-f6b6a10384dc"
-          },
-          "type": "Compose",
-          "inputs": "@outputs('List_Last_Successful_bulk_upload_activity')?['body']['value'][0]['cid_activitytype@OData.Community.Display.V1.FormattedValue']"
         },
         "Get_Bulk_Upload_Messages": {
           "runAfter": {
@@ -3042,6 +3028,57 @@
           },
           "metadata": {
             "operationMetadataId": "6c3594a2-3429-4fed-b5d2-2f430b1d9cbd"
+          },
+          "type": "If"
+        },
+        "bulkupload-List-Length": {
+          "runAfter": {
+            "List_Last_Successful_bulk_upload_activity": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b0db0acd-d03e-4c37-a55d-62b7e4148bca"
+          },
+          "type": "Compose",
+          "inputs": "@length(outputs('List_Last_Successful_bulk_upload_activity')?['body']['value'])"
+        },
+        "Check_if_last_activity_length_is_greater_than_zero": {
+          "actions": {
+            "Bulk-Last-Upload-GUID": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "5c35949f-fa71-4e55-82a3-3ac18b62bf2e"
+              },
+              "type": "Compose",
+              "inputs": "@outputs('List_Last_Successful_bulk_upload_activity')?['body']['value'][0]['cid_bulkactivitylogsummaryid']"
+            },
+            "Bulk-Last-Upload-Type": {
+              "runAfter": {
+                "Bulk-Last-Upload-GUID": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "ce97332f-a42a-44d0-81fe-f6b6a10384dc"
+              },
+              "type": "Compose",
+              "inputs": "@outputs('List_Last_Successful_bulk_upload_activity')?['body']['value'][0]['cid_activitytype@OData.Community.Display.V1.FormattedValue']"
+            }
+          },
+          "runAfter": {
+            "bulkupload-List-Length": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "greater": [
+              "@int(outputs('bulkupload-List-Length'))",
+              0
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "38ed1da2-49ed-4b08-bae9-52d30b7b6722"
           },
           "type": "If"
         }

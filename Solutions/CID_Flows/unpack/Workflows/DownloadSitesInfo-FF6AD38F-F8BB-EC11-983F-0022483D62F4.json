@@ -957,7 +957,7 @@
                   },
                   "parameters": {
                     "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
-                    "path": "@variables('New_File_Path')",
+                    "path": "@outputs('Create_file_English')?['body/Path']",
                     "inferContentType": true
                   },
                   "authentication": "@parameters('$authentication')"
@@ -965,7 +965,7 @@
               },
               "Invoke_an_HTTP_request_-_Protect_Update_Site_Info_sheet_2": {
                 "runAfter": {
-                  "Get_file_content_-_no_sites_loaded": [
+                  "check_language_before_sending_attachment_to_portal_2": [
                     "Succeeded"
                   ]
                 },
@@ -1248,6 +1248,163 @@
                   },
                   "authentication": "@parameters('$authentication')"
                 }
+              },
+              "check_language_before_sending_attachment_to_portal_2": {
+                "actions": {
+                  "Get_full_file_content_from_French_file_2": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "7d8416e5-6901-4748-96e7-b570229707ac"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "GetFileContentByPath",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                      },
+                      "parameters": {
+                        "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                        "path": "@outputs('Create_file_French')?['body/Path']",
+                        "inferContentType": true
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Add_attachment_to_activity_French_2": {
+                    "runAfter": {
+                      "Get_full_file_content_from_French_file_2": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "91d0606f-6ed7-4292-a3a7-b064235dbded"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_commondataserviceforapps",
+                        "operationId": "CreateRecord",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      },
+                      "parameters": {
+                        "entityName": "annotations",
+                        "item/subject": "Site List Attachement",
+                        "item/notetext": "*WEB*",
+                        "item/isdocument": true,
+                        "item/documentbody": "@base64(outputs('Get_full_file_content_from_French_file_2')?['body'])",
+                        "item/filename": "@variables('New_File_Path')",
+                        "item/objectid_cid_bulkactivitylogsummary@odata.bind": "@concat('/cid_bulkactivitylogsummaries/', outputs('activityid'))"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Response_French_Note_attachment_2": {
+                    "runAfter": {
+                      "Add_attachment_to_activity_French_2": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "5d3b67ed-de62-4ccd-98f2-2d15ea5552c2"
+                    },
+                    "type": "Response",
+                    "kind": "Http",
+                    "inputs": {
+                      "statusCode": 200,
+                      "headers": {
+                        "RootMessag": "@variables('RooTMessage')"
+                      },
+                      "body": "@{outputs('Add_attachment_to_activity_French_2')?['body/annotationid']}|@{variables('RooTMessage')}"
+                    }
+                  }
+                },
+                "runAfter": {
+                  "Get_file_content_-_no_sites_loaded": [
+                    "Succeeded"
+                  ]
+                },
+                "else": {
+                  "actions": {
+                    "Get_full_file_content_English_2": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "7d8416e5-6901-4748-96e7-b570229707ac"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "GetFileContentByPath",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                          "path": "@outputs('Create_file_English')?['body/Path']",
+                          "inferContentType": true
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Add_attachment_to_activity_English_2": {
+                      "runAfter": {
+                        "Get_full_file_content_English_2": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "91d0606f-6ed7-4292-a3a7-b064235dbded"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "CreateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "annotations",
+                          "item/subject": "Site List Attachement",
+                          "item/notetext": "*WEB*",
+                          "item/isdocument": true,
+                          "item/documentbody": "@base64(outputs('Get_full_file_content_English_2')?['body'])",
+                          "item/filename": "@variables('New_File_Path')",
+                          "item/objectid_cid_bulkactivitylogsummary@odata.bind": "@concat('/cid_bulkactivitylogsummaries/', outputs('activityid'))"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Response": {
+                      "runAfter": {
+                        "Add_attachment_to_activity_English_2": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "5d3b67ed-de62-4ccd-98f2-2d15ea5552c2"
+                      },
+                      "type": "Response",
+                      "kind": "Http",
+                      "inputs": {
+                        "statusCode": 200,
+                        "headers": {
+                          "RootMessag": "@variables('RooTMessage')"
+                        },
+                        "body": "@{outputs('Add_attachment_to_activity_English_2')?['body/annotationid']}|@{variables('RooTMessage')}"
+                      }
+                    }
+                  }
+                },
+                "expression": {
+                  "equals": [
+                    "@triggerBody()?['Language']",
+                    "French"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "b1855c41-6717-4bb2-8117-25454635b1d1"
+                },
+                "type": "If"
               }
             }
           },
