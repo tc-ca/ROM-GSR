@@ -300,9 +300,9 @@
                   },
                   "isCompleted": {
                     "actions": {
-                      "Update_a_row": {
+                      "Update_Service_Request": {
                         "runAfter": {
-                          "convert_standard_days_to_minutes": [
+                          "Create_new_Service_Request_Performance_record": [
                             "Succeeded"
                           ]
                         },
@@ -319,6 +319,7 @@
                           "parameters": {
                             "entityName": "fdr_servicerequests",
                             "recordId": "@triggerOutputs()?['body/fdr_servicerequestid']",
+                            "item/fdr_servicerequestperformance@odata.bind": "fdr_servicerequestperformances(@{outputs('Create_new_Service_Request_Performance_record')?['body/fdr_servicerequestperformanceid']})",
                             "item/fdr_tss_duration": "@variables('ss_minutes')"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -376,9 +377,9 @@
                         },
                         "description": "Always calculate Performance as App User"
                       },
-                      "Add_a_new_row": {
+                      "Create_new_Service_Request_Performance_record": {
                         "runAfter": {
-                          "Update_a_row": [
+                          "convert_standard_days_to_minutes": [
                             "Succeeded"
                           ]
                         },
@@ -406,7 +407,6 @@
                             "item/fdr_holidaydaynbr": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/HolidayDayNbr']",
                             "item/fdr_onholddaynbr": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/OnHoldDayNbr']",
                             "item/fdr_remittanceamt": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/RemittanceAmt']",
-                            "item/fdr_ServiceRequestId@odata.bind": "fdr_servicerequests(@{triggerOutputs()?['body/fdr_servicerequestid']})",
                             "item/fdr_servicerequestperformanceidnumber": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/ServiceRequestPerformanceId']",
                             "item/fdr_standardassessmentpct": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/StandardAssessmentPct']",
                             "item/fdr_standardmetind": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request')?['body/StandardMetInd']",

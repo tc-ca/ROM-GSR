@@ -1,0 +1,120 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_dataverse_fdrsp"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_spapi_v2"
+        },
+        "api": {
+          "name": "shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2",
+          "logicalName": "fdr_5Fspapi-20v2-20connector"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_service_request_performance_adjustment_is_made": {
+          "metadata": {
+            "operationMetadataId": "64af40f0-dde4-45bb-90b5-bfb979d732c4"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "fdr_servicerequestperformance",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "fdr_adjustmentjustificationtxt,fdr_adjustmentnbr,fdr_servicerequestperformanceid"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Get_Associated_Service_Request": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "53137c5b-d6a5-4b32-8aa0-8e9d46ae0771"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "fdr_servicerequests",
+              "$select": "fdr_name,fdr_mtoa_sr_id",
+              "$filter": "_fdr_servicerequestperformance_value eq @{triggerOutputs()?['body/fdr_servicerequestperformanceid']}",
+              "$top": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Apply_to_each_Service_Request": {
+          "foreach": "@outputs('Get_Associated_Service_Request')?['body/value']",
+          "actions": {
+            "Adjust_a_service_request_performance": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "02efd036-7671-4973-ac6f-8f382c896ad8"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2",
+                  "operationId": "servicerequestcontrollervAdjustPerformance",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2"
+                },
+                "parameters": {
+                  "serviceRequestId": "@items('Apply_to_each_Service_Request')?['fdr_mtoa_sr_id']",
+                  "body/AdjustmentNbr": "@triggerOutputs()?['body/fdr_adjustmentnbr']",
+                  "body/AdjustmentJustificationTxt": "@triggerOutputs()?['body/fdr_adjustmentjustificationtxt']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "Get_Associated_Service_Request": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1c94adc7-8dd9-496d-91ee-8d2b06b05c0e"
+          },
+          "type": "Foreach",
+          "description": "Should only be one service request for a specific performance"
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}

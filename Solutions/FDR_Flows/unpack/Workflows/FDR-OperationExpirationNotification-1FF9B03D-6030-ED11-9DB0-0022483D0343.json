@@ -31,6 +31,14 @@
         "$authentication": {
           "defaultValue": {},
           "type": "SecureObject"
+        },
+        "ALL Regions  Operation Expiry Email notebox (fdr_alllRegionsOperationsExpiry)": {
+          "defaultValue": "mocregister-registrecontenant@tc.gc.ca",
+          "type": "String",
+          "metadata": {
+            "schemaName": "fdr_alllRegionsOperationsExpiry",
+            "description": "Email to send all notification for MOC Registration(Operations) expiration "
+          }
         }
       },
       "triggers": {
@@ -83,7 +91,7 @@
         },
         "List_of_operations_expiring_today": {
           "runAfter": {
-            "Queue_Email": [
+            "Current_Region_Name": [
               "Succeeded"
             ]
           },
@@ -159,114 +167,9 @@
                 "value": "@{concat(outputs('Get_a_Parent_org')?['body/_territoryid_value@OData.Community.Display.V1.FormattedValue'], ' FDR')}"
               }
             },
-            "Get_queue_by_name": {
-              "runAfter": {
-                "Set_current_Region_Name": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "72adaa4a-503d-413b-a84b-f5f9ef94367d"
-              },
-              "type": "OpenApiConnection",
-              "inputs": {
-                "host": {
-                  "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "ListRecords",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                },
-                "parameters": {
-                  "entityName": "queues",
-                  "$select": "queueid,emailaddress",
-                  "$filter": "(contains(name, '@{variables('CurrentRegionName')}'))"
-                },
-                "authentication": "@parameters('$authentication')"
-              }
-            },
-            "Queue_Found": {
-              "actions": {
-                "Set_email": {
-                  "runAfter": {},
-                  "metadata": {
-                    "operationMetadataId": "e122e24c-6d27-4b60-9efb-367e376d6e4a"
-                  },
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "QueueEmail",
-                    "value": "@{first(outputs('Get_queue_by_name')?['body/value'])?['emailaddress']}"
-                  }
-                }
-              },
-              "runAfter": {
-                "Get_queue_by_name": [
-                  "Succeeded"
-                ]
-              },
-              "else": {
-                "actions": {
-                  "Get_default_queue": {
-                    "runAfter": {},
-                    "metadata": {
-                      "operationMetadataId": "e68bc49a-bee2-44ca-b11d-c38559b8a936"
-                    },
-                    "type": "OpenApiConnection",
-                    "inputs": {
-                      "host": {
-                        "connectionName": "shared_commondataserviceforapps_1",
-                        "operationId": "ListRecords",
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                      },
-                      "parameters": {
-                        "entityName": "queues",
-                        "$select": "queueid,emailaddress",
-                        "$filter": "(name eq 'Default FDR')"
-                      },
-                      "authentication": "@parameters('$authentication')"
-                    }
-                  },
-                  "Set_default_email": {
-                    "runAfter": {
-                      "Get_default_queue": [
-                        "Succeeded"
-                      ]
-                    },
-                    "metadata": {
-                      "operationMetadataId": "51789c87-f390-4aff-ba15-d94d483ebef8"
-                    },
-                    "type": "SetVariable",
-                    "inputs": {
-                      "name": "QueueEmail",
-                      "value": "@{first(outputs('Get_default_queue')?['body/value'])?['emailaddress']}"
-                    }
-                  }
-                }
-              },
-              "expression": {
-                "and": [
-                  {
-                    "greater": [
-                      "@length(outputs('Get_queue_by_name')?['body/value'])",
-                      0
-                    ]
-                  },
-                  {
-                    "not": {
-                      "equals": [
-                        "@trim(variables('CurrentRegionName'))",
-                        "FDR"
-                      ]
-                    }
-                  }
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "d22f42c0-6cf3-498c-aacc-f4310b7437b3"
-              },
-              "type": "If"
-            },
             "Send_an_email_(V2)": {
               "runAfter": {
-                "Queue_Found": [
+                "Set_current_Region_Name": [
                   "Succeeded"
                 ]
               },
@@ -281,7 +184,7 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                 },
                 "parameters": {
-                  "emailMessage/To": "@variables('QueueEmail')",
+                  "emailMessage/To": "@parameters('ALL Regions  Operation Expiry Email notebox (fdr_alllRegionsOperationsExpiry)')",
                   "emailMessage/Subject": "Operation @{items('Iterate_expiring_-_single_thread')?['ovs_name']} expired",
                   "emailMessage/Body": "<p>Hello,<br>\nThis is an auto reminder about operation expiration.<br>\nOperation @{items('Iterate_expiring_-_single_thread')?['ovs_name']} related to @{outputs('Get_a_Parent_org')?['body/ovs_legalname']} expired 30 days ago.<br>\n<br>\n<br>\n</p>",
                   "emailMessage/Importance": "Normal"
@@ -303,25 +206,6 @@
             "concurrency": {
               "repetitions": 1
             }
-          }
-        },
-        "Queue_Email": {
-          "runAfter": {
-            "Current_Region_Name": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "25fc6c20-72a0-44a2-8980-ec64ba0342c2"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "QueueEmail",
-                "type": "string"
-              }
-            ]
           }
         }
       }

@@ -1,0 +1,130 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_dataverse_fdrsp"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_spapi_v2"
+        },
+        "api": {
+          "name": "shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2",
+          "logicalName": "fdr_5Fspapi-20v2-20connector"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "Recurrence": {
+          "recurrence": {
+            "frequency": "Day",
+            "interval": 1,
+            "startTime": "2022-09-20T14:00:00Z"
+          },
+          "metadata": {
+            "operationMetadataId": "9305d23c-ec43-459f-82ab-bab12e9e3561"
+          },
+          "type": "Recurrence"
+        }
+      },
+      "actions": {
+        "Get_Active_Not_And_Not_Completed_SRs": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "0d810647-07d2-4eff-97fa-e08dc3943ee3"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "fdr_servicerequests",
+              "$select": "fdr_mtoa_sr_id,fdr_servicerequestid",
+              "$filter": "(statecode eq 0 and statuscode ne 794600005 and fdr_mtoa_sr_id ne null)"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Loop_Over_Service_Requests": {
+          "foreach": "@outputs('Get_Active_Not_And_Not_Completed_SRs')?['body/value']",
+          "actions": {
+            "Update_a_row": {
+              "runAfter": {
+                "Calculate_the_performance_to_date,_and_estimate_what_the_due_date_will_be._2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "2f3de538-d76a-49cc-b206-2a41aa0e3b54"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "fdr_servicerequests",
+                  "recordId": "@items('Loop_Over_Service_Requests')?['fdr_servicerequestid']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Calculate_the_performance_to_date,_and_estimate_what_the_due_date_will_be._2": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "311bc07a-0736-4ae0-985b-ed4fd2edc0b3"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2",
+                  "operationId": "servicerequestcontrollervEstimateServiceRequestPerformance",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2"
+                },
+                "parameters": {
+                  "serviceRequestId": "@items('Loop_Over_Service_Requests')?['fdr_mtoa_sr_id']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "Get_Active_Not_And_Not_Completed_SRs": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "bd1a3b89-2f38-4c50-b407-007f8b4e2bd3"
+          },
+          "type": "Foreach"
+        }
+      }
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}
