@@ -268,7 +268,13 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000106",
                         "message_en": "<h2>TDG CLIENT IDENTIFICATION DATABASE: {0}</h2>",
                         "message_fr": "<h2>TDG CLIENT IDENTIFICATION DATABASE_FR: {0}</h2>"
+                    },
+					{
+                        "code": "m000107",
+                        "message_en": "You must choose a valid NAICS Code from the NAICS Code drop- down list to continue.",
+                        "message_fr": "You must choose a valid NAICS Code from the NAICS Code drop- down list to continue. _FR"
                     }
+					
                 ];
 
             return list;
