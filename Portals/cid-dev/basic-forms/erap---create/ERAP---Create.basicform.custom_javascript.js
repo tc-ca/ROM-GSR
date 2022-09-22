@@ -1,6 +1,7 @@
 //
 // Basic Form-ERAP - Create.js
 //
+
 var _reload = false;
 var _count = 0;
 
@@ -89,18 +90,18 @@ function btn_save_new_onclick() {
     var contact_id = '{{user.id}}';
     var cid_erapid = $("#cid_erapid").val();
 
-   // tdg.root.cid_companyeraps_insert(parent_id, cid_erapid, contact_id, false);
+    // tdg.root.cid_companyeraps_insert(parent_id, cid_erapid, contact_id, false);
     cid_companyeraps_insert(parent_id, cid_erapid, contact_id);
 }
 
 function cid_companyeraps_insert(account_id, cid_erapid, contact_id) {
     debugger;
     var data = {
-                "cid_Company@odata.bind": "/accounts(" + account_id + ")",
-                "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
-                "cid_root_ind": false,
-                "cid_erapid": cid_erapid
-            };
+        "cid_Company@odata.bind": "/accounts(" + account_id + ")",
+        "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
+        "cid_root_ind": false,
+        "cid_erapid": cid_erapid
+    };
 
     tdg.webapi.create("cid_companyeraps", data, success_cb, error_cb);
 }
@@ -113,8 +114,7 @@ function check_erap_from_other_company() {
     var cid_erapid = $("#cid_erapid").val();
     var data = tdg.root.erap_get_by_root_name(cid_erapid);
 
-    if (data.length > 0)
-    {
+    if (data.length > 0) {
         var msg = tdg.error_message.message("m000019");	// ERAP {0} is assigned to another Company. Are you sure you want to complete the add?
         msg = msg.replace("{0}", cid_erapid);
 
@@ -147,50 +147,4 @@ function error_cb(msg) {
     var selected_language = '{{website.selected_language.code}}';
     msg = tdg.c.text_language(msg, selected_language)
     tdg.c.message_panel_set("EntityFormControl", msg);
-}
-
-function confirmDialog(message, handler) {
-
-    $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
-    <header class="modal-header">
-        <h2 class="modal-title">CID Portal</h2>
-    </header>
-    <div class="modal-body">
-        ${message}
-
-    </div>
-  <div class="modal-footer">
-     <button id="btnYes" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">Yes</button>
-    <button  id="btnNo" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" data-dismiss="modal">No</button>
-
-</section>
-`).appendTo('body');
-
-    $('#btnNo').focus();
-
-
-    $("#myModal").css('top', '15%');
-    $("#myModal").css('left', '40%');
-    $("#myModal").css('position', 'fixed');
-    $("#myModal").css('z-index', '9999');
-
-
-    $("#btnYes").click(function () {
-
-        // handler(true);
-        //  $("#myModal").modal("hide");
-        $("#myModal").remove();
-        handler(true);
-    });
-
-    //Pass false to callback function
-    $("#btnNo").click(function () {
-
-        //handler(lse);
-        $("#myModal").remove();
-        handler(false);
-    });
-
-
-
 }

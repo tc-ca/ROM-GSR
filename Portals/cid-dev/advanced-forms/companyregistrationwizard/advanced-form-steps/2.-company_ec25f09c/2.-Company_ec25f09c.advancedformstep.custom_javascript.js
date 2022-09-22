@@ -129,8 +129,8 @@ $(document).ready(function () {
 	$("#cid_reasonfornobnnumber_other").attr("autocomplete", "new-password");
 	$("#websiteurl").attr("autocomplete", "new-password");
 	tdg.cid.convert_province_to_code(selected_language);
-	var currentUserId = '{{user.contactid}}';
-	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
+
+	Disable_ContactTypeFieldsForSecondaryUser();
 });
 
 function advanced_form_header() {
@@ -175,50 +175,28 @@ function address1_line1_set(value) {
 	catch (e) { }
 }
 
-function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
+function Disable_ContactTypeFieldsForSecondaryUser() {
 	debugger;
-	if (currentuserId == null) return;
-	var filteroption = "contactid eq (guid'" + currentuserId + "')";
-	var odataUri = window.location.protocol + "//" + window.location.host + "/_odata/contact";
-	odataUri += "?$filter=" + encodeURIComponent(filteroption);
-	//Get user contact record
-	$.ajax(
-		{
-			type: "GET",
-			contentType: "application/json; charset=utf-8",
-			datatype: "json",
-			url: odataUri,
-			beforeSend: function (XMLHttpRequest) {
-				XMLHttpRequest.setRequestHeader("Accept", "application/json");
-			},
-			async: false,
-			success: function (data, textStatus, xhr) {
-				var result = data;
-				var cid_UserContactType = result.value[0].cid_contacttype.Value;
-				//if not primary contact
-				if (cid_UserContactType != 100000000) {
-					$("#name").prop("disabled", true);
-					//				$("#address1_line1").prop( "disabled", true );
-					$("#address1_line1").css("pointer-events", "none");
-					$("#WebResource_address_complete").css("pointer-events", "none");
-					$("#address1_line2").attr("readonly", true);
-					$("#address1_line3").prop("disabled", true);
-					$("#address1_city").prop("disabled", true);
-					$("#address1_postalcode").prop("disabled", true);
-					$("#ovs_address1_province").prop("disabled", true);
-					$("#address1_country").prop("disabled", true);
-					$("#telephone1").prop("disabled", true);
-					$("#websiteurl").prop("disabled", true);
-					$("#fax").prop("disabled", true);
 
-					//Disable address lookup web resource
-					$('#WebResource_address_complete').on('load', function () {
-						tdg.cid.WebResource_address_complete_readonly(true);
-					});
-				}
-			},
-			error: function (xhr, textStatus, errorThrown) {
-				alert(textStatus + ' ' + errorThrown);
-			}
+	var cid_contacttype = '{{user.cid_contacttype.Value}}';
+	//if not primary contact
+	if (cid_contacttype != 100000000) {
+		$("#name").prop("disabled", true);
+		$("#address1_line1").css("pointer-events", "none");
+		$("#WebResource_address_complete").css("pointer-events", "none");
+		$("#address1_line2").attr("readonly", true);
+		$("#address1_line3").prop("disabled", true);
+		$("#address1_city").prop("disabled", true);
+		$("#address1_postalcode").prop("disabled", true);
+		$("#ovs_address1_province").prop("disabled", true);
+		$("#address1_country").prop("disabled", true);
+		$("#telephone1").prop("disabled", true);
+		$("#websiteurl").prop("disabled", true);
+		$("#fax").prop("disabled", true);
+
+		// disable address lookup web resource
+		$('#WebResource_address_complete').on('load', function () {
+			tdg.cid.WebResource_address_complete_readonly(true);
 		});
+	}
 }

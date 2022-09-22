@@ -39,6 +39,18 @@ if (typeof (tdg.c) == "undefined") {
             c.targetFunction();
         },
 
+        subgrid_index: function (entityList, name) {
+            var grid = null;
+            for (var i = 0; entityList.length; i++) {
+                grid = entityList.eq(i);
+                grid_name = grid[0].dataset.refRel;
+                if (name == grid_name) {
+                    return grid;
+                }
+            }
+            return grid;
+        },
+
         weblink_hide: function (url) {
             //var value = "#navbar li.weblink";     // out of box template
             var value = "#def-top li.weblink";      // Canada government template
@@ -1122,6 +1134,125 @@ if (typeof (tdg.cid) == "undefined") {
                 $(this).append(row1);
                 console.log("after row 1 modified");
             })
+        },
+
+        subgrid_companynaicscode: function (companynaicscode) {
+            debugger;
+            var selected_language = sessionStorage.getItem("selected_language");
+
+            companynaicscode.on("loaded", function () {
+                debugger;
+                // header
+                let header = companynaicscode.find("table thead > tr");
+                for (var index1 = 0; index1 < header.length; index1++) {
+                    //debugger;
+                    let tr = header[index1];
+                    let cols = $(tr).find('th');
+                    for (var i = 0; i < cols.length; i++) {
+                        var tdElement = cols[i];
+                        var className = $(tdElement)[0].className;
+                        if (className.indexOf("sort-enabled") == -1) {
+                            var text = $(tdElement).text();
+                            text = tdg.c.text_language(text, selected_language);
+                            $(tdElement).text(text);
+                        }
+                    }
+                }
+                debugger;
+                let rows = companynaicscode.find("table tbody > tr");
+                rows.each(function (index, tr) {
+                    //debugger;
+                    let cols = $(tr).find('td');
+                    cols.each(function (index, td) {
+                        debugger;
+                        var tdElement = $(this);
+                        var value = tdElement.attr('data-attribute');
+                        if (value != null) {
+                            var index1 = value.indexOf('.cid_naicsclasstitle');
+                            if (index1 != -1) {
+                                var cellValue = $(td).text();
+                                cellValue = tdg.c.text_language(cellValue, selected_language);
+                                $(td).text(cellValue);
+                            }
+                        }
+                    });
+                });
+            });
+        },
+
+        subgrid_unnumber: function (unnumber) {
+            debugger;
+            var selected_language = sessionStorage.getItem("selected_language");
+
+            unnumber.on("loaded", function () {
+                debugger;
+
+                // header
+                let header = unnumber.find("table thead > tr");
+                for (var index1 = 0; index1 < header.length; index1++) {
+                    debugger;
+                    let tr = header[index1];
+
+                    let cols = $(tr).find('th');
+                    for (var i = 0; i < cols.length; i++) {
+                        var tdElement = cols[i];
+                        var className = $(tdElement)[0].className;
+                        if (className.indexOf("sort-enabled") == -1) {
+                            var text = $(tdElement).text();
+                            text = tdg.c.text_language(text, selected_language);
+                            $(tdElement).text(text);
+                        }
+
+                        switch (i) {
+                            case 0:
+                                //tdElement.ariaLabel = "UN Number Display";
+                                break;
+                            case 1: // Packing Group
+                                tdElement.style.display = "none";
+                                break;
+                            case 2: // Shipping
+                                tdElement.style.display = "none";
+                                break;
+                        }
+                    }
+                }
+
+                debugger
+                let rows = unnumber.find("table tbody > tr");
+
+                rows.each(function (index, tr) {
+                    debugger;
+
+                    let cols = $(tr).find('td');
+                    for (var i = 0; i < cols.length; i++) {
+                        tdElement = $(cols[i]).eq(0);
+                        var value = tdElement.attr('data-attribute');
+                        if (value != null) {
+                            var index1 = value.indexOf('.tdg_shippingnamedescriptiontxt');
+                            if (index1 != -1) {
+                                var cellValue = tdElement.text();
+                                cellValue = tdg.c.text_language(cellValue, selected_language);
+                                tdElement.text(cellValue);
+                            }
+
+                            switch (i) {
+                                case 0:
+                                    var cellValue = tdElement.text();
+                                    var f1 = $(cols[i + 1]).eq(0);
+                                    var f2 = $(cols[i + 2]).eq(0);
+                                    var text = cellValue + " - " +
+                                        f1.text() + " - " +
+                                        tdg.c.text_language(f2.text(), selected_language);
+                                    tdElement.text(text);
+
+                                    f1[0].style.display = "none";
+                                    f2[0].style.display = "none";
+                                    break;
+                            }
+                        }
+                    }
+                });
+            });
         },
 
         Display_Modes: function (siteid) {

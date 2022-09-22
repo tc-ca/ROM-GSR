@@ -147,55 +147,32 @@ function address1_line1_set(value) {
 
 function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 	debugger;
-	if (currentuserId == null) return;
-	var filteroption = "contactid eq (guid'" + currentuserId + "')";
-	var odataUri = window.location.protocol + "//" + window.location.host + "/_odata/contact";
-	odataUri += "?$filter=" + encodeURIComponent(filteroption);
-	//Get user contact record
-	$.ajax(
-		{
-			type: "GET",
-			contentType: "application/json; charset=utf-8",
-			datatype: "json",
-			url: odataUri,
-			beforeSend: function (XMLHttpRequest) {
-				XMLHttpRequest.setRequestHeader("Accept", "application/json");
-			},
-			async: false,
-			success: function (data, textStatus, xhr) {
-				var result = data;
-				var cid_UserContactType = result.value[0].cid_contacttype.Value;
-				//if not primary contact
-				if (cid_UserContactType != 100000000) {
+	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
+	
+    //if not primary contact
+	if (cid_usercontacttype != 100000000) {
+		//var message = "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen.";
+		//tdg.c.dialog_OK(message);
+		$("#name").attr("readonly", true);
+		$("#address1_line2").attr("readonly", true);
+		$("#address1_line3").attr("readonly", true);
+		$("#address1_city").attr("readonly", true);
+		$("#address1_postalcode").attr("readonly", true);
+		$("#ovs_address1_province").attr("readonly", true);
+		$("#ovs_address1_province").css("pointer-events", "none");
+		$("#address1_country").attr("readonly", true);
+		$("#telephone1").attr("readonly", true);
+		$("#websiteurl").attr("readonly", true);
+		$("#fax").attr("readonly", true);
+		$('#cid_crabusinessnumber').attr("readonly", true);
+		$('#ovs_legalname').attr("readonly", true);
+		$('#cid_reasonfornobnnumber').attr("readonly", true);
+		$('#cid_reasonfornobnnumber').css("pointer-events", "none");
+		$('#cid_reasonfornobnnumber_other').attr("readonly", true);
 
-					var message = "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen.";
-					tdg.c.dialog_OK(message);
-
-					$("#name").attr("readonly", true);
-					$("#address1_line2").attr("readonly", true);
-					$("#address1_line3").attr("readonly", true);
-					$("#address1_city").attr("readonly", true);
-					$("#address1_postalcode").attr("readonly", true);
-					$("#ovs_address1_province").attr("readonly", true);
-					$("#ovs_address1_province").css("pointer-events", "none");
-					$("#address1_country").attr("readonly", true);
-					$("#telephone1").attr("readonly", true);
-					$("#websiteurl").attr("readonly", true);
-					$("#fax").attr("readonly", true);
-					$('#cid_crabusinessnumber').attr("readonly", true);
-					$('#ovs_legalname').attr("readonly", true);
-					$('#cid_reasonfornobnnumber').attr("readonly", true);
-					$('#cid_reasonfornobnnumber').css("pointer-events", "none");
-					$('#cid_reasonfornobnnumber_other').attr("readonly", true);
-
-					//Disable address lookup web resource
-					$('#WebResource_address_complete').on('load', function () {
-						tdg.cid.WebResource_address_complete_readonly(true);
-					});
-				}
-			},
-			error: function (xhr, textStatus, errorThrown) {
-				alert(textStatus + ' ' + errorThrown);
-			}
+		//Disable address lookup web resource
+		$('#WebResource_address_complete').on('load', function () {
+			tdg.cid.WebResource_address_complete_readonly(true);
 		});
+	}
 }
