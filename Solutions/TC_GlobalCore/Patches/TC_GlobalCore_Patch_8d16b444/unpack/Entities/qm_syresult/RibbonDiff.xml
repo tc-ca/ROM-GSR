@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RibbonDiffXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <CustomActions>
+    <CustomAction Id="ovs.Mscrm.SubGrid.qm_syresult.AddExistingStandard.CustomAction" Location="Mscrm.SubGrid.qm_syresult.MainTab.Management.Controls._children" Sequence="30">
+      <CommandUIDefinition>
+        <Button Alt="$LocLabels:Mscrm.SubGrid.qm_syresult.AddExistingStandard.Alt" Command="Mscrm.AddExistingRecordFromSubGridStandard" Id="Mscrm.SubGrid.qm_syresult.AddExistingStandard" Image32by32="/_imgs/ribbon/AddExistingStandard_32.png" Image16by16="/_imgs/ribbon/AddExistingStandard_16.png" LabelText="$LocLabels:Mscrm.SubGrid.qm_syresult.AddExistingStandard.LabelText" Sequence="30" TemplateAlias="o1" ToolTipTitle="$LocLabels:Mscrm.SubGrid.qm_syresult.AddExistingStandard.ToolTipTitle" ToolTipDescription="$LocLabels:Mscrm.SubGrid.qm_syresult.AddExistingStandard.ToolTipDescription" ModernImage="AddExisting" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <CustomAction Id="ovs.Mscrm.SubGrid.qm_syresult.AddNewStandard.CustomAction" Location="Mscrm.SubGrid.qm_syresult.MainTab.Management.Controls._children" Sequence="20">
+      <CommandUIDefinition>
+        <Button Alt="$LocLabels:Mscrm.SubGrid.qm_syresult.AddNewStandard.Alt" Command="Mscrm.AddNewRecordFromSubGridStandard" Id="Mscrm.SubGrid.qm_syresult.AddNewStandard" Image32by32="/_imgs/ribbon/newrecord32.png" Image16by16="/_imgs/ribbon/New_16.png" LabelText="$LocLabels:Mscrm.SubGrid.qm_syresult.AddNewStandard.LabelText" Sequence="20" TemplateAlias="o1" ToolTipTitle="$LocLabels:Mscrm.SubGrid.qm_syresult.AddNewStandard.ToolTipTitle" ToolTipDescription="$Resources(EntityDisplayName):Mscrm_SubGrid_EntityLogicalName_MainTab_Management_AddNewStandard_ToolTipDescription" ModernImage="New" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <CustomAction Id="ovs.TC.Violation.Buttons.DisassociateViolation.CustomAction" Location="Mscrm.SubGrid.qm_syresult.MainTab.Management.Controls._children" Sequence="18">
+      <CommandUIDefinition>
+        <Button Alt="$LocLabels:TC.Violation.Buttons.DisassociateViolation.Alt" Command="TC.Violation.Commands.DisassociateViolation" Id="TC.Violation.Buttons.DisassociateViolation" Image32by32="/_imgs/ribbon/BulkDelete_32.png" Image16by16="/_imgs/ribbon/BulkDelete_16.png" LabelText="$LocLabels:TC.Violation.Buttons.DisassociateViolation.LabelText" Sequence="18" TemplateAlias="o1" ToolTipTitle="$LocLabels:TC.Violation.Buttons.DisassociateViolation.ToolTipTitle" ToolTipDescription="$LocLabels:TC.Violation.Buttons.DisassociateViolation.ToolTipDescription" ModernImage="DeleteBulk" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <HideCustomAction HideActionId="tc.Mscrm.Form.qm_syresult.Deactivate.Hide" Location="Mscrm.Form.qm_syresult.Deactivate" />
+    <HideCustomAction HideActionId="tc.Mscrm.Form.qm_syresult.Delete.Hide" Location="Mscrm.Form.qm_syresult.Delete" />
+    <HideCustomAction HideActionId="tc.Mscrm.Form.qm_syresult.NewRecord.Hide" Location="Mscrm.Form.qm_syresult.NewRecord" />
+    <HideCustomAction HideActionId="tc.Mscrm.SubGrid.qm_syresult.Deactivate.Hide" Location="Mscrm.SubGrid.qm_syresult.Deactivate" />
+  </CustomActions>
+  <Templates>
+    <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
+  </Templates>
+  <CommandDefinitions>
+    <CommandDefinition Id="Mscrm.AddExistingRecordFromSubGridStandard">
+      <EnableRules>
+        <EnableRule Id="Mscrm.AppendToPrimary" />
+        <EnableRule Id="Mscrm.EntityFormIsEnabled" />
+        <EnableRule Id="Mscrm.IsEntityAvailableForUserInMocaOffline" />
+        <EnableRule Id="Mscrm.IsRelationshipEnabledInMocaOffline" />
+        <EnableRule Id="tc.qm_syresult.EnableRule9.HideButtonIfFormIsReadOnly" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="tc.qm_syresult.DisplayRule5.DisplayRule" />
+        <DisplayRule Id="Mscrm.AddExisting" />
+        <DisplayRule Id="Mscrm.ShowForOneToManyGrids" />
+        <DisplayRule Id="Mscrm.AppendToPrimary" />
+        <DisplayRule Id="Mscrm.AppendSelected" />
+        <DisplayRule Id="Mscrm.CanWriteSelected" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="filterAddExisting" Library="$webresource:ovs_SafetyAssessmentMainForm">
+          <CrmParameter Value="SelectedEntityTypeName" />
+          <CrmParameter Value="SelectedControl" />
+          <CrmParameter Value="FirstPrimaryItemId" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="Mscrm.AddNewRecordFromSubGridStandard">
+      <EnableRules>
+        <EnableRule Id="Mscrm.AppendToPrimary" />
+        <EnableRule Id="Mscrm.EntityFormIsEnabled" />
+        <EnableRule Id="Mscrm.IsEntityAvailableForUserInMocaOffline" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.ShowForOneToManyGrids" />
+        <DisplayRule Id="Mscrm.AppendToPrimary" />
+        <DisplayRule Id="Mscrm.CreateSelectedEntityPermission" />
+        <DisplayRule Id="Mscrm.AppendSelected" />
+        <DisplayRule Id="Mscrm.HideAddNewForChildEntities" />
+        <DisplayRule Id="tc.qm_syresult.DisplayRule8.DisplayRule" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.Open.addNewFromSubGridStandard" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedEntityTypeName" />
+          <CrmParameter Value="PrimaryEntityTypeName" />
+          <CrmParameter Value="FirstPrimaryItemId" />
+          <CrmParameter Value="PrimaryControl" />
+          <CrmParameter Value="SelectedControl" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="Mscrm.DeleteSelectedRecord">
+      <EnableRules>
+        <EnableRule Id="Mscrm.SelectionCountAtLeastOne" />
+        <EnableRule Id="Mscrm.VisualizationPaneNotMaximized" />
+        <EnableRule Id="Mscrm.IsEntityAvailableForUserInMocaOffline" />
+        <EnableRule Id="tc.qm_syresult.EnableRule9.HideButtonIfFormIsReadOnly" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.NotShowForManyToManyGrids" />
+        <DisplayRule Id="Mscrm.DeleteSelectedEntityPermission" />
+        <DisplayRule Id="ovs.qm_syresult.DisplayRule15.HideDeleteViolationWhenOnSafetyAssessment" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.Delete.deleteRecords" Library="$Webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedControl" />
+          <CrmParameter Value="SelectedControlSelectedItemReferences" />
+          <CrmParameter Value="SelectedEntityTypeName" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="Mscrm.EditSelectedRecord">
+      <EnableRules>
+        <EnableRule Id="Mscrm.CheckBulkEditSupportForEntity" />
+        <EnableRule Id="Mscrm.VisualizationPaneNotMaximized" />
+        <EnableRule Id="Mscrm.IsValidForHierarchyView" />
+        <EnableRule Id="Mscrm.ShowOnNonModernAndModernIfAllowed" />
+        <EnableRule Id="tc.qm_syresult.EnableRule9.HideButtonIfFormIsReadOnly" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.BulkEditPrivilege" />
+        <DisplayRule Id="Mscrm.WriteSelectedEntityPermission" />
+        <DisplayRule Id="Mscrm.HybridDialogBulkEditEnabled" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.BulkEdit.bulkEditRecords" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedControl" />
+          <CrmParameter Value="SelectedControlSelectedItemReferences" />
+          <CrmParameter Value="SelectedEntityTypeName" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="TC.Violation.Commands.DisassociateViolation">
+      <EnableRules>
+        <EnableRule Id="Mscrm.SelectionCountAtLeastOne" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="ovs.qm_syresult.DisplayRule14.HideRemoveViolationWhenOnWorkOrder" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="DisassociateViolation" Library="$webresource:qm_ViolationMainForm">
+          <CrmParameter Value="SelectedControl" />
+          <CrmParameter Value="SelectedControlSelectedItemIds" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+  </CommandDefinitions>
+  <RuleDefinitions>
+    <TabDisplayRules />
+    <DisplayRules>
+      <DisplayRule Id="Mscrm.CreateSelectedEntityPermission">
+        <EntityPrivilegeRule PrivilegeType="Create" PrivilegeDepth="Basic" AppliesTo="SelectedEntity" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.HideAddNewForChildEntities">
+        <OrRule>
+          <Or>
+            <EntityPropertyRule AppliesTo="SelectedEntity" PropertyName="IsChildEntity" PropertyValue="false" />
+          </Or>
+          <Or>
+            <RelationshipTypeRule AppliesTo="SelectedEntity" AllowCustomRelationship="false" />
+          </Or>
+        </OrRule>
+      </DisplayRule>
+      <DisplayRule Id="ovs.qm_syresult.DisplayRule14.HideRemoveViolationWhenOnWorkOrder">
+        <EntityRule EntityName="msdyn_workorder" AppliesTo="PrimaryEntity" Context="SubGridStandard" Default="false" InvertResult="true" />
+      </DisplayRule>
+      <DisplayRule Id="ovs.qm_syresult.DisplayRule15.HideDeleteViolationWhenOnSafetyAssessment">
+        <EntityRule EntityName="ovs_cysafetyassessment" AppliesTo="PrimaryEntity" Context="SubGridStandard" Default="false" InvertResult="true" />
+      </DisplayRule>
+      <DisplayRule Id="tc.qm_syresult.DisplayRule5.DisplayRule">
+        <EntityRule EntityName="msdyn_workorder" AppliesTo="PrimaryEntity" Context="SubGridStandard" Default="false" InvertResult="true" />
+      </DisplayRule>
+      <DisplayRule Id="tc.qm_syresult.DisplayRule8.DisplayRule">
+        <EntityRule EntityName="ovs_cysafetyassessment" AppliesTo="PrimaryEntity" Context="SubGridStandard" Default="false" InvertResult="true" />
+      </DisplayRule>
+    </DisplayRules>
+    <EnableRules>
+      <EnableRule Id="tc.qm_syresult.EnableRule9.HideButtonIfFormIsReadOnly">
+        <CustomRule FunctionName="HideButtonIfFormIsReadOnly" Library="$webresource:ovs_ROMCommonFunctions">
+          <CrmParameter Value="PrimaryControl" />
+        </CustomRule>
+      </EnableRule>
+    </EnableRules>
+  </RuleDefinitions>
+  <LocLabels>
+    <LocLabel Id="Mscrm.SubGrid.qm_syresult.AddExistingStandard.Alt">
+      <Titles>
+        <Title description="Add Existing {0}" languagecode="1033" />
+        <Title description="Ajouter une {0}" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.SubGrid.qm_syresult.AddExistingStandard.LabelText">
+      <Titles>
+        <Title description="Add Existing {0}" languagecode="1033" />
+        <Title description="Ajouter une {0}" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.SubGrid.qm_syresult.AddExistingStandard.ToolTipDescription">
+      <Titles>
+        <Title description="Add a {0} that already exists to the record you are working with." languagecode="1033" />
+        <Title description="Ajouter une {0} qui existe déjà à l’enregistrement utilisé" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.SubGrid.qm_syresult.AddExistingStandard.ToolTipTitle">
+      <Titles>
+        <Title description="Add Existing​​ {0}" languagecode="1033" />
+        <Title description="Ajouter une​​ {0}" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.SubGrid.qm_syresult.AddNewStandard.Alt">
+      <Titles>
+        <Title description="Add New {0}" languagecode="1033" />
+        <Title description="Nouvelle {0}" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.SubGrid.qm_syresult.AddNewStandard.LabelText">
+      <Titles>
+        <Title description="Add New {0}" languagecode="1033" />
+        <Title description="Nouvelle {0}" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="Mscrm.SubGrid.qm_syresult.AddNewStandard.ToolTipTitle">
+      <Titles>
+        <Title description="Add New {0}" languagecode="1033" />
+        <Title description="Nouvelle {0}" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="TC.Violation.Buttons.DisassociateViolation.Alt">
+      <Titles>
+        <Title description="Remove Violation" languagecode="1033" />
+        <Title description="Supprimer une infraction" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="TC.Violation.Buttons.DisassociateViolation.LabelText">
+      <Titles>
+        <Title description="Remove Violation" languagecode="1033" />
+        <Title description="Supprimer une infraction" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="TC.Violation.Buttons.DisassociateViolation.ToolTipDescription">
+      <Titles>
+        <Title description="Disassociate Violation from Safety Assessment" languagecode="1033" />
+        <Title description="Dissocier une infraction d'une évaluation de la sécurité" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="TC.Violation.Buttons.DisassociateViolation.ToolTipTitle">
+      <Titles>
+        <Title description="Disassociate Violation from Safety Assessment" languagecode="1033" />
+        <Title description="Dissocier une infraction d'une évaluation de la sécurité" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+  </LocLabels>
+</RibbonDiffXml>

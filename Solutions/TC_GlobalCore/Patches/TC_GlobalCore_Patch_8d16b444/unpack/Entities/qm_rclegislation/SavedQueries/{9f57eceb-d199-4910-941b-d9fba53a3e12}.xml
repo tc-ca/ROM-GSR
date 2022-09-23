@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>1</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{9f57eceb-d199-4910-941b-d9fba53a3e12}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="qm_name" select="1" icon="1" preview="1">
+        <row name="result" id="qm_rclegislationid">
+          <cell name="qm_name" width="100" />
+          <cell name="qm_violationtext" width="300" />
+          <cell name="qm_tylegislationtypeid" width="126" />
+          <cell name="qm_legislationlbl" width="71" />
+          <cell name="qm_tylegislationsourceid" width="300" />
+          <cell name="qm_violationdisplaytext" width="300" />
+          <cell name="qm_enablingprovision" width="100" />
+          <cell name="qm_enablingregulation" width="100" />
+          <cell name="qm_rcparentlegislationid" width="100" />
+          <cell name="qm_ordernbr" width="25" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>4</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="qm_rclegislation">
+          <filter type="or" isquickfindfields="1">
+            <condition attribute="qm_legislationlbl" operator="like" value="{0}" />
+            <condition attribute="qm_legislationftxt" operator="like" value="{0}" />
+            <condition attribute="qm_frenchname" operator="like" value="{0}" />
+            <condition attribute="qm_legislationetxt" operator="like" value="{0}" />
+            <condition attribute="qm_violationdisplaytextfr" operator="like" value="{0}" />
+            <condition attribute="qm_violationdisplaytexten" operator="like" value="{0}" />
+            <condition attribute="qm_englishname" operator="like" value="{0}" />
+          </filter>
+          <attribute name="qm_legislationlbl" />
+          <attribute name="qm_tylegislationtypeid" />
+          <attribute name="qm_name" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="qm_violationtext" />
+          <attribute name="qm_violationdisplaytext" />
+          <attribute name="qm_ordernbr" />
+          <order attribute="qm_ordernbr" descending="false" />
+          <attribute name="qm_tylegislationsourceid" />
+          <attribute name="qm_enablingprovision" />
+          <attribute name="qm_enablingregulation" />
+          <attribute name="qm_rcparentlegislationid" />
+          <attribute name="qm_rclegislationid" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.6</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Quick Find Active Legislations" languagecode="1033" />
+      <LocalizedName description="Recherche rapide Règlements en vigueur" languagecode="1036" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
