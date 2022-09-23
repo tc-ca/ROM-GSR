@@ -1152,7 +1152,14 @@ if (typeof (tdg.cid) == "undefined") {
                         var tdElement = cols[i];
                         var className = $(tdElement)[0].className;
                         if (className.indexOf("sort-enabled") == -1) {
-                            var text = $(tdElement).text();
+                            var text = $(tdElement).text().trim();
+                            switch (text) {
+                                case "NAICS Class (NAICS Code)":
+                                    text = tdg.error_message.message(text);
+                                    break;
+                                default:
+                                    break;
+                            }
                             text = tdg.c.text_language(text, selected_language);
                             $(tdElement).text(text);
                         }

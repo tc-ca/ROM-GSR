@@ -175,11 +175,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
   $(document).ready( function() {
+  //assign number of unclaimed sites
    var NumberOfUnClaimedSites= '{{UnClaimedSitesResultsize}}';
 
-    
-      console.log ("started counting") ;
-      console.log (NumberOfUnClaimedSites);
+   
       
       var Page_Partial_URL = '{{page.adx_partialurl}}';
      
@@ -426,8 +425,10 @@ $('#btn_attachfile_and_scan').click(function(e)
 
  
 $('#linkdownload_English').on('click', async function() {
-
-        Disable_all_Buttons();
+        //check if page for initial registeration
+       
+                //Disable_all_Buttons();
+        
         //call download flow to download excel sheet
         Download_ExcelTemplate("English") ;
     });
@@ -437,7 +438,10 @@ $('#linkdownload_English').on('click', async function() {
 //download french button
  $('#linkdownload_French').on('click', async function() {
 
-      Disable_all_Buttons();
+ //check if page for initial registeration
+       
+          Disable_all_Buttons();
+        
       //call download flow to download excel sheet
        Download_ExcelTemplate("French") ;
     });
@@ -1024,8 +1028,16 @@ function Enable_Button (buttonID)
 //diable all buttons in the form
 function Disable_all_Buttons()
 {
-      Disable_Button('btn_Previous');
-      Disable_Button('btn_Next');
+      
+       //check if page for initial registeration
+        var Page_Partial_URL = '{{page.adx_partialurl}}';
+        if (Page_Partial_URL !=  "Bulk_Site_Upload")
+        {
+            Disable_Button('btn_Previous');
+            Disable_Button('btn_Next');
+        }
+      
+      
       Disable_Button('btn_attachfile_and_scan');
       
       Disable_Button('linkdownload_English');
@@ -1035,15 +1047,22 @@ function Disable_all_Buttons()
 //diable all buttons in the form
 function Enabled_all_Buttons()
 {
-      Enable_Button('btn_Previous');
-      Enable_Button('btn_Next');
+     //check if page for initial registeration
+        var Page_Partial_URL = '{{page.adx_partialurl}}';
+        if (Page_Partial_URL !=  "Bulk_Site_Upload")
+        {
+          Enable_Button('btn_Previous');
+          Enable_Button('btn_Next');
+           $('#Div_btn_next').tooltip('hide')
+            .attr('data-original-title', 'Next');
+        }
+
       Enable_Button('btn_attachfile_and_scan');
       Enable_Button('linkdownload_English');
       Enable_Button('linkdownload_French');
       //hideTooltip();
 
-      $('#Div_btn_next').tooltip('hide')
-    .attr('data-original-title', 'Next');
+     
 
       /* $('#Div_btn_next'#Div_btn_next').tooltip({
                  trigger: 'hover',

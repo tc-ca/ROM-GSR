@@ -74,6 +74,7 @@ $(document).ready(function () {
     tdg.cid.address_type_change(false);
 
     tdg.cid.convert_province_to_code(selected_language);
+    $('#loader').hide();
 });
 
 function cid_same_as_company_change() {

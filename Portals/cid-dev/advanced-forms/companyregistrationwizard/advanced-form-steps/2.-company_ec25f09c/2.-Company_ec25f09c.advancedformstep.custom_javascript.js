@@ -8,7 +8,7 @@ $(document).ready(function () {
 	sessionStorage.setItem("selected_language", selected_language);
 
 	var code = sessionStorage.getItem("cid_suppress_error_code") + "";
-	if (code != "") {
+	if (code != "null" && code != "") {
 		var msg = tdg.error_message.message(code);
 		tdg.c.dialog_OK(msg);
 	}
@@ -184,7 +184,7 @@ function Disable_ContactTypeFieldsForSecondaryUser() {
 		$("#name").prop("disabled", true);
 		$("#address1_line1").css("pointer-events", "none");
 		$("#WebResource_address_complete").css("pointer-events", "none");
-		$("#address1_line2").attr("readonly", true);
+		$("#address1_line2").prop("disabled", true);
 		$("#address1_line3").prop("disabled", true);
 		$("#address1_city").prop("disabled", true);
 		$("#address1_postalcode").prop("disabled", true);

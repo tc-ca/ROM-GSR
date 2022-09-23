@@ -8,6 +8,10 @@ $(document).ready(function () {
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 
+     //hid manually added field
+	// $("#cid_addressoverwritten").parent.parent.hide();
+	
+
 	// address
 	tdg.cid.address_init(false);
 	tdg.cid.WebResource_address_complete_readonly(false);

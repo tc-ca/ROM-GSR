@@ -3,12 +3,11 @@
 //
 
 $(document).load(function () {
-	$('#loader').hide();
+	//$('#loader').hide();
+    $('#loader').show();
 });
 
 $(document).ready(function () {
-	//document.getElementById("loader").style.display = "block";
-
 	//$('#instructions').hide();
 	$('#EntityFormView').hide();
 	//$('#redirectInstruction').show();
@@ -66,8 +65,6 @@ $(document).ready(function () {
 		});
 	}
 
-	//document.getElementById("loader").style.display = "none";
-
 	webFormClientValidate = function () {
 		var validation = true;
 		var rows = $("#Operations .view-grid table").find("tbody > tr");
@@ -96,4 +93,5 @@ $(document).ready(function () {
 		}
 		return validation;
 	}
+	$('#loader').hide();
 });

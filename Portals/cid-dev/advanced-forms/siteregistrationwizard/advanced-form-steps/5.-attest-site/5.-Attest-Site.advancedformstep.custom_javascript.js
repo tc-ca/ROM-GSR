@@ -1,6 +1,9 @@
 //
 // SiteRegistrationWizard-Attest Site.js
 //
+$(document).load(function () {
+    $('#loader').show();
+});
 
 async function OperationDetailsProvided(operationId, flag) {
     await UpdateOperationDetailsProvided(operationId, flag);
@@ -8,7 +11,7 @@ async function OperationDetailsProvided(operationId, flag) {
 
 $(document).ready(function () {
     debugger;
-
+    $('#loader').hide();
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 

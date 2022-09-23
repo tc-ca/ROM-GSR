@@ -1,14 +1,15 @@
 //
 // CompanyRegistrationWizard-Complete.js
 //
+
 $(document).ready(function () {
     debugger;
 
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
     var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
     cid_crabusinessnumber = (cid_crabusinessnumber != "null" ? cid_crabusinessnumber : "");
-
-    var currentUserId = '{{user.contactid}}';
-	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
 
     // do not have a business number?
     if (cid_crabusinessnumber == "") {
@@ -22,14 +23,7 @@ $(document).ready(function () {
         tdg.c.control_hide("cid_reasonfornobnnumber_other");
     }
 
-    $('table').each(function () {
-        var selectedTable = $(this);
-        if (selectedTable.attr('data-name').includes('_readonly')) {
-            selectedTable.find("tr").each(function () {
-                $(this).css("background-color", "#F0F0F0");
-            });
-        }
-    });
+    tdg.c.control_hide("address1_stateorprovince");
 
     if ($("#printSummary").length <= 0) {
         printSummary();
@@ -43,24 +37,14 @@ $(document).ready(function () {
 
     subgrid_language();
 
-//$('#NextButton').on('click', function(){
-//   
-//});
-
-// 	(function ($) {
-//		webFormClientValidate = function () {
-//			var validation = true;
-
-//			if (!validation) {
-//				$('#ValidationSummaryEntityFormView div').remove();
-//				var validationSection = $('#ValidationSummaryEntityFormView');
-//				validationSection.append($("<div class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
-//				validationSection.show();
-//			}
-//			return validation;
-//		}
-//	}(window.jQuery));
-
+    $('table').each(function () {
+        var selectedTable = $(this);
+        if (selectedTable.attr('data-name').includes('_readonly')) {
+            selectedTable.find("tr").each(function () {
+                $(this).css("background-color", "#F0F0F0");
+            });
+        }
+    });
 });
 
 function printSummary() {
@@ -90,54 +74,10 @@ function printSummary() {
 
 function subgrid_language() {
     debugger;
-    var selected_language = sessionStorage.getItem("selected_language");
 
     var entityList = $(".entity-grid");
-    var naicscode = entityList.eq(1);   // cid_account_companynaicscode
-    var refRel = naicscode[0].dataset.refRel;
-    if (refRel == "cid_account_companynaicscode") {
-        naicscode.on("loaded", function () {
-            debugger;
-
-            // header
-            let header = naicscode.find("table thead > tr");
-            for (var index1 = 0; index1 < header.length; index1++) {
-                //debugger;
-                let tr = header[index1];
-
-                let cols = $(tr).find('th');
-                for (var i = 0; i < cols.length; i++) {
-                    var tdElement = cols[i];
-                    var className = $(tdElement)[0].className;
-                    if (className.indexOf("sort-enabled") == -1) {
-                        var text = $(tdElement).text();
-                        text = tdg.c.text_language(text, selected_language);
-                        $(tdElement).text(text);
-                    }
-                }
-            }
-
-            debugger;
-
-            let rows = naicscode.find("table tbody > tr");
-            rows.each(function (index, tr) {
-                debugger;
-
-                let cols = $(tr).find('td');
-                cols.each(function (index, td) {
-                    //debugger;
-                    var tdElement = $(this);
-                    var value = tdElement.attr('data-attribute');
-                    if (value != null) {
-                        var index1 = value.indexOf('.cid_naicsclasstitle');
-                        if (index1 != -1) {
-                            var cellValue = $(td).text();
-                            cellValue = tdg.c.text_language(cellValue, selected_language);
-                            $(td).text(cellValue);
-                        }
-                    }
-                });
-            });
-        });
+    var companynaicscode = tdg.c.subgrid_index(entityList, "cid_account_companynaicscode");
+    if (companynaicscode != null) {
+        tdg.cid.subgrid_companynaicscode(companynaicscode);
     }
 }

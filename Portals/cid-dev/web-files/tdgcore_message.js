@@ -226,10 +226,15 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "Enregistrement de l'opération pour {0}"
                     },
                     {
+                        "code": "m000026",
+                        "message_en": "You cannot proceed before attesting your company data changes, please check the 'Attestation' box",
+                        "message_fr": "You cannot proceed before attesting your company data changes, please check the 'Attestation' box_FR"
+                    },
+                    {
                         "code": "m000098",
                         "message_en": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
                         "message_fr": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID._FR"
-                    },                    {
+                    }, {
                         "code": "m000099",
                         "message_en": "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen",
                         "message_fr": "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen_FR"
@@ -269,12 +274,12 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "<h2>TDG CLIENT IDENTIFICATION DATABASE: {0}</h2>",
                         "message_fr": "<h2>TDG CLIENT IDENTIFICATION DATABASE_FR: {0}</h2>"
                     },
-					{
+                    {
                         "code": "m000107",
                         "message_en": "You must choose a valid NAICS Code from the NAICS Code drop- down list to continue.",
                         "message_fr": "You must choose a valid NAICS Code from the NAICS Code drop- down list to continue. _FR"
                     }
-					
+
                 ];
 
             return list;

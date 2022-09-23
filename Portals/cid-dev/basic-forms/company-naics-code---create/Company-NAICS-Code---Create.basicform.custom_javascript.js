@@ -23,6 +23,7 @@ $(document).ready(function () {
 	$("#cid_naicscode").attr("value", null);
 	$("#cid_naicscode_name").attr("value", null);
 });
+
 $(window).unload(function () {
 	debugger;
 	if (_reload) {
@@ -54,6 +55,12 @@ if (window.jQuery) {
 	(function ($) {
 		entityFormClientValidate = function () {
 			debugger;
+
+			// remove system error
+			if ($("#alertMessages").length > 0) {
+				$("#alertMessages")[0].remove();
+			}
+
 			var naicsCodeVal = $("#cid_naicscode").attr("value");
 			if (naicsCodeVal == null || !isValidGUID(naicsCodeVal)) {
 				var msg = tdg.error_message.message("m000107"); // Record added

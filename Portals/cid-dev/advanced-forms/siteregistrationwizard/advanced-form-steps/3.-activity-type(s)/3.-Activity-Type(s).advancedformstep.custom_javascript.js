@@ -1,3 +1,11 @@
+$(document).load(function () {
+    $('#loader').show();
+});
+
+$(document).ready(function () {
+	$('#loader').hide();
+});
+
 if (window.jQuery) {
     (function ($) {
         webFormClientValidate = function () {
