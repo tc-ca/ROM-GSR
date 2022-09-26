@@ -173,29 +173,9 @@
             "site-GUID": "27"
           }
         },
-        "Initialize_variable": {
-          "runAfter": {
-            "Site-Sheet-columns": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "e53a280e-1b10-4466-a33c-80efcafa5508"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "Language",
-                "type": "integer",
-                "value": 918640001
-              }
-            ]
-          }
-        },
         "Initialize_AddSiteGraphAPI_Variable": {
           "runAfter": {
-            "check_if_language_is_french": [
+            "Site-Sheet-columns": [
               "Succeeded"
             ]
           },
@@ -297,7 +277,7 @@
         },
         "get-environment-settings": {
           "runAfter": {
-            "Check_upload_type": [
+            "Initialize_variable_to_store_New_File_Folder": [
               "Succeeded"
             ]
           },
@@ -1446,7 +1426,7 @@
         },
         "downloadTemplate": {
           "runAfter": {
-            "Initialize_variable_CompanyName_default_to_OperatingName": [
+            "Initialize_variable_ExcelHeader": [
               "Succeeded"
             ]
           },
@@ -1455,81 +1435,6 @@
           },
           "type": "Compose",
           "inputs": "/Shared Documents/CID_Bulk_Upload/Dev/CID_Sites_Template_2022_ENG_April 2022 v12.xlsx"
-        },
-        "check_if_language_is_french": {
-          "actions": {
-            "Set_variable_language_to_French_index": {
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "e4376b0a-29bf-4f2b-bfb6-3fa0cf10aba5"
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "Language",
-                "value": 918640002
-              }
-            },
-            "check_if_French_name_is_not_empty": {
-              "actions": {
-                "Set_Company_Name_to_operating_name_in_French": {
-                  "runAfter": {},
-                  "metadata": {
-                    "operationMetadataId": "75f98f36-ddb8-4255-a3a6-80fb015c65f9"
-                  },
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "CompanyName",
-                    "value": "@outputs('Get_Company')?['body/ovs_namefr']"
-                  }
-                }
-              },
-              "runAfter": {
-                "Set_variable_language_to_French_index": [
-                  "Succeeded"
-                ]
-              },
-              "expression": {
-                "greater": [
-                  "@length(trim(outputs('Get_Company')?['body/ovs_namefr']))",
-                  0
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "474a93f4-0abf-4134-a1db-30ff1530139f"
-              },
-              "type": "If"
-            },
-            "Set_variable_Excel_header_to_French": {
-              "runAfter": {
-                "check_if_French_name_is_not_empty": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "14488109-d895-4e6c-bf96-e66e8952e85e"
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "Excel_Header",
-                "value": "@{concat('French - Transport Canada CID Registration for  ' , variables('CompanyName'))}"
-              }
-            }
-          },
-          "runAfter": {
-            "Initialize_variable_ExcelHeader": [
-              "Succeeded"
-            ]
-          },
-          "expression": {
-            "equals": [
-              "@triggerBody()?['Language']",
-              "French"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "6ddd7dac-d14e-4ba2-b153-271ac62add29"
-          },
-          "type": "If"
         },
         "Check_if_Root_data_exists": {
           "actions": {
@@ -1720,7 +1625,7 @@
             }
           },
           "runAfter": {
-            "Invoke_an_HTTP_request_-_Add_settings": [
+            "Update_Instruction_sheet_Sheet_header_": [
               "Succeeded"
             ]
           },
@@ -1755,7 +1660,7 @@
         },
         "unHide_Column_Remove_UN": {
           "runAfter": {
-            "Update_Extended_Sheet_header": [
+            "Update_UN_from_ERAP_header_Sheet": [
               "Succeeded"
             ]
           },
@@ -2004,111 +1909,6 @@
             ]
           }
         },
-        "Check_upload_type": {
-          "actions": {
-            "Set_Initial_Registration_to_Yes": {
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "b0541a73-cad7-4b17-8cca-c7ec9d9e43a9"
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "Initial_Registeration",
-                "value": "@true"
-              }
-            },
-            "Set_variable_download_type_Initial_registeration": {
-              "runAfter": {
-                "Set_Initial_Registration_to_Yes": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "d2542982-9619-4fff-b7ff-39f8b036c2e2"
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "DownloadType",
-                "value": 100000000
-              }
-            },
-            "Set_variable_Hide_column_to_True": {
-              "runAfter": {
-                "Set_variable_download_type_Initial_registeration": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "d77ea6ef-296a-4a4f-84dd-8c0864f4a124"
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "HideRemoveColumn",
-                "value": "@true"
-              }
-            }
-          },
-          "runAfter": {
-            "Initialize_variable_to_store_New_File_Folder": [
-              "Succeeded"
-            ]
-          },
-          "else": {
-            "actions": {
-              "Set_Initial_registration_to_No": {
-                "runAfter": {},
-                "metadata": {
-                  "operationMetadataId": "c74c7895-433b-442f-a76f-371ce2b5fc17"
-                },
-                "type": "SetVariable",
-                "inputs": {
-                  "name": "Initial_Registeration",
-                  "value": "@false"
-                }
-              },
-              "Set_variable_download_type_In_year_update": {
-                "runAfter": {
-                  "Set_Initial_registration_to_No": [
-                    "Succeeded"
-                  ]
-                },
-                "metadata": {
-                  "operationMetadataId": "872f6840-6a1a-4869-b0dd-2cbd4196a5b8"
-                },
-                "type": "SetVariable",
-                "inputs": {
-                  "name": "DownloadType",
-                  "value": 100000002
-                }
-              },
-              "Set_variable_Hide_column_to_false": {
-                "runAfter": {
-                  "Set_variable_download_type_In_year_update": [
-                    "Succeeded"
-                  ]
-                },
-                "metadata": {
-                  "operationMetadataId": "ebc5e987-b272-4fbe-be0c-e0eae79878a2"
-                },
-                "type": "SetVariable",
-                "inputs": {
-                  "name": "HideRemoveColumn",
-                  "value": "@false"
-                }
-              }
-            }
-          },
-          "expression": {
-            "equals": [
-              "@triggerBody()?['UploadType']",
-              "@'Initial'"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "d591a3a8-ee44-4bca-a750-0fd81555f5a6"
-          },
-          "type": "If"
-        },
         "Initialize_Download_Type": {
           "runAfter": {
             "Initil_Initial_Registeration": [
@@ -2224,7 +2024,8 @@
                     "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_June_2022%2bv14.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_June_2022 v14.xlsx",
                     "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_June_2022%2bv15.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_June_2022 v15.xlsx",
                     "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_June_2022%2bv18.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_June_2022 v18.xlsx",
-                    "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_FR_June_2022%2bv18.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_FR_June_2022 v18.xlsx"
+                    "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_FR_June_2022%2bv18.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_FR_June_2022 v18.xlsx",
+                    "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_FR_2022%2bv19.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_FR_2022 v19.xlsx"
                   },
                   "type": "OpenApiConnection",
                   "inputs": {
@@ -2235,7 +2036,7 @@
                     },
                     "parameters": {
                       "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
-                      "id": "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_FR_June_2022%2bv18.xlsx",
+                      "id": "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_FR_2022%2bv19.xlsx",
                       "inferContentType": true
                     },
                     "authentication": "@parameters('$authentication')"
@@ -2282,7 +2083,7 @@
                 "parameters": {
                   "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
                   "folderPath": "@outputs('Create_new_folder')?['body/{FullPath}']",
-                  "name": "CID Registration - Site Bulk Upload - , @{formatDateTime(utcNow(), 'yyyy/MM/dd')}.xlsx",
+                  "name": "@{variables('FileNamePrefix')}-@{formatDateTime(utcNow(), 'yyyy-MM-dd')}.xlsx",
                   "body": "@body('Get_file_Template_content_French')"
                 },
                 "authentication": "@parameters('$authentication')"
@@ -2334,7 +2135,8 @@
                       "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_May%2b2022%2bv13.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_May 2022 v13.xlsx",
                       "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_June_2022%2bv14.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_June_2022 v14.xlsx",
                       "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_June_2022%2bv15.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_June_2022 v15.xlsx",
-                      "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_June_2022%2bv18.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_June_2022 v18.xlsx"
+                      "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_June_2022%2bv18.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_June_2022 v18.xlsx",
+                      "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_2022%2bv19.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_2022 v19.xlsx"
                     },
                     "type": "OpenApiConnection",
                     "inputs": {
@@ -2345,7 +2147,7 @@
                       },
                       "parameters": {
                         "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
-                        "id": "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_June_2022%2bv18.xlsx",
+                        "id": "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_2022%2bv19.xlsx",
                         "inferContentType": true
                       },
                       "authentication": "@parameters('$authentication')"
@@ -2375,7 +2177,7 @@
               },
               "Create_file_English": {
                 "runAfter": {
-                  "English_-_Get_Company_and_create_File": [
+                  "Compose": [
                     "Succeeded"
                   ]
                 },
@@ -2392,7 +2194,7 @@
                   "parameters": {
                     "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
                     "folderPath": "@outputs('Create_new_folder')?['body/{FullPath}']",
-                    "name": "CID Registration - Site Bulk Upload - , @{formatDateTime(utcNow(), 'yyyy/MM/dd')}.xlsx",
+                    "name": "@{variables('FileNamePrefix')} @{formatDateTime(utcNow(), 'yyyy/MM/dd')}.xlsx",
                     "body": "@body('Get_file_Template_content')"
                   },
                   "authentication": "@parameters('$authentication')"
@@ -2417,6 +2219,18 @@
                   "name": "New_File_Path",
                   "value": "@outputs('Create_file_English')?['body/Name']"
                 }
+              },
+              "Compose": {
+                "runAfter": {
+                  "English_-_Get_Company_and_create_File": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "96e26f6a-270b-4534-a32d-ca2606bb0c42"
+                },
+                "type": "Compose",
+                "inputs": "@{variables('FileNamePrefix')}-@{formatDateTime(utcNow(), 'yyyy-MM-dd')}.xlsx"
               }
             }
           },
@@ -2547,9 +2361,425 @@
             ]
           }
         },
+        "Check_upload_type": {
+          "actions": {
+            "Set_Initial_Registration_to_Yes": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "b0541a73-cad7-4b17-8cca-c7ec9d9e43a9"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Initial_Registeration",
+                "value": "@true"
+              }
+            },
+            "Set_variable_download_type_Initial_registeration": {
+              "runAfter": {
+                "Set_Initial_Registration_to_Yes": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d2542982-9619-4fff-b7ff-39f8b036c2e2"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "DownloadType",
+                "value": 100000000
+              }
+            },
+            "Set_variable_Hide_column_to_True": {
+              "runAfter": {
+                "Set_variable_download_type_Initial_registeration": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d77ea6ef-296a-4a4f-84dd-8c0864f4a124"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "HideRemoveColumn",
+                "value": "@true"
+              }
+            },
+            "check_if_language_is_french__to_change_header_to_french": {
+              "actions": {
+                "Set_variable_2": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "b7b026a1-c068-41ec-869c-ded97770499b"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ExcelHeaderPrefix",
+                    "value": "French Transport Canada CID Registration for "
+                  }
+                }
+              },
+              "runAfter": {
+                "Set_variable_Hide_column_to_True": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "equals": [
+                  "@triggerBody()?['Language']",
+                  "French"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "6ddd7dac-d14e-4ba2-b153-271ac62add29"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "Apply_to_each": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Set_Initial_registration_to_No": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "c74c7895-433b-442f-a76f-371ce2b5fc17"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "Initial_Registeration",
+                  "value": "@false"
+                }
+              },
+              "Set_variable_download_type_In_year_update": {
+                "runAfter": {
+                  "Set_Initial_registration_to_No": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "872f6840-6a1a-4869-b0dd-2cbd4196a5b8"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "DownloadType",
+                  "value": 100000002
+                }
+              },
+              "Set_variable_Hide_column_to_false": {
+                "runAfter": {
+                  "Set_variable_download_type_In_year_update": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "ebc5e987-b272-4fbe-be0c-e0eae79878a2"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "HideRemoveColumn",
+                  "value": "@false"
+                }
+              },
+              "Set_variable_filenamePrefix": {
+                "runAfter": {
+                  "Set_variable_Hide_column_to_false": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "84d463cb-25e6-4fc1-bb81-87cb486e93f4"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "FileNamePrefix",
+                  "value": "TC CID Annual Compliance - Site Bulk Upload - @{variables('CompanyName')}, as of"
+                }
+              },
+              "check_if_language_is_french__to_change_header_to_french_2": {
+                "actions": {
+                  "Set_Excel_Header_Prefix_to_french_annual_compliance": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "25ba0269-34d0-4f92-84e5-15f846aa5aba"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ExcelHeaderPrefix",
+                      "value": "French Transport Canada CID Annual Compliance for "
+                    }
+                  }
+                },
+                "runAfter": {
+                  "Set_variable_filenamePrefix": [
+                    "Succeeded"
+                  ]
+                },
+                "else": {
+                  "actions": {
+                    "Set_variable_Header_prefix_to_annual_compliance": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "5f8898e1-bd24-49c5-8cd0-e01f4b51407e"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "ExcelHeaderPrefix",
+                        "value": "Transport Canada CID Annual Compliance for "
+                      }
+                    }
+                  }
+                },
+                "expression": {
+                  "equals": [
+                    "@triggerBody()?['Language']",
+                    "French"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "6ddd7dac-d14e-4ba2-b153-271ac62add29"
+                },
+                "type": "If"
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@triggerBody()?['UploadType']",
+              "@'Initial'"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d591a3a8-ee44-4bca-a750-0fd81555f5a6"
+          },
+          "type": "If"
+        },
+        "check_if_language_is_french": {
+          "actions": {
+            "Set_variable_language_to_French_index": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "e4376b0a-29bf-4f2b-bfb6-3fa0cf10aba5"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Language",
+                "value": 918640002
+              }
+            },
+            "check_if_French_name_is_not_empty": {
+              "actions": {
+                "Set_Company_Name_to_operating_name_in_French": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "75f98f36-ddb8-4255-a3a6-80fb015c65f9"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "CompanyName",
+                    "value": "@outputs('Get_Company')?['body/ovs_namefr']"
+                  }
+                }
+              },
+              "runAfter": {
+                "Compose_2": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "not": {
+                  "equals": [
+                    "@outputs('Get_Company')?['body/ovs_namefr']",
+                    "@null"
+                  ]
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "474a93f4-0abf-4134-a1db-30ff1530139f"
+              },
+              "type": "If"
+            },
+            "Compose_2": {
+              "runAfter": {
+                "Set_variable_language_to_French_index": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b4435df6-7a5a-4dfb-90d3-3f527c810130"
+              },
+              "type": "Compose",
+              "inputs": "@outputs('Get_Company')?['body/ovs_namefr']"
+            }
+          },
+          "runAfter": {
+            "Initialize_variable_ExcelHeaderPrefix": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "equals": [
+              "@triggerBody()?['Language']",
+              "French"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6ddd7dac-d14e-4ba2-b153-271ac62add29"
+          },
+          "type": "If"
+        },
+        "Initialize_variable_Language": {
+          "runAfter": {
+            "Initialize_variable_CompanyName_default_to_OperatingName": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e53a280e-1b10-4466-a33c-80efcafa5508"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Language",
+                "type": "integer",
+                "value": 918640001
+              }
+            ]
+          }
+        },
+        "Initialize_variable_FileNamePrefix": {
+          "runAfter": {
+            "check_if_language_is_french": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "dc2aa679-3a35-4130-b518-2f35de495923"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FileNamePrefix",
+                "type": "string",
+                "value": "TC CID Registration - Site Bulk Upload - @{variables('CompanyName')}, as of"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_InvalidFileNameChar": {
+          "runAfter": {
+            "Initialize_variable_Language": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e6f4cfc8-985f-45c9-bf60-4a942408053e"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "InvalidFileNameChar",
+                "type": "array",
+                "value": [
+                  "#",
+                  "%",
+                  "&",
+                  "{",
+                  "}",
+                  "<",
+                  ">",
+                  "*",
+                  "?",
+                  "$",
+                  "!",
+                  ":",
+                  "@",
+                  "+",
+                  "|",
+                  "=",
+                  "'"
+                ]
+              }
+            ]
+          }
+        },
+        "Apply_to_each": {
+          "foreach": "@variables('InvalidFileNameChar')",
+          "actions": {
+            "CurrentChar": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "77b19509-8888-4808-82d8-bcde333a2ded"
+              },
+              "type": "Compose",
+              "inputs": "@items('Apply_to_each')"
+            },
+            "Assign_New_company_Name": {
+              "runAfter": {
+                "Remove_Invalid_Char_from_Company_variable": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "39357808-2a40-4b87-aa61-3578428dea83"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "CompanyName",
+                "value": "@{outputs('Remove_Invalid_Char_from_Company_variable')}"
+              }
+            },
+            "Remove_Invalid_Char_from_Company_variable": {
+              "runAfter": {
+                "CurrentChar": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "c3e7789a-963a-4584-8042-9b524711a7f9"
+              },
+              "type": "Compose",
+              "inputs": "@Replace(variables('CompanyName') ,outputs('CurrentChar'),'')"
+            }
+          },
+          "runAfter": {
+            "Initialize_variable_FileNamePrefix": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "778da869-679f-42fa-8cf3-95e21dd16857"
+          },
+          "type": "Foreach"
+        },
+        "Initialize_variable_ExcelHeaderPrefix": {
+          "runAfter": {
+            "Initialize_variable_InvalidFileNameChar": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5aff9f15-9890-4c80-9c3a-5e0fa7db883f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ExcelHeaderPrefix",
+                "type": "string",
+                "value": "Transport Canada CID Registration for "
+              }
+            ]
+          }
+        },
         "Initialize_variable_ExcelHeader": {
           "runAfter": {
-            "Initialize_variable": [
+            "Check_upload_type": [
               "Succeeded"
             ]
           },
@@ -2562,9 +2792,90 @@
               {
                 "name": "Excel_Header",
                 "type": "string",
-                "value": "@{concat('Transport Canada CID Registration for  ' , variables('CompanyName'))}"
+                "value": "@{concat(variables('ExcelHeaderPrefix') , variables('CompanyName'))}"
               }
             ]
+          }
+        },
+        "Update_Instruction_sheet_Sheet_header_": {
+          "runAfter": {
+            "Invoke_an_HTTP_request_-_Add_settings": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2588d12e-85cc-4f36-9d27-05bc388020f4"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_webcontents",
+              "operationId": "InvokeHttp",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
+            },
+            "parameters": {
+              "request/method": "PATCH",
+              "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{variables('Folder_path')}/@{variables('New_File_Path')}:/workbook/names/InstructionHeader/range",
+              "request/headers": {
+                "accept": "application/json"
+              },
+              "request/body": "\n\n{\n\"values\": [[ \"@{variables('Excel_Header')}\"]]\n}"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Update_UN_Mass_assignment_Sheet_header": {
+          "runAfter": {
+            "Update_Extended_Sheet_header": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2588d12e-85cc-4f36-9d27-05bc388020f4"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_webcontents",
+              "operationId": "InvokeHttp",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
+            },
+            "parameters": {
+              "request/method": "PATCH",
+              "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{variables('Folder_path')}/@{variables('New_File_Path')}:/workbook/names/UnMassAssignmentHeader/range",
+              "request/headers": {
+                "accept": "application/json"
+              },
+              "request/body": "\n\n{\n\"values\": [[ \"@{variables('Excel_Header')}\"]]\n}"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Update_UN_from_ERAP_header_Sheet": {
+          "runAfter": {
+            "Update_UN_Mass_assignment_Sheet_header": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2588d12e-85cc-4f36-9d27-05bc388020f4"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_webcontents",
+              "operationId": "InvokeHttp",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
+            },
+            "parameters": {
+              "request/method": "PATCH",
+              "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{variables('Folder_path')}/@{variables('New_File_Path')}:/workbook/names/UNFromERAPHeader/range",
+              "request/headers": {
+                "accept": "application/json"
+              },
+              "request/body": "\n\n{\n\"values\": [[ \"@{variables('Excel_Header')}\"]]\n}"
+            },
+            "authentication": "@parameters('$authentication')"
           }
         }
       },

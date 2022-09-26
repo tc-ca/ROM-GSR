@@ -1026,10 +1026,12 @@
                   "expression": {
                     "and": [
                       {
-                        "equals": [
-                          "@outputs('Compare_System_Site_and_uploaded_excel_site_list')?['body/MissingSiteFound']",
-                          "@true"
-                        ]
+                        "not": {
+                          "equals": [
+                            "@outputs('Compare_System_Site_and_uploaded_excel_site_list')?['body/MissingSiteFound']",
+                            "@false"
+                          ]
+                        }
                       },
                       {
                         "not": {
