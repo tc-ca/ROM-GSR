@@ -427,7 +427,7 @@ $('#btn_attachfile_and_scan').click(function(e)
 $('#linkdownload_English').on('click', async function() {
         //check if page for initial registeration
        
-                //Disable_all_Buttons();
+        Disable_all_Buttons();
         
         //call download flow to download excel sheet
         Download_ExcelTemplate("English") ;
@@ -1031,8 +1031,10 @@ function Disable_all_Buttons()
       
        //check if page for initial registeration
         var Page_Partial_URL = '{{page.adx_partialurl}}';
-        if (Page_Partial_URL !=  "Bulk_Site_Upload")
+       
+        if (Page_Partial_URL ==  "Bulk_Site_Upload")
         {
+          
             Disable_Button('btn_Previous');
             Disable_Button('btn_Next');
         }
@@ -1049,7 +1051,7 @@ function Enabled_all_Buttons()
 {
      //check if page for initial registeration
         var Page_Partial_URL = '{{page.adx_partialurl}}';
-        if (Page_Partial_URL !=  "Bulk_Site_Upload")
+        if (Page_Partial_URL ==  "Bulk_Site_Upload")
         {
           Enable_Button('btn_Previous');
           Enable_Button('btn_Next');

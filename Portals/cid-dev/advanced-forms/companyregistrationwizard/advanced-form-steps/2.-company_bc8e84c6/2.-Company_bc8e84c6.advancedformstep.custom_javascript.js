@@ -4,14 +4,9 @@
 
 $(document).ready(function () {
 	debugger;
-
+	tdg.c.control_hide("cid_addressoverwritten");
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
-
-     //hid manually added field
-	// $("#cid_addressoverwritten").parent.parent.hide();
-	
-
 	// address
 	tdg.cid.address_init(false);
 	tdg.cid.WebResource_address_complete_readonly(false);
@@ -119,11 +114,12 @@ $(document).ready(function () {
 	$("#address1_stateorprovince").attr("oninput", "setManualAddressEntryFlag()");
 	$("#address1_postalcode").attr("oninput", "setManualAddressEntryFlag()");
 	$("#address1_country").attr("oninput", "setManualAddressEntryFlag()");
-
 	tdg.cid.convert_province_to_code(selected_language);
-
 	var currentUserId = '{{user.contactid}}';
 	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
+
+
+
 });
 if (window.jQuery) {
 	(function ($) {
@@ -138,7 +134,6 @@ if (window.jQuery) {
 		}
 	}(window.jQuery));
 }
-
 function address1_line1_set(value) {
 	debugger;
 	try {
@@ -152,7 +147,6 @@ function address1_line1_set(value) {
 function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 	debugger;
 	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
-	
     //if not primary contact
 	if (cid_usercontacttype != 100000000) {
 		//var message = "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen.";
@@ -173,7 +167,6 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 		$('#cid_reasonfornobnnumber').attr("readonly", true);
 		$('#cid_reasonfornobnnumber').css("pointer-events", "none");
 		$('#cid_reasonfornobnnumber_other').attr("readonly", true);
-
 		//Disable address lookup web resource
 		$('#WebResource_address_complete').on('load', function () {
 			tdg.cid.WebResource_address_complete_readonly(true);

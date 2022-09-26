@@ -3,6 +3,14 @@
 //
 $(document).ready(function () {
     debugger;
+console.log("before adding new button");
+//create bulk upload button only for DEV and QA environment
+ if ('{{request.url}}'.includes("tdgcore-qa") || '{{request.url}}'.includes("rd-tdgcore-dev"))
+ {
+ var BulkUploaddButton = '<div class="input-group pull-left"><a href="~/Bulk_Site_Update/" class="btn btn-primary pull-right action" title="BulkSiteUpdate">Bulk Site Update</a></div>';
+    $(".entitylist-download").before(BulkUploaddButton);
+ }
+    
  var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
     $('#cid_cidcompanystatus').hide();
     $('#cid_cidcompanystatus_label').hide();

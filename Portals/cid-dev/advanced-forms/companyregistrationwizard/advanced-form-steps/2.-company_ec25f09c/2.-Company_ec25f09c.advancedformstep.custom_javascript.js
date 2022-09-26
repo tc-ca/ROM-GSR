@@ -4,8 +4,10 @@
 
 $(document).ready(function () {
 	debugger;
+	tdg.c.control_hide("cid_addressoverwritten");
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
+
 
 	var code = sessionStorage.getItem("cid_suppress_error_code") + "";
 	if (code != "null" && code != "") {

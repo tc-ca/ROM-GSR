@@ -3,6 +3,7 @@
 //
 $(document).ready(function ()
 {
+    
     $(".create-action").click(function () {
         //alert("Test");
         $('#ValidationSummaryEntityFormView div').remove();
@@ -86,7 +87,7 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 	//if not primary contact
 	if (cid_usercontacttype != 100000000) {
         $(".create-action").attr("disabled", true);
-        $(".create-action").css("pointer-events", "none");
+         $(".create-action").css("pointer-events", "none");
 
         //Wait till subgrid load
         $("#Contacts").on("loaded", function () {

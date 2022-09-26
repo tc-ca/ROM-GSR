@@ -157,8 +157,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000012",
-                        "message_en": "You cannot proceed before attesting all the company sites.",
-                        "message_fr": "Vous ne pouvez pas continuer avant d'avoir attesté tous les sites de l'entreprise."
+                        "message_en": "'You cannot proceed before attesting all the company sites.’ to ‘You cannot proceed before attesting all the Company Sites, via the [V] button option in each row where 'Is Site Attested' = No",
+                        "message_fr": "French 'You cannot proceed before attesting all the company sites.’ to ‘You cannot proceed before attesting all the Company Sites, via the [V] button option in each row where 'Is Site Attested' = No"
                     },
                     {
                         "code": "m000013",
