@@ -1,0 +1,351 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+
+    <link href="../qm_/Bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+
+    <script src="../ClientGlobalContext.js.aspx"></script>
+    <script src="../qm_/Scripts/jquery_3.1.1.min.js"></script>
+    <script src="../qm_/Bootstrap/js/bootstrap.min.js"></script>
+
+    <style>
+
+
+    </style>
+
+</head>
+<body>
+
+        <div class="input-group input-group-lg" style="margin: 10px 5px 0px 5px;">
+            <input type="text" id="search" class="form-control" placeholder="Type to search">
+        
+            <span class="input-group-btn">
+                <button class="btn btn-primary" type="button" style="pointer-events: none;"> <span class="glyphicon glyphicon glyphicon-search" aria-hidden="true"></span>
+                </button>
+            </span>
+        </div>
+    <div class="container-fluid">
+
+        <div class="panel">
+            <!-- <div class="panel-heading" id="panel-heading">
+               <h3 class="panel-title">Select required specs</h3> 
+       
+            </div> -->
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <ul id="lstTarget" class="list-group">
+
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer panel-primary text-right">
+                    <button type="button" id="submitButton" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
+                        Add
+                    </button>
+                 
+                    <button type="button" id="cancelButton" class="btn btn-default"  aria-pressed="false" autocomplete="off">
+                        Cancel
+                    </button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+
+        var globalContext = Xrm.Utility.getGlobalContext();
+        var formContext;
+        var gridControl;
+        var LCID = 1033;
+
+        var paramsObj = null;
+
+        function addSpecs2SRF(srfId, specIDs) {
+
+            var parameters = {};
+            parameters.srfId = srfId;
+            parameters.specIDs = specIDs;
+
+            var fdr_AddSpecs2SRFRequest = {
+                srfId: parameters.srfId,
+                specIDs: parameters.specIDs,
+
+                getMetadata: function () {
+                    return {
+                        boundParameter: null,
+                        parameterTypes: {
+                            "srfId": {
+                                "typeName": "Edm.String",
+                                "structuralProperty": 1
+                            },
+                            "specIDs": {
+                                "typeName": "Edm.String",
+                                "structuralProperty": 1
+                            }
+                        },
+                        operationType: 0,
+                        operationName: "fdr_AddSpecs2SRF"
+                    };
+                }
+            };
+
+            Xrm.WebApi.online.execute(fdr_AddSpecs2SRFRequest).then(
+                function success(result) {
+                    Xrm.Utility.closeProgressIndicator();
+
+                    if (result.ok) {
+                        result.text().then(function (i) {
+                            var data = JSON.parse(i);
+                            if (data != null || typeof data !== 'undefined') {
+
+                                if ((data.responceString != null)
+                                    && typeof data.responceString !== 'undefined') {
+
+                                    if (data.responceString != "") {
+                                        Xrm.Navigation.openErrorDialog({ message: "Something went wrong with adding Spcifications. Error: " + data.responceString });
+                                        window.close();
+                                    }
+                                    else {
+
+                                        window.close();
+                                    }
+                                }
+
+                            }
+                        }, function (error) {
+
+                            Xrm.Utility.closeProgressIndicator();
+                            console.log("add Specs error: " + error.message);
+                            Xrm.Navigation.openErrorDialog({ message: "Something went wrong. Error: " + error.message });
+                        });
+
+                    }
+
+                },
+                function (error) {
+                    Xrm.Utility.closeProgressIndicator();
+                    console.log("addSpecs2SRF error: " + error.message);
+                    Xrm.Navigation.openErrorDialog({ message: "Something went wrong. Error: " + error.message });
+
+                }
+            );
+
+        }
+
+        function getSpecs(cfId, srfId, langId) {
+
+            Xrm.Utility.showProgressIndicator("Working ...");
+
+            var parameters = {};
+            parameters.langId = langId;
+            parameters.cfId = cfId;
+            parameters.srfId = srfId;
+
+            var fdr_Specifications4SRFRequest = {
+                langId: parameters.langId,
+                cfId: parameters.cfId,
+                srfId: parameters.srfId,
+
+                getMetadata: function () {
+                    return {
+                        boundParameter: null,
+                        parameterTypes: {
+                            "langId": {
+                                "typeName": "Edm.Int32",
+                                "structuralProperty": 1
+                            },
+                            "cfId": {
+                                "typeName": "Edm.String",
+                                "structuralProperty": 1
+                            },
+                            "srfId": {
+                                "typeName": "Edm.String",
+                                "structuralProperty": 1
+                            }
+                        },
+                        operationType: 0,
+                        operationName: "fdr_Specifications4SRF"
+                    };
+                }
+            };
+
+            Xrm.WebApi.online.execute(fdr_Specifications4SRFRequest).then(
+                function success(result) {
+                    Xrm.Utility.closeProgressIndicator();
+
+                    if (result.ok) {
+                        result.text().then(function (i) {
+                            var data = JSON.parse(i);
+                            if (data != null || typeof data !== 'undefined') {
+
+                                if ((data.listOfSpecsHTML != null)
+                                    && typeof data.listOfSpecsHTML !== 'undefined') {
+
+                                    $('#lstTarget').html(data.listOfSpecsHTML);
+
+                                }
+
+                            }
+                        }, function (error) {
+
+                            Xrm.Utility.closeProgressIndicator();
+                            console.log("Specs error: " + error.message);
+                            Xrm.Navigation.openErrorDialog({ message: "Something went wrong. Error: " + error.message });
+                        });
+
+                    }
+
+                },
+                function (error) {
+                    Xrm.Utility.closeProgressIndicator();
+                    console.log("Specs2SRF error: " + error.message);
+                    Xrm.Navigation.openErrorDialog({ message: "Something went wrong. Error: " + error.message });
+
+                }
+            );
+        }
+
+        //sdk function modified
+        function getDataParam() {
+
+            var vals = new Array();
+            if (location.search != "") {
+                vals = location.search.substr(1).split("&");
+                for (var i in vals) {
+                    vals[i] = vals[i].replace(/\+/g, " ").split("=");
+                }
+                //look for the parameter named 'data'
+                var dataObj = null;
+                for (var i in vals) {
+                    if (vals[i][0].toLowerCase() == "data") {
+                        dataObj = parseDataValue(vals[i][1]);
+                        found = true;
+                        break;
+                    } else {
+
+                        //notify user - params weren't found
+                        Xrm.Navigation.openErrorDialog({ message: "Specifications couls not be fetched due to the parameters error" });
+                        return null;
+                    }
+                }
+
+                if (dataObj != null) return dataObj;
+                else {
+
+                    //notify user - params couldn't be parsed
+                    Xrm.Navigation.openErrorDialog({ message: "Specifications couls not be fetched due to the parameters parsing error" });
+                    return null;
+                }
+            }
+            else {
+                //notify user - params are missing
+                return null;
+                Xrm.Navigation.openErrorDialog({ message: "Specifications couls not be fetched due to absence of required parameters" });
+            }
+        }
+
+        //sdk function modified
+        function parseDataValue(datavalue) {
+
+            if (datavalue != "") {
+                var vals = new Array();
+
+                vals = decodeURIComponent(datavalue).split("&");
+                for (var i in vals) {
+                    vals[i] = vals[i].replace(/\+/g, " ").split("=");
+                }
+
+                return JSON.parse(vals[0][0]);
+                ////Loop through vals and create rows for the table
+                //for (var i in vals) {
+                //    var c1 = vals[i][0];
+                //}
+
+            }
+            return null;
+        }
+
+
+        $(document).ready(function () {
+
+            var userSettings = globalContext.userSettings;
+            LCID = userSettings.languageId;
+
+            //if (LCID == 1033)
+            //    resexResourceName = "?.1033.resx";
+            //else if (LCID == 1036)
+            //    resexResourceName = "?.1036.resx";
+
+            //$('#lblTitle').text(Xrm.Utility.getResourceString(resexResourceName, ""));
+
+
+            //get params
+            var paramsObj = getDataParam();
+
+            if (paramsObj != null) getSpecs(paramsObj.cfId, paramsObj.srfId, paramsObj.langId);
+
+            $('#submitButton').on('click', function () {
+                var $btn = $(this).button('loading')
+
+                //get selected check boxes
+                var selected = [];
+                var count = $("input:checked").length;
+
+                if (count == 0) {
+
+                    var alertStrings = { confirmButtonLabel: "Yes", text: "Please, check at least one specification" };
+                    Xrm.Navigation.openAlertDialog(alertStrings);
+                }
+                else {
+                    $("input:checked").each(function () {
+
+                        selected.push($(this).attr('id'));
+                    });
+                } 
+
+                //send to assign
+                paramsObj.selected = selected.join(';');
+                //call castom action
+                addSpecs2SRF(paramsObj.srfId, paramsObj.selected);   
+                $btn.button('reset')
+            })
+
+            $('#cancelButton').on('click', function () {
+
+                window.close();
+            })
+
+            $("#lstTarget").on("change", ":checkbox", function (event) {
+                
+                if(event.target.checked)
+                {
+                    $("#icon-" + event.target.id).addClass("glyphicon glyphicon-ok");
+
+                }else{
+                    $("#icon-" + event.target.id).removeClass("glyphicon glyphicon-ok");
+                }
+
+            });
+
+
+            $("#search").on("keyup", function () {
+                var value = this.value.toLowerCase().trim();
+                $("#lstTarget div").show().filter(function () {
+                    return $(this).text().toLowerCase().trim().indexOf(value) == -1;
+                }).hide();
+            });
+        });
+
+
+    </script>
+
+</body>
+</html>
