@@ -49,6 +49,13 @@
           "metadata": {
             "schemaName": "fdr_FDR_MTOA_JWT"
           }
+        },
+        "Environment Variable - MTOA App User ID (fdr_envvar_mtoa_appuserid)": {
+          "defaultValue": "11087",
+          "type": "String",
+          "metadata": {
+            "schemaName": "fdr_envvar_mtoa_appuserid"
+          }
         }
       },
       "triggers": {
@@ -759,7 +766,7 @@
         },
         "Get_MTOA_Service_Request": {
           "runAfter": {
-            "Initialize_variable_2": [
+            "Initialize_Minutes": [
               "Succeeded"
             ]
           },
@@ -781,7 +788,7 @@
             "authentication": "@parameters('$authentication')"
           }
         },
-        "Initialize_variable": {
+        "Initialize_Days": {
           "runAfter": {
             "Status_Changed": [
               "Succeeded"
@@ -800,9 +807,9 @@
             ]
           }
         },
-        "Initialize_variable_2": {
+        "Initialize_Minutes": {
           "runAfter": {
-            "Initialize_variable": [
+            "Initialize_Days": [
               "Succeeded"
             ]
           },
@@ -834,7 +841,7 @@
               {
                 "name": "FDR App User",
                 "type": "integer",
-                "value": 102
+                "value": "@parameters('Environment Variable - MTOA App User ID (fdr_envvar_mtoa_appuserid)')"
               }
             ]
           }

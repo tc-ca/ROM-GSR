@@ -1,10 +1,11 @@
 {
   "properties": {
     "connectionReferences": {
-      "shared_commondataserviceforapps_1": {
+      "shared_commondataserviceforapps_2": {
+        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+          "connectionReferenceLogicalName": "fdr_conref_dataverse_fdrsp"
         },
         "api": {
           "name": "shared_commondataserviceforapps"
@@ -13,7 +14,7 @@
       "shared_powerplatformforadmins": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "ovs_sharedpowerplatformforadmins_bd483"
+          "connectionReferenceLogicalName": "fdr_conref_ppfa"
         },
         "api": {
           "name": "shared_powerplatformforadmins"
@@ -22,19 +23,10 @@
       "shared_teams": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "tdg_ConnectionReferenceMSTeamsTDGCoreUser"
+          "connectionReferenceLogicalName": "fdr_conref_msteams"
         },
         "api": {
           "name": "shared_teams"
-        }
-      },
-      "shared_commondataserviceforapps": {
-        "runtimeSource": "embedded",
-        "connection": {
-          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
-        },
-        "api": {
-          "name": "shared_commondataserviceforapps"
         }
       }
     },
@@ -59,15 +51,16 @@
           "type": "OpenApiConnectionWebhook",
           "inputs": {
             "host": {
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "SubscribeWebhookTrigger",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+              "connectionName": "shared_commondataserviceforapps_2",
+              "operationId": "SubscribeWebhookTrigger"
             },
             "parameters": {
               "subscriptionRequest/message": 3,
               "subscriptionRequest/entityname": "fdr_servicerequestservicetask",
               "subscriptionRequest/scope": 4,
-              "subscriptionRequest/filteringattributes": "fdr_approvetime"
+              "subscriptionRequest/filteringattributes": "fdr_approvetime",
+              "subscriptionRequest/name": "b04a37e4-8d33-ed11-9db1-0022483d0343"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -84,9 +77,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "GetItem",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                  "connectionName": "shared_commondataserviceforapps_2",
+                  "operationId": "GetItem"
                 },
                 "parameters": {
                   "entityName": "systemusers",
@@ -123,9 +116,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_powerplatformforadmins",
                   "connectionName": "shared_powerplatformforadmins",
-                  "operationId": "GetSingleEnvironment",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_powerplatformforadmins"
+                  "operationId": "GetSingleEnvironment"
                 },
                 "parameters": {
                   "environment": "@workflow()['tags']['environmentName']",
@@ -188,9 +181,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
                   "connectionName": "shared_teams",
-                  "operationId": "PostMessageToConversation",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams"
+                  "operationId": "PostMessageToConversation"
                 },
                 "parameters": {
                   "poster": "Flow bot",
@@ -271,9 +264,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "GetItem",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                  "connectionName": "shared_commondataserviceforapps_2",
+                  "operationId": "GetItem"
                 },
                 "parameters": {
                   "entityName": "fdr_servicerequests",
@@ -295,9 +288,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "GetItem",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                  "connectionName": "shared_commondataserviceforapps_2",
+                  "operationId": "GetItem"
                 },
                 "parameters": {
                   "entityName": "msdyn_servicetasktypes",

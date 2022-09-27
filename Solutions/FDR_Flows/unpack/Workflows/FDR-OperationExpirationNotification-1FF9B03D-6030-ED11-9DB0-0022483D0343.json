@@ -33,7 +33,7 @@
           "type": "SecureObject"
         },
         "ALL Regions  Operation Expiry Email notebox (fdr_alllRegionsOperationsExpiry)": {
-          "defaultValue": "mocregister-registrecontenant@tc.gc.ca",
+          "defaultValue": "tdg-field-service-qa@034gc.onmicrosoft.com",
           "type": "String",
           "metadata": {
             "schemaName": "fdr_alllRegionsOperationsExpiry",
@@ -108,7 +108,7 @@
             "parameters": {
               "entityName": "ovs_mocregistrations",
               "$select": "ovs_mocregistrationname,ovs_registrationexpiry,ovs_name,ovs_mocregistrationid,_ovs_siteid_value",
-              "$filter": "(ovs_mocregistrationname ne null and ovs_registrationexpiry ne null and Microsoft.Dynamics.CRM.OlderThanXDays(PropertyName='ovs_registrationexpiry',PropertyValue=30) and _ovs_siteid_value ne null) and (ovs_SiteId/_parentaccountid_value ne null)",
+              "$filter": "(ovs_mocregistrationname ne null and ovs_registrationexpiry ne null and (Microsoft.Dynamics.CRM.On(PropertyName='ovs_registrationexpiry',PropertyValue='@{formatDateTime(addDays(utcnow(),-30),'yyyy-MM-dd')}')) and _ovs_siteid_value ne null) and (ovs_SiteId/_parentaccountid_value ne null)",
               "$expand": "ovs_SiteId($select=accountid,_parentaccountid_value)",
               "$top": 10000
             },

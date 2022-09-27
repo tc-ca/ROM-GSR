@@ -73,7 +73,7 @@
           "actions": {
             "Update_a_row": {
               "runAfter": {
-                "Calculate_the_performance_to_date,_and_estimate_what_the_due_date_will_be._2": [
+                "Call_Estimate_API": [
                   "Succeeded"
                 ]
               },
@@ -89,12 +89,14 @@
                 },
                 "parameters": {
                   "entityName": "fdr_servicerequests",
-                  "recordId": "@items('Loop_Over_Service_Requests')?['fdr_servicerequestid']"
+                  "recordId": "@items('Loop_Over_Service_Requests')?['fdr_servicerequestid']",
+                  "item/fdr_daysremaining": "@outputs('Call_Estimate_API')?['body/UnitsRemainingNbr']",
+                  "item/fdr_tss_duration": "@mul(mul(outputs('Call_Estimate_API')?['body/CurrentApplicableUnitNbr'], 24), 60)"
                 },
                 "authentication": "@parameters('$authentication')"
               }
             },
-            "Calculate_the_performance_to_date,_and_estimate_what_the_due_date_will_be._2": {
+            "Call_Estimate_API": {
               "runAfter": {},
               "metadata": {
                 "operationMetadataId": "311bc07a-0736-4ae0-985b-ed4fd2edc0b3"
