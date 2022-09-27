@@ -813,9 +813,16 @@ if (typeof (tdg.cid) == "undefined") {
             tdg.c.control_hide("address1_stateorprovince");
 
             $("#ovs_address1_province").on("change", function (i, val) {
-                debugger
-                var ovs_address1_province = $("#ovs_address1_province :selected").text()
+                debugger;
+                var ovs_address1_province = $("#ovs_address1_province :selected").text();
                 $("#address1_stateorprovince").val(ovs_address1_province);
+            });
+			
+			
+			 $("#ovs_lld_province").on("change", function (i, val) {
+                debugger;
+                var lld_address1_province = $("#ovs_lld_province :selected").text();
+                $("#address1_stateorprovince").val(lld_address1_province);
             });
 
             $("#address1_postalcode").attr("maxlength", "6");
@@ -1156,6 +1163,9 @@ if (typeof (tdg.cid) == "undefined") {
                             switch (text) {
                                 case "NAICS Class (NAICS Code)":
                                     text = tdg.error_message.message(text);
+                                    break;
+                                case "NAICS Class (Code SCIAN)":
+                                    text = tdg.error_message.message("NAICS Class (NAICS Code)");
                                     break;
                                 default:
                                     break;

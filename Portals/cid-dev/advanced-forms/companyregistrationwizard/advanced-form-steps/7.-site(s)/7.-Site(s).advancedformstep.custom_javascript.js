@@ -3,6 +3,12 @@
 //
 $(document).ready(function () {
 	debugger;
+ 	 if ('{{request.url}}'.includes("tdgcore-qa") || '{{request.url}}'.includes("rd-tdgcore-dev"))
+        {
+          var BulkUploaddButton = '<div class="input-group pull-left"><a href="~/Bulk_Site_Upload/" class="btn btn-primary pull-right action" title="BulkSiteUpdate">Bulk Site upload</a></div>';
+          $(".toolbar-actions").append(BulkUploaddButton);
+	   //class="btn btn-primary pull-right action create-action"
+         }
 
 	//var companyId = $("#EntityFormView_EntityID").val();
 	//var filter = "parentaccountid/Id eq (guid'" + companyId + "')";
