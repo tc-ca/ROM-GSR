@@ -1006,7 +1006,16 @@ if (typeof (tdg.cid) == "undefined") {
             }
         },
 
+        //Converts prepopulated province string to code that maps to dropdown field value
+        //Also formats the postal code field
         convert_province_to_code: function (language) {
+            //Format postal code
+            var n = $("#address1_postalcode").val().replace(/\W/g, '');
+            var match = n.match(/^(\w{3})(\w{3})$/);
+            if (match) {
+                $("#address1_postalcode").val(match[1] + ' ' + match[2]);
+            }
+
             var address1_stateorprovince = $("#address1_stateorprovince").val();
 
             // If there is no value that is prepopulated, this function exits

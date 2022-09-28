@@ -4,9 +4,12 @@
 $(document).ready(function () {
 	debugger;
  	 if ('{{request.url}}'.includes("tdgcore-qa") || '{{request.url}}'.includes("rd-tdgcore-dev"))
-        {
-          var BulkUploaddButton = '<div class="input-group pull-left"><a href="~/Bulk_Site_Upload/" class="btn btn-primary pull-right action" title="BulkSiteUpdate">Bulk Site upload</a></div>';
-          $(".toolbar-actions").append(BulkUploaddButton);
+        
+		{
+
+           
+           var BulkUploaddButton = '<div class="input-group pull-left">&nbsp;&nbsp;</div><div class="input-group pull-left"><button type="button" id="BulkUploadButton"  class="btn btn-primary pull-right action">Bulk Site upload</button></div>';
+           $(".toolbar-actions").append(BulkUploaddButton);
 	   //class="btn btn-primary pull-right action create-action"
          }
 
@@ -95,6 +98,31 @@ $(document).ready(function () {
 	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
 
 	});
+
+
+     $('#BulkUploadButton').click(function(e)
+          
+		{
+			//company id
+			var companyId = $("#EntityFormView_EntityID").val();
+			console.log(companyId);
+		   var filter = "_parentaccountid_value eq " + companyId + " and cid_siteclaim eq 100000003";
+		   var response  = tdg.webapi.list("accounts", filter);
+            if (response.length > 0)
+			{
+				tdg.c.dialog_OK("Users cannot access bulk upload until all of the existing sites in the list have been Claimed");
+
+			}
+			else
+			{
+			 window.location.href='~/Bulk_Site_Upload/'	
+			}
+		  
+		   console.log("after query from tdg core");
+		   console.log(response);
+		   console.log(response.length);
+		}
+	 );
 
 	webFormClientValidate = function () {
 		var validation = true;
