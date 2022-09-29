@@ -28,12 +28,16 @@ $(document).ready(function () {
 
     //Add comma formatting
     $("#cid_annualquantityvolume").on('keyup', function(){
-        var n = $(this).val().replace(/[^0-9\.]/g,'');
-        $(this).val(n.toLocaleString());
+        var n = $(this).val().replace(/\D/g,'');
+        if(!isNaN(n)){
+    	    $(this).val(n.toLocaleString());
+        }
     });
     $("#cid_annualnumberofshipment").on('keyup', function(){
         var n = $(this).val().replace(/\D/g,'');
-        $(this).val(n.toLocaleString());
+        if(!isNaN(n)){
+    	    $(this).val(n.toLocaleString());
+        }
     });
 });
 

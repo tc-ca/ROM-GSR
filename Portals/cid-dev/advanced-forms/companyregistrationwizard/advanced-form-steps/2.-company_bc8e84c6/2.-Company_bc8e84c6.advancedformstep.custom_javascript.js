@@ -130,6 +130,8 @@ if (window.jQuery) {
 			sessionStorage.setItem("step_start", "");
 			// cid claim company
 			$('#cid_companyclaim').val(1);
+			//TODO Validate address
+			//TODO Validate Phone number length <=10
 			return true;
 		}
 	}(window.jQuery));

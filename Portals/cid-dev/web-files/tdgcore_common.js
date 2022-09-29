@@ -873,6 +873,21 @@ if (typeof (tdg.cid) == "undefined") {
             }
         },
 
+        //Takes an array of strings containing the field name formatted for use with jquery, ex. "#telephone1"
+        phone_init: function (listOfFields) {
+            for(let field of listOfFields){
+                $(field).attr("maxlength", "10");
+                $(field).on('keyup', function () {
+                    var n = $(this).val().replace(/\D/g, '');
+                    $(this).val(n);
+                    var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
+                    if (match) {
+                        $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
+                    }
+                });
+            }     
+        },
+
         address_same_as_company: function (parent_id) {
             debugger;
 
