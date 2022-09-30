@@ -3,6 +3,11 @@
 //
 
 $(document).ready(function () {
+    debugger;
+
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
     sessionStorage.setItem('to_actvt_stp', 'false');
     sessionStorage.setItem('to_oprtn_wzrd', 'false');
 
@@ -21,7 +26,10 @@ $(document).ready(function () {
         if ($("#backToActivityTypesStep").length > 0) {
             $('#mainContent').remove();
         }
-        $('#mainContent').prepend("<div id='backToActivityTypesStep' class='input-group pull-left'><p><input type='button' id='backToActivityTypes' name='Back' value='Back to Activity Types Screen' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'><br><br></p></div>");
+        var msg = tdg.error_message.message("m000108");
+        var text = "<div id='backToActivityTypesStep' class='input-group pull-left'><p><input type='button' id='backToActivityTypes' name='Back' value='{0}' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'><br><br></p></div>";
+        text = text.replace("{0}", msg);
+        $('#mainContent').prepend(text);
 
         $("#backToActivityTypes").click(function () {
             sessionStorage.setItem('to_actvt_stp', 'true');

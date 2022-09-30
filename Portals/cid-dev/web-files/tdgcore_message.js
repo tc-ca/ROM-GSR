@@ -278,8 +278,17 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000107",
                         "message_en": "You must choose a valid NAICS Code from the NAICS Code drop- down list to continue.",
                         "message_fr": "You must choose a valid NAICS Code from the NAICS Code drop- down list to continue. _FR"
+                    },
+                    {
+                        "code": "m000108",
+                        "message_en": "Back to Activity Types Screen",
+                        "message_fr": "Back to Activity Types Screen_FR"
+                    },
+                    {
+                        "code": "m000109",
+                        "message_en": "Deactivate Company",
+                        "message_fr": "Désactiver l'entreprise"
                     }
-
                 ];
 
             return list;

@@ -1167,14 +1167,14 @@ if (typeof (tdg.cid) == "undefined") {
             })
         },
 
-        subgrid_companynaicscode: function (companynaicscode) {
+        subgrid_header_language: function (grid) {
             debugger;
             var selected_language = sessionStorage.getItem("selected_language");
 
-            companynaicscode.on("loaded", function () {
+            grid.on("loaded", function () {
                 debugger;
                 // header
-                let header = companynaicscode.find("table thead > tr");
+                let header = grid.find("table thead > tr");
                 for (var index1 = 0; index1 < header.length; index1++) {
                     //debugger;
                     let tr = header[index1];
@@ -1184,23 +1184,49 @@ if (typeof (tdg.cid) == "undefined") {
                         var className = $(tdElement)[0].className;
                         if (className.indexOf("sort-enabled") == -1) {
                             var text = $(tdElement).text().trim();
-                            switch (text) {
-                                case "NAICS Class (NAICS Code)":
-                                    text = tdg.error_message.message(text);
-                                    break;
-                                case "NAICS Class (Code SCIAN)":
-                                    text = tdg.error_message.message("NAICS Class (NAICS Code)");
-                                    break;
-                                default:
-                                    break;
-                            }
+                            text = tdg.cid.subgrid_header_special_col(text);
                             text = tdg.c.text_language(text, selected_language);
                             $(tdElement).text(text);
                         }
+                        else {
+                            // tdElement.innerHTML
+                            var control_a = $(tdElement).find("a");
+                            var text = control_a.attr("aria-label");
+                            if (text != null) {
+                                debugger;
+
+                                var text1 = tdg.c.text_language(text, selected_language);
+                                var html = control_a[0].innerHTML;
+                                control_a[0].innerHTML = html.replace(text, text1);
+                            }
+                        }
                     }
                 }
+            });
+        },
+
+        subgrid_header_special_col: function (text) {
+            switch (text) {
+                case "NAICS Class (NAICS Code)":
+                    text = tdg.error_message.message(text);
+                    break;
+                case "NAICS Class (Code SCIAN)":
+                    text = tdg.error_message.message("NAICS Class (NAICS Code)");
+                    break;
+                default:
+                    break;
+            }
+            return text;
+        },
+
+        subgrid_companynaicscode: function (grid) {
+            debugger;
+            var selected_language = sessionStorage.getItem("selected_language");
+
+            tdg.cid.subgrid_header_language(grid);
+            grid.on("loaded", function () {
                 debugger;
-                let rows = companynaicscode.find("table tbody > tr");
+                let rows = grid.find("table tbody > tr");
                 rows.each(function (index, tr) {
                     //debugger;
                     let cols = $(tr).find('td');
@@ -1221,45 +1247,13 @@ if (typeof (tdg.cid) == "undefined") {
             });
         },
 
-        subgrid_unnumber: function (unnumber) {
+        subgrid_unnumber: function (grid) {
             debugger;
             var selected_language = sessionStorage.getItem("selected_language");
-
-            unnumber.on("loaded", function () {
+            tdg.cid.subgrid_header_language(grid);
+            grid.on("loaded", function () {
                 debugger;
-
-                // header
-                let header = unnumber.find("table thead > tr");
-                for (var index1 = 0; index1 < header.length; index1++) {
-                    debugger;
-                    let tr = header[index1];
-
-                    let cols = $(tr).find('th');
-                    for (var i = 0; i < cols.length; i++) {
-                        var tdElement = cols[i];
-                        var className = $(tdElement)[0].className;
-                        if (className.indexOf("sort-enabled") == -1) {
-                            var text = $(tdElement).text();
-                            text = tdg.c.text_language(text, selected_language);
-                            $(tdElement).text(text);
-                        }
-
-                        switch (i) {
-                            case 0:
-                                //tdElement.ariaLabel = "UN Number Display";
-                                break;
-                            case 1: // Packing Group
-                                tdElement.style.display = "none";
-                                break;
-                            case 2: // Shipping
-                                tdElement.style.display = "none";
-                                break;
-                        }
-                    }
-                }
-
-                debugger
-                let rows = unnumber.find("table tbody > tr");
+                let rows = grid.find("table tbody > tr");
 
                 rows.each(function (index, tr) {
                     debugger;

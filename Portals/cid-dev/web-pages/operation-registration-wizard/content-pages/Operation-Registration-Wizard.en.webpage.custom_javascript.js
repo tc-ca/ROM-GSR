@@ -1,15 +1,21 @@
 //
 // Web Page-Operation Registration Wizard.js
 //
+
 $(document).ready(function () {
+    debugger;
+
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
     sessionStorage.setItem('to_actvt_stp', 'false');
     sessionStorage.setItem('to_oprtn_wzrd', 'false');
 
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('isExtended')) {
-    	var isExtended = urlParams.get('isExtended');
+        var isExtended = urlParams.get('isExtended');
 
-        if(isExtended =='false'){
+        if (isExtended == 'false') {
             $('.progress li').last().addClass("hidden");
         }
     }
@@ -17,12 +23,15 @@ $(document).ready(function () {
     if (urlParams.has('siteid')) {
         var siteId = urlParams.get('siteid');
 
- 	    if ($("#backToActivityTypesStep").length > 0) {
-		    $('#mainContent').remove();
+        if ($("#backToActivityTypesStep").length > 0) {
+            $('#mainContent').remove();
         }
-        $('#mainContent').prepend("<div id='backToActivityTypesStep' class='input-group pull-left'><p><input type='button' id='backToActivityTypes' name='Back' value='Back to Activity Types Screen' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'><br><br></p></div>");
-    
-        $("#backToActivityTypes").click(function(){
+        var msg = tdg.error_message.message("m000108");
+        var text = "<div id='backToActivityTypesStep' class='input-group pull-left'><p><input type='button' id='backToActivityTypes' name='Back' value='{0}' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'><br><br></p></div>";
+        text = text.replace("{0}", msg);
+        $('#mainContent').prepend(text);
+
+        $("#backToActivityTypes").click(function () {
             sessionStorage.setItem('to_actvt_stp', 'true');
             window.location.href = "~/SiteRegistrationWizard/?id=" + siteId;
         });
@@ -36,9 +45,9 @@ $(document).ready(function () {
 
     if (instructionBtns.length > 0) {
         instructionBtns.click(function () {
-			var msg = tdg.error_message.message("m000010");	// Choose the same named button found below
-			tdg.c.dialog_OK(msg);
-		});
+            var msg = tdg.error_message.message("m000010");	// Choose the same named button found below
+            tdg.c.dialog_OK(msg);
+        });
     }
 
     $("legend").each(function () {
