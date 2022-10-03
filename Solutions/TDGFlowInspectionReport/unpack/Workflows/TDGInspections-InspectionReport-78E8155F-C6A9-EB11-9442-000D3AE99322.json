@@ -643,7 +643,7 @@
                         },
                         {
                           "participationtypemask": 2,
-                          "partyid@odata.bind": "/accounts(@{outputs('Get_Site_and_Primary_Contact')?['body/accountid']})"
+                          "partyid@odata.bind": "/msdyn_workorders(@{triggerOutputs()?['body/_ovs_workorderid_value']})"
                         },
                         {
                           "participationtypemask": 3,
@@ -717,7 +717,7 @@
                           },
                           {
                             "participationtypemask": 2,
-                            "partyid@odata.bind": "/accounts(@{outputs('Get_Site_and_Primary_Contact')?['body/accountid']})"
+                            "partyid@odata.bind": "/msdyn_workorders(@{outputs('Get_Inspection_Report')?['body/_ovs_workorderid_value']})"
                           },
                           {
                             "participationtypemask": 3,
@@ -1882,10 +1882,10 @@
                             "item/statuscode": "@if(items('Apply_to_each_Violation')?['qm_confirmationrequestedchk'],4,918640004)",
                             "item/ovs_Violation_ovs_confirmationofcompliance@odata.bind": "/qm_syresults(@{items('Apply_to_each_Violation')?['qm_syresultid']})",
                             "item/statecode": "@if(items('Apply_to_each_Violation')?['qm_confirmationrequestedchk'],3,1)",
+                            "item/subject": "Confirmation of Compliance - @{items('Apply_to_each_Violation')?['qm_rclegislationid/qm_legislationlbl']}",
                             "item/scheduledend": "@items('Apply_to_each_Violation')?['ovs_duedate']",
                             "item/ownerid_ovs_confirmationofcompliance@odata.bind": "/teams(@{outputs('Get_a_WO._All_fields')?['body/_ownerid_value']})",
-                            "item/regardingobjectid_msdyn_workorder_ovs_confirmationofcompliance@odata.bind": "/msdyn_workorders(@{outputs('Get_a_WO._All_fields')?['body/msdyn_workorderid']})",
-                            "item/subject": "Confirmation of Compliance - @{items('Apply_to_each_Violation')?['qm_rclegislationid/qm_legislationlbl']}"
+                            "item/regardingobjectid_msdyn_workorder_ovs_confirmationofcompliance@odata.bind": "/msdyn_workorders(@{outputs('Get_a_WO._All_fields')?['body/msdyn_workorderid']})"
                           },
                           "authentication": "@parameters('$authentication')"
                         }
@@ -2530,7 +2530,8 @@
         }
       },
       "outputs": {}
-    }
+    },
+    "templateName": null
   },
   "schemaVersion": "1.0.0.0"
 }
