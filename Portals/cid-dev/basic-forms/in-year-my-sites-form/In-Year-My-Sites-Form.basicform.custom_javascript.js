@@ -3,6 +3,7 @@
 //
 $(document).ready(function () {
     debugger;
+
 console.log("before adding new button");
 //create bulk upload button only for DEV and QA environment
  if ('{{request.url}}'.includes("tdgcore-qa") || '{{request.url}}'.includes("rd-tdgcore-dev"))
