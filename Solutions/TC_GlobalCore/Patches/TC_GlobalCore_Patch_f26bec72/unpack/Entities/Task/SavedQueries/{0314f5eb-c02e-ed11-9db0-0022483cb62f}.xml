@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{0314f5eb-c02e-ed11-9db0-0022483cb62f}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="subject" select="1" preview="1" icon="1">
+        <row name="result" id="activityid">
+          <cell name="statuscode" width="50" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="a_a0c45060fb24ed119db2000d3a844ef3.cid_description" width="300" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+        <entity name="task">
+          <attribute name="statuscode" />
+          <order attribute="statuscode" descending="false" />
+          <filter type="and">
+            <condition attribute="cid_tasklevel" operator="eq" value="100000001" />
+            <condition attribute="cid_annualcomplianceitem" operator="eq" uiname="05" uitype="cid_annualcomplianceitem" value="{23B80D02-612E-ED11-9DB0-0022483D0343}" />
+          </filter>
+          <link-entity name="cid_annualcomplianceitem" from="cid_annualcomplianceitemid" to="cid_annualcomplianceitem" visible="false" link-type="outer" alias="a_a0c45060fb24ed119db2000d3a844ef3">
+            <attribute name="cid_description" />
+          </link-entity>
+          <attribute name="activityid" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="X_CID Portal - Site Annual Compliance Update Item4" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
