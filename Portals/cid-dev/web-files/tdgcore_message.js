@@ -231,6 +231,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "You cannot proceed before attesting your company data changes, please check the 'Attestation' box_FR"
                     },
                     {
+                        "code": "m000027",
+                        "message_en": "Further Site Details",
+                        "message_fr": "Further Site Details_FR"
+                    },
+                    {
                         "code": "m000098",
                         "message_en": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
                         "message_fr": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID._FR"
