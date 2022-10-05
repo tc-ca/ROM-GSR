@@ -60,6 +60,13 @@ stages:
     StageName: 'BuildAndPublishArtifacts'
     dependsOn: 
     - 'RollupSolutionOnDev'
+- template: templates/stage/PatchSolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    ConnectionString: $(Pipeline_ConnectionStringDev)
+    StageName: 'CreatePatchOnDev'
+    dependsOn: 
+    - 'BuildAndPublishArtifacts'
 
 # - template: templates/stage/DeployHoldingSolution.yml  # Template reference
 #   parameters:
@@ -141,14 +148,6 @@ stages:
         SolutionName: '$(SolutionName)'
         AsyncOperation: true
         MaxAsyncWaitTime: '9999'
-
-- template: templates/stage/PatchSolution.yml  # Template reference
-  parameters:
-    SolutionName: $(SolutionName)
-    ConnectionString: $(Pipeline_ConnectionStringDev)
-    StageName: 'CreatePatchOnDev'
-    dependsOn: 
-    - 'ApplySolutionUpgradeQA'
 
 #deploy to acc-data as unmanaged solution
 # - template: templates/stage/DeploySolution.yml  # Template reference
