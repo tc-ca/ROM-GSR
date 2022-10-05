@@ -1,6 +1,9 @@
 //
 // Basic Form-Operation UN Number - Edit.js
 //
+
+var _err_un_number_not_selected = false;
+
 $(document).ready(function () {
     debugger;
 
@@ -27,16 +30,16 @@ $(document).ready(function () {
     $('input[type="text"]').attr('autocomplete', 'off');
 
     //Add comma formatting
-    $("#cid_annualquantityvolume").on('keyup', function(){
-        var n = $(this).val().replace(/\D/g,'');
-        if(!isNaN(n)){
-    	    $(this).val(n.toLocaleString());
+    $("#cid_annualquantityvolume").on('keyup', function () {
+        var n = $(this).val().replace(/\D/g, '');
+        if (!isNaN(n)) {
+            $(this).val(n.toLocaleString());
         }
     });
-    $("#cid_annualnumberofshipment").on('keyup', function(){
-        var n = $(this).val().replace(/\D/g,'');
-        if(!isNaN(n)){
-    	    $(this).val(n.toLocaleString());
+    $("#cid_annualnumberofshipment").on('keyup', function () {
+        var n = $(this).val().replace(/\D/g, '');
+        if (!isNaN(n)) {
+            $(this).val(n.toLocaleString());
         }
     });
 });
@@ -79,7 +82,15 @@ if (window.jQuery) {
     (function ($) {
         entityFormClientValidate = function () {
             debugger;
+            _err_un_number_not_selected = false;
+
             var validation = true;
+            tdg.c.error_message_clear();
+
+            if (un_number_not_selected() == false) {
+                _err_un_number_not_selected = true;
+                return false;
+            }
 
             var validBuffer = $("#cid_annualquantityvolume").val().replaceAll(',', '');
             $("#cid_annualquantityvolume").val(validBuffer);
@@ -91,4 +102,25 @@ if (window.jQuery) {
             return validation;
         }
     }(window.jQuery));
+}
+
+function un_number_not_selected() {
+    debugger;
+
+    try {
+        var f = document.getElementById("WebResource_unnumber");
+        var c = f.contentWindow;
+        var value = c.document.getElementById("tdg_unnumberid").value;
+        if (value != "") {
+            var ovs_unnumber = $("#ovs_unnumber").attr("value");
+            if (ovs_unnumber == null) {
+                var msg = tdg.error_message.message("m000028");
+                tdg.c.dialog_OK(msg);
+                return false;
+            }
+        }
+        return true;
+    } catch (e) {
+        return false;
+    }
 }

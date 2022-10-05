@@ -7,24 +7,6 @@ $(document).ready(function ()
 {
     debugger;
 
-    var cidSiteStatus = $('#cid_cidsitestatus').find(":selected").text();
-    var activationButon = $("#EntityFormPanel").find(".workflow-link");
-
-    if (cidSiteStatus.indexOf("Inactive") < 0){
-        activationButon.hide();
-    }
-    else{
-        activationButon.css("color","#000000");
-        activationButon.css("background-color","#4CAF50");
-
-        $(".submit-btn").prop("disabled", true); 
-        $(".create-action").hide();
-        $('.crmEntityFormView').find('input, textarea, select, a').attr('disabled','disabled'); 
-    }
-
-
-    $('table[data-name="SUMMARY_TAB_section_5"]').find("#cid_issiteattested").prop('checked',false);
-
     // address
     tdg.cid.address_init(true);
 

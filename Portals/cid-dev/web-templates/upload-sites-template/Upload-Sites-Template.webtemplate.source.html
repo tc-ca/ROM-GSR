@@ -966,7 +966,29 @@ function Download_ExcelTemplate (TemplateLanguage)
       req.open("POST", url, true);
       req.setRequestHeader('Content-Type', 'application/json');
       req.onreadystatechange = function() {
+        console.log(  this.readyState);
+        console.log(  this.status);
+        console.log(  this.response);
+        console.log(req.getResponseHeader('location'));
         if (this.readyState === 4) {
+
+           //asyncronous check       
+           if (this.status === 202)
+           {
+               if (req.getResponseHeader('location') != null)
+               {
+                   var locationheader = req.getResponseHeader('location') ;
+                   console.log("after check 202");
+                   console.log(req.getResponseHeader('location'));
+                     var SeperatorIndex =   locationheader.indexOf("|");
+                     var  NoteGUID = locationheader.substring(0, SeperatorIndex ).trim();
+                      var fileattachementURL = "~/_entity/annotation/"  + NoteGUID;
+                  //download the file from the url
+            window.location.replace(fileattachementURL);
+
+               }
+
+           } 
           req.onreadystatechange = null;
           if (this.status === 200) {
            $('#infoMsg').html(DownloadMessageCompleted );

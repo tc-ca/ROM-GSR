@@ -1,17 +1,13 @@
 //
 // CompanyRegistrationWizard-Site.js
 //
+
 $(document).ready(function () {
 	debugger;
- 	 if ('{{request.url}}'.includes("tdgcore-qa") || '{{request.url}}'.includes("rd-tdgcore-dev"))
-        
-		{
-
-           
-           var BulkUploaddButton = '<div class="input-group pull-left">&nbsp;&nbsp;</div><div class="input-group pull-left"><button type="button" id="BulkUploadButton"  class="btn btn-primary pull-right action">Bulk Site upload</button></div>';
-           $(".toolbar-actions").append(BulkUploaddButton);
-	   //class="btn btn-primary pull-right action create-action"
-         }
+	if ('{{request.url}}'.includes("tdgcore-qa") || '{{request.url}}'.includes("rd-tdgcore-dev")) {
+		var BulkUploaddButton = '<div class="input-group pull-left">&nbsp;&nbsp;</div><div class="input-group pull-left"><button type="button" id="BulkUploadButton"  class="btn btn-primary pull-right action">Bulk Site upload</button></div>';
+		$(".toolbar-actions").append(BulkUploaddButton);
+	}
 
 	//var companyId = $("#EntityFormView_EntityID").val();
 	//var filter = "parentaccountid/Id eq (guid'" + companyId + "')";
@@ -91,38 +87,32 @@ $(document).ready(function () {
 			m000022 = m000022.replaceAll("\n", "<br>");
 			// change instruction text
 			tdg.c.page_instructions(m000022);
-        }
+		}
 
-    //make for readonly for secondary users
-    var currentUserId = '{{user.contactid}}';
-	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
-
+		//make for readonly for secondary users
+		var currentUserId = '{{user.contactid}}';
+		Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
 	});
 
+	$('#BulkUploadButton').click(function (e) {
+		//company id
+		var companyId = $("#EntityFormView_EntityID").val();
+		console.log(companyId);
+		var filter = "_parentaccountid_value eq " + companyId + " and cid_siteclaim eq 100000003";
+		var response = tdg.webapi.list("accounts", filter);
+		if (response.length > 0) {
+			tdg.c.dialog_OK("Users cannot access bulk upload until all of the existing sites in the list have been Claimed");
 
-     $('#BulkUploadButton').click(function(e)
-          
-		{
-			//company id
-			var companyId = $("#EntityFormView_EntityID").val();
-			console.log(companyId);
-		   var filter = "_parentaccountid_value eq " + companyId + " and cid_siteclaim eq 100000003";
-		   var response  = tdg.webapi.list("accounts", filter);
-            if (response.length > 0)
-			{
-				tdg.c.dialog_OK("Users cannot access bulk upload until all of the existing sites in the list have been Claimed");
-
-			}
-			else
-			{
-			 window.location.href='~/Bulk_Site_Upload/'	
-			}
-		  
-		   console.log("after query from tdg core");
-		   console.log(response);
-		   console.log(response.length);
 		}
-	 );
+		else {
+			window.location.href = '~/Bulk_Site_Upload/'
+		}
+
+		console.log("after query from tdg core");
+		console.log(response);
+		console.log(response.length);
+	}
+	);
 
 	webFormClientValidate = function () {
 		var validation = true;
@@ -158,3 +148,19 @@ $(document).ready(function () {
 	}
 });
 
+function Disable_ContactTypeFieldsForSecondaryUser() {
+	debugger;
+	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
+	//if not primary contact
+	if (cid_usercontacttype != 100000000) {
+        $(".create-action").attr("disabled", true);
+         $(".create-action").css("pointer-events", "none");
+
+        //Wait till subgrid load
+        $("#Contacts").on("loaded", function () {
+            $(".btn.btn-default.btn-xs").prop("disabled", true);
+            $(".details-link").prop("disabled", true);
+            $(".details-link").css("pointer-events", "none");
+        });
+	}
+}

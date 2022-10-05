@@ -1,9 +1,10 @@
 //
 // OperationRegistrationWizard-UN Number.js
 //
+
 $(document).ready(function () {
     debugger;
-    
+
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
@@ -86,20 +87,6 @@ function subgrid_language() {
                         }
                     }
                 }
-
-                //cols.each(function (index, td) {
-                //    //debugger;
-                //    var tdElement = $(this);
-                //    var value = tdElement.attr('data-attribute');
-                //    if (value != null) {
-                //        var index1 = value.indexOf('.tdg_shippingnamedescriptiontxt');
-                //        if (index1 != -1) {
-                //            var cellValue = $(td).text();
-                //            cellValue = tdg.c.text_language(cellValue, selected_language);
-                //            $(td).text(cellValue);
-                //        }
-                //    }
-                //});
             });
         });
     }
@@ -118,27 +105,27 @@ if (window.jQuery) {
                     errorMessage = tdg.error_message.message("m000017"); // "You cannot proceed before adding UN Number(s).";
                     validation = false;
                 }
-          
-                if (!validation) {
-                    $('#ValidationSummaryEntityFormView div').remove();
-                    var validationSection = $('#ValidationSummaryEntityFormView');
+            }
 
-                    validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
-                    validationSection.show();
-                    $('#alertMessages').focus();
-                }
-                else {
-                    OperationDetailsProvided(operationId, true);
-                    if (urlParams.has('siteid')) {
+            if (!validation) {
+                $('#ValidationSummaryEntityFormView div').remove();
+                var validationSection = $('#ValidationSummaryEntityFormView');
 
-                        var siteId = urlParams.get('siteid');
+                validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
+                validationSection.show();
+                $('#alertMessages').focus();
+            }
+            else {
+                OperationDetailsProvided(operationId, true);
+                if (urlParams.has('siteid')) {
 
-                        if (urlParams.has('in_year')) {
-                            window.location.href = "~/my-sites/in-year-site/?id=" + siteId;
-                        }
-                        else {
-                            window.location.href = "~/SiteRegistrationWizard/?id=" + siteId;
-                        }
+                    var siteId = urlParams.get('siteid');
+
+                    if (urlParams.has('in_year')) {
+                        window.location.href = "~/en-US/my-sites/in-year-site/?id=" + siteId;
+                    }
+                    else {
+                        window.location.href = "~/en-US/SiteRegistrationWizard/?id=" + siteId;
                     }
                 }
             }

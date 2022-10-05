@@ -7,6 +7,12 @@ $(document).ready(function () {
 
     $('#loader').show();
 
+
+        //$("a[href$='activate-site']").css('background-color', 'red');
+        //$("a[href$='activate-site']").hide();
+
+
+
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('id')) {
         var siteId = urlParams.get('id');

@@ -1,8 +1,10 @@
 //
 // Basic Form-Operation UN Number - Create.js
 //
+
 var _reload = false;
 var _count = 0;
+var _err_un_number_not_selected = false;
 
 $(document).ready(function () {
     debugger;
@@ -24,16 +26,16 @@ $(document).ready(function () {
     $('input[type="text"]').attr('autocomplete', 'off');
 
     //Add comma formatting
-    $("#cid_annualquantityvolume").on('keyup', function(){
-        var n = parseInt($(this).val().replace(/\D/g,''), 10);
-        if(!isNaN(n)){
-    	    $(this).val(n.toLocaleString());
+    $("#cid_annualquantityvolume").on('keyup', function () {
+        var n = parseInt($(this).val().replace(/\D/g, ''), 10);
+        if (!isNaN(n)) {
+            $(this).val(n.toLocaleString());
         }
     });
-    $("#cid_annualnumberofshipment").on('keyup', function(){
-        var n = parseInt($(this).val().replace(/\D/g,''), 10);
-        if(!isNaN(n)){
-    	    $(this).val(n.toLocaleString());
+    $("#cid_annualnumberofshipment").on('keyup', function () {
+        var n = parseInt($(this).val().replace(/\D/g, ''), 10);
+        if (!isNaN(n)) {
+            $(this).val(n.toLocaleString());
         }
     });
 
@@ -85,7 +87,16 @@ if (window.jQuery) {
 
         entityFormClientValidate = function () {
             debugger;
+            _err_un_number_not_selected = false;
+
             var validation = true;
+            tdg.c.error_message_clear();
+
+            if (un_number_not_selected() == false)
+            {
+                _err_un_number_not_selected = true;
+                return false;
+            }
 
             //remove commas from quantity field
             var validBuffer = $("#cid_annualquantityvolume").val().replaceAll(',', '');
@@ -110,6 +121,18 @@ function btn_save_new_onclick() {
             }
         }
     };
+
+    debugger;
+    var length = $("#ValidationSummaryEntityFormControl_EntityFormView")[0].childNodes.length;
+    if (length > 0) {
+        $("#btn_save_new").prop('disabled', false);
+        return;
+    }
+
+    if (_err_un_number_not_selected) {
+        $("#btn_save_new").prop('disabled', false);
+        return;
+    }
 
     var operation_id = null;
     var url_search = window.location.search.replace("?", "");
@@ -196,4 +219,25 @@ function error_cb(msg) {
     msg = tdg.c.text_language(msg, selected_language)
     tdg.c.message_panel_set("EntityFormControl", msg);
     $("#btn_save_new").prop('disabled', false);
+}
+
+function un_number_not_selected() {
+    debugger;
+
+    try {
+        var f = document.getElementById("WebResource_unnumber");
+        var c = f.contentWindow;
+        var value = c.document.getElementById("tdg_unnumberid").value;
+        if (value != "") {
+            var ovs_unnumber = $("#ovs_unnumber").attr("value");
+            if (ovs_unnumber == null) {
+                var msg = tdg.error_message.message("m000028");
+                tdg.c.dialog_OK(msg);
+                return false;
+            }
+        }
+        return true;
+    } catch (e) {
+        return false;
+    }
 }

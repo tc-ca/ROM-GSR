@@ -1,21 +1,13 @@
-$(document).ready(function ()
-{
-    debugger;
-   
-   $('div[data-name="tdg_activity_types"]').find("#cid_issiteattested").prop('checked',false);
-
-    $('div[data-name="tdg_activity_types"]').find("#cid_cidsitestatus").hide();
-    //$('div[data-name="tdg_activity_types"]').find("#cid_cidsitestatus").hide();
-});
-
 if (window.jQuery) {
     (function ($) {
         entityFormClientValidate = function (this, e) {
             debugger;
-            alert(e);
-            alert(this);
+
+            var siteStatus = $('div[data-name="tdg_activities_details"]').find("#cid_issiteattested");
+            //alert(e);
+            //alert(this);
             //if($("#cid_issiteattested").prop('checked')){
-            if($('div[data-name="tdg_activity_types"]').find("#cid_issiteattested").prop('checked')){
+            if(siteStatus.prop('checked')){
                 return true;
             }
             else{

@@ -236,6 +236,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "Further Site Details_FR"
                     },
                     {
+                        "code": "m000028",
+                        "message_en": "UN Number does not exist",
+                        "message_fr": "UN Number does not exist_FR"
+                    },
+                    {
                         "code": "m000098",
                         "message_en": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
                         "message_fr": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID._FR"
