@@ -224,6 +224,26 @@ var WO_TDG_main = (function (window, document) {
         }
     }
 
+    function hideOrShowTabs(formContext, isCivilAviationDocument) {
+        var profileTab = formContext.ui.tabs.get("tab_14");
+        var violationTab = formContext.ui.tabs.get("tab_10");
+        //var inspectReportTab = formContext.ui.tabs.get("tab_InspectionReport");
+        var cocTab = formContext.ui.tabs.get("tab_ConfirmationOfCompliances");
+        var postinspectTab = formContext.ui.tabs.get("tab_PostInspection");
+        var statTab = formContext.ui.tabs.get("tab_cepdata");
+        var recommendation = formContext.getControl("ovs_recommendation");
+        var remote = formContext.getControl("qm_remote");
+
+        profileTab.setVisible(isCivilAviationDocument);
+        violationTab.setVisible(isCivilAviationDocument);
+        //inspectReportTab.setVisible(isCivilAviationDocument);
+        cocTab.setVisible(isCivilAviationDocument);
+        postinspectTab.setVisible(isCivilAviationDocument);
+        statTab.setVisible(isCivilAviationDocument);
+        recommendation.setVisible(!isCivilAviationDocument);
+        remote.setVisible(isCivilAviationDocument);
+    }
+
 
     //********************private methods end***************
 
@@ -367,6 +387,12 @@ var WO_TDG_main = (function (window, document) {
             //glHelper.SetRequiredLevel(formContext, "ovs_mocoperationid", true);
             //pre-filter Oversith Type and Region
             operation.fireOnChange();
+
+            WO_TDG_main.getOverSightType(executionContext);
+
+            WO_TDG_main.setRecommendationRequired(executionContext);
+
+            //WO_TDG_main.setDefaultInspectionSynopsis(executionContext);
                         
         },
 
@@ -822,6 +848,7 @@ var WO_TDG_main = (function (window, document) {
                         if (sActivityName == "Civil Aviation Document Review" || sActivityName == "Examen des documents de l'aviation civile" || sActivityName == "Examen documentation de l'aviation civile") {
 
                             glHelper.SetDisabled(formContext, "ovs_oversighttype", true);
+                            WO_TDG_main.getOverSightType(executionContext);
                         }
                         else {
 
@@ -845,6 +872,8 @@ var WO_TDG_main = (function (window, document) {
                                     glHelper.SetDisabled(formContext, "ovs_oversighttype", true);
 
                                     setInspectionType(formContext, 0);
+
+                                    WO_TDG_main.getOverSightType(executionContext);
                                 },
                                 function (error) {
                                     Xrm.Navigation.openErrorDialog({ message: error.message });
@@ -867,6 +896,44 @@ var WO_TDG_main = (function (window, document) {
                 }
             );
         },
+
+        getOverSightType: function (executionContext) {
+            var formContext = executionContext.getFormContext();
+            var osTypeObj = formContext.getAttribute("ovs_oversighttype").getValue();
+
+            if (osTypeObj != null) {
+
+                var osType = glHelper.GetLookupName(formContext, "ovs_oversighttype");
+
+                if (osType.toString() == "Civil Aviation Document Review" || osType.toString() == "Examen des documents de l'aviation civile") {
+                    hideOrShowTabs(formContext, false);
+                } else {
+                    hideOrShowTabs(formContext, true);
+                }
+            }
+        },
+
+        setRecommendationRequired: function (executionContext) {
+            var formContext = executionContext.getFormContext();
+
+            if (formType == 1) {
+                glHelper.SetRequiredLevel(formContext, "ovs_recommendation", false);
+            } else {
+                glHelper.SetRequiredLevel(formContext, "ovs_recommendation", true);
+            }
+        },
+
+        /*setDefaultInspectionSynopsis: function (executionContext) {
+            var formContext = executionContext.getFormContext();
+
+            if (formType == 1) {
+                if (userSettings.languageId == 1033) {
+                    formContext.getAttribute("ovs_inspectionsynopsis").setValue("<h3>PART 1</h3><br /><h3>PART 2</h3><br /><h3>PART 3</h3><br /><h3>PART 4</h3><br /><h3>PART 5</h3><br /><h3>PART 6</h3><br /><h3>PART 7</h3><br /><h3>PART 8</h3><br /><h3>PART 9</h3><br /><h3>PART 10</h3><br /><h3>PART 11</h3><br /><h3>PART 12</h3><br />");
+                } else if (userSettings.languageId == 1036) {
+                    formContext.getAttribute("ovs_inspectionsynopsis").setValue("<h3>PARTIE 1</h3><br /><h3>PARTIE 2</h3><br /><h3>PARTIE 3</h3><br /><h3>PARTIE 4</h3><br /><h3>PARTIE 5</h3><br /><h3>PARTIE 6</h3><br /><h3>PARTIE 7</h3><br /><h3>PARTIE 8</h3><br /><h3>PARTIE 9</h3><br /><h3>PARTIE 10</h3><br /><h3>PARTIE 11</h3><br /><h3>PARTIE 12</h3><br />");
+                }
+            }
+        }, */
 
     }
 

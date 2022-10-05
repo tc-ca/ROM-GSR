@@ -18,6 +18,22 @@
       </CommandUIDefinition>
     </CustomAction>
     <HideCustomAction HideActionId="ovs.Mscrm.Form.ovs_cyaction.Delete.Hide" Location="Mscrm.Form.ovs_cyaction.Delete" />
+    <CustomAction Id="ovs.Mscrm.HomepageGrid.ovs_cyaction.Activate.CustomAction" Location="Mscrm.HomepageGrid.ovs_cyaction.MainTab.Management.Controls._children" Sequence="30">
+      <CommandUIDefinition>
+        <Button Alt="$Resources:Ribbon.HomepageGrid.account.Record.Status.Activate" Command="Mscrm.HomepageGrid.Activate" Id="Mscrm.HomepageGrid.ovs_cyaction.Activate" Image32by32="/_imgs/ribbon/Activate_32.png" Image16by16="/_imgs/ribbon/Activate_16.png" LabelText="$Resources:Ribbon.HomepageGrid.account.Record.Status.Activate" Sequence="30" TemplateAlias="o2" ToolTipTitle="$Resources:Ribbon.HomepageGrid.account.Record.Status.Activate" ToolTipDescription="$Resources(EntityPluralDisplayName):Ribbon.Tooltip.Activate" ModernImage="Activate" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <CustomAction Id="ovs.Mscrm.HomepageGrid.ovs_cyaction.Deactivate.CustomAction" Location="Mscrm.HomepageGrid.ovs_cyaction.MainTab.Management.Controls._children" Sequence="40">
+      <CommandUIDefinition>
+        <Button Alt="$Resources:Ribbon.HomepageGrid.account.Record.Status.Deactivate" Command="Mscrm.HomepageGrid.Deactivate" Id="Mscrm.HomepageGrid.ovs_cyaction.Deactivate" Image32by32="/_imgs/ribbon/Deactivate_32.png" Image16by16="/_imgs/ribbon/Deactivate_16.png" LabelText="$Resources:Ribbon.HomepageGrid.account.Record.Status.Deactivate" Sequence="40" TemplateAlias="o2" ToolTipTitle="$Resources:Ribbon.HomepageGrid.account.Record.Status.Deactivate" ToolTipDescription="$Resources(EntityPluralDisplayName):Ribbon.Tooltip.Deactivate" ModernImage="DeActivate" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <CustomAction Id="ovs.Mscrm.SubGrid.ovs_cyaction.Activate.CustomAction" Location="Mscrm.SubGrid.ovs_cyaction.MainTab.Management.Controls._children" Sequence="60">
+      <CommandUIDefinition>
+        <Button Alt="$Resources:Ribbon.HomepageGrid.account.Record.Status.Activate" Command="Mscrm.HomepageGrid.Activate" Id="Mscrm.SubGrid.ovs_cyaction.Activate" Image32by32="/_imgs/ribbon/Activate_32.png" Image16by16="/_imgs/ribbon/Activate_16.png" LabelText="$Resources:Ribbon.HomepageGrid.account.Record.Status.Activate" Sequence="60" TemplateAlias="o2" ToolTipTitle="$Resources:Ribbon.HomepageGrid.account.Record.Status.Activate" ToolTipDescription="$Resources(EntityPluralDisplayName):Ribbon.Tooltip.Activate" ModernImage="Activate" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <HideCustomAction HideActionId="ovs.Mscrm.SubGrid.ovs_cyaction.Deactivate.Hide" Location="Mscrm.SubGrid.ovs_cyaction.Deactivate" />
     <HideCustomAction HideActionId="ovs.Mscrm.SubGrid.ovs_cyaction.Delete.Hide" Location="Mscrm.SubGrid.ovs_cyaction.Delete" />
     <HideCustomAction HideActionId="ovs.Mscrm.SubGrid.ovs_cyaction.Flows.RefreshCommandBar.Hide" Location="Mscrm.SubGrid.ovs_cyaction.Flows.RefreshCommandBar" />
     <HideCustomAction HideActionId="ovs.Mscrm.SubGrid.ovs_cyaction.RunReport.Hide" Location="Mscrm.SubGrid.ovs_cyaction.RunReport" />
@@ -286,6 +302,9 @@
       </DisplayRule>
       <DisplayRule Id="ovs.ovs_cyaction.Subgrid.DeleteSeletedEntityPermission">
         <EntityPrivilegeRule PrivilegeType="Delete" PrivilegeDepth="Global" AppliesTo="SelectedEntity" EntityName="account" />
+      </DisplayRule>
+      <DisplayRule Id="ovs.SelectedIsInactive">
+        <EntityPropertyRule AppliesTo="SelectedEntity" PropertyName="IsActivity" PropertyValue="false" />
       </DisplayRule>
     </DisplayRules>
     <EnableRules>

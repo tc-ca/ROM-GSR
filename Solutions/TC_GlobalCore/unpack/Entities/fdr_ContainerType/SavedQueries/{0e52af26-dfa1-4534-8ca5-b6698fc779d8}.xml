@@ -10,7 +10,6 @@
     <layoutxml>
       <grid name="resultset" jump="fdr_name" select="1" icon="1" preview="1">
         <row name="result" id="fdr_containertypeid">
-          <cell name="fdr_name" width="300" />
           <cell name="fdr_englishname" width="150" />
           <cell name="fdr_englishdescription" width="150" />
           <cell name="fdr_frenchname" width="150" />
@@ -30,8 +29,6 @@
     <fetchxml>
       <fetch version="1.0" output-format="xml-platform" mapping="logical">
         <entity name="fdr_containertype">
-          <attribute name="fdr_containertypeid" />
-          <attribute name="fdr_name" />
           <attribute name="createdon" />
           <attribute name="fdr_englishname" />
           <attribute name="fdr_englishdescription" />
@@ -40,7 +37,7 @@
           <attribute name="modifiedon" />
           <attribute name="statecode" />
           <attribute name="statuscode" />
-          <order attribute="fdr_name" descending="false" />
+          <order attribute="fdr_englishname" descending="false" />
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="1" />
           </filter>
@@ -48,6 +45,7 @@
           <attribute name="fdr_standard" />
           <attribute name="fdr_certificateprefix" />
           <attribute name="fdr_nextdesignnumber" />
+          <attribute name="fdr_containertypeid" />
         </entity>
       </fetch>
     </fetchxml>

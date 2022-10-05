@@ -25,6 +25,8 @@ const FIELD_DUE_DATE = "ovs_duedate";
 const FIELD_COCREQUESTED = "qm_confirmationrequestedchk";
 const FIELD_COCJUSTIFICATION = "qm_justificationfornotcoc";
 
+const DUE_DATE_OFFSET_DAYS = 30;
+
 async function OnLoad(executionContext) {
     //get context
     globalContext = glHelper.getGlobalContext();
@@ -53,7 +55,7 @@ async function OnLoad(executionContext) {
     if (formType == 1) {
       //If form is new, set the Action Date to today.
       var currentDate = new Date();
-      glHelper.SetValue(formContext, FIELD_DUE_DATE, currentDate);
+        glHelper.SetValue(formContext, FIELD_DUE_DATE, glHelper.GetOffsetDate(currentDate, DUE_DATE_OFFSET_DAYS));
     }
     
     let violationRecordId = glHelper.GetCurrentRecordId(formContext);

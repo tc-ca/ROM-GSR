@@ -22,19 +22,20 @@
     </layoutxml>
     <querytype>0</querytype>
     <fetchxml>
-      <fetch version="1.0" output-format="xml-platform" mapping="logical">
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="account">
           <attribute name="name" />
-          <order attribute="ovs_legalname" descending="false" />
-          <filter type="and">
-            <condition attribute="customertypecode" operator="eq" value="948010000" />
-          </filter>
           <attribute name="ovs_legalname" />
           <attribute name="primarycontactid" />
           <attribute name="cid_crabusinessnumber" />
           <attribute name="root_organization_id" />
           <attribute name="ovs_address_display" />
           <attribute name="cid_rootcompany" />
+          <order attribute="ovs_legalname" descending="false" />
+          <filter type="and">
+            <condition attribute="customertypecode" operator="eq" value="948010000" />
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
           <attribute name="accountid" />
         </entity>
       </fetch>

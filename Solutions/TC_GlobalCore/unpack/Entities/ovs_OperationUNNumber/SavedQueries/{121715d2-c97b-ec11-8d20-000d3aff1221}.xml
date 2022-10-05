@@ -27,15 +27,16 @@
         <entity name="ovs_operationunnumber">
           <attribute name="cid_annualnumberofshipment" />
           <attribute name="cid_annualquantityvolume" />
-          <order attribute="ovs_unnumber" descending="false" />
-          <filter type="and">
-            <condition attribute="statuscode" operator="eq" value="1" />
-          </filter>
           <attribute name="ovs_unnumber" />
           <attribute name="cid_unitofmeasurement" />
           <attribute name="cid_portalrecordcreationdetails" />
           <attribute name="cid_portalrecordmodificationdetails" />
-          <link-entity alias="a_b375e71a6743ec118c600022483c3ed3" name="tdg_unnumber" from="tdg_unnumberid" to="ovs_unnumber" link-type="outer" visible="false">
+          <order attribute="ovs_unnumber" descending="false" />
+          <filter type="and">
+            <condition attribute="statuscode" operator="eq" value="1" />
+            <condition attribute="cid_createdbyregistrant" operator="not-null" />
+          </filter>
+          <link-entity name="tdg_unnumber" from="tdg_unnumberid" to="ovs_unnumber" visible="false" link-type="outer" alias="a_b375e71a6743ec118c600022483c3ed3">
             <attribute name="tdg_packinggroupcd" />
             <attribute name="tdg_shippingnamedescriptiontxt" />
           </link-entity>

@@ -1,0 +1,142 @@
+﻿<html>
+
+<head>
+    <meta charset="utf-8" />
+    <link href="../qm_/Bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+
+    <script src="../ClientGlobalContext.js.aspx"></script>
+    <script src="../qm_/Scripts/jquery_3.1.1.min.js"></script>
+    <script src="../qm_/Bootstrap/js/bootstrap.min.js"></script>
+    <style>
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+
+        <div class="panel">
+            <!-- <div class="panel-heading" id="panel-heading">
+                <h3 class="panel-title">Rejection Reason</h3>
+
+            </div> -->
+            <form>
+                <div class="panel-body" style="padding:0px 15px">
+                    <div class="radio">
+                        <label for="option_timetoohigh" id="label_timetoohigh">
+                        <input type="radio" name="rejectionReason" id="option_timetoohigh" value="Time is too high">
+
+                            <span id="span_timetoohigh">Time is too high</span>
+                        </label>
+
+                    </div>
+                    <div class="radio">
+                        <label for="option_timetoolow" id="label_timetoohlow">
+                            <input type="radio" name="rejectionReason" id="option_2_timetoolow" value="Time is too low">
+                            <span id="span_timetoohlow">Time is too low</span>
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label for="option_3_other" id="label_other">
+                            <input type="radio" name="rejectionReason" id="option_3_other" value="option3">
+                            <span id="span_other">Other</span>
+                        </label>
+                    </div>
+                    <div>
+                        <textarea class="form-control hidden" id="other_textarea" rows="10"></textarea>
+                    </div>
+                </div>
+                <br>
+                <div class="panel-footer panel-primary text-right">
+                    <button type="button" id="saveButton" disabled data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
+                        Save
+                    </button>
+
+                    <button type="button" id="cancelButton" class="btn btn-default" aria-pressed="false" autocomplete="off">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+
+
+
+        </div>
+    </div>
+
+    <script>
+
+        $(document).ready(function () {
+
+
+            var userSettings = Xrm.Utility.getGlobalContext().userSettings;
+            langId = userSettings.languageId;
+
+            if (langId != 1033) {
+                $('#span_timetoohigh').text("Durée trop élevée");
+                $('#span_timetoohlow').text("Durée trop courte");
+                $('#span_other').text("Autre");
+                $('#saveButton').text("Enregistrer");
+                $('#cancelButton').text("Annuler");
+
+
+            }
+
+            $('input[type=radio][name=rejectionReason]').change(function () {
+                if (this.id == 'option_3_other') {
+                    $("#other_textarea").removeClass("hidden");
+                    $("#other_textarea").addClass("required-valid");
+
+                }
+                else {
+                    $("#other_textarea").addClass("hidden");
+                    $("#other_textarea").removeClass("required-valid");
+
+                }
+
+
+            });
+
+            $('#cancelButton').on('click', function () {
+                window.top.localStorage.removeItem('_fdr_rejection_reason');
+                window.close();
+
+            })
+
+            $('#saveButton').on('click', function () {
+
+                var checkedId = $('[name=rejectionReason]:checked')[0].id;
+                var checkedValue = $('[name=rejectionReason]:checked').val();
+
+                if (checkedId == 'option_3_other') {
+                    window.top.localStorage.setItem('_fdr_rejection_reason', $("#other_textarea").val());
+
+                }
+                else {
+                    window.top.localStorage.setItem('_fdr_rejection_reason', checkedValue);
+                }
+
+                window.close();
+
+            })
+
+            $('form').on('input paste change', function () {
+                var $required = $('form .required-valid');
+
+                //filter required inputs to only ones that have a value.
+                var $valid = $required.filter(function () {
+                    return this.value != '';
+                });
+
+                //set disabled prop to false if valid input count is != required input count
+                $('#saveButton').prop('disabled', $valid.length != $required.length);
+
+            })
+
+
+        });
+
+
+    </script>
+</body>
+
+</html>

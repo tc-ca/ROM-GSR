@@ -10,7 +10,8 @@
     <layoutxml>
       <grid name="resultset" jump="fdr_name" select="1" icon="1" preview="1">
         <row name="result" id="fdr_functionid">
-          <cell name="fdr_name" width="300" />
+          <cell name="fdr_englishname" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="fdr_frenchname" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="createdon" width="125" />
         </row>
       </grid>
@@ -19,13 +20,14 @@
     <fetchxml>
       <fetch version="1.0" mapping="logical">
         <entity name="fdr_function">
-          <attribute name="fdr_functionid" />
-          <attribute name="fdr_name" />
           <attribute name="createdon" />
-          <order attribute="fdr_name" descending="false" />
+          <order attribute="fdr_englishname" descending="false" />
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="1" />
           </filter>
+          <attribute name="fdr_frenchname" />
+          <attribute name="fdr_englishname" />
+          <attribute name="fdr_functionid" />
         </entity>
       </fetch>
     </fetchxml>

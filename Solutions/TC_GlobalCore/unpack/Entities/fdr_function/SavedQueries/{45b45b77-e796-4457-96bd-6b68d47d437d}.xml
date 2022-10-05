@@ -10,10 +10,9 @@
     <layoutxml>
       <grid name="resultset" jump="fdr_name" select="1" icon="1" preview="1">
         <row name="result" id="fdr_functionid">
-          <cell name="fdr_name" width="300" />
-          <cell name="fdr_englishname" width="150" />
+          <cell name="fdr_englishname" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="fdr_englishdescription" width="150" />
-          <cell name="fdr_frenchname" width="150" />
+          <cell name="fdr_frenchname" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="fdr_frenchdescription" width="150" />
           <cell name="createdon" width="125" />
           <cell name="modifiedon" width="150" />
@@ -26,8 +25,6 @@
     <fetchxml>
       <fetch version="1.0" output-format="xml-platform" mapping="logical">
         <entity name="fdr_function">
-          <attribute name="fdr_functionid" />
-          <attribute name="fdr_name" />
           <attribute name="createdon" />
           <attribute name="fdr_englishname" />
           <attribute name="fdr_englishdescription" />
@@ -36,10 +33,11 @@
           <attribute name="modifiedon" />
           <attribute name="statecode" />
           <attribute name="statuscode" />
-          <order attribute="fdr_name" descending="false" />
+          <order attribute="fdr_englishname" descending="false" />
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="0" />
           </filter>
+          <attribute name="fdr_functionid" />
         </entity>
       </fetch>
     </fetchxml>

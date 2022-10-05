@@ -742,6 +742,13 @@
         return result;
     }
 
+    // returns date offset by a given number of days.
+    function GetOffsetDate(date, days) {
+        var result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
+    }
+
     function GetLocalizedStrings() {
         // TODO Replace with resx Web Resource
 
@@ -844,6 +851,7 @@
         isNetworkAvailable: isNetworkAvailable,
         isOffline: isOffline,
         getFiscalYearFromCurrentDate: getFiscalYearFromCurrentDate,
+        GetOffsetDate: GetOffsetDate,
         filterOptionSetUsingOrigin: filterOptionSetUsingOrigin,
         SetFieldNotification: SetFieldNotification,
         ClearFieldNotification: ClearFieldNotification,

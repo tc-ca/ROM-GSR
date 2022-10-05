@@ -10,8 +10,9 @@
     <layoutxml>
       <grid name="resultset" jump="subject" select="1" preview="1" icon="1">
         <row name="result" id="activityid">
-          <cell name="statuscode" width="50" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="subject" width="25" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="a_a0c45060fb24ed119db2000d3a844ef3.cid_description" width="300" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="statuscode" width="100" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
         </row>
       </grid>
     </layoutxml>
@@ -20,13 +21,14 @@
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="task">
           <attribute name="statuscode" />
-          <order attribute="statuscode" descending="false" />
+          <order attribute="subject" descending="false" />
           <filter type="and">
             <condition attribute="cid_tasklevel" operator="eq" value="100000001" />
           </filter>
           <link-entity name="cid_annualcomplianceitem" from="cid_annualcomplianceitemid" to="cid_annualcomplianceitem" visible="false" link-type="outer" alias="a_a0c45060fb24ed119db2000d3a844ef3">
             <attribute name="cid_description" />
           </link-entity>
+          <attribute name="subject" />
           <attribute name="activityid" />
         </entity>
       </fetch>

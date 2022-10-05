@@ -14,65 +14,47 @@
 
     <style>
 
-        .input-group-addon:first-child, .input-group-btn:first-child {
-            width: 50px !important;
-        }
-
     </style>
 
 </head>
 <body>
 
-    <!--<div class="form-group">-->
+        <div class="input-group" style="margin: 10px 5px 0px 5px;">
+            <input type="text" id="search" class="form-control" style="height:36px" placeholder="Type to search">
+        
+            <span class="input-group-btn" style="background-color: #f0f0f0;border: solid 1px #b7b7b7;">
+                <button class="btn" type="button" style="pointer-events: none;"> <span class="glyphicon glyphicon glyphicon-search" aria-hidden="true"></span>
+                </button>
+            </span>
+        </div>
     <div class="container-fluid">
 
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">Select required specs</h3>
-            </div>
+        <div class="panel">
+            <!-- <div class="panel-heading" id="panel-heading">
+               <h3 class="panel-title">Select required specs</h3> 
+       
+            </div> -->
             <div class="panel-body">
                 <div class="row">
                     <div class="col-xs-12">
                         <ul id="lstTarget" class="list-group">
 
-                            <!--<li class="list-group-item">
-                                <span class="input-group-addon">
-                                     <input type="checkbox" class="cbFlag" id="specsGuid">
-                                </span>
-                                <span class="badge">13</span>
-                                Specs 1
-                            </li>
-                            <li class="list-group-item">
-                                <span class="input-group-addon">
-                                    <input type="checkbox">
-                                </span>
-                                <span class="badge">Speks 6 details</span>
-                                <p class="list-group-item-text">Speks 6 details </p>
-                                <p class="list-group-item-text">
-                                    <a href="#">Speks 6.en/Speks 6.fr page ref</a>
-                                </p>
-                            </li>-->
 
                         </ul>
-                    </div><!-- /.col-lg-6 -->
+                    </div>
                 </div>
             </div>
-        </div>
-
-
-        <div class="row">
-            <div class="col-xs-3 col-xs-offset-2">
-                <button type="button" id="submitButton" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
-                    Add Selected Specs
-                </button>
+            <div class="panel-footer panel-primary text-right">
+                    <button type="button" id="submitButton" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
+                        Add
+                    </button>
+                 
+                    <button type="button" id="cancelButton" class="btn btn-default"  aria-pressed="false" autocomplete="off">
+                        Cancel
+                    </button>
             </div>
-            <div class="col-xs-3">
-            </div>
-            <button type="button" id="cancelButton" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
-                Cancel
-            </button>
-        </div>
 
+        </div>
     </div>
 
 
@@ -339,7 +321,28 @@
 
                 window.close();
             })
+
+            $("#lstTarget").on("change", ":checkbox", function (event) {
+                
+                if(event.target.checked)
+                {
+                    $("#icon-" + event.target.id).addClass("glyphicon glyphicon-ok");
+
+                }else{
+                    $("#icon-" + event.target.id).removeClass("glyphicon glyphicon-ok");
+                }
+
+            });
+
+
+            $("#search").on("keyup", function () {
+                var value = this.value.toLowerCase().trim();
+                $("#lstTarget div").show().filter(function () {
+                    return $(this).text().toLowerCase().trim().indexOf(value) == -1;
+                }).hide();
+            });
         });
+
 
     </script>
 

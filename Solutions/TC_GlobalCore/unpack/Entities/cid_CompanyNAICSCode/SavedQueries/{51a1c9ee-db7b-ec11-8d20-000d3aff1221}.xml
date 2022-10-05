@@ -21,14 +21,15 @@
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="cid_companynaicscode">
           <attribute name="cid_naicscode" />
+          <attribute name="cid_portalrecordcreationdetails" />
           <order attribute="cid_naicscode" descending="false" />
           <filter type="and">
             <condition attribute="statuscode" operator="eq" value="1" />
+            <condition attribute="cid_portalrecordcreationdetails" operator="not-null" />
           </filter>
           <link-entity name="cid_naicscode" from="cid_naicscodeid" to="cid_naicscode" visible="false" link-type="outer" alias="a_328065ce7948ec118c60000d3a84fcd9">
             <attribute name="cid_naicsclasstitle" />
           </link-entity>
-          <attribute name="cid_portalrecordcreationdetails" />
           <attribute name="cid_companynaicscodeid" />
         </entity>
       </fetch>

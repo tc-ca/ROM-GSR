@@ -1,6 +1,5 @@
-<HTML>
-<HEAD>
-    <TITLE></TITLE>
+<html><head>
+    <title></title>
     <style>
         body {
             background-color: white;
@@ -43,17 +42,21 @@
     </style>
     <!-- Using jquery library -->
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-</HEAD>
-<BODY>
+    <script src="ClientGlobalContext.js.aspx" type="text/javascript"></script>
+    <meta>
+    <meta>
+    <meta>
+<meta></head>
+<body style="overflow-wrap: break-word;">
     <label for="cid_naicscode" class="field-label">NAICS Code</label>
     <span id="cid_naicscode_required" style="color: red;font-weight: bold"> *</span>
     <br>
-    <input list="cid_naicscode_list" id="cid_naicscode" class="text form-control" />
+    <input list="cid_naicscode_list" id="cid_naicscode" class="text form-control">
     <br>
     <datalist id="cid_naicscode_list">
     </datalist>
 
-    <input type="text" id="cid_naicscode_list_id" hidden />
+    <input type="text" id="cid_naicscode_list_id" hidden="">
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -62,8 +65,8 @@
             // tony-july 27, 2022
 
             document.getElementById("cid_naicscode").setAttribute("autocomplete", "off");
-
             document.querySelector('input[list="cid_naicscode_list"]').addEventListener('input', onInput);
+
 
             // language
             try {
@@ -83,6 +86,13 @@
 
         function naicscode_selected(text, id) {
             debugger;
+
+            var validationSummaryFC = parent.$('#ValidationSummaryEntityFormControl_EntityFormView');
+            if (validationSummaryFC != null && validationSummaryFC[0] != null) {
+                //validationSummaryFC.remove();
+                validationSummaryFC[0].innerHTML = "";
+                validationSummaryFC.hide();
+            }
 
             var index1 = text.indexOf(" - ");
             text = text.substr(0, index1);
@@ -105,6 +115,9 @@
         function search() {
             naicscode_clear();
 
+            // remove options
+            $('#cid_naicscode_list').empty();
+
             var cid_naicscode = document.getElementById("cid_naicscode").value;
             if (cid_naicscode.length < 2) return;
 
@@ -116,14 +129,13 @@
 
             var cid_naicscode_list = document.getElementById('cid_naicscode_list');
 
-            // remove options
-            $('#cid_naicscode_list').empty();
+
 
             var cid_naicscode_list_id = "";
             for (i = 0; i < items.length; i++) {
                 var item = items[i];
                 var value = item.cid_naicscodeid;
-                var cid_naicsclasstitle = item.cid_naicsclasstitle.replaceAll("\n"," ");
+                var cid_naicsclasstitle = item.cid_naicsclasstitle.replaceAll("\n", " ");
                 var text = item.cid_name + ' - ' +
                     tdg.c.text_language(cid_naicsclasstitle, selected_language);
 
@@ -241,7 +253,7 @@
 
                 error_message_clear: function () {
                     debugger;
-                    $('#ValidationSummaryEntityFormView div').remove();
+                  $('#ValidationSummaryEntityFormControl_EntityFormView').remove();
 
                     //$('#ValidationSummaryEntityFormView')[0].remove();
                     //$('#ValidationSummaryEntityFormView').hide();
@@ -316,5 +328,7 @@
             }
         }
     </script>
-</BODY>
-</HTML>
+
+
+
+</body></html>

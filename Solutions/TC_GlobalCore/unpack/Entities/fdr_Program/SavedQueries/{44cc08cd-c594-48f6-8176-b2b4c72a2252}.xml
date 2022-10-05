@@ -10,7 +10,6 @@
     <layoutxml>
       <grid name="resultset" jump="fdr_name" select="1" icon="1" preview="1">
         <row name="result" id="fdr_programid">
-          <cell name="fdr_name" width="155" />
           <cell name="fdr_englishname" width="191" />
           <cell name="fdr_englishdescription" width="278" />
           <cell name="fdr_frenchname" width="144" />
@@ -25,10 +24,8 @@
     <fetchxml>
       <fetch version="1.0" mapping="logical">
         <entity name="fdr_program">
-          <attribute name="fdr_programid" />
-          <attribute name="fdr_name" />
           <attribute name="createdon" />
-          <order attribute="fdr_name" descending="false" />
+          <order attribute="fdr_englishname" descending="false" />
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="1" />
           </filter>
@@ -38,6 +35,7 @@
           <attribute name="fdr_frenchdescription" />
           <attribute name="statecode" />
           <attribute name="modifiedon" />
+          <attribute name="fdr_programid" />
         </entity>
       </fetch>
     </fetchxml>

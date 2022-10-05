@@ -20,11 +20,12 @@
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="cid_companyerap">
           <attribute name="cid_erapid" />
+          <attribute name="cid_portalrecordcreationdetails" />
           <order attribute="cid_erapid" descending="false" />
           <filter type="and">
             <condition attribute="statuscode" operator="eq" value="1" />
+            <condition attribute="cid_portalrecordcreationdetails" operator="not-null" />
           </filter>
-          <attribute name="cid_portalrecordcreationdetails" />
           <attribute name="cid_companyerapid" />
         </entity>
       </fetch>

@@ -7,7 +7,12 @@ var RegisteredMark_Main = (function (window, document)
     const FIELD_MARK_TYPE = "fdr_marktype";
     const FIELD_MARK_TEXT = "fdr_marktext";
     const FIELD_MARK_LOGO = "fdr_marklogo";
-    
+    const FIELD_SERVICE_REQUEST = "fdr_servicerequest";
+
+    const SERVICE_REQUEST_TYPE_NEW = 794600000;
+
+   
+
     function toggleRequiredLevel(formContext)
     {
         var markType = glHelper.GetValue(formContext, FIELD_MARK_TYPE);
@@ -40,6 +45,7 @@ var RegisteredMark_Main = (function (window, document)
             {
                 //Only make it required on update
                 glHelper.SetRequiredLevel(formContext, FIELD_MARK_LOGO, true);
+
             }
         }
 
@@ -76,6 +82,35 @@ var RegisteredMark_Main = (function (window, document)
             var markType = formContext.getAttribute(FIELD_MARK_TYPE);
             markType.removeOnChange(RegisteredMark_Main.MarkType_OnChange);
             markType.addOnChange(RegisteredMark_Main.MarkType_OnChange);
+
+            formContext.data.entity.removeOnSave(RegisteredMark_Main.OnSave);
+            formContext.data.entity.addOnSave(RegisteredMark_Main.OnSave);
+
+            //Validate If User Can Make Changes Based On SR Status
+            var serviceRequestId = glHelper.GetLookupAttrId(formContext, FIELD_SERVICE_REQUEST);
+
+            if (serviceRequestId != null)
+            {
+
+                Xrm.WebApi.online.retrieveRecord("fdr_servicerequest", serviceRequestId, "?$select=statuscode,statecode,fdr_srtype").then(
+                    function success(result)
+                    {
+                        var serviceRequestType = result["fdr_srtype"];
+                        var serviceRequestStatusReason = result["statuscode"];
+                        var serviceRequestStatus = result["statecode"];//A In
+
+                        if (serviceRequestType != SERVICE_REQUEST_TYPE_NEW)
+                            glHelper.SetFormReadOnly(formContext);
+
+                    },
+                    function (error)
+                    {
+                        console.log("Problem Locating Parent Service Request " + error.message);
+                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Problem Locating Parent Service Request " + error.message });
+                    }
+                );
+            }
+
         },
 
 
@@ -85,6 +120,24 @@ var RegisteredMark_Main = (function (window, document)
             var formContext = executionContext.getFormContext();
 
             toggleRequiredLevel(formContext);
+        },
+
+        OnSave: function (executionContext)
+        {
+
+            var formContext = executionContext.getFormContext();
+            let formType = glHelper.GetFormType(formContext);
+            var serviceRequestId = glHelper.GetLookupAttrId(formContext, FIELD_SERVICE_REQUEST);
+
+            // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+
+            if (serviceRequestId == null)
+            {
+                glHelper.DisplayFormNotification("Service Request Is Mandatory For Adding a Registered Mark.", "ERROR", 5000);
+                executionContext.getEventArgs().preventDefault();
+                return;
+            }
+
         }
 
     }

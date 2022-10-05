@@ -73,6 +73,15 @@
                       </cell>
                     </row>
                     <row>
+                      <cell id="{fe3c3f30-de1c-45c8-a3d9-b13e8427800c}" locklevel="0" colspan="1" rowspan="1" showlabel="true">
+                        <labels>
+                          <label description="Email" languagecode="1033" />
+                          <label description="Adresse de messagerie" languagecode="1036" />
+                        </labels>
+                        <control id="emailaddress" classid="{ADA2203E-B4CD-49BE-9DDF-234642B43B52}" datafieldname="emailaddress" disabled="true" uniqueid="{db4e7c77-a077-50b1-8d17-d468841aeae4}" />
+                      </cell>
+                    </row>
+                    <row>
                       <cell id="{7d6c513a-2512-de5e-aa35-ede6d7ea12a2}" showlabel="false" colspan="1" auto="false">
                         <labels>
                           <label description="Operation Type" languagecode="1033" />
@@ -103,7 +112,7 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{23bcdeca-a538-3004-c72d-94994c93318a}" showlabel="true" locklevel="0" labelid="{2e1a9b9c-bd6d-4701-b96c-3a1527a51806}">
+                      <cell id="{23bcdeca-a538-3004-c72d-94994c93318a}" showlabel="true" locklevel="1" labelid="{2e1a9b9c-bd6d-4701-b96c-3a1527a51806}">
                         <labels>
                           <label description="Oversight Activity" languagecode="1033" />
                           <label description="Activité de surveillance" languagecode="1036" />
@@ -214,6 +223,15 @@
                             <useMainFormDialogForEdit>true</useMainFormDialogForEdit>
                           </parameters>
                         </control>
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{e3a2bb6c-9754-4d55-a9ff-cdee9cef0f6b}" locklevel="0" colspan="1" rowspan="1" visible="false">
+                        <labels>
+                          <label description="Recommendation" languagecode="1033" />
+                          <label description="Recommandation" languagecode="1036" />
+                        </labels>
+                        <control id="ovs_recommendation" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="ovs_recommendation" disabled="false" />
                       </cell>
                     </row>
                     <row>
@@ -1182,12 +1200,29 @@
         </tab>
         <tab name="tab_10" id="{c6beb034-96a8-8ad4-03ac-1b345402dcad}" IsUserDefined="0" locklevel="0" showlabel="true" expanded="true">
           <labels>
-            <label description="Violations" languagecode="1033" />
-            <label description="Infractions" languagecode="1036" />
+            <label description="Synopsis/Violations" languagecode="1033" />
+            <label description="Synopsis/Infractions" languagecode="1036" />
           </labels>
           <columns>
             <column width="100%">
               <sections>
+                <section name="synopsis_section" id="a3b96336-4983-4c17-9836-13ed255ce278" IsUserDefined="0" locklevel="0" showlabel="true" showbar="false" layout="varwidth" celllabelalignment="Left" celllabelposition="Left" columns="1" labelwidth="115">
+                  <labels>
+                    <label description="Inspection Synopsis" languagecode="1033" />
+                    <label description="Synopsis d’inspection" languagecode="1036" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{c6a0ced3-4d01-42ea-8af6-f14469aa137a}" locklevel="0" colspan="1" rowspan="1" showlabel="false">
+                        <labels>
+                          <label description="Inspection Synopsis" languagecode="1033" />
+                          <label description="Synopsis d’inspection" languagecode="1036" />
+                        </labels>
+                        <control id="ovs_inspectionsynopsis" classid="{F9A8A302-114E-466A-B582-6771B2AE0D92}" datafieldname="ovs_inspectionsynopsis" disabled="false" uniqueid="{29f7e4bb-f24f-43f6-add3-c3e5a4b4e0e6}" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
                 <section name="tab_10_section_1" showlabel="false" showbar="false" locklevel="0" id="{d8d70e7c-8e57-1b61-e28b-4ac3c46b9608}" IsUserDefined="0" layout="varwidth" columns="1" labelwidth="115" height="auto">
                   <labels>
                     <label description="Section" languagecode="1033" />
@@ -3441,6 +3476,28 @@
             </parameters>
           </customControl>
         </controlDescription>
+        <controlDescription forControl="{29f7e4bb-f24f-43f6-add3-c3e5a4b4e0e6}">
+          <customControl id="{E0DECE4B-6FC8-4A8F-A065-082708572369}">
+            <parameters>
+              <datafieldname>ovs_inspectionsynopsis</datafieldname>
+            </parameters>
+          </customControl>
+          <customControl formFactor="1" name="MscrmControls.RichTextEditor.RichTextEditorControl">
+            <parameters>
+              <value type="Multiple">ovs_inspectionsynopsis</value>
+            </parameters>
+          </customControl>
+          <customControl formFactor="2" name="MscrmControls.RichTextEditor.RichTextEditorControl">
+            <parameters>
+              <value type="Multiple">ovs_inspectionsynopsis</value>
+            </parameters>
+          </customControl>
+          <customControl formFactor="0" name="MscrmControls.RichTextEditor.RichTextEditorControl">
+            <parameters>
+              <value type="Multiple">ovs_inspectionsynopsis</value>
+            </parameters>
+          </customControl>
+        </controlDescription>
       </controlDescriptions>
       <formLibraries>
         <Library name="msdyn_/WorkOrder/WorkOrder.Library.js" libraryUniqueId="{17dd260c-4613-be64-6de8-3e20e7931c70}" />
@@ -3467,6 +3524,11 @@
           <Handlers>
             <Handler passExecutionContext="true" parameters="" enabled="true" handlerUniqueId="{c21e80a3-caac-d778-c228-499cdb811686}" libraryName="$webresource:msdyn_/CFS/Utils/RibbonUtils.js" functionName="msdyn.RibbonUtils.refreshRibbonFnFromExecutionFormContext" />
             <Handler passExecutionContext="false" parameters="" enabled="true" handlerUniqueId="{4a403021-45a7-9154-c9d0-67de208e4787}" libraryName="msdyn_/CFS/WorkOrder/WorkOrderForm.js" functionName="msdyn.workOrderForm.ShoworHideDeviceInsights" />
+          </Handlers>
+        </event>
+        <event name="onchange" application="false" active="false" attribute="ovs_oversighttype">
+          <Handlers>
+            <Handler functionName="WO_TDG_main.getOverSightType" libraryName="qm_WO_TDG_main.js" handlerUniqueId="{a9eb8969-1098-43fd-80ad-c40b739428a2}" enabled="true" parameters="" passExecutionContext="true" />
           </Handlers>
         </event>
       </events>

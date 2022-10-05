@@ -1,0 +1,58 @@
+﻿<html>
+<head>
+    <meta charset="utf-8">
+
+    <style type="text/css">
+        .searchFrame {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+    <iframe class="searchFrame" id="reportHolder" frameborder="0">
+    </iframe>
+
+    <script>
+
+        function searchOnload()
+        {
+            try
+            {
+                parent.Xrm.WebApi.retrieveMultipleRecords("report", "?$select=name,reportid&$filter=name eq 'Design Details'")
+                    .then(
+                    function success(result)
+                    {
+
+                        if (result.entities && result.entities.length > 0)
+                            document.getElementById("reportHolder").src = parent.Xrm.Utility.getGlobalContext().getClientUrl() + "/crmreports/viewer/viewer.aspx?action=run&helpID=8DigitSearch.rdl&id={" + result.entities[0].reportid + "}";
+                        else
+                        {
+                            console.log("Cannot find 'Design Details' report");
+                            parent.Xrm.Navigation.openErrorDialog({ message: "Cannot find 'Design Details' report" });
+                        }
+                    },
+                    function (error)
+                    {
+                        console.log(error.message);
+                        parent.Xrm.Navigation.openErrorDialog({ message: "Something went wrong. Error: " + error.message });
+
+                    }
+                );
+
+            } catch (e)
+            {
+                parent.Xrm.Navigation.openErrorDialog({ message: "Report load failed. Error: " + e.message });
+            }
+        }
+
+        window.onload = searchOnload;
+
+    </script>
+
+</body>
+</html>
+
+

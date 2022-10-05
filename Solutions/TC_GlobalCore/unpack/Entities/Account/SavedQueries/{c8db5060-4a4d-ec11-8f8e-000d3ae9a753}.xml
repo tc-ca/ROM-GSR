@@ -33,14 +33,19 @@
           <attribute name="cid_siteclaim" />
           <attribute name="ovs_address_display" />
           <attribute name="cid_attestationdate" />
+          <attribute name="cid_portalrecordcreationdetails" />
+          <attribute name="cid_portalrecordmodificationdetails" />
           <order attribute="cid_siteclaim" descending="false" />
           <order attribute="cid_issiteattested" descending="true" />
           <filter type="and">
             <condition attribute="customertypecode" operator="eq" value="948010001" />
             <condition attribute="statuscode" operator="eq" value="1" />
+            <condition attribute="cid_portalrecordcreationdetails" operator="not-null" />
+            <condition attribute="cid_siteclaim" operator="in">
+              <value>100000000</value>
+              <value>100000001</value>
+            </condition>
           </filter>
-          <attribute name="cid_portalrecordcreationdetails" />
-          <attribute name="cid_portalrecordmodificationdetails" />
           <attribute name="accountid" />
         </entity>
       </fetch>

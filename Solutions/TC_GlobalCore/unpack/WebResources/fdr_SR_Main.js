@@ -32,10 +32,10 @@ var SR_main = (function (window, document) {
         "794600011": [794600011, 794600002],
         "Technical Review": ["Technical Review", "Technical Info Required", "Pending Inspection", "Cancellation Pending", "Refused", "Approved"],
         "794600002": [794600002, 794600011, 794600003, 794600009, 794600008, 794600007],
-        "Pending Inspection": ["Pending Inspection", "Cancellation Pending", "Post Inspection Review"],
-        "794600003": [794600003, 794600009, 794600004],
-        "Post Inspection Review": ["Post Inspection Review", "Cancellation Pending", "Refused", "Approved"],
-        "794600004": [794600004, 794600009, 794600008, 794600007],
+        "Pending Inspection": ["Pending Inspection", "Post Inspection Review"],
+        "794600003": [794600003, 794600004],
+        "Post Inspection Review": ["Post Inspection Review", "Refused", "Approved"],
+        "794600004": [794600004, 794600008, 794600007],
         "Refused": ["Refused", "Completed"],
         "794600008": [794600008, 794600005],
         "Cancellation Pending": ["Cancellation Pending"],
@@ -50,6 +50,20 @@ var SR_main = (function (window, document) {
 
         "Draft": ["Canceled"],
         "1": [794600001],
+        "Submitted": ["Canceled"],
+        "794600010": [794600001],
+        "Admin Review": ["Canceled"],
+        "794600006": [794600001],
+        "Additional Info Required": ["Canceled"],
+        "794600000": [794600001],
+        "Technical Info Required": ["Canceled"],
+        "794600011": [794600001],
+        "Technical Review": ["Canceled"],
+        "794600002": [794600001],
+        "Pending Inspection": ["Canceled"],
+        "794600003": [794600001],
+        "Post Inspection Review": ["Canceled"],
+        "794600004": [794600001],
         "Cancellation Pending": ["Canceled"],
         "794600009": [794600001],
         "Completed": ["Closed"],
@@ -69,9 +83,6 @@ var SR_main = (function (window, document) {
         "Closed": ["Reactivation"],
         "794600003": [794600007]
     };
-   
-    // "Unregistered": ["New Registration", "Renewal", "Partial Revocation", "Amendment", "Full Revocation", "Close Active Registration", "Close Expired Registration", "Reactivation"],
-    //"794600002": [794600000, 794600001, 794600002, 794600003, 794600004, 794600005, 794600006, 794600007],
 
     //********************private methods*******************
 
@@ -90,13 +101,6 @@ var SR_main = (function (window, document) {
 
     function ServiceRquestTypeFilter(formContext, operationstatus) {
 
-        ////"Unregistered","794600002"  - set SR Type to null, no options available. Notify user SR cannot be created due to opeartion type 
-        //if (operationstatus == 794600002) {
-
-        //    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "No Service Request couls be created for and Operation of type 'Unregistered'. Please select another operation" });
-        //    glHelper.filterOptionSetUsingOrigin(formContext, "fdr_srtype", serviceRquestTypeOptions, ServiceRquestType2OperationType[operationstatus], false);
-        //    return;
-        //}
 
         if (!operationstatus) operationstatus = 0;
         glHelper.filterOptionSetUsingOrigin(formContext, "fdr_srtype", serviceRquestTypeOptions, ServiceRquestType2OperationType[operationstatus], true);
@@ -193,6 +197,10 @@ var SR_main = (function (window, document) {
         OnStatusReason_Change: function (executionContext) {
 
             var formContext = executionContext.getFormContext();
+
+            //only one state change allowed!
+            if (formContext.getAttribute("statuscode").getIsDirty()) return;
+
             var currentSatatus = glHelper.GetOptionsetValue(formContext, "statuscode");
             var currentState = glHelper.GetOptionsetValue(formContext, "statecode");
             //is instance is active
@@ -205,7 +213,7 @@ var SR_main = (function (window, document) {
 
         OnState_Change: function (executionContext) {
 
-            var formContext = executionContext.getFormContext();
+            var formContext = executionContext.getFormContext();           
 
             //update status reason filters based on state
             //if switched to inactive

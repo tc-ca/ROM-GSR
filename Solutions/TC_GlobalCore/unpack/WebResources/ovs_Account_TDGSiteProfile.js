@@ -17,10 +17,10 @@
     const isPlanner = true;
     
     function setFieldPermissions(formContext) {
-        const rType = glHelper.GetValue(formContext, "customertypecode");
+        //const rType = glHelper.GetValue(formContext, "customertypecode");
        
-        if (rType !== null && rType.toString() === "948010001") {
-           
+        //if (rType !== null && rType.toString() === "948010001") {
+           /*
             if(isInspectorOrAnalystOrManager === (glHelper.hasCurrentUserRole("TDG Inspector")|| glHelper.hasCurrentUserRole("TDG Analyst") ||glHelper.hasCurrentUserRole("TDG Manager"))){
                 glHelper.SetSectionVisibility(formContext, TAB_NAME, SECTION_NAME, false);
             }
@@ -28,9 +28,14 @@
             if(isPlanner === (glHelper.hasCurrentUserRole("TDG Planner"))) {
                 glHelper.SetSectionVisibility(formContext, TAB_NAME, SECTION_NAME, true);
             }
+            */
+            
+            var isPlanner = (glHelper.hasCurrentUserRole("TDG Planner")) 
+            glHelper.SetSectionVisibility(formContext, TAB_NAME, SECTION_NAME, isPlanner);
+                
 
         }
-    }
+    //}
     return{
         OnLoad: function (executionContext) {
 
