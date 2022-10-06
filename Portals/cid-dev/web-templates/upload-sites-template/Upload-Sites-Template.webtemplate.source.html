@@ -916,7 +916,7 @@ function storeMessageListInSession(data)
    sessionStorage.setItem('MessagesJsonArray',JSON.stringify(data));
 }
 
-function Download_ExcelTemplate (TemplateLanguage)
+ function  Download_ExcelTemplate (TemplateLanguage)
 {
   $("Div.validation-summary").css('display', 'none');
         
@@ -966,25 +966,46 @@ function Download_ExcelTemplate (TemplateLanguage)
       req.open("POST", url, true);
       req.setRequestHeader('Content-Type', 'application/json');
       req.onreadystatechange = function() {
-        console.log(  this.readyState);
-        console.log(  this.status);
-        console.log(  this.response);
+      
         console.log(req.getResponseHeader('location'));
         if (this.readyState === 4) {
+            req.onreadystatechange = null;
 
            //asyncronous check       
            if (this.status === 202)
            {
                if (req.getResponseHeader('location') != null)
                {
-                   var locationheader = req.getResponseHeader('location') ;
-                   console.log("after check 202");
-                   console.log(req.getResponseHeader('location'));
-                     var SeperatorIndex =   locationheader.indexOf("|");
-                     var  NoteGUID = locationheader.substring(0, SeperatorIndex ).trim();
+                   var locationheader =  req.getResponseHeader('location') ;
+                
+                   var req2 = new XMLHttpRequest();
+                    req2.open("POST", locationheader);
+                    req2.setRequestHeader('Content-Type', 'application/json');
+                    req2.onreadystatechange = function() {
+                         if (this.readyState === 4) {
+                             req2.onreadystatechange = null;
+                             console.log("inside request 2");
+                             console.log(this.status);
+
+                            //asyncronous check       
+                            if (this.status === 200)
+                            {
+                                    let GetResponse =  Get_Location_Header (locationheader);
+
+                            }
+                         }
+                        }
+               
+
+
+                    console.log("Get response");
+                   console.log(GetResponse);
+                     var SeperatorIndex =   GetResponse.indexOf("|");
+
+                     var  NoteGUID = GetResponse.substring(0, SeperatorIndex ).trim();
                       var fileattachementURL = "~/_entity/annotation/"  + NoteGUID;
                   //download the file from the url
-            window.location.replace(fileattachementURL);
+               window.location.replace(fileattachementURL);
 
                }
 
@@ -1112,6 +1133,55 @@ function filter_BulkMessageArray(id , lang)
    return responseMessage ;
 }
 
+function Get_Location_Header(url)
+{
+    var xhr = new XMLHttpRequest();
+//xhr.withCredentials = true;
+
+
+xhr.addEventListener("readystatechange", function() {
+  if(this.readyState === 4) {
+    
+   
+            console.log("status inside get");
+            console.log(this.status);
+            if (this.status === 200)
+            //(this.responseText.indexOf('Running') <= 0)
+            {
+    return (this.responseText);
+            }
+            else
+            {
+                Get_Location_Header(url) ;
+            }
+            
+  }
+});
+
+xhr.open("GET", url);
+/*xhr.setRequestHeader('Content-Type', 'application/json');
+xhr.onreadystatechange = function() {
+    if(this.readyState === 4) {
+         console.log("sttus inside get");
+            console.log(this.status);
+            console.log(this.responseText);
+        if (this.status != "Running")
+        {
+            xhr.onreadystatechange = null;
+            console.log("running not found");
+            console.log(this.responseText);
+             return (this.responseText);
+        }
+         console.log("running is found");
+            console.log(this.responseText);
+      
+}
+}*/
+
+
+xhr.send();
+
+}
 
 
 </script>
