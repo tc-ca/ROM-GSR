@@ -424,7 +424,10 @@ $('#btn_attachfile_and_scan').click(function(e)
 });
 
  
-$('#linkdownload_English').on('click', async function() {
+$('#linkdownload_English').click(function(e)
+{
+
+//.on('click', async function() {
         //check if page for initial registeration
        
         Disable_all_Buttons();
@@ -436,7 +439,10 @@ $('#linkdownload_English').on('click', async function() {
 
 
 //download french button
- $('#linkdownload_French').on('click', async function() {
+ $('#linkdownload_French').click(function(e)
+{
+
+ //.on('click', async function() {
 
  //check if page for initial registeration
        
@@ -916,13 +922,14 @@ function storeMessageListInSession(data)
    sessionStorage.setItem('MessagesJsonArray',JSON.stringify(data));
 }
 
- function  Download_ExcelTemplate (TemplateLanguage)
+  function  Download_ExcelTemplate (TemplateLanguage)
 {
-  $("Div.validation-summary").css('display', 'none');
-        
+        //hid any error or validation div
+        $("Div.validation-summary").css('display', 'none');
         $("Div.alert").css('display', 'none');
-          
+          //get language
         var langcode = '{{languagecode}}'  ;
+      
         var downloadMessage ='<p>Downloading the custom Site Bulk Upload template.  Please wait a moment...</p>';
        // '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>' ;
         var DownloadMessageCompleted =  '<p>Download completed.</p>';
@@ -954,59 +961,32 @@ function storeMessageListInSession(data)
       var companyid = '{{parentid}}';
 
 
+     //flow paramater
      var flowparamaters =
         '{ "accountid": "' + companyid + '",'  + '"Language": "' + TemplateLanguage + '" , "UiLanguage":"'+ langcode+'" , "UploadType" : "' + UploadType + '" }';
 
-
       var req = new XMLHttpRequest();
-
       var url = '{{download_flow_URL}}';
       console.log(url);
-
       req.open("POST", url, true);
       req.setRequestHeader('Content-Type', 'application/json');
       req.onreadystatechange = function() {
       
-        console.log(req.getResponseHeader('location'));
+      
         if (this.readyState === 4) {
-            req.onreadystatechange = null;
+            //req.onreadystatechange = null;
+              console.log(req.getResponseHeader('location'));
 
            //asyncronous check       
            if (this.status === 202)
            {
+               //async flow response call will retrun location header to get the result
                if (req.getResponseHeader('location') != null)
                {
                    var locationheader =  req.getResponseHeader('location') ;
-                
-                   var req2 = new XMLHttpRequest();
-                    req2.open("POST", locationheader);
-                    req2.setRequestHeader('Content-Type', 'application/json');
-                    req2.onreadystatechange = function() {
-                         if (this.readyState === 4) {
-                             req2.onreadystatechange = null;
-                             console.log("inside request 2");
-                             console.log(this.status);
-
-                            //asyncronous check       
-                            if (this.status === 200)
-                            {
-                                    let GetResponse =  Get_Location_Header (locationheader);
-
-                            }
-                         }
-                        }
-               
-
-
-                    console.log("Get response");
-                   console.log(GetResponse);
-                     var SeperatorIndex =   GetResponse.indexOf("|");
-
-                     var  NoteGUID = GetResponse.substring(0, SeperatorIndex ).trim();
-                      var fileattachementURL = "~/_entity/annotation/"  + NoteGUID;
-                  //download the file from the url
-               window.location.replace(fileattachementURL);
-
+               //call function to get location header result
+                  setTimeout(Get_Location_Header (locationheader), 3000); 
+                  
                }
 
            } 
@@ -1019,8 +999,8 @@ function storeMessageListInSession(data)
           //assign result to noteid intially
            var SeperatorIndex =   result.indexOf("|");
             var  NoteGUID = result.substring(0, SeperatorIndex ).trim();
-            // NoteGUID =result.replace('|' , '').trim();
-             console.log("NoteGUID " + NoteGUID) ;
+         
+       
            
          if (req.getResponseHeader('RootMessag') != null && req.getResponseHeader('RootMessag') != "")
          {
@@ -1133,56 +1113,89 @@ function filter_BulkMessageArray(id , lang)
    return responseMessage ;
 }
 
-function Get_Location_Header(url)
+async function Get_Location_Header(url)
 {
-    var xhr = new XMLHttpRequest();
-//xhr.withCredentials = true;
-
-
-xhr.addEventListener("readystatechange", function() {
-  if(this.readyState === 4) {
-    
+    //delay execution for 30 seconds
+   await delay(30000);
    
-            console.log("status inside get");
-            console.log(this.status);
-            if (this.status === 200)
-            //(this.responseText.indexOf('Running') <= 0)
-            {
-    return (this.responseText);
-            }
-            else
-            {
-                Get_Location_Header(url) ;
-            }
-            
-  }
-});
+   var req2 = new XMLHttpRequest();
+                    req2.open("Get", url);
+                    req2.setRequestHeader('Content-Type', 'application/json');
+                    
+                    req2.onreadystatechange = function() {
+                         if (this.readyState === 4) {
+                            // req2.onreadystatechange = null;
+                            
+                             console.log("inside request 2");
+                             console.log(this.status);
+                             //console.log (this.responseText); 
 
-xhr.open("GET", url);
-/*xhr.setRequestHeader('Content-Type', 'application/json');
-xhr.onreadystatechange = function() {
-    if(this.readyState === 4) {
-         console.log("sttus inside get");
-            console.log(this.status);
-            console.log(this.responseText);
-        if (this.status != "Running")
-        {
-            xhr.onreadystatechange = null;
-            console.log("running not found");
-            console.log(this.responseText);
-             return (this.responseText);
-        }
-         console.log("running is found");
-            console.log(this.responseText);
+                            //check if location call returned 200     
+                            if (this.status === 200)
+                            {
+                                console.log("200 status")
+                                
+                                //get seperator char index to split NoteID and Message
+                                    var SeperatorIndex =   this.responseText.indexOf("|");
+                                    var Reponse_Length = this.responseText.length;
+
+                                    var  NoteGUID = this.responseText.substring(0, SeperatorIndex ).trim();
+                                    var fileattachementURL = "~/_entity/annotation/"  + NoteGUID;
+                                    //download the file from the url
+                                   window.location.replace(fileattachementURL);
+                                   console.log (this.responseText);
+                                   console.log ("reponse Length : " + Reponse_Length);
+                                   var langcode = '{{languagecode}}'  ;
       
+                                    var downloadMessage ='<p>Downloading the custom Site Bulk Upload template.  Please wait a moment...</p>';
+                                // '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>' ;
+                                    var DownloadMessageCompleted =  '<p>Download completed.</p>';
+                                if (langcode != "en-US" && langcode != "en")
+                                {
+                                    downloadMessage = "<p>Téléchargement du modèle de téléchargement en masse de site personnalisé. Patientez s'il-vous-plait...</p>";
+                                    //"<p>Le classeur Excel personnalisé de téléchargement en masse du site est en cours de téléchargement…</p>"
+                                    DownloadMessageCompleted  = '<p>Téléchargement terminé.</p>' ;
+                                }//end check language
+                                console.log("Index of  I " + this.responseText.indexOf("|"));
+                                $('#infoMsg').html(DownloadMessageCompleted );
+                               if (this.responseText.indexOf("|") != (Reponse_Length -1) )
+                                {
+            
+                                  // NoteGUID = result.substring(0, SeperatorIndex ).trim();
+
+                                    //get root message from the text from flow retruned text 
+                                    var rootMessage = this.responseText.substring( SeperatorIndex + 1);
+
+                                    $('#infoMsg').html("<p>" + DownloadMessageCompleted +  "</p> <br> <p>"+ rootMessage
+                                
+                                    + "</p>");
+                                }
+                                //enable all buttons
+                                Enable_Button('btn_attachfile_and_scan');
+                                Enable_Button('linkdownload_English');
+                                Enable_Button('linkdownload_French');
+                                Enable_Button('btn_Previous');
+                            }//end if status = 200
+                            else{
+                                
+
+                                //call function again if returned status is not 200
+                                setTimeout(Get_Location_Header (url), 400000); 
+                            }//end else
+
+                         }
+                        }
+                        //send request
+                        req2.send();
+
 }
-}*/
 
 
-xhr.send();
-
+function delay(milliseconds){
+    return new Promise(resolve => {
+        setTimeout(resolve, milliseconds);
+    });
 }
-
 
 </script>
 <div class="container ">

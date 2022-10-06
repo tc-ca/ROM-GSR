@@ -157,8 +157,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000012",
-                        "message_en": "You cannot proceed before attesting all the Company Sites, via the [V] button option in each row where 'Is Site Attested' = No",
-                        "message_fr": "You cannot proceed before attesting all the Company Sites, via the [V] button option in each row where 'Is Site Attested' = No_FR"
+                        "message_en": "You cannot proceed before attesting all the Company Sites, via opening the site details and completing all the required information for each site.",
+                        "message_fr": "FR-You cannot proceed before attesting all the Company Sites, via opening the site details and completing all the required information for each site."
                     },
                     {
                         "code": "m000013",
@@ -241,6 +241,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "UN Number does not exist_FR"
                     },
                     {
+                        "code": "m000029",
+                        "message_en": "Switch Site Type",
+                        "message_fr": "Switch Site Type_FR"
+                    },
+                    {
                         "code": "m000098",
                         "message_en": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
                         "message_fr": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID._FR"
@@ -298,6 +303,16 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000109",
                         "message_en": "Deactivate Company",
                         "message_fr": "Désactiver l'entreprise"
+                    },
+                    {
+                        "code": "m000110",
+                        "message_en": "Before selecting the Bulk option, each Site where 'Site Claimed' is set to 'Site Claim Pending', needs to be claimed, by choosing one of the options (My Active Site, My Inactive Site, or Not My Site) via that row’s [V] button.",
+                        "message_fr": "Before selecting the Bulk option, each Site where 'Site Claimed' is set to 'Site Claim Pending', needs to be claimed, by choosing one of the options (My Active Site, My Inactive Site, or Not My Site) via that row’s [V] button."
+                    },
+                    {
+                        "code": "m000111",
+                        "message_en": "Bulk Add/Update",
+                        "message_fr": "Ajout/Mise à jour en masse"
                     }
                 ];
 

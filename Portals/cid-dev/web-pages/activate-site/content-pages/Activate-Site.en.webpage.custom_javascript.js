@@ -1,8 +1,19 @@
+//
+// Web Page-Activate Site.js
+//
+
 $(document).ready(function () {
-	var companyName = '{{user.parentcustomerid.name }}';
+	debugger;
+
+	var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name}}');
 	var topNav = $('#navbar');
 
-	if(companyName)
-		if(topNav)
-			$( "<h2>TDG Site Registration Database: " + companyName + "</h2>" ).insertAfter(topNav);
+	if (companyName)
+		if (topNav) {
+			var msg = tdg.error_message.message("m000108");
+			var value = "<h2>{0} - {1}</h2>";
+			value = value.replace("{0}", msg);
+			value = value.replace("{1}", companyName);
+			$(value).insertAfter(topNav);
+		}
 });

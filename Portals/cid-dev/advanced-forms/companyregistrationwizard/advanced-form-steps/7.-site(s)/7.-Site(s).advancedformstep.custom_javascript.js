@@ -98,13 +98,18 @@ $(document).ready(function () {
 		//company id
 		var companyId = $("#EntityFormView_EntityID").val();
 		console.log(companyId);
+		//get all sites with pending claim
 		var filter = "_parentaccountid_value eq " + companyId + " and cid_siteclaim eq 100000003";
 		var response = tdg.webapi.list("accounts", filter);
+		//if one or more sites found pending claim
 		if (response.length > 0) {
-			tdg.c.dialog_OK("Users cannot access bulk upload until all of the existing sites in the list have been Claimed");
-
+			//display errror message
+			var m000110 = tdg.error_message.message("m000110");
+			tdg.c.dialog_OK(m000110);
+			//("Users cannot access bulk upload until all of the existing sites in the list have been Claimed");
 		}
 		else {
+			//redirect to bulk update
 			window.location.href = '~/Bulk_Site_Upload/'
 		}
 
@@ -153,14 +158,14 @@ function Disable_ContactTypeFieldsForSecondaryUser() {
 	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
 	//if not primary contact
 	if (cid_usercontacttype != 100000000) {
-        $(".create-action").attr("disabled", true);
-         $(".create-action").css("pointer-events", "none");
+		$(".create-action").attr("disabled", true);
+		$(".create-action").css("pointer-events", "none");
 
-        //Wait till subgrid load
-        $("#Contacts").on("loaded", function () {
-            $(".btn.btn-default.btn-xs").prop("disabled", true);
-            $(".details-link").prop("disabled", true);
-            $(".details-link").css("pointer-events", "none");
-        });
+		//Wait till subgrid load
+		$("#Contacts").on("loaded", function () {
+			$(".btn.btn-default.btn-xs").prop("disabled", true);
+			$(".details-link").prop("disabled", true);
+			$(".details-link").css("pointer-events", "none");
+		});
 	}
 }

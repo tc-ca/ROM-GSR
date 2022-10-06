@@ -8,6 +8,7 @@ $(document).load(function () {
 });
 
 $(document).ready(function () {
+	var operationWizardURL = "";
 	//$('#instructions').hide();
 	$('#EntityFormView').hide();
 	//$('#redirectInstruction').show();
@@ -23,10 +24,14 @@ $(document).ready(function () {
 
 				if (operationId) {
 					var extendedSite = IsExtendedSite(operationId, null);
-					var operationWizardURL = "~/OperationRegistrationWizard/?id=" + operationId + "&siteid=" + siteid + (extendedSite ? "&isExtended=true" : "&isExtended=false");
+					operationWizardURL = "~/OperationRegistrationWizard/?id=" + operationId + "&siteid=" + siteid + (extendedSite ? "&isExtended=true" : "&isExtended=false");
 
 					if ($("#further_site_details").length <= 0) {
-						$("#PreviousButton").parent().after("<div id='further_site_details' role='group' class='btn-group entity-action-button'><a href='" + operationWizardURL + "'><input type='button' name='Previous' value='Previous' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>");
+						//var furtherDetailsBtn = '<div class="input-group pull-left">&nbsp;&nbsp;</div><div class="input-group pull-left"><button type="button" id="furtherDetailsBtn" onclick="window.open(' + operationWizardURL + '", "Further Deatils", "location=0,width=750,height=650,left=500,top=55"); return false;" class="btn btn-primary pull-right action">Prev</button></div>';
+						var furtherDetailsBtn = "<div id='further_site_details' role='group' class='btn-group entity-action-button'><a href='" + operationWizardURL + "'><input type='button' name='Previous' value='Previous' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>";
+						//$("#PreviousButton").parent().after("<div id='further_site_details' role='group' class='btn-group entity-action-button'><a href='" + operationWizardURL + "'><input type='button' name='Previous' value='Previous' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>");
+						$("#PreviousButton").parent().after(furtherDetailsBtn);
+						
 						$("#PreviousButton").hide();
 					}
 
@@ -65,6 +70,10 @@ $(document).ready(function () {
 		});
 	}
 
+$('#furtherDetailsBtn').click(function (e) {
+	//window.open(operationWizardURL,'Further Site Details','width=600,height=400')
+	alert('Test');
+});	
 	webFormClientValidate = function () {
 		var validation = true;
 		var rows = $("#Operations .view-grid table").find("tbody > tr");
