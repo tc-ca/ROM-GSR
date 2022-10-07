@@ -312,6 +312,9 @@
                   "Succeeded"
                 ]
               },
+              "limit": {
+                "timeout": "PT15M"
+              },
               "metadata": {
                 "operationMetadataId": "e136eead-50e8-4d66-aab4-6eb6647796dc"
               },
@@ -333,7 +336,10 @@
                   "item/ValidationMessages": "@body('Parse_JSON_Messages_From_Web')",
                   "item/Language": "@variables('Language')"
                 },
-                "authentication": "@parameters('$authentication')"
+                "authentication": "@parameters('$authentication')",
+                "retryPolicy": {
+                  "type": "none"
+                }
               }
             },
             "check_if_error_found_in_validation": {
@@ -890,7 +896,7 @@
                       "type": "SetVariable",
                       "inputs": {
                         "name": "SiteRemoveWarnning",
-                        "value": "Note that the Site listed below were removed from the workbook prior to its upload. If you intend on inactivating these Sites, then this needs to be done using the xxxxx functionality:"
+                        "value": "\"Note that the Site listed below were removed from the workbook prior to its upload. If you intend on inactivating these Sites, then this needs to be done using the 'Deactivate this Site' functionality as found in the side-menu bar when the Site has been retrieved.\":"
                       }
                     },
                     "Select_Missing_Site_List_": {
@@ -1067,7 +1073,7 @@
                         "type": "SetVariable",
                         "inputs": {
                           "name": "SiteRemoveWarnning",
-                          "value": "French - Note that the Site listed below were removed from the workbook prior to its upload. If you intend on inactivating these Sites, then this needs to be done using the xxxxx functionality:"
+                          "value": "French - \"Note that the Site listed below were removed from the workbook prior to its upload. If you intend on inactivating these Sites, then this needs to be done using the 'Deactivate this Site' functionality as found in the side-menu bar when the Site has been retrieved.\":"
                         }
                       },
                       "Select_Missing_Site_List__French": {
@@ -2757,7 +2763,7 @@
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
