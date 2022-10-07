@@ -132,7 +132,7 @@
 {% endif %}
 
 {% endfor %}
-{% if {{languagecode}}  == 'fr-FR' %}
+{% if {{languagecode}}  == 'fr' %}
 {% assign step1 = 'Étape 1. Téléchargez le modèle Excel personnalisé de téléchargement en masse du site.' %}
 {% assign  step2 = 'Étape 2. Téléchargez le classeur Excel personnalisé de téléchargement en masse du site.' %}
 {% assign upload = 'Commence le téléchargement' %}
@@ -178,7 +178,9 @@
   //assign number of unclaimed sites
    var NumberOfUnClaimedSites= '{{UnClaimedSitesResultsize}}';
 
-   
+   //get upload button text message
+   var UploadButtonText = tdg.error_message.message("m000111");
+   console.log(UploadButtonText);
       
       var Page_Partial_URL = '{{page.adx_partialurl}}';
      
@@ -186,7 +188,7 @@
 
       //read all messages in json array
       ReadBulkMessagesFile();
-
+   
 
     //insert lables and buttons
     $(".section[data-name='General']").closest("fieldset").hide();
@@ -214,9 +216,6 @@
                    container: 'body',
                    title : "Please first complete the Steps before choosing the [Next] option. Alternatively, choose the [Previous] button to return to the Wizard."
                     });
-        
-
- 
  
   }
   else
@@ -230,7 +229,7 @@
     document.getElementById("uploadFile").value = this.value.replace("C:\\fakepath\\", "");
    };
       //if any unclaimed site is found
-      if (NumberOfUnClaimedSites > 0)
+    /*  if (NumberOfUnClaimedSites > 0)
       {
 
           //disable all controls in the form
@@ -239,20 +238,15 @@
           $("#Div_BrowseButton").prop('disabled',true);
           Disable_all_Buttons();
           var   errorMessage  = "Before choose the Bulk option, each Site where 'Is Site Attested' is set to 'No', need to be attested by choosing one of the options via the [V] button at the far right of that row." ;
-          /*   errorMessage = filter_BulkMessageArray("M14" , "en").replace("{0}" , emailaddress1);
-            if ( Lang != 'en-US' && Lang !="en")
-            {
-           errorMessage = filter_BulkMessageArray("M14" , "fr").replace("{0}" , emailaddress1);
-            }*/
-       
+        
         //show popup message;
-        Popup_Message(errorMessage, (ans) => {
+       Popup_Message(errorMessage, (ans) => {
                             if (ans) {
                                 //window.location.href='~/RegistrationWizard/';
                                  history.back() ;
                                 }
                             });
-            }
+            }*/
 
 //hide form button
  $("#InsertButton").css("display", "none");

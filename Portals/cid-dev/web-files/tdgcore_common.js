@@ -1167,7 +1167,7 @@ if (typeof (tdg.cid) == "undefined") {
             })
         },
 
-        subgrid_header_language: function (grid) {
+        subgrid_header_language: function (grid, un_number_grid) {
             debugger;
             var selected_language = sessionStorage.getItem("selected_language");
 
@@ -1200,6 +1200,20 @@ if (typeof (tdg.cid) == "undefined") {
                                 control_a[0].innerHTML = html.replace(text, text1);
                             }
                         }
+
+                        if (un_number_grid == true) {
+                            switch (i) {
+                                case 0:
+                                    tdElement.ariaLabel = "UN Number Display";
+                                    break;
+                                case 1: // Packing Group
+                                    tdElement.style.display = "none";
+                                    break;
+                                case 2: // Shipping
+                                    tdElement.style.display = "none";
+                                    break;
+                            }
+                        }
                     }
                 }
             });
@@ -1223,7 +1237,7 @@ if (typeof (tdg.cid) == "undefined") {
             debugger;
             var selected_language = sessionStorage.getItem("selected_language");
 
-            tdg.cid.subgrid_header_language(grid);
+            tdg.cid.subgrid_header_language(grid, false);
             grid.on("loaded", function () {
                 debugger;
                 let rows = grid.find("table tbody > tr");
@@ -1250,7 +1264,7 @@ if (typeof (tdg.cid) == "undefined") {
         subgrid_unnumber: function (grid) {
             debugger;
             var selected_language = sessionStorage.getItem("selected_language");
-            tdg.cid.subgrid_header_language(grid);
+            tdg.cid.subgrid_header_language(grid, true);
             grid.on("loaded", function () {
                 debugger;
                 let rows = grid.find("table tbody > tr");

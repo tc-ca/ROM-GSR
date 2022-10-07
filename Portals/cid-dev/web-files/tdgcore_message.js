@@ -313,6 +313,11 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000111",
                         "message_en": "Bulk Add/Update",
                         "message_fr": "Ajout/Mise à jour en masse"
+                    },
+					 {
+                        "code": "m000112",
+                        "message_en": "The Annual Compliance Update can only be completed on or 30 days after the Company’s Anniversary Date each year.",
+                        "message_fr": "The Annual Compliance Update can only be completed on or 30 days after the Company’s Anniversary Date each year_FR."
                     }
                 ];
 

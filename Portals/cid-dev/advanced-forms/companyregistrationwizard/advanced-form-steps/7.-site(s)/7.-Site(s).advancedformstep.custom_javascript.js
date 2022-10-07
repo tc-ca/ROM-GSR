@@ -4,8 +4,9 @@
 
 $(document).ready(function () {
 	debugger;
+	var UploadButtonText = tdg.error_message.message("m000111");
 	if ('{{request.url}}'.includes("tdgcore-qa") || '{{request.url}}'.includes("rd-tdgcore-dev")) {
-		var BulkUploaddButton = '<div class="input-group pull-left">&nbsp;&nbsp;</div><div class="input-group pull-left"><button type="button" id="BulkUploadButton"  class="btn btn-primary pull-right action">Bulk Site upload</button></div>';
+		var BulkUploaddButton = '<div class="input-group pull-left">&nbsp;&nbsp;</div><div class="input-group pull-left"><button type="button" id="BulkUploadButton"  class="btn btn-primary pull-right action">'+ UploadButtonText +'</button></div>';
 		$(".toolbar-actions").append(BulkUploaddButton);
 	}
 
