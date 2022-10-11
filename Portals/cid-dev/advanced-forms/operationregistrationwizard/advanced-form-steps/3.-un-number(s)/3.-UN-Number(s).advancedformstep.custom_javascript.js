@@ -54,10 +54,10 @@ if (window.jQuery) {
                     var siteId = urlParams.get('siteid');
 
                     if (urlParams.has('in_year')) {
-                        window.location.href = "~/en-US/my-sites/in-year-site/?id=" + siteId;
+                        window.location.href = "~/my-sites/in-year-site/?id=" + siteId;
                     }
                     else {
-                        window.location.href = "~/en-US/SiteRegistrationWizard/?id=" + siteId;
+                        window.location.href = "~/SiteRegistrationWizard/?id=" + siteId;
                     }
                 }
             }

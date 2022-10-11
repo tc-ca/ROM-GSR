@@ -62,6 +62,13 @@ if (typeof (tdg.message) == "undefined") {
                 "Note:\n" +
                 "- <b>[Bulk Add/Update]</b> will appear to the right of the <b>[+Add]</b> button\n" +
                 "- For In Year / Annual Compliance, the <b>[V]</b> options will be 'Open Site Details', 'Deactivate / Reactivate'_FR"
+				
+			var m000030_EN = "The registration of your Company in the CID Data Platform is now complete. " +
+				"An email has been sent to your address, confirming the completion of the registration." +
+				"<br><br>You are currently in the initial in-year page, which will be your starting page for each future CID session."
+            var m000030_FR = "L'enregistrement de votre entreprise dans la plateforme de données CID est maintenant terminé. " +
+				"Un e-mail a été envoyé à votre adresse, confirmant la finalisation de l'inscription." +
+				"<br><br>Vous êtes actuellement dans la page initiale en cours d'année, qui sera votre page de démarrage pour chaque future session CID."
 
             var list =
                 [
@@ -244,6 +251,11 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000029",
                         "message_en": "Switch Site Type",
                         "message_fr": "Switch Site Type_FR"
+                    },
+					{
+                        "code": "m000030",
+                        "message_en": m000030_EN,
+                        "message_fr": m000030_FR
                     },
                     {
                         "code": "m000098",

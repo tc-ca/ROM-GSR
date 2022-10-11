@@ -27,8 +27,8 @@ $(document).ready(function () {
         var siteId = urlParams.get('id');
         var operationId = GetHOTIOperation(siteId);
 
-        var msg = tdg.error_message.message("m000029");
-        var html1 = "&nbsp;&nbsp;<div id='switchSiteType' role='group' class='btn-group entity-action-button'><a href='~/AuditHistoryLog_Create?id=" + siteId + "'><input type='button' name='SwitchSiteType' value='{0}' class='btn btn-primary button submit-btn' nonactionlinkbutton='true'></a></div>";
+        var msg = "Switch Requirement Level";//tdg.error_message.message("m000029");
+        var html1 = "&nbsp;&nbsp;<div id='switchSiteRequirementLevel' role='group' class='btn-group entity-action-button'><a href='~/my-sites/in-year-site/switch_site_requirement_level?id=" + siteId + "'><input type='button' name='switchSiteRequirementLevel' value='{0}' class='btn btn-primary button submit-btn' nonactionlinkbutton='true'></a></div>";
         html1 = html1.replaceAll("{0}", msg);
         $('div[data-name="tdg_activities_details"]').parent().parent().find("#UpdateButton").parent().after(html1);
 
