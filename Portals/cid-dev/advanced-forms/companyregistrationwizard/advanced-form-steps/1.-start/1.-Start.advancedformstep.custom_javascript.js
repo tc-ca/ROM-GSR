@@ -15,12 +15,8 @@ $(document).ready(function () {
     //$("#cid_contacttype").val(100000000);
     tdg.c.control_hide("cid_contacttype");
 
-    // get cra bn
-    var test = '{{user.fullname}}';
-    var cid_has_cra_bn = '{{user.cid_has_cra_bn}}';
-    cid_has_cra_bn = (cid_has_cra_bn == "true" ? 1 : 0);
-    $("#cid_has_cra_bn").val(cid_has_cra_bn);
-    //cid_has_cra_bn").val("1");
+    // default has a cra bn
+    $("#cid_has_cra_bn").val("1");
 
     tdg.c.control_hide("parentcustomerid", true);
     tdg.c.control_hide("cid_operatingname");
@@ -46,7 +42,8 @@ $(document).ready(function () {
         var account_id = '{{user.parentcustomerid.Id}}';
         if (account_id != "") {
             debugger;
-            //var invitation = tdg.c.OData_List("adx_invitation", "");
+
+            var invitation = tdg.c.OData_List("adx_invitation", "");
             //if (invitation.length > 0) {
                 sessionStorage.setItem("cid_suppress_error", "true");
 
@@ -59,10 +56,8 @@ $(document).ready(function () {
                 else {
                     $("#cid_has_cra_bn").val("0");
                     $("#cid_legalname").val(account.ovs_legalname);
-                    if(account.cid_reasonfornobnnumber != null)
-                        $("#cid_reasonfornobnnumber").val(account.cid_reasonfornobnnumber.Value);
                 }
-                
+
                 sessionStorage.setItem("cid_suppress_error_code", "m000099");
                 $("#NextButton").click();
             //}

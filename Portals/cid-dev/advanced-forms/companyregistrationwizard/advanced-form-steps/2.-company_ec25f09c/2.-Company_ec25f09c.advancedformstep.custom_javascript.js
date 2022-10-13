@@ -4,10 +4,10 @@
 
 $(document).ready(function () {
 	debugger;
+
 	tdg.c.control_hide("cid_addressoverwritten");
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
-
 
 	var code = sessionStorage.getItem("cid_suppress_error_code") + "";
 	if (code != "null" && code != "") {
@@ -55,6 +55,7 @@ $(document).ready(function () {
 		var cid_legalname = $('#ovs_legalname').val();
 		var cid_operatingname = $('#name').val();
 		var cid_has_cra_bn = $('#cid_has_cra_bn').val();
+		var cid_crabusinessnumber = $('#cid_crabusinessnumber').val();
 		var cid_reasonfornobnnumber = $('#cid_reasonfornobnnumber').val();
 		var cid_reasonfornobnnumber_other = $('#cid_reasonfornobnnumber_other').val();
 	}
