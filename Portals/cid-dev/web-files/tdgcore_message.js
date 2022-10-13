@@ -69,7 +69,24 @@ if (typeof (tdg.message) == "undefined") {
             var m000030_FR = "L'enregistrement de votre entreprise dans la plateforme de données CID est maintenant terminé. " +
 				"Un e-mail a été envoyé à votre adresse, confirmant la finalisation de l'inscription." +
 				"<br><br>Vous êtes actuellement dans la page initiale en cours d'année, qui sera votre page de démarrage pour chaque future session CID."
-
+							
+			var m000031_EN = "You are changing the site requirement level from basic to extended. " +
+				"You are required to complete the extended processing requirements for the site before the site can be attested.<br><br>" +
+				"You must enter the following applicable information for the site:<br>" +
+				"All applicable UN Numbers<br>" +
+				"<p>- Unit of Measurement<br>" +
+				"- Annual Quantity / Volume<br>" +
+				"- Annual Number of Consignments</p>"
+		
+		
+            var m000031_FR = "Vous modifiez le niveau d'exigence du site de base à étendu. " +
+				"Vous devez remplir les exigences de traitement étendu pour le site avant que le site puisse être attesté.<br><br>" +
+				"Vous devez saisir les informations applicables suivantes pour le site:<br>" +
+				"Tous les Nom d'affichage de l'ONU applicables<br>" +
+				"<p>- Unité de mesure<br>" +
+				"- Quantité annuelle / Volume<br>" +
+				"- Nombre annuel d'envois</p>"
+				
             var list =
                 [
                     {
@@ -257,6 +274,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": m000030_EN,
                         "message_fr": m000030_FR
                     },
+					{
+                        "code": "m000031",
+                        "message_en": m000031_EN,
+                        "message_fr": m000031_FR
+                    },
                     {
                         "code": "m000098",
                         "message_en": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
@@ -326,7 +348,7 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "Bulk Add/Update",
                         "message_fr": "Ajout/Mise à jour en masse"
                     },
-					 {
+					{
                         "code": "m000112",
                         "message_en": "The Annual Compliance Update can only be completed on or 30 days after the Company’s Anniversary Date each year.",
                         "message_fr": "The Annual Compliance Update can only be completed on or 30 days after the Company’s Anniversary Date each year_FR."

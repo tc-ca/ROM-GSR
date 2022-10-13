@@ -49,7 +49,7 @@ $(document).ready(function () {
 	tdg.c.control_hide("cid_companyclaim");
 	var step_start = sessionStorage.getItem("step_start");
 	step_start = (step_start == "null" ? "" : step_start);
-	if (step_start == "2") {
+	if (step_start == "1" || step_start == "2") {
 		var cid_has_cra_bn = $('#cid_has_cra_bn').val();
 		var address1_line1 = $("#address1_line1").val();
 		var cid_legalname = $('#ovs_legalname').val();

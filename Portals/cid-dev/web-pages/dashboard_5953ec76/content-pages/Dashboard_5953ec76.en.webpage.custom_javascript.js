@@ -10,9 +10,7 @@ $(document).ready(function () {
         var firstTime = urlParams.get('firsttime')
 
         if(firstTime == "true"){
-            message = "The registration of your Company in the CID Data Platform is now complete. " +
-            "An email has been sent to your address, confirming the completion of the registration." +
-            "<br><br>You are currently in the initial in-year page, which will be your starting page for each future CID session.";//tdg.error_message.message("m000000");
+            message = tdg.error_message.message("m000030");
 	        tdg.c.dialog_OK(message);
         }
     }
