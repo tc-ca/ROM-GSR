@@ -40,14 +40,31 @@ $(document).ready(function () {
 	tdg.c.control_hide("cid_companyclaim");
 	var step_start = sessionStorage.getItem("step_start");
 	step_start = (step_start == "null" ? "" : step_start);
-	//var contactId = window.parent["Microsoft"]["Dynamic365"]["Portal"]["User"]["contactId"];
-	var cid_has_cra_bn = '{{user.cid_has_cra_bn}}';
-	var cid_has_cra_bn = (cid_has_cra_bn == "true" ? 1 : 0);
-	var cid_crabusinessnumber = '{{user.cid_crabusinessnumber}}';
-	var cid_reasonfornobnnumber = "{{user.cid_reasonfornobnnumber.Value}}";
-	var cid_reasonfornobnnumber_other = tdg.c.replace_special_char("{{user.cid_reasonfornobnnumber_other}}");
-	var cid_legalname = tdg.c.replace_special_char("{{user.cid_legalname}}");
-	var cid_operatingname = tdg.c.replace_special_char("{{user.cid_operatingname}}");
+
+	if (step_start == "1") {
+		var cid_has_cra_bn = '{{user.cid_has_cra_bn}}';
+		var cid_has_cra_bn = (cid_has_cra_bn == "true" ? 1 : 0);
+		var cid_crabusinessnumber = '{{user.cid_crabusinessnumber}}';
+		var cid_reasonfornobnnumber = "{{user.cid_reasonfornobnnumber.Value}}";
+		var cid_reasonfornobnnumber_other = tdg.c.replace_special_char("{{user.cid_reasonfornobnnumber_other}}");
+		var cid_legalname = "{{user.cid_legalname}}";
+		var cid_operatingname = "{{user.cid_operatingname}}";
+		var ovs_name_fr = cid_operatingname;
+	}
+	else {
+		var cid_has_cra_bn = $('#cid_has_cra_bn').val();
+		var cid_has_cra_bn = $('#cid_has_cra_bn').val();
+		var cid_crabusinessnumber = $('#cid_crabusinessnumber').val();
+		var cid_reasonfornobnnumber = $('#cid_reasonfornobnnumber').val();
+		var cid_reasonfornobnnumber_other = $('#cid_reasonfornobnnumber_other').val();
+		var cid_legalname = $('#cid_legalname').val();
+		var cid_operatingname = $('#name').val();
+		var ovs_name_fr = $('#ovs_name_fr').val();;
+	}
+	var cid_legalname = tdg.c.replace_special_char(cid_legalname);
+	var cid_operatingname = tdg.c.replace_special_char(cid_operatingname);
+	var ovs_name_fr = tdg.c.replace_special_char(ovs_name_fr);
+
 	$('#cid_has_cra_bn').val(cid_has_cra_bn);
 	tdg.c.control_hide("cid_has_cra_bn");
 
@@ -74,6 +91,8 @@ $(document).ready(function () {
 	if (step_start != "2") {
 		$("#ovs_legalname").val(cid_legalname);
 		$("#name").val(cid_operatingname);
+		$("#ovs_name_fr").val(ovs_name_fr);
+
 		debugger;
 		var value = $("#address1_line1").val();
 		address1_line1_set(value);
@@ -117,10 +136,8 @@ $(document).ready(function () {
 	tdg.cid.convert_province_to_code(selected_language);
 	var currentUserId = '{{user.contactid}}';
 	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
-
-
-
 });
+
 if (window.jQuery) {
 	(function ($) {
 		webFormClientValidate = function () {
@@ -136,6 +153,7 @@ if (window.jQuery) {
 		}
 	}(window.jQuery));
 }
+
 function address1_line1_set(value) {
 	debugger;
 	try {
@@ -149,11 +167,12 @@ function address1_line1_set(value) {
 function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 	debugger;
 	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
-    //if not primary contact
+	//if not primary contact
 	if (cid_usercontacttype != 100000000) {
 		//var message = "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen.";
 		//tdg.c.dialog_OK(message);
 		$("#name").attr("readonly", true);
+		$("#ovs_name_fr").attr("readonly", true);
 		$("#address1_line2").attr("readonly", true);
 		$("#address1_line3").attr("readonly", true);
 		$("#address1_city").attr("readonly", true);

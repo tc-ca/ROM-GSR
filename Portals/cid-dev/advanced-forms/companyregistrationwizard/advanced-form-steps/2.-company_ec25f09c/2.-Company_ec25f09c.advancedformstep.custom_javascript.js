@@ -49,11 +49,12 @@ $(document).ready(function () {
 	tdg.c.control_hide("cid_companyclaim");
 	var step_start = sessionStorage.getItem("step_start");
 	step_start = (step_start == "null" ? "" : step_start);
-	if (step_start == "1" || step_start == "2") {
+	if (step_start == "2") {
 		var cid_has_cra_bn = $('#cid_has_cra_bn').val();
 		var address1_line1 = $("#address1_line1").val();
 		var cid_legalname = $('#ovs_legalname').val();
 		var cid_operatingname = $('#name').val();
+		var ovs_name_fr = $('#ovs_name_fr').val();
 		var cid_has_cra_bn = $('#cid_has_cra_bn').val();
 		var cid_crabusinessnumber = $('#cid_crabusinessnumber').val();
 		var cid_reasonfornobnnumber = $('#cid_reasonfornobnnumber').val();
@@ -65,26 +66,26 @@ $(document).ready(function () {
 		var cid_crabusinessnumber = '{{user.cid_crabusinessnumber}}';
 		var cid_reasonfornobnnumber = "{{user.cid_reasonfornobnnumber.Value}}";
 		var cid_reasonfornobnnumber_other = tdg.c.replace_special_char("{{user.cid_reasonfornobnnumber_other}}");
-		var cid_legalname = tdg.c.replace_special_char("{{user.cid_legalname}}");
-		var cid_operatingname = tdg.c.replace_special_char("{{user.cid_operatingname}}");
+		var cid_legalname = "{{user.cid_legalname}}";
+		var cid_operatingname = "{{user.cid_operatingname}}";
+		var ovs_name_fr = cid_operatingname;
 		var address1_line1 = tdg.c.replace_special_char("{{user.address1_line1}}");
 		var address1_line2 = tdg.c.replace_special_char("{{user.address1_line2}}");
 		var address1_line3 = tdg.c.replace_special_char("{{user.address1_line3}}");
 		var address1_city = tdg.c.replace_special_char("{{user.address1_city}}");
 		var address1_stateorprovince = tdg.c.replace_special_char("{{user.address1_stateorprovince}}");
 		var address1_postalcode = tdg.c.replace_special_char("{{user.address1_postalcode}}");
-		var address1_country = tdg.c.replace_special_char("{{user.address1_country}}");
 		$("#address1_line1").val(address1_line1);
 		$("#address1_line2").val(address1_line2);
 		$("#address1_line3").val(address1_line3);
 		$("#address1_city").val(address1_city);
 		$("#address1_stateorprovince").val(address1_stateorprovince);
 		$("#address1_postalcode").val(address1_postalcode);
-		//$("#address1_country").val(address1_country);
 	}
 	tdg.c.control_hide("cid_has_cra_bn");
-	cid_legalname = tdg.c.replace_special_char(cid_legalname);
-	cid_operatingname = tdg.c.replace_special_char(cid_operatingname);
+	var cid_legalname = tdg.c.replace_special_char(cid_legalname);
+	var cid_operatingname = tdg.c.replace_special_char(cid_operatingname);
+	var ovs_name_fr = tdg.c.replace_special_char(ovs_name_fr);
 	// do not have a business number?
 	if (cid_has_cra_bn != "1") {
 		tdg.c.control_hide("cid_crabusinessnumber");
@@ -114,6 +115,8 @@ $(document).ready(function () {
 	if (step_start != "2") {
 		$("#ovs_legalname").val(cid_legalname);
 		$("#name").val(cid_operatingname);
+		$("#ovs_name_fr").val(ovs_name_fr);
+
 		debugger;
 		var value = $("#address1_line1").val();
 		address1_line1_set(value);
@@ -185,6 +188,7 @@ function Disable_ContactTypeFieldsForSecondaryUser() {
 	//if not primary contact
 	if (cid_contacttype != 100000000) {
 		$("#name").prop("disabled", true);
+		$("#ovs_name_fr").prop("disabled", true);
 		$("#address1_line1").css("pointer-events", "none");
 		$("#WebResource_address_complete").css("pointer-events", "none");
 		$("#address1_line2").prop("disabled", true);

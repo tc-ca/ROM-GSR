@@ -34,7 +34,6 @@ function header_setup() {
 	var msg = tdg.error_message.message("m000100");
 	if ($("#backToCompanyWizard").length > 0) {
 		$('#mainContent').remove();
-		//$('#mainContent').prepend("<div id='backToCompanyWizard' class='input-group pull-left'><p><a href='~/en-US/RegistrationWizard' class='entitylist-create btn btn-info pull-right action' title='Back'>" + msg + "</a><br><br></p></div>");
 	}
 	$('#mainContent').prepend("<div id='backToCompanyWizard' class='input-group'><p><a href='~/RegistrationWizard' class='entitylist-create btn btn-info pull-right action' title='Back'>" + msg + "</a><br><br></p></div>");
 

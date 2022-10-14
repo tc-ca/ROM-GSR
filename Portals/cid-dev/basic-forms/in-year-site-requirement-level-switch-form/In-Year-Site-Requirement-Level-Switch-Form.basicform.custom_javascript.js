@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    $("#cid_siterequirementlevelswitcheffectivedate_datepicker_description").val('');
+    $("#cid_siterequirementlevelswitchmemo").val('');
     $("#cid_issiteattested").prop( "checked", false );
 
     var siteRequirementLevel = $('#cid_requirementlevel').find(":selected").text();

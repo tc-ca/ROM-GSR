@@ -13,6 +13,8 @@ $(document).ready(function () {
         $('#EntityFormPanel').find('input, textarea, button, select').attr('disabled', 'disabled');
     }
 
+    $("#cid_reasonforcompanydeactivation option[value='']").attr('selected', true); 
+    $("#cid_memoforcompanydeactivation").val('');
     $("#cid_iscompanyattested").prop("checked", false);
 });
 

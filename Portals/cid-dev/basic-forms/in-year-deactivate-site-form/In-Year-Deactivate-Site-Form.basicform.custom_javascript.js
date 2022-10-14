@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    $("#cid_sitedeactivationeffectivedate_datepicker_description").val('');
+    $("#cid_reasonforsitedeactivation option[value='']").attr('selected', true); 
+    $("#cid_memositedeactivation").val('');
     $("#cid_issiteattested").prop( "checked", false );
 });
 

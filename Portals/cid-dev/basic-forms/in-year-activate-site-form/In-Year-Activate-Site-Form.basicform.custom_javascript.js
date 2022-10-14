@@ -1,9 +1,51 @@
+$('body').ready(function(){
+   $(document).on('change', '#cid_siteactivationmemo', function(){
+      alert('Test99');
+   });
+});
+
+function onTitleChange()
+
+ {
+
+ alert("changed111!!!");
+
+ }
+
 $(document).ready(function () {
+
+    $("#cid_siteactivationmemo").change(onTitleChange);
+
+
     var cidSiteStatus = $('#cid_cidsitestatus').find(":selected").text();
     $('#cid_cidsitestatus').hide();
     $('#cid_cidsitestatus_label').hide();
 
+    $("#cid_siteactivationmemo").val('');
+    $("#cid_siteactivationmemo").val('');
     $("#cid_issiteattested").prop( "checked", false );
+
+    $("#cid_siteactivationmemo").change(function (e) {
+        alert('Test1');
+    });	
+    $("#cid_siteactivationmemo").change(function(){   // 1st way
+        alert('Test2');
+    });
+
+
+    $("#cid_siteactivationmemo").on('change', function(){    // 2nd way
+        alert('Test3');
+    });
+
+    $("body").on('change', '#cid_siteactivationmemo', function(){    // 3rd way
+        alert('Test4');
+    });
+
+$("#cid_siteactivationmemo").change(function(){
+    alert('Test5');
+});
+
+
 });
 
 if (window.jQuery) {
@@ -27,3 +69,4 @@ if (window.jQuery) {
         }
     }(window.jQuery));
 }
+

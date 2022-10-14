@@ -5,9 +5,60 @@
 $(document).load(function () {
 	//$('#loader').hide();
     $('#loader').show();
+	  $(".furtherDetailsBtn").click(function (e) {
+        alert('Test1');
+    });	
+    $("#furtherDetailsBtn").click(function(){   // 1st way
+        alert('Test2');
+    });
+
+
+    $("#furtherDetailsBtn").on('click', function(){    // 2nd way
+        alert('Test3');
+    });
+
+    $("body").on('click', '#furtherDetailsBtn', function(){    // 3rd way
+        alert('Test4');
+    });
+
+$("#furtherDetailsBtn").click(function(){
+    alert('Test5');
+});
+
+$('#furtherDetailsBtn').click(function (e) {
+	//window.open(operationWizardURL,'Further Site Details','width=600,height=400')
+	alert('Test');
+});	
 });
 
 $(document).ready(function () {
+
+	
+    $("#furtherDetailsBtn").change(function (e) {
+        alert('Test1');
+    });	
+    $("#furtherDetailsBtn").change(function(){   // 1st way
+        alert('Test2');
+    });
+
+
+    $("#furtherDetailsBtn").on('change', function(){    // 2nd way
+        alert('Test3');
+    });
+
+    $("body").on('change', '#furtherDetailsBtn', function(){    // 3rd way
+        alert('Test4');
+    });
+
+$("#furtherDetailsBtn").change(function(){
+    alert('Test5');
+});
+
+$('#furtherDetailsBtn').click(function (e) {
+	//window.open(operationWizardURL,'Further Site Details','width=600,height=400')
+	alert('Test');
+});	
+
 	var operationWizardURL = "";
 	//$('#instructions').hide();
 	$('#EntityFormView').hide();
@@ -27,9 +78,9 @@ $(document).ready(function () {
 					operationWizardURL = "~/OperationRegistrationWizard/?id=" + operationId + "&siteid=" + siteid + (extendedSite ? "&isExtended=true" : "&isExtended=false");
 
 					if ($("#further_site_details").length <= 0) {
-						var furtherDetailsBtn = "<div id='further_site_details' role='group' class='btn-group entity-action-button'><a href='" + operationWizardURL + "'><input type='button' name='Previous' value='Previous' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>";
+						//var furtherDetailsBtn = "<div id='further_site_details' role='group' class='btn-group entity-action-button'><a href='" + operationWizardURL + "'><input type='button' name='Previous' value='Previous' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>";
 						
-						//var furtherDetailsBtn = "<div id='further_site_details' role='group' class='btn-group entity-action-button'><input id ='furtherDetailsBtn' type='button' name='Previous' value='Previous' class='furtherDetailsBtn btn btn-default button previous previous-btn' onclick='window.open('~/KnowledgeArticle/?id=66d7499a-96e5-449c-b3a6-48a49fca76f2', 'Test', 'height=550,width=600, top=50, left=400');'></div>";
+						var furtherDetailsBtn = "<div id='further_site_details' role='group' class='btn-group entity-action-button'><input id ='furtherDetailsBtn' type='button' name='Previous' value='Previouss' class='furtherDetailsBtn btn btn-default button previous previous-btn'></div>";
 
 						$("#PreviousButton").parent().after(furtherDetailsBtn);
 
@@ -72,10 +123,8 @@ $(document).ready(function () {
 		});
 	}
 
-$('.furtherDetailsBtn').click(function (e) {
-	window.open(operationWizardURL,'Further Site Details','width=600,height=400')
-	alert('Test');
-});	
+
+
 	webFormClientValidate = function () {
 		var validation = true;
 		var rows = $("#Operations .view-grid table").find("tbody > tr");
