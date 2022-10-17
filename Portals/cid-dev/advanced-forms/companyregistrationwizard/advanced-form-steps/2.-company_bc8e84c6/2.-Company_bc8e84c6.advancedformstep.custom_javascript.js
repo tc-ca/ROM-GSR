@@ -38,8 +38,8 @@ $(document).ready(function () {
 	});
 	tdg.c.control_hide("cid_reasonfornobnnumber_other");
 	tdg.c.control_hide("cid_companyclaim");
-	var step_start = sessionStorage.getItem("step_start");
-	step_start = (step_start == "null" ? "" : step_start);
+	var step_start = sessionStorage.getItem("step_start") + "";
+	step_start = (step_start == "null" ? "1" : step_start);
 
 	if (step_start == "1") {
 		var cid_has_cra_bn = '{{user.cid_has_cra_bn}}';
@@ -52,14 +52,13 @@ $(document).ready(function () {
 		var ovs_name_fr = cid_operatingname;
 	}
 	else {
-		var cid_has_cra_bn = $('#cid_has_cra_bn').val();
-		var cid_has_cra_bn = $('#cid_has_cra_bn').val();
 		var cid_crabusinessnumber = $('#cid_crabusinessnumber').val();
+		var cid_has_cra_bn = (cid_crabusinessnumber == "" ? 0 : 1);
+
 		var cid_reasonfornobnnumber = $('#cid_reasonfornobnnumber').val();
 		var cid_reasonfornobnnumber_other = $('#cid_reasonfornobnnumber_other').val();
 		var cid_legalname = $('#cid_legalname').val();
 		var cid_operatingname = $('#name').val();
-		var ovs_name_fr = $('#ovs_name_fr').val();;
 	}
 	var cid_legalname = tdg.c.replace_special_char(cid_legalname);
 	var cid_operatingname = tdg.c.replace_special_char(cid_operatingname);
@@ -81,6 +80,11 @@ $(document).ready(function () {
 		else {
 			tdg.c.control_hide("cid_reasonfornobnnumber_other");
 		}
+		tdg.c.addValidator("ovs_name_fr");
+		$("#name").on('keyup', function () {
+			var name = $("#name").val();
+			$("#ovs_name_fr").val(name);
+		});
 	}
 	else {
 		tdg.c.control_show("cid_crabusinessnumber");
@@ -109,14 +113,12 @@ $(document).ready(function () {
 		var address1_city = tdg.c.replace_special_char("{{user.address1_city}}");
 		var address1_stateorprovince = tdg.c.replace_special_char("{{user.address1_stateorprovince}}");
 		var address1_postalcode = tdg.c.replace_special_char("{{user.address1_postalcode}}");
-		var address1_country = tdg.c.replace_special_char("{{user.address1_country}}");
 		$("#address1_line1").val(address1_line1);
 		$("#address1_line2").val(address1_line2);
 		$("#address1_line3").val(address1_line3);
 		$("#address1_city").val(address1_city);
 		$("#address1_stateorprovince").val(address1_stateorprovince);
 		$("#address1_postalcode").val(address1_postalcode);
-		//$("#address1_country").val(address1_country);
 		sessionStorage.setItem("AddressLine1Text", address1_line1);
 	}
 	// autocomplete off
@@ -136,6 +138,8 @@ $(document).ready(function () {
 	tdg.cid.convert_province_to_code(selected_language);
 	var currentUserId = '{{user.contactid}}';
 	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
+
+	tdg.c.addValidator("ovs_name_fr");
 });
 
 if (window.jQuery) {

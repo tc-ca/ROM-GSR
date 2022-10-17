@@ -137,6 +137,7 @@ $(document).ready(function () {
 	tdg.cid.convert_province_to_code(selected_language);
 
 	Disable_ContactTypeFieldsForSecondaryUser();
+	tdg.c.addValidator("ovs_name_fr");
 });
 
 function advanced_form_header() {
