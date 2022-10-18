@@ -12,6 +12,28 @@ $(document).ready(function () {
     sessionStorage.setItem("tdg_unnumberid_label", tdg_unnumberid_label);
 
     subgrid_language();
+    debugger;
+    console.log("befor new code");
+   
+   //****Logic used to add comma to annual number of consigment in the UN number grid */
+   //define digit function to update Grid Cell
+   $.fn.digits = function(){
+    return this.each(function(){
+      $(this).text( $(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));});};
+    //define variable to reference UN Grid
+    var list = $(".entity-grid");
+     //add onload event to grid 
+     list.on("loaded", function () {
+ 
+      //loop for each UN number in the current page
+      list.find("td[data-attribute='cid_annualnumberofshipment']").each(function (i, e){
+          //call function to update whole number format to include comma
+          $(this).digits();
+   
+        }); 
+    }); 
+    /******************** */
+
 });
 
 function subgrid_language() {

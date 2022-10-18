@@ -1,8 +1,26 @@
 $(document).ready(function () {
-    $("#cid_sitedeactivationeffectivedate_datepicker_description").val('');
+    sessionStorage.setItem('futureDateMessageShown', 'false');
+    var effectiveDateControl = $("#cid_sitedeactivationeffectivedate_datepicker_description");
+    effectiveDateControl.val('');
     $("#cid_reasonforsitedeactivation option[value='']").attr('selected', true); 
     $("#cid_memositedeactivation").val('');
     $("#cid_issiteattested").prop( "checked", false );
+ 
+    $("#EntityFormPanel").click(function(){
+        var futureDateMessageShown = sessionStorage.getItem("futureDateMessageShown");
+
+        if(futureDateMessageShown != 'true'){          
+            var effectiveDate = Date.parse(effectiveDateControl.val());
+
+            if(effectiveDate >= new Date()){
+                var message = "<p>Please be aware that the entered date is in the future.</p>";
+
+                tdg.c.dialog_OK(message);
+                
+                sessionStorage.setItem('futureDateMessageShown', 'true');
+            }
+        }
+    });
 });
 
 if (window.jQuery) {

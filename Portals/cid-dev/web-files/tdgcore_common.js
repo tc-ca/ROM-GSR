@@ -167,7 +167,7 @@ if (typeof (tdg.c) == "undefined") {
         OData_List: function (entity, filter) {
             debugger;
             //alert("OData_List -> " + entity);
-            //return tdg.webapi.list(entity + "s", filter);
+            return tdg.webapi.list(entity + "s", filter);
             //return;
 
             var url = entity;
