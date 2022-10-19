@@ -22,6 +22,10 @@ $(document).ready(function () {
 	// clear form
 	$("#cid_naicscode").attr("value", null);
 	$("#cid_naicscode_name").attr("value", null);
+
+	 debugger; 
+
+	//Test The NAICS Code must be selected using the NAICS Code drop-down. Enter at least the first two digits or your full NAICS Code to filter the drop-down and select the applicable NAICS Code from the list.</p>");
 });
 
 $(window).unload(function () {

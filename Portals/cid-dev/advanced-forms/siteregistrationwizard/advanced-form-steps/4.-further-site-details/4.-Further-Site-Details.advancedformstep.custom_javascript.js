@@ -5,60 +5,9 @@
 $(document).load(function () {
 	//$('#loader').hide();
     $('#loader').show();
-	  $(".furtherDetailsBtn").click(function (e) {
-        alert('Test1');
-    });	
-    $("#furtherDetailsBtn").click(function(){   // 1st way
-        alert('Test2');
-    });
-
-
-    $("#furtherDetailsBtn").on('click', function(){    // 2nd way
-        alert('Test3');
-    });
-
-    $("body").on('click', '#furtherDetailsBtn', function(){    // 3rd way
-        alert('Test4');
-    });
-
-$("#furtherDetailsBtn").click(function(){
-    alert('Test5');
-});
-
-$('#furtherDetailsBtn').click(function (e) {
-	//window.open(operationWizardURL,'Further Site Details','width=600,height=400')
-	alert('Test');
-});	
 });
 
 $(document).ready(function () {
-
-	
-    $("#furtherDetailsBtn").change(function (e) {
-        alert('Test1');
-    });	
-    $("#furtherDetailsBtn").change(function(){   // 1st way
-        alert('Test2');
-    });
-
-
-    $("#furtherDetailsBtn").on('change', function(){    // 2nd way
-        alert('Test3');
-    });
-
-    $("body").on('change', '#furtherDetailsBtn', function(){    // 3rd way
-        alert('Test4');
-    });
-
-$("#furtherDetailsBtn").change(function(){
-    alert('Test5');
-});
-
-$('#furtherDetailsBtn').click(function (e) {
-	//window.open(operationWizardURL,'Further Site Details','width=600,height=400')
-	alert('Test');
-});	
-
 	var operationWizardURL = "";
 	//$('#instructions').hide();
 	$('#EntityFormView').hide();
@@ -83,7 +32,6 @@ $('#furtherDetailsBtn').click(function (e) {
 						var furtherDetailsBtn = "<div id='further_site_details' role='group' class='btn-group entity-action-button'><input id ='furtherDetailsBtn' type='button' name='Previous' value='Previouss' class='furtherDetailsBtn btn btn-default button previous previous-btn'></div>";
 
 						$("#PreviousButton").parent().after(furtherDetailsBtn);
-
 
 						$("#PreviousButton").hide();
 					}
@@ -122,8 +70,6 @@ $('#furtherDetailsBtn').click(function (e) {
 			}
 		});
 	}
-
-
 
 	webFormClientValidate = function () {
 		var validation = true;

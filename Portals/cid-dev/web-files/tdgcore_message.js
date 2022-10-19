@@ -352,6 +352,11 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000112",
                         "message_en": "The Annual Compliance Update can only be completed on or 30 days after the Company’s Anniversary Date each year.",
                         "message_fr": "The Annual Compliance Update can only be completed on or 30 days after the Company’s Anniversary Date each year_FR."
+                    },
+                    {
+                        "code": "m000113",
+                        "message_en": "The NAICS Code must be selected using the NAICS Code drop-down. Enter at least the first two digits or your full NAICS Code to filter the drop-down and select the applicable NAICS Code from the list.",
+                        "message_fr": "The NAICS Code must be selected using the NAICS Code drop-down. Enter at least the first two digits or your full NAICS Code to filter the drop-down and select the applicable NAICS Code from the list._FR."
                     }
                 ];
 

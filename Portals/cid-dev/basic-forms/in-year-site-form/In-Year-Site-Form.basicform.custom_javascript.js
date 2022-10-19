@@ -16,7 +16,7 @@ $(document).ready(function ()
     $("#telephone1").attr("maxlength", "10");
     $("#fax").attr("maxlength", "10");
 
-    $("#address1_telephone1").on('keyup', function () {
+    $("#telephone1").on('keyup', function () {
         var n = $(this).val().replace(/\D/g, '');
         $(this).val(n);
         var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);

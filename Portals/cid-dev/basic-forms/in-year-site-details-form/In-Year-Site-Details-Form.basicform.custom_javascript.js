@@ -5,8 +5,11 @@
 $(document).ready(function () {
     debugger;
 
+    var operationId = sessionStorage.getItem("siteOperationId");
+
     var urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('operationid')) {
+    //if (urlParams.has('operationid')) {
+    if (operationId != '') {
         var cidSiteStatus = $('#cid_cidsitestatus').find(":selected").text();
         var disabled = "";
 
@@ -14,7 +17,7 @@ $(document).ready(function () {
             disabled = "disabled";
 
         var siteId = urlParams.get('id');
-        var operationId = urlParams.get('operationid');
+        //var operationId = urlParams.get('operationid');
 
         var isExtendedSite = $("#cid_requirementlevel").find(":selected").text();
         var extendedSite = false;

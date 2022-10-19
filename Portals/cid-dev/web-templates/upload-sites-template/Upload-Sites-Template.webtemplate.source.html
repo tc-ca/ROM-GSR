@@ -666,7 +666,8 @@ function call_Inital_validation(Language , bulkactivitytype)
          UploadType = "Update";
          }
 
-
+        console.log ("upload type : ") ;
+        console.log(UploadType);
         var acupdate =
             '{ "activityid":"' + newrecordid + '" , "name": "'+ companyname +'", "accountid": "' + companyid + '" , "Lang" : "' + Language + '" ,"ActivityType" : "' + UploadType +  '" }';
 
@@ -1249,7 +1250,12 @@ function delay(milliseconds){
             <td>
 
                 <h3 class="blue_border">{{step2}}</h3>
+          
+                {% if page.adx_partialurl == 'Bulk_Site_Upload' %}
                 {% entityform name: 'Insert Bulk Activity Log Summary' %}
+                {%else%}
+                 {% entityform name: 'Insert Annual Bulk Activity Log Summary' %}
+                {%endif%}
 
                 <div>
                 </div>

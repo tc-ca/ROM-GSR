@@ -22,6 +22,7 @@ $(document).ready(function () {
 
     sessionStorage.setItem("tdg_unnumberid", "");
 
+   
     //when the page is done loading, disable autocomplete on all inputs[text]
     $('input[type="text"]').attr('autocomplete', 'off');
 
@@ -40,6 +41,7 @@ $(document).ready(function () {
     });
 
     tdg.c.btn_save_new_setup();
+  
 });
 
 $(window).unload(function () {

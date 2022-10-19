@@ -13,9 +13,7 @@ $(document).ready(function () {
 
     subgrid_language();
     debugger;
-    console.log("befor new code");
-   
-   //****Logic used to add comma to annual number of consigment in the UN number grid */
+    //****Logic used to add comma to annual number of consigment in the UN number grid */
    //define digit function to update Grid Cell
    $.fn.digits = function(){
     return this.each(function(){
@@ -24,12 +22,10 @@ $(document).ready(function () {
     var list = $(".entity-grid");
      //add onload event to grid 
      list.on("loaded", function () {
- 
       //loop for each UN number in the current page
       list.find("td[data-attribute='cid_annualnumberofshipment']").each(function (i, e){
           //call function to update whole number format to include comma
           $(this).digits();
-   
         }); 
     }); 
     /******************** */
