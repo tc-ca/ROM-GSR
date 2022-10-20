@@ -10,8 +10,8 @@ $(document).ready(function () {
     var deactivateSiteWebLink = $('a[href*="deactivate-site"]');
     var activateSiteWebLink = $('a[href*="activate-site"]');
 
-    $('table[data-name="SUMMARY_TAB_section_5"]').find("#cid_issiteattested").prop('checked', false);;
-    $('div[data-name="tdg_activities_details"]').find("#cid_issiteattested").prop('checked', false);;
+    //$('table[data-name="SUMMARY_TAB_section_5"]').find("#cid_issiteattested").prop('checked', false);;
+    //$('div[data-name="tdg_activities_details"]').find("#cid_issiteattested").prop('checked', false);;
     $('table[data-name="further_site_details_section_3"]').find("#cid_issiteattested").prop('checked', false);
 
     $('table[data-name="tab_5_section_1"] tr:first').addClass("hidden");
