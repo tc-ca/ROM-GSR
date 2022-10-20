@@ -4,7 +4,11 @@
 
 $(document).ready(function () {
     debugger;
+	var urlParams = new URLSearchParams(window.location.search);
+	urlParams.set('operationid', sessionStorage.getItem("siteOperationId"));
 
+	//alert(sessionStorage.getItem("siteOperationId"));
+    //alert(urlParams.get('operationid'));
     $('#loader').show();
 
     var deactivateSiteWebLink = $('a[href*="deactivate-site"]');

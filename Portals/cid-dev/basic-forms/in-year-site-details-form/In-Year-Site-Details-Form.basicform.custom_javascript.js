@@ -53,8 +53,9 @@ $(document).ready(function () {
 
     if (window.jQuery) {
     (function ($) {
-        entityFormClientValidate = function (e) {
-            alert(e);
+        entityFormClientValidate = function () {
+            alert($(this).text());
+            alert($(this).val());
             $('table[data-name="further_site_details_section_3"]').find("#cid_issiteattested").prop('checked')
 
             //if($("#cid_issiteattested").prop('checked')){

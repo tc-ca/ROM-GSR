@@ -3,7 +3,6 @@
 //
 
 $(document).load(function () {
-	//$('#loader').hide();
     $('#loader').show();
 });
 
@@ -27,9 +26,9 @@ $(document).ready(function () {
 					operationWizardURL = "~/OperationRegistrationWizard/?id=" + operationId + "&siteid=" + siteid + (extendedSite ? "&isExtended=true" : "&isExtended=false");
 
 					if ($("#further_site_details").length <= 0) {
-						//var furtherDetailsBtn = "<div id='further_site_details' role='group' class='btn-group entity-action-button'><a href='" + operationWizardURL + "'><input type='button' name='Previous' value='Previous' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>";
+						var furtherDetailsBtn = "<div id='further_site_details' role='group' class='btn-group entity-action-button'><a href='" + operationWizardURL + "'><input type='button' name='Previous' value='Previous' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>";
 						
-						var furtherDetailsBtn = "<div id='further_site_details' role='group' class='btn-group entity-action-button'><input id ='furtherDetailsBtn' type='button' name='Previous' value='Previouss' class='furtherDetailsBtn btn btn-default button previous previous-btn'></div>";
+						//var furtherDetailsBtn = "<div id='further_site_details' role='group' class='btn-group entity-action-button'><input id ='furtherDetailsBtn' type='button' name='Previous' value='Previouss' class='furtherDetailsBtn btn btn-default button previous previous-btn'></div>";
 
 						$("#PreviousButton").parent().after(furtherDetailsBtn);
 
