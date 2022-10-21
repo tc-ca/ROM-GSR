@@ -16,7 +16,7 @@ variables:
     value: $true
 
 stages:
-- stage: Stage_Pack_and_Deploy_To_QA
+- stage: Stage_Pack_Data_and_Publish_Artifact
   pool:
       vmImage: 'windows-latest'
   jobs:
@@ -42,14 +42,15 @@ stages:
         ArtifactName: 'PackedData'
         publishLocation: 'Container'
 
-
+- stage: Stage_MasterData_to_QA
+  dependsOn: Stage_Pack_Data_and_Publish_Artifact
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
   - deployment: Deploy
     displayName: Deploy_MasterData_to_QA
-    dependsOn: Pack_Data_and_Publish_Artifact
     environment: QA-TDG
     cancelTimeoutInMinutes: 2
-    pool:
-      vmImage: windows-latest
     strategy:
       runOnce:
         deploy:
@@ -90,7 +91,8 @@ stages:
                 cd $(Build.SourcesDirectory)/ConfigurationMigration/Logs/import
                 cat *
 
-- stage: Stage_Deploy_To_ACC
+- stage: Deploy_MasterData_to_ACC
+  dependsOn: Stage_Pack_Data_and_Publish_Artifact
   pool:
       vmImage: 'windows-latest'
   jobs:
@@ -139,7 +141,8 @@ stages:
                 cd $(Build.SourcesDirectory)/ConfigurationMigration/Logs/import
                 cat *
 
-- stage: Stage_Deploy_To_PREPROD
+- stage: Deploy_MasterData_to_PREPROD
+  dependsOn: Stage_Pack_Data_and_Publish_Artifact
   pool:
       vmImage: 'windows-latest'
   jobs:
