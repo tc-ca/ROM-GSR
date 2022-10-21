@@ -88,7 +88,8 @@ $(document).ready(function () {
         }
     });
 
-    $('#cid_contacttype').attr("disabled", true);
+    $('#cid_contacttype').attr("readonly", true);
+    $('#cid_contacttype').css("pointer-events", "none");
 });
 
 function page_setup() {
@@ -132,11 +133,13 @@ function Disable_ContactTypeFieldsForSecondaryUser() {
         $("#mobilephone").prop("disabled", true);
         $("#fax").prop("disabled", true);
         $("#cid_languageofcorrespondence").prop("disabled", true);
-        $("#cid_contacttype").prop("disabled", true);
+        $('#cid_contacttype').attr("readonly", true);
+        $('#cid_contacttype').css("pointer-events", "none");
     }
 
     //if primary contact and not the primary contact record
     if (cid_contacttype != 100000000 || $('#cid_contacttype').val() == 100000000) {
-        $("#cid_contacttype").prop("disabled", true);
+        $('#cid_contacttype').attr("readonly", true);
+        $('#cid_contacttype').css("pointer-events", "none");
     }
 }

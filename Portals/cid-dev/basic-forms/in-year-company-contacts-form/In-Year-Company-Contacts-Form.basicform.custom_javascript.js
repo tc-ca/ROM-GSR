@@ -4,9 +4,6 @@
 
 $(document).ready(function () {
     debugger;
-    var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
-    $('#cid_cidcompanystatus').hide();
-    $('#cid_cidcompanystatus_label').hide();
 
     if (cidCompanyStatus.indexOf("Inactive") >= 0) {
         $(".create-action").hide();

@@ -17,7 +17,19 @@ $(document).ready(function () {
    //define digit function to update Grid Cell
    $.fn.digits = function(){
     return this.each(function(){
-      $(this).text( $(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));});};
+        var selected_language = '{{website.selected_language.code}}';
+        console.log(selected_language);
+       if (selected_language == "en")
+       { 
+        $(this).text( $(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+       }
+       else
+       {
+           $(this).text( $(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1 "));
+
+       }
+      });};
+       
     //define variable to reference UN Grid
     var list = $(".entity-grid");
      //add onload event to grid 

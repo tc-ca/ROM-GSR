@@ -166,9 +166,7 @@ if (typeof (tdg.c) == "undefined") {
         // odata
         OData_List: function (entity, filter) {
             debugger;
-            //alert("OData_List -> " + entity);
-            return tdg.webapi.list(entity + "s", filter);
-            //return;
+            //return tdg.webapi.list(entity + "s", filter);
 
             var url = entity;
             if (filter != "") {
@@ -822,9 +820,9 @@ if (typeof (tdg.cid) == "undefined") {
                 var ovs_address1_province = $("#ovs_address1_province :selected").text();
                 $("#address1_stateorprovince").val(ovs_address1_province);
             });
-			
-			
-			 $("#ovs_lld_province").on("change", function (i, val) {
+
+
+            $("#ovs_lld_province").on("change", function (i, val) {
                 debugger;
                 var lld_address1_province = $("#ovs_lld_province :selected").text();
                 $("#address1_stateorprovince").val(lld_address1_province);
@@ -880,7 +878,7 @@ if (typeof (tdg.cid) == "undefined") {
 
         //Takes an array of strings containing the field name formatted for use with jquery, ex. "#telephone1"
         phone_init: function (listOfFields) {
-            for(let field of listOfFields){
+            for (let field of listOfFields) {
                 $(field).attr("maxlength", "10");
                 $(field).on('keyup', function () {
                     var n = $(this).val().replace(/\D/g, '');
@@ -890,7 +888,7 @@ if (typeof (tdg.cid) == "undefined") {
                         $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
                     }
                 });
-            }     
+            }
         },
 
         address_same_as_company: function (parent_id) {
@@ -1050,8 +1048,7 @@ if (typeof (tdg.cid) == "undefined") {
                 //    || canProvincesCodes[i].localeCompare(address1_stateorprovince.toLowerCase()))
 
                 if (localizedProvince.localeCompare(address1_stateorprovince, undefined, { sensitivity: 'accent' }) == 0
-                    || canProvincesCodes[i] == address1_stateorprovince)
-                { 
+                    || canProvincesCodes[i] == address1_stateorprovince) {
                     //finds match
                     $("#ovs_address1_province").val(i);
                     return;

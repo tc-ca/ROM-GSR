@@ -1,4 +1,5 @@
 $(document).ready(function(){
+debugger;
     //maskPhoneFields();
 
     //Phone masking

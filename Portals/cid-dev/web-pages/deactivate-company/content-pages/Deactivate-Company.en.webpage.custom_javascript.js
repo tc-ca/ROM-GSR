@@ -7,7 +7,7 @@ $(document).ready(function () {
 
 	var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name}}');
 
-	var topNav = $('#navbar');
+   	var topNav = $('#navbar');
 	var h2Header = $('.tab-title');
 
 	if (companyName)

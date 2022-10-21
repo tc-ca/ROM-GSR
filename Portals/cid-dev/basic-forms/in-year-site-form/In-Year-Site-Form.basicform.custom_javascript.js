@@ -1,10 +1,10 @@
 //
-// Basic Form-In Year Site Form
+// Basic Form-In Year Site Form.js
 //
+
 var _busy = false;
 
-$(document).ready(function ()
-{
+$(document).ready(function () {
     debugger;
 
     // address
@@ -65,7 +65,7 @@ function cid_same_as_company_change() {
 
     _busy = true;
 
-    var parent_id = '{{ user.parentcustomerid.id }}';
+    var parent_id = '{{ user.parentcustomerid.Id }}';
     tdg.cid.address_same_as_company(parent_id);
 
     _busy = false;

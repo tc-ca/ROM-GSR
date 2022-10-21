@@ -22,6 +22,10 @@ $(document).ready(function () {
     $('table[data-name="further_site_details_section_4"]').parent().addClass("hidden");
 
     var cidSiteStatus = $('#cid_cidsitestatus').find(":selected").text();
+
+    $('#cid_cidsitestatus').hide();
+    $('#cid_cidsitestatus_label').hide();
+    
     var disabled = "";
 
     if (cidSiteStatus.indexOf("Inactive") >= 0) {
