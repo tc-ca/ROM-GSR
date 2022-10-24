@@ -28,8 +28,8 @@ if (window.jQuery)
 			debugger;
 			var validation = false;
 			var companyId = $("#EntityFormView_EntityID").val();
-			//var filter = "parentcustomerid/Id eq (guid'" + companyId + "')";
-			var filter = "_parentcustomerid_value eq '" + companyId + "'";
+			var filter = "parentcustomerid/Id eq (guid'" + companyId + "')";
+			//var filter = "_parentcustomerid_value eq '" + companyId + "'";
 			//var data = ExecuteQuery("Validation_CompanyPrimarySecondaryContacts", filter);
 			var data = tdg.c.OData_List("contact", filter);
 			if (data != null)
@@ -38,10 +38,10 @@ if (window.jQuery)
 				var secondaryFound = false;
 				for (i = 0; i < data.length; i++)
 				{
-					//if (data[i].cid_contacttype.Value == 100000000) primaryFound = true;
-					//if (data[i].cid_contacttype.Value == 100000001) secondaryFound = true;
-                    if (data[i].cid_contacttype == 100000000) primaryFound = true;
-					if (data[i].cid_contacttype == 100000001) secondaryFound = true;
+					if (data[i].cid_contacttype.Value == 100000000) primaryFound = true;
+					if (data[i].cid_contacttype.Value == 100000001) secondaryFound = true;
+                    //if (data[i].cid_contacttype == 100000000) primaryFound = true;
+					//if (data[i].cid_contacttype == 100000001) secondaryFound = true;
 				}
 				if (primaryFound && secondaryFound)
 				{
