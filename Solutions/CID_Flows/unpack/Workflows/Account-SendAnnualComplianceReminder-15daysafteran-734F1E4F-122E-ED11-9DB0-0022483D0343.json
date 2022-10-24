@@ -110,7 +110,7 @@
                             "value": "@items('Apply_to_each_2')?['emailaddress1']"
                           }
                         },
-                        "Set_variable_2": {
+                        "Set_Primary_Contact_First_Name": {
                           "runAfter": {
                             "Set_To_Email_Recipients": [
                               "Succeeded"
@@ -134,7 +134,7 @@
                               "Apply_to_each_3": {
                                 "foreach": "@outputs('GetEmailRecipients')?['body/value']",
                                 "actions": {
-                                  "Set_variable": {
+                                  "Set_variable_Temp_CC_Recipients": {
                                     "runAfter": {},
                                     "metadata": {
                                       "operationMetadataId": "4e5ae564-2e7f-45d3-94e3-12f39f652eb5"
@@ -147,7 +147,7 @@
                                   },
                                   "Concat_CCEmailRecipients_variable_if_not_empty": {
                                     "runAfter": {
-                                      "Set_variable": [
+                                      "Set_variable_Temp_CC_Recipients": [
                                         "Succeeded"
                                       ]
                                     },
@@ -274,7 +274,7 @@
             }
           },
           "runAfter": {
-            "GetAccounts": [
+            "Set_Environment_Value_": [
               "Succeeded"
             ]
           },
@@ -290,7 +290,11 @@
           "type": "If"
         },
         "Initialize_To_Email_Recipients": {
-          "runAfter": {},
+          "runAfter": {
+            "Initialize_variable_Environment": [
+              "Succeeded"
+            ]
+          },
           "metadata": {
             "operationMetadataId": "9058c756-6243-4980-a304-83ef8af504a9"
           },
@@ -360,10 +364,62 @@
               }
             ]
           }
+        },
+        "Initialize_variable_Environment": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "7a75d8c8-f902-4f00-914b-b341715123b1"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Environment",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Parse_JSON": {
+          "runAfter": {
+            "GetAccounts": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "535d09ed-bd7f-4a86-9af1-058992fc4a95"
+          },
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@body('GetAccounts')",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "@@odata.context": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "Set_Environment_Value_": {
+          "runAfter": {
+            "Parse_JSON": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3d4a6af9-dd31-47c9-bd1d-02d00d505bba"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "Environment",
+            "value": "@{substring(body('Parse_JSON')?['@odata.context'], 0, indexOf(body('Parse_JSON')?['@odata.context'], '.crm3.'))}"
+          }
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }

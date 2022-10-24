@@ -86,6 +86,9 @@
               "Succeeded"
             ]
           },
+          "limit": {
+            "timeout": "PT15M"
+          },
           "metadata": {
             "operationMetadataId": "ac6e64b9-dbb1-483c-8d71-6a7321136783"
           },
@@ -105,7 +108,10 @@
               "item/IntialRegYN": "@variables('Initial_Registeration')",
               "item/ID": "@triggerBody()?['accountid']"
             },
-            "authentication": "@parameters('$authentication')"
+            "authentication": "@parameters('$authentication')",
+            "retryPolicy": {
+              "type": "none"
+            }
           }
         },
         "SiteList": {

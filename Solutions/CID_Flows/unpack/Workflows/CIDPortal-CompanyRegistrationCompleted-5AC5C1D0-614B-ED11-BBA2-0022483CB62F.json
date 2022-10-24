@@ -1,0 +1,335 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_sendmail": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedsendmail_883c5"
+        },
+        "api": {
+          "name": "shared_sendmail"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_the_\"Registration_As_Of\"_is_modified_in_the_company_record": {
+          "metadata": {
+            "operationMetadataId": "d8b28241-477d-46fc-be28-13a0aaec14db"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "account",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "cid_registrationasof",
+              "subscriptionRequest/runas": 3
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Condition:_Check_if_\"Registration_As_Of\"_field_in_not_empty": {
+          "actions": {
+            "Update_the_company_registration,_anniversary,_and_reminder_dates": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "06565992-756e-4694-8171-6b2d86579855"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "recordId": "@triggerOutputs()?['body/accountid']",
+                  "item/cid_companyanniversarydate": "@body('Convert_\"Anniversary_Date\"_variable_time_zone_from_UTC_to_ET')",
+                  "item/cid_nextannualcomplianceupdate": "@variables('Anniversary Date')",
+                  "item/cid_officiallyregistrationcompletationdate": "@triggerOutputs()?['body/cid_registrationasof']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "List_Annual_Compliance_Items": {
+              "runAfter": {
+                "Update_the_company_registration,_anniversary,_and_reminder_dates": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "2be9cb67-29a1-4b79-bfb3-e2ae2bba1fcb"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "cid_annualcomplianceitems",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"cid_annualcomplianceitem\">\n    <attribute name=\"cid_annualcomplianceitemid\" />\n    <attribute name=\"cid_name\"/>\n     <attribute name=\"cid_itemlevel\" />\n    <filter type=\"and\">\n      <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\" />\n    </filter>\n  </entity>\n</fetch>"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Apply_to_each": {
+              "foreach": "@outputs('List_Annual_Compliance_Items')?['body/value']",
+              "actions": {
+                "Get_Corresponding_Annual_Compliance_Tasks": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "817a8c04-4669-4158-87cd-805ba00eb90a"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "ListRecords",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "tasks",
+                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"task\">\n    <attribute name=\"activityid\" />\n    <filter type=\"and\">\n          <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n          <condition attribute=\"cid_annualcomplianceitem\" operator=\"eq\" value=\"@{items('Apply_to_each')?['cid_annualcomplianceitemid']}\" />\n      <condition attribute=\"regardingobjectid\" operator=\"eq\" value=\"@{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/accountid']}\" />\n    </filter>\n  </entity>\n</fetch>"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Condition": {
+                  "actions": {
+                    "Add_a_new_row_2": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "600897ac-c2fd-43f6-8e68-a425f9051809"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "CreateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "tasks",
+                          "item/subject": "@items('Apply_to_each')?['cid_name']",
+                          "item/regardingobjectid_account_task@odata.bind": "accounts(@{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/accountid']})",
+                          "item/cid_AnnualComplianceItem_Task@odata.bind": "cid_annualcomplianceitems(@{items('Apply_to_each')?['cid_annualcomplianceitemid']})",
+                          "item/cid_tasklevel": "@items('Apply_to_each')?['cid_itemlevel']"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Get_Corresponding_Annual_Compliance_Tasks": [
+                      "Succeeded"
+                    ]
+                  },
+                  "expression": {
+                    "equals": [
+                      "@length(body('Get_Corresponding_Annual_Compliance_Tasks')?['value'])",
+                      0
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "2df10716-2401-4292-9ce5-96c9d057ef8e"
+                  },
+                  "type": "If"
+                }
+              },
+              "runAfter": {
+                "List_Annual_Compliance_Items": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "c712dfe1-652c-4f74-b0dc-7fefcdba6e5d"
+              },
+              "type": "Foreach"
+            },
+            "Send_registration_completion_email_to_each_contact": {
+              "foreach": "@outputs('Get_all_company_contacts')?['body/value']",
+              "actions": {
+                "Check_if_the_contact_has_a_French_language_preference": {
+                  "actions": {
+                    "Send_a_French_email_notification_(V3)": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "d7657707-0ce1-4567-8669-90147353c38f"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sendmail",
+                          "operationId": "SendEmailV3",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                        },
+                        "parameters": {
+                          "request/to": "@{items('Send_registration_completion_email_to_each_contact')?['emailaddress1']};",
+                          "request/subject": "FRENCH - Beta Testing: Successful completion of the registration process of the  @{triggerOutputs()?['body/name']} Company in the Transport Canada CID Data Platform",
+                          "request/text": "<p>FRENCH<br>\n<br>\nBeta Testing:<br>\n<br>\nHello @{items('Send_registration_completion_email_to_each_contact')?['fullname']},<br>\n<br>\n<br>\nThe registration process of the @{triggerOutputs()?['body/name']} Company in the Transport Canada CID Data Platform has been successfully completed.<br>\n<br>\nPer the regulations, you are required to update your Company’s information in the Platform during the year, if a material change has occurred involving the data being managed here for your Company and its Sites.<br>\n<br>\nFurther, your Company’s data is required to be fully updated on an annual basis, with the initial update being required one year from today.<br>\n<br>\n<br>\nRegards,<br>\nTransport Canada CID Data Platform Team<br>\n</p>"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
+                  },
+                  "runAfter": {},
+                  "else": {
+                    "actions": {
+                      "Send_an_English_email_notification_(V3)": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "c2df476c-f760-4d9b-b264-913655f42aba"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_sendmail",
+                            "operationId": "SendEmailV3",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                          },
+                          "parameters": {
+                            "request/to": "@{items('Send_registration_completion_email_to_each_contact')?['emailaddress1']};",
+                            "request/subject": "Beta Testing: Successful completion of the registration process of the  @{triggerOutputs()?['body/name']} Company in the Transport Canada CID Data Platform",
+                            "request/text": "<p>Beta Testing:<br>\n<br>\nHello @{items('Send_registration_completion_email_to_each_contact')?['fullname']},<br>\n<br>\n<br>\nThe registration process of the @{triggerOutputs()?['body/name']} Company in the Transport Canada CID Data Platform has been successfully completed.<br>\n<br>\nPer the regulations, you are required to update your Company’s information in the Platform during the year, if a material change has occurred involving the data being managed here for your Company and its Sites.<br>\n<br>\nFurther, your Company’s data is required to be fully updated on an annual basis, with the initial update being required one year from today.<br>\n<br>\n<br>\nRegards,<br>\nTransport Canada CID Data Platform Team<br>\n</p>"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      }
+                    }
+                  },
+                  "expression": {
+                    "equals": [
+                      "",
+                      918640002
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "9544a815-93e3-4012-9e83-bca7a1c0e8a5"
+                  },
+                  "type": "If"
+                }
+              },
+              "runAfter": {
+                "Get_all_company_contacts": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7d2d8dea-6340-4ee9-935d-568324304ce3"
+              },
+              "type": "Foreach"
+            },
+            "Get_all_company_contacts": {
+              "runAfter": {
+                "Apply_to_each": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "22e5af7d-64ea-42f0-b3c8-6cb1f0f1ef84"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "contacts",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <attribute name=\"emailaddress1\" />\n    <attribute name=\"cid_contacttype\" />\n    <attribute name=\"cid_portalrecordcreationdetails\" />\n    <attribute name=\"cid_portalrecordmodificationdetails\" />\n    <attribute name=\"cid_languageofcorrespondence\" />\n    <attribute name=\"contactid\" />\n    <order attribute=\"cid_contacttype\" descending=\"false\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\" />\n      <condition attribute=\"cid_contacttype\" operator=\"not-null\" />\n      <condition attribute=\"emailaddress1\" operator=\"not-null\" />\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" value=\"@{triggerOutputs()?['body/accountid']}\" />\n    </filter>\n  </entity>\n</fetch>"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "Convert_\"Anniversary_Date\"_variable_time_zone_from_UTC_to_ET": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "not": {
+              "equals": [
+                "@triggerOutputs()?['body/cid_registrationasof']",
+                "@null"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "754c9247-6750-4eda-8985-3450997cb556"
+          },
+          "type": "If"
+        },
+        "Initialize_\"Anniversary_Date\"_variable": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "93bb21ee-1c6c-44bc-b6a2-c52fb0500143"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Anniversary Date",
+                "type": "string",
+                "value": "@{addDays(utcNow(), 365)}"
+              }
+            ]
+          }
+        },
+        "Convert_\"Anniversary_Date\"_variable_time_zone_from_UTC_to_ET": {
+          "runAfter": {
+            "Initialize_\"Anniversary_Date\"_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a48be502-9a44-4f1b-af83-3bef2b1d667b"
+          },
+          "type": "Expression",
+          "kind": "ConvertTimeZone",
+          "inputs": {
+            "baseTime": "@variables('Anniversary Date')",
+            "formatString": "o",
+            "sourceTimeZone": "UTC",
+            "destinationTimeZone": "Eastern Standard Time"
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
