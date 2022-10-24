@@ -8,6 +8,30 @@ $(document).ready(function ()
 		//alert("Test");
 		$('#ValidationSummaryEntityFormView div').remove();
 	});
+
+	//*******Remove menu item basedon user type******** */
+			 var gridList = $(".entity-grid");
+          //add onload event to grid 
+            gridList.on("loaded", function () {
+				console.log("Inside load function");		             
+              gridList.find('td[aria-label="action menu"]').each(function(i, e) {
+				  
+					    console.log("role : ");
+                       var role=$(this).text(); 
+					   console.log(role);
+					   console.log ($(this));
+
+				 
+			
+					
+					
+                    if(role=="No") //condition. 
+                    {
+                      $("tr[data-entity*='contact']").children(':last-child').children().children().next().children(':nth-child(2)').remove(); 
+					}
+					});
+					});
+
 	//$('.create-action').on("click", function () {
 	//    //alert("Test");
 	//    $('#ValidationSummaryEntityFormView div').remove();
@@ -29,9 +53,11 @@ if (window.jQuery)
 			var validation = false;
 			var companyId = $("#EntityFormView_EntityID").val();
 			var filter = "parentcustomerid/Id eq (guid'" + companyId + "')";
+		
 			//var filter = "_parentcustomerid_value eq '" + companyId + "'";
 			//var data = ExecuteQuery("Validation_CompanyPrimarySecondaryContacts", filter);
-			var data = tdg.c.OData_List("contact", filter);
+            var data =  tdg.webapi.list("contact", filter);
+			//var data = tdg.c.OData_List("contact", filter);
 			if (data != null)
 			{
 				var primaryFound = false;
