@@ -16,6 +16,26 @@ $(document).ready(function () {
     $("#cid_reasonforcompanydeactivation option[value='']").attr('selected', true); 
     $("#cid_memoforcompanydeactivation").val('');
     $("#cid_iscompanyattested").prop("checked", false);
+
+        sessionStorage.setItem('futureDateMessageShown', 'false');
+        var effectiveDateControl = $("#cid_companydeactivationeffectivedate_datepicker_description");
+        effectiveDateControl.val('');
+
+        $("#EntityFormPanel").click(function(){
+        var futureDateMessageShown = sessionStorage.getItem("futureDateMessageShown");
+
+        if(futureDateMessageShown != 'true'){          
+            var effectiveDate = Date.parse(effectiveDateControl.val());
+
+            if(effectiveDate >= new Date()){
+                var message = "<p>Please be aware that the entered date is in the future.</p>";
+
+                tdg.c.dialog_OK(message);
+                
+                sessionStorage.setItem('futureDateMessageShown', 'true');
+            }
+        }
+    });
 });
 
 if (window.jQuery) {

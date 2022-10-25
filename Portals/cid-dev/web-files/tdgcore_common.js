@@ -549,6 +549,21 @@ if (typeof (tdg.webapi) == "undefined") {
             return response;
         },
 
+        SelectedColumnlist: function (entity_name, select_colums , filter) {
+            debugger;
+
+            var response = null;
+            $.ajax({
+                type: "GET",
+                url: "/_api/" + entity_name + "?$select=" + select_colums + "&$filter=" + filter,
+                contentType: "application/json",
+                async: false
+            }).done(function (json) {
+                response = json.value;
+            });
+            return response;
+        },
+
         // Sample code to insert
         //var data = {
         //    "cid_Company@odata.bind": "/accounts(" + parent_id + ")",
@@ -749,8 +764,9 @@ if (typeof (tdg.root) == "undefined") {
 
                 var data;
                 var filter = "root_organization_id eq " + root_organization_id;
-
-                data = tdg.c.OData_List("root_erap", filter);
+                
+                //data = tdg.c.OData_List("root_erap", filter);
+                data = tdg.webapi.list("root_eraps", filter);
                 if (data.length == 0) {
                     return data;
                 }
@@ -766,7 +782,8 @@ if (typeof (tdg.root) == "undefined") {
             var data;
             var filter = "root_name eq '" + root_name + "'";
 
-            data = tdg.c.OData_List("root_erap", filter);
+            //data = tdg.c.OData_List("root_erap", filter);
+            data = tdg.webapi.list("root_eraps", filter);
             if (data.length == 0) {
                 return data;
             }
@@ -788,8 +805,8 @@ if (typeof (tdg.root) == "undefined") {
         company: function (bn) {
             var data;
             var filter = "root_org_business_cra_num eq " + bn;
-
-            data = tdg.c.OData_List("root_company", filter);
+            //data = tdg.c.OData_List("root_company", filter);
+            data = tdg.webapi.list("root_companies", filter);
             if (data.length == 0) {
                 return data;
             }
@@ -904,9 +921,12 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#ovs_address1_province").prop('disabled', true);
                 $("#address1_stateorprovince").prop('readonly', true);
                 $("#address1_postalcode").prop('readonly', true);
-
-                var filter = "accountid eq guid'" + parent_id + "'";
-                var data = tdg.c.OData_List("account", filter);
+                               
+                //var filter = "accountid eq guid'" + parent_id + "'";
+                //var data = tdg.c.OData_List("account", filter);
+                var select_col = "address1_city,address1_country,ovs_address1_province,address1_stateorprovince,address1_line1,address1_line2,address1_line3,address1_postalcode";
+                var filter = "accountid eq '" + parent_id + "'";
+                var data = tdg.webapi.SelectedColumnlist("accounts", select_col, filter);
 
                 var address1_line1 = "N/A";
                 var address1_city = "N/A";
@@ -923,7 +943,7 @@ if (typeof (tdg.cid) == "undefined") {
                     address1_line3 = item.address1_line3;
                     address1_line3 = (address1_line3 == null ? "" : address1_line3);
                     address1_city = item.address1_city;
-                    ovs_address1_province = item.ovs_address1_province.Value;
+                    ovs_address1_province = item.ovs_address1_province;
                     address1_stateorprovince = item.address1_stateorprovince;
                     address1_postalcode = item.address1_postalcode;
                     address1_country = item.address1_country;
