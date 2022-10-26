@@ -10,14 +10,14 @@
           "name": "shared_commondataserviceforapps"
         }
       },
-      "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc": {
+      "shared_tc-5ftmapiconnector-5f5cf23ef0bee9f3b2": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "fdr_conref_tmapi_v1"
+          "connectionReferenceLogicalName": "fdr_conref_tmapi"
         },
         "api": {
-          "name": "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc",
-          "logicalName": "fdr_tmapi-20v1-20connector"
+          "name": "shared_tc-5Ftmapiconnector-5F5cf23ef0bee9f3b2",
+          "logicalName": "tc_5Ftmapiconnector"
         }
       }
     },
@@ -80,7 +80,7 @@
           "actions": {
             "Update_Service_Task_Sync_Field_to_True": {
               "runAfter": {
-                "Update_an_existing_Time_Entry": [
+                "Update_an_existing_Time_Entry_2": [
                   "Succeeded"
                 ]
               },
@@ -104,17 +104,17 @@
                 "authentication": "@parameters('$authentication')"
               }
             },
-            "Update_an_existing_Time_Entry": {
+            "Update_an_existing_Time_Entry_2": {
               "runAfter": {},
               "metadata": {
-                "operationMetadataId": "0e09cc6a-7571-4c81-b25d-5b0342b242f4"
+                "operationMetadataId": "c4da56b8-7b61-441c-b1f2-d28151f8dbd8"
               },
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "connectionName": "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc",
+                  "connectionName": "shared_tc-5ftmapiconnector-5f5cf23ef0bee9f3b2",
                   "operationId": "timeentryUpdateTimeEntry",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc"
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Ftmapiconnector-5F5cf23ef0bee9f3b2"
                 },
                 "parameters": {
                   "id": "@triggerOutputs()?['body/fdr_tmtimeentryid']",

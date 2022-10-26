@@ -10,14 +10,14 @@
           "name": "shared_commondataserviceforapps"
         }
       },
-      "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc": {
+      "shared_tc-5ftmapiconnector-5f5cf23ef0bee9f3b2": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "fdr_conref_tmapi_v1"
+          "connectionReferenceLogicalName": "fdr_conref_tmapi"
         },
         "api": {
-          "name": "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc",
-          "logicalName": "fdr_tmapi-20v1-20connector"
+          "name": "shared_tc-5Ftmapiconnector-5F5cf23ef0bee9f3b2",
+          "logicalName": "tc_5Ftmapiconnector"
         }
       }
     },
@@ -288,87 +288,9 @@
         },
         "Try": {
           "actions": {
-            "Add_a_new_Time_Entry": {
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "12468216-707e-4ee3-a098-1bfab22482b8"
-              },
-              "type": "OpenApiConnection",
-              "inputs": {
-                "host": {
-                  "connectionName": "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc",
-                  "operationId": "timeentryAddTimeEntry",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc"
-                },
-                "parameters": {
-                  "serviceRequestId": "@outputs('Get_Service_Request_By_Id')?['body/fdr_mtoa_sr_id']",
-                  "dateTime": "@triggerOutputs()?['body/createdon']",
-                  "user": "@outputs('Get_User_by_Id')?['body/domainname']",
-                  "serviceId": "@variables('serviceId')",
-                  "activityId": "@variables('activityId')"
-                },
-                "authentication": "@parameters('$authentication')"
-              }
-            },
-            "Add_hours_to_a_Time_Entry": {
-              "runAfter": {
-                "Add_a_new_Time_Entry": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "08df8996-bc55-4926-927c-7404c9974985"
-              },
-              "type": "OpenApiConnection",
-              "inputs": {
-                "host": {
-                  "connectionName": "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc",
-                  "operationId": "timeentryAddHours",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc"
-                },
-                "parameters": {
-                  "id": "@outputs('Add_a_new_Time_Entry')?['body/Id']",
-                  "quantity": "@variables('hours')",
-                  "typeCode": "REG",
-                  "isBillable": false
-                },
-                "authentication": "@parameters('$authentication')"
-              }
-            },
-            "Update_an_existing_Time_Entry": {
-              "runAfter": {
-                "Add_hours_to_a_Time_Entry": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "b2fbcaad-03b7-4e46-adf6-cbe9bc77d7a8"
-              },
-              "type": "OpenApiConnection",
-              "inputs": {
-                "host": {
-                  "connectionName": "shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc",
-                  "operationId": "timeentryUpdateTimeEntry",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_tmapi-20v1-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc"
-                },
-                "parameters": {
-                  "id": "@outputs('Add_a_new_Time_Entry')?['body/Id']",
-                  "body/ServiceRequestId": "@outputs('Get_Service_Request_By_Id')?['body/fdr_mtoa_sr_id']",
-                  "body/Hours": [
-                    {
-                      "HourId": "@outputs('Add_hours_to_a_Time_Entry')?['body/HourId']",
-                      "TypeCode": "REG",
-                      "TimeEntryId": "@outputs('Add_a_new_Time_Entry')?['body/Id']",
-                      "StatusId": "@variables('Submitted for Approval')"
-                    }
-                  ]
-                },
-                "authentication": "@parameters('$authentication')"
-              }
-            },
             "Update_Service_Request_Service_Tasks": {
               "runAfter": {
-                "Update_an_existing_Time_Entry": [
+                "Update_an_existing_Time_Entry_2": [
                   "Succeeded"
                 ]
               },
@@ -385,13 +307,88 @@
                 "parameters": {
                   "entityName": "fdr_servicerequestservicetasks",
                   "recordId": "@triggerOutputs()?['body/fdr_servicerequestservicetaskid']",
-                  "item/fdr_syncwithtmapi": true,
-                  "item/fdr_tmhourid": "@outputs('Add_hours_to_a_Time_Entry')?['body/HourId']",
-                  "item/fdr_tmtimeentryid": "@outputs('Add_a_new_Time_Entry')?['body/Id']"
+                  "item/fdr_syncwithtmapi": true
                 },
                 "authentication": "@parameters('$authentication')"
               },
               "description": "Update entity with TimeEntryId and HourId from response for reference."
+            },
+            "Add_a_new_Time_Entry_2": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "899a12a7-f484-4368-bcdf-71be7b5f8ff9"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_tc-5ftmapiconnector-5f5cf23ef0bee9f3b2",
+                  "operationId": "timeentryAddTimeEntry",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Ftmapiconnector-5F5cf23ef0bee9f3b2"
+                },
+                "parameters": {
+                  "serviceRequestId": "@outputs('Get_Service_Request_By_Id')?['body/fdr_mtoa_sr_id']",
+                  "dateTime": "@triggerOutputs()?['body/createdon']",
+                  "user": "@outputs('Get_User_by_Id')?['body/domainname']",
+                  "serviceId": "@variables('serviceId')",
+                  "activityId": "@variables('activityId')"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Add_hours_to_a_Time_Entry_2": {
+              "runAfter": {
+                "Add_a_new_Time_Entry_2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "8816e78c-20b3-424b-8dd8-b80ae2607185"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_tc-5ftmapiconnector-5f5cf23ef0bee9f3b2",
+                  "operationId": "timeentryAddHours",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Ftmapiconnector-5F5cf23ef0bee9f3b2"
+                },
+                "parameters": {
+                  "id": "@outputs('Add_a_new_Time_Entry_2')?['body/Id']",
+                  "quantity": "@variables('hours')",
+                  "typeCode": "REG",
+                  "isBillable": false
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Update_an_existing_Time_Entry_2": {
+              "runAfter": {
+                "Add_hours_to_a_Time_Entry_2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "c703bb61-4aa1-453a-abf6-ace8a2b8e2d7"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_tc-5ftmapiconnector-5f5cf23ef0bee9f3b2",
+                  "operationId": "timeentryUpdateTimeEntry",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Ftmapiconnector-5F5cf23ef0bee9f3b2"
+                },
+                "parameters": {
+                  "id": "@outputs('Add_a_new_Time_Entry_2')?['body/Id']",
+                  "body/Hours": [
+                    {
+                      "HourId": "@outputs('Add_hours_to_a_Time_Entry_2')?['body/HourId']",
+                      "TypeCode": "REG",
+                      "TimeEntryId": "@outputs('Add_a_new_Time_Entry_2')?['body/Id']",
+                      "StatusId": "@variables('Submitted for Approval')"
+                    }
+                  ]
+                },
+                "authentication": "@parameters('$authentication')"
+              }
             }
           },
           "runAfter": {
@@ -481,7 +478,7 @@
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }

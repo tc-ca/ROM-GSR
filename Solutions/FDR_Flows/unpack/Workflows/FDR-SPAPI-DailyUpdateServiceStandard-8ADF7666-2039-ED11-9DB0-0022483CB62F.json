@@ -10,14 +10,14 @@
           "name": "shared_commondataserviceforapps"
         }
       },
-      "shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2": {
+      "shared_tc-5fspapiconnector-5f5cf23ef0bee9f3b2": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "fdr_conref_spapi_v2"
+          "connectionReferenceLogicalName": "fdr_conref_spapi"
         },
         "api": {
-          "name": "shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2",
-          "logicalName": "fdr_5Fspapi-20v2-20connector"
+          "name": "shared_tc-5Fspapiconnector-5F5cf23ef0bee9f3b2",
+          "logicalName": "tc_5Fspapiconnector"
         }
       }
     },
@@ -73,7 +73,7 @@
           "actions": {
             "Update_a_row": {
               "runAfter": {
-                "Call_Estimate_API": [
+                "Estimate_Service_Performance": [
                   "Succeeded"
                 ]
               },
@@ -90,23 +90,23 @@
                 "parameters": {
                   "entityName": "fdr_servicerequests",
                   "recordId": "@items('Loop_Over_Service_Requests')?['fdr_servicerequestid']",
-                  "item/fdr_daysremaining": "@outputs('Call_Estimate_API')?['body/UnitsRemainingNbr']",
-                  "item/fdr_tss_duration": "@mul(mul(outputs('Call_Estimate_API')?['body/CurrentApplicableUnitNbr'], 24), 60)"
+                  "item/fdr_daysremaining": "@outputs('Estimate_Service_Performance')?['body/UnitsRemainingNbr']",
+                  "item/fdr_tss_duration": "@mul(mul(outputs('Estimate_Service_Performance')?['body/CurrentApplicableUnitNbr'], 24), 60)"
                 },
                 "authentication": "@parameters('$authentication')"
               }
             },
-            "Call_Estimate_API": {
+            "Estimate_Service_Performance": {
               "runAfter": {},
               "metadata": {
-                "operationMetadataId": "311bc07a-0736-4ae0-985b-ed4fd2edc0b3"
+                "operationMetadataId": "a7207024-950e-4c01-86cb-51ae41b1fc5f"
               },
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "connectionName": "shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2",
+                  "connectionName": "shared_tc-5fspapiconnector-5f5cf23ef0bee9f3b2",
                   "operationId": "servicerequestcontrollervEstimateServiceRequestPerformance",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2"
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Fspapiconnector-5F5cf23ef0bee9f3b2"
                 },
                 "parameters": {
                   "serviceRequestId": "@items('Loop_Over_Service_Requests')?['fdr_mtoa_sr_id']"
