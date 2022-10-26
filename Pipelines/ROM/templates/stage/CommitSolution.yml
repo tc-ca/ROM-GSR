@@ -8,6 +8,9 @@ parameters:
   - name: dependsOn
     type: object
     default: []
+  - name: addFilesToArtifact
+    type: object
+    default: []
 stages:
 - stage: ${{Parameters.StageName}}
   dependsOn:
@@ -91,6 +94,10 @@ stages:
       inputs:
         SolutionInputFile: '$(Build.ArtifactStagingDirectory)\zip\${{Parameters.SolutionName}}.zip'
         SolutionTargetFolder: '$(Build.ArtifactStagingDirectory)\${{Parameters.SolutionName}}'
+    - ${{ if not(eq(parameters.addFilesToArtifact, [])) }}:
+        - ${{ each fileToAdd in parameters.addFilesToArtifact }}:
+            - powershell: |
+                Copy-item -Force -Recurse -Verbose ${{ fileToAdd }} -Destination $(Build.ArtifactStagingDirectory)\zip\
     - task: PublishBuildArtifacts@1
       displayName: publish unpacked files
       inputs:
