@@ -57,6 +57,8 @@ stages:
     StageName: 'BuildAndPublishArtifacts'
     dependsOn: 
     - 'UpdateBuildVersion'
+    addFilesToArtifact:
+    - '$(Build.SourcesDirectory)\Pipelines\ROM\connection_references\FDRFlows_SolutionSettings_QA.json'
 
 #QA
 - template: templates/stage/DeployFlowSolution.yml  # Template reference
@@ -65,7 +67,7 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_QA)
     PowerPlatformSPN_Dev: $(PowerPlatformSPN_Dev) #used to update solution version after successful deployment to QA
     UseDeploymentSettingsFile: true
-    DeploymentSettingsFile: 'Pipelines\ROM\connection_references\FDRFlows_SolutionSettings_QA.json'
+    DeploymentSettingsFile: 'FDRFlows_SolutionSettings_QA.json'
     Environment: 'QA-TDG'
     StageName: 'DeployManagedSolutionToQA'
     DeleteSolution: false
