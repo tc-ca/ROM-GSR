@@ -94,7 +94,7 @@ stages:
       inputs:
         SolutionInputFile: '$(Build.ArtifactStagingDirectory)\zip\${{Parameters.SolutionName}}.zip'
         SolutionTargetFolder: '$(Build.ArtifactStagingDirectory)\${{Parameters.SolutionName}}'
-    - ${{ if not(eq(parameters.addFilesToArtifact, [])) }}:
+    - ${{ if gt(length(parameters.addFilesToArtifact), 0) }}:
         - ${{ each fileToAdd in parameters.addFilesToArtifact }}:
             - powershell: |
                 Copy-item -Force -Recurse -Verbose ${{ fileToAdd }} -Destination $(Build.ArtifactStagingDirectory)\zip\
