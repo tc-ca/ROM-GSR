@@ -80,6 +80,7 @@ stages:
                 MaxAsyncWaitTime: '360'
                 HoldingSolution: false
                 OverwriteUnmanagedCustomizations: true
+                ActivatePlugins: true
           - ${{ if eq(parameters.DeployUnmanagedSolution, true) }}:
             - task: PowerPlatformImportSolution@0
               inputs:
@@ -92,6 +93,7 @@ stages:
                 MaxAsyncWaitTime: '360'
                 HoldingSolution: false
                 OverwriteUnmanagedCustomizations: false
+                ActivatePlugins: true
           - ${{ if and(eq(Parameters.Environment, 'QA-TDG'), eq(Parameters.IncrementVersion, true)) }}:
             - task: PowerPlatformSetSolutionVersion@0
               inputs:
