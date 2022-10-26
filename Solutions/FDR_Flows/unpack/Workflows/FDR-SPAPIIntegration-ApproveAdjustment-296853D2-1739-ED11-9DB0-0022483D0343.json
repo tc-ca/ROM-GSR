@@ -1,16 +1,6 @@
 {
   "properties": {
     "connectionReferences": {
-      "shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2": {
-        "runtimeSource": "embedded",
-        "connection": {
-          "connectionReferenceLogicalName": "fdr_conref_spapi_v2"
-        },
-        "api": {
-          "name": "shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2",
-          "logicalName": "fdr_5Fspapi-20v2-20connector"
-        }
-      },
       "shared_commondataserviceforapps_1": {
         "runtimeSource": "embedded",
         "connection": {
@@ -27,6 +17,16 @@
         },
         "api": {
           "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_tc-5fspapiconnector-5f5cf23ef0bee9f3b2": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_spapi"
+        },
+        "api": {
+          "name": "shared_tc-5Fspapiconnector-5F5cf23ef0bee9f3b2",
+          "logicalName": "tc_5Fspapiconnector"
         }
       }
     },
@@ -116,28 +116,9 @@
             "Apply_to_each_Service_Request": {
               "foreach": "@outputs('Get_Associated_Service_Request')?['body/value']",
               "actions": {
-                "Approve_a_service_request_performance": {
-                  "runAfter": {},
-                  "metadata": {
-                    "operationMetadataId": "c5b0f490-64c9-4300-b669-bc8568fbab9e"
-                  },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "host": {
-                      "connectionName": "shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2",
-                      "operationId": "servicerequestcontrollervApproveRemission",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2"
-                    },
-                    "parameters": {
-                      "serviceRequestId": "@items('Apply_to_each_Service_Request')?['fdr_mtoa_sr_id']",
-                      "body/ApproverNetworkId": "@outputs('Get_User_by_Id')?['body/domainname']"
-                    },
-                    "authentication": "@parameters('$authentication')"
-                  }
-                },
                 "Update_a_row": {
                   "runAfter": {
-                    "Approve_a_service_request_performance": [
+                    "Approve_a_service_request_performance_2": [
                       "Succeeded"
                     ]
                   },
@@ -153,8 +134,27 @@
                     },
                     "parameters": {
                       "entityName": "fdr_servicerequestperformances",
-                      "recordId": "@triggerOutputs()?['body/fdr_servicerequestperformanceidnumber']",
+                      "recordId": "@triggerOutputs()?['body/fdr_servicerequestperformanceid']",
                       "item/fdr_approvernetworkid": "@outputs('Get_User_by_Id')?['body/domainname']"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Approve_a_service_request_performance_2": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "a7ed263b-8b6a-49e5-b356-0e78eba067b5"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_tc-5fspapiconnector-5f5cf23ef0bee9f3b2",
+                      "operationId": "servicerequestcontrollervApproveRemission",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Fspapiconnector-5F5cf23ef0bee9f3b2"
+                    },
+                    "parameters": {
+                      "serviceRequestId": "@items('Apply_to_each_Service_Request')?['fdr_mtoa_sr_id']",
+                      "body/ApproverNetworkId": "@outputs('Get_User_by_Id')?['body/domainname']"
                     },
                     "authentication": "@parameters('$authentication')"
                   }
@@ -206,7 +206,7 @@
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }

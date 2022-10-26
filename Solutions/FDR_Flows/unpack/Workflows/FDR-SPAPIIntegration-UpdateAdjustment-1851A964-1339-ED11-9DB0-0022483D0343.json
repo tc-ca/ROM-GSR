@@ -10,14 +10,14 @@
           "name": "shared_commondataserviceforapps"
         }
       },
-      "shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2": {
+      "shared_tc-5fspapiconnector-5f5cf23ef0bee9f3b2": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "fdr_conref_spapi_v2"
+          "connectionReferenceLogicalName": "fdr_conref_spapi"
         },
         "api": {
-          "name": "shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2",
-          "logicalName": "fdr_5Fspapi-20v2-20connector"
+          "name": "shared_tc-5Fspapiconnector-5F5cf23ef0bee9f3b2",
+          "logicalName": "tc_5Fspapiconnector"
         }
       }
     },
@@ -81,17 +81,17 @@
         "Apply_to_each_Service_Request": {
           "foreach": "@outputs('Get_Associated_Service_Request')?['body/value']",
           "actions": {
-            "Adjust_a_service_request_performance": {
+            "Adjust_a_service_request_performance_2": {
               "runAfter": {},
               "metadata": {
-                "operationMetadataId": "02efd036-7671-4973-ac6f-8f382c896ad8"
+                "operationMetadataId": "4aea12e5-a315-4cd3-9efa-37bffff7701b"
               },
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "connectionName": "shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2",
+                  "connectionName": "shared_tc-5fspapiconnector-5f5cf23ef0bee9f3b2",
                   "operationId": "servicerequestcontrollervAdjustPerformance",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_fdr-5fspapi-20v2-20connector-5f5cf23ef0bee9f3b2"
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Fspapiconnector-5F5cf23ef0bee9f3b2"
                 },
                 "parameters": {
                   "serviceRequestId": "@items('Apply_to_each_Service_Request')?['fdr_mtoa_sr_id']",
@@ -115,7 +115,7 @@
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }

@@ -10,14 +10,14 @@
           "name": "shared_commondataserviceforapps"
         }
       },
-      "shared_mtapi-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc_1": {
+      "shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2": {
         "runtimeSource": "invoker",
         "connection": {
-          "connectionReferenceLogicalName": "fdr_conref_mtapi"
+          "connectionReferenceLogicalName": "fdr_conref_mtapi_v3"
         },
         "api": {
-          "name": "shared_mtapi-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc",
-          "logicalName": "fdr_mtapi-20connector"
+          "name": "shared_tc-5Fmtapiconnector-5F5cf23ef0bee9f3b2",
+          "logicalName": "tc_5Fmtapiconnector"
         }
       }
     },
@@ -106,7 +106,7 @@
                     "parameters": {
                       "entityName": "contacts",
                       "recordId": "@triggerOutputs()?['body/contactid']",
-                      "item/fdr_mtoa_id": "@first(outputs('Get_a_user_by_it''s_email(s)')?['body'])?.Id"
+                      "item/fdr_mtoa_id": "@first(outputs('Get_a_user_by_it''s_email(s)2')?['body'])?.Id"
                     },
                     "authentication": {
                       "type": "Raw",
@@ -116,7 +116,7 @@
                 }
               },
               "runAfter": {
-                "Get_a_user_by_it's_email(s)": [
+                "Get_a_user_by_it's_email(s)2": [
                   "Succeeded"
                 ]
               },
@@ -141,14 +141,14 @@
                   {
                     "not": {
                       "equals": [
-                        "@body('Get_a_user_by_it''s_email(s)')",
+                        "",
                         "@null"
                       ]
                     }
                   },
                   {
                     "greater": [
-                      "@length(outputs('Get_a_user_by_it''s_email(s)')?['body'])",
+                      "@length(outputs('Get_a_user_by_it''s_email(s)2')?['body'])",
                       0
                     ]
                   }
@@ -159,17 +159,17 @@
               },
               "type": "If"
             },
-            "Get_a_user_by_it's_email(s)": {
+            "Get_a_user_by_it's_email(s)2": {
               "runAfter": {},
               "metadata": {
-                "operationMetadataId": "1da4e0f7-9a2c-41b9-a4d6-9e4ce3da3399"
+                "operationMetadataId": "0958bd26-349c-47ff-991d-be5b9075fb2c"
               },
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "connectionName": "shared_mtapi-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc_1",
+                  "connectionName": "shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2",
                   "operationId": "Users_GetByEmail",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_mtapi-20connector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc"
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Fmtapiconnector-5F5cf23ef0bee9f3b2"
                 },
                 "parameters": {
                   "email": "@items('Apply_to_each_contact')?['emailaddress1']",
@@ -219,7 +219,7 @@
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
