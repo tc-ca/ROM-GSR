@@ -74,7 +74,7 @@ stages:
                 authenticationType: 'PowerPlatformSPN'
                 PowerPlatformSPN: '${{Parameters.PowerPlatformSPN}}'
                 UseDeploymentSettingsFile: '${{Parameters.UseDeploymentSettingsFile}}'
-                DeploymentSettingsFile: '$(Build.SourcesDirectory)\${{Parameters.DeploymentSettingsFile}}'
+                DeploymentSettingsFile: '$(Agent.BuildDirectory)\zip\${{Parameters.DeploymentSettingsFile}}'
                 SolutionInputFile: '$(Agent.BuildDirectory)\zip\${{Parameters.SolutionName}}_Managed.zip'
                 AsyncOperation: true
                 MaxAsyncWaitTime: '360'
