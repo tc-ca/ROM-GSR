@@ -187,6 +187,26 @@ if (typeof (tdg.c) == "undefined") {
             return response;
         },
 
+        WebApi_List: function (entity, filter) {
+            debugger;
+
+            var api_url = entity;
+            if (filter != "") {
+                api_url += "?$filter=" + filter;
+            }
+            var response = null;
+
+            $.ajax({
+                type: "GET",
+                url: "/_api/" + api_url,
+                contentType: "application/json",
+                async: false
+            }).done(function (json) {
+                response = json.value;
+            });
+            return response;
+        },
+
         message_panel_clear: function () {
             try {
                 $("#MessagePanel")[0].innerText = "";

@@ -10,9 +10,6 @@ $(document).ready(function () {
     sessionStorage.setItem(k_existing_sites, "null");
 
     tdg.c.section_hide("section_address_1");
-
-    // default current use is "Primary"
-    //$("#cid_contacttype").val(100000000);
     tdg.c.control_hide("cid_contacttype");
 
     // default has a cra bn
@@ -43,23 +40,23 @@ $(document).ready(function () {
         if (account_id != "") {
             debugger;
 
-            var invitation = tdg.c.OData_List("adx_invitation", "");
+            var invitation = tdg.c.WebApi_List("adx_invitations", "");
             //if (invitation.length > 0) {
-                sessionStorage.setItem("cid_suppress_error", "true");
+            sessionStorage.setItem("cid_suppress_error", "true");
 
-                var filter = "accountid eq guid'" + account_id + "'";
-                var account = tdg.c.OData_List("account", filter)[0];
+            var filter = "accountid eq '" + account_id + "'";
+            var account = tdg.c.WebApi_List("accounts", filter)[0];
 
-                if (account.cid_crabusinessnumber != null) {
-                    $("#cid_crabusinessnumber").val(account.cid_crabusinessnumber);
-                }
-                else {
-                    $("#cid_has_cra_bn").val("0");
-                    $("#cid_legalname").val(account.ovs_legalname);
-                }
+            if (account.cid_crabusinessnumber != null) {
+                $("#cid_crabusinessnumber").val(account.cid_crabusinessnumber);
+            }
+            else {
+                $("#cid_has_cra_bn").val("0");
+                $("#cid_legalname").val(account.ovs_legalname);
+            }
 
-                sessionStorage.setItem("cid_suppress_error_code", "m000099");
-                $("#NextButton").click();
+            sessionStorage.setItem("cid_suppress_error_code", "m000099");
+            $("#NextButton").click();
             //}
         }
     }
@@ -163,7 +160,7 @@ if (window.jQuery) {
 
                 filter = "ovs_legalname eq '" + legalname + "'";
                 filter = filter.replaceAll("&", "%26");
-                rom_data = tdg.c.OData_List("account", filter);
+                rom_data = tdg.c.WebApi_List("accounts", filter);
                 if (rom_data.length > 0) {
                     rom_data = rom_data[0];
 
@@ -181,7 +178,7 @@ if (window.jQuery) {
                 var data = cid_crabusinessnumber_onchange();
 
                 if (data == "") {
-                    tdg.c.error_message_advanced_form("m000001", true);   // "Invalid CRA Business Number"
+                    tdg.c.error_message_advanced_form("m000001", true);
                 }
                 else {
                     debugger;
@@ -192,7 +189,7 @@ if (window.jQuery) {
                     validation = false; // true
 
                     filter = "cid_crabusinessnumber eq '" + cid_crabusinessnumber + "'";
-                    rom_data = tdg.c.OData_List("account", filter);
+                    rom_data = tdg.c.WebApi_List("accounts", filter);
                     if (rom_data.length > 0) {
                         rom_data = rom_data[0];
 
@@ -211,13 +208,14 @@ if (window.jQuery) {
 }
 
 function in_current_registration(rom_data, suppress_error) {
+    debugger;
     var value = true;
 
     tdg.cid.crw.start_parentcustomerid_setup(rom_data.accountid, rom_data.ovs_legalname);
 
     if (rom_data.cid_cidcompanystatus != null) {
         var current_registering = false
-        switch (rom_data.cid_cidcompanystatus.Value) {
+        switch (rom_data.cid_cidcompanystatus) {
             case 100000002:
                 break;
             case 100000003:
@@ -232,11 +230,14 @@ function in_current_registration(rom_data, suppress_error) {
         if (current_registering) {
             var message_code = "";
             if (!suppress_error) {
-                message_code = "m000014";
+                message_code = (rom_data.cid_cidcompanystatus != 100000005 ? "m000014" : "m000014B");
 
                 var message = tdg.error_message.message(message_code);
-                tdg.c.dialog_OK(message);
-
+                tdg.c.dialog_YN(message, (ans) => {
+        	        if (ans) {
+        		        // send email
+        	        } else { }
+                });
                 value = false;
             }
             else {
@@ -267,7 +268,8 @@ function Retrieve_cra(bn) {
     var data_fake = {};
     var filter = "cid_businessregistrationnumber eq '" + bn + "'";
 
-    data = tdg.c.OData_List("cid_fake_cra_bn_api", filter);
+    //data = tdg.c.OData_List("cid_fake_cra_bn_api", filter);
+    data = tdg.c.WebApi_List("cid_fake_cra_bn_apis", filter);
 
     if (data == null) {
         return "";

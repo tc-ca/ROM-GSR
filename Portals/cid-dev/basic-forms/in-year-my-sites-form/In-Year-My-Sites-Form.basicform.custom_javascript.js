@@ -192,7 +192,7 @@ function cid_same_as_company_change()
 		var parent_id = '{{ user.parentcustomerid.id }}';
 		var filter = "accountid eq guid'" + parent_id + "'";
 		//var data = tdg.c.OData_List("account", filter);
-		var data = tdg.webapi.list("contacts", filter);
+		var data = tdg.webapi.list("account", filter);
 		var address1_line1 = "N/A";
 		var address1_city = "N/A";
 		var address1_stateorprovince = "N/A";

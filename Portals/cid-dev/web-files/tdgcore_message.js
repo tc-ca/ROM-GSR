@@ -62,31 +62,31 @@ if (typeof (tdg.message) == "undefined") {
                 "Note:\n" +
                 "- <b>[Bulk Add/Update]</b> will appear to the right of the <b>[+Add]</b> button\n" +
                 "- For In Year / Annual Compliance, the <b>[V]</b> options will be 'Open Site Details', 'Deactivate / Reactivate'_FR"
-				
-			var m000030_EN = "The registration of your Company in the CID Data Platform is now complete. " +
-				"An email has been sent to your address, confirming the completion of the registration." +
-				"<br><br>You are currently in the initial in-year page, which will be your starting page for each future CID session."
+
+            var m000030_EN = "The registration of your Company in the CID Data Platform is now complete. " +
+                "An email has been sent to your address, confirming the completion of the registration." +
+                "<br><br>You are currently in the initial in-year page, which will be your starting page for each future CID session."
             var m000030_FR = "L'enregistrement de votre entreprise dans la plateforme de données CID est maintenant terminé. " +
-				"Un e-mail a été envoyé à votre adresse, confirmant la finalisation de l'inscription." +
-				"<br><br>Vous êtes actuellement dans la page initiale en cours d'année, qui sera votre page de démarrage pour chaque future session CID."
-							
-			var m000031_EN = "You are changing the site requirement level from basic to extended. " +
-				"You are required to complete the extended processing requirements for the site before the site can be attested.<br><br>" +
-				"You must enter the following applicable information for the site:<br>" +
-				"All applicable UN Numbers<br>" +
-				"<p>- Unit of Measurement<br>" +
-				"- Annual Quantity / Volume<br>" +
-				"- Annual Number of Consignments</p>"
-		
-		
+                "Un e-mail a été envoyé à votre adresse, confirmant la finalisation de l'inscription." +
+                "<br><br>Vous êtes actuellement dans la page initiale en cours d'année, qui sera votre page de démarrage pour chaque future session CID."
+
+            var m000031_EN = "You are changing the site requirement level from basic to extended. " +
+                "You are required to complete the extended processing requirements for the site before the site can be attested.<br><br>" +
+                "You must enter the following applicable information for the site:<br>" +
+                "All applicable UN Numbers<br>" +
+                "<p>- Unit of Measurement<br>" +
+                "- Annual Quantity / Volume<br>" +
+                "- Annual Number of Consignments</p>"
+
+
             var m000031_FR = "Vous modifiez le niveau d'exigence du site de base à étendu. " +
-				"Vous devez remplir les exigences de traitement étendu pour le site avant que le site puisse être attesté.<br><br>" +
-				"Vous devez saisir les informations applicables suivantes pour le site:<br>" +
-				"Tous les Nom d'affichage de l'ONU applicables<br>" +
-				"<p>- Unité de mesure<br>" +
-				"- Quantité annuelle / Volume<br>" +
-				"- Nombre annuel d'envois</p>"
-				
+                "Vous devez remplir les exigences de traitement étendu pour le site avant que le site puisse être attesté.<br><br>" +
+                "Vous devez saisir les informations applicables suivantes pour le site:<br>" +
+                "Tous les Nom d'affichage de l'ONU applicables<br>" +
+                "<p>- Unité de mesure<br>" +
+                "- Quantité annuelle / Volume<br>" +
+                "- Nombre annuel d'envois</p>"
+
             var list =
                 [
                     {
@@ -191,8 +191,13 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000014",
-                        "message_en": "This Company is either in the process of being registered, or is fully registered. You will not be able to use this Company at this time.",
-                        "message_fr": "This Company is either in the process of being registered, or is fully registered. You will not be able to use this Company at this time._FR"
+                        "message_en": "This registration for this company has already begun. Do you want to send a request to the Administrator of that registration process requesting to be on-boarded as a user for that company?",
+                        "message_fr": "This registration for this company has already begun. Do you want to send a request to the Administrator of that registration process requesting to be on-boarded as a user for that company?_FR"
+                    },
+                    {
+                        "code": "m000014B",
+                        "message_en": "This registration for this company is already complete. Do you want to send a request to the company’s Administrator requesting to be on-boarded as a user for that company?",
+                        "message_fr": "This registration for this company is already complete. Do you want to send a request to the company’s Administrator requesting to be on-boarded as a user for that company?_FR"
                     },
                     {
                         "code": "m000015",
@@ -269,12 +274,12 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "Switch Site Type",
                         "message_fr": "Switch Site Type_FR"
                     },
-					{
+                    {
                         "code": "m000030",
                         "message_en": m000030_EN,
                         "message_fr": m000030_FR
                     },
-					{
+                    {
                         "code": "m000031",
                         "message_en": m000031_EN,
                         "message_fr": m000031_FR
@@ -348,15 +353,26 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "Bulk Add/Update",
                         "message_fr": "Ajout/Mise à jour en masse"
                     },
-					{
+                    {
                         "code": "m000112",
                         "message_en": "The Annual Compliance Update can only be completed on or 30 days after the Company’s Anniversary Date each year.",
                         "message_fr": "The Annual Compliance Update can only be completed on or 30 days after the Company’s Anniversary Date each year_FR."
                     },
                     {
                         "code": "m000113",
-                        "message_en": "The NAICS Code must be selected using the NAICS Code drop-down. Enter at least the first two digits or your full NAICS Code to filter the drop-down and select the applicable NAICS Code from the list.",
-                        "message_fr": "The NAICS Code must be selected using the NAICS Code drop-down. Enter at least the first two digits or your full NAICS Code to filter the drop-down and select the applicable NAICS Code from the list._FR."
+                        "message_en": "The Assign as Primary Admin is restricted to only the Primary Admin for this company.",
+                        "message_fr": "The Assign as Primary Admin is restricted to only the Primary Admin for this company._FR."
+                    },
+                    {
+                        "code": "m000114",
+                        "message_en": "Are you sure you want to assign {0} as the Primary Admin for this company’s CID Platform, and in doing assign yourself as a Secondary Contact?",
+                        "message_fr": "Are you sure you want to assign {0} as the Primary Admin for this company’s CID Platform, and in doing assign yourself as a Secondary Contact?_FR."
+
+                    },
+                    {
+                        "code": "m000115",
+                        "message_en": "The Assign as Primary Admin can only be assigned to a Secondary Admin that has logged into the CID Platform at least one time.",
+                        "message_fr": "The Assign as Primary Admin can only be assigned to a Secondary Admin that has logged into the CID Platform at least one time._FR"
                     }
                 ];
 

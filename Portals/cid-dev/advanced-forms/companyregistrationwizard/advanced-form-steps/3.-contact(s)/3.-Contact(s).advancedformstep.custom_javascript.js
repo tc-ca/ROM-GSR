@@ -26,6 +26,9 @@ $(document).ready(function ()
 			{
 				//find ul
 				var ul = $(this).find("ul");
+				  //add the "resend invitation" action
+                $(ul).append('<li role="none"><a href="#"  role="menuitem" tabindex="-1" title="Resend Invitation" aria-setsize="4" aria-posinset="4">Resend Invitation</a></li>');
+                      
 				//find list item (Li)
 				$(ul).find("li").each(function ()
 				{
@@ -41,9 +44,9 @@ $(document).ready(function ()
 					else if (menueTitle == "Resend Invitation")
 					{
 						console.log("inside resend inviation");
-						var link = $(this).find("a");
-						console.log("after link ");
-						$(link).attr("data-modal-confirmation", "Do you want to send invitation to " + ContactFullName);
+						//var link = $(this).find("a");
+						//console.log("after link ");
+						//$(link).attr("data-modal-confirmation", "Do you want to send invitation to " + ContactFullName);
 					}
 
 

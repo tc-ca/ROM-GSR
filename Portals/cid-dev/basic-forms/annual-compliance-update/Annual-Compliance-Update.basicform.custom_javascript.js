@@ -65,8 +65,8 @@ $(document).ready(function ()
 	});
 	$('#cid_companyanniversarydate').parent().parent().hide();
 	var annualComplianceCompletionDate = $('#cid_annualcompliancecompletiondate').val();
-	if (annualComplianceCompletionDate == null) //uncheck attestation check box
-	$("#cid_iscompanyattested").prop("checked", false);
+	if (annualComplianceCompletionDate == "" || annualComplianceCompletionDate == null) //uncheck attestation check box
+		$("#cid_iscompanyattested").prop("checked", false);
 	entityFormClientValidate = function ()
 	{
 		var errorMessage = "";
