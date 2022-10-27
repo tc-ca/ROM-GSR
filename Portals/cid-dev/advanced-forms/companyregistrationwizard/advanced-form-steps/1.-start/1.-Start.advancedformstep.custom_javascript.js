@@ -238,6 +238,8 @@ function in_current_registration(rom_data, suppress_error) {
         		        // send email
         	        } else { }
                 });
+
+                tdg.c.sign_out();
                 value = false;
             }
             else {
@@ -268,7 +270,6 @@ function Retrieve_cra(bn) {
     var data_fake = {};
     var filter = "cid_businessregistrationnumber eq '" + bn + "'";
 
-    //data = tdg.c.OData_List("cid_fake_cra_bn_api", filter);
     data = tdg.c.WebApi_List("cid_fake_cra_bn_apis", filter);
 
     if (data == null) {

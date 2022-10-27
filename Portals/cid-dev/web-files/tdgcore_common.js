@@ -39,6 +39,10 @@ if (typeof (tdg.c) == "undefined") {
             c.targetFunction();
         },
 
+        sign_out: function () {
+            window.location.replace("~/en/Account/Login/LogOff");
+        },
+
         subgrid_index: function (entityList, name) {
             var grid = null;
             for (var i = 0; entityList.length; i++) {
@@ -569,7 +573,7 @@ if (typeof (tdg.webapi) == "undefined") {
             return response;
         },
 
-        SelectedColumnlist: function (entity_name, select_colums , filter) {
+        SelectedColumnlist: function (entity_name, select_colums, filter) {
             debugger;
 
             var response = null;
@@ -784,7 +788,7 @@ if (typeof (tdg.root) == "undefined") {
 
                 var data;
                 var filter = "root_organization_id eq " + root_organization_id;
-                
+
                 //data = tdg.c.OData_List("root_erap", filter);
                 data = tdg.webapi.list("root_eraps", filter);
                 if (data.length == 0) {
@@ -941,7 +945,7 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#ovs_address1_province").prop('disabled', true);
                 $("#address1_stateorprovince").prop('readonly', true);
                 $("#address1_postalcode").prop('readonly', true);
-                               
+
                 //var filter = "accountid eq guid'" + parent_id + "'";
                 //var data = tdg.c.OData_List("account", filter);
                 var select_col = "address1_city,address1_country,ovs_address1_province,address1_stateorprovince,address1_line1,address1_line2,address1_line3,address1_postalcode";

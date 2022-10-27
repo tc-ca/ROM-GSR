@@ -17,6 +17,8 @@ $(document).ready(function ()
 		{
 			var ContactTypeCell = $(this).find('td')[0];
 			var ContactFullNameCell = $(this).find('td')[1];
+			var contctId = $(this).attr("data-id");
+			//Console.log(contctId) ;
 			//console.log($(this).attr("data-id"));
 			var contactType = $(ContactTypeCell).attr("aria-label");
 			var ContactFullName = $(ContactFullNameCell).attr("aria-label");
@@ -28,7 +30,8 @@ $(document).ready(function ()
 				var ul = $(this).find("ul");
 				  //add the "resend invitation" action
                 $(ul).append('<li role="none"><a href="#"  role="menuitem" tabindex="-1" title="Resend Invitation" aria-setsize="4" aria-posinset="4">Resend Invitation</a></li>');
-                      
+                 $(ul).append('<li role="none"><a href="#" onclick="DeactivateContact(' + "'" + contctId +"'" +  ')" role="menuitem" tabindex="-1" title="Deactivate" aria-setsize="4" aria-posinset="4">Deactivate</a></li>');
+                         
 				//find list item (Li)
 				$(ul).find("li").each(function ()
 				{
@@ -41,15 +44,7 @@ $(document).ready(function ()
 							$(this).attr("hidden", "true");
 						}
 					} //end check if primary
-					else if (menueTitle == "Resend Invitation")
-					{
-						console.log("inside resend inviation");
-						//var link = $(this).find("a");
-						//console.log("after link ");
-						//$(link).attr("data-modal-confirmation", "Do you want to send invitation to " + ContactFullName);
-					}
-
-
+						//$(link).attr("Class", "details-link");
 				}); //end find ul li
 			}); //end find menu action
 		}); //end find tr
@@ -139,4 +134,38 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId)
 			$(".details-link").css("pointer-events", "none");
 		});
 	}
+}
+
+function DeactivateContact(ContactId)
+{
+	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
+	//if not primary
+   if (cid_usercontacttype != 100000000)
+	{
+		 // var m000115 = tdg.error_message.message("m000115");
+            //show error message
+           tdg.c.dialog_OK("Only the Primary Admin can deactivate a Secondary Admin");
+	}//end check user type
+	else
+	{
+		 var ParentAccount = '{{user.parentcustomerid.id}}' ;
+		 var LanguageCode = '{{website.selected_language.code}}';
+		 //get all secondary contacts
+		 var contactQueryResults =  tdg.webapi.SelectedColumnlist ("contacts", "firstname", "cid_contacttype ne 100000000 and _parentcustomerid_value eq " + ParentAccount );
+		 console.log (contactQueryResults.length);
+		 if (contactQueryResults.length > 1)
+		 {
+
+		 }
+		 else
+		 {
+			  // var m000115 = tdg.error_message.message("m000115");
+            //show error message
+           tdg.c.dialog_OK("At least one other active Secondary Admin needs to be added before you can deactivate this Secondary Admin.");
+		 }
+
+
+
+
+	}//end else
 }

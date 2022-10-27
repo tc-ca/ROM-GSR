@@ -14,8 +14,7 @@ $(document).ready(function () {
                     var contactid = $(this).attr("data-id") ;
                     var contactType = $(ContactTypeCell).attr("aria-label");
                     var ContactFullName = $(ContactFullNameCell).attr("aria-label");
-                    console.log ("full name");
-                    console.log (ContactFullName);
+             
 
 				   //fins Menue action
 		          $(this).find('td[aria-label="action menu"]').each(function() {
@@ -167,6 +166,34 @@ async function Update_contactType(data1 , data2)
                   tdg.webapi.update("contacts", CurrentUserID, data2);	
                  $(".entity-grid").trigger("refresh");
                  console.log("after refresh");
+    //****************************call workflow ******************** */
+                var EnvironmentSettingResult =  tdg.webapi.SelectedColumnlist ("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_Flow_Primary_Contact_Change_With_Secondary'" );
+                if (EnvironmentSettingResult.length > 0 )
+                {
+                    var FlowURL = EnvironmentSettingResult[0]["qm_value"]; 
+                        console.log("flow url");
+                        console.log(FlowURL );
+                        var FlowParamater =
+                        '{"AccountId" : "' + ParentAccount + '" ,' +
+                        '"New_Primary_Contactid" : "' + contactid + '" ,' +
+                        '"Previous_Contactid" : "' + CurrentUserID + '", ' +
+                        '"UI_Language_Code" : "' + LanguageCode + '"}';
+                    var req = new XMLHttpRequest();
+                    req.open("POST", FlowURL , true);
+                    req.setRequestHeader('Content-Type', 'application/json');
+                    req.onreadystatechange = function () {
+                        if (this.readyState === 4) {
+                            req.onreadystatechange = null;
+                            if (this.status === 200) { }
+                        }
+                        }
+                        req.send(FlowParamater);
+                            }  
+    //***************************** */
+
+
+
+
                  } else {} });
         }
        else
@@ -179,7 +206,7 @@ async function Update_contactType(data1 , data2)
     }//end else
 
 
-     console.log("flow url123");
+  
      var EnvironmentSettingResult =  tdg.webapi.SelectedColumnlist ("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_Flow_Primary_Contact_Change_With_Secondary'" );
     if (EnvironmentSettingResult.length > 0 )
     {
