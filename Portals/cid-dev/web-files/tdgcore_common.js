@@ -1,3 +1,4 @@
+
 //To apply the Asterisk(*) Sign using custom JS:
 //$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
 
@@ -519,8 +520,94 @@ if (typeof (tdg.grid) == "undefined") {
             var value = "#" + name + " table tbody tr"
             var row_count = $(value).length;
             return row_count;
+        },
+
+        InYear_ContactGrid_Actions: function (gridList) {
+            gridList.on("loaded", function () {
+                gridList.find("tr").each(function () {
+                    var ContactTypeCell = $(this).find('td')[0];
+                    var ContactFullNameCell = $(this).find('td')[1];
+                    var contactid = $(this).attr("data-id");
+                    var contactType = $(ContactTypeCell).attr("aria-label");
+                    var ContactFullName = $(ContactFullNameCell).attr("aria-label");
+
+
+                    //fins Menue action
+                    $(this).find('td[aria-label="action menu"]').each(function () {
+                        //find ul
+                        var ul = $(this).find("ul");
+                        if (contactType != "Primary") {
+                            //add the "resend invitation" action
+                            $(ul).append('<li role="none"><a href="#"  role="menuitem" tabindex="-1" title="Resend Invitation" aria-setsize="4" aria-posinset="4">Resend Invitation</a></li>');
+
+                            //add "Assign as Primary Admin" action
+                            $(ul).append('<li role="none"><a href="#" onclick="AssignAsAdmin(' + "'" + contactid + "','"
+                                + ContactFullName + "'" + ')" role="menuitem" tabindex="-1" title="Assign as Primary Admin" aria-setsize="4" aria-posinset="4">Assign as Primary Admin</a></li>');
+
+
+                        }
+                        //find list item (Li)
+                        $(ul).find("li").each(function () {
+                            //get the menue titel
+                            var menueTitle = $(this).find("a").attr("title");
+                            if (contactType == "Primary") {
+                                if (menueTitle != "Edit") {
+                                    $(this).attr("hidden", "true");
+                                }
+                            }//end check if primary
+
+                        });//end find ul li
+
+                    });//end find menu action
+
+                });//end find tr
+            });//end on grid load                  
+
+
         }
+        ,
+
+        Registeration_ContactGrid_Actions: function (gridList) {
+            gridList.on("loaded", function () {
+                gridList.find("tr").each(function () {
+                    //contact type cell
+                    var ContactTypeCell = $(this).find('td')[0];
+                    //contact full name
+                    var ContactFullNameCell = $(this).find('td')[1];
+                    //Contact id
+                    var contctId = $(this).attr("data-id");
+
+                    var contactType = $(ContactTypeCell).attr("aria-label");
+                    var ContactFullName = $(ContactFullNameCell).attr("aria-label");
+
+                    //find Menue action
+                    $(this).find('td[aria-label="action menu"]').each(function () {
+                        //find ul
+                        var ul = $(this).find("ul");
+                        //add the "resend invitation" action
+                        $(ul).append('<li role="none"><a href="#"  role="menuitem" tabindex="-1" title="Resend Invitation" aria-setsize="4" aria-posinset="4">Resend Invitation</a></li>');
+                        //add deactivate action
+                        $(ul).append('<li role="none"><a href="#" onclick="DeactivateContact(' + "'" + contctId + "'" + ')" role="menuitem" tabindex="-1" title="Deactivate" aria-setsize="4" aria-posinset="4">Deactivate</a></li>');
+
+                        //find list item (Li)
+                        $(ul).find("li").each(function () {
+                            //get the menue titel
+                            var menueTitle = $(this).find("a").attr("title");
+                            if (contactType == "Primary") {
+                                if (menueTitle != "View details") {
+                                    $(this).attr("hidden", "true");
+                                }
+                            } //end check if primary
+                            //$(link).attr("Class", "details-link");
+                        }); //end find ul li
+                    }); //end find menu action
+                }); //end find tr
+            }); //end on grid load
+
+        }
+
     }
+
 }
 
 // Wrapper AJAX function
@@ -1392,6 +1479,66 @@ if (typeof (tdg.cid) == "undefined") {
 if (typeof (tdg.cid.crw) == "undefined") {
     tdg.cid.crw = {
         // start
+        start_in_current_registration: function (rom_data, suppress_error) {
+            debugger;
+
+            if (rom_data.cid_cidcompanystatus == 100000004) {
+
+            }
+
+            var value = true;
+
+            tdg.cid.crw.start_parentcustomerid_setup(rom_data.accountid, rom_data.ovs_legalname);
+
+            if (rom_data.cid_cidcompanystatus != null) {
+                var current_registering = false
+                switch (rom_data.cid_cidcompanystatus) {
+                    case 100000002:
+                        break;
+                    case 100000003:
+                        break;
+                    case 100000004:
+                        break;
+                    default:
+                        current_registering = true;
+                        break;
+                }
+
+                if (current_registering) {
+                    var message_code = "";
+                    if (!suppress_error) {
+                        message_code = (rom_data.cid_cidcompanystatus != 100000005 ? "m000014" : "m000014B");
+
+                        var message = tdg.error_message.message(message_code);
+                        tdg.c.dialog_YN(message, (ans) => {
+                            if (ans) {
+                                debugger;
+                                // send email
+                                var data = {}
+                                data.EmailCode = "S1B-1";
+                                data.AccountId = rom_data.account_id;
+                                data.Primary_Contactid = "{{user.contactid}}";
+                                data.Secondary_Contactid = data.Primary_Contactid;
+                                tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", JSON.stringify(data));
+                            } else { }
+                        });
+
+                        tdg.c.sign_out();
+                        value = false;
+                    }
+                    else {
+                        value = true;
+                    }
+
+                    return value;
+                }
+                $("#parentcustomerid").attr("value", rom_data.accountid);
+                $("#parentcustomerid_name").attr("value", rom_data.ovs_legalname);
+                $("#parentcustomerid_entityname").attr("value", 'account');
+            }
+            return value;
+        },
+
         start_clear_contact_address: function () {
             $("#address1_line1").val("");
             $("#address1_line2").val("");
@@ -1426,6 +1573,34 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#address1_city").val(address.CityName);
             $("#address1_stateorprovince").val(address.ProvinceStateCode);
             $("#address1_postalcode").val(address.PostalZipCode);
+        }
+    }
+}
+
+if (typeof (tdg.cid.flow) == "undefined") {
+    tdg.cid.flow = {
+        Call_Flow: function (FlowName, data) {
+            console.log("Flow is executed");
+            //get flow URL
+            var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
+            //flow url found
+            if (EnvironmentSettingResult.length > 0) {
+                var FlowURL = EnvironmentSettingResult[0]["qm_value"];
+
+                // Execute flow
+                var req = new XMLHttpRequest();
+                req.open("POST", FlowURL, true);
+                req.setRequestHeader('Content-Type', 'application/json');
+                req.onreadystatechange = function () {
+                    if (this.readyState === 4) {
+                        req.onreadystatechange = null;
+                        if (this.status === 200) {
+                            //console.log("Flow Executed scucessfully.")
+                        }
+                    }//end ready status
+                }//end on ready function
+                req.send(data);
+            }//end check if flow url found
         }
     }
 }

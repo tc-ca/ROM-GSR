@@ -11,9 +11,11 @@ $(document).ready(function ()
 	//*******Remove menu item basedon user type******** */
 	var gridList = $(".entity-grid");
 	//add onload event to grid 
-	gridList.on("loaded", function ()
-	{
-		gridList.find("tr").each(function ()
+	tdg.grid.Registeration_ContactGrid_Actions (gridList);
+	
+	//gridList.on("loaded", function ()
+	//{
+	/*	gridList.find("tr").each(function ()
 		{
 			var ContactTypeCell = $(this).find('td')[0];
 			var ContactFullNameCell = $(this).find('td')[1];
@@ -49,6 +51,7 @@ $(document).ready(function ()
 			}); //end find menu action
 		}); //end find tr
 	}); //end on grid load
+	*/
 	//$('.create-action').on("click", function () {
 	//    //alert("Test");
 	//    $('#ValidationSummaryEntityFormView div').remove();
@@ -139,6 +142,9 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId)
 function DeactivateContact(ContactId)
 {
 	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
+	var CurrentUserID = '{{user.id}}';
+   var ParentAccount = '{{user.parentcustomerid.id}}' ;
+   var LanguageCode = '{{website.selected_language.code}}';
 	//if not primary
    if (cid_usercontacttype != 100000000)
 	{
@@ -148,19 +154,31 @@ function DeactivateContact(ContactId)
 	}//end check user type
 	else
 	{
-		 var ParentAccount = '{{user.parentcustomerid.id}}' ;
-		 var LanguageCode = '{{website.selected_language.code}}';
 		 //get all secondary contacts
 		 var contactQueryResults =  tdg.webapi.SelectedColumnlist ("contacts", "firstname", "cid_contacttype ne 100000000 and _parentcustomerid_value eq " + ParentAccount );
 		 console.log (contactQueryResults.length);
 		 if (contactQueryResults.length > 1)
 		 {
+			  //get flow URL
+			  var FlowName = "CID Send Portal Contact Email by EmailCode";
+            var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
+            console.log("URL  " +  EnvironmentSettingResult.length);
 
+
+
+			  tdg.c.dialog_OK("Deactivation started");
+			  var data =
+           '{"EmailCode" : "S4-4", '+
+            '"AccountId" : "' + ParentAccount + '" ,' +
+            '"Primary_Contactid" : "' + ContactId + '" ,' +
+            '"Secondary_Contactid" : "' + CurrentUserID + '"}';
+			
+			  tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code",data) ;
 		 }
 		 else
 		 {
-			  // var m000115 = tdg.error_message.message("m000115");
-            //show error message
+		   // var m000115 = tdg.error_message.message("m000115");
+           //show error message
            tdg.c.dialog_OK("At least one other active Secondary Admin needs to be added before you can deactivate this Secondary Admin.");
 		 }
 

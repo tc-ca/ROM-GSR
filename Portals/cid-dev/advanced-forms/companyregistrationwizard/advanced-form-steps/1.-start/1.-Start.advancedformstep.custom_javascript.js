@@ -164,8 +164,7 @@ if (window.jQuery) {
                 if (rom_data.length > 0) {
                     rom_data = rom_data[0];
 
-                    // currently in the process of registration?
-                    validation = in_current_registration(rom_data, suppress_error);
+                    validation = tdg.cid.crw.start_in_current_registration(rom_data, suppress_error);
 
                     $("#cid_operatingname").val(rom_data.name);
                 }
@@ -193,8 +192,7 @@ if (window.jQuery) {
                     if (rom_data.length > 0) {
                         rom_data = rom_data[0];
 
-                        // currently in the process of registration?
-                        validation = in_current_registration(rom_data, suppress_error);
+                        validation = tdg.cid.crw.start_in_current_registration(rom_data, suppress_error);
                     }
                     else {
                         validation = true;
@@ -205,54 +203,6 @@ if (window.jQuery) {
             return validation;
         }
     }(window.jQuery));
-}
-
-function in_current_registration(rom_data, suppress_error) {
-    debugger;
-    var value = true;
-
-    tdg.cid.crw.start_parentcustomerid_setup(rom_data.accountid, rom_data.ovs_legalname);
-
-    if (rom_data.cid_cidcompanystatus != null) {
-        var current_registering = false
-        switch (rom_data.cid_cidcompanystatus) {
-            case 100000002:
-                break;
-            case 100000003:
-                break;
-            case 100000004:
-                break;
-            default:
-                current_registering = true;
-                break;
-        }
-
-        if (current_registering) {
-            var message_code = "";
-            if (!suppress_error) {
-                message_code = (rom_data.cid_cidcompanystatus != 100000005 ? "m000014" : "m000014B");
-
-                var message = tdg.error_message.message(message_code);
-                tdg.c.dialog_YN(message, (ans) => {
-        	        if (ans) {
-        		        // send email
-        	        } else { }
-                });
-
-                tdg.c.sign_out();
-                value = false;
-            }
-            else {
-                value = true;
-            }
-
-            return value;
-        }
-        $("#parentcustomerid").attr("value", rom_data.accountid);
-        $("#parentcustomerid_name").attr("value", legalname);
-        $("#parentcustomerid_entityname").attr("value", 'account');
-    }
-    return value;
 }
 
 function cid_crabusinessnumber_onchange() {

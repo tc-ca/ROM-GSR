@@ -207,17 +207,18 @@ async function Update_contactType(data1 , data2)
 
 
   
-     var EnvironmentSettingResult =  tdg.webapi.SelectedColumnlist ("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_Flow_Primary_Contact_Change_With_Secondary'" );
+     var EnvironmentSettingResult =  tdg.webapi.SelectedColumnlist ("qm_environmentsettingses", "qm_value", "qm_name eq 'CID Send Portal Contact Email by EmailCode'" );
     if (EnvironmentSettingResult.length > 0 )
     {
         var FlowURL = EnvironmentSettingResult[0]["qm_value"]; 
             console.log("flow url");
             console.log(FlowURL );
             var FlowParamater =
-            '{"AccountId" : "' + ParentAccount + '" ,' +
-            '"New_Primary_Contactid" : "' + contactid + '" ,' +
-            '"Previous_Contactid" : "' + CurrentUserID + '", ' +
-            '"UI_Language_Code" : "' + LanguageCode + '"}';
+            '{"EmailCode" : "S4-4", '+
+            '"AccountId" : "' + ParentAccount + '" ,' +
+            '"Primary_Contactid" : "' + contactid + '" ,' +
+            '"Secondary_Contactid" : "' + CurrentUserID + '", ' +
+            '"Language_Code" : "' + LanguageCode + '"}';
         var req = new XMLHttpRequest();
         req.open("POST", FlowURL , true);
         req.setRequestHeader('Content-Type', 'application/json');

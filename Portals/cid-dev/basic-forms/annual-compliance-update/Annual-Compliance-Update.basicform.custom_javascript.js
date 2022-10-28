@@ -63,7 +63,7 @@ $(document).ready(function ()
 			});
 		});
 	});
-	$('#cid_companyanniversarydate').parent().parent().hide();
+	//$('#cid_companyanniversarydate').parent().parent().hide();
 	var annualComplianceCompletionDate = $('#cid_annualcompliancecompletiondate').val();
 	if (annualComplianceCompletionDate == "" || annualComplianceCompletionDate == null) //uncheck attestation check box
 		$("#cid_iscompanyattested").prop("checked", false);
@@ -110,8 +110,7 @@ $(document).ready(function ()
 				});
 			});
 		}
-		if ($("#cid_iscompanyattested").prop('checked'))
-		{
+
 			$("#company_annual_compliance_update table tbody").find("tr").each(function ()
 			{
 				if (!firstErrorFound)
@@ -142,12 +141,13 @@ $(document).ready(function ()
 					});
 				}
 			});
-		}
-		else
-		{
+
+
+		if (!$("#cid_iscompanyattested").prop('checked')){
 			validation = false;
 			errorMessage = errorMessage + "You cannot proceed before attesting your company annual compliance update changes, please check the 'Attestation' box<br>";
 		}
+
 		if (errorMessage != "")
 		{
 			$('.validation-summary div').remove();
