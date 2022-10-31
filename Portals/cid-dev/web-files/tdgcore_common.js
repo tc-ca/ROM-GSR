@@ -1482,7 +1482,28 @@ if (typeof (tdg.cid.crw) == "undefined") {
         start_in_current_registration: function (rom_data, suppress_error) {
             debugger;
 
+            // Pending Active: Pending registration, email invitation sent
             if (rom_data.cid_cidcompanystatus == 100000004) {
+                var message = tdg.error_message.message("m000032");
+                message = message.replaceAll("{0}", rom_data.ovs_legalname);
+                tdg.c.dialog_YN(message, (ans) => {
+                    if (ans) {
+                        debugger;
+                        // add Activity Review Log
+                        var data = {
+                            "cid_Company@odata.bind": "/accounts(" + rom_data.accountid + ")"
+                        };
+                        //data = tdg.webapi.create("cid_activityreviewlog", data);
+
+                        return;
+                    } else {
+                        debugger;
+                        return;
+                    }
+                });
+                return;
+            }
+            else {
 
             }
 

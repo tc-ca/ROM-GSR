@@ -55,6 +55,74 @@ $(document).ready(function () {
         $("#telephone1").attr("autocomplete", "new-password");
         $("#mobilephone").attr("autocomplete", "new-password");
         $("#fax").attr("autocomplete", "new-password");
+
+//*************************submit button */
+        $("#InsertButton").css("display", "none");
+            //get submit button value to use it with the new button  
+            var SubmitButtonValue = $("#InsertButton").val();
+            //add new insert and update button
+            $("#InsertButton").after('<input type="button" onclick="" id="InsertUpdateButton" class="submit-btn btn btn-primary form-action-container-left" value="'+SubmitButtonValue +'"/>');
+             var ParentAccount = '{{user.parentcustomerid.id}}' ;
+            //define click event
+            $('#InsertUpdateButton').on('click', function () {
+              var emailaddress =  $("#emailaddress1").val();
+              console.log (emailaddress);
+              if  (emailaddress.length > 0)
+              {
+                  var ContactWithNoCompany = false;
+                  var ContactDifferntCompany = false;
+                   //check if contact exists
+                   var EmailQueryResuts =  tdg.webapi.SelectedColumnlist 
+                  
+                   ("contacts", "contactid,firstname, lastname ,_parentcustomerid_value , emailaddress1", "emailaddress1 eq '" + emailaddress + "' and statecode eq 0" );
+                    console.log("before loop");
+                   for (let i = 0 ; i  < EmailQueryResuts.length ; i ++ ) {
+                            console.log(EmailQueryResuts[i]);
+                            console.log(EmailQueryResuts[i]['_parentcustomerid_value']);
+                            if (  EmailQueryResuts[i]['_parentcustomerid_value'] == null )
+                            {
+                                var contactid = EmailQueryResuts[i]['contactid'];
+                                console.log ("No Company");
+                                ContactWithNoCompany = true;
+                                // var contactrecord ={};
+                                
+                                 //contactrecord["parentcustomerid@odata.bind"] = "/accounts/" + ParentAccount ;
+
+                                var messageconfirm = "The Secondary Contact {0} has been sent an on-boarding invitation to their email address of {1}.";
+                              
+                                tdg.c.dialog_OK(messageconfirm);
+                              // var response =  tdg.webapi.update ("contacts", contactid, '"ParentCustomerId@odata.bind" : "/accounts(' + ParentAccount  + ')"') ;
+                               updateContactParentAccount(contactid , ParentAccount) ;
+                           
+
+                                break ;
+
+                            }//end if
+                            else
+                            {
+                               console.log ("belong to another company");
+                               ContactDifferntCompany = true;
+
+
+                              
+
+                            }//end else no comany found
+                        }
+
+
+              }
+              else
+              {
+               //call insert button to validate and add new contact if validaton pass
+                $("#InsertButton").click();
+              }
+
+        
+        });
+
+//********************************************* */
+
+
     } catch (e) { }
 });
 
@@ -68,6 +136,7 @@ $(window).unload(function () {
             //wp.location.reload()
         } catch (e) { }
     }
+
 });
 
 if (window.jQuery) {
@@ -100,4 +169,51 @@ function page_setup() {
 
     // server error?
     tdg.c.message_panel();
+}
+
+(function (webapi, $) {
+	function safeAjax(ajaxOptions) {
+		var deferredAjax = $.Deferred();
+
+		shell.getTokenDeferred().done(function (token) {
+			// add headers for AJAX
+			if (!ajaxOptions.headers) {
+				$.extend(ajaxOptions, {
+					headers: {
+						"__RequestVerificationToken": token
+					}
+				});
+			} else {
+				ajaxOptions.headers["__RequestVerificationToken"] = token;
+			}
+			$.ajax(ajaxOptions)
+				.done(function (data, textStatus, jqXHR) {
+					validateLoginSession(data, textStatus, jqXHR, deferredAjax.resolve);
+				}).fail(deferredAjax.reject); //AJAX
+		}).fail(function () {
+			deferredAjax.rejectWith(this, arguments); // on token failure pass the token AJAX and args
+		});
+
+		return deferredAjax.promise();
+	}
+	webapi.safeAjax = safeAjax;
+})(window.webapi = window.webapi || {}, jQuery)
+
+
+function updateContactParentAccount(contactid , parentaccountid)
+{
+var dataObject={
+		"parentcustomerid_account@odata.bind":'"/_api/accounts('+ parentaccountid +')"'
+
+};
+
+webapi.safeAjax({
+	type: "PATCH",
+	url: "/_api/contacts("+ contactid+")",
+	contentType:"application/json",
+	data: JSON.stringify(dataObject),
+	success: function(res) {
+		console.log(res)
+	}
+});
 }
