@@ -8,50 +8,12 @@ $(document).ready(function ()
 		//alert("Test");
 		$('#ValidationSummaryEntityFormView div').remove();
 	});
-	//*******Remove menu item basedon user type******** */
+	//*******Add actions and events to contact grid ******** */
 	var gridList = $(".entity-grid");
 	//add onload event to grid 
 	tdg.grid.Registeration_ContactGrid_Actions (gridList);
+	//*********************************************** */
 	
-	//gridList.on("loaded", function ()
-	//{
-	/*	gridList.find("tr").each(function ()
-		{
-			var ContactTypeCell = $(this).find('td')[0];
-			var ContactFullNameCell = $(this).find('td')[1];
-			var contctId = $(this).attr("data-id");
-			//Console.log(contctId) ;
-			//console.log($(this).attr("data-id"));
-			var contactType = $(ContactTypeCell).attr("aria-label");
-			var ContactFullName = $(ContactFullNameCell).attr("aria-label");
-			
-			//find Menue action
-			$(this).find('td[aria-label="action menu"]').each(function ()
-			{
-				//find ul
-				var ul = $(this).find("ul");
-				  //add the "resend invitation" action
-                $(ul).append('<li role="none"><a href="#"  role="menuitem" tabindex="-1" title="Resend Invitation" aria-setsize="4" aria-posinset="4">Resend Invitation</a></li>');
-                 $(ul).append('<li role="none"><a href="#" onclick="DeactivateContact(' + "'" + contctId +"'" +  ')" role="menuitem" tabindex="-1" title="Deactivate" aria-setsize="4" aria-posinset="4">Deactivate</a></li>');
-                         
-				//find list item (Li)
-				$(ul).find("li").each(function ()
-				{
-					//get the menue titel
-					var menueTitle = $(this).find("a").attr("title");
-					if (contactType == "Primary")
-					{
-						if (menueTitle != "View details")
-						{
-							$(this).attr("hidden", "true");
-						}
-					} //end check if primary
-						//$(link).attr("Class", "details-link");
-				}); //end find ul li
-			}); //end find menu action
-		}); //end find tr
-	}); //end on grid load
-	*/
 	//$('.create-action').on("click", function () {
 	//    //alert("Test");
 	//    $('#ValidationSummaryEntityFormView div').remove();
@@ -145,35 +107,71 @@ function DeactivateContact(ContactId)
 	var CurrentUserID = '{{user.id}}';
    var ParentAccount = '{{user.parentcustomerid.id}}' ;
    var LanguageCode = '{{website.selected_language.code}}';
+   var FlowEmailCode = "" ;
 	//if not primary
    if (cid_usercontacttype != 100000000)
 	{
-		 // var m000115 = tdg.error_message.message("m000115");
-            //show error message
-           tdg.c.dialog_OK("Only the Primary Admin can deactivate a Secondary Admin");
+         tdg.c.dialog_OK("Only the Primary Admin can deactivate a Secondary Admin");
 	}//end check user type
 	else
 	{
 		 //get all secondary contacts
 		 var contactQueryResults =  tdg.webapi.SelectedColumnlist ("contacts", "firstname", "cid_contacttype ne 100000000 and _parentcustomerid_value eq " + ParentAccount );
-		 console.log (contactQueryResults.length);
+		//if more than one secondary contact eixts
 		 if (contactQueryResults.length > 1)
 		 {
+
+			 //get user invitation
+			  var adx_invitationResults =  tdg.webapi.SelectedColumnlist ("adx_invitations", "adx_expirydate", "_adx_invitecontact_value eq " + ContactId );
+			  console.log("Inviation results");
+			  console.log(adx_invitationResults);
+		
+			 //check if user logined before
+			  var result =  tdg.webapi.SelectedColumnlist ("contacts", "msdyn_portaltermsagreementdate", "contactid eq " + ContactId );
+               console.log("after select contacts results");
+			  console.log (result[0]["msdyn_portaltermsagreementdate"]);
+              //if contact doesn't have agreement date
+              if (result[0]["msdyn_portaltermsagreementdate"] != null)
+              {
+				 //adx_invitation
+				if (adx_invitationResults.length > 0 )
+				{
+					FlowEmailCode = "S4-2";
+				}
+				else
+				{
+					FlowEmailCode = "S4-1";
+				}
+		
+			  }//end check if user login before
+			  else
+			  {
+				  //check the user that did not login has invitation
+				  if (adx_invitationResults.length > 0 )
+				  {
+					  FlowEmailCode = "S4-3";
+
+				  }
+
+			  }
+			  //deactivate contact
+			  tdg.webapi.update ("contacts",ContactId ,'{ "statuscode " :"2" , "statecode " : "1" }' );
+			  console.log ("after update web api call");
+			
+
+              //Execute flow to send email and set expiry date for invitation   
 			  //get flow URL
-			  var FlowName = "CID Send Portal Contact Email by EmailCode";
+			var FlowName = "CID Send Portal Contact Email by EmailCode";
             var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
-            console.log("URL  " +  EnvironmentSettingResult.length);
-
-
 
 			  tdg.c.dialog_OK("Deactivation started");
 			  var data =
-           '{"EmailCode" : "S4-4", '+
+           '{ "EmailCode" : "' + FlowEmailCode + '", '+
             '"AccountId" : "' + ParentAccount + '" ,' +
-            '"Primary_Contactid" : "' + ContactId + '" ,' +
-            '"Secondary_Contactid" : "' + CurrentUserID + '"}';
-			
-			  tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code",data) ;
+            '"Primary_Contactid" : "' + CurrentUserID + '" ,' +
+            '"Secondary_Contactid" : "' + ContactId + '"}';
+			// call function to execute flow
+			  tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code",  data)  ;
 		 }
 		 else
 		 {
