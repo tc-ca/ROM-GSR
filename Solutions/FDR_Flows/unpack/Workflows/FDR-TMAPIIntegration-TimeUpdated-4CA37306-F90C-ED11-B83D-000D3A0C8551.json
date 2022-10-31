@@ -164,6 +164,20 @@
                 },
                 "authentication": "@parameters('$authentication')"
               }
+            },
+            "Terminate": {
+              "runAfter": {
+                "Update_Service_Task_Sync_Field_to_False": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "c181ed13-603b-4654-887d-c62ded2ae7ac"
+              },
+              "type": "Terminate",
+              "inputs": {
+                "runStatus": "Failed"
+              }
             }
           },
           "runAfter": {

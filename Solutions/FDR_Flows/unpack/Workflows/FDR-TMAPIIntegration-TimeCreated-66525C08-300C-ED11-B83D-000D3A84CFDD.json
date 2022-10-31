@@ -307,7 +307,9 @@
                 "parameters": {
                   "entityName": "fdr_servicerequestservicetasks",
                   "recordId": "@triggerOutputs()?['body/fdr_servicerequestservicetaskid']",
-                  "item/fdr_syncwithtmapi": true
+                  "item/fdr_syncwithtmapi": true,
+                  "item/fdr_tmhourid": "@outputs('Add_hours_to_a_Time_Entry_2')?['body/HourId']",
+                  "item/fdr_tmtimeentryid": "@outputs('Add_hours_to_a_Time_Entry_2')?['body/TimeEntryId']"
                 },
                 "authentication": "@parameters('$authentication')"
               },
@@ -421,6 +423,20 @@
                   "item/fdr_syncwithtmapi": false
                 },
                 "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Terminate": {
+              "runAfter": {
+                "Update_Service_Task_Sync_Field_to_False": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "08015bb2-1f52-4b1b-a15d-8b2c058e6662"
+              },
+              "type": "Terminate",
+              "inputs": {
+                "runStatus": "Failed"
               }
             }
           },
