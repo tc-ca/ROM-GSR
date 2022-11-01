@@ -360,8 +360,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000112",
-                        "message_en": "The Annual Compliance Update can only be completed on or 30 days after the Company’s Anniversary Date each year.",
-                        "message_fr": "The Annual Compliance Update can only be completed on or 30 days after the Company’s Anniversary Date each year_FR."
+                        "message_en": "The Annual Compliance Update can only be completed on your Anniversary Date. On your Anniversary Date, you will have 30 days to complete the Annual Compliance Update.",
+                        "message_fr": "The Annual Compliance Update can only be completed on your Anniversary Date. On your Anniversary Date, you will have 30 days to complete the Annual Compliance Update._FR."
                     },
                     {
                         "code": "m000113",
@@ -378,10 +378,36 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000115",
                         "message_en": "The Assign as Primary Admin can only be assigned to a Secondary Admin that has logged into the CID Platform at least one time.",
                         "message_fr": "The Assign as Primary Admin can only be assigned to a Secondary Admin that has logged into the CID Platform at least one time._FR"
+                    },
+                    {
+                        "code": "m000116",
+                        "message_en": "This Contact cannot be added as a Contact with this name and email address already exists in CID, but is assigned to a different Company.",
+                        "message_fr": "This Contact cannot be added as a Contact with this name and email address already exists in CID, but is assigned to a different Company._FR"
                     }
+                    ,
+                    {
+                        "code": "m000117",
+                        "message_en": "The Secondary Contact {0} has been sent an on-boarding invitation to their email address of {1}.",
+                        "message_fr": "The Secondary Contact {0} has been sent an on-boarding invitation to their email address of {1}._FR"
+                    }
+                    ,
+                    {
+                        "code": "m000118",
+                        "message_en": "Only the Primary Admin can deactivate a Secondary Admin.",
+                        "message_fr": "Only the Primary Admin can deactivate a Secondary Admin._FR"
+                    }
+                    ,
+                    {
+                        "code": "m000119",
+                        "message_en": "At least one other active Secondary Admin needs to be added before you can deactivate this Secondary Admin.",
+                        "message_fr": "At least one other active Secondary Admin needs to be added before you can deactivate this Secondary Admin._FR"
+                    }
+
                 ];
 
             return list;
         }
     }
 }
+
+

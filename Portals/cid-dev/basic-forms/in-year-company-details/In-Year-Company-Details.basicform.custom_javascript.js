@@ -5,6 +5,19 @@
 $(document).ready(function () {
     debugger;
 
+    var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
+    var activationButon = $("#EntityFormPanel").find(".workflow-link");
+
+    if (cidCompanyStatus.indexOf("Inactive") < 0) {
+        activationButon.hide();
+    }
+    else {
+        activationButon.css("color", "#000000");
+        activationButon.css("background-color", "#4CAF50");
+    }
+    
+   $('.validation-summary').eq(1).remove();
+
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
@@ -102,7 +115,8 @@ if (window.jQuery) {
             else {
                 var errorMessage = tdg.error_message.message("m000026");
                 $('.validation-summary div').remove();
-                var validationSection = $('.validation-summary').eq(1);
+                //var validationSection = $('.validation-summary').eq(1);
+                var validationSection = $('div[data-name="company_details"]').parent().find(".validation-summary");
                 validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
                 validationSection.show();
                 $('.validation-summary div').focus();

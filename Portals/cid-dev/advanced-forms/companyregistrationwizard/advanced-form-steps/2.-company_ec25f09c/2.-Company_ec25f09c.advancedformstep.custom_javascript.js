@@ -13,6 +13,7 @@ $(document).ready(function () {
 	if (code != "null" && code != "") {
 		var msg = tdg.error_message.message(code);
 		tdg.c.dialog_OK(msg);
+		sessionStorage.setItem("step_start","2");
 	}
 
 	// address

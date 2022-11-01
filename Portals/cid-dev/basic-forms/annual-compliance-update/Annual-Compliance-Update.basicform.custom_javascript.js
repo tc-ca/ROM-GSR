@@ -1,6 +1,8 @@
 $(document).ready(function ()
 {
 	debugger;
+    //page_setup();
+
 	$("legend").each(function ()
 	{
 		$(this).removeClass();
@@ -63,93 +65,78 @@ $(document).ready(function ()
 			});
 		});
 	});
-	//$('#cid_companyanniversarydate').parent().parent().hide();
+	$('#cid_companyanniversarydate').parent().parent().hide();
 	var annualComplianceCompletionDate = $('#cid_annualcompliancecompletiondate').val();
-	if (annualComplianceCompletionDate == "" || annualComplianceCompletionDate == null) //uncheck attestation check box
-		$("#cid_iscompanyattested").prop("checked", false);
-	entityFormClientValidate = function ()
+	if (annualComplianceCompletionDate == null || annualComplianceCompletionDate == "") //uncheck attestation check box
+	$("#cid_iscompanyattested").prop("checked", false);
+	var anniversaryDate = new Date($('#cid_companyanniversarydate').val());
+	var complienceReadonly = checkAnuualComplienceEligibility(anniversaryDate);
+	if (complienceReadonly)
 	{
+		validation = false;
+		var errormsg = tdg.error_message.message("m000112");
+		
+        if (errormsg != "")
+		{
+			$('.validation-summary div').remove();
+			var validationSection = $('.validation-summary');
+			validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errormsg + "</div>"));
+			validationSection.show();
+			//$('.validation-summary div').focus();
+		}
+
+		$("#UpdateButton").prop("disabled", true);
+		$('.crmEntityFormView').find('input, textarea, select').attr('disabled', 'disabled');
+		$(".entity-grid").on("loaded", function ()
+		{
+			$(this).find("thead").find("tr").each(function ()
+			{
+				$(this).find('th:last').remove();
+			});
+			$(this).find("tbody").find("tr").each(function ()
+			{
+				$(this).find('td:last').remove();
+			});
+		});
+	}
+	entityFormClientValidate = function (){
 		var errorMessage = "";
 		var validation = true;
 		var firstErrorFound = false;
 		var secondErrorFound = false;
-		var anniversaryDate = new Date($('#cid_companyanniversarydate').val());
-		var today = new Date();
-		var complienceReadonly = false;
-		if (anniversaryDate == null)
-		{
-			//show error message and hide  annual complience 
-			complienceReadonly = true;
-		}
-		else
-		{
-			anniversaryDate = new Date(today.getFullYear(), anniversaryDate.getMonth(), anniversaryDate.getDate())
-			if (anniversaryDate > today) anniversaryDate = new Date(anniversaryDate.getFullYear() - 1, anniversaryDate.getMonth(), anniversaryDate.getDate());
-			var dateDiff = Math.floor((Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) - Date.UTC(anniversaryDate.getFullYear(), anniversaryDate.getMonth(), anniversaryDate.getDate())) / (1000 * 60 * 60 * 24))
-			if (dateDiff < 30)
-			{ //Annual Compliance Update can only be completed on or 30 days after the Company’s Anniversary Date each year
-				complienceReadonly = true;
+
+		$("#company_annual_compliance_update table tbody").find("tr").each(function (){
+			if (!firstErrorFound){
+				$(this).find("td").each(function (){
+					if ($(this).attr('data-attribute') == 'statuscode' && $(this).attr('aria-label') != 'Completed'){
+						validation = false;
+						errorMessage = errorMessage + "You cannot proceed before completing the checklist items in the Company Management section<br>";
+						firstErrorFound = true;
+					}
+				});
 			}
-		}
-		if (complienceReadonly)
-		{
-			validation = false;
-			var msg = tdg.error_message.message("m000112");
-			tdg.c.dialog_OK(msg);
-			//$("#UpdateButton").prop("disabled", true);
-			$('.crmEntityFormView').find('input, textarea, select').attr('disabled', 'disabled');
-			$(".entity-grid").on("loaded", function ()
-			{
-				$(this).find("thead").find("tr").each(function ()
-				{
-					$(this).find('th:last').remove();
+		});
+			
+		$("#sites_annual_compliance_update table tbody").find("tr").each(function (){
+			if (!secondErrorFound){
+				$(this).find("td").each(function (){
+					if ($(this).attr('data-attribute') == 'statuscode' && $(this).attr('aria-label') != 'Completed'){
+						validation = false;
+						errorMessage = errorMessage + "You cannot proceed before completing the checklist items in the Sites Management section<br>";
+						secondErrorFound = true;
+					}
 				});
-				$(this).find("tbody").find("tr").each(function ()
-				{
-					$(this).find('td:last').remove();
-				});
-			});
-		}
+			}
+		});
 
-			$("#company_annual_compliance_update table tbody").find("tr").each(function ()
-			{
-				if (!firstErrorFound)
-				{
-					$(this).find("td").each(function ()
-					{
-						if ($(this).attr('data-attribute') == 'statuscode' && $(this).attr('aria-label') != 'Completed')
-						{
-							validation = false;
-							errorMessage = errorMessage + "You cannot proceed before completing the checklist items in the Company Management section<br>";
-							firstErrorFound = true;
-						}
-					});
-				}
-			});
-			$("#sites_annual_compliance_update table tbody").find("tr").each(function ()
-			{
-				if (!secondErrorFound)
-				{
-					$(this).find("td").each(function ()
-					{
-						if ($(this).attr('data-attribute') == 'statuscode' && $(this).attr('aria-label') != 'Completed')
-						{
-							validation = false;
-							errorMessage = errorMessage + "You cannot proceed before completing the checklist items in the Sites Management section<br>";
-							secondErrorFound = true;
-						}
-					});
-				}
-			});
-
-
+		
+		
 		if (!$("#cid_iscompanyattested").prop('checked')){
 			validation = false;
 			errorMessage = errorMessage + "You cannot proceed before attesting your company annual compliance update changes, please check the 'Attestation' box<br>";
 		}
 
-		if (errorMessage != "")
-		{
+		if (errorMessage != "")	{
 			$('.validation-summary div').remove();
 			var validationSection = $('.validation-summary');
 			validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
@@ -159,3 +146,43 @@ $(document).ready(function ()
 		return validation;
 	}
 });
+checkAnuualComplienceEligibility = function (anniversaryDate)
+{
+	debugger;
+	if (anniversaryDate == null)
+	{
+		//show error message and hide  annual complience 
+		return true;
+	}
+	else
+	{
+		var today = new Date();
+		anniversaryDate = new Date(today.getFullYear(), anniversaryDate.getMonth(), anniversaryDate.getDate())
+		if (anniversaryDate > today) anniversaryDate = new Date(anniversaryDate.getFullYear() - 1, anniversaryDate.getMonth(), anniversaryDate.getDate());
+		var dateDiff = Math.floor((Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) - Date.UTC(anniversaryDate.getFullYear(), anniversaryDate.getMonth(), anniversaryDate.getDate())) / (1000 * 60 * 60 * 24))
+		if (dateDiff > 30)
+		{ //Annual Compliance Update can only be completed on or 30 days within the Company’s Anniversary Date each year
+			return true;
+		}
+	}
+	return false;
+}
+
+function page_setup() {
+debugger;
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
+    const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = file;
+
+        $("body").append(script);
+    }
+
+    // server error?
+    tdg.c.message_panel();
+}

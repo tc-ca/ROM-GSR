@@ -27,6 +27,8 @@ $(document).ready(function () {
     if (cidSiteStatus.indexOf("Inactive") >= 0) {
         $(".create-action").hide();
         $('.crmEntityFormView').find('input, textarea, select').attr('disabled', 'disabled');
+        $('.workflow-link').attr('disabled', 'disabled');
+        
         disabled = "disabled";
 
         activateSiteWebLink.removeClass("hidden");

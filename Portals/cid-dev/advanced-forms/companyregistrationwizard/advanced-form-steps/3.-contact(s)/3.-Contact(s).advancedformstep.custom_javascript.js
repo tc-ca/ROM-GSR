@@ -111,7 +111,10 @@ function DeactivateContact(ContactId)
 	//if not primary
    if (cid_usercontacttype != 100000000)
 	{
-         tdg.c.dialog_OK("Only the Primary Admin can deactivate a Secondary Admin");
+		//m000118
+		 var m000118 = tdg.error_message.message("m000118");
+         tdg.c.dialog_OK(m000118);
+			 //"Only the Primary Admin can deactivate a Secondary Admin");
 	}//end check user type
 	else
 	{
@@ -161,9 +164,7 @@ function DeactivateContact(ContactId)
 
               //Execute flow to send email and set expiry date for invitation   
 			  //get flow URL
-			var FlowName = "CID Send Portal Contact Email by EmailCode";
-            var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
-
+			
 			  tdg.c.dialog_OK("Deactivation started");
 			  var data =
            '{ "EmailCode" : "' + FlowEmailCode + '", '+
@@ -175,13 +176,10 @@ function DeactivateContact(ContactId)
 		 }
 		 else
 		 {
-		   // var m000115 = tdg.error_message.message("m000115");
+		    var m000119 = tdg.error_message.message("m000119");
            //show error message
-           tdg.c.dialog_OK("At least one other active Secondary Admin needs to be added before you can deactivate this Secondary Admin.");
+           tdg.c.dialog_OK(m000119);
 		 }
-
-
-
 
 	}//end else
 }

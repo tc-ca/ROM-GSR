@@ -7,6 +7,8 @@ var _busy = false;
 $(document).ready(function () {
     debugger;
 
+    $('.validation-summary').eq(1).remove();
+
     // address
     tdg.cid.address_init(true);
 
@@ -53,6 +55,8 @@ $(document).ready(function () {
     });
     tdg.cid.address_type_change(false);
 
+    tdg.cid.convert_province_to_code(selected_language);
+
     $('#ovs_legalname').attr("readonly", true);
 
     subgrid_language();
@@ -65,15 +69,12 @@ $(document).ready(function () {
                 //if($("#cid_issiteattested").prop('checked')){
                     debugger;
                 if($('table[data-name="further_site_details_section_3"]').find("#cid_issiteattested").prop('checked')){
-                    var x= "y";
                     return true;
                 }
                 else{
-                    var y ="x";
                     var errorMessage = 'You cannot proceed before attesting your site data changes, please check the "Attestation" box';  
                     $('.validation-summary div').remove();
-                    //var validationSection = $('.validation-summary').eq(1); 
-                    var validationSection = $('div[data-name="SUMMARY_TAB"]').parent().find(".validation-summary");
+                    var validationSection = $('div[data-name="site_details2"]').parent().find(".validation-summary");
 
                     validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>")); 
                     validationSection.show(); 

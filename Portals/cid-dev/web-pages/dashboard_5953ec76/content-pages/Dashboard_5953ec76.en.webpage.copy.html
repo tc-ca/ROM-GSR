@@ -1,1 +1,16 @@
 {% entityform name: 'Company Dashboard' %}
+
+{% assign parentCompanyId = user.parentcustomerid.id %}
+{% if parentCompanyId %}
+    {% assign company = entities['account'][parentCompanyId] %}
+   
+    {% if company.cid_cidcompanystatus.label contains "nactive" %}
+        <script>
+            $('a[href*="deactivate-company"]').addClass("hidden");
+        </script>
+    {% else %}
+         <script>
+            $('a[href*="deactivate-company"]').removeClass("hidden");
+        </script>
+    {% endif %}
+{% endif %}
