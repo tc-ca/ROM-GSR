@@ -129,8 +129,11 @@ $(document).ready(function ()
 			}
 		});
 
-		
-		
+		if ($("#numberOfNotAttestedSites").val() != 0){
+			validation = false;
+			errorMessage = errorMessage + "You cannot proceed before attesting all companies sites<br>";
+		}
+
 		if (!$("#cid_iscompanyattested").prop('checked')){
 			validation = false;
 			errorMessage = errorMessage + "You cannot proceed before attesting your company annual compliance update changes, please check the 'Attestation' box<br>";

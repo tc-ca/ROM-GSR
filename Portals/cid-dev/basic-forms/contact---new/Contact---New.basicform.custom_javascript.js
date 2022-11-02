@@ -61,9 +61,11 @@ $(document).ready(function () {
              var ParentAccount = '{{user.parentcustomerid.id}}' ;
             //define click event
             $('#InsertUpdateButton').on('click', function () {
-              
+        
+            // function will check of existing contact need to be linke to company
+            //instead of add new else it will call the click event of the origional submit button
+              invitation.New_and_Existing_Contact_Submit_Logic(ParentAccount);
         });
-
 //********************************************* */
 
 
@@ -101,7 +103,7 @@ function page_setup() {
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
-    const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
+    const files = ["/tdgcore_common.js", "/tdgcore_message.js" , "/tdgcore_invitation.js"];
     for (var i = 0; i < files.length; i++) {
         var file = files[i];
         var script = document.createElement('script');

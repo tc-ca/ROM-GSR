@@ -106,7 +106,11 @@ function DeactivateContact(ContactId)
 	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
 	var CurrentUserID = '{{user.id}}';
    var ParentAccount = '{{user.parentcustomerid.id}}' ;
+   console.log ("cid_usercontacttype " + cid_usercontacttype );
    var LanguageCode = '{{website.selected_language.code}}';
+   console.log("after moving the code to js file2");
+   invitation.Execute_Invitation_Deactivation_Logic(ContactId,cid_usercontacttype, CurrentUserID, ParentAccount, LanguageCode  );
+   /*
    var FlowEmailCode = "" ;
 	//if not primary
    if (cid_usercontacttype != 100000000)
@@ -159,12 +163,9 @@ function DeactivateContact(ContactId)
 			  }
 			  //deactivate contact
 			  tdg.webapi.update ("contacts",ContactId ,'{ "statuscode " :"2" , "statecode " : "1" }' );
-			  console.log ("after update web api call");
-			
-
+			 		
               //Execute flow to send email and set expiry date for invitation   
 			  //get flow URL
-			
 			  tdg.c.dialog_OK("Deactivation started");
 			  var data =
            '{ "EmailCode" : "' + FlowEmailCode + '", '+
@@ -182,4 +183,5 @@ function DeactivateContact(ContactId)
 		 }
 
 	}//end else
+	*/
 }
