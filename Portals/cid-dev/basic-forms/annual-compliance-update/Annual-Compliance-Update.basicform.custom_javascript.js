@@ -152,7 +152,7 @@ $(document).ready(function ()
 checkAnuualComplienceEligibility = function (anniversaryDate)
 {
 	debugger;
-	if (anniversaryDate == null)
+	if (anniversaryDate == null || anniversaryDate == "")
 	{
 		//show error message and hide  annual complience 
 		return true;

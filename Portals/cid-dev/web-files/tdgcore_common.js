@@ -1,4 +1,5 @@
 
+
 //To apply the Asterisk(*) Sign using custom JS:
 //$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
 
@@ -523,6 +524,7 @@ if (typeof (tdg.grid) == "undefined") {
         },
 
         InYear_ContactGrid_Actions: function (gridList) {
+            //add onload event to grid 
             gridList.on("loaded", function () {
                 gridList.find("tr").each(function () {
                     var ContactTypeCell = $(this).find('td')[0];
@@ -531,14 +533,18 @@ if (typeof (tdg.grid) == "undefined") {
                     var contactType = $(ContactTypeCell).attr("aria-label");
                     var ContactFullName = $(ContactFullNameCell).attr("aria-label");
 
-
                     //fins Menue action
                     $(this).find('td[aria-label="action menu"]').each(function () {
                         //find ul
                         var ul = $(this).find("ul");
                         if (contactType != "Primary") {
+                            //add the "Dectivation" action
+                            $(ul).append('<li role="none"><a href="#" onclick="DeactivateContact(' + "'" + contactid + "'" +
+                                ')" role="menuitem" tabindex="-1" title="Deactivate" aria-setsize="4" aria-posinset="4">Deactivate</a></li>');
+
                             //add the "resend invitation" action
-                            $(ul).append('<li role="none"><a href="#"  role="menuitem" tabindex="-1" title="Resend Invitation" aria-setsize="4" aria-posinset="4">Resend Invitation</a></li>');
+                            $(ul).append('<li role="none"><a href="#" onclick="ResendInvitation(' + "'" + contactid + "','"
+                                + ContactFullName + "'" + ')" role="menuitem" tabindex="-1" title="Resend Invitation" aria-setsize="4" aria-posinset="4">Resend Invitation</a></li>');
 
                             //add "Assign as Primary Admin" action
                             $(ul).append('<li role="none"><a href="#" onclick="AssignAsAdmin(' + "'" + contactid + "','"
@@ -561,9 +567,7 @@ if (typeof (tdg.grid) == "undefined") {
                     });//end find menu action
 
                 });//end find tr
-            });//end on grid load                  
-
-
+            });//end on grid load             
         }
         ,
 
@@ -585,7 +589,11 @@ if (typeof (tdg.grid) == "undefined") {
                         //find ul
                         var ul = $(this).find("ul");
                         //add the "resend invitation" action
-                        $(ul).append('<li role="none"><a href="#"  role="menuitem" tabindex="-1" title="Resend Invitation" aria-setsize="4" aria-posinset="4">Resend Invitation</a></li>');
+
+                        //add the "resend invitation" action
+                        $(ul).append('<li role="none"><a href="#" onclick="ResendInvitation(' + "'" + contctId + "','"
+                            + ContactFullName + "'" + ')" role="menuitem" tabindex="-1" title="Resend Invitation" aria-setsize="4" aria-posinset="4">Resend Invitation</a></li>');
+
                         //add deactivate action
                         $(ul).append('<li role="none"><a href="#" onclick="DeactivateContact(' + "'" + contctId + "'" + ')" role="menuitem" tabindex="-1" title="Deactivate" aria-setsize="4" aria-posinset="4">Deactivate</a></li>');
 
@@ -1479,6 +1487,56 @@ if (typeof (tdg.cid) == "undefined") {
 if (typeof (tdg.cid.crw) == "undefined") {
     tdg.cid.crw = {
         // start
+        start_clear_parentcustomerid: function () {
+            $("#cid_crabusinessnumber").val("");
+            $("#cid_reasonfornobnnumber").val("");
+            $("#cid_reasonfornobnnumber_other").val("");
+            $("#cid_legalname").val("");
+            $("#cid_operatingname").val("");
+
+            $("#parentcustomerid").attr("value", null);
+            $("#parentcustomerid_name").attr("value", null);
+        },
+
+        start_cid_has_cra_bn_onchange: function () {
+            debugger;
+
+            tdg.cid.crw.clear_parentcustomerid();
+
+            tdg.c.removeValidator("cid_crabusinessnumber");
+            tdg.c.removeValidator("cid_reasonfornobnnumber");
+            tdg.c.removeValidator("cid_reasonfornobnnumber_other");
+            tdg.c.removeValidator("cid_legalname");
+
+            tdg.c.control_hide("cid_reasonfornobnnumber_other");
+
+            var cid_has_cra_bn = $("#cid_has_cra_bn").val();
+
+            // business number?
+            if (cid_has_cra_bn == "0") {
+                tdg.c.control_hide("cid_crabusinessnumber");
+                tdg.c.control_show("cid_reasonfornobnnumber");
+                tdg.c.control_show("cid_legalname");
+
+                tdg.c.addValidator("cid_legalname");
+                tdg.c.addValidator("cid_reasonfornobnnumber");
+
+                $("#cid_crabusinessnumber").val("");
+            }
+            else {
+                tdg.c.control_show("cid_crabusinessnumber");
+                tdg.c.control_hide("cid_reasonfornobnnumber");
+                tdg.c.control_hide("cid_legalname");
+
+                tdg.c.addValidator("cid_crabusinessnumber");
+
+                // clear data
+                $("#cid_reasonfornobnnumber").val("");
+                $("#cid_reasonfornobnnumber_other").val("");
+                $("#cid_legalname").val("");
+            }
+        },
+
         start_clear_contact_address: function () {
             $("#address1_line1").val("");
             $("#address1_line2").val("");

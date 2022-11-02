@@ -5,6 +5,13 @@
 $(document).ready(function () {
     debugger;
 
+ sessionStorage.setItem('futureDateMessageShown', 'false');
+        var effectiveDateControl = $("#cid_companydeactivationeffectivedate_datepicker_description");
+        effectiveDateControl.val('');
+    $("#cid_reasonforcompanydeactivation option[value='']").attr('selected', true); 
+    $("#cid_memoforcompanydeactivation").val('');
+    $("#cid_iscompanyattested").prop("checked", false);
+    
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
     $('#cid_cidcompanystatus').hide();
     $('#cid_cidcompanystatus_label').hide();
@@ -13,13 +20,9 @@ $(document).ready(function () {
         $('#EntityFormPanel').find('input, textarea, button, select').attr('disabled', 'disabled');
     }
 
-    $("#cid_reasonforcompanydeactivation option[value='']").attr('selected', true); 
-    $("#cid_memoforcompanydeactivation").val('');
-    $("#cid_iscompanyattested").prop("checked", false);
 
-        sessionStorage.setItem('futureDateMessageShown', 'false');
-        var effectiveDateControl = $("#cid_companydeactivationeffectivedate_datepicker_description");
-        effectiveDateControl.val('');
+
+       
 
         $("#EntityFormPanel").click(function(){
         var futureDateMessageShown = sessionStorage.getItem("futureDateMessageShown");

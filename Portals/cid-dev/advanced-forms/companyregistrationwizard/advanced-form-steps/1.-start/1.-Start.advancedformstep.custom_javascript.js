@@ -20,8 +20,8 @@ $(document).ready(function () {
     tdg.c.control_hide("parentcustomerid", true);
     tdg.c.control_hide("cid_operatingname");
 
-    $("#cid_has_cra_bn").change(cid_has_cra_bn_onchange);
-    cid_has_cra_bn_onchange();
+    $("#cid_has_cra_bn").change(tdg.cid.crw.start_cid_has_cra_bn_onchange);
+    tdg.cid.crw.start_cid_has_cra_bn_onchange();
 
     $("#cid_reasonfornobnnumber").change(cid_reasonfornobnnumber_onchange);
     cid_reasonfornobnnumber_onchange();
@@ -99,45 +99,6 @@ function invitation_go_next(account, primary_ind, contact_id) {
     $("#NextButton").click();
 }
 
-function cid_has_cra_bn_onchange() {
-    debugger;
-
-    clear_parentcustomerid();
-
-    tdg.c.removeValidator("cid_crabusinessnumber");
-    tdg.c.removeValidator("cid_reasonfornobnnumber");
-    tdg.c.removeValidator("cid_reasonfornobnnumber_other");
-    tdg.c.removeValidator("cid_legalname");
-
-    tdg.c.control_hide("cid_reasonfornobnnumber_other");
-
-    var cid_has_cra_bn = $("#cid_has_cra_bn").val();
-
-    // business number?
-    if (cid_has_cra_bn == "0") {
-        tdg.c.control_hide("cid_crabusinessnumber");
-        tdg.c.control_show("cid_reasonfornobnnumber");
-        tdg.c.control_show("cid_legalname");
-
-        tdg.c.addValidator("cid_legalname");
-        tdg.c.addValidator("cid_reasonfornobnnumber");
-
-        $("#cid_crabusinessnumber").val("");
-    }
-    else {
-        tdg.c.control_show("cid_crabusinessnumber");
-        tdg.c.control_hide("cid_reasonfornobnnumber");
-        tdg.c.control_hide("cid_legalname");
-
-        tdg.c.addValidator("cid_crabusinessnumber");
-
-        // clear data
-        $("#cid_reasonfornobnnumber").val("");
-        $("#cid_reasonfornobnnumber_other").val("");
-        $("#cid_legalname").val("");
-    }
-}
-
 function cid_reasonfornobnnumber_onchange() {
     debugger;
 
@@ -153,18 +114,6 @@ function cid_reasonfornobnnumber_onchange() {
         tdg.c.control_hide("cid_reasonfornobnnumber_other");
         tdg.c.removeValidator("cid_reasonfornobnnumber_other");
     }
-}
-
-// clear parentcustomerid
-function clear_parentcustomerid() {
-    $("#cid_crabusinessnumber").val("");
-    $("#cid_reasonfornobnnumber").val("");
-    $("#cid_reasonfornobnnumber_other").val("");
-    $("#cid_legalname").val("");
-    $("#cid_operatingname").val("");
-
-    $("#parentcustomerid").attr("value", null);
-    $("#parentcustomerid_name").attr("value", null);
 }
 
 if (window.jQuery) {
@@ -202,7 +151,8 @@ if (window.jQuery) {
                     if (rom_data.length > 0) {
                         rom_data = rom_data[0];
 
-                        validation = invitation.in_current_registration(rom_data, suppress_error);
+                        var contact_id = '{{user.id}}';
+                        validation = invitation.in_current_registration(rom_data, suppress_error, contact_id);
 
                         $("#cid_operatingname").val(rom_data.name);
                     }
@@ -229,8 +179,8 @@ if (window.jQuery) {
                         rom_data = tdg.c.WebApi_List("accounts", filter);
                         if (rom_data.length > 0) {
                             rom_data = rom_data[0];
-
-                            validation = invitation.in_current_registration(rom_data, suppress_error);
+                            var contact_id = '{{user.id}}';
+                            validation = invitation.in_current_registration(rom_data, suppress_error, contact_id);
                         }
                         else {
                             validation = true;

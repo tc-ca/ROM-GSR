@@ -3,53 +3,13 @@
 //
 
 $(document).ready(function () {
-   
+   page_setup();
     //*******Remove menu item basedon user type******** */
 		var gridList = $(".entity-grid");
-          //add onload event to grid 
-            gridList.on("loaded", function () {
-				gridList.find("tr").each(function (){
-                    var ContactTypeCell = $(this).find('td')[0];
-					var ContactFullNameCell = $(this).find('td')[1];
-                    var contactid = $(this).attr("data-id") ;
-                    var contactType = $(ContactTypeCell).attr("aria-label");
-                    var ContactFullName = $(ContactFullNameCell).attr("aria-label");
-             
-
-				   //fins Menue action
-		          $(this).find('td[aria-label="action menu"]').each(function() {
-				   //find ul
-				   var ul = $(this).find("ul");
-                    if (contactType != "Primary")
-					  {
-                          //add the "resend invitation" action
-                          $(ul).append('<li role="none"><a href="#"  role="menuitem" tabindex="-1" title="Resend Invitation" aria-setsize="4" aria-posinset="4">Resend Invitation</a></li>');
-                      
-                         //add "Assign as Primary Admin" action
-                          $(ul).append('<li role="none"><a href="#" onclick="AssignAsAdmin(' + "'" + contactid + "','" 
-                          + ContactFullName + "'" +  ')" role="menuitem" tabindex="-1" title="Assign as Primary Admin" aria-setsize="4" aria-posinset="4">Assign as Primary Admin</a></li>');
-                      
-                      
-                      }
-                  //find list item (Li)
-				   $(ul).find("li").each(function()
-				   {
-					   //get the menue titel
-					var menueTitle = $(this).find("a").attr("title");					  
-					  if (contactType == "Primary")
-					  {
-						  if ( menueTitle != "Edit")
-						  {
-							   $(this).attr("hidden", "true");
-						  }
-					  }//end check if primary
-
-				   });//end find ul li
-
-				  });//end find menu action
-
-				});//end find tr
-					});//end on grid load                  
+        console.log("after moving the code to file");
+        //update grid to inlude deactivate , resend , assign primary admin action with click events to each row
+        tdg.grid.InYear_ContactGrid_Actions(gridList);    
+          
     debugger;
 
     if (cidCompanyStatus.indexOf("Inactive") >= 0) {
@@ -118,18 +78,7 @@ if (window.jQuery) {
     }(window.jQuery));
 }
 
-async function Update_contactType(data1 , data2)
-{
-      var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
-   var CurrentUserID = '{{user.id}}';
-      await tdg.webapi.update("contacts", contactid, data1);
-             
-               
-    await tdg.webapi.update("contacts", CurrentUserID, data2);
-   
-     $(".entity-grid").trigger("refresh");
 
-}
 //check user assign
  function AssignAsAdmin(contactid , contactFullName)
  {
@@ -150,7 +99,7 @@ async function Update_contactType(data1 , data2)
     {
         // retrieve contact by GUID
        var result =  tdg.webapi.SelectedColumnlist  ("contacts", "msdyn_portaltermsagreementdate", "contactid eq " + contactid );
-       console.log (result[0]["msdyn_portaltermsagreementdate"]);
+     
         //if contact doesn't have agreement date
         if (result[0]["msdyn_portaltermsagreementdate"] != null)
         {
@@ -162,7 +111,7 @@ async function Update_contactType(data1 , data2)
                  var response = tdg.webapi.update("contacts", contactid, data1);                
                  //switch current contact to secondary
                  var data2 = {"cid_contacttype" : 100000001 };
-                 //Update_contactType(data1 , data2)
+                
                   tdg.webapi.update("contacts", CurrentUserID, data2);	
                  $(".entity-grid").trigger("refresh");
                  console.log("after refresh");
@@ -189,12 +138,8 @@ async function Update_contactType(data1 , data2)
                         }
                         req.send(FlowParamater);
                             }  
-    //***************************** */
-
-
-
-
-                 } else {} });
+  
+                 }  });
         }
        else
        {
@@ -231,3 +176,49 @@ async function Update_contactType(data1 , data2)
 req.send(FlowParamater);
     }                
  }
+
+//dactivate contact in the Grid
+ function DeactivateContact(ContactId)
+{
+	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
+	var CurrentUserID = '{{user.id}}';
+   var ParentAccount = '{{user.parentcustomerid.id}}' ;
+   var LanguageCode = '{{website.selected_language.code}}';
+   console.log("deactivation started");
+   //deactivate contact and set expiry date for invitation
+   invitation.Execute_Invitation_Deactivation_Logic(ContactId,cid_usercontacttype, CurrentUserID, ParentAccount, LanguageCode  );
+   setInterval(refreshGrid, 50000); 
+   console.log("refresh grid");
+    $(".entity-grid").trigger("refresh");
+    
+}
+function refreshGrid()
+{
+     $(".entity-grid").trigger("refresh");
+     console.log("inside funtion refresh grid");
+
+}
+function ResendInvitation(contactid, fullname)
+{
+    alert ("resend invitation started");
+
+
+}
+
+function page_setup() {
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
+    const files = ["/tdgcore_common.js", "/tdgcore_message.js" , "/tdgcore_invitation.js"];
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = file;
+
+        $("body").append(script);
+    }
+
+    // server error?
+    tdg.c.message_panel();
+}

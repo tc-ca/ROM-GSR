@@ -1,7 +1,8 @@
+
 // CompanyRegistrationWizard-invitation
 if (typeof (invitation) == "undefined") {
     invitation = {
-        in_current_registration: function (rom_data, suppress_error) {
+        in_current_registration: function (rom_data, suppress_error, contact_id) {
             debugger;
 
             // Pending Active: Pending registration, email invitation sent
@@ -30,7 +31,6 @@ if (typeof (invitation) == "undefined") {
 
                 }
             }
-
 
             var value = true;
 
@@ -63,13 +63,14 @@ if (typeof (invitation) == "undefined") {
                                 var data = {}
                                 data.EmailCode = "S1B-1";
                                 data.AccountId = rom_data.account_id;
-                                data.Primary_Contactid = "{{user.contactid}}";
-                                data.Secondary_Contactid = data.Primary_Contactid;
+                                data.Primary_Contactid = contact_id;
+                                data.Secondary_Contactid = contact_id;
                                 tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", JSON.stringify(data));
+
+                                //tdg.c.sign_out();
                             } else { }
                         });
 
-                        tdg.c.sign_out();
                         value = false;
                     }
                     else {
@@ -89,14 +90,12 @@ if (typeof (invitation) == "undefined") {
             var emailaddressTextBox = $("#emailaddress1").val();
             var firstnameTextBox = $("#firstname").val();
             var lastnameTextBox = $("#lastname").val();
-            
+
 
             if (emailaddressTextBox.length > 0 && firstnameTextBox.length > 0 && lastnameTextBox.length > 0) {
                 var ContactWithNoCompany = false;
                 var ContactDifferntCompany = false;
                 //check if contact exists
-                console.log("emailaddress1 eq '" + emailaddressTextBox + "' and statecode eq 0 and firstname eq '" +
-                    firstnameTextBox + "' and lastname eq '" + lastnameTextBox + "' and  parentcustomerid ne " + ParentAccount);
                 var EmailQueryResuts = tdg.webapi.SelectedColumnlist("contacts",
                     "contactid,firstname, lastname ,_parentcustomerid_value , emailaddress1",
                     "emailaddress1 eq '" + emailaddressTextBox + "' and statecode eq 0 and firstname eq '" +
@@ -162,11 +161,11 @@ if (typeof (invitation) == "undefined") {
 
         },
 
-        Execute_Invitation_Deactivation_Logic: function (ContactId  ,cid_usercontacttype, CurrentUserID, ParentAccount, LanguageCode ) {
-         
+        Execute_Invitation_Deactivation_Logic: function (ContactId, cid_usercontacttype, CurrentUserID, ParentAccount, LanguageCode) {
+
             var FlowEmailCode = "";
             //if not primary
-         
+
             if (cid_usercontacttype != 100000000) {
                 //m000118
                 var m000118 = tdg.error_message.message("m000118");
@@ -175,15 +174,12 @@ if (typeof (invitation) == "undefined") {
             }//end check user type
             else {
                 //get all secondary contacts
-                var contactQueryResults = tdg.webapi.SelectedColumnlist("contacts", "firstname", "cid_contacttype ne 100000000 and _parentcustomerid_value eq " + ParentAccount);
+                var contactQueryResults = tdg.webapi.SelectedColumnlist("contacts", "firstname", "cid_contacttype ne 100000000 and statecode eq 0 and _parentcustomerid_value eq " + ParentAccount);
                 //if more than one secondary contact eixts
                 if (contactQueryResults.length > 1) {
 
                     //get user invitation
                     var adx_invitationResults = tdg.webapi.SelectedColumnlist("adx_invitations", "adx_expirydate", "_adx_invitecontact_value eq " + ContactId);
-                    console.log("Inviation results");
-                    console.log(adx_invitationResults);
-
                     //check if user logined before
                     var result = tdg.webapi.SelectedColumnlist("contacts", "msdyn_portaltermsagreementdate", "contactid eq " + ContactId);
                     console.log("after select contacts results");
@@ -207,8 +203,10 @@ if (typeof (invitation) == "undefined") {
                         }
 
                     }
+                   
                     //deactivate contact
-                    tdg.webapi.update("contacts", ContactId, '{ "statuscode " :"2" , "statecode " : "1" }');
+                    var DeactivationData = { "statecode": 1 };
+                    tdg.webapi.update("contacts", ContactId, DeactivationData);
 
                     //Execute flow to send email and set expiry date for invitation   
                     //get flow URL
@@ -231,7 +229,4 @@ if (typeof (invitation) == "undefined") {
         },
     }
 }
-
-
-
 
