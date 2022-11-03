@@ -5,6 +5,13 @@
 $(document).ready(function () {
 	debugger;
 
+	$("legend").each(function() {
+		$(this).removeClass();
+		$(this).css("font-size", "20px");
+		$(this).css("font-weight", "bold");
+		$(this).css("text-decoration", "underline");
+    });
+
  var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
 
     $('#cid_cidcompanystatus').hide();

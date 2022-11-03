@@ -62,7 +62,7 @@ if (typeof (invitation) == "undefined") {
                                 // send email
                                 var data = {}
                                 data.EmailCode = "S1B-1";
-                                data.AccountId = rom_data.account_id;
+                                data.AccountId = rom_data.accountid;
                                 data.Primary_Contactid = contact_id;
                                 data.Secondary_Contactid = contact_id;
                                 tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", JSON.stringify(data));
@@ -117,7 +117,7 @@ if (typeof (invitation) == "undefined") {
                             var contactrecordData =
                                 '{"ParentAccount" : "' + ParentAccount + '", "ContactId" :"' + contactid +
                                 '", "Portal_URL" : "' + window.location.host + '"}';
-                         
+
                             tdg.cid.flow.Call_Flow("CID_Portal_Update_contact_ParentAccount", contactrecordData);
                             var m000117 = tdg.error_message.message("m000117");
                             // "The Secondary Contact {0} has been sent an on-boarding invitation to their email address of {1}.";
@@ -255,6 +255,8 @@ if (typeof (invitation) == "undefined") {
                             tdg.webapi.update("contacts", CurrentUserID, data2);
                             $(".entity-grid").trigger("refresh");
                             setTimeout(refreshGrid, 3000);
+                           
+
 
                             console.log("after refresh");
                             //****************************call workflow ******************** */
@@ -263,6 +265,7 @@ if (typeof (invitation) == "undefined") {
                                 '"Primary_Contactid" : "' + contactid + '" ,' +
                                 '"Secondary_Contactid" : "' + CurrentUserID + '"}';
                             tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", SendEmailFlowData);
+                            setTimeout(function () { console.log("inside relocation"); window.location.href = "~/account/login/logoff" }, 7000);
 
                         }
                     });
@@ -274,7 +277,7 @@ if (typeof (invitation) == "undefined") {
                 }//end else if user login before
 
             }//end else
-           
+
 
         }
         ,

@@ -4,6 +4,15 @@
 
 $(document).ready(function () {
    page_setup();
+   var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
+	//if not primary contact
+	if (cid_usercontacttype != 100000000)
+	{
+        //disable add button
+		$(".create-action").attr("disabled", true);
+		$(".create-action").css("pointer-events", "none");
+    }
+
     //*******Remove menu item basedon user type******** */
 		var gridList = $(".entity-grid");
         console.log("after moving the code to file");
@@ -89,105 +98,10 @@ if (window.jQuery) {
    var ParentAccount = '{{user.parentcustomerid.id}}' ;
    var LanguageCode = '{{website.selected_language.code}}';
    invitation.Execute_Assign_Primary_Admin_Logic(contactid, contactFullName, cid_usercontacttype, CurrentUserID, ParentAccount, LanguageCode);
-   console.log("before timer");
-   setTimeout(function(){ console.log("inside relocation"); window.location.href = "~/account/login/logoff" }, 6000)
-   console.log("after timer");
 
-/*
-    //if not primary contact
-    if (cid_usercontacttype != 100000000)
-    {
-    var m000113= tdg.error_message.message("m000113");
-       tdg.c.dialog_OK(m000113);
-    }
-    else
-    {
-        // retrieve contact by GUID
-       var result =  tdg.webapi.SelectedColumnlist  ("contacts", "msdyn_portaltermsagreementdate", "contactid eq " + contactid );
-     
-        //if contact doesn't have agreement date
-        if (result[0]["msdyn_portaltermsagreementdate"] != null)
-        {
-            var m000114= tdg.error_message.message("m000114");
-           
-            tdg.c.dialog_YN(m000114.replace('{0}' , contactFullName), (ans) => {if (ans) {
-                 //update contact type to primary
-                  var data1 = {"cid_contacttype" : 100000000 };
-                 var response = tdg.webapi.update("contacts", contactid, data1);                
-                 //switch current contact to secondary
-                 var data2 = {"cid_contacttype" : 100000001 };
-                
-                  tdg.webapi.update("contacts", CurrentUserID, data2);	
-                 $(".entity-grid").trigger("refresh");
-                  setTimeout(refreshGrid, 3000);
   
-                 console.log("after refresh");
-    //****************************call workflow ******************** *
-                var EnvironmentSettingResult =  tdg.webapi.SelectedColumnlist ("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_Flow_Primary_Contact_Change_With_Secondary'" );
-                if (EnvironmentSettingResult.length > 0 )
-                {
-                    var FlowURL = EnvironmentSettingResult[0]["qm_value"]; 
-                        console.log("flow url");
-                        console.log(FlowURL );
-                        var FlowParamater =
-                        '{"AccountId" : "' + ParentAccount + '" ,' +
-                        '"New_Primary_Contactid" : "' + contactid + '" ,' +
-                        '"Previous_Contactid" : "' + CurrentUserID + '", ' +
-                        '"UI_Language_Code" : "' + LanguageCode + '"}';
-                    var req = new XMLHttpRequest();
-                    req.open("POST", FlowURL , true);
-                    req.setRequestHeader('Content-Type', 'application/json');
-                    req.onreadystatechange = function () {
-                        if (this.readyState === 4) {
-                            req.onreadystatechange = null;
-                            if (this.status === 200) { }
-                        }
-                        }
-                        req.send(FlowParamater);
-                            }  
-  
-                 }  });
-        }
-       else
-       {
-           var m000115 = tdg.error_message.message("m000115");
-            //show error message
-           tdg.c.dialog_OK(m000115);
-       }//end else if user login before
 
-    }//end else
-    var SendEmailFlowData = '{"EmailCode" : "S4-4", '+
-            '"AccountId" : "' + ParentAccount + '" ,' +
-            '"Primary_Contactid" : "' + contactid + '" ,' +
-            '"Secondary_Contactid" : "' + CurrentUserID + '", ' +
-            '"Language_Code" : "' + LanguageCode + '"}';
-    tdg.cid.flow.Call_Flow("CID_Portal_Update_contact_ParentAccount", SendEmailFlowData);
-
-*/
-  
-   /*  var EnvironmentSettingResult =  tdg.webapi.SelectedColumnlist ("qm_environmentsettingses", "qm_value", "qm_name eq 'CID Send Portal Contact Email by EmailCode'" );
-    if (EnvironmentSettingResult.length > 0 )
-    {
-        var FlowURL = EnvironmentSettingResult[0]["qm_value"]; 
-            console.log("flow url");
-            console.log(FlowURL );
-            var FlowParamater =
-            '{"EmailCode" : "S4-4", '+
-            '"AccountId" : "' + ParentAccount + '" ,' +
-            '"Primary_Contactid" : "' + contactid + '" ,' +
-            '"Secondary_Contactid" : "' + CurrentUserID + '", ' +
-            '"Language_Code" : "' + LanguageCode + '"}';
-        var req = new XMLHttpRequest();
-        req.open("POST", FlowURL , true);
-        req.setRequestHeader('Content-Type', 'application/json');
-        req.onreadystatechange = function () {
-            if (this.readyState === 4) {
-                req.onreadystatechange = null;
-                if (this.status === 200) { }
-            }
-}
-req.send(FlowParamater);
-    }  */             
+       
  }
 
 //dactivate contact in the Grid
@@ -214,18 +128,26 @@ function refreshGrid()
 }
 function ResendInvitation(contactid, fullname)
 {
-    // retrieve contact by GUID
-                var result = tdg.webapi.SelectedColumnlist("contacts", "msdyn_portaltermsagreementdate,emailaddress1", "contactid eq " + contactid);
-
+    // get current user contact type
+    var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
+                
+   if (cid_usercontacttype == 100000000) 
+   { 
+       // retrieve contact by GUID
+            var result = tdg.webapi.SelectedColumnlist("contacts", "msdyn_portaltermsagreementdate,emailaddress1",
+                 "contactid eq " + contactid);
                 //if contact doesn't have agreement date
                 if (result[0]["msdyn_portaltermsagreementdate"] == null) {
                     var m2 ="The Secondary Contact {0} has been re-sent an on-boarding invitation email to {1}.";
                     m2 = m2.replace("{0}" , fullname ).replace("{1}" ,result[0]["emailaddress1"] );
                     tdg.c.dialog_OK(m2);
-                     var SendEmailFlowData = "";
-                           // tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", SendEmailFlowData);
-
-
+                     var SendEmailFlowData = '{'+
+                            '"Secondary_Contactid": "'+ contactid + '",' +
+                            '"Email_Code": "S3-1",' +
+                            '"Portal_URL": "https://'+ window.location.hostname +'"'+
+                            '}';
+                            console.log(SendEmailFlowData);
+                     tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Invitations", SendEmailFlowData);
                 }
                 else
                 {
@@ -233,8 +155,12 @@ function ResendInvitation(contactid, fullname)
                      tdg.c.dialog_OK(m);
                 
                 }
-
-
+            }
+            else
+            {
+                 var mm = "Only Primary Admin can Resend invitation.";
+                     tdg.c.dialog_OK(mm); 
+            }
 }
 
 function page_setup() {

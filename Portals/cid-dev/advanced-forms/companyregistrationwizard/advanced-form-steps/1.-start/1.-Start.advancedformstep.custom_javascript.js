@@ -68,7 +68,7 @@ $(document).ready(function () {
                     });
                 }
                 else {
-                    invitation_go_next(_account, false, contact_id );
+                    invitation_go_next(_account, false, contact_id);
                 }
                 return;
             }
@@ -192,6 +192,23 @@ if (window.jQuery) {
                 tdg.cid.crw.start_parentcustomerid_setup(_account.accountid, _account.ovs_legalname);
                 validation = true;
             }
+
+            if (validation) {
+                debugger;
+                if (_account != null) {
+                    switch (_account.cid_cidcompanystatus) {
+                        case 100000004:
+                            $("#cid_contacttype").val(100000000);
+                    }
+                }
+                else if (rom_data.cid_cidcompanystatus == null) {
+                    $("#cid_contacttype").val(100000000);
+                }
+                else if (rom_data == null) {
+                    $("#cid_contacttype").val(100000000);
+                }
+            }
+
             return validation;
         }
     }(window.jQuery));

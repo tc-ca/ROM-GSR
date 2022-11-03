@@ -1501,7 +1501,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
         start_cid_has_cra_bn_onchange: function () {
             debugger;
 
-            tdg.cid.crw.clear_parentcustomerid();
+            tdg.cid.crw.start_clear_parentcustomerid();
 
             tdg.c.removeValidator("cid_crabusinessnumber");
             tdg.c.removeValidator("cid_reasonfornobnnumber");

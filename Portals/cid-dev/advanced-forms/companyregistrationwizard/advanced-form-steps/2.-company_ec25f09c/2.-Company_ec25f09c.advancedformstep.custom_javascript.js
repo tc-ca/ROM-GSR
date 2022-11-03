@@ -9,11 +9,15 @@ $(document).ready(function () {
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 
-	var code = sessionStorage.getItem("cid_suppress_error_code") + "";
-	if (code != "null" && code != "") {
-		var msg = tdg.error_message.message(code);
-		tdg.c.dialog_OK(msg);
-		sessionStorage.setItem("step_start","2");
+	var cid_contacttype = '{{user.cid_contacttype.Value}}';
+	//if not primary contact
+	if (cid_contacttype != 100000000) {
+		var code = sessionStorage.getItem("cid_suppress_error_code") + "";
+		if (code != "null" && code != "") {
+			var msg = tdg.error_message.message(code);
+			tdg.c.dialog_OK(msg);
+			sessionStorage.setItem("step_start", "2");
+		}
 	}
 
 	// address

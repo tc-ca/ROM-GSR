@@ -4,6 +4,13 @@
 
 $(document).ready(function () {
     debugger;
+    $("legend").each(function() {
+		$(this).removeClass();
+		$(this).css("font-size", "20px");
+		$(this).css("font-weight", "bold");
+        $(this).css("text-decoration", "underline");
+    });
+
 	var urlParams = new URLSearchParams(window.location.search);
 	urlParams.set('operationid', sessionStorage.getItem("siteOperationId"));
 
@@ -19,8 +26,8 @@ $(document).ready(function () {
 
     var cidSiteStatus = $('#cid_cidsitestatus').find(":selected").text();
 
-    $('#cid_cidsitestatus').hide();
-    $('#cid_cidsitestatus_label').hide();
+    //$('#cid_cidsitestatus').hide();
+    //$('#cid_cidsitestatus_label').hide();
     
     var disabled = "";
 
@@ -43,13 +50,25 @@ $(document).ready(function () {
 
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('id')) {
+        var isExtendedSite = $("#cid_requirementlevel").find(":selected").text();
+        var cidSiteStatus = $('#cid_cidsitestatus').find(":selected").text();
         var siteId = urlParams.get('id');
         var operationId = GetHOTIOperation(siteId);
+        var disabledSiteLevelSwitch = "";
+        var disabled = "";
+
+        if (cidSiteStatus.indexOf("Inactive") >= 0)
+            disabled = "disabled";
+alert($("#cid_requirementlevel"));
+        if ($("#cid_requirementlevel") == null){
+            alert(isExtendedSite);
+            disabledSiteLevelSwitch = "disabled";
+        }
 
         sessionStorage.setItem('siteOperationId', operationId);
 
         var msg = "Switch Requirement Level";//tdg.error_message.message("m000029");
-        var html1 = "&nbsp;&nbsp;<div id='switchSiteRequirementLevel' role='group' class='btn-group entity-action-button'><a href='~/my-sites/in-year-site/switch_site_requirement_level?id=" + siteId + "'><input type='button' name='switchSiteRequirementLevel' value='{0}' class='btn btn-primary button submit-btn' nonactionlinkbutton='true'" + disabled + "></a></div>";
+        var html1 = "&nbsp;&nbsp;<div id='switchSiteRequirementLevel' role='group' class='btn-group entity-action-button'><a href='~/my-sites/in-year-site/switch_site_requirement_level?id=" + siteId + "'><input type='button' name='switchSiteRequirementLevel' value='{0}' class='btn btn-primary button submit-btn' nonactionlinkbutton='true'" + disabledSiteLevelSwitch + " " + disabled + "></a></div>";
         html1 = html1.replaceAll("{0}", msg);
         $('div[data-name="site_details2"]').parent().parent().find("#UpdateButton").parent().after(html1);
 
@@ -59,20 +78,12 @@ $(document).ready(function () {
                 $(this).attr("href", _href + '?id=' + siteId);
         });
 
-        var isExtendedSite = $("#cid_requirementlevel").find(":selected").text();
-
         if (isExtendedSite == 'Basic') {
             $('table[data-name="site_details_section_6"]').parent().addClass("hidden");
         }
 
         if ($("#openOperationWizard").length > 0)
             $('#openOperationWizard').remove();
-
-        var cidSiteStatus = $('#cid_cidsitestatus').find(":selected").text();
-        var disabled = "";
-
-        if (cidSiteStatus.indexOf("Inactive") >= 0)
-            disabled = "disabled";
     }
     $('#loader').hide();
 });

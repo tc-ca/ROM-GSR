@@ -21,7 +21,8 @@ $(document).ready(function () {
 
 	$("legend").each(function() {
 		$(this).removeClass();
-		$(this).css("font-size", "24px");
+		$(this).css("font-size", "20px");
 		$(this).css("font-weight", "bold");
+        $(this).css("text-decoration", "underline");
     });
 });

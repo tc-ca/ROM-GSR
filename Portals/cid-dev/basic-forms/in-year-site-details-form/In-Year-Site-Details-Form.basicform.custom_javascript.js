@@ -18,6 +18,10 @@ $(document).ready(function () {
         if (cidSiteStatus.indexOf("Inactive") >= 0)
             disabled = "disabled";
 
+        if(isExtendedSite != ''){
+            $("#cid_requirementlevel").attr('disabled', 'disabled');
+        }
+
         if (isExtendedSite == 'Extended')
             extendedSite = true;
 
