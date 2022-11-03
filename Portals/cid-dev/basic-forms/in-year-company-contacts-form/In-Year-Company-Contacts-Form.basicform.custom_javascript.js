@@ -88,7 +88,12 @@ if (window.jQuery) {
    var CurrentUserID = '{{user.id}}';
    var ParentAccount = '{{user.parentcustomerid.id}}' ;
    var LanguageCode = '{{website.selected_language.code}}';
+   invitation.Execute_Assign_Primary_Admin_Logic(contactid, contactFullName, cid_usercontacttype, CurrentUserID, ParentAccount, LanguageCode);
+   console.log("before timer");
+   setTimeout(function(){ console.log("inside relocation"); window.location.href = "~/account/login/logoff" }, 6000)
+   console.log("after timer");
 
+/*
     //if not primary contact
     if (cid_usercontacttype != 100000000)
     {
@@ -114,8 +119,10 @@ if (window.jQuery) {
                 
                   tdg.webapi.update("contacts", CurrentUserID, data2);	
                  $(".entity-grid").trigger("refresh");
+                  setTimeout(refreshGrid, 3000);
+  
                  console.log("after refresh");
-    //****************************call workflow ******************** */
+    //****************************call workflow ******************** *
                 var EnvironmentSettingResult =  tdg.webapi.SelectedColumnlist ("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_Flow_Primary_Contact_Change_With_Secondary'" );
                 if (EnvironmentSettingResult.length > 0 )
                 {
@@ -149,10 +156,16 @@ if (window.jQuery) {
        }//end else if user login before
 
     }//end else
+    var SendEmailFlowData = '{"EmailCode" : "S4-4", '+
+            '"AccountId" : "' + ParentAccount + '" ,' +
+            '"Primary_Contactid" : "' + contactid + '" ,' +
+            '"Secondary_Contactid" : "' + CurrentUserID + '", ' +
+            '"Language_Code" : "' + LanguageCode + '"}';
+    tdg.cid.flow.Call_Flow("CID_Portal_Update_contact_ParentAccount", SendEmailFlowData);
 
-
+*/
   
-     var EnvironmentSettingResult =  tdg.webapi.SelectedColumnlist ("qm_environmentsettingses", "qm_value", "qm_name eq 'CID Send Portal Contact Email by EmailCode'" );
+   /*  var EnvironmentSettingResult =  tdg.webapi.SelectedColumnlist ("qm_environmentsettingses", "qm_value", "qm_name eq 'CID Send Portal Contact Email by EmailCode'" );
     if (EnvironmentSettingResult.length > 0 )
     {
         var FlowURL = EnvironmentSettingResult[0]["qm_value"]; 
@@ -174,7 +187,7 @@ if (window.jQuery) {
             }
 }
 req.send(FlowParamater);
-    }                
+    }  */             
  }
 
 //dactivate contact in the Grid
@@ -187,7 +200,8 @@ req.send(FlowParamater);
    console.log("deactivation started");
    //deactivate contact and set expiry date for invitation
    invitation.Execute_Invitation_Deactivation_Logic(ContactId,cid_usercontacttype, CurrentUserID, ParentAccount, LanguageCode  );
-   setInterval(refreshGrid, 50000); 
+   //setInterval(refreshGrid, 50000); 
+   setTimeout(refreshGrid, 3000);
    console.log("refresh grid");
     $(".entity-grid").trigger("refresh");
     
@@ -200,7 +214,25 @@ function refreshGrid()
 }
 function ResendInvitation(contactid, fullname)
 {
-    alert ("resend invitation started");
+    // retrieve contact by GUID
+                var result = tdg.webapi.SelectedColumnlist("contacts", "msdyn_portaltermsagreementdate,emailaddress1", "contactid eq " + contactid);
+
+                //if contact doesn't have agreement date
+                if (result[0]["msdyn_portaltermsagreementdate"] == null) {
+                    var m2 ="The Secondary Contact {0} has been re-sent an on-boarding invitation email to {1}.";
+                    m2 = m2.replace("{0}" , fullname ).replace("{1}" ,result[0]["emailaddress1"] );
+                    tdg.c.dialog_OK(m2);
+                     var SendEmailFlowData = "";
+                           // tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", SendEmailFlowData);
+
+
+                }
+                else
+                {
+                    var m = "The Resend Onboarding Invitation is only available to Secondary Admins that have not yet logged into the CID Platform.";
+                     tdg.c.dialog_OK(m);
+                
+                }
 
 
 }

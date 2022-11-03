@@ -115,7 +115,9 @@ if (typeof (invitation) == "undefined") {
                             ContactWithNoCompany = true;
                             //update parent contact and send invitation
                             var contactrecordData =
-                                '{"ParentAccount" : "' + ParentAccount + '", "ContactId" :"' + contactid + '"}';
+                                '{"ParentAccount" : "' + ParentAccount + '", "ContactId" :"' + contactid +
+                                '", "Portal_URL" : "' + window.location.host + '"}';
+                         
                             tdg.cid.flow.Call_Flow("CID_Portal_Update_contact_ParentAccount", contactrecordData);
                             var m000117 = tdg.error_message.message("m000117");
                             // "The Secondary Contact {0} has been sent an on-boarding invitation to their email address of {1}.";
@@ -203,14 +205,14 @@ if (typeof (invitation) == "undefined") {
                         }
 
                     }
-                   
+
                     //deactivate contact
                     var DeactivationData = { "statecode": 1 };
                     tdg.webapi.update("contacts", ContactId, DeactivationData);
 
                     //Execute flow to send email and set expiry date for invitation   
                     //get flow URL
-                    tdg.c.dialog_OK("Deactivation started");
+                    console.log("Deactivation started");
                     var data =
                         '{ "EmailCode" : "' + FlowEmailCode + '", ' +
                         '"AccountId" : "' + ParentAccount + '" ,' +
@@ -227,6 +229,56 @@ if (typeof (invitation) == "undefined") {
 
             }//end else
         },
+
+        Execute_Assign_Primary_Admin_Logic: function (contactid, contactFullName, cid_usercontacttype, CurrentUserID, ParentAccount, LanguageCode) {
+            //if not primary contact
+            if (cid_usercontacttype != 100000000) {
+                var m000113 = tdg.error_message.message("m000113");
+                tdg.c.dialog_OK(m000113);
+            }
+            else {
+                // retrieve contact by GUID
+                var result = tdg.webapi.SelectedColumnlist("contacts", "msdyn_portaltermsagreementdate", "contactid eq " + contactid);
+
+                //if contact doesn't have agreement date
+                if (result[0]["msdyn_portaltermsagreementdate"] != null) {
+                    var m000114 = tdg.error_message.message("m000114");
+
+                    tdg.c.dialog_YN(m000114.replace('{0}', contactFullName), (ans) => {
+                        if (ans) {
+                            //update contact type to primary
+                            var data1 = { "cid_contacttype": 100000000 };
+                            var response = tdg.webapi.update("contacts", contactid, data1);
+                            //switch current contact to secondary
+                            var data2 = { "cid_contacttype": 100000001 };
+
+                            tdg.webapi.update("contacts", CurrentUserID, data2);
+                            $(".entity-grid").trigger("refresh");
+                            setTimeout(refreshGrid, 3000);
+
+                            console.log("after refresh");
+                            //****************************call workflow ******************** */
+                            var SendEmailFlowData = '{"EmailCode" : "S4-4", ' +
+                                '"AccountId" : "' + ParentAccount + '" ,' +
+                                '"Primary_Contactid" : "' + contactid + '" ,' +
+                                '"Secondary_Contactid" : "' + CurrentUserID + '"}';
+                            tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", SendEmailFlowData);
+
+                        }
+                    });
+                }
+                else {
+                    var m000115 = tdg.error_message.message("m000115");
+                    //show error message
+                    tdg.c.dialog_OK(m000115);
+                }//end else if user login before
+
+            }//end else
+           
+
+        }
+        ,
+
     }
 }
 
