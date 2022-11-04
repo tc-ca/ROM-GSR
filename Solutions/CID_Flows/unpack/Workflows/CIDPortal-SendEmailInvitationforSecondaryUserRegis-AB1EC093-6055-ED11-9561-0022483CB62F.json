@@ -2,6 +2,7 @@
   "properties": {
     "connectionReferences": {
       "shared_commondataserviceforapps": {
+        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_c6183"
@@ -50,15 +51,16 @@
           "type": "OpenApiConnectionWebhook",
           "inputs": {
             "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps",
-              "operationId": "SubscribeWebhookTrigger",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              "operationId": "SubscribeWebhookTrigger"
             },
             "parameters": {
               "subscriptionRequest/message": 1,
               "subscriptionRequest/entityname": "adx_invitation",
               "subscriptionRequest/scope": 4,
-              "subscriptionRequest/runas": 3
+              "subscriptionRequest/runas": 3,
+              "subscriptionRequest/name": "ab1ec093-6055-ed11-9561-0022483cb62f"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -75,9 +77,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps",
-                  "operationId": "GetItem",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  "operationId": "GetItem"
                 },
                 "parameters": {
                   "entityName": "contacts",
@@ -114,9 +116,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps",
-                  "operationId": "GetItem",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  "operationId": "GetItem"
                 },
                 "parameters": {
                   "entityName": "accounts",
@@ -152,9 +154,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps",
-                  "operationId": "GetItem",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  "operationId": "GetItem"
                 },
                 "parameters": {
                   "entityName": "contacts",
@@ -289,9 +291,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail",
                       "connectionName": "shared_sendmail_1",
-                      "operationId": "SendEmailV3",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                      "operationId": "SendEmailV3"
                     },
                     "parameters": {
                       "request/to": "@{outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/emailaddress1']};",
@@ -313,9 +315,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                       "connectionName": "shared_commondataserviceforapps",
-                      "operationId": "UpdateRecord",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      "operationId": "UpdateRecord"
                     },
                     "parameters": {
                       "entityName": "adx_invitations",
@@ -341,9 +343,9 @@
                     "type": "OpenApiConnection",
                     "inputs": {
                       "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail",
                         "connectionName": "shared_sendmail_2",
-                        "operationId": "SendEmailV3",
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                        "operationId": "SendEmailV3"
                       },
                       "parameters": {
                         "request/to": "@{outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/emailaddress1']};",
@@ -365,9 +367,9 @@
                     "type": "OpenApiConnection",
                     "inputs": {
                       "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                         "connectionName": "shared_commondataserviceforapps",
-                        "operationId": "UpdateRecord",
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        "operationId": "UpdateRecord"
                       },
                       "parameters": {
                         "entityName": "adx_invitations",
@@ -474,7 +476,7 @@
         }
       }
     },
-    "templateName": ""
+    "templateName": null
   },
   "schemaVersion": "1.0.0.0"
 }
