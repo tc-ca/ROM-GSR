@@ -10,13 +10,13 @@
           "name": "shared_commondataserviceforapps"
         }
       },
-      "shared_office365_1": {
+      "shared_sendmail": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "tdg_ConnectionReferenceOutlookTDGCoreUser"
+          "connectionReferenceLogicalName": "cid_sharedsendmail_8e8b5"
         },
         "api": {
-          "name": "shared_office365"
+          "name": "shared_sendmail"
         }
       }
     },
@@ -49,7 +49,7 @@
       "actions": {
         "GetAccounts": {
           "runAfter": {
-            "Initialize_Primary_Contact_First_Name": [
+            "Initialize_variable_Language": [
               "Succeeded"
             ]
           },
@@ -89,7 +89,7 @@
                     },
                     "parameters": {
                       "entityName": "contacts",
-                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <attribute name=\"firstname\" />\n    <attribute name=\"telephone1\" />\n    <attribute name=\"contactid\" />\n    <attribute name=\"emailaddress1\" />\n    <attribute name=\"cid_contacttype\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" uitype=\"account\" value=\"@{items('Apply_to_each')?['accountid']}\" />\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n    </filter>\n  </entity>\n</fetch>"
+                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <attribute name=\"firstname\" />\n    <attribute name=\"telephone1\" />\n    <attribute name=\"contactid\" />\n    <attribute name=\"emailaddress1\" />\n    <attribute name=\"cid_languageofcorrespondence\" />\n    <attribute name=\"cid_contacttype\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" uitype=\"account\" value=\"@{items('Apply_to_each')?['accountid']}\" />\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n    </filter>\n  </entity>\n</fetch>"
                     },
                     "authentication": "@parameters('$authentication')"
                   }
@@ -123,6 +123,21 @@
                           "inputs": {
                             "name": "Primary Contact First Name",
                             "value": "@items('Apply_to_each_2')?['firstname']"
+                          }
+                        },
+                        "Set_variable": {
+                          "runAfter": {
+                            "Set_Primary_Contact_First_Name": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "8bb38385-cec5-4d16-a940-19ad091fb117"
+                          },
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Language",
+                            "value": "@items('Apply_to_each_2')?['cid_languageofcorrespondence']"
                           }
                         }
                       },
@@ -239,27 +254,66 @@
             "Apply_to_each_5": {
               "foreach": "@outputs('GetAccounts')?['body/value']",
               "actions": {
-                "Send_an_email_(V2)": {
-                  "runAfter": {},
-                  "metadata": {
-                    "operationMetadataId": "cd420056-f88b-4159-98b5-fb3ec975a945"
+                "Check_Language": {
+                  "actions": {
+                    "Send_an_email_notification_(V3)_English": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "c2551477-398d-40f1-8e7b-f9e9356226f7"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sendmail",
+                          "operationId": "SendEmailV3",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                        },
+                        "parameters": {
+                          "request/to": "@{variables('ToEmailRecipients')};",
+                          "request/subject": "Beta Tesfing: Annual Compliance Reminder",
+                          "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['ovs_accountnameenglish']}was expired 15 days ago. Please log into your account &nbsp;and initialise Annual Compliance.<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto genarated email.</p>",
+                          "request/cc": "@variables('CCEmailRecipients')"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
                   },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "host": {
-                      "connectionName": "shared_office365_1",
-                      "operationId": "SendEmailV2",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
-                    },
-                    "parameters": {
-                      "emailMessage/To": "@variables('ToEmailRecipients')",
-                      "emailMessage/Subject": "Annual Compliance Reminder",
-                      "emailMessage/Body": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['ovs_accountnameenglish']}was expired 15 days ago. <a href=\"https://rd-tdgcore-dev.powerappsportals.com/en-US/\">Please log into your account</a> &nbsp;and initialise Annual Compliance.<br>\n<strong>Transport Canada / Government of Canada</strong><br>\n<br>\n<br>\nThis is auto genarated email.</p>",
-                      "emailMessage/Cc": "@variables('CCEmailRecipients')",
-                      "emailMessage/Importance": "Normal"
-                    },
-                    "authentication": "@parameters('$authentication')"
-                  }
+                  "runAfter": {},
+                  "else": {
+                    "actions": {
+                      "Send_an_email_notification_(V3)_French": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "a2f50e41-3158-4535-bdf8-6619b18ad2e3"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_sendmail",
+                            "operationId": "SendEmailV3",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                          },
+                          "parameters": {
+                            "request/to": "@{variables('ToEmailRecipients')};",
+                            "request/subject": "FR: Beta Tesfing: Annual Compliance Reminder",
+                            "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['ovs_accountnameenglish']}was expired 15 days ago. Please log into your account &nbsp;and initialise Annual Compliance.<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto genarated email.</p>",
+                            "request/cc": "@variables('CCEmailRecipients')"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      }
+                    }
+                  },
+                  "expression": {
+                    "equals": [
+                      "@variables('Language')",
+                      918640001
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "8ddbc870-fe76-4391-9b6c-e8a56007d8e0"
+                  },
+                  "type": "If"
                 }
               },
               "runAfter": {
@@ -415,6 +469,26 @@
           "inputs": {
             "name": "Environment",
             "value": "@{substring(body('Parse_JSON')?['@odata.context'], 0, indexOf(body('Parse_JSON')?['@odata.context'], '.crm3.'))}"
+          }
+        },
+        "Initialize_variable_Language": {
+          "runAfter": {
+            "Initialize_Primary_Contact_First_Name": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "fa656d66-6bd3-41a9-bd30-dba9052d80cb"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Language",
+                "type": "integer",
+                "value": 918640001
+              }
+            ]
           }
         }
       }

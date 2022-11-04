@@ -1,0 +1,172 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "74e5e484-cd17-4b21-af6f-b10ce1bed7de"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ParentAccount": {
+                  "type": "string"
+                },
+                "ContactId": {
+                  "type": "string"
+                },
+                "Portal_URL": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "HTTP": {
+          "runAfter": {
+            "Add_a_new_row": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b6c1ce61-2acf-465d-a6f2-c7e017a3bda0"
+          },
+          "type": "Http",
+          "inputs": {
+            "method": "POST",
+            "uri": "@variables('Flow_URL')",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "Secondary_Contactid": "@{triggerBody()?['ContactId']}",
+              "Email_Code": "S3-2",
+              "Portal_URL": "@{triggerBody()?['Portal_URL']}"
+            }
+          }
+        },
+        "List_rows_-_get_flow_URL": {
+          "runAfter": {
+            "Update_a_row": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6a863a10-1603-4595-8315-58933d40cf49"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "qm_environmentsettingses",
+              "fetchXml": "<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\n<entity name=\"qm_environmentsettings\">\n<attribute name=\"qm_environmentsettingsid\"/>\n<attribute name=\"qm_name\"/>\n<attribute name=\"qm_value\"/>\n<attribute name=\"createdon\"/>\n<order attribute=\"qm_name\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\n<condition attribute=\"qm_name\" operator=\"eq\" value=\"CID_Send_Portal_Contact_Invitations\"/>\n</filter>\n</entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_variable_Flow_URL": {
+          "runAfter": {
+            "List_rows_-_get_flow_URL": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8b203275-f4cf-4e5a-95ff-9ee510a4ec2e"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Flow_URL",
+                "type": "string",
+                "value": "@{outputs('List_rows_-_get_flow_URL')?['body/value'][0]['qm_value']}"
+              }
+            ]
+          }
+        },
+        "Add_a_new_row": {
+          "runAfter": {
+            "Initialize_variable_Flow_URL": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4a808689-e5f6-4f30-8a04-932562c01c95"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "adx_invitations",
+              "item/adx_name": "Invitation",
+              "item/adx_type": 756150000,
+              "item/adx_assignToAccount@odata.bind": "@concat('/accounts/' , triggerBody()?['ParentAccount'])",
+              "item/adx_expirydate": "@addDays(utcNow(), 30)",
+              "item/adx_inviteContact@odata.bind": "@concat('/contacts/' , triggerBody()?['ContactId'])",
+              "item/statuscode": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Update_a_row": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "f03e4b09-38d2-4631-a580-11154e53807b"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "UpdateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "contacts",
+              "recordId": "@triggerBody()?['ContactId']",
+              "item/parentcustomerid_account@odata.bind": "@concat('/accounts/' , triggerBody()?['ParentAccount'] )"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

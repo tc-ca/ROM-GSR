@@ -10,13 +10,13 @@
           "name": "shared_commondataserviceforapps"
         }
       },
-      "shared_office365": {
+      "shared_sendmail": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "tdg_ConnectionReferenceOutlookTDGCoreUser"
+          "connectionReferenceLogicalName": "cid_sharedsendmail_8e8b5"
         },
         "api": {
-          "name": "shared_office365"
+          "name": "shared_sendmail"
         }
       }
     },
@@ -49,7 +49,7 @@
       "actions": {
         "GetAccounts": {
           "runAfter": {
-            "Initialize_variable_Primary_Contact_First_Name": [
+            "Initialize_variable_2": [
               "Succeeded"
             ]
           },
@@ -89,7 +89,7 @@
                     },
                     "parameters": {
                       "entityName": "contacts",
-                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <attribute name=\"telephone1\" />\n    <attribute name=\"contactid\" />\n    <attribute name=\"emailaddress1\" />\n    <attribute name=\"cid_contacttype\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" uitype=\"account\" value=\"@{items('Apply_to_each')?['accountid']}\" />\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n    </filter>\n  </entity>\n</fetch>"
+                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <attribute name=\"telephone1\" />\n    <attribute name=\"contactid\" />\n    <attribute name=\"emailaddress1\" />\n   <attribute name=\"cid_languageofcorrespondence\" />\n    <attribute name=\"cid_contacttype\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" uitype=\"account\" value=\"@{items('Apply_to_each')?['accountid']}\" />\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n    </filter>\n  </entity>\n</fetch>"
                     },
                     "authentication": "@parameters('$authentication')"
                   }
@@ -124,6 +124,21 @@
                             "name": "Primary Contact First Name",
                             "value": "@items('Apply_to_each_2')?['firstname']"
                           }
+                        },
+                        "Set_variable_2": {
+                          "runAfter": {
+                            "Set_variable_Primary_Contact_First_Name": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "a2c2ccb2-733a-4db4-a32d-751938a13cdc"
+                          },
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Language",
+                            "value": "@items('Apply_to_each_2')?['cid_languageofcorrespondence']"
+                          }
                         }
                       },
                       "runAfter": {},
@@ -157,7 +172,7 @@
                                     "type": "SetVariable",
                                     "inputs": {
                                       "name": "CCEmailRecipients",
-                                      "value": "@{concat(variables('Temp CC Recipients'), ';' , item('Apply_to_each_3')?['emailaddress1'])}"
+                                      "value": "@{concat(variables('Temp CC Recipients'), ';' , items('Apply_to_each_3')?['emailaddress1'])}"
                                     }
                                   }
                                 },
@@ -239,27 +254,66 @@
             "Apply_to_each_5": {
               "foreach": "@outputs('GetAccounts')?['body/value']",
               "actions": {
-                "Send_an_email_(V2)": {
-                  "runAfter": {},
-                  "metadata": {
-                    "operationMetadataId": "cd420056-f88b-4159-98b5-fb3ec975a945"
+                "Check_Language": {
+                  "actions": {
+                    "Send_an_email_notification_(V3)_English": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "067c864f-1bfd-4030-835d-c08234cbbae8"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sendmail",
+                          "operationId": "SendEmailV3",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                        },
+                        "parameters": {
+                          "request/to": "@{variables('ToEmailRecipients')};",
+                          "request/subject": "Beta Test:  Annual Compliance Reminder",
+                          "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['ovs_accountnameenglish']} was expired 30 days ago. Please log into your account and initialize Annual Compliance.<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto generated email.</p>",
+                          "request/cc": "@variables('CCEmailRecipients')"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
                   },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "host": {
-                      "connectionName": "shared_office365",
-                      "operationId": "SendEmailV2",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
-                    },
-                    "parameters": {
-                      "emailMessage/To": "@variables('ToEmailRecipients')",
-                      "emailMessage/Subject": "Annual Compliance Reminder",
-                      "emailMessage/Body": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['ovs_accountnameenglish']} was expired 30 days ago. Please log into your account and initialize Annual Compliance.<br>\n<br>\n<strong>Transport Canada / Government of Canada</strong><br>\n<br>\n<br>\nThis is auto generated email.</p>",
-                      "emailMessage/Cc": "@variables('CCEmailRecipients')",
-                      "emailMessage/Importance": "Normal"
-                    },
-                    "authentication": "@parameters('$authentication')"
-                  }
+                  "runAfter": {},
+                  "else": {
+                    "actions": {
+                      "Send_an_email_notification_(V3)": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "c07ae499-722a-4137-b3ce-b4ee789416b7"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_sendmail",
+                            "operationId": "SendEmailV3",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                          },
+                          "parameters": {
+                            "request/to": "@{variables('ToEmailRecipients')};",
+                            "request/subject": "Beta Test:  FR: Annual Compliance Reminder",
+                            "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['ovs_accountnameenglish']} was expired 30 days ago. Please log into your account and initialize Annual Compliance.<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto generated email.</p>",
+                            "request/cc": "@variables('CCEmailRecipients')"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      }
+                    }
+                  },
+                  "expression": {
+                    "equals": [
+                      "@variables('Language')",
+                      918640001
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "31b2f0eb-c13a-4786-ae9f-f8eb1a3e8670"
+                  },
+                  "type": "If"
                 }
               },
               "runAfter": {
@@ -361,10 +415,30 @@
               }
             ]
           }
+        },
+        "Initialize_variable_2": {
+          "runAfter": {
+            "Initialize_variable_Primary_Contact_First_Name": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "43d372f7-287c-4fe7-9273-f62a28707eb4"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Language",
+                "type": "integer",
+                "value": 918640001
+              }
+            ]
+          }
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
