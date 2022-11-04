@@ -50,7 +50,7 @@ $(document).ready(function () {
 
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('id')) {
-        var isExtendedSite = $("#cid_requirementlevel").find(":selected").text();
+        var requirementLevel = $("#cid_requirementlevel").find(":selected").text();
         var cidSiteStatus = $('#cid_cidsitestatus').find(":selected").text();
         var siteId = urlParams.get('id');
         var operationId = GetHOTIOperation(siteId);
@@ -59,11 +59,9 @@ $(document).ready(function () {
 
         if (cidSiteStatus.indexOf("Inactive") >= 0)
             disabled = "disabled";
-alert($("#cid_requirementlevel"));
-        if ($("#cid_requirementlevel") == null){
-            alert(isExtendedSite);
+
+        if(requirementLevel == "" || requirementLevel == null || requirementLevel == " ")
             disabledSiteLevelSwitch = "disabled";
-        }
 
         sessionStorage.setItem('siteOperationId', operationId);
 
@@ -78,7 +76,7 @@ alert($("#cid_requirementlevel"));
                 $(this).attr("href", _href + '?id=' + siteId);
         });
 
-        if (isExtendedSite == 'Basic') {
+        if (requirementLevel == 'Basic') {
             $('table[data-name="site_details_section_6"]').parent().addClass("hidden");
         }
 

@@ -10,7 +10,7 @@ $(document).ready(function () {
 
     if (operationId != '') {
         var cidSiteStatus = $('#cid_cidsitestatus').find(":selected").text();
-        var isExtendedSite = $("#cid_requirementlevel").find(":selected").text();
+        var requirementLevel = $("#cid_requirementlevel").find(":selected").text();
         var extendedSite = false;
         var disabled = "";
         var siteId = urlParams.get('id');
@@ -18,11 +18,10 @@ $(document).ready(function () {
         if (cidSiteStatus.indexOf("Inactive") >= 0)
             disabled = "disabled";
 
-        if(isExtendedSite != ''){
+        if(requirementLevel != "" && requirementLevel != null && requirementLevel != " ")
             $("#cid_requirementlevel").attr('disabled', 'disabled');
-        }
 
-        if (isExtendedSite == 'Extended')
+        if (requirementLevel == 'Extended')
             extendedSite = true;
 
         if ($("#openOperationWizard").length > 0)
