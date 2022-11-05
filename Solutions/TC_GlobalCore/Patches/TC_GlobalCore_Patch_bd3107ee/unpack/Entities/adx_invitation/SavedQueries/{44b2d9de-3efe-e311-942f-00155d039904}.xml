@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{44b2d9de-3efe-e311-942f-00155d039904}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="adx_name" select="1" preview="1" icon="1">
+        <row name="result" id="adx_invitationid">
+          <cell name="adx_name" width="200" />
+          <cell name="adx_type" width="100" />
+          <cell name="createdon" width="125" />
+          <cell name="statuscode" width="100" />
+          <cell name="adx_expirydate" width="125" />
+          <cell name="adx_invitationcode" width="200" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+        <entity name="adx_invitation">
+          <attribute name="adx_name" />
+          <attribute name="adx_type" />
+          <attribute name="adx_invitationcode" />
+          <attribute name="adx_expirydate" />
+          <attribute name="createdon" />
+          <attribute name="statuscode" />
+          <order attribute="createdon" descending="true" />
+          <order attribute="adx_name" descending="false" />
+          <filter type="and">
+            <condition attribute="statuscode" operator="in">
+              <value>756150000</value>
+              <value>1</value>
+            </condition>
+            <filter type="or">
+              <filter type="or">
+                <condition attribute="adx_expirydate" operator="next-x-years" value="99" />
+                <condition attribute="adx_expirydate" operator="today" />
+              </filter>
+              <condition attribute="adx_expirydate" operator="null" />
+            </filter>
+          </filter>
+          <attribute name="adx_invitationid" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Open Invitations" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="Invitations that are new or have been sent, but have not expired or been redeemed fully." languagecode="1033" />
+    </Descriptions>
+  </savedquery>
+</savedqueries>
