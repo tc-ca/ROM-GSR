@@ -86,6 +86,88 @@ if (typeof (invitation) == "undefined") {
             return value;
         },
 
+        invitation_go_next: function(account, primary_ind, contact_id) {
+            debugger;
+            sessionStorage.setItem("cid_suppress_error", "true");
+
+            if (account.cid_crabusinessnumber != null) {
+                $("#cid_crabusinessnumber").val(account.cid_crabusinessnumber);
+            }
+            else {
+                $("#cid_has_cra_bn").val("0");
+                $("#cid_legalname").val(account.ovs_legalname);
+            }
+
+            sessionStorage.setItem("cid_suppress_error_code", "m000099");
+
+            if (primary_ind) {
+                $("#cid_contacttype").val(100000000);
+                sessionStorage.setItem("cid_suppress_error", "");
+                sessionStorage.setItem("cid_suppress_error_code", "");
+            }
+
+            $("#NextButton").click();
+        },
+
+        invitation_primary: function(_account, message) {
+            debugger;
+            message = tdg.error_message.message("m000033");
+            message = message.replaceAll("{0}", _account.ovs_legalname);
+            tdg.c.dialog_YN(message, (ans) => {
+                if (ans) {
+                    debugger;
+                    if (_account.cid_has_cra_bn) {
+                        $("#cid_crabusinessnumber").val(_account.cid_crabusinessnumber);
+                        tdg.cid.crw.start_cid_crabusinessnumber_onchange();
+                    }
+                    invitation.invitation_go_next(_account, true, contact_id);
+                    return;
+                } else {
+                    debugger;
+                    return;
+                }
+            });
+        },
+
+        invitation_secondary: function (_account, message) {
+            debugger;
+            message = tdg.error_message.message("m000034");
+            message = message.replaceAll("{0}", _account.ovs_legalname);
+            tdg.c.dialog_YN(message, (ans) => {
+                if (ans) {
+                    debugger;
+                    if (_account.cid_has_cra_bn) {
+                        $("#cid_crabusinessnumber").val(_account.cid_crabusinessnumber);
+                        tdg.cid.crw.start_cid_crabusinessnumber_onchange();
+                    }
+                    invitation.invitation_go_next(_account, true, contact_id);
+                    return;
+                } else {
+                    debugger;
+
+                    var message = tdg.error_message.message("m000036");
+                    message = message.replaceAll("{0}", _account.ovs_legalname);
+                    tdg.c.dialog_YN(message, (ans) => {
+                        if (ans) {
+                            debugger;
+                            // delete invitation
+                            var record_id = sessionStorage.getItem("adx_invitationid");
+                            var data = {};
+                            data.adx_invitationcode = "";
+                            tdg.webapi.update("adx_invitation", record_id, data);
+                            return;
+                        } else {
+                            debugger;
+                            return;
+                        }
+                    });
+
+                    return;
+                }
+            });
+
+        },
+
         New_and_Existing_Contact_Submit_Logic: function (ParentAccount) {
             var emailaddressTextBox = $("#emailaddress1").val();
             var firstnameTextBox = $("#firstname").val();
@@ -255,8 +337,6 @@ if (typeof (invitation) == "undefined") {
                             tdg.webapi.update("contacts", CurrentUserID, data2);
                             $(".entity-grid").trigger("refresh");
                             setTimeout(refreshGrid, 3000);
-                           
-
 
                             console.log("after refresh");
                             //****************************call workflow ******************** */
@@ -277,8 +357,6 @@ if (typeof (invitation) == "undefined") {
                 }//end else if user login before
 
             }//end else
-
-
         }
         ,
 

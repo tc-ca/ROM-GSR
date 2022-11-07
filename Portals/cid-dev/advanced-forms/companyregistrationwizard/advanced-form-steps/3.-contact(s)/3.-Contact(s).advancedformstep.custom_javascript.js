@@ -8,6 +8,8 @@ $(document).ready(function ()
 		//alert("Test");
 		$('#ValidationSummaryEntityFormView div').remove();
 	});
+	var currentUserId = '{{user.contactid}}';
+	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
 	//*******Add actions and events to contact grid ******** */
 	var gridList = $(".entity-grid");
 	//add onload event to grid 
@@ -22,8 +24,8 @@ $(document).ready(function ()
 	sessionStorage.setItem("step_start", 2);
 	root_erap_setup();
 	//make for readonly for secondary users
-	var currentUserId = '{{user.contactid}}';
-	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
+	//var currentUserId = '{{user.contactid}}';
+	//Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
 });
 if (window.jQuery)
 {
@@ -86,18 +88,19 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId)
 {
 	debugger;
 	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
+	console.log (cid_usercontacttype);
 	//if not primary contact
 	if (cid_usercontacttype != 100000000)
 	{
 		$(".create-action").attr("disabled", true);
 		$(".create-action").css("pointer-events", "none");
 		//Wait till subgrid load
-	/*	$("#Contacts").on("loaded", function ()
+		$("#Contacts").on("loaded", function ()
 		{
 			$(".btn.btn-default.btn-xs").prop("disabled", true);
 			$(".details-link").prop("disabled", true);
 			$(".details-link").css("pointer-events", "none");
-		});*/
+		});
 	}
 }
 

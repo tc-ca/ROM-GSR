@@ -266,8 +266,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000028",
-                        "message_en": "UN Number does not exist",
-                        "message_fr": "UN Number does not exist_FR"
+                        "message_en": "This UN Number does not exist in the CID Regulation. Please enter a valid UN Number to proceed.",
+                        "message_fr": "This UN Number does not exist in the CID Regulation. Please enter a valid UN Number to proceed._FR"
                     },
                     {
                         "code": "m000029",
@@ -288,6 +288,26 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000032",
                         "message_en": "The registration of the {0} Company is based on invitation only. Do you want to request to have an invitation sent to you to register this Company?",
                         "message_fr": "The registration of the {0} Company is based on invitation only. Do you want to request to have an invitation sent to you to register this Company?_FR"
+                    },
+                    {
+                        "code": "m000033",
+                        "message_en": "You are about to begin the process of registering the {0} company within CID. Would you like to proceed?",
+                        "message_fr": "You are about to begin the process of registering the {0} company within CID. Would you like to proceed?_FR"
+                    },
+                    {
+                        "code": "m000034",
+                        "message_en": "The registration process for the {0} Company has begun. If you proceed, then you will be on-boarded as a Secondary Admin for the {0} Corporation. Would you like to proceed?",
+                        "message_fr": "The registration process for the {0} Company has begun. If you proceed, then you will be on-boarded as a Secondary Admin for the {0} Corporation. Would you like to proceed?_FR"
+                    },
+                    {
+                        "code": "m000035",
+                        "message_en": "The registration process for the {0} Company is complete. If you proceed, then you will be on-boarded as a Secondary Admin for the {0} Corporation. Would you like to proceed?",
+                        "message_fr": "The registration process for the {0} Company is complete. If you proceed, then you will be on-boarded as a Secondary Admin for the {0} Corporation. Would you like to proceed?_FR"
+                    },
+                    {
+                        "code": "m000036",
+                        "message_en": "If you proceed, you will no longer be attached to {0} Company, after which you will have the option to register a new Company instead. Do you want to continue and be disconnected from {0}?",
+                        "message_fr": "If you proceed, you will no longer be attached to {0} Company, after which you will have the option to register a new Company instead. Do you want to continue and be disconnected from {0}?_FR"
                     },
                     {
                         "code": "m000098",

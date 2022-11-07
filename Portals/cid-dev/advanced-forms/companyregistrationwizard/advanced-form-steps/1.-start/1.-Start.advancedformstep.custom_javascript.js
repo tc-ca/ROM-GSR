@@ -5,7 +5,11 @@ var _account;
 $(document).ready(function () {
     debugger;
 
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
     sessionStorage.setItem("cid_has_invitation", "false");
+    sessionStorage.setItem("adx_invitationid", "");
 
     // init var to use in CompanyRegistrationWizard-Site.js
     var k_existing_sites = "already_have_existing_sites";
@@ -23,8 +27,8 @@ $(document).ready(function () {
     $("#cid_has_cra_bn").change(tdg.cid.crw.start_cid_has_cra_bn_onchange);
     tdg.cid.crw.start_cid_has_cra_bn_onchange();
 
-    $("#cid_reasonfornobnnumber").change(cid_reasonfornobnnumber_onchange);
-    cid_reasonfornobnnumber_onchange();
+    $("#cid_reasonfornobnnumber").change(tdg.cid.crw.start_cid_reasonfornobnnumber_onchange);
+    tdg.cid.crw.start_cid_reasonfornobnnumber_onchange();
 
     // autocomplete off
     $("#cid_crabusinessnumber").attr("autocomplete", "new-password");
@@ -46,75 +50,32 @@ $(document).ready(function () {
             var inv = tdg.c.WebApi_List("adx_invitations", filter);
             if (inv.length > 0) {
                 sessionStorage.setItem("cid_has_invitation", "true");
+                sessionStorage.setItem("adx_invitationid", inv[0].adx_invitationid);
 
                 filter = "accountid eq '" + account_id + "'";
                 _account = tdg.c.WebApi_List("accounts", filter)[0];
-                if (_account.cid_cidcompanystatus == 100000004) {
-                    var message = "You are about to begin the process of registering the {0} company within CID. Would you like to proceed?";
-                    message = message.replaceAll("{0}", _account.ovs_legalname);
-                    tdg.c.dialog_YN(message, (ans) => {
-                        if (ans) {
-                            debugger;
-                            if (_account.cid_has_cra_bn) {
-                                $("#cid_crabusinessnumber").val(_account.cid_crabusinessnumber);
-                                cid_crabusinessnumber_onchange();
-                            }
-                            invitation_go_next(_account, true, contact_id);
-                            return;
-                        } else {
-                            debugger;
-                            return;
-                        }
-                    });
+
+                switch (_account.cid_cidcompanystatus) {
+                    case 100000004:
+                        invitation.invitation_primary(_account, "m000033");
+                        break;
+                    case 100000001:
+                        invitation.invitation_secondary(_account, "m000034");
+                        break;
+                    case 100000005:
+                        invitation.invitation_secondary(_account, "m000035");
+                        break;
+                    default:
+                        invitation.invitation_go_next(_account, false, contact_id);
+                        break;
                 }
-                else {
-                    invitation_go_next(_account, false, contact_id);
-                }
+
                 return;
             }
         }
     }
 });
 
-function invitation_go_next(account, primary_ind, contact_id) {
-    debugger;
-    sessionStorage.setItem("cid_suppress_error", "true");
-
-    if (account.cid_crabusinessnumber != null) {
-        $("#cid_crabusinessnumber").val(account.cid_crabusinessnumber);
-    }
-    else {
-        $("#cid_has_cra_bn").val("0");
-        $("#cid_legalname").val(account.ovs_legalname);
-    }
-
-    sessionStorage.setItem("cid_suppress_error_code", "m000099");
-
-    if (primary_ind) {
-        $("#cid_contacttype").val(100000000);
-        sessionStorage.setItem("cid_suppress_error", "");
-        sessionStorage.setItem("cid_suppress_error_code", "");
-    }
-
-    $("#NextButton").click();
-}
-
-function cid_reasonfornobnnumber_onchange() {
-    debugger;
-
-    $("#cid_reasonfornobnnumber_other").val("");
-
-    cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
-    if (cid_reasonfornobnnumber == "3")   // other
-    {
-        tdg.c.control_show("cid_reasonfornobnnumber_other");
-        tdg.c.addValidator("cid_reasonfornobnnumber_other");
-    }
-    else {
-        tdg.c.control_hide("cid_reasonfornobnnumber_other");
-        tdg.c.removeValidator("cid_reasonfornobnnumber_other");
-    }
-}
 
 if (window.jQuery) {
     (function ($) {

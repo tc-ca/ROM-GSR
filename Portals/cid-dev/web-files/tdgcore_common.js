@@ -172,7 +172,6 @@ if (typeof (tdg.c) == "undefined") {
         // odata
         OData_List: function (entity, filter) {
             debugger;
-            //return tdg.webapi.list(entity + "s", filter);
 
             var url = entity;
             if (filter != "") {
@@ -194,8 +193,6 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         WebApi_List: function (entity, filter) {
-            debugger;
-
             var api_url = entity;
             if (filter != "") {
                 api_url += "?$filter=" + filter;
@@ -234,8 +231,6 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         message_panel: function () {
-            //debugger;
-
             var language = sessionStorage.getItem("selected_language");
 
             try {
@@ -257,7 +252,6 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         error_message_clear: function () {
-            //debugger;
             var v = this.ValidationSummary();
             try {
                 v[0].innerHTML = "";
@@ -275,7 +269,6 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         error_message: function (message, clear) {
-            debugger;
             message = tdg.c.message(message);
 
             var v = this.ValidationSummary();
@@ -287,7 +280,6 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         error_message_advanced_form: function (message, clear) {
-            debugger;
             message = tdg.error_message.message(message);
             if (clear) {
                 $('#ValidationSummaryEntityFormView div').remove();
@@ -1498,9 +1490,22 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#parentcustomerid_name").attr("value", null);
         },
 
-        start_cid_has_cra_bn_onchange: function () {
-            debugger;
+        start_cid_reasonfornobnnumber_onchange: function() {
+            $("#cid_reasonfornobnnumber_other").val("");
 
+            cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
+            if (cid_reasonfornobnnumber == "3")   // other
+            {
+                tdg.c.control_show("cid_reasonfornobnnumber_other");
+                tdg.c.addValidator("cid_reasonfornobnnumber_other");
+            }
+            else {
+                tdg.c.control_hide("cid_reasonfornobnnumber_other");
+                tdg.c.removeValidator("cid_reasonfornobnnumber_other");
+            }
+        },
+
+        start_cid_has_cra_bn_onchange: function () {
             tdg.cid.crw.start_clear_parentcustomerid();
 
             tdg.c.removeValidator("cid_crabusinessnumber");

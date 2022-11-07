@@ -5,8 +5,10 @@
 $(document).ready(function () {
 	debugger;
 
+    //add bulk upload button
 	var UploadButtonText = tdg.error_message.message("m000111");
-	if ('{{request.url}}'.includes("tdgcore-qa") || '{{request.url}}'.includes("rd-tdgcore-dev")) {
+	//if ('{{request.url}}'.includes("tdgcore-qa") || '{{request.url}}'.includes("rd-tdgcore-dev")) 
+	{
 		var BulkUploaddButton = '<div class="input-group pull-left">&nbsp;&nbsp;</div><div class="input-group pull-left"><button type="button" id="BulkUploadButton"  class="btn btn-primary pull-right action">' + UploadButtonText + '</button></div>';
 		$(".toolbar-actions").append(BulkUploaddButton);
 	}
@@ -106,8 +108,11 @@ $(document).ready(function () {
 		var companyId = $("#EntityFormView_EntityID").val();
 		console.log(companyId);
 		//get all sites with pending claim
-		var filter = "_parentaccountid_value eq " + companyId + " and cid_siteclaim eq 100000003";
-		var response = tdg.webapi.list("accounts", filter);
+		//var filter = "_parentaccountid_value eq " + companyId + " and cid_siteclaim eq 100000003";
+		//var response = tdg.webapi.list("accounts", filter);
+
+		var response = tdg.webapi.SelectedColumnlist("accounts", "name",
+                 "_parentaccountid_value eq " + companyId + " and (cid_siteclaim eq 100000003 or cid_siteclaim eq null)");
 		//if one or more sites found pending claim
 		if (response.length > 0) {
 			//display errror message
