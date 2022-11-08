@@ -36,8 +36,10 @@ $(document).ready(function () {
 
     $("#emailaddress1").width('100%');
 
-    $("#telephone1").attr("placeholder", "");
-    $("#mobilephone").attr("placeholder", "");
+    //Phone number formatting
+    tdg.cid.phone_init("telephone1", selected_language);
+    tdg.cid.phone_init("mobilephone", selected_language);
+    tdg.cid.phone_init("fax", selected_language);
 
     tdg.c.addValidator("emailaddress1");
     $('#emailaddress1').attr("readonly", true);

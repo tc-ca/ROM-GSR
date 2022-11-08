@@ -57,13 +57,19 @@ $(document).ready(function () {
 
                 switch (_account.cid_cidcompanystatus) {
                     case 100000004:
-                        invitation.invitation_primary(_account, "m000033");
+                        invitation.invitation_primary(_account, "m000033", contact_id);
+                        break;
+                    case 100000000:
+                        invitation.invitation_secondary(_account, "m000034", contact_id);
                         break;
                     case 100000001:
-                        invitation.invitation_secondary(_account, "m000034");
+                        invitation.invitation_secondary(_account, "m000034", contact_id);
                         break;
                     case 100000005:
-                        invitation.invitation_secondary(_account, "m000035");
+                        invitation.invitation_secondary(_account, "m000035", contact_id);
+                        break;
+                    case 100000009:
+                        invitation.invitation_secondary(_account, "m000034", contact_id);
                         break;
                     default:
                         invitation.invitation_go_next(_account, false, contact_id);
@@ -123,7 +129,7 @@ if (window.jQuery) {
                 }
                 else {
                     debugger;
-                    var data = cid_crabusinessnumber_onchange();
+                    var data = tdg.cid.crw.cid_crabusinessnumber_onchange();
 
                     if (data == "") {
                         tdg.c.error_message_advanced_form("m000001", true);
@@ -173,49 +179,4 @@ if (window.jQuery) {
             return validation;
         }
     }(window.jQuery));
-}
-
-function cid_crabusinessnumber_onchange() {
-    var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
-    var data;
-    data = Retrieve_cra(cid_crabusinessnumber);
-    return data;
-}
-
-// CRA BN API - DEV ONLY
-function Retrieve_cra(bn) {
-    debugger;
-
-    var data;
-    var fake = {};
-    var filter = "cid_businessregistrationnumber eq '" + bn + "'";
-
-    data = tdg.c.WebApi_List("cid_fake_cra_bn_apis", filter);
-
-    if (data == null) {
-        return "";
-    }
-
-    if (data.length == 0) {
-        return "";
-    }
-
-    data = data[0];
-
-    fake.LegalName = data.cid_legalname;
-    fake.OperatingName = data.cid_legalname;
-    fake.BusinessRegistrationNumber = bn;
-    var a = {};
-    a.AddressLine1Text = data.cid_addressline1text;
-    a.AddressLine2Text = data.cid_addressline2text;
-    a.CityName = data.cid_cityname;
-    a.ProvinceStateCode = data.cid_provincestatecode;
-    a.PostalZipCode = data.cid_postalzipcode;
-    a.CountryCode = data.cid_countrycode;
-
-    fake.PhysicalLocationAddress = a;
-
-    tdg.cid.crw.start_BN_Selected(fake);
-
-    return data;
 }

@@ -1010,18 +1010,23 @@ if (typeof (tdg.cid) == "undefined") {
         },
 
         //Takes an array of strings containing the field name formatted for use with jquery, ex. "#telephone1"
-        phone_init: function (listOfFields) {
-            for (let field of listOfFields) {
-                $(field).attr("maxlength", "10");
-                $(field).on('keyup', function () {
-                    var n = $(this).val().replace(/\D/g, '');
-                    $(this).val(n);
-                    var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
-                    if (match) {
-                        $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
-                    }
-                });
-            }
+        phone_init: function (phoneField, language) {
+            $("#" + phoneField).attr("placeholder", "");
+            $("#" + phoneField).attr("maxlength", "10");
+            $("#" + phoneField).on('keyup', function () {
+                var n = $(this).val().replace(/\D/g, '');
+                $(this).val(n);
+                var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
+                if (match) {
+                    $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
+                }
+            });
+            $("#" + phoneField).focusout(function () {
+                if ($(this).val().length < 10 && $(this).val().length != 0) {
+                    alert(tdg.c.text_language("Invalid number::Numéro invalide", language));
+                    $(this).val("");
+                }
+            })
         },
 
         address_same_as_company: function (parent_id) {
@@ -1495,7 +1500,52 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#parentcustomerid_name").attr("value", null);
         },
 
-        start_cid_reasonfornobnnumber_onchange: function() {
+        start_cid_crabusinessnumber_onchange: function() {
+            var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
+            var data;
+            data = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber);
+            return data;
+        },
+
+        // CRA BN API - DEV ONLY
+        start_Retrieve_cra: function(bn) {
+            debugger;
+
+            var data;
+            var fake = {};
+            var filter = "cid_businessregistrationnumber eq '" + bn + "'";
+
+            data = tdg.c.WebApi_List("cid_fake_cra_bn_apis", filter);
+
+            if (data == null) {
+                return "";
+            }
+
+            if (data.length == 0) {
+                return "";
+            }
+
+            data = data[0];
+
+            fake.LegalName = data.cid_legalname;
+            fake.OperatingName = data.cid_legalname;
+            fake.BusinessRegistrationNumber = bn;
+            var a = {};
+            a.AddressLine1Text = data.cid_addressline1text;
+            a.AddressLine2Text = data.cid_addressline2text;
+            a.CityName = data.cid_cityname;
+            a.ProvinceStateCode = data.cid_provincestatecode;
+            a.PostalZipCode = data.cid_postalzipcode;
+            a.CountryCode = data.cid_countrycode;
+
+            fake.PhysicalLocationAddress = a;
+
+            tdg.cid.crw.start_BN_Selected(fake);
+
+            return data;
+        },
+
+        start_cid_reasonfornobnnumber_onchange: function () {
             $("#cid_reasonfornobnnumber_other").val("");
 
             cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();

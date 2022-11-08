@@ -10,37 +10,13 @@ $(document).ready(function () {
 
     $("#emailaddress1").width('100%');
 
-    $("#telephone1").attr("placeholder", "");
-    $("#mobilephone").attr("placeholder", "");
-    
-    $("#telephone1").attr("maxlength", "10");
-    $("#mobilephone").attr("maxlength", "10");
-    $("#fax").attr("maxlength", "10");
+    var selected_language = '{{website.selected_language.code}}';
 
-    $("#telephone1").on('keyup', function() {
-        var n = $(this).val().replace(/\D/g, '');
-        $(this).val(n);
-        var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
-        if (match) {
-            $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
-        }
-    });
-    $("#mobilephone").on('keyup', function() {
-        var n = $(this).val().replace(/\D/g, '');
-        $(this).val(n);
-        var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
-        if (match) {
-            $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
-        }
-    });
-    $("#fax").on('keyup', function() {
-        var n = $(this).val().replace(/\D/g, '');
-        $(this).val(n);
-        var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
-        if (match) {
-            $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
-        }
-    });
+    //Phone number formatting
+    tdg.cid.phone_init("telephone1", selected_language);
+    tdg.cid.phone_init("mobilephone", selected_language);
+    tdg.cid.phone_init("fax", selected_language);
+    
     tdg.c.addValidator("emailaddress1");
 
     // autocomplete off

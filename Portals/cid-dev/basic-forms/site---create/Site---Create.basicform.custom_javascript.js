@@ -10,8 +10,6 @@ $(document).ready(function () {
     // address
     tdg.cid.address_init(true);
 
-    $("#telephone1").attr("placeholder", "");
-
     var cid_legalname = "{{user.cid_legalname}}";
     cid_legalname = tdg.c.replace_special_char(cid_legalname);
 
@@ -37,26 +35,11 @@ $(document).ready(function () {
     $("#fax").attr("autocomplete", "new-password");
 
     //Phone masking
-    $("#telephone1").attr("maxlength", "10");
-    $("#fax").attr("maxlength", "10");
+    var selected_language = '{{website.selected_language.code}}';
 
-    $("#telephone1").on('keyup', function () {
-        var n = $(this).val().replace(/\D/g, '');
-        $(this).val(n);
-        var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
-        if (match) {
-            $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
-        }
-    });
-
-    $("#fax").on('keyup', function () {
-        var n = $(this).val().replace(/\D/g, '');
-        $(this).val(n);
-        var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
-        if (match) {
-            $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
-        }
-    });
+    //Phone number formatting
+    tdg.cid.phone_init("telephone1", selected_language);
+    tdg.cid.phone_init("fax", selected_language);
 
     $("#ovs_address_type").change(function () {
         tdg.cid.address_type_change(true);

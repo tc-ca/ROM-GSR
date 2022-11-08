@@ -105,11 +105,21 @@ if (typeof (invitation) == "undefined") {
                 sessionStorage.setItem("cid_suppress_error", "");
                 sessionStorage.setItem("cid_suppress_error_code", "");
             }
+            else {
+                debugger;
+                // email
+                var data = {}
+                data.EmailCode = "S2B-1";
+                data.AccountId = account.accountid;
+                data.Primary_Contactid = contact_id;
+                data.Secondary_Contactid = contact_id;
+                tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", JSON.stringify(data));
+            }
 
             $("#NextButton").click();
         },
 
-        invitation_primary: function(_account, message) {
+        invitation_primary: function (_account, message, contact_id) {
             debugger;
             message = tdg.error_message.message("m000033");
             message = message.replaceAll("{0}", _account.ovs_legalname);
@@ -129,7 +139,7 @@ if (typeof (invitation) == "undefined") {
             });
         },
 
-        invitation_secondary: function (_account, message) {
+        invitation_secondary: function (_account, message, contact_id) {
             debugger;
             message = tdg.error_message.message("m000034");
             message = message.replaceAll("{0}", _account.ovs_legalname);
@@ -140,7 +150,7 @@ if (typeof (invitation) == "undefined") {
                         $("#cid_crabusinessnumber").val(_account.cid_crabusinessnumber);
                         tdg.cid.crw.start_cid_crabusinessnumber_onchange();
                     }
-                    invitation.invitation_go_next(_account, true, contact_id);
+                    invitation.invitation_go_next(_account, false, contact_id);
                     return;
                 } else {
                     debugger;
@@ -153,7 +163,7 @@ if (typeof (invitation) == "undefined") {
                             var record_id = sessionStorage.getItem("adx_invitationid");
                             var data = {};
                             data.adx_invitationcode = "";
-                            tdg.webapi.update("adx_invitation", record_id, data);
+                            tdg.webapi.update("adx_invitations", record_id, data);
                             return;
                         } else {
                             debugger;
