@@ -150,7 +150,6 @@ if (typeof (invitation) == "undefined") {
                     tdg.c.dialog_YN(message, (ans) => {
                         if (ans) {
                             debugger;
-                            // delete invitation
                             var record_id = sessionStorage.getItem("adx_invitationid");
                             var data = {};
                             data.adx_invitationcode = "";

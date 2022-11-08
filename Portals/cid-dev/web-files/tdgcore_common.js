@@ -731,6 +731,11 @@ if (typeof (tdg.webapi) == "undefined") {
                 success: function (res) {
                     debugger;
                     console.log(res);
+                },
+
+                error: function (res, status, errorThrown) {
+                    debugger;
+                    console.log(res);
                 }
             });
         },
