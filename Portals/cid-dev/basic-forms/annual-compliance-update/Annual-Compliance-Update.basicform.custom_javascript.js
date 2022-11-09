@@ -1,8 +1,7 @@
 $(document).ready(function ()
 {
 	debugger;
-    //page_setup();
-
+	//page_setup();
 	$("legend").each(function ()
 	{
 		$(this).removeClass();
@@ -68,15 +67,21 @@ $(document).ready(function ()
 	$('#cid_companyanniversarydate').parent().parent().hide();
 	var annualComplianceCompletionDate = $('#cid_annualcompliancecompletiondate').val();
 	if (annualComplianceCompletionDate == null || annualComplianceCompletionDate == "") //uncheck attestation check box
-	$("#cid_iscompanyattested").prop("checked", false);
-	var anniversaryDate = new Date($('#cid_companyanniversarydate').val());
-	var complienceReadonly = checkAnuualComplienceEligibility(anniversaryDate);
+	{
+		$("#cid_iscompanyattested").prop("checked", false);
+	}
+
+	var anniversaryDate = $('#cid_companyanniversarydate').val();
+	var complienceReadonly = true;
+	if (anniversaryDate != null && anniversaryDate != "")
+	{
+		complienceReadonly = checkAnuualComplienceEligibility(new Date(anniversaryDate));
+	}
 	if (complienceReadonly)
 	{
 		validation = false;
 		var errormsg = tdg.error_message.message("m000112");
-		
-        if (errormsg != "")
+		if (errormsg != "")
 		{
 			$('.validation-summary div').remove();
 			var validationSection = $('.validation-summary');
@@ -84,7 +89,6 @@ $(document).ready(function ()
 			validationSection.show();
 			//$('.validation-summary div').focus();
 		}
-
 		$("#UpdateButton").prop("disabled", true);
 		$('.crmEntityFormView').find('input, textarea, select').attr('disabled', 'disabled');
 		$(".entity-grid").on("loaded", function ()
@@ -99,16 +103,20 @@ $(document).ready(function ()
 			});
 		});
 	}
-	entityFormClientValidate = function (){
+	entityFormClientValidate = function ()
+	{
 		var errorMessage = "";
 		var validation = true;
 		var firstErrorFound = false;
 		var secondErrorFound = false;
-
-		$("#company_annual_compliance_update table tbody").find("tr").each(function (){
-			if (!firstErrorFound){
-				$(this).find("td").each(function (){
-					if ($(this).attr('data-attribute') == 'statuscode' && $(this).attr('aria-label') != 'Completed'){
+		$("#company_annual_compliance_update table tbody").find("tr").each(function ()
+		{
+			if (!firstErrorFound)
+			{
+				$(this).find("td").each(function ()
+				{
+					if ($(this).attr('data-attribute') == 'statuscode' && $(this).attr('aria-label') != 'Completed')
+					{
 						validation = false;
 						errorMessage = errorMessage + "You cannot proceed before completing the checklist items in the Company Management section<br>";
 						firstErrorFound = true;
@@ -116,11 +124,14 @@ $(document).ready(function ()
 				});
 			}
 		});
-			
-		$("#sites_annual_compliance_update table tbody").find("tr").each(function (){
-			if (!secondErrorFound){
-				$(this).find("td").each(function (){
-					if ($(this).attr('data-attribute') == 'statuscode' && $(this).attr('aria-label') != 'Completed'){
+		$("#sites_annual_compliance_update table tbody").find("tr").each(function ()
+		{
+			if (!secondErrorFound)
+			{
+				$(this).find("td").each(function ()
+				{
+					if ($(this).attr('data-attribute') == 'statuscode' && $(this).attr('aria-label') != 'Completed')
+					{
 						validation = false;
 						errorMessage = errorMessage + "You cannot proceed before completing the checklist items in the Sites Management section<br>";
 						secondErrorFound = true;
@@ -128,18 +139,18 @@ $(document).ready(function ()
 				});
 			}
 		});
-
-		if ($("#numberOfNotAttestedSites").val() != 0){
+		if ($("#numberOfNotAttestedSites").val() != 0)
+		{
 			validation = false;
 			errorMessage = errorMessage + "You cannot proceed before attesting all companies sites<br>";
 		}
-
-		if (!$("#cid_iscompanyattested").prop('checked')){
+		if (!$("#cid_iscompanyattested").prop('checked'))
+		{
 			validation = false;
 			errorMessage = errorMessage + "You cannot proceed before attesting your company annual compliance update changes, please check the 'Attestation' box<br>";
 		}
-
-		if (errorMessage != "")	{
+		if (errorMessage != "")
+		{
 			$('.validation-summary div').remove();
 			var validationSection = $('.validation-summary');
 			validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
@@ -160,8 +171,8 @@ checkAnuualComplienceEligibility = function (anniversaryDate)
 	else
 	{
 		var today = new Date();
-		anniversaryDate = new Date(today.getFullYear(), anniversaryDate.getMonth(), anniversaryDate.getDate())
-		if (anniversaryDate > today) anniversaryDate = new Date(anniversaryDate.getFullYear() - 1, anniversaryDate.getMonth(), anniversaryDate.getDate());
+		//anniversaryDate = new Date(today.getFullYear(), anniversaryDate.getMonth(), anniversaryDate.getDate())
+		//if (anniversaryDate > today) anniversaryDate = new Date(anniversaryDate.getFullYear() - 1, anniversaryDate.getMonth(), anniversaryDate.getDate());
 		var dateDiff = Math.floor((Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) - Date.UTC(anniversaryDate.getFullYear(), anniversaryDate.getMonth(), anniversaryDate.getDate())) / (1000 * 60 * 60 * 24))
 		if (dateDiff > 30)
 		{ //Annual Compliance Update can only be completed on or 30 days within the Company’s Anniversary Date each year
@@ -171,21 +182,20 @@ checkAnuualComplienceEligibility = function (anniversaryDate)
 	return false;
 }
 
-function page_setup() {
-debugger;
-    var selected_language = '{{website.selected_language.code}}';
-    sessionStorage.setItem("selected_language", selected_language);
-
-    const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
-    for (var i = 0; i < files.length; i++) {
-        var file = files[i];
-        var script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = file;
-
-        $("body").append(script);
-    }
-
-    // server error?
-    tdg.c.message_panel();
+function page_setup()
+{
+	debugger;
+	var selected_language = '{{website.selected_language.code}}';
+	sessionStorage.setItem("selected_language", selected_language);
+	const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
+	for (var i = 0; i < files.length; i++)
+	{
+		var file = files[i];
+		var script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = file;
+		$("body").append(script);
+	}
+	// server error?
+	tdg.c.message_panel();
 }

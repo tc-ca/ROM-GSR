@@ -4,7 +4,37 @@
 
 $(document).ready(function () {
 	debugger;
-	tdg.c.control_hide("cid_addressoverwritten");
+
+	document.getElementById("address1_city").addEventListener('keydown', (event) => {
+    $("#cid_addressoverwritten").val(1);
+		//console.log(`key=${event.key},code=${event.code}`);
+	});
+	
+	document.getElementById("ovs_address1_province").addEventListener('change', (event) => {
+    $("#cid_addressoverwritten").val(0);
+		//console.log(`key=${event.key},code=${event.code}`);
+	});
+
+	const cbox = document.querySelectorAll('select');
+
+ for (let i = 0; i < cbox.length; i++) {
+	 console.log( " queery " +  i);
+     cbox[i].addEventListener("click", function() {
+       console.log("clicked");
+     });
+
+	   cbox[i].addEventListener("change", function() {
+       console.log("changed");
+     });
+ }
+
+
+
+	
+
+	
+  //$('#address1_line2').val();
+	//tdg.c.control_hide("cid_addressoverwritten");
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 	// address
@@ -181,4 +211,9 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 			tdg.cid.WebResource_address_complete_readonly(true);
 		});
 	}
+}
+function ListChange()
+{
+	console.log("List Change");
+
 }

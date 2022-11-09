@@ -150,6 +150,14 @@ if (typeof (invitation) == "undefined") {
                         $("#cid_crabusinessnumber").val(_account.cid_crabusinessnumber);
                         tdg.cid.crw.start_cid_crabusinessnumber_onchange();
                     }
+                    else
+                    {
+                        $("#cid_has_cra_bn").val("0");
+                        tdg.cid.crw.start_cid_has_cra_bn_onchange();
+                        $("#cid_reasonfornobnnumber").val(_account.cid_reasonfornobnnumber);
+                        $("#cid_reasonfornobnnumber_other").val(_account.cid_reasonfornobnnumber_other);
+                        $("#cid_legalname").val(_account.ovs_legalname);
+                    }
                     invitation.invitation_go_next(_account, false, contact_id);
                     return;
                 } else {

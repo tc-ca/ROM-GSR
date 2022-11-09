@@ -4,6 +4,8 @@
 
 $(document).ready(function () {
 	debugger;
+	console.log("before key press");
+	document.getElementById("address1_line1").addEventListener("keypress", Street1KeyPress);
 
 	tdg.c.control_hide("cid_addressoverwritten");
 	var selected_language = '{{website.selected_language.code}}';
@@ -212,4 +214,9 @@ function Disable_ContactTypeFieldsForSecondaryUser() {
 			tdg.cid.WebResource_address_complete_readonly(true);
 		});
 	}
+}
+
+function Street1KeyPress ()
+{
+ console.log ("Key press");
 }

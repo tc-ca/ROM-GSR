@@ -11,6 +11,9 @@ $(document).ready(function () {
         $(this).css("text-decoration", "underline");
     });
 
+    sessionStorage.setItem('frominyearsites', 'false');
+    sessionStorage.setItem('fromannualcompliance', 'true');
+
 	var urlParams = new URLSearchParams(window.location.search);
 	urlParams.set('operationid', sessionStorage.getItem("siteOperationId"));
 
