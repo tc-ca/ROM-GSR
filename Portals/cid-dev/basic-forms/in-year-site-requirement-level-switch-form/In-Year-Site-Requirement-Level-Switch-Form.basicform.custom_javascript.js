@@ -4,7 +4,7 @@ $(document).ready(function () {
     effectiveDateControl.val('');
 
     $("#cid_siterequirementlevelswitchmemo").val('');
-    $("#cid_issiteattested").prop( "checked", false );
+    //$("#cid_issiteattested").prop( "checked", false );
 
     $("#EntityFormPanel").click(function(){
         var futureDateMessageShown = sessionStorage.getItem("futureDateMessageShown");
@@ -49,24 +49,24 @@ $(document).ready(function () {
     
 });
 
-if (window.jQuery) {
-    (function ($) {
-        entityFormClientValidate = function () {
-            debugger;
+//if (window.jQuery) {
+//    (function ($) {
+//        entityFormClientValidate = function () {
+//            debugger;
 
-            if($("#cid_issiteattested").prop('checked')){
-                return true;
-            }
-            else{
-                var errorMessage = 'You cannot proceed before attesting your site requirement level switch, please check the "Attestation" box';  
-                $('.validation-summary div').remove();
-                var validationSection = $('.validation-summary'); 
-				validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>")); 
-				validationSection.show();
-                $('.validation-summary div').focus();  
+//            if($("#cid_issiteattested").prop('checked')){
+//               return true;
+//            }
+//            else{
+//                var errorMessage = 'You cannot proceed before attesting your site requirement level switch, please check the "Attestation" box';  
+//                $('.validation-summary div').remove();
+//                var validationSection = $('.validation-summary'); 
+//				validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>")); 
+//				validationSection.show();
+//                $('.validation-summary div').focus();  
 
-                return false;
-            }
-        }
-    }(window.jQuery));
-}
+//                return false;
+//            }
+//        }
+//    }(window.jQuery));
+//}

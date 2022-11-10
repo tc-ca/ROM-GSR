@@ -1481,6 +1481,14 @@ if (typeof (tdg.cid) == "undefined") {
                     tdg.cid.Append_Modes_html_checkboxes(air, marine, rail, road);
                 }
             });
+        },
+
+         Update_AdderssOverwritten_Field: function () {
+            document.getElementById("address1_city").addEventListener('change', (event) => { $("#cid_addressoverwritten").val(1); });
+            document.getElementById("address1_line2").addEventListener('change', (event) => { $("#cid_addressoverwritten").val(1); });
+            document.getElementById("ovs_address1_province").addEventListener('change', (event) => { $("#cid_addressoverwritten").val(1); });
+            document.getElementById("address1_line3").addEventListener('change', (event) => { $("#cid_addressoverwritten").val(1); });
+            document.getElementById("address1_postalcode").addEventListener('change', (event) => { $("#cid_addressoverwritten").val(1); });
         }
     }
 }
@@ -1500,7 +1508,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#parentcustomerid_name").attr("value", null);
         },
 
-        start_cid_crabusinessnumber_onchange: function() {
+        start_cid_crabusinessnumber_onchange: function () {
             var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
             var data;
             data = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber);
@@ -1508,7 +1516,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
         },
 
         // CRA BN API - DEV ONLY
-        start_Retrieve_cra: function(bn) {
+        start_Retrieve_cra: function (bn) {
             debugger;
 
             var data;
@@ -1662,3 +1670,4 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
+

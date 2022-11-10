@@ -1,31 +1,9 @@
 //
 // CompanyRegistrationWizard-Company Create.js
 //
-
 $(document).ready(function () {
 	debugger;
-
-// city change event
-	document.getElementById("address1_city").addEventListener('change', (event) => {$("#cid_addressoverwritten").val(0);});
-	document.getElementById("address1_line2").addEventListener('change', (event) => {$("#cid_addressoverwritten").val(0);});
-	document.getElementById("ovs_address1_province").addEventListener('change', (event) => {$("#cid_addressoverwritten").val(0);});
-	document.getElementById("address1_line3").addEventListener('change', (event) => {$("#cid_addressoverwritten").val(1);});
-	document.getElementById("address1_postalcode").addEventListener('change', (event) => {$("#cid_addressoverwritten").val(1);});
-
-/*	const cbox = document.querySelectorAll('select');
-
- for (let i = 0; i < cbox.length; i++) {
-	 console.log( " queery " +  i);
-     cbox[i].addEventListener("click", function() {
-       console.log("clicked");
-     });
-
-	   cbox[i].addEventListener("change", function() {
-       console.log("changed");
-     });
- }*/
-
-
+	tdg.cid.Update_AdderssOverwritten_Field();
 
 	tdg.c.control_hide("cid_addressoverwritten");
 	var selected_language = '{{website.selected_language.code}}';
@@ -38,7 +16,6 @@ $(document).ready(function () {
 		$(".previous-btn").attr('disabled', true);
 	}
 	$("#websiteurl").width('100%');
-	$("#telephone1").attr("placeholder", "");
 
 	//phone field formatting
 	tdg.cid.phone_init("telephone1", selected_language);
