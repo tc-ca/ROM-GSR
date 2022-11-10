@@ -1,0 +1,24 @@
+﻿
+function ColorBasedRemainDays(rowData, userLCID) {   
+    if (rowData == null || rowData == 'undefined')
+        return;
+
+    var str = JSON.parse(rowData);
+    var coldata = str.fdr_daysremaining;
+
+    if (coldata == null || coldata == 'undefined' || coldata.length < 1)
+        return;
+
+    var imgName = "";
+    var tooltip = "";  
+    var remain = parseInt(coldata, 10);
+
+    if (remain < 1)
+        imgName = "fdr_ExclamationMark";  
+
+    if (remain >= 1 && remain <= 5)
+        imgName = "fdr_ClockMark";  
+
+    var resultarray = [imgName, tooltip];
+    return resultarray;
+}
