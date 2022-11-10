@@ -1,0 +1,459 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sendmail_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "new_sharedsendmail_eef82"
+        },
+        "api": {
+          "name": "shared_sendmail"
+        }
+      },
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "new_sharedcommondataserviceforapps_aec40"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "c0bed9d7-ee36-4e10-9d2a-ad6219312650"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "account",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "cid_iscompanyattested, cid_annualcompliancecompletiondate"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Condition_Is_company_annual_compliance_done_": {
+          "actions": {
+            "Apply_to_each_5": {
+              "foreach": "@outputs('GetEmailRecipients')?['body/value']",
+              "actions": {
+                "Check_Language": {
+                  "actions": {
+                    "Send_an_email_notification_(V3)_English": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "067c864f-1bfd-4030-835d-c08234cbbae8"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sendmail_1",
+                          "operationId": "SendEmailV3",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                        },
+                        "parameters": {
+                          "request/to": "@{variables('ToEmailRecipients')};",
+                          "request/subject": "Beta Test:  Annual Compliance Completed",
+                          "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['ovs_accountnameenglish']} was sucessfully completed. Please log into your account to see the detials.<br>\n<br>\nAnnual Complience Completed Date: @{triggerOutputs()?['body/cid_annualcompliancecompletiondate']}<br>\n<br>\n<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\nThis is auto generated email.</p>",
+                          "request/cc": "@variables('CCEmailRecipients')"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
+                  },
+                  "runAfter": {},
+                  "else": {
+                    "actions": {
+                      "Send_an_email_notification_(V3)": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "c07ae499-722a-4137-b3ce-b4ee789416b7"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_sendmail_1",
+                            "operationId": "SendEmailV3",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                          },
+                          "parameters": {
+                            "request/to": "@{variables('ToEmailRecipients')};",
+                            "request/subject": "Beta Test:  FR: Annual Compliance Reminder",
+                            "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['ovs_accountnameenglish']} was sucessfully completed. Please log into your account to see the detials.<br>\n<br>\nAnnual Complience Completed Date: @{triggerOutputs()?['body/cid_annualcompliancecompletiondate']}<br>\n<br>\n<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\nThis is auto generated email.</p>",
+                            "request/cc": "@variables('CCEmailRecipients')"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      }
+                    }
+                  },
+                  "expression": {
+                    "equals": [
+                      "@variables('Language')",
+                      918640001
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "31b2f0eb-c13a-4786-ae9f-f8eb1a3e8670"
+                  },
+                  "type": "If"
+                }
+              },
+              "runAfter": {
+                "Apply_to_each_2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "182ab6d0-95a5-4efe-9ab5-510e6a39a843"
+              },
+              "type": "Foreach"
+            },
+            "GetEmailRecipients": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "747bddcb-cdac-4976-8bf9-5eb29d723233"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "contacts",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <attribute name=\"telephone1\" />\n    <attribute name=\"contactid\" />\n    <attribute name=\"emailaddress1\" />\n   <attribute name=\"cid_languageofcorrespondence\" />\n    <attribute name=\"cid_contacttype\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" uitype=\"account\" value=\"@{triggerOutputs()?['body/accountid']}\" />\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n    </filter>\n  </entity>\n</fetch>"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Apply_to_each_2": {
+              "foreach": "@outputs('GetEmailRecipients')?['body/value']",
+              "actions": {
+                "If_Primary_Contact": {
+                  "actions": {
+                    "Set_To_Email_Recipients": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "53a06a09-3428-4240-8e1f-0983659c54a7"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "ToEmailRecipients",
+                        "value": "@items('Apply_to_each_2')?['emailaddress1']"
+                      }
+                    },
+                    "Set_variable_Primary_Contact_First_Name": {
+                      "runAfter": {
+                        "Set_To_Email_Recipients": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "edc751a4-9c9e-40db-848d-b2e2c1f26f5c"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "Primary Contact First Name",
+                        "value": "@items('Apply_to_each_2')?['firstname']"
+                      }
+                    },
+                    "Set_variable_Language": {
+                      "runAfter": {
+                        "Set_variable_Primary_Contact_First_Name": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "a2c2ccb2-733a-4db4-a32d-751938a13cdc"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "Language",
+                        "value": "@items('Apply_to_each_2')?['cid_languageofcorrespondence']"
+                      }
+                    }
+                  },
+                  "runAfter": {},
+                  "else": {
+                    "actions": {
+                      "Condition_2": {
+                        "actions": {
+                          "Apply_to_each_3": {
+                            "foreach": "@outputs('GetEmailRecipients')?['body/value']",
+                            "actions": {
+                              "Set_variable": {
+                                "runAfter": {},
+                                "metadata": {
+                                  "operationMetadataId": "4e5ae564-2e7f-45d3-94e3-12f39f652eb5"
+                                },
+                                "type": "SetVariable",
+                                "inputs": {
+                                  "name": "Temp CC Recipients",
+                                  "value": "@variables('CCEmailRecipients')"
+                                }
+                              },
+                              "Concat_CCEmailRecipients_variable_if_not_empty": {
+                                "runAfter": {
+                                  "Set_variable": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "metadata": {
+                                  "operationMetadataId": "f4a01aa2-2fd2-4b2a-922f-63e1d556a09b"
+                                },
+                                "type": "SetVariable",
+                                "inputs": {
+                                  "name": "CCEmailRecipients",
+                                  "value": "@{concat(variables('Temp CC Recipients'), ';' , items('Apply_to_each_3')?['emailaddress1'])}"
+                                }
+                              }
+                            },
+                            "runAfter": {},
+                            "metadata": {
+                              "operationMetadataId": "5027a906-3e0f-41e1-a7c1-34cec4669cfa"
+                            },
+                            "type": "Foreach"
+                          }
+                        },
+                        "runAfter": {},
+                        "else": {
+                          "actions": {
+                            "Apply_to_each_4": {
+                              "foreach": "@outputs('GetEmailRecipients')?['body/value']",
+                              "actions": {
+                                "Set_CC_list_if_its_empty": {
+                                  "runAfter": {},
+                                  "metadata": {
+                                    "operationMetadataId": "fefbec20-6ec8-4b33-8ebd-7fc3c762b1f6"
+                                  },
+                                  "type": "SetVariable",
+                                  "inputs": {
+                                    "name": "CCEmailRecipients",
+                                    "value": "@items('Apply_to_each_4')?['emailaddress1']"
+                                  }
+                                }
+                              },
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "80c61f12-02c2-447c-8296-49dd160d2f21"
+                              },
+                              "type": "Foreach"
+                            }
+                          }
+                        },
+                        "expression": {
+                          "greater": [
+                            "@length(variables('CCEmailRecipients'))",
+                            0
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "794dff1f-0703-4bd2-a46f-c8cb08877300"
+                        },
+                        "type": "If"
+                      }
+                    }
+                  },
+                  "expression": {
+                    "equals": [
+                      "@items('Apply_to_each_2')?['cid_contacttype']",
+                      100000000
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "4fd5894a-2fdc-4494-ac7a-99d52071e743"
+                  },
+                  "type": "If"
+                }
+              },
+              "runAfter": {
+                "GetEmailRecipients": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "3b7fc09e-16da-4109-971e-ebfd8088a1e0"
+              },
+              "type": "Foreach"
+            }
+          },
+          "runAfter": {
+            "Initialize_variable_DateDiff_Annual_Compliance_Completed_Date": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/cid_iscompanyattested']",
+                  true
+                ]
+              },
+              {
+                "equals": [
+                  "@variables('DateDiff')",
+                  0
+                ]
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9fd4c9b4-c8aa-46bd-8060-133cc8a00a21"
+          },
+          "type": "If"
+        },
+        "Initialize_To_Email_Recipients": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "9058c756-6243-4980-a304-83ef8af504a9"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ToEmailRecipients",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_CC_Email_Recipients": {
+          "runAfter": {
+            "Initialize_To_Email_Recipients": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "44b5133c-59e0-4ae7-ba27-efd2cffd30b4"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CCEmailRecipients",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable": {
+          "runAfter": {
+            "Initialize_CC_Email_Recipients": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4eeb6aba-5d6e-43c2-ba22-4aa36a0c1990"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Temp CC Recipients",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_Primary_Contact_First_Name": {
+          "runAfter": {
+            "Initialize_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e58d10f7-d2be-4f07-9248-4da6b284c07f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Primary Contact First Name",
+                "type": "string",
+                "value": "Sir/Madam"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_Language": {
+          "runAfter": {
+            "Initialize_variable_Primary_Contact_First_Name": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "43d372f7-287c-4fe7-9273-f62a28707eb4"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Language",
+                "type": "integer",
+                "value": 918640001
+              }
+            ]
+          }
+        },
+        "Initialize_variable_DateDiff_Annual_Compliance_Completed_Date": {
+          "runAfter": {
+            "Initialize_variable_Language": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c9d5e37a-87a8-4b8d-8878-9ff17f5235b4"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "DateDiff",
+                "type": "integer",
+                "value": "@div(sub(ticks(convertFromUtc(triggerOutputs()?['body/cid_annualcompliancecompletiondate'], 'Eastern Standard Time','D')),ticks(formatDateTime(utcNow(), 'yyyy-MM-dd'))),864000000000)"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

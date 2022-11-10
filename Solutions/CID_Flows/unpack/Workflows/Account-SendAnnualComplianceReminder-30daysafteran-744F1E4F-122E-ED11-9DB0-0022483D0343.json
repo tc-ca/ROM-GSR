@@ -37,11 +37,10 @@
         "Recurrence": {
           "recurrence": {
             "frequency": "Day",
-            "interval": 1,
-            "startTime": "2022-08-17T08:00:00Z"
+            "interval": 1
           },
           "metadata": {
-            "operationMetadataId": "ef625b5d-963c-47ff-a0ee-c8744a9932d5"
+            "operationMetadataId": "11a7fab0-1371-4f52-a966-c57a9063b829"
           },
           "type": "Recurrence"
         }
@@ -68,6 +67,99 @@
               "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"account\">\n    <attribute name=\"name\" />\n    <attribute name=\"ovs_legalname\" />\n    <attribute name=\"primarycontactid\" />\n    <attribute name=\"cid_crabusinessnumber\" />\n    <attribute name=\"root_organization_id\" />\n    <attribute name=\"ovs_address_display\" />\n    <attribute name=\"cid_rootcompany\" />\n    <attribute name=\"accountid\" />\n    <attribute name=\"cid_attestationdate\" />\n    <attribute name=\"cid_annualcomplianceupdatesremindersenddate\" />\n    <order attribute=\"ovs_legalname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n      <condition attribute=\"cid_attestationdate\" operator=\"on\" value=\"@{addDays(utcNow(), -395 ,'yyyy-MM-dd')}\" />\n    </filter>\n  </entity>\n</fetch>"
             },
             "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_To_Email_Recipients": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "9058c756-6243-4980-a304-83ef8af504a9"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ToEmailRecipients",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_CC_Email_Recipients": {
+          "runAfter": {
+            "Initialize_To_Email_Recipients": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "44b5133c-59e0-4ae7-ba27-efd2cffd30b4"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CCEmailRecipients",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable": {
+          "runAfter": {
+            "Initialize_CC_Email_Recipients": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4eeb6aba-5d6e-43c2-ba22-4aa36a0c1990"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Temp CC Recipients",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_Primary_Contact_First_Name": {
+          "runAfter": {
+            "Initialize_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e58d10f7-d2be-4f07-9248-4da6b284c07f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Primary Contact First Name",
+                "type": "string",
+                "value": "Sir/Madam"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_2": {
+          "runAfter": {
+            "Initialize_variable_Primary_Contact_First_Name": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "43d372f7-287c-4fe7-9273-f62a28707eb4"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Language",
+                "type": "integer",
+                "value": 918640001
+              }
+            ]
           }
         },
         "Condition": {
@@ -251,7 +343,7 @@
               },
               "type": "Foreach"
             },
-            "Apply_to_each_5": {
+            "Send_Email_to_Company_Contacts": {
               "foreach": "@outputs('GetAccounts')?['body/value']",
               "actions": {
                 "Check_Language": {
@@ -271,7 +363,7 @@
                         "parameters": {
                           "request/to": "@{variables('ToEmailRecipients')};",
                           "request/subject": "Beta Test:  Annual Compliance Reminder",
-                          "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['ovs_accountnameenglish']} was expired 30 days ago. Please log into your account and initialize Annual Compliance.<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto generated email.</p>",
+                          "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Send_Email_to_Company_Contacts')?['ovs_accountnameenglish']} was expired 30 days ago. Please log into your account and initialize Annual Compliance.<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto generated email.</p>",
                           "request/cc": "@variables('CCEmailRecipients')"
                         },
                         "authentication": "@parameters('$authentication')"
@@ -296,7 +388,7 @@
                           "parameters": {
                             "request/to": "@{variables('ToEmailRecipients')};",
                             "request/subject": "Beta Test:  FR: Annual Compliance Reminder",
-                            "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['ovs_accountnameenglish']} was expired 30 days ago. Please log into your account and initialize Annual Compliance.<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto generated email.</p>",
+                            "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Send_Email_to_Company_Contacts')?['ovs_accountnameenglish']} was expired 30 days ago. Please log into your account and initialize Annual Compliance.<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto generated email.</p>",
                             "request/cc": "@variables('CCEmailRecipients')"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -342,99 +434,6 @@
             "operationMetadataId": "9fd4c9b4-c8aa-46bd-8060-133cc8a00a21"
           },
           "type": "If"
-        },
-        "Initialize_To_Email_Recipients": {
-          "runAfter": {},
-          "metadata": {
-            "operationMetadataId": "9058c756-6243-4980-a304-83ef8af504a9"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "ToEmailRecipients",
-                "type": "string"
-              }
-            ]
-          }
-        },
-        "Initialize_CC_Email_Recipients": {
-          "runAfter": {
-            "Initialize_To_Email_Recipients": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "44b5133c-59e0-4ae7-ba27-efd2cffd30b4"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "CCEmailRecipients",
-                "type": "string"
-              }
-            ]
-          }
-        },
-        "Initialize_variable": {
-          "runAfter": {
-            "Initialize_CC_Email_Recipients": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "4eeb6aba-5d6e-43c2-ba22-4aa36a0c1990"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "Temp CC Recipients",
-                "type": "string"
-              }
-            ]
-          }
-        },
-        "Initialize_variable_Primary_Contact_First_Name": {
-          "runAfter": {
-            "Initialize_variable": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "e58d10f7-d2be-4f07-9248-4da6b284c07f"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "Primary Contact First Name",
-                "type": "string",
-                "value": "Sir/Madam"
-              }
-            ]
-          }
-        },
-        "Initialize_variable_2": {
-          "runAfter": {
-            "Initialize_variable_Primary_Contact_First_Name": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "43d372f7-287c-4fe7-9273-f62a28707eb4"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "Language",
-                "type": "integer",
-                "value": 918640001
-              }
-            ]
-          }
         }
       }
     },

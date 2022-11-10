@@ -58,44 +58,9 @@
       "actions": {
         "Condition": {
           "actions": {
-            "Get_a_row_by_ID_Invited_By": {
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "596eeb55-93a9-4aea-b448-52d2d447d7f8"
-              },
-              "type": "OpenApiConnection",
-              "inputs": {
-                "host": {
-                  "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "GetItem",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                },
-                "parameters": {
-                  "entityName": "contacts",
-                  "recordId": "@triggerOutputs()?['body/_adx_invitercontact_value']",
-                  "$select": "fullname"
-                },
-                "authentication": "@parameters('$authentication')"
-              }
-            },
-            "Set_variable_Invited_By": {
-              "runAfter": {
-                "Get_a_row_by_ID_Invited_By": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "a69640fd-9cc4-4567-a92c-174bc53bc2a5"
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "Invited By",
-                "value": "@outputs('Get_a_row_by_ID_Invited_By')?['body/fullname']"
-              }
-            },
             "Get_a_row_by_ID_Accounts": {
               "runAfter": {
-                "Set_variable_Invited_By": [
+                "Condition_3": [
                   "Succeeded"
                 ]
               },
@@ -287,7 +252,7 @@
                     "parameters": {
                       "request/to": "@{outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/emailaddress1']};",
                       "request/subject": "FRENCH: Beta Testing: CID Data Platform: Assignment as a Secondary Admin for the @{variables('Company Name')} Company",
-                      "request/text": "<p>Hello @{outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/fullname']},<br>\n<br>\n@{variables('Invited By')}, the Primary Admin for the @{variables('Company Name')} Company of the CID Data Platform has added you as a Secondary Admin for that Company.<br>\n<br>\nOnce you are ready to use the CID Data Platform, you can use the following:<br>\n&nbsp;&nbsp;&nbsp;On-boarding link : @{variables('Environment')}<br>\n&nbsp;&nbsp;Activation Code &nbsp;: @{triggerOutputs()?['body/adx_invitationcode']}<br>\nto on-board to the CID Platform.<br>\nParameters:<br>\n<br>\nTransport Canada – CID</p>"
+                      "request/text": "<p>Hello @{outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/fullname']},<br>\n<br>\n@{variables('Invited By')} Primary Admin for the @{variables('Company Name')} Company of the CID Data Platform has added you as a Secondary Admin for that Company.<br>\n<br>\nOnce you are ready to use the CID Data Platform, you can use the following:<br>\n&nbsp;&nbsp;&nbsp;On-boarding link : @{variables('Environment')}<br>\n&nbsp;&nbsp;Activation Code &nbsp;: @{triggerOutputs()?['body/adx_invitationcode']}<br>\nto on-board to the CID Platform.<br>\nParameters:<br>\n<br>\nTransport Canada – CID</p>"
                     },
                     "authentication": "@parameters('$authentication')"
                   }
@@ -339,7 +304,7 @@
                       "parameters": {
                         "request/to": "@{outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/emailaddress1']};",
                         "request/subject": "Beta Testing: CID Data Platform: Assignment as a Secondary Admin for the @{variables('Company Name')} Company",
-                        "request/text": "<p>Hello @{outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/fullname']}<br>\n<br>\n@{variables('Invited By')}, the Primary Admin for the @{variables('Company Name')} Company of the CID Data Platform has added you as a Secondary Admin for that Company.<br>\n<br>\nOnce you are ready to use the CID Data Platform, you can use the following:<br>\n&nbsp;&nbsp;&nbsp;On-boarding link : @{variables('Environment')}<br>\n&nbsp;&nbsp;&nbsp;Activation Code &nbsp;: @{triggerOutputs()?['body/adx_invitationcode']}<br>\nto on-board to the CID Platform.<br>\nParameters:<br>\n<br>\nTransport Canada – CID</p>"
+                        "request/text": "<p>Hello @{outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/fullname']}<br>\n<br>\n@{variables('Invited By')} Primary Admin for the @{variables('Company Name')} Company of the CID Data Platform has added you as a Secondary Admin for that Company.<br>\n<br>\nOnce you are ready to use the CID Data Platform, you can use the following:<br>\n&nbsp;&nbsp;&nbsp;On-boarding link : @{variables('Environment')}<br>\n&nbsp;&nbsp;&nbsp;Activation Code &nbsp;: @{triggerOutputs()?['body/adx_invitationcode']}<br>\nto on-board to the CID Platform.<br>\nParameters:<br>\n<br>\nTransport Canada – CID</p>"
                       },
                       "authentication": "@parameters('$authentication')"
                     }
@@ -378,6 +343,59 @@
               },
               "metadata": {
                 "operationMetadataId": "d1f56c7c-3617-4128-acdd-287b00b852b1"
+              },
+              "type": "If"
+            },
+            "Condition_3": {
+              "actions": {},
+              "runAfter": {},
+              "else": {
+                "actions": {
+                  "Get_a_row_by_ID_Invited_By": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "aacd9444-4067-4f62-a551-910b3e8b0de2"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_commondataserviceforapps_1",
+                        "operationId": "GetItem",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      },
+                      "parameters": {
+                        "entityName": "contacts",
+                        "recordId": "@triggerOutputs()?['body/_adx_invitercontact_value']",
+                        "$select": "fullname"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Set_variable_Invited_By": {
+                    "runAfter": {
+                      "Get_a_row_by_ID_Invited_By": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "a69640fd-9cc4-4567-a92c-174bc53bc2a5"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Invited By",
+                      "value": "@{outputs('Get_a_row_by_ID_Invited_By')?['body/fullname']} , the"
+                    }
+                  }
+                }
+              },
+              "expression": {
+                "equals": [
+                  "@triggerOutputs()?['body/_adx_invitercontact_value']",
+                  null
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "90a5f9da-6443-48bd-95e9-2864fc3a4eae"
               },
               "type": "If"
             }
@@ -419,7 +437,7 @@
               {
                 "name": "Invited By",
                 "type": "string",
-                "value": "Sir/ Madam"
+                "value": "The"
               }
             ]
           }

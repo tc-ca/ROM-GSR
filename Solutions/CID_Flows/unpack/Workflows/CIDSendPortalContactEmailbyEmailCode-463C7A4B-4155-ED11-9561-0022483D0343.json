@@ -349,6 +349,22 @@
             "S2B-1": {
               "case": "S2B-1",
               "actions": {
+                "Get_Primary_contact": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "ListRecords",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "contacts",
+                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\" no-lock=\"false\">\n<entity name=\"contact\">\n<attribute name=\"fullname\"/>\n<attribute name=\"emailaddress1\"/>\n<attribute name=\"cid_contacttype\"/>\n<attribute name=\"cid_portalrecordcreationdetails\"/>\n<attribute name=\"cid_portalrecordmodificationdetails\"/>\n<order attribute=\"cid_contacttype\" descending=\"false\"/>\n<order attribute=\"fullname\" descending=\"false\"/>\n<attribute name=\"contactid\"/>\n<filter type=\"and\">\n<condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\n<condition attribute=\"emailaddress1\" operator=\"not-null\"/>\n<condition attribute=\"parentcustomerid\" operator=\"eq\" value=\"@{triggerBody()?['AccountId']}\" />\n<condition attribute=\"cid_contacttype\" operator=\"eq\" value=\"100000000\"/>\n</filter>\n</entity>\n</fetch>"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
                 "Condition_4_Check_Language": {
                   "actions": {
                     "Send_an_email_notification_(V3)_5": {
@@ -361,15 +377,19 @@
                           "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
                         },
                         "parameters": {
-                          "request/to": "@{outputs('GetPrimary')?['body/emailaddress1']};",
-                          "request/subject": "CID Data Platform: Secondary Admin {0} has logged into CID Platform for the first time ",
-                          "request/text": "<p>Hello @{outputs('GetPrimary')?['body/firstname']} @{outputs('GetPrimary')?['body/lastname']},<br>\n<br>\n@{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']}, at @{variables('ContactInfo')}, has logged into CID Platform for the first time as a Secondary Admin for the @{outputs('Get_Parent_account_name')?['body/name']} Company.<br>\n<br>\nIf this individual should not be accessing CID for this company, then from Contacts, you have the option to:<br>\nDeactivate their Contact record, which will prevent further logins.<br>\n</p>"
+                          "request/to": "@{outputs('Primary_Email_Address')};",
+                          "request/subject": "CID Data Platform: Secondary Admin @{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']} has logged into CID Platform for the first time ",
+                          "request/text": "<p>Hello @{outputs('Primary_Full_name')} ,<br>\n<br>\n@{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']}, at @{variables('ContactInfo')}, has logged into CID Platform for the first time as a Secondary Admin for the @{outputs('Get_Parent_account_name')?['body/name']} Company.<br>\n<br>\nIf this individual should not be accessing CID for this company, then from Contacts, you have the option to:<br>\nDeactivate their Contact record, which will prevent further logins.<br>\n</p>"
                         },
                         "authentication": "@parameters('$authentication')"
                       }
                     }
                   },
-                  "runAfter": {},
+                  "runAfter": {
+                    "Primary_Full_name": [
+                      "Succeeded"
+                    ]
+                  },
                   "else": {
                     "actions": {
                       "Send_an_email_notification_(V3)_6": {
@@ -382,9 +402,9 @@
                             "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
                           },
                           "parameters": {
-                            "request/to": "@{outputs('GetPrimary')?['body/emailaddress1']};",
-                            "request/subject": "French CID Data Platform: Secondary Admin {0} has logged into CID Platform for the first time ",
-                            "request/text": "<p>Hello @{outputs('GetPrimary')?['body/firstname']} @{outputs('GetPrimary')?['body/lastname']},<br>\n<br>\n@{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']}, at @{variables('ContactInfo')}, has logged into CID Platform for the first time as a Secondary Admin for the @{outputs('Get_Parent_account_name')?['body/ovs_name_fr']} Company.<br>\n<br>\nIf this individual should not be accessing CID for this company, then from Contacts, you have the option to:<br>\nDeactivate their Contact record, which will prevent further logins.</p>"
+                            "request/to": "@{outputs('Primary_Email_Address')};",
+                            "request/subject": "French CID Data Platform: Secondary Admin @{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']} has logged into CID Platform for the first time ",
+                            "request/text": "<p>Hello  @{outputs('Primary_Full_name')},<br>\n<br>\n@{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']}, at @{variables('ContactInfo')}, has logged into CID Platform for the first time as a Secondary Admin for the @{outputs('Get_Parent_account_name')?['body/ovs_name_fr']} Company.<br>\n<br>\nIf this individual should not be accessing CID for this company, then from Contacts, you have the option to:<br>\nDeactivate their Contact record, which will prevent further logins.</p>"
                           },
                           "authentication": "@parameters('$authentication')"
                         }
@@ -398,6 +418,24 @@
                     ]
                   },
                   "type": "If"
+                },
+                "Primary_Email_Address": {
+                  "runAfter": {
+                    "Get_Primary_contact": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Compose",
+                  "inputs": "@outputs('Get_Primary_contact')?['body/value'][0]['emailaddress1']"
+                },
+                "Primary_Full_name": {
+                  "runAfter": {
+                    "Primary_Email_Address": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Compose",
+                  "inputs": "@outputs('Get_Primary_contact')?['body/value'][0]['fullname']"
                 }
               }
             },
