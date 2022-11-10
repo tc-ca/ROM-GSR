@@ -38,9 +38,10 @@ $(document).ready(function () {
 			var recId = trElement.attr('data-id');
 			var firstTdElement = trElement.find('td:first');
 			var lastTdElement = trElement.find('td:last');
+			var detailsLink = firstTdElement.find(".details-link");
 
-			var href = lastTdElement.find('a:first').attr('href');
-
+			var href = lastTdElement.find('a:last').attr('href');
+			detailsLink.attr("href", href);
 
 			trElement.find("td").each(function () {
 				var tdElement = $(this);

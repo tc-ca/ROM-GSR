@@ -5,17 +5,14 @@
 $(document).ready(function () {
 	debugger;
 
-	document.getElementById("address1_city").addEventListener('keydown', (event) => {
-    $("#cid_addressoverwritten").val(1);
-		//console.log(`key=${event.key},code=${event.code}`);
-	});
-	
-	document.getElementById("ovs_address1_province").addEventListener('change', (event) => {
-    $("#cid_addressoverwritten").val(0);
-		//console.log(`key=${event.key},code=${event.code}`);
-	});
+// city change event
+	document.getElementById("address1_city").addEventListener('change', (event) => {$("#cid_addressoverwritten").val(0);});
+	document.getElementById("address1_line2").addEventListener('change', (event) => {$("#cid_addressoverwritten").val(0);});
+	document.getElementById("ovs_address1_province").addEventListener('change', (event) => {$("#cid_addressoverwritten").val(0);});
+	document.getElementById("address1_line3").addEventListener('change', (event) => {$("#cid_addressoverwritten").val(1);});
+	document.getElementById("address1_postalcode").addEventListener('change', (event) => {$("#cid_addressoverwritten").val(1);});
 
-	const cbox = document.querySelectorAll('select');
+/*	const cbox = document.querySelectorAll('select');
 
  for (let i = 0; i < cbox.length; i++) {
 	 console.log( " queery " +  i);
@@ -26,15 +23,11 @@ $(document).ready(function () {
 	   cbox[i].addEventListener("change", function() {
        console.log("changed");
      });
- }
+ }*/
 
 
 
-	
-
-	
-  //$('#address1_line2').val();
-	//tdg.c.control_hide("cid_addressoverwritten");
+	tdg.c.control_hide("cid_addressoverwritten");
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 	// address
