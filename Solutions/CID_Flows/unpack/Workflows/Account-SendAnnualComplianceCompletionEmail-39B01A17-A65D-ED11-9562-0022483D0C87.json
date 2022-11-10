@@ -1,28 +1,19 @@
 {
   "properties": {
     "connectionReferences": {
-      "shared_sendmail_1": {
+      "shared_sendmail": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "new_sharedsendmail_eef82"
+          "connectionReferenceLogicalName": "cid_sharedsendmail_883c5"
         },
         "api": {
           "name": "shared_sendmail"
         }
       },
-      "shared_commondataserviceforapps_1": {
+      "shared_commondataserviceforapps_2": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
-        },
-        "api": {
-          "name": "shared_commondataserviceforapps"
-        }
-      },
-      "shared_commondataserviceforapps": {
-        "runtimeSource": "embedded",
-        "connection": {
-          "connectionReferenceLogicalName": "new_sharedcommondataserviceforapps_aec40"
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
         },
         "api": {
           "name": "shared_commondataserviceforapps"
@@ -50,7 +41,7 @@
           "type": "OpenApiConnectionWebhook",
           "inputs": {
             "host": {
-              "connectionName": "shared_commondataserviceforapps",
+              "connectionName": "shared_commondataserviceforapps_2",
               "operationId": "SubscribeWebhookTrigger",
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
@@ -80,7 +71,7 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "connectionName": "shared_sendmail_1",
+                          "connectionName": "shared_sendmail",
                           "operationId": "SendEmailV3",
                           "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
                         },
@@ -105,7 +96,7 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "connectionName": "shared_sendmail_1",
+                            "connectionName": "shared_sendmail",
                             "operationId": "SendEmailV3",
                             "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
                           },
@@ -150,7 +141,7 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "connectionName": "shared_commondataserviceforapps_1",
+                  "connectionName": "shared_commondataserviceforapps_2",
                   "operationId": "ListRecords",
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
