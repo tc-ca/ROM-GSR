@@ -8,6 +8,8 @@ $(document).ready(function () {
  sessionStorage.setItem('futureDateMessageShown', 'false');
         var effectiveDateControl = $("#cid_companydeactivationeffectivedate_datepicker_description");
         effectiveDateControl.val('');
+        $("#cid_companydeactivationeffectivedate") = null;
+        $("#cid_companydeactivationeffectivedate").val(null);
     $("#cid_reasonforcompanydeactivation option[value='']").attr('selected', true); 
     $("#cid_memoforcompanydeactivation").val('');
     $("#cid_iscompanyattested").prop("checked", false);
