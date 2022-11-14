@@ -58,81 +58,6 @@
       "actions": {
         "Condition_Is_company_annual_compliance_done_": {
           "actions": {
-            "Apply_to_each_5": {
-              "foreach": "@outputs('GetEmailRecipients')?['body/value']",
-              "actions": {
-                "Check_Language": {
-                  "actions": {
-                    "Send_an_email_notification_(V3)_English": {
-                      "runAfter": {},
-                      "metadata": {
-                        "operationMetadataId": "067c864f-1bfd-4030-835d-c08234cbbae8"
-                      },
-                      "type": "OpenApiConnection",
-                      "inputs": {
-                        "host": {
-                          "connectionName": "shared_sendmail",
-                          "operationId": "SendEmailV3",
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
-                        },
-                        "parameters": {
-                          "request/to": "@{variables('ToEmailRecipients')};",
-                          "request/subject": "Beta Test:  Annual Compliance Completed",
-                          "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['ovs_accountnameenglish']} was sucessfully completed. Please log into your account to see the detials.<br>\n<br>\nAnnual Complience Completed Date: @{triggerOutputs()?['body/cid_annualcompliancecompletiondate']}<br>\n<br>\n<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\nThis is auto generated email.</p>",
-                          "request/cc": "@variables('CCEmailRecipients')"
-                        },
-                        "authentication": "@parameters('$authentication')"
-                      }
-                    }
-                  },
-                  "runAfter": {},
-                  "else": {
-                    "actions": {
-                      "Send_an_email_notification_(V3)": {
-                        "runAfter": {},
-                        "metadata": {
-                          "operationMetadataId": "c07ae499-722a-4137-b3ce-b4ee789416b7"
-                        },
-                        "type": "OpenApiConnection",
-                        "inputs": {
-                          "host": {
-                            "connectionName": "shared_sendmail",
-                            "operationId": "SendEmailV3",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
-                          },
-                          "parameters": {
-                            "request/to": "@{variables('ToEmailRecipients')};",
-                            "request/subject": "Beta Test:  FR: Annual Compliance Reminder",
-                            "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['ovs_accountnameenglish']} was sucessfully completed. Please log into your account to see the detials.<br>\n<br>\nAnnual Complience Completed Date: @{triggerOutputs()?['body/cid_annualcompliancecompletiondate']}<br>\n<br>\n<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\nThis is auto generated email.</p>",
-                            "request/cc": "@variables('CCEmailRecipients')"
-                          },
-                          "authentication": "@parameters('$authentication')"
-                        }
-                      }
-                    }
-                  },
-                  "expression": {
-                    "equals": [
-                      "@variables('Language')",
-                      918640001
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "31b2f0eb-c13a-4786-ae9f-f8eb1a3e8670"
-                  },
-                  "type": "If"
-                }
-              },
-              "runAfter": {
-                "Apply_to_each_2": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "182ab6d0-95a5-4efe-9ab5-510e6a39a843"
-              },
-              "type": "Foreach"
-            },
             "GetEmailRecipients": {
               "runAfter": {},
               "metadata": {
@@ -301,6 +226,71 @@
                 "operationMetadataId": "3b7fc09e-16da-4109-971e-ebfd8088a1e0"
               },
               "type": "Foreach"
+            },
+            "Check_Language": {
+              "actions": {
+                "Send_an_email_notification_(V3)_English": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "067c864f-1bfd-4030-835d-c08234cbbae8"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sendmail",
+                      "operationId": "SendEmailV3",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                    },
+                    "parameters": {
+                      "request/to": "@{variables('ToEmailRecipients')};",
+                      "request/subject": "Beta Test:  Annual Compliance Completed",
+                      "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{triggerOutputs()?['body/ovs_legalname']} was sucessfully completed. Please log into your account to see the detials.<br>\n<br>\nAnnual Complience Completed Date: @{triggerOutputs()?['body/cid_annualcompliancecompletiondate']}<br>\n<br>\n<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\nThis is auto generated email.</p>",
+                      "request/cc": "@variables('CCEmailRecipients')"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Apply_to_each_2": [
+                  "Succeeded"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "Send_an_email_notification_(V3)": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "c07ae499-722a-4137-b3ce-b4ee789416b7"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_sendmail",
+                        "operationId": "SendEmailV3",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                      },
+                      "parameters": {
+                        "request/to": "@{variables('ToEmailRecipients')};",
+                        "request/subject": "Beta Test:  FR: Annual Compliance Reminder",
+                        "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{triggerOutputs()?['body/ovs_legalnamefr']} was sucessfully completed. Please log into your account to see the detials.<br>\n<br>\nAnnual Complience Completed Date: @{triggerOutputs()?['body/cid_annualcompliancecompletiondate']}<br>\n<br>\n<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\nThis is auto generated email.</p>",
+                        "request/cc": "@variables('CCEmailRecipients')"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  }
+                }
+              },
+              "expression": {
+                "equals": [
+                  "@variables('Language')",
+                  918640001
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "31b2f0eb-c13a-4786-ae9f-f8eb1a3e8670"
+              },
+              "type": "If"
             }
           },
           "runAfter": {
