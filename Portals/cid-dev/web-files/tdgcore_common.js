@@ -78,7 +78,7 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         btn_save_new_setup: function () {
-            var button = $('<input type="button" name="btn_save_new" id="btn_save_new" />');
+            var button = $('<input type="button" name="btn_save_new" id="btn_save_new" class="submit-btn btn btn-primary" />');
             $("#InsertButton").after(button);
 
             var button1 = $("#InsertButton");
@@ -93,9 +93,9 @@ if (typeof (tdg.c) == "undefined") {
             var text1 = tdg.error_message.message("m000004");   // Submit and Add Another
             button2.prop("value", text1);
             button2[0].className = className;
-            button2.css("fontSize", fontSize);
-            button2.css('color', color);
-            button2.css("background-color", background_color);
+            //button2.css("fontSize", fontSize);
+            //button2.css('color', color);
+            //button2.css("background-color", background_color);
 
             // bind the click event to this custom buttton
             $("#btn_save_new").bind("click", function () {
@@ -1048,6 +1048,7 @@ if (typeof (tdg.cid) == "undefined") {
                 var select_col = "address1_city,address1_country,ovs_address1_province,address1_stateorprovince,address1_line1,address1_line2,address1_line3,address1_postalcode";
                 var filter = "accountid eq '" + parent_id + "'";
                 var data = tdg.webapi.SelectedColumnlist("accounts", select_col, filter);
+                //var data = tdg.webapi.list("accounts", filter);
 
                 var address1_line1 = "N/A";
                 var address1_city = "N/A";
@@ -1483,7 +1484,7 @@ if (typeof (tdg.cid) == "undefined") {
             });
         },
 
-         Update_AdderssOverwritten_Field: function () {
+        Update_AdderssOverwritten_Field: function () {
             document.getElementById("address1_city").addEventListener('change', (event) => { $("#cid_addressoverwritten").val(1); });
             document.getElementById("address1_line2").addEventListener('change', (event) => { $("#cid_addressoverwritten").val(1); });
             document.getElementById("ovs_address1_province").addEventListener('change', (event) => { $("#cid_addressoverwritten").val(1); });

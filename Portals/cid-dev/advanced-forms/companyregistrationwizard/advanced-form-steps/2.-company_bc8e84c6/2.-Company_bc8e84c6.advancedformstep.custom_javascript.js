@@ -1,9 +1,15 @@
 //
 // CompanyRegistrationWizard-Company Create.js
 //
+function testChange()
+{
+	alert("address1 Changed");
+}
 $(document).ready(function () {
 	debugger;
 	tdg.cid.Update_AdderssOverwritten_Field();
+	//get change event for address1
+	document.querySelector('input[list="address_list"]').addEventListener('click', testChange());
 
 	tdg.c.control_hide("cid_addressoverwritten");
 	var selected_language = '{{website.selected_language.code}}';
