@@ -2,6 +2,8 @@ $(document).ready(function () {
     sessionStorage.setItem('futureDateMessageShown', 'false');
     var effectiveDateControl = $("#cid_sitedeactivationeffectivedate_datepicker_description");
     effectiveDateControl.val('');
+    $("#cid_sitedeactivationeffectivedate").val(null);
+
     $("#cid_reasonforsitedeactivation option[value='']").attr('selected', true); 
     $("#cid_memositedeactivation").val('');
     $("#cid_issiteattested").prop( "checked", false );

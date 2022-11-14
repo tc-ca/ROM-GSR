@@ -5,11 +5,11 @@
 $(document).ready(function () {
     debugger;
 
- sessionStorage.setItem('futureDateMessageShown', 'false');
-        var effectiveDateControl = $("#cid_companydeactivationeffectivedate_datepicker_description");
-        effectiveDateControl.val('');
-        $("#cid_companydeactivationeffectivedate") = null;
-        $("#cid_companydeactivationeffectivedate").val(null);
+    sessionStorage.setItem('futureDateMessageShown', 'false');
+    var effectiveDateControl = $("#cid_companydeactivationeffectivedate_datepicker_description");
+    effectiveDateControl.val('');
+    $("#cid_companydeactivationeffectivedate").val(null);
+
     $("#cid_reasonforcompanydeactivation option[value='']").attr('selected', true); 
     $("#cid_memoforcompanydeactivation").val('');
     $("#cid_iscompanyattested").prop("checked", false);
@@ -18,15 +18,10 @@ $(document).ready(function () {
     $('#cid_cidcompanystatus').hide();
     $('#cid_cidcompanystatus_label').hide();
 
-    if (cidCompanyStatus.indexOf("Inactive") >= 0) {
+    if (cidCompanyStatus.indexOf("Inactive") >= 0)
         $('#EntityFormPanel').find('input, textarea, button, select').attr('disabled', 'disabled');
-    }
 
-
-
-       
-
-        $("#EntityFormPanel").click(function(){
+    $("#EntityFormPanel").click(function(){
         var futureDateMessageShown = sessionStorage.getItem("futureDateMessageShown");
 
         if(futureDateMessageShown != 'true'){          
@@ -34,9 +29,7 @@ $(document).ready(function () {
 
             if(effectiveDate >= new Date()){
                 var message = "<p>Please be aware that the entered date is in the future.</p>";
-
-                tdg.c.dialog_OK(message);
-                
+                tdg.c.dialog_OK(message);  
                 sessionStorage.setItem('futureDateMessageShown', 'true');
             }
         }

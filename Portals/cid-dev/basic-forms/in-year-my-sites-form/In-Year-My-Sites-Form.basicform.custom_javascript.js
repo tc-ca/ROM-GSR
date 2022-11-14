@@ -4,15 +4,7 @@
 $(document).ready(function ()
 {
 	debugger;
-	console.log("before adding new button");
-	//create bulk upload button only for DEV and QA environment
-	if ('{{request.url}}'.includes("tdgcore-qa") || '{{request.url}}'.includes("rd-tdgcore-dev"))
-	{
-		//get bulk update button test
-		var UploadButtonText = tdg.error_message.message("m000111");
-		var BulkUploaddButton = '<div class="input-group pull-left"><a href="~/Bulk_Site_Update/" class="btn btn-primary pull-right action" title="BulkSiteUpdate">' + UploadButtonText + '</a></div>';
-		$(".entitylist-download").before(BulkUploaddButton);
-	}
+	
 	var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
 	$('#cid_cidcompanystatus').hide();
 	$('#cid_cidcompanystatus_label').hide();
@@ -27,6 +19,17 @@ $(document).ready(function ()
 			});
 		});
 	}
+
+	console.log("before adding new button");
+	//create bulk upload button only for DEV and QA environment
+	if (cidCompanyStatus.indexOf("Inactive") < 0 && ('{{request.url}}'.includes("tdgcore-qa") || '{{request.url}}'.includes("rd-tdgcore-dev")))
+	{
+		//get bulk update button test
+		var UploadButtonText = tdg.error_message.message("m000111");
+		var BulkUploaddButton = '<div class="input-group pull-left"><a href="~/Bulk_Site_Update/" class="btn btn-primary pull-right action" title="BulkSiteUpdate">' + UploadButtonText + '</a></div>';
+		$(".entitylist-download").before(BulkUploaddButton);
+	}
+
 	clear_address_type_required_fields();
 	$("#telephone1").attr("placeholder", "");
 	// resize WebResource_address_complete

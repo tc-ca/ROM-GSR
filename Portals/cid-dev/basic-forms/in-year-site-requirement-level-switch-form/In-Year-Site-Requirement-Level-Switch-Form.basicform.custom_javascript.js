@@ -2,6 +2,7 @@ $(document).ready(function () {
     sessionStorage.setItem('futureDateMessageShown', 'false');
     var effectiveDateControl = $("#cid_siterequirementlevelswitcheffectivedate_datepicker_description");
     effectiveDateControl.val('');
+    $("#cid_siterequirementlevelswitcheffectivedate").val(null);
 
     $("#cid_siterequirementlevelswitchmemo").val('');
     //$("#cid_issiteattested").prop( "checked", false );

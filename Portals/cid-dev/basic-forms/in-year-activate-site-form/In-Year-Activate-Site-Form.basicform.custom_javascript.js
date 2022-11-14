@@ -9,6 +9,7 @@ $(document).ready(function () {
     sessionStorage.setItem('futureDateMessageShown', 'false');
     var effectiveDateControl = $("#cid_siteactivationeffectivedate_datepicker_description");
     effectiveDateControl.val('');
+    $("#cid_siteactivationeffectivedate").val(null);
 
     $("#EntityFormPanel").click(function(){
         var futureDateMessageShown = sessionStorage.getItem("futureDateMessageShown");
