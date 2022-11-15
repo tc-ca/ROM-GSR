@@ -12,7 +12,7 @@ $(document).ready(function () {
 	//if (!urlParams.has('in_year') || urlParams.get('in_year') != 'true') {
 	if(inYear == "true")
 		header_setup("inyear");
-	else if( annualCompliance != "true")
+	else if( annualCompliance == "true")
 		header_setup("annualcompliance");
 	else
 		header_setup("initial");
@@ -47,7 +47,7 @@ function header_setup(type) {
 		href = "~/my-sites";
 		break;
 	case "annualcompliance":
-		msg = "Back To Annual Compliance Page";
+		msg = "Back To Annual Compliance Update Page";
 		href = "~/my-company/annual-compliance-update";
 		break;
 	default:

@@ -5,6 +5,9 @@
 $(document).ready(function () {
 	debugger;
 
+	sessionStorage.setItem('frominyearsites', 'false');
+    sessionStorage.setItem('fromannualcompliance', 'true');
+
 	$("legend").each(function() {
 		$(this).removeClass();
 		$(this).css("font-size", "20px");

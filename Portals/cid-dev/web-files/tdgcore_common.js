@@ -499,6 +499,112 @@ if (typeof (tdg.c) == "undefined") {
             } else {
                 return false;
             }
+        },
+
+        Check_if_PostalFirstLetter_MatchProvince: function (postalCode, province) {
+            var provinceMatchesPostalcode = false;
+            switch (postalCode.toUpperCase().charAt(0)) {
+                //NL&L
+                case "A":
+                    if (province == "NL") provinceMatchesPostalcode = true;
+                    break;
+                //NS
+                case "B":
+                    if (province == "NS") provinceMatchesPostalcode = true;
+                    break;
+                //PEI
+                case "C":
+                    if (province == "PE") provinceMatchesPostalcode = true;
+                    break;
+                //NB
+                case "E":
+                    if (province == "NB") provinceMatchesPostalcode = true;
+                    break;
+                //QC
+                case "G":
+                case "H":
+                case "J":
+                    if (province == "QC") provinceMatchesPostalcode = true;
+                    break;
+                //ON
+                case "K":
+                case "L":
+                case "M":
+                case "N":
+                case "P":
+                    if (province == "ON") provinceMatchesPostalcode = true;
+                    break;
+                //MB
+                case "R":
+                    if (province == "MB") provinceMatchesPostalcode = true;
+                    break;
+                //SK
+                case "S":
+                    if (province == "SK") provinceMatchesPostalcode = true;
+                    break;
+                //AB
+                case "T":
+                    if (province == "AB") provinceMatchesPostalcode = true;
+                    break;
+                //BC
+                case "V":
+                    if (province == "BC") provinceMatchesPostalcode = true;
+                    break;
+                //NT & NU
+                case "X":
+                    if (province == "NT" || province == "NU") provinceMatchesPostalcode = true;
+                    break;
+                //YT
+                case "Y":
+                    if (province == "YT") provinceMatchesPostalcode = true;
+                    break;
+                default: provinceMatchesPostalcode = false;
+                    break
+                //Postal Code is invalid
+            }
+
+            return provinceMatchesPostalcode;
+        },
+
+        Add_Validation_For_Postal_Code_with_Province: function (selected_language) {
+            try {
+                console.log("inside validation function 2");
+                var validationMessage = "";
+                if (selected_language == "en") {
+                    validationMessage = "Postal code need to match province.";
+                }
+                else {
+                    validationMessage = "Postal code need to match province._fr";
+
+                }
+                if (typeof (Page_Validators) == 'undefined') return;
+                // Create new validator
+                var newValidator = document.createElement('span');
+                newValidator.style.display = "none";
+                newValidator.id = "address1_postalcodeValidator";
+                newValidator.controltovalidate = "address1_postalcode";
+                newValidator.errormessage = "<a href='#address1_postalcode_label' referencecontrolid='address1_postalcode ' onclick='javascript:scrollToAndFocus(\"address1_postalcode _label\",\" address1_postalcode \");return false;'>" + validationMessage+"</a>";
+                newValidator.validationGroup = ""; // Set this if you have set ValidationGroup on the form
+                newValidator.initialvalue = "";
+                newValidator.evaluationfunction = function () {
+                    var Postalvalue = $("#address1_postalcode").val();
+                    console.log(" postal code :" + Postalvalue);
+                    var province = $("#ovs_address1_province :selected").text();
+                    console.log("Province :" + province);
+                    var ValidationFlag = tdg.c.Check_if_PostalFirstLetter_MatchProvince(Postalvalue, province);
+                    if (ValidationFlag == false) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                };
+
+                // Add the new validator to the page validators array:
+                Page_Validators.push(newValidator);
+
+                
+            } catch (e) { }
+
         }
     }
 }
@@ -1671,4 +1777,5 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
+
 

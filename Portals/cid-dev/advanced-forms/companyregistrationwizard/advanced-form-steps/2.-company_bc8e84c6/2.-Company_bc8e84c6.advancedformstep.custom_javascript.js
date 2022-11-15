@@ -1,19 +1,15 @@
 //
 // CompanyRegistrationWizard-Company Create.js
 //
-function testChange()
-{
-	alert("address1 Changed");
-}
 $(document).ready(function () {
 	debugger;
-	tdg.cid.Update_AdderssOverwritten_Field();
-	//get change event for address1
-	document.querySelector('input[list="address_list"]').addEventListener('click', testChange());
-
-	tdg.c.control_hide("cid_addressoverwritten");
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
+	//update manually entered field if address fields changed
+	tdg.cid.Update_AdderssOverwritten_Field();
+	//validate postal code with province - first letter of postal code need to matched allowed province letters
+	tdg.c.Add_Validation_For_Postal_Code_with_Province(selected_language);
+	tdg.c.control_hide("cid_addressoverwritten");
 	// address
 	tdg.cid.address_init(false);
 	tdg.cid.WebResource_address_complete_readonly(false);
@@ -121,11 +117,11 @@ $(document).ready(function () {
 	$("#cid_reasonfornobnnumber_other").attr("autocomplete", "new-password");
 	$("#websiteurl").attr("autocomplete", "new-password");
 	//Add listeners for the address fields to change the "manually entered" flag
-	$("#address1_line1").attr("oninput", "setManualAddressEntryFlag()");
-	$("#address1_city").attr("oninput", "setManualAddressEntryFlag()");
-	$("#address1_stateorprovince").attr("oninput", "setManualAddressEntryFlag()");
-	$("#address1_postalcode").attr("oninput", "setManualAddressEntryFlag()");
-	$("#address1_country").attr("oninput", "setManualAddressEntryFlag()");
+	//$("#address1_line1").attr("oninput", "setManualAddressEntryFlag()");
+	//$("#address1_city").attr("oninput", "setManualAddressEntryFlag()");
+	//$("#address1_stateorprovince").attr("oninput", "setManualAddressEntryFlag()");
+	//$("#address1_postalcode").attr("oninput", "setManualAddressEntryFlag()");
+	//$("#address1_country").attr("oninput", "setManualAddressEntryFlag()");
 	tdg.cid.convert_province_to_code(selected_language);
 	var currentUserId = '{{user.contactid}}';
 	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);

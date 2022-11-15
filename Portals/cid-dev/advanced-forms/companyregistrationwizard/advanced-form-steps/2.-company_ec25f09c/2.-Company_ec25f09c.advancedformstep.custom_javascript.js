@@ -5,7 +5,8 @@
 $(document).ready(function () {
 	debugger;
 
-	document.getElementById("address1_line1").addEventListener("keypress", Street1KeyPress);
+	//update manually entered field if address fields changed
+	tdg.cid.Update_AdderssOverwritten_Field();
 
 	tdg.c.control_hide("cid_addressoverwritten");
 	var selected_language = '{{website.selected_language.code}}';
@@ -200,7 +201,4 @@ function Disable_ContactTypeFieldsForSecondaryUser() {
 	}
 }
 
-function Street1KeyPress ()
-{
- console.log ("Key press");
-}
+

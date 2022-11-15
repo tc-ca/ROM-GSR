@@ -4,6 +4,11 @@
 var _account;
 $(document).ready(function () {
     debugger;
+    //if user skip adding first and last name
+    //redirect to profile page
+    var userFullname = '{{user.fullname}}';
+    if(userFullname.length == 0 )
+    {window.location.href='~/profile/';}
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
