@@ -1,0 +1,436 @@
+<html><head>
+    <title></title>
+    <style>
+        body {
+            background-color: white;
+            display: block;
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+
+        text {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            padding: 6px 12px;
+        }
+
+        label {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            margin: 0px 0px 5px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            display: block;
+            font-size: 14px;
+            line-height: 1.4375;
+            color: #555;
+            border: 1px solid #949494;
+            border-radius: 4px;
+            box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+            font-family: "Noto Sans",sans-serif;
+            padding: 6px 12px;
+            height: auto;
+            max-width: 100%;
+            min-height: 37px;
+            background-image: none;
+            margin-top: 7px;
+            width: 100%;
+        }
+    </style>
+    <!-- Using jquery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <meta>
+<meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta></head>
+<body style="overflow-wrap: break-word;">
+    <script type="text/javascript">
+        function search() {
+
+            // tony-july 27, 2022
+
+            debugger;
+
+            var selected_language = sessionStorage.getItem("selected_language");
+            var address1_line1 = document.getElementById("address1_line1").value
+            var SearchTerm = address1_line1;
+            //var LanguagePreference = 'en';
+            var LanguagePreference = (selected_language != "fr" ? "en" : "fr");
+
+            AddressComplete.Find(SearchTerm, LanguagePreference, false);
+        }
+
+        function onInput(e) {
+            var input = e.target;
+            var val = input.value;
+            var list = input.getAttribute('list');
+            var options = document.getElementById(list).childNodes;
+            var found = false;
+            var index = 0;
+
+            // address1_line1
+            var address1_line1 = document.getElementById('address1_line1').value;
+            sessionStorage.setItem("Line1", address1_line1);
+            try {
+                // transfer control back to parent form
+                //parent.AddressComplete_address1_line1();
+
+                parent.$("#address1_line1").val(sessionStorage.getItem("Line1"));
+            } catch (e) { }
+
+            debugger;
+            index = -1;
+            for (var i = 0; i < options.length; i++) {
+                var current = options[i].value;
+                if (current == val) {
+                    found = true;
+                    index = i;
+                    break;
+                }
+            }
+            console.log("on input " + val);
+            console.log("found flag " + found);
+            sessionStorage.setItem("foundFlag", found);
+
+            if (found) {
+                debugger;
+                parent.$("#cid_addressoverwritten").val(0);
+                var id = AddressComplete.GetId(index);
+                var list = id.split(";");
+
+                var address_list_id = document.getElementById("address_list_id");
+
+                //No sublist meaning the desired address is found
+                var action = list[1];
+                action = action.replace("undefined", "");
+                switch (action) {
+                    case "Retrieve":
+                        debugger;
+
+                        console.log("Retrieve->Id = " + list[0]);
+
+                        AddressComplete.Retrieve(list[0]);
+
+                        //this.removeOptions(address_list_id);
+                        const option1 = document.createElement('option');
+                        option1.value = list;
+                        option1.text = text;
+                        address_list_id.add(option1);
+
+                        break;
+                    case "Find":
+                        var selected_language = sessionStorage.getItem("selected_language");
+                        var LanguagePreference = (selected_language != "fr" ? "en" : "fr");
+
+                        var LastId = list[0];
+                        if (LastId != "") {
+                            console.log("Find->LastId = " + LastId);
+
+                            var commonAddress = address1_line1.split(",")[0];
+
+                            document.getElementById('address1_line1').value = commonAddress; // list[0];
+                            AddressComplete.Find(LastId, LanguagePreference, true);
+                        }
+
+                        break;
+                    case "":
+                        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                        console.log("Index = " + index);
+                        console.log(address_list_id);
+                        console.log(address1_line1);
+                        console.log(list);
+                        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+                        break;
+                }
+            }
+            else {
+                search();
+                parent.$("#cid_addressoverwritten").val(1);
+            }
+        }
+    </script>
+
+    <label for="address1_line1" class="field-label">Street 1 (Address Lookup)</label>
+    <span id="address1_line1_required" style="color: red;font-weight: bold"> *</span>
+    <br>
+    <div id="div1" hidden="">
+        <input list="address_list" id="address1_line1" class="text form-control" autocomplete="off">
+        <br>
+        <datalist id="address_list">
+        </datalist>
+        <datalist id="address_list2">
+        </datalist>
+        <select id="address_list_id" name="address_list_id" hidden="">
+        </select>
+    </div>
+    <div id="div2" hidden="">
+        <input type="text" id="txt_address1_line1" class="text form-control" readonly="">
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            debugger;
+
+            // read/hide
+            parent.$('#address1_stateorprovince').attr("readonly", true);
+
+            document.querySelector('input[list="address_list"]').addEventListener('input', onInput);
+            AddressComplete.removeOptions('address_list');
+
+            // language
+            try {
+                var selected_language = sessionStorage.getItem("selected_language");
+                //var value = (selected_language == "en-US" ? "Street 1" : "Rue 1");
+                var value = (selected_language == "en" ? "Street 1 (Address Lookup)" : "Rue 1 (Recherche d'adresse)");
+                $("#address1_line1")[0].labels[0].innerHTML = value;
+            } catch (e) { }
+
+            var value = sessionStorage.getItem("AddressComplete_readonly");
+            value = (value == "true" ? true : false);
+            readonly(value);
+
+            document.getElementById("address1_line1").setAttribute("autocomplete", "off");
+            $("#address1_line1").autocomplete({
+                source: []
+            });
+        })
+
+    </script>
+
+    <script>
+        function readonly(value) {
+            debugger;
+            sessionStorage.setItem("AddressComplete_readonly", value);
+
+            var address1_line1 = sessionStorage.getItem("AddressLine1Text");
+            address1_line1 = (address1_line1 == "null" ? "" : address1_line1);
+
+            if (value) {
+                $('#div1').hide();
+                $('#div2').show();
+                $('#txt_address1_line1').val(address1_line1);
+            }
+            else {
+                $('#div1').show();
+                $('#div2').hide();
+                $('#address1_line1').val(address1_line1);
+            }
+        }
+
+        function address1_line1(value) {
+            document.getElementById('address1_line1').value = value;
+        }
+
+        var AddressComplete = {
+            _Key: "MM95-DM44-MP35-XM79",
+            _MaxResults: 7,
+            _MaxSuggestions: 7,
+            _SearchFor: 'Everything',
+
+            GetId: function (index) {
+                debugger;
+
+                var value = document.getElementById("address_list_id")[index].value;
+                var text = document.getElementById("address_list_id")[index].text;
+
+                console.log("+++++++++++++++++++++++++++");
+                console.log("Index = " + index);
+                console.log("value = " + value);
+                console.log("text = " + text);
+                console.log("+++++++++++++++++++++++++++");
+
+                return value;
+            },
+
+            Find: function (SearchTerm, LanguagePreference, LastId_ind) {
+                //debugger;
+
+                var listname = (!LastId_ind ? "address_list" : "address_list2");
+                var listname2 = "address_list_id";
+
+                this.removeOptions(listname);
+                this.removeOptions(listname2);
+
+                var Country = '';
+                var url = 'https://ws1.postescanada-canadapost.ca/AddressComplete/Interactive/Find/v2.10/json3.ws';
+
+                var params = '';
+                params += "&Key=" + encodeURIComponent(this._Key);
+                if (!LastId_ind) {
+                    params += "&SearchTerm=" + encodeURIComponent(SearchTerm);
+                }
+                else {
+                    params += "&LastId=" + encodeURIComponent(SearchTerm);
+
+                }
+                params += "&SearchFor=" + encodeURIComponent(this._SearchFor);
+                params += "&Country=" + encodeURIComponent(Country);
+                params += "&LanguagePreference=" + encodeURIComponent(LanguagePreference);
+                params += "&MaxSuggestions=" + encodeURIComponent(this._MaxSuggestions);
+                params += "&MaxResults=" + encodeURIComponent(this._MaxResults);
+
+                var http = new XMLHttpRequest();
+                http.open('POST', url, true);
+                http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                http.onreadystatechange = function () {
+                    if (http.readyState == 4 && http.status == 200) {
+                        var response = JSON.parse(http.responseText);
+
+                        // Test for an error
+                        if (response.Items.length == 1 && typeof (response.Items[0].Error) != "undefined") {
+                            // Show the error message
+                            console.log("error:  " );
+                            console.log(response.Items[0].Description);
+                        }
+                        else {
+                            // Check if there were any items found
+                            if (response.Items.length == 0) {
+                                console.log("Sorry, there were no results");
+                            }
+                            else {
+                                debugger;
+                                var items = response.Items;
+
+                                var address_list = document.getElementById(listname);
+                                document.getElementById('address1_line1').setAttribute('list', document.getElementById(listname).id);
+
+                                var address_list2 = document.getElementById(listname2);
+
+                                var max = items.length;
+                                for (i = 0; i < max; i++) {
+                                    var item = items[i];
+                                    var value = item.Id;
+                                    var next = item.Next;
+                                    var text = item.Text + ', ' + item.Description;
+
+                                    const option = document.createElement('option');
+                                    option.value = text;
+                                    address_list.appendChild(option);
+
+                                    // address_list2
+                                    const option2 = document.createElement('option');
+                                    option2.value = value + ";" + next;
+                                    option2.text = text;
+                                    address_list2.add(option2);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                try {
+                    http.send(params);
+                } catch (e) {
+                    //debugger;
+                }
+            },
+
+            Retrieve: function (Id) {
+                //debugger;
+
+                var url = 'https://ws1.postescanada-canadapost.ca/AddressComplete/Interactive/Retrieve/v2.11/json3.ws';
+                var params = '';
+                params += "&Key=" + encodeURIComponent(this._Key);
+                params += "&Id=" + encodeURIComponent(Id);
+
+                var http = new XMLHttpRequest();
+                http.open('POST', url, true);
+                http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                http.onreadystatechange = function () {
+                    if (http.readyState == 4 && http.status == 200) {
+                        var response = JSON.parse(http.responseText);
+                        // Test for an error
+                        if (response.Items.length == 1 && typeof (response.Items[0].Error) != "undefined") {
+                            // Show the error message
+                            console.log(response.Items[0].Description);
+                        }
+                        else {
+                            // Check if there were any items found
+                            if (response.Items.length == 0) {
+                                console.log("Sorry, there were no results");
+                            }
+                            else {
+                                //debugger;
+                                AddressComplete.Selected(response.Items);
+                            }
+                        }
+                    }
+                }
+                http.send(params);
+            },
+
+            removeOptions: function (name) {
+                // remove options
+                $('#' + name).empty();
+            },
+
+            getItem: function (field) {
+                return sessionStorage.getItem(field);
+            },
+
+            ovs_address1_province: function (stateorprovince, selected_language) {
+                debugger;
+
+                //if (selected_language = "en-US") {
+                if (selected_language = "en") {
+                    var list = ["AB", "BC", "MB", "NB", "NL", "NT", "NS", "NT", "ON", "PE", "QC", "SK", "YT"];
+                }
+                else {
+                    var list = ["AB", "BC", "MB", "NB", "NL", "NT", "NS", "NT", "ON", "PE", "QC", "SK", "YT"];
+                }
+
+                //var value = list.find(stateorprovince);
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i] == stateorprovince) {
+                        parent.$("#ovs_address1_province").val(i);
+                        break;
+                    }
+                }
+            },
+
+            Selected: function (data) {
+                debugger;
+
+                var selected_language = sessionStorage.getItem("selected_language");
+                //var item_e = (selected_language == "en-US" ? data[0] : data[1]);
+                var item_e = (selected_language == "en" ? data[0] : data[1]);
+
+                sessionStorage.setItem("POBoxNumber", item_e.POBoxNumber);
+                sessionStorage.setItem("Line1", item_e.Line1);
+                sessionStorage.setItem("Line2", item_e.Line2);
+                sessionStorage.setItem("Line3", item_e.Line3);
+                sessionStorage.setItem("City", item_e.City);
+                sessionStorage.setItem("ProvinceName", item_e.ProvinceCode);
+                sessionStorage.setItem("PostalCode", item_e.PostalCode);
+                sessionStorage.setItem("CountryName", item_e.CountryName);
+                sessionStorage.setItem("Label", item_e.Label);
+
+                try {
+                    // transfer control back to parent form
+                    //window.parent.Xrm.Page.AddressComplete_Selected;
+                    //var value = parent.Xrm.Utility.AddressComplete_Selected();
+                    //parent.AddressComplete_Selected();
+
+                    parent.$("#address1_line1").val(item_e.Line1);
+                    parent.$("#address1_line2").val(item_e.Line2);
+                    parent.$("#address1_line3").val(item_e.Line3);
+                    parent.$("#address1_city").val(item_e.City);
+                    parent.$("#address1_stateorprovince").val(item_e.ProvinceCode);
+                    parent.$("#address1_postalcode").val(item_e.PostalCode);
+                    parent.$("#address1_country").val(item_e.CountryName);
+                    parent.$("#cid_addressoverwritten").val(0);
+
+                    this.ovs_address1_province(item_e.ProvinceCode, selected_language);
+
+                    // set address1
+                    document.getElementById('address1_line1').value = item_e.Line1;
+                    document.getElementById('txt_address1_line1').value = item_e.Line1;
+                } catch (e) { }
+            }
+        }
+    </script>
+
+
+</body></html>
