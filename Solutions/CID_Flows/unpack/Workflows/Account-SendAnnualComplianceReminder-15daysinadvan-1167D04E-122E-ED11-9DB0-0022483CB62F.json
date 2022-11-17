@@ -72,7 +72,7 @@
         },
         "Condition": {
           "actions": {
-            "Apply_to_each": {
+            "Apply_to_each_Account": {
               "foreach": "@outputs('GetAccounts')?['body/value']",
               "actions": {
                 "GetEmailRecipients": {
@@ -89,7 +89,7 @@
                     },
                     "parameters": {
                       "entityName": "contacts",
-                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n   <attribute name=\"firstname\" />\n    <attribute name=\"telephone1\" />\n    <attribute name=\"contactid\" />\n    <attribute name=\"emailaddress1\" />\n   <attribute name=\"cid_languageofcorrespondence\" />\n    <attribute name=\"cid_contacttype\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" uitype=\"account\" value=\"@{items('Apply_to_each')?['accountid']}\" />\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n    </filter>\n  </entity>\n</fetch>"
+                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n   <attribute name=\"firstname\" />\n    <attribute name=\"telephone1\" />\n    <attribute name=\"contactid\" />\n    <attribute name=\"emailaddress1\" />\n   <attribute name=\"cid_languageofcorrespondence\" />\n    <attribute name=\"cid_contacttype\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" uitype=\"account\" value=\"@{items('Apply_to_each_Account')?['accountid']}\" />\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n    </filter>\n  </entity>\n</fetch>"
                     },
                     "authentication": "@parameters('$authentication')"
                   }
@@ -125,7 +125,7 @@
                             "value": "@items('Apply_to_each_2')?['firstname']"
                           }
                         },
-                        "Set_variable_2": {
+                        "Set_variable_Laguage": {
                           "runAfter": {
                             "Set_variable_Primary_Contact_First_Name": [
                               "Succeeded"
@@ -215,7 +215,7 @@
                     }
                   },
                   "runAfter": {
-                    "Update_a_row": [
+                    "Reset__CC_email_List": [
                       "Succeeded"
                     ]
                   },
@@ -242,22 +242,42 @@
                     },
                     "parameters": {
                       "entityName": "accounts",
-                      "recordId": "@items('Apply_to_each')?['accountid']",
+                      "recordId": "@items('Apply_to_each_Account')?['accountid']",
                       "item/cid_annualcomplianceupdatesremindersenddate": "@utcNow()"
                     },
                     "authentication": "@parameters('$authentication')"
                   }
-                }
-              },
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "c67dcd6a-d820-4898-807c-20d1863951d6"
-              },
-              "type": "Foreach"
-            },
-            "Apply_to_each_5": {
-              "foreach": "@outputs('GetAccounts')?['body/value']",
-              "actions": {
+                },
+                "Reset_Temp_CC_Variable": {
+                  "runAfter": {
+                    "Update_a_row": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "17185783-900c-4af2-a1d0-45b2cfb2e230"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Temp CC Recipients",
+                    "value": "@{null}"
+                  }
+                },
+                "Reset__CC_email_List": {
+                  "runAfter": {
+                    "Reset_Temp_CC_Variable": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "adc25f34-9ba6-40d3-a86d-415ea4a73383"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "CCEmailRecipients",
+                    "value": "@{null}"
+                  }
+                },
                 "Check_Language": {
                   "actions": {
                     "Send_an_email_notification_(V3)_English": {
@@ -275,14 +295,18 @@
                         "parameters": {
                           "request/to": "@{variables('ToEmailRecipients')};",
                           "request/subject": "Beta Testing: Annual Compliance Renewal Reminder",
-                          "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['accountnumber']}will be expire in 15 days. Please log into your account &nbsp;and initialize Annual Compliance.<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto generated email.</p>",
+                          "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_Account')?['ovs_legalname']} will be expire in 15 days. Please log into your account &nbsp;and initialize Annual Compliance.<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto generated email.</p>",
                           "request/cc": "@variables('CCEmailRecipients')"
                         },
                         "authentication": "@parameters('$authentication')"
                       }
                     }
                   },
-                  "runAfter": {},
+                  "runAfter": {
+                    "Apply_to_each_2": [
+                      "Succeeded"
+                    ]
+                  },
                   "else": {
                     "actions": {
                       "Send_an_email_notification_(V3)_French": {
@@ -300,7 +324,7 @@
                           "parameters": {
                             "request/to": "@{variables('ToEmailRecipients')};",
                             "request/subject": "Beta Testing:  FR: Annual Compliance Renewal Reminder",
-                            "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_5')?['accountnumber']}will be expire in 15 days. Please log into your account &nbsp;and initialize Annual Compliance.<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto generated email.</p>",
+                            "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_Account')?['ovs_legalnamefr']} will be expire in 15 days. Please log into your account &nbsp;and initialize Annual Compliance.<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto generated email.</p>",
                             "request/cc": "@variables('CCEmailRecipients')"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -320,13 +344,9 @@
                   "type": "If"
                 }
               },
-              "runAfter": {
-                "Apply_to_each": [
-                  "Succeeded"
-                ]
-              },
+              "runAfter": {},
               "metadata": {
-                "operationMetadataId": "182ab6d0-95a5-4efe-9ab5-510e6a39a843"
+                "operationMetadataId": "c67dcd6a-d820-4898-807c-20d1863951d6"
               },
               "type": "Foreach"
             }

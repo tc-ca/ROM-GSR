@@ -164,7 +164,7 @@
         },
         "Condition": {
           "actions": {
-            "Apply_to_each": {
+            "Apply_to_each_Account": {
               "foreach": "@outputs('GetAccounts')?['body/value']",
               "actions": {
                 "GetEmailRecipients": {
@@ -181,9 +181,39 @@
                     },
                     "parameters": {
                       "entityName": "contacts",
-                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <attribute name=\"firstname\" />\n    <attribute name=\"telephone1\" />\n    <attribute name=\"contactid\" />\n    <attribute name=\"emailaddress1\" />\n   <attribute name=\"cid_languageofcorrespondence\" />\n    <attribute name=\"cid_contacttype\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" uitype=\"account\" value=\"@{items('Apply_to_each')?['accountid']}\" />\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n    </filter>\n  </entity>\n</fetch>"
+                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <attribute name=\"firstname\" />\n    <attribute name=\"telephone1\" />\n    <attribute name=\"contactid\" />\n    <attribute name=\"emailaddress1\" />\n   <attribute name=\"cid_languageofcorrespondence\" />\n    <attribute name=\"cid_contacttype\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" uitype=\"account\" value=\"@{items('Apply_to_each_Account')?['accountid']}\" />\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n    </filter>\n  </entity>\n</fetch>"
                     },
                     "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Set_Temp_CC_Variable_to_Null": {
+                  "runAfter": {
+                    "GetEmailRecipients": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3ef53ae4-9459-46a5-8eb5-5682d68ee414"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Temp CC Recipients",
+                    "value": "@{null}"
+                  }
+                },
+                "Set_variable__CCEmailRecipients_to_Null": {
+                  "runAfter": {
+                    "Set_Temp_CC_Variable_to_Null": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "fa448a5e-e93a-46b3-a8f9-b87a827ee37d"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "CCEmailRecipients",
+                    "value": "@{null}"
                   }
                 },
                 "Apply_to_each_2": {
@@ -307,7 +337,7 @@
                     }
                   },
                   "runAfter": {
-                    "GetEmailRecipients": [
+                    "Set_variable__CCEmailRecipients_to_Null": [
                       "Succeeded"
                     ]
                   },
@@ -315,17 +345,7 @@
                     "operationMetadataId": "3b7fc09e-16da-4109-971e-ebfd8088a1e0"
                   },
                   "type": "Foreach"
-                }
-              },
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "c67dcd6a-d820-4898-807c-20d1863951d6"
-              },
-              "type": "Foreach"
-            },
-            "Send_Email_to_Company_Contacts": {
-              "foreach": "@outputs('GetAccounts')?['body/value']",
-              "actions": {
+                },
                 "Check_Language": {
                   "actions": {
                     "Send_an_email_notification_(V3)_English": {
@@ -343,14 +363,18 @@
                         "parameters": {
                           "request/to": "@{variables('ToEmailRecipients')};",
                           "request/subject": "Beta Test:  Annual Compliance Reminder",
-                          "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Send_Email_to_Company_Contacts')?['ovs_accountnameenglish']} was expired 30 days ago. Please log into your account and initialize Annual Compliance.<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto generated email.</p>",
+                          "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_Account')?['ovs_legalname']} was expired 30 days ago. Please log into your account and initialize Annual Compliance.<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto generated email.</p>",
                           "request/cc": "@variables('CCEmailRecipients')"
                         },
                         "authentication": "@parameters('$authentication')"
                       }
                     }
                   },
-                  "runAfter": {},
+                  "runAfter": {
+                    "Apply_to_each_2": [
+                      "Succeeded"
+                    ]
+                  },
                   "else": {
                     "actions": {
                       "Send_an_email_notification_(V3)": {
@@ -368,7 +392,7 @@
                           "parameters": {
                             "request/to": "@{variables('ToEmailRecipients')};",
                             "request/subject": "Beta Test:  FR: Annual Compliance Reminder",
-                            "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Send_Email_to_Company_Contacts')?['ovs_accountnameenglish']} was expired 30 days ago. Please log into your account and initialize Annual Compliance.<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto generated email.</p>",
+                            "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_Account')?['ovs_legalnamefr']} was expired 30 days ago. Please log into your account and initialize Annual Compliance.<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto generated email.</p>",
                             "request/cc": "@variables('CCEmailRecipients')"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -388,13 +412,9 @@
                   "type": "If"
                 }
               },
-              "runAfter": {
-                "Apply_to_each": [
-                  "Succeeded"
-                ]
-              },
+              "runAfter": {},
               "metadata": {
-                "operationMetadataId": "182ab6d0-95a5-4efe-9ab5-510e6a39a843"
+                "operationMetadataId": "c67dcd6a-d820-4898-807c-20d1863951d6"
               },
               "type": "Foreach"
             }
