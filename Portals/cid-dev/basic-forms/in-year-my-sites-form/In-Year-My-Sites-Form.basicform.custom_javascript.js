@@ -4,6 +4,8 @@
 $(document).ready(function ()
 {
 	debugger;
+
+	$("#cid_registrationasof").parent().parent().hide();
 	
 	var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
 	$('#cid_cidcompanystatus').hide();

@@ -3,6 +3,8 @@
 //
 
 $(document).ready(function () {
+    $("#cid_registrationasof").parent().parent().hide();
+
    page_setup();
    var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
 	//if not primary contact

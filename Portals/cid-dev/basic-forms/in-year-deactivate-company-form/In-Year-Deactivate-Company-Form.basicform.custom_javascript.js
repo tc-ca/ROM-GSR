@@ -5,6 +5,8 @@
 $(document).ready(function () {
     debugger;
 
+    $("#cid_registrationasof").parent().parent().hide();
+
     sessionStorage.setItem('futureDateMessageShown', 'false');
     var effectiveDateControl = $("#cid_companydeactivationeffectivedate_datepicker_description");
     effectiveDateControl.val('');

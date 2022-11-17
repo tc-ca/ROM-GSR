@@ -1,6 +1,9 @@
 $(document).ready(function ()
 {
 	debugger;
+
+	$("#cid_registrationasof").parent().parent().hide();
+
 	//page_setup();
 	$("legend").each(function ()
 	{

@@ -5,6 +5,8 @@
 $(document).ready(function () {
 	debugger;
 
+	$("#cid_registrationasof").parent().parent().hide();
+
     //add bulk upload button
 	var UploadButtonText = tdg.error_message.message("m000111");
 	if ('{{request.url}}'.includes("tdgcore-qa") || '{{request.url}}'.includes("rd-tdgcore-dev")) 

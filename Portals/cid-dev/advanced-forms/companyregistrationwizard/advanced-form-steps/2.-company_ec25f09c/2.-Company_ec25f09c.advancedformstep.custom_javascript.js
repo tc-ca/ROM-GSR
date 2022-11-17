@@ -5,12 +5,17 @@
 $(document).ready(function () {
 	debugger;
 
+	$("#cid_registrationasof").parent().parent().hide();
+
 	//update manually entered field if address fields changed
 	tdg.cid.Update_AdderssOverwritten_Field();
 
 	tdg.c.control_hide("cid_addressoverwritten");
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
+	
+	//validate postal code with province - first letter of postal code need to matched allowed province letters
+	tdg.c.Add_Validation_For_Postal_Code_with_Province(selected_language);
 
 	var cid_contacttype = '{{user.cid_contacttype.Value}}';
 	//if not primary contact

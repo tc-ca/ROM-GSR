@@ -3,6 +3,7 @@
 //
 $(document).ready(function ()
 {
+	$("#cid_registrationasof").parent().parent().hide();
 	$(".create-action").click(function ()
 	{
 		//alert("Test");

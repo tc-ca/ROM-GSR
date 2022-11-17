@@ -583,7 +583,7 @@ if (typeof (tdg.c) == "undefined") {
                 newValidator.style.display = "none";
                 newValidator.id = "address1_postalcodeValidator";
                 newValidator.controltovalidate = "address1_postalcode";
-                newValidator.errormessage = "<a href='#address1_postalcode_label' referencecontrolid='address1_postalcode ' onclick='javascript:scrollToAndFocus(\"address1_postalcode _label\",\" address1_postalcode \");return false;'>" + validationMessage+"</a>";
+                newValidator.errormessage = "<a href='#address1_postalcode_label' referencecontrolid='address1_postalcode ' onclick='javascript:scrollToAndFocus(\"address1_postalcode _label\",\" address1_postalcode \");return false;'>" + validationMessage + "</a>";
                 newValidator.validationGroup = ""; // Set this if you have set ValidationGroup on the form
                 newValidator.initialvalue = "";
                 newValidator.evaluationfunction = function () {
@@ -602,7 +602,7 @@ if (typeof (tdg.c) == "undefined") {
                 // Add the new validator to the page validators array:
                 Page_Validators.push(newValidator);
 
-                
+
             } catch (e) { }
 
         }
@@ -1596,6 +1596,81 @@ if (typeof (tdg.cid) == "undefined") {
             document.getElementById("ovs_address1_province").addEventListener('change', (event) => { $("#cid_addressoverwritten").val(1); });
             document.getElementById("address1_line3").addEventListener('change', (event) => { $("#cid_addressoverwritten").val(1); });
             document.getElementById("address1_postalcode").addEventListener('change', (event) => { $("#cid_addressoverwritten").val(1); });
+        },
+        Get_Contact_Changes_and_SendEmail: function () {
+            //define flags for each field change
+            var FirstNameChangeFlag = false;
+            var LastNameChangeFlag = false;
+            var PhoneChangeFlag = false;
+            var MobileChangeFlag = false;
+            var FaxChangeFlag = false;
+            var EmailaddressChangeFlag = false;
+            var LanguageFlag = false;
+
+            // change values array
+            var ChangeArr = [];
+            //get fileds values on load
+            var FirstNameOnload = $("#firstname").val();
+            var lastnameNameOnload = $("#lastname").val();
+            var EmailAddressNameOnload = $("#emailaddress1").val();
+            var telphoneOnload = $("#telephone1").val();
+            var MobilePhoneNameOnload = $("#mobilephone").val();
+            var FaxOnload = $("#fax").val();
+            var LanguageeOnload = $("#cid_languageofcorrespondence :selected").text();
+            //define change event
+            document.getElementById("firstname").addEventListener('change', (event) => { FirstNameChangeFlag = true; });
+            document.getElementById("lastname").addEventListener('change', (event) => { LastNameChangeFlag = true; });
+            document.getElementById("emailaddress1").addEventListener('change', (event) => { EmailaddressChangeFlag = true; });
+            document.getElementById("telephone1").addEventListener('change', (event) => { PhoneChangeFlag = true; });
+            document.getElementById("mobilephone").addEventListener('change', (event) => { MobileChangeFlag = true; });
+            document.getElementById("fax").addEventListener('change', (event) => { FaxChangeFlag = true; });
+            document.getElementById("cid_languageofcorrespondence").addEventListener('change', (event) => { LanguageFlag = true; });
+
+            document.getElementById("UpdateButton").addEventListener('click', (event) => {
+                //get current record id
+                var recordid = document.getElementById("EntityFormControl_EntityFormView_EntityID").value;
+                //if first name changed
+                if (FirstNameChangeFlag == true) {
+                    ChangeArr.push('{"fieldName" : "First Name", "OldValue" : "' + FirstNameOnload +
+                        '"' + ', "NewValue" : "' + $("#firstname").val() + '"}');
+                    console.log(ChangeArr);
+                }
+                if (LastNameChangeFlag == true) {
+                    ChangeArr.push('{"fieldName" : "Last Name", "OldValue" : "' + lastnameNameOnload +
+                        '"' + ', "NewValue" : "' + $("#lastname").val() + '"}');
+                    console.log(ChangeArr);
+                }
+                if (PhoneChangeFlag == true) {
+                    ChangeArr.push('{"fieldName" : "Business Phone", "OldValue" : "' + telphoneOnload +
+                        '"' + ', "NewValue" : "' + $("#telephone1").val() + '"}');
+                    console.log(ChangeArr);
+                }
+                if (MobileChangeFlag == true) {
+                    ChangeArr.push('{"fieldName" : "Mobile Phone", "OldValue" : "' + MobilePhoneNameOnload +
+                        '"' + ', "NewValue" : "' + $("#mobilephone").val() + '"}');
+                    console.log(ChangeArr);
+                }
+                if (EmailaddressChangeFlag == true) {
+                    ChangeArr.push('{"fieldName" : "Email", "OldValue" : "' + EmailAddressNameOnload +
+                        '"' + ', "NewValue" : "' + $("#emailaddress1").val() + '"}');
+                    console.log(ChangeArr);
+                }
+                if (FaxChangeFlag == true) {
+                    ChangeArr.push('{"fieldName" : "Fax", "OldValue" : "' + FaxOnload +
+                        '"' + ', "NewValue" : "' + $("#fax").val() + '"}');
+                    console.log(ChangeArr);
+                }
+                if (LanguageFlag == true) {
+                    ChangeArr.push('{"fieldName" : "Language of Correspondence", "OldValue" : "' + LanguageeOnload +
+                        '"' + ', "NewValue" : "' + $("#cid_languageofcorrespondence :selected").text() + '"}');
+                    console.log(ChangeArr);
+                }
+
+                //call flow
+                var data = '{ "contactid" : "' + recordid + '", "ChangedInfo" : [' + ChangeArr + ']}';
+              
+                tdg.cid.flow.Call_Flow("CID_Portal_Email_Contact_when_Information_is_changed", data);
+            });
         }
     }
 }
@@ -1747,6 +1822,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#address1_stateorprovince").val(address.ProvinceStateCode);
             $("#address1_postalcode").val(address.PostalZipCode);
         }
+        
     }
 }
 

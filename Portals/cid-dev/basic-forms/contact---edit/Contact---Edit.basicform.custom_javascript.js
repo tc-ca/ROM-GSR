@@ -5,29 +5,11 @@ $(document).ready(function () {
     debugger;
 
     page_setup();
-     var ChangeArr = [];
-    var FirstNameOnload = $("#firstname").val();
-    var flagFirstNameChanged = false;
-   document.getElementById("UpdateButton").addEventListener('click', (event) => {  
-    var recordid = document.getElementById("EntityFormControl_EntityFormView_EntityID").value;
-    if (flagFirstNameChanged == true)
-     {  ChangeArr.push('{"fieldName" : "First Name", "OldValue" : "' + FirstNameOnload + 
-       '"' + ', "NewValue" : "' + $("#firstname").val() + '"}');
-    //sessionStorage.setItem("FirstnameChange", '"' + FirstNameOnload + '"' + ',"' + $("#firstname").val() + '"');
-    //console.log(sessionStorage.getItem("FirstnameChange"));
-    var data = '{ "contactid" : "' + recordid + '", "ChangedInfo" : [' + ChangeArr +  ']}'; 
-      tdg.cid.flow.Call_Flow("CID_Portal_Email_Contact_when_Information_is_changed" , data);
-     }
-     });
-   
-    document.getElementById("firstname").addEventListener('change', (event) => {
-    //FirstNameChangeFlag = true;
-   // ChangeArr.push('{"fieldName" : "First Name", "OldValue" : "' + FirstNameOnload + '"' + ', "NewValue" : "' + $("#firstname").val() + '"}');
-    flagFirstNameChanged = true;
-    });
+     
+     //this function will get the origional value onload and before saving get new values if available and call flow to send email
+     //there is event listner for onclick , change event for all fields
+    tdg.cid.Get_Contact_Changes_and_SendEmail();
 
-
-  
     //when the page is done loading, disable autocomplete on all inputs[text]
     $('input[type="text"]').attr('autocomplete', 'off');
 

@@ -4,6 +4,9 @@
 $(document).ready(function ()
 {
 	debugger;
+
+	$("#cid_registrationasof").parent().parent().hide();
+
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 	var entityList = $(".entity-grid").eq(0);
