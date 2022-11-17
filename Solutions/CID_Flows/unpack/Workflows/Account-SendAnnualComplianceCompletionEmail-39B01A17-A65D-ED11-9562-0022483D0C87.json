@@ -1,15 +1,6 @@
 {
   "properties": {
     "connectionReferences": {
-      "shared_sendmail": {
-        "runtimeSource": "embedded",
-        "connection": {
-          "connectionReferenceLogicalName": "cid_sharedsendmail_883c5"
-        },
-        "api": {
-          "name": "shared_sendmail"
-        }
-      },
       "shared_commondataserviceforapps_2": {
         "runtimeSource": "embedded",
         "connection": {
@@ -17,6 +8,15 @@
         },
         "api": {
           "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_sendmail": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedsendmail_883c5"
+        },
+        "api": {
+          "name": "shared_sendmail"
         }
       }
     },
@@ -155,7 +155,7 @@
                                 "type": "SetVariable",
                                 "inputs": {
                                   "name": "CCEmailRecipients",
-                                  "value": "@{concat(variables('Temp CC Recipients'), ';' , items('Apply_to_each_3')?['emailaddress1'])}"
+                                  "value": "@{items('Apply_to_each_3')?['emailaddress1']}"
                                 }
                               }
                             },

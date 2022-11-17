@@ -1,0 +1,309 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_office365": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceOutlookTDGCoreUser"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "a53c595f-02f4-42a4-a429-6e89763d85f5"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "contactid": {
+                  "type": "string"
+                },
+                "ChangedInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "fieldName": {
+                        "type": "string"
+                      },
+                      "OldValue": {
+                        "type": "string"
+                      },
+                      "NewValue": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "fieldName",
+                      "OldValue",
+                      "NewValue"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "Get_Updated_Contact": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "d4a5fc26-f694-4b24-b932-cec71efc5235"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "contacts",
+              "recordId": "@triggerBody()?['contactid']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Apply_to_each_change_info": {
+          "foreach": "@triggerBody()?['ChangedInfo']",
+          "actions": {
+            "Compose": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "80249c33-16a7-4d76-abe0-8d78b834d700"
+              },
+              "type": "Compose",
+              "inputs": "@items('Apply_to_each_change_info')"
+            },
+            "Append_to_string_variable_ChangeInfo": {
+              "runAfter": {
+                "NewValue": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "6b94171b-92f9-4a70-a4f2-f6685c9eddef"
+              },
+              "type": "AppendToStringVariable",
+              "inputs": {
+                "name": "ChangeInfo",
+                "value": "@concat(outputs('ChangedFieldName') , ' Changed from ' ,outputs('OldValue') , ' to ' ,outputs('NewValue') , '<br>')"
+              }
+            },
+            "ChangedFieldName": {
+              "runAfter": {
+                "Compose": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "c69e60ee-2f1b-42f7-abb5-db40172728d8"
+              },
+              "type": "Compose",
+              "inputs": "@items('Apply_to_each_change_info')['fieldName']"
+            },
+            "OldValue": {
+              "runAfter": {
+                "ChangedFieldName": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "35a52921-12ea-4661-afa7-c291efe63bb2"
+              },
+              "type": "Compose",
+              "inputs": "@items('Apply_to_each_change_info')['OldValue']"
+            },
+            "NewValue": {
+              "runAfter": {
+                "OldValue": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "62cffd46-9801-4612-aa82-7d1102719f16"
+              },
+              "type": "Compose",
+              "inputs": "@items('Apply_to_each_change_info')['NewValue']"
+            }
+          },
+          "runAfter": {
+            "Initialize_variable_-_ChangeInfo": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e08499a6-2fc8-4322-bee1-e132c96927ec"
+          },
+          "type": "Foreach"
+        },
+        "Parse_JSON": {
+          "runAfter": {
+            "Get_Updated_Contact": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5977ace8-50bb-4a99-8c57-7636bd526815"
+          },
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@triggerBody()?['ChangedInfo']",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "fieldName": {
+                    "type": "string"
+                  },
+                  "OldValue": {
+                    "type": "string"
+                  },
+                  "NewValue": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "fieldName",
+                  "OldValue",
+                  "NewValue"
+                ]
+              }
+            }
+          }
+        },
+        "Initialize_variable_-_ChangeInfo": {
+          "runAfter": {
+            "Parse_JSON": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8336bdf1-b0a1-4389-9bf1-13dd95ae93d5"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ChangeInfo",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "GetModifiedby": {
+          "runAfter": {
+            "Apply_to_each_change_info": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "829f2aef-85fc-4245-87db-f4a1199c7f88"
+          },
+          "type": "Compose",
+          "inputs": "@add(2 , indexOf(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'],',') )"
+        },
+        "Condition_-_check_language": {
+          "actions": {
+            "Send_an_email_-_English": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "f85669dc-5cb3-4909-965f-938e6fbd4548"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_office365",
+                  "operationId": "SendEmailV2",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                },
+                "parameters": {
+                  "emailMessage/To": "@outputs('Get_Updated_Contact')?['body/emailaddress1']",
+                  "emailMessage/Subject": "Your Profile in CID has been changed",
+                  "emailMessage/Body": "<p>Hi @{outputs('Get_Updated_Contact')?['body/fullname']},<br>\nYour information has been modified by @{substring(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'] , add(2, indexOf(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'],',') ) )}.<br>\n<br>\n@{variables('ChangeInfo')}<br>\n<br>\nTransport Canada</p>",
+                  "emailMessage/From": "TDG.Core@034gc.onmicrosoft.com",
+                  "emailMessage/Importance": "Normal"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "GetModifiedby": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Send_an_email_-_French": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "f85669dc-5cb3-4909-965f-938e6fbd4548"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_office365",
+                    "operationId": "SendEmailV2",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                  },
+                  "parameters": {
+                    "emailMessage/To": "@outputs('Get_Updated_Contact')?['body/emailaddress1']",
+                    "emailMessage/Subject": "French -  Your Profile in CID has been changed",
+                    "emailMessage/Body": "<p>Hi @{outputs('Get_Updated_Contact')?['body/fullname']},<br>\nYour information has been modified by @{substring(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'], add(2, indexOf(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'], ',')))}.<br>\n<br>\n@{variables('ChangeInfo')}<br>\n<br>\nTransport Canada</p>",
+                    "emailMessage/From": "TDG.Core@034gc.onmicrosoft.com",
+                    "emailMessage/Importance": "Normal"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@outputs('Get_Updated_Contact')?['body/cid_languageofcorrespondence']",
+              918640001
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4a27d600-a6b6-46db-a915-56219a19d767"
+          },
+          "type": "If"
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

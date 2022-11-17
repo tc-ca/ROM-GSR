@@ -146,66 +146,46 @@
                         "actions": {
                           "Condition_2": {
                             "actions": {
-                              "Apply_to_each_3": {
-                                "foreach": "@outputs('GetEmailRecipients')?['body/value']",
-                                "actions": {
-                                  "Set_variable_Temp_CC_Recipients": {
-                                    "runAfter": {},
-                                    "metadata": {
-                                      "operationMetadataId": "4e5ae564-2e7f-45d3-94e3-12f39f652eb5"
-                                    },
-                                    "type": "SetVariable",
-                                    "inputs": {
-                                      "name": "Temp CC Recipients",
-                                      "value": "@variables('CCEmailRecipients')"
-                                    }
-                                  },
-                                  "Concat_CCEmailRecipients_variable_if_not_empty": {
-                                    "runAfter": {
-                                      "Set_variable_Temp_CC_Recipients": [
-                                        "Succeeded"
-                                      ]
-                                    },
-                                    "metadata": {
-                                      "operationMetadataId": "f4a01aa2-2fd2-4b2a-922f-63e1d556a09b"
-                                    },
-                                    "type": "SetVariable",
-                                    "inputs": {
-                                      "name": "CCEmailRecipients",
-                                      "value": "@{concat(variables('Temp CC Recipients'), ';' , items('Apply_to_each_3')?['emailaddress1'])}"
-                                    }
-                                  }
-                                },
+                              "Set_variable_Temp_CC_Recipients": {
                                 "runAfter": {},
                                 "metadata": {
-                                  "operationMetadataId": "5027a906-3e0f-41e1-a7c1-34cec4669cfa"
+                                  "operationMetadataId": "4e5ae564-2e7f-45d3-94e3-12f39f652eb5"
                                 },
-                                "type": "Foreach"
+                                "type": "SetVariable",
+                                "inputs": {
+                                  "name": "Temp CC Recipients",
+                                  "value": "@variables('CCEmailRecipients')"
+                                }
+                              },
+                              "Concat_CCEmailRecipients_variable_if_not_empty": {
+                                "runAfter": {
+                                  "Set_variable_Temp_CC_Recipients": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "metadata": {
+                                  "operationMetadataId": "f4a01aa2-2fd2-4b2a-922f-63e1d556a09b"
+                                },
+                                "type": "SetVariable",
+                                "inputs": {
+                                  "name": "CCEmailRecipients",
+                                  "value": "@{concat(variables('Temp CC Recipients'), ';' , items('Apply_to_each_2')?['emailaddress1'])}"
+                                }
                               }
                             },
                             "runAfter": {},
                             "else": {
                               "actions": {
-                                "Apply_to_each_4": {
-                                  "foreach": "@outputs('GetEmailRecipients')?['body/value']",
-                                  "actions": {
-                                    "Set_CC_list_if_its_empty": {
-                                      "runAfter": {},
-                                      "metadata": {
-                                        "operationMetadataId": "fefbec20-6ec8-4b33-8ebd-7fc3c762b1f6"
-                                      },
-                                      "type": "SetVariable",
-                                      "inputs": {
-                                        "name": "CCEmailRecipients",
-                                        "value": "@items('Apply_to_each_4')?['emailaddress1']"
-                                      }
-                                    }
-                                  },
+                                "Set_CC_list_if_its_empty": {
                                   "runAfter": {},
                                   "metadata": {
-                                    "operationMetadataId": "80c61f12-02c2-447c-8296-49dd160d2f21"
+                                    "operationMetadataId": "fefbec20-6ec8-4b33-8ebd-7fc3c762b1f6"
                                   },
-                                  "type": "Foreach"
+                                  "type": "SetVariable",
+                                  "inputs": {
+                                    "name": "CCEmailRecipients",
+                                    "value": "@items('Apply_to_each_2')?['emailaddress1']"
+                                  }
                                 }
                               }
                             },
