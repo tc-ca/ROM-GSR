@@ -63,15 +63,17 @@ $(document).ready(function () {
         if (cidSiteStatus.indexOf("Inactive") >= 0)
             disabled = "disabled";
 
-        if(requirementLevel == "" || requirementLevel == null || requirementLevel == " ")
-            disabledSiteLevelSwitch = "disabled";
+        //if(requirementLevel == "" || requirementLevel == null || requirementLevel == " ")
+        //    disabledSiteLevelSwitch = "disabled";
 
         sessionStorage.setItem('siteOperationId', operationId);
 
-        var msg = "Switch Requirement Level";//tdg.error_message.message("m000029");
-        var html1 = "&nbsp;&nbsp;<div id='switchSiteRequirementLevel' role='group' class='btn-group entity-action-button'><a href='~/my-sites/in-year-site/switch_site_requirement_level?id=" + siteId + "'><input type='button' name='switchSiteRequirementLevel' value='{0}' class='btn btn-primary button submit-btn' nonactionlinkbutton='true'" + disabledSiteLevelSwitch + " " + disabled + "></a></div>";
+        var msg = "Set/Change Site Requirement Level";//tdg.error_message.message("m000029");
+        var html1 = "<div id='switchSiteRequirementLevel' role='group' class='btn-group entity-action-button'><a href='~/my-sites/in-year-site/switch_site_requirement_level?id=" + siteId + "'><input type='button' name='switchSiteRequirementLevel' value='{0}' class='btn btn-primary button submit-btn' nonactionlinkbutton='true'" + disabledSiteLevelSwitch + " " + disabled + "></a></div><br><br><br><br>";
         html1 = html1.replaceAll("{0}", msg);
-        $('div[data-name="site_details2"]').parent().parent().find("#UpdateButton").parent().after(html1);
+        //$('div[data-name="site_details2"]').parent().parent().find("#UpdateButton").parent().after(html1);
+        $('table[data-name="tab_5_section_2"]').parent().after(html1);
+        
 
         $(".list-group-item").each(function () {
             var _href = $(this).attr("href");

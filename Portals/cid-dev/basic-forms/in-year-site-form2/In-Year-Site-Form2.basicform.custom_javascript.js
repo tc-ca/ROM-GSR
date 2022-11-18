@@ -47,24 +47,58 @@ $(document).ready(function () {
         if (window.jQuery) {
         (function ($) {
             entityFormClientValidate = function () {
-                $('table[data-name="further_site_details_section_3"]').find("#cid_issiteattested").prop('checked')
+                var validation = true;
+                var errorMessage = "";
 
-                //if($("#cid_issiteattested").prop('checked')){
-                    debugger;
-                if($('table[data-name="further_site_details_section_3"]').find("#cid_issiteattested").prop('checked')){
-                    return true;
+                //$('table[data-name="further_site_details_section_3"]').find("#cid_issiteattested").prop('checked')
+
+                var handlingType = $('table[data-name="tab_5_section_1"]').find("#cid_handlingsitetype").prop('checked');
+                var offeringType = $('table[data-name="tab_5_section_1"]').find("#cid_offeringfortransportsitetype").prop('checked');
+                var transportType = $('table[data-name="tab_5_section_1"]').find("#cid_transportingsitetype").prop('checked');
+                var importType = $('table[data-name="tab_5_section_1"]').find("#cid_importingsitetype").prop('checked');
+                
+                if(handlingType != true && offeringType != true && transportType != true && importType != true){
+                    validation = false;
+                    errorMessage += "TDG Activity Types required</br>";
                 }
-                else{
-                    var errorMessage = 'You cannot proceed before attesting your site data changes, please check the "Attestation" box';  
+
+                var requirementLevel = $("#cid_requirementlevel").find(":selected").text();
+
+                if(requirementLevel == "" || requirementLevel == null || requirementLevel == " "){
+                    validation = false;
+                    errorMessage += "Missing Site Requirement Level</br>";
+                }
+
+                if($('table[data-name="further_site_details_section_3"]').find("#cid_issiteattested").prop('checked') == false){
+                    errorMessage += "You cannot proceed before attesting your site data changes, please check the 'Attestation' box</br>";
+                    validation = false;
+                }
+                var urlParams = new URLSearchParams(window.location.search);
+                var siteId = urlParams.get('id');
+
+            //Classes validation
+            if (!SiteHasOperationClasses(null, siteId)) {
+                var msg = tdg.error_message.message("m000016"); // You cannot proceed before adding class(es).
+                errorMessage += msg + "</br>";
+                validation = false;
+            }
+
+            //UN Numbers validation
+            if (requirementLevel == 'Extended' && !SiteHasOperationUNNumbers(null, siteId)) {
+                var msg = tdg.error_message.message("m000017"); // UN ??
+                errorMessage += msg + "</br>";
+                validation = false;
+            }
+
+                 if (!validation) {
                     $('.validation-summary div').remove();
                     var validationSection = $('div[data-name="site_details2"]').parent().find(".validation-summary");
 
                     validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>")); 
                     validationSection.show(); 
                     $('.validation-summary div').focus(); 
-
-                    return false;
                 }
+                return validation;
             }
         }(window.jQuery));
     }   

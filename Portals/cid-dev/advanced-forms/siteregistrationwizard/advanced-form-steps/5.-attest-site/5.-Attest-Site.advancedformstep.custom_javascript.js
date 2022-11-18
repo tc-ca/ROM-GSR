@@ -75,7 +75,7 @@ if (window.jQuery) {
             //UN Numbers validation
             var isExtendedSite = $("#cid_requirementlevel").find(":selected").text();
 
-            if (IsExtendedSite == 'Basic' && !SiteHasOperationUNNumbers(null, siteId)) {
+            if (IsExtendedSite == 'Extended' && !SiteHasOperationUNNumbers(null, siteId)) {
                 var msg = tdg.error_message.message("m000017"); // UN ??
                 errorMessage = errorMessage + msg + "</br>";
                 validation = false;
