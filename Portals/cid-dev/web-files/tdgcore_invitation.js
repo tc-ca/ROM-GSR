@@ -52,13 +52,24 @@ if (typeof (invitation) == "undefined") {
 
                 if (current_registering) {
                     var message_code = "";
+
+                    // current primary user of selected company?
+                    if (!suppress_error) {
+                        var filter = "_parentcustomerid_value eq '" + rom_data.accountid + "'";
+                        var list = tdg.webapi.list("contacts", filter);
+                        list = list.filter(x => x.cid_contacttype == 100000000 && x.contactid == contact_id);
+                        if (list.length == 1) {
+                            suppress_error = true;
+                        }
+                    }
+
                     if (!suppress_error) {
                         message_code = (rom_data.cid_cidcompanystatus != 100000005 ? "m000014" : "m000014B");
-
                         var message = tdg.error_message.message(message_code);
                         tdg.c.dialog_YN(message, (ans) => {
                             if (ans) {
                                 debugger;
+
                                 // send email
                                 var data = {}
                                 data.EmailCode = "S1B-1";
@@ -79,6 +90,7 @@ if (typeof (invitation) == "undefined") {
 
                     return value;
                 }
+
                 $("#parentcustomerid").attr("value", rom_data.accountid);
                 $("#parentcustomerid_name").attr("value", rom_data.ovs_legalname);
                 $("#parentcustomerid_entityname").attr("value", 'account');

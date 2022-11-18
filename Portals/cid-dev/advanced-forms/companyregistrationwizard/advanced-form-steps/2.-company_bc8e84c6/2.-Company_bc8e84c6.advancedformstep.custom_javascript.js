@@ -17,7 +17,7 @@ $(document).ready(function () {
 	tdg.cid.WebResource_address_complete_readonly(false);
 	var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name }}');
 	if (companyName) {
-		$(".previous-btn").attr('disabled', true);
+		//$(".previous-btn").attr('disabled', true);
 	}
 	$("#websiteurl").width('100%');
 
@@ -186,8 +186,7 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 		});
 	}
 }
-function ListChange()
-{
-	console.log("List Change");
 
+function ListChange() {
+	console.log("List Change");
 }

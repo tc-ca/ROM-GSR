@@ -1,7 +1,6 @@
 //
 // CompanyRegistrationWizard-Company Edit.js
 //
-
 $(document).ready(function () {
 	debugger;
 
@@ -13,7 +12,7 @@ $(document).ready(function () {
 	tdg.c.control_hide("cid_addressoverwritten");
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
-	
+
 	//validate postal code with province - first letter of postal code need to matched allowed province letters
 	tdg.c.Add_Validation_For_Postal_Code_with_Province(selected_language);
 
@@ -35,13 +34,13 @@ $(document).ready(function () {
 	advanced_form_header();
 	var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name }}');
 	if (companyName) {
-		$(".previous-btn").attr('disabled', true);
+		//$(".previous-btn").attr('disabled', true);
 	}
 	$("#websiteurl").width('100%');
 	//phone field formatting
 	tdg.cid.phone_init("telephone1", selected_language);
 	tdg.cid.phone_init("fax", selected_language);
-	
+
 	tdg.c.control_hide("cid_reasonfornobnnumber_other");
 	tdg.c.control_hide("cid_companyclaim");
 	var step_start = sessionStorage.getItem("step_start");
@@ -205,5 +204,3 @@ function Disable_ContactTypeFieldsForSecondaryUser() {
 		});
 	}
 }
-
-

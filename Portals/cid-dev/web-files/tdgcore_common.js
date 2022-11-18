@@ -666,8 +666,7 @@ if (typeof (tdg.grid) == "undefined") {
 
                 });//end find tr
             });//end on grid load             
-        }
-        ,
+        },
 
         Registeration_ContactGrid_Actions: function (gridList) {
             gridList.on("loaded", function () {
@@ -709,11 +708,8 @@ if (typeof (tdg.grid) == "undefined") {
                     }); //end find menu action
                 }); //end find tr
             }); //end on grid load
-
         }
-
     }
-
 }
 
 // Wrapper AJAX function
@@ -754,10 +750,16 @@ if (typeof (tdg.webapi) == "undefined") {
         list: function (entity_name, filter) {
             debugger;
 
+            var api_url = entity_name;
+            if (filter != "") {
+                api_url += "?$filter=" + filter;
+            }
+            var response = null;
+
             var response = null;
             $.ajax({
                 type: "GET",
-                url: "/_api/" + entity_name + "?$filter=" + filter,
+                url: "/_api/" + api_url,
                 contentType: "application/json",
                 async: false
             }).done(function (json) {
@@ -1185,6 +1187,11 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#address1_stateorprovince").val(address1_stateorprovince);
                 $("#address1_postalcode").val(address1_postalcode);
                 $("#address1_country").val(address1_country);
+
+                if (ovs_address1_province == null) {
+                    var selected_language = sessionStorage.getItem("selected_language");
+                    tdg.cid.convert_province_to_code(selected_language);
+                }
             }
             else {
                 $("#address1_line2").prop('readonly', false);
@@ -1668,7 +1675,7 @@ if (typeof (tdg.cid) == "undefined") {
 
                 //call flow
                 var data = '{ "contactid" : "' + recordid + '", "ChangedInfo" : [' + ChangeArr + ']}';
-              
+
                 tdg.cid.flow.Call_Flow("CID_Portal_Email_Contact_when_Information_is_changed", data);
             });
         }
@@ -1822,7 +1829,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#address1_stateorprovince").val(address.ProvinceStateCode);
             $("#address1_postalcode").val(address.PostalZipCode);
         }
-        
+
     }
 }
 
