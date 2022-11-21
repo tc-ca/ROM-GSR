@@ -4,14 +4,20 @@
 $(document).ready(function () {
 	debugger;
 	$("#cid_registrationasof").parent().parent().hide();
-
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
+
+	tdg.c.control_hide("cid_addressoverwritten");
 	//update manually entered field if address fields changed
 	tdg.cid.Update_AdderssOverwritten_Field();
 	//validate postal code with province - first letter of postal code need to matched allowed province letters
 	tdg.c.Add_Validation_For_Postal_Code_with_Province(selected_language);
-	tdg.c.control_hide("cid_addressoverwritten");
+	// PO Box address validation
+	tdg.c.Prevent_Po_Box_address_Validation(selected_language);
+	//disable/enable province based on enterd manually
+	if ($("#cid_addressoverwritten").val() == 0)
+	{ $("#ovs_address1_province").prop('disabled', true);}
+	else {$("#ovs_address1_province").prop('disabled', false);}
 	// address
 	tdg.cid.address_init(false);
 	tdg.cid.WebResource_address_complete_readonly(false);
@@ -187,6 +193,3 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 	}
 }
 
-function ListChange() {
-	console.log("List Change");
-}

@@ -15,6 +15,12 @@ $(document).ready(function () {
 
 	//validate postal code with province - first letter of postal code need to matched allowed province letters
 	tdg.c.Add_Validation_For_Postal_Code_with_Province(selected_language);
+    // PO Box address validation
+	tdg.c.Prevent_Po_Box_address_Validation(selected_language);
+	//disable/enable province based on enterd manually
+	if ($("#cid_addressoverwritten").val() == 0)
+	{ $("#ovs_address1_province").prop('disabled', true);}
+	else {$("#ovs_address1_province").prop('disabled', false);}
 
 	var cid_contacttype = '{{user.cid_contacttype.Value}}';
 	//if not primary contact
