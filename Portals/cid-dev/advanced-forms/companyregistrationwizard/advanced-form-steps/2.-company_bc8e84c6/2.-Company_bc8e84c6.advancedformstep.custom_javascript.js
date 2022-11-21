@@ -15,15 +15,17 @@ $(document).ready(function () {
 	// PO Box address validation
 	tdg.c.Prevent_Po_Box_address_Validation(selected_language);
 	//disable/enable province based on enterd manually
-	if ($("#cid_addressoverwritten").val() == 0)
-	{ $("#ovs_address1_province").prop('disabled', true);}
-	else {$("#ovs_address1_province").prop('disabled', false);}
+	if ($("#cid_addressoverwritten").val() == 0) { $("#ovs_address1_province").prop('disabled', true); }
+	else { $("#ovs_address1_province").prop('disabled', false); }
+
+	var cid_contacttype = '{{user.cid_contacttype.Value}}';
+
 	// address
 	tdg.cid.address_init(false);
 	tdg.cid.WebResource_address_complete_readonly(false);
 	var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name }}');
-	if (companyName) {
-		//$(".previous-btn").attr('disabled', true);
+	if (cid_contacttype != 100000000) {
+		$(".previous-btn").attr('disabled', true);
 	}
 	$("#websiteurl").width('100%');
 
@@ -39,6 +41,7 @@ $(document).ready(function () {
 	if (step_start == "1") {
 		var cid_has_cra_bn = '{{user.cid_has_cra_bn}}';
 		var cid_has_cra_bn = (cid_has_cra_bn == "true" ? 1 : 0);
+		$('#cid_has_cra_bn').val(cid_has_cra_bn);
 		var cid_crabusinessnumber = '{{user.cid_crabusinessnumber}}';
 		var cid_reasonfornobnnumber = "{{user.cid_reasonfornobnnumber.Value}}";
 		var cid_reasonfornobnnumber_other = tdg.c.replace_special_char("{{user.cid_reasonfornobnnumber_other}}");
@@ -124,12 +127,6 @@ $(document).ready(function () {
 	$("#fax").attr("autocomplete", "new-password");
 	$("#cid_reasonfornobnnumber_other").attr("autocomplete", "new-password");
 	$("#websiteurl").attr("autocomplete", "new-password");
-	//Add listeners for the address fields to change the "manually entered" flag
-	//$("#address1_line1").attr("oninput", "setManualAddressEntryFlag()");
-	//$("#address1_city").attr("oninput", "setManualAddressEntryFlag()");
-	//$("#address1_stateorprovince").attr("oninput", "setManualAddressEntryFlag()");
-	//$("#address1_postalcode").attr("oninput", "setManualAddressEntryFlag()");
-	//$("#address1_country").attr("oninput", "setManualAddressEntryFlag()");
 	tdg.cid.convert_province_to_code(selected_language);
 	var currentUserId = '{{user.contactid}}';
 	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
@@ -192,4 +189,3 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 		});
 	}
 }
-

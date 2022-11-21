@@ -15,12 +15,11 @@ $(document).ready(function () {
 
 	//validate postal code with province - first letter of postal code need to matched allowed province letters
 	tdg.c.Add_Validation_For_Postal_Code_with_Province(selected_language);
-    // PO Box address validation
+	// PO Box address validation
 	tdg.c.Prevent_Po_Box_address_Validation(selected_language);
 	//disable/enable province based on enterd manually
-	if ($("#cid_addressoverwritten").val() == 0)
-	{ $("#ovs_address1_province").prop('disabled', true);}
-	else {$("#ovs_address1_province").prop('disabled', false);}
+	if ($("#cid_addressoverwritten").val() == 0) { $("#ovs_address1_province").prop('disabled', true); }
+	else { $("#ovs_address1_province").prop('disabled', false); }
 
 	var cid_contacttype = '{{user.cid_contacttype.Value}}';
 	//if not primary contact
@@ -39,8 +38,8 @@ $(document).ready(function () {
 	// header
 	advanced_form_header();
 	var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name }}');
-	if (companyName) {
-		//$(".previous-btn").attr('disabled', true);
+	if (cid_contacttype != 100000000) {
+		$(".previous-btn").attr('disabled', true);
 	}
 	$("#websiteurl").width('100%');
 	//phone field formatting
@@ -57,7 +56,6 @@ $(document).ready(function () {
 		var cid_legalname = $('#ovs_legalname').val();
 		var cid_operatingname = $('#name').val();
 		var ovs_name_fr = $('#ovs_name_fr').val();
-		var cid_has_cra_bn = $('#cid_has_cra_bn').val();
 		var cid_crabusinessnumber = $('#cid_crabusinessnumber').val();
 		var cid_reasonfornobnnumber = $('#cid_reasonfornobnnumber').val();
 		var cid_reasonfornobnnumber_other = $('#cid_reasonfornobnnumber_other').val();
@@ -65,6 +63,7 @@ $(document).ready(function () {
 	else {
 		var cid_has_cra_bn = '{{user.cid_has_cra_bn}}';
 		cid_has_cra_bn = (cid_has_cra_bn == "true" ? 1 : 0);
+		$('#cid_has_cra_bn').val(cid_has_cra_bn);
 		var cid_crabusinessnumber = '{{user.cid_crabusinessnumber}}';
 		var cid_reasonfornobnnumber = "{{user.cid_reasonfornobnnumber.Value}}";
 		var cid_reasonfornobnnumber_other = tdg.c.replace_special_char("{{user.cid_reasonfornobnnumber_other}}");
