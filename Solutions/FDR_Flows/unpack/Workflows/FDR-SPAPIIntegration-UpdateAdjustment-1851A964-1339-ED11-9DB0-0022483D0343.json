@@ -100,6 +100,31 @@
                 },
                 "authentication": "@parameters('$authentication')"
               }
+            },
+            "Update_Service_Request_Performance": {
+              "runAfter": {
+                "Adjust_a_service_request_performance_2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "8c763824-ddb4-478f-a211-b024894cc6da"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "fdr_servicerequestperformances",
+                  "recordId": "@triggerOutputs()?['body/fdr_servicerequestperformanceid']",
+                  "item/fdr_adjustmentapplicableunitnbr": "@outputs('Adjust_a_service_request_performance_2')?['body/AdjustmentApplicableUnitNbr']"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "description": "Update field Adjustment Applicable Unit Nbr with value returned from API"
             }
           },
           "runAfter": {

@@ -1,0 +1,167 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_office365": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_sharedoffice365_e53ce"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      },
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_dataverse_fdrsp"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "ALL Regions  Operation Expiry Email notebox (fdr_alllRegionsOperationsExpiry)": {
+          "defaultValue": "tdg-field-service-qa@034gc.onmicrosoft.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "fdr_alllRegionsOperationsExpiry",
+            "description": "Email to send all notification for MOC Registration(Operations) expiration "
+          }
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "aeb4550f-113d-49cb-94ff-b344ed191237"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "fdr_servicerequest",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "fdr_name,fdr_srtype,fdr_site",
+              "subscriptionRequest/filterexpression": "(statecode eq 1 and statuscode eq 794600008) and (fdr_srtype eq 794600000 or fdr_srtype eq 794600001 or fdr_srtype eq 794600007)"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Send_Refusal_Email": {
+          "runAfter": {
+            "Get_Site_Details": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a5de3400-7254-402a-bf51-3286cf6defdd"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_office365",
+              "operationId": "SendEmailV2",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+            },
+            "parameters": {
+              "emailMessage/To": "@parameters('ALL Regions  Operation Expiry Email notebox (fdr_alllRegionsOperationsExpiry)')",
+              "emailMessage/Subject": "Transport Canada/Transports Canada - Registration Refusal/ Inscription refusé",
+              "emailMessage/Body": "<p>Your company was unable to demonstrate that it can consistently meet the requirements of the safety standard. Therefore, we have refused the following registration request:<br>\n<br>\nService Request ID number: @{triggerOutputs()?['body/fdr_name']}<br>\n<br>\nService Request Type: @{triggerOutputs()['body/_fdr_srtype_label']}<br>\n<br>\nRegistration Type: @{outputs('Get_SR_Details')?['body/fdr_containertype/fdr_englishname']}<br>\n<br>\nStandard: @{outputs('Get_Standard_Name')?['body/fdr_englishname']}<br>\n<br>\nCompany Name: @{outputs('Get_Site_Details')?['body/name']}<br>\n<br>\nSite address: @{outputs('Get_Site_Details')?['body/address1_composite']}<br>\n<br>\n<br>\nDE: mocregister-registrecontenant@tc.gc.ca<br>\n<br>\n<br>\nVotre entreprise n'a pas été en mesure de démontrer qu'elle pouvait satisfaire de manière constante aux exigences de la norme de sécurité. Par conséquent, nous avons refusé la demande d'inscription suivante :<br>\n<br>\nNuméro de demande de service: @{triggerOutputs()?['body/fdr_name']}<br>\n<br>\nType de demande de service: @{triggerOutputs()['body/_fdr_srtype_label']}<br>\n<br>\nType d’inscription: @{outputs('Get_SR_Details')?['body/fdr_containertype/fdr_frenchname']}<br>\n<br>\nNorme: @{outputs('Get_Standard_Name')?['body/fdr_frenchname']}<br>\n<br>\nNom d’entreprise: @{outputs('Get_Site_Details')?['body/name']}<br>\n<br>\nLocalisation: @{outputs('Get_Site_Details')?['body/address1_composite']}</p>",
+              "emailMessage/Importance": "Normal"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Get_Site_Details": {
+          "runAfter": {
+            "Get_Standard_Name": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c81ade87-9876-4aa0-878e-b02c921e9bc8"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "accounts",
+              "recordId": "@triggerOutputs()?['body/_fdr_site_value']",
+              "$select": "address1_composite,name",
+              "$expand": "primarycontactid($select=emailaddress1)"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Get_SR_Details": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "c81ade87-9876-4aa0-878e-b02c921e9bc8"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "fdr_servicerequests",
+              "recordId": "@triggerOutputs()?['body/fdr_servicerequestid']",
+              "$expand": "fdr_ContainerType($select=fdr_englishname,fdr_frenchname)"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Get_Standard_Name": {
+          "runAfter": {
+            "Get_SR_Details": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c81ade87-9876-4aa0-878e-b02c921e9bc8"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "fdr_containertypes",
+              "recordId": "@outputs('Get_SR_Details')?['body/_fdr_containertype_value']",
+              "$expand": "fdr_Standard($select=qm_name)"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

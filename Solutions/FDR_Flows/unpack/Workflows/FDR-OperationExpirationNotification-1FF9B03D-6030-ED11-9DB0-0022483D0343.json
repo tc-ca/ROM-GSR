@@ -39,6 +39,14 @@
             "schemaName": "fdr_alllRegionsOperationsExpiry",
             "description": "Email to send all notification for MOC Registration(Operations) expiration "
           }
+        },
+        "CrmBaseUrl (ovs_CrmBaseUrl)": {
+          "defaultValue": "tdgcore-dev-tcd365.crm3.dynamics.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "ovs_CrmBaseUrl",
+            "description": "Provides current environment base url. No back slash ending."
+          }
         }
       },
       "triggers": {
@@ -55,43 +63,9 @@
         }
       },
       "actions": {
-        "Parent_Site": {
-          "runAfter": {},
-          "metadata": {
-            "operationMetadataId": "43f98a44-a472-42c8-9f9a-21187f3b1789"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "ParentSite",
-                "type": "string"
-              }
-            ]
-          }
-        },
-        "Current_Region_Name": {
+        "List_of_operations_expired_30_days_ago": {
           "runAfter": {
-            "Parent_Site": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "bcbf45c3-eb18-460f-a4f4-2d57a9da5475"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "CurrentRegionName",
-                "type": "string"
-              }
-            ]
-          }
-        },
-        "List_of_operations_expiring_today": {
-          "runAfter": {
-            "Current_Region_Name": [
+            "Primary_Contact_Company": [
               "Succeeded"
             ]
           },
@@ -115,28 +89,105 @@
             "authentication": "@parameters('$authentication')"
           }
         },
+        "Iterate_expired_-_single_thread": {
+          "foreach": "@outputs('List_of_operations_expired_30_days_ago')?['body/value']",
+          "actions": {
+            "Send_an_email_(V2)_-expired": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "a5de3400-7254-402a-bf51-3286cf6defdd"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_office365",
+                  "operationId": "SendEmailV2",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                },
+                "parameters": {
+                  "emailMessage/To": "@parameters('ALL Regions  Operation Expiry Email notebox (fdr_alllRegionsOperationsExpiry)')",
+                  "emailMessage/Subject": "Operation @{items('Iterate_expired_-_single_thread')?['ovs_name']} expired",
+                  "emailMessage/Body": "<p>Hello/Bonjour,<br>\n<br>\nOperation @{items('Iterate_expired_-_single_thread')?['ovs_name']} expired 30 days ago.<br>\n<br>\nPlease use the following link to navigate directly to the operation: <br>\n<a href = 'https://@{parameters('CrmBaseUrl (ovs_CrmBaseUrl)')}/main.aspx?pagetype=entityrecord&etn=ovs_mocregistration&id=@{items('Iterate_expired_-_single_thread')?['ovs_mocregistrationid']}'>Operation @{items('Iterate_expired_-_single_thread')?['ovs_name']}</a><br>\n___________________________________________________________________________________<br>\n<br>\nOpération @{items('Iterate_expired_-_single_thread')?['ovs_name']} a expiré il y a 30 jours.<br>\n<br>\nVeuillez utiliser le lien suivant pour accéder directement à l’opération:<br>\n<a href = 'https://@{parameters('CrmBaseUrl (ovs_CrmBaseUrl)')}/main.aspx?pagetype=entityrecord&etn=ovs_mocregistration&id=@{items('Iterate_expired_-_single_thread')?['ovs_mocregistrationid']}'>Operation @{items('Iterate_expired_-_single_thread')?['ovs_name']}</a><br>\n<br>\n<br>\n</p>",
+                  "emailMessage/Importance": "Normal"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "List_of_operations_expired_30_days_ago": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "804aed47-3ba9-4c0e-ad1b-618ce12b41b0"
+          },
+          "type": "Foreach",
+          "runtimeConfiguration": {
+            "concurrency": {
+              "repetitions": 1
+            }
+          }
+        },
+        "List_of_operations_expiring_today": {
+          "runAfter": {
+            "Primary_Contact_Company": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "604bdefd-6710-47a0-8a67-86d34559a501"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_mocregistrations",
+              "$select": "ovs_name,ovs_mocregistrationid,ovs_mocregistrationname,ovs_registrationexpiry,_fdr_primarycontact_value",
+              "$filter": "(Microsoft.Dynamics.CRM.On(PropertyName='ovs_registrationexpiry',PropertyValue='@{formatDateTime(utcnow(),'yyyy-MM-dd')}') and ovs_SiteId/_parentaccountid_value ne null and ovs_registrationexpiry ne null and ovs_mocregistrationname ne null and fdr_registrationtype/_fdr_standard_value ne null) and (ovs_SiteId/accountid ne null) and (fdr_registrationtype/fdr_containertypeid ne null)",
+              "$expand": "ovs_SiteId($select=address1_composite,_parentaccountid_value,_primarycontactid_value),fdr_registrationtype($select=fdr_frenchname,fdr_englishname,_fdr_standard_value)",
+              "$top": 10000
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "List_of_operations_expiring_in_120_days": {
+          "runAfter": {
+            "Primary_Contact_Company": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "604bdefd-6710-47a0-8a67-86d34559a501"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_mocregistrations",
+              "$select": "ovs_name,ovs_mocregistrationid,ovs_mocregistrationname,ovs_registrationexpiry,_fdr_primarycontact_value",
+              "$filter": "(Microsoft.Dynamics.CRM.On(PropertyName='ovs_registrationexpiry',PropertyValue='@{formatDateTime(addDays(utcnow(),120),'yyyy-MM-dd')}')  and ovs_SiteId/_parentaccountid_value ne null and ovs_registrationexpiry ne null and ovs_mocregistrationname ne null and fdr_registrationtype/_fdr_standard_value ne null) and (ovs_SiteId/accountid ne null) and (fdr_registrationtype/fdr_containertypeid ne null)",
+              "$expand": "ovs_SiteId($select=address1_composite,_parentaccountid_value,_primarycontactid_value),fdr_registrationtype($select=fdr_frenchname,fdr_englishname,_fdr_standard_value)",
+              "$top": 10000
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
         "Iterate_expiring_-_single_thread": {
           "foreach": "@outputs('List_of_operations_expiring_today')?['body/value']",
           "actions": {
-            "Set_current_Parent_Org_id": {
+            "Get_Parent": {
               "runAfter": {},
               "metadata": {
-                "operationMetadataId": "d945a8e4-2c8e-4da5-bf30-9d8c84329de8"
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "ParentSite",
-                "value": "@{items('Iterate_expiring_-_single_thread')?['ovs_siteid/_parentaccountid_value']}"
-              }
-            },
-            "Get_a_Parent_org": {
-              "runAfter": {
-                "Set_current_Parent_Org_id": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "8321b85f-5c61-4ed5-b17c-a7986ce075e4"
+                "operationMetadataId": "9306435a-cdf3-4334-8405-c7fb422b10ab"
               },
               "type": "OpenApiConnection",
               "inputs": {
@@ -147,29 +198,16 @@
                 },
                 "parameters": {
                   "entityName": "accounts",
-                  "recordId": "@variables('ParentSite')"
+                  "recordId": "@items('Iterate_expiring_-_single_thread')?['ovs_siteid/_parentaccountid_value']",
+                  "$select": "ovs_legalname,ovs_legalnamefr, accountid",
+                  "$expand": "primarycontactid($select=emailaddress1)"
                 },
                 "authentication": "@parameters('$authentication')"
               }
             },
-            "Set_current_Region_Name": {
+            "Send_an_email_(V2)_-_expiring": {
               "runAfter": {
-                "Get_a_Parent_org": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "22c0d48a-6a44-4866-a452-13f9eaa1979c"
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "CurrentRegionName",
-                "value": "@{concat(outputs('Get_a_Parent_org')?['body/_territoryid_value@OData.Community.Display.V1.FormattedValue'], ' FDR')}"
-              }
-            },
-            "Send_an_email_(V2)": {
-              "runAfter": {
-                "Set_current_Region_Name": [
+                "Get_Standard": [
                   "Succeeded"
                 ]
               },
@@ -184,13 +222,197 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                 },
                 "parameters": {
-                  "emailMessage/To": "@parameters('ALL Regions  Operation Expiry Email notebox (fdr_alllRegionsOperationsExpiry)')",
-                  "emailMessage/Subject": "Operation @{items('Iterate_expiring_-_single_thread')?['ovs_name']} expired",
-                  "emailMessage/Body": "<p>Hello,<br>\nThis is an auto reminder about operation expiration.<br>\nOperation @{items('Iterate_expiring_-_single_thread')?['ovs_name']} related to @{outputs('Get_a_Parent_org')?['body/ovs_legalname']} expired 30 days ago.<br>\n<br>\n<br>\n</p>",
+                  "emailMessage/To": "@if(variables('isProd'),body('_Join_Email_List'),parameters('ALL Regions  Operation Expiry Email notebox (fdr_alllRegionsOperationsExpiry)'))",
+                  "emailMessage/Subject": "Transport Canada – Expiry Notice / Transports Canada – Avis d’expiration ",
+                  "emailMessage/Body": "<p>Your registration under number @{items('Iterate_expiring_-_single_thread')?['ovs_mocregistrationname']} expired on @{formatDateTime(utcnow(),'yyyy-MM-dd')}. You are no longer registered, and any registered mark associated to this registration, shall no longer be applied. <br>\n <br>\nPlease advise us if you would like to close your file. To renew your registration, you must submit a <a href=\"https://tc.canada.ca/en/dangerous-goods/containers\">renewal request</a> .<br>\n <br>\nOperation Type: @{items('Iterate_expiring_-_single_thread')?['fdr_registrationtype/fdr_englishname']}<br>\nStandard: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@{outputs('Get_Standard')?['body/qm_legislationsourceetxt']} <br>\nCompany Name: @{outputs('Get_Parent')?['body/ovs_legalname']}<br>\nSite address: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@{items('Iterate_expiring_-_single_thread')?['ovs_siteid/address1_composite']} <br>\n________________________________________________________________________ <br>\n <br>\nVotre inscription sous le numéro @{items('Iterate_expiring_-_single_thread')?['ovs_mocregistrationname']} a expiré le @{formatDateTime(utcnow(),'dd-MM-yyyy')}. &nbsp;<br>\nVous n'êtes plus inscrit, et toute marque enregistrée associée à cet inscription, ne doit plus être appliquée. <br>\nVeuillez nous aviser si vous désirez fermer votre dossier. Pour renouveler votre inscription, vous devez soumettre une <a href=\"https://tc.canada.ca/fr/marchandises-dangereuses/contenants\">demande de renouvellement</a> .<br>\n<br>\nType d’opération: @{items('Iterate_expiring_-_single_thread')?['fdr_registrationtype/fdr_frenchname']} <br>\nNorme: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@{outputs('Get_Standard')?['body/qm_legislationsourceftxt']} <br>\nNom d’entreprise: @{outputs('Get_Parent')?['body/ovs_legalnamefr']}<br>\nLocalisation: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@{items('Iterate_expiring_-_single_thread')?['ovs_siteid/address1_composite']}<br>\n</p>",
                   "emailMessage/Importance": "Normal"
                 },
                 "authentication": "@parameters('$authentication')"
               }
+            },
+            "Get_Standard": {
+              "runAfter": {
+                "_Join_Email_List": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "ab2888ed-b050-4967-9f7a-97c2426be260"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "qm_tylegislationsources",
+                  "recordId": "@items('Iterate_expiring_-_single_thread')?['fdr_registrationtype/_fdr_standard_value']",
+                  "$select": "qm_legislationsourceetxt,qm_legislationsourceftxt"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Get_Primary_Site_Contacts_-_Required": {
+              "runAfter": {
+                "Company_contact_": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "bdd95035-18d6-4c92-a5d1-a1439ef2abde"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "contacts",
+                  "recordId": "@items('Iterate_expiring_-_single_thread')?['ovs_siteid/_primarycontactid_value']",
+                  "$select": "emailaddress1"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "isThereOperationContact": {
+              "actions": {
+                "Get_Operation_Contact_-_Optional": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "c329291d-957a-4708-ba93-80850951002c"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "GetItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "contacts",
+                      "recordId": "@items('Iterate_expiring_-_single_thread')?['_fdr_primarycontact_value']",
+                      "$select": "emailaddress1"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Set_Operation_contact": {
+                  "runAfter": {
+                    "Get_Operation_Contact_-_Optional": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "9f379d80-17fe-44d0-a871-840b15966751"
+                  },
+                  "type": "AppendToArrayVariable",
+                  "inputs": {
+                    "name": "contactOperation",
+                    "value": "@outputs('Get_Operation_Contact_-_Optional')?['body/emailaddress1']"
+                  }
+                }
+              },
+              "runAfter": {
+                "Set_Contact_Site": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "equals": [
+                  "@empty(items('Iterate_expiring_-_single_thread')?['_fdr_primarycontact_value'])",
+                  "@false"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b7be41d4-5128-47c9-bd9b-69afa3048d26"
+              },
+              "type": "If"
+            },
+            "Set_Contact_Site": {
+              "runAfter": {
+                "Get_Primary_Site_Contacts_-_Required": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7cb03ee4-0eb1-4893-b575-dce7c5836e43"
+              },
+              "type": "AppendToArrayVariable",
+              "inputs": {
+                "name": "primaryContactSite",
+                "value": "@outputs('Get_Primary_Site_Contacts_-_Required')?['body/emailaddress1']"
+              }
+            },
+            "Company_contact_": {
+              "actions": {
+                "Set_company_contact_": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "fdaba686-68ee-498c-8ea7-aef3cf890156"
+                  },
+                  "type": "AppendToArrayVariable",
+                  "inputs": {
+                    "name": "primaryContactCompany",
+                    "value": "@outputs('Get_Parent')['body/primarycontactid']['emailaddress1']"
+                  }
+                }
+              },
+              "runAfter": {
+                "Get_Parent": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@empty(outputs('Get_Parent')?['body/primarycontactid'])",
+                      "@false"
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@empty(outputs('Get_Parent')['body/primarycontactid']['emailaddress1'])",
+                      "@false"
+                    ]
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "c5d83592-f26a-4f19-8e5a-c8d5a719ee7d"
+              },
+              "type": "If"
+            },
+            "_Join_Email_List": {
+              "runAfter": {
+                "Compose_Email_List": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "212be8cd-a13a-445c-bf58-80955b8611f4"
+              },
+              "type": "Join",
+              "inputs": {
+                "from": "@outputs('Compose_Email_List')",
+                "joinWith": ";"
+              }
+            },
+            "Compose_Email_List": {
+              "runAfter": {
+                "isThereOperationContact": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "9384380c-b072-48ff-aa82-d25f19b3ba9c"
+              },
+              "type": "Compose",
+              "inputs": "@union(variables('primaryContactSite'),variables('primaryContactCompany'),variables('contactOperation'))"
             }
           },
           "runAfter": {
@@ -207,10 +429,389 @@
               "repetitions": 1
             }
           }
+        },
+        "Iterate_expiring_in_120_-_single_thread": {
+          "foreach": "@outputs('List_of_operations_expiring_in_120_days')?['body/value']",
+          "actions": {
+            "Get_Parent_120": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "e03fde8f-9ac5-4069-93dd-2a113d683e69"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "recordId": "@items('Iterate_expiring_in_120_-_single_thread')?['ovs_siteid/_parentaccountid_value']",
+                  "$select": "ovs_legalname,ovs_legalnamefr",
+                  "$expand": "primarycontactid($select=emailaddress1)"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Send_an_email_(V2)_120": {
+              "runAfter": {
+                "Get_Standard_120": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a5de3400-7254-402a-bf51-3286cf6defdd"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_office365",
+                  "operationId": "SendEmailV2",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                },
+                "parameters": {
+                  "emailMessage/To": "@if(variables('isProd'),body('_Join_Email_List_120'),parameters('ALL Regions  Operation Expiry Email notebox (fdr_alllRegionsOperationsExpiry)'))",
+                  "emailMessage/Subject": "Transport Canada –Renewal Notice / Transports Canada – Avis de renouvellement ",
+                  "emailMessage/Body": "<p>Your registration under number @{items('Iterate_expiring_in_120_-_single_thread')?['ovs_mocregistrationname']} will expire on @{formatDateTime(addDays(utcnow(),120),'yyyy-MM-dd')}. &nbsp;<br>\n<br>\nPlease advise us if you would like to close your file. To renew your registration, you must submit a <a href=\"https://tc.canada.ca/en/dangerous-goods/containers\">renewal request</a> &nbsp;.<br>\n<br>\nOperation Type: @{items('Iterate_expiring_in_120_-_single_thread')?['fdr_registrationtype/fdr_englishname']}<br>\nStandard: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@{outputs('Get_Standard_120')?['body/qm_legislationsourceetxt']}<br>\nCompany Name: @{outputs('Get_Parent_120')?['body/ovs_legalname']}<br>\nSite address: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@{items('Iterate_expiring_in_120_-_single_thread')?['ovs_siteid/address1_composite']}<br>\n<br>\n________________________________________________________________________<br>\n<br>\nVotre inscription sous le numéro @{items('Iterate_expiring_in_120_-_single_thread')?['ovs_mocregistrationname']} vient a échéance le @{formatDateTime(addDays(utcnow(),120),'dd-MM-yyyy')}. &nbsp;<br>\nVeuillez nous aviser si vous désirez fermer votre dossier. Pour renouveler votre inscription, vous devez soumettre une <a href=\"https://tc.canada.ca/fr/marchandises-dangereuses/contenants\">demande de renouvellement</a> . &nbsp;<br>\n<br>\nType d’opération: @{items('Iterate_expiring_in_120_-_single_thread')?['fdr_registrationtype/fdr_frenchname']}<br>\nNorme: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@{outputs('Get_Standard_120')?['body/qm_legislationsourceftxt']}<br>\nNom d’entreprise: @{outputs('Get_Parent_120')?['body/ovs_legalnamefr']}<br>\nLocalisation: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@{items('Iterate_expiring_in_120_-_single_thread')?['ovs_siteid/address1_composite']}<br>\n<br>\n<br>\n<br>\n</p>",
+                  "emailMessage/Importance": "Normal"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Get_Standard_120": {
+              "runAfter": {
+                "_Join_Email_List_120": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "66d0e4c8-71ab-40bb-b2de-229cd2d29b00"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "qm_tylegislationsources",
+                  "recordId": "@items('Iterate_expiring_in_120_-_single_thread')?['fdr_registrationtype/_fdr_standard_value']",
+                  "$select": "qm_legislationsourceetxt,qm_legislationsourceftxt"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Get_Primary_Contacts_120": {
+              "runAfter": {
+                "Condition": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "f2c39460-93cb-48fa-a6cb-7c68f21cfd86"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "contacts",
+                  "recordId": "@items('Iterate_expiring_in_120_-_single_thread')?['ovs_siteid/_primarycontactid_value']",
+                  "$select": "emailaddress1"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "isThereOperationContact_120": {
+              "actions": {
+                "Get_Operation_Contact_-_Optional_120": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "c329291d-957a-4708-ba93-80850951002c"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "GetItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "contacts",
+                      "recordId": "@items('Iterate_expiring_in_120_-_single_thread')?['_fdr_primarycontact_value']",
+                      "$select": "emailaddress1"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Set_Operation_contact_120": {
+                  "runAfter": {
+                    "Get_Operation_Contact_-_Optional_120": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "9f379d80-17fe-44d0-a871-840b15966751"
+                  },
+                  "type": "AppendToArrayVariable",
+                  "inputs": {
+                    "name": "contact120Operation",
+                    "value": "@outputs('Get_Operation_Contact_-_Optional_120')?['body/emailaddress1']"
+                  }
+                }
+              },
+              "runAfter": {
+                "Set_Contact_Site_120": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "equals": [
+                  "@empty(items('Iterate_expiring_in_120_-_single_thread')?['_fdr_primarycontact_value'])",
+                  "@false"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b7be41d4-5128-47c9-bd9b-69afa3048d26"
+              },
+              "type": "If"
+            },
+            "Condition": {
+              "actions": {
+                "Set_company_contact_120": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "9e05d508-a4a0-44ae-9b35-56928883b165"
+                  },
+                  "type": "AppendToArrayVariable",
+                  "inputs": {
+                    "name": "primaryContact120Company",
+                    "value": "@outputs('Get_Parent_120')?['body/primarycontactid']['emailaddress1']"
+                  }
+                }
+              },
+              "runAfter": {
+                "Get_Parent_120": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@empty(outputs('Get_Parent_120')?['body/primarycontactid'])",
+                      "@false"
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@empty(outputs('Get_Parent_120')?['body/primarycontactid']['emailaddress1'])",
+                      "@false"
+                    ]
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "f5566721-de24-46e3-88bf-3a0164648d47"
+              },
+              "type": "If"
+            },
+            "Set_Contact_Site_120": {
+              "runAfter": {
+                "Get_Primary_Contacts_120": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7cb03ee4-0eb1-4893-b575-dce7c5836e43"
+              },
+              "type": "AppendToArrayVariable",
+              "inputs": {
+                "name": "primaryContact120Site",
+                "value": "@outputs('Get_Primary_Contacts_120')?['body/emailaddress1']"
+              }
+            },
+            "Compose_Email_List_120": {
+              "runAfter": {
+                "isThereOperationContact_120": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "8be7289b-02ec-4dc4-b6f5-f4b4ff480539"
+              },
+              "type": "Compose",
+              "inputs": "@union(variables('primaryContact120Site'),variables('primaryContact120Company'),variables('contact120Operation'))"
+            },
+            "_Join_Email_List_120": {
+              "runAfter": {
+                "Compose_Email_List_120": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "99ea3fa5-51a2-46b7-bf17-497a53f5b27a"
+              },
+              "type": "Join",
+              "inputs": {
+                "from": "@outputs('Compose_Email_List_120')",
+                "joinWith": ";"
+              }
+            }
+          },
+          "runAfter": {
+            "List_of_operations_expiring_in_120_days": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "804aed47-3ba9-4c0e-ad1b-618ce12b41b0"
+          },
+          "type": "Foreach",
+          "runtimeConfiguration": {
+            "concurrency": {
+              "repetitions": 1
+            }
+          }
+        },
+        "Primary_Contact_120_Site_-_Required": {
+          "runAfter": {
+            "Initialize_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "28a1d632-a895-46c5-855e-a0c9d67942a2"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "primaryContact120Site",
+                "type": "array"
+              }
+            ]
+          }
+        },
+        "Contact_for_Operation_120": {
+          "runAfter": {
+            "Primary_Contact_120_Site_-_Required": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "bd3d2510-f7fe-4edd-a740-2e1980143a84"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "contact120Operation",
+                "type": "array"
+              }
+            ]
+          }
+        },
+        "Primary_Contact_120_Company": {
+          "runAfter": {
+            "Contact_for_Operation_120": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "cdf33020-0b7e-45dd-8488-bbfe48f5ba3e"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "primaryContact120Company",
+                "type": "array"
+              }
+            ]
+          }
+        },
+        "Primary_Contact_Site_-_Required": {
+          "runAfter": {
+            "Primary_Contact_120_Company": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f9320eca-8eb5-4b2a-8cea-8574732e1d95"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "primaryContactSite",
+                "type": "array"
+              }
+            ]
+          }
+        },
+        "Contact_for_Operation": {
+          "runAfter": {
+            "Primary_Contact_Site_-_Required": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "110e00a0-3700-439f-8874-cc6be122791f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "contactOperation",
+                "type": "array"
+              }
+            ]
+          }
+        },
+        "Primary_Contact_Company": {
+          "runAfter": {
+            "Contact_for_Operation": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4458b98e-c2a8-403f-b8ce-d68424acb564"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "primaryContactCompany",
+                "type": "array"
+              }
+            ]
+          }
+        },
+        "Initialize_variable": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "c2844a82-8e37-44ab-8530-8def661a9f32"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "isProd",
+                "type": "boolean",
+                "value": "@equals(trim(toLower(parameters('CrmBaseUrl (ovs_CrmBaseUrl)'))),trim(toLower('rom-prod-tdg-tcd365.crm3.dynamics.com')))"
+              }
+            ]
+          }
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }

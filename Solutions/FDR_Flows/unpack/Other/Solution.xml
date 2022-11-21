@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ImportExportXml version="9.2.22103.172" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ImportExportXml version="9.2.22105.154" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <UniqueName>FDR_Flows</UniqueName>
     <LocalizedNames>
       <LocalizedName description="FDR.Flows" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.0.0.42</Version>
+    <Version>1.0.0.43</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>FDR</UniqueName>
@@ -83,7 +83,9 @@
       <RootComponent type="29" id="{1851a964-1339-ed11-9db0-0022483d0343}" behavior="0" />
       <RootComponent type="29" id="{1ff9b03d-6030-ed11-9db0-0022483d0343}" behavior="0" />
       <RootComponent type="29" id="{296853d2-1739-ed11-9db0-0022483d0343}" behavior="0" />
+      <RootComponent type="29" id="{484b40e1-ef66-ed11-9562-0022483d0c87}" behavior="0" />
       <RootComponent type="29" id="{4ca37306-f90c-ed11-b83d-000d3a0c8551}" behavior="0" />
+      <RootComponent type="29" id="{4d4d25a0-a45f-ed11-9562-0022483d0343}" behavior="0" />
       <RootComponent type="29" id="{64725ff4-d0ec-ec11-bb3c-000d3a8483f6}" behavior="0" />
       <RootComponent type="29" id="{66525c08-300c-ed11-b83d-000d3a84cfdd}" behavior="0" />
       <RootComponent type="29" id="{6df26ce3-a20d-ed11-b83d-000d3a0c8551}" behavior="0" />
@@ -94,6 +96,10 @@
       <RootComponent type="29" id="{d3e1f0e7-960f-ed11-b83d-000d3a0c8551}" behavior="0" />
     </RootComponents>
     <MissingDependencies>
+      <MissingDependency>
+        <Required type="1" schemaName="fdr_containertype" displayName="Registration Type" solution="Active" />
+        <Dependent type="29" displayName="FDR - Send Refusal Of Service Email" id="{484b40e1-ef66-ed11-9562-0022483d0c87}" />
+      </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="fdr_costrecoveryattribute" displayName="Cost Recovery Attribute" solution="Active" />
         <Dependent type="29" displayName="FDR - MTAPI Integration - Service Request Created" id="{a339b9ba-5ce7-ec11-bb3c-000d3a848130}" />
@@ -108,7 +114,15 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="fdr_servicerequest" displayName="Service Request" solution="Active" />
+        <Dependent type="29" displayName="FDR - Send Refusal Of Service Email" id="{484b40e1-ef66-ed11-9562-0022483d0c87}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="fdr_servicerequest" displayName="Service Request" solution="Active" />
         <Dependent type="29" displayName="FDR - TMAPI Integration - Time Updated" id="{4ca37306-f90c-ed11-b83d-000d3a0c8551}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="fdr_servicerequest" displayName="Service Request" solution="Active" />
+        <Dependent type="29" displayName="FDR - Send Notification When SR WO is Completed or Canceled" id="{4d4d25a0-a45f-ed11-9562-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="fdr_servicerequest" displayName="Service Request" solution="Active" />
@@ -160,19 +174,41 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="msdyn_servicetasktype" displayName="Service Task Type" solution="FieldService (8.8.0.88)">
-          <package>FieldService_Anchor (8.8.77.41)</package>
+          <package>FieldService_Anchor (8.8.78.23)</package>
         </Required>
         <Dependent type="29" displayName="FDR - TMAPI Integration - Time Created" id="{66525c08-300c-ed11-b83d-000d3a84cfdd}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="msdyn_servicetasktype" displayName="Service Task Type" solution="FieldService (8.8.0.88)">
-          <package>FieldService_Anchor (8.8.77.41)</package>
+          <package>FieldService_Anchor (8.8.78.23)</package>
         </Required>
         <Dependent type="29" displayName="FDR - Send Notification When Time Is Rejected" id="{b04a37e4-8d33-ed11-9db1-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="1" schemaName="msdyn_workorder" displayName="Work Order" solution="FieldService (8.8.0.88)">
+          <package>FieldService_Anchor (8.8.78.23)</package>
+        </Required>
+        <Dependent type="29" displayName="FDR - Send Notification When SR WO is Completed or Canceled" id="{4d4d25a0-a45f-ed11-9562-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="1" schemaName="ovs_mocregistration" displayName="Operation" solution="Active" />
         <Dependent type="29" displayName="FDR - Operation Expiration Notification" id="{1ff9b03d-6030-ed11-9db0-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="qm_tylegislationsource" displayName="Legislation Source" solution="Active" />
+        <Dependent type="29" displayName="FDR - Operation Expiration Notification" id="{1ff9b03d-6030-ed11-9db0-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="fdr_name" displayName="Service Request ID" parentSchemaName="fdr_servicerequest" parentDisplayName="Service Request" solution="Active" />
+        <Dependent type="29" displayName="FDR - Send Refusal Of Service Email" id="{484b40e1-ef66-ed11-9562-0022483d0c87}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="fdr_site" displayName="Account" parentSchemaName="fdr_servicerequest" parentDisplayName="Service Request" solution="Active" />
+        <Dependent type="29" displayName="FDR - Send Refusal Of Service Email" id="{484b40e1-ef66-ed11-9562-0022483d0c87}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="fdr_srtype" displayName="Service Request Type" parentSchemaName="fdr_servicerequest" parentDisplayName="Service Request" solution="Active" />
+        <Dependent type="29" displayName="FDR - Send Refusal Of Service Email" id="{484b40e1-ef66-ed11-9562-0022483d0c87}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="statuscode" displayName="Status Reason" parentSchemaName="fdr_servicerequest" parentDisplayName="Service Request" solution="Active" />
@@ -183,7 +219,7 @@
         <Dependent type="29" displayName="FDR - SPAPI Integration - Update Adjustment" id="{1851a964-1339-ed11-9db0-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="2" schemaName="fdr_adjustmentnbr" displayName="Adjustment Nbr" parentSchemaName="fdr_servicerequestperformance" parentDisplayName="Service Request Performance" solution="Active" />
+        <Required type="2" schemaName="fdr_adjustmentnbr" displayName="Adjustment (in days)" parentSchemaName="fdr_servicerequestperformance" parentDisplayName="Service Request Performance" solution="Active" />
         <Dependent type="29" displayName="FDR - SPAPI Integration - Update Adjustment" id="{1851a964-1339-ed11-9db0-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
@@ -209,6 +245,12 @@
       <MissingDependency>
         <Required type="2" schemaName="fdr_minute" displayName="Minute" parentSchemaName="fdr_servicerequestservicetask" parentDisplayName="Service Request Service Task" solution="Active" />
         <Dependent type="29" displayName="FDR - TMAPI Integration - Time Updated" id="{4ca37306-f90c-ed11-b83d-000d3a0c8551}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="msdyn_systemstatus" displayName="Record Status" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)">
+          <package>FieldService_Anchor (8.8.78.23)</package>
+        </Required>
+        <Dependent type="29" displayName="FDR - Send Notification When SR WO is Completed or Canceled" id="{4d4d25a0-a45f-ed11-9562-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="372" schemaName="tc_5Fmtapiconnector" displayName="MTAPIConnector" solution="Active" id="{5bdc4d18-803f-480a-82bc-c3e6d00ad974}" />
@@ -271,6 +313,10 @@
         <Dependent type="29" displayName="FDR - Operation Expiration Notification" id="{1ff9b03d-6030-ed11-9db0-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="EnvironmentVariableDefinition" displayName="fdr_alllRegionsOperationsExpiry" solution="Active" id.schemaname="fdr_alllRegionsOperationsExpiry" />
+        <Dependent type="29" displayName="FDR - Send Refusal Of Service Email" id="{484b40e1-ef66-ed11-9562-0022483d0c87}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="EnvironmentVariableDefinition" displayName="fdr_envvar_mtoa_appuserid" solution="Active" id.schemaname="fdr_envvar_mtoa_appuserid" />
         <Dependent type="29" displayName="FDR - MTAPI Integration - Service Request Updated" id="{64725ff4-d0ec-ec11-bb3c-000d3a8483f6}" />
       </MissingDependency>
@@ -297,6 +343,10 @@
       <MissingDependency>
         <Required type="EnvironmentVariableDefinition" displayName="fdr_FDR_MTOA_JWT" solution="Active" id.schemaname="fdr_FDR_MTOA_JWT" />
         <Dependent type="29" displayName="FDR - MTAPI Integration - Contact Created" id="{d3e1f0e7-960f-ed11-b83d-000d3a0c8551}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="EnvironmentVariableDefinition" displayName="ovs_CrmBaseUrl" solution="Active" id.schemaname="ovs_CrmBaseUrl" />
+        <Dependent type="29" displayName="FDR - Operation Expiration Notification" id="{1ff9b03d-6030-ed11-9db0-0022483d0343}" />
       </MissingDependency>
     </MissingDependencies>
   </SolutionManifest>

@@ -66,7 +66,7 @@
         }
       },
       "actions": {
-        "Condition": {
+        "is_status_reason_=_approved": {
           "actions": {
             "Get_User_by_Id": {
               "runAfter": {},
@@ -116,9 +116,9 @@
             "Apply_to_each_Service_Request": {
               "foreach": "@outputs('Get_Associated_Service_Request')?['body/value']",
               "actions": {
-                "Update_a_row": {
+                "Update_Service_Request_Performance": {
                   "runAfter": {
-                    "Approve_a_service_request_performance_2": [
+                    "Approve_a_service_request_performance": [
                       "Succeeded"
                     ]
                   },
@@ -140,10 +140,10 @@
                     "authentication": "@parameters('$authentication')"
                   }
                 },
-                "Approve_a_service_request_performance_2": {
+                "Approve_a_service_request_performance": {
                   "runAfter": {},
                   "metadata": {
-                    "operationMetadataId": "a7ed263b-8b6a-49e5-b356-0e78eba067b5"
+                    "operationMetadataId": "899ef73f-7931-439a-a3af-d8fc44c33427"
                   },
                   "type": "OpenApiConnection",
                   "inputs": {
@@ -173,7 +173,7 @@
             }
           },
           "runAfter": {
-            "Initialize_variable": [
+            "Initialize_variable:_approved": [
               "Succeeded"
             ]
           },
@@ -188,7 +188,7 @@
           },
           "type": "If"
         },
-        "Initialize_variable": {
+        "Initialize_variable:_approved": {
           "runAfter": {},
           "metadata": {
             "operationMetadataId": "ddaf293d-998f-4879-acd6-c5462f335fc9"

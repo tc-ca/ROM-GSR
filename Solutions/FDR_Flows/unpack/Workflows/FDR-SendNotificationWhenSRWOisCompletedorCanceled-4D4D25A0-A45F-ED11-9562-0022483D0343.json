@@ -1,0 +1,569 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_2": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_dataverse_fdrsp"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_powerplatformforadmins": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_ppfa"
+        },
+        "api": {
+          "name": "shared_powerplatformforadmins"
+        }
+      },
+      "shared_teams": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_msteams"
+        },
+        "api": {
+          "name": "shared_teams"
+        }
+      },
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_dataverse_fdrsp"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "b257183d-3dd7-42b7-be9b-3c2e8d0fb3e1"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_2",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "msdyn_workorder",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "msdyn_systemstatus"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "conditions": [
+            {
+              "expression": "@or(equals(triggerOutputs()?['body/msdyn_systemstatus'],690970003),equals(triggerOutputs()?['body/msdyn_systemstatus'],690970005))"
+            }
+          ],
+          "description": "Is triggered when msdyn_systemstatus equals completed or canceled "
+        }
+      },
+      "actions": {
+        "Apply_to_each": {
+          "foreach": "@outputs('List_rows_-_Get_Service_Requests')?['body/value']",
+          "actions": {
+            "Get_Service_Request_Owner": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "302200e7-9fe2-4133-a73b-7da775522ffb"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_2",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "systemusers",
+                  "recordId": "@items('Apply_to_each')?['_ownerid_value']",
+                  "$select": "domainname,fullname"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Get_Environment_as_Admin": {
+              "runAfter": {
+                "Set_OwnerUserEmail": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "21e13561-c80a-4c1e-9910-13dacabd670e"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_powerplatformforadmins",
+                  "operationId": "GetSingleEnvironment",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_powerplatformforadmins"
+                },
+                "parameters": {
+                  "environment": "@workflow()['tags']['environmentName']",
+                  "api-version": "2018-10-01"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Set_Environment_Name": {
+              "runAfter": {
+                "Get_Environment_as_Admin": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0e08f995-6bf7-4dce-a4a7-ccafe1710190"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Environment Name",
+                "value": "@{body('Get_Environment_as_Admin')?['properties']?['displayName']}"
+              }
+            },
+            "Set_Work_Order_URL": {
+              "runAfter": {
+                "Set_Environment_Name": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0dd259f4-fe58-4b43-abab-fe76ebcf1d3e"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Work Order URL",
+                "value": "@{concat('https://', variables('Environment Name'), '.crm3.dynamics.com/main.aspx?pagetype=entityrecord&etn=msdyn_workorder&id=', triggerOutputs()?['body/msdyn_workorderid'])}"
+              }
+            },
+            "Compose_Work_Order_Anchor": {
+              "runAfter": {
+                "Set_Work_Order_URL": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "cd6c001b-0ca7-4960-b9a3-eedc4797f60f"
+              },
+              "type": "Compose",
+              "inputs": "<a href = \"@{variables('Work Order URL')}\">@{triggerOutputs()?['body/msdyn_name']}</a>"
+            },
+            "Set_Work_Order_Anchor_Tag": {
+              "runAfter": {
+                "Compose_Work_Order_Anchor": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "15b5202e-f27c-401a-924f-31e93596d50f"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Work Order Anchor Tag",
+                "value": "@{outputs('Compose_Work_Order_Anchor')}"
+              }
+            },
+            "Compose_Service_Request_Anchor": {
+              "runAfter": {
+                "Set_Service_Request_URL": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1e0abe34-b534-4c53-bdbb-fe5da5d78103"
+              },
+              "type": "Compose",
+              "inputs": "<a href = \"@{variables('Service Request URL')}\">@{items('Apply_to_each')?['fdr_name']}</a>"
+            },
+            "Set_Service_Request_URL": {
+              "runAfter": {
+                "Set_Work_Order_Anchor_Tag": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "fa53ebd7-8b03-4e85-9395-12af025e4a5a"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Service Request URL",
+                "value": "@{concat('https://', variables('Environment Name'), '.crm3.dynamics.com/main.aspx?pagetype=entityrecord&etn=fdr_servicerequest&id=', items('Apply_to_each')?['fdr_servicerequestid'])}"
+              }
+            },
+            "Set_Service_Request_Anchor_Tag": {
+              "runAfter": {
+                "Compose_Service_Request_Anchor": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "9bd120ca-b013-4b4f-98e3-9fe7ff10fb2a"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Service Request Anchor Tag",
+                "value": "@{outputs('Compose_Service_Request_Anchor')}"
+              }
+            },
+            "Set_OwnerUserEmail": {
+              "runAfter": {
+                "Set_Service_Request_Id": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d1a1c818-c5bf-495f-a75f-5da1ec9cdf3c"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ownerUserEmail",
+                "value": "@outputs('Get_Service_Request_Owner')?['body/domainname']"
+              }
+            },
+            "Switch_On_Work_Order_System_Status": {
+              "runAfter": {
+                "Set_Service_Request_Anchor_Tag": [
+                  "Succeeded"
+                ]
+              },
+              "cases": {
+                "Case_-_Work_is_Completed": {
+                  "case": 690970003,
+                  "actions": {
+                    "Only_trigger_if_completed_on_column": {
+                      "actions": {
+                        "Update_Service_Request_and_sets_status_reason_to_Post_Inspection_Review": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "890bb2be-6c30-4f20-9d84-165d2015becf"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_commondataserviceforapps_2",
+                              "operationId": "UpdateRecord",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            },
+                            "parameters": {
+                              "entityName": "fdr_servicerequests",
+                              "recordId": "@variables('Service Request Id')",
+                              "item/statuscode": 794600004
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          }
+                        },
+                        "Post_message_in_a_chat_or_channel": {
+                          "runAfter": {
+                            "Update_Service_Request_and_sets_status_reason_to_Post_Inspection_Review": [
+                              "Succeeded"
+                            ]
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_teams",
+                              "operationId": "PostMessageToConversation",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams"
+                            },
+                            "parameters": {
+                              "poster": "Flow bot",
+                              "location": "Chat with Flow bot",
+                              "body/recipient": "@{variables('ownerUserEmail')};",
+                              "body/messageBody": "<p><strong>Please note that the following inspection report has been issued. &nbsp;</strong><br>\n<br>\nInspection Work Order Number: @{variables('Work Order Anchor Tag')}<br>\nService Request ID Number: @{variables('Service Request Anchor Tag')}<br>\n<br>\n___________________________________________________________________________________<br>\n<strong>Veuillez noter que le rapport d’inspection suivant a été émis: &nbsp;</strong><br>\n<br>\nNuméro de l’ordre de travail de l’inspection: &nbsp;@{variables('Work Order Anchor Tag')}<br>\nNuméro de la demande de service: @{variables('Service Request Anchor Tag')}</p>"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          }
+                        }
+                      },
+                      "runAfter": {},
+                      "expression": {
+                        "equals": [
+                          "@empty(triggerOutputs()?['body/msdyn_completedon'])",
+                          "@false"
+                        ]
+                      },
+                      "type": "If",
+                      "description": "remark: condition used to ensure notification is only sent once as the flow is called twice when inspection report is set, as the inspection report flow also sets the booking which triggers flow again"
+                    }
+                  }
+                },
+                "Case_-_Work_is_Canceled": {
+                  "case": 690970005,
+                  "actions": {
+                    "Update_Service_Request_Status": {
+                      "runAfter": {},
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps_2",
+                          "operationId": "UpdateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "fdr_servicerequests",
+                          "recordId": "@variables('Service Request Id')",
+                          "item/statuscode": 794600004
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Post_message_in_a_chat_or_channel_2": {
+                      "runAfter": {
+                        "Update_Service_Request_Status": [
+                          "Succeeded"
+                        ]
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_teams",
+                          "operationId": "PostMessageToConversation",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams"
+                        },
+                        "parameters": {
+                          "poster": "Flow bot",
+                          "location": "Chat with Flow bot",
+                          "body/recipient": "@{variables('ownerUserEmail')};",
+                          "body/messageBody": "<p><strong>Please note that the following inspection report has been canceled. &nbsp;<br>\n</strong><br>\nInspection Work Order Number: @{variables('Work Order Anchor Tag')}<br>\nService Request ID Number: @{variables('Service Request Anchor Tag')}<br>\n<br>\n___________________________________________________________________________________<br>\n<strong>Veuillez noter que le rapport d’inspection suivant a été annulé. &nbsp;<br>\n</strong><br>\nNuméro de l’ordre de travail de l’inspection: &nbsp;@{variables('Work Order Anchor Tag')}<br>\nNuméro de la demande de service: @{variables('Service Request Anchor Tag')}</p>"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
+                  }
+                }
+              },
+              "default": {
+                "actions": {}
+              },
+              "expression": "@triggerOutputs()?['body/msdyn_systemstatus']",
+              "metadata": {
+                "operationMetadataId": "e939aeb2-5d22-4569-9b23-05cb979ee3ce"
+              },
+              "type": "Switch"
+            },
+            "Set_Service_Request_Id": {
+              "runAfter": {
+                "Get_Service_Request_Owner": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b92cb02b-8d40-478d-a9e3-4e61949a91c3"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Service Request Id",
+                "value": "@items('Apply_to_each')?['fdr_servicerequestid']"
+              }
+            }
+          },
+          "runAfter": {
+            "List_rows_-_Get_Service_Requests": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "58ed3fd9-81f1-4b0f-b926-d11b4a7aa819"
+          },
+          "type": "Foreach"
+        },
+        "Initialize_variable:_Work_Order_Anchor_Tag": {
+          "runAfter": {
+            "Initialize_variable:_Work_Order_System_Status": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "412ac43f-596d-42f4-91b4-42e14bfa13e2"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Work Order Anchor Tag",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_Service_Request_Anchor_Tag": {
+          "runAfter": {
+            "Initialize_variable:_Work_Order_Anchor_Tag": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "412ac43f-596d-42f4-91b4-42e14bfa13e2"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Service Request Anchor Tag",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_Environment_Name": {
+          "runAfter": {
+            "Initialize_variable:_Service_Request_URL": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "775d6e44-0dd0-4dda-9277-05c30311025e"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Environment Name",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_ownerUserEmail": {
+          "runAfter": {
+            "Initialize_variable:_Environment_Name": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a43806f2-df7b-4d03-8cc0-15a29ac80d31"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ownerUserEmail",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_Work_Order_URL": {
+          "runAfter": {
+            "Initialize_variable:_Service_Request_Anchor_Tag": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "57e6e1e7-2452-4f7a-b236-9f496d2061e9"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Work Order URL",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_Service_Request_URL": {
+          "runAfter": {
+            "Initialize_variable:_Work_Order_URL": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6f59f9e8-bf48-4701-9b24-0ae4f0fffd65"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Service Request URL",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_Work_Order_System_Status": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "d2905584-edaf-4454-931c-70a8aa56c1af"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Work Order System Status",
+                "type": "string",
+                "value": "@{triggerOutputs()?['body/msdyn_systemstatus']}"
+              }
+            ]
+          }
+        },
+        "List_rows_-_Get_Service_Requests": {
+          "runAfter": {
+            "Initialize_variable:_Service_Request": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "125f4d25-97f9-4ace-a42b-a3f5808181b5"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "fdr_servicerequests",
+              "$filter": "(_fdr_relatedworkorder_value eq  @{triggerOutputs()?['body/msdyn_workorderid']}  )",
+              "$top": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "description": "Set Row Count to 1, should ever be one service request per work order."
+        },
+        "Initialize_variable:_Service_Request": {
+          "runAfter": {
+            "Initialize_variable:_ownerUserEmail": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a0c8ab2e-8c62-45b1-ba56-983bd04ea7ce"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Service Request Id",
+                "type": "string"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
