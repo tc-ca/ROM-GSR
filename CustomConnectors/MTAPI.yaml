@@ -1,0 +1,3376 @@
+swagger: '2.0'
+info:
+  version: v1
+  title: MTOA Web Service APIs (v3.0.0.430)
+host: wwwappstestext.tc.gc.ca
+basePath: /Saf-Sec-Sur/13/MTAPI-INT
+schemes:
+  - https
+consumes: []
+produces: []
+paths:
+  /api/v1/servicerequests:
+    get:
+      tags:
+        - ServiceRequests
+      summary: Gets a list of service requests related to a given service.
+      description: "Gets a list of service requests.\r\n            This list allows for pagination if a page or page size is provided.\r\n            Service requests can be excluded."
+      operationId: ServiceRequests_GetServiceRequestByServices
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: services
+          in: query
+          description: >-
+            Coma delimited list of service ids we want to retrieve service
+            requests for.
+          required: true
+          type: string
+        - name: page
+          in: query
+          description: Page number. The default value for "Page" is 1.
+          required: false
+          type: integer
+          format: int32
+        - name: pageSize
+          in: query
+          description: >-
+            Page size. The default for the "PageSize" is 25. if the "PageSize"
+            is set to a bigger value than the maximum allowed value, the maximum
+            allowed value will be used as the "PageSize" value.
+          required: false
+          type: integer
+          format: int32
+        - name: excludeMetadata
+          in: query
+          description: Exclude the Service Request metadata.
+          required: false
+          type: boolean
+        - name: excludeServiceRequests
+          in: query
+          description: >-
+            Exclude all the Service Requests (used to retrieve the Service
+            Request count).
+          required: false
+          type: boolean
+        - name: includeRegulatedEntities
+          in: query
+          description: >-
+            True if the Service Request payload should contain its associated
+            regulated entities, false otherwise.
+          required: false
+          type: boolean
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Service Requests retrieval successful
+          schema:
+            $ref: '#/definitions/ServiceRequestCollectionDTO'
+        '400':
+          description: Service Requests retrieval failed
+        '401':
+          description: Unauthorized
+    post:
+      tags:
+        - ServiceRequests
+      summary: "Add a new service request.\r\nFor AP services, serviceStandardId is required."
+      description: Add a new service request.
+      operationId: ServiceRequests_AddServiceRequest
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: userId
+          in: query
+          description: User id
+          required: true
+          type: integer
+          format: int32
+        - name: serviceId
+          in: query
+          description: Service id
+          required: true
+          type: integer
+          format: int32
+        - name: englishName
+          in: query
+          description: Service request English name
+          required: true
+          type: string
+        - name: frenchName
+          in: query
+          description: Service request French name
+          required: true
+          type: string
+        - name: organizationId
+          in: query
+          description: Organization Id
+          required: false
+          type: integer
+          format: int32
+        - name: serviceRequestStatus
+          in: query
+          description: Service Request Status
+          required: false
+          type: string
+          enum:
+            - Unknown
+            - InProgress
+            - Submitted
+            - InReview
+            - Completed
+            - TrainingCompleted
+            - InformationRequired
+            - Accepted
+            - AcceptedWithUpdates
+            - Canceled
+            - Initiated
+            - Expired
+            - Rejected
+            - Failed
+            - PickedUp
+            - TestPaymentPending
+            - TestPaymentSent
+            - Validated
+            - Verified
+            - Approved
+            - OnHold
+            - PendingApproval
+            - DocumentIssued
+            - Draft
+            - Assigned
+            - Updated
+            - ActivityPlanned
+            - Closed
+            - ActivityCompleted
+            - DeclarationSubmitted
+            - Fulfilled
+        - name: serviceStandardId
+          in: query
+          description: Service Standard Id
+          required: false
+          type: integer
+          format: int32
+        - name: createdByUserId
+          in: query
+          description: The id of the user who created the service request (optional)
+          required: false
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ServiceRequestCreationResult'
+    put:
+      tags:
+        - ServiceRequests
+      summary: Update an existing Service Request.
+      description: Update an existing Service Request.
+      operationId: ServiceRequests_UpdateServiceRequest
+      consumes:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: serviceRequest
+          in: body
+          description: Service Request data to update.
+          required: true
+          schema:
+            $ref: '#/definitions/BaseServiceRequest'
+            x-ms-visibility: important
+          x-ms-visibility: important
+        - name: updatedByUserId
+          in: query
+          description: The id of the user who updated the service request.
+          required: false
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+          default: >-
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJGRFIiLCJ1bmlxdWVfbmFtZSI6IkZhY2lsaXRpZXMgYW5kIERlc2lnbiBSZWdpc3RlciAoRkRSKSIsInJvbGUiOiJVc2VyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMi4wIiwiQ29ycmVsYXRpb25LZXkiOiI1YTkwYzkxNzdkYTMiLCJuYmYiOjE2NTM5NDA3NTgsImV4cCI6MTcxNzA5OTE1OCwiaWF0IjoxNjUzOTQwNzU4LCJpc3MiOiJUcmFuc3BvcnQgQ2FuYWRhIiwiYXVkIjoiVHJhbnNwb3J0IENhbmFkYSJ9.0CPTpmLiz29jJ4cpopnV9CtuPmrUuUqHolMh2Yqot0I
+          x-ms-visibility: important
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ServiceRequestDTO'
+      x-ms-visibility: important
+  /api/v1/servicerequests/{id}:
+    get:
+      tags:
+        - ServiceRequests
+      summary: Gets a service request by it's id.
+      description: Gets a service request by it's id.
+      operationId: ServiceRequests_GetServiceRequestById
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service Request Id
+          required: true
+          type: integer
+          format: int32
+        - name: includeRegulatedEntities
+          in: query
+          description: >-
+            True if the Service Request payload should contain its associated
+            regulated entities, false otherwise.
+          required: false
+          type: boolean
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ServiceRequestDTO'
+    delete:
+      tags:
+        - ServiceRequests
+      summary: Delete an existing service request.
+      description: Delete an existing request by it's id.
+      operationId: ServiceRequests_DeleteServiceRequest
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service request id
+          required: true
+          type: integer
+          format: int32
+        - name: userId
+          in: query
+          description: Id of the user who deleted the service request
+          required: true
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/servicerequests/statuses:
+    get:
+      tags:
+        - ServiceRequests
+      summary: Gets a list service request status
+      operationId: ServiceRequests_GetStatuses
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: serviceId
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Service Request statuses retrieval successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ServiceRequestStatusInfo'
+        '400':
+          description: Service Request statuses retrieval failed
+        '401':
+          description: Unauthorized
+  /api/v1/servicerequests/{id}/status-history:
+    get:
+      tags:
+        - ServiceRequests
+      summary: "Retrieve the history of ServiceRequest status changes for a given Service Request Id.  \r\nFor Ap services retrieve different list of status per serviceStandard."
+      operationId: ServiceRequests_GetStatusHistory
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service Request Id to query
+          required: true
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Service Request Status History retrieval successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ServiceRequestStatusHistory'
+        '400':
+          description: Service Request Status History retrieval failed
+        '401':
+          description: Unauthorized
+  /api/v1/servicerequests/status-history:
+    get:
+      tags:
+        - ServiceRequests
+      summary: "Retrieve the history of ServiceRequest status changes for a given Service Request Guid.\r\nFor Ap services retrieve different list of status per serviceStandard."
+      operationId: ServiceRequests_GetStatusHistoryByGuid
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: guid
+          in: query
+          description: Service Request Guid to query
+          required: true
+          type: string
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/servicerequests/{id}/artifacts:
+    get:
+      tags:
+        - ServiceRequests
+      summary: Gets a list of artifacts by Service Request id.
+      description: Gets a list of artifacts by Service Request id.
+      operationId: ServiceRequests_GetArtifacts
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service Request id
+          required: true
+          type: integer
+          format: int32
+        - name: artifactSelectionType
+          in: query
+          description: Select the type of artifact to be retrieved
+          required: false
+          type: string
+          enum:
+            - All
+            - Active
+            - Archived
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v2/servicerequests:
+    post:
+      tags:
+        - ServiceRequests
+      summary: "Add a new Service Request using a Service Request Creation Data Transfer Object.\r\nFor AP services, serviceStandardId is required"
+      description: >-
+        Add a new Service Request using a Service Request Creation Data Transfer
+        Object.
+      operationId: ServiceRequests_AddServiceRequest96
+      consumes:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: serviceRequest
+          in: body
+          description: A Service Request Creation Data Transfer Object.
+          required: true
+          schema:
+            $ref: '#/definitions/ServiceRequestCreationDTO'
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ServiceRequestCreationResult'
+  /api/v1/servicerequests/query:
+    post:
+      tags:
+        - ServiceRequests
+      summary: >-
+        Gets a list of service requests related to a given service which the
+        results can be filtered.
+      description: "Gets a list of service requests.\r\n             This list allows for pagination if a page or page size is provided.\r\n             Service requests can be excluded."
+      operationId: ServiceRequests_PerformServiceRequestQuery
+      consumes:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: serviceRequestQueryDTO
+          in: body
+          description: Service request query object used to build the query
+          required: true
+          schema:
+            $ref: '#/definitions/ServiceRequestQueryDTO'
+        - name: excludeServiceRequests
+          in: query
+          description: >-
+            True to exclude the service requests, false to include the service
+            requests
+          required: true
+          type: boolean
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Service Requests retrieval successful
+          schema:
+            $ref: '#/definitions/ServiceRequestCollectionDTO'
+        '400':
+          description: Service Requests retrieval failed
+        '401':
+          description: Unauthorized
+  /api/v1/servicerequests/{id}/updatestatus:
+    post:
+      tags:
+        - ServiceRequests
+      summary: Update an existing service request status.
+      description: Update the status of an existing service request by it's id.
+      operationId: ServiceRequests_UpdateServiceRequestStatus
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service request id
+          required: true
+          type: integer
+          format: int32
+        - name: userId
+          in: query
+          description: Id of the user performing the Service Request status update
+          required: true
+          type: integer
+          format: int32
+        - name: serviceRequestStatus
+          in: query
+          description: Service request status
+          required: true
+          type: string
+        - name: revisedUpdateDateUtc
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+          x-ms-visibility: important
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+      x-ms-visibility: important
+  /api/v1/servicerequests/{id}/updatename:
+    post:
+      tags:
+        - ServiceRequests
+      summary: Update an existing service request display's name.
+      description: Update an existing service request display's name.
+      operationId: ServiceRequests_UpdateServiceRequestDisplayName
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service request id
+          required: true
+          type: integer
+          format: int32
+        - name: userId
+          in: query
+          description: The id of the user who is updating the display name
+          required: true
+          type: integer
+          format: int32
+        - name: englishName
+          in: query
+          description: Service request English display name
+          required: true
+          type: string
+        - name: frenchName
+          in: query
+          description: Service request French display name
+          required: true
+          type: string
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/servicerequests/{id}/transfer:
+    post:
+      tags:
+        - ServiceRequests
+      summary: Initiates a service request transfer.
+      operationId: ServiceRequests_InitiateTransfer
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service request id.
+          required: true
+          type: integer
+          format: int32
+        - name: userId
+          in: query
+          description: user id who initiated the transfer
+          required: true
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/servicerequests/transfer:
+    post:
+      tags:
+        - ServiceRequests
+      summary: Completes service transfer request.
+      operationId: ServiceRequests_CompleteTransfer
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: code
+          in: query
+          description: Service request code.
+          required: true
+          type: string
+        - name: userId
+          in: query
+          description: User id.
+          required: true
+          type: integer
+          format: int32
+        - name: action
+          in: query
+          description: Service request transfer action.
+          required: true
+          type: string
+          enum:
+            - Accept
+            - Cancel
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/servicerequests/{id}/file-attachments:
+    get:
+      tags:
+        - ServiceRequests
+      summary: Gets a list of file attachment associated to a service request.
+      description: Gets a list of file attachment associated to a service request
+      operationId: ServiceRequests_GetFileAttachmentByServiceRequest
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service request id
+          required: true
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/servicerequests/{id}/requester-details:
+    get:
+      tags:
+        - ServiceRequests
+      summary: >-
+        Retrieve the Requester Details information associated with a given
+        Service Request Id.
+      description: >-
+        This API requires the Service Request to be associated with a
+        RequesterId
+      operationId: ServiceRequests_GetRequesterDetails
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service Request Id to retrieve the Requester Details for.
+          required: true
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/servicerequests/{id}/user-assignments:
+    get:
+      tags:
+        - ServiceRequests
+      summary: Retrieves a list of User Assignment for a given Service Request
+      operationId: ServiceRequests_GetUserAssignments
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service Request Id used
+          required: true
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/servicerequests/{id}/status-history-ex:
+    get:
+      tags:
+        - ServiceRequests
+      summary: "Retrieve the extended history of ServiceRequest status changes for a given Service Request Id.\r\nFor Ap services retrieve different list of status per serviceStandard."
+      operationId: ServiceRequests_GetStatusHistoryEx
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service Request Id to query
+          required: true
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Extended Service Request Status History retrieval successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ServiceRequestStatusHistoryEx'
+        '400':
+          description: Extended Service Request Status History retrieval failed
+        '401':
+          description: Unauthorized
+  /api/v1/servicerequests/status-history-ex:
+    get:
+      tags:
+        - ServiceRequests
+      summary: "Retrieve the extended history of ServiceRequest status changes for a given Service Request Guid.\r\nFor Ap services retrieve different list of status per serviceStandard."
+      operationId: ServiceRequests_GetStatusHistoryExByGuid
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: guid
+          in: query
+          description: Service Request Guid to query
+          required: true
+          type: string
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+    put:
+      tags:
+        - ServiceRequests
+      summary: Update Date of a Status History for a given Service Request
+      description: "The UpdateDate parameter needs to contain a UTC date\r\n            (i.e. the DateTime value provided needs to be explicitly converted to UTC,\r\n            providing a local time with an offset will not work)."
+      operationId: ServiceRequests_UpdateStatusHistoryEx
+      consumes:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: serviceRequestStatusHistoryUpdate
+          in: body
+          description: Service Request status update
+          required: true
+          schema:
+            $ref: '#/definitions/ServiceRequestStatusHistoryUpdateDto'
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/servicerequests/{id}/audit-history:
+    get:
+      tags:
+        - ServiceRequests
+      summary: >-
+        Retrieve the audit history of a service request for a given service
+        request Id.
+      operationId: ServiceRequests_GetAuditHistory
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service Request Id which to view the history
+          required: true
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/servicerequests/user-assignments:
+    post:
+      tags:
+        - ServiceRequests
+      summary: Assign a user to a given Service Request
+      operationId: ServiceRequests_AddUserAssignment
+      consumes:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: serviceRequestUserAssignment
+          in: body
+          description: Service Request User Assignment data
+          required: true
+          schema:
+            $ref: '#/definitions/ServiceRequestUserAssignmentCreationDto'
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/servicerequests/multiple-user-assignments:
+    post:
+      tags:
+        - ServiceRequests
+      summary: Assign multiple user to a given Service Request
+      operationId: ServiceRequests_AddMultipleUserAssignment
+      consumes:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: serviceRequestUserAssignments
+          in: body
+          description: Service Request User Assignment data
+          required: true
+          schema:
+            $ref: '#/definitions/MultipleServiceRequestUserAssignmentCreationDto'
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Service Request user assignments successfully added
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ServiceRequestUserAssignment'
+        '400':
+          description: Service Request  user assignments  failed
+        '401':
+          description: Unauthorized
+  /api/v1/servicerequests/{id}/user-assignments/{userId}:
+    delete:
+      tags:
+        - ServiceRequests
+      summary: Un-assign a user from a Service Request
+      operationId: ServiceRequests_RemoveUserAssignment
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: >-
+            Service Request Id of the Service Request that has been assigned to
+            a user.
+          required: true
+          type: integer
+          format: int32
+        - name: userId
+          in: path
+          description: The UserId the ServiceRequest has been assigned to.
+          required: true
+          type: integer
+          format: int32
+        - name: deletedByUserId
+          in: query
+          description: The id of the user who removed the assignment.
+          required: false
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/servicerequests/{id}/multiple-user-assignments:
+    delete:
+      tags:
+        - ServiceRequests
+      summary: Un-assign multiple users from a Service Request
+      operationId: ServiceRequests_RemoveMultipleUserAssignment
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: >-
+            Service Request Id of the Service Request that has been assigned to
+            multiple users.
+          required: true
+          type: integer
+          format: int32
+        - name: userIds
+          in: query
+          description: >-
+            Coma delimited list of user ids that should be unassigned from the
+            Service Request.
+          required: true
+          type: string
+        - name: deletedByUserId
+          in: query
+          description: The id of the user who removed the assignment.
+          required: false
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Service Request multiple user assignments successfully removed
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ServiceRequestUserAssignment'
+        '400':
+          description: Service Request multiple user assignments removal failed
+        '401':
+          description: Unauthorized
+  /api/v1/servicerequests/search-metadata:
+    post:
+      tags:
+        - ServiceRequests
+      summary: "Retrieve ServiceRequestCollectionDTO including service request filtered by metadata.       \r\nNotes:\r\n1) Metadata structure should be defined for the service\r\n2) SearchValue represents data stored in metadata for service request       \r\n3) SearchValue can be partial and should be minimum two characters in length after trimming.\r\n4) StructureColumnKeyName determines the column structure to use for filtering (i.e for Service 60, \"project name\" or \"nom du projet\"). It can be spedified in englis or French.\r\n5) Matching will ignore cases however where applicable accents must be specified in \"SearchValue\""
+      description: \"SearchValue\" data stored in metadata for a specific service request.
+      operationId: ServiceRequests_SearchMetadata
+      consumes:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: serviceRequestSearchDTO
+          in: body
+          description: >-
+            SearchValue, StructureColumnKeyName, UserId and ServiceId,  are
+            required. OrganizationId is optional. The default value for "Page"
+            is 1. The default and the max value for "PageSize" is 25. The
+            "PageSize" over 25 value will be ignored and the default value of 25
+            will be used.
+          required: true
+          schema:
+            $ref: '#/definitions/ServiceRequestSearchMetadataDTO'
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/services:
+    get:
+      tags:
+        - Services
+      summary: Gets a list of all services.
+      description: Gets a list of all services.
+      operationId: Services_GetAll
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: groupId
+          in: query
+          description: Filter by group id or group name.
+          required: false
+          type: string
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/services/{id}:
+    get:
+      tags:
+        - Services
+      summary: Retrieves a service by id.
+      description: Retrieves information about a service by id. The id can also be a name.
+      operationId: Services_GetService
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service id or abbreviated name of a service
+          required: true
+          type: string
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/services/{id}/activities:
+    get:
+      tags:
+        - Services
+      summary: Returns a list of activities for a given service.
+      operationId: Services_GetActivities
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service id used to return its associated activities.
+          required: true
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/services/{id}/service-standards:
+    get:
+      tags:
+        - Services
+      summary: Returns a list of Service Standards associated with a given service.
+      operationId: Services_GetServiceStandard
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service id used to return its associated service standards.
+          required: true
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                ServiceStandardId:
+                  type: integer
+                  format: int32
+                  description: ServiceStandardId
+                ServiceCategoryCode:
+                  type: string
+                  description: ServiceCategoryCode
+                StatusSortOrder:
+                  type: integer
+                  format: int32
+                  description: StatusSortOrder
+                Id:
+                  type: integer
+                  format: int32
+                  description: Id
+                Name:
+                  type: string
+                  description: Name
+                EnglishDisplayName:
+                  type: string
+                  description: EnglishDisplayName
+                FrenchDisplayName:
+                  type: string
+                  description: FrenchDisplayName
+  /api/v1/services/{id}/servicerequests:
+    get:
+      tags:
+        - Services
+      summary: Gets a list of service requests related to a given service.
+      description: "Gets a list of service requests.\r\n            This list allows for pagination if a page or page size is provided.\r\n            Service requests can be excluded."
+      operationId: Services_GetServiceRequestsByServiceId
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Id of the service to retrieve Service Requests for.
+          required: true
+          type: integer
+          format: int32
+        - name: organizationId
+          in: query
+          description: List only the Service Request for the specified Organization Id.
+          required: false
+          type: integer
+          format: int32
+        - name: excludeMetadata
+          in: query
+          description: Exclude the Service Request metadata.
+          required: false
+          type: boolean
+        - name: excludeServiceRequests
+          in: query
+          description: >-
+            Exclude all the Service Requests (used to retrieve the Service
+            Request count).
+          required: false
+          type: boolean
+        - name: page
+          in: query
+          description: Specific page to retrieve.
+          required: false
+          type: integer
+          format: int32
+        - name: pageSize
+          in: query
+          description: Size of the page to retrieve.
+          required: false
+          type: integer
+          format: int32
+        - name: userId
+          in: query
+          description: >-
+            Restrict the ServiceRequest to those the specified user has the
+            permissions to see.
+          required: false
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/services/{id}/enrolluser:
+    post:
+      tags:
+        - Services
+      summary: Enrolls a user to a service.
+      description: Enrolls a user to a service.
+      operationId: Services_EnrollUser
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service id
+          required: true
+          type: integer
+          format: int32
+        - name: userId
+          in: query
+          description: User id
+          required: true
+          type: integer
+          format: int32
+        - name: organizationId
+          in: query
+          description: Organization id
+          required: false
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/services/{id}/withdrawuser:
+    delete:
+      tags:
+        - Services
+      summary: Withdraws a user from a service.
+      description: Withdraws a user from a service.
+      operationId: Services_WithdrawUser
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service id
+          required: true
+          type: integer
+          format: int32
+        - name: userId
+          in: query
+          description: User id
+          required: true
+          type: integer
+          format: int32
+        - name: organizationId
+          in: query
+          description: Organization id
+          required: false
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/services/{id}/activate-user:
+    post:
+      tags:
+        - Services
+      summary: Reactivates a user from a service.
+      description: Activates a user from a service.
+      operationId: Services_Activate
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service id
+          required: true
+          type: integer
+          format: int32
+        - name: userId
+          in: query
+          description: User id
+          required: true
+          type: integer
+          format: int32
+        - name: organizationId
+          in: query
+          description: Organization id
+          required: false
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/services/deactivate-user:
+    post:
+      tags:
+        - Services
+      summary: Deactivates a user in the future from a given service.
+      description: Deactivates a user from a service.
+      operationId: Services_Deactivate
+      consumes:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: userFutureDeactivation
+          in: body
+          description: User to deactivate in the future
+          required: true
+          schema:
+            $ref: '#/definitions/UserFutureDeactivationDto'
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/services/{id}/deactivate-user:
+    post:
+      tags:
+        - Services
+      summary: Deactivates a user from a service.
+      description: Deactivates a user from a service.
+      operationId: Services_Deactivate123
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service id
+          required: true
+          type: integer
+          format: int32
+        - name: userId
+          in: query
+          description: User id
+          required: true
+          type: integer
+          format: int32
+        - name: organizationId
+          in: query
+          description: Organization id
+          required: false
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/services/{id}/bind-organization:
+    post:
+      tags:
+        - Services
+      summary: Binds an organization to a service
+      operationId: Services_BindOrganization
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service id
+          required: true
+          type: integer
+          format: int32
+        - name: userId
+          in: query
+          description: User id
+          required: true
+          type: integer
+          format: int32
+        - name: organizationId
+          in: query
+          description: Organization id
+          required: true
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+      deprecated: true
+  /api/v1/services/{serviceId}/initiate-invite:
+    post:
+      tags:
+        - Services
+      summary: Invites a user to join an organization
+      operationId: Services_InitiateInvite
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: userId
+          in: query
+          description: Id of the user who is initiating the invite
+          required: true
+          type: integer
+          format: int32
+        - name: email
+          in: query
+          description: User's email
+          required: true
+          type: string
+        - name: serviceId
+          in: path
+          description: Service id
+          required: true
+          type: integer
+          format: int32
+        - name: organizationId
+          in: query
+          description: Organization id
+          required: true
+          type: integer
+          format: int32
+        - name: isEnglish
+          in: query
+          description: Is the current language English
+          required: false
+          type: boolean
+        - name: returnUrl
+          in: query
+          description: Return url
+          required: false
+          type: string
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/services/complete-invite:
+    post:
+      tags:
+        - Services
+      summary: Completes the invitation process of a user joining an organization
+      operationId: Services_CompleteInvite
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: userId
+          in: query
+          description: User id
+          required: true
+          type: integer
+          format: int32
+        - name: serviceRequestId
+          in: query
+          description: Service request id
+          required: true
+          type: integer
+          format: int32
+        - name: invitationCode
+          in: query
+          description: Invitation code
+          required: true
+          type: string
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/services/invites:
+    get:
+      tags:
+        - Services
+      summary: Gets a list of invites for a service.
+      operationId: Services_GetInvites
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: userId
+          in: query
+          description: User id
+          required: true
+          type: integer
+          format: int32
+        - name: serviceId
+          in: query
+          description: Service request id
+          required: true
+          type: integer
+          format: int32
+        - name: organizationId
+          in: query
+          description: Organization Id
+          required: false
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/services/{id}/users:
+    get:
+      tags:
+        - Services
+      summary: Gets users by service id.
+      description: >-
+        Get a users by service id and User Type (Internal, External or default
+        value is All).
+      operationId: Services_GetUsers
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: Service id
+          required: true
+          type: integer
+          format: int32
+        - name: userType
+          in: query
+          description: User Type (Internal, External or default value is All)
+          required: false
+          type: string
+          enum:
+            - Unknown
+            - Guest
+            - Internal
+            - External
+            - All
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Get a user by it's id.
+      description: Get a user by it's id.
+      operationId: Users_GetById
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: User id
+          required: true
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+    delete:
+      tags:
+        - Users
+      summary: Deletes a user.
+      description: Deletes a user if they exist.
+      operationId: Users_Delete
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: User id
+          required: true
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+    head:
+      tags:
+        - Users
+      summary: "Check if User Id exists or not.\r\n\"Exists\" checks for existence of any StakeholderType in non-deleted users."
+      description: Returns whether User Id exists or not.
+      operationId: Users_Exists
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: User Id
+          required: true
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/users/pki:
+    get:
+      tags:
+        - Users
+      summary: Get a user by it's pki.
+      description: Get a user by it's pki.
+      operationId: Users_GetByPki
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: pki
+          in: query
+          description: User pki
+          required: true
+          type: string
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/users/emails:
+    get:
+      tags:
+        - Users
+      summary: Get a user by it's email(s).
+      description: Get a user by it's id.
+      operationId: Users_GetByEmail
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: email
+          in: query
+          description: email to search for
+          required: true
+          type: string
+        - name: userType
+          in: query
+          description: Allow to filter users being queried by type.
+          required: false
+          type: string
+          enum:
+            - Unknown
+            - Guest
+            - Internal
+            - External
+            - All
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Users retrieval successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserDTO'
+        '400':
+          description: Users retrieval failed
+        '401':
+          description: Unauthorized
+  /api/v1/users:
+    get:
+      tags:
+        - Users
+      summary: Retrieve a user by authentication context or PKI.
+      operationId: Users_GetByAuthenticationContext
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: login
+          in: query
+          description: Active Directory login name.
+          required: false
+          type: string
+        - name: mbun
+          in: query
+          description: GCKey Meaningless but unique number (MBUN).
+          required: false
+          type: string
+        - name: issuer
+          in: query
+          description: GCKey Issuer.
+          required: false
+          type: string
+        - name: pki
+          in: query
+          description: User's public key.
+          required: false
+          type: string
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: User retrieval successful
+          schema:
+            $ref: '#/definitions/UserDTO'
+        '400':
+          description: User retrieval failed
+        '401':
+          description: Unauthorized
+    post:
+      tags:
+        - Users
+      summary: Adds or updates a user.
+      description: Adds a user if they don't exist, otherwise update user.
+      operationId: Users_AddOrUpdate
+      consumes:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: userDTO
+          in: body
+          description: User Dto
+          required: true
+          schema:
+            $ref: '#/definitions/UserDTO'
+        - name: excludeCoordinates
+          in: query
+          description: Should coordinates be excluded
+          required: false
+          type: boolean
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/users/{id}/servicerequests:
+    get:
+      tags:
+        - Users
+      summary: Gets the service requests for a specific user.
+      description: Gets the service requests for a specific user.
+      operationId: Users_GetServiceRequestsForUser
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: User id
+          required: true
+          type: integer
+          format: int32
+        - name: serviceId
+          in: query
+          description: Service id
+          required: false
+          type: integer
+          format: int32
+        - name: excludeMetadata
+          in: query
+          description: Exclude the Service Request metadata.
+          required: false
+          type: boolean
+        - name: excludeServiceRequests
+          in: query
+          description: Exclude service requests
+          required: false
+          type: boolean
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          type: integer
+          format: int32
+        - name: pageSize
+          in: query
+          description: Page size
+          required: false
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/users/{id}/organizations:
+    get:
+      tags:
+        - Users
+      summary: Get a user's organization.
+      description: Get a user's organization by it's id or service id.
+      operationId: Users_GetOrganizationsForUser
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: User id
+          required: true
+          type: integer
+          format: int32
+        - name: serviceId
+          in: query
+          description: Service id
+          required: false
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/users/{id}/business-systems:
+    get:
+      tags:
+        - Users
+      summary: Gets a business system of a user.
+      description: Gets a business system of a user.
+      operationId: Users_GetBusinessSystemsForUser
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: User id
+          required: true
+          type: integer
+          format: int32
+        - name: serviceId
+          in: query
+          description: Service id
+          required: false
+          type: integer
+          format: int32
+        - name: businessSystemType
+          in: query
+          description: Business system type
+          required: false
+          type: string
+          enum:
+            - Undefined
+            - UAS
+            - SVMMS
+            - MTOA
+            - MTO
+            - SIRS
+            - FTAE
+            - CPCS
+            - BW
+            - DAPLS
+            - RSIP
+            - ZEV
+            - MyTcReferenceCenter
+            - EMER_ACES
+            - NDWL_APA
+            - MarineCertification
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/users/{id}/services:
+    get:
+      tags:
+        - Users
+      summary: Get services of a user.
+      description: >-
+        Gets the services available to a user, it's possible to exclude the self
+        enrolled service.
+      operationId: Users_GetServicesByUser
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: User id
+          required: true
+          type: integer
+          format: int32
+        - name: includeSelfEnrolled
+          in: query
+          description: Include self enrolled services
+          required: true
+          type: boolean
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v2/users/{id}/services:
+    get:
+      tags:
+        - Users
+      summary: Get only services where the user is active.
+      description: Service where users has deactivated is not returned
+      operationId: Users_GetServicesByUser153
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: User id
+          required: true
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/users/{id}/permissions:
+    get:
+      tags:
+        - Users
+      summary: Gets permission for a specified user
+      operationId: Users_GetPermissions
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: User id
+          required: true
+          type: integer
+          format: int32
+        - name: serviceId
+          in: query
+          description: Id of the specific service we want to retrieve permissions for
+          required: false
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: User Permissions retrieval successful
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserServicePermissionInfo'
+        '400':
+          description: User Permissions retrieval failed
+        '401':
+          description: Unauthorized
+    post:
+      tags:
+        - Users
+      summary: Add a user permission for a service.
+      description: Adds a user permission for a service.
+      operationId: Users_AddPermissionToService
+      consumes:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: User id
+          required: true
+          type: integer
+          format: int32
+        - name: userServicePermissionDTO
+          in: body
+          description: User service permission DTO
+          required: true
+          schema:
+            $ref: '#/definitions/UserServicePermissionDTO'
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/users/{id}/permissions/{permissionId}:
+    delete:
+      tags:
+        - Users
+      summary: Delete a user permission for a service.
+      description: Deletes a user's permission for a service.
+      operationId: Users_DeletePermissionToService
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: id
+          in: path
+          description: User id
+          required: true
+          type: integer
+          format: int32
+        - name: permissionId
+          in: path
+          description: Permission Id
+          required: true
+          type: integer
+          format: int32
+        - name: serviceId
+          in: query
+          description: Service Id
+          required: true
+          type: integer
+          format: int32
+        - name: organizationId
+          in: query
+          description: Organization Id
+          required: false
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v1/users/search:
+    post:
+      tags:
+        - Users
+      summary: "Gets the list of internal-users for a user represented by \"FilterUserId\", by matching \"SearchValue\" in first name, last name, email and windows user name (for internal users only). /&gt;.\r\n\r\nAPI lists users from only those services where a current \"internal\" user have \"ReadUsers\" permission.\r\nNotes:\r\n1) leading and trailing spaces will be removed before searching \"SearchValue\"\r\n2) to limit search result, \"SearchValue\" need to be minimum two characters in length after trimming \"SearchValue\"\r\n3) While counting 2 characters length above \"TC\\\" domain prefix will be ignored\r\n4) prefixing \"TC\\\" is optional while searching internal users by windows user name\r\n5) Search result will include internal users matching \"first name\"/\"last name\"/email/\"windows user name\" starting with passed \"SearchValue\"\r\n6) Matching result will ignore cases however where applicable accents must be specified in \"SearchValue\""
+      description: Searches \"SearchValue\" in first name, last name for a specific user.
+      operationId: Users_SearchUsers
+      consumes:
+        - application/json
+        - text/json
+        - text/html
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: userSearchDTO
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserSearchDTO'
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  /api/v2/users:
+    get:
+      tags:
+        - Users
+      summary: "Gets the list of internal-users for a given user represented by {filterUserId}.\r\n\r\nAPI lists users from only those services where {filterUserId} have \"ReadUsers\" permission."
+      description: Gets the service requests for a specific user.
+      operationId: Users_GetUserList
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - text/html
+        - application/xml
+        - text/xml
+      parameters:
+        - name: userType
+          in: query
+          description: Type of user to query
+          required: true
+          type: string
+          enum:
+            - Unknown
+            - Guest
+            - Internal
+            - External
+            - All
+        - name: filterUserId
+          in: query
+          description: "Id of user who is requesting the list of users.\r\n                Can only be used for internal users."
+          required: true
+          type: integer
+          format: int32
+        - name: page
+          in: query
+          description: Page number. The default value is 1)
+          required: false
+          type: integer
+          format: int32
+        - name: pageSize
+          in: query
+          description: >-
+            Page size. The default value is 25. Passing over 25 will be ignored
+            and max 25 will be used.
+          required: false
+          type: integer
+          format: int32
+        - name: app-jwt
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+definitions:
+  AuthenticationContext:
+    type: object
+    properties:
+      Type:
+        enum:
+          - Anonymous
+          - GCKey
+          - Windows
+        type: string
+      GCKey:
+        $ref: '#/definitions/GCKey'
+      WindowsUserName:
+        type: string
+  GCKey:
+    type: object
+    properties:
+      MBUN:
+        type: string
+      Issuer:
+        type: string
+  UserDTO:
+    type: object
+    properties:
+      FirstName:
+        type: string
+      LastName:
+        type: string
+      GCKey:
+        $ref: '#/definitions/GCKey'
+      WindowsUserName:
+        type: string
+      Verified:
+        type: boolean
+      PKI:
+        type: string
+      AuthenticationType:
+        enum:
+          - Anonymous
+          - GCKey
+          - Windows
+        type: string
+      Id:
+        format: int32
+        type: integer
+      Addresses:
+        type: array
+        items:
+          $ref: '#/definitions/MailCoordinate'
+  MailCoordinate:
+    type: object
+    properties:
+      Id:
+        format: int32
+        type: integer
+      LocationType:
+        enum:
+          - Business
+          - Individual
+        type: string
+      IsPrimary:
+        type: boolean
+      CoordinateType:
+        enum:
+          - Mail
+          - Email
+          - Phone
+          - Web
+          - GIS
+        type: string
+      SubAddressType:
+        type: string
+      FloorSectionNumber:
+        type: string
+      SuiteApartmentNumber:
+        type: string
+      StreetCivicNumber:
+        type: string
+      StreetName:
+        type: string
+      PostalZipCode:
+        type: string
+      BuildingName:
+        type: string
+      StreetDirection:
+        enum:
+          - None
+          - North
+          - South
+          - East
+          - West
+          - Northeast
+          - Northwest
+          - Southeast
+          - Southwest
+          - Unknown
+        type: string
+      StreetType:
+        enum:
+          - None
+          - Abbey
+          - Acres
+          - Allee
+          - Alley
+          - Aut
+          - Av
+          - Ave
+          - Bay
+          - Beach
+          - Bend
+          - Blvd
+          - Boul
+          - Bypass
+          - Byway
+          - C
+          - Campus
+          - Cape
+          - Car
+          - Carref
+          - Cds
+          - Cercle
+          - Ch
+          - Chase
+          - Cir
+          - Circt
+          - Close
+          - Common
+          - Conc
+          - Cote
+          - Cour
+          - Cours
+          - Cove
+          - Cres
+          - Crnrs
+          - Crois
+          - Cross
+          - Crt
+          - Ctr
+          - Dale
+          - Dell
+          - Divers
+          - Downs
+          - Dr
+          - End
+          - Espl
+          - Estate
+          - Expy
+          - Exten
+          - Ech
+          - Farm
+          - Field
+          - Forest
+          - Front
+          - Fwy
+          - Gate
+          - Gdns
+          - Glade
+          - Glen
+          - Green
+          - Grnds
+          - Grove
+          - Harbr
+          - Heath
+          - Height
+          - Hghlds
+          - Hill
+          - Hollow
+          - Hts
+          - Hwy
+          - Ile
+          - Imp
+          - Inlet
+          - Island
+          - Key
+          - Knoll
+          - Landng
+          - Lane
+          - Line
+          - Link
+          - Lkout
+          - Lmts
+          - Loop
+          - Mall
+          - Manor
+          - Maze
+          - Meadow
+          - Mews
+          - Montee
+          - Moor
+          - Mount
+          - Mtn
+          - Orch
+          - Parade
+          - Parc
+          - Pass
+          - Path
+          - Pines
+          - Pk
+          - Pky
+          - Pl
+          - Place
+          - Plat
+          - Plaza
+          - Pointe
+          - Port
+          - Prom
+          - Pt
+          - Ptway
+          - Pvt
+          - Quai
+          - Quay
+          - Ramp
+          - Rang
+          - Rd
+          - Rdpt
+          - Rg
+          - Ridge
+          - Rise
+          - Rle
+          - Row
+          - Rte
+          - Rue
+          - Run
+          - Sent
+          - Sq
+          - St
+          - Subdiv
+          - Terr
+          - Thick
+          - Tline
+          - Towers
+          - Trail
+          - Trnabt
+          - Tsse
+          - Vale
+          - Via
+          - View
+          - Villas
+          - Villge
+          - Vista
+          - Voie
+          - Walk
+          - Way
+          - Wharf
+          - Wood
+          - Wynd
+          - Unknown
+        type: string
+      CountryCode:
+        format: int32
+        type: integer
+      CountrySubdivisionCode:
+        type: string
+      DeliveryInstallationArea:
+        type: string
+      DeliveryInstallQualifier:
+        type: string
+      GenDeliveryCategory:
+        type: string
+      RouteServiceType:
+        type: string
+      BoxNumber:
+        type: string
+      RouteServiceNumber:
+        type: string
+      UnregisteredCityTownName:
+        type: string
+      DeliveryDirective:
+        type: string
+      GeneratedStreetAddress:
+        type: string
+      CityTown:
+        type: string
+      CityTownName:
+        type: string
+      AddressLine1:
+        type: string
+      AddressLine2:
+        type: string
+  ServiceRequestCollectionDTO:
+    type: object
+    properties:
+      ServiceRequests:
+        type: array
+        items:
+          $ref: '#/definitions/ServiceRequestDTO'
+      Count:
+        format: int32
+        type: integer
+      Page:
+        format: int32
+        type: integer
+      HasMore:
+        type: boolean
+  ServiceRequestDTO:
+    type: object
+    properties:
+      Id:
+        format: int32
+        type: integer
+      Guid:
+        type: string
+      UserId:
+        format: int32
+        type: integer
+      ServiceId:
+        format: int32
+        type: integer
+      OrganizationId:
+        format: int32
+        type: integer
+      RequestStatus:
+        enum:
+          - Unknown
+          - InProgress
+          - Submitted
+          - InReview
+          - Completed
+          - TrainingCompleted
+          - InformationRequired
+          - Accepted
+          - AcceptedWithUpdates
+          - Canceled
+          - Initiated
+          - Expired
+          - Rejected
+          - Failed
+          - PickedUp
+          - TestPaymentPending
+          - TestPaymentSent
+          - Validated
+          - Verified
+          - Approved
+          - OnHold
+          - PendingApproval
+          - DocumentIssued
+          - Draft
+          - Assigned
+          - Updated
+          - ActivityPlanned
+          - Closed
+          - ActivityCompleted
+          - DeclarationSubmitted
+          - Fulfilled
+        type: string
+      EnglishDisplayName:
+        type: string
+      FrenchDisplayName:
+        type: string
+      MetadataStructureId:
+        format: int32
+        type: integer
+      ServiceAttributeId:
+        format: int32
+        type: integer
+      Comment:
+        type: string
+      RequesterId:
+        format: int32
+        type: integer
+      MailCoordinateId:
+        format: int32
+        type: integer
+      PlaceOfSupply:
+        type: string
+      RequesterOrganizationId:
+        format: int32
+        type: integer
+      ServiceStandardId:
+        format: int32
+        type: integer
+      RegulatedEntities:
+        type: array
+        items:
+          $ref: '#/definitions/ServiceRequestRegulatedEntity'
+      UserAssignments:
+        type: array
+        items:
+          $ref: '#/definitions/ServiceRequestUserAssignment'
+      StatusHistory:
+        type: array
+        items:
+          $ref: '#/definitions/ServiceRequestStatusHistory'
+      DateUpdatedUtc:
+        format: date-time
+        type: string
+      DateUpdated:
+        format: date-time
+        type: string
+  ServiceRequestRegulatedEntity:
+    type: object
+    properties:
+      Value:
+        type: string
+      ServiceId:
+        format: int32
+        type: integer
+      RegulatedEntityTypeCode:
+        type: string
+      RegulatedEntityIdTypeCode:
+        type: string
+      SortOrder:
+        format: int32
+        type: integer
+      EnglishDisplayName:
+        type: string
+      FrenchDisplayName:
+        type: string
+  ServiceRequestUserAssignment:
+    type: object
+    properties:
+      Id:
+        format: int32
+        type: integer
+      ServiceRequestId:
+        format: int32
+        type: integer
+      UserId:
+        format: int32
+        type: integer
+      Description:
+        type: string
+      AssignmentDate:
+        format: date-time
+        type: string
+  ServiceRequestStatusHistory:
+    type: object
+    properties:
+      ServiceHistoryEntryId:
+        format: int32
+        type: integer
+      Status:
+        enum:
+          - Unknown
+          - InProgress
+          - Submitted
+          - InReview
+          - Completed
+          - TrainingCompleted
+          - InformationRequired
+          - Accepted
+          - AcceptedWithUpdates
+          - Canceled
+          - Initiated
+          - Expired
+          - Rejected
+          - Failed
+          - PickedUp
+          - TestPaymentPending
+          - TestPaymentSent
+          - Validated
+          - Verified
+          - Approved
+          - OnHold
+          - PendingApproval
+          - DocumentIssued
+          - Draft
+          - Assigned
+          - Updated
+          - ActivityPlanned
+          - Closed
+          - ActivityCompleted
+          - DeclarationSubmitted
+          - Fulfilled
+        type: string
+      EnglishDisplayName:
+        type: string
+      FrenchDisplayName:
+        type: string
+      Date:
+        format: date-time
+        type: string
+      ServiceCategoryCode:
+        type: string
+      ServiceStandardId:
+        format: int32
+        type: integer
+  ServiceRequestCreationResult:
+    type: object
+    properties:
+      ServiceRequestId:
+        format: int32
+        type: integer
+  BaseServiceRequest:
+    type: object
+    properties:
+      Id:
+        format: int32
+        type: integer
+      Guid:
+        type: string
+      UserId:
+        format: int32
+        type: integer
+      ServiceId:
+        format: int32
+        type: integer
+      OrganizationId:
+        format: int32
+        type: integer
+      RequestStatus:
+        enum:
+          - Unknown
+          - InProgress
+          - Submitted
+          - InReview
+          - Completed
+          - TrainingCompleted
+          - InformationRequired
+          - Accepted
+          - AcceptedWithUpdates
+          - Canceled
+          - Initiated
+          - Expired
+          - Rejected
+          - Failed
+          - PickedUp
+          - TestPaymentPending
+          - TestPaymentSent
+          - Validated
+          - Verified
+          - Approved
+          - OnHold
+          - PendingApproval
+          - DocumentIssued
+          - Draft
+          - Assigned
+          - Updated
+          - ActivityPlanned
+          - Closed
+          - ActivityCompleted
+          - DeclarationSubmitted
+          - Fulfilled
+        type: string
+      EnglishDisplayName:
+        type: string
+      FrenchDisplayName:
+        type: string
+      MetadataStructureId:
+        format: int32
+        type: integer
+      ServiceAttributeId:
+        format: int32
+        type: integer
+      Comment:
+        type: string
+      RequesterId:
+        format: int32
+        type: integer
+      MailCoordinateId:
+        format: int32
+        type: integer
+      PlaceOfSupply:
+        type: string
+      RequesterOrganizationId:
+        format: int32
+        type: integer
+      ServiceStandardId:
+        format: int32
+        type: integer
+  ServiceRequestStatusInfo:
+    type: object
+    properties:
+      Id:
+        format: int32
+        type: integer
+      Name:
+        type: string
+      EnglishDisplayName:
+        type: string
+      FrenchDisplayName:
+        type: string
+  ServiceRequestCreationDTO:
+    type: object
+    properties:
+      UserId:
+        format: int32
+        type: integer
+      ServiceId:
+        format: int32
+        type: integer
+      OrganizationId:
+        format: int32
+        type: integer
+      Status:
+        enum:
+          - Unknown
+          - InProgress
+          - Submitted
+          - InReview
+          - Completed
+          - TrainingCompleted
+          - InformationRequired
+          - Accepted
+          - AcceptedWithUpdates
+          - Canceled
+          - Initiated
+          - Expired
+          - Rejected
+          - Failed
+          - PickedUp
+          - TestPaymentPending
+          - TestPaymentSent
+          - Validated
+          - Verified
+          - Approved
+          - OnHold
+          - PendingApproval
+          - DocumentIssued
+          - Draft
+          - Assigned
+          - Updated
+          - ActivityPlanned
+          - Closed
+          - ActivityCompleted
+          - DeclarationSubmitted
+          - Fulfilled
+        type: string
+      EnglishDisplayName:
+        type: string
+      FrenchDisplayName:
+        type: string
+      MetadataStructureId:
+        format: int32
+        type: integer
+      ServiceAttributeId:
+        format: int32
+        type: integer
+      Comment:
+        type: string
+      RequesterId:
+        format: int32
+        type: integer
+      MailCoordinateId:
+        format: int32
+        type: integer
+      PlaceOfSupply:
+        type: string
+      RequesterOrganizationId:
+        format: int32
+        type: integer
+      ServiceStandardId:
+        format: int32
+        type: integer
+      CreatedByUserId:
+        format: int32
+        type: integer
+      RevisedCreatedDateUtc:
+        format: date-time
+        type: string
+  ServiceRequestQueryDTO:
+    type: object
+    properties:
+      UserId:
+        format: int32
+        type: integer
+      ServiceId:
+        format: int32
+        type: integer
+      ServiceRequests:
+        type: string
+      Services:
+        type: string
+      Assignees:
+        type: string
+      OrganizationId:
+        format: int32
+        type: integer
+      ExcludeMetadata:
+        type: boolean
+      IncludeRegulatedEntities:
+        type: boolean
+      IncludeStatusHistory:
+        type: boolean
+      Version:
+        format: float
+        type: number
+      Page:
+        format: int32
+        type: integer
+      PageSize:
+        format: int32
+        type: integer
+      Filter:
+        type: string
+  ServiceRequestStatusHistoryEx:
+    type: object
+    properties:
+      User:
+        $ref: '#/definitions/User'
+      ServiceHistoryEntryId:
+        format: int32
+        type: integer
+      Status:
+        enum:
+          - Unknown
+          - InProgress
+          - Submitted
+          - InReview
+          - Completed
+          - TrainingCompleted
+          - InformationRequired
+          - Accepted
+          - AcceptedWithUpdates
+          - Canceled
+          - Initiated
+          - Expired
+          - Rejected
+          - Failed
+          - PickedUp
+          - TestPaymentPending
+          - TestPaymentSent
+          - Validated
+          - Verified
+          - Approved
+          - OnHold
+          - PendingApproval
+          - DocumentIssued
+          - Draft
+          - Assigned
+          - Updated
+          - ActivityPlanned
+          - Closed
+          - ActivityCompleted
+          - DeclarationSubmitted
+          - Fulfilled
+        type: string
+      EnglishDisplayName:
+        type: string
+      FrenchDisplayName:
+        type: string
+      Date:
+        format: date-time
+        type: string
+      ServiceCategoryCode:
+        type: string
+      ServiceStandardId:
+        format: int32
+        type: integer
+  User:
+    type: object
+    properties:
+      FirstName:
+        type: string
+      LastName:
+        type: string
+      Verified:
+        type: boolean
+      FullName:
+        type: string
+        readOnly: true
+      Pki:
+        type: string
+      AuthenticationContext:
+        $ref: '#/definitions/AuthenticationContext'
+      Type:
+        enum:
+          - Unknown
+          - Guest
+          - Internal
+          - External
+          - All
+        type: string
+        readOnly: true
+      Id:
+        format: int32
+        type: integer
+      Coordinates:
+        type: array
+        items:
+          $ref: '#/definitions/ICoordinate'
+  ICoordinate:
+    type: object
+    properties:
+      Id:
+        format: int32
+        type: integer
+      LocationType:
+        enum:
+          - Business
+          - Individual
+        type: string
+      IsPrimary:
+        type: boolean
+  ServiceRequestStatusHistoryUpdateDto:
+    type: object
+    properties:
+      ServiceRequestHistoryEntryId:
+        format: int32
+        type: integer
+      UpdateDate:
+        format: date-time
+        type: string
+      ModifiedByUserId:
+        format: int32
+        type: integer
+  ServiceRequestUserAssignmentCreationDto:
+    type: object
+    properties:
+      ServiceRequestId:
+        format: int32
+        type: integer
+      UserId:
+        format: int32
+        type: integer
+      Description:
+        type: string
+      CreatedByUserId:
+        format: int32
+        type: integer
+  MultipleServiceRequestUserAssignmentCreationDto:
+    type: object
+    properties:
+      ServiceRequestId:
+        format: int32
+        type: integer
+      Users:
+        type: string
+      Description:
+        type: string
+      CreatedByUserId:
+        format: int32
+        type: integer
+  ServiceRequestSearchMetadataDTO:
+    type: object
+    properties:
+      Page:
+        format: int32
+        type: integer
+      PageSize:
+        format: int32
+        type: integer
+      UserId:
+        format: int32
+        type: integer
+      ServiceId:
+        format: int32
+        type: integer
+      OrganizationId:
+        format: int32
+        type: integer
+      SearchValue:
+        type: string
+      StructureColumnKeyName:
+        type: string
+  UserFutureDeactivationDto:
+    type: object
+    properties:
+      UserId:
+        format: int32
+        type: integer
+      ServiceId:
+        format: int32
+        type: integer
+      OrganizationId:
+        format: int32
+        type: integer
+      DateTime:
+        format: date-time
+        type: string
+  UserServicePermissionDTO:
+    type: object
+    properties:
+      PermissionId:
+        format: int32
+        type: integer
+      ServiceId:
+        format: int32
+        type: integer
+      OrganizationId:
+        format: int32
+        type: integer
+  UserServicePermissionInfo:
+    type: object
+    properties:
+      ServiceId:
+        format: int32
+        type: integer
+      OrganizationId:
+        format: int32
+        type: integer
+      IsActive:
+        type: boolean
+      Permissions:
+        type: array
+        items:
+          $ref: '#/definitions/PermissionInfo'
+  PermissionInfo:
+    type: object
+    properties:
+      Id:
+        format: int32
+        type: integer
+      Name:
+        type: string
+  UserSearchDTO:
+    type: object
+    properties:
+      UserType:
+        enum:
+          - Unknown
+          - Guest
+          - Internal
+          - External
+          - All
+        type: string
+      FilterUserId:
+        format: int32
+        type: integer
+      SearchValue:
+        type: string
+      Page:
+        format: int32
+        type: integer
+      PageSize:
+        format: int32
+        type: integer
+parameters: {}
+responses: {}
+securityDefinitions:
+  API Key:
+    type: apiKey
+    in: header
+    name: api-key
+security:
+  - API Key: []
+tags: []

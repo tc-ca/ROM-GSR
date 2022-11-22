@@ -1,0 +1,849 @@
+swagger: '2.0'
+info:
+  title: Time Management API (1.0.0.0)
+  description: This documentation provides information about the Time Management API.
+  version: v1
+host: ncdtmsaapp.azurewebsites.net
+basePath: /
+schemes:
+  - https
+consumes: []
+produces: []
+paths:
+  /api/TimeEntry/{id}:
+    get:
+      tags:
+        - TimeEntry
+      summary: Returns a single time entry
+      operationId: timeentryGetTimeEntry
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          description: The Id of the time entry
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/TimeEntry'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundResult'
+    put:
+      tags:
+        - TimeEntry
+      summary: Update an existing Time Entry
+      operationId: timeentryUpdateTimeEntry
+      consumes:
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          description: ID of the Time Entry to be updated
+          required: true
+          type: integer
+          format: int32
+        - in: body
+          name: body
+          description: The Time Entry object
+          schema:
+            $ref: '#/definitions/TimeEntryPut'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/TimeEntry'
+  /api/TimeEntry:
+    get:
+      tags:
+        - TimeEntry
+      summary: Returns all time entries for a given Service Request Id
+      operationId: timeentryGetTimeEntries
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: query
+          name: serviceRequestId
+          description: The identifier of the Service Request
+          type: integer
+          format: int32
+        - in: query
+          name: stateCode
+          description: >-
+            The status of the desired Time Entries. 0 = Active (Default), 1 =
+            Inactive
+          type: integer
+          format: int32
+          default: 0
+        - in: query
+          name: dateTimeDescendingOrder
+          description: >-
+            The results will be sorted by the Date Time in Descending or
+            Ascending order, default is DESC order
+          type: boolean
+          default: true
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TimeEntry'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundResult'
+    delete:
+      tags:
+        - TimeEntry
+      summary: >-
+        Sets the status of the specified Time Entry to inactive along with
+        associated hours and service outputs
+      operationId: timeentryDeactivateTimeEntry
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: query
+          name: timeEntryId
+          description: The ID of the Time Entry being deactivated
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OkResult'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundResult'
+    post:
+      tags:
+        - TimeEntry
+      summary: Add a new Time Entry
+      operationId: timeentryAddTimeEntry
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: query
+          name: serviceRequestId
+          description: >-
+            The MTOA service request identifier that this time entry is
+            associated with
+          type: integer
+          format: int32
+        - in: query
+          name: dateTime
+          description: The date and time of the time entry
+          type: string
+          format: date-time
+        - in: query
+          name: endDateTime
+          description: An optional field to capture the date and time the time entry ended
+          type: string
+          format: date-time
+        - in: query
+          name: user
+          description: >-
+            The TC network user name of the user submitting this Time Entry.
+            "TC\..." excluding quotes or valid email address without quotes.
+          type: string
+        - in: query
+          name: serviceId
+          description: The SIE service that this time entry is associated with
+          type: integer
+          format: int32
+        - in: query
+          name: activityId
+          description: >-
+            The activity identifier from the Service Inventory for this time
+            entry.
+          type: integer
+          format: int32
+        - in: query
+          name: approver
+          description: >-
+            The TC network user name of the user approving this Time Entry.
+            "TC\..." excluding quotes or valid email address without quotes.
+          type: string
+        - in: query
+          name: comment
+          description: A comment for this Time Entry
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/TimeEntry'
+  /api/TimeEntry/Approvals:
+    post:
+      tags:
+        - TimeEntry
+      summary: Returns all time entries for a given Approver Network Id
+      operationId: timeentryGetApproveTimeEntries
+      consumes:
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: query
+          name: stateCode
+          description: The status of the Location Type. 0 = Active (Default), 1 = Inactive
+          type: integer
+          format: int32
+          default: 0
+        - in: query
+          name: dateTimeDescendingOrder
+          description: >-
+            The results will be sorted by the Date Time in Descending or
+            Ascending order, default is DESC order
+          type: boolean
+          default: true
+        - in: body
+          name: body
+          description: >-
+            The identifier of the Approver Network Id. Network Ids must use
+            format "TC\\..." including quotes or be a valid email address in
+            quotes.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TimeEntry'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundResult'
+  /api/TimeEntry/Approvals/{serviceId}:
+    get:
+      tags:
+        - TimeEntry
+      summary: Returns all time entries for a given SIE service
+      operationId: timeentryGetApproveTimeEntriesByService
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: serviceId
+          description: The identifier of the  SIE service
+          required: true
+          type: integer
+          format: int32
+        - in: query
+          name: stateCode
+          description: The status of the Location Type. 0 = Active (Default), 1 = Inactive
+          type: integer
+          format: int32
+          default: 0
+        - in: query
+          name: dateTimeDescendingOrder
+          description: >-
+            The results will be sorted by the Date Time in Descending or
+            Ascending order, default is DESC order
+          type: boolean
+          default: true
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TimeEntry'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundResult'
+  /api/TimeEntry/Approvals/ServiceRequest:
+    post:
+      tags:
+        - TimeEntry
+      summary: >-
+        Returns all time entries for a given Approver Network Id and Service
+        Request Id
+      operationId: timeentryGetApproveTimeEntriesByServiceRequestId
+      consumes:
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: query
+          name: stateCode
+          description: >-
+            The status of the desired Time Entries. 0 = Active (Default), 1 =
+            Inactive
+          type: integer
+          format: int32
+          default: 0
+        - in: query
+          name: dateTimeDescendingOrder
+          description: >-
+            The results will be sorted by the Date Time in Descending or
+            Ascending order, default is DESC order
+          type: boolean
+          default: true
+        - in: body
+          name: body
+          description: >-
+            The identifier of the Approver Network Id and Service Request Id.
+            Network Ids must use format "TC\\..." including quotes or be a valid
+            email address in quotes.
+          schema:
+            $ref: '#/definitions/ApprovalTimeEntries'
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TimeEntry'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundResult'
+  /api/TimeEntry/{id}/ServiceOutput:
+    delete:
+      tags:
+        - TimeEntry
+      summary: Sets the status of the specified service outputs
+      operationId: timeentryDeleteServiceOutput
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: query
+          name: timeEntryId
+          description: The ID of the Time Entry being deactivated
+          type: integer
+          format: int32
+        - in: query
+          name: outputIds
+          description: List of output ID GUIDs
+          type: array
+          items:
+            format: uuid
+            type: string
+          collectionFormat: csv
+        - in: path
+          name: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OkResult'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundResult'
+    post:
+      tags:
+        - TimeEntry
+      summary: Associate a Service Output to a Time Entry
+      operationId: timeentryAddServiceOutput
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          description: The id of the Time Entry to associate this Service Output
+          required: true
+          type: integer
+          format: int32
+        - in: query
+          name: serviceOutputCode
+          description: The Service output code
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ServiceOutput'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundResult'
+  /api/TimeEntry/{id}/Hours:
+    post:
+      tags:
+        - TimeEntry
+      summary: Add hours to a Time Entry
+      operationId: timeentryAddHours
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: id
+          description: The id of the Time Entry
+          required: true
+          type: integer
+          format: int32
+        - in: query
+          name: quantity
+          description: The quantity of hours
+          type: number
+          format: double
+        - in: query
+          name: typeCode
+          description: The hours type code
+          type: string
+        - in: query
+          name: isBillable
+          description: true if the hours are billable; false otherwise
+          type: boolean
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Hours'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundResult'
+  /api/TimeEntry/UpdateApprovers:
+    put:
+      tags:
+        - TimeEntry
+      summary: Update the approver network id of a Time Entry
+      operationId: timeentryUpdateApprover
+      consumes:
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: body
+          name: body
+          description: "A TimeEntryApproverPut object that contains the IDs for all the Time Entries that need to be updated\r\n            and the Approver Network Id to set them all to. Network Ids must use format \"TC\\\\...\" including quotes or be a valid email address in quotes."
+          schema:
+            $ref: '#/definitions/TimeEntryApproverPut'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OkResult'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundResult'
+  /api/TimeEntry/Bulk:
+    post:
+      tags:
+        - TimeEntry
+      summary: Add new Time Entries with hours and optional service outputs.
+      operationId: timeentryAddTimeEntryBulk
+      consumes:
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: body
+          name: body
+          description: >-
+            The MTOA service request identifier that this time entry is
+            associated with
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TimeEntryPost'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/TimeEntry'
+  /api/TimeEntry/UpdateStatus:
+    put:
+      tags:
+        - TimeEntry
+      summary: >-
+        Update the the status of one or multiple Hours, identified by their
+        GUIDs
+      operationId: timeentryUpdateStatuses
+      consumes:
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: body
+          name: body
+          description: The hours to be updated, and what status to update them to
+          schema:
+            $ref: '#/definitions/HourStatusPut'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OkResult'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundResult'
+  /api/TimeEntry/Hours/Status:
+    put:
+      tags:
+        - TimeEntry
+      summary: Set a set of hours to approved or rejected status
+      operationId: timeentryApproveOrRejectHours
+      consumes:
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: body
+          name: body
+          description: The identifiers of hours being approved or rejected
+          schema:
+            $ref: '#/definitions/ApproveHours'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OkResult'
+  /api/TimeEntry/Statuses:
+    get:
+      tags:
+        - TimeEntry
+      summary: Returns a list of all time entry statuses
+      operationId: timeentryGetTimeEntryStatuses
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: query
+          name: stateCode
+          description: >-
+            The status of the Time Entry Statuses. 0 = Active (Default), 1 =
+            Inactive
+          type: integer
+          format: int32
+          default: 0
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TimeEntryStatus'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundResult'
+definitions:
+  ApprovalTimeEntries:
+    type: object
+    properties:
+      ApproverNetworkId:
+        type: string
+      ServiceRequestId:
+        format: int32
+        type: integer
+  ApproveHours:
+    type: object
+    properties:
+      HourIds:
+        type: array
+        items:
+          format: uuid
+          type: string
+      Approve:
+        type: boolean
+      RejectionReason:
+        type: string
+  Hours:
+    type: object
+    properties:
+      HourId:
+        format: uuid
+        type: string
+      Quantity:
+        format: double
+        type: number
+      TypeCode:
+        type: string
+      TimeEntryId:
+        format: int32
+        type: integer
+      IsBillable:
+        type: boolean
+      Status:
+        $ref: '#/definitions/TimeEntryStatus'
+      State:
+        $ref: '#/definitions/StateCode'
+  HoursPost:
+    type: object
+    properties:
+      Quantity:
+        format: double
+        type: number
+      TypeCode:
+        type: string
+      IsBillable:
+        type: boolean
+      StatusCode:
+        format: int32
+        type: integer
+  HoursPut:
+    type: object
+    properties:
+      HourId:
+        format: uuid
+        type: string
+      Quantity:
+        format: double
+        type: number
+      TypeCode:
+        type: string
+      TimeEntryId:
+        format: int32
+        type: integer
+      IsBillable:
+        type: boolean
+      StatusId:
+        format: int32
+        type: integer
+  HourStatusPut:
+    type: object
+    properties:
+      HourIds:
+        type: array
+        items:
+          format: uuid
+          type: string
+      NewStatusId:
+        $ref: '#/definitions/Status'
+  NotFoundResult:
+    type: object
+    properties:
+      StatusCode:
+        format: int32
+        type: integer
+  OkResult:
+    type: object
+    properties:
+      StatusCode:
+        format: int32
+        type: integer
+  ServiceOutput:
+    type: object
+    properties:
+      OutputId:
+        format: uuid
+        type: string
+      TimeEntryId:
+        format: int32
+        type: integer
+      Code:
+        format: int32
+        type: integer
+      State:
+        $ref: '#/definitions/StateCode'
+  ServiceOutputPost:
+    type: object
+    properties:
+      Code:
+        format: int32
+        type: integer
+  StateCode:
+    format: int32
+    enum:
+      - 0
+      - 1
+    type: integer
+  Status:
+    format: int32
+    enum:
+      - 1
+      - 2
+      - 3
+      - 4
+    type: integer
+  TimeEntry:
+    type: object
+    properties:
+      Id:
+        format: int32
+        type: integer
+      ServiceRequestId:
+        format: int32
+        type: integer
+      ServiceId:
+        format: int32
+        type: integer
+      ActivityId:
+        format: int32
+        type: integer
+      ApproverNetworkId:
+        type: string
+      Comment:
+        type: string
+      SubmitterNetworkId:
+        type: string
+      DateTime:
+        format: date-time
+        type: string
+      EndDateTime:
+        format: date-time
+        type: string
+      State:
+        $ref: '#/definitions/StateCode'
+      Hours:
+        type: array
+        items:
+          $ref: '#/definitions/Hours'
+      ServiceOutputs:
+        type: array
+        items:
+          $ref: '#/definitions/ServiceOutput'
+  TimeEntryApproverPut:
+    type: object
+    properties:
+      TimeEntryIds:
+        type: array
+        items:
+          format: int32
+          type: integer
+      HourIds:
+        type: array
+        items:
+          format: uuid
+          type: string
+      ApprovalManagerNetworkId:
+        type: string
+  TimeEntryPost:
+    type: object
+    properties:
+      ServiceRequestId:
+        format: int32
+        type: integer
+      ServiceId:
+        format: int32
+        type: integer
+      ActivityId:
+        format: int32
+        type: integer
+      ApproverNetworkId:
+        type: string
+      Comment:
+        type: string
+      SubmitterNetworkId:
+        type: string
+      DateTime:
+        format: date-time
+        type: string
+      EndDateTime:
+        format: date-time
+        type: string
+      Hours:
+        type: array
+        items:
+          $ref: '#/definitions/HoursPost'
+      ServiceOutputs:
+        type: array
+        items:
+          $ref: '#/definitions/ServiceOutputPost'
+  TimeEntryPut:
+    type: object
+    properties:
+      ServiceRequestId:
+        format: int32
+        type: integer
+      ActivityId:
+        format: int32
+        type: integer
+      ApproverNetworkId:
+        type: string
+      Comment:
+        type: string
+      SubmitterNetworkId:
+        type: string
+      DateTime:
+        format: date-time
+        type: string
+      EndDateTime:
+        format: date-time
+        type: string
+      Hours:
+        type: array
+        items:
+          $ref: '#/definitions/HoursPut'
+      ServiceOutputs:
+        type: array
+        items:
+          $ref: '#/definitions/ServiceOutput'
+  TimeEntryStatus:
+    type: object
+    properties:
+      Id:
+        format: int32
+        type: integer
+      NameEn:
+        type: string
+      NameFr:
+        type: string
+      State:
+        $ref: '#/definitions/StateCode'
+parameters: {}
+responses: {}
+securityDefinitions:
+  API Key:
+    type: apiKey
+    in: header
+    name: api-key
+security:
+  - API Key: []
+tags: []

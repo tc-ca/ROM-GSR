@@ -1,0 +1,813 @@
+swagger: '2.0'
+info:
+  title: Service Performance API Documentation(2.1.5.0)
+  description: ''
+  version: 2.1.5.0
+host: wwwappstestext.tc.gc.ca
+basePath: /Corp-Serv-Gen/5/SPAPI-PSAPI-DEV
+schemes:
+  - https
+consumes: []
+produces: []
+paths:
+  /api/v2/RemissionRequired:
+    get:
+      tags:
+        - RemissionRequired
+      summary: Returns all RemissionRequired objects for the current registered Source.
+      operationId: remissionrequiredGetRemissionRequired
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: header
+          name: User-Identity
+          type: string
+        - in: header
+          name: Source-APIKey
+          type: string
+      responses:
+        '200':
+          description: Returns all RemissionRequired objects.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RemissionRequiredView'
+        '204':
+          description: If there are no RemissionRequired objects.
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundResult'
+        '500':
+          description: If there is an error retrieving RemissionRequired objects.
+          schema:
+            type: string
+  /api/v2/servicerequest/{serviceRequestId}/performance:
+    get:
+      tags:
+        - ServiceRequestControllerV
+      summary: Get the service request performance for a service request
+      operationId: servicerequestcontrollervGetServiceRequestPerformance
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: serviceRequestId
+          description: The Id of the service request that you want the peformance of.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ServiceRequestPerformance'
+        '403':
+          description: Forbidden
+          schema:
+            type: string
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundResponse'
+    post:
+      tags:
+        - ServiceRequestControllerV
+      summary: Calculate and save the service request performance of a request
+      operationId: servicerequestcontrollervCalculateServiceRequestPerformance
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: serviceRequestId
+          description: >-
+            The Id of the service request that is having the calculation
+            executed.
+          required: true
+          type: integer
+          format: int32
+        - in: query
+          name: userId
+          description: The SPAPI stakeholder Id to associate the performance record to.
+          required: true
+          type: integer
+          format: int32
+        - in: query
+          name: ogdInd
+          description: >-
+            If this SR is invoicing other government departments (OGDs), set
+            this field to true, otherwise leave it as false.
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              ServiceRequestPerformanceId:
+                type: integer
+                format: int32
+                description: ServiceRequestPerformanceId
+              ServiceRequestId:
+                type: integer
+                format: int32
+                description: ServiceRequestId
+              ServiceId:
+                type: integer
+                format: int32
+                description: ServiceId
+              ServiceStandardId:
+                type: integer
+                format: int32
+                description: ServiceStandardId
+              ErrorCd:
+                type: integer
+                format: int32
+                description: ErrorCd
+              StartDte:
+                type: string
+                description: StartDte
+              CompletedDte:
+                type: string
+                description: CompletedDte
+              StandardValueTypeCd:
+                type: string
+                description: StandardValueTypeCd
+              StandardUnitNbr:
+                type: integer
+                format: int32
+                description: StandardUnitNbr
+              OnHoldDayNbr:
+                type: integer
+                format: int32
+                description: OnHoldDayNbr
+              WeekendDayNbr:
+                type: integer
+                format: int32
+                description: WeekendDayNbr
+              HolidayDayNbr:
+                type: integer
+                format: int32
+                description: HolidayDayNbr
+              ApplicableUnitNbr:
+                type: integer
+                format: int32
+                description: ApplicableUnitNbr
+              TotalFeeAmt:
+                type: number
+                format: double
+                description: TotalFeeAmt
+              RemittanceAmt:
+                type: number
+                format: double
+                description: RemittanceAmt
+              StandardMetInd:
+                type: boolean
+                description: StandardMetInd
+              ApproverNetworkId:
+                type: string
+                description: ApproverNetworkId
+              StandardAssessmentPct:
+                type: number
+                format: float
+                description: StandardAssessmentPct
+              ServiceStandardChannelId:
+                type: integer
+                format: int32
+                description: ServiceStandardChannelId
+              AdjustmentNbr:
+                type: integer
+                format: int32
+                description: AdjustmentNbr
+              AdjustmentJustificationTxt:
+                type: string
+                description: AdjustmentJustificationTxt
+              AdjustmentApplicableUnitNbr:
+                type: integer
+                format: int32
+                description: AdjustmentApplicableUnitNbr
+              AdjustmentNetworkId:
+                type: string
+                description: AdjustmentNetworkId
+              OgdInd:
+                type: boolean
+                description: OgdInd
+        '400':
+          description: Bad Request
+          schema:
+            type: string
+        '403':
+          description: Forbidden
+          schema:
+            type: string
+        '404':
+          description: Not Found
+          schema:
+            type: string
+        '500':
+          description: Server Error
+          schema:
+            type: string
+  /api/v2/servicerequest/{serviceRequestId}/performance/approval:
+    get:
+      tags:
+        - ServiceRequestControllerV
+      summary: Check if a user is able to approve a service request performance
+      operationId: servicerequestcontrollervCheckRemissionApprover
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: serviceRequestId
+          description: >-
+            The Id of the service request that you want to check the peformance
+            of.
+          required: true
+          type: integer
+          format: int32
+        - in: query
+          name: TcNetworkId
+          description: The Id of the user to get performances awaiting their approval.
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: boolean
+        '403':
+          description: Forbidden
+          schema:
+            type: string
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundResponse'
+    put:
+      tags:
+        - ServiceRequestControllerV
+      summary: Approve a service request performance
+      operationId: servicerequestcontrollervApproveRemission
+      consumes:
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: serviceRequestId
+          description: >-
+            The Id of the service request that is having its performance
+            approved.
+          required: true
+          type: integer
+          format: int32
+        - in: body
+          name: body
+          description: >-
+            The TC network Id of the user approving the performance (including
+            "TC\"), and the ID of the SPAPI user to associate the change with.
+          schema:
+            $ref: '#/definitions/ApproveRemissionPut'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ServiceRequestPerformance'
+        '403':
+          description: Forbidden
+          schema:
+            type: string
+  /api/v2/servicerequest/{serviceRequestId}/performance/adjustment:
+    put:
+      tags:
+        - ServiceRequestControllerV
+      summary: Adjust a service request performance
+      operationId: servicerequestcontrollervAdjustPerformance
+      consumes:
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: serviceRequestId
+          description: The Id of the service request being adjusted.
+          required: true
+          type: integer
+          format: int32
+        - in: body
+          name: body
+          description: The adjustment being applied.
+          schema:
+            $ref: '#/definitions/AdjustmentPost'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ServiceRequestPerformance'
+        '403':
+          description: Forbidden
+          schema:
+            type: string
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundResponse'
+        '500':
+          description: Server Error
+          schema:
+            type: string
+  /api/v2/servicerequest/{serviceRequestId}/remission:
+    post:
+      tags:
+        - ServiceRequestControllerV
+      summary: >-
+        Remit a service request as a transaction. Returns Transactions that have
+        successfully been saved.
+      operationId: servicerequestcontrollervSaveRemission
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: serviceRequestId
+          description: The Id of the service request that is being remitted.
+          required: true
+          type: integer
+          format: int32
+        - in: query
+          name: userId
+          description: The stakeholder Id to associate the transaction record to.
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TransactionGet'
+        '400':
+          description: Bad Request
+          schema:
+            type: string
+        '403':
+          description: Forbidden
+          schema:
+            type: string
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundResponse'
+        '500':
+          description: Server Error
+  /api/v2/servicerequest/{serviceRequestId}/performance/estimate:
+    get:
+      tags:
+        - ServiceRequestControllerV
+      summary: >-
+        Calculate the performance to date, and estimate what the due date will
+        be.
+      description: >-
+        Note: This does not save any data. POST
+        servicerequest/{serviceRequestId}/performance still needs to be run to
+        start the performance/remissions process.
+      operationId: servicerequestcontrollervEstimateServiceRequestPerformance
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - in: path
+          name: serviceRequestId
+          description: The Id of the service request.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              ServiceRequestId:
+                format: int32
+                type: integer
+              ServiceStandardId:
+                type: string
+              StandardValueTypeCd:
+                type: string
+              StandardUnitNbr:
+                format: int32
+                type: integer
+              StartDte:
+                format: date-time
+                type: string
+              EstimatedCompletedDte:
+                format: date-time
+                type: string
+              CurrentApplicableUnitNbr:
+                format: int32
+                type: integer
+              UnitsRemainingNbr:
+                format: int32
+                type: integer
+        '400':
+          description: Bad Request
+          schema:
+            type: string
+        '403':
+          description: Forbidden
+          schema:
+            type: string
+        '404':
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                description: type
+              title:
+                type: string
+                description: title
+              status:
+                type: integer
+                format: int32
+                description: status
+              detail:
+                type: string
+                description: detail
+              FurtherInfo:
+                type: string
+                description: FurtherInfo
+        '500':
+          description: Server Error
+          schema:
+            type: string
+definitions:
+  AdjustmentPost:
+    type: object
+    properties:
+      AdjustmentNbr:
+        format: int32
+        type: integer
+      AdjustmentJustificationTxt:
+        type: string
+      AdjustmentNetworkId:
+        type: string
+      UserId:
+        format: int32
+        type: integer
+  ApproveRemissionPut:
+    type: object
+    properties:
+      ApproverNetworkId:
+        type: string
+      UserId:
+        format: int32
+        type: integer
+  NotFoundResponse:
+    type: object
+    properties:
+      Type:
+        type: string
+      Title:
+        type: string
+      Status:
+        format: int32
+        type: integer
+        title: ''
+      TraceId:
+        type: string
+  NotFoundResult:
+    type: object
+    properties:
+      StatusCode:
+        format: int32
+        type: integer
+  RemissionRequiredView:
+    required:
+      - ElapsedTime
+      - PayeeAdjustment
+      - RequiresRemission
+      - ServiceAdjustment
+      - SourceId
+      - SourceTransactionId
+      - StandardElapsedTime
+    type: object
+    properties:
+      TransactionId:
+        format: int32
+        type: integer
+      SourceTransactionId:
+        maxLength: 450
+        type: string
+      FeeId:
+        type: string
+      SourceId:
+        format: int32
+        type: integer
+      Invoice:
+        type: string
+      Start:
+        format: date-time
+        type: string
+      End:
+        format: date-time
+        type: string
+      Complete:
+        format: date-time
+        type: string
+      ServiceAdjustment:
+        format: int32
+        type: integer
+      ServiceAdjustmentJustification:
+        type: string
+      ElapsedTime:
+        format: int32
+        type: integer
+      StandardElapsedTime:
+        format: int32
+        type: integer
+      Receipt:
+        type: string
+      InvoiceItemNum:
+        format: int32
+        type: integer
+      PayeeAdjustment:
+        format: int32
+        type: integer
+      InvoiceOrReceiptAmount:
+        format: double
+        type: number
+      RequiresRemission:
+        type: boolean
+      ApprovedByNetworkId:
+        type: string
+      CreatedByNetworkId:
+        type: string
+      LastUpdatedByNetworkId:
+        type: string
+  ServiceRequestPerformance:
+    type: object
+    properties:
+      ServiceRequestPerformanceId:
+        format: int32
+        type: integer
+      ServiceRequestId:
+        format: int32
+        type: integer
+      ServiceId:
+        format: int32
+        type: integer
+      ServiceStandardId:
+        format: int32
+        type: integer
+      ErrorCd:
+        format: int32
+        type: integer
+      StartDte:
+        format: date-time
+        type: string
+      CompletedDte:
+        format: date-time
+        type: string
+      StandardValueTypeCd:
+        type: string
+      StandardUnitNbr:
+        format: int32
+        type: integer
+      OnHoldDayNbr:
+        format: int32
+        type: integer
+      WeekendDayNbr:
+        format: int32
+        type: integer
+      HolidayDayNbr:
+        format: int32
+        type: integer
+      ApplicableUnitNbr:
+        format: int32
+        type: integer
+      TotalFeeAmt:
+        format: double
+        type: number
+      RemittanceAmt:
+        format: double
+        type: number
+      StandardMetInd:
+        type: boolean
+      ApproverNetworkId:
+        type: string
+      StandardAssessmentPct:
+        format: double
+        type: number
+      ServiceStandardChannelId:
+        format: int32
+        type: integer
+      AdjustmentNbr:
+        format: int32
+        type: integer
+      AdjustmentJustificationTxt:
+        type: string
+      AdjustmentApplicableUnitNbr:
+        format: int32
+        type: integer
+      AdjustmentNetworkId:
+        type: string
+      OgdInd:
+        type: boolean
+  TransactionGet:
+    type: object
+    properties:
+      FeeId:
+        description: The identifier that indicates the fee for the transaction. Required.
+        type: string
+      Start:
+        format: date-time
+        description: >-
+          The start date for the transaction. Used to calculate elapsed time.
+          Required.
+        type: string
+      End:
+        format: date-time
+        description: >-
+          The end date for the transaction. Used to calculate elapsed time. 
+          Required.
+        type: string
+      Complete:
+        format: date-time
+        description: The completion date for the transaction. Required.
+        type: string
+      ServiceAdjustment:
+        format: int32
+        description: >-
+          Time adjustment for the elapsed transaction time created by the
+          Service. AdjustmentJustification is required if provided.
+        type: integer
+      ServiceAdjustmentJustification:
+        description: >-
+          Justification for the time adjustment for the elapsed transaction
+          time. Required if AdjustmentSeconds is provided.
+        type: string
+      ClientAdjustment:
+        format: int32
+        description: Time adjustment for the elapsed transaction time created by the Payee.
+        type: integer
+      ElapsedTime:
+        format: int32
+        type: integer
+      Invoice:
+        description: Oracle Financials Invoice number. Optional.
+        type: string
+      Receipt:
+        description: Oracle Financials Receipt number. Optional.
+        type: string
+      InvoiceItemNum:
+        format: int32
+        description: Oracle Financials Transaction Line number. Optional.
+        type: integer
+      OracleRemissionReferenceNumber:
+        description: >-
+          The reference number to the Oracle database for the remission.
+          Optional.
+        type: string
+      InvoiceOrReceiptAmount:
+        format: double
+        description: >-
+          The Invoice or Receipt Amount associated with this transaction.
+          Optional.
+        type: number
+      RemissionAmount:
+        format: double
+        description: The amount remitted to the client. Optional.
+        type: number
+      RequiresRemission:
+        description: Flag stating if the transaction needs to be remitted. Required.
+        type: boolean
+      TotalHours:
+        format: double
+        description: Total hours reported towards the transaction. Optional.
+        type: number
+      Id:
+        format: int32
+        type: integer
+      SourceTransactionId:
+        type: string
+      StandardElapsedTime:
+        format: int32
+        type: integer
+      SourceId:
+        format: int32
+        type: integer
+      FeeEn:
+        type: string
+      FeeFr:
+        type: string
+      FeeDisplayEn:
+        type: string
+      FeeDisplayFr:
+        type: string
+      CreatedById:
+        format: int32
+        type: integer
+      ModifiedById:
+        format: int32
+        type: integer
+      CreatedOn:
+        format: date-time
+        type: string
+      ModifiedOn:
+        format: date-time
+        type: string
+      DeletedOn:
+        format: date-time
+        type: string
+      Histories:
+        type: array
+        items:
+          $ref: '#/definitions/TransactionHistoryGet'
+  TransactionHistoryGet:
+    type: object
+    properties:
+      TransactionId:
+        format: int32
+        description: >-
+          The identifier that indicates the transaction for the transaction
+          history. Required.
+        type: integer
+      StatusId:
+        description: >-
+          The identifier that indicates the transaction history's status.
+          Required
+        type: string
+      OracleRemissionReferenceNumber:
+        description: >-
+          The reference number to the Oracle database for the remission.
+          Optional.
+        type: string
+      RemissionAmount:
+        format: double
+        description: The amount remitted to the client. Optional.
+        type: number
+      RemissionTypeId:
+        description: >-
+          The type of transaction (Credit, Cheque, etc) that the Remision is
+          being process as. Optional.
+        type: string
+      RemissionComment:
+        description: Comment attached to the step that the remission is in. Optional.
+        type: string
+      Id:
+        format: int32
+        type: integer
+      CreatedById:
+        format: int32
+        type: integer
+      ModifiedById:
+        format: int32
+        type: integer
+      StatusNameEn:
+        type: string
+      StatusNameFr:
+        type: string
+      RemissionTypeEn:
+        type: string
+      RemissionTypeFr:
+        type: string
+      CreatedOn:
+        format: date-time
+        type: string
+      ModifiedOn:
+        format: date-time
+        type: string
+      DeletedOn:
+        format: date-time
+        type: string
+parameters: {}
+responses: {}
+securityDefinitions:
+  API Key:
+    type: apiKey
+    in: header
+    name: api-key
+security:
+  - API Key: []
+tags: []
