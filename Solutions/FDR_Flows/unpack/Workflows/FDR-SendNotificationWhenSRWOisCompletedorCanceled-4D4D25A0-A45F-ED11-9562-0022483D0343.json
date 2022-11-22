@@ -242,7 +242,7 @@
             },
             "Switch_On_Work_Order_System_Status": {
               "runAfter": {
-                "Set_Service_Request_Anchor_Tag": [
+                "Update_Service_Request_and_sets_status_reason_to_Post_Inspection_Review": [
                   "Succeeded"
                 ]
               },
@@ -250,89 +250,31 @@
                 "Case_-_Work_is_Completed": {
                   "case": 690970003,
                   "actions": {
-                    "Only_trigger_if_completed_on_column": {
-                      "actions": {
-                        "Update_Service_Request_and_sets_status_reason_to_Post_Inspection_Review": {
-                          "runAfter": {},
-                          "metadata": {
-                            "operationMetadataId": "890bb2be-6c30-4f20-9d84-165d2015becf"
-                          },
-                          "type": "OpenApiConnection",
-                          "inputs": {
-                            "host": {
-                              "connectionName": "shared_commondataserviceforapps_2",
-                              "operationId": "UpdateRecord",
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                            },
-                            "parameters": {
-                              "entityName": "fdr_servicerequests",
-                              "recordId": "@variables('Service Request Id')",
-                              "item/statuscode": 794600004
-                            },
-                            "authentication": "@parameters('$authentication')"
-                          }
-                        },
-                        "Post_message_in_a_chat_or_channel": {
-                          "runAfter": {
-                            "Update_Service_Request_and_sets_status_reason_to_Post_Inspection_Review": [
-                              "Succeeded"
-                            ]
-                          },
-                          "type": "OpenApiConnection",
-                          "inputs": {
-                            "host": {
-                              "connectionName": "shared_teams",
-                              "operationId": "PostMessageToConversation",
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams"
-                            },
-                            "parameters": {
-                              "poster": "Flow bot",
-                              "location": "Chat with Flow bot",
-                              "body/recipient": "@{variables('ownerUserEmail')};",
-                              "body/messageBody": "<p><strong>Please note that the following inspection report has been issued. &nbsp;</strong><br>\n<br>\nInspection Work Order Number: @{variables('Work Order Anchor Tag')}<br>\nService Request ID Number: @{variables('Service Request Anchor Tag')}<br>\n<br>\n___________________________________________________________________________________<br>\n<strong>Veuillez noter que le rapport d’inspection suivant a été émis: &nbsp;</strong><br>\n<br>\nNuméro de l’ordre de travail de l’inspection: &nbsp;@{variables('Work Order Anchor Tag')}<br>\nNuméro de la demande de service: @{variables('Service Request Anchor Tag')}</p>"
-                            },
-                            "authentication": "@parameters('$authentication')"
-                          }
-                        }
-                      },
+                    "Post_message_in_a_chat_or_channel_-_work_order_completed": {
                       "runAfter": {},
-                      "expression": {
-                        "equals": [
-                          "@empty(triggerOutputs()?['body/msdyn_completedon'])",
-                          "@false"
-                        ]
-                      },
-                      "type": "If",
-                      "description": "remark: condition used to ensure notification is only sent once as the flow is called twice when inspection report is set, as the inspection report flow also sets the booking which triggers flow again"
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_teams",
+                          "operationId": "PostMessageToConversation",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams"
+                        },
+                        "parameters": {
+                          "poster": "Flow bot",
+                          "location": "Chat with Flow bot",
+                          "body/recipient": "@{variables('ownerUserEmail')};",
+                          "body/messageBody": "<p><strong>Please note that the following inspection report has been issued. &nbsp;</strong><br>\n<br>\nInspection Work Order Number: @{variables('Work Order Anchor Tag')}<br>\nService Request ID Number: @{variables('Service Request Anchor Tag')}<br>\n<br>\n___________________________________________________________________________________<br>\n<strong>Veuillez noter que le rapport d’inspection suivant a été émis: &nbsp;</strong><br>\n<br>\nNuméro de l’ordre de travail de l’inspection: &nbsp;@{variables('Work Order Anchor Tag')}<br>\nNuméro de la demande de service: @{variables('Service Request Anchor Tag')}</p>"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
                     }
                   }
                 },
                 "Case_-_Work_is_Canceled": {
                   "case": 690970005,
                   "actions": {
-                    "Update_Service_Request_Status": {
+                    "Post_message_in_a_chat_or_channel_-_work_order_canceled": {
                       "runAfter": {},
-                      "type": "OpenApiConnection",
-                      "inputs": {
-                        "host": {
-                          "connectionName": "shared_commondataserviceforapps_2",
-                          "operationId": "UpdateRecord",
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                        },
-                        "parameters": {
-                          "entityName": "fdr_servicerequests",
-                          "recordId": "@variables('Service Request Id')",
-                          "item/statuscode": 794600004
-                        },
-                        "authentication": "@parameters('$authentication')"
-                      }
-                    },
-                    "Post_message_in_a_chat_or_channel_2": {
-                      "runAfter": {
-                        "Update_Service_Request_Status": [
-                          "Succeeded"
-                        ]
-                      },
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
@@ -374,6 +316,30 @@
               "inputs": {
                 "name": "Service Request Id",
                 "value": "@items('Apply_to_each')?['fdr_servicerequestid']"
+              }
+            },
+            "Update_Service_Request_and_sets_status_reason_to_Post_Inspection_Review": {
+              "runAfter": {
+                "Set_Service_Request_Anchor_Tag": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "890bb2be-6c30-4f20-9d84-165d2015becf"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_2",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "fdr_servicerequests",
+                  "recordId": "@variables('Service Request Id')",
+                  "item/statuscode": 794600004
+                },
+                "authentication": "@parameters('$authentication')"
               }
             }
           },
