@@ -50,6 +50,7 @@ $(document).ready(function () {
 
 					if ((!extendedSite && SiteHasOperationClasses(operationId, null)) || (extendedSite && SiteHasOperationClasses(operationId, null) && SiteHasOperationUNNumbers(operationId, null))) {
 						$("#NextButton").prop('disabled', false);
+						//$("#NextButton").click();
 					}
 
 					//firstRow.find('td').each(function(){

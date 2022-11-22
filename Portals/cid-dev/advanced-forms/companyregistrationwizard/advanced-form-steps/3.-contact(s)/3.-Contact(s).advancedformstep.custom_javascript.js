@@ -110,12 +110,14 @@ function DeactivateContact(ContactId)
 	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
 	var CurrentUserID = '{{user.id}}';
    var ParentAccount = '{{user.parentcustomerid.id}}' ;
-   console.log ("cid_usercontacttype " + cid_usercontacttype );
    var LanguageCode = '{{website.selected_language.code}}';
-   console.log("after moving the code to js file2");
    invitation.Execute_Invitation_Deactivation_Logic(ContactId,cid_usercontacttype, CurrentUserID, ParentAccount, LanguageCode  );
+   setTimeout(refreshGrid, 3000);
   
 }
+//refresh grid
+function refreshGrid()
+{ $(".entity-grid").trigger("refresh");}
 function ResendInvitation(contactid, fullname)
 {
     // get current user contact type

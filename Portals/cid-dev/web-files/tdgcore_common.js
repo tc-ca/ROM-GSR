@@ -606,43 +606,43 @@ if (typeof (tdg.c) == "undefined") {
             } catch (e) { }
 
         },
-         Prevent_Po_Box_address_Validation : function(selected_language) {
+        Prevent_Po_Box_address_Validation: function (selected_language) {
 
-        //add validation error message
-        try {
-            var validationMessage = "";
-            if (selected_language == "en") {
-                validationMessage = "Street 1 can not have PO Box.";
-            }
-            else {
-                validationMessage = "Street 1 can not have PO Box._fr";
-            }
-            if (typeof (Page_Validators) == 'undefined') return;
-            // Create new validator
-            var newValidator = document.createElement('span');
-            newValidator.style.display = "none";
-            newValidator.id = "address1_line1Validator";
-            newValidator.controltovalidate = "address1_line1";
-            newValidator.errormessage = "<a href='#address1_line1_label' referencecontrolid='address1_line1' onclick='javascript:scrollToAndFocus(\"address1_line1_label\",\" address1_line1 \");return false;'>" + validationMessage + "</a>";
-
-            newValidator.validationGroup = ""; // Set this if you have set ValidationGroup on the form
-            newValidator.initialvalue = "";
-            newValidator.evaluationfunction = function () {
-                var addressline1 = $("#address1_line1").val();
-                if (addressline1.toUpperCase().indexOf("PO BOX") >= 0 || addressline1.toUpperCase().indexOf("P.O") >= 0) {
-
-                    return false;
+            //add validation error message
+            try {
+                var validationMessage = "";
+                if (selected_language == "en") {
+                    validationMessage = "Street 1 can not have PO Box.";
                 }
                 else {
-                    return true;
+                    validationMessage = "Street 1 can not have PO Box._fr";
                 }
-            };
+                if (typeof (Page_Validators) == 'undefined') return;
+                // Create new validator
+                var newValidator = document.createElement('span');
+                newValidator.style.display = "none";
+                newValidator.id = "address1_line1Validator";
+                newValidator.controltovalidate = "address1_line1";
+                newValidator.errormessage = "<a href='#address1_line1_label' referencecontrolid='address1_line1' onclick='javascript:scrollToAndFocus(\"address1_line1_label\",\" address1_line1 \");return false;'>" + validationMessage + "</a>";
 
-            // Add the new validator to the page validators array:
-            Page_Validators.push(newValidator);
+                newValidator.validationGroup = ""; // Set this if you have set ValidationGroup on the form
+                newValidator.initialvalue = "";
+                newValidator.evaluationfunction = function () {
+                    var addressline1 = $("#address1_line1").val();
+                    if (addressline1.toUpperCase().indexOf("PO BOX") >= 0 || addressline1.toUpperCase().indexOf("P.O") >= 0) {
 
-        } catch (e) { }
-    }//end function
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+                };
+
+                // Add the new validator to the page validators array:
+                Page_Validators.push(newValidator);
+
+            } catch (e) { }
+        }//end function
     }
 }
 
@@ -1425,7 +1425,7 @@ if (typeof (tdg.cid) == "undefined") {
                 '</div>' +
                 '</td>' +
                 '</tr>';
-            console.log("row 1");
+            
             var row2 = ' <tr style="background-color: rgb(240, 240, 240);">' +
                 '<td colspan = "1" rowspan = "1" class="clearfix cell checkbox-cell" >' +
                 '<div class="info">' +
@@ -1454,10 +1454,10 @@ if (typeof (tdg.cid) == "undefined") {
             console.log("row 2");
             $("[data-name='site_attestation_section_Modes']").each(function () {
                 var selectedTable = $(this);
-                $(this).append(row2);
-                console.log("after row 2 modified");
                 $(this).append(row1);
-                console.log("after row 1 modified");
+                
+                $(this).append(row2);
+               
             })
         },
 
@@ -1897,5 +1897,6 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
+
 
 
