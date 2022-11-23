@@ -335,7 +335,7 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000103",
-                        "message_en": "Maritime",
+                        "message_en": "Marine",
                         "message_fr": "Maritime"
                     },
                     {

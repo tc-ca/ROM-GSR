@@ -35,6 +35,7 @@ $(document).ready(function () {
         var operationId = GetHOTIOperation(siteId);
 
         OperationDetailsProvided(operationId, false);
+        sessionStorage.setItem('to_oprtn_wzrd', 'true');
     });
 
     //Display mode of transportation check boxes (custom code)
@@ -63,6 +64,7 @@ if (window.jQuery) {
         webFormClientValidate = function () {
             var validation = true;
             var siteId = $("#EntityFormView_EntityID").val();
+            sessionStorage.setItem('to_oprtn_wzrd', 'true');
             var errorMessage = "";
 
             //Classes validation

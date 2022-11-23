@@ -35,15 +35,21 @@ $(document).ready(function () {
 						$("#PreviousButton").hide();
 					}
 
-					var to_actvt_stp = sessionStorage.getItem("to_actvt_stp");
-					var to_oprtn_wzrd = sessionStorage.getItem("to_oprtn_wzrd");
+					var to_activity_step = sessionStorage.getItem("to_actvt_stp");
+					var to_operation_wzrd = sessionStorage.getItem("to_oprtn_wzrd");
+					var to_attest_site = sessionStorage.getItem("to_attst_site");
 
-					if (to_actvt_stp == 'true') {
+					if (to_attest_site == 'true') {
+						sessionStorage.setItem('to_attst_site', 'false');
+						$("#NextButton").click();
+					}
+
+					if (to_activity_step == 'true') {
 						sessionStorage.setItem('to_actvt_stp', 'false');
 						$("#PreviousButton").click();
 					}
 
-					if (to_oprtn_wzrd == 'true') {
+					if (to_operation_wzrd == 'true') {
 						sessionStorage.setItem('to_oprtn_wzrd', 'false');
 						window.location.href = operationWizardURL;
 					}

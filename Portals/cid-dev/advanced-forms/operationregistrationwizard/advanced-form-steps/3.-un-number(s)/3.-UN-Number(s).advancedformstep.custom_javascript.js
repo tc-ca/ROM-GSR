@@ -5,6 +5,10 @@
 $(document).ready(function () {
     debugger;
 
+    $('#NextButton').on('click', function () {
+        sessionStorage.setItem('to_attst_site', 'true');
+    });
+
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
