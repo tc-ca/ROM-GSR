@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ImportExportXml version="9.2.22084.162" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ImportExportXml version="9.2.22111.176" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <UniqueName>TDG_NOP_Flows</UniqueName>
     <LocalizedNames>
       <LocalizedName description="TDG.NOP.Flows" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.0.0.43</Version>
+    <Version>1.0.0.44</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>transportationofdangerousgoods</UniqueName>
@@ -78,6 +78,7 @@
       </Addresses>
     </Publisher>
     <RootComponents>
+      <RootComponent type="29" id="{1492ee5f-bd53-ed11-9561-0022483d0343}" behavior="0" />
       <RootComponent type="29" id="{346f0951-4963-ec11-8f8e-000d3aff1142}" behavior="0" />
       <RootComponent type="29" id="{356f0951-4963-ec11-8f8e-000d3aff1142}" behavior="0" />
       <RootComponent type="29" id="{577ea3a9-7b4c-ec11-8f8e-000d3ae8e96e}" behavior="0" />
@@ -91,13 +92,13 @@
     <MissingDependencies>
       <MissingDependency>
         <Required type="1" schemaName="msdyn_workorder" displayName="Work Order" solution="FieldService (8.8.0.88)">
-          <package>FieldService_Anchor (8.8.72.55)</package>
+          <package>FieldService_Anchor (8.8.78.23)</package>
         </Required>
         <Dependent type="29" displayName="TDG Inspections - Generate Work Order Candidates" id="{577ea3a9-7b4c-ec11-8f8e-000d3ae8e96e}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="msdyn_workorder" displayName="Work Order" solution="FieldService (8.8.0.88)">
-          <package>FieldService_Anchor (8.8.72.55)</package>
+          <package>FieldService_Anchor (8.8.78.23)</package>
         </Required>
         <Dependent type="29" displayName="TDG Inspections - Generate Work Order Candidates on Demand" id="{f084ea5e-610c-ed11-b83d-000d3a0c8551}" />
       </MissingDependency>
@@ -108,6 +109,10 @@
       <MissingDependency>
         <Required type="1" schemaName="ovs_cdnop" displayName="NOP" solution="Active" />
         <Dependent type="29" displayName="TDG Inspections - Generate Work Order Candidates on Demand" id="{f084ea5e-610c-ed11-b83d-000d3a0c8551}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="ovs_cdregionalnop" displayName="Regional NOP" solution="Active" />
+        <Dependent type="29" displayName="TDG Inspection - Update RNOP Flag to generate Work Orders" id="{1492ee5f-bd53-ed11-9561-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="ovs_cdregionalnop" displayName="Regional NOP" solution="Active" />
@@ -219,6 +224,10 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="ovs_workordercandidate" displayName="Work Order Candidate" solution="Active" />
+        <Dependent type="29" displayName="TDG Inspection - Update RNOP Flag to generate Work Orders" id="{1492ee5f-bd53-ed11-9561-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="ovs_workordercandidate" displayName="Work Order Candidate" solution="Active" />
         <Dependent type="29" displayName="Process Hubs" id="{346f0951-4963-ec11-8f8e-000d3aff1142}" />
       </MissingDependency>
       <MissingDependency>
@@ -290,6 +299,10 @@
         <Dependent type="29" displayName="TDG Inspections - Generate Work Order Candidates on Demand" id="{f084ea5e-610c-ed11-b83d-000d3a0c8551}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="2" schemaName="ovs_generateworkorder" displayName="Generate Work Order " parentSchemaName="ovs_cdregionalnop" parentDisplayName="Regional NOP" solution="Active" />
+        <Dependent type="29" displayName="TDG Inspection - Update RNOP Flag to generate Work Orders" id="{1492ee5f-bd53-ed11-9561-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="connectionreference" displayName="tdg_ConnectionReferenceDataverseLegacyServicePrinciple" solution="Active" id.connectionreferencelogicalname="tdg_ConnectionReferenceDataverseLegacyServicePrinciple" />
         <Dependent type="29" displayName="Process Hubs" id="{346f0951-4963-ec11-8f8e-000d3aff1142}" />
       </MissingDependency>
@@ -308,6 +321,10 @@
       <MissingDependency>
         <Required type="connectionreference" displayName="tdg_ConnectionReferenceDataverseLegacyServicePrinciple" solution="Active" id.connectionreferencelogicalname="tdg_ConnectionReferenceDataverseLegacyServicePrinciple" />
         <Dependent type="29" displayName="Process Accidents" id="{b9f2064f-4963-ec11-8f8e-000d3aff196d}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="connectionreference" displayName="tdg_ConnectionReferenceDataverseServicePrinciple" solution="Active" id.connectionreferencelogicalname="tdg_ConnectionReferenceDataverseServicePrinciple" />
+        <Dependent type="29" displayName="TDG Inspection - Update RNOP Flag to generate Work Orders" id="{1492ee5f-bd53-ed11-9561-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="connectionreference" displayName="tdg_ConnectionReferenceDataverseServicePrinciple" solution="Active" id.connectionreferencelogicalname="tdg_ConnectionReferenceDataverseServicePrinciple" />

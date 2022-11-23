@@ -1,0 +1,276 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "6ca8ab37-2b14-4e4c-9048-4112ab603f2e"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "ovs_cdregionalnop",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "ovs_generateworkorder,",
+              "subscriptionRequest/filterexpression": "ovs_generateworkorder eq true",
+              "subscriptionRequest/runas": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "List_rows:_get_active_WOC_with_region_flag_=_yes": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "21762d64-407c-411c-807e-98e115d295f8"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_workordercandidates",
+              "fetchXml": "<fetch distinct=\"false\" no-lock=\"false\" mapping=\"logical\" aggregate=\"false\" >\n    <entity name=\"ovs_workordercandidate\" >\n        <attribute name=\"ovs_site\" />\n        <attribute name=\"ovs_operationid\" />\n        <attribute name=\"ovs_oversighttype\" />\n        <attribute name=\"ovs_primaryinspector\" />\n        <attribute name=\"ovs_remote\" />\n        <attribute name=\"ovs_plannedquarter\" />\n        <filter>\n            <condition attribute=\"ovs_regionalnop\" operator=\"eq\" value=\"@{triggerOutputs()?['body/ovs_cdregionalnopid']}\"/>\n            <condition attribute=\"ovs_regionflag\" operator=\"eq\" value=\"1\" />\n            <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n        </filter>\n    </entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runtimeConfiguration": {
+            "paginationPolicy": {
+              "minimumItemCount": 10000
+            }
+          }
+        },
+        "Condition:_check_if_WOC_exists": {
+          "actions": {
+            "Update_a_row:_RNOP_set_WOC's_count_to_generate_WO_": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "aca5ec3f-9d97-43b2-80aa-c9820eff056e"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "ovs_cdregionalnops",
+                  "recordId": "@triggerOutputs()?['body/ovs_cdregionalnopid']",
+                  "item/ovs_cntwoctogeneratewo": "@length(outputs('List_rows:_get_active_WOC_with_region_flag_=_yes')?['body/value'])"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Try": {
+              "actions": {
+                "Apply_to_each_WOC:_set_WO_generate_Flag_to_True": {
+                  "foreach": "@outputs('List_rows:_get_active_WOC_with_region_flag_=_yes')?['body/value']",
+                  "actions": {
+                    "Update_WOC:_Set_Generate_WO_flag_to_YES": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "9d45713e-ada6-4ea3-a60c-c821bc4d82e5"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "UpdateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "ovs_workordercandidates",
+                          "recordId": "@items('Apply_to_each_WOC:_set_WO_generate_Flag_to_True')?['ovs_workordercandidateid']",
+                          "item/ovs_generate_wo": true,
+                          "item/statecode": 1
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Increment_variable": {
+                      "runAfter": {
+                        "Update_WOC:_Set_Generate_WO_flag_to_YES": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "411569e9-bd6c-4721-8725-11be7b26c4e4"
+                      },
+                      "type": "IncrementVariable",
+                      "inputs": {
+                        "name": "WO_Generated",
+                        "value": 1
+                      }
+                    }
+                  },
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "878fcd95-ead6-44d3-b7a4-c42e5e4a175b"
+                  },
+                  "type": "Foreach",
+                  "runtimeConfiguration": {
+                    "concurrency": {
+                      "repetitions": 50
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Update_a_row:_RNOP_set_WOC's_count_to_generate_WO_": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "ad8fb2d5-8fde-4e96-9e62-d3e6cb67dc4a"
+              },
+              "type": "Scope"
+            },
+            "Catch": {
+              "actions": {
+                "Update_a_row:_reset_generate_WO_in_RNOP_": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "42306247-fead-42eb-a140-2fb2d6729d41"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "UpdateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "ovs_cdregionalnops",
+                      "recordId": "@triggerOutputs()?['body/ovs_cdregionalnopid']",
+                      "item/ovs_cntgeneratedwo": "@variables('WO_Generated')",
+                      "item/ovs_generateworkorder": false
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Try": [
+                  "Failed",
+                  "TimedOut",
+                  "Skipped"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "fc862a59-caf3-4b98-932b-d65192572595"
+              },
+              "type": "Scope"
+            },
+            "Update_a_row:_Set_RNOP_to_InActive": {
+              "runAfter": {
+                "Try": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "42306247-fead-42eb-a140-2fb2d6729d41"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "ovs_cdregionalnops",
+                  "recordId": "@triggerOutputs()?['body/ovs_cdregionalnopid']",
+                  "item/ovs_cntgeneratedwo": "@variables('WO_Generated')",
+                  "item/statecode": 1
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "CNT_of_generated_WO": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@empty(outputs('List_rows:_get_active_WOC_with_region_flag_=_yes')?['body/value'])",
+                  "@false"
+                ]
+              },
+              {
+                "greater": [
+                  "@length(outputs('List_rows:_get_active_WOC_with_region_flag_=_yes')?['body/value'])",
+                  0
+                ]
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "183cd2e5-f7aa-4807-a4f9-a62f6525564e"
+          },
+          "type": "If"
+        },
+        "CNT_of_generated_WO": {
+          "runAfter": {
+            "List_rows:_get_active_WOC_with_region_flag_=_yes": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8dc24af1-1664-42d4-a237-37c7a223c5fe"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "WO_Generated",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
