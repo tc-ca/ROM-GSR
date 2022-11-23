@@ -17,38 +17,18 @@ var Operation_FDR_main = (function (window, document) {
     const FIELD_OPERATION_TYPE = "ovs_operationtype";
     const FIELD_REGISTRATION_TYPE = "fdr_registrationtype";
     const FIELD_MOC_REGISTRATION_ID = "ovs_mocregistrationname";
-    const FIELD_MOC_FACILITY_TYPE = "ovs_operationfacilitytype";
-    const FIELD_MOC_REGISTRATION_EXPIRY_DATE = "ovs_registrationexpiry";
+    //const FIELD_MOC_FACILITY_TYPE = "ovs_operationfacilitytype";
+    //const FIELD_MOC_REGISTRATION_EXPIRY_DATE = "ovs_registrationexpiry";
     const FIELD_MOC_REGISTRATION_INITIAL_DATE = "ovs_mocinitialregistrationdate";
-    const FIELD_HUB_INDICATOR = "ovs_hubind";
-    const FIELD_TARGETED_INDICATOR = "ovs_targetedind";
-    const FIELD_ACCIDENT_INDICATOR = "ovs_accidentind";
-    const FIELD_CEP_INDICATOR = "ovs_cepind";
-    const FIELD_FOLLOW_UP_INDICATOR = "ovs_followupind";
-    const FIELD_RISK_SCORE = "ovs_cdriskscore";
-
-    const VALUE_HOTI = 918640038;
-    const VALUE_HOTI_GOA = 918640042;
-    const VALUE_CIV_AV = 918640040;
-
+    //const FIELD_HUB_INDICATOR = "ovs_hubind";
+    //const FIELD_TARGETED_INDICATOR = "ovs_targetedind";
+    //const FIELD_ACCIDENT_INDICATOR = "ovs_accidentind";
+    //const FIELD_CEP_INDICATOR = "ovs_cepind";
+    //const FIELD_FOLLOW_UP_INDICATOR = "ovs_followupind";
+    //const FIELD_RISK_SCORE = "ovs_cdriskscore";
 
     //**************** Private methods
 
-
-    function toggleRequiredLevel(formContext) {
-        var operationType = glHelper.GetValue(formContext, FIELD_OPERATION_TYPE);
-        var fieldsRequired = true;
-
-        if (operationType == VALUE_CIV_AV || operationType == VALUE_HOTI || operationType == VALUE_HOTI_GOA)
-            fieldsRequired = false;
-
-        glHelper.SetRequiredLevel(formContext, FIELD_SITE, true);
-        //glHelper.SetRequiredLevel(formContext, FIELD_OPERATION_TYPE, fieldsRequired);
-        //glHelper.SetRequiredLevel(formContext, FIELD_MOC_FACILITY_TYPE, fieldsRequired);
-        glHelper.SetRequiredLevel(formContext, FIELD_MOC_REGISTRATION_EXPIRY_DATE, fieldsRequired);
-        glHelper.SetRequiredLevel(formContext, FIELD_MOC_REGISTRATION_ID, fieldsRequired);
-        glHelper.SetRequiredLevel(formContext, FIELD_MOC_REGISTRATION_INITIAL_DATE, fieldsRequired);
-    }
 
     function getContactsByAccountN2N(formContext, accountid) {
 
@@ -120,21 +100,11 @@ var Operation_FDR_main = (function (window, document) {
             //later on this will be done on the entity level for all applications.
             glHelper.SetRequiredLevel(formContext, FIELD_OPERATION_TYPE, false);
             glHelper.SetRequiredLevel(formContext, FIELD_REGISTRATION_TYPE, true);
+            glHelper.SetRequiredLevel(formContext, FIELD_MOC_REGISTRATION_ID, true);
+            //glHelper.SetRequiredLevel(formContext, FIELD_MOC_REGISTRATION_EXPIRY_DATE, true);
+            glHelper.SetRequiredLevel(formContext, FIELD_MOC_REGISTRATION_INITIAL_DATE, true);
+            glHelper.SetRequiredLevel(formContext, FIELD_SITE, true);
 
-
-            //Toggle required level based on Operation Type
-            toggleRequiredLevel(formContext);
-
-
-            //Add function to Refresh Operation Class when UNCode is added
-            if (formType > 1) {
-                var OperationUN = formContext.getControl("Subgrid_OperationUNNumber");
-                if (OperationUN != null) OperationUN.addOnLoad(Operation_FDR_main.Refresh_OperationClass);
-            }
-
-            var operationType = formContext.getAttribute("ovs_operationtype");
-            operationType.removeOnChange(Operation_FDR_main.OperationType_OnChange);
-            operationType.addOnChange(Operation_FDR_main.OperationType_OnChange);
         },
 
         Pre_filterPrimaryContact: function () {
@@ -159,17 +129,6 @@ var Operation_FDR_main = (function (window, document) {
             }
             globalFormContext.getControl(FIELD_PrimaryContact).addCustomFilter(contactFilter, "contact");
         },
-
-        Refresh_OperationClass: function () {
-            var OperationClass = globalFormContext.getControl("grd_Class");
-            if (OperationClass != null) OperationClass.refresh();
-        },
-
-        OperationType_OnChange: function (executionContext) {
-
-            var formContext = executionContext.getFormContext();
-            toggleRequiredLevel(formContext);
-        }
     }
 
 })(window, document)

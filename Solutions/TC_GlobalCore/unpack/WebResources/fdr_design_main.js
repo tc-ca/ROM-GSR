@@ -11,6 +11,8 @@ var Design_main = (function (window, document) {
     var formType;
     var clientUrl;
     var DMRs_IDs = new Array();
+    var DRAs_IDs = new Array();
+    
     var globalObj = {};
     globalObj.Mapping = {};
     globalObj.Mapping.fdr_maincontainerdrawing = new Array("fdr_maincontainerdrawing", "fdr_maincontainerdrawingrevision", "fdr_maincontainerdrawingdate");
@@ -85,6 +87,63 @@ var Design_main = (function (window, document) {
 
 
     }
+
+    function getAllowedDesignReviewAgency(DRA_control) {
+
+        var fetchXml = [
+            "<fetch>",
+            "<entity name='ovs_mocregistration'>",
+            "<attribute name='ovs_mocregistrationid' />",
+            "<link-entity name='fdr_containertype' from='fdr_containertypeid' to='fdr_registrationtype' link-type='inner' alias='ab'>",
+                "<filter type='and'>",
+                    "<condition attribute='fdr_applicanttype' operator='eq' value='794600001' />",
+                "</filter>",  
+            "</link-entity>",
+            "</entity>",
+            "</fetch>",
+        ].join("");
+
+        var encodedFetchXML = encodeURIComponent(fetchXml);
+
+        var req = new XMLHttpRequest();
+        req.open("GET", clientUrl + "/api/data/v9.2/ovs_mocregistrations?fetchXml=" + encodedFetchXML, true);
+        req.setRequestHeader("OData-MaxVersion", "4.0");
+        req.setRequestHeader("OData-Version", "4.0");
+        req.setRequestHeader("Accept", "application/json");
+
+        req.setRequestHeader("Prefer", "odata.include-annotations=\"*\"");
+        req.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                req.onreadystatechange = null;
+                if (this.status === 200) {
+
+                    var results = JSON.parse(this.response);
+                    //if Specs with DMRs related to Container function are found  => get DMRs IDs
+                    if (results.value != null && results.value != undefined && results.value.length > 0)
+                        for (var i = 0; i < results.value.length; i++) {
+
+                            DRAs_IDs.push(results.value[i]["ovs_mocregistrationid"]);
+                        }
+                    else {
+                        console.log("Cannot find Design Review Agency");
+                        DRAs_IDs = new Array();
+                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Cannot find Design Review Agency" });
+                    }
+
+                } else {
+                    console.log("Something went wrong " + this.statusText);
+                    containerFunctions = new Array();
+                    Xrm.Navigation.openErrorDialog({ message: "Something went wrong " + this.statusText });
+                }
+
+                DRA_control.addPreSearch(Design_main.DRA_Pre_filter);
+            }
+        };
+        req.send();
+
+
+    }
+
 
     function initilizeDataObj(formContext, qvName) {
 
@@ -338,7 +397,11 @@ var Design_main = (function (window, document) {
             }
             //pre-filter DMR lookup
             var DMR_control = formContext.getControl("fdr_designmarkingrequirement");
-            getAllowedDMRfromSpecs(DMR_control, SFR_id.replace('{', '').replace('}',''));
+            getAllowedDMRfromSpecs(DMR_control, SFR_id.replace('{', '').replace('}', ''));
+
+            //pre-filter lookup Design Review Agency
+            var DRA_control = formContext.getControl("fdr_designreviewagency");
+            getAllowedDesignReviewAgency(DRA_control);
 
             if (formType == 1) {
 
@@ -396,6 +459,28 @@ var Design_main = (function (window, document) {
 
         },
 
+        DRA_Pre_filter: function () {
+
+            var strTemplate = "<value>{0}</value>";
+            var currentLine = "";
+
+            //no specs with DMR
+            if (DRAs_IDs.length == 0) {
+                // filter have to return an empty result
+                var functionFilter = "<filter type='and'><condition attribute='ovs_mocregistrationid' operator='eq' value='00000000-0000-0000-0000-000000000000'></condition></filter>";
+
+            }
+            else {
+
+                for (var i = 0; i < DRAs_IDs.length; i++) {
+
+                    currentLine = currentLine + strTemplate.replace("{0}", DRAs_IDs[i]);
+                }
+                var functionFilter = "<filter type='and'><condition attribute='ovs_mocregistrationid' operator='in'>" + currentLine + "</condition></filter>";
+            }
+            globalFormContext.getControl("fdr_designreviewagency").addCustomFilter(functionFilter, "ovs_mocregistration");
+
+        },
     }
 
 })(window, document)

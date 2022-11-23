@@ -40,7 +40,9 @@
       <EnableRules>
         <EnableRule Id="fdr.fdr_servicerequestservicetask.SelectCountGreaterThan1.EnableRule" />
       </EnableRules>
-      <DisplayRules />
+      <DisplayRules>
+        <DisplayRule Id="fdr.fdr_servicerequestservicetask.DisplayOnlyToESManager.DisplayRule" />
+      </DisplayRules>
       <Actions>
         <JavaScriptFunction FunctionName="ServiceRequestServiceTask_Ribbon.approveTime" Library="$webresource:fdr_ServiceRequestServiceTask_Ribbon.js">
           <CrmParameter Value="SelectedControlSelectedItemIds" />
@@ -52,7 +54,9 @@
       <EnableRules>
         <EnableRule Id="fdr.fdr_servicerequestservicetask.SelectCountGreaterThan1.EnableRule" />
       </EnableRules>
-      <DisplayRules />
+      <DisplayRules>
+        <DisplayRule Id="fdr.fdr_servicerequestservicetask.DisplayOnlyToESManager.DisplayRule" />
+      </DisplayRules>
       <Actions>
         <JavaScriptFunction FunctionName="ServiceRequestServiceTask_Ribbon.rejectTime" Library="$webresource:fdr_ServiceRequestServiceTask_Ribbon.js">
           <CrmParameter Value="SelectedControlSelectedItemIds" />
@@ -68,7 +72,7 @@
       </EnableRules>
       <DisplayRules>
         <DisplayRule Id="Mscrm.DeletePrimaryEntityPermission" />
-        <DisplayRule Id="fdr.fdr_servicerequestservicetask.DisplayOnlyToSysAdmin.DisplayRule" />
+        <DisplayRule Id="fdr.fdr_servicerequestservicetask.DisplayOnlyToESManager.DisplayRule" />
       </DisplayRules>
       <Actions>
         <JavaScriptFunction FunctionName="XrmCore.Commands.Delete.deletePrimaryRecord" Library="$webresource:Main_system_library.js">
@@ -86,7 +90,7 @@
       <DisplayRules>
         <DisplayRule Id="Mscrm.NotShowForManyToManyGrids" />
         <DisplayRule Id="Mscrm.DeleteSelectedEntityPermission" />
-        <DisplayRule Id="fdr.fdr_servicerequestservicetask.DisplayOnlyToSysAdmin.DisplayRule" />
+        <DisplayRule Id="fdr.fdr_servicerequestservicetask.DisplayOnlyToESManager.DisplayRule" />
       </DisplayRules>
       <Actions>
         <JavaScriptFunction FunctionName="XrmCore.Commands.Delete.deleteRecords" Library="$Webresource:Main_system_library.js">
@@ -104,7 +108,7 @@
       </EnableRules>
       <DisplayRules>
         <DisplayRule Id="Mscrm.DeleteSplitButtonDisplayRule" />
-        <DisplayRule Id="fdr.fdr_servicerequestservicetask.DisplayOnlyToSysAdmin.DisplayRule" />
+        <DisplayRule Id="fdr.fdr_servicerequestservicetask.DisplayOnlyToESManager.DisplayRule" />
       </DisplayRules>
       <Actions>
         <JavaScriptFunction FunctionName="XrmCore.Commands.Delete.deleteRecords" Library="$webresource:Main_system_library.js">
@@ -118,8 +122,8 @@
   <RuleDefinitions>
     <TabDisplayRules />
     <DisplayRules>
-      <DisplayRule Id="fdr.fdr_servicerequestservicetask.DisplayOnlyToSysAdmin.DisplayRule">
-        <EntityPrivilegeRule PrivilegeType="Create" PrivilegeDepth="Basic" AppliesTo="PrimaryEntity" EntityName="msdyn_workordertype" Default="true" InvertResult="false" />
+      <DisplayRule Id="fdr.fdr_servicerequestservicetask.DisplayOnlyToESManager.DisplayRule">
+        <EntityPrivilegeRule PrivilegeType="Create" PrivilegeDepth="Basic" AppliesTo="PrimaryEntity" EntityName="fdr_specification" Default="true" InvertResult="false" />
       </DisplayRule>
     </DisplayRules>
     <EnableRules>

@@ -1,8 +1,6 @@
+
 //To apply the Asterisk(*) Sign using custom JS:
 //$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
-// August 17, 2022 Tony Nguyen
-// August 18, 2022 Lauzon, Olivier
-// August 19, 2022 Tony Nguyen
 
 // tdgcore_common.js
 
@@ -23,6 +21,8 @@ var canProvinces = [
     "Yukon::Yukon"
 ];
 
+var canProvincesCodes = ["AB", "BC", "MB", "NB", "NL", "NT", "NS", "NU", "ON", "PE", "QC", "SK", "YT"];
+
 if (typeof (tdg) == "undefined") {
     tdg = {
         __namespace: true
@@ -38,6 +38,22 @@ if (typeof (tdg.c) == "undefined") {
             var f = document.getElementById("WebResource_address_complete");
             var c = f.contentWindow;
             c.targetFunction();
+        },
+
+        sign_out: function () {
+            window.location.replace("~/en/Account/Login/LogOff");
+        },
+
+        subgrid_index: function (entityList, name) {
+            var grid = null;
+            for (var i = 0; entityList.length; i++) {
+                grid = entityList.eq(i);
+                grid_name = grid[0].dataset.refRel;
+                if (name == grid_name) {
+                    return grid;
+                }
+            }
+            return grid;
         },
 
         weblink_hide: function (url) {
@@ -154,6 +170,9 @@ if (typeof (tdg.c) == "undefined") {
 
         // odata
         OData_List: function (entity, filter) {
+            debugger;
+            //return tdg.webapi.list(entity + "s", filter);
+
             var url = entity;
             if (filter != "") {
                 url += "?$filter=" + filter;
@@ -166,6 +185,26 @@ if (typeof (tdg.c) == "undefined") {
                 type: "GET",
                 url: oDataUrl,
                 dataType: "json",
+                async: false
+            }).done(function (json) {
+                response = json.value;
+            });
+            return response;
+        },
+
+        WebApi_List: function (entity, filter) {
+            debugger;
+
+            var api_url = entity;
+            if (filter != "") {
+                api_url += "?$filter=" + filter;
+            }
+            var response = null;
+
+            $.ajax({
+                type: "GET",
+                url: "/_api/" + api_url,
+                contentType: "application/json",
                 async: false
             }).done(function (json) {
                 response = json.value;
@@ -481,8 +520,94 @@ if (typeof (tdg.grid) == "undefined") {
             var value = "#" + name + " table tbody tr"
             var row_count = $(value).length;
             return row_count;
+        },
+
+        InYear_ContactGrid_Actions: function (gridList) {
+            gridList.on("loaded", function () {
+                gridList.find("tr").each(function () {
+                    var ContactTypeCell = $(this).find('td')[0];
+                    var ContactFullNameCell = $(this).find('td')[1];
+                    var contactid = $(this).attr("data-id");
+                    var contactType = $(ContactTypeCell).attr("aria-label");
+                    var ContactFullName = $(ContactFullNameCell).attr("aria-label");
+
+
+                    //fins Menue action
+                    $(this).find('td[aria-label="action menu"]').each(function () {
+                        //find ul
+                        var ul = $(this).find("ul");
+                        if (contactType != "Primary") {
+                            //add the "resend invitation" action
+                            $(ul).append('<li role="none"><a href="#"  role="menuitem" tabindex="-1" title="Resend Invitation" aria-setsize="4" aria-posinset="4">Resend Invitation</a></li>');
+
+                            //add "Assign as Primary Admin" action
+                            $(ul).append('<li role="none"><a href="#" onclick="AssignAsAdmin(' + "'" + contactid + "','"
+                                + ContactFullName + "'" + ')" role="menuitem" tabindex="-1" title="Assign as Primary Admin" aria-setsize="4" aria-posinset="4">Assign as Primary Admin</a></li>');
+
+
+                        }
+                        //find list item (Li)
+                        $(ul).find("li").each(function () {
+                            //get the menue titel
+                            var menueTitle = $(this).find("a").attr("title");
+                            if (contactType == "Primary") {
+                                if (menueTitle != "Edit") {
+                                    $(this).attr("hidden", "true");
+                                }
+                            }//end check if primary
+
+                        });//end find ul li
+
+                    });//end find menu action
+
+                });//end find tr
+            });//end on grid load                  
+
+
         }
+        ,
+
+        Registeration_ContactGrid_Actions: function (gridList) {
+            gridList.on("loaded", function () {
+                gridList.find("tr").each(function () {
+                    //contact type cell
+                    var ContactTypeCell = $(this).find('td')[0];
+                    //contact full name
+                    var ContactFullNameCell = $(this).find('td')[1];
+                    //Contact id
+                    var contctId = $(this).attr("data-id");
+
+                    var contactType = $(ContactTypeCell).attr("aria-label");
+                    var ContactFullName = $(ContactFullNameCell).attr("aria-label");
+
+                    //find Menue action
+                    $(this).find('td[aria-label="action menu"]').each(function () {
+                        //find ul
+                        var ul = $(this).find("ul");
+                        //add the "resend invitation" action
+                        $(ul).append('<li role="none"><a href="#"  role="menuitem" tabindex="-1" title="Resend Invitation" aria-setsize="4" aria-posinset="4">Resend Invitation</a></li>');
+                        //add deactivate action
+                        $(ul).append('<li role="none"><a href="#" onclick="DeactivateContact(' + "'" + contctId + "'" + ')" role="menuitem" tabindex="-1" title="Deactivate" aria-setsize="4" aria-posinset="4">Deactivate</a></li>');
+
+                        //find list item (Li)
+                        $(ul).find("li").each(function () {
+                            //get the menue titel
+                            var menueTitle = $(this).find("a").attr("title");
+                            if (contactType == "Primary") {
+                                if (menueTitle != "View details") {
+                                    $(this).attr("hidden", "true");
+                                }
+                            } //end check if primary
+                            //$(link).attr("Class", "details-link");
+                        }); //end find ul li
+                    }); //end find menu action
+                }); //end find tr
+            }); //end on grid load
+
+        }
+
     }
+
 }
 
 // Wrapper AJAX function
@@ -527,6 +652,21 @@ if (typeof (tdg.webapi) == "undefined") {
             $.ajax({
                 type: "GET",
                 url: "/_api/" + entity_name + "?$filter=" + filter,
+                contentType: "application/json",
+                async: false
+            }).done(function (json) {
+                response = json.value;
+            });
+            return response;
+        },
+
+        SelectedColumnlist: function (entity_name, select_colums, filter) {
+            debugger;
+
+            var response = null;
+            $.ajax({
+                type: "GET",
+                url: "/_api/" + entity_name + "?$select=" + select_colums + "&$filter=" + filter,
                 contentType: "application/json",
                 async: false
             }).done(function (json) {
@@ -736,13 +876,29 @@ if (typeof (tdg.root) == "undefined") {
                 var data;
                 var filter = "root_organization_id eq " + root_organization_id;
 
-                data = tdg.c.OData_List("root_erap", filter);
+                //data = tdg.c.OData_List("root_erap", filter);
+                data = tdg.webapi.list("root_eraps", filter);
                 if (data.length == 0) {
                     return data;
                 }
 
                 return data;
             }
+            return data;
+        },
+
+        erap_get_by_root_name: function (root_name) {
+            debugger;
+
+            var data;
+            var filter = "root_name eq '" + root_name + "'";
+
+            //data = tdg.c.OData_List("root_erap", filter);
+            data = tdg.webapi.list("root_eraps", filter);
+            if (data.length == 0) {
+                return data;
+            }
+
             return data;
         },
 
@@ -760,8 +916,8 @@ if (typeof (tdg.root) == "undefined") {
         company: function (bn) {
             var data;
             var filter = "root_org_business_cra_num eq " + bn;
-
-            data = tdg.c.OData_List("root_company", filter);
+            //data = tdg.c.OData_List("root_company", filter);
+            data = tdg.webapi.list("root_companies", filter);
             if (data.length == 0) {
                 return data;
             }
@@ -788,9 +944,16 @@ if (typeof (tdg.cid) == "undefined") {
             tdg.c.control_hide("address1_stateorprovince");
 
             $("#ovs_address1_province").on("change", function (i, val) {
-                debugger
-                var ovs_address1_province = $("#ovs_address1_province :selected").text()
+                debugger;
+                var ovs_address1_province = $("#ovs_address1_province :selected").text();
                 $("#address1_stateorprovince").val(ovs_address1_province);
+            });
+
+
+            $("#ovs_lld_province").on("change", function (i, val) {
+                debugger;
+                var lld_address1_province = $("#ovs_lld_province :selected").text();
+                $("#address1_stateorprovince").val(lld_address1_province);
             });
 
             $("#address1_postalcode").attr("maxlength", "6");
@@ -841,6 +1004,21 @@ if (typeof (tdg.cid) == "undefined") {
             }
         },
 
+        //Takes an array of strings containing the field name formatted for use with jquery, ex. "#telephone1"
+        phone_init: function (listOfFields) {
+            for (let field of listOfFields) {
+                $(field).attr("maxlength", "10");
+                $(field).on('keyup', function () {
+                    var n = $(this).val().replace(/\D/g, '');
+                    $(this).val(n);
+                    var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
+                    if (match) {
+                        $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
+                    }
+                });
+            }
+        },
+
         address_same_as_company: function (parent_id) {
             debugger;
 
@@ -855,8 +1033,11 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#address1_stateorprovince").prop('readonly', true);
                 $("#address1_postalcode").prop('readonly', true);
 
-                var filter = "accountid eq guid'" + parent_id + "'";
-                var data = tdg.c.OData_List("account", filter);
+                //var filter = "accountid eq guid'" + parent_id + "'";
+                //var data = tdg.c.OData_List("account", filter);
+                var select_col = "address1_city,address1_country,ovs_address1_province,address1_stateorprovince,address1_line1,address1_line2,address1_line3,address1_postalcode";
+                var filter = "accountid eq '" + parent_id + "'";
+                var data = tdg.webapi.SelectedColumnlist("accounts", select_col, filter);
 
                 var address1_line1 = "N/A";
                 var address1_city = "N/A";
@@ -873,7 +1054,7 @@ if (typeof (tdg.cid) == "undefined") {
                     address1_line3 = item.address1_line3;
                     address1_line3 = (address1_line3 == null ? "" : address1_line3);
                     address1_city = item.address1_city;
-                    ovs_address1_province = item.ovs_address1_province.Value;
+                    ovs_address1_province = item.ovs_address1_province;
                     address1_stateorprovince = item.address1_stateorprovince;
                     address1_postalcode = item.address1_postalcode;
                     address1_country = item.address1_country;
@@ -974,7 +1155,16 @@ if (typeof (tdg.cid) == "undefined") {
             }
         },
 
+        //Converts prepopulated province string to code that maps to dropdown field value
+        //Also formats the postal code field
         convert_province_to_code: function (language) {
+            //Format postal code
+            var n = $("#address1_postalcode").val().replace(/\W/g, '');
+            var match = n.match(/^(\w{3})(\w{3})$/);
+            if (match) {
+                $("#address1_postalcode").val(match[1] + ' ' + match[2]);
+            }
+
             var address1_stateorprovince = $("#address1_stateorprovince").val();
 
             // If there is no value that is prepopulated, this function exits
@@ -982,8 +1172,15 @@ if (typeof (tdg.cid) == "undefined") {
                 return;
             }
             for (var i = 0; i < 13; i++) {
+                // console.log(a.localeCompare(b));
+                // console.log(a.localeCompare(b, 'en', { sensitivity: 'base' }));
                 var localizedProvince = tdg.c.text_language(canProvinces[i], language);
-                if (localizedProvince.localeCompare(address1_stateorprovince), undefined, { sensitivity: 'accent' } == 0) { //finds match
+                //if (localizedProvince.localeCompare(address1_stateorprovince), undefined, { sensitivity: 'accent' } == 0
+                //    || canProvincesCodes[i].localeCompare(address1_stateorprovince.toLowerCase()))
+
+                if (localizedProvince.localeCompare(address1_stateorprovince, undefined, { sensitivity: 'accent' }) == 0
+                    || canProvincesCodes[i] == address1_stateorprovince) {
+                    //finds match
                     $("#ovs_address1_province").val(i);
                     return;
                 }
@@ -1103,6 +1300,143 @@ if (typeof (tdg.cid) == "undefined") {
             })
         },
 
+        subgrid_header_language: function (grid, un_number_grid) {
+            debugger;
+            var selected_language = sessionStorage.getItem("selected_language");
+
+            grid.on("loaded", function () {
+                debugger;
+                // header
+                let header = grid.find("table thead > tr");
+                for (var index1 = 0; index1 < header.length; index1++) {
+                    //debugger;
+                    let tr = header[index1];
+                    let cols = $(tr).find('th');
+                    for (var i = 0; i < cols.length; i++) {
+                        var tdElement = cols[i];
+                        var className = $(tdElement)[0].className;
+                        if (className.indexOf("sort-enabled") == -1) {
+                            var text = $(tdElement).text().trim();
+                            text = tdg.cid.subgrid_header_special_col(text);
+                            text = tdg.c.text_language(text, selected_language);
+                            $(tdElement).text(text);
+                        }
+                        else {
+                            // tdElement.innerHTML
+                            var control_a = $(tdElement).find("a");
+                            var text = control_a.attr("aria-label");
+                            if (text != null) {
+                                debugger;
+
+                                var text1 = tdg.c.text_language(text, selected_language);
+                                var html = control_a[0].innerHTML;
+                                control_a[0].innerHTML = html.replace(text, text1);
+                            }
+                        }
+
+                        if (un_number_grid == true) {
+                            switch (i) {
+                                case 0:
+                                    tdElement.ariaLabel = "UN Number Display";
+                                    break;
+                                case 1: // Packing Group
+                                    tdElement.style.display = "none";
+                                    break;
+                                case 2: // Shipping
+                                    tdElement.style.display = "none";
+                                    break;
+                            }
+                        }
+                    }
+                }
+            });
+        },
+
+        subgrid_header_special_col: function (text) {
+            switch (text) {
+                case "NAICS Class (NAICS Code)":
+                    text = tdg.error_message.message(text);
+                    break;
+                case "NAICS Class (Code SCIAN)":
+                    text = tdg.error_message.message("NAICS Class (NAICS Code)");
+                    break;
+                default:
+                    break;
+            }
+            return text;
+        },
+
+        subgrid_companynaicscode: function (grid) {
+            debugger;
+            var selected_language = sessionStorage.getItem("selected_language");
+
+            tdg.cid.subgrid_header_language(grid, false);
+            grid.on("loaded", function () {
+                debugger;
+                let rows = grid.find("table tbody > tr");
+                rows.each(function (index, tr) {
+                    //debugger;
+                    let cols = $(tr).find('td');
+                    cols.each(function (index, td) {
+                        debugger;
+                        var tdElement = $(this);
+                        var value = tdElement.attr('data-attribute');
+                        if (value != null) {
+                            var index1 = value.indexOf('.cid_naicsclasstitle');
+                            if (index1 != -1) {
+                                var cellValue = $(td).text();
+                                cellValue = tdg.c.text_language(cellValue, selected_language);
+                                $(td).text(cellValue);
+                            }
+                        }
+                    });
+                });
+            });
+        },
+
+        subgrid_unnumber: function (grid) {
+            debugger;
+            var selected_language = sessionStorage.getItem("selected_language");
+            tdg.cid.subgrid_header_language(grid, true);
+            grid.on("loaded", function () {
+                debugger;
+                let rows = grid.find("table tbody > tr");
+
+                rows.each(function (index, tr) {
+                    debugger;
+
+                    let cols = $(tr).find('td');
+                    for (var i = 0; i < cols.length; i++) {
+                        tdElement = $(cols[i]).eq(0);
+                        var value = tdElement.attr('data-attribute');
+                        if (value != null) {
+                            var index1 = value.indexOf('.tdg_shippingnamedescriptiontxt');
+                            if (index1 != -1) {
+                                var cellValue = tdElement.text();
+                                cellValue = tdg.c.text_language(cellValue, selected_language);
+                                tdElement.text(cellValue);
+                            }
+
+                            switch (i) {
+                                case 0:
+                                    var cellValue = tdElement.text();
+                                    var f1 = $(cols[i + 1]).eq(0);
+                                    var f2 = $(cols[i + 2]).eq(0);
+                                    var text = cellValue + " - " +
+                                        f1.text() + " - " +
+                                        tdg.c.text_language(f2.text(), selected_language);
+                                    tdElement.text(text);
+
+                                    f1[0].style.display = "none";
+                                    f2[0].style.display = "none";
+                                    break;
+                            }
+                        }
+                    }
+                });
+            });
+        },
+
         Display_Modes: function (siteid) {
             debugger;
 
@@ -1137,6 +1471,76 @@ if (typeof (tdg.cid) == "undefined") {
                     tdg.cid.Append_Modes_html_checkboxes(air, marine, rail, road);
                 }
             });
+        }
+    }
+}
+
+// CompanyRegistrationWizard
+if (typeof (tdg.cid.crw) == "undefined") {
+    tdg.cid.crw = {
+        // start
+        start_clear_contact_address: function () {
+            $("#address1_line1").val("");
+            $("#address1_line2").val("");
+            $("#address1_line3").val("");
+            $("#address1_city").val("");
+            $("#address1_stateorprovince").val("");
+            $("#address1_postalcode").val("");
+        },
+
+        start_parentcustomerid_setup: function (accountid, legalname) {
+            debugger;
+            $("#parentcustomerid").attr("value", accountid);
+            $("#parentcustomerid_name").attr("value", legalname);
+            $("#parentcustomerid_entityname").attr("value", 'account');
+        },
+
+        start_BN_Selected: function (data) {
+            debugger;
+
+            var LegalName = data.LegalName
+            var OperatingName = data.OperatingName
+            OperatingName = (OperatingName == "" ? LegalName : OperatingName);
+
+            var address = data.PhysicalLocationAddress;
+
+            $("#cid_legalname").val(LegalName);
+            $("#cid_operatingname").val(OperatingName);
+
+            $("#address1_line1").val(address.AddressLine1Text);
+            $("#address1_line2").val(address.AddressLine2Text);
+            $("#address1_line3").val("");
+            $("#address1_city").val(address.CityName);
+            $("#address1_stateorprovince").val(address.ProvinceStateCode);
+            $("#address1_postalcode").val(address.PostalZipCode);
+        }
+    }
+}
+
+if (typeof (tdg.cid.flow) == "undefined") {
+    tdg.cid.flow = {
+        Call_Flow: function (FlowName, data) {
+            console.log("Flow is executed");
+            //get flow URL
+            var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
+            //flow url found
+            if (EnvironmentSettingResult.length > 0) {
+                var FlowURL = EnvironmentSettingResult[0]["qm_value"];
+
+                // Execute flow
+                var req = new XMLHttpRequest();
+                req.open("POST", FlowURL, true);
+                req.setRequestHeader('Content-Type', 'application/json');
+                req.onreadystatechange = function () {
+                    if (this.readyState === 4) {
+                        req.onreadystatechange = null;
+                        if (this.status === 200) {
+                            //console.log("Flow Executed scucessfully.")
+                        }
+                    }//end ready status
+                }//end on ready function
+                req.send(data);
+            }//end check if flow url found
         }
     }
 }

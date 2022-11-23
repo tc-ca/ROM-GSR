@@ -18,74 +18,91 @@ var RegionNOPRibbon = (function (window, document) {
 
     function runGenerateWO(runid, formContext) {
 
+        //#region WO generation flag update function moved from Custom Action to Flow
+        // Not in Use
         //TO DO: localize
-     //  Xrm.Utility.showProgressIndicator(messageProcessStarted);
+        //  Xrm.Utility.showProgressIndicator(messageProcessStarted);
 
-        var parameters = {};
-        parameters.runid = runid;
+        //var parameters = {};
+        //parameters.runid = runid;
 
-        var ovs_GenerateWORequest = {
-            runid: parameters.runid,
+        //var ovs_GenerateWORequest = {
+        //    runid: parameters.runid,
 
-            getMetadata: function () {
-                return {
-                    boundParameter: null,
-                    parameterTypes: {
-                        "runid": {
-                            "typeName": "Edm.String",
-                            "structuralProperty": 1
-                        }
-                    },
-                    operationType: 0,
-                    operationName: "ovs_GenerateWOfortheRNOP"
-                };
-            }
-        };
+        //    getMetadata: function () {
+        //        return {
+        //            boundParameter: null,
+        //            parameterTypes: {
+        //                "runid": {
+        //                    "typeName": "Edm.String",
+        //                    "structuralProperty": 1
+        //                }
+        //            },
+        //            operationType: 0,
+        //            operationName: "ovs_GenerateWOfortheRNOP"
+        //        };
+        //    }
+        //};
         
-        var alertStrings = { confirmButtonLabel: "OK", text: messageProcessStarted };
-        
+        //#endregion
 
-        Xrm.WebApi.online.execute(ovs_GenerateWORequest).then(
-            function success(result) {
+        glHelper.SetValue(formContext, "ovs_generateworkorder", true);
 
-                Xrm.Utility.closeProgressIndicator();
+        formContext.data.save().then(function () {
 
-                if (result.ok) {
-                    result.text().then(function (i) {
-                        var data = JSON.parse(i);
-                        if (data != null || typeof data !== 'undefined') {
+            alertStrings = { confirmButtonLabel: yesNo, text: messageProcessStarted };
+            Xrm.Navigation.openAlertDialog(alertStrings);
 
-                            if ((data.response != null) && typeof data.response !== 'undefined') {
-                                if (data.response.indexOf("Error") > -1) {
-                                    //show error message
-                                    //TO DO: localize
-                                      alertStrings = { confirmButtonLabel: yesNo, text: messageWentWrong + " " + data.response };
-                                }
-                                else {
-                                    //notify about call result 
-                                    //TO DO: localize
-                                      alertStrings = { confirmButtonLabel: yesNo, text: messageProcessStarted };
-                                }
-                            }
-                            Xrm.Navigation.openAlertDialog(alertStrings);
-                        }
-                    }, function (error) {
+        }, function (error) {
+            Xrm.Utility.closeProgressIndicator();
+            console.log(messageWentWrong + " " + error.message);
+            //TO DO: localize
+            Xrm.Navigation.openErrorDialog({ message: messageWentWrong + " " + error.message });
+        });
 
-                        console.log(messageWentWrong + ": + error.message");
-                        //TO DO: localize
-                        Xrm.Navigation.openErrorDialog({ message: messageWentWrong + " " + error.message });
-                    });
-                }
-            },
-            function (error) {
+         //#region WO generation flag update function moved from Custom Action to Flow
+        // Not in Use
+        //Xrm.WebApi.online.execute(ovs_GenerateWORequest).then(
+        //    function success(result) {
 
-                Xrm.Utility.closeProgressIndicator();
-                console.log(messageWentWrong + " " + error.message);
-                //TO DO: localize
-                Xrm.Navigation.openErrorDialog({ message: messageWentWrong + " " + error.message });
-            }
-        );
+        //        Xrm.Utility.closeProgressIndicator();
 
+        //        if (result.ok) {
+        //            result.text().then(function (i) {
+        //                var data = JSON.parse(i);
+        //                if (data != null || typeof data !== 'undefined') {
+
+        //                    if ((data.response != null) && typeof data.response !== 'undefined') {
+        //                        if (data.response.indexOf("Error") > -1) {
+        //                            //show error message
+        //                            //TO DO: localize
+        //                              alertStrings = { confirmButtonLabel: yesNo, text: messageWentWrong + " " + data.response };
+        //                        }
+        //                        else {
+        //                            //notify about call result 
+        //                            //TO DO: localize
+        //                              alertStrings = { confirmButtonLabel: yesNo, text: messageProcessStarted };
+        //                        }
+        //                    }
+        //                    Xrm.Navigation.openAlertDialog(alertStrings);
+        //                }
+        //            }, function (error) {
+
+        //                console.log(messageWentWrong + ": + error.message");
+        //                //TO DO: localize
+        //                Xrm.Navigation.openErrorDialog({ message: messageWentWrong + " " + error.message });
+        //            });
+        //        }
+        //    },
+        //    function (error) {
+
+        //        Xrm.Utility.closeProgressIndicator();
+        //        console.log(messageWentWrong + " " + error.message);
+        //        //TO DO: localize
+        //        Xrm.Navigation.openErrorDialog({ message: messageWentWrong + " " + error.message });
+        //    }
+        //);
+           //#endregion
     }
 
     async function on_runGenerateWO(primaryControl) {

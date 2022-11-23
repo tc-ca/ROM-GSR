@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RibbonDiffXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <CustomActions>
-    <CustomAction Id="fdr.fdr_servicerequest.HomeGridButton.AdjustPerformance.CustomAction" Location="Mscrm.HomepageGrid.fdr_servicerequest.MainTab.Collaborate.Controls._children" Sequence="25">
+    <HideCustomAction HideActionId="fdr.Mscrm.HomepageGrid.fdr_servicerequest.Deactivate.Hide" Location="Mscrm.HomepageGrid.fdr_servicerequest.Deactivate" />
+    <HideCustomAction HideActionId="fdr.Mscrm.SubGrid.fdr_servicerequest.Deactivate.Hide" Location="Mscrm.SubGrid.fdr_servicerequest.Deactivate" />
+    <CustomAction Id="ovs.fdr.fdr_servicerequest.HomeGridButton.AdjustPerformance.CustomAction" Location="Mscrm.HomepageGrid.fdr_servicerequest.MainTab.Collaborate.Controls._children" Sequence="25">
       <CommandUIDefinition>
         <Button Alt="$LocLabels:fdr.fdr_servicerequest.HomeGridButton.AdjustPerformance.Alt" Command="fdr.fdr_servicerequest.AdjustPerformanceHomeGridButton.Command" Id="fdr.fdr_servicerequest.HomeGridButton.AdjustPerformance" LabelText="$LocLabels:fdr.fdr_servicerequest.HomeGridButton.AdjustPerformance.LabelText" Sequence="25" TemplateAlias="o1" ToolTipTitle="$LocLabels:fdr.fdr_servicerequest.HomeGridButton.AdjustPerformance.ToolTipTitle" ToolTipDescription="$LocLabels:fdr.fdr_servicerequest.HomeGridButton.AdjustPerformance.ToolTipDescription" />
       </CommandUIDefinition>
     </CustomAction>
-    <CustomAction Id="fdr.fdr_servicerequest.HomeGridButton.ApprovePerformance.CustomAction" Location="Mscrm.HomepageGrid.fdr_servicerequest.MainTab.Collaborate.Controls._children" Sequence="33">
+    <CustomAction Id="ovs.fdr.fdr_servicerequest.HomeGridButton.ApprovePerformance.CustomAction" Location="Mscrm.HomepageGrid.fdr_servicerequest.MainTab.Collaborate.Controls._children" Sequence="33">
       <CommandUIDefinition>
         <Button Alt="$LocLabels:fdr.fdr_servicerequest.HomeGridButton.ApprovePerformance.Alt" Command="fdr.fdr_servicerequest.ApprovePerformanceHomeGridButton.Command" Id="fdr.fdr_servicerequest.HomeGridButton.ApprovePerformance" LabelText="$LocLabels:fdr.fdr_servicerequest.HomeGridButton.ApprovePerformance.LabelText" Sequence="33" TemplateAlias="o1" ToolTipTitle="$LocLabels:fdr.fdr_servicerequest.HomeGridButton.ApprovePerformance.ToolTipTitle" ToolTipDescription="$LocLabels:fdr.fdr_servicerequest.HomeGridButton.ApprovePerformance.ToolTipDescription" />
       </CommandUIDefinition>
     </CustomAction>
-    <HideCustomAction HideActionId="fdr.Mscrm.HomepageGrid.fdr_servicerequest.Deactivate.Hide" Location="Mscrm.HomepageGrid.fdr_servicerequest.Deactivate" />
-    <HideCustomAction HideActionId="fdr.Mscrm.SubGrid.fdr_servicerequest.Deactivate.Hide" Location="Mscrm.SubGrid.fdr_servicerequest.Deactivate" />
   </CustomActions>
   <Templates>
     <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
@@ -45,6 +45,16 @@
           <CrmParameter Value="SelectedControl" />
           <BoolParameter Value="true" />
           <CrmParameter Value="PrimaryEntityTypeName" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="fdr_servicerequest.Command.CloneServiceRequest">
+      <EnableRules />
+      <DisplayRules />
+      <Actions>
+        <JavaScriptFunction FunctionName="cloneServiceRequest" Library="$webresource:fdr_servicerequest_ribbon">
+          <CrmParameter Value="SelectedControlAllItemIds" />
+          <CrmParameter Value="SelectedControl" />
         </JavaScriptFunction>
       </Actions>
     </CommandDefinition>

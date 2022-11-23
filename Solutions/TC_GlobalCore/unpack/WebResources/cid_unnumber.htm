@@ -1,6 +1,6 @@
-<HTML>
-<HEAD>
-    <TITLE></TITLE>
+<html>
+<head>
+    <title></title>
     <style>
         body {
             background-color: white;
@@ -43,8 +43,8 @@
     </style>
     <!-- Using jquery library -->
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-</HEAD>
-<BODY>
+</head>
+<body onfocusout="parent.setEmailRange();" style="overflow-wrap: break-word;">
     <style>
         .option-indigo {
             font-size: 16px;
@@ -69,7 +69,7 @@
         <label for="tdg_unnumberid" title="Enter part of the UN# or it's description" class="field-label">UN Display Name</label>
         <span id="tdg_unnumberid_required" style="color: red;font-weight: bold"> *</span>
         <br>
-        <input list="tdg_unnumberid_list" id="tdg_unnumberid" class="text form-control" />
+        <input list="tdg_unnumberid_list" id="tdg_unnumberid" class="text form-control">
         <br>
         <datalist id="tdg_unnumberid_list">
         </datalist>
@@ -85,7 +85,7 @@
         <br>
     </div>
 
-    <input type="text" id="tdg_unnumberid_list_id" hidden />
+    <input type="text" id="tdg_unnumberid_list_id" hidden="">
     <script type="text/javascript">
         var _data_source_1;
         var _data_source_2;
@@ -98,17 +98,18 @@
         $(document).ready(function () {
             debugger;
 
-            // tony-july 27, 2022
-
             detail_show(false);
             document.getElementById("div_tdg_unnumberid").style.display = "none";
             document.getElementById("div_erap_unnumberid_list").style.display = "none";
 
+            var selected_language = sessionStorage.getItem("selected_language");
+
             // load cid_companyerap
             var filter = "";
             _cid_companyerap_list = common.OData_List("cid_companyerap", filter);
-            _data_source_1 = "UN Number Master List";
-            _data_source_2 = "UN Number List from Company's ERAP(s)";
+            _data_source_1 = (selected_language == "en" ? "UN Number Master List" : "UN Number Master List_FR");
+            _data_source_2 = (selected_language == "en" ? "UN Number List from Company's ERAP(s)" : "UN Number List from Company's ERAP(s)_FR");
+
             option_insert("data_source", 0, _data_source_1);
             if (_cid_companyerap_list.length > 0) {
                 option_insert("data_source", 1, _data_source_2);
@@ -186,7 +187,7 @@
                     break;
                 case 2: // root_erap
                     document.getElementById("div_tdg_unnumberid").style.display = "none";
-                    document.getElementById("div_erap_unnumberid_list").style.display = ""; 
+                    document.getElementById("div_erap_unnumberid_list").style.display = "";
 
                     if (_root_erap_list == null) {
                         for (var i = 0; i < _cid_companyerap_list.length; i++) {
@@ -464,5 +465,5 @@
             }
         }
     </script>
-</BODY>
-</HTML>
+</body>
+</html>

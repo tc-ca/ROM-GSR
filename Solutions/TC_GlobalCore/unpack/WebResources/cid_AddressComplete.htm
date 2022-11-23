@@ -1,5 +1,4 @@
-<html>
-<head>
+<html><head>
     <title></title>
     <style>
         body {
@@ -44,7 +43,7 @@
     <!-- Using jquery library -->
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <meta>
-</head>
+<meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta><meta></head>
 <body style="overflow-wrap: break-word;" onfocusout="parent.setEmailRange();">
     <script type="text/javascript">
         function search() {
@@ -90,9 +89,14 @@
                     break;
                 }
             }
+            console.log("on input " + val);
+            console.log("found flag " + found);
+            sessionStorage.setItem("foundFlag", found);
 
             if (found) {
                 debugger;
+                parent.$("#cid_addressoverwritten").val(0);
+                parent.$("#ovs_address1_province").attr("disabled", true);
                 var id = AddressComplete.GetId(index);
                 var list = id.split(";");
 
@@ -109,7 +113,7 @@
 
                         AddressComplete.Retrieve(list[0]);
 
-                        this.removeOptions(address_list_id);
+                        //this.removeOptions(address_list_id);
                         const option1 = document.createElement('option');
                         option1.value = list;
                         option1.text = text;
@@ -144,6 +148,8 @@
             }
             else {
                 search();
+                parent.$("#cid_addressoverwritten").val(1);
+                parent.$("#ovs_address1_province").attr("disabled", false);
             }
         }
     </script>
@@ -277,12 +283,13 @@
                         // Test for an error
                         if (response.Items.length == 1 && typeof (response.Items[0].Error) != "undefined") {
                             // Show the error message
-                            console.out(response.Items[0].Description);
+                            console.log("error:  " );
+                            console.log(response.Items[0].Description);
                         }
                         else {
                             // Check if there were any items found
                             if (response.Items.length == 0) {
-                                console.out("Sorry, there were no results");
+                                console.log("Sorry, there were no results");
                             }
                             else {
                                 debugger;
@@ -339,12 +346,12 @@
                         // Test for an error
                         if (response.Items.length == 1 && typeof (response.Items[0].Error) != "undefined") {
                             // Show the error message
-                            console.out(response.Items[0].Description);
+                            console.log(response.Items[0].Description);
                         }
                         else {
                             // Check if there were any items found
                             if (response.Items.length == 0) {
-                                console.out("Sorry, there were no results");
+                                console.log("Sorry, there were no results");
                             }
                             else {
                                 //debugger;
@@ -427,5 +434,5 @@
         }
     </script>
 
-</body>
-</html>
+
+</body></html>

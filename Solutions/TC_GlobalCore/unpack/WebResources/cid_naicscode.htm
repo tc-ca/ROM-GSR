@@ -46,6 +46,7 @@
     <meta>
     <meta>
     <meta>
+    <meta>
 <meta></head>
 <body style="overflow-wrap: break-word;">
     <label for="cid_naicscode" class="field-label">NAICS Code</label>
@@ -124,8 +125,11 @@
             debugger;
 
             var selected_language = sessionStorage.getItem("selected_language");
-            var filter = "startswith(cid_name, '" + cid_naicscode + "') or substringof('" + cid_naicscode + "', cid_naicsclasstitle)";
-            var items = tdg.c.OData_List("cid_naicscode", filter);
+            //var filter = "startswith(cid_name, '" + cid_naicscode + "') or substringof('" + cid_naicscode + "', cid_naicsclasstitle)";
+            //var items = tdg.c.OData_List("cid_naicscode", filter);
+
+            var filter = "(startswith(cid_name, '" + cid_naicscode + "') or contains(cid_naicsclasstitle, '" + cid_naicscode + "'))";
+            var items = tdg.c.WebApi_List("cid_naicscodes", filter);
 
             var cid_naicscode_list = document.getElementById('cid_naicscode_list');
 
@@ -251,6 +255,27 @@
                     return response;
                 },
 
+                //WebApi
+                WebApi_List: function (entity, filter) {
+                    debugger;
+
+                    var url_filter = entity;
+                    if (filter != "") {
+                        url_filter += "?$filter=" + filter;
+                    }
+
+                    var response = null;
+                    $.ajax({
+                        type: "GET",
+                        url: "/_api/" + url_filter,
+                        contentType: "application/json",
+                        async: false
+                    }).done(function (json) {
+                        response = json.value;
+                    });
+                    return response;
+                },
+
                 error_message_clear: function () {
                     debugger;
                   $('#ValidationSummaryEntityFormControl_EntityFormView').remove();
@@ -328,6 +353,7 @@
             }
         }
     </script>
+
 
 
 

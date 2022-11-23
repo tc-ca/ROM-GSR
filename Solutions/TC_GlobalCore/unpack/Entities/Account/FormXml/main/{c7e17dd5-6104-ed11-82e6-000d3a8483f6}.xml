@@ -140,12 +140,66 @@
                   </labels>
                   <rows>
                     <row>
-                      <cell id="{4913500e-605a-809b-e99e-69e2710d09bd}" showlabel="true" locklevel="0" labelid="{fbf25d56-528d-471c-a95a-7f516419d34e}">
+                      <cell id="{4913500e-605a-809b-e99e-69e2710d09bd}" showlabel="true" locklevel="0" labelid="{fbf25d56-528d-471c-a95a-7f516419d34e}" visible="false">
                         <labels>
                           <label description="Address 1" languagecode="1033" />
                           <label description="Adresse 1" languagecode="1036" />
                         </labels>
                         <control disabled="false" id="address1_composite" datafieldname="address1_composite" classid="{E0DECE4B-6FC8-4a8f-A065-082708572369}" uniqueid="{5886545c-1421-65b9-0652-1422a148c1a2}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{a0c8604c-76d8-65eb-4337-948b82aecd4e}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="Street 1" languagecode="1033" />
+                          <label description="Rue 1" languagecode="1036" />
+                        </labels>
+                        <control id="address1_line1" classid="{F9A8A302-114E-466A-B582-6771B2AE0D92}" datafieldname="address1_line1" disabled="false" uniqueid="{491e0dc0-4058-95be-792a-61b268e9144d}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{d37bdb8d-34d9-11d6-8c07-2e3c5c35e282}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="Street 2" languagecode="1033" />
+                          <label description="Rue 2" languagecode="1036" />
+                        </labels>
+                        <control id="address1_line2" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="address1_line2" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{0c0d909d-0108-2395-336e-d21b504d8621}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="City" languagecode="1033" />
+                          <label description="Ville" languagecode="1036" />
+                        </labels>
+                        <control id="address1_city" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="address1_city" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{18613795-9a8a-badc-9c72-88c2bd5e5304}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="State/Province" languagecode="1033" />
+                          <label description="État/province" languagecode="1036" />
+                        </labels>
+                        <control id="address1_stateorprovince" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="address1_stateorprovince" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{dcec7069-4c1d-2e16-e506-b9409e930db5}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="ZIP/Postal Code" languagecode="1033" />
+                          <label description="Code postal" languagecode="1036" />
+                        </labels>
+                        <control id="address1_postalcode" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="address1_postalcode" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{d5a6330e-a31a-d81b-1720-964a8e0b0522}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="Country" languagecode="1033" />
+                          <label description="Pays" languagecode="1036" />
+                        </labels>
+                        <control id="address1_country" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="address1_country" disabled="false" />
                       </cell>
                     </row>
                     <row>
@@ -2102,6 +2156,61 @@
           <customControl formFactor="2" name="msdyn_MscrmControls.TreeView.TreeViewControl">
             <parameters>
               <value>name</value>
+            </parameters>
+          </customControl>
+        </controlDescription>
+        <controlDescription forControl="{491e0dc0-4058-95be-792a-61b268e9144d}">
+          <customControl id="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}">
+            <parameters>
+              <datafieldname>address1_line1</datafieldname>
+            </parameters>
+          </customControl>
+          <customControl formFactor="0" name="fdn_Canadapost.addressComplete">
+            <parameters>
+              <api_key static="true" type="SingleLine.Text">MM95-DM44-MP35-XM79</api_key>
+              <useProvinceCode static="true" type="Enum">No</useProvinceCode>
+              <country_code static="true" type="SingleLine.Text">CA</country_code>
+              <option_allowcountry static="true" type="SingleLine.Text">true</option_allowcountry>
+              <option_showlogo static="true" type="SingleLine.Text">true</option_showlogo>
+              <address_line_1>address1_line1</address_line_1>
+              <address_line_2>address1_line2</address_line_2>
+              <province_or_state>address1_stateorprovince</province_or_state>
+              <city>address1_city</city>
+              <postcode>address1_postalcode</postcode>
+              <country>address1_country</country>
+              <msinternal.isvisibleinmocaonly static="true">true</msinternal.isvisibleinmocaonly>
+            </parameters>
+          </customControl>
+          <customControl formFactor="1" name="fdn_Canadapost.addressComplete">
+            <parameters>
+              <api_key static="true" type="SingleLine.Text">MM95-DM44-MP35-XM79</api_key>
+              <useProvinceCode static="true" type="Enum">No</useProvinceCode>
+              <country_code static="true" type="SingleLine.Text">CA</country_code>
+              <option_allowcountry static="true" type="SingleLine.Text">true</option_allowcountry>
+              <option_showlogo static="true" type="SingleLine.Text">true</option_showlogo>
+              <address_line_1>address1_line1</address_line_1>
+              <address_line_2>address1_line2</address_line_2>
+              <province_or_state>address1_stateorprovince</province_or_state>
+              <city>address1_city</city>
+              <postcode>address1_postalcode</postcode>
+              <country>address1_country</country>
+              <msinternal.isvisibleinmocaonly static="true">true</msinternal.isvisibleinmocaonly>
+            </parameters>
+          </customControl>
+          <customControl formFactor="2" name="fdn_Canadapost.addressComplete">
+            <parameters>
+              <api_key static="true" type="SingleLine.Text">MM95-DM44-MP35-XM79</api_key>
+              <useProvinceCode static="true" type="Enum">No</useProvinceCode>
+              <country_code static="true" type="SingleLine.Text">CA</country_code>
+              <option_allowcountry static="true" type="SingleLine.Text">true</option_allowcountry>
+              <option_showlogo static="true" type="SingleLine.Text">true</option_showlogo>
+              <address_line_1>address1_line1</address_line_1>
+              <address_line_2>address1_line2</address_line_2>
+              <province_or_state>address1_stateorprovince</province_or_state>
+              <city>address1_city</city>
+              <postcode>address1_postalcode</postcode>
+              <country>address1_country</country>
+              <msinternal.isvisibleinmocaonly static="true">true</msinternal.isvisibleinmocaonly>
             </parameters>
           </customControl>
         </controlDescription>

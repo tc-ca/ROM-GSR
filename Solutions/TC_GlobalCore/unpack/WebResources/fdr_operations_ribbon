@@ -37,7 +37,10 @@ var Operations2SRF_Ribbon = (function (window, document) {
                             
                 //success
                 //refresh specs grid
-                gridControl.refresh();                
+                //Give it some time to have the record saved before refreshing
+                setTimeout(() => gridControl.refresh(),2000);
+
+                
             },
             function error() {
                 console.log(error);

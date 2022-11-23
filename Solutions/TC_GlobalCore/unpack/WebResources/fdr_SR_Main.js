@@ -17,6 +17,7 @@ var SR_main = (function (window, document) {
     var SR_state;
     var SR_Status_origin;
     var serviceRquestTypeOptions;
+    var isStatusChanged;
 
     var statusMappingActive = {
 
@@ -44,6 +45,18 @@ var SR_main = (function (window, document) {
         "794600005": [794600005],
         "Approved": ["Approved", "Completed"],
         "794600007": [794600007, 794600005]
+    };
+
+    var statusMappingFullRevocation = {
+
+        "Approved": ["Approved", "Technical Review"],
+        "794600007": [794600007, 794600002]
+    };
+
+    var statusMappingFullRevocationInactive = {
+
+        "Canceled": ["Canceled", "Closed"],
+        "794600001": [794600001, 2]
     };
 
     var statusMappingInactive = {
@@ -189,10 +202,31 @@ var SR_main = (function (window, document) {
             }
 
             ////on update etc
-            //if (formType > 1) {
+            if (formType > 1) {
+                var serviceRquestType = formContext.getAttribute("fdr_srtype").getValue();
+                if (serviceRquestType != null) {
+                    //hide the time tracking and performance tabs when the service request type is "full revocation", "partial revocation", "close active registration", or "close expired registration"
+                    if (serviceRquestType == 794600003 || serviceRquestType == 794600004 || serviceRquestType == 794600005 || serviceRquestType == 794600006) {
+                        glHelper.SetTabVisibility(formContext, "tab_TimeTracking", false);
+                        glHelper.SetTabVisibility(formContext, "tab_Performance", false);
 
-            //}
-        },
+                        if (serviceRquestType == 794600004)
+                        {
+                            //If Type is Full Revocation, only "Approved" should be available status reason.
+                            var currentSatatus = glHelper.GetOptionsetValue(formContext, "statuscode");
+
+                            glHelper.filterOptionSetUsingOrigin(formContext, "header_statuscode", SR_Status_origin, statusMappingFullRevocation["794600007"], true);
+                        }
+                    }
+                    
+                    
+
+                }
+            }
+
+            formContext.data.entity.addOnSave(SR_main.OnSave_Event);
+            formContext.data.entity.addOnPostSave(SR_main.OnPostSave_Event);
+       },
 
         OnStatusReason_Change: function (executionContext) {
 
@@ -213,15 +247,32 @@ var SR_main = (function (window, document) {
 
         OnState_Change: function (executionContext) {
 
-            var formContext = executionContext.getFormContext();           
+            var formContext = executionContext.getFormContext();  
+
+            var serviceRquestType = formContext.getAttribute("fdr_srtype").getValue();
 
             //update status reason filters based on state
             //if switched to inactive
-            if (glHelper.GetOptionsetValue(formContext, "statecode") == 1) {
-
-                glHelper.filterOptionSetUsingOrigin(formContext, "header_statuscode", SR_Status_origin, statusMappingInactive[SR_status], true)
+            if (glHelper.GetOptionsetValue(formContext, "statecode") == 1) 
+            {
+                //If Type is Full Revocation, only "Closed & Canceled" should be available status reason.
+                if (serviceRquestType == 794600004)
+                {
+                    glHelper.filterOptionSetUsingOrigin(formContext, "header_statuscode", SR_Status_origin, statusMappingFullRevocationInactive["794600001"], true);
+                }
+                else
+                    glHelper.filterOptionSetUsingOrigin(formContext, "header_statuscode", SR_Status_origin, statusMappingInactive[SR_status], true)
             }//for active
-            else glHelper.filterOptionSetUsingOrigin(formContext, "header_statuscode", SR_Status_origin, statusMappingActive[SR_status], true);
+            else
+            {
+                //If Type is Full Revocation, only "Approced & Technical Review" should be available status reason.
+                if (serviceRquestType == 794600004)
+                {
+                    glHelper.filterOptionSetUsingOrigin(formContext, "header_statuscode", SR_Status_origin, statusMappingFullRevocation["794600007"], true);
+                }
+                else
+                glHelper.filterOptionSetUsingOrigin(formContext, "header_statuscode", SR_Status_origin, statusMappingActive[SR_status], true);
+            }
             //update global values
             SetStateChangebility(formContext);
         },
@@ -231,9 +282,9 @@ var SR_main = (function (window, document) {
             var formContext = executionContext.getFormContext();
 
             //if account removed => clean operation
-            var hSite = formContext.getControl("header_fdr_site").getAttribute().getValue();
+            var hSite = formContext.getAttribute("fdr_site").getValue();
             //var hSite1 = glHelper.GetLookupAttrId(formContext, "fdr_site");
-            if (hSite == null) formContext.getControl("header_fdr_operation").getAttribute().setValue(null);
+            if (hSite == null) formContext.getAttribute("fdr_operation").setValue(null);
         },
 
         //the event happens only on create as Operation field is readonly rest of the time
@@ -242,14 +293,14 @@ var SR_main = (function (window, document) {
             var formContext = executionContext.getFormContext();
 
             //if opration selected and account is empty => populate the site/account
-            var hSite = formContext.getControl("header_fdr_site").getAttribute().getValue();
-            var hOperation = formContext.getControl("header_fdr_operation").getAttribute().getValue();
+            var hSite = formContext.getAttribute("fdr_site").getValue();
+            var hOperation = formContext.getAttribute("fdr_operation").getValue();
 
             if (hOperation != null) {
 
                 var opperationid = hOperation[0].id.replace('{', '').replace('}', '');
 
-                Xrm.WebApi.online.retrieveRecord("ovs_mocregistration", opperationid, "?$select=fdr_operationstatus,_ovs_siteid_value").then(
+                Xrm.WebApi.online.retrieveRecord("ovs_mocregistration", opperationid, "?$select=_fdr_registrationtype_value,fdr_operationstatus,_ovs_siteid_value").then(
                     function success(result) {
                         var fdr_operationstatus = result["fdr_operationstatus"];
                         var fdr_operationstatus_formatted = result["fdr_operationstatus@OData.Community.Display.V1.FormattedValue"];
@@ -264,8 +315,16 @@ var SR_main = (function (window, document) {
 
                         //set site lookup
                         if (hSite == null) {
-                            glHelper.SetHeaderLookup(formContext, "header_fdr_site", logicalname, siteid, name);
+                            glHelper.SetLookup(formContext, "fdr_site", logicalname, siteid, name);
                         }
+                        var containerType = formContext.getAttribute("fdr_containertype").getValue();
+                        //if (containerType == null) {
+                        //    var containerTypeId = result["_fdr_registrationtype_value"];
+                        //    var containerTypeName = result["_fdr_registrationtype_value@OData.Community.Display.V1.FormattedValue"];
+                        //    var clogicalname = result["_fdr_registrationtype_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+
+                        //    glHelper.SetLookup(formContext, "fdr_containertype", clogicalname, containerTypeId, containerTypeName);
+                        //}
                     },
                     function (error) {
                         Xrm.Navigation.openErrorDialog({ message: error.message });
@@ -276,6 +335,24 @@ var SR_main = (function (window, document) {
 
         },
 
+        //the on save event will refresh if the statuscode ATTRIBUTE is dirty
+        OnSave_Event: function (executionContext) {
+            var formContext = executionContext.getFormContext();
+
+            //statuscode ATTRIBUTE is dirty refresh the form
+            if (formContext.getAttribute("statuscode").getIsDirty()) {
+                isStatusChanged = true
+            }
+        },
+        OnPostSave_Event: function (executionContext) {
+            var formContext = executionContext.getFormContext();
+            var formType = glHelper.GetFormType(formContext);
+
+            //statuscode ATTRIBUTE is dirty refresh the form
+            //if (formType > 1 && isStatusChanged) {
+            //    Xrm.Utility.openEntityForm(formContext.data.entity.getEntityName(), formContext.data.entity.getId());
+            //}
+        }
     }
 
     //********************public methods end***************

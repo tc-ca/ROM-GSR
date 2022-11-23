@@ -10,7 +10,7 @@
     <layoutxml>
       <grid name="resultset" jump="cid_name" select="1" preview="1" icon="1">
         <row name="result" id="cid_companynaicscodeid">
-          <cell name="cid_naicscode" width="50" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="cid_naicscode" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="a_328065ce7948ec118c60000d3a84fcd9.cid_naicsclasstitle" width="200" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="cid_portalrecordcreationdetails" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
         </row>
@@ -25,10 +25,14 @@
           <order attribute="cid_naicscode" descending="false" />
           <filter type="and">
             <condition attribute="statuscode" operator="eq" value="1" />
-            <condition attribute="cid_portalrecordcreationdetails" operator="not-null" />
           </filter>
           <link-entity name="cid_naicscode" from="cid_naicscodeid" to="cid_naicscode" visible="false" link-type="outer" alias="a_328065ce7948ec118c60000d3a84fcd9">
             <attribute name="cid_naicsclasstitle" />
+          </link-entity>
+          <link-entity name="systemuser" from="systemuserid" to="createdby" alias="aa">
+            <filter type="and">
+              <condition attribute="fullname" operator="eq" value="System" />
+            </filter>
           </link-entity>
           <attribute name="cid_companynaicscodeid" />
         </entity>

@@ -82,6 +82,50 @@ var SRFunctions_FDR_main = (function (window, document) {
         req.send();
     }
 
+    function getSpecAndLimitations() {
+        getSpecificationAndLimitations(globalFormContext);
+    }
+
+    function getSpecificationAndLimitations(formContext) {
+        var containerId = formContext.data.entity.getId();;
+
+        //212216 show specs and limitations comma seperated in the functions grid
+        Xrm.WebApi.online.retrieveRecord("fdr_servicerequestfunction", containerId, "?$select=fdr_name&$expand=fdr_fdr_servicerequestfunction_fdr_functionlimitation_servicerequestfunction($select=_fdr_limitation_value,fdr_texten,fdr_textfr,statecode),fdr_ServiceRequestFunction_Specification($select=fdr_englishname,fdr_name,statecode)").then(
+            function success(result) {
+                console.log(result);
+                var limitations = "";
+                var specifications = "";
+
+                // Limitations
+                for (var j = 0; j < result.fdr_fdr_servicerequestfunction_fdr_functionlimitation_servicerequestfunction.length; j++) {
+                    var fdr_limitation_formatted = result.fdr_fdr_servicerequestfunction_fdr_functionlimitation_servicerequestfunction[j]["_fdr_limitation_value@OData.Community.Display.V1.FormattedValue"];
+                     var statecode_formatted = result.fdr_fdr_servicerequestfunction_fdr_functionlimitation_servicerequestfunction[j]["statecode@OData.Community.Display.V1.FormattedValue"];
+                    if (statecode_formatted == "Active") {
+
+                        if (limitations.length > 0)
+                            limitations = limitations + ", ";
+                        limitations = limitations + fdr_limitation_formatted;
+                    }
+                }
+
+                // Specifications
+                for (var j = 0; j < result.fdr_ServiceRequestFunction_Specification.length; j++) {
+                     var fdr_name = result.fdr_ServiceRequestFunction_Specification[j]["fdr_name"];
+                    var statecode_formatted = result.fdr_ServiceRequestFunction_Specification[j]["statecode@OData.Community.Display.V1.FormattedValue"];
+                    //if (statecode_formatted == "Active") {
+                    if (specifications.length > 0)
+                        specifications = specifications + ", ";
+                    specifications = specifications + fdr_name;
+                    //}
+                }
+                glHelper.SetValue(formContext, "fdr_limitations", limitations);
+                glHelper.SetValue(formContext, "fdr_specifications", specifications);
+            },
+            function (error) {
+                console.log(error.message);
+            }
+        );
+    }
 
 
     //**************** Public methods
@@ -122,6 +166,19 @@ var SRFunctions_FDR_main = (function (window, document) {
                 glHelper.SetControlReadOnly(formContext, "fdr_containerfunction", true);
                 //set design or specs visible
                 cf.fireOnChange();
+
+                //212216 show specs and limitations comma seperated in the functions grid
+                getSpecificationAndLimitations(formContext);
+
+                var specGrid = globalFormContext.getControl("GRID_SPECS");
+                var limitationGrid = globalFormContext.getControl("grdFunctionLimitations");
+                if (specGrid != null) {
+                    var recs = specGrid.getGrid().getTotalRecordCount();
+                    specGrid.addOnLoad(getSpecAndLimitations);
+                }
+                if (limitationGrid != null) {
+                    limitationGrid.addOnLoad(getSpecAndLimitations);
+                }
             }
 
         },
@@ -183,7 +240,7 @@ var SRFunctions_FDR_main = (function (window, document) {
                     }
 
                 }
-                //update, Michael. September 1, 2022
+                  //update, Michael. September 1, 2022
                 //logic changed to make design registration option to change on Container function level, task 198729
                 //get and save design allowence value on create only, nio futher mutations!
                 Xrm.WebApi.online.retrieveRecord("fdr_containerfunction", containerId, "?$select=fdr_supportsdesignregistration").then(
