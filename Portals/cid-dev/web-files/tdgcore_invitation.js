@@ -98,7 +98,7 @@ if (typeof (invitation) == "undefined") {
             return value;
         },
 
-        invitation_go_next: function(account, primary_ind, contact_id) {
+        invitation_go_next: function (account, primary_ind, contact_id) {
             debugger;
             sessionStorage.setItem("cid_suppress_error", "true");
 
@@ -162,8 +162,7 @@ if (typeof (invitation) == "undefined") {
                         $("#cid_crabusinessnumber").val(_account.cid_crabusinessnumber);
                         tdg.cid.crw.start_cid_crabusinessnumber_onchange();
                     }
-                    else
-                    {
+                    else {
                         $("#cid_has_cra_bn").val("0");
                         tdg.cid.crw.start_cid_has_cra_bn_onchange();
                         $("#cid_reasonfornobnnumber").val(_account.cid_reasonfornobnnumber);
@@ -262,8 +261,30 @@ if (typeof (invitation) == "undefined") {
                     }
                 }//end check if email address is found
                 else {
+                  
+
+                    
+                    $("#InsertButton").on('click', function () {
+                       
+                        $("#content_form").submit(function (e) {
+                            e.preventDefault();
+                        });
+                        $("#modalwindow").modal({ "backdrop": "static" });
+                    });
+
                     //call insert button to create new record
                     $("#InsertButton").click();
+
+                    var m000120 = tdg.error_message.message("m000120").replace("{0}", firstnameTextBox + " " + lastnameTextBox );
+                    //"This Contact cannot be added as a Contact with this name and email address already exists in CID, but is assigned to a different Company.";                        
+                    tdg.c.dialog_OK(m000120.replace("{1}", emailaddressTextBox));
+                    //changing the position of the dialog to fit the basic form screen
+                    $("#myModal").css({ left: 40 });
+                    // check if user click ok
+                    $("#btnOK").on('click', function () {
+                        $('#modalwindow').modal('hide');
+                    });
+                    
 
                 }
             }//end check if required information is entered
@@ -391,4 +412,5 @@ if (typeof (invitation) == "undefined") {
 
     }
 }
+
 

@@ -5,6 +5,10 @@ var _reload = false;
 $(document).ready(function () {
     debugger;
     page_setup();
+    $( "#content_form" ).submit(function( event ) {
+    event.preventDefault();
+      });
+    $("#modalwindow").modal({ "backdrop": "static" });
     //when the page is done loading, disable autocomplete on all inputs[text]
     $('input[type="text"]').attr('autocomplete', 'off');
 

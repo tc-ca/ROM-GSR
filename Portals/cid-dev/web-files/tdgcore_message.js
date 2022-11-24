@@ -1,4 +1,5 @@
-﻿// tdg.message = tdgcore.message
+﻿
+// tdg.message = tdgcore.message
 if (typeof (tdg.message) == "undefined") {
     tdg.message = {
         list: function () {
@@ -422,6 +423,12 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "At least one other active Secondary Admin needs to be added before you can deactivate this Secondary Admin.",
                         "message_fr": "At least one other active Secondary Admin needs to be added before you can deactivate this Secondary Admin._FR"
                     }
+                    ,
+                    {
+                        "code": "m000120",
+                        "message_en": "The Secondary Contact {0} has been sent an on-boarding invitation to their email address of {1}.",
+                        "message_fr": "The Secondary Contact {0} has been sent an on-boarding invitation to their email address of {1}._FR"
+                    }
 
                 ];
 
@@ -429,5 +436,6 @@ if (typeof (tdg.message) == "undefined") {
         }
     }
 }
+
 
 
