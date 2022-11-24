@@ -4,11 +4,12 @@
 var _account;
 $(document).ready(function () {
     debugger;
+    sessionStorage.setItem("step_start",1);
+
     //if user skip adding first and last name
     //redirect to profile page
     var userFullname = '{{user.fullname}}';
-    if(userFullname.length == 0 )
-    {window.location.href='~/profile/';}
+    if (userFullname.length == 0) { window.location.href = '~/profile/'; }
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
@@ -29,8 +30,10 @@ $(document).ready(function () {
     tdg.c.control_hide("parentcustomerid", true);
     tdg.c.control_hide("cid_operatingname");
 
-    $("#cid_has_cra_bn").change(tdg.cid.crw.start_cid_has_cra_bn_onchange);
-    tdg.cid.crw.start_cid_has_cra_bn_onchange();
+    $("#cid_has_cra_bn").change(function () {
+        tdg.cid.crw.start_cid_has_cra_bn_onchange("1");
+    });
+    tdg.cid.crw.start_cid_has_cra_bn_onchange("1");
 
     $("#cid_reasonfornobnnumber").change(tdg.cid.crw.start_cid_reasonfornobnnumber_onchange);
     tdg.cid.crw.start_cid_reasonfornobnnumber_onchange();

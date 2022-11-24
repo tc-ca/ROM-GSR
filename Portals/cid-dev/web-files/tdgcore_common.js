@@ -1,5 +1,3 @@
-
-
 //To apply the Asterisk(*) Sign using custom JS:
 //$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
 
@@ -1425,7 +1423,7 @@ if (typeof (tdg.cid) == "undefined") {
                 '</div>' +
                 '</td>' +
                 '</tr>';
-            
+
             var row2 = ' <tr style="background-color: rgb(240, 240, 240);">' +
                 '<td colspan = "1" rowspan = "1" class="clearfix cell checkbox-cell" >' +
                 '<div class="info">' +
@@ -1455,9 +1453,9 @@ if (typeof (tdg.cid) == "undefined") {
             $("[data-name='site_attestation_section_Modes']").each(function () {
                 var selectedTable = $(this);
                 $(this).append(row1);
-                
+
                 $(this).append(row2);
-               
+
             })
         },
 
@@ -1794,8 +1792,10 @@ if (typeof (tdg.cid.crw) == "undefined") {
             }
         },
 
-        start_cid_has_cra_bn_onchange: function () {
-            tdg.cid.crw.start_clear_parentcustomerid();
+        start_cid_has_cra_bn_onchange: function (step_start) {
+            if (step_start == "1") {
+                tdg.cid.crw.start_clear_parentcustomerid();
+            }
 
             tdg.c.removeValidator("cid_crabusinessnumber");
             tdg.c.removeValidator("cid_reasonfornobnnumber");
@@ -1815,7 +1815,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 tdg.c.addValidator("cid_legalname");
                 tdg.c.addValidator("cid_reasonfornobnnumber");
 
-                $("#cid_crabusinessnumber").val("");
+                if (step_start == "1") {
+                    $("#cid_crabusinessnumber").val("");
+                }
             }
             else {
                 tdg.c.control_show("cid_crabusinessnumber");
@@ -1825,9 +1827,11 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 tdg.c.addValidator("cid_crabusinessnumber");
 
                 // clear data
-                $("#cid_reasonfornobnnumber").val("");
-                $("#cid_reasonfornobnnumber_other").val("");
-                $("#cid_legalname").val("");
+                if (step_start == "1") {
+                    $("#cid_reasonfornobnnumber").val("");
+                    $("#cid_reasonfornobnnumber_other").val("");
+                    $("#cid_legalname").val("");
+                }
             }
         },
 
@@ -1897,6 +1901,3 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
-
-
-

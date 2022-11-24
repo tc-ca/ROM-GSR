@@ -7,6 +7,7 @@ $(document).ready(function () {
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 
+	tdg.c.control_hide("ovs_invitation_only");
 	tdg.c.control_hide("cid_addressoverwritten");
 	//update manually entered field if address fields changed
 	tdg.cid.Update_AdderssOverwritten_Field();

@@ -88,5 +88,10 @@ $(document).ready(function () {
         if ($("#openOperationWizard").length > 0)
             $('#openOperationWizard').remove();
     }
-    $('#loader').hide();
+
+    var html1 = "<div id='siteRequirementLevel'><label>" + requirementLevel + "</label></div><br>"; 
+    $('#cid_requirementlevel').parent().after(html1); 
+    $('#cid_requirementlevel').hide(); 
+    
+    $('#loader').hide(); 
 });
