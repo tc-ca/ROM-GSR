@@ -1,5 +1,4 @@
-﻿
-// tdg.message = tdgcore.message
+﻿// tdg.message = tdgcore.message
 if (typeof (tdg.message) == "undefined") {
     tdg.message = {
         list: function () {
@@ -311,6 +310,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "If you proceed, you will no longer be attached to {0} Company, after which you will have the option to register a new Company instead. Do you want to continue and be disconnected from {0}?_FR"
                     },
                     {
+                        "code": "m000037",
+                        "message_en": "CRA Business Number '{0}' already exists.",
+                        "message_fr": "CRA Business Number '{0}' already exists._FR"
+                    },
+                    {
                         "code": "m000098",
                         "message_en": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
                         "message_fr": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID._FR"
@@ -436,6 +440,3 @@ if (typeof (tdg.message) == "undefined") {
         }
     }
 }
-
-
-

@@ -1,4 +1,3 @@
-
 // CompanyRegistrationWizard-invitation
 if (typeof (invitation) == "undefined") {
     invitation = {
@@ -140,7 +139,7 @@ if (typeof (invitation) == "undefined") {
                     debugger;
                     if (_account.cid_has_cra_bn) {
                         $("#cid_crabusinessnumber").val(_account.cid_crabusinessnumber);
-                        tdg.cid.crw.start_cid_crabusinessnumber_onchange();
+                        tdg.cid.crw.start_cid_crabusinessnumber_onchange("1");
                     }
                     invitation.invitation_go_next(_account, true, contact_id);
                     return;
@@ -160,7 +159,7 @@ if (typeof (invitation) == "undefined") {
                     debugger;
                     if (_account.cid_has_cra_bn) {
                         $("#cid_crabusinessnumber").val(_account.cid_crabusinessnumber);
-                        tdg.cid.crw.start_cid_crabusinessnumber_onchange();
+                        tdg.cid.crw.start_cid_crabusinessnumber_onchange("1");
                     }
                     else {
                         $("#cid_has_cra_bn").val("0");
@@ -261,30 +260,21 @@ if (typeof (invitation) == "undefined") {
                     }
                 }//end check if email address is found
                 else {
-                  
 
-                    
+
                     $("#InsertButton").on('click', function () {
-                       
-                        $("#content_form").submit(function (e) {
-                            e.preventDefault();
-                        });
-                        $("#modalwindow").modal({ "backdrop": "static" });
+                        var emailaddressTextBox = $("#emailaddress1").val();
+                        var firstnameTextBox = $("#firstname").val();
+                        var lastnameTextBox = $("#lastname").val();
+                        sessionStorage.setItem("NewContactFlag", true);
+                        sessionStorage.setItem("FullName", firstnameTextBox + " " + lastnameTextBox);
+                        sessionStorage.setItem("Email", emailaddressTextBox);
+
                     });
 
                     //call insert button to create new record
                     $("#InsertButton").click();
 
-                    var m000120 = tdg.error_message.message("m000120").replace("{0}", firstnameTextBox + " " + lastnameTextBox );
-                    //"This Contact cannot be added as a Contact with this name and email address already exists in CID, but is assigned to a different Company.";                        
-                    tdg.c.dialog_OK(m000120.replace("{1}", emailaddressTextBox));
-                    //changing the position of the dialog to fit the basic form screen
-                    $("#myModal").css({ left: 40 });
-                    // check if user click ok
-                    $("#btnOK").on('click', function () {
-                        $('#modalwindow').modal('hide');
-                    });
-                    
 
                 }
             }//end check if required information is entered
@@ -407,10 +397,6 @@ if (typeof (invitation) == "undefined") {
                 }//end else if user login before
 
             }//end else
-        }
-        ,
-
+        },
     }
 }
-
-

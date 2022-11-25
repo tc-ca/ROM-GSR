@@ -1732,15 +1732,15 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#parentcustomerid_name").attr("value", null);
         },
 
-        start_cid_crabusinessnumber_onchange: function () {
+        start_cid_crabusinessnumber_onchange: function (step_start) {
             var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
             var data;
-            data = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber);
+            data = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, step_start);
             return data;
         },
 
         // CRA BN API - DEV ONLY
-        start_Retrieve_cra: function (bn) {
+        start_Retrieve_cra: function (bn, step_start) {
             debugger;
 
             var data;
@@ -1772,9 +1772,13 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
             fake.PhysicalLocationAddress = a;
 
-            tdg.cid.crw.start_BN_Selected(fake);
-
-            return data;
+            if (step_start == "1") {
+                tdg.cid.crw.start_BN_Selected(fake);
+                return data;
+            }
+            else {
+                return fake;
+            }
         },
 
         start_cid_reasonfornobnnumber_onchange: function () {
@@ -1810,27 +1814,34 @@ if (typeof (tdg.cid.crw) == "undefined") {
             if (cid_has_cra_bn == "0") {
                 tdg.c.control_hide("cid_crabusinessnumber");
                 tdg.c.control_show("cid_reasonfornobnnumber");
-                tdg.c.control_show("cid_legalname");
 
                 tdg.c.addValidator("cid_legalname");
                 tdg.c.addValidator("cid_reasonfornobnnumber");
 
                 if (step_start == "1") {
+                    tdg.c.control_show("cid_legalname");
                     $("#cid_crabusinessnumber").val("");
+                }
+                else {
+                    $('#ovs_legalname').attr("readonly", false);
                 }
             }
             else {
                 tdg.c.control_show("cid_crabusinessnumber");
                 tdg.c.control_hide("cid_reasonfornobnnumber");
-                tdg.c.control_hide("cid_legalname");
 
                 tdg.c.addValidator("cid_crabusinessnumber");
 
                 // clear data
                 if (step_start == "1") {
+                    tdg.c.control_hide("cid_legalname");
+
                     $("#cid_reasonfornobnnumber").val("");
                     $("#cid_reasonfornobnnumber_other").val("");
                     $("#cid_legalname").val("");
+                }
+                else {
+                    $('#ovs_legalname').attr("readonly", true);
                 }
             }
         },

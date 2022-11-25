@@ -45,13 +45,7 @@ $(document).ready(function () {
             // function will check of existing contact need to be linke to company
             //instead of add new else it will call the click event of the origional submit button
               invitation.New_and_Existing_Contact_Submit_Logic(ParentAccount);
-                var emailaddressTextBox = $("#emailaddress1").val();
-                var firstnameTextBox = $("#firstname").val();
-                var lastnameTextBox = $("#lastname").val();
-                sessionStorage.setItem("NewContactFlag", true);
-                sessionStorage.setItem("FullName", firstnameTextBox + " " + lastnameTextBox);
-                sessionStorage.setItem("Email", emailaddressTextBox);
-                //location.reload();
+              
         });
 //********************************************* */
 

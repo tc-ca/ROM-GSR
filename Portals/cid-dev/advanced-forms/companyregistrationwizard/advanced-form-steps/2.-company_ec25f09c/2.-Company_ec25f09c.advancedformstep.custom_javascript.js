@@ -1,9 +1,11 @@
 //
 // CompanyRegistrationWizard-Company Edit.js
 //
+var _cid_crabusinessnumber = "";
 $(document).ready(function () {
 	debugger;
 
+	_cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
 	$("#cid_registrationasof").parent().parent().hide();
 
 	//update manually entered field if address fields changed
@@ -57,17 +59,11 @@ $(document).ready(function () {
 		var cid_legalname = $('#ovs_legalname').val();
 		var cid_operatingname = $('#name').val();
 		var ovs_name_fr = $('#ovs_name_fr').val();
-		var cid_crabusinessnumber = $('#cid_crabusinessnumber').val();
-		var cid_reasonfornobnnumber = $('#cid_reasonfornobnnumber').val();
-		var cid_reasonfornobnnumber_other = $('#cid_reasonfornobnnumber_other').val();
 	}
 	else {
 		var cid_has_cra_bn = '{{user.cid_has_cra_bn}}';
 		cid_has_cra_bn = (cid_has_cra_bn == "true" ? 1 : 0);
 		$('#cid_has_cra_bn').val(cid_has_cra_bn);
-		var cid_crabusinessnumber = '{{user.cid_crabusinessnumber}}';
-		var cid_reasonfornobnnumber = "{{user.cid_reasonfornobnnumber.Value}}";
-		var cid_reasonfornobnnumber_other = tdg.c.replace_special_char("{{user.cid_reasonfornobnnumber_other}}");
 		var cid_legalname = "{{user.cid_legalname}}";
 		var cid_operatingname = "{{user.cid_operatingname}}";
 		var ovs_name_fr = cid_operatingname;
@@ -88,32 +84,6 @@ $(document).ready(function () {
 	var cid_legalname = tdg.c.replace_special_char(cid_legalname);
 	var cid_operatingname = tdg.c.replace_special_char(cid_operatingname);
 	var ovs_name_fr = tdg.c.replace_special_char(ovs_name_fr);
-	// do not have a business number?
-	if (cid_has_cra_bn != "1") {
-		tdg.c.control_hide("cid_crabusinessnumber");
-		tdg.c.control_show("cid_reasonfornobnnumber");
-		if (step_start != "2") {
-			$("#cid_reasonfornobnnumber").val(cid_reasonfornobnnumber);
-		}
-		if (cid_reasonfornobnnumber == "3") // other
-		{
-			tdg.c.control_show("cid_reasonfornobnnumber_other");
-			if (step_start != "2") {
-				$("#cid_reasonfornobnnumber_other").val(cid_reasonfornobnnumber_other);
-			}
-		}
-		else {
-			tdg.c.control_hide("cid_reasonfornobnnumber_other");
-		}
-	}
-	else {
-		if (step_start != "2") {
-			$("#cid_crabusinessnumber").val(cid_crabusinessnumber);
-		}
-		tdg.c.control_show("cid_crabusinessnumber");
-		tdg.c.control_hide("cid_reasonfornobnnumber");
-		tdg.c.control_hide("cid_reasonfornobnnumber_other");
-	}
 	if (step_start != "2") {
 		$("#ovs_legalname").val(cid_legalname);
 		$("#name").val(cid_operatingname);
@@ -123,11 +93,6 @@ $(document).ready(function () {
 		var value = $("#address1_line1").val();
 		address1_line1_set(value);
 	}
-	$('#cid_crabusinessnumber').attr("readonly", true);
-	$('#ovs_legalname').attr("readonly", true);
-	$('#cid_reasonfornobnnumber').attr("readonly", true);
-	$('#cid_reasonfornobnnumber').css("pointer-events", "none");
-	$('#cid_reasonfornobnnumber_other').attr("readonly", true);
 	// autocomplete off
 	$("#name").attr("autocomplete", "new-password");
 	$("#address1_longitude").attr("autocomplete", "new-password");
@@ -144,13 +109,73 @@ $(document).ready(function () {
 	var ovs_invitation_only = $("#ovs_invitation_only").val();
 	if (ovs_invitation_only == "1") {
 		tdg.c.control_show("cid_has_cra_bn");
-		//$("#cid_has_cra_bn").change(cid_has_cra_bn_onchange);
 		$("#cid_has_cra_bn").change(function () {
 			tdg.cid.crw.start_cid_has_cra_bn_onchange("2");
 		});
 		tdg.cid.crw.start_cid_has_cra_bn_onchange("2");
+
+		$("#cid_crabusinessnumber").change(cid_crabusinessnumber_onchange);
+		var cid_has_cra_bn = $('#cid_has_cra_bn').val();
+		if (cid_has_cra_bn == "1") {
+			cid_crabusinessnumber_onchange();
+        }
+	}
+	else {
+		$('#cid_crabusinessnumber').attr("readonly", true);
+		$('#ovs_legalname').attr("readonly", true);
+		$('#cid_reasonfornobnnumber').attr("readonly", true);
+		$('#cid_reasonfornobnnumber').css("pointer-events", "none");
+		$('#cid_reasonfornobnnumber_other').attr("readonly", true);
     }
 });
+
+function cid_crabusinessnumber_onchange() {
+	var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
+	var data = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber,"2");
+	if (data == "") {
+		tdg.c.error_message_advanced_form("m000001", true);
+	}
+	else {
+		debugger;
+		var account_id = '{{user.parentcustomerid.Id}}';
+		filter = "cid_crabusinessnumber eq '" + cid_crabusinessnumber + "'";
+		var rom_data = tdg.c.WebApi_List("accounts", filter);
+		rom_data = rom_data.filter(x => x.accountid != account_id);
+
+		if (rom_data.length > 0) {
+			var message = tdg.error_message.message("m000037");
+			message = message.replaceAll("{0}", cid_crabusinessnumber);
+			tdg.c.dialog_OK(message);
+			$("#cid_crabusinessnumber").val(_cid_crabusinessnumber);
+		}
+		else {
+			var LegalName = data.LegalName
+			var OperatingName = data.OperatingName
+			OperatingName = (OperatingName == "" ? LegalName : OperatingName);
+
+			var address = data.PhysicalLocationAddress;
+
+			$("#ovs_legalname").val(LegalName);
+			$("#name").val(OperatingName);
+			$("#ovs_name_fr").val(OperatingName);
+
+			$("#address1_line1").val(address.AddressLine1Text);
+			$("#address1_line2").val(address.AddressLine2Text);
+			$("#address1_line3").val("");
+			$("#address1_city").val(address.CityName);
+			$("#address1_stateorprovince").val(address.ProvinceStateCode);
+			$("#address1_postalcode").val(address.PostalZipCode);
+
+			sessionStorage.setItem("AddressLine1Text", address.AddressLine1Text);
+			address1_line1_set(address.AddressLine1Text);
+
+			var selected_language = '{{website.selected_language.code}}';
+			tdg.cid.convert_province_to_code(selected_language);
+
+			_cid_crabusinessnumber = cid_crabusinessnumber;
+		}
+	}
+}
 
 function advanced_form_header() {
 	var selected_language = '{{website.selected_language.code}}';
