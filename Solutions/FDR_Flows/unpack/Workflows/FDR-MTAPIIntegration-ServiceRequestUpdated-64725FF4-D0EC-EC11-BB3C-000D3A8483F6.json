@@ -292,7 +292,7 @@
                 },
                 "Create_new_Service_Request_Performance_record": {
                   "runAfter": {
-                    "convert_standard_days_to_minutes": [
+                    "Set_Service_Performance_Reason": [
                       "Succeeded"
                     ]
                   },
@@ -309,21 +309,22 @@
                     "parameters": {
                       "entityName": "fdr_servicerequestperformances",
                       "item/fdr_name": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/ServiceRequestPerformanceId']",
-                      "item/fdr_adjustmentapplicableunitnbr": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/AdjustmentApplicableUnitNbr']",
-                      "item/fdr_adjustmentjustificationtxt": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/AdjustmentJustificationTxt']",
                       "item/fdr_adjustmentnbr": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/AdjustmentNbr']",
+                      "item/fdr_adjustmentjustificationtxt": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/AdjustmentJustificationTxt']",
                       "item/fdr_adjustmentnetworkid": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/AdjustmentNetworkId']",
-                      "item/fdr_applicableunitnbr": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/ApplicableUnitNbr']",
                       "item/fdr_approvernetworkid": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/ApproverNetworkId']",
                       "item/fdr_completeddte": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/CompletedDte']",
                       "item/fdr_errorcd": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/ErrorCd']",
                       "item/fdr_holidaydaynbr": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/HolidayDayNbr']",
                       "item/fdr_onholddaynbr": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/OnHoldDayNbr']",
+                      "item/fdr_applicableunitnbr": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/ApplicableUnitNbr']",
+                      "item/fdr_adjustmentapplicableunitnbr": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/AdjustmentApplicableUnitNbr']",
                       "item/fdr_remittanceamt": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/RemittanceAmt']",
                       "item/fdr_servicerequestperformanceidnumber": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/ServiceRequestPerformanceId']",
                       "item/fdr_standardassessmentpct": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/StandardAssessmentPct']",
                       "item/fdr_standardmetind": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/StandardMetInd']",
                       "item/fdr_startdte": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/StartDte']",
+                      "item/statuscode": "@variables('Service Performance Status Reason')",
                       "item/fdr_totalfeeamt": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/TotalFeeAmt']",
                       "item/fdr_weekenddaynbr": "@outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/WeekendDayNbr']"
                     },
@@ -349,6 +350,22 @@
                     },
                     "authentication": "@parameters('$authentication')"
                   }
+                },
+                "Set_Service_Performance_Reason": {
+                  "runAfter": {
+                    "convert_standard_days_to_minutes": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "bf17a87f-06d6-4c92-8100-045cc1f753de"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Service Performance Status Reason",
+                    "value": "@if(equals(outputs('Calculate_and_save_the_service_request_performance_of_a_request_2')?['body/StandardMetInd'],true),4,5)"
+                  },
+                  "description": "If standard is met status reason is set to N/A else is set to Approval Required"
                 }
               },
               "runAfter": {
@@ -757,7 +774,7 @@
         },
         "Gets_a_service_request_by_its_id": {
           "runAfter": {
-            "Initialize_Minutes": [
+            "Initialize_Service_Performance_Status_Reason": [
               "Succeeded"
             ]
           },
@@ -777,6 +794,25 @@
               "includeRegulatedEntities": false
             },
             "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_Service_Performance_Status_Reason": {
+          "runAfter": {
+            "Initialize_Minutes": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c12554a8-312c-4882-a689-f21d055d01e0"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Service Performance Status Reason",
+                "type": "integer"
+              }
+            ]
           }
         }
       }
