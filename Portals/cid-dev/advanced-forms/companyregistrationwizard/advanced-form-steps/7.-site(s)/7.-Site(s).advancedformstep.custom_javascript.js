@@ -4,10 +4,12 @@
 
 $(document).ready(function () {
 	debugger;
-	//hide empty message
-	$(".entity-grid").on("loaded", function () { const EmptyMessageDiv = document.querySelector(".view-empty");	
+	var registerationDate = '{{user.cid_officiallyregistrationcompletationdate}}';
+	//hide empty message for registeration only
+	if ( registerationDate == "")
+	{ $(".entity-grid").on("loaded", function () { const EmptyMessageDiv = document.querySelector(".view-empty");	
          	EmptyMessageDiv.style.display = "none";
-      });
+      });}
 
 
 

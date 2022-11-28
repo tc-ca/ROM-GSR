@@ -17,10 +17,7 @@ $(document).ready(function () {
 	sessionStorage.setItem("cid_naicscode_label", cid_naicscode_label);
 	//make for readonly for secondary users
 	Disable_ContactTypeFieldsForSecondaryUser();
-	//hide empty message
-	$(".entity-grid").on("loaded", function () { const EmptyMessageDiv = document.querySelector(".view-empty");	
-         	EmptyMessageDiv.style.display = "none";
-      });
+
 
 
 });

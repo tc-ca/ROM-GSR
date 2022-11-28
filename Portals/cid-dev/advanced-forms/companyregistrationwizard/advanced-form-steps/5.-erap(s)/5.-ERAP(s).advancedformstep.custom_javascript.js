@@ -31,11 +31,6 @@ $(document).ready(function ()
 	var currentUserId = '{{user.contactid}}';
 	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
 
-
-	//hide empty message
-	$(".entity-grid").on("loaded", function () { const EmptyMessageDiv = document.querySelector(".view-empty");	
-         	EmptyMessageDiv.style.display = "none";
-      });
 });
 if (window.jQuery)
 {

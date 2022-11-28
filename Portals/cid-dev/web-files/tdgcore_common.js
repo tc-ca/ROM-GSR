@@ -1266,6 +1266,14 @@ if (typeof (tdg.cid) == "undefined") {
                     tdg.c.addValidator("ovs_lld_province");
 
                     this.address1_default("N/A");
+
+                    //Hide all options
+                    $("#ovs_lld_province").children().hide();
+                    //Show  AB, BC, MB and SK only
+                    $("#ovs_lld_province option[value=" +0+ "]").show(); //AB
+                    $("#ovs_lld_province option[value=" +1+ "]").show(); //BC
+                    $("#ovs_lld_province option[value=" +2+ "]").show(); //MB
+                    $("#ovs_lld_province option[value=" +11+ "]").show(); //SK
                     break;
                 case "2": // lat/long
                     tdg.c.section_show("section_latitude_longitude");

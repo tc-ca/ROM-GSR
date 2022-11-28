@@ -6,6 +6,9 @@ var _busy = false;
 
 $(document).ready(function () {
     debugger;
+    document.getElementById("address1_latitude").addEventListener('change', (event) => { 
+        var Lat = $("#address1_latitude").val() ;
+      });
 
     // address
     tdg.cid.address_init(true);

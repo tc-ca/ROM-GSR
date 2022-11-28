@@ -4,7 +4,8 @@
 
 $(document).ready(function () {
     debugger;
-    //hide empty message
+  
+	//hide empty message for registeration only
 	$(".entity-grid").on("loaded", function () { const EmptyMessageDiv = document.querySelector(".view-empty");	
          	EmptyMessageDiv.style.display = "none";
       });
