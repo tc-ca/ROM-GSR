@@ -4,6 +4,11 @@
 
 $(document).ready(function () {
     debugger;
+    //hide empty message
+	$(".entity-grid").on("loaded", function () { const EmptyMessageDiv = document.querySelector(".view-empty");	
+         	EmptyMessageDiv.style.display = "none";
+      });
+  
 
     $('#NextButton').on('click', function () {
         sessionStorage.setItem('to_attst_site', 'true');

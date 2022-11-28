@@ -4,6 +4,12 @@
 
 $(document).ready(function () {
 	debugger;
+	//hide empty message
+	var EmptyMessageDiv = document.querySelector(".view-empty.message");	
+    EmptyMessageDiv.style.display = "none";
+	
+
+
 
 	$("#cid_registrationasof").parent().parent().hide();
 
@@ -43,6 +49,8 @@ $(document).ready(function () {
 			});
 		}
 	});
+
+	
 });
 
 function printSummary() {

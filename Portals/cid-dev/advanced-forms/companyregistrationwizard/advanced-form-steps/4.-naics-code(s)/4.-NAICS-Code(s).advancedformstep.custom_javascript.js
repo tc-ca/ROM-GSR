@@ -6,7 +6,8 @@ $(document).ready(function () {
 	debugger;
 
 	$("#cid_registrationasof").parent().parent().hide();
-	
+
+
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 
@@ -16,6 +17,12 @@ $(document).ready(function () {
 	sessionStorage.setItem("cid_naicscode_label", cid_naicscode_label);
 	//make for readonly for secondary users
 	Disable_ContactTypeFieldsForSecondaryUser();
+	//hide empty message
+	$(".entity-grid").on("loaded", function () { const EmptyMessageDiv = document.querySelector(".view-empty");	
+         	EmptyMessageDiv.style.display = "none";
+      });
+
+
 });
 
 function subgrid_language() {
@@ -24,6 +31,7 @@ function subgrid_language() {
 	var entityList = $(".entity-grid");
 	var companynaicscode = tdg.c.subgrid_index(entityList, "cid_account_companynaicscode");
 	if (companynaicscode != null) {
+		
 		tdg.cid.subgrid_companynaicscode(companynaicscode);
 	}
 }
@@ -37,6 +45,7 @@ function Disable_ContactTypeFieldsForSecondaryUser() {
 		$(".create-action").css("pointer-events", "none");
 		//Wait till subgrid load
 		$("#CompanyNAICSCodes").on("loaded", function () {
+	
 			$(".btn.btn-default.btn-xs").prop("disabled", true);
 		});
 	}

@@ -4,6 +4,12 @@
 
 $(document).ready(function () {
 	debugger;
+	//hide empty message
+	$(".entity-grid").on("loaded", function () { const EmptyMessageDiv = document.querySelector(".view-empty");	
+         	EmptyMessageDiv.style.display = "none";
+      });
+
+
 
 	$("#cid_registrationasof").parent().parent().hide();
 

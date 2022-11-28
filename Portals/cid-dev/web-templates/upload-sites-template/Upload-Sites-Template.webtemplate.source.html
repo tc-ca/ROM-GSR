@@ -316,8 +316,8 @@ $('#btn_attachfile_and_scan').click(function(e)
           $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  FileTypeErrorMessage + "</p>");
           Enable_Button('btn_attachfile_and_scan');
           Enable_Button('btn_attachfile_and_scan');
-            Enable_Button('linkdownload_English');
-            Enable_Button('linkdownload_French');
+          Enable_Button('linkdownload_English');
+          Enable_Button('linkdownload_French');
          // call the submit button to show error message
          // $("#InsertButton").click();
         
@@ -329,46 +329,14 @@ $('#btn_attachfile_and_scan').click(function(e)
         var reader = new FileReader();
   
         reader.onload = function(e) {
-             try {
-            //get data from reader
-            var data = e.target.result;
-        
-                //parese file as excel
-                var workbook = XLSX.read(data, {
-                    type: 'binary'
-                });
-                //get number of sheets
-                var numberOfSheets = workbook.SheetNames.length;
-                //if file is excel at least one excel sheet will be there.
-                if (numberOfSheets > 0)
-                {
-                    //get the scan flow url from fetch xml  stored in liquid variable
+             //get the scan flow url from fetch xml  stored in liquid variable
                  var Scan_API_URL = '{{Scan_flow_URL}}';
                 
                 //call antivirus URL
                 Call_Virsu_Scan_API(Scan_API_URL
-                ,data , BulkActivitytype ,FileName,langcode );
-          
-                }
-
-
-               }
-            catch (error) {
-                    //get error message in english
-             var FileTypeErrorMessage = filter_BulkMessageArray("M2" , "en");
-           // check language if not english assign french transation
-             if ( langcode != 'en-US' && langcode !="en")
-             {
-                 //get french message
-             FileTypeErrorMessage = filter_BulkMessageArray("M2" , "fr");
-         
-             }//end check language
-              //show file type error message
-                 $('#ErrorMessageDiv').css('display', 'block');
-                 $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  FileTypeErrorMessage + "</p>");
-           
-            }           
-          
+                ,e.target.result , BulkActivitytype ,FileName,langcode );
+                       
+                
         };
 
         reader.readAsBinaryString(file);
@@ -578,7 +546,16 @@ if ( language != 'en-US'&& language != 'en')
 
                $('#infoMsg').css('display', 'block');
                $('#infoMsg').html("<p>Uploading and processing the Site Bulk Upload Excel workbook.  Please wait a moment...</p>");
-              $("#InsertButton").click();
+               
+               
+               var FileTypeError = Check_FileType_With_ExcelRead(fileContent ,language ) ;
+
+               // if file type is correct trigger file save 
+               if (FileTypeError == false)
+               {
+                   $("#InsertButton").click();
+               }
+               
 
          }
          else
@@ -593,12 +570,15 @@ if ( language != 'en-US'&& language != 'en')
            ErrorMessage_fileScan = filter_BulkMessageArray("M3" , "fr");
          
             }//end check language
+          $('#infoMsg').css('display', 'none');
           $('#ErrorMessageDiv').css('display', 'block');
           $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  ErrorMessage_fileScan + "</p>");
           //Enabled_all_Buttons();
             Enable_Button('btn_attachfile_and_scan');
             Enable_Button('linkdownload_English');
             Enable_Button('linkdownload_French');
+
+            
        
          }
 
@@ -608,8 +588,8 @@ if ( language != 'en-US'&& language != 'en')
               $('#processingMsg').text("Error Please Try again Later.");
             var result = this.response;
             console.log (this.response);
-            debugger;
-           // alert("Error " + result);
+            return false;
+
           }
         }
       }
@@ -666,8 +646,7 @@ function call_Inital_validation(Language , bulkactivitytype)
          UploadType = "Update";
          }
 
-        console.log ("upload type : ") ;
-        console.log(UploadType);
+      
         var acupdate =
             '{ "activityid":"' + newrecordid + '" , "name": "'+ companyname +'", "accountid": "' + companyid + '" , "Lang" : "' + Language + '" ,"ActivityType" : "' + UploadType +  '" }';
 
@@ -893,6 +872,55 @@ function decode (str)
 }
 
 
+function Check_FileType_With_ExcelRead(data , langcode)
+{
+    ErrorFound = true;
+     try {
+            //get data from reader
+            //var data = e.target.result;
+        
+                //parese file as excel
+                var workbook = XLSX.read(data, {
+                    type: 'binary'
+                });
+
+                
+                //get number of sheets
+                var numberOfSheets = workbook.SheetNames.length;
+                //if file is excel at least one excel sheet will be there.
+                if (numberOfSheets > 0)
+                {
+                    ErrorFound =false ;
+                    console.log ("number of sheets "  + numberOfSheets);
+                
+
+                    return ErrorFound ;
+                    //get the scan flow url from fetch xml  stored in liquid variable
+                 //var Scan_API_URL = '{{Scan_flow_URL}}';
+                
+                //call antivirus URL
+               // Call_Virsu_Scan_API(Scan_API_URL,data , BulkActivitytype ,FileName,langcode );
+          
+                } //end check number of sheet
+               }//end try
+               catch (error) {
+                    //get error message in english
+                    var FileTypeErrorMessage = filter_BulkMessageArray("M2" , "en");
+                // check language if not english assign french transation
+                    if ( langcode != 'en-US' && langcode !="en")
+                    {
+                        //get french message
+                    FileTypeErrorMessage = filter_BulkMessageArray("M2" , "fr");
+                
+                    }//end check language
+                    //show file type error message
+                    $('#infoMsg').css('display', 'none');
+                        $('#ErrorMessageDiv').css('display', 'block');
+                        $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  FileTypeErrorMessage + "</p>");
+                      return  ErrorFound;
+                //end catch
+                }
+}
 
 
  function  ReadBulkMessagesFile() {

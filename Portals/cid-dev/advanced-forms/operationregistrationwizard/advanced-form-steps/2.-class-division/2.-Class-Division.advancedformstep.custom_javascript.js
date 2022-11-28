@@ -1,6 +1,13 @@
 //
 // OperationRegistrationWizard-Class.js 
 //
+$(document).ready(function () {
+    debugger;
+    //hide empty message
+	$(".entity-grid").on("loaded", function () { const EmptyMessageDiv = document.querySelector(".view-empty");	
+         	EmptyMessageDiv.style.display = "none";
+      });
+});
 if (window.jQuery) {
 	(function ($) {
 		webFormClientValidate = function () {
