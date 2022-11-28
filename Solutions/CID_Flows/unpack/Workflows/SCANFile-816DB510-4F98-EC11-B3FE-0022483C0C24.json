@@ -61,7 +61,7 @@
       "actions": {
         "HTTP-Scan-API": {
           "runAfter": {
-            "fileConverted": [
+            "File-Scan-Result": [
               "Succeeded"
             ]
           },
@@ -141,7 +141,7 @@
                 "headers": {
                   "Message": "Passed"
                 },
-                "body": "@outputs('http-request-result')"
+                "body": "@outputs('File-Scan-Result')"
               }
             }
           },
@@ -220,14 +220,14 @@
                     "MessageCode": "B1001",
                     "Message": "A scan of the file has found a potential virus. Please download and update a new version of the Site Bulk Upload Excel Template, then upload that file instead. [B1001]"
                   },
-                  "body": "@outputs('http-request-result')"
+                  "body": "@outputs('File-Scan-Result')"
                 }
               }
             }
           },
           "expression": {
             "equals": [
-              "@outputs('http-request-result')",
+              "@outputs('File-Scan-Result')",
               "Allowed"
             ]
           },
@@ -237,7 +237,11 @@
           "type": "If"
         },
         "startTime": {
-          "runAfter": {},
+          "runAfter": {
+            "base64": [
+              "Succeeded"
+            ]
+          },
           "metadata": {
             "operationMetadataId": "18f4e50d-9bf6-458d-96d9-6889896e03f2"
           },
@@ -254,12 +258,70 @@
             "operationMetadataId": "9399fb76-b6df-4376-8270-8d50b646139d"
           },
           "type": "Compose",
-          "inputs": "@binary(triggerBody()?['FileContent'])"
+          "inputs": "@triggerBody()?['FileContent']"
+        },
+        "virsusText": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "c77326bc-5fe1-4a5c-b150-2b6064956ba6"
+          },
+          "type": "Compose",
+          "inputs": "X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"
+        },
+        "base64": {
+          "runAfter": {
+            "virsusText": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "519f4d0c-2c47-490a-808a-2d5ca19f6051"
+          },
+          "type": "Compose",
+          "inputs": "@base64(outputs('virsusText'))"
+        },
+        "Perform_an_unbound_action_-_call_file_scan_API": {
+          "runAfter": {
+            "fileConverted": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ff30a19c-4468-469e-8cfd-629ae812871d"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "PerformUnboundAction",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "actionName": "cid_CID_BulkUpload_FileScan",
+              "item/FileContent": "@outputs('fileConverted')",
+              "item/Token": "@outputs('Token')",
+              "item/FileScanAPIURL": "https://wwwapps2.tc.gc.ca/Saf-Sec-Sur/13/tc-virusscan-api/api/v1/file-scan",
+              "item/FileName": "@triggerBody()?['ExcelFileName']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "File-Scan-Result": {
+          "runAfter": {
+            "Perform_an_unbound_action_-_call_file_scan_API": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "553a71ec-eec6-4e96-a3d2-2d3b362ea8be"
+          },
+          "type": "Compose",
+          "inputs": "@outputs('Perform_an_unbound_action_-_call_file_scan_API')?['body/ScanResult']"
         }
       },
       "outputs": {}
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
