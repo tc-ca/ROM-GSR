@@ -1785,30 +1785,6 @@
                 "authentication": "@parameters('$authentication')"
               }
             },
-            "Update_the_Work_Order": {
-              "runAfter": {
-                "Update_attachment": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "add793a2-dfaf-49b8-8ad1-80ad4661ed76"
-              },
-              "type": "OpenApiConnection",
-              "inputs": {
-                "host": {
-                  "connectionName": "shared_commondataserviceforapps",
-                  "operationId": "UpdateRecord",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                },
-                "parameters": {
-                  "entityName": "msdyn_workorders",
-                  "recordId": "@outputs('Get_a_WO._All_fields')?['body/msdyn_workorderid']",
-                  "item/msdyn_systemstatus": 690970003
-                },
-                "authentication": "@parameters('$authentication')"
-              }
-            },
             "Apply_to_each_Violation": {
               "foreach": "@outputs('Get_Violations(Results)')?['body/value']",
               "actions": {
@@ -1951,7 +1927,7 @@
             },
             "Set_report_Inactive": {
               "runAfter": {
-                "Update_the_Work_Order": [
+                "Update_attachment": [
                   "Succeeded"
                 ]
               },
@@ -2147,7 +2123,7 @@
                       "parameters": {
                         "entityName": "appnotifications",
                         "item/title": "Inspection Report Issued",
-                        "item/body": "The Inspection Report for @{outputs('Update_the_Work_Order')?['body/msdyn_name']} was issued and can be accessed with the below link.",
+                        "item/body": "The Inspection Report for  was issued and can be accessed with the below link.",
                         "item/data": "       {\n  \"actions\": [\n        {\n        \"title\": \"Open Work Order\",\n        \"data\" : \n{ \"url\" :\"?&pagetype=entityrecord&etn=msdyn_workorder&id=@{variables('WOid')}\",\n        \"navigationTarget\": \"dialog\"\n      }        \n        }\n      ]\n     }",
                         "item/ttlinseconds": 300,
                         "item/icontype": 100000001,
@@ -2531,7 +2507,7 @@
       },
       "outputs": {}
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
