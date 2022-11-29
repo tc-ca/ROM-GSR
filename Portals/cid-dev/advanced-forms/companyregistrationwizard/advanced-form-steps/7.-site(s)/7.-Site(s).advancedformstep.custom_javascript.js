@@ -4,12 +4,11 @@
 
 $(document).ready(function () {
 	debugger;
-	var registerationDate = '{{user.cid_officiallyregistrationcompletationdate}}';
-	//hide empty message for registeration only
-	if ( registerationDate == "")
-	{ $(".entity-grid").on("loaded", function () { const EmptyMessageDiv = document.querySelector(".view-empty");	
+	$(".toolbar-actions").style.width = "700px";
+
+	 $(".entity-grid").on("loaded", function () { const EmptyMessageDiv = document.querySelector(".view-empty");	
          	EmptyMessageDiv.style.display = "none";
-      });}
+      });
 
 
 
