@@ -6,6 +6,7 @@ var _busy = false;
 
 $(document).ready(function () {
     debugger;
+   
 
     // address
     tdg.cid.address_init(true);
