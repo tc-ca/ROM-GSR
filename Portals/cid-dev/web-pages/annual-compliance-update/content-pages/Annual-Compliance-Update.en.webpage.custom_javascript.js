@@ -46,6 +46,7 @@ $(document).ready(function () {
 		}
 
 	subgrid_language();
+	
 });
 
 function subgrid_language() {

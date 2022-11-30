@@ -4,7 +4,9 @@
 
 $(document).ready(function () {
 	debugger;
-	$(".toolbar-actions").style.width = "700px";
+	//change width and place holder div class to increase search width
+	$('.toolbar-actions').attr('style', "width:700px;");
+	$('.entitylist-search').addClass("col-md-8");
 
 	 $(".entity-grid").on("loaded", function () { const EmptyMessageDiv = document.querySelector(".view-empty");	
          	EmptyMessageDiv.style.display = "none";

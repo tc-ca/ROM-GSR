@@ -1,3 +1,5 @@
+// JavaScript source code
+
 //To apply the Asterisk(*) Sign using custom JS:
 //$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
 
@@ -75,6 +77,26 @@ if (typeof (tdg.c) == "undefined") {
             $(".instructions").html(value);
         },
 
+        button_create: function(name, from_button, label_code) {
+            var value = '<input type="button" name="{0}" id="{0}" />';
+            value = value.replaceAll("{0}", name);
+            var button = $(value);
+            $(from_button).after(button);
+            var button1 = $(from_button);
+            var className = button1[0].className
+            var fontSize = button1.css("fontSize");
+            var color = button1.css("color");
+            var background_color = button1.css("background-color");
+            value = "#{0}".replaceAll("{0}", name);
+            var button2 = $(value);
+
+            var text1 = tdg.error_message.message(label_code);
+            button2.prop("value", text1);
+            button2[0].className = className;
+            button2.css("fontSize", fontSize);
+            button2.css('color', color);
+            button2.css("background-color", background_color);
+        },
         btn_save_new_setup: function () {
             var button = $('<input type="button" name="btn_save_new" id="btn_save_new" class="submit-btn btn btn-primary" />');
             $("#InsertButton").after(button);
@@ -1270,10 +1292,10 @@ if (typeof (tdg.cid) == "undefined") {
                     //Hide all options
                     $("#ovs_lld_province").children().hide();
                     //Show  AB, BC, MB and SK only
-                    $("#ovs_lld_province option[value=" +0+ "]").show(); //AB
-                    $("#ovs_lld_province option[value=" +1+ "]").show(); //BC
-                    $("#ovs_lld_province option[value=" +2+ "]").show(); //MB
-                    $("#ovs_lld_province option[value=" +11+ "]").show(); //SK
+                    $("#ovs_lld_province option[value=" + 0 + "]").show(); //AB
+                    $("#ovs_lld_province option[value=" + 1 + "]").show(); //BC
+                    $("#ovs_lld_province option[value=" + 2 + "]").show(); //MB
+                    $("#ovs_lld_province option[value=" + 11 + "]").show(); //SK
                     break;
                 case "2": // lat/long
                     tdg.c.section_show("section_latitude_longitude");
@@ -1721,7 +1743,59 @@ if (typeof (tdg.cid) == "undefined") {
 
                 tdg.cid.flow.Call_Flow("CID_Portal_Email_Contact_when_Information_is_changed", data);
             });
+        },
+
+        Complete_All_Annualcompliance_Tasks: function (parentAccountid, LanguageCode) {
+
+            //create complete all button for company
+            var Button_CompanyCompleteAll = '<div class="input-group pull-right"><button type="button" id="CompanyCompleteAll" class="btn btn-primary pull-left action">'
+                + 'Complete All' + '</button></div>';
+            const CompanyCompleteButtonLocation = document.querySelector('table[data-name="tab_11_section_1"]');
+            CompanyCompleteButtonLocation.insertAdjacentHTML('beforebegin', Button_CompanyCompleteAll);
+
+            //crate complete all button for site
+            const SiteCompleteButtonLocation = document.querySelector('table[data-name="annual_compliance_section_2"]');
+            var Button_SiteCompleteAll = '<div class="input-group pull-right"><button type="button" id="SiteCompleteAll" class="btn btn-primary pull-left action">'
+                + 'Complete All' + '</button></div>';
+            SiteCompleteButtonLocation.insertAdjacentHTML('beforebegin', Button_SiteCompleteAll);
+            //clicke event for company button
+            $("#CompanyCompleteAll").on("click", function () {
+                var Listdata = tdg.webapi.SelectedColumnlist("tasks", "activityid", "cid_tasklevel eq 100000000 and _regardingobjectid_value eq "
+                    + parentAccountid);
+
+                for (var i = 0; i < Listdata.length; i++) {
+
+                    var data = {
+                        "statecode": 1,
+                        "statuscode": 5
+                    };
+                    tdg.webapi.update("tasks", Listdata[i].activityid, data);
+                }//end for
+
+                // $(".entity-grid").trigger("refresh");
+                setTimeout($(".entity-grid").trigger("refresh"), 3000);
+            });
+            //click event for site button
+            $("#SiteCompleteAll").on("click", function () {
+                var Listdata = tdg.webapi.SelectedColumnlist("tasks", "activityid", "cid_tasklevel eq 100000001 and _regardingobjectid_value eq "
+                    + parentAccountid);
+
+                for (var i = 0; i < Listdata.length; i++) {
+
+                    var data = {
+                        "statecode": 1,
+                        "statuscode": 5
+                    };
+                    tdg.webapi.update("tasks", Listdata[i].activityid, data);
+                }//end for
+
+                // $(".entity-grid").trigger("refresh");
+                setTimeout($(".entity-grid").trigger("refresh"), 3000);
+            });
+
+
         }
+
     }
 }
 
