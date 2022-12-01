@@ -77,7 +77,7 @@ if (typeof (tdg.c) == "undefined") {
             $(".instructions").html(value);
         },
 
-        button_create: function(name, from_button, label_code) {
+        button_create: function (name, from_button, label_code) {
             var value = '<input type="button" name="{0}" id="{0}" />';
             value = value.replaceAll("{0}", name);
             var button = $(value);
@@ -1289,13 +1289,21 @@ if (typeof (tdg.cid) == "undefined") {
 
                     this.address1_default("N/A");
 
-                    //Hide all options
-                    $("#ovs_lld_province").children().hide();
-                    //Show  AB, BC, MB and SK only
-                    $("#ovs_lld_province option[value=" + 0 + "]").show(); //AB
-                    $("#ovs_lld_province option[value=" + 1 + "]").show(); //BC
-                    $("#ovs_lld_province option[value=" + 2 + "]").show(); //MB
-                    $("#ovs_lld_province option[value=" + 11 + "]").show(); //SK
+                    ////Hide all options
+                    //$("#ovs_lld_province").children().hide();
+                    ////Show  AB, BC, MB and SK only
+                    //$("#ovs_lld_province option[value=" + 0 + "]").show(); //AB
+                    //$("#ovs_lld_province option[value=" + 1 + "]").show(); //BC
+                    //$("#ovs_lld_province option[value=" + 2 + "]").show(); //MB
+                    //$("#ovs_lld_province option[value=" + 11 + "]").show(); //SK
+
+                    $('#ovs_lld_province option').each(function () {
+                        if ($(this).val() != '' && $(this).val() != '0' && $(this).val() != '1' && $(this).val() != '2' && $(this).val() != 11) {
+                            $(this).remove();
+                        }
+                    });
+
+
                     break;
                 case "2": // lat/long
                     tdg.c.section_show("section_latitude_longitude");
@@ -1374,7 +1382,7 @@ if (typeof (tdg.cid) == "undefined") {
                     return;
                 }
             }
-            $("#ovs_lld_province").val("");
+            //$("#ovs_lld_province").val("");
         },
 
         address1_default: function (value) {
