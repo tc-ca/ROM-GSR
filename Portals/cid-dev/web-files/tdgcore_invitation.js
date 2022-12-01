@@ -213,7 +213,7 @@ if (typeof (invitation) == "undefined") {
                 //check if email is found
                 if (EmailQueryResuts.length > 0) {
                     for (let i = 0; i < EmailQueryResuts.length; i++) {
-                        console.log("Parent account " + EmailQueryResuts[i]['_parentcustomerid_value']);
+                       
                         //check if contact doesn't have a parent
                         if (EmailQueryResuts[i]['_parentcustomerid_value'] == null) {
                             var contactid = EmailQueryResuts[i]['contactid'];
@@ -227,7 +227,17 @@ if (typeof (invitation) == "undefined") {
                                 '{"ParentAccount" : "' + ParentAccount + '", "ContactId" :"' + contactid +
                                 '", "Portal_URL" : "' + window.location.host + '"}';
 
+                           
+                            var data =
+                            {
+                                "parentcustomerid_account@odata.bind": "/accounts(" + ParentAccount + ")",
+                                "cid_contacttype": "100000001"
+                            }
+                            
+                            tdg.webapi.update("contacts", contactid, data);
                             tdg.cid.flow.Call_Flow("CID_Portal_Update_contact_ParentAccount", contactrecordData);
+                           // sessionStorage.setItem("NewContactFlag", true);
+                            
                             var m000117 = tdg.error_message.message("m000117");
                             // "The Secondary Contact {0} has been sent an on-boarding invitation to their email address of {1}.";
                             m000117 = m000117.replace("{0}", firstname + " " + lastname).replace("{1}", emailaddress);
@@ -236,7 +246,9 @@ if (typeof (invitation) == "undefined") {
                             $("#myModal").css({ left: 40 });
                             //close the form if user selected OK button
                             $("#btnOK").on('click', function () {
+                               
                                 parent.$(".form-close").eq(0).click();
+                                setTimeout($(".entity-grid").trigger("refresh"), 3000);
                             });
 
                             break;
@@ -377,8 +389,6 @@ if (typeof (invitation) == "undefined") {
                             tdg.webapi.update("contacts", CurrentUserID, data2);
                             $(".entity-grid").trigger("refresh");
                             setTimeout(refreshGrid, 3000);
-
-                            console.log("after refresh");
                             //****************************call workflow ******************** */
                             var SendEmailFlowData = '{"EmailCode" : "S4-4", ' +
                                 '"AccountId" : "' + ParentAccount + '" ,' +
@@ -400,3 +410,4 @@ if (typeof (invitation) == "undefined") {
         },
     }
 }
+
