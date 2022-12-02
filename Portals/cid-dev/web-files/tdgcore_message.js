@@ -432,6 +432,11 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000120",
                         "message_en": "The Secondary Contact {0} has been sent an on-boarding invitation to their email address of {1}.",
                         "message_fr": "The Secondary Contact {0} has been sent an on-boarding invitation to their email address of {1}._FR"
+                    },
+                    {
+                        "code": "m000121",
+                        "message_en": "Complete All",
+                        "message_fr": "Complete All_FR"
                     }
 
                 ];

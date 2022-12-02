@@ -1677,6 +1677,7 @@ if (typeof (tdg.cid) == "undefined") {
             document.getElementById("address1_line3").addEventListener('change', (event) => { $("#cid_addressoverwritten").val(1); });
             document.getElementById("address1_postalcode").addEventListener('change', (event) => { $("#cid_addressoverwritten").val(1); });
         },
+
         Get_Contact_Changes_and_SendEmail: function () {
             //define flags for each field change
             var FirstNameChangeFlag = false;
@@ -1755,16 +1756,18 @@ if (typeof (tdg.cid) == "undefined") {
 
         Complete_All_Annualcompliance_Tasks: function (parentAccountid, LanguageCode) {
 
+            var ButtonLable = tdg.error_message.message("m000121");
+
             //create complete all button for company
             var Button_CompanyCompleteAll = '<div class="input-group pull-right"><button type="button" id="CompanyCompleteAll" class="btn btn-primary pull-left action">'
-                + 'Complete All' + '</button></div>';
+                + ButtonLable + '</button></div>';
             const CompanyCompleteButtonLocation = document.querySelector('table[data-name="tab_11_section_1"]');
             CompanyCompleteButtonLocation.insertAdjacentHTML('beforebegin', Button_CompanyCompleteAll);
 
             //crate complete all button for site
             const SiteCompleteButtonLocation = document.querySelector('table[data-name="annual_compliance_section_2"]');
             var Button_SiteCompleteAll = '<div class="input-group pull-right"><button type="button" id="SiteCompleteAll" class="btn btn-primary pull-left action">'
-                + 'Complete All' + '</button></div>';
+                + ButtonLable + '</button></div>';
             SiteCompleteButtonLocation.insertAdjacentHTML('beforebegin', Button_SiteCompleteAll);
             //clicke event for company button
             $("#CompanyCompleteAll").on("click", function () {
@@ -1798,7 +1801,7 @@ if (typeof (tdg.cid) == "undefined") {
                 }//end for
 
                 // $(".entity-grid").trigger("refresh");
-                setTimeout($(".entity-grid").trigger("refresh"), 3000);
+                setTimeout($(".entity-grid").trigger("refresh"), 5000);
             });
 
 
