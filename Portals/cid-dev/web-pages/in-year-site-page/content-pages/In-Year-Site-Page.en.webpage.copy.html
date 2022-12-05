@@ -1,46 +1,62 @@
 <div id="loader"></div>
 
-<div>{% comment %} {% entityform name: 'In Year Site Form' %}{% endcomment %}<br>
-{% comment %} {% entityform name:'In Year Site Activity Form'%}{% endcomment %}<br>
-{% entityform name: 'In Year Site Form2' %}<br>
-<script>
+<div>
+  {% comment %} {% entityform name: 'In Year Site Form' %}{% endcomment %}<br />
+  {% comment %} {% entityform name:'In Year Site Activity Form'%}{% endcomment %}<br />
+  {% entityform name: 'In Year Site Form2' %}<br />
+  <script>
     $('#loader').show();
-</script> {% assign siteId = request.params.id %} {% fetchxml result %} <fetch distinct="false" mapping="logical" output-format="xml-platform" version="1.0"> <entity name="ovs_mocregistration"> <attribute name="ovs_mocregistrationid"></attribute> <attribute name="ovs_operationtype"></attribute> <attribute name="ovs_siteid"></attribute> <attribute name="statecode"></attribute> <filter type="and"> {% comment %} Active Operation {% endcomment %} <condition attribute="statecode" operator="eq" value="0"></condition> {% comment %} HOTI Operation {% endcomment %} <condition attribute="ovs_operationtype" operator="eq" value="918640038"></condition> <condition attribute="ovs_siteid" operator="eq" value="{{ siteId }}"></condition> </filter> </entity> </fetch> {% endfetchxml %} {% if result.results.entities.size &gt; 0 %} {% assign operationId = result.results.entities[0].ovs_mocregistrationid %} {% assign oper = entities.ovs_mocregistration[operationId] %} {% if oper %}
+  </script>
+  {% assign siteId = request.params.id %} {% fetchxml result %}
+  <fetch distinct="false" mapping="logical" output-format="xml-platform" version="1.0">
+    <entity name="ovs_mocregistration">
+      <attribute name="ovs_mocregistrationid"></attribute> <attribute name="ovs_operationtype"></attribute> <attribute name="ovs_siteid"></attribute> <attribute name="statecode"></attribute> <filter type="and"> {% comment %} Active Operation {% endcomment %} <condition attribute="statecode" operator="eq" value="0"></condition> {% comment %} HOTI Operation {% endcomment %} <condition attribute="ovs_operationtype" operator="eq" value="918640038"></condition> <condition attribute="ovs_siteid" operator="eq" value="{{ siteId }}"></condition> </filter>
+    </entity>
+  </fetch>
+  {% endfetchxml %} {% if result.results.entities.size &gt; 0 %} {% assign operationId = result.results.entities[0].ovs_mocregistrationid %} {% assign oper = entities.ovs_mocregistration[operationId] %} {% if oper %}
 
-<h2 class="tab-title">Further Site Details</h2>
+  <h2 class="tab-title">Further Site Details</h2>
 
-<fieldset><legend class="section-title show-bar">Mode(s) of transportation</legend>
+  <fieldset>
+    <legend class="section-title show-bar">Mode(s) of transportation</legend>
 
-<table id="siteModesOfTransportation" class="section" role="presentation" style="width:90%;">
-	<tbody>
-		<tr>
-			<td class="clearfix cell checkbox-cell " style="width:50%;">
-			<div><span>{% if oper.cid_modeoftransportationroad %} <input checked="checked" disabled="disabled" type="checkbox"> {% else %} <input disabled="disabled" type="checkbox"> {% endif %} </span> <label class="field-label" role="none">Road</label></div>
-			</td>
-			<td class="clearfix cell checkbox-cell" style="width:50%;">
-			<div><span>{% if oper.cid_modeoftransportationrail %} <input checked="checked" disabled="disabled" type="checkbox"> {% else %} <input disabled="disabled" type="checkbox"> {% endif %} </span> <label class="field-label" role="none">Rail</label></div>
-			</td>
-		</tr>
-		<tr>
-			<td class="clearfix cell checkbox-cell" style="width:50%;">
-			<div><span>{% if oper.cid_modeoftransportationair %} <input checked="checked" disabled="disabled" type="checkbox"> {% else %} <input disabled="disabled" type="checkbox"> {% endif %} </span> <label class="field-label" role="none">Air</label></div>
-			</td>
-			<td class="clearfix cell checkbox-cell" style="width:50%;">
-			<div><span>{% if oper.cid_modeoftransportationmarine %} <input checked="checked" disabled="disabled" type="checkbox"> {% else %} <input disabled="disabled" type="checkbox"> {% endif %} </span> <label class="field-label" role="none">Marine</label></div>
-			</td>
-			
-		</tr>
-	</tbody>
-</table>
-</fieldset>
-<br>
-{% endif %} {% else %}
-<p style="color:red">Error retrieving modes of transportation.</p>
-{% endif %}<br>
-{% entityform name: 'In Year Site Details Form' %}
-<div id="sitedetails"></div>
-{% include 'RegistrationWizardsWebTemplate'%}</div>
+    <table id="siteModesOfTransportation" class="section" role="presentation" style="width:90%;">
+      <tbody>
+        <tr>
+          <td class="clearfix cell checkbox-cell" style="width:50%;">
+            <div>
+              <span>{% if oper.cid_modeoftransportationroad %} <input checked="checked" disabled="disabled" type="checkbox" /> {% else %} <input disabled="disabled" type="checkbox" /> {% endif %} </span> <label class="field-label" role="none">Road</label>
+            </div>
+          </td>
+          <td class="clearfix cell checkbox-cell" style="width:50%;">
+            <div>
+              <span>{% if oper.cid_modeoftransportationrail %} <input checked="checked" disabled="disabled" type="checkbox" /> {% else %} <input disabled="disabled" type="checkbox" /> {% endif %} </span> <label class="field-label" role="none">Rail</label>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="clearfix cell checkbox-cell" style="width:50%;">
+            <div>
+              <span>{% if oper.cid_modeoftransportationair %} <input checked="checked" disabled="disabled" type="checkbox" /> {% else %} <input disabled="disabled" type="checkbox" /> {% endif %} </span> <label class="field-label" role="none">Air</label>
+            </div>
+          </td>
+          <td class="clearfix cell checkbox-cell" style="width:50%;">
+            <div>
+              <span>{% if oper.cid_modeoftransportationmarine %} <input checked="checked" disabled="disabled" type="checkbox" /> {% else %} <input disabled="disabled" type="checkbox" /> {% endif %} </span> <label class="field-label" role="none">Marine</label>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </fieldset>
+  <br />
+  {% endif %} {% else %}
+  <p style="color:red">Error retrieving modes of transportation.</p>
+  {% endif %}<br />
+  {% entityform name: 'In Year Site Details Form' %}
+  <div id="sitedetails"></div>
+  {% include 'RegistrationWizardsWebTemplate'%}
+</div>
 <script>
-    $('#loader').show();
+  $('#loader').show();
 </script>
-

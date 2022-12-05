@@ -4,7 +4,7 @@
 var _account;
 $(document).ready(function () {
     debugger;
-    sessionStorage.setItem("step_start",1);
+    sessionStorage.setItem("step_start", 1);
 
     //if user skip adding first and last name
     //redirect to profile page
@@ -88,8 +88,67 @@ $(document).ready(function () {
             }
         }
     }
+
+    $("#NextButton").hide();
+    tdg.c.button_create("btn_next", "#NextButton", "Next");
+    $("#btn_next").bind("click", function () {
+        btn_next_click();
+    });
 });
 
+function buttons_confirm(value) {
+    if ($("#cid_has_cra_bn").val() == "1") {
+        $('#cid_has_cra_bn').prop("disabled", !value);
+        $('#cid_crabusinessnumber').attr("readonly", !value);
+        $('#btn_next').prop("disabled", !value);
+    }
+}
+
+function btn_next_click() {
+    debugger;
+    var value = Page_ClientValidate('');
+    if (value) {
+        document.getElementById("btn_next").innerText == 'Processing...';
+        var data = {};
+        data.length = 0;
+        if ($("#cid_has_cra_bn").val() == "1") {
+            var bn = $("#cid_crabusinessnumber").val();
+            var cra_data = tdg.cid.crw.start_Retrieve_cra(bn, "");
+            if (cra_data.length == 0) {
+                var message = tdg.error_message.message("m000001");
+                tdg.c.dialog_OK(message);
+
+                document.getElementById("btn_next").innerText == 'Next';
+                return;
+            }
+            data.length = 1;
+            data.cid_legalname = cra_data.LegalName;
+            data.cid_operatingname = cra_data.OperatingName;
+            data.cid_crabusinessnumber = bn;
+            data.address = cra_data.PhysicalLocationAddress;
+        }
+        else {
+
+        }
+
+        if (data.length == 1) {
+            buttons_confirm(false);
+            tdg.cid.crw.start_confirm(data, (ans) => {
+                if (ans) {
+                    debugger;
+                    buttons_confirm(true);
+                    $("#NextButton").click();
+                } else {
+                    debugger;
+                    buttons_confirm(true);
+                }
+            });
+        }
+        else {
+            $("#NextButton").click();
+        }
+    }
+}
 
 if (window.jQuery) {
     (function ($) {

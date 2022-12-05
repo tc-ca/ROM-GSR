@@ -97,6 +97,7 @@ if (typeof (tdg.c) == "undefined") {
             button2.css('color', color);
             button2.css("background-color", background_color);
         },
+
         btn_save_new_setup: function () {
             var button = $('<input type="button" name="btn_save_new" id="btn_save_new" class="submit-btn btn btn-primary" />');
             $("#InsertButton").after(button);
@@ -1712,7 +1713,7 @@ if (typeof (tdg.cid) == "undefined") {
                 var recordid = document.getElementById("EntityFormControl_EntityFormView_EntityID").value;
                 //if first name changed
                 if (FirstNameChangeFlag == true) {
-                    if ($("#firstname").val() != "" && $("#firstname").val() != null && FirstNameOnload != $("#firstname").val() ) {
+                    if ($("#firstname").val() != "" && $("#firstname").val() != null && FirstNameOnload != $("#firstname").val()) {
                         ChangeArr.push('{"fieldName" : "First Name", "OldValue" : "' + FirstNameOnload +
                             '"' + ', "NewValue" : "' + $("#firstname").val() + '"}');
                         console.log(ChangeArr);
@@ -1723,7 +1724,7 @@ if (typeof (tdg.cid) == "undefined") {
                     }
                 }
                 if (LastNameChangeFlag == true) {
-                    if ($("#lastname").val() != null && $("#lastname").val() != "" && $("#lastname").val() != lastnameNameOnload ) {
+                    if ($("#lastname").val() != null && $("#lastname").val() != "" && $("#lastname").val() != lastnameNameOnload) {
                         ChangeArr.push('{"fieldName" : "Last Name", "OldValue" : "' + lastnameNameOnload +
                             '"' + ', "NewValue" : "' + $("#lastname").val() + '"}');
                         console.log(ChangeArr);
@@ -1743,7 +1744,7 @@ if (typeof (tdg.cid) == "undefined") {
                     console.log(ChangeArr);
                 }
                 if (EmailaddressChangeFlag == true) {
-                    if ($("#emailaddress1").val() != null && $("#emailaddress1").val() != "" && $("#emailaddress1").val() != EmailAddressNameOnload ) {
+                    if ($("#emailaddress1").val() != null && $("#emailaddress1").val() != "" && $("#emailaddress1").val() != EmailAddressNameOnload) {
                         ChangeArr.push('{"fieldName" : "Email", "OldValue" : "' + EmailAddressNameOnload +
                             '"' + ', "NewValue" : "' + $("#emailaddress1").val() + '"}');
                         console.log(ChangeArr);
@@ -1848,6 +1849,94 @@ if (typeof (tdg.cid.crw) == "undefined") {
             var data;
             data = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, step_start);
             return data;
+        },
+
+        start_confirm: function (data, handler) {
+            debugger;
+            var header = tdg.error_message.message("CID_PORTAL");
+            var msg_btn_ok = tdg.error_message.message("BTN_OK");
+            var msg_btn_cancel = tdg.error_message.message("BTN_CANCEL");
+
+            data.address.AddressLine2Text = (data.address.AddressLine2Text == null ? "" : data.address.AddressLine2Text);
+            data.address.AddressLine3Text = (data.address.AddressLine3Text == null ? "" : data.address.AddressLine3Text);
+
+            var text1 = `<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
+	                <header class="modal-header">
+	                <h2 class="modal-title">${header}</h2>
+	                </header>
+	                <div class="modal-body" >
+                    <p>
+                    <label for="cid_legalname" class="field-label">Legal Name</label>
+                    <input type="text" readonly class="text form-control" id="cid_legalname" style="width:100%" value="${data.cid_legalname}">
+                    <p>
+                    <label for="cid_operatingname" class="field-label">Operating Name</label>
+                    <input type="text" readonly class="text form-control" id="cid_operatingname" style="width:100%" value="${data.cid_operatingname}">
+                    <p>
+                    <label for="cid_crabusinessnumber" class="field-label">CRA Business Number</label>
+                    <input type="text" readonly class="text form-control" id="cid_crabusinessnumber" style="width:100%" value="${data.cid_crabusinessnumber}">
+                    <p>
+                    <label for="address1_line1" class="field-label">Street 1</label>
+                    <input type="text" readonly class="text form-control" id="address1_line1" style="width:100%" value="${data.address.AddressLine1Text}">
+                    <p>
+                    <label for="address1_line2" class="field-label">Street 2</label>
+                    <input type="text" readonly class="text form-control" id="address1_line2" style="width:100%" value="${data.address.AddressLine2Text}">
+                    <p>
+                    <label for="address1_line3" class="field-label">Street 3</label>
+                    <input type="text" readonly class="text form-control" id="address1_line3" style="width:100%" value="${data.address.AddressLine3Text}">
+                    <p>
+                    <label for="address1_city" class="field-label">City</label>
+                    <input type="text" readonly class="text form-control" id="address1_city" style="width:100%" value="${data.address.CityName}">
+                    <p>
+                    <label for="address1_stateorprovince" class="field-label">Province / Territory</label>
+                    <input type="text" readonly class="text form-control" id="address1_stateorprovince" style="width:100%" value="${data.address.ProvinceStateCode}">
+                    <p>
+                    <label for="address1_postalcode" class="field-label">Postal Code</label>
+                    <input type="text" readonly class="text form-control" id="address1_postalcode" style="width:100%" value="${data.address.PostalZipCode}">
+                    <p>
+                    <label for="opt_confirm" class="field-label">Please confirm if this is your company?</label>
+                    <span id="opt_confirm_required" style="color: red;font-weight: bold"> *</span>
+                    <select name="opt_confirm" id="opt_confirm" class="form-control boolean-dropdown" onchange="tdg.cid.crw.opt_confirm_click();" style="width:100%">
+                        <option selected="selected" value=""></option>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+	                </div>
+	                <div class="modal-footer">
+	                <button id="btn_ok" type="button" class="pull-left btn btn-primary button next submit-btn">${msg_btn_ok}</button>
+	                <button id="btn_cancel" type="button" class="pull-left btn btn-primary button next submit-btn" data-dismiss="modal">${msg_btn_cancel}</button>
+	                </section>
+	                `;
+            $(text1).appendTo('body');
+
+            $("#myModal").css('top', '1%');
+            $("#myModal").css('left', '35%');
+            $("#myModal").css('position', 'fixed');
+            $("#myModal").css('z-index', '9999');
+
+            $("#btn_ok").hide();
+
+            $("#btn_ok").click(function () {
+                $("#myModal").remove();
+                handler(true);
+            });
+
+            //Pass false to callback function
+            $("#btn_cancel").click(function () {
+                //handler(lse);
+                $("#myModal").remove();
+                handler(false);
+            });
+        },
+
+        opt_confirm_click: function () {
+            debugger;
+            var index = $("#opt_confirm")[0].selectedIndex;
+            if (index == 2) {
+                $("#btn_ok").show();
+            }
+            else {
+                $("#btn_ok").hide();
+            }
         },
 
         // CRA BN API - DEV ONLY

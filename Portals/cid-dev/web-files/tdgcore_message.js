@@ -125,6 +125,16 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "Titre",
                     },
                     {
+                        "code": "BTN_OK",
+                        "message_en": "OK",
+                        "message_fr": "Qui"
+                    },
+                    {
+                        "code": "BTN_CANCEL",
+                        "message_en": "Cancel",
+                        "message_fr": "Annuler"
+                    },
+                    {
                         "code": "m000001",
                         "message_en": "Invalid CRA Business Number",
                         "message_fr": "Numéro d'entreprise de l'ARC invalide"
