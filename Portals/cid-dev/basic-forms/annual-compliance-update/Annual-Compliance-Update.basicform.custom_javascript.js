@@ -2,6 +2,10 @@ $(document).ready(function ()
 {
 	debugger;
 
+$('table[data-name="annual_compliance_update_history_logs"]');
+	
+
+
 	$("#cid_registrationasof").parent().parent().hide();
 
 	//page_setup();
@@ -189,8 +193,8 @@ $(document).ready(function ()
 		}
 		if (errorMessage != "")
 		{
-			$('.validation-summary div').remove();
-			var validationSection = $('.validation-summary');
+			$('.validation-summary div').eq(0).remove();
+			var validationSection = $('.validation-summary').eq(0);
 			validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
 			validationSection.show();
 			$('.validation-summary div').focus();

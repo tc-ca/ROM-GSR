@@ -1712,14 +1712,25 @@ if (typeof (tdg.cid) == "undefined") {
                 var recordid = document.getElementById("EntityFormControl_EntityFormView_EntityID").value;
                 //if first name changed
                 if (FirstNameChangeFlag == true) {
-                    ChangeArr.push('{"fieldName" : "First Name", "OldValue" : "' + FirstNameOnload +
-                        '"' + ', "NewValue" : "' + $("#firstname").val() + '"}');
-                    console.log(ChangeArr);
+                    if ($("#firstname").val() != "" && $("#firstname").val() != null && FirstNameOnload != $("#firstname").val() ) {
+                        ChangeArr.push('{"fieldName" : "First Name", "OldValue" : "' + FirstNameOnload +
+                            '"' + ', "NewValue" : "' + $("#firstname").val() + '"}');
+                        console.log(ChangeArr);
+
+                    }
+                    else {
+                        FirstNameChangeFlag = false;
+                    }
                 }
                 if (LastNameChangeFlag == true) {
-                    ChangeArr.push('{"fieldName" : "Last Name", "OldValue" : "' + lastnameNameOnload +
-                        '"' + ', "NewValue" : "' + $("#lastname").val() + '"}');
-                    console.log(ChangeArr);
+                    if ($("#lastname").val() != null && $("#lastname").val() != "" && $("#lastname").val() != lastnameNameOnload ) {
+                        ChangeArr.push('{"fieldName" : "Last Name", "OldValue" : "' + lastnameNameOnload +
+                            '"' + ', "NewValue" : "' + $("#lastname").val() + '"}');
+                        console.log(ChangeArr);
+                    }
+                    else {
+                        LastNameChangeFlag = false;
+                    }
                 }
                 if (PhoneChangeFlag == true) {
                     ChangeArr.push('{"fieldName" : "Business Phone", "OldValue" : "' + telphoneOnload +
@@ -1732,9 +1743,14 @@ if (typeof (tdg.cid) == "undefined") {
                     console.log(ChangeArr);
                 }
                 if (EmailaddressChangeFlag == true) {
-                    ChangeArr.push('{"fieldName" : "Email", "OldValue" : "' + EmailAddressNameOnload +
-                        '"' + ', "NewValue" : "' + $("#emailaddress1").val() + '"}');
-                    console.log(ChangeArr);
+                    if ($("#emailaddress1").val() != null && $("#emailaddress1").val() != "" && $("#emailaddress1").val() != EmailAddressNameOnload ) {
+                        ChangeArr.push('{"fieldName" : "Email", "OldValue" : "' + EmailAddressNameOnload +
+                            '"' + ', "NewValue" : "' + $("#emailaddress1").val() + '"}');
+                        console.log(ChangeArr);
+                    }
+                    else {
+                        EmailaddressChangeFlag = false;
+                    }
                 }
                 if (FaxChangeFlag == true) {
                     ChangeArr.push('{"fieldName" : "Fax", "OldValue" : "' + FaxOnload +
@@ -1749,8 +1765,10 @@ if (typeof (tdg.cid) == "undefined") {
 
                 //call flow
                 var data = '{ "contactid" : "' + recordid + '", "ChangedInfo" : [' + ChangeArr + ']}';
-
-                tdg.cid.flow.Call_Flow("CID_Portal_Email_Contact_when_Information_is_changed", data);
+                console.log("lenth of array " + ChangeArr.length);
+                if (ChangeArr.length > 0) {
+                    tdg.cid.flow.Call_Flow("CID_Portal_Email_Contact_when_Information_is_changed", data);
+                }
             });
         },
 
