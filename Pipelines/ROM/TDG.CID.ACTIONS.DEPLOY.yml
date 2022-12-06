@@ -2,6 +2,14 @@ trigger: none
 pr: none
 
 #variable 'Pipeline_ConnectionStringDev' defined in devops
+parameters:
+- name: DeleteSolutionBeforeInstall
+  displayName: Delete Solution Before Install
+  type: boolean
+  default: false
+  values:
+  - true
+  - false
 
 variables:
   - name: PowerPlatformSPN_Dev
@@ -81,6 +89,7 @@ stages:
     PowerPlatformSPN_Dev: $(PowerPlatformSPN_Dev) #used to update solution version after successful deployment to QA
     Environment: 'QA-TDG'
     StageName: 'DeployManagedSolutionToQA'
+    DeleteSolution: $(DeleteSolutionBeforeInstall)
     dependsOn: 
     - 'BuildAndPublishArtifacts'
 #ACC
@@ -90,6 +99,7 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_ACC)
     Environment: 'ACC-TDG'
     StageName: 'DeployManagedSolutionToACC'
+    DeleteSolution: $(DeleteSolutionBeforeInstall)
     dependsOn: 
     - 'DeployManagedSolutionToQA'
 #ACCDATA
@@ -100,6 +110,7 @@ stages:
     Environment: 'ACC-TDG-DATA'
     StageName: 'DeployUnmanagedSolutionToACCDATA'
     DeployUnmanagedSolution: false
+    DeleteSolution: $(DeleteSolutionBeforeInstall)
     dependsOn: 
     - 'DeployManagedSolutionToQA'
 #PREPROD
@@ -109,6 +120,7 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
     Environment: 'PREPROD-TDG'
     StageName: 'DeployManagedSolutionToPREPROD'
+    DeleteSolution: $(DeleteSolutionBeforeInstall)
     dependsOn: 
     - 'DeployManagedSolutionToQA'
 #PROD
@@ -118,5 +130,6 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_PROD)
     Environment: 'PROD-TDG'
     StageName: 'DeployManagedSolutionToPROD'
+    DeleteSolution: $(DeleteSolutionBeforeInstall)
     dependsOn: 
     - 'DeployManagedSolutionToQA'
