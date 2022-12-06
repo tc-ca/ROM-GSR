@@ -42,14 +42,15 @@ $(document).ready(function () {
 	advanced_form_header();
 	var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name }}');
 	//if (cid_contacttype != 100000000) {
-		$(".previous-btn").attr('disabled', true);
+	$(".previous-btn").attr('disabled', true);
 	//}
 	$("#websiteurl").width('100%');
 	//phone field formatting
 	tdg.cid.phone_init("telephone1", selected_language);
 	tdg.cid.phone_init("fax", selected_language);
 
-	tdg.c.control_hide("cid_reasonfornobnnumber_other");
+	tdg.cid.crw.start_cid_has_cra_bn_onchange("2");
+
 	tdg.c.control_hide("cid_companyclaim");
 	var step_start = sessionStorage.getItem("step_start");
 	step_start = (step_start == "null" ? "" : step_start);
@@ -118,7 +119,7 @@ $(document).ready(function () {
 		var cid_has_cra_bn = $('#cid_has_cra_bn').val();
 		if (cid_has_cra_bn == "1") {
 			cid_crabusinessnumber_onchange();
-        }
+		}
 	}
 	else {
 		$('#cid_crabusinessnumber').attr("readonly", true);
@@ -126,12 +127,12 @@ $(document).ready(function () {
 		$('#cid_reasonfornobnnumber').attr("readonly", true);
 		$('#cid_reasonfornobnnumber').css("pointer-events", "none");
 		$('#cid_reasonfornobnnumber_other').attr("readonly", true);
-    }
+	}
 });
 
 function cid_crabusinessnumber_onchange() {
 	var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
-	var data = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber,"2");
+	var data = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, "2");
 	if (data == "") {
 		tdg.c.error_message_advanced_form("m000001", true);
 	}

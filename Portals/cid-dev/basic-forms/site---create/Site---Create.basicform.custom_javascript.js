@@ -5,30 +5,29 @@ var _busy = false;
 $(document).ready(function ()
 {
 	debugger;
-	document.getElementById("address1_latitude").addEventListener('change', (event) = > {
+	document.getElementById("address1_latitude").addEventListener('change', (event) => {
 		//get Latitude and set it to nearest 4 digits
 		var Lat = $("#address1_latitude").val();
 		$("#address1_latitude").val(Number.parseFloat(Lat).toFixed(4));
 	});
-	document.getElementById("address1_longitude").addEventListener('change', (event) = > {
+	document.getElementById("address1_longitude").addEventListener('change', (event) => {
 		//get Lontitude and set it to nearest 4 digits
 		var Longtitude = $("#address1_longitude").val();
 		$("#address1_longitude").val(Number.parseFloat(Longtitude).toFixed(4));
-		
-debugger;
-$(".breadcrumb li").each(function ()
-		{
-			if ($(this).text() == 'Site Registration'
-			{
-				var index = $(this).index();
-				var text = $(this).text();
-				var value = $(this).attr('value');
-				alert('Index is: ' + index + ' and text is ' + text + ' and Value ' + value);
-				$(this).text('My Sites');
-				//$(this).attr('value', )
-			}
-			});
-		});
+	});
+
+    /*debugger;
+    $(".breadcrumb li").each(function ()
+            {
+                if ($(this).text() == '\n  Site Registration\n ' && sessionStorage.getItem('frominyearsites'))
+                {
+                    var bredcrumb = $(this);
+                    bredcrumb.text('\n My Sites\n');
+                    bredcrumb[0].innerHTML = "\n  <a href=\"/my-sites/\" title=\"My Sites\">My Sites</a>\n ";
+                }
+            });
+*/
+
 	// address
 	tdg.cid.address_init(true);
 	var cid_legalname = "{{user.cid_legalname}}";
@@ -66,7 +65,7 @@ $(".breadcrumb li").each(function ()
 	$("#address1_stateorprovince").attr("oninput", "setManualAddressEntryFlag()");
 	$("#address1_postalcode").attr("oninput", "setManualAddressEntryFlag()");
 	$("#address1_country").attr("oninput", "setManualAddressEntryFlag()");
-	});
+});
 
 function cid_same_as_company_change()
 {

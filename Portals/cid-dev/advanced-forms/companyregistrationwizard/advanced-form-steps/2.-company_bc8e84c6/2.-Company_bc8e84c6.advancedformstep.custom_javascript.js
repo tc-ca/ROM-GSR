@@ -25,9 +25,9 @@ $(document).ready(function () {
 	tdg.cid.address_init(false);
 	tdg.cid.WebResource_address_complete_readonly(false);
 	var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name }}');
-	if (cid_contacttype != 100000000) {
+	//if (cid_contacttype != 100000000) {
 		$(".previous-btn").attr('disabled', true);
-	}
+	//}
 	$("#websiteurl").width('100%');
 
 	//phone field formatting

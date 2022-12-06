@@ -5,8 +5,9 @@ $(document).ready(function ()
 {
 	debugger;
 	//increase search place hoder width	
-	$('.toolbar-actions').attr('style', "width:1100px;");
-	$('.entitylist-search').addClass("col-md-8");
+	$('.toolbar-actions').attr('style', "width:85%;");
+	$('.entitylist-search').addClass("col-md-7");
+	$('.query.form-control').css('border', 'solid 1px black');
 
 	$("#cid_registrationasof").parent().parent().hide();
 	

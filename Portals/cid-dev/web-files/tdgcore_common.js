@@ -1897,8 +1897,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     <span id="opt_confirm_required" style="color: red;font-weight: bold"> *</span>
                     <select name="opt_confirm" id="opt_confirm" class="form-control boolean-dropdown" onchange="tdg.cid.crw.opt_confirm_click();" style="width:100%">
                         <option selected="selected" value=""></option>
-                        <option value="0">No</option>
-                        <option value="1">Yes</option>
+                        <option value="0">Confirming is NOT my Company, retry entry</option>
+                        <option value="1">Confirming this IS my Company</option>
                     </select>
 	                </div>
 	                <div class="modal-footer">
