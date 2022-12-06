@@ -96,7 +96,7 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_ACC)
     Environment: 'ACC-TDG'
     StageName: 'DeployManagedSolutionToACC'
-    DeleteSolution: $(DeleteSolutionBeforeInstall)
+    DeleteSolution: ${{ parameters.DeleteSolutionBeforeInstall }}
     dependsOn: 
     - 'DeployManagedSolutionToQA'
 #ACCDATA
@@ -107,7 +107,7 @@ stages:
     Environment: 'ACC-TDG-DATA'
     StageName: 'DeployUnmanagedSolutionToACCDATA'
     DeployUnmanagedSolution: false
-    DeleteSolution: $(DeleteSolutionBeforeInstall)
+    DeleteSolution: ${{ parameters.DeleteSolutionBeforeInstall }}
     dependsOn: 
     - 'DeployManagedSolutionToQA'
 #PREPROD
@@ -117,7 +117,7 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
     Environment: 'PREPROD-TDG'
     StageName: 'DeployManagedSolutionToPREPROD'
-    DeleteSolution: $(DeleteSolutionBeforeInstall)
+    DeleteSolution: ${{ parameters.DeleteSolutionBeforeInstall }}
     dependsOn: 
     - 'DeployManagedSolutionToQA'
 #PROD
@@ -127,6 +127,6 @@ stages:
     PowerPlatformSPN: $(PowerPlatformSPN_PROD)
     Environment: 'PROD-TDG'
     StageName: 'DeployManagedSolutionToPROD'
-    DeleteSolution: $(DeleteSolutionBeforeInstall)
+    DeleteSolution: ${{ parameters.DeleteSolutionBeforeInstall }}
     dependsOn: 
     - 'DeployManagedSolutionToQA'
