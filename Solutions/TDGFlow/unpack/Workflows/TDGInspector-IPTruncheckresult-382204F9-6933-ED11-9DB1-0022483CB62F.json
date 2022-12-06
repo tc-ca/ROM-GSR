@@ -57,8 +57,8 @@
           "type": "Wait",
           "inputs": {
             "interval": {
-              "count": 4,
-              "unit": "Minute"
+              "count": 7,
+              "unit": "Hour"
             }
           }
         },
@@ -86,13 +86,13 @@
             }
           },
           "runAfter": {
-            "Delay_7_hours": [
+            "Get_Current_Row_Status": [
               "Succeeded"
             ]
           },
           "expression": {
             "equals": [
-              "@triggerOutputs()?['body/statuscode']",
+              "@outputs('Get_Current_Row_Status')?['body/statuscode']",
               918640000
             ]
           },
@@ -100,9 +100,33 @@
             "operationMetadataId": "08ed0bf3-5ae1-474f-bf6a-ec5d883e76aa"
           },
           "type": "If"
+        },
+        "Get_Current_Row_Status": {
+          "runAfter": {
+            "Delay_7_hours": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "31a111eb-2907-4f11-b344-0569d9b3796c"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_iptruns",
+              "recordId": "@triggerOutputs()?['body/ovs_iptrunid']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
         }
       }
-    }
+    },
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
