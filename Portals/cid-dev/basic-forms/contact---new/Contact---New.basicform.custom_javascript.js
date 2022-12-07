@@ -2,14 +2,17 @@
 // Basic Form-Contact - New.js
 //
 var _reload = false;
+
 $(document).ready(function () {
     debugger;
     page_setup();
-    $( "#content_form" ).submit(function( event ) {
-    event.preventDefault();
-      });
-    $("#modalwindow").modal({ "backdrop": "static" });
-    //when the page is done loading, disable autocomplete on all inputs[text]
+
+    // on key press
+    $('#firstname').bind('keypress', ValidateAlphabetInput);
+    $('#firstname').bind('paste', ValidateAlphabetInput);
+  
+    $('#lastname').bind('keypress', ValidateAlphabetInput);
+     
     $('input[type="text"]').attr('autocomplete', 'off');
 
     $("#emailaddress1").width('100%');
@@ -125,5 +128,10 @@ function page_setup() {
 	}
 	webapi.safeAjax = safeAjax;
 })(window.webapi = window.webapi || {}, jQuery)
-
-
+// used to force alphabet only
+function ValidateAlphabetInput(event) {
+   var value = String.fromCharCode(event.which);
+ // var value = (event.type === "paste" ? event.clipboardData : event.dataTransfer).getData('text');
+   var pattern = new RegExp(/[a-zåäö ]/i);
+   return pattern.test(value);
+}

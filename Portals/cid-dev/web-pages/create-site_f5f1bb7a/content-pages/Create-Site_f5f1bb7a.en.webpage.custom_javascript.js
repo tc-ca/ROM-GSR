@@ -1,6 +1,7 @@
 // CreateSite.js
 $(document).ready(function ()
 {
+	console.log("document read");
 	debugger;
 	$(".breadcrumb li").each(function ()
 	{
@@ -11,4 +12,7 @@ $(document).ready(function ()
 			bredcrumb[0].innerHTML = "\n  <a href=\"/my-sites/\" title=\"My Sites\">My Sites</a>\n ";
 		}
 	});
+
+
+
 });

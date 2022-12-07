@@ -5,6 +5,20 @@ var _busy = false;
 $(document).ready(function ()
 {
 	debugger;
+	page_setup();
+	//cancel button text   
+	var ButtonCancel = tdg.error_message.message("BTN_CANCEL") ;
+	//add button next to save button
+	$(".actions").append('<input id ="cancelButton" type="button" value="' + 
+	ButtonCancel + '" class="submit-btn btn btn-primary form-action-container-left"> </input>');
+    //cancel button click event
+	$('#cancelButton').click(function(e)
+	{
+		//click back button
+		history.back();
+	});
+
+    //latitude validation
 	document.getElementById("address1_latitude").addEventListener('change', (event) => {
 		//get Latitude and set it to nearest 4 digits
 		var Lat = $("#address1_latitude").val();
@@ -81,4 +95,21 @@ function cid_same_as_company_change()
 function setManualAddressEntryFlag()
 {
 	$("#cid_addressoverwritten").val(1);
+}
+function page_setup() {
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
+    const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = file;
+
+        $("body").append(script);
+    }
+
+    // server error?
+    tdg.c.message_panel();
 }

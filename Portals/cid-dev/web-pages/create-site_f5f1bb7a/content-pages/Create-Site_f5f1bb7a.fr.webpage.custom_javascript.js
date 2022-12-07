@@ -10,4 +10,7 @@ $(document).ready(function ()
 			bredcrumb[0].innerHTML = "\n  <a href=\"/my-sites/\" title=\"Mes sites\">Mes sites</a>\n ";
 		}
 	});
+
+
+
 });

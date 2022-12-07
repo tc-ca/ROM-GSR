@@ -1851,16 +1851,100 @@ if (typeof (tdg.cid.crw) == "undefined") {
             return data;
         },
 
+        start_buttons_confirm: function (value)
+        {
+            if ($("#cid_has_cra_bn").val() == "1") {
+                $('#cid_has_cra_bn').prop("disabled", !value);
+                $('#cid_crabusinessnumber').attr("readonly", !value);
+                $('#btn_next').prop("disabled", !value);
+            }
+        },
+
+        start_btn_next_click: function() {
+            debugger;
+            var value = Page_ClientValidate('');
+            if (value) {
+                $("#btn_next").prop("value", 'Processing...');
+                var data = {};
+                data.length = 0;
+                if ($("#cid_has_cra_bn").val() == "1") {
+                    var bn = $("#cid_crabusinessnumber").val();
+                    var cra_data = tdg.cid.crw.start_Retrieve_cra(bn, "");
+                    if (cra_data.length == 0) {
+                        var message = tdg.error_message.message("m000001");
+                        tdg.c.dialog_OK(message);
+                        $("#btn_next").prop("value", 'Next');
+                        return;
+                    }
+                    data.length = 1;
+                    data.cid_has_cra_bn = 1;
+                    data.cid_legalname = cra_data.LegalName;
+                    data.cid_operatingname = cra_data.OperatingName;
+                    data.cid_crabusinessnumber = bn;
+                    data.address = cra_data.PhysicalLocationAddress;
+                }
+                else {
+                    var account = tdg.cid.crw.start_account_by_name();
+                    if (account.length > 0) {
+                        account = account[0];
+                        data.length = 1;
+                        data.cid_has_cra_bn = 0;
+                        data.cid_legalname = account.ovs_legalname;
+                        data.cid_operatingname = account.name;
+                        data.cid_reasonfornobnnumber = account.cid_reasonfornobnnumber;
+                        data.cid_reasonfornobnnumber_other = account.cid_reasonfornobnnumber_other;
+
+                        var address = {};
+                        address.AddressLine1Text = account.address1_line1;
+                        address.AddressLine2Text = account.address1_line2;
+                        address.AddressLine3Text = account.address1_line3;
+                        address.CityName = account.address1_city;
+                        address.ProvinceStateCode = account.address1_stateorprovince;
+                        address.PostalZipCode = account.address1_postalcode;
+
+                        data.address = address;
+                    }
+                }
+
+                if (data.length == 1) {
+                    tdg.cid.crw.start_buttons_confirm(false);
+                    tdg.cid.crw.start_confirm(data, (ans) => {
+                        if (ans) {
+                            debugger;
+                            tdg.cid.crw.start_buttons_confirm(true);
+                            $("#NextButton").click();
+                        } else {
+                            debugger;
+                            tdg.cid.crw.start_buttons_confirm(true);
+                        }
+                    });
+                }
+                else {
+                    $("#NextButton").click();
+                }
+            }
+        },
+
+        start_account_by_name: function() {
+            var legalname = $("#cid_legalname").val();
+            legalname = legalname.replaceAll("'", "''");
+
+            var filter = "ovs_legalname eq '" + legalname + "'";
+            filter = filter.replaceAll("&", "%26");
+            return tdg.c.WebApi_List("accounts", filter);
+        },
+
         start_confirm: function (data, handler) {
             debugger;
             var header = tdg.error_message.message("CID_PORTAL");
-            var msg_btn_ok = tdg.error_message.message("BTN_OK");
-            var msg_btn_cancel = tdg.error_message.message("BTN_CANCEL");
+            var msg_btn_ok = tdg.error_message.message("BTN_IS_MY_COMPANY");
+            var msg_btn_cancel = tdg.error_message.message("BTN_IS_NOT_MY_COMPANY");
 
             data.address.AddressLine2Text = (data.address.AddressLine2Text == null ? "" : data.address.AddressLine2Text);
             data.address.AddressLine3Text = (data.address.AddressLine3Text == null ? "" : data.address.AddressLine3Text);
 
-            var text1 = `<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
+            var text1 = `
+                    <section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
 	                <header class="modal-header">
 	                <h2 class="modal-title">${header}</h2>
 	                </header>
@@ -1892,28 +1976,22 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     <p>
                     <label for="address1_postalcode" class="field-label">Postal Code</label>
                     <input type="text" readonly class="text form-control" id="address1_postalcode" style="width:100%" value="${data.address.PostalZipCode}">
-                    <p>
-                    <label for="opt_confirm" class="field-label">Please confirm if this is your company?</label>
-                    <span id="opt_confirm_required" style="color: red;font-weight: bold"> *</span>
-                    <select name="opt_confirm" id="opt_confirm" class="form-control boolean-dropdown" onchange="tdg.cid.crw.opt_confirm_click();" style="width:100%">
-                        <option selected="selected" value=""></option>
-                        <option value="0">Confirming is NOT my Company, retry entry</option>
-                        <option value="1">Confirming this IS my Company</option>
-                    </select>
 	                </div>
-	                <div class="modal-footer">
+	                <div class="modal-footer" style="text-align: left;">
+                    <label for="opt_confirm" class="field-label">Confirmation that this is your Company:</label>
+                    <p><br>
 	                <button id="btn_ok" type="button" class="pull-left btn btn-primary button next submit-btn">${msg_btn_ok}</button>
 	                <button id="btn_cancel" type="button" class="pull-left btn btn-primary button next submit-btn" data-dismiss="modal">${msg_btn_cancel}</button>
 	                </section>
 	                `;
             $(text1).appendTo('body');
 
+            $("#cid_legalname").focus();
+
             $("#myModal").css('top', '1%');
-            $("#myModal").css('left', '35%');
+            $("#myModal").css('left', '40%');
             $("#myModal").css('position', 'fixed');
             $("#myModal").css('z-index', '9999');
-
-            $("#btn_ok").hide();
 
             $("#btn_ok").click(function () {
                 $("#myModal").remove();
@@ -1926,17 +2004,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 $("#myModal").remove();
                 handler(false);
             });
-        },
-
-        opt_confirm_click: function () {
-            debugger;
-            var index = $("#opt_confirm")[0].selectedIndex;
-            if (index == 2) {
-                $("#btn_ok").show();
-            }
-            else {
-                $("#btn_ok").hide();
-            }
         },
 
         // CRA BN API - DEV ONLY

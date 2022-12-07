@@ -135,6 +135,16 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "Annuler"
                     },
                     {
+                        "code": "BTN_IS_MY_COMPANY",
+                        "message_en": "IS my Company",
+                        "message_fr": "IS my Company_FR"
+                    },
+                    {
+                        "code": "BTN_IS_NOT_MY_COMPANY",
+                        "message_en": "IS NOT my Company",
+                        "message_fr": "IS NOT my Company_FR"
+                    },
+                    {
                         "code": "m000001",
                         "message_en": "Invalid CRA Business Number",
                         "message_fr": "Numéro d'entreprise de l'ARC invalide"

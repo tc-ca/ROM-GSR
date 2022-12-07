@@ -3,16 +3,15 @@
 //
 function checkToDisplaycontactAddMessage()
 {
-	console.log("New message");
+
    var newcontactflag =    sessionStorage.getItem("NewContactFlag");
-             console.log ("New contact flag "  + newcontactflag);
-			 console.log( sessionStorage.getItem("FullName"));
+
 			 if (sessionStorage.getItem("FullName") != null  && sessionStorage.getItem("FullName") != "" ){
 				 var m000120 = tdg.error_message.message("m000120").replace("{0}",sessionStorage.getItem("FullName") );
                     //"This Contact cannot be added as a Contact with this name and email address already exists in CID, but is assigned to a different Company.";                        
                     tdg.c.dialog_OK(m000120.replace("{1}",  sessionStorage.getItem("Email")));
 					 sessionStorage.removeItem("FullName");
-					console.log(sessionStorage.getItem("FullName"));
+
 			 }
 			 
 }
