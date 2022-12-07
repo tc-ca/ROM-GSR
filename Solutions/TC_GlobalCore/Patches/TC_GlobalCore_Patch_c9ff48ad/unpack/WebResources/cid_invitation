@@ -1,0 +1,206 @@
+function ResendInvitation(ContactId)
+{
+    debugger;
+    var data =
+        '{ "Secondary_Contactid": "' + ContactId + '"}';
+
+    Call_Flow("CID_Send_Portal_Contact_Invitations", data);
+}
+
+function ResendInvitationByInvitationId(InvitationIds) {
+    debugger;
+    var invitationList;
+
+    //Confirm the process
+    var confirmStrings = {
+        text: "Do you want to send invitations to the selected invitees.", title: "Invitation Emails Confirmation ",
+        subtitle: "", "cancelButtonLabel": "Cancel", confirmButtonLabel: "Confirm"
+
+    };
+    var confirmOptions = { height: 150, width: 500 };
+    Xrm.Navigation.openConfirmDialog(confirmStrings, confirmOptions).then(
+        function (success) {
+            if (success.confirmed) {
+                for (var x = 0; x < InvitationIds.length; x++) {
+                    if (invitationList == null || invitationList == "") invitationList = "{" + InvitationIds[x] + "}";
+                    else
+                        invitationList += " or adx_invitationid eq {" + InvitationIds[x] + "}";
+                }
+                processInvitation(invitationList);
+            }
+            else
+                return;
+        });
+}
+function processInvitation(InvitationsList) { 
+    Xrm.WebApi.online.retrieveMultipleRecords("adx_invitation", "?$select=adx_invitationid,adx_expirydate,_adx_assigntoaccount_value,cid_invitationsenton,_adx_invitecontact_value,_adx_invitercontact_value,adx_redemptions,_adx_website_value,statuscode&$expand=adx_inviteContact($select=emailaddress1,firstname,lastname)&$filter=adx_invitationid eq " + InvitationsList).then(
+        function success(results)
+        {
+            console.log(results);
+            var sucessMessage = "", errorMessage = "" ;
+
+            for (var i = 0; i < results.entities.length; i++) {
+                var result = results.entities[i];
+
+                // Columns
+                var adx_invitationid = result["adx_invitationid"]; // Guid
+                var adx_assigntoaccount = result["_adx_assigntoaccount_value"]; // Lookup
+                var cid_invitationsenton = result["cid_invitationsenton"]; // Date Time
+                var adx_invitecontact = result["_adx_invitecontact_value"]; // Lookup
+                var adx_invitercontact = result["_adx_invitercontact_value"]; // Lookup
+                var adx_redemptions = result["adx_redemptions"]; // Whole Number
+                var adx_website = result["_adx_website_value"]; // Lookup
+                var statuscode = result["statuscode"]; // Status
+                var adx_expirydate = result["adx_expirydate"]; // Date Time
+
+                    // Many To One Relationships
+                if (result.hasOwnProperty("adx_inviteContact") && result["adx_inviteContact"] !== null) {
+                    var adx_inviteContact_emailaddress1 = result["adx_inviteContact"]["emailaddress1"]; // Text
+                    var adx_inviteContact_firstname = result["adx_inviteContact"]["firstname"]; // Text
+                    var adx_inviteContact_lastname = result["adx_inviteContact"]["lastname"]; // Text
+                }
+                else {
+                    var adx_inviteContact_emailaddress1 = "Unknown"; // Text
+                    var adx_inviteContact_firstname = "Unknown"; // Text
+                    var adx_inviteContact_lastname = "Unknown"; // Text
+                }
+
+
+                //for new invitations set the expry date to 120 from send date
+                if (statuscode == 1) {
+                    // Create new Date instance
+                    var expDate = new Date();
+                    expDate.setDate(expDate.getDate() + 120);
+
+                    var record = {};
+                    record.adx_expirydate = expDate.toISOString(); // Date Time
+                    record.statuscode = 756150000; // Status // Sent
+
+                    Xrm.WebApi.online.updateRecord("adx_invitation", adx_invitationid, record).then(
+                        function success(result) {
+                            var updatedId = result.id;
+                            console.log(updatedId);
+                        },
+                        function (error) {
+                            console.log(error.message);
+                        }
+                    );
+                }
+
+                if (statuscode == 756150001 || statuscode == 2 || adx_expirydate <= new Date()
+                    || adx_inviteContact_emailaddress1 == "Unknown" || adx_inviteContact_emailaddress1 == null
+                    || adx_inviteContact_emailaddress1 == "")
+                {
+                    if (errorMessage == null || errorMessage == "")
+                        errorMessage = adx_inviteContact_firstname + " " + adx_inviteContact_lastname + "\n";
+                    else
+                        errorMessage += adx_inviteContact_firstname + " " + adx_inviteContact_lastname + "\n";
+                }
+                else
+                {   //Set portal URL
+                    var dynamicsUrl = (Xrm.Utility.getGlobalContext().getClientUrl()).toString();
+                    var portalURl = dynamicsUrl.substring(0, dynamicsUrl.indexOf(".crm3."));
+
+                    if (portalURl == "https://tdgcore-dev-tcd365") // Handle Dev URL
+                        portalURl = "https://rd-tdgcore-dev.powerappsportals.com";
+                    else
+                        portalURl += ".powerappsportals.com/";
+
+                    //create email
+                    var data =
+                        '{"Secondary_Contactid": "' + adx_invitecontact + '" ,' +
+                        '"Email_Code" : "S3-1",'+
+                        '"Portal_URL": "' + portalURl
+                        + '"}';
+
+                    Call_Flow("CID_Send_Portal_Contact_Invitations", data);
+
+                    if (sucessMessage == null || sucessMessage == "") {
+                        sucessMessage =adx_inviteContact_firstname + " " + adx_inviteContact_lastname
+                            + " (Email : "+ adx_inviteContact_emailaddress1 + ")\n";
+                    }
+                    else {
+                        sucessMessage += adx_inviteContact_firstname + " " + adx_inviteContact_lastname
+                            + " (Email : " + adx_inviteContact_emailaddress1 + ")\n";
+                    }
+                }
+            }
+            if (sucessMessage != null && sucessMessage != "")
+            {
+                var alertStrings = {
+                    confirmButtonLabel: "OK"
+                    , text: "The on-boarding invitation email was sucessfully sent to the folowing Secondary Contact(s) \n\n "+ sucessMessage
+                    , title: "The Invitation Email Message(s) Sent"
+                };
+                var alertOptions = { height: 300, width: 500 };
+                Xrm.Navigation.openAlertDialog(alertStrings, alertOptions).then(
+                    function (success) {
+                        console.log("Alert dialog closed");
+                    },
+                    function (error) {
+                        console.log(error.message);
+                    }
+                );
+
+            }
+
+            if (errorMessage != null && errorMessage != "")
+            {
+                var alertStrings = {
+                    confirmButtonLabel: "OK"
+                    , text: "The invitation for the follwing invitee(s) are no longer valid. Therefore system will not resend the invitation email \n\n " + errorMessage
+                    , title: "The Invitation Email Message - Error"
+                };
+                var alertOptions = { height: 300, width: 500 };
+                Xrm.Navigation.openAlertDialog(alertStrings, alertOptions).then(
+                    function (success) {
+                        console.log("Alert dialog closed");
+                    },
+                    function (error) {
+                        console.log(error.message);
+                    }
+                );
+            }
+        },
+        function (error) {
+            console.log(error.message);
+        }
+    );
+}
+
+function Call_Flow(FlowName, data) {
+    debugger
+    console.log("Flow is execution Started");
+
+    //get flow URL
+    Xrm.WebApi.online.retrieveMultipleRecords("qm_environmentsettings", "?$select=qm_value&$filter=qm_name eq '" + FlowName + "'").then(
+        function success(results) {
+            console.log(results);
+            for (var i = 0; i < results.entities.length; i++) {
+                var result = results.entities[i];
+                // Columns
+                var qm_environmentsettingsid = result["qm_environmentsettingsid"]; // Guid
+                var FlowURL = result["qm_value"]; // Multiline Text
+
+                if (FlowURL != null && FlowURL != "") {
+                    // Execute flow
+                    var req = new XMLHttpRequest();
+                    req.open("POST", FlowURL, true);
+                    req.setRequestHeader('Content-Type', 'application/json');
+                    req.onreadystatechange = function () {
+                        if (this.readyState === 4) {
+                            req.onreadystatechange = null;
+                            if (this.status === 202 || this.status === 200) {
+                                console.log("Flow Executed scucessfully.")
+                            }
+                        }//end ready status
+                    }//end on ready function
+                    req.send(data);
+                }//end check if flow url found
+            }
+        },
+        function (error) {
+            console.log(error.message);
+        }
+    );
+}
