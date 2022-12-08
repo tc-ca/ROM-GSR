@@ -8,11 +8,11 @@ $(document).ready(function () {
     page_setup();
 
     // prevent none Alphabet char on key press and past
-    $('#firstname').bind('keypress', ValidateAlphabetInput);
-    $('#firstname').bind('paste', ValidateAlphabetPast); 
-    $('#lastname').bind('keypress', ValidateAlphabetInput);
-    $('#lastname').bind('paste', ValidateAlphabetPast);
-    $('#emailaddress1').bind('change' , EmailAddressValidation);
+   // $('#firstname').bind('keypress', ValidateAlphabetInput);
+   // $('#firstname').bind('paste', ValidateAlphabetPast); 
+   // $('#lastname').bind('keypress', ValidateAlphabetInput);
+   // $('#lastname').bind('paste', ValidateAlphabetPast);
+   // $('#emailaddress1').bind('change' , EmailAddressValidation);
      
     $('input[type="text"]').attr('autocomplete', 'off');
 

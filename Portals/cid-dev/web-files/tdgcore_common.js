@@ -78,7 +78,7 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         button_create: function (name, from_button, label_code) {
-            var value = '<input type="button" name="{0}" id="{0}" />';
+            var value = '<input type="button" name="{0}" id="{0}" /><label>&nbsp;&nbsp;</label>';
             value = value.replaceAll("{0}", name);
             var button = $(value);
             $(from_button).after(button);
@@ -927,6 +927,35 @@ if (typeof (tdg.webapi) == "undefined") {
                 "statuscode": 821350004
             };
             tdg.webapi.update(entity_name, record_id, data);
+        },
+
+        GetOptionSetLable: function(entityname, attributename, attributevalue) {
+            //prepare query options
+            var query = "/api/data/v8.2/stringmaps?$filter=objecttypecode eq '" + entityname + "' and  attributename eq '" + attributename + "' and attributevalue eq " + attributevalue;
+            //setup webapi request
+            var req = new XMLHttpRequest();
+            req.open("GET", Xrm.Page.context.getClientUrl() + query, false);
+            req.setRequestHeader("OData-MaxVersion", "4.0");
+            req.setRequestHeader("OData-Version", "4.0");
+            req.setRequestHeader("Accept", "application/json");
+            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+            req.setRequestHeader("Prefer", "odata.include-annotations=\"*\"");
+            req.onreadystatechange = function () {
+                if (this.readyState === 4) {
+                    req.onreadystatechange = null;
+                    if (this.status === 200) {
+                        var results = JSON.parse(this.response);
+                        if (results != null && results.value.length > 0) {
+                            debugger;
+                            var value = results.value[0].value;
+                        }
+ 
+                    } else {
+                        debugger;
+                    }
+                }
+            };
+            req.send();
         }
     }
 }
@@ -1864,7 +1893,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
             debugger;
             var value = Page_ClientValidate('');
             if (value) {
-                $("#btn_next").prop("value", 'Processing...');
+                var message = tdg.error_message.message("m000038");
+                $("#btn_next").prop("value", message);
                 var data = {};
                 data.length = 0;
                 if ($("#cid_has_cra_bn").val() == "1") {
@@ -1873,7 +1903,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     if (cra_data.length == 0) {
                         var message = tdg.error_message.message("m000001");
                         tdg.c.dialog_OK(message);
-                        $("#btn_next").prop("value", 'Next');
+
+                        var message = tdg.error_message.message("BTN_NEXT");
+                        $("#btn_next").prop("value", message);
                         return;
                     }
                     data.length = 1;
@@ -1888,7 +1920,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     if (account.length > 0) {
                         account = account[0];
                         data.length = 1;
-                        data.cid_has_cra_bn = 0;
+                        data.cid_has_cra_bn = account.cid_has_cra_bn;
+                        data.cid_crabusinessnumber = account.cid_crabusinessnumber;
                         data.cid_legalname = account.ovs_legalname;
                         data.cid_operatingname = account.name;
                         data.cid_reasonfornobnnumber = account.cid_reasonfornobnnumber;
@@ -1906,6 +1939,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     }
                 }
 
+
                 if (data.length == 1) {
                     tdg.cid.crw.start_buttons_confirm(false);
                     tdg.cid.crw.start_confirm(data, (ans) => {
@@ -1916,6 +1950,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
                         } else {
                             debugger;
                             tdg.cid.crw.start_buttons_confirm(true);
+                            var message = tdg.error_message.message("BTN_NEXT");
+                            $("#btn_next").prop("value", message);
                         }
                     });
                 }
@@ -1943,6 +1979,32 @@ if (typeof (tdg.cid.crw) == "undefined") {
             data.address.AddressLine2Text = (data.address.AddressLine2Text == null ? "" : data.address.AddressLine2Text);
             data.address.AddressLine3Text = (data.address.AddressLine3Text == null ? "" : data.address.AddressLine3Text);
 
+            var text_middle = "";
+            if (data.cid_has_cra_bn == 1) {
+                text_middle = `
+                    <p>
+                    <label for="cid_crabusinessnumber" class="field-label">CRA Business Number</label>
+                    <input type="text" readonly class="text form-control" id="cid_crabusinessnumber" style="width:100%" value="${data.cid_crabusinessnumber}">
+	                `;
+            }
+            else {
+                var list = $("#cid_reasonfornobnnumber")[0].options;
+                var index1 = parseInt(data.cid_reasonfornobnnumber) + 1;
+                var cid_reasonfornobnnumber = list[index1].text;
+                text_middle = `
+                    <p>
+                    <label for="cid_reasonfornobnnumber" class="field-label">Reason for No CRA Business Number</label>
+                    <input type="text" readonly class="text form-control" id="cid_reasonfornobnnumber" style="width:100%" value="${cid_reasonfornobnnumber}">
+	                `;
+                if (data.cid_reasonfornobnnumber == 3) {
+                    text_middle += `
+                    <p>
+                    <label for="cid_reasonfornobnnumber_other" class="field-label">Further Details Regarding No CRA Business Number</label>
+                    <input type="text" readonly class="text form-control" id="cid_reasonfornobnnumber_other" style="width:100%" value="${data.cid_reasonfornobnnumber_other}">
+	                `;
+                }
+            }
+
             var text1 = `
                     <section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
 	                <header class="modal-header">
@@ -1955,9 +2017,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     <p>
                     <label for="cid_operatingname" class="field-label">Operating Name</label>
                     <input type="text" readonly class="text form-control" id="cid_operatingname" style="width:100%" value="${data.cid_operatingname}">
-                    <p>
-                    <label for="cid_crabusinessnumber" class="field-label">CRA Business Number</label>
-                    <input type="text" readonly class="text form-control" id="cid_crabusinessnumber" style="width:100%" value="${data.cid_crabusinessnumber}">
+                    ` +
+                    text_middle +
+                    `
                     <p>
                     <label for="address1_line1" class="field-label">Street 1</label>
                     <input type="text" readonly class="text form-control" id="address1_line1" style="width:100%" value="${data.address.AddressLine1Text}">
@@ -2084,6 +2146,15 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
                 tdg.c.addValidator("cid_legalname");
                 tdg.c.addValidator("cid_reasonfornobnnumber");
+
+                var cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
+                if (cid_reasonfornobnnumber == "3") // other
+                {
+                    tdg.c.control_show("cid_reasonfornobnnumber_other");
+                }
+                else {
+                    tdg.c.control_hide("cid_reasonfornobnnumber_other");
+                }
 
                 if (step_start == "1") {
                     tdg.c.control_show("cid_legalname");

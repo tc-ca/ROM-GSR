@@ -135,14 +135,24 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "Annuler"
                     },
                     {
+                        "code": "BTN_NEXT",
+                        "message_en": "Next",
+                        "message_fr": "Suivant"
+                    },
+                    {
+                        "code": "BTN_PREVIOUS",
+                        "message_en": "Previous",
+                        "message_fr": "Précédent"
+                    },
+                    {
                         "code": "BTN_IS_MY_COMPANY",
-                        "message_en": "IS my Company",
-                        "message_fr": "IS my Company_FR"
+                        "message_en": "This is my Company",
+                        "message_fr": "This is my Company_FR"
                     },
                     {
                         "code": "BTN_IS_NOT_MY_COMPANY",
-                        "message_en": "IS NOT my Company",
-                        "message_fr": "IS NOT my Company_FR"
+                        "message_en": "This is not my Company",
+                        "message_fr": "This is not my Company_FR"
                     },
                     {
                         "code": "m000001",
@@ -335,6 +345,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "CRA Business Number '{0}' already exists._FR"
                     },
                     {
+                        "code": "m000038",
+                        "message_en": "Processing...",
+                        "message_fr": "Processing..._FR"
+                    },
+                    {
                         "code": "m000098",
                         "message_en": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
                         "message_fr": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID._FR"
@@ -458,6 +473,12 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "Complete All",
                         "message_fr": "Complete All_FR"
                     }
+                    ,
+                    {
+                        "code": "m000122",
+                        "message_en": "Are you sure you would like to de-activate this contact record?",
+                        "message_fr": "Are you sure you would like to de-activate this contact record?_FR"
+                    }
 
                 ];
 
@@ -465,3 +486,4 @@ if (typeof (tdg.message) == "undefined") {
         }
     }
 }
+

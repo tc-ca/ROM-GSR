@@ -247,7 +247,7 @@ if (typeof (invitation) == "undefined") {
                             $("#myModal").css({ left: 40 });
                             //close the form if user selected OK button
                             $("#btnOK").on('click', function () {
-                                
+
                                 parent.$(".entity-grid").trigger("refresh");
                                 parent.$(".form-close").eq(0).click();
                                 setTimeout($(".entity-grid").trigger("refresh"), 3000);
@@ -315,6 +315,10 @@ if (typeof (invitation) == "undefined") {
                 var contactQueryResults = tdg.webapi.SelectedColumnlist("contacts", "firstname", "cid_contacttype ne 100000000 and statecode eq 0 and _parentcustomerid_value eq " + ParentAccount);
                 //if more than one secondary contact eixts
                 if (contactQueryResults.length > 1) {
+                    //m000122 Are you sure you would like to de-activate this contact record?
+                    var m000122 = tdg.error_message.message("m000122");
+                    tdg.c.dialog_YN(m000122, (ans) => {
+                        if (ans) {
 
                     //get user invitation
                     var adx_invitationResults = tdg.webapi.SelectedColumnlist("adx_invitations", "adx_expirydate", "_adx_invitecontact_value eq " + ContactId);
@@ -356,6 +360,10 @@ if (typeof (invitation) == "undefined") {
                         '"Secondary_Contactid" : "' + ContactId + '"}';
                     // call function to execute flow
                     tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", data);
+
+                 }//end if ans
+                    } //end dialog functoin
+                    ); //end dialog
                 }
                 else {
                     var m000119 = tdg.error_message.message("m000119");
@@ -412,5 +420,6 @@ if (typeof (invitation) == "undefined") {
         },
     }
 }
+
 
 

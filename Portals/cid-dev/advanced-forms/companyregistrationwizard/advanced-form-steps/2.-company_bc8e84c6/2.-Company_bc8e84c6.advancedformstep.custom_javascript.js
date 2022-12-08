@@ -3,6 +3,14 @@
 //
 $(document).ready(function () {
 	debugger;
+
+	var msg = tdg.error_message.message("BTN_PREVIOUS");
+	$("#PreviousButton").hide();
+	tdg.c.button_create("btn_previous", "#PreviousButton", msg);
+	$("#btn_previous").bind("click", function () {
+		btn_previous_click();
+	});
+
 	$("#cid_registrationasof").parent().parent().hide();
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
@@ -21,13 +29,8 @@ $(document).ready(function () {
 
 	var cid_contacttype = '{{user.cid_contacttype.Value}}';
 
-	// address
 	tdg.cid.address_init(false);
 	tdg.cid.WebResource_address_complete_readonly(false);
-	var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name }}');
-	//if (cid_contacttype != 100000000) {
-		$(".previous-btn").attr('disabled', true);
-	//}
 	$("#websiteurl").width('100%');
 
 	//phone field formatting
@@ -134,6 +137,10 @@ $(document).ready(function () {
 
 	tdg.c.addValidator("ovs_name_fr");
 });
+
+function btn_previous_click() {
+	debugger;
+}
 
 if (window.jQuery) {
 	(function ($) {
