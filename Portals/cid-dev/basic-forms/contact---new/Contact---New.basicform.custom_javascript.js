@@ -7,11 +7,12 @@ $(document).ready(function () {
     debugger;
     page_setup();
 
-    // on key press
+    // prevent none Alphabet char on key press and past
     $('#firstname').bind('keypress', ValidateAlphabetInput);
-    $('#firstname').bind('paste', ValidateAlphabetInput);
-  
+    $('#firstname').bind('paste', ValidateAlphabetPast); 
     $('#lastname').bind('keypress', ValidateAlphabetInput);
+    $('#lastname').bind('paste', ValidateAlphabetPast);
+    $('#emailaddress1').bind('change' , EmailAddressValidation);
      
     $('input[type="text"]').attr('autocomplete', 'off');
 
@@ -131,7 +132,29 @@ function page_setup() {
 // used to force alphabet only
 function ValidateAlphabetInput(event) {
    var value = String.fromCharCode(event.which);
- // var value = (event.type === "paste" ? event.clipboardData : event.dataTransfer).getData('text');
-   var pattern = new RegExp(/[a-zåäö ]/i);
+   var pattern = new RegExp(/^[a-zA-Z àâäèéêëîïôœùûüÿçÀÂÄÈÉÊËÎÏÔŒÙÛÜŸÇ]*$/);
+   //new RegExp(/[a-zåäö ]/i);
    return pattern.test(value);
+}
+function ValidateAlphabetPast(event) {
+    var textContent = event.originalEvent.clipboardData.getData("text/plain");
+    var letters = new RegExp(/^[a-zA-Z àâäèéêëîïôœùûüÿçÀÂÄÈÉÊËÎÏÔŒÙÛÜŸÇ]*$/);
+    //(/^[A-Za-z]+$/);     
+   var compareResult = (letters.test(textContent));
+ 
+   return compareResult;
+}
+//email address validation
+function EmailAddressValidation(event)
+{
+    console.log("inside email address validation");
+   var pattern = new RegExp( /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+   var emailaddressText =  $("#emailaddress1").val();
+   var result = pattern.test(emailaddressText);
+    console.log(result);
+   if (result == false)
+   {
+       
+   }
+
 }

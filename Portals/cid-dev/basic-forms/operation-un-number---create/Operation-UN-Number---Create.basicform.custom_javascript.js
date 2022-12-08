@@ -22,7 +22,7 @@ $(document).ready(function () {
 
     sessionStorage.setItem("tdg_unnumberid", "");
 
-   
+
     //when the page is done loading, disable autocomplete on all inputs[text]
     $('input[type="text"]').attr('autocomplete', 'off');
 
@@ -41,7 +41,7 @@ $(document).ready(function () {
     });
 
     tdg.c.btn_save_new_setup();
-  
+
 });
 
 $(window).unload(function () {
@@ -73,7 +73,7 @@ function page_setup() {
     tdg.c.message_panel();
 }
 
-function tdg_unnumberid_selected(text, id) {
+function tdg_unnumberid_selected(text, id, textboxheight) {
     debugger;
 
     var index1 = text.indexOf(" - ");
@@ -81,6 +81,11 @@ function tdg_unnumberid_selected(text, id) {
     $("#ovs_unnumber").attr("value", id);
     $("#ovs_unnumber_name").attr("value", text);
     $("#ovs_unnumber_entityname").attr("value", 'tdg_unnumber');
+
+    if (textboxheight > 0) {
+        var wrheight = textboxheight + 220;
+        $("#WebResource_unnumber").height(wrheight + 'px');
+    }
 }
 
 //Function called on form submit
@@ -94,8 +99,7 @@ if (window.jQuery) {
             var validation = true;
             tdg.c.error_message_clear();
 
-            if (un_number_not_selected() == false)
-            {
+            if (un_number_not_selected() == false) {
                 _err_un_number_not_selected = true;
                 return false;
             }
@@ -191,9 +195,12 @@ function form_clear() {
     $("#cid_unitofmeasurement").val(null);
     $("#cid_annualnumberofshipment").val("");
     $("#cid_annualquantityvolume").val("");
+    // resize WebResource_unnumber
+    $("#WebResource_unnumber").height('175px');
 
     try {
-        var f = document.getElementById("WebResource_unnumber");
+        var f = document.getElementById("WebResource_unnumber");;
+        //reset fields
         var c = f.contentWindow;
         c.clear_field();
     } catch (e) { }
