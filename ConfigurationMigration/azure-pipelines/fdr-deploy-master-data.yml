@@ -141,6 +141,57 @@ stages:
                 cd $(Build.SourcesDirectory)/ConfigurationMigration/Logs/import
                 cat *
 
+- stage: Deploy_MasterData_to_AccData
+  dependsOn: Stage_Pack_Data_and_Publish_Artifact
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy_MasterData_to_ACCDATA
+    environment: ACC-TDG-DATA
+    cancelTimeoutInMinutes: 2
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: none
+
+          - task: DownloadBuildArtifacts@1
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'PackedData'
+              downloadPath: '$(System.ArtifactsDirectory)'
+
+          - task: PowerShell@2
+            name: "Import_Data_ACCDATA"
+            inputs:
+              targetType: 'inline'
+              script: |
+                Install-Module -Name Microsoft.Xrm.Tooling.ConfigurationMigration -force
+                
+                If(!(test-path "$(logWriteDirectory)"))
+                {
+                    Write-Host "$(logWriteDirectory) folder does not exists."
+                    New-Item -ItemType Directory -Force -Path "$(logWriteDirectory)"
+                    Write-Host "$(logWriteDirectory) folder created."
+                }
+                
+                Import-CrmDataFile -CrmConnection "$(ConnectionStringACCDATA)" -Datafile "$(System.ArtifactsDirectory)\PackedData\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
+              warningPreference: 'stop'
+              failOnStderr: true
+              showWarnings: true
+              
+          - task: PowerShell@2
+            name: "Print_Logs"
+            condition: always()
+            inputs:
+              targetType: 'inline'
+              script: |
+                cd $(Build.SourcesDirectory)/ConfigurationMigration/Logs/import
+                cat *
+
+
 - stage: Deploy_MasterData_to_PREPROD
   dependsOn: Stage_Pack_Data_and_Publish_Artifact
   pool:
