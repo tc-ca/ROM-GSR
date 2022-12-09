@@ -18,7 +18,7 @@ if (typeof (tdg.message) == "undefined") {
             var m000020_EN = "The data grid below lists the Sites that are understood to be associated to your Company. " +
                 "Please choose the <b>[V]</b> button on each row to update Attest each Site, or flag it as not your Company's Site.\n\n" +
                 "When those updates are Complete, please add any remaining Sites individually by choosing the <b>[+Add]</b> button," +
-                "or all at once via Excel, by choosing the <b>[Bulk Add/Update]</b> button."
+                "or all at once via Excel, by choosing the <b>[Bulk Add/Update]</b> button.";
             var m000020_FR = "The data grid below lists the Sites that are understood to be associated to your Company. " +
                 "Please choose the <b>[V]</b> button on each row to update Attest each Site, or flag it as not your Company's Site.\n\n" +
                 "When those updates are Complete, please add any remaining Sites individually by choosing the <b>[+Add]</b> button," +
@@ -30,23 +30,23 @@ if (typeof (tdg.message) == "undefined") {
                 "button to add all new Sites at once via Excel.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
-                "If required, choose the <b>[Previous]</b> button below to return to the Attest Company screen."
+                "If required, choose the <b>[Previous]</b> button below to return to the Attest Company screen.";
             var m000021_FR = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of " +
                 "the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.\n\n" +
                 "To add additional Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> " +
                 "button to add all new Sites at once via Excel.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
-                "If required, choose the <b>[Previous]</b> button below to return to the Attest Company screen._FR"
+                "If required, choose the <b>[Previous]</b> button below to return to the Attest Company screen._FR";
 
             var m000022_EN = "To add Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
-                "If required, choose the <b>[Previous]</b> button below to return to the Attest Company screen."
+                "If required, choose the <b>[Previous]</b> button below to return to the Attest Company screen.";
             var m000022_FR = "To add Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
-                "If required, choose the <b>[Previous]</b> button below to return to the Attest Company screen._FR"
+                "If required, choose the <b>[Previous]</b> button below to return to the Attest Company screen._FR";
 
             var m000023_EN = "To add Sites individually, choose the <b>[+Add]</b> button below.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
@@ -54,21 +54,21 @@ if (typeof (tdg.message) == "undefined") {
                 "If required, choose the 'Deactivate / Reactivate' option via the <b>[V]</b> button at the end of a Site's row.\n\n" +
                 "Note:\n" +
                 "- <b>[Bulk Add/Update]</b> will appear to the right of the <b>[+Add]</b> button\n" +
-                "- For In Year / Annual Compliance, the <b>[V]</b> options will be 'Open Site Details', 'Deactivate / Reactivate'"
+                "- For In Year / Annual Compliance, the <b>[V]</b> options will be 'Open Site Details', 'Deactivate / Reactivate'";
             var m000023_FR = "To add Sites individually, choose the <b>[+Add]</b> button below.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Alternatively, choose the <b>[Bulk Add/Update]</b> button to edit existing, and add new, Sites all at once via Excel.\n\n" +
                 "If required, choose the 'Deactivate / Reactivate' option via the <b>[V]</b> button at the end of a Site's row.\n\n" +
                 "Note:\n" +
                 "- <b>[Bulk Add/Update]</b> will appear to the right of the <b>[+Add]</b> button\n" +
-                "- For In Year / Annual Compliance, the <b>[V]</b> options will be 'Open Site Details', 'Deactivate / Reactivate'_FR"
+                "- For In Year / Annual Compliance, the <b>[V]</b> options will be 'Open Site Details', 'Deactivate / Reactivate'_FR";
 
             var m000030_EN = "The registration of your Company in the CID Data Platform is now complete. " +
                 "An email has been sent to your address, confirming the completion of the registration." +
                 "<br><br>You are currently in the initial in-year page, which will be your starting page for each future CID session."
             var m000030_FR = "L'enregistrement de votre entreprise dans la plateforme de données CID est maintenant terminé. " +
                 "Un e-mail a été envoyé à votre adresse, confirmant la finalisation de l'inscription." +
-                "<br><br>Vous êtes actuellement dans la page initiale en cours d'année, qui sera votre page de démarrage pour chaque future session CID."
+                "<br><br>Vous êtes actuellement dans la page initiale en cours d'année, qui sera votre page de démarrage pour chaque future session CID.";
 
             var m000031_EN = "You are changing the site requirement level from basic to extended. " +
                 "You are required to complete the extended processing requirements for the site before the site can be attested.<br><br>" +
@@ -76,16 +76,19 @@ if (typeof (tdg.message) == "undefined") {
                 "All applicable UN Numbers<br>" +
                 "<p>- Unit of Measurement<br>" +
                 "- Annual Quantity / Volume<br>" +
-                "- Annual Number of Consignments</p>"
-
-
+                "- Annual Number of Consignments</p>";
             var m000031_FR = "Vous modifiez le niveau d'exigence du site de base à étendu. " +
                 "Vous devez remplir les exigences de traitement étendu pour le site avant que le site puisse être attesté.<br><br>" +
                 "Vous devez saisir les informations applicables suivantes pour le site:<br>" +
                 "Tous les Nom d'affichage de l'ONU applicables<br>" +
                 "<p>- Unité de mesure<br>" +
                 "- Quantité annuelle / Volume<br>" +
-                "- Nombre annuel d'envois</p>"
+                "- Nombre annuel d'envois</p>";
+
+            var m000039_EN = "At this point you cannot proceed back to the previous step to re-begin the registration process. <br><br>" +
+                             "Do you want to request that TDG support personnel reach out to you in order to reset your account so that you can restart the registration process?";
+            var m000039_FR = "At this point you cannot proceed back to the previous step to re-begin the registration process. <br><br>" +
+                             "Do you want to request that TDG support personnel reach out to you in order to reset your account so that you can restart the registration process?_FR";
 
             var list =
                 [
@@ -350,6 +353,16 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "Processing..._FR"
                     },
                     {
+                        "code": "m000039",
+                        "message_en": m000039_EN,
+                        "message_fr": m000039_FR
+                    },
+                    {
+                        "code": "m000040",
+                        "message_en": "TDG support personnel have been notified of your request and will contact you shortly at your email of {0}.",
+                        "message_fr": "TDG support personnel have been notified of your request and will contact you shortly at your email of {0}._FR"
+                    },
+                    {
                         "code": "m000098",
                         "message_en": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
                         "message_fr": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID._FR"
@@ -473,12 +486,6 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "Complete All",
                         "message_fr": "Complete All_FR"
                     }
-                    ,
-                    {
-                        "code": "m000122",
-                        "message_en": "Are you sure you would like to de-activate this contact record?",
-                        "message_fr": "Are you sure you would like to de-activate this contact record?_FR"
-                    }
 
                 ];
 
@@ -486,4 +493,3 @@ if (typeof (tdg.message) == "undefined") {
         }
     }
 }
-

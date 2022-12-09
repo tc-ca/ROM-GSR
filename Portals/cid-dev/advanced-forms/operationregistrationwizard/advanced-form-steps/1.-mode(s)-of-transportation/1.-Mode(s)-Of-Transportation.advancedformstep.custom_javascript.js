@@ -11,9 +11,15 @@ $(document).ready(function () {
 		var sitePageURL = "";
 		
 		if (urlParams.has('in_year'))
-			sitePageURL = "~/my-sites/in-year-site/?id=" + siteId;  
+			{
+				sitePageURL = "~/my-sites/in-year-site/?id=" + siteId;  
+				tdg.c.weblink_hide("/RegistrationWizard/");
+				tdg.c.weblink_hide("/Bulk_Site_Upload/");
+			}
 		else 
-			sitePageURL = "~/SiteRegistrationWizard/?id=" + siteId; 
+			{
+				sitePageURL = "~/SiteRegistrationWizard/?id=" + siteId; 
+			}
 
 		sessionStorage.setItem('to_actvt_stp', 'true');
 

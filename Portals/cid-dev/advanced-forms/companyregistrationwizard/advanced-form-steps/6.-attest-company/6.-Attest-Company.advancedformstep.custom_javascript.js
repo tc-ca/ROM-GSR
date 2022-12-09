@@ -4,6 +4,10 @@
 
 $(document).ready(function () {
 	debugger;
+	console.log ("before changing div content");
+	$("#cid_reasonfornobnnumber_other").next("div").css("color","transparent");
+	$("#ovs_address1_province").next("div").css("color","transparent");
+	//innerHTML = "<p> </p>";
 	//hide empty message
 var gridview = $("#Naics_codes");
 gridview.on("loaded", function () {
@@ -33,6 +37,7 @@ gridview.on("loaded", function () {
 		tdg.c.control_show("cid_crabusinessnumber");
 		tdg.c.control_hide("cid_reasonfornobnnumber");
 		tdg.c.control_hide("cid_reasonfornobnnumber_other");
+		$("#cid_reasonfornobnnumber_other").closest(".text-muted").innerHTML = "<p> </p>";
 	}
 
 	if ($("#printSummary").length <= 0) {

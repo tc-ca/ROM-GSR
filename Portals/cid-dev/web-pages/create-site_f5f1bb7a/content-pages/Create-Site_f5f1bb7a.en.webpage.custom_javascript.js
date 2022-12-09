@@ -1,8 +1,11 @@
 // CreateSite.js
 $(document).ready(function ()
 {
-	console.log("document read");
 	debugger;
+    tdg.c.weblink_hide("/RegistrationWizard/");
+	tdg.c.weblink_hide("/Bulk_Site_Upload/"); 
+
+	console.log("document read");
 	$(".breadcrumb li").each(function ()
 	{
 		if ($(this).text() == '\n  Site Registration\n ' && sessionStorage.getItem('frominyearsites'))
@@ -12,7 +15,4 @@ $(document).ready(function ()
 			bredcrumb[0].innerHTML = "\n  <a href=\"/my-sites/\" title=\"My Sites\">My Sites</a>\n ";
 		}
 	});
-
-
-
 });

@@ -1,6 +1,9 @@
 $(document).ready(function ()
 {
 	debugger;
+    tdg.c.weblink_hide("/RegistrationWizard/");
+	tdg.c.weblink_hide("/Bulk_Site_Upload/"); 
+
 	$(".breadcrumb li").each(function ()
 	{
 		if ($(this).text() == '\n  Inscription au site\n ' && sessionStorage.getItem('frominyearsites'))

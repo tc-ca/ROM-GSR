@@ -2,7 +2,7 @@ $(document).ready(function ()
 {
 	debugger;
 
-$('table[data-name="annual_compliance_update_history_logs"]');
+
 	
 
 
@@ -71,7 +71,7 @@ $('table[data-name="annual_compliance_update_history_logs"]');
 			});
 		});
 	});
-	$('#cid_companyanniversarydate').parent().parent().hide();
+	//$('#cid_companyanniversarydate').parent().parent().hide();
 	var annualComplianceCompletionDate = $('#cid_annualcompliancecompletiondate').val();
 	if (annualComplianceCompletionDate == null || annualComplianceCompletionDate == "") //uncheck attestation check box
 	{

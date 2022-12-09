@@ -5,8 +5,19 @@
 $(document).ready(function () {
 	debugger;
 	//change width and place holder div class to increase search width
-	$('.toolbar-actions').attr('style', "width:700px;");
+	var lang = '{{website.selected_language.code}}';
+	console.log(lang);
+    if (lang == "en")
+	{
+	$('.toolbar-actions').attr('style', "width:70%;");
 	$('.entitylist-search').addClass("col-md-8");
+
+	}//end if
+	else
+	{
+	$('.toolbar-actions').attr('style', "width:90%;");
+	$('.entitylist-search').addClass("col-md-8");
+	}//end else
 
 	 $(".entity-grid").on("loaded", function () { const EmptyMessageDiv = document.querySelector(".view-empty");	
          	EmptyMessageDiv.style.display = "none";

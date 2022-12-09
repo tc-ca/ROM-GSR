@@ -324,7 +324,7 @@ if (typeof (invitation) == "undefined") {
                     var adx_invitationResults = tdg.webapi.SelectedColumnlist("adx_invitations", "adx_expirydate", "_adx_invitecontact_value eq " + ContactId);
                     //check if user logined before
                     var result = tdg.webapi.SelectedColumnlist("contacts", "msdyn_portaltermsagreementdate", "contactid eq " + ContactId);
-                    console.log("after select contacts results");
+                 
                     console.log(result[0]["msdyn_portaltermsagreementdate"]);
                     //if contact doesn't have agreement date
                     if (result[0]["msdyn_portaltermsagreementdate"] != null) {
@@ -352,14 +352,15 @@ if (typeof (invitation) == "undefined") {
 
                     //Execute flow to send email and set expiry date for invitation   
                     //get flow URL
-                    console.log("Deactivation started");
                     var data =
                         '{ "EmailCode" : "' + FlowEmailCode + '", ' +
                         '"AccountId" : "' + ParentAccount + '" ,' +
                         '"Primary_Contactid" : "' + CurrentUserID + '" ,' +
                         '"Secondary_Contactid" : "' + ContactId + '"}';
                     // call function to execute flow
-                    tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", data);
+                            tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", data);
+                            //refresh grid
+                            setTimeout($(".entity-grid").trigger("refresh"), 3000);
 
                  }//end if ans
                     } //end dialog functoin

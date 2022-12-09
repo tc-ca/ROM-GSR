@@ -10,7 +10,10 @@ $(document).ready(function () {
         var firstTime = urlParams.get('firsttime')
 
         if(firstTime == "true"){
-            message = tdg.error_message.message("m000030");
+            var companyAnniversaryDate = $('#cid_companyanniversarydate').val();
+            
+            var message = tdg.error_message.message("m000030");
+            message = message.replace("{0}", companyAnniversaryDate.substring(0, 10));
 	        tdg.c.dialog_OK(message);
         }
     }
