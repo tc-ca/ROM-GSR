@@ -45,6 +45,10 @@ function header_setup(type) {
 	case "inyear":
 		msg = "Back To In Year Page";
 		href = "~/my-sites";
+		tdg.c.weblink_hide("/RegistrationWizard/");
+        tdg.c.weblink_hide("/Bulk_Site_Upload/");
+		tdg.c.weblink_show("/company_dashboard/");
+        tdg.c.weblink_show("/Bulk_Site_Update/");
 		break;
 	case "annualcompliance":
 		msg = "Back To Annual Compliance Update Page";

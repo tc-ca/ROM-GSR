@@ -4,6 +4,10 @@
 
 $(document).ready(function () {
     debugger;
+    tdg.c.weblink_show("/company_dashboard/");
+    tdg.c.weblink_show("/Bulk_Site_Update/");
+
+
     $("legend").each(function() {
 		$(this).removeClass();
 		$(this).css("font-size", "20px");
@@ -11,7 +15,7 @@ $(document).ready(function () {
         $(this).css("text-decoration", "underline");
     });
 
-    sessionStorage.setItem('frominyearsites', 'false');
+    sessionStorage.setItem('frominyearsites', 'true');
     sessionStorage.setItem('fromannualcompliance', 'true');
 
 	var urlParams = new URLSearchParams(window.location.search);

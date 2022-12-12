@@ -1,19 +1,21 @@
 $(document).ready(function ()
 {
-    var contentControl = $("table[data-name='Knowledge Information']").find('textarea');
+    //var contentControl = $("table[data-name='Knowledge Information']").find('textarea');
 
 
-		var htmlContent = contentControl.text();
 
-		contentControl.parent().after(htmlContent);
 
-		var contentControlX = $("#content_label");
-		//var contentControlXX = $("#content").parent();
+		//var contentControlX = $("#content_label");
+		//var contentControlXX = $(".form-control ");
 		//contentControlXX.attr('style', "display:none;");
-		 contentControl.attr('style', 'display:none;');
-		 contentControlX.attr('style', 'display:none;');
+		 //contentControl.attr('style', 'display:none;');
+		 //contentControlX.attr('style', 'display:none;');
 		//contentControlXX.css("visibility", "hidden");
-		//contentControlXX.attr('style', "display:none;");
+		//contentControlXX.attr(attr, "hidden");
+
+				//var htmlContent = contentControl.text();
+
+		//contentControl.parent().after(htmlContent);
 
 		//$("table[data-name='Knowledge Information']").on("loaded", function () {
 		//		var contentControl = $("table[data-name='Knowledge Information']").find('input');

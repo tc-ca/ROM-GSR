@@ -1,5 +1,3 @@
-// JavaScript source code
-
 //To apply the Asterisk(*) Sign using custom JS:
 //$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
 
@@ -65,7 +63,27 @@ if (typeof (tdg.c) == "undefined") {
                     var item = $(this).find("a")[0];
                     var href = item.href;
                     if (href.indexOf(url) != -1) {
-                        $(this).remove();
+                       // $(this).remove();
+                        //use hidden attribute instead of remove method
+                        $(this).attr("hidden", "");
+
+                        return;
+                    }
+                });
+        },
+
+        weblink_show: function (url) {
+            //var value = "#navbar li.weblink";     // out of box template
+            var value = "#def-top li.weblink";      // Canada government template
+            $(value)
+                .each(function () {
+                    var item = $(this).find("a")[0];
+                    var href = item.href;
+                    if (href.indexOf(url) != -1) {
+                        
+                        //use remove hidden attribute to show menue item
+                        $(this).removeAttr("hidden");
+
                         return;
                     }
                 });
@@ -929,7 +947,7 @@ if (typeof (tdg.webapi) == "undefined") {
             tdg.webapi.update(entity_name, record_id, data);
         },
 
-        GetOptionSetLable: function(entityname, attributename, attributevalue) {
+        GetOptionSetLable: function (entityname, attributename, attributevalue) {
             //prepare query options
             var query = "/api/data/v8.2/stringmaps?$filter=objecttypecode eq '" + entityname + "' and  attributename eq '" + attributename + "' and attributevalue eq " + attributevalue;
             //setup webapi request
@@ -949,7 +967,7 @@ if (typeof (tdg.webapi) == "undefined") {
                             debugger;
                             var value = results.value[0].value;
                         }
- 
+
                     } else {
                         debugger;
                     }
@@ -1880,8 +1898,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             return data;
         },
 
-        start_buttons_confirm: function (value)
-        {
+        start_buttons_confirm: function (value) {
             if ($("#cid_has_cra_bn").val() == "1") {
                 $('#cid_has_cra_bn').prop("disabled", !value);
                 $('#cid_crabusinessnumber').attr("readonly", !value);
@@ -1889,7 +1906,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             }
         },
 
-        start_btn_next_click: function() {
+        start_btn_next_click: function () {
             debugger;
             var value = Page_ClientValidate('');
             if (value) {
@@ -1961,7 +1978,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             }
         },
 
-        start_account_by_name: function() {
+        start_account_by_name: function () {
             var legalname = $("#cid_legalname").val();
             legalname = legalname.replaceAll("'", "''");
 
@@ -2018,8 +2035,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     <label for="cid_operatingname" class="field-label">Operating Name</label>
                     <input type="text" readonly class="text form-control" id="cid_operatingname" style="width:100%" value="${data.cid_operatingname}">
                     ` +
-                    text_middle +
-                    `
+                text_middle +
+                `
                     <p>
                     <label for="address1_line1" class="field-label">Street 1</label>
                     <input type="text" readonly class="text form-control" id="address1_line1" style="width:100%" value="${data.address.AddressLine1Text}">

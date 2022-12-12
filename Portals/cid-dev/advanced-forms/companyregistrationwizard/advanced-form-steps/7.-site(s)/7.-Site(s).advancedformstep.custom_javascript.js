@@ -4,6 +4,8 @@
 
 $(document).ready(function () {
 	debugger;
+
+    sessionStorage.setItem("frominyearsites", 'false');
 	//change width and place holder div class to increase search width
 	var lang = '{{website.selected_language.code}}';
 	console.log(lang);
@@ -22,8 +24,6 @@ $(document).ready(function () {
 	 $(".entity-grid").on("loaded", function () { const EmptyMessageDiv = document.querySelector(".view-empty");	
          	EmptyMessageDiv.style.display = "none";
       });
-
-
 
 	$("#cid_registrationasof").parent().parent().hide();
 

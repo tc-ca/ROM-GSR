@@ -86,9 +86,9 @@ if (typeof (tdg.message) == "undefined") {
                 "- Nombre annuel d'envois</p>";
 
             var m000039_EN = "At this point you cannot proceed back to the previous step to re-begin the registration process. <br><br>" +
-                             "Do you want to request that TDG support personnel reach out to you in order to reset your account so that you can restart the registration process?";
+                "Do you want to request that TDG support personnel reach out to you in order to reset your account so that you can restart the registration process?";
             var m000039_FR = "At this point you cannot proceed back to the previous step to re-begin the registration process. <br><br>" +
-                             "Do you want to request that TDG support personnel reach out to you in order to reset your account so that you can restart the registration process?_FR";
+                "Do you want to request that TDG support personnel reach out to you in order to reset your account so that you can restart the registration process?_FR";
 
             var list =
                 [
@@ -485,6 +485,11 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000121",
                         "message_en": "Complete All",
                         "message_fr": "Complete All_FR"
+                    },
+                    {
+                        "code": "m000122",
+                        "message_en": "Are you sure you would like to de-activate this contact record?",
+                        "message_fr": "Are you sure you would like to de-activate this contact record?_FR"
                     }
 
                 ];
@@ -493,3 +498,4 @@ if (typeof (tdg.message) == "undefined") {
         }
     }
 }
+
