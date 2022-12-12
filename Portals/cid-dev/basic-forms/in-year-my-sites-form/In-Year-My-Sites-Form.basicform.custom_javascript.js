@@ -9,6 +9,8 @@ $(document).ready(function ()
 	$('.entitylist-search').addClass("col-md-7");
 	$('.query.form-control').css('border', 'solid 1px black');
 
+
+
 	$("#cid_registrationasof").parent().parent().hide();
 	
 	var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
