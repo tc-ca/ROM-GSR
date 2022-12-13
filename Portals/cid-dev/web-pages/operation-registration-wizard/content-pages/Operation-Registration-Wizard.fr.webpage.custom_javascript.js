@@ -35,6 +35,14 @@ $(document).ready(function () {
             sessionStorage.setItem('to_actvt_stp', 'true');
             window.location.href = "~/SiteRegistrationWizard/?id=" + siteId;
         });
+
+        if (!urlParams.has('in_year') || urlParams.get('in_year') != "true") {
+            
+	    tdg.c.weblink_hide("/RegistrationWizard/");
+        tdg.c.weblink_hide("/Bulk_Site_Upload/");
+        tdg.c.weblink_show("/company_dashboard/");
+        tdg.c.weblink_show("/Bulk_Site_Update/");
+        }
     }
 
     debugger;

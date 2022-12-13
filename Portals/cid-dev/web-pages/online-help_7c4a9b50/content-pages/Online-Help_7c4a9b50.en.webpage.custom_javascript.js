@@ -4,5 +4,5 @@ $(document).ready(function () {
 
 	if(companyName)
 		if(topNav)
-			$( "<h2>TDG Site Registration Database: " + companyName + "</h2>" ).insertAfter(topNav);
+			$( "<h2>TDG Site Registration Database: " + companyName + "</h2>" ).insertAfter(topNav);z
 });

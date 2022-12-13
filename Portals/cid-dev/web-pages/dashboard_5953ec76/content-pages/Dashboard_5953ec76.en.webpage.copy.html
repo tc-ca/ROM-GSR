@@ -14,3 +14,18 @@
         </script>
     {% endif %}
 {% endif %}
+
+{% fetchxml result %}
+<fetch distinct="false" mapping="logical" output-format="xml-platform" version="1.0">
+  <entity name="account">
+    <attribute name="accountid"></attribute>
+    <attribute name="cid_companyanniversarydate"></attribute>
+    <attribute name="statecode"></attribute>
+    <filter type="and">
+      <condition attribute="statecode" operator="eq" value="0"></condition>
+      <condition attribute="accountid" operator="eq" value="{{ user.parentcustomerid.id }}"></condition>
+    </filter>
+  </entity>
+</fetch>
+{% endfetchxml %}
+<input type="hidden" id="companyAnniversaryDate" name="companyAnniversaryDate" value="{{ result.results.entities[0].cid_companyanniversarydate }}">
