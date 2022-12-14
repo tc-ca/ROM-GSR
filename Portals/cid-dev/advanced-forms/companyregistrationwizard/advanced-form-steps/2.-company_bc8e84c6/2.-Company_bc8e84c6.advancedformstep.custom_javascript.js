@@ -4,7 +4,7 @@
 $(document).ready(function () {
 	debugger;
 
-   console.log("inser form");
+	console.log("inser form");
 	var msg = tdg.error_message.message("BTN_PREVIOUS");
 	$("#PreviousButton").hide();
 	tdg.c.button_create("btn_previous", "#PreviousButton", msg);
@@ -140,7 +140,10 @@ $(document).ready(function () {
 });
 
 function btn_previous_click() {
-	debugger;
+	var account_id = '{{user.parentcustomerid.Id}}';
+	var contact_id = '{{user.id}}';
+	var email = "{{user.emailaddress1}}";
+	tdg.cid.crw.step2_previous_click(email, account_id, contact_id);
 }
 
 if (window.jQuery) {

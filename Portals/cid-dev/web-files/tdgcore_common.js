@@ -2013,7 +2013,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 var index1 = parseInt(data.cid_reasonfornobnnumber) + 1;
                 console.log("before selected text");
                 var cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber option:selected").text();
-                    //list[index1].text;
+                //list[index1].text;
                 text_middle = `
                     <p>
                     <label for="cid_reasonfornobnnumber" class="field-label">Reason for No CRA Business Number</label>
@@ -2241,8 +2241,31 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#address1_city").val(address.CityName);
             $("#address1_stateorprovince").val(address.ProvinceStateCode);
             $("#address1_postalcode").val(address.PostalZipCode);
-        }
+        },
 
+        step2_previous_click: function (email, account_id, contact_id) {
+            debugger;
+            var message = tdg.error_message.message("m000039");
+            tdg.c.dialog_YN(message, (ans) => {
+                if (ans) {
+                    debugger;
+                    //var data = {}
+                    //data.EmailCode = "S1B-??";
+                    //data.AccountId = account_id;
+                    //data.Primary_Contactid = contact_id;
+                    //data.Secondary_Contactid = contact_id;
+                    //tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", JSON.stringify(data));
+
+                    // TODO - add ARL record
+
+                    message = tdg.error_message.message("m000040");
+                    message = message.replaceAll("{0}", email);
+                    tdg.c.dialog_OK(message);
+                }
+                else {
+                }
+            });
+        }
     }
 }
 
@@ -2273,4 +2296,3 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
-

@@ -5,7 +5,7 @@ var _cid_crabusinessnumber = "";
 $(document).ready(function () {
 	debugger;
 
-    console.log("edit form");
+	console.log("edit form");
 	var msg = tdg.error_message.message("BTN_PREVIOUS");
 	$("#PreviousButton").hide();
 	tdg.c.button_create("btn_previous", "#PreviousButton", msg);
@@ -87,7 +87,7 @@ $(document).ready(function () {
 			$("#address1_city").val(address1_city);
 			$("#address1_stateorprovince").val(address1_stateorprovince);
 			$("#address1_postalcode").val(address1_postalcode);
-        }
+		}
 	}
 	tdg.c.control_hide("cid_has_cra_bn");
 	var cid_legalname = tdg.c.replace_special_char(cid_legalname);
@@ -139,7 +139,10 @@ $(document).ready(function () {
 });
 
 function btn_previous_click() {
-	debugger;
+	var account_id = '{{user.parentcustomerid.Id}}';
+	var contact_id = '{{user.id}}';
+	var email = "{{user.emailaddress1}}";
+	tdg.cid.crw.step2_previous_click(email, account_id, contact_id);
 }
 
 function cid_crabusinessnumber_onchange() {
