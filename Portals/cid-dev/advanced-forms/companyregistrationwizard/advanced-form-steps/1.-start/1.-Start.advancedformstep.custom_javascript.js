@@ -92,7 +92,10 @@ $(document).ready(function () {
     $("#NextButton").hide();
     tdg.c.button_create("btn_next", "#NextButton", "Next");
     $("#btn_next").bind("click", function () {
-        tdg.cid.crw.start_btn_next_click();
+     
+    tdg.cid.crw.start_btn_next_click();
+        
+        
     });
 });
 
@@ -114,9 +117,9 @@ if (window.jQuery) {
 
             var validation = false;
             var rom_data, filter, legalname;
-            console.log("removed clearing message");
+            
 
-           // tdg.c.error_message_clear();
+            tdg.c.error_message_clear();
 
             if (has_invitation != "true") {
                 if (cid_has_cra_bn == 0) {

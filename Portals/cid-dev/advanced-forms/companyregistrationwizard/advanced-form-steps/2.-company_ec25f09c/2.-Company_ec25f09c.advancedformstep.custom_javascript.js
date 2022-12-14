@@ -5,6 +5,7 @@ var _cid_crabusinessnumber = "";
 $(document).ready(function () {
 	debugger;
 
+    console.log("edit form");
 	var msg = tdg.error_message.message("BTN_PREVIOUS");
 	$("#PreviousButton").hide();
 	tdg.c.button_create("btn_previous", "#PreviousButton", msg);

@@ -1,3 +1,5 @@
+{% assign currentDate = now | date: "yyyyMMddHHmmss" %}
+
 {% entityform name: 'Company Dashboard' %}
 
 {% assign parentCompanyId = user.parentcustomerid.id %}
@@ -21,9 +23,11 @@
     <attribute name="accountid"></attribute>
     <attribute name="cid_companyanniversarydate"></attribute>
     <attribute name="statecode"></attribute>
+    <attribute name="createdon"></attribute>
     <filter type="and">
       <condition attribute="statecode" operator="eq" value="0"></condition>
       <condition attribute="accountid" operator="eq" value="{{ user.parentcustomerid.id }}"></condition>
+      <condition attribute="name" operator="ne" value="' | append: {{ currentDate }} | append: '"></condition>
     </filter>
   </entity>
 </fetch>

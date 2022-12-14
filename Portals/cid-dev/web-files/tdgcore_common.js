@@ -63,7 +63,7 @@ if (typeof (tdg.c) == "undefined") {
                     var item = $(this).find("a")[0];
                     var href = item.href;
                     if (href.indexOf(url) != -1) {
-                       // $(this).remove();
+                        // $(this).remove();
                         //use hidden attribute instead of remove method
                         $(this).attr("hidden", "");
 
@@ -80,7 +80,7 @@ if (typeof (tdg.c) == "undefined") {
                     var item = $(this).find("a")[0];
                     var href = item.href;
                     if (href.indexOf(url) != -1) {
-                        
+
                         //use remove hidden attribute to show menue item
                         $(this).removeAttr("hidden");
 
@@ -1908,6 +1908,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
         start_btn_next_click: function () {
             debugger;
+            console.log("inside button click next");
             var value = Page_ClientValidate('');
             if (value) {
                 var message = tdg.error_message.message("m000038");
@@ -1933,8 +1934,11 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     data.address = cra_data.PhysicalLocationAddress;
                 }
                 else {
+                    console.log("inside else before get account by name");
                     var account = tdg.cid.crw.start_account_by_name();
+                    console.log("after query account by legal name");
                     if (account.length > 0) {
+                        console.log("account length " + account.length);
                         account = account[0];
                         data.length = 1;
                         data.cid_has_cra_bn = account.cid_has_cra_bn;
@@ -1956,7 +1960,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     }
                 }
 
-
+                console.log("before second length");
                 if (data.length == 1) {
                     tdg.cid.crw.start_buttons_confirm(false);
                     tdg.cid.crw.start_confirm(data, (ans) => {
@@ -2007,7 +2011,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
             else {
                 var list = $("#cid_reasonfornobnnumber")[0].options;
                 var index1 = parseInt(data.cid_reasonfornobnnumber) + 1;
-                var cid_reasonfornobnnumber = list[index1].text;
+                console.log("before selected text");
+                var cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber option:selected").text();
+                    //list[index1].text;
                 text_middle = `
                     <p>
                     <label for="cid_reasonfornobnnumber" class="field-label">Reason for No CRA Business Number</label>
@@ -2267,3 +2273,4 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
+
