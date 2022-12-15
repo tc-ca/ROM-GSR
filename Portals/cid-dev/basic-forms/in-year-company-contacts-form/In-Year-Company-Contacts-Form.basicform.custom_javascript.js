@@ -17,7 +17,6 @@ $(document).ready(function () {
 
     //*******Remove menu item basedon user type******** */
 		var gridList = $(".entity-grid");
-        console.log("after moving the code to file");
         //update grid to inlude deactivate , resend , assign primary admin action with click events to each row
         tdg.grid.InYear_ContactGrid_Actions(gridList);    
           
@@ -116,10 +115,10 @@ if (window.jQuery) {
    console.log("deactivation started");
    //deactivate contact and set expiry date for invitation
    invitation.Execute_Invitation_Deactivation_Logic(ContactId,cid_usercontacttype, CurrentUserID, ParentAccount, LanguageCode  );
-   //setInterval(refreshGrid, 50000); 
-   setTimeout(refreshGrid, 3000);
-   console.log("refresh grid");
-    $(".entity-grid").trigger("refresh");
+
+  // setTimeout(refreshGrid, 6000);
+
+  
     
 }
 function refreshGrid()

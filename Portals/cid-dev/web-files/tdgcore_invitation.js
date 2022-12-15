@@ -1,4 +1,3 @@
-
 // CompanyRegistrationWizard-invitation
 if (typeof (invitation) == "undefined") {
     invitation = {
@@ -299,7 +298,8 @@ if (typeof (invitation) == "undefined") {
 
         },
 
-        Execute_Invitation_Deactivation_Logic: function (ContactId, cid_usercontacttype, CurrentUserID, ParentAccount, LanguageCode) {
+        Execute_Invitation_Deactivation_Logic: function (ContactId, cid_usercontacttype, CurrentUserID, ParentAccount, LanguageCode)
+        {
 
             var FlowEmailCode = "";
             //if not primary
@@ -320,49 +320,49 @@ if (typeof (invitation) == "undefined") {
                     tdg.c.dialog_YN(m000122, (ans) => {
                         if (ans) {
 
-                    //get user invitation
-                    var adx_invitationResults = tdg.webapi.SelectedColumnlist("adx_invitations", "adx_expirydate", "_adx_invitecontact_value eq " + ContactId);
-                    //check if user logined before
-                    var result = tdg.webapi.SelectedColumnlist("contacts", "msdyn_portaltermsagreementdate", "contactid eq " + ContactId);
-                 
-                    console.log(result[0]["msdyn_portaltermsagreementdate"]);
-                    //if contact doesn't have agreement date
-                    if (result[0]["msdyn_portaltermsagreementdate"] != null) {
-                        //adx_invitation
-                        if (adx_invitationResults.length > 0) {
-                            FlowEmailCode = "S4-2";
-                        }
-                        else {
-                            FlowEmailCode = "S4-1";
-                        }
+                            //get user invitation
+                            var adx_invitationResults = tdg.webapi.SelectedColumnlist("adx_invitations", "adx_expirydate", "_adx_invitecontact_value eq " + ContactId);
+                            //check if user logined before
+                            var result = tdg.webapi.SelectedColumnlist("contacts", "msdyn_portaltermsagreementdate", "contactid eq " + ContactId);
 
-                    }//end check if user login before
-                    else {
-                        //check the user that did not login has invitation
-                        if (adx_invitationResults.length > 0) {
-                            FlowEmailCode = "S4-3";
+                            console.log(result[0]["msdyn_portaltermsagreementdate"]);
+                            //if contact doesn't have agreement date
+                            if (result[0]["msdyn_portaltermsagreementdate"] != null) {
+                                //adx_invitation
+                                if (adx_invitationResults.length > 0) {
+                                    FlowEmailCode = "S4-2";
+                                }
+                                else {
+                                    FlowEmailCode = "S4-1";
+                                }
 
-                        }
+                            }//end check if user login before
+                            else {
+                                //check the user that did not login has invitation
+                                if (adx_invitationResults.length > 0) {
+                                    FlowEmailCode = "S4-3";
 
-                    }
+                                }
 
-                    //deactivate contact
-                    var DeactivationData = { "statecode": 1 };
-                    tdg.webapi.update("contacts", ContactId, DeactivationData);
+                            }
 
-                    //Execute flow to send email and set expiry date for invitation   
-                    //get flow URL
-                    var data =
-                        '{ "EmailCode" : "' + FlowEmailCode + '", ' +
-                        '"AccountId" : "' + ParentAccount + '" ,' +
-                        '"Primary_Contactid" : "' + CurrentUserID + '" ,' +
-                        '"Secondary_Contactid" : "' + ContactId + '"}';
-                    // call function to execute flow
+                            //deactivate contact
+                            var DeactivationData = { "statecode": 1 };
+                            tdg.webapi.update("contacts", ContactId, DeactivationData);
+
+                            //Execute flow to send email and set expiry date for invitation   
+                            //get flow URL
+                            var data =
+                                '{ "EmailCode" : "' + FlowEmailCode + '", ' +
+                                '"AccountId" : "' + ParentAccount + '" ,' +
+                                '"Primary_Contactid" : "' + CurrentUserID + '" ,' +
+                                '"Secondary_Contactid" : "' + ContactId + '"}';
+                            // call function to execute flow
                             tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", data);
                             //refresh grid
-                            setTimeout($(".entity-grid").trigger("refresh"), 3000);
+                            setTimeout(invitation.refreshGrid, 4000);
 
-                 }//end if ans
+                        }//end if ans
                     } //end dialog functoin
                     ); //end dialog
                 }
@@ -374,7 +374,12 @@ if (typeof (invitation) == "undefined") {
 
             }//end else
         },
+        refreshGrid: function ()
+       {
+        $(".entity-grid").trigger("refresh");
+        console.log("inside funtion refresh grid **");
 
+        },
         Execute_Assign_Primary_Admin_Logic: function (contactid, contactFullName, cid_usercontacttype, CurrentUserID, ParentAccount, LanguageCode) {
             //if not primary contact
             if (cid_usercontacttype != 100000000) {
@@ -421,6 +426,7 @@ if (typeof (invitation) == "undefined") {
         },
     }
 }
+
 
 
 

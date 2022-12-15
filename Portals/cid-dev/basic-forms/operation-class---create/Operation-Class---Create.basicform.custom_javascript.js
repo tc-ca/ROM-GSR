@@ -42,12 +42,16 @@ if (window.jQuery) {
             debugger;
             var validation = true;
 
-            //var ovs_class_division = $("#ovs_class_division").val();
-            //var ovs_compatibility_group = $("#ovs_compatibility_group").val();
-
             return validation;
         }
     }(window.jQuery));
+}
+
+function show_error(msg) {
+    var validationSection = $('.validation-summary');
+    validationSection.html($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + msg + "</div>"));
+    validationSection.show();
+    $('.validation-summary div').focus();
 }
 
 function page_setup() {
@@ -69,9 +73,9 @@ function page_setup() {
 }
 
 function btn_save_new_onclick() {
-     //disable button to prevent adding duplicate classes by double click
-     $("#btn_save_new").prop('disabled', true);
-    tdg.c.error_message_clear();
+    //disable button to prevent adding duplicate classes by double click
+    $("#btn_save_new").prop('disabled', true);
+    //tdg.c.error_message_clear();
     if (typeof entityFormClientValidate === 'function') {
         if (entityFormClientValidate()) {
             if (typeof Page_ClientValidate === 'function') {
@@ -102,7 +106,6 @@ function btn_save_new_onclick() {
     var ovs_compatibility_group = $("#ovs_compatibility_group").val();
 
     ovs_operationclass_insert(operation_id, ovs_class_division, ovs_compatibility_group, contact_id);
-
 }
 
 function ovs_primaryclass_selected(text, id) {
@@ -143,7 +146,6 @@ function ovs_operationclass_insert(operation_id, ovs_primaryclass, ovs_compatibi
         };
     }
     tdg.webapi.create("ovs_operationclasses", data, success_cb, error_cb);
-   
 }
 
 function form_clear() {
@@ -160,7 +162,7 @@ function form_clear() {
         var c = f.contentWindow;
         c.clear_field(true);
         //enable button after all operations are finished
-      $("#btn_save_new").prop('disabled', false);
+        $("#btn_save_new").prop('disabled', false);
     } catch (e) { }
 }
 
@@ -183,7 +185,8 @@ function error_cb(msg) {
 
     var selected_language = '{{website.selected_language.code}}';
     msg = tdg.c.text_language(msg, selected_language)
-    tdg.c.message_panel_set("EntityFormControl", msg);
+    show_error(msg);
+
     //enable button after all operations are finished
-      $("#btn_save_new").prop('disabled', false);
+    $("#btn_save_new").prop('disabled', false);
 }

@@ -7,6 +7,14 @@ $(document).ready(function () {
 	  $(".entity-grid").on("loaded", function () { const EmptyMessageDiv = document.querySelector(".view-empty");	
          	EmptyMessageDiv.style.display = "none";
       });
+	  var urlParams = new URLSearchParams(window.location.search);
+	   if (urlParams.has('in_year'))
+			{
+				tdg.c.weblink_hide("/RegistrationWizard/");
+				tdg.c.weblink_hide("/Bulk_Site_Upload/");
+				tdg.c.weblink_show("/company_dashboard/");
+                tdg.c.weblink_show("/Bulk_Site_Update/");
+			}
 });
 if (window.jQuery) {
 	(function ($) {
@@ -38,7 +46,7 @@ if (window.jQuery) {
 						if (urlParams.has('siteid')) {
 							var siteId = urlParams.get('siteid');
 							if (urlParams.has('in_year')) {
-								window.location.href = "~/my-sites/in-year-site/?id=" + siteId;
+								window.location.href = "~/my-sites/in-year-site/?id=" + siteId;								
 							}
 							else {
 								window.location.href = "~/SiteRegistrationWizard/?id=" + siteId;

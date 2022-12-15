@@ -23,7 +23,7 @@ $(document).ready(function () {
 	$("#cid_naicscode").attr("value", null);
 	$("#cid_naicscode_name").attr("value", null);
 
-	 debugger; 
+	debugger;
 
 	//Test The NAICS Code must be selected using the NAICS Code drop-down. Enter at least the first two digits or your full NAICS Code to filter the drop-down and select the applicable NAICS Code from the list.</p>");
 });
@@ -71,10 +71,7 @@ if (window.jQuery) {
 				var selected_language = '{{website.selected_language.code}}';
 				msg = tdg.c.text_language(msg, selected_language);
 
-				var validationSection = $('.validation-summary');
-				validationSection.html($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + msg + "</div>"));
-				validationSection.show();
-				$('.validation-summary div').focus();
+				show_error(msg);
 
 				var validation = false;
 				return validation;
@@ -83,6 +80,13 @@ if (window.jQuery) {
 			return validation;
 		}
 	}(window.jQuery));
+}
+
+function show_error(msg) {
+	var validationSection = $('.validation-summary');
+	validationSection.html($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + msg + "</div>"));
+	validationSection.show();
+	$('.validation-summary div').focus();
 }
 
 // call back from tdg.c 
@@ -137,6 +141,7 @@ function success_cb() {
 	msg = tdg.error_message.message("m000005"); // Record added
 	msg = msg.replace("{0}", _count);
 	tdg.c.message_panel_set("EntityFormControl", msg);
+
 	// clear form
 	form_clear();
 	_reload = true;
@@ -147,7 +152,9 @@ function error_cb(msg) {
 	debugger;
 	var selected_language = '{{website.selected_language.code}}';
 	msg = tdg.c.text_language(msg, selected_language);
-	tdg.c.message_panel_set("EntityFormControl", msg);
+	show_error(msg);
+	//tdg.c.message_panel_set("EntityFormControl", msg);
+
 	$("#btn_save_new").prop('disabled', false);
 }
 
