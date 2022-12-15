@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>1</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{508ea182-80b7-43a9-a678-51860bcdebc3}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="cid_name" select="1" icon="1" preview="1">
+        <row name="result" id="cid_invitationid">
+          <cell name="cid_name" width="300" />
+          <cell name="createdon" width="125" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>4</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="cid_invitation">
+          <attribute name="cid_invitationid" />
+          <attribute name="cid_name" />
+          <attribute name="createdon" />
+          <order attribute="cid_name" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <filter type="or" isquickfindfields="1">
+            <condition attribute="cid_name" operator="like" value="{0}" />
+            <condition attribute="cid_companyaddress" operator="like" value="{0}" />
+            <condition attribute="cid_companyname" operator="like" value="{0}" />
+            <condition attribute="cid_company_province" operator="like" value="{0}" />
+            <condition attribute="cid_invitation" operator="like" value="{0}" />
+            <condition attribute="cid_invitedcontact" operator="like" value="{0}" />
+            <condition attribute="cid_invitedcontactemail" operator="like" value="{0}" />
+          </filter>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Quick Find Active CID Invitations" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

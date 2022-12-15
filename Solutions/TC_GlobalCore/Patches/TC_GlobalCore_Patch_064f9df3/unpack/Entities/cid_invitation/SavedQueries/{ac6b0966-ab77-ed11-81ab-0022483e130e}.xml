@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{ac6b0966-ab77-ed11-81ab-0022483e130e}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="cid_name" select="1" icon="1" preview="1">
+        <row name="result" id="cid_invitationid">
+          <cell name="cid_companystatus" width="300" />
+          <cell name="cid_companyname" width="162" />
+          <cell name="cid_companyaddress" width="290" />
+          <cell name="cid_company_province" width="143" />
+          <cell name="cid_invitationsenton" width="144" />
+          <cell name="cid_invitedcontact" width="211" />
+          <cell name="cid_invitedcontactemail" width="222" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
+        <entity name="cid_invitation">
+          <attribute name="cid_invitationid" />
+          <filter type="and">
+            <condition attribute="statuscode" operator="eq" value="1" />
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="cid_companystatus" />
+          <attribute name="cid_companyname" />
+          <attribute name="cid_companyaddress" />
+          <attribute name="cid_company_province" />
+          <attribute name="cid_invitationsenton" />
+          <attribute name="cid_invitedcontact" />
+          <attribute name="cid_invitedcontactemail" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="New Invitations" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
