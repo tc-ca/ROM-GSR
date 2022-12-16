@@ -10,7 +10,7 @@ $(document).ready(function ()
 	else
 	{
 		tdg.c.weblink_hide("/company_dashboard/");
-		tdg.c.weblink_hide("/Bulk_Site_Upload/");
+		tdg.c.weblink_hide("/Bulk_Site_Update/");
 	}
 	console.log("document read");
 	$(".breadcrumb li").each(function ()

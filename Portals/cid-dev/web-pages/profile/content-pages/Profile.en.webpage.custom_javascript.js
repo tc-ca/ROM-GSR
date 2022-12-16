@@ -13,17 +13,30 @@ $(document).ready(function () {
     tdg.c.control_hide("cid_contacttype");
 
     var parent_id = '{{user.parentcustomerid.Id}}';
-    var filter = "accountid eq guid'" + parent_id + "'";
-    var data = tdg.c.OData_List("account", filter);
-    if (data == null) {
+   // var filter = "accountid eq guid'" + parent_id + "'";
+
+    var data = tdg.webapi.SelectedColumnlist("accounts",
+                    "cid_cidcompanystatus,cid_officiallyregistrationcompletationdate",
+                    "accountid eq " + parent_id );
+                
+     
+    if (data.length == 0)
+   // var data = tdg.c.OData_List("account", filter);
+    //if (data == null) 
+    {
         tdg.c.weblink_hide("/RegistrationWizard/");
         tdg.c.weblink_hide("/Bulk_Site_Upload/");
         tdg.c.weblink_hide("/company_dashboard/");
         tdg.c.weblink_hide("/Bulk_Site_Update/");
     }
     else {
-        var cid_cidcompanystatus = data[0].cid_cidcompanystatus.Value;
-        if (cid_cidcompanystatus == 100000005)  // Active: Registration complete, part of CID Reporting
+        var cid_cidcompanystatus = data[0]['cid_cidcompanystatus'];
+          var completionDate = data[0]['cid_officiallyregistrationcompletationdate'];
+     
+        //.cid_cidcompanystatus.Value;
+        if ( completionDate != "" && completionDate != null)
+        //.cid_cidcompanystatus.Value;
+       // if (cid_cidcompanystatus == 100000005)  // Active: Registration complete, part of CID Reporting
         {
             tdg.c.weblink_hide("/RegistrationWizard/");
             tdg.c.weblink_hide("/Bulk_Site_Upload/");
