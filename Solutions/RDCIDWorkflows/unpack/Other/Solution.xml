@@ -6,7 +6,7 @@
       <LocalizedName description="RD.CID.Workflows" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.0.0.27</Version>
+    <Version>1.0.0.28</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>CID_Solution</UniqueName>
@@ -86,6 +86,7 @@
       <RootComponent type="29" id="{3018d500-4c9e-ec11-b3fe-000d3a842be7}" behavior="0" />
       <RootComponent type="29" id="{39c0446d-f08a-4c6d-8c4e-d5218fd8681c}" behavior="0" />
       <RootComponent type="29" id="{3f4ca60c-51d3-482e-978b-267564d36b27}" behavior="0" />
+      <RootComponent type="29" id="{51a0b99a-a37e-ed11-81ac-0022483e130e}" behavior="0" />
       <RootComponent type="29" id="{62be25a8-351b-4eed-82da-a15a047afb59}" behavior="0" />
       <RootComponent type="29" id="{6a798e74-7b6c-ed11-81ab-0022483e130e}" behavior="0" />
       <RootComponent type="29" id="{712cb931-8b12-44c0-8f2b-a765346f7efb}" behavior="0" />
@@ -114,6 +115,12 @@
           <package>CDSBasePortal (9.3.2109.20)</package>
         </Required>
         <Dependent type="29" displayName="CID Portal - Invitation - Set Expiry Date on Deactivation" id="{110bea79-43da-4093-a476-e0cb46f863b7}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="adx_invitation" displayName="Invitation" solution="MicrosoftPortalBase (9.2.2103.1)">
+          <package>CDSBasePortal (9.3.2109.20)</package>
+        </Required>
+        <Dependent type="29" displayName="CID Portal - CID Invitation - Set Expiry Date of I" id="{51a0b99a-a37e-ed11-81ac-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="adx_invitation" displayName="Invitation" solution="MicrosoftPortalBase (9.2.2103.1)">
@@ -162,6 +169,10 @@
       <MissingDependency>
         <Required type="1" schemaName="cid_companynaicscode" displayName="Company NAICS Code" solution="Active" />
         <Dependent type="29" displayName="CID Portal - Company Re-Attestation - NAICS Codes" id="{0ca318d6-11bf-49e7-bc0f-412f72bd394e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="cid_invitation" displayName="CID Invitation " solution="Active" />
+        <Dependent type="29" displayName="CID Portal - CID Invitation - Set Expiry Date of I" id="{51a0b99a-a37e-ed11-81ac-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="cid_invitation" displayName="CID Invitation " solution="Active" />
@@ -226,6 +237,10 @@
       <MissingDependency>
         <Required type="10" schemaName="ovs_MOCRegistration_Site" displayName="ovs_MOCRegistration_Site" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
         <Dependent type="29" displayName="CID Portal - Site Re-Attestation - Modes of transportation" id="{bfaa9bdd-318d-4f7b-bfa3-4d8d08bb5bfe}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="10" schemaName="cid_cid_invitation_Invitation_adx_invitation" displayName="cid_cid_invitation_Invitation_adx_invitation" parentSchemaName="adx_invitation" parentDisplayName="Invitation" solution="Active" />
+        <Dependent type="29" displayName="CID Portal - CID Invitation - Set Expiry Date of I" id="{51a0b99a-a37e-ed11-81ac-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="10" schemaName="adx_invitation_invitecontact" displayName="adx_invitation_invitecontact" parentSchemaName="contact" parentDisplayName="Contact" solution="MicrosoftPortalBase (9.2.2103.1)">
@@ -300,6 +315,10 @@
       <MissingDependency>
         <Required type="2" schemaName="cid_cidcompanystatus" displayName="CID Company Status" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
         <Dependent type="29" displayName="CID Portal - Attest Company" id="{8e2fd2fe-a5b4-4d59-a651-24a81cf732b4}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_cidcompanystatus" displayName="CID Company Status" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="29" displayName="CID Portal - Create portal Invitation for new contacts" id="{b301671d-97d4-46c8-9323-23733015c408}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="cid_cidcompanystatus" displayName="CID Company Status" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
@@ -474,6 +493,10 @@
         <Dependent type="29" displayName="Account - Calculate Lat/Long" id="{3018d500-4c9e-ec11-b3fe-000d3a842be7}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="2" schemaName="ovs_invitation_only" displayName="Invitation Only" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="29" displayName="CID Portal - Create portal Invitation for new contacts" id="{b301671d-97d4-46c8-9323-23733015c408}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="2" schemaName="ovs_legal_land_description" displayName="Calculated Legal Land Description" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
         <Dependent type="29" displayName="Account - Calculate LLD" id="{9a344c93-7da0-ec11-b3fe-000d3a0c84c3}" />
       </MissingDependency>
@@ -531,6 +554,12 @@
         <Required type="2" schemaName="adx_expirydate" displayName="Expiry Date" parentSchemaName="adx_invitation" parentDisplayName="Invitation" solution="MicrosoftPortalBase (9.2.2103.1)">
           <package>CDSBasePortal (9.3.2109.20)</package>
         </Required>
+        <Dependent type="29" displayName="CID Portal - CID Invitation - Set Expiry Date of I" id="{51a0b99a-a37e-ed11-81ac-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="adx_expirydate" displayName="Expiry Date" parentSchemaName="adx_invitation" parentDisplayName="Invitation" solution="MicrosoftPortalBase (9.2.2103.1)">
+          <package>CDSBasePortal (9.3.2109.20)</package>
+        </Required>
         <Dependent type="29" displayName="CID Portal - Create portal Invitation for new contacts" id="{b301671d-97d4-46c8-9323-23733015c408}" />
       </MissingDependency>
       <MissingDependency>
@@ -544,6 +573,12 @@
           <package>CDSBasePortal (9.3.2109.20)</package>
         </Required>
         <Dependent type="29" displayName="CID Portal - Invitation - Set Expiry Date on Deactivation" id="{110bea79-43da-4093-a476-e0cb46f863b7}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="adx_invitationid" displayName="Invitation" parentSchemaName="adx_invitation" parentDisplayName="Invitation" solution="MicrosoftPortalBase (9.2.2103.1)">
+          <package>CDSBasePortal (9.3.2109.20)</package>
+        </Required>
+        <Dependent type="29" displayName="CID Portal - CID Invitation - Set Expiry Date of I" id="{51a0b99a-a37e-ed11-81ac-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="adx_invitationid" displayName="Invitation" parentSchemaName="adx_invitation" parentDisplayName="Invitation" solution="MicrosoftPortalBase (9.2.2103.1)">
@@ -591,6 +626,12 @@
         <Required type="2" schemaName="adx_name" displayName="Name" parentSchemaName="adx_invitation" parentDisplayName="Invitation" solution="MicrosoftPortalBase (9.2.2103.1)">
           <package>CDSBasePortal (9.3.2109.20)</package>
         </Required>
+        <Dependent type="29" displayName="CID Portal - CID Invitation - Set Expiry Date of I" id="{51a0b99a-a37e-ed11-81ac-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="adx_name" displayName="Name" parentSchemaName="adx_invitation" parentDisplayName="Invitation" solution="MicrosoftPortalBase (9.2.2103.1)">
+          <package>CDSBasePortal (9.3.2109.20)</package>
+        </Required>
         <Dependent type="29" displayName="CID Portal - Create portal Invitation for new contacts" id="{b301671d-97d4-46c8-9323-23733015c408}" />
       </MissingDependency>
       <MissingDependency>
@@ -620,6 +661,12 @@
           <package>CDSBasePortal (9.3.2109.20)</package>
         </Required>
         <Dependent type="29" displayName="CID Portal - Invitation - Set Expiry Date on Deactivation" id="{110bea79-43da-4093-a476-e0cb46f863b7}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="statecode" displayName="Status" parentSchemaName="adx_invitation" parentDisplayName="Invitation" solution="MicrosoftPortalBase (9.2.2103.1)">
+          <package>CDSBasePortal (9.3.2109.20)</package>
+        </Required>
+        <Dependent type="29" displayName="CID Portal - CID Invitation - Set Expiry Date of I" id="{51a0b99a-a37e-ed11-81ac-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="adx_name" displayName="Name" parentSchemaName="adx_webrole" parentDisplayName="Web Role" solution="MicrosoftPortalDependencies (9.2.2103.0)">
@@ -782,12 +829,32 @@
         <Dependent type="29" displayName="Account - Create CID Invitation Record on Create" id="{6a798e74-7b6c-ed11-81ab-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="2" schemaName="cid_invitation" displayName="Invitation" parentSchemaName="cid_invitation" parentDisplayName="CID Invitation " solution="Active" />
+        <Dependent type="29" displayName="CID Portal - CID Invitation - Set Expiry Date of I" id="{51a0b99a-a37e-ed11-81ac-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_invitationid" displayName="CID Invitation " parentSchemaName="cid_invitation" parentDisplayName="CID Invitation " solution="Active" />
+        <Dependent type="29" displayName="CID Portal - CID Invitation - Set Expiry Date of I" id="{51a0b99a-a37e-ed11-81ac-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="2" schemaName="cid_invitationid" displayName="CID Invitation " parentSchemaName="cid_invitation" parentDisplayName="CID Invitation " solution="Active" />
         <Dependent type="29" displayName="Account - Create CID Invitation Record on Create" id="{6a798e74-7b6c-ed11-81ab-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="2" schemaName="cid_invitationvaliduntil" displayName="Invitation Valid Until" parentSchemaName="cid_invitation" parentDisplayName="CID Invitation " solution="Active" />
+        <Dependent type="29" displayName="CID Portal - CID Invitation - Set Expiry Date of I" id="{51a0b99a-a37e-ed11-81ac-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_name" displayName="Name" parentSchemaName="cid_invitation" parentDisplayName="CID Invitation " solution="Active" />
+        <Dependent type="29" displayName="CID Portal - CID Invitation - Set Expiry Date of I" id="{51a0b99a-a37e-ed11-81ac-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="2" schemaName="cid_name" displayName="Name" parentSchemaName="cid_invitation" parentDisplayName="CID Invitation " solution="Active" />
         <Dependent type="29" displayName="Account - Create CID Invitation Record on Create" id="{6a798e74-7b6c-ed11-81ab-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="statecode" displayName="Status" parentSchemaName="cid_invitation" parentDisplayName="CID Invitation " solution="Active" />
+        <Dependent type="29" displayName="CID Portal - CID Invitation - Set Expiry Date of I" id="{51a0b99a-a37e-ed11-81ac-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="cid_company" displayName="Company" parentSchemaName="cid_modeoftransportation" parentDisplayName="Mode of Transportation (CID)" solution="Active" />
