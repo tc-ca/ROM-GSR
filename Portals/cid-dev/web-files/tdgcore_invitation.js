@@ -132,7 +132,22 @@ if (typeof (invitation) == "undefined") {
 
         invitation_primary: function (_account, message, contact_id) {
             debugger;
-            message = tdg.error_message.message("m000033");
+
+            var data = tdg.cid.crw.data_confirm_dialog();
+            if (data.length == 0)
+            {
+            }
+            tdg.cid.crw.start_confirm(data, (ans) => {
+                if (ans) {
+                    debugger;
+                } else {
+                    debugger;
+                }
+            });
+
+            return;
+
+            message = tdg.error_message.message(message);
             message = message.replaceAll("{0}", _account.ovs_legalname);
             tdg.c.dialog_YN(message, (ans) => {
                 if (ans) {
@@ -298,8 +313,7 @@ if (typeof (invitation) == "undefined") {
 
         },
 
-        Execute_Invitation_Deactivation_Logic: function (ContactId, cid_usercontacttype, CurrentUserID, ParentAccount, LanguageCode)
-        {
+        Execute_Invitation_Deactivation_Logic: function (ContactId, cid_usercontacttype, CurrentUserID, ParentAccount, LanguageCode) {
 
             var FlowEmailCode = "";
             //if not primary
@@ -374,10 +388,9 @@ if (typeof (invitation) == "undefined") {
 
             }//end else
         },
-        refreshGrid: function ()
-       {
-        $(".entity-grid").trigger("refresh");
-        console.log("inside funtion refresh grid **");
+        refreshGrid: function () {
+            $(".entity-grid").trigger("refresh");
+            console.log("inside funtion refresh grid **");
 
         },
         Execute_Assign_Primary_Admin_Logic: function (contactid, contactFullName, cid_usercontacttype, CurrentUserID, ParentAccount, LanguageCode) {
@@ -426,7 +439,3 @@ if (typeof (invitation) == "undefined") {
         },
     }
 }
-
-
-
-

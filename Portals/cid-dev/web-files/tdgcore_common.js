@@ -1906,6 +1906,52 @@ if (typeof (tdg.cid.crw) == "undefined") {
             }
         },
 
+        data_confirm_dialog: function (cid_has_cra_bn, bn) {
+            debugger;
+            var data = {};
+            data.length = 0;
+            if (cid_has_cra_bn == "1") {
+                var cra_data = tdg.cid.crw.start_Retrieve_cra(bn, "");
+                if (cra_data.length == 0) {
+                    return data;
+                }
+
+                data.length = 1;
+                data.cid_has_cra_bn = 1;
+                data.cid_legalname = cra_data.LegalName;
+                data.cid_operatingname = cra_data.OperatingName;
+                data.cid_crabusinessnumber = bn;
+                data.address = cra_data.PhysicalLocationAddress;
+            }
+            else {
+                console.log("inside else before get account by name");
+                var account = tdg.cid.crw.start_account_by_name();
+                console.log("after query account by legal name");
+                if (account.length > 0) {
+                    console.log("account length " + account.length);
+                    account = account[0];
+                    data.length = 1;
+                    data.cid_has_cra_bn = account.cid_has_cra_bn;
+                    data.cid_crabusinessnumber = account.cid_crabusinessnumber;
+                    data.cid_legalname = account.ovs_legalname;
+                    data.cid_operatingname = account.name;
+                    data.cid_reasonfornobnnumber = account.cid_reasonfornobnnumber;
+                    data.cid_reasonfornobnnumber_other = account.cid_reasonfornobnnumber_other;
+
+                    var address = {};
+                    address.AddressLine1Text = account.address1_line1;
+                    address.AddressLine2Text = account.address1_line2;
+                    address.AddressLine3Text = account.address1_line3;
+                    address.CityName = account.address1_city;
+                    address.ProvinceStateCode = account.address1_stateorprovince;
+                    address.PostalZipCode = account.address1_postalcode;
+
+                    data.address = address;
+                }
+            }
+            return data;
+        },
+
         start_btn_next_click: function () {
             debugger;
             console.log("inside button click next");
@@ -1913,52 +1959,64 @@ if (typeof (tdg.cid.crw) == "undefined") {
             if (value) {
                 var message = tdg.error_message.message("m000038");
                 $("#btn_next").prop("value", message);
-                var data = {};
-                data.length = 0;
-                if ($("#cid_has_cra_bn").val() == "1") {
-                    var bn = $("#cid_crabusinessnumber").val();
-                    var cra_data = tdg.cid.crw.start_Retrieve_cra(bn, "");
-                    if (cra_data.length == 0) {
-                        var message = tdg.error_message.message("m000001");
-                        tdg.c.dialog_OK(message);
 
-                        var message = tdg.error_message.message("BTN_NEXT");
-                        $("#btn_next").prop("value", message);
-                        return;
-                    }
-                    data.length = 1;
-                    data.cid_has_cra_bn = 1;
-                    data.cid_legalname = cra_data.LegalName;
-                    data.cid_operatingname = cra_data.OperatingName;
-                    data.cid_crabusinessnumber = bn;
-                    data.address = cra_data.PhysicalLocationAddress;
+                var cid_has_cra_bn = $("#cid_has_cra_bn").val();
+                var bn = $("#cid_crabusinessnumber").val();
+                var data = tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn);
+                if (data.length == 0) {
+                    var message = tdg.error_message.message("m000001");
+                    tdg.c.dialog_OK(message);
+
+                    var message = tdg.error_message.message("BTN_NEXT");
+                    $("#btn_next").prop("value", message);
+                    return;
                 }
-                else {
-                    console.log("inside else before get account by name");
-                    var account = tdg.cid.crw.start_account_by_name();
-                    console.log("after query account by legal name");
-                    if (account.length > 0) {
-                        console.log("account length " + account.length);
-                        account = account[0];
-                        data.length = 1;
-                        data.cid_has_cra_bn = account.cid_has_cra_bn;
-                        data.cid_crabusinessnumber = account.cid_crabusinessnumber;
-                        data.cid_legalname = account.ovs_legalname;
-                        data.cid_operatingname = account.name;
-                        data.cid_reasonfornobnnumber = account.cid_reasonfornobnnumber;
-                        data.cid_reasonfornobnnumber_other = account.cid_reasonfornobnnumber_other;
+                //var data = {};
+                //data.length = 0;
+                //if ($("#cid_has_cra_bn").val() == "1") {
+                //    var bn = $("#cid_crabusinessnumber").val();
+                //    var cra_data = tdg.cid.crw.start_Retrieve_cra(bn, "");
+                //    if (cra_data.length == 0) {
+                //        var message = tdg.error_message.message("m000001");
+                //        tdg.c.dialog_OK(message);
 
-                        var address = {};
-                        address.AddressLine1Text = account.address1_line1;
-                        address.AddressLine2Text = account.address1_line2;
-                        address.AddressLine3Text = account.address1_line3;
-                        address.CityName = account.address1_city;
-                        address.ProvinceStateCode = account.address1_stateorprovince;
-                        address.PostalZipCode = account.address1_postalcode;
+                //        var message = tdg.error_message.message("BTN_NEXT");
+                //        $("#btn_next").prop("value", message);
+                //        return;
+                //    }
+                //    data.length = 1;
+                //    data.cid_has_cra_bn = 1;
+                //    data.cid_legalname = cra_data.LegalName;
+                //    data.cid_operatingname = cra_data.OperatingName;
+                //    data.cid_crabusinessnumber = bn;
+                //    data.address = cra_data.PhysicalLocationAddress;
+                //}
+                //else {
+                //    console.log("inside else before get account by name");
+                //    var account = tdg.cid.crw.start_account_by_name();
+                //    console.log("after query account by legal name");
+                //    if (account.length > 0) {
+                //        console.log("account length " + account.length);
+                //        account = account[0];
+                //        data.length = 1;
+                //        data.cid_has_cra_bn = account.cid_has_cra_bn;
+                //        data.cid_crabusinessnumber = account.cid_crabusinessnumber;
+                //        data.cid_legalname = account.ovs_legalname;
+                //        data.cid_operatingname = account.name;
+                //        data.cid_reasonfornobnnumber = account.cid_reasonfornobnnumber;
+                //        data.cid_reasonfornobnnumber_other = account.cid_reasonfornobnnumber_other;
 
-                        data.address = address;
-                    }
-                }
+                //        var address = {};
+                //        address.AddressLine1Text = account.address1_line1;
+                //        address.AddressLine2Text = account.address1_line2;
+                //        address.AddressLine3Text = account.address1_line3;
+                //        address.CityName = account.address1_city;
+                //        address.ProvinceStateCode = account.address1_stateorprovince;
+                //        address.PostalZipCode = account.address1_postalcode;
+
+                //        data.address = address;
+                //    }
+                //}
 
                 console.log("before second length");
                 if (data.length == 1) {
