@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" ?><xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"><xsl:output method="text" indent="no"/><xsl:template match="/data"><![CDATA[<div data-wrapper="true" style="font-family:'Segoe UI','Helvetica Neue',sans-serif; font-size:9pt">
 <div>
 <div><br>
-<span style="font-size:11pt"><span style="line-height:107%"><span style="font-family:Calibri,sans-serif">[Date]</span></span></span><br>
+<span style="font-size:11pt"><span style="line-height:107%"><span style="font-family:Calibri,sans-serif">[submissionDate]</span></span></span><br>
 <br>
 <span style="font-size:11pt"><span style="line-height:107%"><span style="font-family:Calibri,sans-serif">To: [primaryContactName]</span></span></span><br>
 <span style="font-size:11pt"><span style="line-height:107%"><span style="font-family:Calibri,sans-serif">[siteName]</span></span></span><br>
@@ -24,7 +24,7 @@
 
 <div style="border-bottom:double windowtext 2.25pt; padding:0cm 0cm 1.0pt 0cm">&nbsp;</div>
 <br>
-<span style="font-size:12pt"><span style="font-family:Arial,sans-serif"><span lang="FR-CA" style="font-size:10.5pt"><span style="background-color:white"><span style="font-family:&quot;Segoe UI&quot;,sans-serif"><span style="color:#242424">[Date] </span></span></span></span></span></span><br>
+<span style="font-size:12pt"><span style="font-family:Arial,sans-serif"><span lang="FR-CA" style="font-size:10.5pt"><span style="background-color:white"><span style="font-family:&quot;Segoe UI&quot;,sans-serif"><span style="color:#242424">[submissionDate] </span></span></span></span></span></span><br>
 <br>
 <span style="font-size:11pt"><span><span style="line-height:107%"><span style="font-family:Calibri,sans-serif"><span lang="FR-CA" style="font-size:10.5pt"><span style="background-color:white"><span style="line-height:107%"><span style="font-family:&quot;Segoe UI&quot;,sans-serif"><span style="color:#242424">À : [primaryContactName]</span></span></span></span></span></span></span></span></span><br>
 <span style="font-size:11pt"><span><span style="line-height:107%"><span style="font-family:Calibri,sans-serif"><span lang="FR-CA" style="font-size:10.5pt"><span style="background-color:white"><span style="line-height:107%"><span style="font-family:&quot;Segoe UI&quot;,sans-serif"><span style="color:#242424">[siteName]</span></span></span></span></span></span></span></span></span><br>

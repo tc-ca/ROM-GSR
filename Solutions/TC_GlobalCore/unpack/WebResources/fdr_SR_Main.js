@@ -25,8 +25,8 @@ var SR_main = (function (window, document) {
         "1": [1, 794600010],
         "Submitted": ["Submitted", "Admin Review", "Cancellation Pending"],
         "794600010": [794600010, 794600006, 794600009],
-        "Admin Review": ["Admin Review", "Additional Info Required", "Technical Review", "Cancellation Pending"],
-        "794600006": [794600006, 794600000, 794600002, 794600009],
+        "Admin Review": ["Admin Review", "Additional Info Required", "Technical Review", "Cancellation Pending","Refused"],
+        "794600006": [794600006, 794600000, 794600002, 794600009, 794600008],
         "Additional Info Required": ["Additional Info Required", "Admin Review"],
         "794600000": [794600000, 794600006],
         "Technical Info Required": ["Technical Info Required", "Technical Review"],
@@ -49,8 +49,8 @@ var SR_main = (function (window, document) {
 
     var statusMappingFullRevocation = {
 
-        "Approved": ["Approved", "Technical Review"],
-        "794600007": [794600007, 794600002]
+        "Completed": ["Completed", "Technical Review"],
+        "794600005": [794600005, 794600002]
     };
 
     var statusMappingFullRevocationInactive = {
@@ -110,6 +110,24 @@ var SR_main = (function (window, document) {
             glHelper.SetDisabled(formContext, "header_statecode", false);
         //else state is read only
         else glHelper.SetDisabled(formContext, "header_statecode", true);
+    }
+
+    function SetStateDependantVisibility(formContext)
+    {
+
+        SR_status = glHelper.GetOptionsetValue(formContext, "statuscode");
+        SR_state = glHelper.GetOptionsetValue(formContext, "statecode");
+
+        //Field toggles
+        var isJustificationNeeded = false;
+
+        if (SR_status == 794600008) isJustificationNeeded = true;
+
+        //If status is Refused then show and require justification
+        glHelper.SetControlVisibility(formContext, "fdr_refusaljustification", isJustificationNeeded);
+
+        glHelper.SetRequiredLevel(formContext, "fdr_refusaljustification", isJustificationNeeded);
+
     }
 
     function ServiceRquestTypeFilter(formContext, operationstatus) {
@@ -174,6 +192,9 @@ var SR_main = (function (window, document) {
             //events happens on any form stage
             SetStateChangebility(formContext);
 
+            //Manage hide/show based on status
+            SetStateDependantVisibility(formContext);
+
             var formState = formContext.getAttribute("statecode");
             formState.removeOnChange(SR_main.OnState_Change);
             formState.addOnChange(SR_main.OnState_Change);
@@ -215,7 +236,7 @@ var SR_main = (function (window, document) {
                             //If Type is Full Revocation, only "Approved" should be available status reason.
                             var currentSatatus = glHelper.GetOptionsetValue(formContext, "statuscode");
 
-                            glHelper.filterOptionSetUsingOrigin(formContext, "header_statuscode", SR_Status_origin, statusMappingFullRevocation["794600007"], true);
+                            glHelper.filterOptionSetUsingOrigin(formContext, "header_statuscode", SR_Status_origin, statusMappingFullRevocation["794600005"], true);
                         }
                     }
                     
@@ -243,6 +264,9 @@ var SR_main = (function (window, document) {
                 //update global values
                 SetStateChangebility(formContext);
             }
+
+            //Manage hide/show based on status
+            SetStateDependantVisibility(formContext);
         },
 
         OnState_Change: function (executionContext) {
@@ -268,7 +292,7 @@ var SR_main = (function (window, document) {
                 //If Type is Full Revocation, only "Approced & Technical Review" should be available status reason.
                 if (serviceRquestType == 794600004)
                 {
-                    glHelper.filterOptionSetUsingOrigin(formContext, "header_statuscode", SR_Status_origin, statusMappingFullRevocation["794600007"], true);
+                    glHelper.filterOptionSetUsingOrigin(formContext, "header_statuscode", SR_Status_origin, statusMappingFullRevocation["794600005"], true);
                 }
                 else
                 glHelper.filterOptionSetUsingOrigin(formContext, "header_statuscode", SR_Status_origin, statusMappingActive[SR_status], true);
@@ -318,13 +342,13 @@ var SR_main = (function (window, document) {
                             glHelper.SetLookup(formContext, "fdr_site", logicalname, siteid, name);
                         }
                         var containerType = formContext.getAttribute("fdr_containertype").getValue();
-                        //if (containerType == null) {
-                        //    var containerTypeId = result["_fdr_registrationtype_value"];
-                        //    var containerTypeName = result["_fdr_registrationtype_value@OData.Community.Display.V1.FormattedValue"];
-                        //    var clogicalname = result["_fdr_registrationtype_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                        if (containerType == null) {
+                            var containerTypeId = result["_fdr_registrationtype_value"];
+                            var containerTypeName = result["_fdr_registrationtype_value@OData.Community.Display.V1.FormattedValue"];
+                            var clogicalname = result["_fdr_registrationtype_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
 
-                        //    glHelper.SetLookup(formContext, "fdr_containertype", clogicalname, containerTypeId, containerTypeName);
-                        //}
+                            glHelper.SetLookup(formContext, "fdr_containertype", clogicalname, containerTypeId, containerTypeName);
+                        }
                     },
                     function (error) {
                         Xrm.Navigation.openErrorDialog({ message: error.message });
@@ -349,9 +373,9 @@ var SR_main = (function (window, document) {
             var formType = glHelper.GetFormType(formContext);
 
             //statuscode ATTRIBUTE is dirty refresh the form
-            //if (formType > 1 && isStatusChanged) {
-            //    Xrm.Utility.openEntityForm(formContext.data.entity.getEntityName(), formContext.data.entity.getId());
-            //}
+            if (formType > 1 && isStatusChanged) {
+                Xrm.Utility.openEntityForm(formContext.data.entity.getEntityName(), formContext.data.entity.getId());
+            }
         }
     }
 

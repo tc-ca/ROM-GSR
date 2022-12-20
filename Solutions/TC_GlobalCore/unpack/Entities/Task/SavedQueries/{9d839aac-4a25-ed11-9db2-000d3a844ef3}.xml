@@ -21,14 +21,15 @@
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="task">
           <attribute name="statuscode" />
+          <attribute name="subject" />
           <order attribute="subject" descending="false" />
           <filter type="and">
             <condition attribute="cid_tasklevel" operator="eq" value="100000001" />
+            <condition attribute="scheduledend" operator="null" />
           </filter>
           <link-entity name="cid_annualcomplianceitem" from="cid_annualcomplianceitemid" to="cid_annualcomplianceitem" visible="false" link-type="outer" alias="a_a0c45060fb24ed119db2000d3a844ef3">
             <attribute name="cid_description" />
           </link-entity>
-          <attribute name="subject" />
           <attribute name="activityid" />
         </entity>
       </fetch>

@@ -13,9 +13,8 @@
           <cell name="cid_effectivedate" width="100" />
           <cell name="cid_createdbyregistrant" width="100" />
           <cell name="a_dabd53fd95d5ec11a7b50022483c547f.cid_activityen" width="200" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
-          <cell name="cid_memoen" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="a_dabd53fd95d5ec11a7b50022483c547f.cid_activityfr" width="200" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
-          <cell name="cid_memofr" width="200" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="cid_memo" width="100" disableSorting="1" />
         </row>
       </grid>
     </layoutxml>
@@ -23,9 +22,7 @@
     <fetchxml>
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="cid_audithistorylog">
-          <attribute name="cid_memofr" />
-          <attribute name="cid_memoen" />
-          <order attribute="cid_memoen" descending="false" />
+          <order attribute="cid_effectivedate" descending="false" />
           <filter type="and">
             <condition attribute="cid_externallyvisible" operator="eq" value="1" />
             <condition attribute="cid_company" operator="not-null" />
@@ -36,6 +33,7 @@
           </link-entity>
           <attribute name="cid_effectivedate" />
           <attribute name="cid_createdbyregistrant" />
+          <attribute name="cid_memo" />
           <attribute name="cid_audithistorylogid" />
         </entity>
       </fetch>

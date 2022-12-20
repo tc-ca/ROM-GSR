@@ -15,11 +15,16 @@
             padding: 6px 12px;
         }
 
+
         label {
             font-family: Helvetica, Arial, sans-serif;
             font-size: 16px;
             margin: 0px 0px 5px;
             font-weight: bold;
+        }
+
+        read-only {
+            background: #eee;
         }
 
         .form-control {
@@ -43,8 +48,9 @@
     </style>
     <!-- Using jquery library -->
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <meta>
 </head>
-<body onfocusout="parent.setEmailRange();" style="overflow-wrap: break-word;">
+<body style="overflow-wrap: break-word;" >
     <style>
         .option-indigo {
             font-size: 16px;
@@ -73,7 +79,8 @@
         <br>
         <datalist id="tdg_unnumberid_list">
         </datalist>
-        <br>
+        <textarea readonly="" class="text form-control read-only " id="tdg_unnumber_text" cols="100%"> 
+        </textarea>
     </div>
     <div id="div_erap_unnumberid_list">
         <label for="erap_unnumberid_list" class="field-label">UN Display Name</label>
@@ -106,7 +113,8 @@
 
             // load cid_companyerap
             var filter = "";
-            _cid_companyerap_list = common.OData_List("cid_companyerap", filter);
+            //_cid_companyerap_list = common.OData_List("cid_companyerap", filter);
+            _cid_companyerap_list = common.WebApi_List("cid_companyeraps", filter);
             _data_source_1 = (selected_language == "en" ? "UN Number Master List" : "UN Number Master List_FR");
             _data_source_2 = (selected_language == "en" ? "UN Number List from Company's ERAP(s)" : "UN Number List from Company's ERAP(s)_FR");
 
@@ -194,17 +202,20 @@
                             var item = _cid_companyerap_list[i];
 
                             var filter = "root_name eq '{0}'".replace("{0}", item.cid_erapid);
-                            _root_erap_list = common.OData_List("root_erap", filter);
+                            //_root_erap_list = common.OData_List("root_erap", filter);
+                            _root_erap_list = common.WebApi_List("root_eraps", filter);
                             for (var j = 0; j < _root_erap_list.length; j++) {
                                 var item2 = _root_erap_list[j];
                                 var root_erap_id = item2.root_erap_id;
                                 root_erap_id = parseInt(root_erap_id);
                                 var filter = "root_erap_id eq {0}".replace("{0}", root_erap_id);
-                                _root_erapdg_list = common.OData_List("root_erapdg", filter);
+                                //_root_erapdg_list = common.OData_List("root_erapdg", filter);
+                                _root_erapdg_list = common.WebApi_List("root_erapdgs", filter);
                                 for (var k = 0; k < _root_erapdg_list.length; k++) {
                                     var item3 = _root_erapdg_list[k];
                                     var filter = "tdg_name eq '{0}'".replace("{0}", item3.root_un_number_num);
-                                    _tdg_unnumber_list = common.OData_List("tdg_unnumber", filter);
+                                    //_tdg_unnumber_list = common.OData_List("tdg_unnumber", filter);
+                                    _tdg_unnumber_list = common.WebApi_List("tdg_unnumbers", filter);
                                     for (var l = 0; l < _tdg_unnumber_list.length; l++) {
                                         var item4 = _tdg_unnumber_list[l];
                                         var text = item4.tdg_undisplayname + ' - ' +
@@ -236,7 +247,7 @@
                     //debugger;
 
                     // transfer control back to parent form
-                    parent.tdg_unnumberid_selected(text, id);
+                    parent.tdg_unnumberid_selected(text, id, null);
 
                 } catch (e) { }
             }
@@ -267,8 +278,10 @@
         }
 
         function unnumber_clear() {
+            debugger;
             parent.$("#ovs_unnumber").attr("value", null);
             parent.$("#ovs_unnumber_name").attr("value", null);
+            $("#tdg_unnumberid_list").find("option").remove().end();
         }
 
         function unnumber_selected(text, id) {
@@ -288,8 +301,9 @@
         function clear_field() {
             debugger;
             document.getElementById("tdg_unnumberid").value = "";
+            document.getElementById("tdg_unnumber_text").value = "";
             document.getElementById("erap_unnumberid_list").selectedIndex = 0;
-
+            $("#erap_unnumberid_list").find("option").remove().end();
             unnumber_clear();
         }
 
@@ -305,8 +319,11 @@
             //selected_language = (selected_language == null ? "en-US" : selected_language);
             selected_language = (selected_language == null ? "en" : selected_language);
             var tdg_unnumberid = document.getElementById("tdg_unnumberid").value;
-            var filter = "substringof('" + tdg_unnumberid + "', tdg_undisplayname) or substringof('" + tdg_unnumberid + "', tdg_shippingnamedescriptiontxt)";
-            var items = common.OData_List("tdg_unnumber", filter);
+            //var filter = "substringof('" + tdg_unnumberid + "', tdg_undisplayname) or substringof('" + tdg_unnumberid + "', tdg_shippingnamedescriptiontxt)";
+            var filter = "contains(tdg_undisplayname, '" + tdg_unnumberid + "') or contains(tdg_shippingnamedescriptiontxt, '" + tdg_unnumberid + "')";
+
+            //var items = common.OData_List("tdg_unnumber", filter);
+            var items = common.WebApi_List("tdg_unnumbers", filter);
 
             var tdg_unnumberid_list = document.getElementById('tdg_unnumberid_list');
 
@@ -369,8 +386,13 @@
                 try {
                     debugger;
 
+                    var textarea = $("#tdg_unnumber_text");
+                    textarea.val(text)
+                    textarea.autoResize();
+                    
+
                     // transfer control back to parent form
-                    parent.tdg_unnumberid_selected(text, id);
+                    parent.tdg_unnumberid_selected(text, id, textarea.height());
 
                 } catch (e) { }
             }
@@ -381,7 +403,8 @@
 
         function tdg_unnumber_get(id) {
             var filter = "tdg_unnumberid eq guid'" + id + "'";
-            var item = common.OData_List("tdg_unnumber", filter);
+            //var item = common.OData_List("tdg_unnumber", filter);
+            var item = common.WebApi_List("tdg_unnumbers", filter);
         }
 
         function erap_list(site_id) {
@@ -389,15 +412,16 @@
             //selected_language = (selected_language == null ? "en-US" : selected_language);
             selected_language = (selected_language == null ? "en" : selected_language);
             var tdg_unnumberid = document.getElementById("tdg_unnumberid").value;
-            var filter = "substringof('" + tdg_unnumberid + "', tdg_undisplayname) or substringof('" + tdg_unnumberid + "', tdg_shippingnamedescriptiontxt)";
-            var items = common.OData_List("tdg_unnumber", filter);
+            //var filter = "substringof('" + tdg_unnumberid + "', tdg_undisplayname) or substringof('" + tdg_unnumberid + "', tdg_shippingnamedescriptiontxt)";
+            var filter = "contains(tdg_undisplayname, '" + tdg_unnumberid + "') or contains(tdg_shippingnamedescriptiontxt, '" + tdg_unnumberid + "')";
+            //var items = common.OData_List("tdg_unnumber", filter);
+            var items = common.WebApi_List("tdg_unnumbers", filter);
         }
 
     </script>
 
     <script>
         // tdgcore_common.js
-
         if (typeof (common) == "undefined") {
             common = {
                 text_language: function (text, language) {
@@ -443,19 +467,38 @@
                 },
 
                 // odata
-                OData_List: function (entity, filter) {
-                    var url = entity;
+                //OData_List: function (entity, filter) {
+                //    var url = entity;
+                //    if (filter != "") {
+                //        url += "?$filter=" + filter;
+                //    }
+                //    var oDataUrl = "~/_odata/" + url;
+                //    //var oDataUrl = "https://rd-tdgcore-dev.powerappsportals.com/_odata/" + url;
+                //    var response = null;
+
+                //    $.ajax({
+                //        type: "GET",
+                //        url: oDataUrl,
+                //        dataType: "json",
+                //        async: false
+                //    }).done(function (json) {
+                //        response = json.value;
+                //    });
+                //    return response;
+
+                //web API List
+                WebApi_List: function (entity, filter) {
+                    debugger;
+                    var api_url = entity;
                     if (filter != "") {
-                        url += "?$filter=" + filter;
+                        api_url += "?$filter=" + filter;
                     }
-                    var oDataUrl = "~/_odata/" + url;
-                    //var oDataUrl = "https://rd-tdgcore-dev.powerappsportals.com/_odata/" + url;
                     var response = null;
 
                     $.ajax({
                         type: "GET",
-                        url: oDataUrl,
-                        dataType: "json",
+                        url: "/_api/" + api_url,
+                        contentType: "application/json",
                         async: false
                     }).done(function (json) {
                         response = json.value;
@@ -464,6 +507,23 @@
                 }
             }
         }
+
+        $.fn.autoResize = function () {
+            let r = e => {
+                e.style.height = '';
+                e.style.height = e.scrollHeight + 'px'
+            };
+            return this.each((i, e) => {
+                e.style.overflow = 'hidden';
+                r(e);
+                $(e).bind('input', e => {
+                    r(e.target);
+                })
+            })
+        };
+
     </script>
+
+
 </body>
 </html>

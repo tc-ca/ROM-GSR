@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RibbonDiffXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <CustomActions>
+    <CustomAction Id="cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button.CustomAction" Location="Mscrm.Form.cid_invitation.MainTab.Save.Controls._children" Sequence="49">
+      <CommandUIDefinition>
+        <Button Command="cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button" Id="cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button" Image16by16="" LabelText="$LocLabels:cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button.LabelText" Sequence="49" TemplateAlias="o1" ToolTipTitle="$LocLabels:cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button.ToolTipTitle" ToolTipDescription="$LocLabels:cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button.ToolTipDescription" ModernImage="$webresource:adx_create_invitation.svg" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <CustomAction Id="cid.cid_invitation.Button4.Button.Mscrm.HomepageGrid.cid_invitation.NewRecord.CustomAction" Location="Mscrm.HomepageGrid.cid_invitation.MainTab.Management.Controls._children" Sequence="10">
+      <CommandUIDefinition>
+        <Button Alt="$Resources:Ribbon.HomepageGrid.MainTab.New" Command="cid.cid_invitation.Button4.Button.Mscrm.HomepageGrid.cid_invitation.NewRecord" Id="cid.cid_invitation.Button4.Button.Mscrm.HomepageGrid.cid_invitation.NewRecord" Image32by32="/_imgs/ribbon/newrecord32.png" Image16by16="/_imgs/ribbon/New_16.png" LabelText="$Resources:Ribbon.HomepageGrid.MainTab.New" Sequence="10" TemplateAlias="o1" ToolTipTitle="$Resources:Ribbon.HomepageGrid.MainTab.New" ToolTipDescription="$Resources(EntityDisplayName):Ribbon.Tooltip.New" ModernImage="New" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <CustomAction Id="cid.cid_invitation.SendInvitation.Button.CustomAction" Location="Mscrm.HomepageGrid.cid_invitation.MainTab.Management.Controls._children" Sequence="41">
+      <CommandUIDefinition>
+        <Button Command="cid.cid_invitation.SendInvitation.Command" Id="cid.cid_invitation.SendInvitation.Button" Image16by16="" LabelText="$LocLabels:cid.cid_invitation.SendInvitation.Button.LabelText" Sequence="41" TemplateAlias="o2" ToolTipTitle="$LocLabels:cid.cid_invitation.SendInvitation.Button.ToolTipTitle" ToolTipDescription="$LocLabels:cid.cid_invitation.SendInvitation.Button.ToolTipDescription" ModernImage="$webresource:adx_create_invitation.svg" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <HideCustomAction HideActionId="cid.Mscrm.HomepageGrid.cid_invitation.NewRecord.Hide" Location="Mscrm.HomepageGrid.cid_invitation.NewRecord" />
+    <HideCustomAction HideActionId="cid.Mscrm.HomepageGrid.cid_invitation.NewRecordForBPFEntity.Hide" Location="Mscrm.HomepageGrid.cid_invitation.NewRecordForBPFEntity" />
+    <CustomAction Id="cid.Mscrm.SubGrid.cid_invitation.Edit.CustomAction" Location="Mscrm.SubGrid.cid_invitation.MainTab.Management.Controls._children" Sequence="50">
+      <CommandUIDefinition>
+        <Button Alt="$Resources:Ribbon.HomepageGrid.MainTab.Management.Edit" Command="Mscrm.EditSelectedRecord" Id="Mscrm.SubGrid.cid_invitation.Edit" Image32by32="/_imgs/ribbon/edit32.png" Image16by16="/_imgs/ribbon/Edit_16.png" LabelText="$Resources:Ribbon.HomepageGrid.MainTab.Management.Edit" Sequence="50" TemplateAlias="o1" ToolTipTitle="$Resources:Ribbon.HomepageGrid.MainTab.Management.Edit" ToolTipDescription="$Resources(EntityDisplayName):Ribbon.Tooltip.Edit" ModernImage="Edit" />
+      </CommandUIDefinition>
+    </CustomAction>
+  </CustomActions>
+  <Templates>
+    <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
+  </Templates>
+  <CommandDefinitions>
+    <CommandDefinition Id="cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button">
+      <EnableRules>
+        <EnableRule Id="Mscrm.AvailableOnForm" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.PrimaryEntityIsNotBPFEntity" />
+        <DisplayRule Id="Mscrm.HideInLegacyRibbon" />
+        <DisplayRule Id="cid.cid_invitation.CanWriteSelected.DisplayRule" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="ResendInvitationByInvitationId" Library="$webresource:cid_invitation">
+          <CrmParameter Value="PrimaryItemIds" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="cid.cid_invitation.Button4.Button.Mscrm.HomepageGrid.cid_invitation.NewRecord">
+      <EnableRules>
+        <EnableRule Id="Mscrm.IsValidForHierarchyView" />
+        <EnableRule Id="Mscrm.IsValidForHierarchyPageInUC" />
+        <EnableRule Id="Mscrm.IsEntityAvailableForUserInMocaOffline" />
+        <EnableRule Id="Mscrm.PrimaryIsNotActivityHomePageGrid" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.CreateSelectedEntityPermission" />
+        <DisplayRule Id="Mscrm.ShowForNonRelationshipBoundGrids" />
+        <DisplayRule Id="Mscrm.HideNewForChildEntities" />
+        <DisplayRule Id="Mscrm.HideAddressEntities" />
+        <DisplayRule Id="Mscrm.SelectedEntityIsNotBPFEntity" />
+        <DisplayRule Id="Mscrm.IsNotActivityPointer" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.Open.openNewRecord" Library="$webresource:Main_system_library.js">
+          <StringParameter Value="adx_invitation" />
+          <CrmParameter Value="SelectedControl" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="cid.cid_invitation.Command4.Command">
+      <EnableRules>
+        <EnableRule Id="Mscrm.AvailableOnForm" />
+        <EnableRule Id="Mscrm.IsEntityAvailableForUserInMocaOffline" />
+      </EnableRules>
+      <DisplayRules />
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.Open.openNewRecord" Library="$webresource:Main_system_library.js">
+          <StringParameter Value="&quot;adx_invitation&quot;" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="cid.cid_invitation.SendInvitation.Command">
+      <EnableRules>
+        <EnableRule Id="cid.cid_invitation.SelectionCountAtLeastOne.EnableRule" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="cid.cid_invitation.CanWriteSelected.DisplayRule" />
+        <DisplayRule Id="cid.cid_invitation.SelectedEntityHasStatecode.DisplayRule" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="ResendInvitationByInvitationId" Library="$webresource:cid_invitation">
+          <CrmParameter Value="SelectedControlSelectedItemIds" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="Mscrm.NewRecordFromForm">
+      <EnableRules>
+        <EnableRule Id="Mscrm.AvailableOnForm" />
+        <EnableRule Id="Mscrm.IsEntityAvailableForUserInMocaOffline" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.HideInLegacyRibbon" />
+        <DisplayRule Id="Mscrm.CreatePrimaryEntityPermission" />
+        <DisplayRule Id="Mscrm.PrimaryEntityIsNotBPFEntity" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.Open.openNewRecord" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="PrimaryEntityTypeName" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="Mscrm.NewRecordFromGrid">
+      <EnableRules>
+        <EnableRule Id="Mscrm.IsValidForHierarchyView" />
+        <EnableRule Id="Mscrm.IsValidForHierarchyPageInUC" />
+        <EnableRule Id="Mscrm.IsEntityAvailableForUserInMocaOffline" />
+        <EnableRule Id="Mscrm.PrimaryIsNotActivityHomePageGrid" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.CreateSelectedEntityPermission" />
+        <DisplayRule Id="Mscrm.ShowForNonRelationshipBoundGrids" />
+        <DisplayRule Id="Mscrm.HideNewForChildEntities" />
+        <DisplayRule Id="Mscrm.HideAddressEntities" />
+        <DisplayRule Id="Mscrm.SelectedEntityIsNotBPFEntity" />
+        <DisplayRule Id="Mscrm.IsNotActivityPointer" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.Open.openNewRecord" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedEntityTypeName" />
+          <CrmParameter Value="SelectedControl" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+  </CommandDefinitions>
+  <RuleDefinitions>
+    <TabDisplayRules />
+    <DisplayRules>
+      <DisplayRule Id="cid.cid_invitation.CanWriteSelected.DisplayRule">
+        <EntityPrivilegeRule PrivilegeType="Write" PrivilegeDepth="Basic" AppliesTo="SelectedEntity" />
+      </DisplayRule>
+      <DisplayRule Id="cid.cid_invitation.SelectedEntityHasStatecode.DisplayRule">
+        <EntityPropertyRule AppliesTo="SelectedEntity" PropertyName="HasStateCode" PropertyValue="true" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.CreatePrimaryEntityPermission">
+        <EntityPrivilegeRule PrivilegeType="Create" PrivilegeDepth="Basic" AppliesTo="PrimaryEntity" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.CreateSelectedEntityPermission">
+        <EntityPrivilegeRule PrivilegeType="Create" PrivilegeDepth="Basic" AppliesTo="SelectedEntity" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.HideAddressEntities">
+        <EntityRule EntityName="customeraddress" AppliesTo="SelectedEntity" Default="false" InvertResult="true" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.HideInLegacyRibbon">
+        <CommandClientTypeRule Type="Legacy" InvertResult="true" />
+        <PageRule Address="/userdefined/edit.aspx" InvertResult="true" />
+        <PageRule Address="/advancedfind/advfind.aspx" InvertResult="true" />
+        <PageRule Address="/advancedfind/fetchData.aspx" InvertResult="true" />
+        <PageRule Address="/tools/formeditor/formeditor.aspx" InvertResult="true" />
+        <PageRule Address="/tools/visualizationdesigner/visualizationdesigner.aspx" InvertResult="true" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.HideNewForChildEntities">
+        <EntityPropertyRule AppliesTo="SelectedEntity" PropertyName="IsChildEntity" PropertyValue="false" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.IsNotActivityPointer">
+        <EntityRule EntityName="activitypointer" AppliesTo="SelectedEntity" InvertResult="true" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.PrimaryEntityIsNotBPFEntity">
+        <EntityPropertyRule AppliesTo="PrimaryEntity" PropertyName="IsBPFEntity" PropertyValue="false" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.SelectedEntityIsNotBPFEntity">
+        <EntityPropertyRule AppliesTo="SelectedEntity" PropertyName="IsBPFEntity" PropertyValue="false" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.ShowForNonRelationshipBoundGrids">
+        <RelationshipTypeRule AppliesTo="SelectedEntity" RelationshipType="NoRelationship" />
+      </DisplayRule>
+    </DisplayRules>
+    <EnableRules>
+      <EnableRule Id="cid.cid_invitation.SelectionCountAtLeastOne.EnableRule">
+        <SelectionCountRule AppliesTo="PrimaryEntity" Minimum="1" />
+      </EnableRule>
+      <EnableRule Id="Mscrm.AvailableOnForm">
+        <EntityRule AppliesTo="PrimaryEntity" Context="Form" Default="false" />
+      </EnableRule>
+      <EnableRule Id="Mscrm.IsEntityAvailableForUserInMocaOffline">
+        <CustomRule FunctionName="XrmCore.Rules.Online.IsEntityAvailableForUserInMocaOffline" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedEntityTypeName" />
+        </CustomRule>
+      </EnableRule>
+      <EnableRule Id="Mscrm.IsValidForHierarchyPageInUC">
+        <CustomRule FunctionName="XrmCore.Rules.HierarchyView.isValidForHierarchyPageInUC" Library="$webresource:Main_system_library.js" />
+      </EnableRule>
+      <EnableRule Id="Mscrm.IsValidForHierarchyView">
+        <CustomRule FunctionName="XrmCore.Rules.HierarchyView.isValidForHierarchyView" Library="$webresource:Main_system_library.js" />
+      </EnableRule>
+      <EnableRule Id="Mscrm.PrimaryIsNotActivityHomePageGrid">
+        <CustomRule FunctionName="XrmCore.Rules.Enabled.PrimaryIsNotActivityHomePageGrid" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedEntityTypeName" />
+          <CrmParameter Value="SelectedControl" />
+        </CustomRule>
+      </EnableRule>
+    </EnableRules>
+  </RuleDefinitions>
+  <LocLabels>
+    <LocLabel Id="cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button.LabelText">
+      <Titles>
+        <Title description="Send Invitation" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button.ToolTipDescription">
+      <Titles>
+        <Title description="Send Invitation" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button.ToolTipTitle">
+      <Titles>
+        <Title description="Send Invitation" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="cid.cid_invitation.SendInvitation.Button.LabelText">
+      <Titles>
+        <Title description="Send Invitation" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="cid.cid_invitation.SendInvitation.Button.ToolTipDescription">
+      <Titles>
+        <Title description="Send Invitation" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="cid.cid_invitation.SendInvitation.Button.ToolTipTitle">
+      <Titles>
+        <Title description="Send Invitation" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+  </LocLabels>
+</RibbonDiffXml>

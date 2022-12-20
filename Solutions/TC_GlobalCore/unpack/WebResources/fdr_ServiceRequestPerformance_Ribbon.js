@@ -150,7 +150,7 @@ var ServiceRequestPerformance_Ribbon = (function (window, document) {
             if (selectedControl == null) { return };
 
             var currentView = selectedControl.getViewSelector().getCurrentView().name;
-            var targetedView = "Service Performances";
+            var targetedView = "Service Standard Not Met"; //todo get french name once translations are in.
             return currentView == targetedView;
         },
 

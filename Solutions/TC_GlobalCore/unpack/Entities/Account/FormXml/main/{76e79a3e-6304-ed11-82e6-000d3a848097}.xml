@@ -88,6 +88,15 @@
                       </cell>
                     </row>
                     <row>
+                      <cell id="{a677c4a8-6bf3-49d7-9e5d-1ee84d41fb44}" locklevel="0" colspan="1" rowspan="1">
+                        <labels>
+                          <label description="Email" languagecode="1033" />
+                          <label description="Courrier électronique" languagecode="1036" />
+                        </labels>
+                        <control id="emailaddress1" classid="{ADA2203E-B4CD-49BE-9DDF-234642B43B52}" datafieldname="emailaddress1" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
                       <cell id="{84ab3013-362b-43fb-a370-9d5d2e42cce4}" locklevel="0" labelid="{aac7f817-adfd-4ceb-88f1-1a8f186765d5}">
                         <labels>
                           <label description="NAICS Code" languagecode="1033" />
@@ -109,7 +118,14 @@
                             </InternalHandlers>
                           </event>
                         </events>
-                        <control id="parentaccountid" datafieldname="parentaccountid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" />
+                        <control id="parentaccountid" datafieldname="parentaccountid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}">
+                          <parameters>
+                            <DefaultViewId>{80D24AA0-2B6C-ED11-81AC-0022483D0343}</DefaultViewId>
+                            <AvailableViewIds>{A9AF0AB8-861D-4CFA-92A5-C6281FED7FAB},{61273827-328E-E011-95AE-00155D9CFA03},{61273827-328E-E011-95AE-00155D9CFA02},{15C63745-0A6E-4322-8416-A62C84D90279},{CFBCD7AF-AEE5-4E45-8ECC-C040D4020581},{49FB9771-09E1-4E70-B193-198752493577},{00000000-0000-0000-00AA-000010001002},{82CC4863-AA98-EB11-B1AC-000D3AE93A4F},{65FFAF9A-E8C5-432D-860B-32F841B00D87},{A0BE1CB3-8525-EC11-B6E6-0022483CB5CD},{6E812D65-8725-EC11-B6E6-0022483CB5CD},{27025EBD-1817-ED11-B83F-000D3A84CFDD},{153AA606-2043-ED11-BBA3-0022483D0343},{40662D0E-D694-EC11-B3FE-000D3A0C829E},{84F03662-9E28-EC11-B6E6-0022483CB5CD},{EFE63E51-3040-ED11-BBA2-0022483D0343},{C8DB5060-4A4D-EC11-8F8E-000D3AE9A753},{D540E97A-C892-EC11-B3FE-000D3A0C187C},{048F4D4F-C892-EC11-B3FE-000D3A0C187C},{3FFFABCB-74C0-EC11-983E-0022483DB9D8},{7DE498C2-508F-49A4-B2E8-D550D5B1B9EE},{00000000-0000-0000-00AA-000010001031},{00000000-0000-0000-00AA-000010001001},{D234426E-1F37-4944-9255-50E19B541C4C},{AA2BA086-5AD4-EB11-BACC-000D3AF3999C},{2253BE98-5AD4-EB11-BACC-000D3AF38CD4},{FDBC939A-2403-EB11-A813-000D3AF3AC0D},{8965DC8D-460A-EB11-A813-000D3AF3A7A7},{D15E48F6-E8FE-E811-8165-000D3AF92C6E},{0F928982-20D3-E811-815B-000D3AFD1036},{7B62C6EE-865B-EB11-A812-000D3A84DB40},{FF211CB9-117A-EC11-8D20-000D3AFF1221},{7C363E5F-5BD4-EB11-BACC-000D3AF3999C},{E7BA8BD8-440A-EB11-A813-000D3AF3A7A7},{906591F6-654C-EC11-8F8E-000D3AE8E96E},{57962920-5929-EB11-A813-000D3AF3A7A7},{80D24AA0-2B6C-ED11-81AC-0022483D0343}</AvailableViewIds>
+                            <DisableViewPicker>true</DisableViewPicker>
+                            <DisableMru>true</DisableMru>
+                          </parameters>
+                        </control>
                       </cell>
                     </row>
                     <row>
@@ -451,15 +467,13 @@
                         </labels>
                         <control disabled="false" id="primarycontactid" datafieldname="primarycontactid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" uniqueid="{8380b36b-9b5b-2c53-bbe2-8dcb3eae3b36}">
                           <parameters>
-                            <FilterRelationshipName>contact_customer_accounts</FilterRelationshipName>
-                            <DependentAttributeName>contact.parentcustomerid</DependentAttributeName>
-                            <DependentAttributeType>account</DependentAttributeType>
                             <AllowFilterOff>true</AllowFilterOff>
                             <AutoResolve>true</AutoResolve>
-                            <DisableMru>false</DisableMru>
+                            <DisableMru>true</DisableMru>
                             <DisableQuickFind>false</DisableQuickFind>
-                            <DisableViewPicker>false</DisableViewPicker>
+                            <DisableViewPicker>true</DisableViewPicker>
                             <DefaultViewId>{A2D479C5-53E3-4C69-ADDD-802327E67A0D}</DefaultViewId>
+                            <AvailableViewIds>{A2D479C5-53E3-4C69-ADDD-802327E67A0D}</AvailableViewIds>
                           </parameters>
                         </control>
                       </cell>
@@ -2425,7 +2439,7 @@
           <customControl formFactor="0" name="fdn_Canadapost.addressComplete">
             <parameters>
               <api_key static="true" type="SingleLine.Text">MM95-DM44-MP35-XM79</api_key>
-              <useProvinceCode static="true" type="Enum">No</useProvinceCode>
+              <useProvinceCode static="true" type="Enum">Yes</useProvinceCode>
               <country_code static="true" type="SingleLine.Text">CA</country_code>
               <option_allowcountry static="true" type="SingleLine.Text">true</option_allowcountry>
               <option_showlogo static="true" type="SingleLine.Text">true</option_showlogo>
@@ -2440,7 +2454,7 @@
           <customControl formFactor="1" name="fdn_Canadapost.addressComplete">
             <parameters>
               <api_key static="true" type="SingleLine.Text">MM95-DM44-MP35-XM79</api_key>
-              <useProvinceCode static="true" type="Enum">No</useProvinceCode>
+              <useProvinceCode static="true" type="Enum">Yes</useProvinceCode>
               <country_code static="true" type="SingleLine.Text">CA</country_code>
               <option_allowcountry static="true" type="SingleLine.Text">true</option_allowcountry>
               <option_showlogo static="true" type="SingleLine.Text">true</option_showlogo>
@@ -2455,7 +2469,7 @@
           <customControl formFactor="2" name="fdn_Canadapost.addressComplete">
             <parameters>
               <api_key static="true" type="SingleLine.Text">MM95-DM44-MP35-XM79</api_key>
-              <useProvinceCode static="true" type="Enum">No</useProvinceCode>
+              <useProvinceCode static="true" type="Enum">Yes</useProvinceCode>
               <country_code static="true" type="SingleLine.Text">CA</country_code>
               <option_allowcountry static="true" type="SingleLine.Text">true</option_allowcountry>
               <option_showlogo static="true" type="SingleLine.Text">true</option_showlogo>
@@ -2495,6 +2509,7 @@
         <Library name="msdyn_/Utils/FieldServiceTrial.js" libraryUniqueId="{81848ec9-2a66-58a9-8e79-84d836110771}" />
         <Library name="msdyn_/Account/Account.Library.js" libraryUniqueId="{d8db2d05-4b38-9935-cedb-cdacb9e65d75}" />
         <Library name="fdr_AccountFDR_main.js" libraryUniqueId="{40de3979-2f85-4fed-802c-bb089fab4bf7}" />
+        <Library name="fdr_AccountFDR_Site.js" libraryUniqueId="{5e82a5b9-4fa9-4f53-b433-86d09e08d0c1}" />
       </formLibraries>
       <events>
         <event name="onload" application="false" active="false">
@@ -2506,6 +2521,7 @@
             <Handler functionName="FieldServiceTrial.Library.Load" libraryName="msdyn_/Utils/FieldServiceTrial.js" handlerUniqueId="{58a9e819-d88b-c572-d1d3-601017c57b37}" enabled="true" passExecutionContext="true" parameters="" />
             <Handler functionName="Sales.DocumentsTabController.shouldShowDocumentsTab" libraryName="Sales/ClientCommon/Sales_ClientCommon.js" handlerUniqueId="{CA3D9A4B-7A5C-4238-BAD6-5810FB05E86C}" enabled="true" passExecutionContext="true" parameters="" />
             <Handler functionName="AccountFDRmain.OnLoad" libraryName="fdr_AccountFDR_main.js" handlerUniqueId="{a659cd31-450f-49f4-9ed8-a83b1f000186}" enabled="true" parameters="" passExecutionContext="true" />
+            <Handler functionName="AccountFDR_Site.OnLoad" libraryName="fdr_AccountFDR_Site.js" handlerUniqueId="{1069aac3-79e0-4661-83e4-d324ab0edd95}" enabled="true" parameters="" passExecutionContext="true" />
           </Handlers>
         </event>
       </events>

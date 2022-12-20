@@ -27,6 +27,7 @@
           <cell name="a_b40c1eb4f16c414ba0dc995cccbf85cf.fdr_holidaydaynbr" width="100" />
           <cell name="a_b40c1eb4f16c414ba0dc995cccbf85cf.fdr_onholddaynbr" width="100" />
           <cell name="a_b40c1eb4f16c414ba0dc995cccbf85cf.statuscode" width="100" />
+          <cell name="modifiedon" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -42,7 +43,7 @@
           <filter type="and">
             <condition attribute="fdr_servicerequestperformance" operator="not-null" />
           </filter>
-          <link-entity alias="a_b40c1eb4f16c414ba0dc995cccbf85cf" name="fdr_servicerequestperformance" to="fdr_servicerequestperformance" from="fdr_servicerequestperformanceid" link-type="outer" visible="false">
+          <link-entity alias="a_b40c1eb4f16c414ba0dc995cccbf85cf" name="fdr_servicerequestperformance" to="fdr_servicerequestperformance" from="fdr_servicerequestperformanceid" link-type="inner">
             <attribute name="fdr_startdte" />
             <attribute name="fdr_completeddte" />
             <attribute name="fdr_applicableunitnbr" />
@@ -55,14 +56,20 @@
             <attribute name="fdr_holidaydaynbr" />
             <attribute name="fdr_onholddaynbr" />
             <attribute name="statuscode" />
+            <filter type="and">
+              <condition attribute="fdr_standardmetind" operator="eq" value="0" />
+            </filter>
           </link-entity>
           <attribute name="fdr_servicerequestperformance" />
+          <attribute name="modifiedon" />
+          <order attribute="modifiedon" descending="true" />
         </entity>
       </fetch>
     </fetchxml>
     <IntroducedVersion>1.0.0.0</IntroducedVersion>
     <LocalizedNames>
-      <LocalizedName description="Service Performances" languagecode="1033" />
+      <LocalizedName description="Service Standard Not Met" languagecode="1033" />
+      <LocalizedName description="Norme de service non satisfaite" languagecode="1036" />
     </LocalizedNames>
   </savedquery>
 </savedqueries>
