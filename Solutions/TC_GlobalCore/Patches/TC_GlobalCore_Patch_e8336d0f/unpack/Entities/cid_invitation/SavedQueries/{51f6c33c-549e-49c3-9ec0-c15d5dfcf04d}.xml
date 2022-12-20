@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{51f6c33c-549e-49c3-9ec0-c15d5dfcf04d}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="cid_name" select="1" icon="1" preview="1">
+        <row name="result" id="cid_invitationid">
+          <cell name="cid_name" width="300" />
+          <cell name="cid_companyname" width="164" />
+          <cell name="cid_companystatus" width="229" />
+          <cell name="cid_invitedcontact" width="136" />
+          <cell name="cid_invitationsenton" width="154" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="cid_invitation">
+          <attribute name="cid_invitationid" />
+          <attribute name="cid_name" />
+          <order attribute="cid_name" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="1" />
+          </filter>
+          <attribute name="cid_companyname" />
+          <attribute name="cid_companystatus" />
+          <attribute name="cid_invitationsenton" />
+          <attribute name="cid_invitedcontact" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Inactive CID Invitations" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
