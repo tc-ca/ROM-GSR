@@ -92,10 +92,7 @@ $(document).ready(function () {
     $("#NextButton").hide();
     tdg.c.button_create("btn_next", "#NextButton", "Next");
     $("#btn_next").bind("click", function () {
-     
-    tdg.cid.crw.start_btn_next_click();
-        
-        
+        tdg.cid.crw.start_btn_next_click();
     });
 });
 
@@ -117,13 +114,13 @@ if (window.jQuery) {
 
             var validation = false;
             var rom_data, filter, legalname;
-            
 
             tdg.c.error_message_clear();
 
             if (has_invitation != "true") {
                 if (cid_has_cra_bn == 0) {
-                    rom_data = tdg.cid.crw.start_account_by_name();
+                    var legalname = $("#cid_legalname").val();
+                    rom_data = tdg.cid.crw.start_account_by_name(legalname);
                     if (rom_data.length > 0) {
                         rom_data = rom_data[0];
 

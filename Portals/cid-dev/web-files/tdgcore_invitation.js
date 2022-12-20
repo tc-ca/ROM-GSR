@@ -133,15 +133,72 @@ if (typeof (invitation) == "undefined") {
         invitation_primary: function (_account, message, contact_id) {
             debugger;
 
-            var data = tdg.cid.crw.data_confirm_dialog();
+            var btn_next_name = "NextButton";
+            tdg.cid.crw.start_buttons_confirm(false, btn_next_name);
+            var cid_has_cra_bn = _account.cid_has_cra_bn;
+            cid_has_cra_bn = (cid_has_cra_bn == null? 0: cid_has_cra_bn);
+            var bn = _account.cid_crabusinessnumber;
+            var legalname = _account.ovs_legalname;
+            var cid_reasonfornobnnumber = _account.cid_reasonfornobnnumber;
+            var list = $("#cid_reasonfornobnnumber")[0].options;
+            for (var i = 0; i < list.length; i++) {
+                if (cid_reasonfornobnnumber == list[i].value) {
+                    cid_reasonfornobnnumber = list[i].text;
+                    break;
+                }
+            }
+            var cid_reasonfornobnnumber_other = _account.cid_reasonfornobnnumber_other;
+            var data = tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn, legalname, list);
             if (data.length == 0)
             {
+                data.length = 1;
+                data.cid_has_cra_bn = cid_has_cra_bn;
+                data.cid_legalname = legalname;
+                data.cid_operatingname = _account.name;
+                data.cid_crabusinessnumber = bn;
+                data.cid_reasonfornobnnumber = cid_reasonfornobnnumber;
+                data.cid_reasonfornobnnumber_other = cid_reasonfornobnnumber_other;
+
+                var address = {};
+                address.AddressLine1Text = _account.address1_line1;
+                address.AddressLine2Text = _account.address1_line2;
+                address.AddressLine3Text = _account.address1_line3;
+                address.CityName = _account.address1_city;
+                address.ProvinceStateCode = _account.address1_stateorprovince;
+                address.PostalZipCode = _account.address1_postalcode;
+
+                data.address = address;
             }
+            data.invitation_ind = true;
             tdg.cid.crw.start_confirm(data, (ans) => {
                 if (ans) {
                     debugger;
+
+                    if (_account.cid_has_cra_bn) {
+                        $("#cid_crabusinessnumber").val(_account.cid_crabusinessnumber);
+                        tdg.cid.crw.start_cid_crabusinessnumber_onchange("1");
+                    }
+                    invitation.invitation_go_next(_account, true, contact_id);
                 } else {
                     debugger;
+
+                    var message = tdg.error_message.message("m000036");
+                    message = message.replaceAll("{0}", _account.ovs_legalname);
+                    tdg.c.dialog_YN(message, (ans) => {
+                        if (ans) {
+                            debugger;
+                            tdg.cid.crw.start_buttons_confirm(true, btn_next_name);
+                            var record_id = sessionStorage.getItem("adx_invitationid");
+                            var data = {};
+                            data.adx_invitationcode = "";
+                            tdg.webapi.update("adx_invitations", record_id, data);
+                            return;
+                        } else {
+                            debugger;
+                            invitation.invitation_primary(_account, message, contact_id);
+                            return;
+                        }
+                    });
                 }
             });
 

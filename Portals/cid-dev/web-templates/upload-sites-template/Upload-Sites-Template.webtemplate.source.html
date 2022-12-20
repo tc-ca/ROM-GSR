@@ -281,8 +281,6 @@ $('#btn_attachfile_and_scan').click(function(e)
             Enable_Button('btn_attachfile_and_scan');
             Enable_Button('linkdownload_English');
             Enable_Button('linkdownload_French');
-          
-            
    }
    else
    {
@@ -391,9 +389,7 @@ $('#linkdownload_English').click(function(e)
 
 //.on('click', async function() {
         //check if page for initial registeration
-       
         Disable_all_Buttons();
-        
         //call download flow to download excel sheet
         Download_ExcelTemplate("English") ;
     });
@@ -1021,7 +1017,8 @@ function storeMessageListInSession(data)
                       
           //assign result to noteid intially
            var SeperatorIndex =   result.indexOf("|");
-            var  NoteGUID = result.substring(0, SeperatorIndex ).trim();
+            var  NoteGUID = result;
+            //.substring(0, SeperatorIndex ).trim();
          
        
            
@@ -1162,7 +1159,8 @@ async function Get_Location_Header(url)
                                     var SeperatorIndex =   this.responseText.indexOf("|");
                                     var Reponse_Length = this.responseText.length;
 
-                                    var  NoteGUID = this.responseText.substring(0, SeperatorIndex ).trim();
+                                    var  NoteGUID = this.responseText;
+                                    //.substring(0, SeperatorIndex ).trim();
                                     var fileattachementURL = "~/_entity/annotation/"  + NoteGUID;
                                     //download the file from the url
                                    window.location.replace(fileattachementURL);
@@ -1179,9 +1177,11 @@ async function Get_Location_Header(url)
                                     //"<p>Le classeur Excel personnalisé de téléchargement en masse du site est en cours de téléchargement…</p>"
                                     DownloadMessageCompleted  = '<p>Téléchargement terminé.</p>' ;
                                 }//end check language
-                                console.log("Index of  I " + this.responseText.indexOf("|"));
+                               
                                 $('#infoMsg').html(DownloadMessageCompleted );
-                               if (this.responseText.indexOf("|") != (Reponse_Length -1) )
+                                
+                                //**Removed on Dec 2022 part of Exetended info removal**
+                             /*  if (this.responseText.indexOf("|") != (Reponse_Length -1) )
                                 {
             
                                   // NoteGUID = result.substring(0, SeperatorIndex ).trim();
@@ -1192,7 +1192,7 @@ async function Get_Location_Header(url)
                                     $('#infoMsg').html("<p>" + DownloadMessageCompleted +  "</p> <br> <p>"+ rootMessage
                                 
                                     + "</p>");
-                                }
+                                }*/
                                 //enable all buttons
                                 Enable_Button('btn_attachfile_and_scan');
                                 Enable_Button('linkdownload_English');

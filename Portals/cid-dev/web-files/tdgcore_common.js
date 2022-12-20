@@ -1898,15 +1898,16 @@ if (typeof (tdg.cid.crw) == "undefined") {
             return data;
         },
 
-        start_buttons_confirm: function (value) {
-            if ($("#cid_has_cra_bn").val() == "1") {
-                $('#cid_has_cra_bn').prop("disabled", !value);
-                $('#cid_crabusinessnumber').attr("readonly", !value);
-                $('#btn_next').prop("disabled", !value);
-            }
+        start_buttons_confirm: function (value, btn_next_name) {
+            $('#cid_has_cra_bn').prop("disabled", !value);
+            $('#cid_crabusinessnumber').attr("readonly", !value);
+            $('#cid_reasonfornobnnumber').prop("disabled", !value);
+            $('#cid_reasonfornobnnumber_other').attr("readonly", !value);
+
+            $('#' + btn_next_name).prop("disabled", !value);
         },
 
-        data_confirm_dialog: function (cid_has_cra_bn, bn) {
+        data_confirm_dialog: function (cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber_list) {
             debugger;
             var data = {};
             data.length = 0;
@@ -1924,18 +1925,22 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 data.address = cra_data.PhysicalLocationAddress;
             }
             else {
-                console.log("inside else before get account by name");
-                var account = tdg.cid.crw.start_account_by_name();
-                console.log("after query account by legal name");
+                var account = tdg.cid.crw.start_account_by_name(legalname);
                 if (account.length > 0) {
-                    console.log("account length " + account.length);
                     account = account[0];
                     data.length = 1;
                     data.cid_has_cra_bn = account.cid_has_cra_bn;
                     data.cid_crabusinessnumber = account.cid_crabusinessnumber;
                     data.cid_legalname = account.ovs_legalname;
                     data.cid_operatingname = account.name;
-                    data.cid_reasonfornobnnumber = account.cid_reasonfornobnnumber;
+                    var cid_reasonfornobnnumber = account.cid_reasonfornobnnumber;
+                    for (var i = 0; i < cid_reasonfornobnnumber_list.length; i++) {
+                        if (cid_reasonfornobnnumber == cid_reasonfornobnnumber_list[i].value) {
+                            cid_reasonfornobnnumber = cid_reasonfornobnnumber_list[i].text;
+                            break;
+                        }
+                    }
+                    data.cid_reasonfornobnnumber = cid_reasonfornobnnumber;
                     data.cid_reasonfornobnnumber_other = account.cid_reasonfornobnnumber_other;
 
                     var address = {};
@@ -1962,7 +1967,10 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
                 var cid_has_cra_bn = $("#cid_has_cra_bn").val();
                 var bn = $("#cid_crabusinessnumber").val();
-                var data = tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn);
+                var legalname = $("#cid_legalname").val();
+                var cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
+                var cid_reasonfornobnnumber_other = $("#cid_reasonfornobnnumber_other").val();
+                var data = tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber, cid_reasonfornobnnumber_other);
                 if (data.length == 0) {
                     var message = tdg.error_message.message("m000001");
                     tdg.c.dialog_OK(message);
@@ -1971,64 +1979,19 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     $("#btn_next").prop("value", message);
                     return;
                 }
-                //var data = {};
-                //data.length = 0;
-                //if ($("#cid_has_cra_bn").val() == "1") {
-                //    var bn = $("#cid_crabusinessnumber").val();
-                //    var cra_data = tdg.cid.crw.start_Retrieve_cra(bn, "");
-                //    if (cra_data.length == 0) {
-                //        var message = tdg.error_message.message("m000001");
-                //        tdg.c.dialog_OK(message);
 
-                //        var message = tdg.error_message.message("BTN_NEXT");
-                //        $("#btn_next").prop("value", message);
-                //        return;
-                //    }
-                //    data.length = 1;
-                //    data.cid_has_cra_bn = 1;
-                //    data.cid_legalname = cra_data.LegalName;
-                //    data.cid_operatingname = cra_data.OperatingName;
-                //    data.cid_crabusinessnumber = bn;
-                //    data.address = cra_data.PhysicalLocationAddress;
-                //}
-                //else {
-                //    console.log("inside else before get account by name");
-                //    var account = tdg.cid.crw.start_account_by_name();
-                //    console.log("after query account by legal name");
-                //    if (account.length > 0) {
-                //        console.log("account length " + account.length);
-                //        account = account[0];
-                //        data.length = 1;
-                //        data.cid_has_cra_bn = account.cid_has_cra_bn;
-                //        data.cid_crabusinessnumber = account.cid_crabusinessnumber;
-                //        data.cid_legalname = account.ovs_legalname;
-                //        data.cid_operatingname = account.name;
-                //        data.cid_reasonfornobnnumber = account.cid_reasonfornobnnumber;
-                //        data.cid_reasonfornobnnumber_other = account.cid_reasonfornobnnumber_other;
-
-                //        var address = {};
-                //        address.AddressLine1Text = account.address1_line1;
-                //        address.AddressLine2Text = account.address1_line2;
-                //        address.AddressLine3Text = account.address1_line3;
-                //        address.CityName = account.address1_city;
-                //        address.ProvinceStateCode = account.address1_stateorprovince;
-                //        address.PostalZipCode = account.address1_postalcode;
-
-                //        data.address = address;
-                //    }
-                //}
-
-                console.log("before second length");
                 if (data.length == 1) {
-                    tdg.cid.crw.start_buttons_confirm(false);
+                    data.invitation_ind = false;
+                    var btn_next_name = "btn_next"
+                    tdg.cid.crw.start_buttons_confirm(false, btn_next_name);
                     tdg.cid.crw.start_confirm(data, (ans) => {
                         if (ans) {
                             debugger;
-                            tdg.cid.crw.start_buttons_confirm(true);
+                            tdg.cid.crw.start_buttons_confirm(true, btn_next_name);
                             $("#NextButton").click();
                         } else {
                             debugger;
-                            tdg.cid.crw.start_buttons_confirm(true);
+                            tdg.cid.crw.start_buttons_confirm(true, btn_next_name);
                             var message = tdg.error_message.message("BTN_NEXT");
                             $("#btn_next").prop("value", message);
                         }
@@ -2040,8 +2003,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
             }
         },
 
-        start_account_by_name: function () {
-            var legalname = $("#cid_legalname").val();
+        start_account_by_name: function (legalname) {
+            //var legalname = $("#cid_legalname").val();
             legalname = legalname.replaceAll("'", "''");
 
             var filter = "ovs_legalname eq '" + legalname + "'";
@@ -2067,11 +2030,10 @@ if (typeof (tdg.cid.crw) == "undefined") {
 	                `;
             }
             else {
-                var list = $("#cid_reasonfornobnnumber")[0].options;
-                var index1 = parseInt(data.cid_reasonfornobnnumber) + 1;
-                console.log("before selected text");
-                var cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber option:selected").text();
-                //list[index1].text;
+                //var list = $("#cid_reasonfornobnnumber")[0].options;
+                //var index1 = parseInt(data.cid_reasonfornobnnumber) + 1;
+                //var cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber option:selected").text();
+                var cid_reasonfornobnnumber = data.cid_reasonfornobnnumber;
                 text_middle = `
                     <p>
                     <label for="cid_reasonfornobnnumber" class="field-label">Reason for No CRA Business Number</label>
@@ -2086,12 +2048,20 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 }
             }
 
+            var invitation_msg = "";
+            if (data.invitation_ind)
+            {
+                invitation_msg = tdg.error_message.message("m000033");
+                invitation_msg = invitation_msg.replaceAll("{0}", data.cid_legalname);
+            }
             var text1 = `
                     <section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
 	                <header class="modal-header">
 	                <h2 class="modal-title">${header}</h2>
 	                </header>
 	                <div class="modal-body" >
+                    <p>
+                    ${invitation_msg}<hr>
                     <p>
                     <label for="cid_legalname" class="field-label">Legal Name</label>
                     <input type="text" readonly class="text form-control" id="cid_legalname" style="width:100%" value="${data.cid_legalname}">
