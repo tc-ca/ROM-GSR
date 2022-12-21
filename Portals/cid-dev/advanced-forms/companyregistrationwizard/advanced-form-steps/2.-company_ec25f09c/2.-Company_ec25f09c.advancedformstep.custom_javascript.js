@@ -5,7 +5,6 @@ var _cid_crabusinessnumber = "";
 $(document).ready(function () {
 	debugger;
 
-	console.log("edit form");
 	var msg = tdg.error_message.message("BTN_PREVIOUS");
 	$("#PreviousButton").hide();
 	tdg.c.button_create("btn_previous", "#PreviousButton", msg);
@@ -117,10 +116,6 @@ $(document).ready(function () {
 
 	var ovs_invitation_only = $("#ovs_invitation_only").val();
 	if (ovs_invitation_only == "1") {
-		tdg.c.control_show("cid_has_cra_bn");
-		$("#cid_has_cra_bn").change(function () {
-			tdg.cid.crw.start_cid_has_cra_bn_onchange("2");
-		});
 		tdg.cid.crw.start_cid_has_cra_bn_onchange("2");
 
 		$("#cid_crabusinessnumber").change(cid_crabusinessnumber_onchange);
@@ -128,6 +123,13 @@ $(document).ready(function () {
 		if (cid_has_cra_bn == "1") {
 			cid_crabusinessnumber_onchange();
 		}
+		else {
+			$("#ovs_legalname").change(ovs_legalname_onchange);
+
+			$('#cid_reasonfornobnnumber').attr("readonly", true);
+			$('#cid_reasonfornobnnumber').css("pointer-events", "none");
+			$('#cid_reasonfornobnnumber_other').attr("readonly", true);
+        }
 	}
 	else {
 		$('#cid_crabusinessnumber').attr("readonly", true);
@@ -137,6 +139,10 @@ $(document).ready(function () {
 		$('#cid_reasonfornobnnumber_other').attr("readonly", true);
 	}
 });
+
+function ovs_legalname_onchange() {
+	debugger;
+}
 
 function btn_previous_click() {
 	var account_id = '{{user.parentcustomerid.Id}}';

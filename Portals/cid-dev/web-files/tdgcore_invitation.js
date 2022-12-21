@@ -175,8 +175,18 @@ if (typeof (invitation) == "undefined") {
                     debugger;
 
                     if (_account.cid_has_cra_bn) {
+                        $("#cid_has_cra_bn").val(1);
+                        tdg.cid.crw.start_cid_has_cra_bn_onchange("1");
                         $("#cid_crabusinessnumber").val(_account.cid_crabusinessnumber);
                         tdg.cid.crw.start_cid_crabusinessnumber_onchange("1");
+                    }
+                    else {
+                        $("#cid_has_cra_bn").val(0);
+                        tdg.cid.crw.start_cid_has_cra_bn_onchange("1");
+                        $("#cid_legalname").val(_account.ovs_legalname);
+                        $("#cid_reasonfornobnnumber").val(_account.cid_reasonfornobnnumber);
+                        tdg.cid.crw.start_cid_reasonfornobnnumber_onchange();          
+                        $("#cid_reasonfornobnnumber_other").val(_account.cid_reasonfornobnnumber_other);
                     }
                     invitation.invitation_go_next(_account, true, contact_id);
                 } else {
@@ -187,11 +197,12 @@ if (typeof (invitation) == "undefined") {
                     tdg.c.dialog_YN(message, (ans) => {
                         if (ans) {
                             debugger;
-                            tdg.cid.crw.start_buttons_confirm(true, btn_next_name);
                             var record_id = sessionStorage.getItem("adx_invitationid");
                             var data = {};
                             data.adx_invitationcode = "";
                             tdg.webapi.update("adx_invitations", record_id, data);
+
+                            tdg.cid.crw.start_buttons_confirm(true, btn_next_name);
                             return;
                         } else {
                             debugger;

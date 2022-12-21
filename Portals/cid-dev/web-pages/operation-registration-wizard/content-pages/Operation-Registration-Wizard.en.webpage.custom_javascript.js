@@ -12,13 +12,13 @@ $(document).ready(function () {
     sessionStorage.setItem('to_oprtn_wzrd', 'false');
 
     var urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('isExtended')) {
-        var isExtended = urlParams.get('isExtended');
+    //if (urlParams.has('isExtended')) {
+    //    var isExtended = urlParams.get('isExtended');
 
-        if (isExtended == 'false') {
-            $('.progress li').last().addClass("hidden");
-        }
-    }
+    //    if (isExtended == 'false') {
+    //        $('.progress li').last().addClass("hidden");
+    //    }
+   // }
 
     if (urlParams.has('siteid')) {
         var siteId = urlParams.get('siteid');

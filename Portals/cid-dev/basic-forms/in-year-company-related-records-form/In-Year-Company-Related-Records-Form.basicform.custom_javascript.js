@@ -12,10 +12,10 @@ $(document).ready(function () {
             });
         });
 
-        $("#eraps").on("loaded", function () {
-		    $(this).find("tbody").find("tr").each(function () {
-                $(this).find('td:last').remove();
-            });
-        });
+        //$("#eraps").on("loaded", function () {
+		//   $(this).find("tbody").find("tr").each(function () {
+        //        $(this).find('td:last').remove();
+        //    });
+        //});
     }
 });

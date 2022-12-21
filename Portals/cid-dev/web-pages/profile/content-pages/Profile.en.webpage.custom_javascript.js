@@ -73,6 +73,16 @@ $(document).ready(function () {
     if (firstname == "") {
         $("#cid_contacttype").val(100000000);
     }
+
+    //Remove email link
+    var checkEmaillinkExist = setInterval(function() {
+     if($(".text-primary").hasClass("text-primary")) 
+        {
+            $(".text-primary").css({"cursor":"text"});
+            $(".text-primary").removeAttr("href");
+            clearInterval(checkEmaillinkExist);
+        }
+    }, 100); // check every 100ms
 });
 
 function page_setup() {

@@ -75,12 +75,12 @@ $(document).ready(function () {
                     errorMessage += "TDG Activity Types required</br>";
                 }
 
-                var requirementLevel = $("#cid_requirementlevel").find(":selected").text();
+                //var requirementLevel = $("#cid_requirementlevel").find(":selected").text();
 
-                if(requirementLevel == "" || requirementLevel == null || requirementLevel == " "){
-                    validation = false;
-                    errorMessage += "Missing Site Requirement Level</br>";
-                }
+                //if(requirementLevel == "" || requirementLevel == null || requirementLevel == " "){
+                //    validation = false;
+                //    errorMessage += "Missing Site Requirement Level</br>";
+                //}
 
                 if($('table[data-name="further_site_details_section_3"]').find("#cid_issiteattested").prop('checked') == false){
                     errorMessage += "You cannot proceed before attesting your site data changes, please check the 'Attestation' box</br>";
@@ -96,12 +96,12 @@ $(document).ready(function () {
                 validation = false;
             }
 
-            //UN Numbers validation
-            if (requirementLevel == 'Extended' && !SiteHasOperationUNNumbers(null, siteId)) {
-                var msg = tdg.error_message.message("m000017"); // UN ??
-                errorMessage += msg + "</br>";
-                validation = false;
-            }
+            ////UN Numbers validation
+            //if (requirementLevel == 'Extended' && !SiteHasOperationUNNumbers(null, siteId)) {
+            //    var msg = tdg.error_message.message("m000017"); // UN ??
+           //     errorMessage += msg + "</br>";
+            //    validation = false;
+            //}
 
                  if (!validation) {
                     $('.validation-summary div').remove();

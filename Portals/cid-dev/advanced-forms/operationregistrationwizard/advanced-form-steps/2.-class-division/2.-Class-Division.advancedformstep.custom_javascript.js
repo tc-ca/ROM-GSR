@@ -3,6 +3,11 @@
 //
 $(document).ready(function () {
     debugger;
+
+	$('#NextButton').on('click', function () {
+        sessionStorage.setItem('to_attst_site', 'true');
+    });
+
       //hide grid empty message
 	  $(".entity-grid").on("loaded", function () { const EmptyMessageDiv = document.querySelector(".view-empty");	
          	EmptyMessageDiv.style.display = "none";
@@ -41,7 +46,7 @@ if (window.jQuery) {
 					return validation;
 				}
 				else {
-					if (!IsExtendedSite(operationId, null)) {
+					//if (!IsExtendedSite(operationId, null)) {
 						OperationDetailsProvided(operationId, true);
 						if (urlParams.has('siteid')) {
 							var siteId = urlParams.get('siteid');
@@ -52,10 +57,10 @@ if (window.jQuery) {
 								window.location.href = "~/SiteRegistrationWizard/?id=" + siteId;
 							}
 						}
-					}
-					else {
-						return validation;
-					}
+					//}
+					//else {
+					//	return validation;
+					//}
 				}
 				//return validation; 
 			}

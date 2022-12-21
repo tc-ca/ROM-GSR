@@ -57,11 +57,11 @@ $(document).ready(function () {
 
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('id')) {
-        var requirementLevel = $("#cid_requirementlevel").find(":selected").text();
+        //var requirementLevel = $("#cid_requirementlevel").find(":selected").text();
         var cidSiteStatus = $('#cid_cidsitestatus').find(":selected").text();
         var siteId = urlParams.get('id');
         var operationId = GetHOTIOperation(siteId);
-        var disabledSiteLevelSwitch = "";
+        //var disabledSiteLevelSwitch = "";
         var disabled = "";
 
         if (cidSiteStatus.indexOf("Inactive") >= 0)
@@ -72,11 +72,11 @@ $(document).ready(function () {
 
         sessionStorage.setItem('siteOperationId', operationId);
 
-        var msg = "Set/Change Site Requirement Level";//tdg.error_message.message("m000029");
-        var html1 = "<div id='switchSiteRequirementLevel' role='group' class='btn-group entity-action-button'><a href='~/my-sites/in-year-site/switch_site_requirement_level?id=" + siteId + "'><input type='button' name='switchSiteRequirementLevel' value='{0}' class='btn btn-primary button submit-btn' nonactionlinkbutton='true'" + disabledSiteLevelSwitch + " " + disabled + "></a></div><br><br><br><br>";
-        html1 = html1.replaceAll("{0}", msg);
+        //var msg = "Set/Change Site Requirement Level";//tdg.error_message.message("m000029");
+        //var html1 = "<div id='switchSiteRequirementLevel' role='group' class='btn-group entity-action-button'><a href='~/my-sites/in-year-site/switch_site_requirement_level?id=" + siteId + "'><input type='button' name='switchSiteRequirementLevel' value='{0}' class='btn btn-primary button submit-btn' nonactionlinkbutton='true'" + disabledSiteLevelSwitch + " " + disabled + "></a></div><br><br><br><br>";
+       // html1 = html1.replaceAll("{0}", msg);
         //$('div[data-name="site_details2"]').parent().parent().find("#UpdateButton").parent().after(html1);
-        $('table[data-name="tab_5_section_2"]').parent().after(html1);
+        //$('table[data-name="tab_5_section_2"]').parent().after(html1);
         
 
         $(".list-group-item").each(function () {
@@ -85,17 +85,17 @@ $(document).ready(function () {
                 $(this).attr("href", _href + '?id=' + siteId);
         });
 
-        if (requirementLevel == 'Basic') {
-            $('table[data-name="site_details_section_6"]').parent().addClass("hidden");
-        }
+        //if (requirementLevel == 'Basic') {
+        //    $('table[data-name="site_details_section_6"]').parent().addClass("hidden");
+        //}
 
         if ($("#openOperationWizard").length > 0)
             $('#openOperationWizard').remove();
     }
 
-    var html1 = "<div id='siteRequirementLevel'><label>" + requirementLevel + "</label></div><br>"; 
-    $('#cid_requirementlevel').parent().after(html1); 
-    $('#cid_requirementlevel').hide(); 
+    //var html1 = "<div id='siteRequirementLevel'><label>" + requirementLevel + "</label></div><br>"; 
+    //$('#cid_requirementlevel').parent().after(html1); 
+    //$('#cid_requirementlevel').hide(); 
     
     $('#loader').hide(); 
 });
