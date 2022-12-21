@@ -8,7 +8,7 @@
     <Descriptions>
       <Description description="Upgrade of TDG Core Schema" languagecode="1033" />
     </Descriptions>
-    <Version>1.143.0.0</Version>
+    <Version>1.144.0.0</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>oversightpublisher</UniqueName>
@@ -327,6 +327,7 @@
       <RootComponent type="60" id="{5f5ffe7a-71e3-eb11-bacb-0022483c5e2f}" behavior="0" />
       <RootComponent type="60" id="{5f7d6522-c00f-eb11-a813-000d3af3a7a7}" behavior="0" />
       <RootComponent type="60" id="{70ad8b15-e3f3-4d7d-9e4b-16cb4e51b484}" />
+      <RootComponent type="60" id="{788f109d-7b80-ed11-81ad-0022483d0343}" behavior="0" />
       <RootComponent type="60" id="{b0a1ab16-2d2f-eb11-a813-000d3af3fc19}" behavior="0" />
       <RootComponent type="60" id="{b0a9c7dd-4ec9-eb11-bacc-000d3af390da}" behavior="0" />
       <RootComponent type="60" id="{e631a301-3f03-eb11-a813-000d3af3a7a7}" />
@@ -11085,6 +11086,12 @@
         <Dependent type="26" schemaName="TDG Regions" displayName="TDG Regions" parentSchemaName="territory" parentDisplayName="Region" id="{b6e3caab-ee3b-ec11-8c62-0022483d71b4}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="2" schemaName="territoryid" displayName="Territory" parentSchemaName="territory" parentDisplayName="Region" solution="msdynce_AppCommon (9.0.4.0066)">
+          <package>msdynce_AppCommonAnchor (9.0.22121.10001)</package>
+        </Required>
+        <Dependent type="26" schemaName="Province/Territory to Region" displayName="Province/Territory to Region" parentSchemaName="territory" parentDisplayName="Region" id="{c7493402-8c71-ed11-81ac-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="20" displayName="Customer service app access" solution="msdynce_Customerservicehub (9.0.5.0056)" id="{3dac4d9e-568c-e611-80d4-00155d42a122}">
           <package>msdynce_ServiceAnchor (9.0.22121.1008)</package>
         </Required>
@@ -11615,22 +11622,6 @@
           <package>FieldService_Anchor (8.8.80.48)</package>
         </Required>
         <Dependent type="60" displayName="Information" parentDisplayName="Incident Type" id="{4cbf19c2-8998-4fcf-b1a1-19a983797396}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="26" schemaName="Accounts I Follow" displayName="Accounts I Follow" parentSchemaName="account" parentDisplayName="Account" solution="Active" id="{61273827-328e-e011-95ae-00155d9cfa02}" />
-        <Dependent type="60" displayName="Information" parentDisplayName="Service Request" id="{337e6783-6be4-4278-82d0-ee57257802dc}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="26" schemaName="Accounts I Follow" displayName="Accounts I Follow" parentSchemaName="account" parentDisplayName="Account" solution="Active" id="{61273827-328e-e011-95ae-00155d9cfa02}" />
-        <Dependent type="60" displayName="FDR Site Profile" parentDisplayName="Account" id="{76e79a3e-6304-ed11-82e6-000d3a848097}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="26" schemaName="Accounts I Follow" displayName="Accounts I Follow" parentSchemaName="account" parentDisplayName="Account" solution="Active" id="{61273827-328e-e011-95ae-00155d9cfa02}" />
-        <Dependent type="80" schemaName="fdr_engineer" displayName="Engineering Services" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="26" schemaName="Accounts I Follow" displayName="Accounts I Follow" parentSchemaName="account" parentDisplayName="Account" solution="Active" id="{61273827-328e-e011-95ae-00155d9cfa02}" />
-        <Dependent type="80" schemaName="fdr_FDRAdministration" displayName="ES Administration" />
       </MissingDependency>
       <MissingDependency>
         <Required type="26" schemaName="Attachment View for Knowledge Article" displayName="Attachment View for Knowledge Article" parentSchemaName="msdyn_kbattachment" parentDisplayName="Knowledge Article Attachment" solution="msdynce_KnowledgeManagementFeatures (9.0.22111.5032)" id="{62984379-5ad3-eb11-b1b5-000d3afedc61}">
@@ -12172,10 +12163,6 @@
           <package>FieldService_Anchor (8.8.80.48)</package>
         </Required>
         <Dependent type="60" displayName="Work Order - Mobile" parentDisplayName="Work Order" id="{f25cecf6-2f00-4eab-aeef-d773af32e027}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="26" schemaName="Province/Territory to Region" displayName="Province/Territory to Region" parentSchemaName="territory" parentDisplayName="Region" solution="Active" id="{c7493402-8c71-ed11-81ac-0022483d0343}" />
-        <Dependent type="80" schemaName="ovs_OversightPlanning" displayName="TDG Inspections / Inspections TMD" />
       </MissingDependency>
       <MissingDependency>
         <Required type="26" schemaName="Active Work Order Service Tasks" displayName="Active Work Order Service Tasks" parentSchemaName="msdyn_workorderservicetask" parentDisplayName="Work Order Service Task" solution="FieldService (8.8.0.88)" id="{c9fd8f4d-8184-4ddb-a31a-89e66e8e710e}">
@@ -12840,14 +12827,6 @@
         <Dependent type="60" displayName="Contacts Dashboard" parentDisplayName="Contact" id="{70ad8b15-e3f3-4d7d-9e4b-16cb4e51b484}" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="60" displayName="FDR Dashboards" solution="Active" id="{788f109d-7b80-ed11-81ad-0022483d0343}" />
-        <Dependent type="80" schemaName="fdr_engineer" displayName="Engineering Services" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="60" displayName="FDR Dashboards" solution="Active" id="{788f109d-7b80-ed11-81ad-0022483d0343}" />
-        <Dependent type="80" schemaName="fdr_FDRAdministration" displayName="ES Administration" />
-      </MissingDependency>
-      <MissingDependency>
         <Required type="60" displayName="Work Order Quick View" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)" id="{79c33fb4-7126-41a8-9dff-13e4462c9b19}">
           <package>FieldService_Anchor (8.8.80.48)</package>
         </Required>
@@ -12993,7 +12972,7 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="Activities/SystemLibraries/Task_main_system_library.js" displayName="Activities/SystemLibraries/Task_main_system_library.js" solution="msdynce_Activities (9.0.1.2033)" />
-        <Dependent type="60" displayName="Annual Compliance" parentDisplayName="Task" id="{36b2696a-5e75-4f8b-a1e2-e7dc7d0b7dc3}" />
+        <Dependent type="60" displayName="Information" parentDisplayName="Task" id="{b62ce022-cc0f-4c8c-bb29-21948f70dc74}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="adx_invitations.svg" displayName="adx_invitations.svg" solution="MicrosoftPortalBase (9.2.2103.1)">
@@ -13012,12 +12991,6 @@
           <package>msdynce_AppCommonAnchor (9.0.22121.10001)</package>
         </Required>
         <Dependent type="60" displayName="TDG Site Profile - Custom DeActivation Button" parentDisplayName="Account" id="{05264e2c-47d5-4669-bd52-f903380ba1fa}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="61" schemaName="AppCommon/Account/Account_main_system_library.js" displayName="AppCommon/Account/Account_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
-          <package>msdynce_AppCommonAnchor (9.0.22121.10001)</package>
-        </Required>
-        <Dependent type="60" displayName="CID - Site" parentDisplayName="Account" id="{0e37df7d-990c-45f9-b2a7-3bc3b15d6973}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="AppCommon/Account/Account_main_system_library.js" displayName="AppCommon/Account/Account_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
@@ -13119,6 +13092,12 @@
         <Required type="61" schemaName="AppCommon/Account/Account_main_system_library.js" displayName="AppCommon/Account/Account_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
           <package>msdynce_AppCommonAnchor (9.0.22121.10001)</package>
         </Required>
+        <Dependent type="60" displayName="Information" parentDisplayName="Account" id="{b053a39a-041a-4356-acef-ddf00182762b}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="61" schemaName="AppCommon/Account/Account_main_system_library.js" displayName="AppCommon/Account/Account_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
+          <package>msdynce_AppCommonAnchor (9.0.22121.10001)</package>
+        </Required>
         <Dependent type="60" displayName="CID Portal - In-Year Further Site Details Form" parentDisplayName="Account" id="{b176416e-6172-4b51-8c6a-6158ca14bd48}" />
       </MissingDependency>
       <MissingDependency>
@@ -13167,7 +13146,7 @@
         <Required type="61" schemaName="AppCommon/Contact/Contact_main_system_library.js" displayName="AppCommon/Contact/Contact_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
           <package>msdynce_AppCommonAnchor (9.0.22121.10001)</package>
         </Required>
-        <Dependent type="60" displayName="FDR Contact" parentDisplayName="Contact" id="{0b065527-1f35-ed11-9db1-0022483cb62f}" />
+        <Dependent type="60" displayName="Profile Web Form" parentDisplayName="Contact" id="{0bd832d5-9d6a-456d-bdc1-21129e82cc0f}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="AppCommon/Contact/Contact_main_system_library.js" displayName="AppCommon/Contact/Contact_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
@@ -13221,7 +13200,7 @@
         <Required type="61" schemaName="AppCommon/Territory/Territory_main_system_library.js" displayName="AppCommon/Territory/Territory_main_system_library.js" solution="msdynce_AppCommon (9.0.4.0066)">
           <package>msdynce_AppCommonAnchor (9.0.22121.10001)</package>
         </Required>
-        <Dependent type="60" displayName="TDG Region" parentDisplayName="Region" id="{5e818a16-ee3b-ec11-8c62-0022483d7564}" />
+        <Dependent type="60" displayName="Information" parentDisplayName="Region" id="{2474525c-aaae-43ce-97e2-7adb3ed7efa5}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="ikl_/Attach2Dynamics/Library/index.html" displayName="ikl_/Attach2Dynamics/Library/index.html" solution="Attach2Dynamics (9.0.0.24)">
@@ -14203,7 +14182,7 @@
         <Required type="61" schemaName="msdyncrm_/KnowledgeManagement/KnowledgeArticle/KnowledgeArticleMainSystemLibrary.js" displayName="msdyncrm_/KnowledgeManagement/KnowledgeArticle/KnowledgeArticleMainSystemLibrary.js" solution="msdynce_KnowledgeManagementPatch (9.0.22111.5032)">
           <package>msdynce_KnowledgeManagementAnchor (9.0.22111.5032)</package>
         </Required>
-        <Dependent type="60" displayName="Knowledge Article for Interactive experience" parentDisplayName="Knowledge Article" id="{f7502aaf-4874-49fc-868d-cc201c6c4453}" />
+        <Dependent type="60" displayName="Knowledge Article" parentDisplayName="Knowledge Article" id="{e7ef555e-7f57-4164-b604-59fa4f0a7e2e}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="msdyncrm_/KnowledgeManagementFeatureWebResource/KnowledgeArticleAttachment/KnowledgeArticleAttachment.js" displayName="msdyncrm_/KnowledgeManagementFeatureWebResource/KnowledgeArticleAttachment/KnowledgeArticleAttachment.js" solution="msdynce_KnowledgeManagementFeatures (9.0.22111.5032)">
@@ -14264,12 +14243,6 @@
           <package>msdynce_SalesAnchor (9.0.22121.10004)</package>
         </Required>
         <Dependent type="60" displayName="FDR Contact" parentDisplayName="Contact" id="{0b065527-1f35-ed11-9db1-0022483cb62f}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="61" schemaName="Sales/ClientCommon/Sales_ClientCommon.js" displayName="Sales/ClientCommon/Sales_ClientCommon.js" solution="msdynce_Sales (9.0.4.0076)">
-          <package>msdynce_SalesAnchor (9.0.22121.10004)</package>
-        </Required>
-        <Dependent type="60" displayName="CID - Site" parentDisplayName="Account" id="{0e37df7d-990c-45f9-b2a7-3bc3b15d6973}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="Sales/ClientCommon/Sales_ClientCommon.js" displayName="Sales/ClientCommon/Sales_ClientCommon.js" solution="msdynce_Sales (9.0.4.0076)">
@@ -14347,6 +14320,12 @@
         <Required type="61" schemaName="Sales/ClientCommon/Sales_ClientCommon.js" displayName="Sales/ClientCommon/Sales_ClientCommon.js" solution="msdynce_Sales (9.0.4.0076)">
           <package>msdynce_SalesAnchor (9.0.22121.10004)</package>
         </Required>
+        <Dependent type="60" displayName="FDR Site Profile" parentDisplayName="Account" id="{76e79a3e-6304-ed11-82e6-000d3a848097}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="61" schemaName="Sales/ClientCommon/Sales_ClientCommon.js" displayName="Sales/ClientCommon/Sales_ClientCommon.js" solution="msdynce_Sales (9.0.4.0076)">
+          <package>msdynce_SalesAnchor (9.0.22121.10004)</package>
+        </Required>
         <Dependent type="60" displayName="CID - Site Profile" parentDisplayName="Account" id="{7c9d26a5-5c0a-ec11-b6e6-000d3ae8fd6b}" />
       </MissingDependency>
       <MissingDependency>
@@ -14419,12 +14398,6 @@
         <Required type="61" schemaName="Sales/Contact/Contact_main_system_library.js" displayName="Sales/Contact/Contact_main_system_library.js" solution="msdynce_SalesPatch201904 (9.0.1912.1007)">
           <package>msdynce_SalesAnchor (9.0.22121.10004)</package>
         </Required>
-        <Dependent type="60" displayName="FDR Contact" parentDisplayName="Contact" id="{0b065527-1f35-ed11-9db1-0022483cb62f}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="61" schemaName="Sales/Contact/Contact_main_system_library.js" displayName="Sales/Contact/Contact_main_system_library.js" solution="msdynce_SalesPatch201904 (9.0.1912.1007)">
-          <package>msdynce_SalesAnchor (9.0.22121.10004)</package>
-        </Required>
         <Dependent type="60" displayName="CID Portal - Pre Company Registration" parentDisplayName="Contact" id="{175d73bb-e455-41a0-a9fd-f9b25cf8055c}" />
       </MissingDependency>
       <MissingDependency>
@@ -14444,6 +14417,12 @@
           <package>msdynce_SalesAnchor (9.0.22121.10004)</package>
         </Required>
         <Dependent type="60" displayName="CID Portal - New Contact Form" parentDisplayName="Contact" id="{90e9ddc3-7edc-424f-8491-fca963593b79}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="61" schemaName="Sales/Contact/Contact_main_system_library.js" displayName="Sales/Contact/Contact_main_system_library.js" solution="msdynce_SalesPatch201904 (9.0.1912.1007)">
+          <package>msdynce_SalesAnchor (9.0.22121.10004)</package>
+        </Required>
+        <Dependent type="60" displayName="CID Portal - Edit Contact Form" parentDisplayName="Contact" id="{b5fd5416-28c1-4a1f-8774-2d794708ca15}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="Sales/Contact/Contact_main_system_library.js" displayName="Sales/Contact/Contact_main_system_library.js" solution="msdynce_SalesPatch201904 (9.0.1912.1007)">
@@ -14964,6 +14943,10 @@
           <package>FieldService_Anchor (8.8.80.48)</package>
         </Required>
         <Dependent type="9" schemaName="msdyn_wosystemstatus" displayName="WO System Status" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="EnvironmentVariableDefinition" displayName="fdr_FDRDashboardVariable" solution="Active" id.schemaname="fdr_FDRDashboardVariable" />
+        <Dependent type="60" displayName="FDR Dashboards" id="{788f109d-7b80-ed11-81ad-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="SettingDefinition" displayName="AllowNotificationsEarlyAccess" solution="AppNotifications (10.0.0.10)" id.uniquename="AllowNotificationsEarlyAccess" />
