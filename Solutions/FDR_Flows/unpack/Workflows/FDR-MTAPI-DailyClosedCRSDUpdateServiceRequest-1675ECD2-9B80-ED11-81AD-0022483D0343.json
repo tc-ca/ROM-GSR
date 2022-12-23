@@ -1,0 +1,239 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_dataverse_fdrsp"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_mtapi_v3"
+        },
+        "api": {
+          "name": "shared_tc-5Fmtapiconnector-5F5cf23ef0bee9f3b2",
+          "logicalName": "tc_5Fmtapiconnector"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "FDR_MTOA_JWT (fdr_FDR_MTOA_JWT)": {
+          "defaultValue": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJGRFIiLCJ1bmlxdWVfbmFtZSI6IkZhY2lsaXRpZXMgYW5kIERlc2lnbiBSZWdpc3RlciAoRkRSKSIsInJvbGUiOiJVc2VyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMi4wIiwiQ29ycmVsYXRpb25LZXkiOiI1YTkwYzkxNzdkYTMiLCJuYmYiOjE2NTM5NDA3NTgsImV4cCI6MTcxNzA5OTE1OCwiaWF0IjoxNjUzOTQwNzU4LCJpc3MiOiJUcmFuc3BvcnQgQ2FuYWRhIiwiYXVkIjoiVHJhbnNwb3J0IENhbmFkYSJ9.0CPTpmLiz29jJ4cpopnV9CtuPmrUuUqHolMh2Yqot0I",
+          "type": "String",
+          "metadata": {
+            "schemaName": "fdr_FDR_MTOA_JWT"
+          }
+        }
+      },
+      "triggers": {
+        "Recurrence": {
+          "recurrence": {
+            "frequency": "Day",
+            "interval": 1,
+            "startTime": "2022-12-20T08:30:00Z"
+          },
+          "metadata": {
+            "operationMetadataId": "fa864734-0440-4a70-9ab8-301cf7827a7f"
+          },
+          "type": "Recurrence"
+        }
+      },
+      "actions": {
+        "Get_Active_And_Completed_SRs": {
+          "runAfter": {
+            "CRSD_Status": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0d810647-07d2-4eff-97fa-e08dc3943ee3"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "fdr_servicerequests",
+              "$select": "fdr_servicerequestid,fdr_mtoa_sr_id",
+              "$filter": "(statecode eq 0 and statuscode eq 794600005)"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Loop_Over_Service_Requests": {
+          "foreach": "@outputs('Get_Active_And_Completed_SRs')?['body/value']",
+          "actions": {
+            "Set_variable": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "e0bcbf42-a872-488a-b312-4fffc37011e6"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "MTOASRID",
+                "value": "@{items('Loop_Over_Service_Requests')?['fdr_mtoa_sr_id']}"
+              }
+            },
+            "Condition": {
+              "actions": {},
+              "runAfter": {
+                "Set_variable": [
+                  "Succeeded"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "Gets_a_service_request_by_its_id": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "73907bfe-f2d9-4905-bc83-c187188c7b0f"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2",
+                        "operationId": "ServiceRequests_GetServiceRequestById",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Fmtapiconnector-5F5cf23ef0bee9f3b2"
+                      },
+                      "parameters": {
+                        "id": "@items('Loop_Over_Service_Requests')?['fdr_mtoa_sr_id']",
+                        "app-jwt": "@parameters('FDR_MTOA_JWT (fdr_FDR_MTOA_JWT)')",
+                        "includeRegulatedEntities": false
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Was_Status_Changed": {
+                    "actions": {
+                      "Update_a_row": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "2f3de538-d76a-49cc-b206-2a41aa0e3b54"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_commondataserviceforapps",
+                            "operationId": "UpdateRecord",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                          },
+                          "parameters": {
+                            "entityName": "fdr_servicerequests",
+                            "recordId": "@items('Loop_Over_Service_Requests')?['fdr_servicerequestid']",
+                            "item/statuscode": 2,
+                            "item/statecode": 1
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Gets_a_service_request_by_its_id": [
+                        "Succeeded"
+                      ]
+                    },
+                    "expression": {
+                      "equals": [
+                        "@outputs('Gets_a_service_request_by_its_id')?['body/RequestStatus']",
+                        "@variables('CRSD_Status')"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "a3c0b3bb-6bb5-4596-ab92-f538a6eb50f6"
+                    },
+                    "type": "If"
+                  }
+                }
+              },
+              "expression": {
+                "or": [
+                  {
+                    "equals": [
+                      "@variables('MTOASRID')",
+                      "@null"
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@empty(variables('MTOASRID'))",
+                      "@true"
+                    ]
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "891879dd-e485-4fbe-b832-a9e5668c893f"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "Get_Active_And_Completed_SRs": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "bd1a3b89-2f38-4c50-b407-007f8b4e2bd3"
+          },
+          "type": "Foreach"
+        },
+        "CRSD_Status": {
+          "runAfter": {
+            "MTOA_SR_ID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a2c17f88-10eb-4f4b-9e84-4d953b7ce130"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CRSD_Status",
+                "type": "string",
+                "value": "Closed"
+              }
+            ]
+          }
+        },
+        "MTOA_SR_ID": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "bc542104-77cf-4566-bd0f-77b8002d8188"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "MTOASRID",
+                "type": "string"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
