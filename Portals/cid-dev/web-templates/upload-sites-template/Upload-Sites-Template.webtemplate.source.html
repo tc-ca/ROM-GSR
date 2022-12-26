@@ -598,21 +598,17 @@ function call_Inital_validation(Language , bulkactivitytype)
 {
 
   var URLs = new URLSearchParams(window.location.search);
+  var URLs = new URLSearchParams(window.location.search);
 
-        var URLs = new URLSearchParams(window.location.search);
-
-      //  var newrecordid = URLs.get('id');
-        var companyid = URLs.get('companyid');
-        var newrecordid = URLs.get('id');
-      //  var companyid = URLs.get('companyid');
-        var companyname = '{{ user.parentcustomerid.Name }}';
-     if  ( companyid != null  )
-       {
-
-      //document.getElementById("content").innerHTML = response.html;
-      
+   //  var newrecordid = URLs.get('id');
+   var companyid = URLs.get('companyid');
+   var newrecordid = URLs.get('id');
+   //  var companyid = URLs.get('companyid');
+   var companyname = '{{ user.parentcustomerid.Name }}';
+   if  ( companyid != null  )
+    {
+      //document.getElementById("content").innerHTML = response.html; 
         Disable_all_Buttons();
-
         var urlPath = window.location.href;
         urlPath = urlPath.split('?')[0];
         window.history.replaceState({}, document.title, urlPath);
@@ -627,7 +623,7 @@ function call_Inital_validation(Language , bulkactivitytype)
 
         }
 
-         $('#infoMsg').css('display', 'block');
+        $('#infoMsg').css('display', 'block');
         $('#infoMsg').html(IntialvalidationBegunMessage);
 
          var Page_Partial_URL = '{{page.adx_partialurl}}';
@@ -635,20 +631,20 @@ function call_Inital_validation(Language , bulkactivitytype)
          if (Page_Partial_URL ==  "Bulk_Site_Upload")
          {
               UploadType = "Initial";
-              }
+        }
         else
          {
-
          UploadType = "Update";
          }
 
       
         var acupdate =
-            '{ "activityid":"' + newrecordid + '" , "name": "'+ companyname +'", "accountid": "' + companyid + '" , "Lang" : "' + Language + '" ,"ActivityType" : "' + UploadType +  '" }';
+            '{ "activityid":"' + newrecordid + '" , "name": "'+ companyname
+             +'", "accountid": "' + companyid + '" , "Lang" : "' + Language + '" ,"ActivityType" : "' 
+             + UploadType +  '" }';
 
         var req = new XMLHttpRequest();
         var url = '{{excelload_Flow_URL}}';
-
 
         req.open("POST", url, true);
         req.setRequestHeader('Content-Type', 'application/json');
@@ -662,8 +658,6 @@ function call_Inital_validation(Language , bulkactivitytype)
                 if (this.status === 200) {
                     var result = this.response;
                     $('#infoMsg').css('display', 'none');
-                  // $('#warnningMessage').css('display', 'none');
-                    // alert (this.response);
                      //alert(req.getResponseHeader('DetailMessage'));
                    //  var warrning_Message  = "<p>Detail Site data has already been assigned manually, or via a previous Bulk Upload. If you proceed, then any Site referenced in the workbook that is already in CID, will first be completed deleted from CID, with no possibility to recover the related data. Those Site(s) will then be re-created based on the workbook values here. <br><br>Are you sure you want to continue with this upload and potentially override existing Site data? [B1035]</P>";
                      var warrning_Message  = filter_BulkMessageArray("M12" , "en");
@@ -673,7 +667,6 @@ function call_Inital_validation(Language , bulkactivitytype)
                      {
                          // warrning_Message  = "<p>Les données détaillées du site ont déjà été attribuées manuellement ou via un précédent chargement en bloc. Si vous continuez, tout site référencé dans le classeur qui est déjà dans CID sera d'abord complètement supprimé de CID, sans possibilité de récupérer les données associées. Ces sites seront ensuite recréés en fonction des valeurs du classeur ici. <br><br>Voulez-vous vraiment continuer avec ce téléchargement et éventuellement remplacer les données existantes du site ? [B1035] </P>";
                            warrning_Message  = filter_BulkMessageArray("M12" , "fr");
-
                      }
 
                      /* var NumberOfSiteswithRequirementLevel = req.getResponseHeader('NumberOfSitesWithRequirementLevel');
