@@ -2,6 +2,7 @@
   "properties": {
     "connectionReferences": {
       "shared_commondataserviceforapps_1": {
+        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
@@ -11,12 +12,22 @@
         }
       },
       "shared_commondataserviceforapps": {
+        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
         },
         "api": {
           "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_azureblob_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedazureblob_395e7"
+        },
+        "api": {
+          "name": "shared_azureblob"
         }
       },
       "shared_sharepointonline": {
@@ -44,15 +55,6 @@
         },
         "api": {
           "name": "shared_webcontents"
-        }
-      },
-      "shared_azureblob_1": {
-        "runtimeSource": "embedded",
-        "connection": {
-          "connectionReferenceLogicalName": "cid_sharedazureblob_395e7"
-        },
-        "api": {
-          "name": "shared_azureblob"
         }
       }
     },
@@ -113,9 +115,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "ListRecords",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              "operationId": "ListRecords"
             },
             "parameters": {
               "entityName": "qm_environmentsettingses",
@@ -160,9 +162,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps",
-              "operationId": "GetItem",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              "operationId": "GetItem"
             },
             "parameters": {
               "entityName": "accounts",
@@ -366,7 +368,7 @@
         },
         "Get_Bulk_Activity_log_Summaries-initial": {
           "runAfter": {
-            "Initialize_variable_TotalNumberOfSites": [
+            "TotalNumberOfUns": [
               "Succeeded"
             ]
           },
@@ -376,9 +378,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "GetItem",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              "operationId": "GetItem"
             },
             "parameters": {
               "entityName": "cid_bulkactivitylogsummaries",
@@ -498,9 +500,28 @@
             ]
           }
         },
-        "Initialize_variable_WarrningMessage13": {
+        "Initialize_variable_NumberOfSitesWithRequirementLevel": {
           "runAfter": {
             "Initialize_variable-Type": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "99b24bc9-26ae-470b-be9c-fb7020c3e5db"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "NumberOfSitesWithRequirementLevel",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_WarrningMessage13": {
+          "runAfter": {
+            "Initialize_variable_NumberOfSitesWithRequirementLevel": [
               "Succeeded"
             ]
           },
@@ -556,6 +577,25 @@
             ]
           }
         },
+        "TotalNumberOfUns": {
+          "runAfter": {
+            "Initialize_variable_TotalNumberOfSites": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4798ef44-faa3-4c4b-bfff-cc920a3fab32"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "TotalNumberOfUns",
+                "type": "integer"
+              }
+            ]
+          }
+        },
         "Get_Contact": {
           "runAfter": {
             "ContactID": [
@@ -568,9 +608,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps",
-              "operationId": "GetItem",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              "operationId": "GetItem"
             },
             "parameters": {
               "entityName": "contacts",
@@ -589,9 +629,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "UpdateRecord",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  "operationId": "UpdateRecord"
                 },
                 "parameters": {
                   "entityName": "cid_bulkactivitylogsummaries",
@@ -601,6 +641,7 @@
                   "item/cid_filename": "@outputs('OrigionalFileName')",
                   "item/cid_language": "@variables('Language_Index')",
                   "item/cid_numberofsites": "@variables('TotalNumberOfSite')",
+                  "item/cid_numberofunnumbers": "@variables('TotalNumberOfUns')",
                   "item/cid_tempsharepointfilelocation": "@outputs('Create_Temp_file')?['body/Path']",
                   "item/cid_validationcompletedstage": 100000000
                 },
@@ -619,7 +660,9 @@
                   "inputs": {
                     "statusCode": 200,
                     "headers": {
-                      "filepath": "@outputs('Create_Temp_file')?['body/Path']"
+                      "filepath": "@outputs('Create_Temp_file')?['body/Path']",
+                      "NumberOfSitesWithRequirementLevel": "@variables('NumberOfSitesWithRequirementLevel')",
+                      "warningMessage": ""
                     },
                     "body": "@variables('WarrningMessage13')"
                   }
@@ -642,7 +685,9 @@
                     "inputs": {
                       "statusCode": 200,
                       "headers": {
-                        "filepath": "@outputs('Create_Temp_file')?['body/Path']"
+                        "NumberOfSitesWithRequirementLevel": "@variables('NumberOfSitesWithRequirementLevel')",
+                        "filepath": "@outputs('Create_Temp_file')?['body/Path']",
+                        "warningMessage": ""
                       },
                       "body": "@variables('WarrningMessage13')"
                     }
@@ -676,9 +721,9 @@
                 "type": "OpenApiConnection",
                 "inputs": {
                   "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                     "connectionName": "shared_commondataserviceforapps_1",
-                    "operationId": "UpdateRecord",
-                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    "operationId": "UpdateRecord"
                   },
                   "parameters": {
                     "entityName": "cid_bulkactivitylogsummaries",
@@ -690,6 +735,7 @@
                     "item/cid_filename": "@outputs('OrigionalFileName')",
                     "item/cid_language": "@variables('Language_Index')",
                     "item/cid_numberofsites": "@variables('TotalNumberOfSite')",
+                    "item/cid_numberofunnumbers": "@variables('TotalNumberOfUns')",
                     "item/cid_tempsharepointfilelocation": "@outputs('Create_Temp_file')?['body/Path']",
                     "item/cid_totalruntime": "@div(sub(ticks(utcNow()),ticks(outputs('Bulk_Activity_start_time'))),10000000)",
                     "item/cid_version": "@int(variables('Version#'))"
@@ -709,9 +755,9 @@
                 "type": "OpenApiConnection",
                 "inputs": {
                   "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                     "connectionName": "shared_sharepointonline",
-                    "operationId": "HttpRequest",
-                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    "operationId": "HttpRequest"
                   },
                   "parameters": {
                     "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -736,9 +782,9 @@
                 "type": "OpenApiConnection",
                 "inputs": {
                   "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                     "connectionName": "shared_sharepointonline",
-                    "operationId": "DeleteItem",
-                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    "operationId": "DeleteItem"
                   },
                   "parameters": {
                     "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -799,9 +845,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                   "connectionName": "shared_sharepointonline",
-                  "operationId": "CreateFile",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                  "operationId": "CreateFile"
                 },
                 "parameters": {
                   "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -829,9 +875,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                   "connectionName": "shared_sharepointonline",
-                  "operationId": "CreateNewFolder",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                  "operationId": "CreateNewFolder"
                 },
                 "parameters": {
                   "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -878,9 +924,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
                           "connectionName": "shared_excelonlinebusiness_1",
-                          "operationId": "GetTables",
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness"
+                          "operationId": "GetTables"
                         },
                         "parameters": {
                           "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
@@ -903,6 +949,21 @@
                       "inputs": {
                         "from": "@outputs('Get_tables')?['body/value']",
                         "where": "@equals(item()['name'], 'SettingTable')"
+                      }
+                    },
+                    "Filter-array-Table4": {
+                      "runAfter": {
+                        "Get_tables": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "6b2878bf-b104-467f-9d6a-3cd0583bc967"
+                      },
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@outputs('Get_tables')?['body/value']",
+                        "where": "@equals(item()['name'], 'TableAddExtended')"
                       }
                     },
                     "Filter-array-table2": {
@@ -939,9 +1000,9 @@
                           "type": "OpenApiConnection",
                           "inputs": {
                             "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents",
                               "connectionName": "shared_webcontents",
-                              "operationId": "InvokeHttp",
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
+                              "operationId": "InvokeHttp"
                             },
                             "parameters": {
                               "request/method": "GET",
@@ -962,13 +1023,36 @@
                           "type": "OpenApiConnection",
                           "inputs": {
                             "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents",
                               "connectionName": "shared_webcontents",
-                              "operationId": "InvokeHttp",
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
+                              "operationId": "InvokeHttp"
                             },
                             "parameters": {
                               "request/method": "GET",
                               "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/@{outputs('Get-File-Relative-Path')}:/workbook/tables/TableAddBasic/rows"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          }
+                        },
+                        "Invoke-an-HTTP-request-unnumber_2": {
+                          "runAfter": {
+                            "Get-Table-Setting_2": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "f11d9ebe-4fb1-412e-b313-ec10ab941bb7"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents",
+                              "connectionName": "shared_webcontents",
+                              "operationId": "InvokeHttp"
+                            },
+                            "parameters": {
+                              "request/method": "GET",
+                              "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/@{outputs('Get-File-Relative-Path')}:/workbook/tables/TableAddExtended/rows"
                             },
                             "authentication": "@parameters('$authentication')"
                           }
@@ -979,6 +1063,23 @@
                         "operationMetadataId": "1c59b105-b8ac-414b-93f6-452c6bc03090"
                       },
                       "type": "Scope"
+                    },
+                    "Select_UNNumber": {
+                      "runAfter": {
+                        "Graph_API_call_to_get_Excel_tables": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "265c9e91-9b01-4801-9bf7-22ee945843c8"
+                      },
+                      "type": "Select",
+                      "inputs": {
+                        "from": "@outputs('Invoke-an-HTTP-request-unnumber_2')?['body']['value']",
+                        "select": {
+                          "UNNumber": "@item()['values'][0][1]"
+                        }
+                      }
                     },
                     "SelectSitesValues": {
                       "runAfter": {
@@ -993,7 +1094,7 @@
                       "inputs": {
                         "from": "@outputs('Invoke_http_Get_Sites_2')?['body']['value']",
                         "select": {
-                          "FullAddress": "@item()['values'][0][26]"
+                          "FullAddress": "@item()['values'][0][27]"
                         }
                       }
                     },
@@ -1014,7 +1115,7 @@
                     },
                     "Set_variable_Error_Message": {
                       "runAfter": {
-                        "Perform_a_bound_action_-_Initial_validation": [
+                        "Set_variable": [
                           "Succeeded"
                         ]
                       },
@@ -1029,6 +1130,9 @@
                     },
                     "Perform_a_bound_action_-_Initial_validation": {
                       "runAfter": {
+                        "Set_variable_UNnumber": [
+                          "Succeeded"
+                        ],
                         "Set_variable_Number_of_sites": [
                           "Succeeded"
                         ]
@@ -1039,9 +1143,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                           "connectionName": "shared_commondataserviceforapps_1",
-                          "operationId": "PerformBoundAction",
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                          "operationId": "PerformBoundAction"
                         },
                         "parameters": {
                           "entityName": "accounts",
@@ -1052,12 +1156,28 @@
                           "item/ActivityStartDate": "@outputs('Bulk_Activity_start_time')",
                           "item/ActivityType": "@string(variables('ActivityType'))",
                           "item/SiteInfo": "@body('SelectSitesValues')",
+                          "item/UNList": "@body('Select_UNNumber')",
                           "item/SettingTable": "@outputs('Get-Table-Setting_2')?['body']['value'][0]['values'][0]",
                           "item/ActivityID": "@triggerBody()?['activityid']",
                           "item/Language": "@triggerBody()?['Lang']",
                           "item/CompanyName": "@outputs('Get_Company')?['body/name']"
                         },
                         "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Set_variable": {
+                      "runAfter": {
+                        "Perform_a_bound_action_-_Initial_validation": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "2c5a92ca-32af-4441-9aa7-9e3d23a6e1cb"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "NumberOfSitesWithRequirementLevel",
+                        "value": "@{outputs('Perform_a_bound_action_-_Initial_validation')?['body/TotalSitesWithRequirementLevel']}"
                       }
                     },
                     "Set_variable_warning_message_13": {
@@ -1088,6 +1208,21 @@
                       "inputs": {
                         "name": "Version#",
                         "value": "@outputs('Perform_a_bound_action_-_Initial_validation')?['body/VersionNumber']"
+                      }
+                    },
+                    "Set_variable_UNnumber": {
+                      "runAfter": {
+                        "Select_UNNumber": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "041d1288-27d7-4885-b73c-f1ad20413e7f"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "TotalNumberOfUns",
+                        "value": "@length(body('Select_UNNumber'))"
                       }
                     },
                     "Set_variable_Number_of_sites": {
@@ -1151,9 +1286,9 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                             "connectionName": "shared_commondataserviceforapps_1",
-                            "operationId": "PerformBoundAction",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            "operationId": "PerformBoundAction"
                           },
                           "parameters": {
                             "entityName": "accounts",
@@ -1216,6 +1351,12 @@
                       {
                         "greater": [
                           "@length(body('Filter-array-table2'))",
+                          0
+                        ]
+                      },
+                      {
+                        "greater": [
+                          "@length(body('Filter-array-Table4'))",
                           0
                         ]
                       }
@@ -1309,9 +1450,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "ListRecords",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  "operationId": "ListRecords"
                 },
                 "parameters": {
                   "entityName": "annotations",
@@ -1368,9 +1509,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_azureblob",
                   "connectionName": "shared_azureblob_1",
-                  "operationId": "GetFileContent_V2",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_azureblob"
+                  "operationId": "GetFileContent_V2"
                 },
                 "parameters": {
                   "dataset": "satdgrdnprdcc",
@@ -1406,7 +1547,7 @@
       },
       "outputs": {}
     },
-    "templateName": ""
+    "templateName": null
   },
   "schemaVersion": "1.0.0.0"
 }

@@ -18,6 +18,15 @@
         "api": {
           "name": "shared_sendmail"
         }
+      },
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_c6183"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
       }
     },
     "definition": {
@@ -447,6 +456,95 @@
               },
               "metadata": {
                 "operationMetadataId": "17bbbd0e-be2e-40d4-9320-1b4e37c17aee"
+              },
+              "type": "If"
+            },
+            "Apply_to_each": {
+              "foreach": "@outputs('Filter_Invitations')?['body/value']",
+              "actions": {
+                "Update_invitation_status_to_sent": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "5ab319cf-51a9-4510-9045-69bea813a240"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "UpdateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "adx_invitations",
+                      "recordId": "@items('Apply_to_each')?['adx_invitationid']",
+                      "item/statuscode": 756150000
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Switch": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "6fb9027c-779b-49b7-8e80-52db7505a296"
+              },
+              "type": "Foreach"
+            },
+            "Condition_2": {
+              "actions": {
+                "Update_a_row": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "e331dd28-3674-4abb-80cf-09e453b16ff1"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "UpdateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "accounts",
+                      "recordId": "@outputs('Get_a_row_by_ID_Accounts')?['body/accountid']",
+                      "item/cid_cidcompanystatus": 100000004
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Apply_to_each": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "or": [
+                  {
+                    "equals": [
+                      "@outputs('Get_a_row_by_ID_Accounts')?['body/cid_cidcompanystatus']",
+                      "@null"
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@outputs('Get_a_row_by_ID_Accounts')?['body/cid_cidcompanystatus']",
+                      100000010
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@outputs('Get_a_row_by_ID_Accounts')?['body/cid_cidcompanystatus']",
+                      100000003
+                    ]
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "9d86bfb7-0e20-4a1c-804d-cb7ae3e533bb"
               },
               "type": "If"
             }

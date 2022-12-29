@@ -2,6 +2,7 @@
   "properties": {
     "connectionReferences": {
       "shared_commondataserviceforapps_1": {
+        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
@@ -20,6 +21,7 @@
         }
       },
       "shared_commondataserviceforapps": {
+        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
@@ -28,13 +30,13 @@
           "name": "shared_commondataserviceforapps"
         }
       },
-      "shared_office365": {
+      "shared_sendmail": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "tdg_ConnectionReferenceOutlookTDGCoreUser"
+          "connectionReferenceLogicalName": "cid_sharedsendmail_883c5"
         },
         "api": {
-          "name": "shared_office365"
+          "name": "shared_sendmail"
         }
       }
     },
@@ -59,16 +61,17 @@
           "type": "OpenApiConnectionWebhook",
           "inputs": {
             "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "SubscribeWebhookTrigger",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              "operationId": "SubscribeWebhookTrigger"
             },
             "parameters": {
               "subscriptionRequest/message": 3,
               "subscriptionRequest/entityname": "cid_bulkactivitylogsummary",
               "subscriptionRequest/scope": 4,
               "subscriptionRequest/filteringattributes": "cid_detailedvalidationstarttime",
-              "subscriptionRequest/runas": 3
+              "subscriptionRequest/runas": 3,
+              "subscriptionRequest/name": ""
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -77,6 +80,25 @@
       "actions": {
         "Check_if_Validation_should_start_on_the_Modified_event": {
           "actions": {
+            "List_rows_UNNumber": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "49f988a5-a4a2-4243-af3f-56831c6264dc"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "ListRecords"
+                },
+                "parameters": {
+                  "entityName": "tdg_unnumbers",
+                  "$select": "tdg_name,tdg_unnumberid,tdg_packinggroupcd"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
             "List_All_Accounts": {
               "runAfter": {
                 "List-rows-division-classes": [
@@ -89,9 +111,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "ListRecords",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  "operationId": "ListRecords"
                 },
                 "parameters": {
                   "entityName": "accounts",
@@ -114,9 +136,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents",
                   "connectionName": "shared_webcontents",
-                  "operationId": "InvokeHttp",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
+                  "operationId": "InvokeHttp"
                 },
                 "parameters": {
                   "request/method": "GET",
@@ -141,6 +163,47 @@
               "inputs": {
                 "from": "@outputs('Invoke_an_HTTP_request_Get_Site_Table')?['body']['value']",
                 "where": "@greater(length(item()['values'][0][int(outputs('SiteFullAddress'))]), 0)"
+              }
+            },
+            "Invoke_an_HTTP_request_Get_Extended_info_table": {
+              "runAfter": {
+                "Invoke_an_HTTP_request_Get_SettingTable_": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "59c6048d-c4f6-4e9a-8a0d-1df0e3d03d91"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents",
+                  "connectionName": "shared_webcontents",
+                  "operationId": "InvokeHttp"
+                },
+                "parameters": {
+                  "request/method": "GET",
+                  "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/@{outputs('Get-File-Relative-Path')}:/workbook/tables/TableAddExtended/rows",
+                  "request/headers": {
+                    "accept": "application/json"
+                  }
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Filter_table_-_Get_None_empty_cells_Extended_Table": {
+              "runAfter": {
+                "Invoke_an_HTTP_request_Get_Extended_info_table": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1f1c482b-be72-4cb9-8ef4-90104b2c6119"
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('Invoke_an_HTTP_request_Get_Extended_info_table')?['body']['value']",
+                "where": "@and(greater(length(item()['values'][0][ int(outputs('ExtendedSite')) ]), 0) , greater(length(item()['values'][0][int(outputs('ExtendedUNNumber'))]), 0))"
               }
             },
             "Select_Site_List": {
@@ -180,23 +243,52 @@
                   "Transport": "@item()['values'][0][int(outputs('Transport'))]",
                   "Import": "@item()['values'][0][int(outputs('Import'))]",
                   "Class": "@item()['values'][0][int(outputs('Class'))]",
+                  "ExtendedYN": "@item()['values'][0][int(outputs('extendedYN'))]",
                   "LineNumber": "@item()['index']",
                   "SiteFullAddress": "@item()['values'][0][int(outputs('SiteFullAddress'))]",
                   "SiteGUID": "@item()['values'][0][int(outputs('SiteGUID'))]"
                 }
               }
             },
+            "Select_extended_info": {
+              "runAfter": {
+                "Filter_table_-_Get_None_empty_cells_Extended_Table": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1dcf797c-658a-41e7-bf42-afd1e950fbfd"
+              },
+              "type": "Select",
+              "inputs": {
+                "from": "@body('Filter_table_-_Get_None_empty_cells_Extended_Table')",
+                "select": {
+                  "ExtendedAction": "@item()['values'][0][int(outputs('ExtendedAction'))]",
+                  "ExtendedSite": "@item()['values'][0][int(outputs('ExtendedSite'))]",
+                  "ExtendedUNnumber": "@item()['values'][0][int(outputs('ExtendedUNNumber'))]",
+                  "Quantity": "@item()['values'][0][int(outputs('ExtendedQuantity'))]",
+                  "UnitOfMeasure": "@item()['values'][0][int(outputs('ExtendedUnitOfMeasure'))]",
+                  "AnnualNumberOfConsignment": "@item()['values'][0][int(outputs('ExtendedAnnulaConsignment'))]",
+                  "ExtendedGUID": "@item()['values'][0][int(outputs('ExtendedGUID'))]",
+                  "LinNumber": "@item()['index']"
+                }
+              }
+            },
             "List-rows-division-classes": {
-              "runAfter": {},
+              "runAfter": {
+                "List_rows_UNNumber": [
+                  "Succeeded"
+                ]
+              },
               "metadata": {
                 "operationMetadataId": "a7d3ec09-bede-4093-9912-32bc0c48b914"
               },
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "ListRecords",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  "operationId": "ListRecords"
                 },
                 "parameters": {
                   "entityName": "ovs_primaryclasses",
@@ -223,9 +315,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "PerformUnboundAction",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  "operationId": "PerformUnboundAction"
                 },
                 "parameters": {
                   "actionName": "cid_BulkSitUploadValidation",
@@ -233,14 +325,15 @@
                   "item/UploadType": "@triggerOutputs()?['body/cid_activitytype']",
                   "item/ClassList": "@outputs('List-rows-division-classes')?['body']['value']",
                   "item/SiteInfo": "@body('Select_Site_List')",
+                  "item/UNList": "@body('Select_extended_info')",
                   "item/ActivityID": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_bulkactivitylogsummaryid']",
                   "item/ValidationMessages": "@body('Parse_JSON_Messages_From_Web')",
                   "item/Language": "@variables('Language')"
                 },
-                "authentication": "@parameters('$authentication')",
                 "retryPolicy": {
                   "type": "none"
-                }
+                },
+                "authentication": "@parameters('$authentication')"
               }
             },
             "check_if_error_found_in_validation": {
@@ -336,7 +429,7 @@
                     },
                     "Add_a_new_row": {
                       "runAfter": {
-                        "Append_to_array_ErrorList_with_Error_from_actions": [
+                        "Compose": [
                           "Succeeded"
                         ]
                       },
@@ -346,9 +439,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                           "connectionName": "shared_commondataserviceforapps_1",
-                          "operationId": "CreateRecord",
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                          "operationId": "CreateRecord"
                         },
                         "parameters": {
                           "entityName": "cid_bulkactivitylogsdetailses",
@@ -363,6 +456,18 @@
                         },
                         "authentication": "@parameters('$authentication')"
                       }
+                    },
+                    "Compose": {
+                      "runAfter": {
+                        "Append_to_array_ErrorList_with_Error_from_actions": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "39ca73b8-1baf-47b3-96ed-830e4347e8e6"
+                      },
+                      "type": "Compose",
+                      "inputs": "@items('Apply_to_each_Error')['SheetNameInEnglish']"
                     }
                   },
                   "runAfter": {
@@ -434,9 +539,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents",
                   "connectionName": "shared_webcontents",
-                  "operationId": "InvokeHttp",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
+                  "operationId": "InvokeHttp"
                 },
                 "parameters": {
                   "request/method": "GET",
@@ -450,7 +555,7 @@
             },
             "ExcelLanguage": {
               "runAfter": {
-                "Invoke_an_HTTP_request_Get_SettingTable_": [
+                "Select_extended_info": [
                   "Succeeded"
                 ]
               },
@@ -593,14 +698,15 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "UpdateRecord",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  "operationId": "UpdateRecord"
                 },
                 "parameters": {
                   "entityName": "cid_bulkactivitylogsummaries",
-                  "recordId": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_bulkactivitylogsummaryid']",
+                  "recordId": "@triggerOutputs()?['body/cid_bulkactivitylogsummaryid']",
                   "item/cid_numberofsites": "@outputs('totalNumberOfSites')",
+                  "item/cid_numberofunnumbers": "@outputs('NumberOfUnNumbers')",
                   "item/cid_validationcompletedstage": 100000001
                 },
                 "authentication": "@parameters('$authentication')"
@@ -617,9 +723,24 @@
                   "type": "Compose",
                   "inputs": "@items('Loop_in_each_site_to_insert_or_Update')"
                 },
-                "Insert-Update_Sites_and_related_data": {
+                "UNList": {
                   "runAfter": {
                     "Current_row_Site": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3c730080-51de-459b-8861-551d06758084"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@body('Select_extended_info')",
+                    "where": "@and(equals(item()['ExtendedSite'], outputs('Current_row_Site')['SiteFullAddress']), greater(length(item()['ExtendedUNnumber']), 0))"
+                  }
+                },
+                "Insert-Update_Sites_and_related_data": {
+                  "runAfter": {
+                    "UNList": [
                       "Succeeded"
                     ]
                   },
@@ -629,9 +750,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                       "connectionName": "shared_commondataserviceforapps",
-                      "operationId": "PerformBoundAction",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      "operationId": "PerformBoundAction"
                     },
                     "parameters": {
                       "entityName": "accounts",
@@ -643,6 +764,7 @@
                       "item/LegalName": "@outputs('Get_a_account_by_ID')?['body/ovs_legalname']",
                       "item/OperatingName": "@outputs('Get_a_account_by_ID')?['body/name']",
                       "item/SiteInfo": "@outputs('Current_row_Site')",
+                      "item/UNList": "@body('UNList')",
                       "item/ActivityID": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_bulkactivitylogsummaryid']"
                     },
                     "authentication": "@parameters('$authentication')"
@@ -650,7 +772,7 @@
                 }
               },
               "runAfter": {
-                "Compare_System_Site_and_uploaded_excel_site_list": [
+                "check_if_delete_UN_number_is_required": [
                   "Succeeded"
                 ]
               },
@@ -658,6 +780,82 @@
                 "operationMetadataId": "a13dfb1a-1128-4977-9f3a-295db5d71229"
               },
               "type": "Foreach"
+            },
+            "check_if_delete_UN_number_is_required": {
+              "actions": {
+                "List_All_UN_rows_under_parent_account": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "1f5d0802-0ff1-4931-8759-52ff00665346"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "ListRecords"
+                    },
+                    "parameters": {
+                      "entityName": "ovs_operationunnumbers",
+                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"ovs_operationunnumber\">\n<attribute name=\"ovs_name\"/>\n<attribute name=\"ovs_operationunnumberid\"/>\n<order attribute=\"ovs_name\" descending=\"false\"/>\n<link-entity name=\"ovs_mocregistration\" from=\"ovs_mocregistrationid\" to=\"ovs_operationunnumber\" link-type=\"inner\" alias=\"ac\">\n<link-entity name=\"account\" from=\"accountid\" to=\"ovs_siteid\" link-type=\"inner\" alias=\"ad\">\n<filter type=\"and\">\n<condition attribute=\"parentaccountid\" operator=\"eq\"  value=\"@{outputs('Get_a_account_by_ID')?['body/accountid']}\"/>\n</filter>\n</link-entity>\n</link-entity>\n</entity>\n</fetch>"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Apply_to_each_UN_row_to_delete": {
+                  "foreach": "@outputs('List_All_UN_rows_under_parent_account')?['body/value']",
+                  "actions": {
+                    "Delete_UN_Row": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "8d369b03-04b2-41e0-b59e-6d9170217202"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "DeleteRecord"
+                        },
+                        "parameters": {
+                          "entityName": "ovs_operationunnumbers",
+                          "recordId": "@items('Apply_to_each_UN_row_to_delete')?['ovs_operationunnumberid']"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "List_All_UN_rows_under_parent_account": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "cec00236-1701-42f0-bba2-406e1d856876"
+                  },
+                  "type": "Foreach",
+                  "runtimeConfiguration": {
+                    "concurrency": {
+                      "repetitions": 25
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Compose_2": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "equals": [
+                  "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_activitytype']",
+                  100000001
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "03f7da4b-e6a8-4420-a708-a2e797cb5f7e"
+              },
+              "type": "If"
             },
             "Update_Bulk_activity_log_summary_end_activity_time": {
               "runAfter": {
@@ -671,13 +869,13 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "UpdateRecord",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  "operationId": "UpdateRecord"
                 },
                 "parameters": {
                   "entityName": "cid_bulkactivitylogsummaries",
-                  "recordId": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_bulkactivitylogsummaryid']",
+                  "recordId": "@triggerOutputs()?['body/cid_bulkactivitylogsummaryid']",
                   "item/cid_activityendtime": "@utcNow()",
                   "item/cid_activitystatus": 100000000,
                   "item/cid_totalruntime": "@div(sub(ticks(utcNow()),ticks(outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_activitystarttime'])),600000000)"
@@ -745,6 +943,30 @@
                       "type": "Compose",
                       "inputs": "  <style>\n        table {\n            border: 1px solid #1C6EA4;\n            background-color: #EEEEEE;\n            width: 100%;\n    \n            border-collapse: collapse;\n        }\n\n            table td, table th {\n                border: 1px solid #AAAAAA;\n                padding: 3px 2px;\n         \n            }\n\n           \n            table tbody tr :nth-child(2) {\n                text-align: center;\n                font-size: 13px;\n            }\n\n           \n           \n            table thead {\n                background: #1C6EA4;\n                border-bottom: 2px solid #444444;\n            }\n\n                table thead th {\n                    font-size: 15px;\n                    font-weight: bold;\n                    color: #FFFFFF;\n                    border-left: 2px solid #D0E4F5;\n                    text-align: center;\n                }\n\n                    table thead th:first-child {\n                        border-left: none;\n                    }\n    </style>\n\n@{body('Create_HTML_table_Missing_Site_List')}"
                     },
+                    "Send_summary_email_to_portal_contact_in_English": {
+                      "runAfter": {
+                        "html_table_with_style_Missing_Site": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "03fa68c2-eaef-45a3-a78e-77053dd96194"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail",
+                          "connectionName": "shared_sendmail",
+                          "operationId": "SendEmailV3"
+                        },
+                        "parameters": {
+                          "request/to": "@{outputs('get_contact_email')?['body/emailaddress1']};",
+                          "request/subject": "Successful Bulk Data Upload during the processing of the Registration in the Transport Canada CID Data Platform. Please see the details for the next steps ",
+                          "request/text": "<p>Hello @{outputs('get_contact_email')?['body/firstname']},<br>\n&nbsp;<br>\nThe Bulk Data Upload processing of the Registration for the @{outputs('get_contact_email')?['body/cid_legalname']} company, within the Transport Canada CID Data Platform, was successful. &nbsp;<br>\n&nbsp;<br>\nThe @{outputs('totalNumberOfSites')} Site entries and @{outputs('NumberOfUnNumbers')} UN # entries from the ‘@{outputs('Update_Bulk_activity_log_summary_2')?['body/cid_filename']}’ file were successfully updated in the Transport Canada CID Data Platform.<br>\n<br>\nPlease return to the Transport Canada CID Data Platform and choose the Company Registeration to continue with the Registration process.<br>\n<br>\n@{variables('SiteRemoveWarnning')}<br>\n<br>\n@{outputs('html_table_with_style_Missing_Site')}<br>\n<br>\nPlease note that the language of this email can be changed by updating the 'Language of Correspondence' field in the User Profile within the CID Platform.<br>\n<br>\nRegards<br>\nTransport Canada CID Data Platform Team</p>"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
                     "Parse_JSON_Missing_Site_List": {
                       "runAfter": {
                         "Set_variable_Site_Remove_warnning": [
@@ -780,53 +1002,27 @@
                           }
                         }
                       }
-                    },
-                    "outlook_-_Send_summary_email_to_portal_contact_in_English": {
-                      "runAfter": {
-                        "html_table_with_style_Missing_Site": [
-                          "Succeeded"
-                        ]
-                      },
-                      "metadata": {
-                        "operationMetadataId": "d72fb334-b949-40f3-96bc-4b223ce27604"
-                      },
-                      "type": "OpenApiConnection",
-                      "inputs": {
-                        "host": {
-                          "connectionName": "shared_office365",
-                          "operationId": "SendEmailV2",
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
-                        },
-                        "parameters": {
-                          "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
-                          "emailMessage/Subject": "Successful Bulk Data Upload during the processing of the @{variables('UploadTypeName')} in the Transport Canada CID Data Platform. Please see the details for the next steps ",
-                          "emailMessage/Body": "<p>Hello @{outputs('get_contact_email')?['body/firstname']},<br>\n&nbsp;<br>\nThe Bulk Data Upload processing of the @{variables('UploadTypeName')} for the @{outputs('get_contact_email')?['body/cid_legalname']} company, within the Transport Canada CID Data Platform, was successful. &nbsp;<br>\n&nbsp;<br>\nThe @{outputs('totalNumberOfSites')} Site entries from the ‘@{outputs('Update_Bulk_activity_log_summary_2')?['body/cid_filename']}’ file were successfully updated in the Transport Canada CID Data Platform.<br>\n<br>\nPlease return to the Transport Canada CID Data Platform and choose the Company Registeration to continue with the @{variables('UploadTypeName')} process.<br>\n<br>\n@{variables('SiteRemoveWarnning')}<br>\n<br>\n@{outputs('html_table_with_style_Missing_Site')}<br>\n<br>\nPlease note that the language of this email can be changed by updating the 'Language of Correspondence' field in the User Profile within the CID Platform.<br>\n<br>\nRegards<br>\nTransport Canada CID Data Platform Team</p>",
-                          "emailMessage/Importance": "Normal"
-                        },
-                        "authentication": "@parameters('$authentication')"
-                      }
                     }
                   },
                   "runAfter": {},
                   "else": {
                     "actions": {
-                      "outlook_-_Send_summary_email_to_portal_contact_in_English_2": {
+                      "Send_summary_email_to_portal_contact_in_English_2": {
                         "runAfter": {},
                         "metadata": {
-                          "operationMetadataId": "ed3fef3f-0a85-4fcf-9ab5-d6dff0765b39"
+                          "operationMetadataId": "03fa68c2-eaef-45a3-a78e-77053dd96194"
                         },
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "connectionName": "shared_office365",
-                            "operationId": "SendEmailV2",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail",
+                            "connectionName": "shared_sendmail",
+                            "operationId": "SendEmailV3"
                           },
                           "parameters": {
-                            "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
-                            "emailMessage/Subject": "Successful Bulk Data Upload during the processing of the @{variables('UploadTypeName')} in the Transport Canada CID Data Platform. Please see the details for the next steps ",
-                            "emailMessage/Body": "<p>Hello @{outputs('get_contact_email')?['body/firstname']},<br>\n&nbsp;<br>\nThe Bulk Data Upload processing of the @{variables('UploadTypeName')} for the @{outputs('get_contact_email')?['body/cid_legalname']} company, within the Transport Canada CID Data Platform, was successful. &nbsp;<br>\n&nbsp;<br>\nThe @{outputs('totalNumberOfSites')} Site entries from the ‘@{outputs('Update_Bulk_activity_log_summary_2')?['body/cid_filename']}’ file were successfully updated in the Transport Canada CID Data Platform.<br>\n<br>\nPlease return to the Transport Canada CID Data Platform and choose the Company Registeration to continue with the @{variables('UploadTypeName')} process.<br>\n&nbsp;<br>\nPlease note that the language of this email can be changed by updating the 'Language of Correspondence' field in the User Profile within the CID Platform.<br>\n<br>\nRegards<br>\nTransport Canada CID Data Platform Team<br>\n</p>",
-                            "emailMessage/Importance": "Normal"
+                            "request/to": "@{outputs('get_contact_email')?['body/emailaddress1']};",
+                            "request/subject": "Successful Bulk Data Upload during the processing of the Registration in the Transport Canada CID Data Platform. Please see the details for the next steps ",
+                            "request/text": "<p>Hello @{outputs('get_contact_email')?['body/firstname']},<br>\n&nbsp;<br>\nThe Bulk Data Upload processing of the Registration for the @{outputs('get_contact_email')?['body/cid_legalname']} company, within the Transport Canada CID Data Platform, was successful. &nbsp;<br>\n&nbsp;<br>\nThe @{outputs('totalNumberOfSites')} Site entries and @{outputs('NumberOfUnNumbers')} UN # entries from the ‘@{outputs('Update_Bulk_activity_log_summary_2')?['body/cid_filename']}’ file were successfully updated in the Transport Canada CID Data Platform.<br>\n<br>\nPlease return to the Transport Canada CID Data Platform and choose the Company Registeration to continue with the Registration process.<br>\n&nbsp;<br>\nPlease note that the language of this email can be changed by updating the 'Language of Correspondence' field in the User Profile within the CID Platform.<br>\n<br>\nRegards<br>\nTransport Canada CID Data Platform Team<br>\n<br>\n<br>\n<br>\n</p>"
                           },
                           "authentication": "@parameters('$authentication')"
                         }
@@ -960,27 +1156,26 @@
                           }
                         }
                       },
-                      "outlook_-_Send_summary_email_to_portal_contact_in_French_with_warning": {
+                      "Send_summary_email_to_portal_contact_in_French_with_warnning": {
                         "runAfter": {
                           "html_table_with_style_Missing_Site_French": [
                             "Succeeded"
                           ]
                         },
                         "metadata": {
-                          "operationMetadataId": "d8c36ef7-4bad-4db5-9d8f-efc620c31569"
+                          "operationMetadataId": "87209241-078e-426d-9663-566b2623e814"
                         },
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "connectionName": "shared_office365",
-                            "operationId": "SendEmailV2",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail",
+                            "connectionName": "shared_sendmail",
+                            "operationId": "SendEmailV3"
                           },
                           "parameters": {
-                            "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
-                            "emailMessage/Subject": "Téléchargement de données en masse réussi lors du traitement de l'@{variables('UploadType-French')} dans la plate-forme de données CID de Transports Canada. Veuillez consulter les détails pour les prochaines étapes",
-                            "emailMessage/Body": "<p>Bonjour @{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']}, &nbsp;<br>\n<br>\nLe traitement de téléchargement de données en bloc de Inscription pour la société @{outputs('get_contact_email')?['body/cid_legalname']}, au sein de la plate-forme de données CID de Transports Canada, a réussi.<br>\n<br>\nLes entrées @{outputs('totalNumberOfSites')} du fichier «» ont été mises à jour avec succès dans la plate-forme de données @{triggerOutputs()?['body/cid_filename']} CID de Transports Canada.<br>\n<br>\nVeuillez retourner à la plate-forme de données CID de Transports Canada et choisir l'@{variables('UploadType-French')} de l'entreprise pour poursuivre le processus d'@{variables('UploadType-French')}.<br>\n<br>\n@{variables('SiteRemoveWarnning')}<br>\n<br>\n@{outputs('html_table_with_style_Missing_Site_French')}<br>\n<br>\nVeuillez noter que la langue de cet e-mail peut être modifiée en mettant à jour le champ \"Langue de correspondance\" dans le profil utilisateur de la plate-forme CID.<br>\n<br>\nSalutations<br>\nÉquipe de la plateforme de données CID de Transports Canada<br>\n</p>",
-                            "emailMessage/Importance": "Normal"
+                            "request/to": "@{outputs('get_contact_email')?['body/emailaddress1']};",
+                            "request/subject": "Téléchargement de données en masse réussi lors du traitement de l'enregistrement dans la plate-forme de données CID de Transports Canada. Veuillez consulter les détails pour les prochaines étapes",
+                            "request/text": "<p>Bonjour @{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']}, &nbsp;<br>\n<br>\nLe traitement de téléchargement de données en bloc de Inscription pour la société @{outputs('get_contact_email')?['body/cid_legalname']}, au sein de la plate-forme de données CID de Transports Canada, a réussi.<br>\n<br>\nLes entrées @{outputs('totalNumberOfSites')} du fichier «@{outputs('NumberOfUnNumbers')}» ont été mises à jour avec succès dans la plate-forme de données @{triggerOutputs()?['body/cid_filename']} CID de Transports Canada.<br>\n<br>\nVeuillez retourner à la plate-forme de données CID de Transports Canada et choisir l'enregistrement de l'entreprise pour poursuivre le processus d'enregistrement.<br>\n<br>\n@{variables('SiteRemoveWarnning')}<br>\n<br>\n@{outputs('html_table_with_style_Missing_Site_French')}<br>\n<br>\nVeuillez noter que la langue de cet e-mail peut être modifiée en mettant à jour le champ \"Langue de correspondance\" dans le profil utilisateur de la plate-forme CID.<br>\n<br>\nSalutations<br>\nÉquipe de la plateforme de données CID de Transports Canada<br>\n<br>\n</p>"
                           },
                           "authentication": "@parameters('$authentication')"
                         }
@@ -989,23 +1184,22 @@
                     "runAfter": {},
                     "else": {
                       "actions": {
-                        "outlook_-_Send_summary_email_to_portal_contact_in_French": {
+                        "Send_summary_email_to_portal_contact_in_French": {
                           "runAfter": {},
                           "metadata": {
-                            "operationMetadataId": "4c009ca5-08c1-457d-93b0-ea4c58485eb8"
+                            "operationMetadataId": "87209241-078e-426d-9663-566b2623e814"
                           },
                           "type": "OpenApiConnection",
                           "inputs": {
                             "host": {
-                              "connectionName": "shared_office365",
-                              "operationId": "SendEmailV2",
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail",
+                              "connectionName": "shared_sendmail",
+                              "operationId": "SendEmailV3"
                             },
                             "parameters": {
-                              "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
-                              "emailMessage/Subject": "Téléchargement de données en masse réussi lors du traitement de l'@{variables('UploadType-French')} dans la plate-forme de données CID de Transports Canada. Veuillez consulter les détails pour les prochaines étapes",
-                              "emailMessage/Body": "<p>Bonjour @{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']}, &nbsp;<br>\n<br>\nLe traitement de téléchargement de données en bloc de Inscription pour la société @{outputs('get_contact_email')?['body/cid_legalname']}, au sein de la plate-forme de données CID de Transports Canada, a réussi.<br>\n<br>\nLes entrées @{outputs('totalNumberOfSites')} du fichier «» ont été mises à jour avec succès dans la plate-forme de données @{triggerOutputs()?['body/cid_filename']} CID de Transports Canada.<br>\n<br>\nVeuillez retourner à la plate-forme de données CID de Transports Canada et choisir l'@{variables('UploadTypeName')} de l'entreprise pour poursuivre le processus d'@{variables('UploadTypeName')}.<br>\n<br>\nVeuillez noter que la langue de cet e-mail peut être modifiée en mettant à jour le champ \"Langue de correspondance\" dans le profil utilisateur de la plate-forme CID.<br>\n<br>\nSalutations<br>\nÉquipe de la plateforme de données CID de Transports Canada</p>",
-                              "emailMessage/Importance": "Normal"
+                              "request/to": "@{outputs('get_contact_email')?['body/emailaddress1']};",
+                              "request/subject": "Téléchargement de données en masse réussi lors du traitement de l'enregistrement dans la plate-forme de données CID de Transports Canada. Veuillez consulter les détails pour les prochaines étapes",
+                              "request/text": "<p>Bonjour @{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']}, &nbsp;<br>\n<br>\nLe traitement de téléchargement de données en bloc de Inscription pour la société @{outputs('get_contact_email')?['body/cid_legalname']}, au sein de la plate-forme de données CID de Transports Canada, a réussi.<br>\n<br>\nLes entrées @{outputs('totalNumberOfSites')} du fichier «@{outputs('NumberOfUnNumbers')}» ont été mises à jour avec succès dans la plate-forme de données @{triggerOutputs()?['body/cid_filename']} CID de Transports Canada.<br>\n<br>\nVeuillez retourner à la plate-forme de données CID de Transports Canada et choisir l'enregistrement de l'entreprise pour poursuivre le processus d'enregistrement.<br>\n<br>\nVeuillez noter que la langue de cet e-mail peut être modifiée en mettant à jour le champ \"Langue de correspondance\" dans le profil utilisateur de la plate-forme CID.<br>\n<br>\nSalutations<br>\nÉquipe de la plateforme de données CID de Transports Canada<br>\n<br>\n</p>"
                             },
                             "authentication": "@parameters('$authentication')"
                           }
@@ -1060,9 +1254,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "PerformBoundAction",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  "operationId": "PerformBoundAction"
                 },
                 "parameters": {
                   "entityName": "accounts",
@@ -1072,6 +1266,18 @@
                 },
                 "authentication": "@parameters('$authentication')"
               }
+            },
+            "Compose_2": {
+              "runAfter": {
+                "Compare_System_Site_and_uploaded_excel_site_list": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "ce05a605-a441-4f63-bbf7-0f633be2f2d7"
+              },
+              "type": "Compose",
+              "inputs": "@{outputs('Compare_System_Site_and_uploaded_excel_site_list')?['body/MissingSiteFound']}\n\n\n\n@{outputs('Compare_System_Site_and_uploaded_excel_site_list')?['body/MissingSiteList']}"
             }
           },
           "runAfter": {
@@ -1097,6 +1303,30 @@
                         "Error": "@item()['Error']",
                         "Site": "@item()['Site']"
                       }
+                    }
+                  },
+                  "Send_an_email_notification_to_portal_users_with_errors": {
+                    "runAfter": {
+                      "Eng-Localization-Error": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "94e1b98e-5051-4132-b512-028ad4bd7d96"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail",
+                        "connectionName": "shared_sendmail",
+                        "operationId": "SendEmailV3"
+                      },
+                      "parameters": {
+                        "request/to": "@{outputs('get_contact_email')?['body/emailaddress1']};",
+                        "request/subject": "Unsuccessful Bulk Data Upload during the processing of the Registration in the Transport Canada CID Data Platform. Please see the details for the next steps ",
+                        "request/text": "<p>Hello @{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']},<br>\n&nbsp;<br>\nThe Bulk Data Upload processing of the Registration for the @{outputs('Get_a_account_by_ID')?['body/ovs_legalname']} company, within the Transport Canada CID Data Platform, was not successful. No data was updated within the Transport Canada CID Data Platform. &nbsp;<br>\n&nbsp;<br>\nPlease: &nbsp;<br>\n• address the @{outputs('totalNumberOferrors')} @{outputs('Eng-Localization-Error')} that are as detailed below<br>\n• save a copy of the workbook with those updates<br>\n• use that new copy as the file source of another Registration Bulk Upload process.<br>\n<br>\n@{replace( outputs('html_table_with_style') ,'<table>' , '  <table><col style=\"width:15%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:50%\">\r\n        <col style=\"width:25%\">')}<br>\n<br>\nPlease note that the language of this email can be changed by updating the 'Language of Correspondence' field in the User Profile within the CID Platform.<br>\n<br>\nRegards<br>\n&nbsp;Transport Canada CID Data Platform Team<br>\n<br>\n<br>\n<br>\n</p>"
+                      },
+                      "authentication": "@parameters('$authentication')"
                     }
                   },
                   "html_table_with_style": {
@@ -1137,31 +1367,6 @@
                     },
                     "type": "Compose",
                     "inputs": "@if( greater( outputs('totalNumberOferrors'),1)  , 'errors' , 'error')"
-                  },
-                  "outlook_-_Send_an_email_notification_to_portal_users_with_errors": {
-                    "runAfter": {
-                      "Eng-Localization-Error": [
-                        "Succeeded"
-                      ]
-                    },
-                    "metadata": {
-                      "operationMetadataId": "4ce07b24-a0b7-4dae-ba6b-8e35601cde00"
-                    },
-                    "type": "OpenApiConnection",
-                    "inputs": {
-                      "host": {
-                        "connectionName": "shared_office365",
-                        "operationId": "SendEmailV2",
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
-                      },
-                      "parameters": {
-                        "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
-                        "emailMessage/Subject": "Unsuccessful Bulk Data Upload during the processing of the @{variables('UploadTypeName')} in the Transport Canada CID Data Platform. Please see the details for the next steps ",
-                        "emailMessage/Body": "<p>Hello @{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']},<br>\n&nbsp;<br>\nThe Bulk Data Upload processing of the @{variables('UploadTypeName')} for the @{outputs('Get_a_account_by_ID')?['body/ovs_legalname']} company, within the Transport Canada CID Data Platform, was not successful. No data was updated within the Transport Canada CID Data Platform. &nbsp;<br>\n&nbsp;<br>\nPlease: &nbsp;<br>\n• address the @{outputs('totalNumberOferrors')} @{outputs('Eng-Localization-Error')} that are as detailed below<br>\n• save a copy of the workbook with those updates<br>\n• use that new copy as the file source of another @{variables('UploadTypeName')} Bulk Upload process.<br>\n<br>\n@{replace( outputs('html_table_with_style') ,'<table>' , '  <table><col style=\"width:15%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:50%\">\r\n        <col style=\"width:25%\">')}<br>\n<br>\nPlease note that the language of this email can be changed by updating the 'Language of Correspondence' field in the User Profile within the CID Platform.<br>\n<br>\nRegards<br>\n&nbsp;Transport Canada CID Data Platform Team</p>",
-                        "emailMessage/Importance": "Normal"
-                      },
-                      "authentication": "@parameters('$authentication')"
-                    }
                   }
                 },
                 "runAfter": {
@@ -1202,6 +1407,30 @@
                         }
                       }
                     },
+                    "Send_an_email_notification_with_errors_to_portal_user_in_English": {
+                      "runAfter": {
+                        "French-Localization-Error": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "661155db-9f65-4f0b-af70-fa25633e3684"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail",
+                          "connectionName": "shared_sendmail",
+                          "operationId": "SendEmailV3"
+                        },
+                        "parameters": {
+                          "request/to": "@{outputs('get_contact_email')?['body/emailaddress1']};",
+                          "request/subject": "Échec du téléchargement de données en bloc lors du traitement de l'enregistrement dans la plate-forme de données CID de Transports Canada. Veuillez consulter les détails pour les prochaines étapes",
+                          "request/text": "<p>Bonjour @{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']},<br>\n<br>\nLe traitement de téléchargement de données en bloc de l'enregistrement pour la société @{outputs('Get_a_account_by_ID')?['body/ovs_legalname']}, au sein de la plate-forme de données CID de Transports Canada, n'a pas abouti. Aucune donnée n'a été mise à jour dans la plateforme de données CID de Transports Canada.<br>\n&nbsp;<br>\nS'il vous plaît:<br>\n• adressez @{outputs('totalNumberOferrors')} @{outputs('French-Localization-Error')} qui sont détaillés ci-dessous<br>\n• enregistrer une copie du classeur avec ces mises à jour<br>\n• utiliser cette nouvelle copie comme fichier source d'un autre processus de téléchargement en masse Inscription.<br>\n<br>\nSalutations<br>\n<br>\nÉquipe de la plateforme de données CID de Transports Canada<br>\n<br>\n<br>\n@{replace( outputs('html_table_with_style-French') ,'<table>' , '  <table><col style=\"width:20%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:45%\">\r\n        <col style=\"width:25%\">')}<br>\n<br>\n<br>\n</p>"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
                     "html_table_with_style-French": {
                       "runAfter": {
                         "Create_HTML_table-French": [
@@ -1225,31 +1454,6 @@
                       },
                       "type": "Compose",
                       "inputs": "@if(greater(outputs('totalNumberOferrors'), 1), 'les erreurs', 'Erreur')"
-                    },
-                    "outlook_-_Send_an_email_notification_with_errors_to_portal_user_in_English": {
-                      "runAfter": {
-                        "French-Localization-Error": [
-                          "Succeeded"
-                        ]
-                      },
-                      "metadata": {
-                        "operationMetadataId": "8032faa7-fb47-44ec-8d89-80f44dcb5c0c"
-                      },
-                      "type": "OpenApiConnection",
-                      "inputs": {
-                        "host": {
-                          "connectionName": "shared_office365",
-                          "operationId": "SendEmailV2",
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
-                        },
-                        "parameters": {
-                          "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
-                          "emailMessage/Subject": "Échec du téléchargement de données en bloc lors du traitement de l'@{variables('UploadTypeName')} dans la plate-forme de données CID de Transports Canada. Veuillez consulter les détails pour les prochaines étapes",
-                          "emailMessage/Body": "<p>Bonjour @{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']},<br>\n<br>\nLe traitement de téléchargement de données en bloc de l'@{variables('UploadType-French')} pour la société @{outputs('Get_a_account_by_ID')?['body/ovs_legalname']}, au sein de la plate-forme de données CID de Transports Canada, n'a pas abouti. Aucune donnée n'a été mise à jour dans la plateforme de données CID de Transports Canada.<br>\n&nbsp;<br>\nS'il vous plaît:<br>\n• adressez @{outputs('totalNumberOferrors')} @{outputs('French-Localization-Error')} qui sont détaillés ci-dessous<br>\n• enregistrer une copie du classeur avec ces mises à jour<br>\n• utiliser cette nouvelle copie comme source de fichier d'un autre processus de téléchargement en bloc d'@{variables('UploadType-French')}.<br>\n<br>\nSalutations<br>\n<br>\nÉquipe de la plateforme de données CID de Transports Canada<br>\n<br>\n<br>\n@{replace( outputs('html_table_with_style-French') ,'<table>' , '  <table><col style=\"width:20%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:45%\">\r\n        <col style=\"width:25%\">')}</p>",
-                          "emailMessage/Importance": "Normal"
-                        },
-                        "authentication": "@parameters('$authentication')"
-                      }
                     }
                   }
                 },
@@ -1272,16 +1476,17 @@
                 "type": "OpenApiConnection",
                 "inputs": {
                   "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                     "connectionName": "shared_commondataserviceforapps_1",
-                    "operationId": "UpdateRecord",
-                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    "operationId": "UpdateRecord"
                   },
                   "parameters": {
                     "entityName": "cid_bulkactivitylogsummaries",
-                    "recordId": "@outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_bulkactivitylogsummaryid']",
+                    "recordId": "@triggerOutputs()?['body/cid_bulkactivitylogsummaryid']",
                     "item/cid_activityendtime": "@utcNow()",
                     "item/cid_activitystatus": 100000001,
                     "item/cid_numberofsites": "@outputs('totalNumberOfSites')",
+                    "item/cid_numberofunnumbers": "@outputs('NumberOfUnNumbers')",
                     "item/cid_totalruntime": "@div(sub(ticks(utcNow()),ticks(outputs('Get_bulk_activities_log_summary_by_ID')?['body/cid_activitystarttime'])),600000000)"
                   },
                   "authentication": "@parameters('$authentication')"
@@ -1312,9 +1517,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "GetItem",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              "operationId": "GetItem"
             },
             "parameters": {
               "entityName": "contacts",
@@ -1335,9 +1540,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps",
-              "operationId": "ListRecords",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              "operationId": "ListRecords"
             },
             "parameters": {
               "entityName": "qm_environmentsettingses",
@@ -1535,9 +1740,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "GetItem",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              "operationId": "GetItem"
             },
             "parameters": {
               "entityName": "cid_bulkactivitylogsummaries",
@@ -1589,9 +1794,21 @@
           "type": "Compose",
           "inputs": "@length(body('Filter_table_-_get_none_empty_cells_sites_for_insert_'))"
         },
-        "Convert_time_zone": {
+        "NumberOfUnNumbers": {
           "runAfter": {
             "totalNumberOfSites": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "958aedd2-980b-4aeb-806d-5de021c93c57"
+          },
+          "type": "Compose",
+          "inputs": "@length(body('Filter_table_-_Get_None_empty_cells_Extended_Table'))"
+        },
+        "Convert_time_zone": {
+          "runAfter": {
+            "NumberOfUnNumbers": [
               "Succeeded"
             ]
           },
@@ -1897,9 +2114,21 @@
               "type": "Compose",
               "inputs": "@body('Parse_JSON')['Class']"
             },
-            "LineNumber": {
+            "extendedYN": {
               "runAfter": {
                 "Class": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a3f56429-de62-4db0-8ac3-2f7dba91b8e2"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['Extended-Information-Site']"
+            },
+            "LineNumber": {
+              "runAfter": {
+                "extendedYN": [
                   "Succeeded"
                 ]
               },
@@ -2073,6 +2302,166 @@
           },
           "type": "Scope"
         },
+        "define_extended_columns_in_excel_sheet_2": {
+          "actions": {
+            "ExtendedSite": {
+              "runAfter": {
+                "ExtendedAction": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0b319d79-94cf-4ca6-bb49-3374fdd972f0"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON-ExtendedColumns')['Site']"
+            },
+            "ExtendedUNNumber": {
+              "runAfter": {
+                "ExtendedSite": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1f93a4c9-5519-4834-b9a6-fb3d5764c2eb"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON-ExtendedColumns')['unnumber']"
+            },
+            "ExtendedQuantity": {
+              "runAfter": {
+                "ExtendedUNNumber": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "dbe26cc1-4c9c-4ba8-b85d-cb64eef8faef"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON-ExtendedColumns')['Quantity']"
+            },
+            "ExtendedUnitOfMeasure": {
+              "runAfter": {
+                "ExtendedQuantity": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e975e0f1-f06a-4dca-9047-e47503e2782b"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON-ExtendedColumns')['Unit of Measure']"
+            },
+            "ExtendedAnnulaConsignment": {
+              "runAfter": {
+                "ExtendedUnitOfMeasure": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "75282f2f-4b8b-4689-9ea9-3782d51058df"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON-ExtendedColumns')['Consignments']"
+            },
+            "ExtendedGUID": {
+              "runAfter": {
+                "ExtendedAnnulaConsignment": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "3f6a122f-c20c-4d83-b063-3be620089848"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON-ExtendedColumns')['UN-GUID']"
+            },
+            "Filter_array-environmentsetting-getExcelUNColumns": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "41f6f1a2-74a5-40a3-8f7a-1c9d91283a64"
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('get-environment-settings')?['body/value']",
+                "where": "@equals(item()['qm_name'], 'CID_BulkUpload_Extended_Columns_In_Excel')"
+              }
+            },
+            "ExtendedAction": {
+              "runAfter": {
+                "Parse_JSON-ExtendedColumns": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a1598679-b359-4995-8082-c3ab58b5ce7b"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON-ExtendedColumns')['UserAction']"
+            },
+            "ExclJsonUNStringColumns": {
+              "runAfter": {
+                "Filter_array-environmentsetting-getExcelUNColumns": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "6c280618-ef32-4af0-90e1-8d8d3ad762f4"
+              },
+              "type": "Compose",
+              "inputs": "@body('Filter_array-environmentsetting-getExcelUNColumns')?[0]['qm_value']"
+            },
+            "Parse_JSON-ExtendedColumns": {
+              "runAfter": {
+                "ExclJsonUNStringColumns": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "3f62b9eb-4bd6-419b-953f-ba6f2c27ef27"
+              },
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@outputs('ExclJsonUNStringColumns')",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "UserAction": {
+                      "type": "string"
+                    },
+                    "Site": {
+                      "type": "string"
+                    },
+                    "unnumber": {
+                      "type": "string"
+                    },
+                    "Quantity": {
+                      "type": "string"
+                    },
+                    "Unit of Measure": {
+                      "type": "string"
+                    },
+                    "Consignments": {
+                      "type": "string"
+                    },
+                    "UN-GUID": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "define_basic_info_sheet_columns_2": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d4375930-3c4d-472c-a8b9-7d72d1b358f5"
+          },
+          "type": "Scope"
+        },
         "Get_a_account_by_ID": {
           "runAfter": {},
           "metadata": {
@@ -2081,9 +2470,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "GetItem",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              "operationId": "GetItem"
             },
             "parameters": {
               "entityName": "accounts",
@@ -2239,7 +2628,7 @@
         },
         "Get_Bulk_Upload_Messages": {
           "runAfter": {
-            "define_basic_info_sheet_columns_2": [
+            "define_extended_columns_in_excel_sheet_2": [
               "Succeeded"
             ]
           },
@@ -2249,9 +2638,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "ListRecords",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              "operationId": "ListRecords"
             },
             "parameters": {
               "entityName": "annotations",
@@ -2334,7 +2723,7 @@
         },
         "Initialize_variable_LanguageCode": {
           "runAfter": {
-            "check_upload_type": [
+            "Parse_JSON_Messages_From_Web": [
               "Succeeded"
             ]
           },
@@ -2370,97 +2759,10 @@
               }
             ]
           }
-        },
-        "Initialize_variable_Upload_type_name": {
-          "runAfter": {
-            "Parse_JSON_Messages_From_Web": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "b16fd290-8d26-419f-8894-4269c565e52f"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "UploadTypeName",
-                "type": "string",
-                "value": "Registration"
-              }
-            ]
-          }
-        },
-        "check_upload_type": {
-          "actions": {
-            "Set_variable_upload_type_english": {
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "8bf305cb-98e9-47ec-9969-445047dec530"
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "UploadTypeName",
-                "value": "in-year data management"
-              }
-            },
-            "Set_variable_French": {
-              "runAfter": {
-                "Set_variable_upload_type_english": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "2992e407-e738-4e3b-856c-92b78a629428"
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "UploadType-French",
-                "value": "gestion des données en cours d'année"
-              }
-            }
-          },
-          "runAfter": {
-            "Initialize_variable": [
-              "Succeeded"
-            ]
-          },
-          "expression": {
-            "not": {
-              "equals": [
-                "@variables('UploadTypeName')",
-                100000001
-              ]
-            }
-          },
-          "metadata": {
-            "operationMetadataId": "6fcd149d-e0af-45ac-8270-4b3b594e6e56"
-          },
-          "type": "If"
-        },
-        "Initialize_variable": {
-          "runAfter": {
-            "Initialize_variable_Upload_type_name": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "c756e433-7c0a-480d-acc9-b9e67fed5173"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "UploadType-French",
-                "type": "string",
-                "value": "enregistrement"
-              }
-            ]
-          }
         }
       }
     },
-    "templateName": ""
+    "templateName": null
   },
   "schemaVersion": "1.0.0.0"
 }

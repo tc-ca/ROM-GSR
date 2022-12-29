@@ -18,6 +18,15 @@
         "api": {
           "name": "shared_sendmail"
         }
+      },
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_c6183"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
       }
     },
     "definition": {
@@ -58,47 +67,9 @@
       "actions": {
         "Condition": {
           "actions": {
-            "Get_a_row_by_ID_Accounts": {
-              "runAfter": {
-                "Condition_3": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "2dd83585-2c35-458b-94ff-9782ce5e36ec"
-              },
-              "type": "OpenApiConnection",
-              "inputs": {
-                "host": {
-                  "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "GetItem",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                },
-                "parameters": {
-                  "entityName": "accounts",
-                  "recordId": "@triggerOutputs()?['body/_adx_assigntoaccount_value']"
-                },
-                "authentication": "@parameters('$authentication')"
-              }
-            },
-            "Set_Variable_Assigned_Company": {
-              "runAfter": {
-                "Get_a_row_by_ID_Accounts": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "19e797ac-e1a0-49d1-bf45-0f580ddf071c"
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "Company Name",
-                "value": "@outputs('Get_a_row_by_ID_Accounts')?['body/name']"
-              }
-            },
             "Get_a_row_by_ID_Invitation_Receiver": {
               "runAfter": {
-                "Set_Variable_Assigned_Company": [
+                "Condition_3": [
                   "Succeeded"
                 ]
               },
@@ -256,30 +227,6 @@
                     },
                     "authentication": "@parameters('$authentication')"
                   }
-                },
-                "Update_a_row": {
-                  "runAfter": {
-                    "Send_an_email_notification_(V3)_2": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "e4ae5018-0262-4492-81cc-5bf9c27e3f77"
-                  },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "host": {
-                      "connectionName": "shared_commondataserviceforapps_1",
-                      "operationId": "UpdateRecord",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                    },
-                    "parameters": {
-                      "entityName": "adx_invitations",
-                      "recordId": "@triggerOutputs()?['body/adx_invitationid']",
-                      "item/statuscode": 756150000
-                    },
-                    "authentication": "@parameters('$authentication')"
-                  }
                 }
               },
               "runAfter": {
@@ -305,30 +252,6 @@
                         "request/to": "@{outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/emailaddress1']};",
                         "request/subject": "Beta Testing: CID Data Platform: Assignment as a Secondary Admin for the @{variables('Company Name')} Company",
                         "request/text": "<p>Hello @{outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/fullname']},<br>\n<br>\n@{variables('Invited By')} Primary Admin for the @{variables('Company Name')} Company of the CID Data Platform has added you as a Secondary Admin for that Company.<br>\n<br>\nOnce you are ready to use the CID Data Platform, you can use the following:<br>\n&nbsp;&nbsp;&nbsp;On-boarding link : @{variables('Environment')}<br>\n&nbsp;&nbsp;&nbsp;Activation Code &nbsp;: @{triggerOutputs()?['body/adx_invitationcode']}<br>\nto on-board to the CID Platform.<br>\n<br>\n<br>\nTransport Canada – CID</p>"
-                      },
-                      "authentication": "@parameters('$authentication')"
-                    }
-                  },
-                  "Update_a_row_2": {
-                    "runAfter": {
-                      "Send_an_email_notification_(V3)": [
-                        "Succeeded"
-                      ]
-                    },
-                    "metadata": {
-                      "operationMetadataId": "27f7f5c2-dc50-4e99-9ba3-72b13ce6d2b5"
-                    },
-                    "type": "OpenApiConnection",
-                    "inputs": {
-                      "host": {
-                        "connectionName": "shared_commondataserviceforapps_1",
-                        "operationId": "UpdateRecord",
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                      },
-                      "parameters": {
-                        "entityName": "adx_invitations",
-                        "recordId": "@triggerOutputs()?['body/adx_invitationid']",
-                        "item/statuscode": 756150000
                       },
                       "authentication": "@parameters('$authentication')"
                     }
@@ -398,10 +321,115 @@
                 "operationMetadataId": "90a5f9da-6443-48bd-95e9-2864fc3a4eae"
               },
               "type": "If"
+            },
+            "List_CID_Invitation_Records": {
+              "runAfter": {
+                "Update_account_row": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "6ac0aa75-9e7e-4dd3-b55a-67da842f23a1"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "cid_invitations",
+                  "fetchXml": "<fetch top=\"50\">\n  <entity name=\"cid_invitation\">\n    <filter>\n      <condition attribute=\"cid_invitation\" operator=\"eq\" value='@{triggerOutputs()?['body/adx_invitationid']}' uitype=\"cid_invitation\" />\n    </filter>\n  </entity>\n</fetch>"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "To_Each_CID_Invitation_Record": {
+              "foreach": "@outputs('List_CID_Invitation_Records')?['body/value']",
+              "actions": {
+                "Update_Sent_On_Date_": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "2a52aa0c-0d98-4fa0-8b27-0f9e10dfa511"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "UpdateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "cid_invitations",
+                      "recordId": "@items('To_Each_CID_Invitation_Record')?['cid_invitationid']",
+                      "item/cid_invitationsenton": "@utcNow()"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "List_CID_Invitation_Records": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0ca979c8-6a5b-452d-9d36-87c58346dd16"
+              },
+              "type": "Foreach"
+            },
+            "Update_Invitation_Table": {
+              "runAfter": {
+                "Condition_2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e4ae5018-0262-4492-81cc-5bf9c27e3f77"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "adx_invitations",
+                  "recordId": "@triggerOutputs()?['body/adx_invitationid']",
+                  "item/statuscode": 756150000
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Update_account_row": {
+              "runAfter": {
+                "Update_Invitation_Table": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "cbfa3695-bb7b-408c-a9e8-532073ef0b9c"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "recordId": "@outputs('Update_Invitation_Table')?['body/_adx_assigntoaccount_value']",
+                  "item/cid_cidcompanystatus": 100000004
+                },
+                "authentication": "@parameters('$authentication')"
+              }
             }
           },
           "runAfter": {
-            "Initialize_Variable_Environment": [
+            "Set_Variable_Assigned_Company": [
               "Succeeded"
             ]
           },
@@ -415,8 +443,8 @@
               },
               {
                 "equals": [
-                  "@triggerOutputs()?['body/adx_type']",
-                  756150000
+                  "@outputs('Get_a_row_by_ID_Accounts')?['body/cid_cidcompanystatus']",
+                  100000001
                 ]
               }
             ]
@@ -479,6 +507,44 @@
                 "type": "string"
               }
             ]
+          }
+        },
+        "Get_a_row_by_ID_Accounts": {
+          "runAfter": {
+            "Initialize_Variable_Environment": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2dd83585-2c35-458b-94ff-9782ce5e36ec"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "accounts",
+              "recordId": "@triggerOutputs()?['body/_adx_assigntoaccount_value']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Set_Variable_Assigned_Company": {
+          "runAfter": {
+            "Get_a_row_by_ID_Accounts": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "19e797ac-e1a0-49d1-bf45-0f580ddf071c"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "Company Name",
+            "value": "@outputs('Get_a_row_by_ID_Accounts')?['body/name']"
           }
         }
       }
