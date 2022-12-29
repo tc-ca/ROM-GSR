@@ -1,4 +1,3 @@
-
 //To apply the Asterisk(*) Sign using custom JS:
 //$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
 
@@ -2039,7 +2038,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
         start_btn_next_click: function () {
             debugger;
-            console.log("inside button click next");
             var value = Page_ClientValidate('');
             if (value) {
                 var message = tdg.error_message.message("m000038");
@@ -2052,12 +2050,21 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 var cid_reasonfornobnnumber_other = $("#cid_reasonfornobnnumber_other").val();
                 var data = tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber, cid_reasonfornobnnumber_other);
                 if (data.length == 0) {
-                    var message = tdg.error_message.message("m000001");
-                    tdg.c.dialog_OK(message);
+                    if (cid_has_cra_bn == "1") {
+                        var message = tdg.error_message.message("m000001");
+                        tdg.c.dialog_OK(message);
 
-                    var message = tdg.error_message.message("BTN_NEXT");
-                    $("#btn_next").prop("value", message);
-                    return;
+                        var message = tdg.error_message.message("BTN_NEXT");
+                        $("#btn_next").prop("value", message);
+                        return;
+                    }
+                    else {
+                        var cid_has_invitation = sessionStorage.getItem("cid_has_invitation");
+                        if (cid_has_invitation == 'false') {
+                            $("#NextButton").click();
+                            return;
+                        }
+                    }
                 }
 
                 if (data.length == 1) {
@@ -2403,4 +2410,3 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
-
