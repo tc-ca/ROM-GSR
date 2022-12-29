@@ -1,3 +1,4 @@
+
 //To apply the Asterisk(*) Sign using custom JS:
 //$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
 
@@ -1823,10 +1824,11 @@ if (typeof (tdg.cid) == "undefined") {
         Complete_All_Annualcompliance_Tasks: function (parentAccountid, LanguageCode) {
 
             var ButtonLable = tdg.error_message.message("m000121");
+            var ButtonCompleteLable = tdg.error_message.message("m000123");
 
             //create complete all button for company
             var Button_CompanyCompleteAll = '<div class="input-group pull-right"><button type="button" id="CompanyCompleteAll" class="btn btn-primary pull-left action">'
-                + ButtonLable + '</button></div>';
+                + ButtonCompleteLable + '</button></div>';
             const CompanyCompleteButtonLocation = document.querySelector('table[data-name="tab_11_section_1"]');
             CompanyCompleteButtonLocation.insertAdjacentHTML('beforebegin', Button_CompanyCompleteAll);
 
@@ -1850,7 +1852,7 @@ if (typeof (tdg.cid) == "undefined") {
                 }//end for
 
                 // $(".entity-grid").trigger("refresh");
-                setTimeout($(".entity-grid").trigger("refresh"), 3000);
+                setTimeout(tdg.cid.Refresh_EntityGrid, 6000);
             });
             //click event for site button
             $("#SiteCompleteAll").on("click", function () {
@@ -1867,11 +1869,89 @@ if (typeof (tdg.cid) == "undefined") {
                 }//end for
 
                 // $(".entity-grid").trigger("refresh");
-                setTimeout($(".entity-grid").trigger("refresh"), 5000);
+                setTimeout(tdg.cid.Refresh_EntityGrid, 7000);
             });
 
 
+        },
+
+        Setup_site_Profile_Title: function (CompanyName) {
+
+            var SiteLable = tdg.error_message.message("m000127");
+            var LatitudeLabel = tdg.error_message.message("m000128");
+            var LongtituedLable = tdg.error_message.message("m000129");
+            var TDGActivityHeaderLabel = tdg.error_message.message("m000124");
+            var ModeOftransportationHeaderLable = tdg.error_message.message("m000126");
+            var ClassHeaderLabel = tdg.error_message.message("m000125");
+
+            //get site id
+            var urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('id')) {
+                var recodId = urlParams.get('id');
+                var SiteAddressInfo = tdg.webapi.SelectedColumnlist("accounts",
+                    "cid_sitename,ovs_address_type,address1_line1,address1_city,ovs_address1_province,address1_stateorprovince,address1_latitude,address1_longitude,ovs_lld_quarter,ovs_lld_section,ovs_lld_township,ovs_lld_range,ovs_lld_meridian",
+                    "accountid eq " + recodId);
+                var cid_sitename = SiteAddressInfo[0]["cid_sitename"];
+                var ovs_address_type = SiteAddressInfo[0]["ovs_address_type"];
+                var address1_line1 = SiteAddressInfo[0]["address1_line1"];
+                var address1_city = SiteAddressInfo[0]["address1_city"];
+                var address1_stateorprovince = SiteAddressInfo[0]["address1_stateorprovince"];
+                var address1_latitude = SiteAddressInfo[0]["address1_latitude"];
+                var address1_longitude = SiteAddressInfo[0]["address1_longitude"];
+                var ovs_lld_quarter = SiteAddressInfo[0]["ovs_lld_quarter"];
+                var ovs_lld_section = SiteAddressInfo[0]["ovs_lld_section@OData.Community.Display.V1.FormattedValue"];
+                var ovs_lld_township = SiteAddressInfo[0]["ovs_lld_township@OData.Community.Display.V1.FormattedValue"];
+                var ovs_lld_range = SiteAddressInfo[0]["ovs_lld_range@OData.Community.Display.V1.FormattedValue"];
+                var ovs_lld_meridian = SiteAddressInfo[0]["ovs_lld_meridian@OData.Community.Display.V1.FormattedValue"];
+                var pageTitle = CompanyName;
+                if (cid_sitename != null && cid_sitename != "") {
+                    if (cid_sitename.toLowerCase().indexOf("site") < 0) {
+                        cid_sitename = cid_sitename + " " + SiteLable;
+                    }
+                    pageTitle = pageTitle + " - " + cid_sitename;
+                }
+                else {
+                    var sitefulladdress;
+                    //if the address is postal
+                    if (ovs_address_type == 0) {
+                        sitefulladdress = address1_line1 + ", " + address1_city + ", " + address1_stateorprovince + " " + SiteLable;
+                        pageTitle = pageTitle + " - " + sitefulladdress;
+
+                    }
+                    else if (ovs_address_type == 1) {
+                        if (ovs_lld_quarter != null) {
+                            sitefulladdress = SiteAddressInfo[0]["ovs_lld_quarter@OData.Community.Display.V1.FormattedValue"] + " - ";
+                        }
+                        sitefulladdress = sitefulladdress + ovs_lld_section + " - " +
+                            ovs_lld_township + " - " + ovs_lld_range + " - " + ovs_lld_meridian + " " + SiteLable;
+                        pageTitle = pageTitle + " - " + sitefulladdress;
+                    }
+                    else if (ovs_address_type == 2) {
+                        sitefulladdress = LatitudeLabel + ": " + address1_longitude + " " + LongtituedLable + ": " + address1_latitude + " " + SiteLable;
+                        pageTitle = pageTitle + " - " + sitefulladdress;
+                    }
+
+                }
+                const titleElement = document.getElementsByClassName("tab-title");
+                console.log("before title");
+                titleElement[0].innerHTML = pageTitle;
+                const TDGActivitiesHeaderElement = document.querySelector('[aria-label="TDG Activity Types"]');
+                const ClassesHeaderElement = document.querySelector('[ aria-label="Classes"]');
+                TDGActivitiesHeaderElement.children[0].innerHTML = TDGActivityHeaderLabel + " " + pageTitle;
+                ClassesHeaderElement.children[0].innerHTML = ClassHeaderLabel + " " + pageTitle;
+                var ModeTable = document.getElementById('siteModesOfTransportation');
+                ModeTable.closest('fieldset').children[0].innerHTML = ModeOftransportationHeaderLable + " " + pageTitle;
+
+
+            }
+
+
+        },
+
+        Refresh_EntityGrid() {
+            $(".entity-grid").trigger("refresh");
         }
+
 
     }
 }
@@ -2049,8 +2129,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             }
 
             var invitation_msg = "";
-            if (data.invitation_ind)
-            {
+            if (data.invitation_ind) {
                 invitation_msg = tdg.error_message.message("m000033");
                 invitation_msg = invitation_msg.replaceAll("{0}", data.cid_legalname);
             }
@@ -2324,3 +2403,4 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
+

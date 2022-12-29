@@ -1,4 +1,5 @@
-﻿// tdg.message = tdgcore.message
+﻿
+// tdg.message = tdgcore.message
 if (typeof (tdg.message) == "undefined") {
     tdg.message = {
         list: function () {
@@ -490,7 +491,43 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000122",
                         "message_en": "Are you sure you would like to de-activate this contact record?",
                         "message_fr": "Are you sure you would like to de-activate this contact record?_FR"
+                    },
+                    {
+                        "code": "m000123",
+                        "message_en": "Complete",
+                        "message_fr": "Complete_FR"
+                    },
+                    {
+                        "code": "m000124",
+                        "message_en": "TDG Activity Types for",
+                        "message_fr": "TDG Activity Types for_FR"
+                    },
+                    {
+                        "code": "m000125",
+                        "message_en": "Class / Divisions for",
+                        "message_fr": "Class / Divisions for_FR"
+                    },
+                    {
+                        "code": "m000126",
+                        "message_en": "Modes of Transportation for",
+                        "message_fr": "Modes of Transportation for_FR"
+                    },
+                    {
+                        "code": "m000127",
+                        "message_en": "Site",
+                        "message_fr": "Site_FR"
+                    },
+                    {
+                        "code": "m000128",
+                        "message_en": "Latitude",
+                        "message_fr": "Latitude_FR"
+                    },
+                    {
+                        "code": "m000129",
+                        "message_en": "Longitude",
+                        "message_fr": "Longitude_FR"
                     }
+
 
                 ];
 
@@ -498,4 +535,5 @@ if (typeof (tdg.message) == "undefined") {
         }
     }
 }
+
 

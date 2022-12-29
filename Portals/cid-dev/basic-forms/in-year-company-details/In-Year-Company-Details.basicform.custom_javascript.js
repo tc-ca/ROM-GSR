@@ -4,6 +4,10 @@
 
 $(document).ready(function () {
     debugger;
+    //remove spell checker code
+   // $("#address1_line2").attr( "spellcheck","false");
+   
+
 
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
     var activationButon = $("#EntityFormPanel").find(".workflow-link");
