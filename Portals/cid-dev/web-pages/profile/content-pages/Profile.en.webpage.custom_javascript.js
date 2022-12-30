@@ -14,6 +14,18 @@ $(document).ready(function () {
 
     var parent_id = '{{user.parentcustomerid.Id}}';
    // var filter = "accountid eq guid'" + parent_id + "'";
+   
+   //hide page header
+   const PageHeaderElement = document.getElementsByClassName("page-header");
+   PageHeaderElement[0].setAttribute("hidden", "");
+   //add bottom to profile link in page-heading
+   const PageheadingElement = document.getElementsByClassName("page-heading");
+   PageheadingElement[0].style.marginBottom = "10px";
+   //add margin to update button
+  const UpdateButtonElement = document.getElementById("ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton");
+  UpdateButtonElement.style.marginTop = "10px";
+
+  
 
     var data = tdg.webapi.SelectedColumnlist("accounts",
                     "cid_cidcompanystatus,cid_officiallyregistrationcompletationdate",
