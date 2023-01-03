@@ -3,10 +3,7 @@
   <script>
     $('#loader').show();
   </script>
-  {% assign parentCompanyId = user.parentcustomerid.id %}
-  {% if parentCompanyId %}
-  {% assign company = entities['account'][parentCompanyId] %}
-  {% if company.cid_registrationasof and (request.url contains "tdgcore-qa" or request.url contains "rd-tdgcore-dev" or request.url contains "rd-tdgcore-dev")%}
+  {% assign parentCompanyId = user.parentcustomerid.id %} {% if parentCompanyId %} {% assign company = entities['account'][parentCompanyId] %} {% if company.cid_registrationasof and (request.url contains "tdgcore-qa" or request.url contains "rd-tdgcore-dev" or request.url contains "rd-tdgcore-dev")%}
   <h2>You will be redirected to the company dashboard page.</h2>
   <h2>Please wait ...</h2>
   <script>
@@ -18,10 +15,7 @@
   <script>
     window.location.replace('/RegistrationWizard');
   </script>
-  {% endif %}
-  {% else %}
-  You will be redirected to the company registartion page.
-  Please wait ...
+  {% endif %} {% else %} You will be redirected to the company registartion page. Please wait ...
   <script>
     window.location.replace('/RegistrationWizard');
   </script>
