@@ -13,19 +13,13 @@ $(document).ready(function () {
     }
 
 	var updateCompanyBtn = "<div><input id='update_company' type='button' onclick='alert('Test')' name='UpdateCompany' value='Update Company' class='btn btn-primary action create-action' nonactionlinkbutton='true'/></div>";
-var companyName  = "{{user.parentcustomerid.name}}";
+    var companyName  = "{{user.parentcustomerid.name}}";
     $( ".form-custom-actions" ).first().parent().after(updateCompanyBtn);
 
-        $('div[data-name="company_details"]').parent().before("<h2>" + companyName +"</h2><hr>");
-
-//$('fieldset[aria-label="Head Office"]) legend').first().text = companyName + " - Head Office";
-        
-//$('fieldset[aria-label="Head Office"])').find("legend").each(function () {
-    
-    //$(this).text = companyName + " - Head Office";
-//});
-        
-
+    $('div[data-name="company_details"]').parent().before("<h2>" + companyName +"</h2><hr>");
+    var legend = $('fieldset[aria-label="Head Office"] legend').first();
+    legend.text("");
+    legend.after("<h2>"+ companyName + " - Head Office</h2><hr>");
 
     $('div[data-name="tab_3"]').parent().parent().addClass("hidden");
 
