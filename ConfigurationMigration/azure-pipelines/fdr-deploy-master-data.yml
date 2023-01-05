@@ -14,6 +14,8 @@ variables:
     value: "$(basepath)/data/fdr"
   - name: combineDataXmlFile
     value: $true
+  - name: currentDate
+    value: $[format('{0:dd}.{0:MM}.{0:yyyy}', pipeline.startTime)]
 
 stages:
 - stage: Stage_Pack_Data_and_Publish_Artifact
@@ -39,7 +41,7 @@ stages:
       name: Create_Artifact_Packed_Data
       inputs:
         PathtoPublish: '$(tempDirectory)'
-        ArtifactName: 'PackedData'
+        ArtifactName: 'PackedData.$(currentDate)'
         publishLocation: 'Container'
 
 - stage: Stage_MasterData_to_QA
@@ -60,7 +62,7 @@ stages:
             inputs:
               buildType: 'current'
               downloadType: 'single'
-              artifactName: 'PackedData'
+              artifactName: 'PackedData.$(currentDate)'
               downloadPath: '$(System.ArtifactsDirectory)'
 
           - task: PowerShell@2
@@ -77,7 +79,7 @@ stages:
                     Write-Host "$(logWriteDirectory) folder created."
                 }
                 
-                Import-CrmDataFile -CrmConnection "$(ConnectionStringQA)" -Datafile "$(System.ArtifactsDirectory)\PackedData\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
+                Import-CrmDataFile -CrmConnection "$(ConnectionStringQA)" -Datafile "$(System.ArtifactsDirectory)\PackedData.$(currentDate)\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
               warningPreference: 'stop'
               failOnStderr: true
               showWarnings: true
@@ -110,7 +112,7 @@ stages:
             inputs:
               buildType: 'current'
               downloadType: 'single'
-              artifactName: 'PackedData'
+              artifactName: 'PackedData.$(currentDate)'
               downloadPath: '$(System.ArtifactsDirectory)'
 
           - task: PowerShell@2
@@ -127,7 +129,7 @@ stages:
                     Write-Host "$(logWriteDirectory) folder created."
                 }
                 
-                Import-CrmDataFile -CrmConnection "$(ConnectionStringACC)" -Datafile "$(System.ArtifactsDirectory)\PackedData\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
+                Import-CrmDataFile -CrmConnection "$(ConnectionStringACC)" -Datafile "$(System.ArtifactsDirectory)\PackedData.$(currentDate)\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
               warningPreference: 'stop'
               failOnStderr: true
               showWarnings: true
@@ -160,7 +162,7 @@ stages:
             inputs:
               buildType: 'current'
               downloadType: 'single'
-              artifactName: 'PackedData'
+              artifactName: 'PackedData.$(currentDate)'
               downloadPath: '$(System.ArtifactsDirectory)'
 
           - task: PowerShell@2
@@ -177,7 +179,7 @@ stages:
                     Write-Host "$(logWriteDirectory) folder created."
                 }
                 
-                Import-CrmDataFile -CrmConnection "$(ConnectionStringACCDATA)" -Datafile "$(System.ArtifactsDirectory)\PackedData\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
+                Import-CrmDataFile -CrmConnection "$(ConnectionStringACCDATA)" -Datafile "$(System.ArtifactsDirectory)\PackedData.$(currentDate)\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
               warningPreference: 'stop'
               failOnStderr: true
               showWarnings: true
@@ -211,7 +213,7 @@ stages:
             inputs:
               buildType: 'current'
               downloadType: 'single'
-              artifactName: 'PackedData'
+              artifactName: 'PackedData.$(currentDate)'
               downloadPath: '$(System.ArtifactsDirectory)'
 
           - task: PowerShell@2
@@ -228,7 +230,7 @@ stages:
                     Write-Host "$(logWriteDirectory) folder created."
                 }
                 
-                Import-CrmDataFile -CrmConnection "$(ConnectionStringPREPROD)" -Datafile "$(System.ArtifactsDirectory)\PackedData\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
+                Import-CrmDataFile -CrmConnection "$(ConnectionStringPREPROD)" -Datafile "$(System.ArtifactsDirectory)\PackedData.$(currentDate)\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
               warningPreference: 'stop'
               failOnStderr: true
               showWarnings: true
