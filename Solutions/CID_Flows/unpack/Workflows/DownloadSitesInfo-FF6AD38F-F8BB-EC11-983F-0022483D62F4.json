@@ -743,11 +743,7 @@
           "else": {
             "actions": {
               "Update_bulk_activity_log": {
-                "runAfter": {
-                  "check_language_before_sending_attachment_to_portal_2": [
-                    "Succeeded"
-                  ]
-                },
+                "runAfter": {},
                 "metadata": {
                   "operationMetadataId": "e0f774e5-53f3-47de-b653-05797908c7ce"
                 },
@@ -992,7 +988,11 @@
                     "type": "Scope"
                   }
                 },
-                "runAfter": {},
+                "runAfter": {
+                  "Update_bulk_activity_log": [
+                    "Succeeded"
+                  ]
+                },
                 "else": {
                   "actions": {
                     "Delete_Temp_SharePoint_folder_and_file_3": {
@@ -1919,7 +1919,7 @@
             }
           },
           "runAfter": {
-            "Apply_to_each": [
+            "Initialize_variable_FileNamePrefix": [
               "Succeeded"
             ]
           },
@@ -2106,26 +2106,6 @@
             ]
           }
         },
-        "Initialize_variable_FileNamePrefix": {
-          "runAfter": {
-            "check_if_language_is_french": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "dc2aa679-3a35-4130-b518-2f35de495923"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "FileNamePrefix",
-                "type": "string",
-                "value": "TC CID Registration - Site Bulk Upload - @{variables('CompanyName')}, as of"
-              }
-            ]
-          }
-        },
         "Initialize_variable_InvalidFileNameChar": {
           "runAfter": {
             "Initialize_variable_Language": [
@@ -2204,7 +2184,7 @@
             }
           },
           "runAfter": {
-            "Initialize_variable_FileNamePrefix": [
+            "check_if_language_is_french": [
               "Succeeded"
             ]
           },
@@ -2278,6 +2258,26 @@
               "request/body": "\n\n{\n\"values\": [[ \"@{variables('Excel_Header')}\"]]\n}"
             },
             "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_variable_FileNamePrefix": {
+          "runAfter": {
+            "Apply_to_each": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "dc2aa679-3a35-4130-b518-2f35de495923"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FileNamePrefix",
+                "type": "string",
+                "value": "TC CID Registration - Site Bulk Upload - @{variables('CompanyName')}, as of"
+              }
+            ]
           }
         }
       },

@@ -480,7 +480,7 @@
         },
         "Initialize_variable_Error_found": {
           "runAfter": {
-            "Condition_-_check_activity_type": [
+            "Update_bulk_Activity_Log_Summary_Activity_Type": [
               "Succeeded"
             ]
           },
@@ -1402,6 +1402,30 @@
             "operationMetadataId": "28bcf457-d482-4c97-8639-e70b9bcd77c1"
           },
           "type": "Scope"
+        },
+        "Update_bulk_Activity_Log_Summary_Activity_Type": {
+          "runAfter": {
+            "Condition_-_check_activity_type": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "16c1b0ac-fdb1-4356-9768-087810cae42f"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "UpdateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "cid_bulkactivitylogsummaries",
+              "recordId": "@triggerBody()?['activityid']",
+              "item/cid_activitytype": "@variables('ActivityType')"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
         }
       },
       "outputs": {}
