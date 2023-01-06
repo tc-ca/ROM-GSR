@@ -37,7 +37,9 @@ stages:
           Write-Host "writing zip file to $(tempDirectory)/$(dataFileName)"
           Write-Host "Compressing files from $(extractFolder)"
           Write-Host "listing files from $(extractFolder)"
-          ls $(extractFolder)
+          ls $(extractFolder)          
+          Write-Host "listing files from $(tempDirectory)"
+          ls $(tempDirectory)
 
     - task: PowerShell@2
       name: "Pack_Master_Data_From_SC"
@@ -46,6 +48,14 @@ stages:
         script: |
           Install-Module -Name Xrm.Framework.CI.PowerShell.Cmdlets -Force
           Compress-XrmCMData -DataZip "$(tempDirectory)/$(dataFileName)" -Folder "$(extractFolder)" -CombineDataXmlFile $(combineDataXmlFile)
+
+    - task: PowerShell@2
+      name: "DebugPowershellScript2"
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "listing files after data compression from $(tempDirectory)"
+          ls $(tempDirectory)
 
     - task: PublishBuildArtifacts@1
       name: Create_Artifact_Packed_Data
