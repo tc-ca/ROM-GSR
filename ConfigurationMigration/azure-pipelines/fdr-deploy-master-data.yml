@@ -15,7 +15,7 @@ variables:
   - name: combineDataXmlFile
     value: $true
   - name: currentDate
-    value: $[format('{0:dd}.{0:MM}.{0:yyyy}', pipeline.startTime)]
+    value: $[format('D{0:dd}.{0:MM}.{0:yyyy}T{0:hh}.{0:mm}', pipeline.startTime)]
 
 stages:
 - stage: Stage_Pack_Data_and_Publish_Artifact
@@ -30,6 +30,16 @@ stages:
       clean: true
       
     - task: PowerShell@2
+      name: "DebugPowershellScript"
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "writing zip file to $(tempDirectory)/$(dataFileName)"
+          Write-Host "Compressing files from $(extractFolder)"
+          Write-Host "listing files from $(extractFolder)"
+          ls $(extractFolder)
+
+    - task: PowerShell@2
       name: "Pack_Master_Data_From_SC"
       inputs:
         targetType: 'inline'
@@ -40,7 +50,7 @@ stages:
     - task: PublishBuildArtifacts@1
       name: Create_Artifact_Packed_Data
       inputs:
-        PathtoPublish: '$(tempDirectory)'
+        PathtoPublish: '$(tempDirectory)/$(dataFileName)'
         ArtifactName: 'PackedData.$(currentDate)'
         publishLocation: 'Container'
 
@@ -58,12 +68,21 @@ stages:
         deploy:
           steps:
           - checkout: none
-          - task: DownloadBuildArtifacts@1
+          # - task: DownloadBuildArtifacts@1
+          #   inputs:
+          #     buildType: 'current'
+          #     downloadType: 'single'
+          #     artifactName: 'PackedData.$(currentDate)'
+          #     downloadPath: '$(System.ArtifactsDirectory)'
+          
+          - task: PowerShell@2
+            name: "DebugPowershellScript"
             inputs:
-              buildType: 'current'
-              downloadType: 'single'
-              artifactName: 'PackedData.$(currentDate)'
-              downloadPath: '$(System.ArtifactsDirectory)'
+              targetType: 'inline'
+              script: |
+                Write-Host "listing build.ArtifactStagingDirectory"
+                ls $(Build.ArtifactStagingDirectory) 
+                Write-Host "using file name = $(Build.ArtifactStagingDirectory)\PackedData.$(currentDate)\$(dataFileName)"
 
           - task: PowerShell@2
             name: "Import_Data_QA"
@@ -157,41 +176,44 @@ stages:
         deploy:
           steps:
           - checkout: none
-
-          - task: DownloadBuildArtifacts@1
-            inputs:
-              buildType: 'current'
-              downloadType: 'single'
-              artifactName: 'PackedData.$(currentDate)'
-              downloadPath: '$(System.ArtifactsDirectory)'
-
+          
           - task: PowerShell@2
-            name: "Import_Data_ACCDATA"
+            name: "DebugPowershellScript"
             inputs:
               targetType: 'inline'
               script: |
-                Install-Module -Name Microsoft.Xrm.Tooling.ConfigurationMigration -force
+                Write-Host "listing build.ArtifactStagingDirectory"
+                ls $(Build.ArtifactStagingDirectory) 
+                Write-Host "using file name = $(Build.ArtifactStagingDirectory)\PackedData.$(currentDate)\$(dataFileName)"
+                Write-Host "ConnectionString = $(ConnectionStringACCDATA)"
+
+          # - task: PowerShell@2
+          #   name: "Import_Data_ACCDATA"
+          #   inputs:
+          #     targetType: 'inline'
+          #     script: |
+          #       Install-Module -Name Microsoft.Xrm.Tooling.ConfigurationMigration -force
                 
-                If(!(test-path "$(logWriteDirectory)"))
-                {
-                    Write-Host "$(logWriteDirectory) folder does not exists."
-                    New-Item -ItemType Directory -Force -Path "$(logWriteDirectory)"
-                    Write-Host "$(logWriteDirectory) folder created."
-                }
+          #       If(!(test-path "$(logWriteDirectory)"))
+          #       {
+          #           Write-Host "$(logWriteDirectory) folder does not exists."
+          #           New-Item -ItemType Directory -Force -Path "$(logWriteDirectory)"
+          #           Write-Host "$(logWriteDirectory) folder created."
+          #       }
                 
-                Import-CrmDataFile -CrmConnection "$(ConnectionStringACCDATA)" -Datafile "$(System.ArtifactsDirectory)\PackedData.$(currentDate)\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
-              warningPreference: 'stop'
-              failOnStderr: true
-              showWarnings: true
+          #       Import-CrmDataFile -CrmConnection "$(ConnectionStringACCDATA)" -Datafile "$(System.ArtifactsDirectory)\PackedData.$(currentDate)\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
+          #     warningPreference: 'stop'
+          #     failOnStderr: true
+          #     showWarnings: true
               
-          - task: PowerShell@2
-            name: "Print_Logs"
-            condition: always()
-            inputs:
-              targetType: 'inline'
-              script: |
-                cd $(Build.SourcesDirectory)/ConfigurationMigration/Logs/import
-                cat *
+          # - task: PowerShell@2
+          #   name: "Print_Logs"
+          #   condition: always()
+          #   inputs:
+          #     targetType: 'inline'
+          #     script: |
+          #       cd $(Build.SourcesDirectory)/ConfigurationMigration/Logs/import
+          #       cat *
 
 
 - stage: Deploy_MasterData_to_PREPROD
