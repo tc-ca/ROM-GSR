@@ -7,7 +7,7 @@ variables:
   - name: tempDirectory
     value: "$(Agent.TempDirectory)"
   - name: currentDate
-    value: $[format('D{0:dd}.{0:MM}.{0:yyyy}T{0:HH}.{0:mm}', pipeline.startTime)]
+    value: $[format('{0:dd}.{0:MM}.{0:yyyy}', pipeline.startTime)]
   - name: dataFileName
     value: "MasterData-FDR-$(currentDate).zip"
   - name: logWriteDirectory
@@ -95,7 +95,7 @@ stages:
               script: |
                 Write-Host "listing build.ArtifactStagingDirectory"
                 ls $(Build.ArtifactStagingDirectory) 
-                Write-Host "using file name = $(Build.ArtifactStagingDirectory)\PackedData.$(currentDate)\$(dataFileName)"
+                Write-Host "using file name = $(Build.ArtifactStagingDirectory)\$(artifactName)\$(dataFileName)"
 
           - task: PowerShell@2
             name: "Import_Data_QA"
