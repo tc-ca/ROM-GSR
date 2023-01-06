@@ -196,36 +196,36 @@ stages:
                 ls $(Build.ArtifactStagingDirectory) 
                 Write-Host "listing $(Agent.BuildDirectory)"
                 ls $(Agent.BuildDirectory) 
-                Write-Host "using file name = $(Build.ArtifactStagingDirectory)\PackedData.$(currentDate)\$(dataFileName)"
+                Write-Host "using file name = $(Agent.BuildDirectory)\PackedData.$(currentDate)\$(dataFileName)"
                 Write-Host "ConnectionString = $(ConnectionStringACCDATA)"
 
-          # - task: PowerShell@2
-          #   name: "Import_Data_ACCDATA"
-          #   inputs:
-          #     targetType: 'inline'
-          #     script: |
-          #       Install-Module -Name Microsoft.Xrm.Tooling.ConfigurationMigration -force
+          - task: PowerShell@2
+            name: "Import_Data_ACCDATA"
+            inputs:
+              targetType: 'inline'
+              script: |
+                Install-Module -Name Microsoft.Xrm.Tooling.ConfigurationMigration -force
                 
-          #       If(!(test-path "$(logWriteDirectory)"))
-          #       {
-          #           Write-Host "$(logWriteDirectory) folder does not exists."
-          #           New-Item -ItemType Directory -Force -Path "$(logWriteDirectory)"
-          #           Write-Host "$(logWriteDirectory) folder created."
-          #       }
+                If(!(test-path "$(logWriteDirectory)"))
+                {
+                    Write-Host "$(logWriteDirectory) folder does not exists."
+                    New-Item -ItemType Directory -Force -Path "$(logWriteDirectory)"
+                    Write-Host "$(logWriteDirectory) folder created."
+                }
                 
-          #       Import-CrmDataFile -CrmConnection "$(ConnectionStringACCDATA)" -Datafile "$(System.ArtifactsDirectory)\PackedData.$(currentDate)\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
-          #     warningPreference: 'stop'
-          #     failOnStderr: true
-          #     showWarnings: true
+                Import-CrmDataFile -CrmConnection "$(ConnectionStringACCDATA)" -Datafile "$(Agent.BuildDirectory)\PackedData.$(currentDate)\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
+              warningPreference: 'stop'
+              failOnStderr: true
+              showWarnings: true
               
-          # - task: PowerShell@2
-          #   name: "Print_Logs"
-          #   condition: always()
-          #   inputs:
-          #     targetType: 'inline'
-          #     script: |
-          #       cd $(Build.SourcesDirectory)/ConfigurationMigration/Logs/import
-          #       cat *
+          - task: PowerShell@2
+            name: "Print_Logs"
+            condition: always()
+            inputs:
+              targetType: 'inline'
+              script: |
+                cd $(Build.SourcesDirectory)/ConfigurationMigration/Logs/import
+                cat *
 
 
 - stage: Deploy_MasterData_to_PREPROD
