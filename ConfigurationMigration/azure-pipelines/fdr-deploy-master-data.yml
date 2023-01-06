@@ -6,16 +6,19 @@ variables:
     value: "$(Build.SourcesDirectory)/ConfigurationMigration"
   - name: tempDirectory
     value: "$(Agent.TempDirectory)"
+  - name: currentDate
+    value: $[format('D{0:dd}.{0:MM}.{0:yyyy}T{0:HH}.{0:mm}', pipeline.startTime)]
   - name: dataFileName
-    value: "MasterData-FDR.zip"
+    value: "MasterData-FDR-$(currentDate).zip"
   - name: logWriteDirectory
     value: "$(basepath)/logs/import"
   - name: extractFolder
     value: "$(basepath)/data/fdr"
   - name: combineDataXmlFile
     value: $true
-  - name: currentDate
-    value: $[format('D{0:dd}.{0:MM}.{0:yyyy}T{0:HH}.{0:mm}', pipeline.startTime)]
+  - name: artifactName
+    value: "PackedData.$(currentDate)"
+
 
 stages:
 - stage: Stage_Pack_Data_and_Publish_Artifact
@@ -61,7 +64,7 @@ stages:
       name: Create_Artifact_Packed_Data
       inputs:
         PathtoPublish: '$(tempDirectory)/$(dataFileName)'
-        ArtifactName: 'PackedData.$(currentDate)'
+        ArtifactName: '$(artifactName)'
         publishLocation: 'Container'
 
 - stage: Stage_MasterData_to_QA
@@ -196,8 +199,7 @@ stages:
                 ls $(Build.ArtifactStagingDirectory) 
                 Write-Host "listing $(Agent.BuildDirectory)"
                 ls $(Agent.BuildDirectory) 
-                Write-Host "using file name = $(Agent.BuildDirectory)\PackedData.$(currentDate)\$(dataFileName)"
-                Write-Host "ConnectionString = $(ConnectionStringACCDATA)"
+                Write-Host "using file name = $(Agent.BuildDirectory)\$(artifactName)\$(dataFileName)"
 
           - task: PowerShell@2
             name: "Import_Data_ACCDATA"
@@ -213,7 +215,7 @@ stages:
                     Write-Host "$(logWriteDirectory) folder created."
                 }
                 
-                Import-CrmDataFile -CrmConnection "$(ConnectionStringACCDATA)" -Datafile "$(Agent.BuildDirectory)\PackedData.$(currentDate)\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
+                Import-CrmDataFile -CrmConnection "$(ConnectionStringACCDATA)" -Datafile "$(Agent.BuildDirectory)\$(artifactName)\$(dataFileName)" -Verbose -LogWriteDirectory "$(logWriteDirectory)"
               warningPreference: 'stop'
               failOnStderr: true
               showWarnings: true
