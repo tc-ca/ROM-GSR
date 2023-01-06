@@ -192,8 +192,10 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                Write-Host "listing build.ArtifactStagingDirectory"
+                Write-Host "listing $(Build.ArtifactStagingDirectory)"
                 ls $(Build.ArtifactStagingDirectory) 
+                Write-Host "listing $(Agent.BuildDirectory)"
+                ls $(Agent.BuildDirectory) 
                 Write-Host "using file name = $(Build.ArtifactStagingDirectory)\PackedData.$(currentDate)\$(dataFileName)"
                 Write-Host "ConnectionString = $(ConnectionStringACCDATA)"
 
