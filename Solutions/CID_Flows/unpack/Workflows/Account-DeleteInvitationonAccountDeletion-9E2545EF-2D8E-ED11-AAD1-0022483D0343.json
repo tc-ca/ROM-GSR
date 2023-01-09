@@ -1,0 +1,106 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "Trigger_when_account_was_deleted": {
+          "metadata": {
+            "operationMetadataId": "22ea7b42-c7da-4e22-a8c7-9b5132f5fd78"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 2,
+              "subscriptionRequest/entityname": "account",
+              "subscriptionRequest/scope": 2
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "List_all_associated_rows": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "925951b7-273c-4726-a744-7e08ab316698"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "adx_invitations",
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"adx_invitation\">\n    <attribute name=\"adx_name\" />\n    <attribute name=\"createdon\" />\n    <attribute name=\"adx_type\" />\n    <attribute name=\"statuscode\" />\n    <attribute name=\"adx_invitationcode\" />\n    <attribute name=\"adx_expirydate\" />\n    <attribute name=\"adx_invitationid\" />\n    <attribute name=\"adx_assigntoaccount\" />\n    <order attribute=\"createdon\" descending=\"false\" />\n    <order attribute=\"adx_name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"adx_assigntoaccount\" operator=\"eq\" uitype=\"account\" value=\"@{triggerOutputs()?['body/accountid']}\" />\n    </filter>\n  </entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Delete_all_associate_invitations": {
+          "foreach": "@outputs('List_all_associated_rows')?['body/value']",
+          "actions": {
+            "Delete_a_row": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "0bce6536-61a0-449a-b907-4fec244b6125"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "DeleteRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "adx_invitations",
+                  "recordId": "@items('Delete_all_associate_invitations')?['@odata']?['id']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "List_all_associated_rows": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "316725d7-6113-4811-afca-d3baf3ad751c"
+          },
+          "type": "Foreach"
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
