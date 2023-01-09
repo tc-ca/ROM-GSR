@@ -4,6 +4,7 @@
 
 $(document).ready(function () {
     debugger;
+
     tdg.c.weblink_show("/company_dashboard/");
     tdg.c.weblink_show("/Bulk_Site_Update/");
 
@@ -96,6 +97,12 @@ $(document).ready(function () {
     //var html1 = "<div id='siteRequirementLevel'><label>" + requirementLevel + "</label></div><br>"; 
     //$('#cid_requirementlevel').parent().after(html1); 
     //$('#cid_requirementlevel').hide(); 
-    
+
+    if ($("#updateSiteBtn").length <= 0){
+        //var updateSiteBtn = "</br><div id='updateSiteBtn' role='group' class='btn-group entity-action-button '><a href='~/my-sites/in-year-site/in_year_site_update/?id=" + siteId + "&in_year=true'><input type='button' name='UpdateSite' value='Update Site' class='btn btn-primary button submit-btn' nonactionlinkbutton='true'" + disabled + "></a></div></br></br>";      
+        var updateSiteBtn = "</br><div id='updateSiteBtn' role='group' class='btn-group entity-action-button '><a href='~/SiteRegistrationWizard/?id=" + siteId + "&in_year=true'><input type='button' name='UpdateSite' value='Update Site' class='btn btn-primary button submit-btn' nonactionlinkbutton='true'" + disabled + "></a></div></br></br>";      
+
+        $('div[data-name="further_site_details"]').parent().after(updateSiteBtn);
+    }
     $('#loader').hide(); 
 });

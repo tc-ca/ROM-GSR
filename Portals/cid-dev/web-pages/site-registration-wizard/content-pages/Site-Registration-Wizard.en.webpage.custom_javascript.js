@@ -7,6 +7,7 @@ $(document).ready(function () {
 
 	var inYear = sessionStorage.getItem('frominyearsites');
     var annualCompliance = sessionStorage.getItem('fromannualcompliance');
+	var frominyearsitepage = sessionStorage.getItem('frominyearsitepage');
 
 	var urlParams = new URLSearchParams(window.location.search);
 	//if (!urlParams.has('in_year') || urlParams.get('in_year') != 'true') {
@@ -14,6 +15,8 @@ $(document).ready(function () {
 		header_setup("inyear");
 	else if( annualCompliance == "true")
 		header_setup("annualcompliance");
+	else if( frominyearsitepage == "true")
+		header_setup("frominyearsitepage");
 	else
 		header_setup("initial");
 
@@ -36,6 +39,7 @@ $(document).ready(function () {
 function header_setup(type) {
 	debugger;
 
+	var urlParams = new URLSearchParams(window.location.search);
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 	var msg = "";
@@ -43,7 +47,7 @@ function header_setup(type) {
 
 	switch(type) {
 	case "inyear":
-		msg = "Back To In Year Page";
+		msg = "Back To In Year Sites Page";
 		href = "~/my-sites";
 		tdg.c.weblink_hide("/RegistrationWizard/");
         tdg.c.weblink_hide("/Bulk_Site_Upload/");
@@ -53,6 +57,11 @@ function header_setup(type) {
 	case "annualcompliance":
 		msg = "Back To Annual Compliance Update Page";
 		href = "~/my-company/annual-compliance-update";
+		break;
+	case "frominyearsitepage":
+		msg = "Back To In Year Site Update Page";
+		
+		href = "~/my-sites/in-year-site/?id=" + urlParams.get('id');
 		break;
 	default:
 		msg = tdg.error_message.message("m000100");

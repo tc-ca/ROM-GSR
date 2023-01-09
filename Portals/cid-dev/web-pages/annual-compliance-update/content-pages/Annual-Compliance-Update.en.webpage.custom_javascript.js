@@ -7,6 +7,7 @@ $(document).ready(function () {
 
 	sessionStorage.setItem('frominyearsites', 'false');
     sessionStorage.setItem('fromannualcompliance', 'true');
+	sessionStorage.setItem('frominyearsitepage', 'false');
 
 	$("legend").each(function() {
 		$(this).removeClass();

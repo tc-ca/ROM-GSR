@@ -5,8 +5,10 @@
 $(document).ready(function () {
     debugger;
 
-    sessionStorage.setItem('frominyearsites', 'true');
+	sessionStorage.setItem('frominyearsites', 'true');
     sessionStorage.setItem('fromannualcompliance', 'false');
+	sessionStorage.setItem('frominyearsitepage', 'false');
+
 
     var topNav = $('#navbar');
     if (topNav) {
