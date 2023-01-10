@@ -1926,7 +1926,7 @@ if (typeof (tdg.cid) == "undefined") {
                         pageTitle = pageTitle + " - " + sitefulladdress;
                     }
                     else if (ovs_address_type == 2) {
-                        sitefulladdress = LatitudeLabel + ": " + address1_longitude + " " + LongtituedLable + ": " + address1_latitude + " " + SiteLable;
+                        sitefulladdress = LatitudeLabel + ": " + address1_latitude + " " + LongtituedLable + ": " + address1_longitude + " " + SiteLable;
                         pageTitle = pageTitle + " - " + sitefulladdress;
                     }
 
@@ -2410,3 +2410,4 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
+
