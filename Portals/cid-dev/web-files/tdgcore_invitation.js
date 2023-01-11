@@ -77,6 +77,12 @@ if (typeof (invitation) == "undefined") {
                                 data.Secondary_Contactid = contact_id;
                                 tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", JSON.stringify(data));
 
+                                // change current user to secondary
+                                debugger;
+                                var data = {};
+                                data.cid_contacttype = "100000001";
+                                tdg.webapi.update("contacts", contact_id, data);
+
                                 //tdg.c.sign_out();
                             } else { }
                         });
@@ -136,7 +142,7 @@ if (typeof (invitation) == "undefined") {
             var btn_next_name = "NextButton";
             tdg.cid.crw.start_buttons_confirm(false, btn_next_name);
             var cid_has_cra_bn = _account.cid_has_cra_bn;
-            cid_has_cra_bn = (cid_has_cra_bn == null? 0: cid_has_cra_bn);
+            cid_has_cra_bn = (cid_has_cra_bn == null ? 0 : cid_has_cra_bn);
             var bn = _account.cid_crabusinessnumber;
             var legalname = _account.ovs_legalname;
             var cid_reasonfornobnnumber = _account.cid_reasonfornobnnumber;
@@ -149,8 +155,7 @@ if (typeof (invitation) == "undefined") {
             }
             var cid_reasonfornobnnumber_other = _account.cid_reasonfornobnnumber_other;
             var data = tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn, legalname, list);
-            if (data.length == 0)
-            {
+            if (data.length == 0) {
                 data.length = 1;
                 data.cid_has_cra_bn = cid_has_cra_bn;
                 data.cid_legalname = legalname;
@@ -185,7 +190,7 @@ if (typeof (invitation) == "undefined") {
                         tdg.cid.crw.start_cid_has_cra_bn_onchange("1");
                         $("#cid_legalname").val(_account.ovs_legalname);
                         $("#cid_reasonfornobnnumber").val(_account.cid_reasonfornobnnumber);
-                        tdg.cid.crw.start_cid_reasonfornobnnumber_onchange();          
+                        tdg.cid.crw.start_cid_reasonfornobnnumber_onchange();
                         $("#cid_reasonfornobnnumber_other").val(_account.cid_reasonfornobnnumber_other);
                     }
                     invitation.invitation_go_next(_account, true, contact_id);
@@ -309,7 +314,6 @@ if (typeof (invitation) == "undefined") {
                             var contactrecordData =
                                 '{"ParentAccount" : "' + ParentAccount + '", "ContactId" :"' + contactid +
                                 '", "Portal_URL" : "' + window.location.host + '"}';
-
 
                             var data =
                             {
