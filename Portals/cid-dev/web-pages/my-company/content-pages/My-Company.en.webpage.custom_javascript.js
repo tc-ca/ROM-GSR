@@ -34,11 +34,6 @@ $(document).ready(function () {
         deactivateCompanyWebLink.removeClass("hidden");
     }
     
-    $("#cid_iscompanyattested").val(1);
-    $("#cid_iscompanyattested").prop( "checked", true );
-
-//$("#cid_iscompanyattested").parent().addClass("hidden");
-
     var topNav = $('#navbar');
     if (topNav) {
         var companyName = $("#ovs_legalname").val();
@@ -118,6 +113,11 @@ $(document).ready(function () {
 	$("#address1_stateorprovince").attr("oninput", "setManualAddressEntryFlag()");
 	$("#address1_postalcode").attr("oninput", "setManualAddressEntryFlag()");
 	$("#address1_country").attr("oninput", "setManualAddressEntryFlag()");
+
+    $("#cid_iscompanyattested").val(1);
+    //$("#cid_iscompanyattested").prop( "checked", true );
+
+    $("#cid_iscompanyattested").parent().parent().parent().addClass("hidden");
 
 });
 
