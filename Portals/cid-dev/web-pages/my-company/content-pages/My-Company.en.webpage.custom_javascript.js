@@ -34,6 +34,11 @@ $(document).ready(function () {
         deactivateCompanyWebLink.removeClass("hidden");
     }
     
+    $("#cid_iscompanyattested").val(1);
+    $("#cid_iscompanyattested").prop( "checked", true );
+
+//$("#cid_iscompanyattested").parent().addClass("hidden");
+
     var topNav = $('#navbar');
     if (topNav) {
         var companyName = $("#ovs_legalname").val();
@@ -48,4 +53,101 @@ $(document).ready(function () {
 		$(this).css("font-weight", "bold");
         $(this).css("text-decoration", "underline");
     });
+
+   var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
+    // address
+    tdg.cid.address_init(false);
+
+    tdg.cid.WebResource_address_complete_readonly(false);
+
+    tdg.c.control_hide("cid_reasonfornobnnumber_other");
+
+    //Phone number formatting
+    tdg.cid.phone_init("telephone1", selected_language);
+    tdg.cid.phone_init("fax", selected_language);
+
+    var cid_has_cra_bn = ($('#cid_crabusinessnumber').val() != "" ? "1" : "0");
+    var cid_reasonfornobnnumber = $('#cid_reasonfornobnnumber').val();
+
+    tdg.c.control_hide("cid_has_cra_bn");
+
+    // do not have a business number?
+    if (cid_has_cra_bn != "1") {
+        tdg.c.control_hide("cid_crabusinessnumber");
+        tdg.c.control_show("cid_reasonfornobnnumber");
+
+        if (cid_reasonfornobnnumber == "3")   // other
+        {
+            tdg.c.control_show("cid_reasonfornobnnumber_other");
+        }
+        else {
+            tdg.c.control_hide("cid_reasonfornobnnumber_other");
+        }
+    }
+    else {
+        tdg.c.control_show("cid_crabusinessnumber");
+        tdg.c.control_hide("cid_reasonfornobnnumber");
+        tdg.c.control_hide("cid_reasonfornobnnumber_other");
+    }
+
+    $('#cid_crabusinessnumber').attr("readonly", true);
+    $('#ovs_legalname').attr("readonly", true);
+    $('#cid_reasonfornobnnumber').attr("readonly", true);
+    $('#cid_reasonfornobnnumber').css("pointer-events", "none");
+    $('#cid_reasonfornobnnumber_other').attr("readonly", true);
+
+
+    $('#address1_country').attr("readonly", true);
+
+	var address1_stateorprovince = tdg.c.replace_special_char("{{user.address1_stateorprovince}}");
+	$("#address1_stateorprovince").val(address1_stateorprovince);
+	tdg.cid.convert_province_to_code(selected_language);
+
+	if ($("#cid_addressoverwritten").val() == 0) { $("#ovs_address1_province").prop('disabled', true); }
+	else { $("#ovs_address1_province").prop('disabled', false); }
+
+
+
+        subgrid_language();
+
+        	//Add listeners for the address fields to change the "manually entered" flag
+	$("#address1_line1").attr("oninput", "setManualAddressEntryFlag()");
+	$("#address1_city").attr("oninput", "setManualAddressEntryFlag()");
+	$("#address1_stateorprovince").attr("oninput", "setManualAddressEntryFlag()");
+	$("#address1_postalcode").attr("oninput", "setManualAddressEntryFlag()");
+	$("#address1_country").attr("oninput", "setManualAddressEntryFlag()");
+
 });
+
+function subgrid_language() {
+    debugger;
+    var entityList = $(".entity-grid");
+    var companynaicscode = tdg.c.subgrid_index(entityList, "cid_account_companynaicscode");
+    if (companynaicscode != null) {
+        tdg.cid.subgrid_companynaicscode(companynaicscode);
+   }
+}
+
+function setManualAddressEntryFlag() {
+	$("#cid_addressoverwritten").val(1);
+}
+
+//function page_setup() {
+//	var selected_language = '{{website.selected_language.code}}';
+//	sessionStorage.setItem("selected_language", selected_language);
+
+//	const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
+//	for (var i = 0; i < files.length; i++) {
+//		var file = files[i];
+//		var script = document.createElement('script');
+//		script.type = 'text/javascript';
+//		script.src = file;
+
+//		$("body").append(script);
+//	}
+
+	// server error?
+//	tdg.c.message_panel();
+//}
