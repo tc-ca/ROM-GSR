@@ -370,20 +370,37 @@
                 "authentication": "@parameters('$authentication')"
               }
             },
-            "Set_Cost_Recovery_Service_Attribute": {
+            "Condition_2": {
+              "actions": {
+                "Set_Cost_Recovery_Service_Attribute": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "d2566226-592e-4897-ba31-8d613fb628f0"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "CR_ServiceAttribute",
+                    "value": "@outputs('Get_Cost_Recovery_Service_Attribute')?['body/fdr_serviceattributeid']"
+                  }
+                }
+              },
               "runAfter": {
                 "Get_Cost_Recovery_Service_Attribute": [
                   "Succeeded"
                 ]
               },
-              "metadata": {
-                "operationMetadataId": "d2566226-592e-4897-ba31-8d613fb628f0"
+              "expression": {
+                "not": {
+                  "equals": [
+                    "@outputs('Get_Cost_Recovery_Service_Attribute')?['body/fdr_serviceattributeid']",
+                    "@null"
+                  ]
+                }
               },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "CR_ServiceAttribute",
-                "value": "@outputs('Get_Cost_Recovery_Service_Attribute')?['body/fdr_serviceattributeid']"
-              }
+              "metadata": {
+                "operationMetadataId": "2e6ec71e-d603-44a2-ac7d-4ec1942cb719"
+              },
+              "type": "If"
             }
           },
           "runAfter": {
