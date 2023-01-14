@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RibbonDiffXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <CustomActions>
+    <CustomAction Id="fdr.fdr_equipment.Button.AddExistingAssoc.CustomAction" Location="Mscrm.SubGrid.fdr_equipment.MainTab.Management.Controls._children" Sequence="45">
+      <CommandUIDefinition>
+        <Button Alt="$Resources(EntityDisplayName):Ribbon.SubGrid.AddExisting" Command="fdr.fdr_equipment.Command.AddExistingRecordFromSubGridAssociated" Id="fdr.fdr_equipment.Button.AddExistingAssoc" Image32by32="/_imgs/ribbon/AddExistingStandard_32.png" Image16by16="/_imgs/ribbon/AddExistingStandard_16.png" LabelText="$Resources(EntityDisplayName):Ribbon.SubGrid.AddExisting" Sequence="45" TemplateAlias="o1" ToolTipTitle="$Resources(EntityDisplayName):Mscrm_SubGrid_EntityLogicalName_MainTab_Management_AddExistingAssoc_ToolTipTitle" ToolTipDescription="$Resources(EntityDisplayName):Mscrm_SubGrid_EntityLogicalName_MainTab_Management_AddExistingAssoc_ToolTipDescription" ModernImage="AddExisting" />
+      </CommandUIDefinition>
+    </CustomAction>
+  </CustomActions>
+  <Templates>
+    <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
+  </Templates>
+  <CommandDefinitions>
+    <CommandDefinition Id="fdr.fdr_equipment.Command.AddExistingRecordFromSubGridAssociated">
+      <EnableRules>
+        <EnableRule Id="Mscrm.AppendToPrimary" />
+        <EnableRule Id="Mscrm.EntityFormIsEnabled" />
+        <EnableRule Id="fdr.fdr_equipment.EnableRule.ShowAddExisting_4_ServiceRequest" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.AddExisting" />
+        <DisplayRule Id="Mscrm.ShowForManyToManyGrids" />
+        <DisplayRule Id="Mscrm.AppendToPrimary" />
+        <DisplayRule Id="Mscrm.AppendPrimary" />
+        <DisplayRule Id="Mscrm.AppendSelected" />
+        <DisplayRule Id="Mscrm.AppendToSelected" />
+        <DisplayRule Id="fdr.fdr_equipment.ShowAddExisting_4_ServiceRequest" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="Equipment_Ribbon.openEquipmentPanel" Library="$webresource:fdr_Equipment_Ribbon.js">
+          <CrmParameter Value="FirstPrimaryItemId" />
+          <CrmParameter Value="UserLcid" />
+          <CrmParameter Value="SelectedControl" />
+          <CrmParameter Value="PrimaryControl" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="Mscrm.AddExistingRecordFromSubGridAssociated">
+      <EnableRules>
+        <EnableRule Id="Mscrm.AppendToPrimary" />
+        <EnableRule Id="Mscrm.EntityFormIsEnabled" />
+        <EnableRule Id="fdr.fdr_equipment.EnableRule.HideAddExisting_4_ServiceRequest" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.AddExisting" />
+        <DisplayRule Id="Mscrm.ShowForManyToManyGrids" />
+        <DisplayRule Id="Mscrm.AppendToPrimary" />
+        <DisplayRule Id="Mscrm.AppendPrimary" />
+        <DisplayRule Id="Mscrm.AppendSelected" />
+        <DisplayRule Id="Mscrm.AppendToSelected" />
+        <DisplayRule Id="fdr.fdr_equipment.HideAddExisting_4_ServiceRequest" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="XrmCore.Commands.AddFromSubGrid.addExistingFromSubGridAssociated" Library="$webresource:Main_system_library.js">
+          <CrmParameter Value="SelectedEntityTypeName" />
+          <CrmParameter Value="SelectedControl" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+  </CommandDefinitions>
+  <RuleDefinitions>
+    <TabDisplayRules />
+    <DisplayRules>
+      <DisplayRule Id="Mscrm.AddExisting">
+        <ReferencingAttributeRequiredRule Default="false" InvertResult="true" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.AppendPrimary">
+        <EntityPrivilegeRule PrivilegeType="Append" PrivilegeDepth="Basic" AppliesTo="PrimaryEntity" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.AppendSelected">
+        <EntityPrivilegeRule PrivilegeType="Append" PrivilegeDepth="Basic" AppliesTo="SelectedEntity" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.AppendToPrimary">
+        <EntityPrivilegeRule PrivilegeType="AppendTo" PrivilegeDepth="Basic" AppliesTo="PrimaryEntity" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.AppendToSelected">
+        <EntityPrivilegeRule PrivilegeType="AppendTo" PrivilegeDepth="Basic" AppliesTo="SelectedEntity" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.ShowForManyToManyGrids">
+        <RelationshipTypeRule AppliesTo="SelectedEntity" RelationshipType="ManyToMany" />
+      </DisplayRule>
+    </DisplayRules>
+    <EnableRules>
+      <EnableRule Id="fdr.fdr_equipment.EnableRule.HideAddExisting_4_ServiceRequest">
+        <EntityRule EntityName="fdr_servicerequest" AppliesTo="PrimaryEntity" Default="false" InvertResult="true" />
+      </EnableRule>
+      <EnableRule Id="fdr.fdr_equipment.EnableRule.ShowAddExisting_4_ServiceRequest">
+        <EntityRule EntityName="fdr_servicerequest" AppliesTo="PrimaryEntity" Default="false" InvertResult="false" />
+      </EnableRule>
+      <EnableRule Id="Mscrm.AppendToPrimary">
+        <RecordPrivilegeRule PrivilegeType="AppendTo" AppliesTo="PrimaryEntity" />
+      </EnableRule>
+      <EnableRule Id="Mscrm.EntityFormIsEnabled">
+        <FormStateRule State="Disabled" InvertResult="true" />
+      </EnableRule>
+    </EnableRules>
+  </RuleDefinitions>
+  <LocLabels />
+</RibbonDiffXml>
