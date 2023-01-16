@@ -151,13 +151,15 @@ function btn_previous_click() {
 	tdg.cid.crw.step2_previous_click(email, account_id, contact_id);
 }
 
-function cid_crabusinessnumber_onchange() {
+function cid_crabusinessnumber_onchange() 
+    {
 	var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
 	var data = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, "2");
 	if (data == "") {
 		tdg.c.error_message_advanced_form("m000001", true);
 	}
-	else {
+	else 
+    {
 		debugger;
 		var account_id = '{{user.parentcustomerid.Id}}';
 		filter = "cid_crabusinessnumber eq '" + cid_crabusinessnumber + "'";
@@ -170,7 +172,8 @@ function cid_crabusinessnumber_onchange() {
 			tdg.c.dialog_OK(message);
 			$("#cid_crabusinessnumber").val(_cid_crabusinessnumber);
 		}
-		else {
+		else 
+        {
 			var LegalName = data.LegalName
 			var OperatingName = data.OperatingName
 			OperatingName = (OperatingName == "" ? LegalName : OperatingName);

@@ -119,6 +119,11 @@ $(document).ready(function () {
 
     $("#cid_iscompanyattested").parent().parent().parent().addClass("hidden");
 
+    if($("#ovs_address1_province option:selected" ).text().trim() != $("#address1_stateorprovince").val().trim())
+    {
+        $("#address1_stateorprovince").val($("#ovs_address1_province option:selected" ).text().trim());
+    }
+
 });
 
 function subgrid_language() {

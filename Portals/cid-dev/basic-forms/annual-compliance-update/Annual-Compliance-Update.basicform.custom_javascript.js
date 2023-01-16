@@ -2,10 +2,6 @@ $(document).ready(function ()
 {
 	debugger;
 
-
-	
-
-
 	$("#cid_registrationasof").parent().parent().hide();
 
 	//page_setup();
@@ -216,7 +212,7 @@ checkAnuualComplienceEligibility = function (anniversaryDate)
 		//anniversaryDate = new Date(today.getFullYear(), anniversaryDate.getMonth(), anniversaryDate.getDate())
 		//if (anniversaryDate > today) anniversaryDate = new Date(anniversaryDate.getFullYear() - 1, anniversaryDate.getMonth(), anniversaryDate.getDate());
 		var dateDiff = Math.floor((Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) - Date.UTC(anniversaryDate.getFullYear(), anniversaryDate.getMonth(), anniversaryDate.getDate())) / (1000 * 60 * 60 * 24))
-		if (dateDiff > 30 || dateDiff < 0)
+		if (dateDiff > 30 && dateDiff > -30)
 		{ //Annual Compliance Update can only be completed on or 30 days within the Company’s Anniversary Date each year
 			return true;
 		}
