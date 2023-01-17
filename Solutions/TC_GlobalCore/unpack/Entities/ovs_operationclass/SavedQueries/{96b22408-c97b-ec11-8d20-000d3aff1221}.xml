@@ -12,7 +12,7 @@
         <row name="result" id="ovs_operationclassid">
           <cell name="ovs_class_division" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="ovs_compatibility_group" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
-          <cell name="cid_portalrecordcreationdetails" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="cid_portalrecordmodificationdetails" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
         </row>
       </grid>
     </layoutxml>
@@ -22,13 +22,13 @@
         <entity name="ovs_operationclass">
           <attribute name="ovs_compatibility_group" />
           <attribute name="ovs_class_division" />
-          <attribute name="cid_portalrecordcreationdetails" />
           <order attribute="ovs_class_division" descending="false" />
           <order attribute="ovs_compatibility_group" descending="false" />
           <filter type="and">
             <condition attribute="statuscode" operator="eq" value="1" />
             <condition attribute="cid_createdbyregistrant" operator="not-null" />
           </filter>
+          <attribute name="cid_portalrecordmodificationdetails" />
           <attribute name="ovs_operationclassid" />
         </entity>
       </fetch>

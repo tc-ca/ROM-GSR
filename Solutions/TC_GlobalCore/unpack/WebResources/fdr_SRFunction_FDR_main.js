@@ -11,12 +11,52 @@ var SRFunctions_FDR_main = (function (window, document) {
     var formType;
     var clientUrl;
     var isDesignRegSupported = false;
+    var displayDesign = false;
+    var hasOperation = false;
 
     var containerFunctions = new Array();
 
 
 
     //**************** Private methods
+
+    //get service request operation and status reason
+    function getSRs_status(formContext, SR_id) {
+
+        Xrm.WebApi.online.retrieveRecord("fdr_servicerequest", SR_id, "?$select=_fdr_operation_value,statuscode").then(
+            function success(result) {
+
+                try {
+
+                    var _fdr_operation_value = result["_fdr_operation_value"];
+                    var _fdr_operation_value_formatted = result["_fdr_operation_value@OData.Community.Display.V1.FormattedValue"];
+                    var _fdr_operation_value_lookuplogicalname = result["_fdr_operation_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                    var statuscode = result["statuscode"];
+
+                } catch (e) {
+                    displayDesign = false;
+                    hasOperation = false;
+                }
+
+                //set flag to display Designs based on SR status and operation presence
+                if (_fdr_operation_value == null) {
+                    displayDesign = false;
+                    hasOperation = false;
+                }
+                else if (statuscode == 1 || statuscode == 794600010 || statuscode == 794600000 || statuscode == 794600006) {
+                    displayDesign = false;
+                    hasOperation = true;
+                } else {
+                    displayDesign = true;
+                    hasOperation = true;
+                }
+
+            },
+            function (error) {
+                Xrm.Navigation.openErrorDialog({ message: "Something went wrong " + error.message});
+            }
+        );
+    }
 
     //get SR's container type and if any => list of related container functions
     function getSRs_ContainerType(formContext, SR_id) {
@@ -148,12 +188,14 @@ var SRFunctions_FDR_main = (function (window, document) {
 
             isDesignRegSupported = glHelper.GetValue(formContext, "fdr_supportsdesignregistration");
 
+            var SR_id = glHelper.GetLookupAttrId(formContext, "fdr_servicerequest");
+            if (SR_id != null) getSRs_status(formContext, SR_id);
+
             if (formType == 1) {
 
                 glHelper.SetControlReadOnly(formContext, "fdr_containerfunction", false);
 
                 //if Service Request is populated check for its container type
-                var SR_id = glHelper.GetLookupAttrId(formContext, "fdr_servicerequest");
                 if (SR_id != null)
                     getSRs_ContainerType(formContext, SR_id);
                 else {
@@ -250,8 +292,20 @@ var SRFunctions_FDR_main = (function (window, document) {
                         //var sdr_value = result["fdr_supportsdesignregistration@OData.Community.Display.V1.FormattedValue"];
                         glHelper.SetValue(formContext, "fdr_supportsdesignregistration", isDesignRegSupported);
 
-                        glHelper.SetSectionVisibility(formContext, "General", "section_design", isDesignRegSupported);
-                        glHelper.SetControlVisibility(formContext, "Subgrid_Designs", isDesignRegSupported);
+                        //set notification about design grid absence
+                        if (isDesignRegSupported && (!hasOperation || !displayDesign)) {
+
+                            //service request lacks operation
+                            if (!hasOperation)
+                                glHelper.DisplayFormNotificationModern(formContext, "Parent Service Request has no Operation selected. Design cannot be added.", "WARNING", false);
+
+                            //service request technical review yet reached
+                            if (hasOperation && !displayDesign)
+                                glHelper.DisplayFormNotificationModern(formContext, "Parent Service Request yet reached Technical Review stage. Design cannot be added.", "WARNING", false);
+                        }
+
+                        glHelper.SetSectionVisibility(formContext, "General", "section_design", (isDesignRegSupported && hasOperation && displayDesign));
+                        glHelper.SetControlVisibility(formContext, "Subgrid_Designs_N_N", (isDesignRegSupported && hasOperation && displayDesign));
                         glHelper.SetSectionVisibility(formContext, "General", "section_specs", !isDesignRegSupported);
                         glHelper.SetControlVisibility(formContext, "GRID_SPECS", !isDesignRegSupported);
                         //199424 : Hide Specs grid in Service Request Function if the selected Container Function record does not support Designs AND has no specifications 
@@ -297,7 +351,7 @@ var SRFunctions_FDR_main = (function (window, document) {
             else {
                 //hide both
                 glHelper.SetSectionVisibility(formContext, "General", "section_design", false);
-                glHelper.SetControlVisibility(formContext, "Subgrid_Designs", false);
+                glHelper.SetControlVisibility(formContext, "Subgrid_Designs_N_N", false);
                 glHelper.SetSectionVisibility(formContext, "General", "section_specs", false);
                 glHelper.SetControlVisibility(formContext, "GRID_SPECS", false);
                 //throw a message?

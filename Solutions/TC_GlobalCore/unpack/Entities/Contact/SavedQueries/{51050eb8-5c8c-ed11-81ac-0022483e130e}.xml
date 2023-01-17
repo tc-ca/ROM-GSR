@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{51050eb8-5c8c-ed11-81ac-0022483e130e}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="fullname" select="1" icon="1" preview="1">
+        <row name="result" id="contactid">
+          <cell name="fullname" width="250" />
+          <cell name="emailaddress1" width="250" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
+        <entity name="contact">
+          <attribute name="fullname" />
+          <attribute name="contactid" />
+          <link-entity name="connection" alias="aa" link-type="inner" from="record2id" to="contactid">
+            <filter type="and">
+              <filter type="or">
+                <condition attribute="record2roleid" operator="eq" value="{cf121971-848b-ed11-81ad-0022483d0343}" uiname="FDR Company Primary Contact" uitype="connectionrole" />
+                <condition attribute="record2roleid" operator="eq" value="{fcfbfac2-848b-ed11-81ad-0022483d0343}" uiname="FDR Company Secondary Contact" uitype="connectionrole" />
+                <condition attribute="record2roleid" operator="eq" value="{51925999-848b-ed11-81ad-0022483d0343}" uiname="FDR Site Primary Contact" uitype="connectionrole" />
+                <condition attribute="record2roleid" operator="eq" value="{2b4e0ff2-848b-ed11-81ad-0022483d0343}" uiname="FDR Site Secondary Contact" uitype="connectionrole" />
+              </filter>
+            </filter>
+          </link-entity>
+          <attribute name="emailaddress1" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="FDR Mailing List" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="Service view for FDR team to get all contacts related to Sites/Companies" languagecode="1033" />
+    </Descriptions>
+  </savedquery>
+</savedqueries>

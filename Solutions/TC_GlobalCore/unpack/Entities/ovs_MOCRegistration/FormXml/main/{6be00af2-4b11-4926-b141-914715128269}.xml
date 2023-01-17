@@ -43,6 +43,7 @@
                       <cell id="{8a7305d5-7975-109d-e83a-24c66c488739}" showlabel="true" locklevel="0">
                         <labels>
                           <label description="Registration Type" languagecode="1033" />
+                          <label description="Type d'inscription" languagecode="1036" />
                         </labels>
                         <control id="fdr_registrationtype" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="fdr_registrationtype" disabled="false" />
                       </cell>
@@ -77,6 +78,7 @@
                       <cell id="{6f171490-d682-4797-9123-91b7caed4995}" locklevel="0" colspan="1" rowspan="1">
                         <labels>
                           <label description="MOC Registration Issue Date" languagecode="1033" />
+                          <label description="Date d’inscription" languagecode="1036" />
                         </labels>
                         <control id="fdr_registrationissuedate" classid="{5B773807-9FB2-42DB-97C3-7A91EFF8ADFF}" datafieldname="fdr_registrationissuedate" disabled="false" />
                       </cell>
@@ -106,20 +108,6 @@
                           <label description="Secteur d’activité" languagecode="1036" />
                         </labels>
                         <control id="ovs_lineofbusiness" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ovs_lineofbusiness" disabled="false" />
-                      </cell>
-                    </row>
-                    <row>
-                      <cell id="{6552e5f9-1576-43b1-95db-bf11bc5cc3a0}" locklevel="0" colspan="1" rowspan="1">
-                        <labels>
-                          <label description="Primary Operation Contact" languagecode="1033" />
-                        </labels>
-                        <control id="fdr_primarycontact" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="fdr_primarycontact" disabled="false">
-                          <parameters>
-                            <DisableViewPicker>true</DisableViewPicker>
-                            <DisableMru>true</DisableMru>
-                            <IsInlineNewEnabled>false</IsInlineNewEnabled>
-                          </parameters>
-                        </control>
                       </cell>
                     </row>
                     <row>
@@ -164,6 +152,38 @@
             </column>
             <column width="50%">
               <sections>
+                <section name="tab_general_section_4" id="6bf3398c-3d8b-4a16-815d-dad799ca5360" IsUserDefined="0" locklevel="0" showlabel="false" showbar="false" layout="varwidth" celllabelalignment="Left" celllabelposition="Left" columns="1" labelwidth="115">
+                  <labels>
+                    <label description="Contacts" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell locklevel="0" id="{793b8eaf-06a7-425e-85bc-7781fbdc44a8}" rowspan="4" colspan="1" auto="false">
+                        <labels>
+                          <label description="Contacts" languagecode="1033" />
+                          <label description="Connexions" languagecode="1036" />
+                        </labels>
+                        <control indicationOfSubgrid="true" id="subgrid_Contacts" classid="{E7A81278-8635-4D9E-8D4D-59480B391C5B}">
+                          <parameters>
+                            <RecordsPerPage>8</RecordsPerPage>
+                            <AutoExpand>Fixed</AutoExpand>
+                            <EnableQuickFind>false</EnableQuickFind>
+                            <EnableViewPicker>false</EnableViewPicker>
+                            <EnableChartPicker>true</EnableChartPicker>
+                            <ChartGridMode>All</ChartGridMode>
+                            <TargetEntityType>connection</TargetEntityType>
+                            <ViewId>{BF1EDD07-888B-ED11-81AC-0022483E130E}</ViewId>
+                            <ViewIds>{7C0E0725-CCD9-4525-9313-665FD075652F},{BF1EDD07-888B-ED11-81AC-0022483E130E}</ViewIds>
+                            <RelationshipName>ovs_mocregistration_connections1</RelationshipName>
+                          </parameters>
+                        </control>
+                      </cell>
+                    </row>
+                    <row />
+                    <row />
+                    <row />
+                  </rows>
+                </section>
                 <section name="_section_692" id="35ba3bc0-30a2-4cfc-ac06-c1ef0d42d2df" IsUserDefined="0" locklevel="0" showlabel="false" showbar="false" layout="varwidth" celllabelalignment="Left" celllabelposition="Left" columns="1" labelwidth="115">
                   <labels>
                     <label description="New Section" languagecode="1033" />
@@ -266,6 +286,7 @@
                       <cell id="{d1de823c-eaca-a11d-c87e-138a1c59ee1a}" showlabel="true" locklevel="0">
                         <labels>
                           <label description="Authorized Location" languagecode="1033" />
+                          <label description="Lieu autorisé" languagecode="1036" />
                         </labels>
                         <control id="fdr_authorizedlocation" classid="{67FAC785-CD58-4f9f-ABB3-4B7DDC6ED5ED}" datafieldname="fdr_authorizedlocation" disabled="true" uniqueid="{9ab13b94-d354-472a-d530-8377739b3ad8}" />
                       </cell>
@@ -325,6 +346,7 @@
         <tab name="tab_sr" id="ea9d008b-dee2-467c-939f-b3a651043462" IsUserDefined="0" locklevel="0" showlabel="true">
           <labels>
             <label description="Service Requests" languagecode="1033" />
+            <label description="Demandes de Services" languagecode="1036" />
           </labels>
           <columns>
             <column width="100%">
@@ -386,6 +408,7 @@
             <cell id="{e683ae54-b6ab-970b-a53b-69926bb63a12}" showlabel="true" locklevel="0">
               <labels>
                 <label description="Operation Status" languagecode="1033" />
+                <label description="Statut de l'opération" languagecode="1036" />
               </labels>
               <control id="header_fdr_operationstatus" classid="{3EF39988-22BB-4f0b-BBBE-64B5A3748AEE}" datafieldname="fdr_operationstatus" disabled="false" uniqueid="{b905c652-e7a2-7546-ce5b-da676e127a73}" />
             </cell>
@@ -404,17 +427,17 @@
           <row>
             <cell id="{15a52b86-0c43-4da5-93b0-ff2daf7b11ce}" showlabel="false" labelid="{9152d152-31e1-4690-ba20-83fd74cd031e}">
               <labels>
-                <label description="" languagecode="1033" />
+                <label description="" languagecode="1036" />
               </labels>
             </cell>
             <cell id="{cae61cf9-8efb-4c15-a5c0-e02aa8df2223}" showlabel="false" labelid="{ea748efc-3fdb-4648-a3ee-1159583e4ea6}">
               <labels>
-                <label description="" languagecode="1033" />
+                <label description="" languagecode="1036" />
               </labels>
             </cell>
             <cell id="{bca04bc8-2391-4311-9f1b-ecad12d9bde9}" showlabel="false" labelid="{63102f1e-befc-436f-a1a8-990132730064}">
               <labels>
-                <label description="" languagecode="1033" />
+                <label description="" languagecode="1036" />
               </labels>
             </cell>
           </row>
@@ -522,11 +545,6 @@
         <Library name="fdr_operation_fdr_main.js" libraryUniqueId="{f9c57ae1-ae5b-408c-9a50-f02eba71794d}" />
       </formLibraries>
       <events>
-        <event name="onchange" application="true" active="true" attribute="fdr_primarycontact">
-          <Handlers>
-            <Handler functionName="Operation_FDR_main.OnLoad" libraryName="fdr_operation_fdr_main.js" handlerUniqueId="{90ea5c02-2465-4082-978e-693f3d85c61b}" enabled="true" parameters="" passExecutionContext="true" />
-          </Handlers>
-        </event>
         <event name="onload" application="true" active="true">
           <Handlers>
             <Handler functionName="Operation_FDR_main.OnLoad" libraryName="fdr_operation_fdr_main.js" handlerUniqueId="{dcfe7d59-6126-4cb1-b94b-195dd327bae2}" enabled="true" parameters="" passExecutionContext="true" />

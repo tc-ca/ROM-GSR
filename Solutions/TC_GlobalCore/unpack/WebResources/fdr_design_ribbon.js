@@ -17,7 +17,7 @@
             "      <link-entity name='ovs_mocregistration' from='ovs_mocregistrationid' to='fdr_operation' link-type='outer' alias='Opp'>",
             "        <attribute name='ovs_mocregistrationid' />",
             "        <attribute name='ovs_name' />",
-            "        <link-entity name='fdr_containertype' from='fdr_containertypeid' to='fdr_registrationtype' link-type='inner' alias='RT'>",
+            "        <link-entity name='fdr_containertype' from='fdr_containertypeid' to='fdr_registrationtype' link-type='outer' alias='RT'>",
             "          <attribute name='fdr_containertypeid' />",
             "        </link-entity>",
             "      </link-entity>",

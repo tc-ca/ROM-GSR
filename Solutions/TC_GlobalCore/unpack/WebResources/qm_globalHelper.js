@@ -345,6 +345,39 @@
         }
     }
 
+    function ClearFormNotificationModern(formContext, uniqueId) {
+
+        formContext.ui.clearFormNotification(uniqueId);
+    }
+    /**
+      * The method display and optionaly clears form level message. It returns message unique id in case manuall clear is needed
+      * @param {context of current CRM form} formContext
+      * @param {MESSAGE TO THE USER} message 
+      * @param {TYPE OF NOTIFICATION ["INFO", "WARNING", "ERROR"]} type 
+      * @param {boolen to notify if message shall be removed by time out} needsTimeOut
+      * @param {TIME IN MS TO CLEAR NOTIFICATION [DEFAULT 5 SECONDS]} timeout 
+  */
+    function DisplayFormNotificationModern(formContext, message, type, needsTimeOut = false, timeout = 5000) {
+
+        //UNIQUE ID FOR THIS NOTIFICATION. 
+        //ID IS USED TO LATER CLOSE THIS SPECIFIC NOTIFICATION
+        var uniqueId = generateUniqueIdString();
+
+        //DISPLAY THE NOTIFICATION
+        formContext.ui.setFormNotification(message, type, uniqueId);
+
+        //WAIT IF NEEDED, AND CLEAR
+        if (needsTimeOut)
+            setTimeout(
+                function () {
+                    ClearFormNotificationModern(formContext, uniqueId);
+                },
+                timeout
+            );
+
+        return id;
+    }
+
     /**
         * 
         * @param {MESSAGE TO THE USER} message 
@@ -352,10 +385,10 @@
         * @param {TIME IN MS TO CLEAR NOTIFICATION [DEFAULT 5 SECONDS]} timeout 
     */
     function DisplayFormNotification(message, type, timeout = 3000) {
+
         //UNIQUE ID FOR THIS NOTIFICATION. 
         //ID IS USED TO LATER CLOSE THIS SPECIFIC NOTIFICATION
-        var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-        var id = randLetter + Date.now();
+        var id = generateUniqueIdString();
 
         //DISPLAY THE NOTIFICATION
         Xrm.Page.ui.setFormNotification(message, type, id);
@@ -693,6 +726,12 @@
     MISCELLANEOUS
     ****************************************************************************************/
 
+    function generateUniqueIdString() {
+
+        var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+        var id = randLetter + Date.now();
+    }
+
     function quarterByDate(selectedDate) {
 
         var quarter = 0;
@@ -855,6 +894,9 @@
         filterOptionSetUsingOrigin: filterOptionSetUsingOrigin,
         SetFieldNotification: SetFieldNotification,
         ClearFieldNotification: ClearFieldNotification,
+        generateUniqueIdString: generateUniqueIdString,
+        DisplayFormNotificationModern: DisplayFormNotificationModern,
+        ClearFormNotificationModern: ClearFormNotificationModern,
     };
 
     //********************public methods end***************

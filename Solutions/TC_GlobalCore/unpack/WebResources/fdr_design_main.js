@@ -384,6 +384,8 @@ var Design_main = (function (window, document) {
             var DRA_control = formContext.getControl("fdr_designreviewagency");
             getAllowedDesignReviewAgency(DRA_control);
 
+            //hide Design Requirements section for new forms
+            glHelper.SetSectionVisibility(formContext, "General", "section_designRequirement", formType != 1);
 
             if (formType == 1) {
 
@@ -439,10 +441,14 @@ var Design_main = (function (window, document) {
                 getAllowedDMRfromSpecs(DMR_control, initialSRF_id, initialRT_id);
 
 
-                //add DMR on change and use initilizeDataObj from there
+                //add DMR and Name on change and use initilizeDataObj from there
                 var DMR = formContext.getAttribute("fdr_designmarkingrequirement");
                 DMR.removeOnChange(Design_main.DMR_OnChange);
                 DMR.addOnChange(Design_main.DMR_OnChange);
+
+                var Name = formContext.getAttribute("fdr_name");
+                Name.removeOnChange(Design_main.DMR_OnChange);
+                Name.addOnChange(Design_main.DMR_OnChange);
 
             }
             else {
@@ -457,14 +463,17 @@ var Design_main = (function (window, document) {
 
         DMR_OnChange: function (executionContext) {
 
-            globalFormContext.data.save().then(function () {
+            var name = glHelper.GetValue(globalFormContext, "fdr_name");
+            if (glHelper.GetLookupAttrId(globalFormContext, "fdr_designmarkingrequirement") != null
+                && name != null && name != "" && name != undefined)
+                globalFormContext.data.save().then(function () {
 
-                //init quick view control and collection of controls in quick view
-                initilizeDataObj(globalFormContext, "QVC_DMR");
-            }, function (e) {
+                    //init quick view control and collection of controls in quick view
+                    initilizeDataObj(globalFormContext, "QVC_DMR");
+                }, function (e) {
 
-                Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Form must be saved before Design Marking requirement are applied. Please, fill all required fields." });
-            });
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Form must be saved before Design Marking requirement are applied. Please, fill all required fields." });
+                });
 
         },
 
