@@ -1,5 +1,4 @@
-﻿
-// tdg.message = tdgcore.message
+﻿// tdg.message = tdgcore.message
 if (typeof (tdg.message) == "undefined") {
     tdg.message = {
         list: function () {
@@ -364,6 +363,26 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "TDG support personnel have been notified of your request and will contact you shortly at your email of {0}._FR"
                     },
                     {
+                        "code": "m000041",
+                        "message_en": "The following company data was retrieved from the Canada Revenue Agency for this BN #:",
+                        "message_fr": "The following company data was retrieved from the Canada Revenue Agency for this BN #:_FR"
+                    },
+                    {
+                        "code": "m000042",
+                        "message_en": "The following company, with the same Business Number, has been found in our system:",
+                        "message_fr": "The following company, with the same Business Number, has been found in our system:_FR"
+                    },
+                    {
+                        "code": "m000043",
+                        "message_en": "The request has been sent to the primary administrator of this company to onboard you. If they agree, then an invitation email will be sent to you that will allow you complete the onboarding process.<br><br>Please choose the [Sign Out] option to leave the application.",
+                        "message_fr": "The request has been sent to the primary administrator of this company to onboard you. If they agree, then an invitation email will be sent to you that will allow you complete the onboarding process.<br><br>Please choose the [Sign Out] option to leave the application._FR"
+                    },
+                    {
+                        "code": "m000044",
+                        "message_en": "As requested, no request the primary administrator of this company was not sent a request to onboard you to this company.<br><br>Please choose the [Sign Out] option to leave the application.",
+                        "message_fr": "As requested, no request the primary administrator of this company was not sent a request to onboard you to this company.<br><br>Please choose the [Sign Out] option to leave the application._FR"
+                    },
+                    {
                         "code": "m000098",
                         "message_en": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
                         "message_fr": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID._FR"
@@ -535,5 +554,3 @@ if (typeof (tdg.message) == "undefined") {
         }
     }
 }
-
-

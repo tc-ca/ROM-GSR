@@ -77,14 +77,28 @@ if (typeof (invitation) == "undefined") {
                                 data.Secondary_Contactid = contact_id;
                                 tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", JSON.stringify(data));
 
-                                // change current user to secondary
+                                // disable controls
                                 debugger;
-                                var data = {};
-                                data.cid_contacttype = "100000001";
-                                tdg.webapi.update("contacts", contact_id, data);
+                                $("#cid_has_cra_bn").prop('disabled', false);
+                                var cid_has_cra_bn = $("#cid_has_cra_bn").val();
+                                if (cid_has_cra_bn) {
+                                    $('#cid_crabusinessnumber').attr("readonly", true);
+                                }
+                                else {
+                                    $('#ovs_legalname').attr("readonly", true);
+                                    $('#cid_reasonfornobnnumber').attr("readonly", true);
+                                    $('#cid_reasonfornobnnumber_other').attr("readonly", true);
+                                }
+
+                                // show alert message
+                                var message = tdg.error_message.message("m000043");
+                                tdg.c.dialog_OK(message);
 
                                 //tdg.c.sign_out();
-                            } else { }
+                            } else {
+                                var message = tdg.error_message.message("m000044");
+                                tdg.c.dialog_OK(message);
+                            }
                         });
 
                         value = false;

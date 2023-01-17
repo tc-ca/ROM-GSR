@@ -1117,13 +1117,13 @@ function filter_BulkMessageArray(id , lang)
      const BMessage = messageList.filter(x =>x["id"]== id ) ;
      var responseMessage = "<p>" + BMessage[0]["Eng-Message"] + "[" + BMessage[0]["code"] + "] </p>" ;
 
- if (lang != "en")
-   { 
-       responseMessage = "<p>" + BMessage[0]["Fr-Message"] + "[" + BMessage[0]["code"] + "] </p>";
-   }
-   console.log (responseMessage);
-   debugger;
-   return responseMessage ;
+        if (lang != "en")
+        { 
+            responseMessage = "<p>" + BMessage[0]["Fr-Message"] + "[" + BMessage[0]["code"] + "] </p>";
+        }
+        console.log (responseMessage);
+        debugger;
+        return responseMessage ;
 }
 
 async function Get_Location_Header(url)
@@ -1161,8 +1161,9 @@ async function Get_Location_Header(url)
                                    console.log ("reponse Length : " + Reponse_Length);
                                    var langcode = '{{languagecode}}'  ;
       
-                                    var downloadMessage ='<p>Downloading the custom Site Bulk Upload template.  Please wait a moment...</p>';
-                                // '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>' ;
+                                    var downloadMessage ;
+                                    /*='<p>Downloading the custom Site Bulk Upload template.  Please wait a moment...</p>';
+                                 '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>' ;
                                     var DownloadMessageCompleted =  '<p>Download completed.</p>';
                                 if (langcode != "en-US" && langcode != "en")
                                 {
@@ -1170,8 +1171,22 @@ async function Get_Location_Header(url)
                                     //"<p>Le classeur Excel personnalisé de téléchargement en masse du site est en cours de téléchargement…</p>"
                                     DownloadMessageCompleted  = '<p>Téléchargement terminé.</p>' ;
                                 }//end check language
+                                */
+
+                                 downloadMessage = filter_BulkMessageArray("M0" , "en");
+                                // check language if not english assign french transation
+                                    if ( langcode != 'en-US' && langcode !="en")
+                                    {
+                                    // responseMessage  =  "<p> Le système CID va maintenant commencer la deuxième des deux séries de validations du fichier en cours de téléchargement. Un e-mail sera envoyé à votre adresse e-mail de " + useremail +"(tel que défini via votre profil utilisateur), indiquant les résultats de la deuxième série de validations et les étapes ultérieures à suivre. <br><br>" +
+                                    //"À ce stade, vous pouvez attendre l'e-mail de notification et passer à l'étape suivante décrite à partir de celui-ci. Alternativement, vous pouvez quitter temporairement le processus d'inscription et le système vous ramènera à l'endroit où vous vous étiez arrêté à votre retour.[B1037]</p>"
+                                      downloadMessage = filter_BulkMessageArray("M0" , "fr");
+                                
+                                    }//end check language
                                
-                                $('#infoMsg').html(DownloadMessageCompleted );
+
+
+
+                                $('#infoMsg').html(downloadMessage );
                                 
                                 //**Removed on Dec 2022 part of Exetended info removal**
                              /*  if (this.responseText.indexOf("|") != (Reponse_Length -1) )
