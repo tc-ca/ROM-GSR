@@ -1617,13 +1617,13 @@ if (typeof (tdg.cid) == "undefined") {
 
             tdg.cid.subgrid_header_language(grid, false);
             grid.on("loaded", function () {
-                debugger;
+                //debugger;
                 let rows = grid.find("table tbody > tr");
                 rows.each(function (index, tr) {
                     //debugger;
                     let cols = $(tr).find('td');
                     cols.each(function (index, td) {
-                        debugger;
+                        //debugger;
                         var tdElement = $(this);
                         var value = tdElement.attr('data-attribute');
                         if (value != null) {
@@ -2410,4 +2410,3 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
-

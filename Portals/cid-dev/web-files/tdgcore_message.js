@@ -453,8 +453,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000112",
-                        "message_en": "The Annual Compliance Update can only be completed on your Anniversary Date. On your Anniversary Date, you will have 30 days to complete the Annual Compliance Update.",
-                        "message_fr": "The Annual Compliance Update can only be completed on your Anniversary Date. On your Anniversary Date, you will have 30 days to complete the Annual Compliance Update._FR."
+                        "message_en": "The Annual Compliance Update can only be completed 30 days before your Anniversary Date. On your Anniversary Date, you will have an additional 30 days to complete the Annual Compliance Update.",
+                        "message_fr": "The Annual Compliance Update can only be completed 30 days before your Anniversary Date. On your Anniversary Date, you will have an additional 30 days to complete the Annual Compliance Update_FR."
                     },
                     {
                         "code": "m000113",

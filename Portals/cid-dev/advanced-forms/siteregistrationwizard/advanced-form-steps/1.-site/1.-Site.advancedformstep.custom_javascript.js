@@ -6,6 +6,11 @@ var _busy = false;
 
 $(document).ready(function () {
     debugger;
+
+var inYear = sessionStorage.getItem('frominyearsites');
+var annualCompliance = sessionStorage.getItem('fromannualcompliance');
+var frominyearsitepage = sessionStorage.getItem('frominyearsitepage');
+
 document.getElementById("address1_latitude").addEventListener('change', (event) => {
     //get Latitude and set it to nearest 4 digits
     var Lat = $("#address1_latitude").val();
@@ -50,23 +55,59 @@ document.getElementById("address1_longitude").addEventListener('change', (event)
     tdg.c.control_hide("name");
     tdg.c.control_hide("cid_siteclaim");
 
-    // cid_same_as_company
-    $("#cid_same_as_company").change(function () {
-        cid_same_as_company_change();
-    });
-    cid_same_as_company_change();
-
+   
     $("#cid_sitename").attr("autocomplete", "new-password");
     $("#telephone1").attr("autocomplete", "new-password");
     $("#fax").attr("autocomplete", "new-password");
 
-    $("#ovs_address_type").change(function () {
-        tdg.cid.address_type_change(true);
-    });
-    tdg.cid.address_type_change(false);
-
     tdg.cid.convert_province_to_code(selected_language);
     $('#loader').hide();
+
+    if(inYear)
+    {   
+    $("#cid_same_as_company").attr("disabled", true);
+    $("#ovs_address_type").attr("disabled", true);
+
+    var ovs_address_type = $("#ovs_address_type").val();
+    switch (ovs_address_type) 
+    {
+        case "1": // legal land description
+            tdg.c.section_show("section_legal_land_description");
+
+        break;
+        case "2": // lat/long
+            //tdg.c.section_show("section_latitude_longitude");
+
+            //tdg.c.addValidator("address1_latitude");
+            //tdg.c.addValidator("address1_longitude");
+
+            //this.address1_default("N/A");
+        break;
+        default:
+            tdg.c.section_show("section_address");
+            $("#address1_line1").prop('disabled', true);
+            $("#address1_line2").prop('readonly', true);
+            $("#address1_line3").prop('readonly', true);
+            $("#address1_city").prop('readonly', true);
+            $("#ovs_address1_province").prop('disabled', true);
+            $("#address1_stateorprovince").prop('readonly', true);
+            $("#address1_postalcode").prop('readonly', true);
+       }   
+    }
+    else{
+         $("#ovs_address_type").change(function () {
+        tdg.cid.address_type_change(true);
+        });
+        tdg.cid.address_type_change(false);
+
+         // cid_same_as_company
+        $("#cid_same_as_company").change(function () {
+            cid_same_as_company_change();
+        });
+        cid_same_as_company_change();
+
+    }
+
 });
 
 function cid_same_as_company_change() {
