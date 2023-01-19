@@ -1,7 +1,12 @@
 $(document).ready(function () {
-    $("#cid_iscompanyattested").val(1);
-    $("#cid_iscompanyattested").prop( "checked", true );
-
-//$("#cid_iscompanyattested").parent().addClass("hidden");
+    //$("#cid_iscompanyattested").prop( "checked", true );
+    //$("#cid_iscompanyattested").prop( "disabled", true );
 });
 
+//
+// Basic Form-Contact - In Year Company Details_Editable.js
+//
+
+$(document).ready(function () {
+    debugger;
+}

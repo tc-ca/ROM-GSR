@@ -1180,7 +1180,7 @@ if (typeof (tdg.cid) == "undefined") {
                 $(this).val(n);
                 var match = n.match(/^(\w{3})(\w{3})$/);
                 if (match) {
-                    $(this).val(match[1] + ' ' + match[2]);
+                    $(this).val(match[1].toUpperCase() + ' ' + match[2].toUpperCase());
                 }
             });
 
@@ -1224,18 +1224,31 @@ if (typeof (tdg.cid) == "undefined") {
 
         //Takes an array of strings containing the field name formatted for use with jquery, ex. "#telephone1"
         phone_init: function (phoneField, language) {
-            $("#" + phoneField).attr("placeholder", "");
-            $("#" + phoneField).attr("maxlength", "10");
-            $("#" + phoneField).on('keyup', function () {
-                var n = $(this).val().replace(/\D/g, '');
-                $(this).val(n);
-                var match = n.match(/^(\d{3})(\d{3})(\d{4})$/);
-                if (match) {
-                    $(this).val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
+            var field = "#" + phoneField;
+            $(field).attr("placeholder", "(___) ___-____");
+            $(field).attr("maxlength", "14");
+            $(field).on('keyup', function () {
+                //Strip all characters from the input except digits
+                var input = $(this).val().replace(/\D/g, '');
+                //Trim the remaining input to ten characters, to preserve phone number format
+                input = input.substring(0,10);
+                //Based upon the length of the string, we add formatting as necessary
+                var inLength = input.length;
+                if (inLength == 0) {
+                    input = input;
+                }else if (inLength < 3) {
+                    input = '('+input;
+                }else if (inLength < 6) {
+                    input = '('+input.substring(0,3)+') '+input.substring(3,6);
+                }else {
+                    input = '('+input.substring(0,3)+') '+input.substring(3,6)+'-'+input.substring(6,10);
                 }
+
+                $(this).val(input);
             });
-            $("#" + phoneField).focusout(function () {
-                if ($(this).val().length < 10 && $(this).val().length != 0) {
+            $(field).focusout(function () {
+                var inLength = $(this).val().replace(/\D/g, '').length;
+                if (inLength < 10 && inLength != 0) {
                     alert(tdg.c.text_language("Invalid number::Numéro invalide", language));
                     $(this).val("");
                 }

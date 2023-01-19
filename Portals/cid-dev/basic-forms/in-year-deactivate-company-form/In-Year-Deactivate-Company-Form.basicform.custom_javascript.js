@@ -12,21 +12,11 @@ $(document).ready(function () {
     + "<p style='color:red' >Be advised that this action cannot be undone.</p>"
     +"Do you want to proceed with the Company deactivation</br></br>";
     
-    //tdg.c.dialog_OK(message);
-
-    //var message = "Be advised that this action cannot be undone.\n Do you want to proceed with company deactivation";//tdg.error_message.message("m000039");
     tdg.c.dialog_YN(message, (ans) => {
-        if (ans) {
-        }
-        else {
+        if (!ans) {
             window.location.href = "~/my-company";
         }
     });
-
-    //var answer = window.confirm("Be advised that this action cannot be undone.\n Do you want to proceed with company deactivation");
-    //if (!answer) {
-    //    window.location.href = "~/my-company";
-    //}
 
     $("#cid_registrationasof").parent().parent().hide();
 

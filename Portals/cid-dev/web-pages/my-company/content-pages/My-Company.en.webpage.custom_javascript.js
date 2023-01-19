@@ -1,5 +1,12 @@
+//
+// Web Page-My Company.js
+//
+
 $(document).ready(function () {
     debugger;
+
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
 
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
     var activationButon = $("#EntityFormPanel").find(".workflow-link");
@@ -12,28 +19,28 @@ $(document).ready(function () {
         activationButon.css("background-color", "#4CAF50");
     }
 
-	var updateCompanyBtn = "<div><input id='update_company' type='button' onclick='alert('Test')' name='UpdateCompany' value='Update Company' class='btn btn-primary action create-action' nonactionlinkbutton='true'/></div>";
-    var companyName  = "{{user.parentcustomerid.name}}";
-    $( ".form-custom-actions" ).first().parent().after(updateCompanyBtn);
+    var updateCompanyBtn = "<div><input id='update_company' type='button' name='UpdateCompany' value='Update Company' class='btn btn-primary action create-action' nonactionlinkbutton='true'/></div>";
+    var companyName = "{{user.parentcustomerid.name}}";
+    $(".form-custom-actions").first().parent().after(updateCompanyBtn);
 
-    $('div[data-name="company_details"]').parent().before("<h2>" + companyName +"</h2><hr>");
+    $('div[data-name="company_details"]').parent().before("<h2>" + companyName + "</h2><hr>");
     var legend = $('fieldset[aria-label="Head Office"] legend').first();
     legend.text("");
-    legend.after("<h2>"+ companyName + " - Head Office</h2><hr>");
+    legend.after("<h2>" + companyName + " - Head Office</h2><hr>");
 
     $('div[data-name="tab_3"]').parent().parent().addClass("hidden");
 
-	$("#cid_registrationasof").parent().parent().hide();
- 	var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
+    $("#cid_registrationasof").parent().parent().hide();
+    var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
     var deactivateCompanyWebLink = $('a[href*="deactivate-company"]');
-    
+
     if (cidCompanyStatus.indexOf("Inactive") >= 0) {
         deactivateCompanyWebLink.addClass("hidden");
     }
-    else{
+    else {
         deactivateCompanyWebLink.removeClass("hidden");
     }
-    
+
     var topNav = $('#navbar');
     if (topNav) {
         var companyName = $("#ovs_legalname").val();
@@ -42,14 +49,14 @@ $(document).ready(function () {
         $(value).insertAfter(topNav);
     }
 
-	$("legend").each(function() {
-		$(this).removeClass();
-		$(this).css("font-size", "20px");
-		$(this).css("font-weight", "bold");
+    $("legend").each(function () {
+        $(this).removeClass();
+        $(this).css("font-size", "20px");
+        $(this).css("font-weight", "bold");
         $(this).css("text-decoration", "underline");
     });
 
-   var selected_language = '{{website.selected_language.code}}';
+    var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
     // address
@@ -93,37 +100,27 @@ $(document).ready(function () {
     $('#cid_reasonfornobnnumber').css("pointer-events", "none");
     $('#cid_reasonfornobnnumber_other').attr("readonly", true);
 
-
     $('#address1_country').attr("readonly", true);
 
-	var address1_stateorprovince = tdg.c.replace_special_char("{{user.address1_stateorprovince}}");
-	$("#address1_stateorprovince").val(address1_stateorprovince);
-	tdg.cid.convert_province_to_code(selected_language);
+    var address1_stateorprovince = tdg.c.replace_special_char("{{user.address1_stateorprovince}}");
+    $("#address1_stateorprovince").val(address1_stateorprovince);
+    tdg.cid.convert_province_to_code(selected_language);
 
-	if ($("#cid_addressoverwritten").val() == 0) { $("#ovs_address1_province").prop('disabled', true); }
-	else { $("#ovs_address1_province").prop('disabled', false); }
+    if ($("#cid_addressoverwritten").val() == 0) { $("#ovs_address1_province").prop('disabled', true); }
+    else { $("#ovs_address1_province").prop('disabled', false); }
 
+    subgrid_language();
 
+    //Add listeners for the address fields to change the "manually entered" flag
+    $("#address1_line1").attr("oninput", "setManualAddressEntryFlag()");
+    $("#address1_city").attr("oninput", "setManualAddressEntryFlag()");
+    $("#address1_stateorprovince").attr("oninput", "setManualAddressEntryFlag()");
+    $("#address1_postalcode").attr("oninput", "setManualAddressEntryFlag()");
+    $("#address1_country").attr("oninput", "setManualAddressEntryFlag()");
 
-        subgrid_language();
-
-        	//Add listeners for the address fields to change the "manually entered" flag
-	$("#address1_line1").attr("oninput", "setManualAddressEntryFlag()");
-	$("#address1_city").attr("oninput", "setManualAddressEntryFlag()");
-	$("#address1_stateorprovince").attr("oninput", "setManualAddressEntryFlag()");
-	$("#address1_postalcode").attr("oninput", "setManualAddressEntryFlag()");
-	$("#address1_country").attr("oninput", "setManualAddressEntryFlag()");
-
-    $("#cid_iscompanyattested").val(1);
-    //$("#cid_iscompanyattested").prop( "checked", true );
-
-    $("#cid_iscompanyattested").parent().parent().parent().addClass("hidden");
-
-    if($("#ovs_address1_province option:selected" ).text().trim() != $("#address1_stateorprovince").val().trim())
-    {
-        $("#address1_stateorprovince").val($("#ovs_address1_province option:selected" ).text().trim());
+    if ($("#ovs_address1_province option:selected").text().trim() != $("#address1_stateorprovince").val().trim()) {
+        $("#address1_stateorprovince").val($("#ovs_address1_province option:selected").text().trim());
     }
-
 });
 
 function subgrid_language() {
@@ -132,27 +129,9 @@ function subgrid_language() {
     var companynaicscode = tdg.c.subgrid_index(entityList, "cid_account_companynaicscode");
     if (companynaicscode != null) {
         tdg.cid.subgrid_companynaicscode(companynaicscode);
-   }
+    }
 }
 
 function setManualAddressEntryFlag() {
-	$("#cid_addressoverwritten").val(1);
+    $("#cid_addressoverwritten").val(1);
 }
-
-//function page_setup() {
-//	var selected_language = '{{website.selected_language.code}}';
-//	sessionStorage.setItem("selected_language", selected_language);
-
-//	const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
-//	for (var i = 0; i < files.length; i++) {
-//		var file = files[i];
-//		var script = document.createElement('script');
-//		script.type = 'text/javascript';
-//		script.src = file;
-
-//		$("body").append(script);
-//	}
-
-	// server error?
-//	tdg.c.message_panel();
-//}
