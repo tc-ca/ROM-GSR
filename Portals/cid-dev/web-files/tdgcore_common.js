@@ -1231,17 +1231,17 @@ if (typeof (tdg.cid) == "undefined") {
                 //Strip all characters from the input except digits
                 var input = $(this).val().replace(/\D/g, '');
                 //Trim the remaining input to ten characters, to preserve phone number format
-                input = input.substring(0,10);
+                input = input.substring(0, 10);
                 //Based upon the length of the string, we add formatting as necessary
                 var inLength = input.length;
                 if (inLength == 0) {
                     input = input;
-                }else if (inLength < 3) {
-                    input = '('+input;
-                }else if (inLength < 6) {
-                    input = '('+input.substring(0,3)+') '+input.substring(3,6);
-                }else {
-                    input = '('+input.substring(0,3)+') '+input.substring(3,6)+'-'+input.substring(6,10);
+                } else if (inLength < 3) {
+                    input = '(' + input;
+                } else if (inLength < 6) {
+                    input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6);
+                } else {
+                    input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6) + '-' + input.substring(6, 10);
                 }
 
                 $(this).val(input);
@@ -2059,9 +2059,14 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 var cid_has_cra_bn = $("#cid_has_cra_bn").val();
                 var bn = $("#cid_crabusinessnumber").val();
                 var legalname = $("#cid_legalname").val();
+                var cid_reasonfornobnnumber_list = {};
                 var cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
+                if (cid_reasonfornobnnumber != "")
+                {
+                    cid_reasonfornobnnumber_list = $("#cid_reasonfornobnnumber")[0].options;
+                }
                 var cid_reasonfornobnnumber_other = $("#cid_reasonfornobnnumber_other").val();
-                var data = tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber, cid_reasonfornobnnumber_other);
+                var data = tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber_list);
                 if (data.length == 0) {
                     if (cid_has_cra_bn == "1") {
                         var message = tdg.error_message.message("m000001");
@@ -2094,6 +2099,10 @@ if (typeof (tdg.cid.crw) == "undefined") {
                             tdg.cid.crw.start_buttons_confirm(true, btn_next_name);
                             var message = tdg.error_message.message("BTN_NEXT");
                             $("#btn_next").prop("value", message);
+
+                            var msg = (data.cid_has_cra_bn == "1"? "m000045" : "m000046");
+                            msg = tdg.error_message.message(msg);
+                            tdg.c.dialog_OK(msg);
                         }
                     });
                 }
@@ -2153,6 +2162,18 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 invitation_msg = tdg.error_message.message("m000033");
                 invitation_msg = invitation_msg.replaceAll("{0}", data.cid_legalname);
             }
+            else {
+                invitation_msg = (data.cid_has_cra_bn == 1? "m000041" : "m000042");
+                invitation_msg = tdg.error_message.message(invitation_msg);
+                if (data.cid_has_cra_bn == 1)
+                {
+                    invitation_msg = invitation_msg.replaceAll("{0}", data.cid_crabusinessnumber);
+                }
+                else
+                {
+                    invitation_msg = invitation_msg.replaceAll("{0}", data.cid_legalname);
+                }
+            }
             var text1 = `
                     <section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
 	                <header class="modal-header">
@@ -2160,7 +2181,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
 	                </header>
 	                <div class="modal-body" >
                     <p>
-                    ${invitation_msg}<hr>
+                    <b>${invitation_msg}</b><hr>
                     <p>
                     <label for="cid_legalname" class="field-label">Legal Name</label>
                     <input type="text" readonly class="text form-control" id="cid_legalname" style="width:100%" value="${data.cid_legalname}">

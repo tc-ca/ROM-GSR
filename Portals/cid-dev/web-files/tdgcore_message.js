@@ -90,6 +90,24 @@ if (typeof (tdg.message) == "undefined") {
             var m000039_FR = "At this point you cannot proceed back to the previous step to re-begin the registration process. <br><br>" +
                 "Do you want to request that TDG support personnel reach out to you in order to reset your account so that you can restart the registration process?_FR";
 
+            var m000045_EN = "To proceed with the registration process you will need to either:<br><br>" +
+                "- Enter a different Business Number.<br><br>" +
+                "      OR<br><br>" +
+                "- Continue with the same Business Number, which is linked to an existing company we already have on file. Note that in the screens to follow, you can change the existing company data fields as required.";
+            var m000045_FR = "To proceed with the registration process you will need to either:<br><br>" +
+                "- Enter a different Business Number.<br><br>" +
+                "      OR<br><br>" +
+                "- Continue with the same Business Number, which is linked to an existing company we already have on file. Note that in the screens to follow, you can change the existing company data fields as required._FR";
+
+            var m000046_EN = "To proceed with the registration process you will need to either:<br><br>" +
+                "- Enter a different company name.<br><br>" +
+                "      OR<br><br>" +
+                "- Continue with this company name, which matches an existing company we already have on file. Note that in the screens to follow, you can change any existing company data fields as required.";
+            var m000046_FR = "To proceed with the registration process you will need to either:<br><br>" +
+                "- Enter a different company name.<br><br>" +
+                "      OR<br><br>" +
+                "- Continue with this company name, which matches an existing company we already have on file. Note that in the screens to follow, you can change any existing company data fields as required._FR";
+
             var list =
                 [
                     {
@@ -364,13 +382,13 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000041",
-                        "message_en": "The following company data was retrieved from the Canada Revenue Agency for this BN #:",
-                        "message_fr": "The following company data was retrieved from the Canada Revenue Agency for this BN #:_FR"
+                        "message_en": "The following company data was retrieved from Canada Revenue Agency for this BN {0}:",
+                        "message_fr": "The following company data was retrieved from Canada Revenue Agency for this BN {0}:_FR"
                     },
                     {
                         "code": "m000042",
-                        "message_en": "The following company, with the same Business Number, has been found in our system:",
-                        "message_fr": "The following company, with the same Business Number, has been found in our system:_FR"
+                        "message_en": "The following company, with the same Legal Name '{0}', has been found in our system:",
+                        "message_fr": "The following company, with the same Legal Name '{0}', has been found in our system:_FR"
                     },
                     {
                         "code": "m000043",
@@ -381,6 +399,16 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000044",
                         "message_en": "As requested, no request the primary administrator of this company was not sent a request to onboard you to this company.<br><br>Please choose the [Sign Out] option to leave the application.",
                         "message_fr": "As requested, no request the primary administrator of this company was not sent a request to onboard you to this company.<br><br>Please choose the [Sign Out] option to leave the application._FR"
+                    },
+                    {
+                        "code": "m000045",
+                        "message_en": m000045_EN,
+                        "message_fr": m000045_FR
+                    },
+                    {
+                        "code": "m000046",
+                        "message_en": m000046_EN,
+                        "message_fr": m000046_FR
                     },
                     {
                         "code": "m000098",

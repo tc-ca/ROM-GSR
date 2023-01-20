@@ -23,6 +23,11 @@ $(document).ready(function () {
     var companyName = "{{user.parentcustomerid.name}}";
     $(".form-custom-actions").first().parent().after(updateCompanyBtn);
 
+    var cancelBtn = "<div><input id='cancel_company_update' type='button' name='CancelCompanyUpdate' value='Cancel' class='hidden btn btn-primary action create-action' nonactionlinkbutton='true'/></div>";
+    if ($("#cancel_company_update").length <= 0) {
+        $( ".form-custom-actions" ).first().parent().after(cancelBtn);
+    }
+
     $('div[data-name="company_details"]').parent().before("<h2>" + companyName + "</h2><hr>");
     var legend = $('fieldset[aria-label="Head Office"] legend').first();
     legend.text("");
