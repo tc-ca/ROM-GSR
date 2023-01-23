@@ -36,15 +36,6 @@
         "api": {
           "name": "shared_excelonlinebusiness"
         }
-      },
-      "shared_commondataserviceforapps_1": {
-        "runtimeSource": "embedded",
-        "connection": {
-          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
-        },
-        "api": {
-          "name": "shared_commondataserviceforapps"
-        }
       }
     },
     "definition": {
@@ -91,7 +82,7 @@
       "actions": {
         "Perform_a_bound_action": {
           "runAfter": {
-            "Apply_to_each_English_Message": [
+            "downloadTemplate": [
               "Succeeded"
             ]
           },
@@ -174,7 +165,7 @@
         },
         "Filter_environment-setting-get-version#": {
           "runAfter": {
-            "Apply_to_each_English_Message": [
+            "downloadTemplate": [
               "Succeeded"
             ]
           },
@@ -213,7 +204,7 @@
         },
         "Add_bulk_activity_review_Log": {
           "runAfter": {
-            "Apply_to_each_English_Message": [
+            "downloadTemplate": [
               "Succeeded"
             ]
           },
@@ -414,23 +405,6 @@
             },
             "Delete_Temp_SharePoint_folder_and_file": {
               "actions": {
-                "Do_until_Instruction_sheet_is_protected": {
-                  "actions": {},
-                  "runAfter": {
-                    "check_http_invoke_status": [
-                      "Succeeded"
-                    ]
-                  },
-                  "expression": "@equals(outputs('Invoke_an_HTTP_request_-_Protect_Instruction_Sheet')?['statusCode'], 204)",
-                  "limit": {
-                    "count": 60,
-                    "timeout": "PT1H"
-                  },
-                  "metadata": {
-                    "operationMetadataId": "0920e2fb-e3ce-4de3-a4e6-3bd55b3ad6dc"
-                  },
-                  "type": "Until"
-                },
                 "Send_an_HTTP_request_to_SharePoint": {
                   "runAfter": {
                     "check_language_before_sending_attachment_to_portal": [
@@ -478,108 +452,6 @@
                       "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
                       "table": "Documents",
                       "id": "@outputs('Create_new_folder')?['body/ID']"
-                    },
-                    "authentication": "@parameters('$authentication')"
-                  }
-                },
-                "Terminate_3": {
-                  "runAfter": {
-                    "Delete_Folder": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "6057251a-1fd0-49f9-a3ba-8ff02383d6c6"
-                  },
-                  "type": "Terminate",
-                  "inputs": {
-                    "runStatus": "Succeeded"
-                  }
-                },
-                "Invoke_an_HTTP_request_-_Protect_Instruction_Sheet": {
-                  "runAfter": {
-                    "Terminate_3": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "2588d12e-85cc-4f36-9d27-05bc388020f4"
-                  },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "host": {
-                      "connectionName": "shared_webcontents",
-                      "operationId": "InvokeHttp",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
-                    },
-                    "parameters": {
-                      "request/method": "POST",
-                      "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{variables('Folder_path')}/@{variables('New_File_Path')}:/workbook/worksheets('Instructions')/protection/protect",
-                      "request/headers": {
-                        "accept": "application/json"
-                      }
-                    },
-                    "authentication": "@parameters('$authentication')"
-                  }
-                },
-                "check_http_invoke_status": {
-                  "actions": {},
-                  "runAfter": {
-                    "Do_until_2": [
-                      "Succeeded"
-                    ]
-                  },
-                  "expression": {
-                    "equals": [
-                      "@outputs('Invoke_an_HTTP_request_-_Add_Sites')['statusCode']",
-                      201
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "e83c5d2a-a517-4263-9a85-81b57c47bc10"
-                  },
-                  "type": "If"
-                },
-                "Do_until_2": {
-                  "actions": {},
-                  "runAfter": {
-                    "Invoke_an_HTTP_request_-_Protect_Update_Site_Info_sheet": [
-                      "Succeeded"
-                    ]
-                  },
-                  "expression": "@equals(outputs('Invoke_an_HTTP_request_-_Protect_Update_Site_Info_sheet')?['body']['statusCode'], 204)",
-                  "limit": {
-                    "count": 60,
-                    "timeout": "PT1H"
-                  },
-                  "metadata": {
-                    "operationMetadataId": "0920e2fb-e3ce-4de3-a4e6-3bd55b3ad6dc"
-                  },
-                  "type": "Until"
-                },
-                "Invoke_an_HTTP_request_-_Protect_Update_Site_Info_sheet": {
-                  "runAfter": {
-                    "Invoke_an_HTTP_request_-_Protect_Instruction_Sheet": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "2588d12e-85cc-4f36-9d27-05bc388020f4"
-                  },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "host": {
-                      "connectionName": "shared_webcontents",
-                      "operationId": "InvokeHttp",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
-                    },
-                    "parameters": {
-                      "request/method": "POST",
-                      "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{variables('Folder_path')}/@{variables('New_File_Path')}:/workbook/worksheets('Site info')/protection/protect",
-                      "request/headers": {
-                        "accept": "application/json"
-                      },
-                      "request/body": "{\n  \"options\": {\n    \"allowFormatCells\": true,\n    \"allowFormatColumns\": true,\n    \"allowFormatRows\": true,\n    \"allowInsertColumns\": false,\n    \"allowInsertRows\": true,\n    \"allowInsertHyperlinks\": false,\n    \"allowDeleteColumns\": false,\n    \"allowDeleteRows\": true,\n    \"allowSort\": true,\n    \"allowAutoFilter\": true,\n    \"allowPivotTables\": false\n  }\n}"
                     },
                     "authentication": "@parameters('$authentication')"
                   }
@@ -1435,171 +1307,6 @@
           "type": "Compose",
           "inputs": "/Shared Documents/CID_Bulk_Upload/Dev/CID_Sites_Template_2022_ENG_April 2022 v12.xlsx"
         },
-        "Initialize_variable_-_Messages_Array": {
-          "runAfter": {
-            "downloadTemplate": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "499f5dda-1202-4d2e-9116-d73467858d68"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "Messages_Array",
-                "type": "array"
-              }
-            ]
-          }
-        },
-        "Get_Bulk_Upload_Messages": {
-          "runAfter": {
-            "Initialize_variable_-_Messages_Array": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "e6ba2658-3ccd-4e8b-9e91-5ff910d21c81"
-          },
-          "type": "OpenApiConnection",
-          "inputs": {
-            "host": {
-              "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "ListRecords",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-            },
-            "parameters": {
-              "entityName": "annotations",
-              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"annotation\">\n<attribute name=\"subject\"/>\n<attribute name=\"notetext\"/>\n<attribute name=\"filename\"/>\n<attribute name=\"documentbody\"/>\n<attribute name=\"annotationid\"/>\n<order attribute=\"subject\" descending=\"false\"/>\n<link-entity name=\"adx_webfile\" from=\"adx_webfileid\" to=\"objectid\" link-type=\"inner\" alias=\"ab\">\n<filter type=\"and\">\n<condition attribute=\"adx_name\" operator=\"eq\" value=\"Sites_Bulk_Upload_Messages\"/>\n</filter>\n</link-entity>\n</entity>\n</fetch>"
-            },
-            "authentication": "@parameters('$authentication')"
-          }
-        },
-        "Bulk-Messages-From-webFile": {
-          "runAfter": {
-            "Get_Bulk_Upload_Messages": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "ddf0f80b-60bc-48e8-acae-bbbf45c463c5"
-          },
-          "type": "Compose",
-          "inputs": "@base64ToString(outputs('Get_Bulk_Upload_Messages')?['body/value'][0]['documentbody'])"
-        },
-        "Parse_Messages_to_JSON": {
-          "runAfter": {
-            "Bulk-Messages-From-webFile": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "c7167db6-5d1d-4c49-8959-e8ed51425a00"
-          },
-          "type": "ParseJson",
-          "inputs": {
-            "content": "@outputs('Bulk-Messages-From-webFile')",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "code": {
-                    "type": "string"
-                  },
-                  "Eng-Message": {
-                    "type": "string"
-                  },
-                  "Fr-Message": {
-                    "type": "string"
-                  },
-                  "id": {
-                    "type": "string"
-                  },
-                  "order": {
-                    "type": "string"
-                  },
-                  "MessageType": {
-                    "type": "string"
-                  },
-                  "SheetNameInEnglish": {
-                    "type": "string"
-                  },
-                  "SheetNameInFrench": {
-                    "type": "string"
-                  },
-                  "ErrorLog": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "code",
-                  "Eng-Message",
-                  "Fr-Message",
-                  "id",
-                  "order",
-                  "MessageType",
-                  "SheetNameInEnglish",
-                  "SheetNameInFrench",
-                  "ErrorLog"
-                ]
-              }
-            }
-          }
-        },
-        "Select-Messages": {
-          "runAfter": {
-            "Parse_Messages_to_JSON": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "2f87aa54-460c-45c4-a069-00ea3dbd7bf2"
-          },
-          "type": "Select",
-          "inputs": {
-            "from": "@body('Parse_Messages_to_JSON')",
-            "select": {
-              "code": "@item()['code']",
-              "Message": "@item()['Eng-Message']",
-              "id": "@item()['id']",
-              "ErrorLog": "@item()['ErrorLog']",
-              "MessageInFrench": "@item()['Fr-Message']"
-            }
-          }
-        },
-        "Apply_to_each_English_Message": {
-          "foreach": "@body('Select-Messages')",
-          "actions": {
-            "Append_to_Message_Array": {
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "e34d2bba-d320-4f5a-9b95-0e2454bf437e"
-              },
-              "type": "AppendToArrayVariable",
-              "inputs": {
-                "name": "Messages_Array",
-                "value": "@items('Apply_to_each_English_Message')"
-              }
-            }
-          },
-          "runAfter": {
-            "Select-Messages": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "21b64a4a-96fd-4540-b578-86cee5235ab6"
-          },
-          "type": "Foreach",
-          "runtimeConfiguration": {
-            "concurrency": {
-              "repetitions": 42
-            }
-          }
-        },
         "Initil_Initial_Registeration": {
           "runAfter": {},
           "metadata": {
@@ -2302,55 +2009,6 @@
             ]
           }
         },
-        "Apply_to_each": {
-          "foreach": "@variables('InvalidFileNameChar')",
-          "actions": {
-            "CurrentChar": {
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "77b19509-8888-4808-82d8-bcde333a2ded"
-              },
-              "type": "Compose",
-              "inputs": "@items('Apply_to_each')"
-            },
-            "Assign_New_company_Name": {
-              "runAfter": {
-                "Remove_Invalid_Char_from_Company_variable": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "39357808-2a40-4b87-aa61-3578428dea83"
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "CompanyName",
-                "value": "@{outputs('Remove_Invalid_Char_from_Company_variable')}"
-              }
-            },
-            "Remove_Invalid_Char_from_Company_variable": {
-              "runAfter": {
-                "CurrentChar": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "c3e7789a-963a-4584-8042-9b524711a7f9"
-              },
-              "type": "Compose",
-              "inputs": "@Replace(variables('CompanyName') ,outputs('CurrentChar'),'')"
-            }
-          },
-          "runAfter": {
-            "check_if_language_is_french": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "778da869-679f-42fa-8cf3-95e21dd16857"
-          },
-          "type": "Foreach"
-        },
         "Initialize_variable_ExcelHeaderPrefix": {
           "runAfter": {
             "Initialize_variable_InvalidFileNameChar": [
@@ -2420,7 +2078,7 @@
         },
         "Initialize_variable_FileNamePrefix": {
           "runAfter": {
-            "Apply_to_each": [
+            "Assign_New_company_Name_2": [
               "Succeeded"
             ]
           },
@@ -2436,6 +2094,44 @@
                 "value": "TC CID Registration - Site Bulk Upload - @{variables('CompanyName')}, as of"
               }
             ]
+          }
+        },
+        "Perform_an_unbound_action_Remove_special_char": {
+          "runAfter": {
+            "check_if_language_is_french": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "39081ff5-b824-4916-8072-cba379b54371"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "PerformUnboundAction",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "actionName": "cid_CID_Remove_SpecialChar",
+              "item/FileName": "@variables('CompanyName')"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Assign_New_company_Name_2": {
+          "runAfter": {
+            "Perform_an_unbound_action_Remove_special_char": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "39357808-2a40-4b87-aa61-3578428dea83"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "CompanyName",
+            "value": "@outputs('Perform_an_unbound_action_Remove_special_char')?['body/updatedFilename']"
           }
         }
       },
