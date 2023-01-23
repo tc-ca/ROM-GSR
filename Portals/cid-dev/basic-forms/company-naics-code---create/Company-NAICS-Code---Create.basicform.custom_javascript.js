@@ -25,23 +25,8 @@ $(document).ready(function () {
 	$("#cid_naicscode_name").attr("value", null);
 
 	debugger;
-  /*  $('#btn_save_new').after('<input type="button" data-dismiss="modal" value="Cancel" id="CancelButton" name="CancelButton"  class="submit-btn btn btn-primary form-action-container-left"/>')
-	 $('#CancelButton').on('click', function(event){
-		$('.form-close').click(); 
-		
-		// $('#content-container').parent().parent().parent().hide();
-		 //.css('display', 'none');
-		// this.parentElement.parent.parent.parent.style.display='none';
-          // alert ("clicked");
-	      // $('.modal-content').css('display', 'none');;
-		  $('.modal-backdrop').hide(); // for black background
-          $('body').removeClass('modal-open'); // For scroll run
-		  
-		   $(".modal-dialog").modal("hide");
-          //$(".modal-dialog").remove();
-		  $(".modal-content").modal("hide");
-          //$(".modal-content").remove();
-        });*/
+    $('#btn_save_new').after('<div role="group" class="btn-group entity-action-button">&nbsp;</div><input type="button" data-dismiss="modal" value="Cancel" id="CancelButton" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
+	$('#CancelButton').on('click', function(event){parent.$(".form-close").eq(0).click();});
 
 	//Test The NAICS Code must be selected using the NAICS Code drop-down. Enter at least the first two digits or your full NAICS Code to filter the drop-down and select the applicable NAICS Code from the list.</p>");
 });

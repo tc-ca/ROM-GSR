@@ -21,6 +21,10 @@ $(document).ready(function () {
     // hide controls 
     tdg.c.control_hide("ovs_class_division", true);
     tdg.c.control_hide("ovs_compatibility_group", true);
+
+    //add cancel button 
+    $('#btn_save_new').after('<div role="group" class="btn-group entity-action-button">&nbsp;</div><input type="button" data-dismiss="modal" value="Cancel" id="CancelButton" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
+    $('#CancelButton').on('click', function(event){parent.$(".form-close").eq(0).click();});
 });
 
 $(window).unload(function () {
