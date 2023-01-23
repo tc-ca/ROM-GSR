@@ -71,32 +71,7 @@
         "Loop_Over_Service_Requests": {
           "foreach": "@outputs('Get_Active_Not_And_Not_Completed_SRs')?['body/value']",
           "actions": {
-            "Update_a_row": {
-              "runAfter": {
-                "Estimate_Service_Performance": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "2f3de538-d76a-49cc-b206-2a41aa0e3b54"
-              },
-              "type": "OpenApiConnection",
-              "inputs": {
-                "host": {
-                  "connectionName": "shared_commondataserviceforapps",
-                  "operationId": "UpdateRecord",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                },
-                "parameters": {
-                  "entityName": "fdr_servicerequests",
-                  "recordId": "@items('Loop_Over_Service_Requests')?['fdr_servicerequestid']",
-                  "item/fdr_daysremaining": "@outputs('Estimate_Service_Performance')?['body/UnitsRemainingNbr']",
-                  "item/fdr_tss_duration": "@mul(mul(outputs('Estimate_Service_Performance')?['body/CurrentApplicableUnitNbr'], 24), 60)"
-                },
-                "authentication": "@parameters('$authentication')"
-              }
-            },
-            "Estimate_Service_Performance": {
+            "Estimate_Service_Performance_1": {
               "runAfter": {},
               "metadata": {
                 "operationMetadataId": "a7207024-950e-4c01-86cb-51ae41b1fc5f"
@@ -113,6 +88,151 @@
                 },
                 "authentication": "@parameters('$authentication')"
               }
+            },
+            "Try": {
+              "actions": {
+                "Estimate_Service_Performance": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "a7207024-950e-4c01-86cb-51ae41b1fc5f"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_tc-5fspapiconnector-5f5cf23ef0bee9f3b2",
+                      "operationId": "servicerequestcontrollervEstimateServiceRequestPerformance",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Fspapiconnector-5F5cf23ef0bee9f3b2"
+                    },
+                    "parameters": {
+                      "serviceRequestId": "@items('Loop_Over_Service_Requests')?['fdr_mtoa_sr_id']"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Update_a_row": {
+                  "runAfter": {
+                    "Estimate_Service_Performance": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "2f3de538-d76a-49cc-b206-2a41aa0e3b54"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "UpdateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "fdr_servicerequests",
+                      "recordId": "@items('Loop_Over_Service_Requests')?['fdr_servicerequestid']",
+                      "item/fdr_daysremaining": "@outputs('Estimate_Service_Performance')?['body/UnitsRemainingNbr']",
+                      "item/fdr_tss_duration": "@mul(mul(outputs('Estimate_Service_Performance')?['body/CurrentApplicableUnitNbr'], 24), 60)"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Estimate_Service_Performance_1": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "9364af61-18a5-4428-86a3-42155db04e25"
+              },
+              "type": "Scope"
+            },
+            "Catch": {
+              "actions": {
+                "Parse_JSON": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "1b977295-45e3-4aba-97b6-cc83eab0c9b7"
+                  },
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@body('Estimate_Service_Performance')",
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "statusCode": {
+                          "type": "integer"
+                        },
+                        "headers": {
+                          "type": "object",
+                          "properties": {
+                            "Transfer-Encoding": {
+                              "type": "string"
+                            },
+                            "Strict-Transport-Security": {
+                              "type": "string"
+                            },
+                            "TCResponseCode": {
+                              "type": "string"
+                            },
+                            "TCResponseMessage": {
+                              "type": "string"
+                            },
+                            "api-supported-versions": {
+                              "type": "string"
+                            },
+                            "X-Content-Type-Options": {
+                              "type": "string"
+                            },
+                            "x-ms-apihub-cached-response": {
+                              "type": "string"
+                            },
+                            "x-ms-apihub-obo": {
+                              "type": "string"
+                            },
+                            "Date": {
+                              "type": "string"
+                            },
+                            "X-Powered-By": {
+                              "type": "string"
+                            },
+                            "Content-Type": {
+                              "type": "string"
+                            },
+                            "Content-Length": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "body": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string"
+                            },
+                            "title": {
+                              "type": "string"
+                            },
+                            "status": {
+                              "type": "integer"
+                            },
+                            "detail": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Try": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "9a187eb6-6a7a-4754-9974-12652b192f00"
+              },
+              "type": "Scope"
             }
           },
           "runAfter": {

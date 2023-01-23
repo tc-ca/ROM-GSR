@@ -102,65 +102,149 @@
               },
               "else": {
                 "actions": {
-                  "Gets_a_service_request_by_its_id": {
-                    "runAfter": {},
-                    "metadata": {
-                      "operationMetadataId": "73907bfe-f2d9-4905-bc83-c187188c7b0f"
-                    },
-                    "type": "OpenApiConnection",
-                    "inputs": {
-                      "host": {
-                        "connectionName": "shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2",
-                        "operationId": "ServiceRequests_GetServiceRequestById",
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Fmtapiconnector-5F5cf23ef0bee9f3b2"
-                      },
-                      "parameters": {
-                        "id": "@items('Loop_Over_Service_Requests')?['fdr_mtoa_sr_id']",
-                        "app-jwt": "@parameters('FDR_MTOA_JWT (fdr_FDR_MTOA_JWT)')",
-                        "includeRegulatedEntities": false
-                      },
-                      "authentication": "@parameters('$authentication')"
-                    }
-                  },
-                  "Was_Status_Changed": {
+                  "Try": {
                     "actions": {
-                      "Update_a_row": {
+                      "Gets_a_service_request_by_its_id": {
                         "runAfter": {},
                         "metadata": {
-                          "operationMetadataId": "2f3de538-d76a-49cc-b206-2a41aa0e3b54"
+                          "operationMetadataId": "73907bfe-f2d9-4905-bc83-c187188c7b0f"
                         },
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "connectionName": "shared_commondataserviceforapps",
-                            "operationId": "UpdateRecord",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            "connectionName": "shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2",
+                            "operationId": "ServiceRequests_GetServiceRequestById",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Fmtapiconnector-5F5cf23ef0bee9f3b2"
                           },
                           "parameters": {
-                            "entityName": "fdr_servicerequests",
-                            "recordId": "@items('Loop_Over_Service_Requests')?['fdr_servicerequestid']",
-                            "item/statuscode": 2,
-                            "item/statecode": 1
+                            "id": "@items('Loop_Over_Service_Requests')?['fdr_mtoa_sr_id']",
+                            "app-jwt": "@parameters('FDR_MTOA_JWT (fdr_FDR_MTOA_JWT)')",
+                            "includeRegulatedEntities": false
                           },
                           "authentication": "@parameters('$authentication')"
+                        }
+                      },
+                      "Was_Status_Changed": {
+                        "actions": {
+                          "Update_a_row": {
+                            "runAfter": {},
+                            "metadata": {
+                              "operationMetadataId": "2f3de538-d76a-49cc-b206-2a41aa0e3b54"
+                            },
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "host": {
+                                "connectionName": "shared_commondataserviceforapps",
+                                "operationId": "UpdateRecord",
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                              },
+                              "parameters": {
+                                "entityName": "fdr_servicerequests",
+                                "recordId": "@items('Loop_Over_Service_Requests')?['fdr_servicerequestid']",
+                                "item/statuscode": 2,
+                                "item/statecode": 1
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            }
+                          }
+                        },
+                        "runAfter": {
+                          "Gets_a_service_request_by_its_id": [
+                            "Succeeded"
+                          ]
+                        },
+                        "expression": {
+                          "equals": [
+                            "@outputs('Gets_a_service_request_by_its_id')?['body/RequestStatus']",
+                            "@variables('CRSD_Status')"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "a3c0b3bb-6bb5-4596-ab92-f538a6eb50f6"
+                        },
+                        "type": "If"
+                      }
+                    },
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "6befc5da-7e68-414b-ab61-bd3663cc2178"
+                    },
+                    "type": "Scope"
+                  },
+                  "Catch": {
+                    "actions": {
+                      "Parse_JSON": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "a1fc0c1c-2135-4dbf-9925-03d3e527f0a8"
+                        },
+                        "type": "ParseJson",
+                        "inputs": {
+                          "content": "@body('Gets_a_service_request_by_its_id')",
+                          "schema": {
+                            "type": "object",
+                            "properties": {
+                              "statusCode": {
+                                "type": "integer"
+                              },
+                              "headers": {
+                                "type": "object",
+                                "properties": {
+                                  "Pragma": {
+                                    "type": "string"
+                                  },
+                                  "MtapiStatus": {
+                                    "type": "string"
+                                  },
+                                  "X-Content-Type-Options": {
+                                    "type": "string"
+                                  },
+                                  "Strict-Transport-Security": {
+                                    "type": "string"
+                                  },
+                                  "x-ms-apihub-cached-response": {
+                                    "type": "string"
+                                  },
+                                  "x-ms-apihub-obo": {
+                                    "type": "string"
+                                  },
+                                  "Cache-Control": {
+                                    "type": "string"
+                                  },
+                                  "Date": {
+                                    "type": "string"
+                                  },
+                                  "Set-Cookie": {
+                                    "type": "string"
+                                  },
+                                  "X-AspNet-Version": {
+                                    "type": "string"
+                                  },
+                                  "X-Powered-By": {
+                                    "type": "string"
+                                  },
+                                  "Content-Length": {
+                                    "type": "string"
+                                  },
+                                  "Expires": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
                         }
                       }
                     },
                     "runAfter": {
-                      "Gets_a_service_request_by_its_id": [
-                        "Succeeded"
-                      ]
-                    },
-                    "expression": {
-                      "equals": [
-                        "@outputs('Gets_a_service_request_by_its_id')?['body/RequestStatus']",
-                        "@variables('CRSD_Status')"
+                      "Try": [
+                        "Failed"
                       ]
                     },
                     "metadata": {
-                      "operationMetadataId": "a3c0b3bb-6bb5-4596-ab92-f538a6eb50f6"
+                      "operationMetadataId": "3d634085-00d1-4530-b16d-94691eac3899"
                     },
-                    "type": "If"
+                    "type": "Scope"
                   }
                 }
               },
