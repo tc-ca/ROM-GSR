@@ -4,6 +4,10 @@
 $(document).ready(function () {
 	debugger;
 
+	sessionStorage.setItem('frominyearsites', 'false');
+    sessionStorage.setItem('fromannualcompliance', 'false');
+	sessionStorage.setItem('frominyearsitepage', 'false');
+
 	header_setup();
 	var instructionBtns = $(".instruction-btn");
 

@@ -12,6 +12,33 @@ async function OperationDetailsProvided(operationId, flag) {
 $(document).ready(function () {
     debugger;
     $('#loader').hide();
+
+       var inYear = sessionStorage.getItem('frominyearsites');
+    var annualCompliance = sessionStorage.getItem('fromannualcompliance');
+    var frominyearsitepage = sessionStorage.getItem('frominyearsitepage');
+
+    if(inYear == 'true' || annualCompliance  == 'true' || frominyearsitepage == 'true' ){
+        if ($("#cancelButton").length <= 0){
+            $("#NextButton").parent().after("<div role='group' class='btn-group entity-action-button'><input id='cancelButton' type='button' name='CancelButton' value='Cancel' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></div>");
+        }
+
+    	$('#cancelButton').click(function (e) {
+            if(inYear == 'true' )
+                window.location.href = '~/my-sites/';
+            else if(annualCompliance == 'true' )
+                window.location.href = '~/my-company/annual-compliance-update/';
+            else if(frominyearsitepage == 'true' ){
+                var urlParams = new URLSearchParams(window.location.search);
+	            if (urlParams.has('id')) {
+		            var siteid = urlParams.get('id');
+
+                    if(siteid != "")
+                        window.location.href = '~/my-sites/in-year-site/?id=' + siteid;
+                }
+            }
+	    });
+    }
+
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
@@ -42,9 +69,10 @@ $(document).ready(function () {
     var siteid = $("#EntityFormView_EntityID").val();
     tdg.cid.Display_Modes(siteid);
 
-    if ($("#printSummary").length <= 0)
+    if ($("#printSummary").length <= 0){
         var msg = tdg.error_message.message("m000007"); // Print Summary
-    $("#NextButton").parent().after("<div id='printSummary' role='group' class='btn-group entity-action-button'><input type='button' name='PrintButton' value='" + msg + "' onclick='window.print();' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'></div>");
+        $("#NextButton").parent().after("<div id='printSummary' role='group' class='btn-group entity-action-button'><input type='button' name='PrintButton' value='" + msg + "' onclick='window.print();' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'></div>");
+    }
 
     subgrid_language();
 

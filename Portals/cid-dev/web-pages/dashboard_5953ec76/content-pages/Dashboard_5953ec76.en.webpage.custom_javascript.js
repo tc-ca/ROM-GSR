@@ -5,6 +5,13 @@
 $(document).ready(function () {
     debugger;
 
+    sessionStorage.setItem('frominyearsites', 'false');
+    sessionStorage.setItem('fromannualcompliance', 'false');
+	sessionStorage.setItem('frominyearsitepage', 'false');
+
+        var companyName = "{{user.parentcustomerid.name}}";
+    $('div[data-name="tab_5"]').parent().before("<h2>" + companyName + "</h2><hr>");
+
 //alert($("#companyAnniversaryDate").val());
     //var urlParams = new URLSearchParams(window.location.search);
 //	if (urlParams.has('firsttime')) {

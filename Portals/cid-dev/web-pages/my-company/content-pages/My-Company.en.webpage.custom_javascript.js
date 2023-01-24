@@ -5,6 +5,10 @@
 $(document).ready(function () {
     debugger;
 
+    sessionStorage.setItem('frominyearsites', 'false');
+    sessionStorage.setItem('fromannualcompliance', 'false');
+	sessionStorage.setItem('frominyearsitepage', 'false');
+
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
@@ -19,15 +23,13 @@ $(document).ready(function () {
         activationButon.css("background-color", "#4CAF50");
     }
 
-    var updateCompanyBtn = "<div><input id='update_company' type='button' name='UpdateCompany' value='Update Company' class='btn btn-primary action create-action' nonactionlinkbutton='true'/></div>";
-    var companyName = "{{user.parentcustomerid.name}}";
+    var updateCompanyBtn = "<div><input id='update_company' type='button' name='UpdateCompany' value='Update Company' class='btn btn-primary action create-action' nonactionlinkbutton='true'/></div>"
     $(".form-custom-actions").first().parent().after(updateCompanyBtn);
 
-    var cancelBtn = "<div><input id='cancel_company_update' type='button' name='CancelCompanyUpdate' value='Cancel' class='hidden btn btn-primary action create-action' nonactionlinkbutton='true'/></div>";
-    if ($("#cancel_company_update").length <= 0) {
-        $( ".form-custom-actions" ).first().parent().after(cancelBtn);
-    }
+    var cancelBtn = "&nbsp;<input id='cancel_company_update' type='button' name='CancelCompanyUpdate' value='Cancel' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'/>";
+    $( ".form-action-container-left" ).eq(2).after(cancelBtn);
 
+    var companyName = "{{user.parentcustomerid.name}}";
     $('div[data-name="company_details"]').parent().before("<h2>" + companyName + "</h2><hr>");
     var legend = $('fieldset[aria-label="Head Office"] legend').first();
     legend.text("");

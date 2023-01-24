@@ -9,7 +9,7 @@ $(document).ready(function () {
 	var ButtonCancel = tdg.error_message.message("BTN_CANCEL");
 	//add button next to save button
 	$(".actions").append('<input id ="cancelButton" type="button" value="' +
-		ButtonCancel + '" class="submit-btn btn btn-primary form-action-container-left"> </input>');
+		ButtonCancel + '" class="btn btn-default button previous previous-btn"> </input>');
 	//cancel button click event
 	$('#cancelButton').click(function (e) {
 		//click back button

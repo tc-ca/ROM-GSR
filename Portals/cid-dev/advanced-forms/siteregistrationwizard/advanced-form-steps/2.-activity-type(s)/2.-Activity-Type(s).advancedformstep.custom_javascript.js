@@ -4,6 +4,32 @@ $(document).load(function () {
 
 $(document).ready(function () {
 	$('#loader').hide();
+
+       var inYear = sessionStorage.getItem('frominyearsites');
+    var annualCompliance = sessionStorage.getItem('fromannualcompliance');
+    var frominyearsitepage = sessionStorage.getItem('frominyearsitepage');
+
+    if(inYear == 'true' || annualCompliance  == 'true' || frominyearsitepage == 'true' ){
+        if ($("#cancelButton").length <= 0){
+            $("#NextButton").parent().after("<div role='group' class='btn-group entity-action-button'><input id='cancelButton' type='button' name='CancelButton' value='Cancel' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></div>");
+        }
+
+    	$('#cancelButton').click(function (e) {
+            if(inYear == 'true' )
+                window.location.href = '~/my-sites/';
+            else if(annualCompliance == 'true' )
+                window.location.href = '~/my-company/annual-compliance-update/';
+            else if(frominyearsitepage == 'true' ){
+                var urlParams = new URLSearchParams(window.location.search);
+	            if (urlParams.has('id')) {
+		            var siteid = urlParams.get('id');
+
+                    if(siteid != "")
+                        window.location.href = '~/my-sites/in-year-site/?id=' + siteid;
+                }
+            }
+	    });
+    }
 });
 
 if (window.jQuery) {
