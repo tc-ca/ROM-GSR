@@ -12,40 +12,36 @@ if(document.getElementsByTagName('h1')[0])
     }
     //TODO add logic for the default access denied page
 }
-/*
+debugger;
 //account already existing
 if($('.xrm-attribute-value-encoded')[0].innerText =="Register your external account" )
 {
-    alert("email is already in use");
-    if($('#Email'))
+    if($('.validation-summary-errors')[0])
     {
-        var emailaddress = $('#Email').val();
-        alert(emailaddress);
-        if(emailaddress != null)
+        var Innerhtml = $('.validation-summary-errors')[0].innerHTML;
+        var InnerText = $('.validation-summary-errors')[0].innerText;
+        if( Innerhtml!= null && Innerhtml.substring(0, 28) == "<ul><li>The email &amp;quot;")
         {
-            var filter = "emailaddress1 eq '"+ emailaddress +"'";
-            //var data = tdg.c.OData_List("account", filter);
-            
-        $.ajax({
-            type: "GET",
-            url: "/_api/contacts?$filter=emailaddress1 eq 'hasintha@gmail.com'",
-            contentType: "application/json",
-            success: function (data, textStatus, xhr) {
-                var results = data;
-                console.log(results);
-                for (var i = 0; i < results.value.length; i++) {
-                    var result = results.value[i];
-                    // Columns
-                    var contactid = result["contactid"]; // Guid
-                    alert(contactid);
-                }
-            },
-            error: function (xhr, textStatus, errorThrown) {
-                console.log(xhr);
-            }
-        });
+            $('.validation-summary-errors')[0].innerHTML = 
+                    "<ul><li>This email is already in use. This may be due to an invitation previously being sent to this email address. You can use that invitation to access the application.</li><li>If this is not the case, or you require further details, then please choose the Contact Us link below.</li></ul>";
+        }
+        else  if(InnerText!= null && InnerText == "Invalid invitation code.")  
+        {
+             $('.validation-summary-errors')[0].InnerText = "The Invitation Code is already redreemed or expired.";
         }
     }
 }
-*/
+
+//invalid invitation Code
+if($('.xrm-attribute-value-encoded')[0].innerText =="Sign up with an invitation code" )
+{
+    if($('.validation-summary-errors')[0])
+    {
+        var InnerText = $('.validation-summary-errors')[0].innerText;
+        if(InnerText!= null && InnerText == "Invalid invitation code.")  
+        {
+             $('.validation-summary-errors')[0].innerText = "The Invitation Code is already redeemed or Invitation is no longer valid. If required, please choose the Contact Us link at the bottom of this screen to request a new invitation.";
+        }
+    }
+}
 

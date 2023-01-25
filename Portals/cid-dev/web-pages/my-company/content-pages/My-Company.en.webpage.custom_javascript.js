@@ -23,10 +23,11 @@ $(document).ready(function () {
         activationButon.css("background-color", "#4CAF50");
     }
 
+    var cancelLabel = tdg.error_message.message("BTN_CANCEL");
     var updateCompanyBtn = "<div><input id='update_company' type='button' name='UpdateCompany' value='Update Company' class='btn btn-primary action create-action' nonactionlinkbutton='true'/></div>"
     $(".form-custom-actions").first().parent().after(updateCompanyBtn);
 
-    var cancelBtn = "&nbsp;<input id='cancel_company_update' type='button' name='CancelCompanyUpdate' value='Cancel' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'/>";
+    var cancelBtn = "&nbsp;<input id='cancel_company_update' type='button' name='CancelCompanyUpdate' value='"+ cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'/>";
     $( ".form-action-container-left" ).eq(2).after(cancelBtn);
 
     var companyName = "{{user.parentcustomerid.name}}";

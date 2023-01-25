@@ -11,7 +11,8 @@ $(document).ready(function () {
 
     if(inYear == 'true' || annualCompliance  == 'true' || frominyearsitepage == 'true' ){
         if ($("#cancelButton").length <= 0){
-            $("#NextButton").parent().after("<div role='group' class='btn-group entity-action-button'><input id='cancelButton' type='button' name='CancelButton' value='Cancel' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></div>");
+            var cancelLabel = tdg.error_message.message("BTN_CANCEL");
+            $("#NextButton").parent().after("<div role='group' class='btn-group entity-action-button'><input id='cancelButton' type='button' name='CancelButton' value='" + cancelLabel +"' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></div>");
         }
 
     	$('#cancelButton').click(function (e) {

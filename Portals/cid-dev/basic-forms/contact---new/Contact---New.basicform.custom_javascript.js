@@ -52,8 +52,9 @@ $(document).ready(function () {
               
         });
             var cancelLabel = tdg.error_message.message("BTN_CANCEL");
-            $('#InsertUpdateButton').after('<div role="group" class="btn-group entity-action-button">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type="button" data-dismiss="modal" value="'+cancelLabel+'" id="CancelButton" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
+            $('#InsertUpdateButton').after('<input type="button" data-dismiss="modal" value="'+cancelLabel+'" id="CancelButton" style="margin-left: 10px;" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
 	        $('#CancelButton').on('click', function(event){parent.$(".form-close").eq(0).click();});
+            //<div role="group" class="btn-group entity-action-button">
 
 //********************************************* */
 
