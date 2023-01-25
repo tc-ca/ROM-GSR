@@ -936,6 +936,7 @@ function storeMessageListInSession(data)
 
   function  Download_ExcelTemplate (TemplateLanguage)
 {
+   
         //hid any error or validation div
         $("Div.validation-summary").css('display', 'none');
         $("Div.alert").css('display', 'none');
@@ -975,7 +976,8 @@ function storeMessageListInSession(data)
 
      //flow paramater
      var flowparamaters =
-        '{ "accountid": "' + companyid + '",'  + '"Language": "' + TemplateLanguage + '" , "UiLanguage":"'+ langcode+'" , "UploadType" : "' + UploadType + '" }';
+        '{ "accountid": "' + companyid + '",'  + '"Language": "' + TemplateLanguage + '" , "UiLanguage":"'
+        + langcode + '" , "UploadType" : "' + UploadType + '" }';
 
       var req = new XMLHttpRequest();
       var url = '{{download_flow_URL}}';
@@ -1010,12 +1012,17 @@ function storeMessageListInSession(data)
                       
           //assign result to noteid intially
            var SeperatorIndex =   result.indexOf("|");
-            var  NoteGUID = result;
-            //.substring(0, SeperatorIndex ).trim();
+           alert ("result " + result);
+           alert("seperator index " + SeperatorIndex);
+           console.log(SeperatorIndex);
+           console.log(result);
+            var  NoteGUID = result.substring(0, SeperatorIndex ).trim();
+            var instructionNote = result.substring( SeperatorIndex ).trim();
+            console.log("Note " + NoteGUID );
          
        
            
-         if (req.getResponseHeader('RootMessag') != null && req.getResponseHeader('RootMessag') != "")
+        /* if (req.getResponseHeader('RootMessag') != null && req.getResponseHeader('RootMessag') != "")
          {
             
               NoteGUID = result.substring(0, SeperatorIndex ).trim();
@@ -1024,14 +1031,14 @@ function storeMessageListInSession(data)
               $('#infoMsg').html("<p>" + DownloadMessageCompleted +  "</p> <br> <p>"+ rootMessage
           
               + "</p>");
-         }
+         }*/
             
         //  $('<textarea/>').text(req.getResponseHeader('RootMessag')).html();
     
            //annotation url
             var fileattachementURL = "~/_entity/annotation/"  + NoteGUID;
                   //download the file from the url
-            window.location.replace(fileattachementURL);
+           // window.location.replace(fileattachementURL);
             //enabled button
             Enable_Button('btn_attachfile_and_scan');
             Enable_Button('linkdownload_English');
@@ -1126,6 +1133,20 @@ function filter_BulkMessageArray(id , lang)
         return responseMessage ;
 }
 
+async function Download_Instructions(InstructionattachementURL)
+{
+window.location.replace(InstructionattachementURL);
+}
+
+function downloadURL(url,count){
+                                    var hiddenIFrameID = 'hiddenDownloader' + count++;
+                                    var iframe = document.createElement('iframe');
+                                    iframe.id = hiddenIFrameID;
+                                    iframe.style.display = 'none';
+                                    document.body.appendChild(iframe);
+                                    iframe.src = url;
+                                    }
+
 async function Get_Location_Header(url)
 {
     //delay execution for 30 seconds
@@ -1153,25 +1174,46 @@ async function Get_Location_Header(url)
                                     var Reponse_Length = this.responseText.length;
 
                                     var  NoteGUID = this.responseText;
-                                    //.substring(0, SeperatorIndex ).trim();
+                                   if (SeperatorIndex > 0)
+                                   {
+                                       NoteGUID = this.responseText.substring(0, SeperatorIndex ).trim();
+                                   
+                                   }
+                                  
+
+                                  
+                                  
                                     var fileattachementURL = "~/_entity/annotation/"  + NoteGUID;
+                                     var files = [];
+                                    files.push(fileattachementURL);
+                                    
                                     //download the file from the url
-                                   window.location.replace(fileattachementURL);
+                                    //window.location.replace(fileattachementURL);
+                                   
+                                  
+
+                                 
+                                     if (SeperatorIndex > 0)
+                                   {
+                                       var instructionNoteGUID =  this.responseText.substring( (SeperatorIndex + 1) ).trim();
+                                    var InstructionattachementURL = "~/_entity/annotation/"  + instructionNoteGUID;
+                                    files.push(InstructionattachementURL);
+                                   
+                            
+                                  
+                                   }
+
+                                    for(var ii=0; ii<files.length; ii++){
+                                            downloadURL(files[ii],ii);
+                                        }
+
+                                   
                                    console.log (this.responseText);
                                    console.log ("reponse Length : " + Reponse_Length);
                                    var langcode = '{{languagecode}}'  ;
       
                                     var downloadMessage ;
-                                    /*='<p>Downloading the custom Site Bulk Upload template.  Please wait a moment...</p>';
-                                 '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>' ;
-                                    var DownloadMessageCompleted =  '<p>Download completed.</p>';
-                                if (langcode != "en-US" && langcode != "en")
-                                {
-                                    downloadMessage = "<p>Téléchargement du modèle de téléchargement en masse de site personnalisé. Patientez s'il-vous-plait...</p>";
-                                    //"<p>Le classeur Excel personnalisé de téléchargement en masse du site est en cours de téléchargement…</p>"
-                                    DownloadMessageCompleted  = '<p>Téléchargement terminé.</p>' ;
-                                }//end check language
-                                */
+                                
 
                                  downloadMessage = filter_BulkMessageArray("M0" , "en");
                                 // check language if not english assign french transation
