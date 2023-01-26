@@ -87,12 +87,13 @@ document.getElementById("address1_longitude").addEventListener('change', (event)
     tdg.cid.convert_province_to_code(selected_language);
     $('#loader').hide();
 
-    if(inYear)
-    {   
-    $("#cid_same_as_company").attr("disabled", true);
-    $("#ovs_address_type").attr("disabled", true);
+    //if(inYear == 'true')
+   // {   
+   // $("#cid_same_as_company").attr("disabled", true);
+   // $("#ovs_address_type").attr("disabled", true);
 
     var ovs_address_type = $("#ovs_address_type").val();
+
     switch (ovs_address_type) 
     {
         case "1": // legal land description
@@ -117,8 +118,8 @@ document.getElementById("address1_longitude").addEventListener('change', (event)
             $("#address1_stateorprovince").prop('readonly', true);
             $("#address1_postalcode").prop('readonly', true);
        }   
-    }
-    else{
+    //}
+    //else{
          $("#ovs_address_type").change(function () {
         tdg.cid.address_type_change(true);
         });
@@ -130,7 +131,7 @@ document.getElementById("address1_longitude").addEventListener('change', (event)
         });
         cid_same_as_company_change();
 
-    }
+    //}
 
 });
 

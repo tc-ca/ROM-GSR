@@ -12,6 +12,8 @@ async function OperationDetailsProvided(operationId, flag) {
 $(document).ready(function () {
     debugger;
     $('#loader').hide();
+    
+   //$("#cid_issiteattested").prop("checked", true);
 
     var inYear = sessionStorage.getItem('frominyearsites');
     var annualCompliance = sessionStorage.getItem('fromannualcompliance');
@@ -112,6 +114,12 @@ if (window.jQuery) {
                 validation = false;
             }
 
+            //if(!$("#cid_issiteattested").prop('checked')){
+            //    var msg = 'You cannot proceed before attesting your site deactivation, please check the "Attestation" box';  
+            //    errorMessage = errorMessage + msg + "</br>";
+            //    validation = false;
+            //}
+
             if (!validation) {
                 $('#ValidationSummaryEntityFormView div').remove();
                 var validationSection = $('#ValidationSummaryEntityFormView');
@@ -119,28 +127,28 @@ if (window.jQuery) {
                 validationSection.show();
                 $('#alertMessages').focus();
             }
-            else{
-                var inYear = sessionStorage.getItem('frominyearsites');
-                var annualCompliance = sessionStorage.getItem('fromannualcompliance');
-                var frominyearsitepage = sessionStorage.getItem('frominyearsitepage');
-                if(inYear == 'true' )
-                    window.location.href = '~/my-sites/';
-                else if(annualCompliance == 'true' )
-                    window.location.href = '~/my-company/annual-compliance-update/';
-                else if(frominyearsitepage == 'true' ){
-                    var urlParams = new URLSearchParams(window.location.search);
-                    if (urlParams.has('id')) {
-                        var siteid = urlParams.get('id');
+            //else{
+            //    var inYear = sessionStorage.getItem('frominyearsites');
+            //    var annualCompliance = sessionStorage.getItem('fromannualcompliance');
+            //    var frominyearsitepage = sessionStorage.getItem('frominyearsitepage');
+            //    if(inYear == 'true' )
+            //        window.location.href = '~/my-sites/';
+            //    else if(annualCompliance == 'true' )
+            //        window.location.href = '~/my-company/annual-compliance-update/';
+           //     else if(frominyearsitepage == 'true' ){
+            //        var urlParams = new URLSearchParams(window.location.search);
+            //        if (urlParams.has('id')) {
+            //            var siteid = urlParams.get('id');
 
-                        if(siteid != "")
-                            window.location.href = '~/my-sites/in-year-site/?id=' + siteid;
-                    }
-                }
-                else{
-                    window.location.href = '~/RegistrationWizard';
-                }
-            }
-            //return validation;
+            //            if(siteid != "")
+            //                window.location.href = '~/my-sites/in-year-site/?id=' + siteid;
+            //        }
+            //    }
+            //    else{
+            //        window.location.href = '~/RegistrationWizard';
+            //    }
+           // }
+            return validation;
         }
     }(window.jQuery));
 }
