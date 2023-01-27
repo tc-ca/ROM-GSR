@@ -486,23 +486,6 @@
                         "authentication": "@parameters('$authentication')"
                       }
                     },
-                    "Response_French_Note_attachment": {
-                      "runAfter": {
-                        "Add_attachment_to_activity_French": [
-                          "Succeeded"
-                        ]
-                      },
-                      "metadata": {
-                        "operationMetadataId": "5d3b67ed-de62-4ccd-98f2-2d15ea5552c2"
-                      },
-                      "type": "Response",
-                      "kind": "Http",
-                      "inputs": {
-                        "statusCode": 200,
-                        "body": "@outputs('Add_attachment_to_activity_French')?['body/annotationid']"
-                      },
-                      "operationOptions": "Asynchronous"
-                    },
                     "Get_full_file_content_from_French_file": {
                       "runAfter": {
                         "Run_script_-_protect_French_sheets__2": [
@@ -549,6 +532,83 @@
                         },
                         "authentication": "@parameters('$authentication')"
                       }
+                    },
+                    "French_GetContentInstructionPdf": {
+                      "runAfter": {
+                        "Run_script_-_protect_French_sheets__2": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fTransport%2bCanada%2bCID%2bInstructions%2bUpdated.pdf": "/Shared Documents/CID_Bulk_Upload/Transport Canada CID Instructions Updated.pdf",
+                        "operationMetadataId": "2daa2947-a7f6-4514-be5a-d3d68d56e724",
+                        "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fFrench%2b-%2bTransport%2bCanada%2bCID%2bInstructions%2bUpdated.pdf": "/Shared Documents/CID_Bulk_Upload/French - Transport Canada CID Instructions Updated.pdf"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "GetFileContent",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                          "id": "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fFrench%2b-%2bTransport%2bCanada%2bCID%2bInstructions%2bUpdated.pdf",
+                          "inferContentType": true
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Add_French_Instruction_attachment_to_activity_English_PDF_2": {
+                      "runAfter": {
+                        "French_GetContentInstructionPdf": [
+                          "Succeeded"
+                        ]
+                      },
+                      "limit": {
+                        "timeout": "PT15M"
+                      },
+                      "metadata": {
+                        "operationMetadataId": "91d0606f-6ed7-4292-a3a7-b064235dbded"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "CreateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "annotations",
+                          "item/subject": "Instructions Attachement",
+                          "item/notetext": "*WEB*",
+                          "item/isdocument": true,
+                          "item/documentbody": "@base64(outputs('French_GetContentInstructionPdf')?['body'])",
+                          "item/filename": "Instructions.PDF",
+                          "item/objectid_cid_bulkactivitylogsummary@odata.bind": "@concat('/cid_bulkactivitylogsummaries/', outputs('activityid'))"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Response_French_Note_attachment": {
+                      "runAfter": {
+                        "Add_French_Instruction_attachment_to_activity_English_PDF_2": [
+                          "Succeeded"
+                        ],
+                        "Add_attachment_to_activity_French": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "5d3b67ed-de62-4ccd-98f2-2d15ea5552c2"
+                      },
+                      "type": "Response",
+                      "kind": "Http",
+                      "inputs": {
+                        "statusCode": 200,
+                        "body": "@{outputs('Add_attachment_to_activity_French')?['body/annotationid']}|@{outputs('Add_French_Instruction_attachment_to_activity_English_PDF_2')?['body/annotationid']}"
+                      },
+                      "operationOptions": "Asynchronous"
                     }
                   },
                   "runAfter": {},
@@ -584,23 +644,6 @@
                           },
                           "authentication": "@parameters('$authentication')"
                         }
-                      },
-                      "Response_2": {
-                        "runAfter": {
-                          "Add_attachment_to_activity_English": [
-                            "Succeeded"
-                          ]
-                        },
-                        "metadata": {
-                          "operationMetadataId": "5d3b67ed-de62-4ccd-98f2-2d15ea5552c2"
-                        },
-                        "type": "Response",
-                        "kind": "Http",
-                        "inputs": {
-                          "statusCode": 200,
-                          "body": "@outputs('Add_attachment_to_activity_English')?['body/annotationid']"
-                        },
-                        "operationOptions": "Asynchronous"
                       },
                       "Run_script_-_protect_English_sheets__2": {
                         "runAfter": {},
@@ -651,6 +694,82 @@
                           },
                           "authentication": "@parameters('$authentication')"
                         }
+                      },
+                      "Add_English_Instruction_attachment_to_activity_English_PDF": {
+                        "runAfter": {
+                          "GetContentInstructionPdf": [
+                            "Succeeded"
+                          ]
+                        },
+                        "limit": {
+                          "timeout": "PT15M"
+                        },
+                        "metadata": {
+                          "operationMetadataId": "91d0606f-6ed7-4292-a3a7-b064235dbded"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_commondataserviceforapps",
+                            "operationId": "CreateRecord",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                          },
+                          "parameters": {
+                            "entityName": "annotations",
+                            "item/subject": "Instructions Attachement",
+                            "item/notetext": "*WEB*",
+                            "item/isdocument": true,
+                            "item/documentbody": "@base64(outputs('GetContentInstructionPdf')?['body'])",
+                            "item/filename": "Instructions.PDF",
+                            "item/objectid_cid_bulkactivitylogsummary@odata.bind": "@concat('/cid_bulkactivitylogsummaries/', outputs('activityid'))"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      },
+                      "GetContentInstructionPdf": {
+                        "runAfter": {
+                          "Run_script_-_protect_English_sheets__2": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fTransport%2bCanada%2bCID%2bInstructions%2bUpdated.pdf": "/Shared Documents/CID_Bulk_Upload/Transport Canada CID Instructions Updated.pdf",
+                          "operationMetadataId": "2daa2947-a7f6-4514-be5a-d3d68d56e724"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_sharepointonline",
+                            "operationId": "GetFileContent",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                          },
+                          "parameters": {
+                            "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                            "id": "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fTransport%2bCanada%2bCID%2bInstructions%2bUpdated.pdf",
+                            "inferContentType": true
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      },
+                      "Response_2": {
+                        "runAfter": {
+                          "Add_English_Instruction_attachment_to_activity_English_PDF": [
+                            "Succeeded"
+                          ],
+                          "Add_attachment_to_activity_English": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "5d3b67ed-de62-4ccd-98f2-2d15ea5552c2"
+                        },
+                        "type": "Response",
+                        "kind": "Http",
+                        "inputs": {
+                          "statusCode": 200,
+                          "body": "@{outputs('Add_attachment_to_activity_English')?['body/annotationid']}|@{outputs('Add_English_Instruction_attachment_to_activity_English_PDF')?['body/annotationid']}"
+                        },
+                        "operationOptions": "Asynchronous"
                       }
                     }
                   },
@@ -1345,13 +1464,13 @@
         },
         "Update_Basic_Sheet_header": {
           "runAfter": {
+            "Check_Template_language": [
+              "Succeeded"
+            ],
             "GraphAPIStatus": [
               "Succeeded"
             ],
             "version-number": [
-              "Succeeded"
-            ],
-            "Check_Template_language": [
               "Succeeded"
             ]
           },
@@ -1399,7 +1518,8 @@
                     "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_June_2022%2bv18.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_June_2022 v18.xlsx",
                     "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_FR_June_2022%2bv18.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_FR_June_2022 v18.xlsx",
                     "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_FR_2022%2bv19.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_FR_2022 v19.xlsx",
-                    "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_FR_V20.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_FR_V20.xlsx"
+                    "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_FR_V20.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_FR_V20.xlsx",
+                    "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_FR_V21.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_FR_V21.xlsx"
                   },
                   "type": "OpenApiConnection",
                   "inputs": {
@@ -1410,7 +1530,7 @@
                     },
                     "parameters": {
                       "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
-                      "id": "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_FR_V20.xlsx",
+                      "id": "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_FR_V21.xlsx",
                       "inferContentType": true
                     },
                     "authentication": "@parameters('$authentication')"
@@ -1511,7 +1631,8 @@
                       "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_June_2022%2bv15.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_June_2022 v15.xlsx",
                       "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_June_2022%2bv18.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_June_2022 v18.xlsx",
                       "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_2022%2bv19.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_2022 v19.xlsx",
-                      "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_v20.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_v20.xlsx"
+                      "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_v20.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_v20.xlsx",
+                      "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_v21.xlsx": "/Shared Documents/CID_Bulk_Upload/CID_Sites_Template_2022_ENG_v21.xlsx"
                     },
                     "type": "OpenApiConnection",
                     "inputs": {
@@ -1522,7 +1643,7 @@
                       },
                       "parameters": {
                         "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
-                        "id": "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_v20.xlsx",
+                        "id": "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fCID_Sites_Template_2022_ENG_v21.xlsx",
                         "inferContentType": true
                       },
                       "authentication": "@parameters('$authentication')"
