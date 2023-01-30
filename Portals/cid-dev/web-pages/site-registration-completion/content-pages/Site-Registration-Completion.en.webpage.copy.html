@@ -1,36 +1,34 @@
-<div id="loader"></div>
-<div>
-  <script>
-    $('#loader').show();
-  </script>
-  <h2>Please wait ...</h2>
-  <h2>You will be redirected soon.</h2>
-  <script>
-        var inYear = sessionStorage.getItem('frominyearsites');
-                  var annualCompliance = sessionStorage.getItem('fromannualcompliance');
-                  var frominyearsitepage = sessionStorage.getItem('frominyearsitepage');
-                      $('#loader').hide();
-    alert(inYear);
-    alert(annualCompliance);
-    alert(frominyearsitepage);
-                  if(inYear == 'true' )
-                      window.location.href = '~/my-sites/';
-                  else if(annualCompliance == 'true' )
-                      window.location.href = '~/my-company/annual-compliance-update/';
-                  else if(frominyearsitepage == 'true' ){
-                      var urlParams = new URLSearchParams(window.location.search);
-                      if (urlParams.has('id')) {
-                          var siteid = urlParams.get('id');
+<div id="loader" style="position: fixed; width: 100%; left: 0px; right: 0px; top: 0px; bottom: 0px; background-color: rgba(255, 255, 255, 0.8); z-index: 9999; display: none;"></div>
+<script>
+  $('#loader').show();
+</script>
 
-                          if(siteid != "")
-                              window.location.href = '~/my-sites/in-year-site/?id=' + siteid;
-                      }
-                  }
-                  else{
-                      window.location.href = '~/RegistrationWizard';
-                  }
-  </script>
-  <script>
-    $('#loader').hide();
-  </script>
+<div class="container">
+<h2>You will be redirected soon.</h2>
+<h2>Please wait ...</h2>
 </div>
+<script>
+    var inYear = sessionStorage.getItem('frominyearsites');
+    var annualCompliance = sessionStorage.getItem('fromannualcompliance');
+    var frominyearsitepage = sessionStorage.getItem('frominyearsitepage');
+
+    if(inYear == 'true' )
+        window.location.href = '~/my-sites/';
+    else if(annualCompliance == 'true' )
+        window.location.href = '~/my-company/annual-compliance-update/';
+    else if(frominyearsitepage == 'true' ){
+        var urlParams = new URLSearchParams(window.location.search);
+
+        if (urlParams.has('id')) {
+            var siteid = urlParams.get('id');
+            if(siteid != "")
+                window.location.href = '~/my-sites/in-year-site/?id=' + siteid;
+        }
+    }
+    else{
+        window.location.href = '~/RegistrationWizard';
+    }
+</script>
+{% include 'RegistrationWizardsWebTemplate'%}
+
+

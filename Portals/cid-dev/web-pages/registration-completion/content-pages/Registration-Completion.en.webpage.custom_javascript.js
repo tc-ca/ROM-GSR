@@ -1,11 +1,12 @@
 $(document).ready(function () {
     debugger;
 
+    $('#loader').hide();
+    
     var pageURL = window.location.href;
 
     if(pageURL.includes("tdgcore-dev") || pageURL.includes("tdgcore-qa")){
-        //$("#div1").hide();
-        //$("#div2").show();
+        $("#waitDiv").show();
         window.location.href = "~/company_dashboard/?firsttime=true";
     }
     else{
