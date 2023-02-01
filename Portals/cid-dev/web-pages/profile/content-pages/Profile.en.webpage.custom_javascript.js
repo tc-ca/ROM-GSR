@@ -67,9 +67,6 @@ $(document).ready(function () {
 
     $("#emailaddress1").width('100%');
 
-    $("#telephone1").attr("placeholder", "");
-    $("#mobilephone").attr("placeholder", "");
-
     tdg.c.addValidator("emailaddress1");
     $('#emailaddress1').attr("readonly", true);
 
