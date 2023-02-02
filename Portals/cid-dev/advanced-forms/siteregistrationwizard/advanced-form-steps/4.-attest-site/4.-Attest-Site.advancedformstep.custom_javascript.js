@@ -58,7 +58,7 @@ $(document).ready(function () {
 
     tdg.cid.convert_province_to_code(selected_language);
     tdg.c.control_hide("address1_stateorprovince");
-    $('#ovs_address1_province').attr("disabled", true);
+    //$('#ovs_address1_province').attr("disabled", true);
 
     $('#PreviousButton').on('click', function () {
         var siteId = $("#EntityFormView_EntityID").val();
