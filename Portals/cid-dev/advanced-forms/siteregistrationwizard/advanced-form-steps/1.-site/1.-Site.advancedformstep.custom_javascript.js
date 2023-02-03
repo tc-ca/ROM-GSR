@@ -75,20 +75,21 @@ $(document).ready(function ()
 
     //Control address edit
     var parent_Id = '{{ user.parentcustomerid.id }}';
-    var created_On = new Date($("#createdon").val()).getTime();
-	if (inYear == 'true' && (Date.now()- created_On ) /1000/60/60/24 < 1)
+	if (inYear == 'true')
 	{
-        if($("#cid_createdbyregistrant").val() != parent_Id)
+        var created_On = new Date($("#createdon").val()).getTime();
+        if($("#cid_createdbyregistrant").val() != parent_Id  && (Date.now()- created_On ) /1000/60/60/24 < 1)
+        {
+            $("#cid_same_as_company").attr("disabled", false);
+            $("#ovs_address_type").attr("disabled", false);
+        }
+        else 
         {
             $("#cid_same_as_company").attr("disabled", true);
             $("#ovs_address_type").attr("disabled", true);
         }
     }
-    else 
-    {
-            $("#cid_same_as_company").attr("disabled", false);
-            $("#ovs_address_type").attr("disabled", false);
-    }
+    
 
 	var ovs_address_type = $("#ovs_address_type").val();
 	switch (ovs_address_type)
