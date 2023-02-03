@@ -2,6 +2,10 @@
 $(document).ready(function ()
 {
 	debugger;
+
+    $("#createdon").closest("tr").hide();
+    $("#cid_createdbyregistrant_label").closest("tr").hide();
+
 	if (sessionStorage.getItem('frominyearsites') == "true")
 	{
 		tdg.c.weblink_hide("/RegistrationWizard/");

@@ -1348,7 +1348,17 @@ if (typeof (tdg.cid) == "undefined") {
                     tdg.c.addValidator("ovs_lld_meridian");
                     tdg.c.addValidator("ovs_lld_province");
 
-                    this.address1_default("N/A");
+                    //this.address1_default("N/A");
+                    $("#address1_line1").val("N/A");
+                    $("#address1_city").val("N/A");
+                    $("#address1_postalcode").val("N/A");
+                    if ($("#address1_stateorprovince").val().length == 0) {
+                        $("#address1_stateorprovince").val("N/A");
+                    }
+                    if ($("#address1_stateorprovince").val().length == 0) {
+                        $("#address1_stateorprovince").val("N/A");
+                        $("#ovs_address1_province").val(0);
+                    }
 
                     ////Hide all options
                     //$("#ovs_lld_province").children().hide();
@@ -2061,8 +2071,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 var legalname = $("#cid_legalname").val();
                 var cid_reasonfornobnnumber_list = {};
                 var cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
-                if (cid_reasonfornobnnumber != "")
-                {
+                if (cid_reasonfornobnnumber != "") {
                     cid_reasonfornobnnumber_list = $("#cid_reasonfornobnnumber")[0].options;
                 }
                 var cid_reasonfornobnnumber_other = $("#cid_reasonfornobnnumber_other").val();
@@ -2100,7 +2109,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                             var message = tdg.error_message.message("BTN_NEXT");
                             $("#btn_next").prop("value", message);
 
-                            var msg = (data.cid_has_cra_bn == "1"? "m000045" : "m000046");
+                            var msg = (data.cid_has_cra_bn == "1" ? "m000045" : "m000046");
                             msg = tdg.error_message.message(msg);
                             tdg.c.dialog_OK(msg);
                         }
@@ -2163,14 +2172,12 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 invitation_msg = invitation_msg.replaceAll("{0}", data.cid_legalname);
             }
             else {
-                invitation_msg = (data.cid_has_cra_bn == 1? "m000041" : "m000042");
+                invitation_msg = (data.cid_has_cra_bn == 1 ? "m000041" : "m000042");
                 invitation_msg = tdg.error_message.message(invitation_msg);
-                if (data.cid_has_cra_bn == 1)
-                {
+                if (data.cid_has_cra_bn == 1) {
                     invitation_msg = invitation_msg.replaceAll("{0}", data.cid_crabusinessnumber);
                 }
-                else
-                {
+                else {
                     invitation_msg = invitation_msg.replaceAll("{0}", data.cid_legalname);
                 }
             }

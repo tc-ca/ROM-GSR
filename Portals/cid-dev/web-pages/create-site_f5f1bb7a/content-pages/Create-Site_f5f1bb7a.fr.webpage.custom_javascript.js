@@ -1,6 +1,10 @@
 $(document).ready(function ()
 {
 	debugger;
+
+    $("#createdon").closest("tr").hide();
+    $("#cid_createdbyregistrant_label").closest("tr").hide();
+
     tdg.c.weblink_hide("/RegistrationWizard/");
 	tdg.c.weblink_hide("/Bulk_Site_Upload/"); 
 
