@@ -180,9 +180,10 @@
                   "Transport": "@item()['values'][0][int(outputs('Transport'))]",
                   "Import": "@item()['values'][0][int(outputs('Import'))]",
                   "Class": "@item()['values'][0][int(outputs('Class'))]",
-                  "LineNumber": "@item()['index']",
+                  "SiteStatus": "@item()['values'][0][int(outputs('SiteStatus'))]",
                   "SiteFullAddress": "@item()['values'][0][int(outputs('SiteFullAddress'))]",
-                  "SiteGUID": "@item()['values'][0][int(outputs('SiteGUID'))]"
+                  "SiteGUID": "@item()['values'][0][int(outputs('SiteGUID'))]",
+                  "LineNumber": "@item()['values'][0][int(outputs('LineNumber'))]"
                 }
               }
             },
@@ -537,7 +538,7 @@
         },
         "Initialize_ProvinceCodes_variable": {
           "runAfter": {
-            "Scope_-_Language_logic_for_Messages": [
+            "check_if__contact_language_is_null": [
               "Succeeded"
             ]
           },
@@ -1346,183 +1347,6 @@
             "authentication": "@parameters('$authentication')"
           }
         },
-        "Scope_-_Language_logic_for_Messages": {
-          "actions": {
-            "Messaages": {
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "04d08f07-7aa1-43e4-8da5-adb1e21d7258"
-              },
-              "type": "Compose",
-              "inputs": "[\n{\"code\" : \"B1001\" , \"Eng-Message\" : \"A scan of the file has found a potential virus. Please download and update a new version of the Site Bulk Upload Excel Template, then upload that file instead. [B1001]\", \"Fr-Message\" :  \"Une analyse du fichier a trouvé un virus potentiel. Veuillez télécharger et mettre à jour une nouvelle version du modèle Excel de téléchargement groupé du site, puis téléchargez ce fichier à la place.[B1001]\" } ,\n{\"code\" : \"B1002\" , \"Eng-Message\" : \"The uploaded file is not the custom Site Bulk Upload Excel workbook. Please download and update a new version of the Site Bulk Upload Excel Template, then upload that file instead. [B1002] \", \"Fr-Message\" :  \"Le fichier téléchargé n'est pas le classeur Excel personnalisé de téléchargement en masse du site. Veuillez télécharger et mettre à jour une nouvelle version du modèle Excel de téléchargement groupé du site, puis téléchargez ce fichier à la place.[B1002] \" } ,\n{\"code\" : \"B1003\" , \"Eng-Message\" : \"The uploaded file is assigned to the ‘{0}’ Company, versus your own Company. Please download and update a new version of the Site Bulk Upload Excel Template, then upload that file instead. [B1003] \n\n{0} is the name of Company Name stored in a hidden field in the workbook \", \"Fr-Message\" :  \"Le fichier téléchargé est attribué à la société {0}, par opposition à votre propre société. Veuillez télécharger et mettre à jour une nouvelle version du modèle Excel de téléchargement groupé du site, puis téléchargez ce fichier à la place. [B1003]\n\n{0} est le nom du nom de la société stocké dans un champ masqué du classeur\" } ,\n{\"code\" : \"B1004\" , \"Eng-Message\" : \"The uploaded file is based on a template that is no longer current. Please download and update a new version of the Site Bulk Upload Excel Template, then upload that file instead. [B1004] \", \"Fr-Message\" :  \"Le fichier téléchargé est basé sur un modèle qui n'est plus actuel. Veuillez télécharger et mettre à jour une nouvelle version du modèle Excel de téléchargement groupé du site, puis téléchargez ce fichier à la place. [B1004]\" } ,\n{\"code\" : \"B1005\" , \"Eng-Message\" : \"The uploaded file is empty. Please update the file with the Basic, and if required Extended, Site information, Guidance for the data entry can be found in the [Instructions] sheet of the workbook.  \n\nWhen that process is complete, then upload that version of the file. [B1005]\", \"Fr-Message\" :  \"Le fichier téléchargé est vide. Veuillez mettre à jour le fichier avec les informations de base et, si nécessaire, les informations étendues sur le site. Des conseils pour la saisie des données peuvent être trouvés dans la feuille [Instructions] du classeur.\n\nUne fois ce processus terminé, téléchargez cette version du fichier. [B1005]\" } ,\n{\"code\" : \"B1006\" , \"Eng-Message\" : \"This workbook contains {0} rows of Site data and {1} rows of UN data for those sites. This exceeds the acceptable limits for the bulk upload of {2} rows for Site data and {3} rows for UN data.  \n\nThe [Instructions] tab within the workbook provides guidance as to what data needs to be provided. If need be, you may consider splitting the file into two Bulk files, each under the limits, and two Bulk submissions. [B1006] \", \"Fr-Message\" :  \"Ce classeur contient {0} lignes de données de site et {1} lignes de données UN pour ces sites. Cela dépasse les limites acceptables pour le téléchargement groupé de {2} lignes pour les données de site et de {3} lignes pour les données de l'ONU.[B1006]\" } ,\n{\"code\" : \"B1007\" , \"Eng-Message\" : \"There are already {0} rows of Site data and {1} rows of UN data for those sites on file for this Company, so no further uploads can continue. [B1007]\", \"Fr-Message\" :  \"\nIl existe déjà {0} lignes de données de site et {1} lignes de données de l'ONU pour ces sites dans le dossier de cette entreprise. Aucun autre téléchargement ne peut donc continuer. [B1007]\" } ,\n{\"code\" : \"B1008\" , \"Eng-Message\" : \"Missing required field: Province. [B1008]\", \"Fr-Message\" :  \"Champ obligatoire manquant : Province. [B1008]\" } ,\n{\"code\" : \"B1009\" , \"Eng-Message\" : \"Missing required field: Postal Code. [B1009]\", \"Fr-Message\" :  \"Champ obligatoire manquant : Code postal. [B1009]\" } ,\n{\"code\" : \"B1010\" , \"Eng-Message\" : \"Missing required field:Address 1. [B1010]\", \"Fr-Message\" :  \"Champ obligatoire manquant :Adresse 1. [B1010]\" } ,\n{\"code\" : \"B1011\" , \"Eng-Message\" : \"Address already exist. [B1011]\", \"Fr-Message\" :  \"\nL'adresse existe déjà pour l'entreprise par. [B1011]\" } ,\n{\"code\" : \"B1012\" , \"Eng-Message\" : \"City name is not correct. [B1012]\", \"Fr-Message\" :  \"Le nom de la ville n'est pas correct. [B1012]\" } ,\n{\"code\" : \"B1013\" , \"Eng-Message\" : \"City doesn't belong to Province. [B1013]\", \"Fr-Message\" :  \"\nLa ville n'appartient pas à la province. [B1013]\" } ,\n{\"code\" : \"B1014\" , \"Eng-Message\" : \"Missing required field:1B. Quarter / LSD. [B1014]\", \"Fr-Message\" :  \"Champ obligatoire manquant : 1B. Trimestre / LSD. [B1014]\" } ,\n{\"code\" : \"B1015\" , \"Eng-Message\" : \"Missing required field:1B. Section. [B1015]\", \"Fr-Message\" :  \"Champ obligatoire manquant : 1B. Section. [B1015]\" } ,\n{\"code\" : \"B1016\" , \"Eng-Message\" : \"Missing required field:1B. Township. [B1016]\", \"Fr-Message\" :  \"Champ obligatoire manquant : 1B. Canton. [B1016]\" } ,\n{\"code\" : \"B1017\" , \"Eng-Message\" : \"Missing required field:1B. Range. [B1017]\", \"Fr-Message\" :  \"Champ obligatoire manquant : 1B. Varier. [B1017]\" } ,\n{\"code\" : \"B1018\" , \"Eng-Message\" : \"Missing required field:1B. Meridian. [B1018]\", \"Fr-Message\" :  \"Champ obligatoire manquant : 1B. Méridien. [B1018]\" } ,\n{\"code\" : \"B1019\" , \"Eng-Message\" : \"Legal Land description already exists. [B1019]\", \"Fr-Message\" :  \"\nLa description légale du terrain existe déjà. [B1019]\" } ,\n{\"code\" : \"B1020\" , \"Eng-Message\" : \"Missing required field: 1C. Latitude. [B1020]\", \"Fr-Message\" :  \"Champ obligatoire manquant : 1C. Latitude. [B1020]\" } ,\n{\"code\" : \"B1021\" , \"Eng-Message\" : \"Missing required field: 1C. Longtitude. [B1021]\", \"Fr-Message\" :  \"Champ obligatoire manquant : 1C. Longitude. [B1021]\" } ,\n{\"code\" : \"B1022\" , \"Eng-Message\" : \"Latitude and Longtitude alerady exists for the company. [B1022]\", \"Fr-Message\" :  \"\nLa latitude et la longitude existent déjà pour l'entreprise. [B1022]\" } ,\n{\"code\" : \"B1023\" , \"Eng-Message\" : \"At least one mode of transportation Need to be selected. [B1023]\", \"Fr-Message\" :  \"Au moins un mode de transport Doit être sélectionné. [B1023]\" } ,\n{\"code\" : \"B1024\" , \"Eng-Message\" : \"At least one Class need to be added. [B1024]\", \"Fr-Message\" :  \"Au moins une classe doit être ajoutée. [B1024]\" } ,\n{\"code\" : \"B1025\" , \"Eng-Message\" : \"Incorrect class. [B1025]\", \"Fr-Message\" :  \"Classe incorrecte. [B1025]\" } ,\n{\"code\" : \"B1026\" , \"Eng-Message\" : \"Extended Site information in not specified. [B1026]\", \"Fr-Message\" :  \"\nLes informations étendues sur le site ne sont pas spécifiées. [B1026]\" } ,\n{\"code\" : \"B1027\" , \"Eng-Message\" : \"Site must have at least one HOTI activities. [B1027]\", \"Fr-Message\" :  \"Le site doit avoir au moins une activité HOTI. [B1027]\" } ,\n{\"code\" : \"B1028\" , \"Eng-Message\" : \"Extednded site must have at Least  on UNNumber Need to be specified. [B1028]\", \"Fr-Message\" :  \"Le site étendu doit avoir au moins un numéro UN Doit être spécifié. [B1028]\" } ,\n{\"code\" : \"B1029\" , \"Eng-Message\" : \"Missing required field: City. [B1029]\", \"Fr-Message\" :  \"Champ obligatoire manquant : Ville. [B1029]\" } ,\n{\"code\" : \"B1030\" , \"Eng-Message\" : \"Missing Annual Quantity/Volume. [B1030]\", \"Fr-Message\" :  \"Quantité/Volume annuel manquant. [B1030]\" } ,\n{\"code\" : \"B1031\" , \"Eng-Message\" : \"Missing Unit of measurement. [B1031]\", \"Fr-Message\" :  \"Unité de mesure manquante. [B1031]\" } ,\n{\"code\" : \"B1032\" , \"Eng-Message\" : \"Missing Annual # of  Consignments. [B1032]\", \"Fr-Message\" :  \"Nombre annuel manquant d'envois. [B1032]\" } ,\n{\"code\" : \"B1033\" , \"Eng-Message\" : \"Site belong to another company. Please go through cliaming process. [B1033]\", \"Fr-Message\" :  \"Le site appartient à une autre société. Veuillez passer par le processus de réclamation. [B1033]\" } ,\n{\"code\" : \"B1034\" , \"Eng-Message\" : \"Once site address is established it cannot be changed.[B1034]\", \"Fr-Message\" :  \"Une fois l'adresse du site établie, elle ne peut plus être modifiée.[B1034]\" } \n\n]"
-            },
-            "Parse_Messages_to_JSON": {
-              "runAfter": {
-                "Messaages": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "c7167db6-5d1d-4c49-8959-e8ed51425a00"
-              },
-              "type": "ParseJson",
-              "inputs": {
-                "content": "@outputs('Messaages')",
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "code": {
-                        "type": "string"
-                      },
-                      "Eng-Message": {
-                        "type": "string"
-                      },
-                      "Fr-Message": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "code",
-                      "Eng-Message",
-                      "Fr-Message"
-                    ]
-                  }
-                }
-              }
-            },
-            "Check_Language": {
-              "actions": {
-                "Select_-_English_Language": {
-                  "runAfter": {},
-                  "metadata": {
-                    "operationMetadataId": "2f87aa54-460c-45c4-a069-00ea3dbd7bf2"
-                  },
-                  "type": "Select",
-                  "inputs": {
-                    "from": "@body('Parse_Messages_to_JSON')",
-                    "select": {
-                      "code": "@item()['code']",
-                      "Message": "@item()['Eng-Message']"
-                    }
-                  }
-                },
-                "Apply_to_each_English_Message": {
-                  "foreach": "@body('Select_-_English_Language')",
-                  "actions": {
-                    "Append_to_array_variable_3": {
-                      "runAfter": {},
-                      "metadata": {
-                        "operationMetadataId": "e34d2bba-d320-4f5a-9b95-0e2454bf437e"
-                      },
-                      "type": "AppendToArrayVariable",
-                      "inputs": {
-                        "name": "Messages_Array",
-                        "value": "@items('Apply_to_each_English_Message')"
-                      }
-                    }
-                  },
-                  "runAfter": {
-                    "Select_-_English_Language": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "21b64a4a-96fd-4540-b578-86cee5235ab6"
-                  },
-                  "type": "Foreach"
-                }
-              },
-              "runAfter": {
-                "Parse_Messages_to_JSON": [
-                  "Succeeded"
-                ]
-              },
-              "else": {
-                "actions": {
-                  "Select_-_French_Language": {
-                    "runAfter": {},
-                    "metadata": {
-                      "operationMetadataId": "7e1b1002-0ea0-4737-81cd-7a7ddee851b1"
-                    },
-                    "type": "Select",
-                    "inputs": {
-                      "from": "@body('Parse_Messages_to_JSON')",
-                      "select": {
-                        "code": "@item()['code']",
-                        "Message": "@item()['Fr-Message']"
-                      }
-                    }
-                  },
-                  "for_each_French_message": {
-                    "foreach": "@body('Select_-_French_Language')",
-                    "actions": {
-                      "Append_to_array_variable_French_Message": {
-                        "runAfter": {},
-                        "metadata": {
-                          "operationMetadataId": "6ca892ec-2f00-4e9c-9c07-db6a700f96df"
-                        },
-                        "type": "AppendToArrayVariable",
-                        "inputs": {
-                          "name": "Messages_Array",
-                          "value": "@items('for_each_French_message')"
-                        }
-                      }
-                    },
-                    "runAfter": {
-                      "Select_-_French_Language": [
-                        "Succeeded"
-                      ]
-                    },
-                    "metadata": {
-                      "operationMetadataId": "1b147b98-4f69-4ed0-a0b3-3d01bf011e07"
-                    },
-                    "type": "Foreach"
-                  }
-                }
-              },
-              "expression": {
-                "equals": [
-                  "@variables('Language')",
-                  "@'918640001'"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "95a1b3cb-7717-4242-95b3-e1d926135492"
-              },
-              "type": "If"
-            }
-          },
-          "runAfter": {
-            "check_if__contact_language_is_null": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "579a4345-0777-4a5f-8e95-463e308bb3c1"
-          },
-          "type": "Scope"
-        },
-        "Initialize_Message_Array": {
-          "runAfter": {
-            "Initialize_variable_-_Error_Message": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "9c2fcec6-947b-4396-aa5d-63b3262a276f"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "Messages_Array",
-                "type": "array"
-              }
-            ]
-          }
-        },
         "Get_bulk_activities_log_summary_by_ID": {
           "runAfter": {
             "Get_a_account_by_ID": [
@@ -1897,7 +1721,7 @@
               "type": "Compose",
               "inputs": "@body('Parse_JSON')['Class']"
             },
-            "LineNumber": {
+            "SiteStatus": {
               "runAfter": {
                 "Class": [
                   "Succeeded"
@@ -1907,7 +1731,7 @@
                 "operationMetadataId": "87e59482-f129-418f-b5a6-66cf15fa34a4"
               },
               "type": "Compose",
-              "inputs": "@body('Parse_JSON')['Row number']"
+              "inputs": "@body('Parse_JSON')['SiteStatus']"
             },
             "SiteFullAddress": {
               "runAfter": {
@@ -2026,7 +1850,10 @@
                     "Extended Information Site ": {
                       "type": "string"
                     },
-                    "Row number": {
+                    "SiteStatus": {
+                      "type": "string"
+                    },
+                    "LineNumber": {
                       "type": "string"
                     },
                     "SiteFullAddress": {
@@ -2061,6 +1888,18 @@
                 "from": "@outputs('get-environment-settings')?['body/value']",
                 "where": "@equals(item()['qm_name'], 'CID_BulkUpload_Sites_Columns_In_Excel')"
               }
+            },
+            "LineNumber": {
+              "runAfter": {
+                "SiteStatus": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "87e59482-f129-418f-b5a6-66cf15fa34a4"
+              },
+              "type": "Compose",
+              "inputs": "@body('Parse_JSON')['LineNumber']"
             }
           },
           "runAfter": {
@@ -2094,7 +1933,7 @@
         },
         "Initialize_variable_Language": {
           "runAfter": {
-            "Initialize_Message_Array": [
+            "Initialize_variable_-_Error_Message": [
               "Succeeded"
             ]
           },

@@ -1,0 +1,91 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "3e39f266-4d95-440a-aa30-f4739ea4d826"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "cid_crabusinessnumber": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "cid_crabusinessnumber": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "9f597699-c21b-48d5-adbf-e8134ffcc6f9"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "cid_crabusinessnumber",
+                "type": "string",
+                "value": "@triggerBody()?['cid_crabusinessnumber']"
+              }
+            ]
+          }
+        },
+        "HTTP": {
+          "runAfter": {
+            "cid_crabusinessnumber": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "de2b3b88-5d34-41f7-ac70-58773ea76348"
+          },
+          "type": "Http",
+          "inputs": {
+            "method": "GET",
+            "uri": "@{concat('https://wwwapps.tc.gc.ca/saf-sec-sur/3/TDG-BN/api/v1/businesses/',variables('cid_crabusinessnumber'))}",
+            "headers": {
+              "TC-BN-API-KEY": "481271ac-7937-4ee6-997c-a4e791125538",
+              "TC-BN-IDENTITY-TOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IlNJRCIsIm5hbWVpZCI6IjIwIiwicm9sZSI6IkJ1c2luZXNzQWN0aXZpdHkkQnVzaW5lc3NFdmVudCRCdXNpbmVzc1JlZ2lzdHJhdGlvbk51bWJlciRCdXNpbmVzc1R5cGVDb2RlICRDb3Jwb3JhdGlvbkNlcnRpZmljYXRpb24kTGFuZ3VhZ2VQcmVmZXJlbmNlJExlZ2FsTmFtZSRNYWlsaW5nQWRkcmVzcyRPcGVyYXRpbmdOYW1lcyRPd25lcnNOYW1lJFBoeXNpY2FsTG9jYXRpb25BZGRyZXNzJFJlbGF0ZWRCdXNpbmVzc1JlZ2lzdHJhdGlvbk51bWJlciIsIkNvcnJlbGF0aW9uS2V5IjoiYTRlNzkxMTI1NTM4IiwibmJmIjoxNjcxNzM1OTY3LCJleHAiOjE5ODczNTUxNjcsImlhdCI6MTY3MTczNTk2NywiaXNzIjoiVHJhbnNwb3J0IENhbmFkYSIsImF1ZCI6IlRyYW5zcG9ydCBDYW5hZGEifQ.RjwIdwI2MMa1VcCG88cyTIJGCtRKI-TDuNLs8dLgM_g",
+              "TC-BN-UserRole": "02"
+            }
+          }
+        },
+        "Response": {
+          "runAfter": {
+            "HTTP": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8182da8f-641e-41ea-b7b3-ae19e3c23002"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": "@body('HTTP')"
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}
