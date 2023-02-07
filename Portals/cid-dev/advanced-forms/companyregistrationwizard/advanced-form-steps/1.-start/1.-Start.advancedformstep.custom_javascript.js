@@ -152,8 +152,25 @@ if (window.jQuery) {
                         rom_data = tdg.c.WebApi_List("accounts", filter);
                         if (rom_data.length > 0) {
                             rom_data = rom_data[0];
-                            var contact_id = '{{user.id}}';
-                            validation = invitation.in_current_registration(rom_data, suppress_error, contact_id);
+                            if (rom_data.ovs_invitation_only) {
+                                validation = false;
+                                var message = tdg.error_message.message("BTN_NEXT");
+                                $("#btn_next").prop("value", message);
+
+                                var message = tdg.error_message.message("m000047");
+                                tdg.c.dialog_YN(message, (ans) => {
+                                    if (ans) {
+                                        debugger;
+                                        return validation;
+                                    } else {
+                                        return validation;
+                                    }
+                                });
+                            }
+                            else {
+                                var contact_id = '{{user.id}}';
+                                validation = invitation.in_current_registration(rom_data, suppress_error, contact_id);
+                            }
                         }
                         else {
                             validation = true;
@@ -175,6 +192,9 @@ if (window.jQuery) {
                     }
                 }
                 else if (rom_data.cid_cidcompanystatus == null) {
+                    $("#cid_contacttype").val(100000000);
+                }
+                else if (rom_data.cid_cidcompanystatus == 100000002) {
                     $("#cid_contacttype").val(100000000);
                 }
                 else if (rom_data == null) {

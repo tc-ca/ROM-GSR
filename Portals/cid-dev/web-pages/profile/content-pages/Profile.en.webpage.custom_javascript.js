@@ -18,6 +18,10 @@ $(document).ready(function () {
    //hide page header
    const PageHeaderElement = document.getElementsByClassName("page-header");
    PageHeaderElement[0].setAttribute("hidden", "");
+   //get security section div
+   const SecuritySection  = document.getElementsByClassName("panel panel-default nav-profile");
+   SecuritySection[0].setAttribute("hidden", "");
+
    //add bottom to profile link in page-heading
    const PageheadingElement = document.getElementsByClassName("page-heading");
    PageheadingElement[0].style.marginBottom = "10px";

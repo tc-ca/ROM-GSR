@@ -110,8 +110,10 @@ $(document).ready(function () {
 
     $('#address1_country').attr("readonly", true);
 
-    var address1_stateorprovince = tdg.c.replace_special_char("{{user.address1_stateorprovince}}");
-    $("#address1_stateorprovince").val(address1_stateorprovince);
+   // var address1_stateorprovince = tdg.c.replace_special_char("{{user.address1_stateorprovince}}");
+    //console.log("address province from liquid " + address1_stateorprovince);
+   // $("#address1_stateorprovince").val(address1_stateorprovince);
+   console.log( "Province from text " +  $("#address1_stateorprovince").val());
     tdg.cid.convert_province_to_code(selected_language);
 
     if ($("#cid_addressoverwritten").val() == 0) { $("#ovs_address1_province").prop('disabled', true); }

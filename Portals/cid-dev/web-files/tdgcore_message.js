@@ -411,6 +411,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": m000046_FR
                     },
                     {
+                        "code": "m000047",
+                        "message_en": "The ACME company is currently set up as a by-invitation only company. Do you want to request to be on-boarded?",
+                        "message_fr": "The ACME company is currently set up as a by-invitation only company. Do you want to request to be on-boarded?_FR"
+                    },
+                    {
                         "code": "m000098",
                         "message_en": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
                         "message_fr": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID._FR"
