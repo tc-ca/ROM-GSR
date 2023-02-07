@@ -392,7 +392,7 @@
                 },
                 "List_CID_Invitation_Records": {
                   "runAfter": {
-                    "Update_account_row": [
+                    "If_company_registration_not_yet_started_": [
                       "Succeeded"
                     ]
                   },
@@ -471,29 +471,66 @@
                     "authentication": "@parameters('$authentication')"
                   }
                 },
-                "Update_account_row": {
+                "If_company_registration_not_yet_started_": {
+                  "actions": {
+                    "Update_account_row": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "cbfa3695-bb7b-408c-a9e8-532073ef0b9c"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "UpdateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "accounts",
+                          "recordId": "@outputs('Update_Invitation_Table')?['body/_adx_assigntoaccount_value']",
+                          "item/cid_cidcompanystatus": 100000004
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
+                  },
                   "runAfter": {
                     "Update_Invitation_Table": [
                       "Succeeded"
                     ]
                   },
-                  "metadata": {
-                    "operationMetadataId": "cbfa3695-bb7b-408c-a9e8-532073ef0b9c"
+                  "expression": {
+                    "or": [
+                      {
+                        "equals": [
+                          "@outputs('Get_a_row_by_ID_Accounts')?['body/cid_cidcompanystatus']",
+                          100000002
+                        ]
+                      },
+                      {
+                        "equals": [
+                          "@outputs('Get_a_row_by_ID_Accounts')?['body/cid_cidcompanystatus']",
+                          100000010
+                        ]
+                      },
+                      {
+                        "equals": [
+                          "@outputs('Get_a_row_by_ID_Accounts')?['body/cid_cidcompanystatus']",
+                          100000003
+                        ]
+                      },
+                      {
+                        "equals": [
+                          "@outputs('Get_a_row_by_ID_Accounts')?['body/cid_cidcompanystatus']",
+                          "@null"
+                        ]
+                      }
+                    ]
                   },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "host": {
-                      "connectionName": "shared_commondataserviceforapps",
-                      "operationId": "UpdateRecord",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                    },
-                    "parameters": {
-                      "entityName": "accounts",
-                      "recordId": "@outputs('Update_Invitation_Table')?['body/_adx_assigntoaccount_value']",
-                      "item/cid_cidcompanystatus": 100000004
-                    },
-                    "authentication": "@parameters('$authentication')"
-                  }
+                  "metadata": {
+                    "operationMetadataId": "d3d8b392-57ff-425b-8f15-82cee95c9308"
+                  },
+                  "type": "If"
                 }
               },
               "runAfter": {

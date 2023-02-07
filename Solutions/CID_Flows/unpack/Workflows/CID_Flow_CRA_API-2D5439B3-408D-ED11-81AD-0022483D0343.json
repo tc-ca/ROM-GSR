@@ -64,11 +64,12 @@
               "TC-BN-IDENTITY-TOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IlNJRCIsIm5hbWVpZCI6IjIwIiwicm9sZSI6IkJ1c2luZXNzQWN0aXZpdHkkQnVzaW5lc3NFdmVudCRCdXNpbmVzc1JlZ2lzdHJhdGlvbk51bWJlciRCdXNpbmVzc1R5cGVDb2RlICRDb3Jwb3JhdGlvbkNlcnRpZmljYXRpb24kTGFuZ3VhZ2VQcmVmZXJlbmNlJExlZ2FsTmFtZSRNYWlsaW5nQWRkcmVzcyRPcGVyYXRpbmdOYW1lcyRPd25lcnNOYW1lJFBoeXNpY2FsTG9jYXRpb25BZGRyZXNzJFJlbGF0ZWRCdXNpbmVzc1JlZ2lzdHJhdGlvbk51bWJlciIsIkNvcnJlbGF0aW9uS2V5IjoiYTRlNzkxMTI1NTM4IiwibmJmIjoxNjcxNzM1OTY3LCJleHAiOjE5ODczNTUxNjcsImlhdCI6MTY3MTczNTk2NywiaXNzIjoiVHJhbnNwb3J0IENhbmFkYSIsImF1ZCI6IlRyYW5zcG9ydCBDYW5hZGEifQ.RjwIdwI2MMa1VcCG88cyTIJGCtRKI-TDuNLs8dLgM_g",
               "TC-BN-UserRole": "02"
             }
-          }
+          },
+          "operationOptions": "DisableAsyncPattern"
         },
         "Response": {
           "runAfter": {
-            "HTTP": [
+            "httpCallResults": [
               "Succeeded"
             ]
           },
@@ -79,13 +80,25 @@
           "kind": "Http",
           "inputs": {
             "statusCode": 200,
-            "body": "@body('HTTP')"
+            "body": "@outputs('httpCallResults')"
           }
+        },
+        "httpCallResults": {
+          "runAfter": {
+            "HTTP": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8c04b61b-be92-4dcd-aec7-fddf7f536154"
+          },
+          "type": "Compose",
+          "inputs": "@body('HTTP')?['Result']"
         }
       },
       "outputs": {}
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
