@@ -80,7 +80,7 @@ if (typeof (invitation) == "undefined") {
                                 // disable controls
                                 debugger;
                                 //$("#cid_has_cra_bn").prop('disabled', false);
-                                $('#cid_has_cra_bn').attr("disabled","disabled");
+                                $('#cid_has_cra_bn').attr("disabled", "disabled");
                                 var cid_has_cra_bn = $("#cid_has_cra_bn").val();
                                 if (cid_has_cra_bn) {
                                     $('#cid_crabusinessnumber').attr("readonly", true);
@@ -93,7 +93,7 @@ if (typeof (invitation) == "undefined") {
 
                                 var message = tdg.error_message.message("BTN_NEXT");
                                 $("#btn_next").prop("value", message);
-                                $("#btn_next").prop("disabled",true);
+                                $("#btn_next").prop("disabled", true);
 
                                 // show alert message
                                 var message = tdg.error_message.message("m000043");
@@ -101,6 +101,9 @@ if (typeof (invitation) == "undefined") {
 
                                 //tdg.c.sign_out();
                             } else {
+                                var message = tdg.error_message.message("BTN_NEXT");
+                                $("#btn_next").prop("value", message);
+
                                 var message = tdg.error_message.message("m000044");
                                 tdg.c.dialog_OK(message);
                             }
@@ -289,9 +292,13 @@ if (typeof (invitation) == "undefined") {
                             var data = {};
                             data.adx_invitationcode = "";
                             tdg.webapi.update("adx_invitations", record_id, data);
+
+                            sessionStorage.setItem("cid_has_invitation", "false");
+                            sessionStorage.setItem("cid_suppress_error","");
                             return;
                         } else {
                             debugger;
+                            invitation.invitation_secondary(_account, message, contact_id);
                             return;
                         }
                     });

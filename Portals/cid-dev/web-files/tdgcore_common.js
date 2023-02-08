@@ -1963,7 +1963,16 @@ if (typeof (tdg.cid.crw) == "undefined") {
         start_cid_crabusinessnumber_onchange: function (step_start) {
             var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
             var data;
-            data = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, step_start);
+            var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
+            //if pre prod or prod
+            if (environment == "PreProd" || environment == "Prod") {
+                //use CRA API to get iformation
+                data = tdg.cid.crw.Production_start_Retrieve_cra(cid_crabusinessnumber, step_start);
+            }
+            else {
+                // retrieve information from FakeBN entity in dynamics
+                data = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, step_start);
+            }
             return data;
         },
 
@@ -1975,13 +1984,27 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
             $('#' + btn_next_name).prop("disabled", !value);
         },
+         async_function_retrieve_CRA: async function(bn, step) {
+            let data = await tdg.cid.crw.Production_start_Retrieve_cra(bn, step);
 
+            return data;
+        },
         data_confirm_dialog: function (cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber_list) {
             debugger;
             var data = {};
             data.length = 0;
             if (cid_has_cra_bn == "1") {
-                var cra_data = tdg.cid.crw.start_Retrieve_cra(bn, "");
+                var cra_data;
+                var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
+                //if pre prod or prod
+                if (environment == "PreProd" || environment == "Prod") {
+                    //use CRA API to get information
+                    cra_data = tdg.cid.crw.async_function_retrieve_CRA(bn, "");
+                }
+                else {
+                    // retrieve information from FakeBN entity in dynamics
+                    cra_data = tdg.cid.crw.start_Retrieve_cra(bn, "");
+                }
                 if (cra_data.length == 0) {
                     return data;
                 }
@@ -2255,6 +2278,96 @@ if (typeof (tdg.cid.crw) == "undefined") {
             }
         },
 
+        //CRA BN API - Production and PreProd
+        Production_start_Retrieve_cra: function (bn, step_start) {
+
+            var CRA_Data = {};
+            var cid_crabusinessnumber = bn;
+
+            var CRA_Flow_URL;
+            //retrieve the url of the flow used to get data from CRA
+            var results = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_Flow_CRA_API'");
+            //check if flow url is found
+            if (results.length > 0) {
+                CRA_Flow_URL = results[0]["qm_value"];
+                //define flow paramaters
+                let body = {
+                    "cid_crabusinessnumber": cid_crabusinessnumber
+                };
+
+                //call flow to execute CRA API call
+                let req = new XMLHttpRequest();
+                req.open("POST", CRA_Flow_URL, true);
+                req.setRequestHeader("Content-Type", "application/json");
+                req.onreadystatechange = function () {
+                    if (this.readyState === 4) {
+                        req.onreadystatechange = null;
+                        if (this.status === 200) {
+                            debugger;
+                            //parse result found
+                            var json = JSON.parse(this.response);
+                            //check CRM return invalid bn number
+                            if (json.IsInvalidData) {
+                                return "";
+                            }
+                            else {
+
+                                if (json == null) {
+                                    return "";
+                                }
+
+                                if (json.length == 0) {
+                                    return "";
+                                }
+
+
+                                //get CRA data
+                                CRA_Data.LegalName = json.LegalName;
+                                CRA_Data.OperatingName = json.LegalName;
+                                CRA_Data.BusinessRegistrationNumber = cid_crabusinessnumber;
+                                var a = {};
+                                a.AddressLine1Text = json.AddressLine1Text;
+                                a.AddressLine2Text = json.AddressLine2Text;
+                                a.CityName = json.CityName;
+                                a.ProvinceStateCode = json.ProvinceStateCode;
+                                a.PostalZipCode = json.PostalZipCode;
+                                a.CountryCode = json.CountryCode;
+
+                                CRA_Data.PhysicalLocationAddress = a;
+                                if (step_start == "1") {
+                                    tdg.cid.crw.start_BN_Selected(CRA_Data);
+                                    return CRA_Data;
+                                }
+                                else {
+                                    return CRA_Data;
+                                }
+
+                            }
+
+                        } else {
+                            debugger;
+
+                        }
+                    }
+                };
+                req.send(JSON.stringify(body));
+            }//end check if flow url is found
+        },
+
+        //get environment from environment setting (depending on the environment it will return either DEV, QA, ACC, PreProd , or Prod)
+        Get_Enviroment_From_EnvironmentSettings: function () {
+            var environment = "";
+            // web api call to get cid enviroment
+            var results = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_Environment'");
+            //check if flow url is found
+            if (results.length > 0) {
+                environment = results[0]["qm_value"];
+            }
+
+            return environment;
+        },
+
+
         start_cid_reasonfornobnnumber_onchange: function () {
             $("#cid_reasonfornobnnumber_other").val("");
 
@@ -2418,3 +2531,4 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
+

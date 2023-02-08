@@ -153,6 +153,16 @@ if (window.jQuery) {
                         if (rom_data.length > 0) {
                             rom_data = rom_data[0];
                             if (rom_data.ovs_invitation_only) {
+                                var ovs_invitation_only = true;
+                                switch (rom_data.cid_cidcompanystatus) {
+                                    case 100000001:
+                                        ovs_invitation_only = false;
+                                        break;
+                                }
+                                rom_data.ovs_invitation_only = ovs_invitation_only;
+                            }
+
+                            if (rom_data.ovs_invitation_only) {
                                 validation = false;
                                 var message = tdg.error_message.message("BTN_NEXT");
                                 $("#btn_next").prop("value", message);
