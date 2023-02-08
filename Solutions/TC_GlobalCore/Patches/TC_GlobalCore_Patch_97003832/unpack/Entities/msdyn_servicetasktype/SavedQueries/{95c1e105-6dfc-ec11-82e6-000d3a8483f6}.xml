@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{95c1e105-6dfc-ec11-82e6-000d3a8483f6}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="msdyn_name" select="1" icon="1" preview="1">
+        <row name="result" id="msdyn_servicetasktypeid">
+          <cell name="msdyn_name" width="200" />
+          <cell name="ovs_servicetasktypenameenglish" width="252" />
+          <cell name="ovs_servicetasktypenamefrench" width="247" />
+          <cell name="fdr_lookupcode" width="143" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
+        <entity name="msdyn_servicetasktype">
+          <attribute name="msdyn_name" />
+          <attribute name="msdyn_servicetasktypeid" />
+          <attribute name="fdr_lookupcode" />
+          <attribute name="ovs_servicetasktypenameenglish" />
+          <attribute name="ovs_servicetasktypenamefrench" />
+          <filter type="and">
+            <condition attribute="fdr_lookupcode" operator="not-null" />
+          </filter>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Time Activity Types" languagecode="1033" />
+      <LocalizedName description="Types d'activitées de suivi de temps" languagecode="1036" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
