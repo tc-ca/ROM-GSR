@@ -103,12 +103,13 @@ if (typeof (invitation) == "undefined") {
                 //$("#cid_has_cra_bn").prop('disabled', false);
                 $('#cid_has_cra_bn').attr("disabled", "disabled");
                 var cid_has_cra_bn = $("#cid_has_cra_bn").val();
+                cid_has_cra_bn = (cid_has_cra_bn == "1" ? true : false);
                 if (cid_has_cra_bn) {
                     $('#cid_crabusinessnumber').attr("readonly", true);
                 }
                 else {
-                    $('#ovs_legalname').attr("readonly", true);
-                    $('#cid_reasonfornobnnumber').attr("readonly", true);
+                    $('#cid_legalname').attr("readonly", true);
+                    $('#cid_reasonfornobnnumber').attr("disabled", "disabled");
                     $('#cid_reasonfornobnnumber_other').attr("readonly", true);
                 }
 
@@ -116,9 +117,14 @@ if (typeof (invitation) == "undefined") {
                 $("#btn_next").prop("value", message);
                 $("#btn_next").prop("disabled", true);
 
+                $("#NextButton").prop("value", message);
+                $("#NextButton").prop("disabled", true);
+
                 // show alert message
                 var message = tdg.error_message.message("m000043");
                 tdg.c.dialog_OK(message);
+
+                debugger;
 
                 //tdg.c.sign_out();
             } else {

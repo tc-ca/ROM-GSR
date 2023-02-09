@@ -412,8 +412,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000047",
-                        "message_en": "The ACME company is currently set up as a by-invitation only company. Do you want to request to be on-boarded?",
-                        "message_fr": "The ACME company is currently set up as a by-invitation only company. Do you want to request to be on-boarded?_FR"
+                        "message_en": "The '{0}' company is currently set up as a by-invitation only company. Do you want to request to be on-boarded?",
+                        "message_fr": "The '{0}' company is currently set up as a by-invitation only company. Do you want to request to be on-boarded?_FR"
                     },
                     {
                         "code": "m000098",

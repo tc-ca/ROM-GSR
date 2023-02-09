@@ -6,8 +6,6 @@ $(document).ready(function () {
     debugger;
     sessionStorage.setItem("step_start", 1);
 
-    temp();
-
     //if user skip adding first and last name
     //redirect to profile page
     var userFullname = '{{user.fullname}}';
@@ -98,15 +96,36 @@ $(document).ready(function () {
     });
 });
 
-function temp() {
-    var filter = "cid_businessregistrationnumber eq '110000010'";
-    var set1 = tdg.c.WebApi_List("cid_fake_cra_bn_apis", filter);
+function start_registration(rom_data, suppress_error) {
+    debugger;
+    if (rom_data.ovs_invitation_only) {
+        var ovs_invitation_only = true;
+        switch (rom_data.cid_cidcompanystatus) {
+            case 100000001:
+                ovs_invitation_only = false;
+                break;
+        }
+        rom_data.ovs_invitation_only = ovs_invitation_only;
+    }
 
-    var filter = "cid_crabusinessnumber eq '110000010'";
-    var set3 = tdg.c.WebApi_List("accounts", filter);
+    if (rom_data.ovs_invitation_only) {
+        validation = false;
+        var message = tdg.error_message.message("BTN_NEXT");
+        $("#btn_next").prop("value", message);
 
-    var filter = "ovs_legalname eq 'TONY -  WITHOUT BN - Invitation 3'";
-    var set2 = tdg.c.WebApi_List("accounts", filter);
+        var message = tdg.error_message.message("m000047");
+        message = message.replaceAll("{0}", rom_data.ovs_legalname);
+        tdg.c.dialog_YN(message, (ans) => {
+            var contact_id = '{{user.id}}';
+            invitation.request_onboard(rom_data, contact_id, ans, false)
+        });
+        return validation;
+    }
+    else {
+        var contact_id = '{{user.id}}';
+        validation = invitation.in_current_registration(rom_data, suppress_error, contact_id);
+        return validation;
+    }
 }
 
 if (window.jQuery) {
@@ -136,9 +155,7 @@ if (window.jQuery) {
                     rom_data = tdg.cid.crw.start_account_by_name(legalname);
                     if (rom_data.length > 0) {
                         rom_data = rom_data[0];
-
-                        var contact_id = '{{user.id}}';
-                        validation = invitation.in_current_registration(rom_data, suppress_error, contact_id);
+                        validation = start_registration(rom_data, suppress_error);
 
                         $("#cid_operatingname").val(rom_data.name);
                     }
@@ -165,32 +182,7 @@ if (window.jQuery) {
                         rom_data = tdg.c.WebApi_List("accounts", filter);
                         if (rom_data.length > 0) {
                             rom_data = rom_data[0];
-                            if (rom_data.ovs_invitation_only) {
-                                var ovs_invitation_only = true;
-                                switch (rom_data.cid_cidcompanystatus) {
-                                    case 100000001:
-                                        ovs_invitation_only = false;
-                                        break;
-                                }
-                                rom_data.ovs_invitation_only = ovs_invitation_only;
-                            }
-
-                            if (rom_data.ovs_invitation_only) {
-                                validation = false;
-                                var message = tdg.error_message.message("BTN_NEXT");
-                                $("#btn_next").prop("value", message);
-
-                                var message = tdg.error_message.message("m000047");
-                                tdg.c.dialog_YN(message, (ans) => {
-                                    var contact_id = '{{user.id}}';
-                                    invitation.request_onboard(rom_data, contact_id, ans, false)
-                                });
-                                return validation;
-                            }
-                            else {
-                                var contact_id = '{{user.id}}';
-                                validation = invitation.in_current_registration(rom_data, suppress_error, contact_id);
-                            }
+                            validation = start_registration(rom_data, suppress_error);
                         }
                         else {
                             validation = true;
