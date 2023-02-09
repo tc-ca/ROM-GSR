@@ -6,6 +6,8 @@ $(document).ready(function () {
     debugger;
     sessionStorage.setItem("step_start", 1);
 
+    temp();
+
     //if user skip adding first and last name
     //redirect to profile page
     var userFullname = '{{user.fullname}}';
@@ -95,6 +97,17 @@ $(document).ready(function () {
         tdg.cid.crw.start_btn_next_click();
     });
 });
+
+function temp() {
+    var filter = "cid_businessregistrationnumber eq '110000010'";
+    var set1 = tdg.c.WebApi_List("cid_fake_cra_bn_apis", filter);
+
+    var filter = "cid_crabusinessnumber eq '110000010'";
+    var set3 = tdg.c.WebApi_List("accounts", filter);
+
+    var filter = "ovs_legalname eq 'TONY -  WITHOUT BN - Invitation 3'";
+    var set2 = tdg.c.WebApi_List("accounts", filter);
+}
 
 if (window.jQuery) {
     (function ($) {

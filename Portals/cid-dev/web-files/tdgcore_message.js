@@ -578,9 +578,12 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000129",
                         "message_en": "Longitude",
                         "message_fr": "Longitude_FR"
-                    }
-
-
+                    },
+                    {
+                        "code": "m000130",
+                        "message_en": "The Annual Compliance Update can only be completed as early as 30 days before your Company’s Anniversary Date of {0}.",
+                        "message_fr": "In French - The Annual Compliance Update can only be completed as early as 30 days before your Company’s Anniversary Date of {0}."
+                    },
                 ];
 
             return list;

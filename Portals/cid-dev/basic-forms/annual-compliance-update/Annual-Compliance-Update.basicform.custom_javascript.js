@@ -95,7 +95,7 @@ $(document).ready(function ()
 		//	//$('.validation-summary div').focus();
 		//}
 
-		var infomsg = "The Annual Compliance Update can only be completed as early as 30 days before your Company’s Anniversary Date of {0}." //tdg.error_message.message("m000112");
+		var infomsg = tdg.error_message.message("m000130");
 		infomsg = infomsg.replace("{0}", anniversaryDate.substring(0, 10));
 		if (infomsg != "")
 		{
