@@ -60,25 +60,6 @@
       "actions": {
         "Condition": {
           "actions": {
-            "List_rows": {
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "5f2fd663-1a9f-435c-b46f-33ccb07ff0b2"
-              },
-              "type": "OpenApiConnection",
-              "inputs": {
-                "host": {
-                  "connectionName": "shared_commondataserviceforapps",
-                  "operationId": "ListRecords",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                },
-                "parameters": {
-                  "entityName": "accounts",
-                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"account\">\n    <attribute name=\"accountid\" />\n    <attribute name=\"cid_cidsitestatus\" />\n    <order attribute=\"cid_cidsitestatus\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"customertypecode\" operator=\"eq\" value=\"948010001\" />\n      <condition attribute=\"parentaccountid\" operator=\"eq\" value=\"@{triggerOutputs()?['body/accountid']}\" />\n    </filter>\n  </entity>\n</fetch>"
-                },
-                "authentication": "@parameters('$authentication')"
-              }
-            },
             "Apply_to_each": {
               "foreach": "@outputs('List_rows')?['body/value']",
               "actions": {
@@ -102,7 +83,9 @@
                             "parameters": {
                               "entityName": "accounts",
                               "recordId": "@items('Apply_to_each_2')?['accountid']",
-                              "item/cid_cidsitestatus": 100000015
+                              "item/cid_romsitestatus": 100000005,
+                              "item/cid_cidsitestatus": 100000023,
+                              "item/cid_siteclaim": 100000001
                             },
                             "authentication": "@parameters('$authentication')"
                           }
@@ -191,6 +174,92 @@
                 "operationMetadataId": "48bffbb7-dca7-416d-8f5e-c5254efa119e"
               },
               "type": "Foreach"
+            },
+            "Get_Company_Deactivation_History_Code_record": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "82b5d963-14d7-4c0c-bb89-e32641bb8eca"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "cid_audithistorycodes",
+                  "$select": "cid_audithistorycodeid",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"cid_audithistorycode\">\n    <attribute name=\"cid_audithistorycodeid\" />\n    <attribute name=\"cid_name\" />\n    <order attribute=\"cid_name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"cid_name\" operator=\"eq\" value=\"CI1\" />\n      <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\" />\n    </filter>\n  </entity>\n</fetch>",
+                  "$top": 1
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "List_rows": {
+              "runAfter": {
+                "Create_Company_Deactivation_History_Log": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "5f2fd663-1a9f-435c-b46f-33ccb07ff0b2"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"account\">\n    <attribute name=\"accountid\" />\n    <attribute name=\"cid_cidsitestatus\" />\n    <order attribute=\"cid_cidsitestatus\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"customertypecode\" operator=\"eq\" value=\"948010001\" />\n      <condition attribute=\"parentaccountid\" operator=\"eq\" value=\"@{triggerOutputs()?['body/accountid']}\" />\n    </filter>\n  </entity>\n</fetch>"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Create_Company_Deactivation_History_Log": {
+              "actions": {
+                "Add_Company_Deactivation_History_Log": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "7901bf32-2876-41c4-b8f1-0bd2bf63c161"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "CreateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "cid_historylogs",
+                      "item/subject": "Company Deactivation",
+                      "item/cid_Company_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/accountid']})",
+                      "item/cid_externallyvisible": false,
+                      "item/cid_HistoryCode_cid_historylog@odata.bind": "cid_audithistorycodes(@{first(body('Get_Company_Deactivation_History_Code_record')?['value'])?['cid_audithistorycodeid']})",
+                      "item/cid_memotemplateinputparameters": "@{triggerOutputs()?['body/cid_reasonforcompanydeactivation']}|@{triggerOutputs()?['body/cid_companydeactivationeffectivedate']}|@{triggerOutputs()?['body/cid_memoforcompanydeactivation']}"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Get_Company_Deactivation_History_Code_record": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "greater": [
+                  "@length(outputs('Get_Company_Deactivation_History_Code_record')?['body/value'])",
+                  0
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "078f1157-d252-4699-8277-232212a08ba6"
+              },
+              "type": "If"
             }
           },
           "runAfter": {},

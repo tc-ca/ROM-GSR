@@ -48,7 +48,7 @@
       "actions": {
         "GetAccounts": {
           "runAfter": {
-            "Initialize_variable_2": [
+            "Initialize_variable_DueDate": [
               "Succeeded"
             ]
           },
@@ -64,7 +64,7 @@
             },
             "parameters": {
               "entityName": "accounts",
-              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"account\">\n    <attribute name=\"name\" />\n    <attribute name=\"ovs_legalname\" />\n    <attribute name=\"primarycontactid\" />\n    <attribute name=\"cid_crabusinessnumber\" />\n    <attribute name=\"root_organization_id\" />\n    <attribute name=\"ovs_address_display\" />\n    <attribute name=\"cid_rootcompany\" />\n    <attribute name=\"accountid\" />\n    <attribute name=\"cid_attestationdate\" />\n    <attribute name=\"cid_annualcomplianceupdatesremindersenddate\" />\n    <order attribute=\"ovs_legalname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n      <condition attribute=\"cid_attestationdate\" operator=\"on\" value=\"@{addDays(utcNow(), -395 ,'yyyy-MM-dd')}\" />\n    </filter>\n  </entity>\n</fetch>"
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"account\">\n    <attribute name=\"name\" />\n    <attribute name=\"ovs_legalname\" />\n    <attribute name=\"primarycontactid\" />\n    <attribute name=\"cid_crabusinessnumber\" />\n    <attribute name=\"root_organization_id\" />\n    <attribute name=\"ovs_address_display\" />\n    <attribute name=\"cid_rootcompany\" />\n    <attribute name=\"accountid\" />\n    <attribute name=\"cid_attestationdate\" />\n    <attribute name=\"cid_companyanniversarydate\" />\n    <attribute name=\"cid_annualcomplianceupdatesremindersenddate\" />\n    <order attribute=\"ovs_legalname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n      <condition attribute=\"cid_attestationdate\" operator=\"on\" value=\"@{addDays(utcNow(), -395 ,'yyyy-MM-dd')}\" />\n    </filter>\n  </entity>\n</fetch>"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -142,7 +142,7 @@
             ]
           }
         },
-        "Initialize_variable_2": {
+        "Initialize_variable_Language": {
           "runAfter": {
             "Initialize_variable_Primary_Contact_First_Name": [
               "Succeeded"
@@ -181,7 +181,7 @@
                     },
                     "parameters": {
                       "entityName": "contacts",
-                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <attribute name=\"firstname\" />\n    <attribute name=\"telephone1\" />\n    <attribute name=\"contactid\" />\n    <attribute name=\"emailaddress1\" />\n   <attribute name=\"cid_languageofcorrespondence\" />\n    <attribute name=\"cid_contacttype\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" uitype=\"account\" value=\"@{items('Apply_to_each_Account')?['accountid']}\" />\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n    </filter>\n  </entity>\n</fetch>"
+                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <attribute name=\"firstname\" />\n    <attribute name=\"telephone1\" />\n    <attribute name=\"contactid\" />\n    <attribute name=\"emailaddress1\" />\n   <attribute name=\"cid_languageofcorrespondence\" />\n    <attribute name=\"cid_contacttype\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" uitype=\"account\" value=\"@{items('Apply_to_each_Account')?['accountid']}\" />\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n     <condition attribute=\"emailaddress1\" operator=\"not-null\" />\n    </filter>\n  </entity>\n</fetch>"
                     },
                     "authentication": "@parameters('$authentication')"
                   }
@@ -337,7 +337,7 @@
                     }
                   },
                   "runAfter": {
-                    "Set_variable__CCEmailRecipients_to_Null": [
+                    "Set_DueDate": [
                       "Succeeded"
                     ]
                   },
@@ -363,7 +363,7 @@
                         "parameters": {
                           "request/to": "@{variables('ToEmailRecipients')};",
                           "request/subject": "Beta Test:  Annual Compliance Reminder",
-                          "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_Account')?['ovs_legalname']} was expired 30 days ago. Please log into your account and initialize Annual Compliance.<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto generated email.</p>",
+                          "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nPlease note that your @{items('Apply_to_each_Account')?['ovs_legalname']} company’s annual compliance update within the TDG Registration Database was due on your upcoming anniversary date of @{formatDateTime(variables('DueDate'), 'yyyy-MM-dd')} and this is the second reminder that it is past due.<br>\n<br>\nPlease login to the TDG Registration Database portal and choose the ‘Annual Compliance Update’ side menu option to complete the update. Note that guidance material in the instructions sections of that page provides help on how to complete it.<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto generated email.<br>\n</p>\n<head>\n <style type=\"text/css\">\n.div A:link {text-decoration: none; color: white;}\n.div A:visited {text-decoration: none; color: white;}\n.div A:active {text-decoration: none; color: white; }\n.div A:hover {text-decoration: none; color: white;}\n </style>\n</head>\n<div class=\"div\" style=\"display:none; font-size:1; color:white;\">",
                           "request/cc": "@variables('CCEmailRecipients')"
                         },
                         "authentication": "@parameters('$authentication')"
@@ -392,7 +392,7 @@
                           "parameters": {
                             "request/to": "@{variables('ToEmailRecipients')};",
                             "request/subject": "Beta Test:  FR: Annual Compliance Reminder",
-                            "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nYour Annual Compliance for account @{items('Apply_to_each_Account')?['ovs_legalnamefr']} was expired 30 days ago. Please log into your account and initialize Annual Compliance.<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto generated email.</p>",
+                            "request/text": "<p>Hello @{variables('Primary Contact First Name')},<br>\n<br>\nPlease note that your @{items('Apply_to_each_Account')?['ovs_legalnamefr']} company’s annual compliance update within the TDG Registration Database was due on your upcoming anniversary date of @{formatDateTime(variables('DueDate'), 'yyyy-MM-dd')} and this is the second reminder that it is past due.<br>\n<br>\nPlease login to the TDG Registration Database portal and choose the ‘Annual Compliance Update’ side menu option to complete the update. Note that guidance material in the instructions sections of that page provides help on how to complete it.<br>\n<br>\nTransport Canada / Government of Canada<br>\n<br>\n<br>\nThis is auto generated email.</p>\n<head>\n <style type=\"text/css\">\n.div A:link {text-decoration: none; color: white;}\n.div A:visited {text-decoration: none; color: white;}\n.div A:active {text-decoration: none; color: white; }\n.div A:hover {text-decoration: none; color: white;}\n </style>\n</head>\n<div class=\"div\" style=\"display:none; font-size:1; color:white;\">",
                             "request/cc": "@variables('CCEmailRecipients')"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -410,6 +410,21 @@
                     "operationMetadataId": "31b2f0eb-c13a-4786-ae9f-f8eb1a3e8670"
                   },
                   "type": "If"
+                },
+                "Set_DueDate": {
+                  "runAfter": {
+                    "Set_variable__CCEmailRecipients_to_Null": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "0b9fd179-5d2a-428e-a7da-afa4be0cd81c"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "DueDate",
+                    "value": "@items('Apply_to_each_Account')?['cid_companyanniversarydate']"
+                  }
                 }
               },
               "runAfter": {},
@@ -434,6 +449,25 @@
             "operationMetadataId": "9fd4c9b4-c8aa-46bd-8060-133cc8a00a21"
           },
           "type": "If"
+        },
+        "Initialize_variable_DueDate": {
+          "runAfter": {
+            "Initialize_variable_Language": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8865d4f1-0251-4ce8-b812-af4346b38b8d"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "DueDate",
+                "type": "string"
+              }
+            ]
+          }
         }
       }
     },
