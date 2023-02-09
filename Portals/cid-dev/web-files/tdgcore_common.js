@@ -1963,16 +1963,16 @@ if (typeof (tdg.cid.crw) == "undefined") {
         start_cid_crabusinessnumber_onchange: function (step_start) {
             var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
             var data;
-            var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
+            //var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
             //if pre prod or prod
-            if (environment == "PreProd" || environment == "Prod") {
+            //if (environment == "PreProd" || environment == "Prod") {
                 //use CRA API to get iformation
-                data = tdg.cid.crw.Production_start_Retrieve_cra(cid_crabusinessnumber, step_start);
-            }
-            else {
+              //  data = tdg.cid.crw.async_function_retrieve_CRA(cid_crabusinessnumber, step_start);
+            //}
+           // else {
                 // retrieve information from FakeBN entity in dynamics
                 data = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, step_start);
-            }
+            //}
             return data;
         },
 
@@ -1995,16 +1995,16 @@ if (typeof (tdg.cid.crw) == "undefined") {
             data.length = 0;
             if (cid_has_cra_bn == "1") {
                 var cra_data;
-                var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
+                //var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
                 //if pre prod or prod
-                if (environment == "PreProd" || environment == "Prod") {
+               // if (environment == "PreProd" || environment == "Prod") {
                     //use CRA API to get information
-                    cra_data = tdg.cid.crw.async_function_retrieve_CRA(bn, "");
-                }
-                else {
+                 //   cra_data = tdg.cid.crw.async_function_retrieve_CRA(bn, "");
+                //}
+                //else {
                     // retrieve information from FakeBN entity in dynamics
                     cra_data = tdg.cid.crw.start_Retrieve_cra(bn, "");
-                }
+                //}
                 if (cra_data.length == 0) {
                     return data;
                 }
@@ -2326,12 +2326,12 @@ if (typeof (tdg.cid.crw) == "undefined") {
                                 CRA_Data.OperatingName = json.LegalName;
                                 CRA_Data.BusinessRegistrationNumber = cid_crabusinessnumber;
                                 var a = {};
-                                a.AddressLine1Text = json.AddressLine1Text;
-                                a.AddressLine2Text = json.AddressLine2Text;
-                                a.CityName = json.CityName;
-                                a.ProvinceStateCode = json.ProvinceStateCode;
-                                a.PostalZipCode = json.PostalZipCode;
-                                a.CountryCode = json.CountryCode;
+                                a.AddressLine1Text = json.PhysicalLocationAddress.AddressLine1Text;
+                                a.AddressLine2Text = json.PhysicalLocationAddress.AddressLine2Text;
+                                a.CityName = json.PhysicalLocationAddress.CityName;
+                                a.ProvinceStateCode = json.PhysicalLocationAddress.ProvinceStateCode;
+                                a.PostalZipCode = json.PhysicalLocationAddress.PostalZipCode;
+                                a.CountryCode = json.PhysicalLocationAddress.CountryCode;
 
                                 CRA_Data.PhysicalLocationAddress = a;
                                 if (step_start == "1") {

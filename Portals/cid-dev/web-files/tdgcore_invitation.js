@@ -66,47 +66,7 @@ if (typeof (invitation) == "undefined") {
                         message_code = (rom_data.cid_cidcompanystatus != 100000005 ? "m000014" : "m000014B");
                         var message = tdg.error_message.message(message_code);
                         tdg.c.dialog_YN(message, (ans) => {
-                            if (ans) {
-                                debugger;
-
-                                // send email
-                                var data = {}
-                                data.EmailCode = "S1B-1";
-                                data.AccountId = rom_data.accountid;
-                                data.Primary_Contactid = contact_id;
-                                data.Secondary_Contactid = contact_id;
-                                tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", JSON.stringify(data));
-
-                                // disable controls
-                                debugger;
-                                //$("#cid_has_cra_bn").prop('disabled', false);
-                                $('#cid_has_cra_bn').attr("disabled", "disabled");
-                                var cid_has_cra_bn = $("#cid_has_cra_bn").val();
-                                if (cid_has_cra_bn) {
-                                    $('#cid_crabusinessnumber').attr("readonly", true);
-                                }
-                                else {
-                                    $('#ovs_legalname').attr("readonly", true);
-                                    $('#cid_reasonfornobnnumber').attr("readonly", true);
-                                    $('#cid_reasonfornobnnumber_other').attr("readonly", true);
-                                }
-
-                                var message = tdg.error_message.message("BTN_NEXT");
-                                $("#btn_next").prop("value", message);
-                                $("#btn_next").prop("disabled", true);
-
-                                // show alert message
-                                var message = tdg.error_message.message("m000043");
-                                tdg.c.dialog_OK(message);
-
-                                //tdg.c.sign_out();
-                            } else {
-                                var message = tdg.error_message.message("BTN_NEXT");
-                                $("#btn_next").prop("value", message);
-
-                                var message = tdg.error_message.message("m000044");
-                                tdg.c.dialog_OK(message);
-                            }
+                            invitation.request_onboard(rom_data, contact_id, ans, true)
                         });
 
                         value = false;
@@ -123,6 +83,52 @@ if (typeof (invitation) == "undefined") {
                 $("#parentcustomerid_entityname").attr("value", 'account');
             }
             return value;
+        },
+
+        request_onboard: function (rom_data, contact_id, ans, type) {
+            debugger;
+            if (ans) {
+                debugger;
+
+                // send email
+                var data = {}
+                data.EmailCode = "S1B-1";
+                data.AccountId = rom_data.accountid;
+                data.Primary_Contactid = contact_id;
+                data.Secondary_Contactid = contact_id;
+                tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", JSON.stringify(data));
+
+                // disable controls
+                debugger;
+                //$("#cid_has_cra_bn").prop('disabled', false);
+                $('#cid_has_cra_bn').attr("disabled", "disabled");
+                var cid_has_cra_bn = $("#cid_has_cra_bn").val();
+                if (cid_has_cra_bn) {
+                    $('#cid_crabusinessnumber').attr("readonly", true);
+                }
+                else {
+                    $('#ovs_legalname').attr("readonly", true);
+                    $('#cid_reasonfornobnnumber').attr("readonly", true);
+                    $('#cid_reasonfornobnnumber_other').attr("readonly", true);
+                }
+
+                var message = tdg.error_message.message("BTN_NEXT");
+                $("#btn_next").prop("value", message);
+                $("#btn_next").prop("disabled", true);
+
+                // show alert message
+                var message = tdg.error_message.message("m000043");
+                tdg.c.dialog_OK(message);
+
+                //tdg.c.sign_out();
+            } else {
+                debugger;
+                var message = tdg.error_message.message("BTN_NEXT");
+                $("#btn_next").prop("value", message);
+
+                var message = tdg.error_message.message("m000044");
+                tdg.c.dialog_OK(message);
+            }
         },
 
         invitation_go_next: function (account, primary_ind, contact_id) {

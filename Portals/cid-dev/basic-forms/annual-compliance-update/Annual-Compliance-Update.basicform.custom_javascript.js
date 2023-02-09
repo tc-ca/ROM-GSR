@@ -75,25 +75,40 @@ $(document).ready(function ()
 	}
 
 	var anniversaryDate = $('#cid_companyanniversarydate').val();
-	var complienceReadonly = true;
+	var complianceReadonly = true;
 	if (anniversaryDate != null && anniversaryDate != "")
 	{
-		complienceReadonly = checkAnuualComplienceEligibility(new Date(anniversaryDate));
+		complianceReadonly = checkAnuualComplianceEligibility(new Date(anniversaryDate));
 	}
-	if (complienceReadonly)
+	if (complianceReadonly)
 	{
+		//$(".alert-info").parent().addClass("hidden");
+		
 		validation = false;
-		var errormsg = tdg.error_message.message("m000112");
-		if (errormsg != "")
+		//var errormsg = tdg.error_message.message("m000112");
+		//if (errormsg != "")
+		//{
+		//	$('.validation-summary div').eq(0).remove();
+		//	var validationSection = $('.validation-summary').eq(0);
+		//	validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errormsg + "</div>"));
+		//	validationSection.show();
+		//	//$('.validation-summary div').focus();
+		//}
+
+		var infomsg = "The Annual Compliance Update can only be completed as early as 30 days before your Company’s Anniversary Date of {0}." //tdg.error_message.message("m000112");
+		infomsg = infomsg.replace("{0}", anniversaryDate.substring(0, 10));
+		if (infomsg != "")
 		{
-			$('.validation-summary div').eq(0).remove();
-			var validationSection = $('.validation-summary').eq(0);
-			validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errormsg + "</div>"));
+
+			$('.instructions div').eq(0).remove();
+			var validationSection = $('.instructions').eq(0);
+			validationSection.append($("<div id='alertMessages' tabindex='0' class='alert alert-info' style='background:#d7faff'></br></br>" + infomsg + "</br></br></div>"));
 			validationSection.show();
-			//$('.validation-summary div').focus();
 		}
-		$("#UpdateButton").prop("disabled", true);
-		$('.crmEntityFormView').find('input, textarea, select').attr('disabled', 'disabled');
+
+		$('table[data-name="annual_compliance_section_3"]').addClass("hidden");
+		$("#UpdateButton").prop("hidden", true);
+		
 		$(".entity-grid").on("loaded", function ()
 		{
 			$(this).find("thead").find("tr").each(function ()
@@ -198,7 +213,7 @@ $(document).ready(function ()
 		return validation;
 	}
 });
-checkAnuualComplienceEligibility = function (anniversaryDate)
+checkAnuualComplianceEligibility = function (anniversaryDate)
 {
 	debugger;
 	if (anniversaryDate == null || anniversaryDate == "")

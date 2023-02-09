@@ -169,13 +169,10 @@ if (window.jQuery) {
 
                                 var message = tdg.error_message.message("m000047");
                                 tdg.c.dialog_YN(message, (ans) => {
-                                    if (ans) {
-                                        debugger;
-                                        return validation;
-                                    } else {
-                                        return validation;
-                                    }
+                                    var contact_id = '{{user.id}}';
+                                    invitation.request_onboard(rom_data, contact_id, ans, false)
                                 });
+                                return validation;
                             }
                             else {
                                 var contact_id = '{{user.id}}';
