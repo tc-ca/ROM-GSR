@@ -1,6 +1,5 @@
 $(document).ready(function () {
 
-alert ("form loaded");
 
   $("#UpdateButton").hide();
     tdg.c.button_create("btn_next", "#UpdateButton", "NextNext");
@@ -12,12 +11,12 @@ alert ("form loaded");
 
 });
 
-// JavaScript source code
 
-async function Test_start_btn_next_click () {
+
+  function Test_start_btn_next_click () {
     var value = Page_ClientValidate('');
     if (value) {
-        let data = await Test_data_confirm_dialog(cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber_list);
+       
         var message = tdg.error_message.message("m000038");
         $("#btn_next").prop("value", message);
 
@@ -30,7 +29,8 @@ async function Test_start_btn_next_click () {
             cid_reasonfornobnnumber_list = $("#cid_reasonfornobnnumber")[0].options;
         }
         var cid_reasonfornobnnumber_other = $("#cid_reasonfornobnnumber_other").val();
-        
+           let data =  Test_data_confirm_dialog(cid_has_cra_bn, bn,
+            legalname, cid_reasonfornobnnumber_list);
         if (data.length == 0) {
             if (cid_has_cra_bn == "1") {
                 var message = tdg.error_message.message("m000001");
@@ -79,104 +79,195 @@ async function Test_start_btn_next_click () {
 }
 
 
-// JavaScript source code
 
-async function Test_start_btn_next_click () {
-    var value = Page_ClientValidate('');
-    if (value) {
-        let data = await Test_data_confirm_dialog($("#cid_has_cra_bn").val(), $("#cid_crabusinessnumber").val(),
-            $("#cid_legalname").val(), cid_reasonfornobnnumber_list);
-        var message = tdg.error_message.message("m000038");
-        $("#btn_next").prop("value", message);
-
-        var cid_has_cra_bn = $("#cid_has_cra_bn").val();
-        var bn = $("#cid_crabusinessnumber").val();
-        var legalname = $("#cid_legalname").val();
-        var cid_reasonfornobnnumber_list = {};
-        var cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
-        if (cid_reasonfornobnnumber != "") {
-            cid_reasonfornobnnumber_list = $("#cid_reasonfornobnnumber")[0].options;
-        }
-        var cid_reasonfornobnnumber_other = $("#cid_reasonfornobnnumber_other").val();
-        
-        if (data.length == 0) {
-            if (cid_has_cra_bn == "1") {
-                var message = tdg.error_message.message("m000001");
-                tdg.c.dialog_OK(message);
-
-                var message = tdg.error_message.message("BTN_NEXT");
-                $("#btn_next").prop("value", message);
-                return;
-            }
-            else {
-                var cid_has_invitation = sessionStorage.getItem("cid_has_invitation");
-                if (cid_has_invitation == 'false') {
-                    $("#NextButton").click();
-                    return;
-                }
-            }
-        }
-
-        if (data.length == 1) {
-            data.invitation_ind = false;
-            var btn_next_name = "btn_next";
-            debugger;
-            Test_start_buttons_confirm(false, btn_next_name);
-
-            Test_start_confirm(data, (ans) => {
-                if (ans) {
-                    debugger;
-                    Test_start_buttons_confirm(true, btn_next_name);
-                    $("#NextButton").click();
-                } else {
-                    debugger;
-                    Test_start_buttons_confirm(true, btn_next_name);
-                    var message = tdg.error_message.message("BTN_NEXT");
-                    $("#btn_next").prop("value", message);
-
-                    var msg = (data.cid_has_cra_bn == "1" ? "m000045" : "m000046");
-                    msg = tdg.error_message.message(msg);
-                    tdg.c.dialog_OK(msg);
-                }
-            });
-        }
-        else {
-            $("#NextButton").click();
-        }
-    }
-}
-
-
-async function Test_data_confirm_dialog (cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber_list) {
+async function Call_CRA_Flow(CRA_Flow_URL , body)
+{
+    var json = {};
     debugger;
+
+     let req = new XMLHttpRequest();
+        req.open("POST", CRA_Flow_URL, true);
+        req.setRequestHeader("Content-Type", "application/json");
+        req.onreadystatechange =   function () {
+            if (this.readyState === 4) {
+                req.onreadystatechange = null;
+                if (this.status === 200) {
+                    debugger;
+                 
+                  
+                      json =  JSON.parse(this.response);
+                      console.log("this.response " + this.response);
+                   // return (r);
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                        resolve(json);
+                        }, 2000);
+                    });
+                       
+
+                } else {
+                    json.length = 0;
+                   return json;
+                    
+
+                }
+            }
+        };
+        req.send(JSON.stringify(body));
+  return new Promise((resolve) => {
+                        setTimeout(() => {
+                        resolve(json);
+                        }, 2000);
+                    });
+}
+async function Test_Production_start_Retrieve_cra (bn, step_start) {
+
+debugger ;
+    var CRA_Data = {};
+    var cid_crabusinessnumber = bn;
+    var json = {};
+   
+
+    //var CRA_Flow_URL;
+    //retrieve the url of the flow used to get data from CRA
+    var results =  tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_Flow_CRA_API'");
+    //check if flow url is found
+    if (results.length > 0) {
+        CRA_Flow_URL = results[0]["qm_value"];
+        //define flow paramaters
+        let body = {
+            "cid_crabusinessnumber": cid_crabusinessnumber
+        };
+        const r = await  Call_CRA_Flow(CRA_Flow_URL , body);
+        console.log ("r " + r.length);
+        debugger;
+        json = r;  
+        console.log("json.IsInvalidData " + json.IsInvalidData);         
+                    if (json.IsInvalidData) {
+                         console.log("invalida CRA");
+                          CRA_Data.length = 0;
+                         
+                            return CRA_Data;
+                          
+                    }
+                    else {
+
+                        if (json == null) {
+                             CRA_Data.length = 0;
+                              console.log("nullCRA");
+                        return  CRA_Data; 
+                            
+                               
+                        }
+
+                        if (json.length == 0) {
+                            console.log("0 lenth CRA");
+                             CRA_Data.length = 0;
+                            // Promise.resolve( CRA_Data); 
+                              return CRA_Data ;
+                          
+                        }
+                        console.log("inside else");
+
+
+                        //get CRA data
+                        CRA_Data.LegalName = json.LegalName;
+                        console.log("after legal name json.LegalName" + CRA_Data.LegalName);
+                        CRA_Data.OperatingName = json.LegalName;
+                        CRA_Data.BusinessRegistrationNumber = cid_crabusinessnumber;
+                        var a = {};
+                        a.AddressLine1Text = json.PhysicalLocationAddress.AddressLine1Text;
+                        a.AddressLine2Text = json.PhysicalLocationAddress.AddressLine2Text;
+                        a.CityName = json.PhysicalLocationAddress.CityName;
+                        a.ProvinceStateCode = json.PhysicalLocationAddress.ProvinceStateCode;
+                        a.PostalZipCode = json.PhysicalLocationAddress.PostalZipCode;
+                        a.CountryCode = json.PhysicalLocationAddress.CountryCode;
+
+                        CRA_Data.PhysicalLocationAddress = a;
+                        if (step_start == "1") {
+                            CRA_Data.length = 1;
+                            tdg.cid.crw.start_BN_Selected(CRA_Data);
+                          
+                           // Promise.resolve (CRA_Data);
+                           // return CRA_Data ;
+                               return new Promise((resolve) => {
+                        setTimeout(() => {
+                        resolve(CRA_Data);
+                        }, 2000);
+                    });
+                       
+                            
+                        }
+                        else {
+                          CRA_Data.length = 1;
+                              console.log("data.lenght " + CRA_Data.length);
+                        return new Promise((resolve) => {
+                        setTimeout(() => {
+                        resolve(CRA_Data);
+                        }, 2000);
+                               //return CRA_Data;
+                        });
+
+                    }
+
+                 
+              
+                    }
+    }
+}
+
+ async function Test_data_confirm_dialog (cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber_list) {
+  debugger;
     var data = {};
     data.length = 0;
-    console.log("inside data confirm  value of  cid_has_cra_bn" + cid_has_cra_bn);
-    debugger;
+ 
 
     if (cid_has_cra_bn == "1") {
-        var cra_data;
-        var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
-        console.log(environment);
+        
+        let environment =   tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
+        console.log("environemnt " + environment) ;
         //if pre prod or prod
         if (environment == "PreProd" || environment == "Prod") {
         //use CRA API to get information
-          cra_data = tdg.cid.crw.async_function_retrieve_CRA(bn, "");
+
+         debugger;
+        const CRA_Data = await Test_Production_start_Retrieve_cra(bn, "");
+       
+          console.log("after Test_Production_start_Retrieve_cra execution *" + CRA_Data.LegalName + "*");
+            console.log("CRA data " + CRA_Data);
+                //if (CRA_Data.length == 0) {
+                 //   return data;
+               // }
+                data.length = 1;
+                data.cid_has_cra_bn = 1;
+                data.cid_legalname = CRA_Data.LegalName;
+                data.cid_operatingname = CRA_Data.OperatingName;
+                data.cid_crabusinessnumber = bn;
+                data.address = CRA_Data.PhysicalLocationAddress;
+
+                return data;
+      
         }
         else {
         // retrieve information from FakeBN entity in dynamics
-        cra_data = tdg.cid.crw.start_Retrieve_cra(bn, "");
-        }
-        if (cra_data.length == 0) {
+        const CRA_Data = tdg.cid.crw.start_Retrieve_cra(bn, "");
+         if (CRA_Data.length == 0) {
             return data;
         }
-
-        data.length = 1;
+          data.length = 1;
         data.cid_has_cra_bn = 1;
-        data.cid_legalname = cra_data.LegalName;
-        data.cid_operatingname = cra_data.OperatingName;
+        data.cid_legalname = CRA_Data.LegalName;
+        data.cid_operatingname = CRA_Data.OperatingName;
         data.cid_crabusinessnumber = bn;
-        data.address = cra_data.PhysicalLocationAddress;
+        data.address = CRA_Data.PhysicalLocationAddress;
+
+
+
+        return data;
+        }
+       
+
+  
     }
     else {
         var account = tdg.cid.crw.start_account_by_name(legalname);
@@ -206,9 +297,10 @@ async function Test_data_confirm_dialog (cid_has_cra_bn, bn, legalname, cid_reas
             address.PostalZipCode = account.address1_postalcode;
 
             data.address = address;
+            return data;
         }
     }
-    return data;
+   
 }
 
 
@@ -221,7 +313,10 @@ function Test_start_buttons_confirm (value, btn_next_name) {
     $('#' + btn_next_name).prop("disabled", !value);
 }
 
-function Test_start_confirm (data, handler) {
+ function Test_start_confirm (data, handler) {
+    debugger;
+    console.log("start confirm functoin");
+    console.log(data);
     debugger;
     var header = tdg.error_message.message("CID_PORTAL");
     var msg_btn_ok = tdg.error_message.message("BTN_IS_MY_COMPANY");

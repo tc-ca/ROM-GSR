@@ -939,6 +939,32 @@ if (typeof (tdg.webapi) == "undefined") {
             });
         },
 
+        executeAction: function (entity_name, record_id, data, action_name) {
+            debugger;
+
+            webapi.safeAjax({
+                type: "POST",
+                url: "/_api/" + entity_name + "s(" + record_id + ")/Microsoft.Dynamics.CRM." + action_name,
+                contentType: "application/json",
+                async: false,
+                data: JSON.stringify(data),
+
+                success: function (res) {
+                    debugger;
+                    var result = res;
+                    console.log(res);
+                    return result["DuplicateFound"]; // Edm.Boolean
+
+                },
+
+                error: function (res, status, errorThrown) {
+                    debugger;
+                    console.log(res);
+                    return false;
+                }
+            });
+        },
+
         inactive: function (entity_name, record_id) {
             var data = {
                 "statecode": 1,
@@ -1966,12 +1992,12 @@ if (typeof (tdg.cid.crw) == "undefined") {
             //var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
             //if pre prod or prod
             //if (environment == "PreProd" || environment == "Prod") {
-                //use CRA API to get iformation
-              //  data = tdg.cid.crw.async_function_retrieve_CRA(cid_crabusinessnumber, step_start);
+            //use CRA API to get iformation
+            //  data = tdg.cid.crw.async_function_retrieve_CRA(cid_crabusinessnumber, step_start);
             //}
-           // else {
-                // retrieve information from FakeBN entity in dynamics
-                data = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, step_start);
+            // else {
+            // retrieve information from FakeBN entity in dynamics
+            data = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, step_start);
             //}
             return data;
         },
@@ -1984,7 +2010,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
             $('#' + btn_next_name).prop("disabled", !value);
         },
-         async_function_retrieve_CRA: async function(bn, step) {
+        async_function_retrieve_CRA: async function (bn, step) {
             let data = await tdg.cid.crw.Production_start_Retrieve_cra(bn, step);
 
             return data;
@@ -1997,13 +2023,13 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 var cra_data;
                 //var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
                 //if pre prod or prod
-               // if (environment == "PreProd" || environment == "Prod") {
-                    //use CRA API to get information
-                 //   cra_data = tdg.cid.crw.async_function_retrieve_CRA(bn, "");
+                // if (environment == "PreProd" || environment == "Prod") {
+                //use CRA API to get information
+                //   cra_data = tdg.cid.crw.async_function_retrieve_CRA(bn, "");
                 //}
                 //else {
-                    // retrieve information from FakeBN entity in dynamics
-                    cra_data = tdg.cid.crw.start_Retrieve_cra(bn, "");
+                // retrieve information from FakeBN entity in dynamics
+                cra_data = tdg.cid.crw.start_Retrieve_cra(bn, "");
                 //}
                 if (cra_data.length == 0) {
                     return data;

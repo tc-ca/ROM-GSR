@@ -584,6 +584,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "The Annual Compliance Update can only be completed as early as 30 days before your Company’s Anniversary Date of {0}.",
                         "message_fr": "In French - The Annual Compliance Update can only be completed as early as 30 days before your Company’s Anniversary Date of {0}."
                     },
+					{
+                        "code": "m000131",
+                        "message_en": "Note that another Company has an active Site with the same information. Do you want to proceed, or stop this addition in order to make a correction to the entered Site data, and/or begin the Site Sale/Merger process via the Site Transfer menu option?",
+                        "message_fr": "In French - Note that another Company has an active Site with the same information. Do you want to proceed, or stop this addition in order to make a correction to the entered Site data, and/or begin the Site Sale/Merger process via the Site Transfer menu option?"
+                    },
                 ];
 
             return list;
