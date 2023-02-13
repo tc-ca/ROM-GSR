@@ -939,32 +939,6 @@ if (typeof (tdg.webapi) == "undefined") {
             });
         },
 
-        executeAction: function (entity_name, record_id, data, action_name) {
-            debugger;
-
-            webapi.safeAjax({
-                type: "POST",
-                url: "/_api/" + entity_name + "s(" + record_id + ")/Microsoft.Dynamics.CRM." + action_name,
-                contentType: "application/json",
-                async: false,
-                data: JSON.stringify(data),
-
-                success: function (res) {
-                    debugger;
-                    var result = res;
-                    console.log(res);
-                    return result["DuplicateFound"]; // Edm.Boolean
-
-                },
-
-                error: function (res, status, errorThrown) {
-                    debugger;
-                    console.log(res);
-                    return false;
-                }
-            });
-        },
-
         inactive: function (entity_name, record_id) {
             var data = {
                 "statecode": 1,

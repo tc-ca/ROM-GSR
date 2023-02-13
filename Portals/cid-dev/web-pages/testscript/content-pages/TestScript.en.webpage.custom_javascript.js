@@ -13,7 +13,7 @@ $(document).ready(function () {
 
 
 
-  function Test_start_btn_next_click () {
+  async function Test_start_btn_next_click () {
     var value = Page_ClientValidate('');
     if (value) {
        
@@ -29,8 +29,9 @@ $(document).ready(function () {
             cid_reasonfornobnnumber_list = $("#cid_reasonfornobnnumber")[0].options;
         }
         var cid_reasonfornobnnumber_other = $("#cid_reasonfornobnnumber_other").val();
-           let data =  Test_data_confirm_dialog(cid_has_cra_bn, bn,
+           const data = await Test_data_confirm_dialog(cid_has_cra_bn, bn,
             legalname, cid_reasonfornobnnumber_list);
+            console.log (" Test_start_btn_next_click data.length = " + data.length  );
         if (data.length == 0) {
             if (cid_has_cra_bn == "1") {
                 var message = tdg.error_message.message("m000001");
@@ -50,6 +51,7 @@ $(document).ready(function () {
         }
 
         if (data.length == 1) {
+            console.log("inside data.length = 1");
             data.invitation_ind = false;
             var btn_next_name = "btn_next";
             debugger;
@@ -235,12 +237,13 @@ debugger ;
        
           console.log("after Test_Production_start_Retrieve_cra execution *" + CRA_Data.LegalName + "*");
             console.log("CRA data " + CRA_Data);
-                //if (CRA_Data.length == 0) {
-                 //   return data;
-               // }
+                if (CRA_Data.length == 0) {
+                   return data;
+                }
                 data.length = 1;
                 data.cid_has_cra_bn = 1;
                 data.cid_legalname = CRA_Data.LegalName;
+                console.log("data.cid_legalname " +  data.cid_legalname);
                 data.cid_operatingname = CRA_Data.OperatingName;
                 data.cid_crabusinessnumber = bn;
                 data.address = CRA_Data.PhysicalLocationAddress;
