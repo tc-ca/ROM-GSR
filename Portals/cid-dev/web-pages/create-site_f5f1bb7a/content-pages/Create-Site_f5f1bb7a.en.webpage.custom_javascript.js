@@ -34,7 +34,7 @@ $(document).ready(function ()
 	});
 });
 
-/*
+
 if (window.jQuery)
 {
 	(function ($)
@@ -85,19 +85,21 @@ if (window.jQuery)
 							
                             var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
                             var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");							if (EnvironmentSettingResult.length > 0)
-							{
+							{                                
 								var FlowURL = EnvironmentSettingResult[0]["qm_value"];
 								// Execute flow
 								var req = new XMLHttpRequest();
 								req.open("POST", FlowURL, true);
 								req.setRequestHeader('Content-Type', 'application/json');
+                                req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
 								req.onreadystatechange = function ()
 								{
 									if (this.readyState === 4)
 									{
 										req.onreadystatechange = null;
 										if (this.status === 200)
-										{
+										{ 
+                                            debugger;
 											if (duplicatefound)
 											{
 												var message = tdg.error_message.message("m000131");
@@ -116,21 +118,20 @@ if (window.jQuery)
 							} //end check if flow url found
 							break;
 					}
-					if (duplicatefound)
-					{
-						var message = tdg.error_message.message("m000131");
-						//message = message.replaceAll("{0}", "AAA");
-						tdg.c.dialog_YN(message, (ans) => {
-							var contact_id = '{{user.id}}';
-							alert(ans);
-							if (ans)
-							{}
-						});
-					}
+					//if (duplicatefound)
+					//{
+					//	var message = tdg.error_message.message("m000131");
+					//	//message = message.replaceAll("{0}", "AAA");
+					//	tdg.c.dialog_YN(message, (ans) => {
+					//		var contact_id = '{{user.id}}';
+					//		alert(ans);
+					//		if (ans)
+					//		{}
+					//	});
+					//}
 					return false;
 				};
 			}
 		}
 	}(window.jQuery));
 }
-*/

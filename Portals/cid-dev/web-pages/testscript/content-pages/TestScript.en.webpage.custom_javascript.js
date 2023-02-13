@@ -13,7 +13,7 @@ $(document).ready(function () {
 
 
 
-  async function Test_start_btn_next_click () {
+ async  function Test_start_btn_next_click () {
     var value = Page_ClientValidate('');
     if (value) {
        
@@ -29,7 +29,7 @@ $(document).ready(function () {
             cid_reasonfornobnnumber_list = $("#cid_reasonfornobnnumber")[0].options;
         }
         var cid_reasonfornobnnumber_other = $("#cid_reasonfornobnnumber_other").val();
-           const data = await Test_data_confirm_dialog(cid_has_cra_bn, bn,
+           const data = await  Test_data_confirm_dialog(cid_has_cra_bn, bn,
             legalname, cid_reasonfornobnnumber_list);
             console.log (" Test_start_btn_next_click data.length = " + data.length  );
         if (data.length == 0) {
@@ -85,10 +85,24 @@ $(document).ready(function () {
 async function Call_CRA_Flow(CRA_Flow_URL , body)
 {
     var json = {};
-    debugger;
+     let response = await fetch(CRA_Flow_URL, {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+         method: 'POST',
+     
+      body: JSON.stringify(body),
+      redirect: 'follow'
+    });
+    
+    return await response.json();
 
-     let req = new XMLHttpRequest();
-        req.open("POST", CRA_Flow_URL, true);
+
+   
+
+    /* let req = new XMLHttpRequest();
+        req.open("POST", CRA_Flow_URL);
         req.setRequestHeader("Content-Type", "application/json");
         req.onreadystatechange =   function () {
             if (this.readyState === 4) {
@@ -115,16 +129,16 @@ async function Call_CRA_Flow(CRA_Flow_URL , body)
                 }
             }
         };
-        req.send(JSON.stringify(body));
-  return new Promise((resolve) => {
+        req.send(JSON.stringify(body));*/
+ /* return new Promise((resolve) => {
                         setTimeout(() => {
                         resolve(json);
                         }, 2000);
-                    });
+                    });*/
 }
-async function Test_Production_start_Retrieve_cra (bn, step_start) {
+ async function Test_Production_start_Retrieve_cra (bn, step_start) {
 
-debugger ;
+
     var CRA_Data = {};
     var cid_crabusinessnumber = bn;
     var json = {};

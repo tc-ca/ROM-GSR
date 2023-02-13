@@ -1960,19 +1960,19 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#parentcustomerid_name").attr("value", null);
         },
 
-        start_cid_crabusinessnumber_onchange: function (step_start) {
+        start_cid_crabusinessnumber_onchange: async function (step_start) {
             var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
             var data;
-            //var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
+            var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
             //if pre prod or prod
-            //if (environment == "PreProd" || environment == "Prod") {
+            if (environment == "PreProd" || environment == "Prod") {
             //use CRA API to get iformation
-            //  data = tdg.cid.crw.async_function_retrieve_CRA(cid_crabusinessnumber, step_start);
-            //}
-            // else {
+                data = await tdg.cid.crw.Production_start_Retrieve_cra(cid_crabusinessnumber, step_start);
+             }
+             else {
             // retrieve information from FakeBN entity in dynamics
-            data = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, step_start);
-            //}
+                data = await tdg.cid.crw.Production_start_Retrieve_cra(cid_crabusinessnumber, step_start);
+            }
             return data;
         },
 
@@ -1984,27 +1984,23 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
             $('#' + btn_next_name).prop("disabled", !value);
         },
-        async_function_retrieve_CRA: async function (bn, step) {
-            let data = await tdg.cid.crw.Production_start_Retrieve_cra(bn, step);
-
-            return data;
-        },
-        data_confirm_dialog: function (cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber_list) {
+      
+        data_confirm_dialog: async function (cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber_list) {
             debugger;
             var data = {};
             data.length = 0;
             if (cid_has_cra_bn == "1") {
                 var cra_data;
-                //var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
+                var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
                 //if pre prod or prod
-                // if (environment == "PreProd" || environment == "Prod") {
+                if (environment == "PreProd" || environment == "Prod") {
                 //use CRA API to get information
-                //   cra_data = tdg.cid.crw.async_function_retrieve_CRA(bn, "");
-                //}
-                //else {
+                    cra_data = await tdg.cid.crw.Production_start_Retrieve_cra(bn, "");
+                }
+                else {
                 // retrieve information from FakeBN entity in dynamics
-                cra_data = tdg.cid.crw.start_Retrieve_cra(bn, "");
-                //}
+                cra_data =  tdg.cid.crw.start_Retrieve_cra(bn, "");
+                }
                 if (cra_data.length == 0) {
                     return data;
                 }
@@ -2049,7 +2045,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             return data;
         },
 
-        start_btn_next_click: function () {
+        start_btn_next_click: async function () {
             debugger;
             var value = Page_ClientValidate('');
             if (value) {
@@ -2065,7 +2061,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     cid_reasonfornobnnumber_list = $("#cid_reasonfornobnnumber")[0].options;
                 }
                 var cid_reasonfornobnnumber_other = $("#cid_reasonfornobnnumber_other").val();
-                var data = tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber_list);
+                const data = await tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber_list);
                 if (data.length == 0) {
                     if (cid_has_cra_bn == "1") {
                         var message = tdg.error_message.message("m000001");
@@ -2278,13 +2274,35 @@ if (typeof (tdg.cid.crw) == "undefined") {
             }
         },
 
+        // call flow in pre-prod and production environment only
+        // will call flow to retrun CRA information
+       Call_CRA_Flow: async function(CRA_Flow_URL, body)
+       {
+        var json = {};
+        let response = await fetch(CRA_Flow_URL, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+
+            body: JSON.stringify(body),
+            redirect: 'follow'
+        });
+
+        return await response.json();
+       },
+
+
+
         //CRA BN API - Production and PreProd
-        Production_start_Retrieve_cra: function (bn, step_start) {
+        Production_start_Retrieve_cra: async function (bn, step_start) {
 
             var CRA_Data = {};
             var cid_crabusinessnumber = bn;
+            var json = {};
 
-            var CRA_Flow_URL;
+            //var CRA_Flow_URL;
             //retrieve the url of the flow used to get data from CRA
             var results = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_Flow_CRA_API'");
             //check if flow url is found
@@ -2294,64 +2312,66 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 let body = {
                     "cid_crabusinessnumber": cid_crabusinessnumber
                 };
+                //wait for flow function to return  CRM response from flow
+                const CRAresult = await tdg.cid.crw.Call_CRA_Flow(CRA_Flow_URL, body);
+                json = CRAresult;
+                // check if response has invlaid data
+                if (json.IsInvalidData) {
 
-                //call flow to execute CRA API call
-                let req = new XMLHttpRequest();
-                req.open("POST", CRA_Flow_URL, true);
-                req.setRequestHeader("Content-Type", "application/json");
-                req.onreadystatechange = function () {
-                    if (this.readyState === 4) {
-                        req.onreadystatechange = null;
-                        if (this.status === 200) {
-                            debugger;
-                            //parse result found
-                            var json = JSON.parse(this.response);
-                            //check CRM return invalid bn number
-                            if (json.IsInvalidData) {
-                                return "";
-                            }
-                            else {
+                    CRA_Data.length = 0;
+                    return CRA_Data;
+                }
+                else {
 
-                                if (json == null) {
-                                    return "";
-                                }
-
-                                if (json.length == 0) {
-                                    return "";
-                                }
-
-
-                                //get CRA data
-                                CRA_Data.LegalName = json.LegalName;
-                                CRA_Data.OperatingName = json.LegalName;
-                                CRA_Data.BusinessRegistrationNumber = cid_crabusinessnumber;
-                                var a = {};
-                                a.AddressLine1Text = json.PhysicalLocationAddress.AddressLine1Text;
-                                a.AddressLine2Text = json.PhysicalLocationAddress.AddressLine2Text;
-                                a.CityName = json.PhysicalLocationAddress.CityName;
-                                a.ProvinceStateCode = json.PhysicalLocationAddress.ProvinceStateCode;
-                                a.PostalZipCode = json.PhysicalLocationAddress.PostalZipCode;
-                                a.CountryCode = json.PhysicalLocationAddress.CountryCode;
-
-                                CRA_Data.PhysicalLocationAddress = a;
-                                if (step_start == "1") {
-                                    tdg.cid.crw.start_BN_Selected(CRA_Data);
-                                    return CRA_Data;
-                                }
-                                else {
-                                    return CRA_Data;
-                                }
-
-                            }
-
-                        } else {
-                            debugger;
-
-                        }
+                    if (json == null) {
+                        CRA_Data.length = 0;
+                        return CRA_Data;
                     }
-                };
-                req.send(JSON.stringify(body));
-            }//end check if flow url is found
+
+                    if (json.length == 0) {
+                        CRA_Data.length = 0;
+
+                        return CRA_Data;
+                    }
+                    //get CRA data
+                    CRA_Data.LegalName = json.LegalName;
+
+                    CRA_Data.OperatingName = json.LegalName;
+                    CRA_Data.BusinessRegistrationNumber = cid_crabusinessnumber;
+                    var a = {};
+                    a.AddressLine1Text = json.PhysicalLocationAddress.AddressLine1Text;
+                    a.AddressLine2Text = json.PhysicalLocationAddress.AddressLine2Text;
+                    a.CityName = json.PhysicalLocationAddress.CityName;
+                    a.ProvinceStateCode = json.PhysicalLocationAddress.ProvinceStateCode;
+                    a.PostalZipCode = json.PhysicalLocationAddress.PostalZipCode;
+                    a.CountryCode = json.PhysicalLocationAddress.CountryCode;
+
+                    CRA_Data.PhysicalLocationAddress = a;
+                    if (step_start == "1") {
+                        CRA_Data.length = 1;
+                        tdg.cid.crw.start_BN_Selected(CRA_Data);
+
+                        return new Promise((resolve) => {
+                            setTimeout(() => {
+                                resolve(CRA_Data);
+                            }, 2000);
+                        });
+
+                    }
+                    else {
+                        CRA_Data.length = 1;
+                        
+                        return new Promise((resolve) => {
+                            setTimeout(() => {
+                                resolve(CRA_Data);
+                            }, 2000);
+                            //return CRA_Data;
+                        });
+
+                    } //end else
+
+                }//end if invalid CRM number else
+            }//end check lenght 
         },
 
         //get environment from environment setting (depending on the environment it will return either DEV, QA, ACC, PreProd , or Prod)
