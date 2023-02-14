@@ -681,7 +681,53 @@ if (typeof (tdg.c) == "undefined") {
                 Page_Validators.push(newValidator);
 
             } catch (e) { }
-        }//end function
+        },//end function
+		
+		Prevent_Duplicate_Site_Creation: function (parameters) {
+			var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
+			var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'"); 
+			
+			if (EnvironmentSettingResult.length > 0)
+			{
+				var FlowURL = EnvironmentSettingResult[0]["qm_value"];
+				// Execute flow
+				var req = new XMLHttpRequest();
+				req.open("POST", FlowURL, true);
+				req.setRequestHeader('Content-Type', 'application/json');
+				req.onreadystatechange = function () {
+					if (this.readyState === 4) {
+						req.onreadystatechange = null;
+						if (this.status === 200) {
+							debugger;
+
+							var result = JSON.parse(this.response);
+							var duplicatefound = result["DuplicateFound"]; // Edm.Boolean
+
+							if (duplicatefound) {
+								var message = tdg.error_message.message("m000131");
+								tdg.c.dialog_YN(message, (ans) => {
+									//var contact_id = '{{user.id}}';
+									if(ans)
+									{
+										return false;
+										//Do nothing
+									}
+									else
+									{
+										return false;
+										//need to add ALM record.
+									}
+								});
+							}
+							
+							return true;
+						}
+					} //end ready status
+				}; //end on ready function
+				req.send(JSON.stringify(parameters));
+			} //end check if flow url found
+			 
+		}//end function
     }
 }
 
