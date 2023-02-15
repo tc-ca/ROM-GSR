@@ -8,10 +8,6 @@ $(document).ready(function () {
 
 			
     var cidSiteStatus = $('#cid_cidsitestatus').find(":selected").text();
-
-    $('#cid_cidsitestatus').hide();
-    $('#cid_cidsitestatus_label').hide();
-	
     var deactivateSiteWebLink = $('a[href*="deactivate-site"]');
     var activateSiteWebLink = $('a[href*="activate-site"]');
     

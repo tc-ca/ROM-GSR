@@ -5,12 +5,7 @@
 $(document).ready(function () {
     debugger;
 
-    //var message = tdg.error_message.message("m000030");
-    var message = "This action will deactivate the Company and all of its Sites.</br></br>" //message.replace("{0}", companyAnniversaryDate.substring(0, 10));
-	+ "Please be aware that if any of the Sites are meant to be sold to another Company, or merged into an existing Company, "
-    + "then you will need to first begin the Transfer/Sale process for those Sites before deactivating the Company.</br></br>"
-    + "<p style='color:red' >Be advised that this action cannot be undone.</p>"
-    +"Do you want to proceed with the Company deactivation</br></br>";
+    var message = tdg.error_message.message("m000132");
     
     tdg.c.dialog_YN(message, (ans) => {
         if (!ans) {

@@ -170,7 +170,7 @@ if (typeof (invitation) == "undefined") {
             $("#NextButton").click();
         },
 
-        invitation_primary: function (_account, message, contact_id) {
+        invitation_primary: async function (_account, message, contact_id) {
             debugger;
 
             var btn_next_name = "NextButton";
@@ -188,7 +188,7 @@ if (typeof (invitation) == "undefined") {
                 }
             }
             var cid_reasonfornobnnumber_other = _account.cid_reasonfornobnnumber_other;
-            var data = tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn, legalname, list);
+            const data = await tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn, legalname, list);
             if (data.length == 0) {
                 data.length = 1;
                 data.cid_has_cra_bn = cid_has_cra_bn;

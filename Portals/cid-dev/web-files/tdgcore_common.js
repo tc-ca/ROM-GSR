@@ -682,52 +682,62 @@ if (typeof (tdg.c) == "undefined") {
 
             } catch (e) { }
         },//end function
-		
-		Prevent_Duplicate_Site_Creation: function (parameters) {
-			var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
-			var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'"); 
-			
-			if (EnvironmentSettingResult.length > 0)
-			{
-				var FlowURL = EnvironmentSettingResult[0]["qm_value"];
-				// Execute flow
-				var req = new XMLHttpRequest();
-				req.open("POST", FlowURL, true);
-				req.setRequestHeader('Content-Type', 'application/json');
-				req.onreadystatechange = function () {
-					if (this.readyState === 4) {
-						req.onreadystatechange = null;
-						if (this.status === 200) {
-							debugger;
 
-							var result = JSON.parse(this.response);
-							var duplicatefound = result["DuplicateFound"]; // Edm.Boolean
+        Prevent_Duplicate_Site_Creation: async function (parameters) {
+            var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
+            var EnvironmentSettingResult = await tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
 
-							if (duplicatefound) {
-								var message = tdg.error_message.message("m000131");
-								tdg.c.dialog_YN(message, (ans) => {
-									//var contact_id = '{{user.id}}';
-									if(ans)
-									{
-										return false;
-										//Do nothing
-									}
-									else
-									{
-										return false;
-										//need to add ALM record.
-									}
-								});
-							}
-							
-							return true;
-						}
-					} //end ready status
-				}; //end on ready function
-				req.send(JSON.stringify(parameters));
-			} //end check if flow url found
-			 
-		}//end function
+            if (EnvironmentSettingResult.length > 0) {
+                var FlowURL = EnvironmentSettingResult[0]["qm_value"];
+                // Execute flow
+                debugger;
+                webapi.safeAjax({
+                    type: "POST",
+                    url: FlowURL,
+                    async: false,
+                    contentType: "application/json",
+                    data: JSON.stringify(parameters),
+
+                    success: function (data, textStatus, xhr) {
+                        debugger;
+                        var result = data;
+                        console.log(result);
+                        // Return Type: mscrm.cid_CID_Create_Update_SiteDuplicateValidationResponse
+                        // Output Parameters
+                        var res = result["DuplicateFound"]; // Edm.Boolean
+
+                        if (res) {
+                            var message = tdg.error_message.message("m000131");
+                            tdg.c.dialog_YN(message, (ans) => {
+                                //var contact_id = '{{user.id}}';
+                                if (ans) {
+                                    return false;
+                                    //Do nothing
+                                }
+                                else {
+                                    return false;
+                                    //need to add ALM record.
+                                }
+                            });
+                        }
+                        else
+                            //return true;
+                            return new Promise(resolve => {
+                                setTimeout(() => {
+                                    resolve(true);
+                                }, 2000);
+                            });
+
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        debugger;
+                        console.log(xhr);
+                        return false;
+                    }
+                });
+            } //end check if flow url found
+
+        }//end function
     }
 }
 
@@ -991,6 +1001,31 @@ if (typeof (tdg.webapi) == "undefined") {
                 "statuscode": 821350004
             };
             tdg.webapi.update(entity_name, record_id, data);
+        },
+
+        executeFlow: function (flow_url, data) {
+            debugger;
+            webapi.safeAjax({
+                type: "POST",
+                url: flow_url,
+                async: false,
+                contentType: "application/json",
+                data: JSON.stringify(data),
+
+                success: function (data, textStatus, xhr) {
+                    debugger;
+                    var result = data;
+                    console.log(result);
+                    // Return Type: mscrm.cid_CID_Create_Update_SiteDuplicateValidationResponse
+                    // Output Parameters
+                    return result["DuplicateFound"]; // Edm.Boolean
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    debugger;
+                    console.log(xhr);
+                    return false;
+                }
+            });
         },
 
         GetOptionSetLable: function (entityname, attributename, attributevalue) {
@@ -2012,11 +2047,11 @@ if (typeof (tdg.cid.crw) == "undefined") {
             var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
             //if pre prod or prod
             if (environment == "PreProd" || environment == "Prod") {
-            //use CRA API to get iformation
+                //use CRA API to get iformation
                 data = await tdg.cid.crw.Production_start_Retrieve_cra(cid_crabusinessnumber, step_start);
-             }
-             else {
-            // retrieve information from FakeBN entity in dynamics
+            }
+            else {
+                // retrieve information from FakeBN entity in dynamics
                 data = await tdg.cid.crw.Production_start_Retrieve_cra(cid_crabusinessnumber, step_start);
             }
             return data;
@@ -2030,7 +2065,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
             $('#' + btn_next_name).prop("disabled", !value);
         },
-      
+
         data_confirm_dialog: async function (cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber_list) {
             debugger;
             var data = {};
@@ -2040,12 +2075,12 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
                 //if pre prod or prod
                 if (environment == "PreProd" || environment == "Prod") {
-                //use CRA API to get information
+                    //use CRA API to get information
                     cra_data = await tdg.cid.crw.Production_start_Retrieve_cra(bn, "");
                 }
                 else {
-                // retrieve information from FakeBN entity in dynamics
-                cra_data =  tdg.cid.crw.start_Retrieve_cra(bn, "");
+                    // retrieve information from FakeBN entity in dynamics
+                    cra_data = tdg.cid.crw.start_Retrieve_cra(bn, "");
                 }
                 if (cra_data.length == 0) {
                     return data;
@@ -2322,22 +2357,21 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
         // call flow in pre-prod and production environment only
         // will call flow to retrun CRA information
-       Call_CRA_Flow: async function(CRA_Flow_URL, body)
-       {
-        var json = {};
-        let response = await fetch(CRA_Flow_URL, {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: 'POST',
+        Call_CRA_Flow: async function (CRA_Flow_URL, body) {
+            var json = {};
+            let response = await fetch(CRA_Flow_URL, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST',
 
-            body: JSON.stringify(body),
-            redirect: 'follow'
-        });
+                body: JSON.stringify(body),
+                redirect: 'follow'
+            });
 
-        return await response.json();
-       },
+            return await response.json();
+        },
 
 
 
@@ -2406,7 +2440,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     }
                     else {
                         CRA_Data.length = 1;
-                        
+
                         return new Promise((resolve) => {
                             setTimeout(() => {
                                 resolve(CRA_Data);

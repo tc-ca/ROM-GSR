@@ -63,10 +63,13 @@ if (window.jQuery) {
                             if(meridian != (null || "")){  parameters.Lld_Meridian = parseInt(meridian); }   // Edm.Int32 
                             parameters.AddressType = 1; // Edm.Int32
 
-							var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
-							var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");                            
-                            return tdg.c.Prevent_Duplicate_Site_Creation(parameters);
-                                                        
+							var duplicateFound = tdg.c.Prevent_Duplicate_Site_Creation(parameters);
+                            
+                            if(duplicateFound)
+                                 return false; 
+                            else
+                                return true; 
+                                
 							break;
 						case "2":
 							// lat/long
@@ -78,8 +81,13 @@ if (window.jQuery) {
                             parameters.AddressType = 2; // Edm.Int32
                             if(latitude != (null || "")){  parameters.Address1_Latitude = parseFloat(latitude); }   // Edm.Float                    
                             if(longitude != (null || "")){  parameters.Address1_Longitude = parseFloat(longitude); }   // Edm.Float    
-                            return tdg.c.Prevent_Duplicate_Site_Creation(parameters);
-
+                            var duplicateFound =  tdg.c.Prevent_Duplicate_Site_Creation(parameters);
+                            
+                            if(duplicateFound)
+                                 return false; 
+                            else
+                                return true; 
+                                
 							break;
 						default:
 							//postal
@@ -94,9 +102,14 @@ if (window.jQuery) {
 							parameters.Address1_StateorProvince = address1_stateorprovince; // Edm.String
 							parameters.Address1_Line1 = address1_line1; // Edm.String
 							parameters.Address1_City = address1_city;
-                            return tdg.c.Prevent_Duplicate_Site_Creation(parameters);
+                            var duplicateFound =  tdg.c.Prevent_Duplicate_Site_Creation(parameters);
                             
-							break;
+                            if(duplicateFound)
+                                 return false; 
+                            else
+                                return true; 
+                                
+							break;                  
 					}
 				};
 			}

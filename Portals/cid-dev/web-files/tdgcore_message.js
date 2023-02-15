@@ -85,10 +85,12 @@ if (typeof (tdg.message) == "undefined") {
                 "- Quantité annuelle / Volume<br>" +
                 "- Nombre annuel d'envois</p>";
 
-            var m000039_EN = "At this point you cannot proceed back to the previous step to re-begin the registration process. <br><br>" +
-                "Do you want to request that TDG support personnel reach out to you in order to reset your account so that you can restart the registration process?";
-            var m000039_FR = "At this point you cannot proceed back to the previous step to re-begin the registration process. <br><br>" +
-                "Do you want to request that TDG support personnel reach out to you in order to reset your account so that you can restart the registration process?_FR";
+            var m000039_EN = "At this point, you cannot proceed back to the previous step to begin the registration process.<br><br>" +
+                "If you want to withdraw your registration altogether, including removing all entered data, then please choose No below. Next, choose the Contact Us button at the top of the screen, from which choose the ‘Request to withdraw this Registration’ option.<br><br>" +
+                "Do you instead want to request that TDG support personnel reach out to you in order to reset your account so that you can change the initial information from the registration process?";
+            var m000039_FR = "At this point, you cannot proceed back to the previous step to begin the registration process.<br><br>" +
+                "If you want to withdraw your registration altogether, including removing all entered data, then please choose No below. Next, choose the Contact Us button at the top of the screen, from which choose the ‘Request to withdraw this Registration’ option.<br><br>" +
+                "Do you instead want to request that TDG support personnel reach out to you in order to reset your account so that you can change the initial information from the registration process?_FR";
 
             var m000045_EN = "To proceed with the registration process you will need to either:<br><br>" +
                 "- Enter a different Business Number.<br><br>" +
@@ -584,10 +586,15 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "The Annual Compliance Update can only be completed as early as 30 days before your Company’s Anniversary Date of {0}.",
                         "message_fr": "In French - The Annual Compliance Update can only be completed as early as 30 days before your Company’s Anniversary Date of {0}."
                     },
-					{
+                    {
                         "code": "m000131",
                         "message_en": "Note that another Company has an active Site with the same information. Do you want to proceed, or stop this addition in order to make a correction to the entered Site data, and/or begin the Site Sale/Merger process via the Site Transfer menu option?",
                         "message_fr": "In French - Note that another Company has an active Site with the same information. Do you want to proceed, or stop this addition in order to make a correction to the entered Site data, and/or begin the Site Sale/Merger process via the Site Transfer menu option?"
+                    },
+                    {
+                        "code": "m000132",
+                        "message_en": "This action will deactivate the Company and all of its Sites.</br></br>Please be aware that if any of the Sites are meant to be sold to another Company, or merged into an existing Company, then you will need to first begin the Transfer/Sale process for those Sites before deactivating the Company.</br></br> <p style='color:red' >Be advised that this action cannot be undone.</p> Do you want to proceed with the Company deactivation.</br></br>",
+                        "message_fr": "In French - This action will deactivate the Company and all of its Sites.</br></br>Please be aware that if any of the Sites are meant to be sold to another Company, or merged into an existing Company, then you will need to first begin the Transfer/Sale process for those Sites before deactivating the Company.</br></br> <p style='color:red' >Be advised that this action cannot be undone.</p> Do you want to proceed with the Company deactivation.</br></br>"
                     },
                 ];
 

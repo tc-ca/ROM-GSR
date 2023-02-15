@@ -11,7 +11,7 @@ $(document).ready(function () {
     tdg.cid.Setup_site_Profile_Title (CompanyName);
  
     $("#update_site").click(function(){
-        //sessionStorage.setItem('frominyearsitepage', 'true');
+        //sessionStorage.setItem('frominyearsitepage', 'tzrue');
         var urlParams = new URLSearchParams(window.location.search);
 	    if (urlParams.has('id')) {
 		    var siteid = urlParams.get('id');
