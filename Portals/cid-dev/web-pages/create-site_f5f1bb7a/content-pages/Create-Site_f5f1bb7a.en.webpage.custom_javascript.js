@@ -27,7 +27,7 @@ $(document).ready(function () {
 	});
 });
 
-
+/*
 if (window.jQuery) {
 	(function ($) {
 		if (typeof (entityFormClientValidate) != 'undefined') {
@@ -116,3 +116,4 @@ if (window.jQuery) {
 		}
 	}(window.jQuery));
 }
+*/

@@ -1247,6 +1247,11 @@ if (typeof (tdg.cid) == "undefined") {
                 var ovs_address1_province = $("#ovs_address1_province :selected").text();
                 $("#address1_stateorprovince").val(ovs_address1_province);
             });
+            $("#ovs_lld_province").on("change", function (i, val) {
+                debugger;
+                var ovs_lld_province = $("#ovs_lld_province :selected").text();
+                $("#address1_stateorprovince").val(ovs_lld_province);
+            });
 
             $("#address1_postalcode").attr("maxlength", "6");
             $("#address1_postalcode").on('keyup', function () {

@@ -3,7 +3,7 @@ if (typeof (tdg.message) == "undefined") {
     tdg.message = {
         list: function () {
             var m000013_EN = "The Sites shown in the datagrid below, with a Site Claim of 'Site Claim Pending', " +
-                "are understood to belong to your company.\n" +
+                "are understood to belong to your Organization.\n" +
                 "Using the button (V) to the right of each of those Sites, please choose one of following actions:\n" +
                 "- Set as My Site Active\n" +
                 "- Set and Attest as My Site Inactive\n" +
@@ -15,12 +15,12 @@ if (typeof (tdg.message) == "undefined") {
                 "- Définir et attester comme mon site inactif\n" +
                 "- Définir et attester qu'il ne s'agit pas de mon site\n";
 
-            var m000020_EN = "The data grid below lists the Sites that are understood to be associated to your Company. " +
-                "Please choose the <b>[V]</b> button on each row to update Attest each Site, or flag it as not your Company's Site.\n\n" +
+            var m000020_EN = "The data grid below lists the Sites that are understood to be associated to your Organization. " +
+                "Please choose the <b>[V]</b> button on each row to update Attest each Site, or flag it as not your Organization's Site.\n\n" +
                 "When those updates are Complete, please add any remaining Sites individually by choosing the <b>[+Add]</b> button," +
                 "or all at once via Excel, by choosing the <b>[Bulk Add/Update]</b> button.";
-            var m000020_FR = "The data grid below lists the Sites that are understood to be associated to your Company. " +
-                "Please choose the <b>[V]</b> button on each row to update Attest each Site, or flag it as not your Company's Site.\n\n" +
+            var m000020_FR = "The data grid below lists the Sites that are understood to be associated to your Organization. " +
+                "Please choose the <b>[V]</b> button on each row to update Attest each Site, or flag it as not your Organization's Site.\n\n" +
                 "When those updates are Complete, please add any remaining Sites individually by choosing the <b>[+Add]</b> button," +
                 "or all at once via Excel, by choosing the <b>[Bulk Add/Update]</b> button._FR";
 
@@ -30,23 +30,23 @@ if (typeof (tdg.message) == "undefined") {
                 "button to add all new Sites at once via Excel.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
-                "If required, choose the <b>[Previous]</b> button below to return to the Attest Company screen.";
+                "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen.";
             var m000021_FR = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of " +
                 "the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.\n\n" +
                 "To add additional Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> " +
                 "button to add all new Sites at once via Excel.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
-                "If required, choose the <b>[Previous]</b> button below to return to the Attest Company screen._FR";
+                "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen._FR";
 
             var m000022_EN = "To add Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
-                "If required, choose the <b>[Previous]</b> button below to return to the Attest Company screen.";
+                "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen.";
             var m000022_FR = "To add Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
-                "If required, choose the <b>[Previous]</b> button below to return to the Attest Company screen._FR";
+                "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen._FR";
 
             var m000023_EN = "To add Sites individually, choose the <b>[+Add]</b> button below.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
@@ -63,12 +63,12 @@ if (typeof (tdg.message) == "undefined") {
                 "- <b>[Bulk Add/Update]</b> will appear to the right of the <b>[+Add]</b> button\n" +
                 "- For In Year / Annual Compliance, the <b>[V]</b> options will be 'Open Site Details', 'Deactivate / Reactivate'_FR";
 
-            var m000030_EN = "The registration of your Company in the CID Data Platform is now complete. " +
+            var m000030_EN = "The registration of your Organization in the CID Data Platform is now complete. " +
                 "An email has been sent to your address, confirming the completion of the registration." +
-                "<br><br>You are currently in the initial in-year page, which will be your starting page for each future CID sessions. {0} is your company annual compliance anniversary date."
+                "<br><br>You are currently in the initial in-year page, which will be your starting page for each future CID sessions. {0} is your Organization annual compliance anniversary date."
             var m000030_FR = "L'enregistrement de votre entreprise dans la plateforme de données CID est maintenant terminé. " +
                 "Un e-mail a été envoyé à votre adresse, confirmant la finalisation de l'inscription." +
-                "<br><br>Vous êtes actuellement dans la page initiale en cours d'année, qui sera votre page de démarrage pour chaque future session CID. {0} is your company annual compliance anniversary date."
+                "<br><br>Vous êtes actuellement dans la page initiale en cours d'année, qui sera votre page de démarrage pour chaque future session CID. {0} is your Organization annual compliance anniversary date."
 
             var m000031_EN = "You are changing the site requirement level from basic to extended. " +
                 "You are required to complete the extended processing requirements for the site before the site can be attested.<br><br>" +
@@ -95,20 +95,20 @@ if (typeof (tdg.message) == "undefined") {
             var m000045_EN = "To proceed with the registration process you will need to either:<br><br>" +
                 "- Enter a different Business Number.<br><br>" +
                 "      OR<br><br>" +
-                "- Continue with the same Business Number, which is linked to an existing company we already have on file. Note that in the screens to follow, you can change the existing company data fields as required.";
+                "- Continue with the same Business Number, which is linked to an existing Organization we already have on file. Note that in the screens to follow, you can change the existing Organization data fields as required.";
             var m000045_FR = "To proceed with the registration process you will need to either:<br><br>" +
                 "- Enter a different Business Number.<br><br>" +
                 "      OR<br><br>" +
-                "- Continue with the same Business Number, which is linked to an existing company we already have on file. Note that in the screens to follow, you can change the existing company data fields as required._FR";
+                "- Continue with the same Business Number, which is linked to an existing Organization we already have on file. Note that in the screens to follow, you can change the existing Organization data fields as required._FR";
 
             var m000046_EN = "To proceed with the registration process you will need to either:<br><br>" +
-                "- Enter a different company name.<br><br>" +
+                "- Enter a different organization name.<br><br>" +
                 "      OR<br><br>" +
-                "- Continue with this company name, which matches an existing company we already have on file. Note that in the screens to follow, you can change any existing company data fields as required.";
+                "- Continue with this organization name, which matches an existing Organization we already have on file. Note that in the screens to follow, you can change any existing Organization data fields as required.";
             var m000046_FR = "To proceed with the registration process you will need to either:<br><br>" +
-                "- Enter a different company name.<br><br>" +
+                "- Enter a different organization name.<br><br>" +
                 "      OR<br><br>" +
-                "- Continue with this company name, which matches an existing company we already have on file. Note that in the screens to follow, you can change any existing company data fields as required._FR";
+                "- Continue with this organization name, which matches an existing Organization we already have on file. Note that in the screens to follow, you can change any existing Organization data fields as required._FR";
 
             var list =
                 [
@@ -169,13 +169,13 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "BTN_IS_MY_COMPANY",
-                        "message_en": "This is my Company",
-                        "message_fr": "This is my Company_FR"
+                        "message_en": "This is my Organization",
+                        "message_fr": "This is my Organization_FR"
                     },
                     {
                         "code": "BTN_IS_NOT_MY_COMPANY",
-                        "message_en": "This is not my Company",
-                        "message_fr": "This is not my Company_FR"
+                        "message_en": "This is not my Organization",
+                        "message_fr": "This is not my Organization_FR"
                     },
                     {
                         "code": "m000001",
@@ -204,7 +204,7 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000006",
-                        "message_en": "You cannot attest company before adding primary and secondary contacts.</br>",
+                        "message_en": "You cannot attest Organization before adding primary and secondary contacts.</br>",
                         "message_fr": "Vous ne pouvez pas attester de l'entreprise avant d'avoir ajouté des contacts principaux et secondaires.</br>"
                     },
                     {
@@ -214,12 +214,12 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000008",
-                        "message_en": "Company Registration",
+                        "message_en": "Organization Registration",
                         "message_fr": "Enregistrement de l'entreprise"
                     },
                     {
                         "code": "m000009",
-                        "message_en": "Company Registration for {0}",
+                        "message_en": "Organization Registration for {0}",
                         "message_fr": "Enregistrement de l'entreprise pour {0}"
                     },
                     {
@@ -229,13 +229,13 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000011",
-                        "message_en": "You cannot proceed before adding active company site(s).",
+                        "message_en": "You cannot proceed before adding active Organization site(s).",
                         "message_fr": "Vous ne pouvez pas continuer avant d'avoir ajouté le(s) site(s) d'entreprise actif(s)."
                     },
                     {
                         "code": "m000012",
-                        "message_en": "You cannot proceed before attesting all the Company Sites, via opening the site details and completing all the required information for each site.",
-                        "message_fr": "FR-You cannot proceed before attesting all the Company Sites, via opening the site details and completing all the required information for each site."
+                        "message_en": "You cannot proceed before attesting all the Organization Sites, via opening the site details and completing all the required information for each site.",
+                        "message_fr": "FR-You cannot proceed before attesting all the Organization Sites, via opening the site details and completing all the required information for each site."
                     },
                     {
                         "code": "m000013",
@@ -244,13 +244,13 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000014",
-                        "message_en": "This registration for this company has already begun. Do you want to send a request to the Administrator of that registration process requesting to be on-boarded as a user for that company?",
-                        "message_fr": "This registration for this company has already begun. Do you want to send a request to the Administrator of that registration process requesting to be on-boarded as a user for that company?_FR"
+                        "message_en": "This registration for this Organization has already begun. Do you want to send a request to the Administrator of that registration process requesting to be on-boarded as a user for that Organization?",
+                        "message_fr": "This registration for this Organization has already begun. Do you want to send a request to the Administrator of that registration process requesting to be on-boarded as a user for that Organization?_FR"
                     },
                     {
                         "code": "m000014B",
-                        "message_en": "This registration for this company is already complete. Do you want to send a request to the company’s Administrator requesting to be on-boarded as a user for that company?",
-                        "message_fr": "This registration for this company is already complete. Do you want to send a request to the company’s Administrator requesting to be on-boarded as a user for that company?_FR"
+                        "message_en": "This registration for this Organization is already complete. Do you want to send a request to the Organization’s Administrator requesting to be on-boarded as a user for that Organization?",
+                        "message_fr": "This registration for this Organization is already complete. Do you want to send a request to the Organization’s Administrator requesting to be on-boarded as a user for that Organization?_FR"
                     },
                     {
                         "code": "m000015",
@@ -274,8 +274,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000019",
-                        "message_en": "ERAP {0} is assigned to another Company. Are you sure you want to complete the add?",
-                        "message_fr": "ERAP {0} is assigned to another Company. Are you sure you want to complete the add?_F"
+                        "message_en": "ERAP {0} is assigned to another Organization. Are you sure you want to complete the add?",
+                        "message_fr": "ERAP {0} is assigned to another Organization. Are you sure you want to complete the add?_F"
                     },
                     {
                         "code": "m000020",
@@ -309,8 +309,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000026",
-                        "message_en": "You cannot proceed before attesting your company data changes, please check the 'Attestation' box",
-                        "message_fr": "You cannot proceed before attesting your company data changes, please check the 'Attestation' box_FR"
+                        "message_en": "You cannot proceed before attesting your Organization data changes, please check the 'Attestation' box",
+                        "message_fr": "You cannot proceed before attesting your Organization data changes, please check the 'Attestation' box_FR"
                     },
                     {
                         "code": "m000027",
@@ -339,28 +339,28 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000032",
-                        "message_en": "The registration of the {0} Company is based on invitation only. Do you want to request to have an invitation sent to you to register this Company?",
-                        "message_fr": "The registration of the {0} Company is based on invitation only. Do you want to request to have an invitation sent to you to register this Company?_FR"
+                        "message_en": "The registration of the {0} Organization is based on invitation only. Do you want to request to have an invitation sent to you to register this Organization?",
+                        "message_fr": "The registration of the {0} Organization is based on invitation only. Do you want to request to have an invitation sent to you to register this Organization?_FR"
                     },
                     {
                         "code": "m000033",
-                        "message_en": "You are about to begin the process of registering the {0} company within CID. Would you like to proceed?",
-                        "message_fr": "You are about to begin the process of registering the {0} company within CID. Would you like to proceed?_FR"
+                        "message_en": "You are about to begin the process of registering the {0} Organization within CID. Would you like to proceed?",
+                        "message_fr": "You are about to begin the process of registering the {0} Organization within CID. Would you like to proceed?_FR"
                     },
                     {
                         "code": "m000034",
-                        "message_en": "The registration process for the {0} Company has begun. If you proceed, then you will be on-boarded as a Secondary Admin for the {0} Corporation. Would you like to proceed?",
-                        "message_fr": "The registration process for the {0} Company has begun. If you proceed, then you will be on-boarded as a Secondary Admin for the {0} Corporation. Would you like to proceed?_FR"
+                        "message_en": "The registration process for the {0} Organization has begun. If you proceed, then you will be on-boarded as a Secondary Admin for the {0} Corporation. Would you like to proceed?",
+                        "message_fr": "The registration process for the {0} Organization has begun. If you proceed, then you will be on-boarded as a Secondary Admin for the {0} Corporation. Would you like to proceed?_FR"
                     },
                     {
                         "code": "m000035",
-                        "message_en": "The registration process for the {0} Company is complete. If you proceed, then you will be on-boarded as a Secondary Admin for the {0} Corporation. Would you like to proceed?",
-                        "message_fr": "The registration process for the {0} Company is complete. If you proceed, then you will be on-boarded as a Secondary Admin for the {0} Corporation. Would you like to proceed?_FR"
+                        "message_en": "The registration process for the {0} Organization is complete. If you proceed, then you will be on-boarded as a Secondary Admin for the {0} Corporation. Would you like to proceed?",
+                        "message_fr": "The registration process for the {0} Organization is complete. If you proceed, then you will be on-boarded as a Secondary Admin for the {0} Corporation. Would you like to proceed?_FR"
                     },
                     {
                         "code": "m000036",
-                        "message_en": "If you proceed, you will no longer be attached to {0} Company, after which you will have the option to register a new Company instead. Do you want to continue and be disconnected from {0}?",
-                        "message_fr": "If you proceed, you will no longer be attached to {0} Company, after which you will have the option to register a new Company instead. Do you want to continue and be disconnected from {0}?_FR"
+                        "message_en": "If you proceed, you will no longer be attached to {0} Organization, after which you will have the option to register a new Organization instead. Do you want to continue and be disconnected from {0}?",
+                        "message_fr": "If you proceed, you will no longer be attached to {0} Organization, after which you will have the option to register a new Organization instead. Do you want to continue and be disconnected from {0}?_FR"
                     },
                     {
                         "code": "m000037",
@@ -384,23 +384,23 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000041",
-                        "message_en": "The following company data was retrieved from Canada Revenue Agency for this BN {0}:",
-                        "message_fr": "The following company data was retrieved from Canada Revenue Agency for this BN {0}:_FR"
+                        "message_en": "The following Organization data was retrieved from Canada Revenue Agency for this BN {0}:",
+                        "message_fr": "The following Organization data was retrieved from Canada Revenue Agency for this BN {0}:_FR"
                     },
                     {
                         "code": "m000042",
-                        "message_en": "The following company, with the same Legal Name '{0}', has been found in our system:",
-                        "message_fr": "The following company, with the same Legal Name '{0}', has been found in our system:_FR"
+                        "message_en": "The following Organization, with the same Legal Name '{0}', has been found in our system:",
+                        "message_fr": "The following Organization, with the same Legal Name '{0}', has been found in our system:_FR"
                     },
                     {
                         "code": "m000043",
-                        "message_en": "The request has been sent to the primary administrator of this company to onboard you. If they agree, then an invitation email will be sent to you that will allow you complete the onboarding process.<br><br>Please choose the [Sign Out] option to leave the application.",
-                        "message_fr": "The request has been sent to the primary administrator of this company to onboard you. If they agree, then an invitation email will be sent to you that will allow you complete the onboarding process.<br><br>Please choose the [Sign Out] option to leave the application._FR"
+                        "message_en": "The request has been sent to the primary administrator of this Organization to onboard you. If they agree, then an invitation email will be sent to you that will allow you complete the onboarding process.<br><br>Please choose the [Sign Out] option to leave the application.",
+                        "message_fr": "The request has been sent to the primary administrator of this Organization to onboard you. If they agree, then an invitation email will be sent to you that will allow you complete the onboarding process.<br><br>Please choose the [Sign Out] option to leave the application._FR"
                     },
                     {
                         "code": "m000044",
-                        "message_en": "As requested, no request the primary administrator of this company was not sent a request to onboard you to this company.<br><br>Please choose the [Sign Out] option to leave the application.",
-                        "message_fr": "As requested, no request the primary administrator of this company was not sent a request to onboard you to this company.<br><br>Please choose the [Sign Out] option to leave the application._FR"
+                        "message_en": "As requested, no request the primary administrator of this Organization was not sent a request to onboard you to this Organization.<br><br>Please choose the [Sign Out] option to leave the application.",
+                        "message_fr": "As requested, no request the primary administrator of this Organization was not sent a request to onboard you to this Organization.<br><br>Please choose the [Sign Out] option to leave the application._FR"
                     },
                     {
                         "code": "m000045",
@@ -414,21 +414,21 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000047",
-                        "message_en": "The '{0}' company is currently set up as a by-invitation only company. Do you want to request to be on-boarded?",
-                        "message_fr": "The '{0}' company is currently set up as a by-invitation only company. Do you want to request to be on-boarded?_FR"
+                        "message_en": "The '{0}' Organization is currently set up as a by-invitation only Organization. Do you want to request to be on-boarded?",
+                        "message_fr": "The '{0}' Organization is currently set up as a by-invitation only Organization. Do you want to request to be on-boarded?_FR"
                     },
                     {
                         "code": "m000098",
-                        "message_en": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
-                        "message_fr": "Your entered name and email account are already associated with an invitation tailored to you and your Company. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID._FR"
+                        "message_en": "Your entered name and email account are already associated with an invitation tailored to you and your Organization. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
+                        "message_fr": "Your entered name and email account are already associated with an invitation tailored to you and your Organization. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID._FR"
                     }, {
                         "code": "m000099",
-                        "message_en": "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen",
-                        "message_fr": "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen_FR"
+                        "message_en": "The Registration process is currently being processed by your Organization’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Organization or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen",
+                        "message_fr": "The Registration process is currently being processed by your Organization’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Organization or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen_FR"
                     },
                     {
                         "code": "m000100",
-                        "message_en": "Back to Company Registration",
+                        "message_en": "Back to Organization Registration",
                         "message_fr": "Retour à l'enregistrement de société"
                     },
                     {
@@ -473,7 +473,7 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000109",
-                        "message_en": "Deactivate Company",
+                        "message_en": "Deactivate Organization",
                         "message_fr": "Désactiver l'entreprise"
                     },
                     {
@@ -493,13 +493,13 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000113",
-                        "message_en": "The Assign as Primary Admin is restricted to only the Primary Admin for this company.",
-                        "message_fr": "The Assign as Primary Admin is restricted to only the Primary Admin for this company._FR."
+                        "message_en": "The Assign as Primary Admin is restricted to only the Primary Admin for this Organization.",
+                        "message_fr": "The Assign as Primary Admin is restricted to only the Primary Admin for this Organization._FR."
                     },
                     {
                         "code": "m000114",
-                        "message_en": "Are you sure you want to assign {0} as the Primary Admin for this company’s CID Platform, and in doing assign yourself as a Secondary Contact?",
-                        "message_fr": "Are you sure you want to assign {0} as the Primary Admin for this company’s CID Platform, and in doing assign yourself as a Secondary Contact?_FR."
+                        "message_en": "Are you sure you want to assign {0} as the Primary Admin for this Organization’s CID Platform, and in doing assign yourself as a Secondary Contact?",
+                        "message_fr": "Are you sure you want to assign {0} as the Primary Admin for this Organization’s CID Platform, and in doing assign yourself as a Secondary Contact?_FR."
 
                     },
                     {
@@ -509,8 +509,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000116",
-                        "message_en": "This Contact cannot be added as a Contact with this name and email address already exists in CID, but is assigned to a different Company.",
-                        "message_fr": "This Contact cannot be added as a Contact with this name and email address already exists in CID, but is assigned to a different Company._FR"
+                        "message_en": "This Contact cannot be added as a Contact with this name and email address already exists in CID, but is assigned to a different Organization.",
+                        "message_fr": "This Contact cannot be added as a Contact with this name and email address already exists in CID, but is assigned to a different Organization._FR"
                     }
                     ,
                     {
@@ -583,18 +583,18 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000130",
-                        "message_en": "The Annual Compliance Update can only be completed as early as 30 days before your Company’s Anniversary Date of {0}.",
-                        "message_fr": "In French - The Annual Compliance Update can only be completed as early as 30 days before your Company’s Anniversary Date of {0}."
+                        "message_en": "The Annual Compliance Update can only be completed as early as 30 days before your Organization’s Anniversary Date of {0}.",
+                        "message_fr": "In French - The Annual Compliance Update can only be completed as early as 30 days before your Organization’s Anniversary Date of {0}."
                     },
                     {
                         "code": "m000131",
-                        "message_en": "Note that another Company has an active Site with the same information. Do you want to proceed, or stop this addition in order to make a correction to the entered Site data, and/or begin the Site Sale/Merger process via the Site Transfer menu option?",
-                        "message_fr": "In French - Note that another Company has an active Site with the same information. Do you want to proceed, or stop this addition in order to make a correction to the entered Site data, and/or begin the Site Sale/Merger process via the Site Transfer menu option?"
+                        "message_en": "Note that another Organization has an active Site with the same information. Do you want to proceed, or stop this addition in order to make a correction to the entered Site data, and/or begin the Site Sale/Merger process via the Site Transfer menu option?",
+                        "message_fr": "In French - Note that another Organization has an active Site with the same information. Do you want to proceed, or stop this addition in order to make a correction to the entered Site data, and/or begin the Site Sale/Merger process via the Site Transfer menu option?"
                     },
                     {
                         "code": "m000132",
-                        "message_en": "This action will deactivate the Company and all of its Sites.</br></br>Please be aware that if any of the Sites are meant to be sold to another Company, or merged into an existing Company, then you will need to first begin the Transfer/Sale process for those Sites before deactivating the Company.</br></br> <p style='color:red' >Be advised that this action cannot be undone.</p> Do you want to proceed with the Company deactivation.</br></br>",
-                        "message_fr": "In French - This action will deactivate the Company and all of its Sites.</br></br>Please be aware that if any of the Sites are meant to be sold to another Company, or merged into an existing Company, then you will need to first begin the Transfer/Sale process for those Sites before deactivating the Company.</br></br> <p style='color:red' >Be advised that this action cannot be undone.</p> Do you want to proceed with the Company deactivation.</br></br>"
+                        "message_en": "This action will deactivate the Organization and all of its Sites.</br></br>Please be aware that if any of the Sites are meant to be sold to another Organization, or merged into an existing Organization, then you will need to first begin the Transfer/Sale process for those Sites before deactivating the Organization.</br></br> <p style='color:red' >Be advised that this action cannot be undone.</p> Do you want to proceed with the Organization deactivation.</br></br>",
+                        "message_fr": "In French - This action will deactivate the Organization and all of its Sites.</br></br>Please be aware that if any of the Sites are meant to be sold to another Organization, or merged into an existing Organization, then you will need to first begin the Transfer/Sale process for those Sites before deactivating the Organization.</br></br> <p style='color:red' >Be advised that this action cannot be undone.</p> Do you want to proceed with the Organization deactivation.</br></br>"
                     },
                 ];
 
