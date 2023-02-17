@@ -1,0 +1,386 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "e2c24b38-6ef1-4fb0-97f8-109dfd59b4a0"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "account",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "cid_cidsitestatus"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Condition": {
+          "actions": {
+            "Get_Site_Deactivation_History_Code_record": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "d44fd109-8e80-4873-ada4-38c4e82cd58c"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "cid_audithistorycodes",
+                  "$select": "cid_audithistorycodeid",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"cid_audithistorycode\">\n    <attribute name=\"cid_audithistorycodeid\" />\n    <attribute name=\"cid_name\" />\n    <order attribute=\"cid_name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"cid_name\" operator=\"eq\" value=\"SG1\" />\n      <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\" />\n    </filter>\n  </entity>\n</fetch>",
+                  "$top": 1
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Get_Site_Deactivation_History_Code_record_SJ1": {
+              "runAfter": {
+                "Get_Site_Deactivation_History_Code_record_SG1": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d44fd109-8e80-4873-ada4-38c4e82cd58c"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "cid_audithistorycodes",
+                  "$select": "cid_audithistorycodeid",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"cid_audithistorycode\">\n    <attribute name=\"cid_audithistorycodeid\" />\n    <attribute name=\"cid_name\" />\n    <order attribute=\"cid_name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"cid_name\" operator=\"eq\" value=\"SG1\" />\n      <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\" />\n    </filter>\n  </entity>\n</fetch>",
+                  "$top": 1
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Parent_Company_inactivated_via_CID": {
+              "actions": {
+                "Create_Site_Deactivation_History_Log_(SJ1)": {
+                  "actions": {
+                    "Add_Site_Deactivation_History_for_SJ1": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "0275cf19-7047-4486-9cf3-d23f0ba0c5e8"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "CreateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "cid_historylogs",
+                          "item/subject": "Site Deactivation",
+                          "item/cid_Company_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/_parentaccountid_value']})",
+                          "item/cid_externallyvisible": false,
+                          "item/cid_HistoryCode_cid_historylog@odata.bind": "cid_audithistorycodes(@{outputs('Get_Site_Deactivation_History_Code_record_SJ1')?['body/value']})",
+                          "item/cid_memotemplateinputparameters": "@{triggerOutputs()?['body/cid_reasonforsitedeactivation']}|@{triggerOutputs()?['body/cid_sitedeactivationeffectivedate']}|@{triggerOutputs()?['body/cid_memositedeactivation']}",
+                          "item/cid_processingstatus": 100000000,
+                          "item/cid_Site_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/accountid']})"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
+                  },
+                  "runAfter": {},
+                  "expression": {
+                    "greater": [
+                      "@length(outputs('Get_Site_Deactivation_History_Code_record')?['body/value'])",
+                      0
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "938ce9b5-60bd-415f-a028-9f54bb3fda4e"
+                  },
+                  "type": "If"
+                }
+              },
+              "runAfter": {
+                "Get_parent_company": [
+                  "Succeeded"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "Create_Site_Deactivation_History_Log_(SG1)": {
+                    "actions": {
+                      "Add_Site_Deactivation_History_Log_for_SG1": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "0275cf19-7047-4486-9cf3-d23f0ba0c5e8"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_commondataserviceforapps",
+                            "operationId": "CreateRecord",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                          },
+                          "parameters": {
+                            "entityName": "cid_historylogs",
+                            "item/subject": "Site Deactivation",
+                            "item/cid_Company_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/_parentaccountid_value']})",
+                            "item/cid_externallyvisible": false,
+                            "item/cid_HistoryCode_cid_historylog@odata.bind": "cid_audithistorycodes(@{outputs('Get_Site_Deactivation_History_Code_record_SG1')?['body/value']})",
+                            "item/cid_memotemplateinputparameters": "@{triggerOutputs()?['body/cid_reasonforsitedeactivation']}|@{triggerOutputs()?['body/cid_sitedeactivationeffectivedate']}|@{triggerOutputs()?['body/cid_memositedeactivation']}",
+                            "item/cid_processingstatus": 100000000,
+                            "item/cid_Site_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/accountid']})"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      }
+                    },
+                    "runAfter": {},
+                    "expression": {
+                      "greater": [
+                        "@length(outputs('Get_Site_Deactivation_History_Code_record_SG1')?['body/value'])",
+                        0
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "938ce9b5-60bd-415f-a028-9f54bb3fda4e"
+                    },
+                    "type": "If"
+                  }
+                }
+              },
+              "expression": {
+                "and": [
+                  {
+                    "not": {
+                      "equals": [
+                        "@triggerOutputs()?['body/_parentaccountid_value']",
+                        "@null"
+                      ]
+                    }
+                  },
+                  {
+                    "equals": [
+                      "@outputs('Get_parent_company')?['body/cid_cidcompanystatus']",
+                      100000007
+                    ]
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7d322ff4-7c1e-4b9e-8ca6-7d27b03ef0b7"
+              },
+              "type": "If"
+            },
+            "Get_parent_company": {
+              "runAfter": {
+                "Get_Site_Deactivation_History_Code_record_SJ1": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "6e6344a0-6296-4dec-9cdf-f92d3bebb39b"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "recordId": "@triggerOutputs()?['body/_parentaccountid_value']",
+                  "$select": "cid_cidcompanystatus"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Get_Site_Deactivation_History_Code_record_SG1": {
+              "runAfter": {
+                "Get_Site_Deactivation_History_Code_record": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d44fd109-8e80-4873-ada4-38c4e82cd58c"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "cid_audithistorycodes",
+                  "$select": "cid_audithistorycodeid",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"cid_audithistorycode\">\n    <attribute name=\"cid_audithistorycodeid\" />\n    <attribute name=\"cid_name\" />\n    <order attribute=\"cid_name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"cid_name\" operator=\"eq\" value=\"SG1\" />\n      <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\" />\n    </filter>\n  </entity>\n</fetch>",
+                  "$top": 1
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {},
+          "else": {
+            "actions": {
+              "Condition_2": {
+                "actions": {
+                  "Get_Site_Deactivation_History_Code_record_2": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "d44fd109-8e80-4873-ada4-38c4e82cd58c"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_commondataserviceforapps",
+                        "operationId": "ListRecords",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      },
+                      "parameters": {
+                        "entityName": "cid_audithistorycodes",
+                        "$select": "cid_audithistorycodeid",
+                        "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"cid_audithistorycode\">\n    <attribute name=\"cid_audithistorycodeid\" />\n    <attribute name=\"cid_name\" />\n    <order attribute=\"cid_name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"cid_name\" operator=\"eq\" value=\"SJ1\" />\n      <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\" />\n    </filter>\n  </entity>\n</fetch>",
+                        "$top": 1
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Create_Site_Deactivation_History_Log_2": {
+                    "actions": {
+                      "Add_Site_Deactivation_History_Log_2": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "0275cf19-7047-4486-9cf3-d23f0ba0c5e8"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_commondataserviceforapps",
+                            "operationId": "CreateRecord",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                          },
+                          "parameters": {
+                            "entityName": "cid_historylogs",
+                            "item/subject": "Site Deactivation",
+                            "item/cid_Company_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/_parentaccountid_value']})",
+                            "item/cid_externallyvisible": false,
+                            "item/cid_HistoryCode_cid_historylog@odata.bind": "cid_audithistorycodes(@{first(body('Get_Site_Deactivation_History_Code_record_2')?['value'])?['cid_audithistorycodeid']})",
+                            "item/cid_memotemplateinputparameters": "@{triggerOutputs()?['body/cid_reasonforsitedeactivation']}|@{triggerOutputs()?['body/cid_sitedeactivationeffectivedate']}|@{triggerOutputs()?['body/cid_memositedeactivation']}",
+                            "item/cid_processingstatus": 100000000,
+                            "item/cid_Site_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/accountid']})"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Get_Site_Deactivation_History_Code_record_2": [
+                        "Succeeded"
+                      ]
+                    },
+                    "expression": {
+                      "greater": [
+                        "@length(outputs('Get_Site_Deactivation_History_Code_record_2')?['body/value'])",
+                        0
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "938ce9b5-60bd-415f-a028-9f54bb3fda4e"
+                    },
+                    "type": "If"
+                  }
+                },
+                "runAfter": {},
+                "expression": {
+                  "equals": [
+                    "@triggerOutputs()?['body/cid_cidsitestatus']",
+                    100000023
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "d4442dc5-ecfc-42b6-8aab-7a8c417b5d4b"
+                },
+                "type": "If"
+              }
+            }
+          },
+          "expression": {
+            "or": [
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/cid_cidsitestatus']",
+                  100000015
+                ]
+              },
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/cid_cidsitestatus']",
+                  100000021
+                ]
+              },
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/cid_cidsitestatus']",
+                  100000022
+                ]
+              },
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/cid_cidsitestatus']",
+                  100000024
+                ]
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e03bd0cd-9341-4c74-ad9f-5b93d8b1455c"
+          },
+          "type": "If"
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
