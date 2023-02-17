@@ -2,6 +2,8 @@
 // CompanyRegistrationWizard-Start.js
 //
 var _account;
+var _cra_record = null;
+
 $(document).ready(function () {
     debugger;
     sessionStorage.setItem("step_start", 1);
@@ -35,8 +37,10 @@ $(document).ready(function () {
     });
     tdg.cid.crw.start_cid_has_cra_bn_onchange("1");
 
-    $("#cid_reasonfornobnnumber").change(tdg.cid.crw.start_cid_reasonfornobnnumber_onchange);
-    tdg.cid.crw.start_cid_reasonfornobnnumber_onchange();
+    $("#cid_reasonfornobnnumber").change(function () {
+        tdg.cid.crw.start_cid_reasonfornobnnumber_onchange(true);
+    });
+    tdg.cid.crw.start_cid_reasonfornobnnumber_onchange(false);
 
     // autocomplete off
     $("#cid_crabusinessnumber").attr("autocomplete", "new-password");
@@ -98,6 +102,7 @@ $(document).ready(function () {
 
 function start_registration(rom_data, suppress_error) {
     debugger;
+    contact_update(rom_data);
     if (rom_data.ovs_invitation_only) {
         var ovs_invitation_only = true;
         switch (rom_data.cid_cidcompanystatus) {
@@ -128,6 +133,18 @@ function start_registration(rom_data, suppress_error) {
     }
 }
 
+function contact_update(data) {
+    debugger;
+    $('#cid_legalname').val(data.ovs_legalname);
+    $('#cid_operatingname').val(data.name);
+    $('#address1_line1').val(data.address1_line1);
+    $('#address1_line2').val(data.address1_line2);
+    $('#address1_line3').val(data.address1_line3);
+    $('#address1_city').val(data.address1_city);
+    $('#address1_stateorprovince').val(data.address1_stateorprovince);
+    $('#address1_postalcode').val(data.address1_postalcode);
+}
+
 if (window.jQuery) {
     (function ($) {
         webFormClientValidate = function () {
@@ -152,6 +169,8 @@ if (window.jQuery) {
             if (has_invitation != "true") {
                 if (cid_has_cra_bn == 0) {
                     var legalname = $("#cid_legalname").val();
+                    debugger;
+
                     rom_data = tdg.cid.crw.start_account_by_name(legalname);
                     if (rom_data.length > 0) {
                         rom_data = rom_data[0];
@@ -165,7 +184,9 @@ if (window.jQuery) {
                 }
                 else {
                     debugger;
-                    var data = tdg.cid.crw.start_cid_crabusinessnumber_onchange("1");
+
+                    //var data = tdg.cid.crw.start_cid_crabusinessnumber_onchange("1");
+                    var data = _cra_record;
 
                     if (data == "") {
                         tdg.c.error_message_advanced_form("m000001", true);

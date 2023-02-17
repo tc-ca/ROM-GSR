@@ -83,11 +83,17 @@ $(document).ready(function () {
 		else {
 			tdg.c.control_hide("cid_reasonfornobnnumber_other");
 		}
+		tdg.c.addValidator("cid_reasonfornobnnumber");
 		tdg.c.addValidator("ovs_name_fr");
 		$("#name").on('keyup', function () {
 			var name = $("#name").val();
 			$("#ovs_name_fr").val(name);
 		});
+
+		$("#cid_reasonfornobnnumber").change(function () {
+			tdg.cid.crw.start_cid_reasonfornobnnumber_onchange(true);
+		});
+		tdg.cid.crw.start_cid_reasonfornobnnumber_onchange(false);
 	}
 	else {
 		tdg.c.control_show("cid_crabusinessnumber");
@@ -106,9 +112,7 @@ $(document).ready(function () {
 	}
 	$('#cid_crabusinessnumber').attr("readonly", true);
 	$('#ovs_legalname').attr("readonly", true);
-	$('#cid_reasonfornobnnumber').attr("readonly", true);
-	$('#cid_reasonfornobnnumber').css("pointer-events", "none");
-	$('#cid_reasonfornobnnumber_other').attr("readonly", true);
+
 	if (step_start == "1") {
 		var address1_line1 = tdg.c.replace_special_char("{{user.address1_line1}}");
 		var address1_line2 = tdg.c.replace_special_char("{{user.address1_line2}}");

@@ -2047,6 +2047,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
         },
 
         start_cid_crabusinessnumber_onchange: async function (step_start) {
+            debugger;
+
             var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
             var data;
             var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
@@ -2059,6 +2061,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 // retrieve information from FakeBN entity in dynamics
                 data = await tdg.cid.crw.Production_start_Retrieve_cra(cid_crabusinessnumber, step_start);
             }
+
             return data;
         },
 
@@ -2133,6 +2136,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
         start_btn_next_click: async function () {
             debugger;
+            _cra_record = null;
+
             var value = Page_ClientValidate('');
             if (value) {
                 var message = tdg.error_message.message("m000038");
@@ -2148,6 +2153,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 }
                 var cid_reasonfornobnnumber_other = $("#cid_reasonfornobnnumber_other").val();
                 const data = await tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber_list);
+
+                _cra_record = data;
+
                 if (data.length == 0) {
                     if (cid_has_cra_bn == "1") {
                         var message = tdg.error_message.message("m000001");
@@ -2473,8 +2481,11 @@ if (typeof (tdg.cid.crw) == "undefined") {
         },
 
 
-        start_cid_reasonfornobnnumber_onchange: function () {
-            $("#cid_reasonfornobnnumber_other").val("");
+        start_cid_reasonfornobnnumber_onchange: function (clear_data) {
+            debugger;
+            if (clear_data) {
+                $("#cid_reasonfornobnnumber_other").val("");
+            }
 
             cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
             if (cid_reasonfornobnnumber == "3")   // other
@@ -2636,4 +2647,3 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
-
