@@ -1,6 +1,6 @@
 
 $(document).ready(function () {
-
+page_setup();
 var selected_language = '{{website.selected_language.code}}';
 var email  = '{{user.emailaddress1}}';
 var contactemailLabe = "Contact Email";
@@ -53,7 +53,16 @@ var j;
 
 document.getElementById("ovs_requesttype").onchange = function() {Get_RequestDetails()};
 
-
+//check if page loaded after record is created
+var URLs = new URLSearchParams(window.location.search);
+console.log(URLs);
+   //  var newrecordid = URLs.get('id');
+   var recordSaved = URLs.get('recordSaved');
+   if (recordSaved != null && recordSaved == 'yes')
+   {
+       tdg.c.dialog_OK('Your request has been sent to the Transport Canada TDG CID Support Team.');
+   }
+  
 });//end document.ready
 
 
@@ -61,7 +70,8 @@ function Get_RequestDetails() {
 
   var selectedValue  = document.getElementById("ovs_requesttype").value;
  
-  var MemoData = tdg.webapi.SelectedColumnlist("ovs_supportrequesttypes" ,"ovs_templateenglish , ovs_templatefrench" , "ovs_supportrequesttypeid eq " + selectedValue );   
+  var MemoData = tdg.webapi.SelectedColumnlist("ovs_supportrequesttypes" ,"ovs_templateenglish , ovs_templatefrench" ,
+   "ovs_supportrequesttypeid eq " + selectedValue );   
     
 
  
