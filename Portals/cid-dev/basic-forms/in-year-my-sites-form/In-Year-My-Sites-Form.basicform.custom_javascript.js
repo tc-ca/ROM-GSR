@@ -30,7 +30,9 @@ $(document).ready(function ()
 
 	console.log("before adding new button");
 	//create bulk upload button only for DEV and QA environment
-	if (cidCompanyStatus.indexOf("Inactive") < 0 && ('{{request.url}}'.includes("tdgcore-qa") || '{{request.url}}'.includes("rd-tdgcore-dev")))
+	if (cidCompanyStatus.indexOf("Inactive") < 0 
+	//&& ('{{request.url}}'.includes("tdgcore-qa") || '{{request.url}}'.includes("rd-tdgcore-dev"))
+	)
 	{
 		//get bulk update button test
 		var UploadButtonText = tdg.error_message.message("m000111");

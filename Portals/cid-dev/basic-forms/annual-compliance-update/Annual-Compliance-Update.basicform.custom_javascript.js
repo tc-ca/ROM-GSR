@@ -102,7 +102,7 @@ $(document).ready(function ()
 
 			$('.instructions div').eq(0).remove();
 			var validationSection = $('.instructions').eq(0);
-			validationSection.append($("<div id='alertMessages' tabindex='0' class='alert alert-info' style='background:#d7faff'></br></br>" + infomsg + "</br></br></div>"));
+			validationSection.append($("<div id='alertMessages' tabindex='0' class='alert alert-info' style='background:#d7faff'></br>" + infomsg + "</br></br></div>"));
 			validationSection.show();
 		}
 

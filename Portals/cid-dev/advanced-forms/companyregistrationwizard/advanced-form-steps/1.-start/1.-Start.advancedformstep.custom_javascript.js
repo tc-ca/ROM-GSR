@@ -135,6 +135,17 @@ function start_registration(rom_data, suppress_error) {
 
 function contact_update(data) {
     debugger;
+
+    if (data.address != null) {
+        data.ovs_legalname = data.cid_legalname;
+        data.name = data.cid_operatingname;
+        data.address1_line1 = data.address.AddressLine1Text;
+        data.address1_line2 = data.address.AddressLine2Text;
+        data.address1_line3 = data.address.AddressLine3Text;
+        data.address1_city = data.address.CityName;
+        data.address1_stateorprovince = data.address.ProvinceStateCode;
+        data.address1_postalcode = data.address.PostalZipCode;
+   }
     $('#cid_legalname').val(data.ovs_legalname);
     $('#cid_operatingname').val(data.name);
     $('#address1_line1').val(data.address1_line1);
@@ -150,25 +161,25 @@ if (window.jQuery) {
         webFormClientValidate = function () {
             debugger;
 
-            var has_invitation = sessionStorage.getItem("cid_has_invitation");
+            let has_invitation = sessionStorage.getItem("cid_has_invitation");
             if (has_invitation != "true") {
                 tdg.cid.crw.start_clear_contact_address();
             }
 
-            var suppress_error = sessionStorage.getItem("cid_suppress_error");
+            let suppress_error = sessionStorage.getItem("cid_suppress_error");
             suppress_error = (suppress_error != "" ? true : false);
             sessionStorage.setItem("step_start", "1");
 
-            var cid_has_cra_bn = $("#cid_has_cra_bn").val();
+            let cid_has_cra_bn = $("#cid_has_cra_bn").val();
 
-            var validation = false;
-            var rom_data, filter, legalname;
+            let validation = false;
+            let rom_data, filter, legalname;
 
             tdg.c.error_message_clear();
 
             if (has_invitation != "true") {
                 if (cid_has_cra_bn == 0) {
-                    var legalname = $("#cid_legalname").val();
+                    let legalname = $("#cid_legalname").val();
                     debugger;
 
                     rom_data = tdg.cid.crw.start_account_by_name(legalname);
@@ -186,7 +197,7 @@ if (window.jQuery) {
                     debugger;
 
                     //var data = tdg.cid.crw.start_cid_crabusinessnumber_onchange("1");
-                    var data = _cra_record;
+                    let data = _cra_record;
 
                     if (data == "") {
                         tdg.c.error_message_advanced_form("m000001", true);
@@ -195,7 +206,7 @@ if (window.jQuery) {
                         debugger;
 
                         legalname = data.cid_legalname;
-                        var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
+                        let cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
 
                         validation = false;
 
@@ -206,6 +217,7 @@ if (window.jQuery) {
                             validation = start_registration(rom_data, suppress_error);
                         }
                         else {
+                            contact_update(data);
                             validation = true;
                         }
                     }
