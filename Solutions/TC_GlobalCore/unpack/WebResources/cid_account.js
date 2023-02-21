@@ -1,4 +1,8 @@
+
 var _form;
+var _CRAFlowURL;
+var _environment;
+var _cid_crabusinessnumber;
 
 function Me_OnLoad(context) {
     debugger;
@@ -18,26 +22,114 @@ function Me_OnLoad(context) {
     _form.getAttribute("cid_has_cra_bn").addOnChange(cid_has_cra_bn_OnChange);
     cid_has_cra_bn_OnChange();
 
-    _form.getAttribute("ovs_address1_province").addOnChange(ovs_address1_province_OnChange);
-    ovs_address1_province_OnChange();
+    var ovs_address1_province = _form.getAttribute("ovs_address1_province").getValue();
+    var address1_stateorprovince = _form.getAttribute("address1_stateorprovince").getValue();
 
-    _form.getAttribute("cid_crabusinessnumber").addOnChange(cid_crabusinessnumber_OnChange);
+    _form.getAttribute("ovs_address1_province").addOnChange(ovs_address1_province_OnChange);
+
+    if ((ovs_address1_province != null) && (address1_stateorprovince == null)) {
+        ovs_address1_province_OnChange();
+    }
+    else if ((address1_stateorprovince != null) && (ovs_address1_province == null)) {
+        ovs_address1_province_setup();
+    }
+
+    //  _form.getAttribute("cid_crabusinessnumber").addOnChange(cid_crabusinessnumber_OnChange);
     var getFormType = _form.ui.getFormType();
     if ((cid_has_cra_bn) && (getFormType != 1)) {
-        cid_crabusinessnumber_OnChange();
+        // cid_crabusinessnumber_OnChange();
     }
 
     _form.getAttribute("cid_reasonfornobnnumber").addOnChange(cid_reasonfornobnnumber_OnChange);
 
     form_setup();
+    Get_FlowURL_and_Environment();
 }
 
-var _cid_crabusinessnumber;
+function Get_FlowURL_and_Environment() {
+    debugger;
+    Xrm.WebApi.retrieveMultipleRecords("qm_environmentsettings",
+        "?$select=qm_name,qm_value&$filter=qm_name eq 'CID_Flow_CRA_API' or qm_name eq 'CID_Environment'").then(
+            function success(result) {
+                debugger;
+                for (var i = 0; i < result.entities.length; i++) {
+                    // console.log(result.entities[i].qm_value);
+                    // alert(result.entities[i].qm_value);
+                    if (result.entities[i].qm_name == "CID_Flow_CRA_API") {
+                        _CRAFlowURL = result.entities[i].qm_value;
+                    }
+                    else if (result.entities[i].qm_name == "CID_Environment") {
+                        _environment = result.entities[i].qm_value;
+                    }
+                }
+                // perform additional operations on retrieved records
+            },
+            function (error) {
+                // handle error conditions
+                debugger;
+            }
+        );
+}
+function cra_api_get_v2() {
+    debugger;
+   
+    var cid_crabusinessnumber = _form.getAttribute("cid_crabusinessnumber").getValue();
+    _form.ui.clearFormNotification("1");
+
+    Xrm.Utility.showProgressIndicator("Please wait while retrieving information from CRA");
+    if (cid_crabusinessnumber != null) {
+        if (_environment == "PreProd" || _environment == "Prod") {
+            debugger;
+            let body = {
+                "cid_crabusinessnumber": cid_crabusinessnumber
+            };
+
+            let req = new XMLHttpRequest();
+            req.open("POST", _CRAFlowURL, true);
+            req.setRequestHeader("Content-Type", "application/json");
+            req.onreadystatechange = function () {
+                if (this.readyState === 4) {
+                    req.onreadystatechange = null;
+                    if (this.status === 200) {
+                        debugger;
+
+                        var json = JSON.parse(this.response);
+                        if (json.IsInvalidData) {
+                            _form.ui.setFormNotification("Invalid CRA number.", "ERROR", "1");
+                            clear_data();
+                        }
+                        else {
+                            tdg.cid.crw.start_BN_Selected(json);
+                            ovs_address1_province_setup();
+                           // cra_api_get_callback(json);
+                        }
+                        Xrm.Utility.closeProgressIndicator();
+                    } else {
+                        debugger;
+
+                        _form.ui.setFormNotification("Invalid CRA number.", "ERROR", "1");
+                        clear_data();
+                        Xrm.Utility.closeProgressIndicator();
+                    }
+                }
+            };
+            req.send(JSON.stringify(body));
+        }//end check if pre-prod enviroment
+        else {
+            tdg.cid.crw.cid_fake_cra_bn_get(cid_crabusinessnumber);
+            Xrm.Utility.closeProgressIndicator();
+        }
+    }//end if bn not null
+    else {
+        clear_data();
+    }
+}
+
 async function cid_crabusinessnumber_OnChange() {
     debugger;
     var cid_crabusinessnumber = _form.getAttribute("cid_crabusinessnumber").getValue();
     if (cid_crabusinessnumber != null) {
-        tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber,"1");
+        tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, "1");
     }
     else {
         // clear data
@@ -324,10 +416,11 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
             var data = await Xrm.WebApi.retrieveMultipleRecords(entity, fetchXml);
             data = data.entities;
+
             tdg.cid.crw.start_Retrieve_cra_callback(data);
         },
 
-        cra_api_get: function(cid_crabusinessnumber) {
+        cra_api_get: function (cid_crabusinessnumber) {
             debugger;
 
             var flowURL = "https://prod-11.canadacentral.logic.azure.com:443/workflows/bcba042341b44a2ea2034afb1464af0c/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=PVKSxI8Wk6En9Yok9_XQg50ws19V8wPOnvbc1xa5TYk";
@@ -361,11 +454,17 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
             var step_start = sessionStorage.getItem("step_start");;
             if (data == null) {
+                _form.ui.setFormNotification("Invalid CRA number.", "ERROR", "1");
+                clear_data();
                 return "";
+
             }
 
             if (data.length == 0) {
+                _form.ui.setFormNotification("Invalid CRA number.", "ERROR", "1");
+                clear_data();
                 return "";
+
             }
 
             data = data[0];
@@ -389,6 +488,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 return data;
             }
             else {
+                tdg.cid.crw.start_BN_Selected(return_address);
+                ovs_address1_province_setup();
                 return return_address;
             }
         },
@@ -433,3 +534,5 @@ if (typeof (tdg.cid.crw) == "undefined") {
         }
     }
 }
+
+

@@ -16,6 +16,7 @@
         <EnableRule Id="Mscrm.AppendToPrimary" />
         <EnableRule Id="Mscrm.EntityFormIsEnabled" />
         <EnableRule Id="fdr.fdr_equipment.EnableRule.ShowAddExisting_4_ServiceRequest" />
+        <EnableRule Id="fdr.fdr_equipment.EnableRule.DisableForInactive" />
       </EnableRules>
       <DisplayRules>
         <DisplayRule Id="Mscrm.AddExisting" />
@@ -24,7 +25,6 @@
         <DisplayRule Id="Mscrm.AppendPrimary" />
         <DisplayRule Id="Mscrm.AppendSelected" />
         <DisplayRule Id="Mscrm.AppendToSelected" />
-        <DisplayRule Id="fdr.fdr_equipment.ShowAddExisting_4_ServiceRequest" />
       </DisplayRules>
       <Actions>
         <JavaScriptFunction FunctionName="Equipment_Ribbon.openEquipmentPanel" Library="$webresource:fdr_Equipment_Ribbon.js">
@@ -40,6 +40,7 @@
         <EnableRule Id="Mscrm.AppendToPrimary" />
         <EnableRule Id="Mscrm.EntityFormIsEnabled" />
         <EnableRule Id="fdr.fdr_equipment.EnableRule.HideAddExisting_4_ServiceRequest" />
+        <EnableRule Id="fdr.fdr_equipment.EnableRule.NorDisplayToES_Engineer" />
       </EnableRules>
       <DisplayRules>
         <DisplayRule Id="Mscrm.AddExisting" />
@@ -81,8 +82,16 @@
       </DisplayRule>
     </DisplayRules>
     <EnableRules>
+      <EnableRule Id="fdr.fdr_equipment.EnableRule.DisableForInactive">
+        <FormStateRule State="ReadOnly" InvertResult="true" />
+        <FormStateRule State="Disabled" InvertResult="true" />
+        <FormStateRule State="BulkEdit" InvertResult="true" />
+      </EnableRule>
       <EnableRule Id="fdr.fdr_equipment.EnableRule.HideAddExisting_4_ServiceRequest">
         <EntityRule EntityName="fdr_servicerequest" AppliesTo="PrimaryEntity" Default="false" InvertResult="true" />
+      </EnableRule>
+      <EnableRule Id="fdr.fdr_equipment.EnableRule.NorDisplayToES_Engineer">
+        <RecordPrivilegeRule PrivilegeType="Create" AppliesTo="PrimaryEntity" />
       </EnableRule>
       <EnableRule Id="fdr.fdr_equipment.EnableRule.ShowAddExisting_4_ServiceRequest">
         <EntityRule EntityName="fdr_servicerequest" AppliesTo="PrimaryEntity" Default="false" InvertResult="false" />

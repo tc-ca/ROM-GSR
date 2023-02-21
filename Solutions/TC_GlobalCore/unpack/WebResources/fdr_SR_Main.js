@@ -170,12 +170,12 @@ var SR_main = (function (window, document) {
     var statusMappingFullRevocation_PartialRegistration = {
         "Approved": {
 
-            "vals": ["Approved", "Technical Review"],
+            "vals": ["Approved"],
             "allowsInactive": true
         },
         "794600007": {
 
-            "vals": [794600007, 794600002],
+            "vals": [794600007],
             "allowsInactive": true
         },
         "Technical Review": {
@@ -187,19 +187,49 @@ var SR_main = (function (window, document) {
 
             "vals": [794600002, 794600007],
             "allowsInactive": true
+        },
+        "Submitted": {
+
+            "vals": ["Submitted", "Technical Review"],
+            "allowsInactive": true
+        },
+        "794600010": {
+
+            "vals": [794600010, 794600002],
+            "allowsInactive": true
         }
     };
 
     var statusMappingRegistrationClosedOrActive = {
+        "Approved": {
+
+            "vals": ["Approved"],
+            "allowsInactive": true
+        },
+        "794600007": {
+
+            "vals": [794600007],
+            "allowsInactive": true
+        },
         "Admin Review": {
 
-            "vals": ["Admin Review"],
+            "vals": ["Admin Review", "Approved"],
             "allowsInactive": true
         },
         "794600006": {
 
-            "vals": [794600006],
+            "vals": [794600006, 794600007],
             "allowsInactive": true
+        },
+        "Submitted": {
+
+            "vals": ["Submitted", "Admin Review"],
+            "allowsInactive": false
+        },
+        "794600010": {
+
+            "vals": [794600010, 794600006],
+            "allowsInactive": false
         }
     };
 
@@ -210,12 +240,12 @@ var SR_main = (function (window, document) {
         "1": [794600001],
         "Cancellation Pending": ["Canceled"],
         "794600009": [794600001],
-        "Admin Review": ["Closed", "Canceled"],
-        "794600006": [2, 794600001],
-        "Technical Review": ["Closed", "Canceled"],
-        "794600002": [2, 794600001],
-        "Approved": ["Closed", "Canceled"],
-        "794600007": [2, 794600001]
+        "Admin Review": ["Canceled"],
+        "794600006": [794600001],
+        "Technical Review": ["Canceled"],
+        "794600002": [794600001],
+        "Approved": ["Closed"],
+        "794600007": [2]
     };
 
     var OperationLevelObj = {
@@ -431,7 +461,6 @@ var SR_main = (function (window, document) {
             "1": inactiveClosedOrCanceled
         }
     };
-
     //********************private methods*******************
 
 
@@ -584,6 +613,12 @@ var SR_main = (function (window, document) {
             SR_status = glHelper.GetOptionsetValue(formContext, "statuscode");
             SR_state = glHelper.GetOptionsetValue(formContext, "statecode");
 
+            //no reg type => means submitted or draft => shall not define status
+            if (serviceRquestType == null || serviceRquestType == undefined) return;
+
+            //only one state change allowed!
+            if (formContext.getAttribute("statuscode").getIsDirty()) return;
+
 
             //is instance is active
             if (SR_state != 1) {
@@ -592,9 +627,6 @@ var SR_main = (function (window, document) {
                 var allowInactive = RegtypeLevelObj[serviceRquestType]["0"][SR_status]["allowsInactive"];
                 //set statecode visibility
                 glHelper.SetDisabled(formContext, "header_statecode", !allowInactive);
-
-                //only one state change allowed!
-                if (formContext.getAttribute("statuscode").getIsDirty()) return;
 
                 glHelper.filterOptionSetUsingOrigin(formContext, "header_statuscode", SR_Status_origin, currentStatuses, true)
             }//inactive
@@ -624,7 +656,7 @@ var SR_main = (function (window, document) {
 
                 var currentStatuses = RegtypeLevelObj[serviceRquestType]["1"][SR_status];
 
-                if (currentStatuses != null && currentStatuses != undefined)                glHelper.filterOptionSetUsingOrigin(formContext, "header_statuscode", SR_Status_origin, currentStatuses, true);
+                if (currentStatuses != null && currentStatuses != undefined) glHelper.filterOptionSetUsingOrigin(formContext, "header_statuscode", SR_Status_origin, currentStatuses, true);
 
                 //is single - set value, else clear the field
                 if (currentStatuses && currentStatuses.length == 1) glHelper.SetOptionsetByValue(formContext, "statuscode", currentStatuses[0]);
@@ -745,8 +777,21 @@ var SR_main = (function (window, document) {
             var formContext = executionContext.getFormContext();
             var formType = glHelper.GetFormType(formContext);
 
-            //statuscode ATTRIBUTE is dirty refresh the form
-            if (formType > 1 && isStatusChanged) {
+            if (glHelper.GetOptionsetValue(formContext, "statuscode") == 794600002) {
+                setTimeout(function () {
+
+                    //if the form wasn't modified by back end  - in case of Technical Review creating operation -> initiates on operation change after save happened and makes changes before form refresh
+                    if (!formContext.data.entity.getIsDirty()) {
+                        //statuscode ATTRIBUTE is dirty refresh the form
+                        if (formType > 1 && isStatusChanged) {
+                            Xrm.Utility.openEntityForm(formContext.data.entity.getEntityName(), formContext.data.entity.getId());
+                        }
+                    }
+                    //else => re-save
+                    else formContext.data.save();
+                }, 2000);
+            }
+            else if (formType > 1 && isStatusChanged) {
                 Xrm.Utility.openEntityForm(formContext.data.entity.getEntityName(), formContext.data.entity.getId());
             }
         }

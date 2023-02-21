@@ -155,10 +155,12 @@
                         </labels>
                         <control id="cid_companyclaim" classid="{B0C6723A-8503-4fd7-BB28-C8A06AC933C2}" datafieldname="cid_companyclaim" disabled="false" uniqueid="{21476004-6350-84b3-640d-e1c3ddbc7c39}" />
                       </cell>
-                      <cell id="{aeeaec34-c3b4-b1d2-2d44-1bb9b371c24e}" showlabel="false" labelid="{8b643ee9-969d-4654-9c99-98698e8e7bfd}">
+                      <cell id="{1a3a7295-6a3d-42cd-81f7-d3c5101c0a05}" locklevel="0" colspan="1" rowspan="1">
                         <labels>
-                          <label description="" languagecode="1036" />
+                          <label description="Attestation Date" languagecode="1033" />
+                          <label description="Date d'attestation" languagecode="1036" />
                         </labels>
+                        <control id="cid_attestationdate" classid="{5B773807-9FB2-42DB-97C3-7A91EFF8ADFF}" datafieldname="cid_attestationdate" disabled="false" />
                       </cell>
                     </row>
                   </rows>
@@ -1075,6 +1077,12 @@
           </InternalHandlers>
           <Handlers>
             <Handler functionName="Me_OnLoad" libraryName="cid_account.js" handlerUniqueId="{c8d8558d-a72c-0b06-5d14-93b08c5bc327}" enabled="true" parameters="" passExecutionContext="true" />
+            <Handler functionName="Get_FlowURL_and_Environment" libraryName="cid_account.js" handlerUniqueId="{41035172-c01b-567e-432d-32bd0c827836}" enabled="true" parameters="" passExecutionContext="true" />
+          </Handlers>
+        </event>
+        <event name="onchange" application="false" active="false" attribute="cid_crabusinessnumber">
+          <Handlers>
+            <Handler functionName="cra_api_get_v2" libraryName="cid_account.js" handlerUniqueId="{e3832025-0d40-c6b8-aac2-9874ba96ccb2}" enabled="true" parameters="" passExecutionContext="true" />
           </Handlers>
         </event>
       </events>

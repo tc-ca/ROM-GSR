@@ -255,9 +255,26 @@ var RegionNOPRibbon = (function (window, document) {
         Xrm.Utility.closeProgressIndicator();
     }
 
+    function toggleWOGenerationButton(primaryControl)
+    {
+        if (primaryControl == null) { return };
+        var globalContext = Xrm.Utility.getGlobalContext();
+        var formContext = primaryControl;
+
+        var isPlanner = glHelper.hasCurrentUserRole("TDG Planner");
+        var isAdmin = glHelper.hasCurrentUserRole("Systen Administrator");
+
+        if (isPlanner || isAdmin)
+            return true;
+        else
+            return false;
+
+    }
+
     return {
         on_runGenerateWO: on_runGenerateWO,
         reCalculateTotals: reCalculateTotals,
-        fillRegionalCapacity: fillRegionalCapacity
+        fillRegionalCapacity: fillRegionalCapacity,
+        toggleWOGenerationButton: toggleWOGenerationButton
     };
 })(window, document);

@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RibbonDiffXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <CustomActions>
-    <HideCustomAction HideActionId="fdr.Mscrm.SubGrid.fdr_regulatoryrequirement.AddExistingStandard.Hide" Location="Mscrm.SubGrid.fdr_regulatoryrequirement.AddExistingStandard" />
     <CustomAction Id="ovs.fdr_regulatoryrequirement.Button2.Button.AddExistingAssoc.CustomAction" Location="Mscrm.SubGrid.fdr_regulatoryrequirement.MainTab.Management.Controls._children" Sequence="0">
       <CommandUIDefinition>
         <Button Alt="$LocLabels:fdr_regulatoryrequirement.Button2.Button.AddExistingAssoc.Alt" Command="fdr_regulatoryrequirement.Button.AddExistingAssoc" CommandValueId="" Id="fdr_regulatoryrequirement.Button2.Button.AddExistingAssoc" Image32by32="/_imgs/ribbon/AddExistingStandard_32.png" Image16by16="/_imgs/ribbon/AddExistingStandard_16.png" LabelText="$LocLabels:fdr_regulatoryrequirement.Button2.Button.AddExistingAssoc.LabelText" Sequence="0" TemplateAlias="o1" ToolTipTitle="$LocLabels:fdr_regulatoryrequirement.Button2.Button.AddExistingAssoc.ToolTipTitle" ToolTipDescription="$LocLabels:fdr_regulatoryrequirement.Button2.Button.AddExistingAssoc.ToolTipDescription" ModernImage="AddExisting" />
@@ -25,7 +24,6 @@
         <DisplayRule Id="Mscrm.AppendPrimary" />
         <DisplayRule Id="Mscrm.AppendSelected" />
         <DisplayRule Id="Mscrm.AppendToSelected" />
-        <DisplayRule Id="fdr.fdr_specification.ShowAddExisting_4_ServiceRequestFunction" />
       </DisplayRules>
       <Actions>
         <JavaScriptFunction FunctionName="Regs2SRF_Ribbon.openRegPanel" Library="$webresource:fdr_regulatoryrequirements_ribbon.js">
@@ -40,6 +38,8 @@
       <EnableRules>
         <EnableRule Id="Mscrm.AppendToPrimary" />
         <EnableRule Id="Mscrm.EntityFormIsEnabled" />
+        <EnableRule Id="fdr.fdr_specification.EnableRule.HideAddExisting_4_ServiceRequestFunction" />
+        <EnableRule Id="fdr.fdr_regulatoryrequirement.EnableRule.NorDisplayToES_Engineer" />
       </EnableRules>
       <DisplayRules>
         <DisplayRule Id="Mscrm.AddExisting" />
@@ -61,8 +61,11 @@
     <TabDisplayRules />
     <DisplayRules />
     <EnableRules>
+      <EnableRule Id="fdr.fdr_regulatoryrequirement.EnableRule.NorDisplayToES_Engineer">
+        <RecordPrivilegeRule PrivilegeType="Create" AppliesTo="PrimaryEntity" />
+      </EnableRule>
       <EnableRule Id="fdr.fdr_specification.EnableRule.HideAddExisting_4_ServiceRequestFunction">
-        <EntityRule EntityName="fdr_servicerequest" AppliesTo="PrimaryEntity" Default="true" InvertResult="false" />
+        <EntityRule EntityName="fdr_servicerequest" AppliesTo="PrimaryEntity" Default="false" InvertResult="true" />
       </EnableRule>
       <EnableRule Id="fdr.fdr_specification.EnableRule.ShowAddExisting_4_ServiceRequestFunction">
         <EntityRule EntityName="fdr_servicerequest" AppliesTo="PrimaryEntity" Default="false" InvertResult="false" />
@@ -73,11 +76,13 @@
     <LocLabel Id="fdr_regulatoryrequirement.Button2.Button.AddExistingAssoc.Alt">
       <Titles>
         <Title description="Add Existing {0}" languagecode="1033" />
+        <Title description="Ajout d'exigences {0}" languagecode="1036" />
       </Titles>
     </LocLabel>
     <LocLabel Id="fdr_regulatoryrequirement.Button2.Button.AddExistingAssoc.LabelText">
       <Titles>
         <Title description="Add Existing {0}" languagecode="1033" />
+        <Title description="Ajout d'exigences {0}" languagecode="1036" />
       </Titles>
     </LocLabel>
     <LocLabel Id="fdr_regulatoryrequirement.Button2.Button.AddExistingAssoc.ToolTipDescription">
@@ -88,6 +93,7 @@
     <LocLabel Id="fdr_regulatoryrequirement.Button2.Button.AddExistingAssoc.ToolTipTitle">
       <Titles>
         <Title description="Add Existing {0}" languagecode="1033" />
+        <Title description="Ajout d'exigences {0}" languagecode="1036" />
       </Titles>
     </LocLabel>
   </LocLabels>

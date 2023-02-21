@@ -43,7 +43,9 @@
       </Actions>
     </CommandDefinition>
     <CommandDefinition Id="ovs.ovs_cdregionalnop.Command.GenerateWO">
-      <EnableRules />
+      <EnableRules>
+        <EnableRule Id="ovs.ovs_cdregionalnop.EnableRule.GenerateWOCandidatesButton" />
+      </EnableRules>
       <DisplayRules />
       <Actions>
         <JavaScriptFunction FunctionName="RegionNOPRibbon.on_runGenerateWO" Library="$webresource:ovs_RegionalNOP_Ribbon">
@@ -55,7 +57,13 @@
   <RuleDefinitions>
     <TabDisplayRules />
     <DisplayRules />
-    <EnableRules />
+    <EnableRules>
+      <EnableRule Id="ovs.ovs_cdregionalnop.EnableRule.GenerateWOCandidatesButton">
+        <CustomRule FunctionName="RegionNOPRibbon.toggleWOGenerationButton" Library="$webresource:ovs_RegionalNOP_Ribbon">
+          <CrmParameter Value="PrimaryControl" />
+        </CustomRule>
+      </EnableRule>
+    </EnableRules>
   </RuleDefinitions>
   <LocLabels>
     <LocLabel Id="ovs.ovs_cdregionalnop.btnFillCapacity.Alt">

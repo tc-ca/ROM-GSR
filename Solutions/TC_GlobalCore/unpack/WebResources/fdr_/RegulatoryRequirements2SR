@@ -1,9 +1,11 @@
-<html><head>
-    <meta charset="utf-8">
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
     <title></title>
 
 
-    <link href="../qm_/Bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../qm_/Bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 
 
     <script src="../ClientGlobalContext.js.aspx"></script>
@@ -13,7 +15,7 @@
     <style>
     </style>
 
-<meta></head>
+</head>
 <body>
 
     <div class="input-group" style="margin: 10px 5px 0px 5px;">
@@ -63,8 +65,7 @@
 
         var paramsObj = null;
 
-        function addRegs2SR(srId, regIDs)
-        {
+        function addRegs2SR(srId, regIDs) {
             var parameters = {};
             parameters.srId = srId;
             parameters.regIDs = regIDs;
@@ -73,8 +74,7 @@
                 srId: parameters.srId,
                 regIDs: parameters.regIDs,
 
-                getMetadata: function ()
-                {
+                getMetadata: function () {
                     return {
                         boundParameter: null,
                         parameterTypes: {
@@ -94,37 +94,29 @@
             };
 
             Xrm.WebApi.online.execute(fdr_AddRegs2SRRequest).then(
-                function success(result)
-                {
+                function success(result) {
                     Xrm.Utility.closeProgressIndicator();
 
-                    if (result.ok)
-                    {
-                        result.text().then(function (i)
-                        {
+                    if (result.ok) {
+                        result.text().then(function (i) {
                             var data = JSON.parse(i);
-                            if (data != null || typeof data !== 'undefined')
-                            {
+                            if (data != null || typeof data !== 'undefined') {
 
                                 if ((data.responceString != null)
-                                    && typeof data.responceString !== 'undefined')
-                                {
+                                    && typeof data.responceString !== 'undefined') {
 
-                                    if (data.responceString != "")
-                                    {
+                                    if (data.responceString != "") {
                                         Xrm.Navigation.openErrorDialog({ message: "Something went wrong with adding Regulation. Error: " + data.responceString });
                                         window.close();
                                     }
-                                    else
-                                    {
+                                    else {
 
                                         window.close();
                                     }
                                 }
 
                             }
-                        }, function (error)
-                        {
+                        }, function (error) {
 
                             Xrm.Utility.closeProgressIndicator();
                             console.log("add Regs error: " + error.message);
@@ -134,8 +126,7 @@
                     }
 
                 },
-                function (error)
-                {
+                function (error) {
                     Xrm.Utility.closeProgressIndicator();
                     console.log("addRegs2SR error: " + error.message);
                     Xrm.Navigation.openErrorDialog({ message: "Something went wrong. Error: " + error.message });
@@ -145,8 +136,7 @@
 
         }
 
-        function getRegs(ctId, srId, langId)
-        {
+        function getRegs(ctId, srId, langId) {
             Xrm.Utility.showProgressIndicator("Working ...");
 
             var parameters = {};
@@ -159,8 +149,7 @@
                 ctId: parameters.ctId,
                 srId: parameters.srId,
 
-                getMetadata: function ()
-                {
+                getMetadata: function () {
                     return {
                         boundParameter: null,
                         parameterTypes: {
@@ -184,29 +173,31 @@
             };
 
             Xrm.WebApi.online.execute(fdr_Regulations4SRRequest).then(
-                function success(result)
-                {
+                function success(result) {
                     Xrm.Utility.closeProgressIndicator();
 
-                    if (result.ok)
-                    {
-                        result.text().then(function (i)
-                        {
+                    if (result.ok) {
+                        result.text().then(function (i) {
                             var data = JSON.parse(i);
-                            if (data != null || typeof data !== 'undefined')
-                            {
+                            if (data != null || typeof data !== 'undefined') {
 
                                 if ((data.listOfRegsHTML != null)
-                                    && typeof data.listOfRegsHTML !== 'undefined')
-                                {
+                                    && typeof data.listOfRegsHTML !== 'undefined') {
 
-                                    $('#lstTarget').html(data.listOfRegsHTML);
 
+                                    if (data.listOfRegsHTML.length === 0) {
+                                        var lang = Xrm.Utility.getGlobalContext().userSettings.languageId;
+                                        $('#lstTarget').html(lang === 1033 ? "No associated regulations" : "Aucune réglementation associéee");
+
+                                    }
+                                    else {
+                                        $('#lstTarget').html(data.listOfRegsHTML);
+
+                                    }
                                 }
 
                             }
-                        }, function (error)
-                        {
+                        }, function (error) {
 
                             Xrm.Utility.closeProgressIndicator();
                             console.log("Regs error: " + error.message);
@@ -216,8 +207,7 @@
                     }
 
                 },
-                function (error)
-                {
+                function (error) {
                     Xrm.Utility.closeProgressIndicator();
                     console.log("Regs2SR error: " + error.message);
                     Xrm.Navigation.openErrorDialog({ message: "Something went wrong. Error: " + error.message });
@@ -227,28 +217,22 @@
         }
 
         //sdk function modified
-        function getDataParam()
-        {
+        function getDataParam() {
 
             var vals = new Array();
-            if (location.search != "")
-            {
+            if (location.search != "") {
                 vals = location.search.substr(1).split("&");
-                for (var i in vals)
-                {
+                for (var i in vals) {
                     vals[i] = vals[i].replace(/\+/g, " ").split("=");
                 }
                 //look for the parameter named 'data'
                 var dataObj = null;
-                for (var i in vals)
-                {
-                    if (vals[i][0].toLowerCase() == "data")
-                    {
+                for (var i in vals) {
+                    if (vals[i][0].toLowerCase() == "data") {
                         dataObj = parseDataValue(vals[i][1]);
                         found = true;
                         break;
-                    } else
-                    {
+                    } else {
 
                         //notify user - params weren't found
                         Xrm.Navigation.openErrorDialog({ message: "Regulatory Requirements could not be fetched due to the parameters error" });
@@ -257,16 +241,14 @@
                 }
 
                 if (dataObj != null) return dataObj;
-                else
-                {
+                else {
 
                     //notify user - params couldn't be parsed
                     Xrm.Navigation.openErrorDialog({ message: "Regulatory Requirements could not be fetched due to the parameters parsing error" });
                     return null;
                 }
             }
-            else
-            {
+            else {
                 //notify user - params are missing
                 return null;
                 Xrm.Navigation.openErrorDialog({ message: "Regulatory Requirements could not be fetched due to absence of required parameters" });
@@ -274,16 +256,13 @@
         }
 
         //sdk function modified
-        function parseDataValue(datavalue)
-        {
+        function parseDataValue(datavalue) {
 
-            if (datavalue != "")
-            {
+            if (datavalue != "") {
                 var vals = new Array();
 
                 vals = decodeURIComponent(datavalue).split("&");
-                for (var i in vals)
-                {
+                for (var i in vals) {
                     vals[i] = vals[i].replace(/\+/g, " ").split("=");
                 }
 
@@ -298,43 +277,41 @@
         }
 
 
-        $(document).ready(function ()
-        {
+        $(document).ready(function () {
 
             var userSettings = globalContext.userSettings;
             LCID = userSettings.languageId;
 
-            //if (LCID == 1033)
-            //    resexResourceName = "?.1033.resx";
-            //else if (LCID == 1036)
-            //    resexResourceName = "?.1036.resx";
+            let selectAtleastOneItem = "Please, select at least one item";
+            let yesString = "Yes";
 
-            //$('#lblTitle').text(Xrm.Utility.getResourceString(resexResourceName, ""));
+            if (LCID == 1036) {
+                $('#submitButton').text("Ajouter");
+                $('#cancelButton').text("Annuler");
+                $('#search').attr('placeholder', "Taper pour chercher")
+                selectAtleastOneItem = "Veuillez sélectionner au moins un élément";
+                yesString = "Oui";
 
-
+            }
             //get params
             var paramsObj = getDataParam();
 
             if (paramsObj != null) getRegs(paramsObj.ctId, paramsObj.srId, paramsObj.langId);
 
-            $('#submitButton').on('click', function ()
-            {
+            $('#submitButton').on('click', function () {
                 var $btn = $(this).button('loading')
 
                 //get selected check boxes
                 var selected = [];
                 var count = $("input:checked").length;
 
-                if (count == 0)
-                {
+                if (count == 0) {
 
-                    var alertStrings = { confirmButtonLabel: "Yes", text: "Please, check at least one Regulatory Requirement" };
+                    var alertStrings = { confirmButtonLabel: yesString, text: selectAtleastOneItem };
                     Xrm.Navigation.openAlertDialog(alertStrings);
                 }
-                else
-                {
-                    $("input:checked").each(function ()
-                    {
+                else {
+                    $("input:checked").each(function () {
 
                         selected.push($(this).attr('id'));
                     });
@@ -345,34 +322,30 @@
                 //call castom action
                 addRegs2SR(paramsObj.srId, paramsObj.selected);
                 $btn.button('reset');
-            })
-
-            $('#cancelButton').on('click', function ()
-            {
 
                 window.close();
             })
 
-            $("#lstTarget").on("change", ":checkbox", function (event)
-            {
+            $('#cancelButton').on('click', function () {
 
-                if (event.target.checked)
-                {
+                window.close();
+            })
+
+            $("#lstTarget").on("change", ":checkbox", function (event) {
+
+                if (event.target.checked) {
                     $("#icon-" + event.target.id).addClass("glyphicon glyphicon-ok");
 
-                } else
-                {
+                } else {
                     $("#icon-" + event.target.id).removeClass("glyphicon glyphicon-ok");
                 }
 
             });
 
 
-            $("#search").on("keyup", function ()
-            {
+            $("#search").on("keyup", function () {
                 var value = this.value.toLowerCase().trim();
-                $("#lstTarget div").show().filter(function ()
-                {
+                $("#lstTarget div").show().filter(function () {
                     return $(this).text().toLowerCase().trim().indexOf(value) == -1;
                 }).hide();
             });
@@ -381,5 +354,5 @@
 
     </script>
 
-
-</body></html>
+</body>
+</html>

@@ -10,8 +10,9 @@
     <layoutxml>
       <grid name="resultset" jump="name" select="1" icon="1" preview="1">
         <row name="result" id="connectionid">
-          <cell name="record2idname" width="220" />
-          <cell name="record2roleid" width="200" />
+          <cell name="record2id" width="200" />
+          <cell name="record2roleid" width="190" />
+          <cell name="statecode" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -20,7 +21,6 @@
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
         <entity name="connection">
           <attribute name="connectionid" />
-          <attribute name="record2idname" />
           <attribute name="record2roleid" />
           <filter type="and">
             <condition attribute="record2objecttypecode" operator="eq" value="2" />
@@ -30,12 +30,14 @@
               <condition attribute="category" operator="eq" value="918640001" />
             </filter>
           </link-entity>
+          <attribute name="record2id" />
+          <attribute name="statecode" />
         </entity>
       </fetch>
     </fetchxml>
     <IntroducedVersion>1.0.0.0</IntroducedVersion>
     <LocalizedNames>
-      <LocalizedName description="FDR" languagecode="1033" />
+      <LocalizedName description="FDR To" languagecode="1033" />
     </LocalizedNames>
   </savedquery>
 </savedqueries>

@@ -13,45 +13,43 @@
     <script src="../qm_/Bootstrap/js/bootstrap.min.js"></script>
 
     <style>
-
     </style>
 
 </head>
 <body>
 
-        <div class="input-group" style="margin: 10px 5px 0px 5px;">
-            <input type="text" id="search" class="form-control" style="height:36px" placeholder="Type to search">
-        
-            <span class="input-group-btn" style="background-color: #f0f0f0;border: solid 1px #b7b7b7;">
-                <button class="btn" type="button" style="pointer-events: none;"> <span class="glyphicon glyphicon glyphicon-search" aria-hidden="true"></span>
-                </button>
-            </span>
-        </div>
+    <div class="input-group" style="margin: 10px 5px 0px 5px;">
+        <input type="text" id="search" class="form-control" style="height:36px" placeholder="Type to search">
+
+        <span class="input-group-btn" style="background-color: #f0f0f0;border: solid 1px #b7b7b7;">
+            <button class="btn" type="button" style="pointer-events: none;">
+                <span class="glyphicon glyphicon glyphicon-search" aria-hidden="true"></span>
+            </button>
+        </span>
+    </div>
     <div class="container-fluid">
 
         <div class="panel">
             <!-- <div class="panel-heading" id="panel-heading">
-               <h3 class="panel-title">Select required specs</h3> 
-       
+               <h3 class="panel-title">Select required specs</h3>
+
             </div> -->
             <div class="panel-body">
                 <div class="row">
                     <div class="col-xs-12">
                         <ul id="lstTarget" class="list-group">
-
-
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="panel-footer panel-primary text-right">
-                    <button type="button" id="submitButton" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
-                        Add
-                    </button>
-                 
-                    <button type="button" id="cancelButton" class="btn btn-default"  aria-pressed="false" autocomplete="off">
-                        Cancel
-                    </button>
+                <button type="button" id="submitButton" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
+                    Add
+                </button>
+
+                <button type="button" id="cancelButton" class="btn btn-default" aria-pressed="false" autocomplete="off">
+                    Cancel
+                </button>
             </div>
 
         </div>
@@ -188,8 +186,15 @@
                                 if ((data.listOfSpecsHTML != null)
                                     && typeof data.listOfSpecsHTML !== 'undefined') {
 
-                                    $('#lstTarget').html(data.listOfSpecsHTML);
+                                    if (data.listOfSpecsHTML.length === 0) {
+                                        var lang = Xrm.Utility.getGlobalContext().userSettings.languageId;
+                                        $('#lstTarget').html(lang === 1033 ? "No associated Equipments" : "Aucun équipement associés");
 
+                                    }
+                                    else {
+                                        $('#lstTarget').html(data.listOfSpecsHTML);
+
+                                    }
                                 }
 
                             }
@@ -278,12 +283,16 @@
             var userSettings = globalContext.userSettings;
             LCID = userSettings.languageId;
 
-            //if (LCID == 1033)
-            //    resexResourceName = "?.1033.resx";
-            //else if (LCID == 1036)
-            //    resexResourceName = "?.1036.resx";
+            let selectAtleastOneItem = "Please, select at least one item";
+            let yesString = "Yes";
 
-            //$('#lblTitle').text(Xrm.Utility.getResourceString(resexResourceName, ""));
+            if (LCID == 1036) {
+                $('#submitButton').text("Ajouter");
+                $('#cancelButton').text("Annuler");
+                $('#search').attr('placeholder', "Taper pour chercher")
+                selectAtleastOneItem = "Veuillez sélectionner au moins un élément";
+                yesString = "Oui";
+            }
 
 
             //get params
@@ -300,7 +309,7 @@
 
                 if (count == 0) {
 
-                    var alertStrings = { confirmButtonLabel: "Yes", text: "Please, check at least one specification" };
+                    var alertStrings = { confirmButtonLabel: yesString, text: selectAtleastOneItem };
                     Xrm.Navigation.openAlertDialog(alertStrings);
                 }
                 else {
@@ -308,12 +317,12 @@
 
                         selected.push($(this).attr('id'));
                     });
-                } 
+                }
 
                 //send to assign
                 paramsObj.selected = selected.join(';');
                 //call castom action
-                addSpecs2SRF(paramsObj.srfId, paramsObj.selected);   
+                addSpecs2SRF(paramsObj.srfId, paramsObj.selected);
                 $btn.button('reset')
             })
 
@@ -323,12 +332,11 @@
             })
 
             $("#lstTarget").on("change", ":checkbox", function (event) {
-                
-                if(event.target.checked)
-                {
+
+                if (event.target.checked) {
                     $("#icon-" + event.target.id).addClass("glyphicon glyphicon-ok");
 
-                }else{
+                } else {
                     $("#icon-" + event.target.id).removeClass("glyphicon glyphicon-ok");
                 }
 

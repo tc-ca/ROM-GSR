@@ -375,7 +375,7 @@
                 timeout
             );
 
-        return id;
+        return uniqueId;
     }
 
     /**

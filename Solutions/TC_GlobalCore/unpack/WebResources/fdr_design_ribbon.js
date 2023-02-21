@@ -94,11 +94,12 @@
             data: JSON.stringify(formParameters)
         };
         var navigationOptions = {
-            target: 2,
-            height: { value: 90, unit: "%" },
-            width: { value: 25, unit: "%" },
-            position: 2,
-            title: "Available Designs"
+          target: 2,
+          height: { value: 90, unit: "%" },
+          width: { value: 25, unit: "%" },
+          position: 2,
+          title:
+            LCID === 1033 ? "Available Designs" : "Conceptions disponibles",
         };
         Xrm.Navigation.navigateTo(pageData, navigationOptions).then(
             function success(returnValue) {
@@ -144,33 +145,6 @@
         formParameters["fdr_ovs_mocregistrationtype"] = "ovs_mocregistration"; // etn
         formParameters["fdr_initialsrfunctionid"] = srfId.replace('{', '').replace('}', '');
         formParameters["fdr_initialregtypeid"] = localObj.rt_id;
-
-
-        //var entityFormOptions = {};
-        //entityFormOptions["entityName"] = "fdr_design";
-        //entityFormOptions["formId"] = "f90a6783-527f-4c28-97bc-28afe3feed37";
-        //entityFormOptions["windowPosition"] = 1;
-        //entityFormOptions["openInNewWindow"] = false;
-        //entityFormOptions["width"] = 600;
-        //entityFormOptions["height"] = 400;     
-
-
-
-        //// Open the form.
-        //Xrm.Navigation.openForm(entityFormOptions, formParameters).then(
-        //    function (success) {
-
-        //        //refresh specs grid
-        //        gridControl.refresh();
-        //        //console.log(success);
-        //    },
-        //    function (error) {
-        //        console.log(error);
-        //        Xrm.Navigation.openErrorDialog({ message: "Something went wrong. Error: " + error });
-        //        //refresh specs grid
-        //        gridControl.refresh();
-        //    }
-        //);
 
         var pageData = {
             pageType: "entityrecord",

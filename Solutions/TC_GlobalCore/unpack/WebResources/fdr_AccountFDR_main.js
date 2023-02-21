@@ -7,12 +7,12 @@ var AccountFDRmain = (function (window, document) {
      //optionset value: form name
     var formMapping_EN = {
         "948010001": "FDR Site Profile",
-        "948010000": "FDR Organizations",
+        "948010000": "FDR Organization",
     };
 
     var formMapping_FR = {
-        "948010001": "Profil du site de TMD",
-        "948010000": "Organisations TMD",
+        "948010001": "RIC profile de site",
+        "948010000": "RIC organisations",
     };
     var formContextGlobalRef;
     var regionMapping = {"AB": "0","BC": "1","MB": "2","NB": "3","NL": "4","NT": "5","NS": "6","NU": "7","ON": "8","PE": "9","QC": "10",	"SK": "11","YK": "12"};

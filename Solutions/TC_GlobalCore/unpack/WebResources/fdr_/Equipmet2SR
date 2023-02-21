@@ -186,7 +186,16 @@
                                 if ((data.listOfSpecsHTML != null)
                                     && typeof data.listOfSpecsHTML !== 'undefined') {
 
-                                    $('#lstTarget').html(data.listOfSpecsHTML);
+                                        if(data.listOfSpecsHTML.length === 0)
+                                        {
+                                            var lang = Xrm.Utility.getGlobalContext().userSettings.languageId;
+                                            $('#lstTarget').html(lang === 1033?"No associated Equipments":"Aucun équipement associés");
+
+                                        }
+                                        else{
+                                            $('#lstTarget').html(data.listOfSpecsHTML);
+
+                                        }
 
                                 }
 
@@ -276,13 +285,17 @@
             var userSettings = globalContext.userSettings;
             LCID = userSettings.languageId;
 
-            //if (LCID == 1033)
-            //    resexResourceName = "?.1033.resx";
-            //else if (LCID == 1036)
-            //    resexResourceName = "?.1036.resx";
+            let selectAtleastOneItem = "Please, select at least one item";
+            let yesString = "Yes";
 
-            //$('#lblTitle').text(Xrm.Utility.getResourceString(resexResourceName, ""));
+            if (LCID == 1036) {
+                $('#submitButton').text("Ajouter");
+                $('#cancelButton').text("Annuler");
+                $('#search').attr('placeholder', "Taper pour chercher")
+                selectAtleastOneItem = "Veuillez sélectionner au moins un élément";
+                yesString = "Oui";
 
+            }
 
             //get params
             var paramsObj = getDataParam();
@@ -298,7 +311,7 @@
 
                 if (count == 0) {
 
-                    var alertStrings = { confirmButtonLabel: "Yes", text: "Please, check at least one specification" };
+                    var alertStrings = { confirmButtonLabel: yesString, text: selectAtleastOneItem };
                     Xrm.Navigation.openAlertDialog(alertStrings);
                 }
                 else {

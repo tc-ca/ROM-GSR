@@ -26,11 +26,12 @@
             data: JSON.stringify(formParameters)
         };
         var navigationOptions = {
-            target: 2,
-            height: { value: 90, unit: "%" },
-            width: { value: 25, unit: "%" },
-            position: 2,
-            title: "Available Equipments"
+          target: 2,
+          height: { value: 90, unit: "%" },
+          width: { value: 25, unit: "%" },
+          position: 2,
+          title:
+            LCID === 1033 ? "Available Equipment" : "Équipements disponibles",
         };
         Xrm.Navigation.navigateTo(pageData, navigationOptions).then(
             function success(returnValue) {

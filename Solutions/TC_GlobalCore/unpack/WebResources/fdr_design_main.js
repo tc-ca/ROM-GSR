@@ -10,6 +10,7 @@ var Design_main = (function (window, document) {
     var globalContext;
     var formType;
     var clientUrl;
+    var isParent;
     var DMRs_IDs = new Array();
     var DRAs_IDs = new Array();
 
@@ -264,7 +265,8 @@ var Design_main = (function (window, document) {
                         if (dmrAttrValue != null && dmrAttrValue.length == 1) {
 
                             glHelper.SetValue(formContext, dmrName, dmrAttrValue);
-                            glHelper.SetControlReadOnly(formContext, dmrName, dmrAttrValue.length == 1)
+                            if (dmrName != "fdr_option")
+                                glHelper.SetControlReadOnly(formContext, dmrName, dmrAttrValue.length == 1)
                         }
                         //if more then one - leave only same options in design control and filter out others
                         if (dmrAttrValue != null && dmrAttrValue.length > 1) {
@@ -379,6 +381,10 @@ var Design_main = (function (window, document) {
             // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
             formType = glHelper.GetFormType(formContext);
 
+            //design type
+            var dType = formContext.getAttribute("fdr_designtype");
+            dType.removeOnChange(Design_main.DesignType_OnChange);
+            dType.addOnChange(Design_main.DesignType_OnChange);
 
             //pre-filter lookup Design Review Agency
             var DRA_control = formContext.getControl("fdr_designreviewagency");
@@ -388,6 +394,9 @@ var Design_main = (function (window, document) {
             glHelper.SetSectionVisibility(formContext, "General", "section_designRequirement", formType != 1);
 
             if (formType == 1) {
+
+                //hide parent design field - untill design type selected
+                glHelper.SetSectionVisibility(formContext, "General", "General_section_5", false);
 
                 //DMR Lookup
                 var DMR_control = formContext.getControl("fdr_designmarkingrequirement");
@@ -412,7 +421,7 @@ var Design_main = (function (window, document) {
                     }
                 );
 
-                if (initialSRF_id == undefined || initialSRF_id.trim() == '') Xrm.Navigation.openErrorDialog({ message: "Design cannot be created from any form except Service request Function. Plase advice with service team." }).then(
+                if (initialSRF_id == undefined || initialSRF_id.trim() == '') Xrm.Navigation.openErrorDialog({ message: "Design cannot be created from any form except Service Request Function. Plase advice with service team." }).then(
                     function (success) {
                         //lock the form
                         glHelper.disableAllFields(formContext);
@@ -424,7 +433,7 @@ var Design_main = (function (window, document) {
                     }
                 );
 
-                if (initialRT_id == undefined || initialRT_id.trim() == '') Xrm.Navigation.openErrorDialog({ message: "Registration type value is missing. Plase advice with service team." }).then(
+                if (initialRT_id == undefined || initialRT_id.trim() == '') Xrm.Navigation.openErrorDialog({ message: "Registration Type value is missing. Plase advice with service team." }).then(
                     function (success) {
                         //lock the form
                         glHelper.disableAllFields(formContext);
@@ -453,28 +462,69 @@ var Design_main = (function (window, document) {
             }
             else {
 
-                //lock dmr 
-                glHelper.SetDisabled(formContext, "fdr_designmarkingrequirement", true);
-                initilizeDataObj(globalFormContext, "QVC_DMR");
+                var status = glHelper.GetOptionsetValue(formContext, "statuscode");
+
+                dType.fireOnChange();
                 //Design Marking Requirement=B620, TCRN only
                 SetTCRNOnlyBasedOnType(formContext);
+
+                ////lock dmr 
+                //glHelper.SetDisabled(formContext, "fdr_designmarkingrequirement", true);
+                initilizeDataObj(globalFormContext, "QVC_DMR");
+
+                //lock form if active 
+                if(status == 1) glHelper.SetFormReadOnly(formContext);
             }
         },
 
         DMR_OnChange: function (executionContext) {
 
+            var formContext = executionContext.getFormContext();
+
+            var saveAndCalculate = false;
             var name = glHelper.GetValue(globalFormContext, "fdr_name");
+            var dType = glHelper.GetValue(globalFormContext, "fdr_designtype");
+            
             if (glHelper.GetLookupAttrId(globalFormContext, "fdr_designmarkingrequirement") != null
-                && name != null && name != "" && name != undefined)
-                globalFormContext.data.save().then(function () {
+                && name != null && name != "" && name != undefined && dType != null && dType != undefined) {
 
-                    //init quick view control and collection of controls in quick view
-                    initilizeDataObj(globalFormContext, "QVC_DMR");
-                }, function (e) {
+                //if parent - no extra required fields
+                if (isParent) saveAndCalculate = true;
+                else {
+                    var pDesignId = glHelper.GetLookupAttrId(formContext, "fdr_parentdesign");
+                    saveAndCalculate = (glHelper.isAttributeRequired(formContext, "fdr_parentdesign") &&  pDesignId != null) ? true : false;
+                }
 
-                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Form must be saved before Design Marking requirement are applied. Please, fill all required fields." });
-                });
+                if (saveAndCalculate) {
+                    globalFormContext.data.save().then(function () {
 
+                        //init quick view control and collection of controls in quick view
+                        initilizeDataObj(globalFormContext, "QVC_DMR");
+                    }, function (e) {
+
+                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Form must be saved before Design Marking requirement are applied. Please, fill all required fields." });
+                    });
+                }
+            }
+        },
+
+        DesignType_OnChange: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+
+            var dTypeValue = glHelper.GetOptionsetValue(formContext, "fdr_designtype");
+            isParent = dTypeValue == 794600000;
+            var pDesignId = glHelper.GetLookupAttrId(formContext, "fdr_parentdesign");
+            //var quickViewControl = formContext.ui.quickForms.get("parent_reqNumber_view");
+
+            glHelper.SetRequiredLevel(formContext, "fdr_parentdesign", !isParent);
+            if (isParent && pDesignId != null) glHelper.SetValue(formContext, "fdr_parentdesign", null);
+            glHelper.SetSectionVisibility(formContext, "General", "General_section_5", !isParent);
+            glHelper.SetControlVisibility(formContext, "fdr_designregistrationnumber", isParent);
+            //glHelper.SetControlVisibility(formContext, "fdr_parentdesign", !isParent);
+            //if (quickViewControl && quickViewControl != undefined) quickViewControl.setVisible(!isParent) 
+
+            Design_main.DMR_OnChange(executionContext);
         },
 
         DMR_Pre_filter: function () {
@@ -522,6 +572,7 @@ var Design_main = (function (window, document) {
             globalFormContext.getControl("fdr_designreviewagency").addCustomFilter(functionFilter, "ovs_mocregistration");
 
         },
+
     }
 
 })(window, document)

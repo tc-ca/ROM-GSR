@@ -23,39 +23,51 @@ var SRFunctions_FDR_main = (function (window, document) {
     //get service request operation and status reason
     function getSRs_status(formContext, SR_id) {
 
-        Xrm.WebApi.online.retrieveRecord("fdr_servicerequest", SR_id, "?$select=_fdr_operation_value,statuscode").then(
-            function success(result) {
+        var req = new XMLHttpRequest();
+        req.open("GET", Xrm.Utility.getGlobalContext().getClientUrl() + "/api/data/v9.2/fdr_servicerequests(" + SR_id + ")?$select=_fdr_operation_value,statuscode", false);
+        req.setRequestHeader("OData-MaxVersion", "4.0");
+        req.setRequestHeader("OData-Version", "4.0");
+        req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+        req.setRequestHeader("Accept", "application/json");
+        req.setRequestHeader("Prefer", "odata.include-annotations=*");
+        req.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                req.onreadystatechange = null;
+                if (this.status === 200) {
+                    var result = JSON.parse(this.response);
+                    console.log(result);
+                    // Columns
+                    var fdr_servicerequestid = result["fdr_servicerequestid"]; // Guid
+                    var fdr_operation = result["_fdr_operation_value"]; // Lookup
+                    var fdr_operation_formatted = result["_fdr_operation_value@OData.Community.Display.V1.FormattedValue"];
+                    var fdr_operation_lookuplogicalname = result["_fdr_operation_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                    var statuscode = result["statuscode"]; // Status
+                    var statuscode_formatted = result["statuscode@OData.Community.Display.V1.FormattedValue"];
 
-                try {
 
-                    var _fdr_operation_value = result["_fdr_operation_value"];
-                    var _fdr_operation_value_formatted = result["_fdr_operation_value@OData.Community.Display.V1.FormattedValue"];
-                    var _fdr_operation_value_lookuplogicalname = result["_fdr_operation_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
-                    var statuscode = result["statuscode"];
+                    //set flag to display Designs based on SR status and operation presence
+                    if (fdr_operation == null) {
+                        displayDesign = false;
+                        hasOperation = false;
+                    }
+                    else if (statuscode == 1 || statuscode == 794600010 || statuscode == 794600000 || statuscode == 794600006) {
+                        displayDesign = false;
+                        hasOperation = true;
+                    } else {
+                        displayDesign = true;
+                        hasOperation = true;
+                    }
 
-                } catch (e) {
-                    displayDesign = false;
-                    hasOperation = false;
-                }
-
-                //set flag to display Designs based on SR status and operation presence
-                if (_fdr_operation_value == null) {
-                    displayDesign = false;
-                    hasOperation = false;
-                }
-                else if (statuscode == 1 || statuscode == 794600010 || statuscode == 794600000 || statuscode == 794600006) {
-                    displayDesign = false;
-                    hasOperation = true;
                 } else {
-                    displayDesign = true;
-                    hasOperation = true;
-                }
 
-            },
-            function (error) {
-                Xrm.Navigation.openErrorDialog({ message: "Something went wrong " + error.message});
+                    displayDesign = false;
+                    hasOperation = false;
+                    //Xrm.Navigation.openErrorDialog({ message: "Something went wrong " + this.statusText });
+                    console.log("Something went wrong in getSRs_status methods :" + this.responseText);
+                }
             }
-        );
+        };
+        req.send();
     }
 
     //get SR's container type and if any => list of related container functions
@@ -122,12 +134,10 @@ var SRFunctions_FDR_main = (function (window, document) {
         req.send();
     }
 
-    function getSpecAndLimitations() {
-        getSpecificationAndLimitations(globalFormContext);
-    }
 
-    function getSpecificationAndLimitations(formContext) {
-        var containerId = formContext.data.entity.getId();;
+    function getSpecAndLimitations() {
+
+        var containerId = globalFormContext.data.entity.getId();
 
         //212216 show specs and limitations comma seperated in the functions grid
         Xrm.WebApi.online.retrieveRecord("fdr_servicerequestfunction", containerId, "?$select=fdr_name&$expand=fdr_fdr_servicerequestfunction_fdr_functionlimitation_servicerequestfunction($select=_fdr_limitation_value,fdr_texten,fdr_textfr,statecode),fdr_ServiceRequestFunction_Specification($select=fdr_englishname,fdr_name,statecode)").then(
@@ -139,7 +149,7 @@ var SRFunctions_FDR_main = (function (window, document) {
                 // Limitations
                 for (var j = 0; j < result.fdr_fdr_servicerequestfunction_fdr_functionlimitation_servicerequestfunction.length; j++) {
                     var fdr_limitation_formatted = result.fdr_fdr_servicerequestfunction_fdr_functionlimitation_servicerequestfunction[j]["_fdr_limitation_value@OData.Community.Display.V1.FormattedValue"];
-                     var statecode_formatted = result.fdr_fdr_servicerequestfunction_fdr_functionlimitation_servicerequestfunction[j]["statecode@OData.Community.Display.V1.FormattedValue"];
+                    var statecode_formatted = result.fdr_fdr_servicerequestfunction_fdr_functionlimitation_servicerequestfunction[j]["statecode@OData.Community.Display.V1.FormattedValue"];
                     if (statecode_formatted == "Active") {
 
                         if (limitations.length > 0)
@@ -150,7 +160,7 @@ var SRFunctions_FDR_main = (function (window, document) {
 
                 // Specifications
                 for (var j = 0; j < result.fdr_ServiceRequestFunction_Specification.length; j++) {
-                     var fdr_name = result.fdr_ServiceRequestFunction_Specification[j]["fdr_name"];
+                    var fdr_name = result.fdr_ServiceRequestFunction_Specification[j]["fdr_name"];
                     var statecode_formatted = result.fdr_ServiceRequestFunction_Specification[j]["statecode@OData.Community.Display.V1.FormattedValue"];
                     //if (statecode_formatted == "Active") {
                     if (specifications.length > 0)
@@ -158,8 +168,17 @@ var SRFunctions_FDR_main = (function (window, document) {
                     specifications = specifications + fdr_name;
                     //}
                 }
-                glHelper.SetValue(formContext, "fdr_limitations", limitations);
-                glHelper.SetValue(formContext, "fdr_specifications", specifications);
+
+                //fdr_limitations
+                //fdr_specifications
+
+                if (glHelper.GetValue(globalFormContext, "fdr_limitations") != limitations
+                    || glHelper.GetValue(globalFormContext, "fdr_specifications") != specifications) {
+
+                    glHelper.SetValue(globalFormContext, "fdr_limitations", limitations);
+                    glHelper.SetValue(globalFormContext, "fdr_specifications", specifications);
+                    globalFormContext.data.save();
+                }
             },
             function (error) {
                 console.log(error.message);
@@ -188,7 +207,7 @@ var SRFunctions_FDR_main = (function (window, document) {
 
             isDesignRegSupported = glHelper.GetValue(formContext, "fdr_supportsdesignregistration");
 
-            var SR_id = glHelper.GetLookupAttrId(formContext, "fdr_servicerequest");
+            var SR_id = glHelper.GetLookupAttrId(formContext, "fdr_servicerequest").replace('{', '').replace('}','');
             if (SR_id != null) getSRs_status(formContext, SR_id);
 
             if (formType == 1) {
@@ -210,7 +229,7 @@ var SRFunctions_FDR_main = (function (window, document) {
                 cf.fireOnChange();
 
                 //212216 show specs and limitations comma seperated in the functions grid
-                getSpecificationAndLimitations(formContext);
+                getSpecAndLimitations();
 
                 var specGrid = globalFormContext.getControl("GRID_SPECS");
                 var limitationGrid = globalFormContext.getControl("grdFunctionLimitations");
@@ -256,12 +275,15 @@ var SRFunctions_FDR_main = (function (window, document) {
 
             if (containerId != null) {
 
-                //populate Service Request Function name
-                glHelper.SetValue(formContext, "fdr_name", glHelper.GetLookupName(formContext, "fdr_containerfunction"));
 
-
-                //select Container Functions that have already been added to a Service Request.
                 if (formType == 1) {
+
+                    //populate Service Request Function name
+                    var currentName = glHelper.GetValue(formContext, "fdr_name");
+                    if (currentName == "" || currentName == null || currentName == undefined)
+                        glHelper.SetValue(formContext, "fdr_name", glHelper.GetLookupName(formContext, "fdr_containerfunction"));
+
+                    //select Container Functions that have already been added to a Service Request.
                     var SR_id = glHelper.GetLookupAttrId(formContext, "fdr_servicerequest");
                     if (SR_id != null) {
                         var filter = "?$select=_fdr_containerfunction_value&$filter=(_fdr_containerfunction_value eq " + containerId;
@@ -282,9 +304,9 @@ var SRFunctions_FDR_main = (function (window, document) {
                     }
 
                 }
-                  //update, Michael. September 1, 2022
+                //update, Michael. September 1, 2022
                 //logic changed to make design registration option to change on Container function level, task 198729
-                //get and save design allowence value on create only, nio futher mutations!
+                //get and save design allowence value on create only, no futher mutations!
                 Xrm.WebApi.online.retrieveRecord("fdr_containerfunction", containerId, "?$select=fdr_supportsdesignregistration").then(
                     function success(result) {
 

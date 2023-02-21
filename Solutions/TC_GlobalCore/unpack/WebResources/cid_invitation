@@ -21,8 +21,7 @@ function ResendInvitationByInvitationId(InvitationIds) {
         function (success) {
             if (success.confirmed) {
                 for (var x = 0; x < InvitationIds.length; x++) {
-                    if (invitationList == null || invitationList == "")
-                    {
+                    if (invitationList == null || invitationList == "") {
                         if (InvitationIds[x].startsWith("{") && InvitationIds[x].endsWith("}"))
                             invitationList = InvitationIds[x];
                         else
@@ -31,15 +30,42 @@ function ResendInvitationByInvitationId(InvitationIds) {
                     else
                         invitationList += " or cid_invitationid eq {" + InvitationIds[x] + "}";
                 }
-                Xrm.WebApi.online.retrieveMultipleRecords("cid_invitation", "?$select=_cid_invitation_value&$filter=cid_invitationid eq " + invitationList).then(
+                Xrm.WebApi.online.retrieveMultipleRecords("cid_invitation", "?$select=_cid_invitation_value,_cid_companyname_value,_cid_invitedcontact_value,cid_companystatus&$filter=cid_invitationid eq " + invitationList).then(
                     function success(results) {
                         console.log(results);
                         for (var i = 0; i < results.entities.length; i++) {
                             var result = results.entities[i];
-                            if (adx_invitationList == null || adx_invitationList == "")
-                                adx_invitationList = "{" + result["_cid_invitation_value"] + "}";
+                            var cid_companystatus = result["cid_companystatus"]; // Choice
+                            var cid_companystatus_formatted = result["cid_companystatus@OData.Community.Display.V1.FormattedValue"];
+                            var cid_companyname_formatted = result["_cid_companyname_value@OData.Community.Display.V1.FormattedValue"];
+                            var cid_companystatus_formatted = result["cid_companystatus@OData.Community.Display.V1.FormattedValue"];
+                            var cid_invitedcontact_formatted = result["_cid_invitedcontact_value@OData.Community.Display.V1.FormattedValue"];
+
+                            if (cid_companystatus == null || cid_companystatus == ""
+                                || cid_companystatus == '100000002' || cid_companystatus == '100000010'
+                                || cid_companystatus == '100000003' || cid_companystatus == '100000004') {
+                                if (adx_invitationList == null || adx_invitationList == "")
+                                    adx_invitationList = "{" + result["_cid_invitation_value"] + "}";
+                                else
+                                    adx_invitationList += " or adx_invitationid eq {" + result["_cid_invitation_value"] + "}";
+                            }
                             else
-                                adx_invitationList += " or adx_invitationid eq {" + result["_cid_invitation_value"] + "}";
+                            {
+                                var alertStrings = {
+                                    confirmButtonLabel: "OK"
+                                    , text: "The Account '" + cid_companyname_formatted + " 'Currently in '" + cid_companystatus_formatted + "' Status. Therefore system will not send the invitation email for contact '" + cid_invitedcontact_formatted + "'\n\n"
+                                    , title: "The Invitation Email Message - Error"
+                                };
+                                var alertOptions = { height: 300, width: 500 };
+                                Xrm.Navigation.openAlertDialog(alertStrings, alertOptions).then(
+                                    function (success) {
+                                        console.log("Alert dialog closed");
+                                    },
+                                    function (error) {
+                                        console.log(error.message);
+                                    }
+                                );
+                            }
                         }
                         processInvitation(adx_invitationList);
                     },
@@ -164,7 +190,7 @@ function processInvitation(InvitationsList) {
             if (errorMessage != null && errorMessage != "") {
                 var alertStrings = {
                     confirmButtonLabel: "OK"
-                    , text: "The invitation for the follwing invitee(s) are no longer valid. Therefore system will not resend the invitation email \n\n " + errorMessage
+                    , text: "The invitation for the follwing invitee(s) are no longer valid. Therefore system will not send/resend the invitation email \n\n " + errorMessage
                     , title: "The Invitation Email Message - Error"
                 };
                 var alertOptions = { height: 300, width: 500 };

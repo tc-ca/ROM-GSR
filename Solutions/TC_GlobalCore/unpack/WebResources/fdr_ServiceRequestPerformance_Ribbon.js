@@ -81,7 +81,7 @@ var ServiceRequestPerformance_Ribbon = (function (window, document) {
             var globalContext = Xrm.Utility.getGlobalContext();
             var LCID = globalContext.userSettings.languageId;
             var resexResourceName = LCID === 1033 ? "ovs_Labels.1033.resx" : "ovs_Labels.1036.resx";
-            var title = "Performance Adjustment";//Xrm.Utility.getResourceString(resexResourceName, "ServiceRequestPerformance.ribbon.Adjustment.Form.Title");
+            var title = LCID === 1033 ? "Performance Adjustment" : "Ajustement des performances";//Xrm.Utility.getResourceString(resexResourceName, "ServiceRequestPerformance.ribbon.Adjustment.Form.Title");
 
             var qs = "param1=1&param2=2";
             var pageInput = {
@@ -150,8 +150,8 @@ var ServiceRequestPerformance_Ribbon = (function (window, document) {
             if (selectedControl == null) { return };
 
             var currentView = selectedControl.getViewSelector().getCurrentView().name;
-            var targetedView = "Service Standard Not Met"; //todo get french name once translations are in.
-            return currentView == targetedView;
+            var targetedView = ["Service Standard Not Met", "Norme de service non satisfaite"]; 
+            return targetedView.includes(currentView);
         },
 
         adjustPerformanceAPI: async function (id, adjustmentNumber, justificationText) {
