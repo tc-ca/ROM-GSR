@@ -584,7 +584,7 @@
                           "item/notetext": "*WEB*",
                           "item/isdocument": true,
                           "item/documentbody": "@base64(outputs('French_GetContentInstructionPdf')?['body'])",
-                          "item/filename": "Instructions.PDF",
+                          "item/filename": "French-TC CID - Site Bulk Upload Instructions.PDF",
                           "item/objectid_cid_bulkactivitylogsummary@odata.bind": "@concat('/cid_bulkactivitylogsummaries/', outputs('activityid'))"
                         },
                         "authentication": "@parameters('$authentication')"
@@ -720,7 +720,7 @@
                             "item/notetext": "*WEB*",
                             "item/isdocument": true,
                             "item/documentbody": "@base64(outputs('GetContentInstructionPdf')?['body'])",
-                            "item/filename": "Instructions.PDF",
+                            "item/filename": "TC CID - Site Bulk Upload Instructions.PDF",
                             "item/objectid_cid_bulkactivitylogsummary@odata.bind": "@concat('/cid_bulkactivitylogsummaries/', outputs('activityid'))"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -827,270 +827,159 @@
                   "authentication": "@parameters('$authentication')"
                 }
               },
-              "check_language_before_sending_attachment_to_portal_2": {
+              "check_language_before_sending_attachment_to_portal_3": {
                 "actions": {
-                  "Delete_Temp_SharePoint_folder_and_file_2": {
-                    "actions": {
-                      "check_http_invoke_status_2": {
-                        "actions": {},
-                        "runAfter": {
-                          "Do_until_Instruction_sheet_is_protected_2": [
-                            "Succeeded"
-                          ]
-                        },
-                        "expression": {
-                          "and": [
-                            {
-                              "equals": [
-                                "@outputs('Invoke_an_HTTP_request_-_Protect_Instruction_Sheet_2')['statusCode']",
-                                204
-                              ]
-                            },
-                            {
-                              "equals": [
-                                "@outputs('Invoke_an_HTTP_request_-_Add_settings')['statusCode']",
-                                201
-                              ]
-                            }
-                          ]
-                        },
-                        "metadata": {
-                          "operationMetadataId": "e83c5d2a-a517-4263-9a85-81b57c47bc10"
-                        },
-                        "type": "If"
-                      },
-                      "Do_until_Instruction_sheet_is_protected_2": {
-                        "actions": {},
-                        "runAfter": {
-                          "Invoke_an_HTTP_request_-_Protect_Instruction_Sheet_2": [
-                            "Succeeded"
-                          ]
-                        },
-                        "expression": "@equals(outputs('Invoke_an_HTTP_request_-_Protect_Instruction_Sheet_2')['statusCode'], 204)",
-                        "limit": {
-                          "count": 60,
-                          "timeout": "PT1H"
-                        },
-                        "metadata": {
-                          "operationMetadataId": "0920e2fb-e3ce-4de3-a4e6-3bd55b3ad6dc"
-                        },
-                        "type": "Until"
-                      },
-                      "Invoke_an_HTTP_request_-_Protect_Instruction_Sheet_2": {
-                        "runAfter": {
-                          "Invoke_an_HTTP_request_-_Protect_Update_Site_Info_sheet_2": [
-                            "Succeeded"
-                          ]
-                        },
-                        "metadata": {
-                          "operationMetadataId": "2588d12e-85cc-4f36-9d27-05bc388020f4"
-                        },
-                        "type": "OpenApiConnection",
-                        "inputs": {
-                          "host": {
-                            "connectionName": "shared_webcontents",
-                            "operationId": "InvokeHttp",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
-                          },
-                          "parameters": {
-                            "request/method": "POST",
-                            "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{outputs('Create_new_folder')?['body/{Name}']}/@{variables('New_File_Path')}:/workbook/worksheets('Instructions')/protection/protect",
-                            "request/headers": {
-                              "accept": "application/json"
-                            }
-                          },
-                          "authentication": "@parameters('$authentication')"
-                        }
-                      },
-                      "Run_script_-_protect_French_sheets": {
-                        "runAfter": {},
-                        "metadata": {
-                          "operationMetadataId": "5e8b44b8-b766-4608-a859-e26efaa71fc9",
-                          "tableId": null
-                        },
-                        "type": "OpenApiConnection",
-                        "inputs": {
-                          "host": {
-                            "connectionName": "shared_excelonlinebusiness",
-                            "operationId": "RunScriptProd",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness"
-                          },
-                          "parameters": {
-                            "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
-                            "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
-                            "file": "@outputs('Create_file_French')?['body/Path']",
-                            "scriptId": "ms-officescript%3A%2F%2Fonedrive_business_itemlink%2F01RHQEHWIQHAAGDMHO3BAISUUQJO4ZQFV7",
-                            "ScriptParameters/password": "TC@123!"
-                          },
-                          "authentication": "@parameters('$authentication')"
-                        }
-                      },
-                      "Invoke_an_HTTP_request_-_Protect_Update_Site_Info_sheet_2": {
-                        "runAfter": {
-                          "Terminate_2": [
-                            "Succeeded"
-                          ]
-                        },
-                        "metadata": {
-                          "operationMetadataId": "2588d12e-85cc-4f36-9d27-05bc388020f4"
-                        },
-                        "type": "OpenApiConnection",
-                        "inputs": {
-                          "host": {
-                            "connectionName": "shared_webcontents",
-                            "operationId": "InvokeHttp",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
-                          },
-                          "parameters": {
-                            "request/method": "POST",
-                            "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{outputs('Create_new_folder')?['body/{Name}']}/@{variables('New_File_Path')}:/workbook/worksheets('Site info')/protection/protect",
-                            "request/headers": {
-                              "accept": "application/json"
-                            }
-                          },
-                          "authentication": "@parameters('$authentication')"
-                        }
-                      },
-                      "Get_full_file_content_from_French_file_2": {
-                        "runAfter": {
-                          "Run_script_-_protect_French_sheets": [
-                            "Succeeded"
-                          ]
-                        },
-                        "metadata": {
-                          "operationMetadataId": "7d8416e5-6901-4748-96e7-b570229707ac"
-                        },
-                        "type": "OpenApiConnection",
-                        "inputs": {
-                          "host": {
-                            "connectionName": "shared_sharepointonline",
-                            "operationId": "GetFileContentByPath",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
-                          },
-                          "parameters": {
-                            "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
-                            "path": "@outputs('Create_file_French')?['body/Path']",
-                            "inferContentType": true
-                          },
-                          "authentication": "@parameters('$authentication')"
-                        }
-                      },
-                      "Add_attachment_to_activity_French_2": {
-                        "runAfter": {
-                          "Get_full_file_content_from_French_file_2": [
-                            "Succeeded"
-                          ]
-                        },
-                        "metadata": {
-                          "operationMetadataId": "91d0606f-6ed7-4292-a3a7-b064235dbded"
-                        },
-                        "type": "OpenApiConnection",
-                        "inputs": {
-                          "host": {
-                            "connectionName": "shared_commondataserviceforapps",
-                            "operationId": "CreateRecord",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                          },
-                          "parameters": {
-                            "entityName": "annotations",
-                            "item/subject": "Site List Attachement",
-                            "item/notetext": "*WEB*",
-                            "item/isdocument": true,
-                            "item/documentbody": "@base64(outputs('Get_full_file_content_from_French_file_2')?['body'])",
-                            "item/filename": "@variables('New_File_Path')",
-                            "item/objectid_cid_bulkactivitylogsummary@odata.bind": "@concat('/cid_bulkactivitylogsummaries/', outputs('activityid'))"
-                          },
-                          "authentication": "@parameters('$authentication')"
-                        }
-                      },
-                      "Response_French_Note_attachment_2": {
-                        "runAfter": {
-                          "Add_attachment_to_activity_French_2": [
-                            "Succeeded"
-                          ]
-                        },
-                        "metadata": {
-                          "operationMetadataId": "5d3b67ed-de62-4ccd-98f2-2d15ea5552c2"
-                        },
-                        "type": "Response",
-                        "kind": "Http",
-                        "inputs": {
-                          "statusCode": 200,
-                          "body": "@outputs('Add_attachment_to_activity_French_2')?['body/annotationid']"
-                        },
-                        "operationOptions": "Asynchronous"
-                      },
-                      "Send_an_HTTP_request_to_SharePoint_2": {
-                        "runAfter": {
-                          "Response_French_Note_attachment_2": [
-                            "Succeeded"
-                          ]
-                        },
-                        "metadata": {
-                          "operationMetadataId": "613190e4-0e54-402c-92ea-4d8c3d1e4a7a"
-                        },
-                        "type": "OpenApiConnection",
-                        "inputs": {
-                          "host": {
-                            "connectionName": "shared_sharepointonline",
-                            "operationId": "HttpRequest",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
-                          },
-                          "parameters": {
-                            "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
-                            "parameters/method": "DELETE",
-                            "parameters/uri": "_api/web/GetFileByServerRelativeUrl('/sites/SamuraiTeam/Shared Documents/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{outputs('activityid')}/@{variables('New_File_Path')}')/recycle",
-                            "parameters/headers": {
-                              "Prefer": "bypass-shared-lock"
-                            }
-                          },
-                          "authentication": "@parameters('$authentication')"
-                        }
-                      },
-                      "Delete_Folder_2": {
-                        "runAfter": {
-                          "Send_an_HTTP_request_to_SharePoint_2": [
-                            "Succeeded"
-                          ]
-                        },
-                        "metadata": {
-                          "operationMetadataId": "f00e886f-145d-4890-91e5-d4fb5eacf205"
-                        },
-                        "type": "OpenApiConnection",
-                        "inputs": {
-                          "host": {
-                            "connectionName": "shared_sharepointonline",
-                            "operationId": "DeleteItem",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
-                          },
-                          "parameters": {
-                            "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
-                            "table": "Documents",
-                            "id": "@outputs('Create_new_folder')?['body/ID']"
-                          },
-                          "authentication": "@parameters('$authentication')"
-                        }
-                      },
-                      "Terminate_2": {
-                        "runAfter": {
-                          "Delete_Folder_2": [
-                            "Succeeded"
-                          ]
-                        },
-                        "metadata": {
-                          "operationMetadataId": "fd060ae4-a169-438b-b9a6-1e5ceee83de2"
-                        },
-                        "type": "Terminate",
-                        "inputs": {
-                          "runStatus": "Succeeded"
-                        }
-                      }
+                  "Add_attachment_to_activity_French_3": {
+                    "runAfter": {
+                      "Get_full_file_content_from_French_file_3": [
+                        "Succeeded"
+                      ]
                     },
+                    "metadata": {
+                      "operationMetadataId": "91d0606f-6ed7-4292-a3a7-b064235dbded"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_commondataserviceforapps",
+                        "operationId": "CreateRecord",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      },
+                      "parameters": {
+                        "entityName": "annotations",
+                        "item/subject": "Site List Attachement",
+                        "item/notetext": "*WEB*",
+                        "item/isdocument": true,
+                        "item/documentbody": "@base64(outputs('Get_full_file_content_from_French_file_3')?['body'])",
+                        "item/filename": "@variables('New_File_Path')",
+                        "item/objectid_cid_bulkactivitylogsummary@odata.bind": "@concat('/cid_bulkactivitylogsummaries/', outputs('activityid'))"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Get_full_file_content_from_French_file_3": {
+                    "runAfter": {
+                      "Run_script_-_protect_French_sheets_": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "7d8416e5-6901-4748-96e7-b570229707ac"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "GetFileContentByPath",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                      },
+                      "parameters": {
+                        "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                        "path": "@outputs('Create_file_French')?['body/Path']",
+                        "inferContentType": true
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Run_script_-_protect_French_sheets_": {
                     "runAfter": {},
                     "metadata": {
-                      "operationMetadataId": "ed5c83c0-aae5-4d67-b9b2-52420758be65"
+                      "operationMetadataId": "5e8b44b8-b766-4608-a859-e26efaa71fc9",
+                      "tableId": null
                     },
-                    "type": "Scope"
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_excelonlinebusiness",
+                        "operationId": "RunScriptProd",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness"
+                      },
+                      "parameters": {
+                        "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
+                        "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
+                        "file": "@outputs('Create_file_French')?['body/Path']",
+                        "scriptId": "ms-officescript%3A%2F%2Fonedrive_business_itemlink%2F01RHQEHWIQHAAGDMHO3BAISUUQJO4ZQFV7",
+                        "ScriptParameters/password": "TC@123!"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "French_GetContentInstructionPdf_2": {
+                    "runAfter": {
+                      "Run_script_-_protect_French_sheets_": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fTransport%2bCanada%2bCID%2bInstructions%2bUpdated.pdf": "/Shared Documents/CID_Bulk_Upload/Transport Canada CID Instructions Updated.pdf",
+                      "operationMetadataId": "2daa2947-a7f6-4514-be5a-d3d68d56e724",
+                      "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fFrench%2b-%2bTransport%2bCanada%2bCID%2bInstructions%2bUpdated.pdf": "/Shared Documents/CID_Bulk_Upload/French - Transport Canada CID Instructions Updated.pdf"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "GetFileContent",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                      },
+                      "parameters": {
+                        "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                        "id": "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fFrench%2b-%2bTransport%2bCanada%2bCID%2bInstructions%2bUpdated.pdf",
+                        "inferContentType": true
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Add_French_Instruction_attachment_to_activity_English_PDF": {
+                    "runAfter": {
+                      "French_GetContentInstructionPdf_2": [
+                        "Succeeded"
+                      ]
+                    },
+                    "limit": {
+                      "timeout": "PT15M"
+                    },
+                    "metadata": {
+                      "operationMetadataId": "91d0606f-6ed7-4292-a3a7-b064235dbded"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_commondataserviceforapps",
+                        "operationId": "CreateRecord",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      },
+                      "parameters": {
+                        "entityName": "annotations",
+                        "item/subject": "Instructions Attachement",
+                        "item/notetext": "*WEB*",
+                        "item/isdocument": true,
+                        "item/documentbody": "@base64(outputs('French_GetContentInstructionPdf_2')?['body'])",
+                        "item/filename": "French-TC CID - Site Bulk Upload Instructions.PDF",
+                        "item/objectid_cid_bulkactivitylogsummary@odata.bind": "@concat('/cid_bulkactivitylogsummaries/', outputs('activityid'))"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Response_French_Note_attachment_3": {
+                    "runAfter": {
+                      "Add_French_Instruction_attachment_to_activity_English_PDF": [
+                        "Succeeded"
+                      ],
+                      "Add_attachment_to_activity_French_3": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "5d3b67ed-de62-4ccd-98f2-2d15ea5552c2"
+                    },
+                    "type": "Response",
+                    "kind": "Http",
+                    "inputs": {
+                      "statusCode": 200,
+                      "body": "@{outputs('Add_attachment_to_activity_French_3')?['body/annotationid']}|@{outputs('Add_French_Instruction_attachment_to_activity_English_PDF')?['body/annotationid']}"
+                    },
+                    "operationOptions": "Asynchronous"
                   }
                 },
                 "runAfter": {
@@ -1100,268 +989,162 @@
                 },
                 "else": {
                   "actions": {
-                    "Delete_Temp_SharePoint_folder_and_file_3": {
-                      "actions": {
-                        "check_http_invoke_status_3": {
-                          "actions": {},
-                          "runAfter": {
-                            "Do_until_Instruction_sheet_is_protected_3": [
-                              "Succeeded"
-                            ]
-                          },
-                          "expression": {
-                            "and": [
-                              {
-                                "equals": [
-                                  "@outputs('Invoke_an_HTTP_request_-_Protect_Instruction_Sheet_3')['statusCode']",
-                                  204
-                                ]
-                              },
-                              {
-                                "equals": [
-                                  "@outputs('Invoke_an_HTTP_request_-_Add_settings')['statusCode']",
-                                  201
-                                ]
-                              }
-                            ]
-                          },
-                          "metadata": {
-                            "operationMetadataId": "e83c5d2a-a517-4263-9a85-81b57c47bc10"
-                          },
-                          "type": "If"
-                        },
-                        "Send_an_HTTP_request_to_SharePoint_3": {
-                          "runAfter": {
-                            "Response": [
-                              "Succeeded"
-                            ]
-                          },
-                          "metadata": {
-                            "operationMetadataId": "613190e4-0e54-402c-92ea-4d8c3d1e4a7a"
-                          },
-                          "type": "OpenApiConnection",
-                          "inputs": {
-                            "host": {
-                              "connectionName": "shared_sharepointonline",
-                              "operationId": "HttpRequest",
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
-                            },
-                            "parameters": {
-                              "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
-                              "parameters/method": "DELETE",
-                              "parameters/uri": "_api/web/GetFileByServerRelativeUrl('/sites/SamuraiTeam/Shared Documents/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{outputs('activityid')}/@{variables('New_File_Path')}')/recycle",
-                              "parameters/headers": {
-                                "Prefer": "bypass-shared-lock"
-                              }
-                            },
-                            "authentication": "@parameters('$authentication')"
-                          }
-                        },
-                        "Delete_Folder_3": {
-                          "runAfter": {
-                            "Send_an_HTTP_request_to_SharePoint_3": [
-                              "Succeeded"
-                            ]
-                          },
-                          "metadata": {
-                            "operationMetadataId": "f00e886f-145d-4890-91e5-d4fb5eacf205"
-                          },
-                          "type": "OpenApiConnection",
-                          "inputs": {
-                            "host": {
-                              "connectionName": "shared_sharepointonline",
-                              "operationId": "DeleteItem",
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
-                            },
-                            "parameters": {
-                              "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
-                              "table": "Documents",
-                              "id": "@outputs('Create_new_folder')?['body/ID']"
-                            },
-                            "authentication": "@parameters('$authentication')"
-                          }
-                        },
-                        "Do_until_Instruction_sheet_is_protected_3": {
-                          "actions": {},
-                          "runAfter": {
-                            "Invoke_an_HTTP_request_-_Protect_Instruction_Sheet_3": [
-                              "Succeeded"
-                            ]
-                          },
-                          "expression": "@equals(outputs('Invoke_an_HTTP_request_-_Protect_Instruction_Sheet_3')['statusCode'], 204)",
-                          "limit": {
-                            "count": 60,
-                            "timeout": "PT1H"
-                          },
-                          "metadata": {
-                            "operationMetadataId": "0920e2fb-e3ce-4de3-a4e6-3bd55b3ad6dc"
-                          },
-                          "type": "Until"
-                        },
-                        "Invoke_an_HTTP_request_-_Protect_Instruction_Sheet_3": {
-                          "runAfter": {
-                            "Invoke_an_HTTP_request_-_Protect_Update_Site_Info_sheet_3": [
-                              "Succeeded"
-                            ]
-                          },
-                          "metadata": {
-                            "operationMetadataId": "2588d12e-85cc-4f36-9d27-05bc388020f4"
-                          },
-                          "type": "OpenApiConnection",
-                          "inputs": {
-                            "host": {
-                              "connectionName": "shared_webcontents",
-                              "operationId": "InvokeHttp",
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
-                            },
-                            "parameters": {
-                              "request/method": "POST",
-                              "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{outputs('Create_new_folder')?['body/{Name}']}/@{variables('New_File_Path')}:/workbook/worksheets('Instructions')/protection/protect",
-                              "request/headers": {
-                                "accept": "application/json"
-                              }
-                            },
-                            "authentication": "@parameters('$authentication')"
-                          }
-                        },
-                        "Invoke_an_HTTP_request_-_Protect_Update_Site_Info_sheet_3": {
-                          "runAfter": {
-                            "Terminate": [
-                              "Succeeded"
-                            ]
-                          },
-                          "metadata": {
-                            "operationMetadataId": "2588d12e-85cc-4f36-9d27-05bc388020f4"
-                          },
-                          "type": "OpenApiConnection",
-                          "inputs": {
-                            "host": {
-                              "connectionName": "shared_webcontents",
-                              "operationId": "InvokeHttp",
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
-                            },
-                            "parameters": {
-                              "request/method": "POST",
-                              "request/url": "https://graph.microsoft.com/v1.0/sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211/lists/ddbec2ce-e3a5-4bf3-b065-23b0d1d0d395/drive/root:/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{outputs('Create_new_folder')?['body/{Name}']}/@{variables('New_File_Path')}:/workbook/worksheets('Site info')/protection/protect",
-                              "request/headers": {
-                                "accept": "application/json"
-                              }
-                            },
-                            "authentication": "@parameters('$authentication')"
-                          }
-                        },
-                        "Run_script_-_protect_English_sheets_": {
-                          "runAfter": {},
-                          "metadata": {
-                            "operationMetadataId": "5e8b44b8-b766-4608-a859-e26efaa71fc9",
-                            "tableId": null
-                          },
-                          "type": "OpenApiConnection",
-                          "inputs": {
-                            "host": {
-                              "connectionName": "shared_excelonlinebusiness",
-                              "operationId": "RunScriptProd",
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness"
-                            },
-                            "parameters": {
-                              "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
-                              "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
-                              "file": "@outputs('Create_file_English')?['body/Path']",
-                              "scriptId": "ms-officescript%3A%2F%2Fonedrive_business_itemlink%2F01RHQEHWIQHAAGDMHO3BAISUUQJO4ZQFV7",
-                              "ScriptParameters/password": "TC@123!"
-                            },
-                            "authentication": "@parameters('$authentication')"
-                          }
-                        },
-                        "Get_full_file_content_English_2": {
-                          "runAfter": {
-                            "Run_script_-_protect_English_sheets_": [
-                              "Succeeded"
-                            ]
-                          },
-                          "metadata": {
-                            "operationMetadataId": "7d8416e5-6901-4748-96e7-b570229707ac"
-                          },
-                          "type": "OpenApiConnection",
-                          "inputs": {
-                            "host": {
-                              "connectionName": "shared_sharepointonline",
-                              "operationId": "GetFileContentByPath",
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
-                            },
-                            "parameters": {
-                              "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
-                              "path": "@outputs('Create_file_English')?['body/Path']",
-                              "inferContentType": true
-                            },
-                            "authentication": "@parameters('$authentication')"
-                          }
-                        },
-                        "Add_attachment_to_activity_English_2": {
-                          "runAfter": {
-                            "Get_full_file_content_English_2": [
-                              "Succeeded"
-                            ]
-                          },
-                          "metadata": {
-                            "operationMetadataId": "91d0606f-6ed7-4292-a3a7-b064235dbded"
-                          },
-                          "type": "OpenApiConnection",
-                          "inputs": {
-                            "host": {
-                              "connectionName": "shared_commondataserviceforapps",
-                              "operationId": "CreateRecord",
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                            },
-                            "parameters": {
-                              "entityName": "annotations",
-                              "item/subject": "Site List Attachement",
-                              "item/notetext": "*WEB*",
-                              "item/isdocument": true,
-                              "item/documentbody": "@base64(outputs('Get_full_file_content_English_2')?['body'])",
-                              "item/filename": "@variables('New_File_Path')",
-                              "item/objectid_cid_bulkactivitylogsummary@odata.bind": "@concat('/cid_bulkactivitylogsummaries/', outputs('activityid'))"
-                            },
-                            "authentication": "@parameters('$authentication')"
-                          }
-                        },
-                        "Response": {
-                          "runAfter": {
-                            "Add_attachment_to_activity_English_2": [
-                              "Succeeded"
-                            ]
-                          },
-                          "metadata": {
-                            "operationMetadataId": "5d3b67ed-de62-4ccd-98f2-2d15ea5552c2"
-                          },
-                          "type": "Response",
-                          "kind": "Http",
-                          "inputs": {
-                            "statusCode": 200,
-                            "body": "@outputs('Add_attachment_to_activity_English_2')?['body/annotationid']"
-                          },
-                          "operationOptions": "Asynchronous"
-                        },
-                        "Terminate": {
-                          "runAfter": {
-                            "Delete_Folder_3": [
-                              "Succeeded"
-                            ]
-                          },
-                          "metadata": {
-                            "operationMetadataId": "28345ad4-168a-4277-9da3-ca28c710f6ce"
-                          },
-                          "type": "Terminate",
-                          "inputs": {
-                            "runStatus": "Succeeded"
-                          }
-                        }
+                    "Add_attachment_to_activity_English_3": {
+                      "runAfter": {
+                        "Get_full_file_content_English_3": [
+                          "Succeeded"
+                        ]
                       },
+                      "limit": {
+                        "timeout": "PT15M"
+                      },
+                      "metadata": {
+                        "operationMetadataId": "91d0606f-6ed7-4292-a3a7-b064235dbded"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "CreateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "annotations",
+                          "item/subject": "Site List Attachement",
+                          "item/notetext": "*WEB*",
+                          "item/isdocument": true,
+                          "item/documentbody": "@base64(outputs('Get_full_file_content_English_3')?['body'])",
+                          "item/filename": "@variables('New_File_Path')",
+                          "item/objectid_cid_bulkactivitylogsummary@odata.bind": "@concat('/cid_bulkactivitylogsummaries/', outputs('activityid'))"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Run_script_-_protect_English_sheets__3": {
                       "runAfter": {},
                       "metadata": {
-                        "operationMetadataId": "ed5c83c0-aae5-4d67-b9b2-52420758be65"
+                        "operationMetadataId": "5e8b44b8-b766-4608-a859-e26efaa71fc9",
+                        "tableId": null
                       },
-                      "type": "Scope"
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_excelonlinebusiness",
+                          "operationId": "RunScriptProd",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness"
+                        },
+                        "parameters": {
+                          "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
+                          "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
+                          "file": "@outputs('Create_file_English')?['body/Path']",
+                          "scriptId": "ms-officescript%3A%2F%2Fonedrive_business_itemlink%2F01RHQEHWIQHAAGDMHO3BAISUUQJO4ZQFV7",
+                          "ScriptParameters/password": "TC@123!"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Get_full_file_content_English_3": {
+                      "runAfter": {
+                        "Run_script_-_protect_English_sheets__3": [
+                          "Succeeded"
+                        ]
+                      },
+                      "limit": {
+                        "timeout": "PT15M"
+                      },
+                      "metadata": {
+                        "operationMetadataId": "7d8416e5-6901-4748-96e7-b570229707ac"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "GetFileContentByPath",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                          "path": "@outputs('Create_file_English')?['body/Path']",
+                          "inferContentType": true
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Add_English_Instruction_attachment_to_activity_English_PDF_2": {
+                      "runAfter": {
+                        "GetContentInstructionPdf_2": [
+                          "Succeeded"
+                        ]
+                      },
+                      "limit": {
+                        "timeout": "PT15M"
+                      },
+                      "metadata": {
+                        "operationMetadataId": "91d0606f-6ed7-4292-a3a7-b064235dbded"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "CreateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "annotations",
+                          "item/subject": "Instructions Attachement",
+                          "item/notetext": "*WEB*",
+                          "item/isdocument": true,
+                          "item/documentbody": "@base64(outputs('GetContentInstructionPdf_2')?['body'])",
+                          "item/filename": "TC CID - Site Bulk Upload Instructions.PDF",
+                          "item/objectid_cid_bulkactivitylogsummary@odata.bind": "@concat('/cid_bulkactivitylogsummaries/', outputs('activityid'))"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "GetContentInstructionPdf_2": {
+                      "runAfter": {
+                        "Run_script_-_protect_English_sheets__3": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fTransport%2bCanada%2bCID%2bInstructions%2bUpdated.pdf": "/Shared Documents/CID_Bulk_Upload/Transport Canada CID Instructions Updated.pdf",
+                        "operationMetadataId": "2daa2947-a7f6-4514-be5a-d3d68d56e724"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "GetFileContent",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                        },
+                        "parameters": {
+                          "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                          "id": "%252fShared%2bDocuments%252fCID_Bulk_Upload%252fTransport%2bCanada%2bCID%2bInstructions%2bUpdated.pdf",
+                          "inferContentType": true
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Response_3": {
+                      "runAfter": {
+                        "Add_English_Instruction_attachment_to_activity_English_PDF_2": [
+                          "Succeeded"
+                        ],
+                        "Add_attachment_to_activity_English_3": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "5d3b67ed-de62-4ccd-98f2-2d15ea5552c2"
+                      },
+                      "type": "Response",
+                      "kind": "Http",
+                      "inputs": {
+                        "statusCode": 200,
+                        "body": "@{outputs('Add_attachment_to_activity_English_3')?['body/annotationid']}|@{outputs('Add_English_Instruction_attachment_to_activity_English_PDF_2')?['body/annotationid']}"
+                      },
+                      "operationOptions": "Asynchronous"
                     }
                   }
                 },
@@ -1375,6 +1158,57 @@
                   "operationMetadataId": "b1855c41-6717-4bb2-8117-25454635b1d1"
                 },
                 "type": "If"
+              },
+              "Send_an_HTTP_request_to_SharePoint_4": {
+                "runAfter": {
+                  "check_language_before_sending_attachment_to_portal_3": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "613190e4-0e54-402c-92ea-4d8c3d1e4a7a"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_sharepointonline",
+                    "operationId": "HttpRequest",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                  },
+                  "parameters": {
+                    "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                    "parameters/method": "DELETE",
+                    "parameters/uri": "_api/web/GetFileByServerRelativeUrl('/sites/SamuraiTeam/Shared Documents/CID_Bulk_Upload/@{variables('Environment_Folder')}/@{outputs('activityid')}/@{variables('New_File_Path')}')/recycle",
+                    "parameters/headers": {
+                      "Prefer": "bypass-shared-lock"
+                    }
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              },
+              "Delete_Folder_4": {
+                "runAfter": {
+                  "Send_an_HTTP_request_to_SharePoint_4": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "f00e886f-145d-4890-91e5-d4fb5eacf205"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_sharepointonline",
+                    "operationId": "DeleteItem",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                  },
+                  "parameters": {
+                    "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                    "table": "Documents",
+                    "id": "@outputs('Create_new_folder')?['body/ID']"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
               }
             }
           },

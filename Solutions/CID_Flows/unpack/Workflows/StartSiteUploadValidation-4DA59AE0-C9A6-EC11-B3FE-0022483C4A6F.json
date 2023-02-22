@@ -183,7 +183,7 @@
                   "SiteStatus": "@item()['values'][0][int(outputs('SiteStatus'))]",
                   "SiteFullAddress": "@item()['values'][0][int(outputs('SiteFullAddress'))]",
                   "SiteGUID": "@item()['values'][0][int(outputs('SiteGUID'))]",
-                  "LineNumber": "@item()['values'][0][int(outputs('LineNumber'))]"
+                  "LineNumber": "@add( int(item()['index']), 6) "
                 }
               }
             },
@@ -800,8 +800,8 @@
                         },
                         "parameters": {
                           "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
-                          "emailMessage/Subject": "Successful Bulk Data Upload during the processing of the @{variables('UploadTypeName')} in the Transport Canada CID Data Platform. Please see the details for the next steps ",
-                          "emailMessage/Body": "<p>Hello @{outputs('get_contact_email')?['body/firstname']},<br>\n&nbsp;<br>\nThe Bulk Data Upload processing of the @{variables('UploadTypeName')} for the @{outputs('get_contact_email')?['body/cid_legalname']} company, within the Transport Canada CID Data Platform, was successful. &nbsp;<br>\n&nbsp;<br>\nThe @{outputs('totalNumberOfSites')} Site entries from the ‘@{outputs('Update_Bulk_activity_log_summary_2')?['body/cid_filename']}’ file were successfully updated in the Transport Canada CID Data Platform.<br>\n<br>\nPlease return to the Transport Canada CID Data Platform and choose the Company Registeration to continue with the @{variables('UploadTypeName')} process.<br>\n<br>\n@{variables('SiteRemoveWarnning')}<br>\n<br>\n@{outputs('html_table_with_style_Missing_Site')}<br>\n<br>\nPlease note that the language of this email can be changed by updating the 'Language of Correspondence' field in the User Profile within the CID Platform.<br>\n<br>\nRegards<br>\nTransport Canada CID Data Platform Team</p>",
+                          "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID:  Successful Bulk Data Upload during the processing of @{variables('UploadTypeName')} in the Transport Canada CID Data Platform. Please see the details for the next steps.",
+                          "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']},<br>\n<br>\nThe Bulk Data Upload processing of @{variables('UploadTypeName')} for the @{outputs('get_contact_email')?['body/cid_operatingname']} organization, within the Transport Canada CID Data Platform, was successful.<br>\n<br>\nThe @{outputs('totalNumberOfSites')} entries from the ‘ @{outputs('Update_Bulk_activity_log_summary_2')?['body/cid_filename']}’ file were successfully updated in the Transport Canada CID Data Platform. @{variables('NextStepText')}<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n<br>\n@{variables('SiteRemoveWarnning')}<br>\n<br>\n@{outputs('html_table_with_style_Missing_Site')}<br>\n@{outputs('English-EmailFooter')}</p>",
                           "emailMessage/Importance": "Normal"
                         },
                         "authentication": "@parameters('$authentication')"
@@ -825,8 +825,8 @@
                           },
                           "parameters": {
                             "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
-                            "emailMessage/Subject": "Successful Bulk Data Upload during the processing of the @{variables('UploadTypeName')} in the Transport Canada CID Data Platform. Please see the details for the next steps ",
-                            "emailMessage/Body": "<p>Hello @{outputs('get_contact_email')?['body/firstname']},<br>\n&nbsp;<br>\nThe Bulk Data Upload processing of the @{variables('UploadTypeName')} for the @{outputs('get_contact_email')?['body/cid_legalname']} company, within the Transport Canada CID Data Platform, was successful. &nbsp;<br>\n&nbsp;<br>\nThe @{outputs('totalNumberOfSites')} Site entries from the ‘@{outputs('Update_Bulk_activity_log_summary_2')?['body/cid_filename']}’ file were successfully updated in the Transport Canada CID Data Platform.<br>\n<br>\nPlease return to the Transport Canada CID Data Platform and choose the Company Registeration to continue with the @{variables('UploadTypeName')} process.<br>\n&nbsp;<br>\nPlease note that the language of this email can be changed by updating the 'Language of Correspondence' field in the User Profile within the CID Platform.<br>\n<br>\nRegards<br>\nTransport Canada CID Data Platform Team<br>\n</p>",
+                            "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID:  Successful Bulk Data Upload during the processing of @{variables('UploadTypeName')} in the Transport Canada CID Data Platform. Please see the details for the next steps.",
+                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']},<br>\n<br>\nThe Bulk Data Upload processing of @{variables('UploadTypeName')} for the @{outputs('get_contact_email')?['body/cid_operatingname']} organization, within the Transport Canada CID Data Platform, was successful.<br>\n<br>\nThe @{outputs('totalNumberOfSites')} entries from the ‘ @{outputs('Update_Bulk_activity_log_summary_2')?['body/cid_filename']}’ file were successfully updated in the Transport Canada CID Data Platform. @{variables('NextStepText')}<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n</p>",
                             "emailMessage/Importance": "Normal"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -877,7 +877,7 @@
                         "type": "SetVariable",
                         "inputs": {
                           "name": "SiteRemoveWarnning",
-                          "value": "French - \"Note that the Site listed below were removed from the workbook prior to its upload. If you intend on inactivating these Sites, then this needs to be done using the 'Deactivate this Site' functionality as found in the side-menu bar when the Site has been retrieved.\":"
+                          "value": "French - \"Note that the Site listed below were removed from the workbook prior to its upload. If you intend on deactivating these Sites, then this needs to be done using the 'Deactivate this Site' functionality as found in the side-menu bar when the Site has been retrieved.\":"
                         }
                       },
                       "Select_Missing_Site_List__French": {
@@ -979,8 +979,8 @@
                           },
                           "parameters": {
                             "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
-                            "emailMessage/Subject": "Téléchargement de données en masse réussi lors du traitement de l'@{variables('UploadType-French')} dans la plate-forme de données CID de Transports Canada. Veuillez consulter les détails pour les prochaines étapes",
-                            "emailMessage/Body": "<p>Bonjour @{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']}, &nbsp;<br>\n<br>\nLe traitement de téléchargement de données en bloc de Inscription pour la société @{outputs('get_contact_email')?['body/cid_legalname']}, au sein de la plate-forme de données CID de Transports Canada, a réussi.<br>\n<br>\nLes entrées @{outputs('totalNumberOfSites')} du fichier «» ont été mises à jour avec succès dans la plate-forme de données @{triggerOutputs()?['body/cid_filename']} CID de Transports Canada.<br>\n<br>\nVeuillez retourner à la plate-forme de données CID de Transports Canada et choisir l'@{variables('UploadType-French')} de l'entreprise pour poursuivre le processus d'@{variables('UploadType-French')}.<br>\n<br>\n@{variables('SiteRemoveWarnning')}<br>\n<br>\n@{outputs('html_table_with_style_Missing_Site_French')}<br>\n<br>\nVeuillez noter que la langue de cet e-mail peut être modifiée en mettant à jour le champ \"Langue de correspondance\" dans le profil utilisateur de la plate-forme CID.<br>\n<br>\nSalutations<br>\nÉquipe de la plateforme de données CID de Transports Canada<br>\n</p>",
+                            "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}French-TDG Online - CID:  Successful Bulk Data Upload during the processing of @{variables('UploadType-French')} in the Transport Canada CID Data Platform. Please see the details for the next steps.",
+                            "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']}, &nbsp;<br>\n<br>\nFrench-The Bulk Data Upload processing of @{variables('UploadType-French')} for the @{outputs('Get_a_account_by_ID')?['body/ovs_name_fr']} organization, within the Transport Canada CID Data Platform, was successful.<br>\n<br>\nThe @{outputs('totalNumberOfSites')} entries from the ‘ @{outputs('Update_Bulk_activity_log_summary_2')?['body/cid_filename']}’ file were successfully updated in the Transport Canada CID Data Platform. @{variables('French-NextStepText')}<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{variables('SiteRemoveWarnning')}<br>\n<br>\n@{outputs('html_table_with_style_Missing_Site_French')}<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
                             "emailMessage/Importance": "Normal"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -1004,8 +1004,8 @@
                             },
                             "parameters": {
                               "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
-                              "emailMessage/Subject": "Téléchargement de données en masse réussi lors du traitement de l'@{variables('UploadType-French')} dans la plate-forme de données CID de Transports Canada. Veuillez consulter les détails pour les prochaines étapes",
-                              "emailMessage/Body": "<p>Bonjour @{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']}, &nbsp;<br>\n<br>\nLe traitement de téléchargement de données en bloc de Inscription pour la société @{outputs('get_contact_email')?['body/cid_legalname']}, au sein de la plate-forme de données CID de Transports Canada, a réussi.<br>\n<br>\nLes entrées @{outputs('totalNumberOfSites')} du fichier «» ont été mises à jour avec succès dans la plate-forme de données @{triggerOutputs()?['body/cid_filename']} CID de Transports Canada.<br>\n<br>\nVeuillez retourner à la plate-forme de données CID de Transports Canada et choisir l'@{variables('UploadTypeName')} de l'entreprise pour poursuivre le processus d'@{variables('UploadTypeName')}.<br>\n<br>\nVeuillez noter que la langue de cet e-mail peut être modifiée en mettant à jour le champ \"Langue de correspondance\" dans le profil utilisateur de la plate-forme CID.<br>\n<br>\nSalutations<br>\nÉquipe de la plateforme de données CID de Transports Canada</p>",
+                              "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}French-TDG Online - CID:  Successful Bulk Data Upload during the processing of @{variables('UploadType-French')} in the Transport Canada CID Data Platform. Please see the details for the next steps.",
+                              "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']}, &nbsp;<br>\n<br>\nFrench-The Bulk Data Upload processing of @{variables('UploadType-French')} for the @{outputs('Get_a_account_by_ID')?['body/ovs_name_fr']} organization, within the Transport Canada CID Data Platform, was successful.<br>\n<br>\nThe @{outputs('totalNumberOfSites')} entries from the ‘ @{outputs('Update_Bulk_activity_log_summary_2')?['body/cid_filename']}’ file were successfully updated in the Transport Canada CID Data Platform. @{variables('French-NextStepText')}<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
                               "emailMessage/Importance": "Normal"
                             },
                             "authentication": "@parameters('$authentication')"
@@ -1093,7 +1093,6 @@
                     "inputs": {
                       "from": "@variables('Error_List')",
                       "select": {
-                        "Worksheet": "@item()['SheetName']",
                         "Row #": "@item()['Row#']",
                         "Error": "@item()['Error']",
                         "Site": "@item()['Site']"
@@ -1110,7 +1109,7 @@
                       "operationMetadataId": "920beb59-130c-4895-ab0c-490a0d32e827"
                     },
                     "type": "Compose",
-                    "inputs": "  <style>\n        table {\n            border: 1px solid #1C6EA4;\n            background-color: #EEEEEE;\n            width: 100%;\n    \n            border-collapse: collapse;\n        }\n\n            table td, table th {\n                border: 1px solid #AAAAAA;\n                padding: 3px 2px;\n         \n            }\n\n           \n            table tbody tr :nth-child(2) {\n                text-align: center;\n                font-size: 13px;\n            }\n\n           \n           \n            table thead {\n                background: #1C6EA4;\n                border-bottom: 2px solid #444444;\n            }\n\n                table thead th {\n                    font-size: 15px;\n                    font-weight: bold;\n                    color: #FFFFFF;\n                    border-left: 2px solid #D0E4F5;\n                    text-align: center;\n                }\n\n                    table thead th:first-child {\n                        border-left: none;\n                    }\n    </style>\n\n@{body('Create_HTML_table')}"
+                    "inputs": "  <style>\n        table {\n            border: 1px solid #1C6EA4;\n            background-color: #EEEEEE;\n            width: 100%;\n    \n            border-collapse: collapse;\n        }\n\n            table td, table th {\n                border: 1px solid #AAAAAA;\n                padding: 3px 2px;\n         \n            }\n\n           \n            table tbody tr :nth-child(2) {\n                text-align: center;\n                font-size: 13px;\n            }\n\n           \n           \n            table thead {\n                background: #1C6EA4;\n                border-bottom: 2px solid #444444;\n            }\n\n                table thead th {\n                    font-size: 15px;\n                    font-weight: bold;\n                    color: #FFFFFF;\n                    border-left: 2px solid #D0E4F5;\n                    text-align: center;\n                }\n\n                    table thead th:first-child {\n                        border-left: none;\n                    }\n    </style>\n@{body('Create_HTML_table')}"
                   },
                   "Create_HTML_table": {
                     "runAfter": {
@@ -1137,7 +1136,7 @@
                       "operationMetadataId": "c0c7a486-a2cb-4b3a-94c7-50459974329f"
                     },
                     "type": "Compose",
-                    "inputs": "@if( greater( outputs('totalNumberOferrors'),1)  , 'errors' , 'error')"
+                    "inputs": "@if( greater( outputs('totalNumberOferrors'),1)  , 'errors that are' , 'error that is')"
                   },
                   "outlook_-_Send_an_email_notification_to_portal_users_with_errors": {
                     "runAfter": {
@@ -1157,8 +1156,8 @@
                       },
                       "parameters": {
                         "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
-                        "emailMessage/Subject": "Unsuccessful Bulk Data Upload during the processing of the @{variables('UploadTypeName')} in the Transport Canada CID Data Platform. Please see the details for the next steps ",
-                        "emailMessage/Body": "<p>Hello @{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']},<br>\n&nbsp;<br>\nThe Bulk Data Upload processing of the @{variables('UploadTypeName')} for the @{outputs('Get_a_account_by_ID')?['body/ovs_legalname']} company, within the Transport Canada CID Data Platform, was not successful. No data was updated within the Transport Canada CID Data Platform. &nbsp;<br>\n&nbsp;<br>\nPlease: &nbsp;<br>\n• address the @{outputs('totalNumberOferrors')} @{outputs('Eng-Localization-Error')} that are as detailed below<br>\n• save a copy of the workbook with those updates<br>\n• use that new copy as the file source of another @{variables('UploadTypeName')} Bulk Upload process.<br>\n<br>\n@{replace( outputs('html_table_with_style') ,'<table>' , '  <table><col style=\"width:15%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:50%\">\r\n        <col style=\"width:25%\">')}<br>\n<br>\nPlease note that the language of this email can be changed by updating the 'Language of Correspondence' field in the User Profile within the CID Platform.<br>\n<br>\nRegards<br>\n&nbsp;Transport Canada CID Data Platform Team</p>",
+                        "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: Unsuccessful Bulk Data Upload during the processing of @{variables('UploadTypeName')} in the Transport Canada CID Data Platform. Please view the details for the next steps.",
+                        "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']},<br>\n&nbsp;<br>\nThe Bulk Data Upload processing of @{variables('UploadTypeName')} for the @{outputs('Get_a_account_by_ID')?['body/name']} organization, within the Transport Canada CID Data Platform, was not successful. No data was updated within the Transport Canada CID Data Platform.<br>\n<br>\nPlease:<br>\n- address the @{outputs('totalNumberOferrors')} @{outputs('Eng-Localization-Error')} detailed below.<br>\n- save a copy of the workbook with those updates.<br>\n- use that new copy as the file source of another @{variables('UploadTypeName')} Bulk Upload process.<br>\n<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n<br>\n@{replace( outputs('html_table_with_style') ,'<table>' , '  <table><col style=\"width:15%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:50%\">\r\n        <col style=\"width:25%\">')}<br>\n@{outputs('English-EmailFooter')}<br>\n</p>",
                         "emailMessage/Importance": "Normal"
                       },
                       "authentication": "@parameters('$authentication')"
@@ -1196,7 +1195,6 @@
                       "inputs": {
                         "from": "@variables('Error_List')",
                         "select": {
-                          "Feuille de travail": "@item()['SheetName']",
                           "Rangée #": "@item()['Row#']",
                           "Erreur": "@item()['Error']",
                           "Site": "@item()['Site']"
@@ -1213,7 +1211,7 @@
                         "operationMetadataId": "920beb59-130c-4895-ab0c-490a0d32e827"
                       },
                       "type": "Compose",
-                      "inputs": " <style>\n        table {\n            border: 1px solid #1C6EA4;\n            background-color: #EEEEEE;\n            width: 100%;\n    \n            border-collapse: collapse;\n        }\n\n            table td, table th {\n                border: 1px solid #AAAAAA;\n                padding: 3px 2px;\n                text-align: center;\n            }\n\n            table tbody tr td:nth-child(1) {\n                text-align: left;\n                font-size: 13px;\n            }\n            table tbody tr td:nth-child(2) {\n                text-align: center;\n                font-size: 13px;\n            }\n           \n            table tbody tr td:nth-child(3) {\n                text-align: left;\n                font-size: 13px;\n            }\n            table tbody tr td:nth-child(4) {\n                text-align: left;\n                font-size: 13px;\n            }\n            table thead {\n                background: #1C6EA4;\n                border-bottom: 2px solid #444444;\n            }\n\n                table thead th {\n                    font-size: 15px;\n                    font-weight: bold;\n                    color: #FFFFFF;\n                    border-left: 2px solid #D0E4F5;\n                }\n\n                    table thead th:first-child {\n                        border-left: none;\n                    }\n    </style>\n\n\n@{replace(replace(body('Create_HTML_table-French'),'Add Extended Info','Ajouter des informations étendues'),'Add Basic Info' ,'Ajouter des informations de base')}\n"
+                      "inputs": "<style>\n        table {\n            border: 1px solid #1C6EA4;\n            background-color: #EEEEEE;\n            width: 100%;\n    \n            border-collapse: collapse;\n        }\n\n            table td, table th {\n                border: 1px solid #AAAAAA;\n                padding: 3px 2px;\n         \n            }\n\n           \n            table tbody tr :nth-child(2) {\n                text-align: center;\n                font-size: 13px;\n            }\n\n           \n           \n            table thead {\n                background: #1C6EA4;\n                border-bottom: 2px solid #444444;\n            }\n\n                table thead th {\n                    font-size: 15px;\n                    font-weight: bold;\n                    color: #FFFFFF;\n                    border-left: 2px solid #D0E4F5;\n                    text-align: center;\n                }\n\n                    table thead th:first-child {\n                        border-left: none;\n                    }\n    </style>\n@{body('Create_HTML_table-French')}\n\n"
                     },
                     "French-Localization-Error": {
                       "runAfter": {
@@ -1245,8 +1243,8 @@
                         },
                         "parameters": {
                           "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
-                          "emailMessage/Subject": "Échec du téléchargement de données en bloc lors du traitement de l'@{variables('UploadTypeName')} dans la plate-forme de données CID de Transports Canada. Veuillez consulter les détails pour les prochaines étapes",
-                          "emailMessage/Body": "<p>Bonjour @{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']},<br>\n<br>\nLe traitement de téléchargement de données en bloc de l'@{variables('UploadType-French')} pour la société @{outputs('Get_a_account_by_ID')?['body/ovs_legalname']}, au sein de la plate-forme de données CID de Transports Canada, n'a pas abouti. Aucune donnée n'a été mise à jour dans la plateforme de données CID de Transports Canada.<br>\n&nbsp;<br>\nS'il vous plaît:<br>\n• adressez @{outputs('totalNumberOferrors')} @{outputs('French-Localization-Error')} qui sont détaillés ci-dessous<br>\n• enregistrer une copie du classeur avec ces mises à jour<br>\n• utiliser cette nouvelle copie comme source de fichier d'un autre processus de téléchargement en bloc d'@{variables('UploadType-French')}.<br>\n<br>\nSalutations<br>\n<br>\nÉquipe de la plateforme de données CID de Transports Canada<br>\n<br>\n<br>\n@{replace( outputs('html_table_with_style-French') ,'<table>' , '  <table><col style=\"width:20%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:45%\">\r\n        <col style=\"width:25%\">')}</p>",
+                          "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}French-TDG Online - CID: Unsuccessful Bulk Data Upload during the processing of @{variables('UploadType-French')} in the Transport Canada CID Data Platform. Please view the details for the next steps.",
+                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']},<br>\n&nbsp;<br>\nThe Bulk Data Upload processing of @{variables('UploadType-French')} for the @{outputs('Get_a_account_by_ID')?['body/ovs_name_fr']} organization, within the Transport Canada CID Data Platform, was not successful. No data was updated within the Transport Canada CID Data Platform.<br>\n<br>\nPlease:<br>\n- address the @{outputs('totalNumberOferrors')} @{outputs('French-Localization-Error')} detailed below.<br>\n- save a copy of the workbook with those updates.<br>\n- use that new copy as the file source of another @{variables('UploadType-French')} Bulk Upload process.<br>\n<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n<br>\n@{replace( outputs('html_table_with_style-French') ,'<table>' , '  <table><col style=\"width:15%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:50%\">\r\n        <col style=\"width:25%\">')}<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
                           "emailMessage/Importance": "Normal"
                         },
                         "authentication": "@parameters('$authentication')"
@@ -1903,7 +1901,7 @@
             }
           },
           "runAfter": {
-            "Filter_environment-CID_Flow_Environment_Folder": [
+            "Check_environment": [
               "Succeeded"
             ]
           },
@@ -2063,7 +2061,7 @@
         },
         "Filter_environment-CID_Flow_Environment_Folder": {
           "runAfter": {
-            "get-environment-settings": [
+            "French-EmailFooter": [
               "Succeeded"
             ]
           },
@@ -2240,7 +2238,7 @@
               "type": "SetVariable",
               "inputs": {
                 "name": "UploadTypeName",
-                "value": "in-year data management"
+                "value": "the Annual Compliance"
               }
             },
             "Set_variable_French": {
@@ -2255,7 +2253,37 @@
               "type": "SetVariable",
               "inputs": {
                 "name": "UploadType-French",
-                "value": "gestion des données en cours d'année"
+                "value": "French-the Annual Compliance"
+              }
+            },
+            "Set_variable_NextStepText": {
+              "runAfter": {
+                "Set_variable_French": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e3437301-2186-46c7-8f18-c7a8570bebd0"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "NextStepText",
+                "value": "Please return to the Transport Canada CID Data Platform and complete any remaining necessary updates before the Annual Compliance can be attested as complete."
+              }
+            },
+            "Set_variable_2": {
+              "runAfter": {
+                "Set_variable_NextStepText": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "80cc333c-aad6-465f-9b5e-c56308b93397"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "French-NextStepText",
+                "value": "French-Please return to the Transport Canada CID Data Platform and complete any remaining necessary updates before the Annual Compliance can be attested as complete."
               }
             }
           },
@@ -2293,6 +2321,238 @@
                 "name": "UploadType-French",
                 "type": "string",
                 "value": "enregistrement"
+              }
+            ]
+          }
+        },
+        "Filter_environment-CID_Environment": {
+          "runAfter": {
+            "Filter_environment-CID_Flow_Environment_Folder": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('get-environment-settings')?['body/value']",
+            "where": "@equals(item()?['qm_name'], 'CID_Environment')"
+          }
+        },
+        "Check_environment": {
+          "actions": {
+            "Set_variable_TestingText": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "224fc033-5e58-423f-b235-e84df25189ec"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "TestingText",
+                "value": "Test email: This email is a test email, not an actual email representing what is indicated below. <br><br>                                                                                 "
+              }
+            },
+            "Set_variable_TestSubjectText": {
+              "runAfter": {
+                "Set_variable_TestingText": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7a6742f2-3215-413a-9225-11fd2574acab"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "TestSubjectText",
+                "value": "Test Email: "
+              }
+            },
+            "Set_variable_FrenchTestSubjectText": {
+              "runAfter": {
+                "Set_variable_TestSubjectText": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a71a8d8c-41f7-4d8b-9136-19ddffd73280"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "FrenchTestSubjectText",
+                "value": "French-Test Email: "
+              }
+            },
+            "Set_variable_FrenchTestingText": {
+              "runAfter": {
+                "Set_variable_FrenchTestSubjectText": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e2edab0d-d0a2-4152-8fae-2b793ec012aa"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "FrenchTestingText",
+                "value": "French-Test email: This email is a test email, not an actual email representing what is indicated below. <br><br>                                                                  "
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_variable_French-NextStepText": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "not": {
+              "equals": [
+                "@body('Filter_environment-CID_Environment')[0]['qm_value']",
+                "PROD"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "9be99f10-fa00-40ae-8580-da6ba08c2e07"
+          },
+          "type": "If"
+        },
+        "Initialize_variable_Testing_text_for_the_email": {
+          "runAfter": {
+            "Filter_environment-CID_Environment": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "056efd54-c348-4947-b42c-bab120c698de"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "TestingText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_TestSubjectText": {
+          "runAfter": {
+            "Initialize_variable_Testing_text_for_the_email": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "36348f7e-e55f-43ac-b622-3f00ecbc9c53"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "TestSubjectText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "English-EmailFooter": {
+          "runAfter": {
+            "get-environment-settings": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1535933c-0d10-4db3-9d01-208feac8f786"
+          },
+          "type": "Compose",
+          "inputs": "<div style=\"font-size:x-small;\">Note: If you would prefer to receive subsequent emails in French, then you can update your Language of Preferred Correspondence choice via the [Account Settings] button in the TDG Online - CID data portal. Please do not reply to this email, if necessary use the Contact Us button or link in the portal.</div>"
+        },
+        "French-EmailFooter": {
+          "runAfter": {
+            "English-EmailFooter": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5ec93fa4-a5e7-451e-9327-290b6c88346b"
+          },
+          "type": "Compose",
+          "inputs": "<div style=\"font-size:x-small;\">French-Note: If you would prefer to receive subsequent emails in French, then you can update your Language of Preferred Correspondence choice via the [Account Settings] button in the TDG Online - CID data portal. Please do not reply to this email, if necessary use the Contact Us button or link in the portal.</div>"
+        },
+        "Initialize_variable_FrenchTestSubjectText": {
+          "runAfter": {
+            "Initialize_variable_TestSubjectText": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "42321f2d-372c-4f1a-a435-a67ead702f1d"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FrenchTestSubjectText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_FrenchTesting_text_for_the_email": {
+          "runAfter": {
+            "Initialize_variable_FrenchTestSubjectText": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6b11f2fb-0032-45f1-83c0-6af6ad4db3b3"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FrenchTestingText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_NextStepText": {
+          "runAfter": {
+            "Initialize_variable_FrenchTesting_text_for_the_email": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "84339ab8-9f9e-43c2-9f43-5f45b44f6162"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "NextStepText",
+                "type": "string",
+                "value": "Please return to the Transport Canada CID Data Platform and navigate to company registration page to continue with the Registration process."
+              }
+            ]
+          }
+        },
+        "Initialize_variable_French-NextStepText": {
+          "runAfter": {
+            "Initialize_variable_NextStepText": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "dcfefd52-76c8-46e9-b89f-ab0b8d31217c"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "French-NextStepText",
+                "type": "string",
+                "value": "French-Please return to the Transport Canada CID Data Platform and navigate to company registration page to continue with the Registration process."
               }
             ]
           }

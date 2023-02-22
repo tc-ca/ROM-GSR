@@ -76,7 +76,7 @@
       "actions": {
         "Get_a_row_by_ID_Contact": {
           "runAfter": {
-            "Initialize_Variable_Environment": [
+            "Initialize_variable_EnviromentSettings": [
               "Succeeded"
             ]
           },
@@ -265,6 +265,18 @@
                           "name": "Environment",
                           "value": "@{concat(envivariables('Environment'), '/en/Register?returnUrl=%2Fen%2F')}"
                         }
+                      },
+                      "Set_variable": {
+                        "runAfter": {
+                          "Set_variable_4": [
+                            "Succeeded"
+                          ]
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "EnviromentSettings",
+                          "value": "@{null}"
+                        }
                       }
                     }
                   },
@@ -290,8 +302,8 @@
                         },
                         "parameters": {
                           "request/to": "@{outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/emailaddress1']};",
-                          "request/subject": "FRENCH: Beta Testing: CID Data Platform: Assignment as a Secondary Admin for the @{variables('Company Name')} Company",
-                          "request/text": "<p>Hello @{outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/fullname']},<br>\n<br>\n@{variables('Invited By')} Primary Admin for the @{variables('Company Name')} Company of the CID Data Platform has added you as a Secondary Admin for that Company.<br>\n<br>\nOnce you are ready to use the CID Data Platform, you can use the following:<br>\n&nbsp;&nbsp;&nbsp;On-boarding link : @{variables('Environment')}<br>\n&nbsp;&nbsp;Activation Code &nbsp;: @{triggerOutputs()?['body/adx_invitationcode']}<br>\nto on-board to the CID Platform.<br>\n<br>\n<br>\nTransport Canada – CID</p>"
+                          "request/subject": "FRENCH: TDG Online - CID: Assignment as a Secondary Admin for the@{variables('Company Name')} organization",
+                          "request/text": "<p>@{variables('EnviromentSettings')} Hello @{outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/fullname']},<br>\n<br>\n@{variables('Invited By')} Primary Admin for the @{variables('Company Name')} organization of the CID Data Platform has added you as a Secondary Admin for that organization. <br>\n<br>\nOnce you are ready to use the CID Data Platform, you can use the following:<br>\n&nbsp;&nbsp;&nbsp;On-boarding link : @{variables('Environment')}<br>\n&nbsp;&nbsp;Activation Code &nbsp;: @{triggerOutputs()?['body/adx_invitationcode']}<br>\nto on-board to the CID Platform.<br>\n<br>\n<br>\nTransport Canada – CID</p>"
                         },
                         "authentication": "@parameters('$authentication')"
                       }
@@ -318,8 +330,8 @@
                           },
                           "parameters": {
                             "request/to": "@{outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/emailaddress1']};",
-                            "request/subject": "Beta Testing: CID Data Platform: Assignment as a Secondary Admin for the @{variables('Company Name')} Company",
-                            "request/text": "<p>Hello @{outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/fullname']},<br>\n<br>\n@{variables('Invited By')} Primary Admin for the @{variables('Company Name')} Company of the CID Data Platform has added you as a Secondary Admin for that Company.<br>\n<br>\nOnce you are ready to use the CID Data Platform, you can use the following:<br>\n&nbsp;&nbsp;&nbsp;On-boarding link : @{variables('Environment')}<br>\n&nbsp;&nbsp;&nbsp;Activation Code &nbsp;: @{triggerOutputs()?['body/adx_invitationcode']}<br>\nto on-board to the CID Platform.<br>\n<br>\n<br>\nTransport Canada – CID</p>"
+                            "request/subject": "TDG Online - CID: Assignment as a Secondary Admin for the@{variables('Company Name')} organization",
+                            "request/text": "<p>@{variables('EnviromentSettings')} Hello @{outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/fullname']},<br>\n<br>\n@{variables('Invited By')} Primary Admin for the @{variables('Company Name')} organization of the CID Data Platform has added you as a Secondary Admin for that organization. <br>\n<br>\nOnce you are ready to use the CID Data Platform, you can use the following:<br>\n&nbsp;&nbsp;&nbsp;On-boarding link : @{variables('Environment')}<br>\n&nbsp;&nbsp;&nbsp;Activation Code &nbsp;: @{triggerOutputs()?['body/adx_invitationcode']}<br>\nto on-board to the CID Platform.<br>\n<br>\n<br>\nTransport Canada – CID</p>"
                           },
                           "authentication": "@parameters('$authentication')"
                         }
@@ -675,6 +687,26 @@
               {
                 "name": "Environment",
                 "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_EnviromentSettings": {
+          "runAfter": {
+            "Initialize_Variable_Environment": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "39c00fef-8e3e-4b60-86f9-cde9473ba69a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "EnviromentSettings",
+                "type": "string",
+                "value": "Test email: "
               }
             ]
           }
