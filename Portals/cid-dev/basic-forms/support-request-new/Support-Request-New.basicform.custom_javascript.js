@@ -12,15 +12,20 @@ $("#InsertButton").before('<p style="font-size:23px">'+email+ '</p>');
 $("#InsertButton").before('<div class="xrm-attribute-value">'+contactusNote+'</Div><br>');
 //declare request and default to reg
 var requestType = "918640000";
-var company_status = "{{entities.account[user.parentcustomerid.id].cid_cidcompanystatus.value}}";
-if (company_status == '100000005') {//registration completed
-requestType = "918640001";
-}
-else {
+
+var  company_reg_date = "{{entities.account[user.parentcustomerid.id].cid_officiallyregistrationcompletationdate}}";
+	
+var requestType = "918640001";
+	if(company_reg_date !=null && company_reg_date !="")
+	{
+        requestType = "918640001";
+    }
+    else {
 
     requestType = "918640000";
-}
-console.log("requestType: " + requestType);
+    }
+
+
 var data = tdg.webapi.SelectedColumnlist("ovs_supportrequesttypes" ,"ovs_reasonenglish,ovs_reasonfrench,ovs_externaluser" 
 , "ovs_requesttype eq " + requestType + " and statecode eq 0 and ovs_externaluser eq true") ;  
 
@@ -60,7 +65,7 @@ console.log(URLs);
    var recordSaved = URLs.get('recordSaved');
    if (recordSaved != null && recordSaved == 'yes')
    {
-       tdg.c.dialog_OK('Your request has been sent to the Transport Canada TDG CID Support Team.');
+       //tdg.c.dialog_OK('Your request has been sent to the Transport Canada TDG CID Support Team.');
    }
   
 });//end document.ready

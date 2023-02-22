@@ -3,13 +3,21 @@
  {% assign weblinkset_id = page.adx_navigation.id %} 
  {% if weblinkset_id %} {% assign nav = weblinks[page.adx_navigation.id] %} 
  {% if nav %} <div class="list-group"> {% for link in nav.weblinks %} 
- <a class="list-group-item" href={{ link.url }}> {{ link.name }} </a> {% endfor %} 
- </div> {% endif %} {% endif %} <script type="text/javascript" src="~/tdgcore_common.js">
+ {%if link.url contains "online-help" or link.url contains "OnlineHelp" or link.url contains "ContactUs"  %}
+  {%if request.url contains "rd-tdgcore-dev" or request.url contains "tdgcore-qa" %}
+  <a class="list-group-item"  href={{ link.url }}> {{ link.name }} </a> 
+   {%else%}
+  <a class="list-group-item" style="pointer-events: none;" href={{ link.url }}> {{ link.name }} </a> 
+  {% endif %}
+ {%else%}
+ <a class="list-group-item" href={{ link.url }}> {{ link.name }} </a> 
+  {% endif %} {% endfor %}</div>
+  {%endif%} {% endif %}  <script type="text/javascript" src="~/tdgcore_common.js">
  </script> <script type="text/javascript" src="~/tdgcore_message.js"></script> 
  <script> // Web Template - CID Left Navigation 
  debugger; 
  tdg.c.weblink_hide("/RegistrationWizard/"); 
- tdg.c.weblink_hide("/Bulk_Site_Upload/"); 
+ //tdg.c.weblink_hide("/Bulk_Site_Upload/"); 
  var selected_language = '{{website.selected_language.code}}'; 
  sessionStorage.setItem("selected_language", selected_language); 
  </script> 

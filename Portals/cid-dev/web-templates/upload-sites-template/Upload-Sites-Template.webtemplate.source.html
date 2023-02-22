@@ -60,6 +60,39 @@
         -box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         display: none;
     }
+    #loader {
+    position:fixed;
+    width:100%;
+    left:0;right:0;top:0;bottom:0;
+    background-color: rgba(255,255,255,0.8);
+    z-index:9999;
+    display:none;
+}
+
+@-webkit-keyframes spin {
+	from {-webkit-transform:rotate(0deg);}
+	to {-webkit-transform:rotate(360deg);}
+}
+
+@keyframes spin {
+	from {transform:rotate(0deg);}
+	to {transform:rotate(360deg);}
+}
+
+#loader::after {
+    content:'';
+    display:block;
+    position:absolute;
+    left:48%;top:40%;
+    width:100px;height:100px;
+    border-style:solid;
+    border-color:#3498db;
+    border-top-color:transparent;
+    border-width: 7px;
+    border-radius:50%;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
 </style>
 
 <script type="text/javascript" src="~/tdgcore_common.js" ></script>
@@ -283,6 +316,7 @@ $('#btn_attachfile_and_scan').click(function(e)
    }
    else
    {
+       $('#loader').show();
    // $("#mainContent").before("<div class='validation' style='color:black;margin-bottom: 20px;'>File is sent for scaning</div>");
     var DocumentbodyContents;
   // Get the name of the selected file
@@ -299,6 +333,7 @@ $('#btn_attachfile_and_scan').click(function(e)
 
     if (MimeType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
    {
+       $('#loader').hide();
        //get error message in english
        var FileTypeErrorMessage = filter_BulkMessageArray("M2" , "en");
            // check language if not english assign french transation
@@ -385,7 +420,7 @@ $('#btn_attachfile_and_scan').click(function(e)
  
 $('#linkdownload_English').click(function(e)
 {
-
+ $('#loader').show();
 //.on('click', async function() {
         //check if page for initial registeration
         Disable_all_Buttons();
@@ -398,6 +433,7 @@ $('#linkdownload_English').click(function(e)
 //download french button
  $('#linkdownload_French').click(function(e)
 {
+     $('#loader').show();
 
  //.on('click', async function() {
 
@@ -513,10 +549,10 @@ var companyid = '{{parentid}}';
 var contactid = '{{contactid}}';
 
 
-var scanningMessage = "<p>Uploading and processing the Site Bulk Upload Excel workbook.  Please wait a moment...</p>";
+var scanningMessage = "<p>Uploading and processing the Site Bulk Upload Excel workbook. Please wait...</p>";
 if ( language != 'en-US'&& language != 'en')
    {
-        scanningMessage ="Téléchargement et traitement du classeur Excel de téléchargement en masse du site. Patientez s'il-vous-plait...";
+        scanningMessage ="French-Uploading and processing the Site Bulk Upload Excel workbook. Please wait...";
     }
       $('#infoMsg').css('display', 'block');
         $('#infoMsg').html(scanningMessage);
@@ -606,6 +642,7 @@ function call_Inital_validation(Language , bulkactivitytype)
    var companyname = '{{ user.parentcustomerid.Name }}';
    if  ( companyid != null  )
     {
+        $('#loader').show();
       //document.getElementById("content").innerHTML = response.html; 
         Disable_all_Buttons();
         var urlPath = window.location.href;
@@ -613,11 +650,11 @@ function call_Inital_validation(Language , bulkactivitytype)
         window.history.replaceState({}, document.title, urlPath);
 
 
-        var IntialvalidationBegunMessage = "<p>Uploading and processing the Site Bulk Upload Excel workbook.  Please wait a moment...</p>";
+        var IntialvalidationBegunMessage = "<p>Uploading and processing the Site Bulk Upload Excel workbook. Please wait...</p>";
         //"<p>Preliminary analysis of the uploaded workbook has begun…</p>" ;
         if ( Language != 'en-US' && Language != 'en')
         {
-            IntialvalidationBegunMessage = "<p>Téléchargement et traitement du classeur Excel de téléchargement en masse du site. Patientez s'il-vous-plait...</p>";
+            IntialvalidationBegunMessage = "<p>French-Uploading and processing the Site Bulk Upload Excel workbook. Please wait...</p>";
             //"<p>L'analyse préliminaire du classeur téléchargé a commencé…</p>";
 
         }
@@ -660,13 +697,14 @@ function call_Inital_validation(Language , bulkactivitytype)
                      //alert(req.getResponseHeader('DetailMessage'));
                    //  var warrning_Message  = "<p>Detail Site data has already been assigned manually, or via a previous Bulk Upload. If you proceed, then any Site referenced in the workbook that is already in CID, will first be completed deleted from CID, with no possibility to recover the related data. Those Site(s) will then be re-created based on the workbook values here. <br><br>Are you sure you want to continue with this upload and potentially override existing Site data? [B1035]</P>";
                      var warrning_Message  = filter_BulkMessageArray("M12" , "en");
-                     console.log (warrning_Message);
+                    // console.log (warrning_Message);
                      debugger;
                      if ( Language != 'en-US' &&  Language != 'en')
                      {
                          // warrning_Message  = "<p>Les données détaillées du site ont déjà été attribuées manuellement ou via un précédent chargement en bloc. Si vous continuez, tout site référencé dans le classeur qui est déjà dans CID sera d'abord complètement supprimé de CID, sans possibilité de récupérer les données associées. Ces sites seront ensuite recréés en fonction des valeurs du classeur ici. <br><br>Voulez-vous vraiment continuer avec ce téléchargement et éventuellement remplacer les données existantes du site ? [B1035] </P>";
                            warrning_Message  = filter_BulkMessageArray("M12" , "fr");
                      }
+                     $('#loader').hide();
 
                      /* var NumberOfSiteswithRequirementLevel = req.getResponseHeader('NumberOfSitesWithRequirementLevel');
 
@@ -729,6 +767,7 @@ function call_Inital_validation(Language , bulkactivitytype)
                     }//end else
                 }
                 else if (this.status === 402) {
+                    $('#loader').hide();
 
                  $('#ErrorMessageDiv').css('display', 'none');
                   $('#warnningMessage').css('display', 'none');
@@ -745,6 +784,7 @@ function call_Inital_validation(Language , bulkactivitytype)
                        //document.getElementById("errortable").innerHTML = result;
 
                 } else {
+                    $('#loader').hide();
 
                   // $('#warnningMessage').css('display', 'none');
                   $('#ErrorMessageDiv').css('display', 'none');
@@ -942,12 +982,12 @@ function storeMessageListInSession(data)
           //get language
         var langcode = '{{languagecode}}'  ;
       
-        var downloadMessage ='<p>Downloading the custom Site Bulk Upload template.  Please wait a moment...</p>';
+        var downloadMessage ='<p>Downloading the custom Site Bulk Upload template and Instruction documents. Please wait…</p>';
        // '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>' ;
         var DownloadMessageCompleted =  '<p>Download completed.</p>';
       if (langcode != "en-US" && langcode != "en")
       {
-          downloadMessage = "<p>Téléchargement du modèle de téléchargement en masse de site personnalisé. Patientez s'il-vous-plait...</p>";
+          downloadMessage = "<p>French-Downloading the custom Site Bulk Upload template and Instruction documents. Please wait…</p>";
           //"<p>Le classeur Excel personnalisé de téléchargement en masse du site est en cours de téléchargement…</p>"
          DownloadMessageCompleted  = '<p>Téléchargement terminé.</p>' ;
       }
@@ -1011,13 +1051,13 @@ function storeMessageListInSession(data)
                       
           //assign result to noteid intially
            var SeperatorIndex =   result.indexOf("|");
-           alert ("result " + result);
-           alert("seperator index " + SeperatorIndex);
-           console.log(SeperatorIndex);
-           console.log(result);
+           //alert ("result " + result);
+           //alert("seperator index " + SeperatorIndex);
+           //console.log(SeperatorIndex);
+           //console.log(result);
             var  NoteGUID = result.substring(0, SeperatorIndex ).trim();
             var instructionNote = result.substring( SeperatorIndex ).trim();
-            console.log("Note " + NoteGUID );
+            
          
        
            
@@ -1207,8 +1247,8 @@ async function Get_Location_Header(url)
                                         }
 
                                    
-                                   console.log (this.responseText);
-                                   console.log ("reponse Length : " + Reponse_Length);
+                                   //console.log (this.responseText);
+                                   //console.log ("reponse Length : " + Reponse_Length);
                                    var langcode = '{{languagecode}}'  ;
       
                                     var downloadMessage ;
@@ -1228,7 +1268,7 @@ async function Get_Location_Header(url)
 
 
                                 $('#infoMsg').html(downloadMessage );
-                                
+                                $('#loader').hide();
                                 //**Removed on Dec 2022 part of Exetended info removal**
                              /*  if (this.responseText.indexOf("|") != (Reponse_Length -1) )
                                 {
@@ -1319,6 +1359,7 @@ function delay(milliseconds){
                                     </tr>
                                 </table>
                                 <br>
+                                <span id="loader" class="loader"></span>
             </div>
         </div>
         </td>

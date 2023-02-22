@@ -11,6 +11,9 @@ $(document).ready(function () {
     page_setup();
 
     tdg.c.control_hide("cid_contacttype");
+ // $("#telephone1").attr('aria-required', "true");
+       // $('#telephone1').parent().prev().addClass("required");
+     MakeRequired("telephone1");
 
     var parent_id = '{{user.parentcustomerid.Id}}';
    // var filter = "accountid eq guid'" + parent_id + "'";
@@ -110,5 +113,36 @@ function page_setup() {
         script.src = file;
 
         $("body").append(script);
+    }
+}
+
+var MakeRequired = function (fieldName) {
+    try {
+        if ($("#" + fieldName) != undefined) {
+            $("#" + fieldName).prop('required', true);
+            $("#" + fieldName).closest(".control").prev().addClass("required");
+ 
+            // Create new validator
+            var Requiredvalidator = document.createElement('span');
+            Requiredvalidator.style.display = "none";
+            Requiredvalidator.id = fieldName + "Validator";
+            Requiredvalidator.controltovalidate = fieldName;
+            Requiredvalidator.errormessage = "&lt;a href='#" + fieldName + "_label'&gt;" + $("#" + fieldName + "_label").html() + " is a required field.&lt;/a&gt;";
+            Requiredvalidator.initialvalue = "";
+            Requiredvalidator.evaluationfunction = function () {
+                var value = $("#" + fieldName).val();
+                if (value == null || value == "") {
+                    return false;
+                } else {
+                    return true;
+                }
+            };
+ 
+            // Add the new validator to the page validators array:
+            Page_Validators.push(Requiredvalidator);
+        }
+    }
+    catch (error) {
+        errorHandler(error);
     }
 }

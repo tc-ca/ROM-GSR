@@ -1,5 +1,10 @@
 $(document).ready(function ()
 {
+	$(".entity-grid").on("loaded", function () { 	
+		$("#CompanyCompleteAll").attr("style", "width:120px");
+		$("#SiteCompleteAll").attr("style", "width:120px");
+    });
+
 	debugger;
 
 	$("#cid_registrationasof").parent().parent().hide();

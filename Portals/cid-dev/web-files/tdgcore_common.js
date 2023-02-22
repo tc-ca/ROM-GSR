@@ -395,7 +395,7 @@ if (typeof (tdg.c) == "undefined") {
 	            <div class="modal-footer">
 	            <button id="btnYes" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">${yes}</button>
 	            <button id="btnNo" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" data-dismiss="modal">${no}</button>
-	            </section>
+	            </section>c.message
 	            `).appendTo('body');
 
             $("#myModal").css('top', '15%');
@@ -683,13 +683,14 @@ if (typeof (tdg.c) == "undefined") {
             } catch (e) { }
         },//end function
 
-        Prevent_Duplicate_Site_Creation: async function (parameters) {
+        Prevent_Duplicate_Site_Creation: function (parameters) {
             var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
-            var EnvironmentSettingResult = await tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
+            var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
 
             if (EnvironmentSettingResult.length > 0) {
                 var FlowURL = EnvironmentSettingResult[0]["qm_value"];
-                // Execute flow
+                //await tdg.c.createCustomTimeout(FlowURL, parameters);
+                //Execute flow
                 debugger;
                 webapi.safeAjax({
                     type: "POST",
@@ -721,13 +722,7 @@ if (typeof (tdg.c) == "undefined") {
                             });
                         }
                         else
-                            //return true;
-                            return new Promise(resolve => {
-                                setTimeout(() => {
-                                    resolve(true);
-                                }, 2000);
-                            });
-
+                            return true;
                     },
                     error: function (xhr, textStatus, errorThrown) {
                         debugger;
@@ -736,8 +731,57 @@ if (typeof (tdg.c) == "undefined") {
                     }
                 });
             } //end check if flow url found
+            else
+                return true;
+        },//end function
 
-        }//end function
+        createCustomTimeout: function (FlowURL, parameters) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    webapi.safeAjax({
+                        type: "POST",
+                        url: FlowURL,
+                        async: false,
+                        contentType: "application/json",
+                        data: JSON.stringify(parameters),
+
+                        success: function (data, textStatus, xhr) {
+                            debugger;
+                            var result = data;
+                            console.log(result);
+                            // Return Type: mscrm.cid_CID_Create_Update_SiteDuplicateValidationResponse
+                            // Output Parameters
+                            var res = result["DuplicateFound"]; // Edm.Boolean
+
+                            if (res) {
+                                var message = tdg.error_message.message("m000131");
+                                tdg.c.dialog_YN(message, (ans) => {
+                                    //var contact_id = '{{user.id}}';
+                                    if (ans) {
+                                        return false;
+                                        //Do nothing
+                                    }
+                                    else {
+                                        return false;
+                                        //need to add ALM record.
+                                    }
+                                });
+                            }
+                            else
+                                return true;
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            debugger;
+                            console.log(xhr);
+                            return false;
+                        }
+                    });
+
+                    resolve();
+                }, 2 * 1000);
+            });
+        }
+
     }
 }
 
@@ -1229,6 +1273,18 @@ if (typeof (tdg.root) == "undefined") {
 // tdg.cid = tdgcore.cid
 if (typeof (tdg.cid) == "undefined") {
     tdg.cid = {
+        ovs_supportrequest_insert: function (data) {
+            debugger;
+            var value = {
+                "ovs_Company@odata.bind": "/accounts(" + data.ovs_Company + ")",
+                "ovs_CreatedByExternalUser@odata.bind": "/contacts(" + data.ovs_CreatedByExternalUser + ")",
+                "ovs_RequestType@odata.bind": "/ovs_supportrequesttypes(" + data.ovs_RequestType + ")",
+                "ovs_requestdetails": data.ovs_requestdetails,
+                "ovs_priority": data.ovs_priority
+            };
+            tdg.webapi.create("ovs_supportrequests", value);
+        },
+
         address_init: function (site_ind) {
             debugger;
 
@@ -1246,11 +1302,6 @@ if (typeof (tdg.cid) == "undefined") {
                 debugger;
                 var ovs_address1_province = $("#ovs_address1_province :selected").text();
                 $("#address1_stateorprovince").val(ovs_address1_province);
-            });
-            $("#ovs_lld_province").on("change", function (i, val) {
-                debugger;
-                var ovs_lld_province = $("#ovs_lld_province :selected").text();
-                $("#address1_stateorprovince").val(ovs_lld_province);
             });
 
             $("#address1_postalcode").attr("maxlength", "6");
@@ -1897,7 +1948,6 @@ if (typeof (tdg.cid) == "undefined") {
         },
 
         Complete_All_Annualcompliance_Tasks: function (parentAccountid, LanguageCode) {
-
             var ButtonLable = tdg.error_message.message("m000121");
             var ButtonCompleteLable = tdg.error_message.message("m000123");
 
@@ -1946,12 +1996,9 @@ if (typeof (tdg.cid) == "undefined") {
                 // $(".entity-grid").trigger("refresh");
                 setTimeout(tdg.cid.Refresh_EntityGrid, 7000);
             });
-
-
         },
 
         Setup_site_Profile_Title: function (CompanyName) {
-
             var SiteLable = tdg.error_message.message("m000127");
             var LatitudeLabel = tdg.error_message.message("m000128");
             var LongtituedLable = tdg.error_message.message("m000129");
@@ -2016,18 +2063,12 @@ if (typeof (tdg.cid) == "undefined") {
                 ClassesHeaderElement.children[0].innerHTML = ClassHeaderLabel + " " + pageTitle;
                 var ModeTable = document.getElementById('siteModesOfTransportation');
                 ModeTable.closest('fieldset').children[0].innerHTML = ModeOftransportationHeaderLable + " " + pageTitle;
-
-
             }
-
-
         },
 
         Refresh_EntityGrid() {
             $(".entity-grid").trigger("refresh");
         }
-
-
     }
 }
 
@@ -2047,8 +2088,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
         },
 
         start_cid_crabusinessnumber_onchange: async function (step_start) {
-            debugger;
-
             var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
             var data;
             var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
@@ -2061,7 +2100,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 // retrieve information from FakeBN entity in dynamics
                 data = await tdg.cid.crw.Production_start_Retrieve_cra(cid_crabusinessnumber, step_start);
             }
-
             return data;
         },
 
@@ -2136,8 +2174,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
         start_btn_next_click: async function () {
             debugger;
-            _cra_record = null;
-
             var value = Page_ClientValidate('');
             if (value) {
                 var message = tdg.error_message.message("m000038");
@@ -2153,9 +2189,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 }
                 var cid_reasonfornobnnumber_other = $("#cid_reasonfornobnnumber_other").val();
                 const data = await tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber_list);
-
-                _cra_record = data;
-
                 if (data.length == 0) {
                     if (cid_has_cra_bn == "1") {
                         var message = tdg.error_message.message("m000001");
@@ -2481,11 +2514,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
         },
 
 
-        start_cid_reasonfornobnnumber_onchange: function (clear_data) {
-            debugger;
-            if (clear_data) {
-                $("#cid_reasonfornobnnumber_other").val("");
-            }
+        start_cid_reasonfornobnnumber_onchange: function () {
+            $("#cid_reasonfornobnnumber_other").val("");
 
             cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
             if (cid_reasonfornobnnumber == "3")   // other
@@ -2600,14 +2630,14 @@ if (typeof (tdg.cid.crw) == "undefined") {
             tdg.c.dialog_YN(message, (ans) => {
                 if (ans) {
                     debugger;
-                    //var data = {}
-                    //data.EmailCode = "S1B-??";
-                    //data.AccountId = account_id;
-                    //data.Primary_Contactid = contact_id;
-                    //data.Secondary_Contactid = contact_id;
-                    //tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", JSON.stringify(data));
 
-                    // TODO - add ARL record
+                    data = {};
+                    data.ovs_CreatedByExternalUser = contact_id;
+                    data.ovs_Company = account_id;
+                    data.ovs_RequestType = "038f80be-4aae-ed11-9885-0022483c8531";
+                    data.ovs_requestdetails = "After the registrant moved to Step 2 in the registration process, they have requested to go back to Step 1. ";
+                    data.ovs_priority = 5;
+                    tdg.cid.ovs_supportrequest_insert(data);
 
                     message = tdg.error_message.message("m000040");
                     message = message.replaceAll("{0}", email);

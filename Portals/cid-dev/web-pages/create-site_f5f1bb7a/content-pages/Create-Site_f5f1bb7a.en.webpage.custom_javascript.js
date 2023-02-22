@@ -27,7 +27,7 @@ $(document).ready(function () {
 	});
 });
 
-
+/*
 if (window.jQuery) {
 	(function ($) {
 		if (typeof (entityFormClientValidate) != 'undefined') {
@@ -65,11 +65,19 @@ if (window.jQuery) {
 
 							var duplicateFound = tdg.c.Prevent_Duplicate_Site_Creation(parameters);
                             
-                            if(duplicateFound)
-                                 return false; 
+                            if(duplicateFound == null)
+                            {
+                                setTimeout(function checkDuplicate()
+                                    {
+                                    if(duplicateFound == true)
+                                        return true; 
+                                    else
+                                        return false; 
+                                    }, 2000);                            
+                            }
                             else
-                                return true; 
-                                
+                                return duplicateFound;
+
 							break;
 						case "2":
 							// lat/long
@@ -116,3 +124,4 @@ if (window.jQuery) {
 		}
 	}(window.jQuery));
 }
+*/
