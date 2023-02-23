@@ -3,13 +3,24 @@ $(document).ready(function () {
 page_setup();
 var selected_language = '{{website.selected_language.code}}';
 var email  = '{{user.emailaddress1}}';
-var contactemailLabe = "Contact Email";
+var contactemailLabel = "Contact Email";
 var contactusNote = "Note: This is your account’s official email, which may be updated via the [Account Settings] button at the top.";
 //to do :
 //add code to get lables from message to js file
-$("#InsertButton").before('<p style="font-size:26px">'+contactemailLabe+'</p>');
-$("#InsertButton").before('<p style="font-size:23px">'+email+ '</p>');
-$("#InsertButton").before('<div class="xrm-attribute-value">'+contactusNote+'</Div><br>');
+
+var userEmailFieldandLable_HTML ='<tr><td colspan="1" rowspan="1" class="clearfix cell"></td>'+
+'<td class="cell zero-cell"></td></tr><tr><td colspan="1" rowspan="1" class="clearfix cell text form-control-cell">'+
+'<div class="info"><label  id="emailaddress_label" class="field-label">' +
+contactemailLabel +
+'</label></div><div class="control"><input  type="text" readonly id="emailaddress" title="user email address" value="'+email 
++'" class="text form-control" >'+
+'</div>'+
+'</td><td class="cell zero-cell"></td></tr>'
++ '<tr><td colspan="1" rowspan="1" class="clearfix cell" ><div class="xrm-attribute-value">'+contactusNote+'</Div></td></tr>'
+;
+
+$("table").after(userEmailFieldandLable_HTML);
+
 //declare request and default to reg
 var requestType = "918640000";
 
@@ -26,7 +37,7 @@ var requestType = "918640001";
     }
 
 
-var data = tdg.webapi.SelectedColumnlist("ovs_supportrequesttypes" ,"ovs_reasonenglish,ovs_reasonfrench,ovs_externaluser" 
+var data = tdg.webapi.SelectedColumnlist("ovs_supportrequesttypes" ,"ovs_reasonenglish,ovs_reasonfrench,ovs_externaluser&$orderby=ovs_displayorder asc" 
 , "ovs_requesttype eq " + requestType + " and statecode eq 0 and ovs_externaluser eq true") ;  
 
 
