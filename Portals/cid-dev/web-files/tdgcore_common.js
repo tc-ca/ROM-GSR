@@ -2114,6 +2114,10 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
         data_confirm_dialog: async function (cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber_list) {
             debugger;
+
+            // save to use in step1
+            _cra_record = null;
+
             var data = {};
             data.length = 0;
             if (cid_has_cra_bn == "1") {
@@ -2123,10 +2127,14 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 if (environment == "PreProd" || environment == "Prod") {
                     //use CRA API to get information
                     cra_data = await tdg.cid.crw.Production_start_Retrieve_cra(bn, "");
+                    // save to use in step1
+                    _cra_record = cra_data;
                 }
                 else {
                     // retrieve information from FakeBN entity in dynamics
                     cra_data = tdg.cid.crw.start_Retrieve_cra(bn, "");
+                    // save to use in step1
+                    _cra_record = cra_data;
                 }
                 if (cra_data.length == 0) {
                     return data;
@@ -2418,8 +2426,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
             return await response.json();
         },
-
-
 
         //CRA BN API - Production and PreProd
         Production_start_Retrieve_cra: async function (bn, step_start) {

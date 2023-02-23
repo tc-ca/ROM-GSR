@@ -1,26 +1,53 @@
 
 $(document).ready(function () {
+
 page_setup();
+
 var selected_language = '{{website.selected_language.code}}';
 var email  = '{{user.emailaddress1}}';
 var contactemailLabel = "Contact Email";
 var contactusNote = "Note: This is your account’s official email, which may be updated via the [Account Settings] button at the top.";
+var confirmationMessage = "Your request has been sent to the Transport Canada TDG CID Support Team.";
+var detailNeedtobAddedMessage = "Details of Request needs to be entered";
 //to do :
 //add code to get lables from message to js file
+
+//hide and create new submit button
+var submit_Lable = $("#InsertButton").val() ;
+ $("#InsertButton").css("display", "none");
+var NewSubmitButton = '<button type="button" id="btn_submit_request" class="submit-btn btn btn-primary form-action-container-left">'
++ submit_Lable +'</button>'
+$("#InsertButton").after(NewSubmitButton);
+$("#btn_submit_request").click(function(e)
+{
+  var lengthofCurrentMemo = $("#ovs_requestdetails").val().length;
+  var TemplateLength = sessionStorage.getItem("MemoLength");
+
+  if (lengthofCurrentMemo > TemplateLength)
+    {
+        $("#InsertButton").click();
+       // tdg.c.dialog_OK(confirmationMessage);
+    }//end if
+    else
+    {
+       tdg.c.dialog_OK(detailNeedtobAddedMessage);
+    }
+});
 
 var userEmailFieldandLable_HTML ='<tr><td colspan="1" rowspan="1" class="clearfix cell"></td>'+
 '<td class="cell zero-cell"></td></tr><tr><td colspan="1" rowspan="1" class="clearfix cell text form-control-cell">'+
 '<div class="info"><label  id="emailaddress_label" class="field-label">' +
 contactemailLabel +
-'</label></div><div class="control"><input  type="text" readonly id="emailaddress" title="user email address" value="'+email 
+'</label></div><div class="control"><input  type="text" readonly id="emailaddress" title="user email address" value="'
++ email 
 +'" class="text form-control" >'+
 '</div>'+
 '</td><td class="cell zero-cell"></td></tr>'
-+ '<tr><td colspan="1" rowspan="1" class="clearfix cell" ><div class="xrm-attribute-value">'+contactusNote+'</Div></td></tr>'
++ '<tr><td colspan="1" rowspan="1" class="clearfix cell" ><div class="xrm-attribute-value">'
++ contactusNote + '</Div></td></tr>'
 ;
 
-$("table").after(userEmailFieldandLable_HTML);
-
+$("table").find('tbody').append(userEmailFieldandLable_HTML);
 //declare request and default to reg
 var requestType = "918640000";
 
@@ -74,10 +101,13 @@ var URLs = new URLSearchParams(window.location.search);
 console.log(URLs);
    //  var newrecordid = URLs.get('id');
    var recordSaved = URLs.get('recordSaved');
-   if (recordSaved != null && recordSaved == 'yes')
-   {
-       //tdg.c.dialog_OK('Your request has been sent to the Transport Canada TDG CID Support Team.');
-   }
+  if (recordSaved == "yes")
+  {
+      tdg.c.dialog_OK(confirmationMessage);
+        var urlPath = window.location.href;
+        urlPath = urlPath.split('?')[0];
+        window.history.replaceState({}, document.title, urlPath);
+  }
   
 });//end document.ready
 
@@ -97,6 +127,8 @@ function Get_RequestDetails() {
     {
         memo = MemoData[0]["ovs_templatefrench"];
     }
+    sessionStorage.setItem("MemoLength", memo.length);
+  
     //update memo
     $("#ovs_requestdetails").val(memo);
 }

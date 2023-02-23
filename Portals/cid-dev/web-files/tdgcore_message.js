@@ -538,8 +538,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000121",
-                        "message_en": "Complete All",
-                        "message_fr": "Complete All_FR"
+                        "message_en": "Mark All as Complete",
+                        "message_fr": "Mark All as Complete_FR"
                     },
                     {
                         "code": "m000122",
@@ -548,8 +548,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000123",
-                        "message_en": "Complete",
-                        "message_fr": "Complete_FR"
+                        "message_en": "Mark as Complete",
+                        "message_fr": "Mark as Complete_FR"
                     },
                     {
                         "code": "m000124",

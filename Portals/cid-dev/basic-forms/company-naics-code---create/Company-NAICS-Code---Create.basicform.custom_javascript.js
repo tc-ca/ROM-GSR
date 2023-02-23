@@ -26,11 +26,10 @@ $(document).ready(function () {
 
 	debugger; 
 	var cancelLabel = tdg.error_message.message("BTN_CANCEL");
-    $("#btn_save_new").after('<div role="group" class="form-action-container-left"> &nbsp; </div><input type="button" data-dismiss="modal" value="'+cancelLabel+'" id="CancelButton" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
-
-    //$('#CancelButton').on('click', function(event){debugger; parent.$('.form-close').eq(0).click();});  
-    $("#CancelButton").on("click", function(){parent.$(".form-close").trigger("click");
-          });  
+    //$("#btn_save_new").after('<div role="group" class="form-action-container-left"> &nbsp; </div><input type="button" data-dismiss="modal" value="'+cancelLabel+'" id="CancelButton" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
+    $("#btn_save_new").after('<input type="button" data-dismiss="modal" value="'+cancelLabel+'" id="CancelButton" name="CancelButton" class="btn btn-default button previous previous-btn"/>')
+    $('#btn_save_new').attr('style', 'margin-right:4px;');
+    $("#CancelButton").on("click", function(){parent.$(".form-close").trigger("click");});  
 	//Test The NAICS Code must be selected using the NAICS Code drop-down. Enter at least the first two digits or your full NAICS Code to filter the drop-down and select the applicable NAICS Code from the list.</p>");
 });
 

@@ -1,8 +1,8 @@
 $(document).ready(function ()
 {
 	$(".entity-grid").on("loaded", function () { 	
-		$("#CompanyCompleteAll").attr("style", "width:120px");
-		$("#SiteCompleteAll").attr("style", "width:120px");
+		$("#CompanyCompleteAll").attr("style", "width:185px");
+		$("#SiteCompleteAll").attr("style", "width:185px");
     });
 
 	debugger;
