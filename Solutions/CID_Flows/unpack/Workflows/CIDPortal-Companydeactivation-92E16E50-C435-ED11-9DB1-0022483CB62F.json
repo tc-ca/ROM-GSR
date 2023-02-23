@@ -65,37 +65,30 @@
               "actions": {
                 "Check_if_site_is_not_inactive": {
                   "actions": {
-                    "Apply_to_each_2": {
-                      "foreach": "@outputs('List_rows')?['body/value']",
-                      "actions": {
-                        "Update_a_row": {
-                          "runAfter": {},
-                          "metadata": {
-                            "operationMetadataId": "0b420993-e15f-47c7-a9e1-48a688d41984"
-                          },
-                          "type": "OpenApiConnection",
-                          "inputs": {
-                            "host": {
-                              "connectionName": "shared_commondataserviceforapps",
-                              "operationId": "UpdateRecord",
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                            },
-                            "parameters": {
-                              "entityName": "accounts",
-                              "recordId": "@items('Apply_to_each_2')?['accountid']",
-                              "item/cid_romsitestatus": 100000005,
-                              "item/cid_cidsitestatus": 100000015,
-                              "item/cid_siteclaim": 100000001
-                            },
-                            "authentication": "@parameters('$authentication')"
-                          }
-                        }
-                      },
+                    "Update_a_row_2": {
                       "runAfter": {},
                       "metadata": {
-                        "operationMetadataId": "96ad31ea-d1fb-4843-a138-8ac562308ca7"
+                        "operationMetadataId": "4b478467-aa1a-423b-8676-6a9d080763d4"
                       },
-                      "type": "Foreach"
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "UpdateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "accounts",
+                          "recordId": "@items('Apply_to_each')?['accountid']",
+                          "item/cid_memositedeactivation": "Company deactivated via CID",
+                          "item/cid_reasonforsitedeactivation": 100000003,
+                          "item/cid_romsitestatus": 100000005,
+                          "item/cid_sitestate": 100000002,
+                          "item/cid_cidsitestatus": 100000023,
+                          "item/cid_siteclaim": 100000001
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
                     }
                   },
                   "runAfter": {},
@@ -239,7 +232,8 @@
                       "item/cid_Company_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/accountid']})",
                       "item/cid_externallyvisible": false,
                       "item/cid_HistoryCode_cid_historylog@odata.bind": "cid_audithistorycodes(@{first(body('Get_Company_Deactivation_History_Code_record')?['value'])?['cid_audithistorycodeid']})",
-                      "item/cid_memotemplateinputparameters": "@{triggerOutputs()?['body/cid_reasonforcompanydeactivation']}|@{triggerOutputs()?['body/cid_companydeactivationeffectivedate']}|@{triggerOutputs()?['body/cid_memoforcompanydeactivation']}"
+                      "item/cid_memotemplateinputparameters": "@{triggerOutputs()?['body/cid_reasonforcompanydeactivation']}|@{triggerOutputs()?['body/cid_companydeactivationeffectivedate']}|@{triggerOutputs()?['body/cid_memoforcompanydeactivation']}",
+                      "item/cid_processingstatus": 100000000
                     },
                     "authentication": "@parameters('$authentication')"
                   }

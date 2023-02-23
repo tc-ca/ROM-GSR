@@ -89,7 +89,7 @@
                 "parameters": {
                   "entityName": "cid_audithistorycodes",
                   "$select": "cid_audithistorycodeid",
-                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"cid_audithistorycode\">\n    <attribute name=\"cid_audithistorycodeid\" />\n    <attribute name=\"cid_name\" />\n    <order attribute=\"cid_name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"cid_name\" operator=\"eq\" value=\"SG1\" />\n      <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\" />\n    </filter>\n  </entity>\n</fetch>",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"cid_audithistorycode\">\n    <attribute name=\"cid_audithistorycodeid\" />\n    <attribute name=\"cid_name\" />\n    <order attribute=\"cid_name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"cid_name\" operator=\"eq\" value=\"SJ1\" />\n      <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\" />\n    </filter>\n  </entity>\n</fetch>",
                   "$top": 1
                 },
                 "authentication": "@parameters('$authentication')"
@@ -116,7 +116,7 @@
                           "item/subject": "Site Deactivation",
                           "item/cid_Company_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/_parentaccountid_value']})",
                           "item/cid_externallyvisible": false,
-                          "item/cid_HistoryCode_cid_historylog@odata.bind": "cid_audithistorycodes(@{outputs('Get_Site_Deactivation_History_Code_record_SJ1')?['body/value']})",
+                          "item/cid_HistoryCode_cid_historylog@odata.bind": "cid_audithistorycodes(@{first(body('Get_Site_Deactivation_History_Code_record_SJ1')?['value'])?['cid_audithistorycodeid']})",
                           "item/cid_memotemplateinputparameters": "@{triggerOutputs()?['body/cid_reasonforsitedeactivation']}|@{triggerOutputs()?['body/cid_sitedeactivationeffectivedate']}|@{triggerOutputs()?['body/cid_memositedeactivation']}",
                           "item/cid_processingstatus": 100000000,
                           "item/cid_Site_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/accountid']})"
@@ -164,7 +164,7 @@
                             "item/subject": "Site Deactivation",
                             "item/cid_Company_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/_parentaccountid_value']})",
                             "item/cid_externallyvisible": false,
-                            "item/cid_HistoryCode_cid_historylog@odata.bind": "cid_audithistorycodes(@{outputs('Get_Site_Deactivation_History_Code_record_SG1')?['body/value']})",
+                            "item/cid_HistoryCode_cid_historylog@odata.bind": "cid_audithistorycodes(@{first(body('Get_Site_Deactivation_History_Code_record_SG1')?['value'])?['cid_audithistorycodeid']})",
                             "item/cid_memotemplateinputparameters": "@{triggerOutputs()?['body/cid_reasonforsitedeactivation']}|@{triggerOutputs()?['body/cid_sitedeactivationeffectivedate']}|@{triggerOutputs()?['body/cid_memositedeactivation']}",
                             "item/cid_processingstatus": 100000000,
                             "item/cid_Site_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/accountid']})"
@@ -261,96 +261,24 @@
             }
           },
           "runAfter": {},
-          "else": {
-            "actions": {
-              "Condition_2": {
-                "actions": {
-                  "Get_Site_Deactivation_History_Code_record_2": {
-                    "runAfter": {},
-                    "metadata": {
-                      "operationMetadataId": "d44fd109-8e80-4873-ada4-38c4e82cd58c"
-                    },
-                    "type": "OpenApiConnection",
-                    "inputs": {
-                      "host": {
-                        "connectionName": "shared_commondataserviceforapps",
-                        "operationId": "ListRecords",
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                      },
-                      "parameters": {
-                        "entityName": "cid_audithistorycodes",
-                        "$select": "cid_audithistorycodeid",
-                        "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"cid_audithistorycode\">\n    <attribute name=\"cid_audithistorycodeid\" />\n    <attribute name=\"cid_name\" />\n    <order attribute=\"cid_name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"cid_name\" operator=\"eq\" value=\"SJ1\" />\n      <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\" />\n    </filter>\n  </entity>\n</fetch>",
-                        "$top": 1
-                      },
-                      "authentication": "@parameters('$authentication')"
-                    }
-                  },
-                  "Create_Site_Deactivation_History_Log_2": {
-                    "actions": {
-                      "Add_Site_Deactivation_History_Log_2": {
-                        "runAfter": {},
-                        "metadata": {
-                          "operationMetadataId": "0275cf19-7047-4486-9cf3-d23f0ba0c5e8"
-                        },
-                        "type": "OpenApiConnection",
-                        "inputs": {
-                          "host": {
-                            "connectionName": "shared_commondataserviceforapps",
-                            "operationId": "CreateRecord",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                          },
-                          "parameters": {
-                            "entityName": "cid_historylogs",
-                            "item/subject": "Site Deactivation",
-                            "item/cid_Company_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/_parentaccountid_value']})",
-                            "item/cid_externallyvisible": false,
-                            "item/cid_HistoryCode_cid_historylog@odata.bind": "cid_audithistorycodes(@{first(body('Get_Site_Deactivation_History_Code_record_2')?['value'])?['cid_audithistorycodeid']})",
-                            "item/cid_memotemplateinputparameters": "@{triggerOutputs()?['body/cid_reasonforsitedeactivation']}|@{triggerOutputs()?['body/cid_sitedeactivationeffectivedate']}|@{triggerOutputs()?['body/cid_memositedeactivation']}",
-                            "item/cid_processingstatus": 100000000,
-                            "item/cid_Site_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/accountid']})"
-                          },
-                          "authentication": "@parameters('$authentication')"
-                        }
-                      }
-                    },
-                    "runAfter": {
-                      "Get_Site_Deactivation_History_Code_record_2": [
-                        "Succeeded"
-                      ]
-                    },
-                    "expression": {
-                      "greater": [
-                        "@length(outputs('Get_Site_Deactivation_History_Code_record_2')?['body/value'])",
-                        0
-                      ]
-                    },
-                    "metadata": {
-                      "operationMetadataId": "938ce9b5-60bd-415f-a028-9f54bb3fda4e"
-                    },
-                    "type": "If"
-                  }
-                },
-                "runAfter": {},
-                "expression": {
-                  "equals": [
-                    "@triggerOutputs()?['body/cid_cidsitestatus']",
-                    100000023
-                  ]
-                },
-                "metadata": {
-                  "operationMetadataId": "d4442dc5-ecfc-42b6-8aab-7a8c417b5d4b"
-                },
-                "type": "If"
-              }
-            }
-          },
           "expression": {
             "or": [
               {
                 "equals": [
                   "@triggerOutputs()?['body/cid_cidsitestatus']",
                   100000015
+                ]
+              },
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/cid_cidsitestatus']",
+                  100000019
+                ]
+              },
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/cid_cidsitestatus']",
+                  100000020
                 ]
               },
               {
@@ -363,6 +291,12 @@
                 "equals": [
                   "@triggerOutputs()?['body/cid_cidsitestatus']",
                   100000022
+                ]
+              },
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/cid_cidsitestatus']",
+                  100000023
                 ]
               },
               {
