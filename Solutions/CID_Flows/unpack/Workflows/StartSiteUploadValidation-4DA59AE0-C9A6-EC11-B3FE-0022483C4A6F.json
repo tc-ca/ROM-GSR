@@ -1094,8 +1094,8 @@
                       "from": "@variables('Error_List')",
                       "select": {
                         "Row #": "@item()['Row#']",
-                        "Error": "@item()['Error']",
-                        "Site": "@item()['Site']"
+                        "Site": "@item()['Site']",
+                        "Error": "@item()['Error']"
                       }
                     }
                   },
@@ -1109,7 +1109,7 @@
                       "operationMetadataId": "920beb59-130c-4895-ab0c-490a0d32e827"
                     },
                     "type": "Compose",
-                    "inputs": "  <style>\n        table {\n            border: 1px solid #1C6EA4;\n            background-color: #EEEEEE;\n            width: 100%;\n    \n            border-collapse: collapse;\n        }\n\n            table td, table th {\n                border: 1px solid #AAAAAA;\n                padding: 3px 2px;\n         \n            }\n\n           \n            table tbody tr :nth-child(2) {\n                text-align: center;\n                font-size: 13px;\n            }\n\n           \n           \n            table thead {\n                background: #1C6EA4;\n                border-bottom: 2px solid #444444;\n            }\n\n                table thead th {\n                    font-size: 15px;\n                    font-weight: bold;\n                    color: #FFFFFF;\n                    border-left: 2px solid #D0E4F5;\n                    text-align: center;\n                }\n\n                    table thead th:first-child {\n                        border-left: none;\n                    }\n    </style>\n@{body('Create_HTML_table')}"
+                    "inputs": "<style>\n        table {\n            border: 1px solid #1C6EA4;\n            background-color: #EEEEEE;\n            width: 70%;\n    \n            border-collapse: collapse;\n        }\n\n            table td, table th {\n                border: 1px solid #AAAAAA;\n                padding: 3px 2px;\n         \n            }\n\n            table tbody tr :nth-child(2) {\n                text-align: center;\n                font-size: 13px;\n            }\n\n          \n            table thead {\n                background: #1C6EA4;\n                border-bottom: 2px solid #444444;\n            }\n\n                table thead th {\n                    font-size: 15px;\n                    font-weight: bold;\n                    color: #FFFFFF;\n                    border-left: 2px solid #D0E4F5;\n                    text-align: center;\n                }\n\n                    table thead th:first-child {\n                        border-left: none;\n                    }\n    </style>\n@{body('Create_HTML_table')}\n@{outputs('English-EmailFooter')}"
                   },
                   "Create_HTML_table": {
                     "runAfter": {
@@ -1140,7 +1140,7 @@
                   },
                   "outlook_-_Send_an_email_notification_to_portal_users_with_errors": {
                     "runAfter": {
-                      "Eng-Localization-Error": [
+                      "HTMLTableWithColumnHeader": [
                         "Succeeded"
                       ]
                     },
@@ -1157,11 +1157,23 @@
                       "parameters": {
                         "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
                         "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: Unsuccessful Bulk Data Upload during the processing of @{variables('UploadTypeName')} in the Transport Canada CID Data Platform. Please view the details for the next steps.",
-                        "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('get_contact_email')?['body/firstname']} @{outputs('get_contact_email')?['body/lastname']},<br>\n&nbsp;<br>\nThe Bulk Data Upload processing of @{variables('UploadTypeName')} for the @{outputs('Get_a_account_by_ID')?['body/name']} organization, within the Transport Canada CID Data Platform, was not successful. No data was updated within the Transport Canada CID Data Platform.<br>\n<br>\nPlease:<br>\n- address the @{outputs('totalNumberOferrors')} @{outputs('Eng-Localization-Error')} detailed below.<br>\n- save a copy of the workbook with those updates.<br>\n- use that new copy as the file source of another @{variables('UploadTypeName')} Bulk Upload process.<br>\n<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n<br>\n@{replace( outputs('html_table_with_style') ,'<table>' , '  <table><col style=\"width:15%\">\r\n\t<col style=\"width:10%\">\r\n\t<col style=\"width:50%\">\r\n        <col style=\"width:25%\">')}<br>\n@{outputs('English-EmailFooter')}<br>\n</p>",
+                        "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n&nbsp;<br>\nThe Bulk Data Upload processing of @{variables('UploadTypeName')} for the @{outputs('Get_a_account_by_ID')?['body/ovs_legalname']} organization, within the Transport Canada CID Data Platform, was not successful. No data was updated within the Transport Canada CID Data Platform.<br>\n<br>\nPlease:<br>\n- Address the @{outputs('totalNumberOferrors')} @{outputs('Eng-Localization-Error')} detailed below.<br>\n- Save a copy of the workbook with those updates.<br>\n- Use that new copy as the file source of another @{variables('UploadTypeName')} Bulk Upload process.<br>\n<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n<br>\n@{outputs('HTMLTableWithColumnHeader')}<br>\n<br>\n</p>",
                         "emailMessage/Importance": "Normal"
                       },
                       "authentication": "@parameters('$authentication')"
                     }
+                  },
+                  "HTMLTableWithColumnHeader": {
+                    "runAfter": {
+                      "Eng-Localization-Error": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "080df04a-5ed3-4e86-b1e0-ce59bc606ccd"
+                    },
+                    "type": "Compose",
+                    "inputs": "@replace(replace( outputs('html_table_with_style') ,'<table>' , '<table><col style=\"width:5%\"><col style=\"width:45%\"><col style=\"width:50%\">'),'<th>Row #</th>','<th>Workbook<br>Row #</th>')"
                   }
                 },
                 "runAfter": {
@@ -1195,9 +1207,9 @@
                       "inputs": {
                         "from": "@variables('Error_List')",
                         "select": {
-                          "Rangée #": "@item()['Row#']",
-                          "Erreur": "@item()['Error']",
-                          "Site": "@item()['Site']"
+                          "Workbook\nRangée #": "@item()['Row#']",
+                          "Site": "@item()['Site']",
+                          "Erreur": "@item()['Error']"
                         }
                       }
                     },
@@ -2457,7 +2469,7 @@
         },
         "English-EmailFooter": {
           "runAfter": {
-            "get-environment-settings": [
+            "StandardSalutation": [
               "Succeeded"
             ]
           },
@@ -2465,7 +2477,7 @@
             "operationMetadataId": "1535933c-0d10-4db3-9d01-208feac8f786"
           },
           "type": "Compose",
-          "inputs": "<div style=\"font-size:x-small;\">Note: If you would prefer to receive subsequent emails in French, then you can update your Language of Preferred Correspondence choice via the [Account Settings] button in the TDG Online - CID data portal. Please do not reply to this email, if necessary use the Contact Us button or link in the portal.</div>"
+          "inputs": "<div style=\"font-size:x-small;\"><br>Note:<br>\n   - To receive subsequent emails in French, you can update your Language of Preferred Correspondence choice via <br>\n      the [Account Settings] button in the TDG Online - CID data portal. <br><br> \n   - Please do not reply to this email. If necessary, use the Contact Us button, or link, in the CID data portal. </div>"
         },
         "French-EmailFooter": {
           "runAfter": {
@@ -2477,7 +2489,7 @@
             "operationMetadataId": "5ec93fa4-a5e7-451e-9327-290b6c88346b"
           },
           "type": "Compose",
-          "inputs": "<div style=\"font-size:x-small;\">French-Note: If you would prefer to receive subsequent emails in French, then you can update your Language of Preferred Correspondence choice via the [Account Settings] button in the TDG Online - CID data portal. Please do not reply to this email, if necessary use the Contact Us button or link in the portal.</div>"
+          "inputs": "<div style=\"font-size:x-small;\">French-Note:<br>\n   - To receive subsequent emails in French, you can update your Language of Preferred Correspondence choice via <br>\n      the [Account Settings] button in the TDG Online - CID data portal. <br><br> \n   - Please do not reply to this email. If necessary, use the Contact Us button, or link, in the CID data portal. </div>"
         },
         "Initialize_variable_FrenchTestSubjectText": {
           "runAfter": {
@@ -2556,6 +2568,18 @@
               }
             ]
           }
+        },
+        "StandardSalutation": {
+          "runAfter": {
+            "get-environment-settings": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ffa8d1a6-89ec-434c-82e6-78e0fa2bd649"
+          },
+          "type": "Compose",
+          "inputs": "<em>*** The following is an automated email sent by the TDG Online - CID system. Please do not reply ***</em>"
         }
       }
     },
