@@ -1479,7 +1479,11 @@ if (typeof (tdg.cid) == "undefined") {
                     //this.address1_default("N/A");
                     $("#address1_line1").val("N/A");
                     $("#address1_city").val("N/A");
+                    $("#address1_stateorprovince").val("N/A");
                     $("#address1_postalcode").val("N/A");
+
+                    tdg.c.removeValidator("address1_stateorprovince");
+                    tdg.c.removeValidator("ovs_address1_province");
 
                     break;
                 case "2": // lat/long
@@ -1489,6 +1493,13 @@ if (typeof (tdg.cid) == "undefined") {
                     tdg.c.addValidator("address1_longitude");
 
                     //this.address1_default("N/A");
+                    $("#address1_line1").val("N/A");
+                    $("#address1_city").val("N/A");
+                    $("#address1_stateorprovince").val("N/A");
+                    $("#address1_postalcode").val("N/A");
+
+                    tdg.c.removeValidator("address1_stateorprovince");
+                    tdg.c.removeValidator("ovs_address1_province");
 
                     break;
                 default: //postal
@@ -2520,8 +2531,11 @@ if (typeof (tdg.cid.crw) == "undefined") {
         },
 
 
-        start_cid_reasonfornobnnumber_onchange: function () {
-            $("#cid_reasonfornobnnumber_other").val("");
+        start_cid_reasonfornobnnumber_onchange: function (clear_ind) {
+            if (clear_ind)
+            {
+                $("#cid_reasonfornobnnumber_other").val("");
+            }
 
             cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber").val();
             if (cid_reasonfornobnnumber == "3")   // other

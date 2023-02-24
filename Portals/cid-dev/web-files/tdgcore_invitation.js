@@ -224,7 +224,7 @@ if (typeof (invitation) == "undefined") {
                         tdg.cid.crw.start_cid_has_cra_bn_onchange("1");
                         $("#cid_legalname").val(_account.ovs_legalname);
                         $("#cid_reasonfornobnnumber").val(_account.cid_reasonfornobnnumber);
-                        tdg.cid.crw.start_cid_reasonfornobnnumber_onchange();
+                        tdg.cid.crw.start_cid_reasonfornobnnumber_onchange(false);
                         $("#cid_reasonfornobnnumber_other").val(_account.cid_reasonfornobnnumber_other);
                     }
                     invitation.invitation_go_next(_account, true, contact_id);
