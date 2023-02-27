@@ -27,7 +27,7 @@ $(document).ready(function () {
 	});
 });
 
-/*
+
 if (window.jQuery) {
 	(function ($) {
 		if (typeof (entityFormClientValidate) != 'undefined') {
@@ -39,7 +39,6 @@ if (window.jQuery) {
 					// return false; // to prevent the form submit you need to return false
 					// end custom validation.
 					debugger;
-					var duplicatefound = false;
 					var account_id = '{{user.parentcustomerid.Id}}';
 					var addressType = $("#ovs_address_type").val();
 					switch (addressType) 
@@ -63,22 +62,49 @@ if (window.jQuery) {
                             if(meridian != (null || "")){  parameters.Lld_Meridian = parseInt(meridian); }   // Edm.Int32 
                             parameters.AddressType = 1; // Edm.Int32
 
-							var duplicateFound = tdg.c.Prevent_Duplicate_Site_Creation(parameters);
-                            
-                            if(duplicateFound == null)
-                            {
-                                setTimeout(function checkDuplicate()
-                                    {
-                                    if(duplicateFound == true)
-                                        return true; 
-                                    else
-                                        return false; 
-                                    }, 2000);                            
-                            }
-                            else
-                                return duplicateFound;
+                            var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
+                            var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
 
-							break;
+                            if (EnvironmentSettingResult.length > 0) 
+                            {
+                                var FlowURL = EnvironmentSettingResult[0]["qm_value"];
+                                //Execute flow
+                                var duplicateFound = tdg.webapi.executeFlow(FlowURL, parameters);
+                                 if (duplicateFound) //IF DUPLICATE FOUND
+                                 { 
+                                    var message = tdg.error_message.message("m000131");
+                                    tdg.c.dialog_YN(message, (ans) => 
+                                    {
+                                        if (ans) 
+                                        {
+                                            return false;
+                                            //Do nothing
+                                        }
+                                        else 
+                                        {   
+                                            return true; 
+                                            //Add ALM record.                                            
+                                            var data = {
+                                                "cid_Company_cid_activityreviewlog@odata.bind": "/accounts(" + account_id + ")",
+                                                "subject": "A duplicate Site was created, LLD",
+                                                "prioritycode": 1,
+                                                "actualdurationminutes": 30,
+                                                "cid_arlcategory":100000000
+                                            };
+                                            tdg.webapi.create("cid_activityreviewlogs", data); 
+                                            Page_IsValid = true;
+                                            return true; 
+                                        }
+                                    });
+                                }
+                               else
+                                   return true;
+                           }
+                            else
+                                return true;
+                
+                        break;
+                        
 						case "2":
 							// lat/long
 							var latitude = $("#address1_latitude").val();
@@ -89,12 +115,37 @@ if (window.jQuery) {
                             parameters.AddressType = 2; // Edm.Int32
                             if(latitude != (null || "")){  parameters.Address1_Latitude = parseFloat(latitude); }   // Edm.Float                    
                             if(longitude != (null || "")){  parameters.Address1_Longitude = parseFloat(longitude); }   // Edm.Float    
-                            var duplicateFound =  tdg.c.Prevent_Duplicate_Site_Creation(parameters);
-                            
-                            if(duplicateFound)
-                                 return false; 
+
+                            var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
+                            var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
+
+                            if (EnvironmentSettingResult.length > 0) 
+                            {
+                                var FlowURL = EnvironmentSettingResult[0]["qm_value"];
+                                //Execute flow
+                                var duplicateFound = tdg.webapi.executeFlow(FlowURL, parameters);
+                                 if (duplicateFound) //IF DUPLICATE FOUND
+                                 { 
+                                    var message = tdg.error_message.message("m000131");
+                                    tdg.c.dialog_YN(message, (ans) => 
+                                    {
+                                        if (ans) 
+                                        {
+                                            return false;
+                                            //Do nothing
+                                        }
+                                        else 
+                                        {
+                                            //add ALM record.
+                                            return true;                                        
+                                        }
+                                    });
+                                }
+                               else
+                                   return true;
+                           }
                             else
-                                return true; 
+                                return true;
                                 
 							break;
 						default:
@@ -110,12 +161,37 @@ if (window.jQuery) {
 							parameters.Address1_StateorProvince = address1_stateorprovince; // Edm.String
 							parameters.Address1_Line1 = address1_line1; // Edm.String
 							parameters.Address1_City = address1_city;
-                            var duplicateFound =  tdg.c.Prevent_Duplicate_Site_Creation(parameters);
-                            
-                            if(duplicateFound)
-                                 return false; 
+                                                        
+                            var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
+                            var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
+
+                            if (EnvironmentSettingResult.length > 0) 
+                            {
+                                var FlowURL = EnvironmentSettingResult[0]["qm_value"];
+                                //Execute flow
+                                var duplicateFound = tdg.webapi.executeFlow(FlowURL, parameters);
+                                 if (duplicateFound) //IF DUPLICATE FOUND
+                                 { 
+                                    var message = tdg.error_message.message("m000131");
+                                    tdg.c.dialog_YN(message, (ans) => 
+                                    {
+                                        if (ans) 
+                                        {
+                                            return false;
+                                            //Do nothing
+                                        }
+                                        else 
+                                        {
+                                            return false;
+                                        //need to add ALM record.
+                                        }
+                                    });
+                                }
+                               else
+                                   return true;
+                           }
                             else
-                                return true; 
+                                return true;
                                 
 							break;                  
 					}
@@ -124,4 +200,5 @@ if (window.jQuery) {
 		}
 	}(window.jQuery));
 }
-*/
+
+var cb = function (v) { console.log('value', v); return v; };

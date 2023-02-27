@@ -689,99 +689,12 @@ if (typeof (tdg.c) == "undefined") {
 
             if (EnvironmentSettingResult.length > 0) {
                 var FlowURL = EnvironmentSettingResult[0]["qm_value"];
-                //await tdg.c.createCustomTimeout(FlowURL, parameters);
                 //Execute flow
-                debugger;
-                webapi.safeAjax({
-                    type: "POST",
-                    url: FlowURL,
-                    async: false,
-                    contentType: "application/json",
-                    data: JSON.stringify(parameters),
-
-                    success: function (data, textStatus, xhr) {
-                        debugger;
-                        var result = data;
-                        console.log(result);
-                        // Return Type: mscrm.cid_CID_Create_Update_SiteDuplicateValidationResponse
-                        // Output Parameters
-                        var res = result["DuplicateFound"]; // Edm.Boolean
-
-                        if (res) {
-                            var message = tdg.error_message.message("m000131");
-                            tdg.c.dialog_YN(message, (ans) => {
-                                //var contact_id = '{{user.id}}';
-                                if (ans) {
-                                    return false;
-                                    //Do nothing
-                                }
-                                else {
-                                    return false;
-                                    //need to add ALM record.
-                                }
-                            });
-                        }
-                        else
-                            return true;
-                    },
-                    error: function (xhr, textStatus, errorThrown) {
-                        debugger;
-                        console.log(xhr);
-                        return false;
-                    }
-                });
+                tdg.webapi.executeFlow(FlowURL, parameters);
             } //end check if flow url found
             else
                 return true;
-        },//end function
-
-        createCustomTimeout: function (FlowURL, parameters) {
-            return new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    webapi.safeAjax({
-                        type: "POST",
-                        url: FlowURL,
-                        async: false,
-                        contentType: "application/json",
-                        data: JSON.stringify(parameters),
-
-                        success: function (data, textStatus, xhr) {
-                            debugger;
-                            var result = data;
-                            console.log(result);
-                            // Return Type: mscrm.cid_CID_Create_Update_SiteDuplicateValidationResponse
-                            // Output Parameters
-                            var res = result["DuplicateFound"]; // Edm.Boolean
-
-                            if (res) {
-                                var message = tdg.error_message.message("m000131");
-                                tdg.c.dialog_YN(message, (ans) => {
-                                    //var contact_id = '{{user.id}}';
-                                    if (ans) {
-                                        return false;
-                                        //Do nothing
-                                    }
-                                    else {
-                                        return false;
-                                        //need to add ALM record.
-                                    }
-                                });
-                            }
-                            else
-                                return true;
-                        },
-                        error: function (xhr, textStatus, errorThrown) {
-                            debugger;
-                            console.log(xhr);
-                            return false;
-                        }
-                    });
-
-                    resolve();
-                }, 2 * 1000);
-            });
-        }
-
+        }//end function
     }
 }
 
@@ -1049,27 +962,16 @@ if (typeof (tdg.webapi) == "undefined") {
 
         executeFlow: function (flow_url, data) {
             debugger;
-            webapi.safeAjax({
+            $.ajax({
                 type: "POST",
                 url: flow_url,
                 async: false,
                 contentType: "application/json",
-                data: JSON.stringify(data),
-
-                success: function (data, textStatus, xhr) {
-                    debugger;
-                    var result = data;
-                    console.log(result);
-                    // Return Type: mscrm.cid_CID_Create_Update_SiteDuplicateValidationResponse
-                    // Output Parameters
-                    return result["DuplicateFound"]; // Edm.Boolean
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    debugger;
-                    console.log(xhr);
-                    return false;
-                }
-            });
+                data: JSON.stringify(data)
+            }).done(function (json) {
+                response = json.DuplicateFound;
+                });
+                return response;
         },
 
         GetOptionSetLable: function (entityname, attributename, attributevalue) {
@@ -2532,8 +2434,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
 
         start_cid_reasonfornobnnumber_onchange: function (clear_ind) {
-            if (clear_ind)
-            {
+            if (clear_ind) {
                 $("#cid_reasonfornobnnumber_other").val("");
             }
 
