@@ -4,6 +4,9 @@
 
 $(document).ready(function () {
 	debugger;
+	
+	var parentAccountid = '{{user.parentcustomerid.id}}';
+    //tdg.cid.Complete_All_Annualcompliance_Tasks(parentAccountid , "")
 
 	sessionStorage.setItem('frominyearsites', 'false');
     sessionStorage.setItem('fromannualcompliance', 'true');
@@ -48,6 +51,50 @@ $(document).ready(function () {
 
 	subgrid_language();
 	
+
+	  var ButtonLable = tdg.error_message.message("m000121");
+            var ButtonCompleteLable = tdg.error_message.message("m000123");
+
+            //create complete all button for company
+            var Button_CompanyCompleteAll = '<div class="input-group pull-right"><button type="button" id="CompanyCompleteAll" class="btn btn-primary pull-left action">'
+                + ButtonCompleteLable + '</button></div>';
+            const CompanyCompleteButtonLocation = document.querySelector('table[data-name="tab_11_section_1"]');
+            CompanyCompleteButtonLocation.insertAdjacentHTML('beforebegin', Button_CompanyCompleteAll);
+
+            //crate complete all button for site
+            const SiteCompleteButtonLocation = document.querySelector('table[data-name="annual_compliance_section_2"]');
+            var Button_SiteCompleteAll = '<div class="input-group pull-right"><button type="button" id="SiteCompleteAll" class="btn btn-primary pull-left action">'
+                + ButtonLable + '</button></div>';
+            SiteCompleteButtonLocation.insertAdjacentHTML('beforebegin', Button_SiteCompleteAll);
+            //clicke event for company button
+            $("#CompanyCompleteAll").on("click", function () {
+				$('#loader').show();
+				//.form-loading
+				//.show();
+               await completeCompanyTasks(parentAccountid);
+				// $('#loader').show();
+
+                // $(".entity-grid").trigger("refresh");
+               // setTimeout(tdg.cid.Refresh_EntityGrid, 6000);
+                $('#loader').hide();
+            });
+            //click event for site button
+            $("#SiteCompleteAll").on("click", function () {
+                var Listdata = tdg.webapi.SelectedColumnlist("tasks", "activityid", "cid_tasklevel eq 100000001 and _regardingobjectid_value eq "
+                    + parentAccountid);
+
+                for (var i = 0; i < Listdata.length; i++) {
+
+                    var data = {
+                        "statecode": 1,
+                        "statuscode": 5
+                    };
+                    tdg.webapi.update("tasks", Listdata[i].activityid, data);
+                }//end for
+
+                // $(".entity-grid").trigger("refresh");
+                setTimeout(tdg.cid.Refresh_EntityGrid, 7000);
+            });
 });
 
 function subgrid_language() {
@@ -58,5 +105,21 @@ function subgrid_language() {
 		var grid = entityList.eq(i);
         tdg.cid.subgrid_header_language(grid);
     }
+
+	async function completeCompanyTasks(parentAccountid)
+	{
+		 var Listdata = tdg.webapi.SelectedColumnlist("tasks", "activityid", "cid_tasklevel eq 100000000 and _regardingobjectid_value eq "
+                    + parentAccountid);
+					// $('#loader').show();
+
+                for (var i = 0; i < Listdata.length; i++) {
+
+                    var data = {
+                        "statecode": 1,
+                        "statuscode": 5
+                    };
+                    tdg.webapi.update("tasks", Listdata[i].activityid, data);
+                }//end for
+	}
 }
 

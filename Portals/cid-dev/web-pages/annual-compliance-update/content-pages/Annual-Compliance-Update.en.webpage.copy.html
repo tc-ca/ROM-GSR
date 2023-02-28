@@ -1,18 +1,15 @@
 <p>{% entityform name: 'Annual Compliance Update' %}</p>
-<br><br>
-{% fetchxml result %}
-<fetch distinct="false" mapping="logical" output-format="xml-platform" version="1.0">
-  <entity name="account">
-    <attribute name="accountid"></attribute>
-    <attribute name="parentaccountid"></attribute>
-    <attribute name="cid_issiteattested"></attribute>
-    <attribute name="statecode"></attribute>
-    <filter type="and">
-      <condition attribute="statecode" operator="eq" value="0"></condition>
-      <condition attribute="cid_issiteattested" operator="eq" value="0"></condition>
-      <condition attribute="parentaccountid" operator="eq" value="{{ user.parentcustomerid.id }}"></condition>
-    </filter>
-  </entity>
-</fetch>
-{% endfetchxml %}
-<input type="hidden" id="numberOfNotAttestedSites" name="numberOfNotAttestedSites" value="{{ result.results.entities.size }}">
+<br>
+<br>
+{% fetchxml result %} <fetch distinct="false" mapping="logical" output-format="xml-platform" version="1.0"> 
+  <entity name="account"> <attribute name="accountid"></attribute> 
+  <attribute name="parentaccountid"></attribute> 
+  <attribute name="cid_issiteattested"></attribute> 
+  <attribute name="statecode"></attribute> <filter type="and"> 
+    <condition attribute="statecode" operator="eq" value="0"></condition> 
+    <condition attribute="cid_issiteattested" operator="eq" value="0"></condition> 
+    <condition attribute="parentaccountid" operator="eq" value="{{ user.parentcustomerid.id }}"></condition> 
+    </filter> </entity> </fetch> {% endfetchxml %}<br>
+<div id="loader"></div> 
+<input id="numberOfNotAttestedSites" name="numberOfNotAttestedSites" type="hidden" value="{{ result.results.entities.size }}">
+

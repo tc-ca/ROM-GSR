@@ -129,7 +129,7 @@ $(document).ready(function ()
 	else
 	{
 		var parentAccountid = '{{user.parentcustomerid.id}}';
-		tdg.cid.Complete_All_Annualcompliance_Tasks(parentAccountid , "")
+		//tdg.cid.Complete_All_Annualcompliance_Tasks(parentAccountid , "")
 		/*
 		var Button_CompanyCompleteAll = '<div class="input-group pull-right"><button type="button" id="CompanyCompleteAll" class="btn btn-primary pull-left action">' 
 		+ 'Complete All' + '</button></div>';

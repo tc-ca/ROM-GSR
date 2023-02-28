@@ -970,8 +970,8 @@ if (typeof (tdg.webapi) == "undefined") {
                 data: JSON.stringify(data)
             }).done(function (json) {
                 response = json.DuplicateFound;
-                });
-                return response;
+            });
+            return response;
         },
 
         GetOptionSetLable: function (entityname, attributename, attributevalue) {
@@ -1877,6 +1877,7 @@ if (typeof (tdg.cid) == "undefined") {
             SiteCompleteButtonLocation.insertAdjacentHTML('beforebegin', Button_SiteCompleteAll);
             //clicke event for company button
             $("#CompanyCompleteAll").on("click", function () {
+                $('#loader').show();
                 var Listdata = tdg.webapi.SelectedColumnlist("tasks", "activityid", "cid_tasklevel eq 100000000 and _regardingobjectid_value eq "
                     + parentAccountid);
 
@@ -1891,6 +1892,7 @@ if (typeof (tdg.cid) == "undefined") {
 
                 // $(".entity-grid").trigger("refresh");
                 setTimeout(tdg.cid.Refresh_EntityGrid, 6000);
+                $('#loader').hide();
             });
             //click event for site button
             $("#SiteCompleteAll").on("click", function () {
@@ -2598,3 +2600,4 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
+
