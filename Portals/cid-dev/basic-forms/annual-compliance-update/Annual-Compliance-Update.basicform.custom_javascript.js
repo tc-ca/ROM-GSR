@@ -3,6 +3,8 @@ $(document).ready(function ()
 	$(".entity-grid").on("loaded", function () { 	
 		$("#CompanyCompleteAll").attr("style", "width:185px");
 		$("#SiteCompleteAll").attr("style", "width:185px");
+		//$("#CompanyCompleteAll").attr("style", "display:none");
+		tdg.cid.Check_If_AnnualTasks_Completed(parentAccountid);
     });
 
 	debugger;
@@ -129,36 +131,12 @@ $(document).ready(function ()
 	else
 	{
 		var parentAccountid = '{{user.parentcustomerid.id}}';
-		//tdg.cid.Complete_All_Annualcompliance_Tasks(parentAccountid , "")
-		/*
-		var Button_CompanyCompleteAll = '<div class="input-group pull-right"><button type="button" id="CompanyCompleteAll" class="btn btn-primary pull-left action">' 
-		+ 'Complete All' + '</button></div>';
-		const CompanyCompleteButtonLocation = document.querySelector('table[data-name="tab_11_section_1"]');
-		CompanyCompleteButtonLocation.insertAdjacentHTML ('beforebegin', Button_CompanyCompleteAll);
-		const SiteCompleteButtonLocation = document.querySelector('table[data-name="annual_compliance_section_2"]');
-		var Button_SiteCompleteAll = '<div class="input-group pull-right"><button type="button" id="SiteCompleteAll" class="btn btn-primary pull-left action">' 
-		+ 'Complete All' + '</button></div>';
-		SiteCompleteButtonLocation.insertAdjacentHTML ('beforebegin', Button_SiteCompleteAll);
-		
-		 $("#CompanyCompleteAll").on("click", function () { 
-			  var Listdata = tdg.webapi.SelectedColumnlist ("tasks", "activityid", "cid_tasklevel eq 100000000 and _regardingobjectid_value eq "
-		  + parentAccountid); 
-		  console.log ("data " + Listdata.length);
-		   for (var i = 0; i < Listdata.length; i++) 
-		  {
-			  console.log ( "data " +  Listdata[i].activityid);
-			 var data = {
-                "statecode": 1,
-                "statuscode": 5
-            };
-            tdg.webapi.update("tasks", Listdata[i].activityid, data);
-		  }//end for
-
-		 // $(".entity-grid").trigger("refresh");
-          setTimeout($(".entity-grid").trigger("refresh"), 3000);
-		 });
-		 */
-
+		tdg.cid.Complete_All_Annualcompliance_Tasks(parentAccountid , "")
+		$("#CompanyCompleteAll").css("display", "none");
+		console.log("before hide");
+		$("#CompanyCompleteAll").attr("style", "display:none");
+		//$("#SiteCompleteAll").attr("style", "width:185px");
+		console.log("after hide");
 		
 	}
 	entityFormClientValidate = function ()

@@ -689,12 +689,99 @@ if (typeof (tdg.c) == "undefined") {
 
             if (EnvironmentSettingResult.length > 0) {
                 var FlowURL = EnvironmentSettingResult[0]["qm_value"];
+                //await tdg.c.createCustomTimeout(FlowURL, parameters);
                 //Execute flow
-                tdg.webapi.executeFlow(FlowURL, parameters);
+                debugger;
+                webapi.safeAjax({
+                    type: "POST",
+                    url: FlowURL,
+                    async: false,
+                    contentType: "application/json",
+                    data: JSON.stringify(parameters),
+
+                    success: function (data, textStatus, xhr) {
+                        debugger;
+                        var result = data;
+                        console.log(result);
+                        // Return Type: mscrm.cid_CID_Create_Update_SiteDuplicateValidationResponse
+                        // Output Parameters
+                        var res = result["DuplicateFound"]; // Edm.Boolean
+
+                        if (res) {
+                            var message = tdg.error_message.message("m000131");
+                            tdg.c.dialog_YN(message, (ans) => {
+                                //var contact_id = '{{user.id}}';
+                                if (ans) {
+                                    return false;
+                                    //Do nothing
+                                }
+                                else {
+                                    return false;
+                                    //need to add ALM record.
+                                }
+                            });
+                        }
+                        else
+                            return true;
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        debugger;
+                        console.log(xhr);
+                        return false;
+                    }
+                });
             } //end check if flow url found
             else
                 return true;
-        }//end function
+        },//end function
+
+        createCustomTimeout: function (FlowURL, parameters) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    webapi.safeAjax({
+                        type: "POST",
+                        url: FlowURL,
+                        async: false,
+                        contentType: "application/json",
+                        data: JSON.stringify(parameters),
+
+                        success: function (data, textStatus, xhr) {
+                            debugger;
+                            var result = data;
+                            console.log(result);
+                            // Return Type: mscrm.cid_CID_Create_Update_SiteDuplicateValidationResponse
+                            // Output Parameters
+                            var res = result["DuplicateFound"]; // Edm.Boolean
+
+                            if (res) {
+                                var message = tdg.error_message.message("m000131");
+                                tdg.c.dialog_YN(message, (ans) => {
+                                    //var contact_id = '{{user.id}}';
+                                    if (ans) {
+                                        return false;
+                                        //Do nothing
+                                    }
+                                    else {
+                                        return false;
+                                        //need to add ALM record.
+                                    }
+                                });
+                            }
+                            else
+                                return true;
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            debugger;
+                            console.log(xhr);
+                            return false;
+                        }
+                    });
+
+                    resolve();
+                }, 2 * 1000);
+            });
+        }
+
     }
 }
 
@@ -962,16 +1049,27 @@ if (typeof (tdg.webapi) == "undefined") {
 
         executeFlow: function (flow_url, data) {
             debugger;
-            $.ajax({
+            webapi.safeAjax({
                 type: "POST",
                 url: flow_url,
                 async: false,
                 contentType: "application/json",
-                data: JSON.stringify(data)
-            }).done(function (json) {
-                response = json.DuplicateFound;
+                data: JSON.stringify(data),
+
+                success: function (data, textStatus, xhr) {
+                    debugger;
+                    var result = data;
+                    console.log(result);
+                    // Return Type: mscrm.cid_CID_Create_Update_SiteDuplicateValidationResponse
+                    // Output Parameters
+                    return result["DuplicateFound"]; // Edm.Boolean
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    debugger;
+                    console.log(xhr);
+                    return false;
+                }
             });
-            return response;
         },
 
         GetOptionSetLable: function (entityname, attributename, attributevalue) {
@@ -1199,6 +1297,7 @@ if (typeof (tdg.cid) == "undefined") {
             //Setup province dropdown
             tdg.c.control_hide("address1_line1");
             tdg.c.control_hide("address1_stateorprovince");
+            tdg.c.control_hide("ovs_lld_province");
 
             $("#ovs_address1_province").on("change", function (i, val) {
                 debugger;
@@ -1267,9 +1366,9 @@ if (typeof (tdg.cid) == "undefined") {
                 var inLength = input.length;
                 if (inLength == 0) {
                     input = input;
-                } else if (inLength < 3) {
+                } else if (inLength < 4) {
                     input = '(' + input;
-                } else if (inLength < 6) {
+                } else if (inLength < 7) {
                     input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6);
                 } else {
                     input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6) + '-' + input.substring(6, 10);
@@ -1877,7 +1976,6 @@ if (typeof (tdg.cid) == "undefined") {
             SiteCompleteButtonLocation.insertAdjacentHTML('beforebegin', Button_SiteCompleteAll);
             //clicke event for company button
             $("#CompanyCompleteAll").on("click", function () {
-                $('#loader').show();
                 var Listdata = tdg.webapi.SelectedColumnlist("tasks", "activityid", "cid_tasklevel eq 100000000 and _regardingobjectid_value eq "
                     + parentAccountid);
 
@@ -1892,7 +1990,6 @@ if (typeof (tdg.cid) == "undefined") {
 
                 // $(".entity-grid").trigger("refresh");
                 setTimeout(tdg.cid.Refresh_EntityGrid, 6000);
-                $('#loader').hide();
             });
             //click event for site button
             $("#SiteCompleteAll").on("click", function () {
@@ -2217,6 +2314,11 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     invitation_msg = invitation_msg.replaceAll("{0}", data.cid_legalname);
                 }
             }
+            var address = data.address.AddressLine1Text + "\n" +
+                data.address.AddressLine2Text + "\n" +
+                (data.address.AddressLine3Text != ""? data.address.AddressLine3Text + "\n" : "") +
+                data.address.CityName + ", " + data.address.ProvinceStateCode + " " + data.address.PostalZipCode;
+
             var text1 = `
                     <section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
 	                <header class="modal-header">
@@ -2235,23 +2337,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 text_middle +
                 `
                     <p>
-                    <label for="address1_line1" class="field-label">Street 1</label>
-                    <input type="text" readonly class="text form-control" id="address1_line1" style="width:100%" value="${data.address.AddressLine1Text}">
-                    <p>
-                    <label for="address1_line2" class="field-label">Street 2</label>
-                    <input type="text" readonly class="text form-control" id="address1_line2" style="width:100%" value="${data.address.AddressLine2Text}">
-                    <p>
-                    <label for="address1_line3" class="field-label">Street 3</label>
-                    <input type="text" readonly class="text form-control" id="address1_line3" style="width:100%" value="${data.address.AddressLine3Text}">
-                    <p>
-                    <label for="address1_city" class="field-label">City</label>
-                    <input type="text" readonly class="text form-control" id="address1_city" style="width:100%" value="${data.address.CityName}">
-                    <p>
-                    <label for="address1_stateorprovince" class="field-label">Province / Territory</label>
-                    <input type="text" readonly class="text form-control" id="address1_stateorprovince" style="width:100%" value="${data.address.ProvinceStateCode}">
-                    <p>
-                    <label for="address1_postalcode" class="field-label">Postal Code</label>
-                    <input type="text" readonly class="text form-control" id="address1_postalcode" style="width:100%" value="${data.address.PostalZipCode}">
+                    <label for="address1_line1" class="field-label">Address</label><br>
+                    <textarea id="address1_line1" readonly rows="4" cols="61">${address}</textarea>
 	                </div>
 	                <div class="modal-footer" style="text-align: left;">
                     <label for="opt_confirm" class="field-label">Confirmation that this is your Company:</label>
@@ -2436,7 +2523,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
 
         start_cid_reasonfornobnnumber_onchange: function (clear_ind) {
-            if (clear_ind) {
+            if (clear_ind)
+            {
                 $("#cid_reasonfornobnnumber_other").val("");
             }
 
@@ -2600,4 +2688,3 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
-

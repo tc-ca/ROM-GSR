@@ -1,12 +1,13 @@
 <style>
 
-.tool-tip {
-  display: inline-block;
-}
+    .tool-tip {
+        display: inline-block;
+    }
 
-.tool-tip [disabled] {
-  pointer-events: none;
-}
+        .tool-tip [disabled] {
+            pointer-events: none;
+        }
+
     .inputfile {
         /* visibility: hidden etc. wont work */
         width: 0.1px;
@@ -60,43 +61,59 @@
         -box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         display: none;
     }
+
     #loader {
-    position:fixed;
-    width:100%;
-    left:0;right:0;top:0;bottom:0;
-    background-color: rgba(255,255,255,0.8);
-    z-index:9999;
-    display:none;
-}
+        position: fixed;
+        width: 100%;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(255,255,255,0.8);
+        z-index: 9999;
+        display: none;
+    }
 
-@-webkit-keyframes spin {
-	from {-webkit-transform:rotate(0deg);}
-	to {-webkit-transform:rotate(360deg);}
-}
+    @-webkit-keyframes spin {
+        from {
+            -webkit-transform: rotate(0deg);
+        }
 
-@keyframes spin {
-	from {transform:rotate(0deg);}
-	to {transform:rotate(360deg);}
-}
+        to {
+            -webkit-transform: rotate(360deg);
+        }
+    }
 
-#loader::after {
-    content:'';
-    display:block;
-    position:absolute;
-    left:48%;top:40%;
-    width:100px;height:100px;
-    border-style:solid;
-    border-color:#3498db;
-    border-top-color:transparent;
-    border-width: 7px;
-    border-radius:50%;
-    -webkit-animation: spin 2s linear infinite;
-    animation: spin 2s linear infinite;
-}
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    #loader::after {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 48%;
+        top: 40%;
+        width: 100px;
+        height: 100px;
+        border-style: solid;
+        border-color: #3498db;
+        border-top-color: transparent;
+        border-width: 7px;
+        border-radius: 50%;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+    }
 </style>
 
-<script type="text/javascript" src="~/tdgcore_common.js" ></script>
-<script type="text/javascript" src="~/tdgcore_message.js" ></script>
+<script type="text/javascript" src="~/tdgcore_common.js"></script>
+<script type="text/javascript" src="~/tdgcore_message.js"></script>
 
 <script>
 	var selected_language = '{{website.selected_language.code}}';
@@ -183,21 +200,21 @@
 
 {% fetchxml UnclaimedSite %}
 <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false" returntotalrecordcount='true'>
-<entity name="account">
-<attribute name="parentaccountid"/>
-<attribute name="accountid"/>
-<attribute name="address1_composite"/>
-<attribute name="ovs_accountnameenglish"/>
-<order attribute="parentaccountid" descending="false"/>
-<filter type="and">
-<condition attribute="statuscode" operator="eq" value="1"/>
-<filter type="or">
-<condition attribute="cid_siteclaim" operator="eq" value="100000003"/>
-<condition attribute="cid_siteclaim" operator="null"/>
-</filter>
-<condition attribute="parentaccountid" operator="eq"  value="{{parentid}}"/>
-</filter>
-</entity>
+    <entity name="account">
+        <attribute name="parentaccountid" />
+        <attribute name="accountid" />
+        <attribute name="address1_composite" />
+        <attribute name="ovs_accountnameenglish" />
+        <order attribute="parentaccountid" descending="false" />
+        <filter type="and">
+            <condition attribute="statuscode" operator="eq" value="1" />
+            <filter type="or">
+                <condition attribute="cid_siteclaim" operator="eq" value="100000003" />
+                <condition attribute="cid_siteclaim" operator="null" />
+            </filter>
+            <condition attribute="parentaccountid" operator="eq" value="{{parentid}}" />
+        </filter>
+    </entity>
 </fetch>
 {% endfetchxml %}
 
@@ -214,14 +231,14 @@
    //get upload button text message
    var UploadButtonText = tdg.error_message.message("m000111");
    console.log(UploadButtonText);
-      
+
       var Page_Partial_URL = '{{page.adx_partialurl}}';
-     
+
       var UploadType = "" ;
 
       //read all messages in json array
       ReadBulkMessagesFile();
-   
+
 
     //insert lables and buttons
     $(".section[data-name='General']").closest("fieldset").hide();
@@ -234,14 +251,14 @@
   {
 
    UploadType = "Initial";
-   //add div 
+   //add div
    //$("div.actions")
    //$("#Row_PreviousNextButton").append('<br><div id="DivNavbuttonGroup"  class="col-sm-6 clearfix"> </div>');
    //add previous and next inside the div
    $("#DivNavbuttonGroup").append('<div role="group" class= "btn-group entity-action-button"><span id="Div_Previous_next" class="tool-tip" tabindex="0" data-toggle="tooltip" data-placement="bottom"  > <button type="button" id="btn_Previous" class="btn btn-default button previous previous-btn">Previous</button></span></div>');
    $("#DivNavbuttonGroup").append('<div role="group" class= "btn-group entity-action-button">&nbsp;&nbsp;</div>');
    $("#DivNavbuttonGroup").append('<div role="group" class = "btn-group entity-action-button" > <span id="Div_btn_next" class="tool-tip" tabindex="0" data-toggle="tooltip" data-placement="bottom"  > <button type="button" id="btn_Next" class="submit-btn btn btn-primary form-action-container-left" disabled >Next</button></span></div>');
-//class="d-inline-block" tabindex="0" data-toggle="tooltip" 
+//class="d-inline-block" tabindex="0" data-toggle="tooltip"
              //data-placement="bottom" title="This button is disabled
                 $('#Div_btn_next').tooltip({
                  trigger: 'hover',
@@ -249,7 +266,7 @@
                    container: 'body',
                    title : "Please first complete the Steps before choosing the [Next] option. Alternatively, choose the [Previous] button to return to the Wizard."
                     });
- 
+
   }
   else
   {
@@ -258,7 +275,7 @@
 
     //attach file event
     document.getElementById("AttachFile").onchange = function () {
-    
+
     document.getElementById("uploadFile").value = this.value.replace("C:\\fakepath\\", "");
    };
       //if any unclaimed site is found
@@ -271,7 +288,7 @@
           $("#Div_BrowseButton").prop('disabled',true);
           Disable_all_Buttons();
           var   errorMessage  = "Before choose the Bulk option, each Site where 'Is Site Attested' is set to 'No', need to be attested by choosing one of the options via the [V] button at the far right of that row." ;
-        
+
         //show popup message;
        Popup_Message(errorMessage, (ans) => {
                             if (ans) {
@@ -282,7 +299,8 @@
             }*/
 
 //hide form button
- $("#InsertButton").css("display", "none");
+$("#InsertButton").css("display", "none");
+
     var langcode = '{{languagecode}}'  ;
 
    //work with attach file transalation
@@ -293,7 +311,7 @@
 
 
     var BulkActivitytype ='{{companystatus}}';
-  
+
     //intial validation will be executed if this is a redirect call
       call_Inital_validation(langcode , BulkActivitytype);
 
@@ -302,10 +320,10 @@ $('#btn_attachfile_and_scan').click(function(e)
 {
 
   Disable_all_Buttons();
-    //hide validation summary    
+    //hide validation summary
     $("Div.validation-summary").css('display', 'none');
     $("Div.alert").css('display', 'none');
-  
+
     if (document.getElementById('AttachFile').files.length == 0)
    {
        // call the submit button to show error message
@@ -342,7 +360,7 @@ $('#btn_attachfile_and_scan').click(function(e)
              // responseMessage  =  "<p> Le système CID va maintenant commencer la deuxième des deux séries de validations du fichier en cours de téléchargement. Un e-mail sera envoyé à votre adresse e-mail de " + useremail +"(tel que défini via votre profil utilisateur), indiquant les résultats de la deuxième série de validations et les étapes ultérieures à suivre. <br><br>" +
              //"À ce stade, vous pouvez attendre l'e-mail de notification et passer à l'étape suivante décrite à partir de celui-ci. Alternativement, vous pouvez quitter temporairement le processus d'inscription et le système vous ramènera à l'endroit où vous vous étiez arrêté à votre retour.[B1037]</p>"
            FileTypeErrorMessage = filter_BulkMessageArray("M2" , "fr");
-         
+
             }//end check language
           $('#ErrorMessageDiv').css('display', 'block');
           $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  FileTypeErrorMessage + "</p>");
@@ -352,27 +370,27 @@ $('#btn_attachfile_and_scan').click(function(e)
           Enable_Button('linkdownload_French');
          // call the submit button to show error message
          // $("#InsertButton").click();
-        
+
    }
 
   else if (file) {
-           
+
        //start reading uploaded file
         var reader = new FileReader();
-  
+
         reader.onload = function(e) {
              //get the scan flow url from fetch xml  stored in liquid variable
                  var Scan_API_URL = '{{Scan_flow_URL}}';
-                
+
                 //call antivirus URL
                 Call_Virsu_Scan_API(Scan_API_URL
                 ,e.target.result , BulkActivitytype ,FileName,langcode );
-                       
-                
+
+
         };
 
         reader.readAsBinaryString(file);
-      
+
            //else
            //{
 
@@ -392,19 +410,19 @@ $('#btn_attachfile_and_scan').click(function(e)
             // Split the string at the first comma (removing the base64 prefix)
           //  DocumentbodyContents = DocumentbodyContents.substring(DocumentbodyContents.indexOf(',') + 1);
            // debugger;
-         
+
             //  var Scan_API_URL = '{{Scan_flow_URL}}';
            //   debugger;
 
           //call antivirus URL
          // Call_Virsu_Scan_API(Scan_API_URL
           //  ,DocumentbodyContents , BulkActivitytype ,FileName,langcode );
-          
+
 
        // ,btoa(c));
-    
 
-        
+
+
         // }//end loader
         //}//end else if file content match file type
 
@@ -417,7 +435,7 @@ $('#btn_attachfile_and_scan').click(function(e)
 //btoa(c) );
 });
 
- 
+
 $('#linkdownload_English').click(function(e)
 {
  $('#loader').show();
@@ -438,9 +456,9 @@ $('#linkdownload_English').click(function(e)
  //.on('click', async function() {
 
  //check if page for initial registeration
-       
+
           Disable_all_Buttons();
-        
+
       //call download flow to download excel sheet
        Download_ExcelTemplate("French") ;
     });
@@ -458,7 +476,7 @@ $('#linkdownload_English').click(function(e)
     //go to registeration wizard
   window.location.href='~/RegistrationWizard/';
   });
-    
+
 });//end document ready
 
 function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls , Lang , Logwarrning , Warnningdetails)
@@ -477,7 +495,7 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
         if (this.readyState === 4) {
           req.onreadystatechange = null;
           if (this.status === 200) {
-            
+
 
             var result = this.response;
             var responseMessage ;
@@ -488,17 +506,17 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
 
              //responseMessage  = "<p>The CID system will now begin the second of two sets of validations of the file being uploaded. An email will be sent to your email address of " + useremail + " (as set via your user profile), indicating the results the second set of validations and the subsequent steps to take. <br><br>" +
             // "At this point you can wait for the notification email and proceed with the next step described from within it. Alternatively, you can leave the Registration process temporarily and the system will return you to the spot where you left off when you return.[B1037]  </p>"
-          
+
           responseMessage = filter_BulkMessageArray("M14" , "en").replace("{0}" , emailaddress1);
-          
+
             if ( Lang != 'en-US' && Lang !="en")
             {
-             
+
            responseMessage = filter_BulkMessageArray("M14" , "fr").replace("{0}" , emailaddress1);
-           
+
             }
-            
-          
+
+
           console.log(responseMessage);
            responseMessage.replace('{0}' , emailaddress1);
 
@@ -532,7 +550,7 @@ function Call_Check_User_Response_flow(activityid , UserResponse , Logdetaisls ,
           Enable_Button('btn_attachfile_and_scan');
             Enable_Button('linkdownload_English');
             Enable_Button('linkdownload_French');
-           
+
           }
         }
       }
@@ -577,16 +595,16 @@ if ( language != 'en-US'&& language != 'en')
 
                $('#infoMsg').css('display', 'block');
                $('#infoMsg').html("<p>Uploading and processing the Site Bulk Upload Excel workbook.  Please wait a moment...</p>");
-               
-               
+
+
                var FileTypeError = Check_FileType_With_ExcelRead(fileContent ,language ) ;
 
-               // if file type is correct trigger file save 
+               // if file type is correct trigger file save
                if (FileTypeError == false)
                {
                    $("#InsertButton").click();
                }
-               
+
 
          }
          else
@@ -599,7 +617,7 @@ if ( language != 'en-US'&& language != 'en')
              // responseMessage  =  "<p> Le système CID va maintenant commencer la deuxième des deux séries de validations du fichier en cours de téléchargement. Un e-mail sera envoyé à votre adresse e-mail de " + useremail +"(tel que défini via votre profil utilisateur), indiquant les résultats de la deuxième série de validations et les étapes ultérieures à suivre. <br><br>" +
              //"À ce stade, vous pouvez attendre l'e-mail de notification et passer à l'étape suivante décrite à partir de celui-ci. Alternativement, vous pouvez quitter temporairement le processus d'inscription et le système vous ramènera à l'endroit où vous vous étiez arrêté à votre retour.[B1037]</p>"
            ErrorMessage_fileScan = filter_BulkMessageArray("M3" , "fr");
-         
+
             }//end check language
           $('#infoMsg').css('display', 'none');
           $('#ErrorMessageDiv').css('display', 'block');
@@ -609,8 +627,8 @@ if ( language != 'en-US'&& language != 'en')
             Enable_Button('linkdownload_English');
             Enable_Button('linkdownload_French');
 
-            
-       
+
+
          }
 
            //  $("#infoMsg").css("display", "none");
@@ -632,7 +650,7 @@ if ( language != 'en-US'&& language != 'en')
 function call_Inital_validation(Language , bulkactivitytype)
 {
 
-  
+
   var URLs = new URLSearchParams(window.location.search);
 
    //  var newrecordid = URLs.get('id');
@@ -643,7 +661,7 @@ function call_Inital_validation(Language , bulkactivitytype)
    if  ( companyid != null  )
     {
         $('#loader').show();
-      //document.getElementById("content").innerHTML = response.html; 
+      //document.getElementById("content").innerHTML = response.html;
         Disable_all_Buttons();
         var urlPath = window.location.href;
         urlPath = urlPath.split('?')[0];
@@ -673,10 +691,10 @@ function call_Inital_validation(Language , bulkactivitytype)
          UploadType = "Update";
          }
 
-      
+
         var acupdate =
             '{ "activityid":"' + newrecordid + '" , "name": "'+ companyname
-             +'", "accountid": "' + companyid + '" , "Lang" : "' + Language + '" ,"ActivityType" : "' 
+             +'", "accountid": "' + companyid + '" , "Lang" : "' + Language + '" ,"ActivityType" : "'
              + UploadType +  '" }';
 
         var req = new XMLHttpRequest();
@@ -773,7 +791,7 @@ function call_Inital_validation(Language , bulkactivitytype)
                   $('#warnningMessage').css('display', 'none');
                // alert ("Uploaded List did not pass validation, please check the errors list.");
               // alert (this.response) ;
-                    var result = 
+                    var result =
                     //this.response;
                     $('<textarea />').html(this.response).text();
 
@@ -845,7 +863,7 @@ function confirmDialog(message, handler)
             $("#myModal").remove();
              handler(false);
         });
-    
+
 }
 
 //popu message
@@ -862,7 +880,7 @@ function Popup_Message(message, handler)
             </div>
         <div class="modal-footer">
             <button id="btnYes" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">Ok</button>
-            
+
         </section>
         `).appendTo('body');
 
@@ -887,7 +905,7 @@ function Popup_Message(message, handler)
            // $("#myModal").remove();
           //   handler(false);
         //});
-    
+
 }
 
 
@@ -906,13 +924,13 @@ function Check_FileType_With_ExcelRead(data , langcode)
      try {
             //get data from reader
             //var data = e.target.result;
-        
+
                 //parese file as excel
                 var workbook = XLSX.read(data, {
                     type: 'binary'
                 });
 
-                
+
                 //get number of sheets
                 var numberOfSheets = workbook.SheetNames.length;
                 //if file is excel at least one excel sheet will be there.
@@ -920,15 +938,15 @@ function Check_FileType_With_ExcelRead(data , langcode)
                 {
                     ErrorFound =false ;
                     console.log ("number of sheets "  + numberOfSheets);
-                
+
 
                     return ErrorFound ;
                     //get the scan flow url from fetch xml  stored in liquid variable
                  //var Scan_API_URL = '{{Scan_flow_URL}}';
-                
+
                 //call antivirus URL
                // Call_Virsu_Scan_API(Scan_API_URL,data , BulkActivitytype ,FileName,langcode );
-          
+
                 } //end check number of sheet
                }//end try
                catch (error) {
@@ -939,7 +957,7 @@ function Check_FileType_With_ExcelRead(data , langcode)
                     {
                         //get french message
                     FileTypeErrorMessage = filter_BulkMessageArray("M2" , "fr");
-                
+
                     }//end check language
                     //show file type error message
                     $('#infoMsg').css('display', 'none');
@@ -952,14 +970,14 @@ function Check_FileType_With_ExcelRead(data , langcode)
 
 
  function  ReadBulkMessagesFile() {
-   
+
     var messageList ;
     var url = window.document.URL;
     url = url.replace("https://", "");
     var index1 = url.indexOf("/");
     var file = "https://" + url.substring(0, index1);
      file += "/BulkUpload_Messages";
-     
+
     fetch(file)
         .then(response => {
             return response.json();
@@ -975,13 +993,13 @@ function storeMessageListInSession(data)
 
   function  Download_ExcelTemplate (TemplateLanguage)
 {
-   
+
         //hid any error or validation div
         $("Div.validation-summary").css('display', 'none');
         $("Div.alert").css('display', 'none');
           //get language
         var langcode = '{{languagecode}}'  ;
-      
+
         var downloadMessage ='<p>Downloading the custom Site Bulk Upload template and Instruction documents. Please wait…</p>';
        // '<p>The custom Site Bulk Upload Excel workbook is being downloaded …</p>' ;
         var DownloadMessageCompleted =  '<p>Download completed.</p>';
@@ -1024,13 +1042,13 @@ function storeMessageListInSession(data)
       req.open("POST", url, true);
       req.setRequestHeader('Content-Type', 'application/json');
       req.onreadystatechange = function() {
-      
-      
+
+
         if (this.readyState === 4) {
             //req.onreadystatechange = null;
               console.log(req.getResponseHeader('location'));
 
-           //asyncronous check       
+           //asyncronous check
            if (this.status === 202)
            {
                //async flow response call will retrun location header to get the result
@@ -1038,17 +1056,17 @@ function storeMessageListInSession(data)
                {
                    var locationheader =  req.getResponseHeader('location') ;
                //call function to get location header result
-                  setTimeout(Get_Location_Header (locationheader), 3000); 
-                  
+                  setTimeout(Get_Location_Header (locationheader), 3000);
+
                }
 
-           } 
+           }
           req.onreadystatechange = null;
           if (this.status === 200) {
            $('#infoMsg').html(DownloadMessageCompleted );
-          
+
             var result = this.response;
-                      
+
           //assign result to noteid intially
            var SeperatorIndex =   result.indexOf("|");
            //alert ("result " + result);
@@ -1057,23 +1075,23 @@ function storeMessageListInSession(data)
            //console.log(result);
             var  NoteGUID = result.substring(0, SeperatorIndex ).trim();
             var instructionNote = result.substring( SeperatorIndex ).trim();
-            
-         
-       
-           
+
+
+
+
         /* if (req.getResponseHeader('RootMessag') != null && req.getResponseHeader('RootMessag') != "")
          {
-            
+
               NoteGUID = result.substring(0, SeperatorIndex ).trim();
-            
-               var rootMessage = result.substring( SeperatorIndex + 1); 
+
+               var rootMessage = result.substring( SeperatorIndex + 1);
               $('#infoMsg').html("<p>" + DownloadMessageCompleted +  "</p> <br> <p>"+ rootMessage
-          
+
               + "</p>");
          }*/
-            
+
         //  $('<textarea/>').text(req.getResponseHeader('RootMessag')).html();
-    
+
            //annotation url
             var fileattachementURL = "~/_entity/annotation/"  + NoteGUID;
                   //download the file from the url
@@ -1110,20 +1128,20 @@ function Enable_Button (buttonID)
 //diable all buttons in the form
 function Disable_all_Buttons()
 {
-      
+
        //check if page for initial registeration
         var Page_Partial_URL = '{{page.adx_partialurl}}';
-       
+
         if (Page_Partial_URL ==  "Bulk_Site_Upload")
         {
-          
+
             Disable_Button('btn_Previous');
             Disable_Button('btn_Next');
         }
-      
-      
+
+
       Disable_Button('btn_attachfile_and_scan');
-      
+
       Disable_Button('linkdownload_English');
       Disable_Button('linkdownload_French');
 }
@@ -1146,7 +1164,7 @@ function Enabled_all_Buttons()
       Enable_Button('linkdownload_French');
       //hideTooltip();
 
-     
+
 
       /* $('#Div_btn_next'#Div_btn_next').tooltip({
                  trigger: 'hover',
@@ -1157,14 +1175,14 @@ function Enabled_all_Buttons()
 }
 
 function filter_BulkMessageArray(id , lang)
-{ 
+{
     debugger ;
      const messageList =JSON.parse( sessionStorage.getItem('MessagesJsonArray'));
      const BMessage = messageList.filter(x =>x["id"]== id ) ;
      var responseMessage = "<p>" + BMessage[0]["Eng-Message"] + "[" + BMessage[0]["code"] + "] </p>" ;
 
         if (lang != "en")
-        { 
+        {
             responseMessage = "<p>" + BMessage[0]["Fr-Message"] + "[" + BMessage[0]["code"] + "] </p>";
         }
         console.log (responseMessage);
@@ -1190,24 +1208,24 @@ async function Get_Location_Header(url)
 {
     //delay execution for 30 seconds
    await delay(30000);
-   
+
    var req2 = new XMLHttpRequest();
                     req2.open("Get", url);
                     req2.setRequestHeader('Content-Type', 'application/json');
-                    
+
                     req2.onreadystatechange = function() {
                          if (this.readyState === 4) {
                             // req2.onreadystatechange = null;
-                            
+
                              console.log("inside request 2");
                              console.log(this.status);
-                             //console.log (this.responseText); 
+                             //console.log (this.responseText);
 
-                            //check if location call returned 200     
+                            //check if location call returned 200
                             if (this.status === 200)
                             {
                                 console.log("200 status")
-                                
+
                                 //get seperator char index to split NoteID and Message
                                     var SeperatorIndex =   this.responseText.indexOf("|");
                                     var Reponse_Length = this.responseText.length;
@@ -1216,43 +1234,43 @@ async function Get_Location_Header(url)
                                    if (SeperatorIndex > 0)
                                    {
                                        NoteGUID = this.responseText.substring(0, SeperatorIndex ).trim();
-                                   
-                                   }
-                                  
 
-                                  
-                                  
+                                   }
+
+
+
+
                                     var fileattachementURL = "~/_entity/annotation/"  + NoteGUID;
                                      var files = [];
                                     files.push(fileattachementURL);
-                                    
+
                                     //download the file from the url
                                     //window.location.replace(fileattachementURL);
-                                   
-                                  
 
-                                 
+
+
+
                                      if (SeperatorIndex > 0)
                                    {
                                        var instructionNoteGUID =  this.responseText.substring( (SeperatorIndex + 1) ).trim();
                                     var InstructionattachementURL = "~/_entity/annotation/"  + instructionNoteGUID;
                                     files.push(InstructionattachementURL);
-                                   
-                            
-                                  
+
+
+
                                    }
 
                                     for(var ii=0; ii<files.length; ii++){
                                             downloadURL(files[ii],ii);
                                         }
 
-                                   
+
                                    //console.log (this.responseText);
                                    //console.log ("reponse Length : " + Reponse_Length);
                                    var langcode = '{{languagecode}}'  ;
-      
+
                                     var downloadMessage ;
-                                
+
 
                                  downloadMessage = filter_BulkMessageArray("M0" , "en");
                                 // check language if not english assign french transation
@@ -1261,9 +1279,9 @@ async function Get_Location_Header(url)
                                     // responseMessage  =  "<p> Le système CID va maintenant commencer la deuxième des deux séries de validations du fichier en cours de téléchargement. Un e-mail sera envoyé à votre adresse e-mail de " + useremail +"(tel que défini via votre profil utilisateur), indiquant les résultats de la deuxième série de validations et les étapes ultérieures à suivre. <br><br>" +
                                     //"À ce stade, vous pouvez attendre l'e-mail de notification et passer à l'étape suivante décrite à partir de celui-ci. Alternativement, vous pouvez quitter temporairement le processus d'inscription et le système vous ramènera à l'endroit où vous vous étiez arrêté à votre retour.[B1037]</p>"
                                       downloadMessage = filter_BulkMessageArray("M0" , "fr");
-                                
+
                                     }//end check language
-                               
+
 
 
 
@@ -1272,14 +1290,14 @@ async function Get_Location_Header(url)
                                 //**Removed on Dec 2022 part of Exetended info removal**
                              /*  if (this.responseText.indexOf("|") != (Reponse_Length -1) )
                                 {
-            
+
                                   // NoteGUID = result.substring(0, SeperatorIndex ).trim();
 
-                                    //get root message from the text from flow retruned text 
+                                    //get root message from the text from flow retruned text
                                     var rootMessage = this.responseText.substring( SeperatorIndex + 1);
 
                                     $('#infoMsg').html("<p>" + DownloadMessageCompleted +  "</p> <br> <p>"+ rootMessage
-                                
+
                                     + "</p>");
                                 }*/
                                 //enable all buttons
@@ -1289,10 +1307,10 @@ async function Get_Location_Header(url)
                                 Enable_Button('btn_Previous');
                             }//end if status = 200
                             else{
-                                
+
 
                                 //call function again if returned status is not 200
-                                setTimeout(Get_Location_Header (url), 400000); 
+                                setTimeout(Get_Location_Header (url), 400000);
                             }//end else
 
                          }
@@ -1310,15 +1328,54 @@ function delay(milliseconds){
 }
 
 </script>
-<div class="container ">
-    <div class="container">
+
+
+
+
+<div  class="container" style="width: 80%; margin: 0 auto;">
+  <div class="row">
+
+  <div class="col-sm-2 col-lg-3 left-column">
+ 
+ {% block sidebar %}
+ {%if page.adx_partialurl == 'Bulk_Site_Update' %}
+ {% assign nav = weblinks["Company Dashboard Navigation"] %}
+ {% if website.selected_language.code == 'fr' %}
+  {% assign nav = weblinks["Company Dashboard Navigation FR"] %}
+ {%endif%}
+ {% assign weblinkset_id = page.adx_navigation.id %} 
+
+  
+ {% if nav %} 
+ <div class="list-group"> 
+ 
+ {% for link in nav.weblinks %} 
+
+ {%if link.url contains "online-help" or link.url contains "OnlineHelp" or link.url contains "ContactUs"  %}
+  {%if request.url contains "rd-tdgcore-dev" or request.url contains "tdgcore-qa" %}
+  <a class="list-group-item"  href={{ link.url }}> {{ link.name }} </a> 
+   {%else%}
+  <a class="list-group-item" style="pointer-events: none;" href={{ link.url }}> {{ link.name }} </a> 
+  {% endif %}
+ {%else%}
+ <a class="list-group-item" href={{ link.url }}> {{ link.name }} </a> 
+  {% endif %} 
+  {% endfor %}
+  </div>
+  {%endif%} 
+ 
+ {%endif%}    
+{% endblock %}
+    </div>
+    <div class="col-sm-9 col-lg-9 right-column">
+
         {% block breadcrumbs %}
         {% include 'Breadcrumbs' %}
         {% endblock %}
         {% block title %}
         {% include 'Page Header' %}
         {% endblock %}
-    </div>
+    
 
     <div id="mainContent" class="row">
 
@@ -1346,10 +1403,12 @@ function delay(milliseconds){
                                 <table>
                                     <tr>
                                         <td>
-                                       
-                                            <button type="button" id="linkdownload_English" 
-                                            class="submit-btn btn btn-primary form-action-container-left" data-toggle="popover" data-content title="download">{{downloadlableEnglishversion}}</button>
-                                      
+
+                                            <button type="button" id="linkdownload_English"
+                                                    class="submit-btn btn btn-primary form-action-container-left" data-toggle="popover" data-content title="download">
+                                                {{downloadlableEnglishversion}}
+                                            </button>
+
                                         </td>
                                         <td> &nbsp;&nbsp;</td>
                                         <td>
@@ -1368,31 +1427,32 @@ function delay(milliseconds){
             <td>
 
                 <h3 class="blue_border">{{step2}}</h3>
-          
+
                 {% if page.adx_partialurl == 'Bulk_Site_Upload' %}
                 {% entityform name: 'Insert Bulk Activity Log Summary' %}
                 {%else%}
-                 {% entityform name: 'Insert Annual Bulk Activity Log Summary' %}
+                {% entityform name: 'Insert Annual Bulk Activity Log Summary' %}
                 {%endif%}
 
                 <div>
                 </div>
             </td>
         </tr>
-        
+
         </tbody>
         </table>
         <br>
-      
+
 
         {% endblock %}
 
 
     </div>
 </div>
-  <div id="DivNavbuttonGroup"  class="col-sm-6 clearfix"> 
-        
-   </div>
+</div>
+<div id="DivNavbuttonGroup" class="col-sm-6 clearfix">
+
+</div>
     </div>
 
 </div>
