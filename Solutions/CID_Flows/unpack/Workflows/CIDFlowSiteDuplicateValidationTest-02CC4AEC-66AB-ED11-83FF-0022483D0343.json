@@ -1,0 +1,138 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "0ba97cef-2ac9-41fd-8a36-7808d7950648"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Parent_Id": {
+                  "type": "string"
+                },
+                "AddressType": {
+                  "type": "integer"
+                },
+                "Address1_Line1": {
+                  "type": "string"
+                },
+                "Address1_City": {
+                  "type": "string"
+                },
+                "Address1_StateorProvince": {
+                  "type": "string"
+                },
+                "Lld_Province": {
+                  "type": "integer"
+                },
+                "Lld_Quarter": {
+                  "type": "integer"
+                },
+                "Lld_Section": {
+                  "type": "integer"
+                },
+                "Lld_Township": {
+                  "type": "integer"
+                },
+                "Lld_Range": {
+                  "type": "integer"
+                },
+                "Lld_Meridian": {
+                  "type": "integer"
+                },
+                "Address1_Longitude": {
+                  "type": "number"
+                },
+                "Address1_Latitude": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "Perform_a_bound_action": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "896b4302-8f3b-496e-a93b-a12c4d706a8b"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "PerformBoundAction",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "accounts",
+              "actionName": "Microsoft.Dynamics.CRM.cid_CID_Create_Update_SiteDuplicateValidation",
+              "recordId": "@triggerBody()?['Parent_Id']",
+              "item/Parent_Id": "@triggerBody()?['Parent_Id']",
+              "item/AddressType": "@triggerBody()?['AddressType']",
+              "item/Address1_Line1": "@triggerBody()?['Address1_Line1']",
+              "item/Address1_City": "@triggerBody()?['Address1_City']",
+              "item/Address1_StateorProvince": "@triggerBody()?['Address1_StateorProvince']",
+              "item/Lld_Province": "@triggerBody()?['Lld_Province']",
+              "item/Lld_Quarter": "@triggerBody()?['Lld_Quarter']",
+              "item/Lld_Section": "@triggerBody()?['Lld_Section']",
+              "item/Lld_Township": "@triggerBody()?['Lld_Township']",
+              "item/Lld_Range": "@triggerBody()?['Lld_Range']",
+              "item/Lld_Meridian": "@triggerBody()?['Lld_Meridian']",
+              "item/Address1_Longitude": "@triggerBody()?['Address1_Longitude']",
+              "item/Address1_Latitude": "@triggerBody()?['Address1_Latitude']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Response": {
+          "runAfter": {
+            "Perform_a_bound_action": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "01ebb04c-1b8c-4bf5-ab22-141e9c8a16b2"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": "@body('Perform_a_bound_action')"
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
