@@ -33,7 +33,7 @@ try
                 var ovs_lld_township = SiteAddressInfo[0]["ovs_lld_township@OData.Community.Display.V1.FormattedValue"];
                 var ovs_lld_range = SiteAddressInfo[0]["ovs_lld_range@OData.Community.Display.V1.FormattedValue"];
                 var ovs_lld_meridian = SiteAddressInfo[0]["ovs_lld_meridian@OData.Community.Display.V1.FormattedValue"];
-                var pageTitle = "History Logs for '";
+                var pageTitle = "History for '";
                 if (cid_sitename != null && cid_sitename != "") {
 					cid_sitename = cid_sitename + "' ";
                     if (cid_sitename.toLowerCase().indexOf("site") < 0) {

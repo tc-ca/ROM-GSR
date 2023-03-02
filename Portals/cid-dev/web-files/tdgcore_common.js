@@ -1959,6 +1959,53 @@ if (typeof (tdg.cid) == "undefined") {
             });
         },
 
+        WebApi_Update_With_Spinner: function (entity_name, record_id, data) {
+            debugger;
+            $('#loader').show();
+            webapi.safeAjax({
+                type: "PATCH",
+                url: "/_api/" + entity_name + "(" + record_id + ")",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+
+                success: function (res) {
+                    debugger;
+                    $(".entity-grid").trigger("refresh");
+                    $('#loader').hide();
+
+                    console.log(res);
+                },
+
+                error: function (res, status, errorThrown) {
+                    debugger;
+                    $('#loader').hide();
+                }
+            });
+        },
+
+        Check_If_AnnualTasks_Completed: function (parentAccountid) {
+            var CompanyListdata = tdg.webapi.SelectedColumnlist("tasks", "activityid", "cid_tasklevel eq 100000000 and statecode eq 0  and _regardingobjectid_value eq "
+                + parentAccountid);
+            if (CompanyListdata != null)
+            if (CompanyListdata.length == 0) {
+                $("#CompanyCompleteAll").css("display", "none");
+            }
+            else {
+                $("#CompanyCompleteAll").css("display", "block");
+            }
+            var SiteListdata = tdg.webapi.SelectedColumnlist("tasks",
+                "activityid", "cid_tasklevel eq 100000001 and statecode eq 0 and _regardingobjectid_value eq "
+            + parentAccountid);
+            if (SiteListdata != null)
+            if (SiteListdata.length == 0) {
+                $("#SiteCompleteAll").css("display", "none");
+            }
+            else {
+                $("#SiteCompleteAll").css("display", "block");
+            }
+
+        },
+
         Complete_All_Annualcompliance_Tasks: function (parentAccountid, LanguageCode) {
             var ButtonLable = tdg.error_message.message("m000121");
             var ButtonCompleteLable = tdg.error_message.message("m000123");
@@ -1976,6 +2023,7 @@ if (typeof (tdg.cid) == "undefined") {
             SiteCompleteButtonLocation.insertAdjacentHTML('beforebegin', Button_SiteCompleteAll);
             //clicke event for company button
             $("#CompanyCompleteAll").on("click", function () {
+                $('#loader').show();
                 var Listdata = tdg.webapi.SelectedColumnlist("tasks", "activityid", "cid_tasklevel eq 100000000 and _regardingobjectid_value eq "
                     + parentAccountid);
 
@@ -1985,30 +2033,39 @@ if (typeof (tdg.cid) == "undefined") {
                         "statecode": 1,
                         "statuscode": 5
                     };
-                    tdg.webapi.update("tasks", Listdata[i].activityid, data);
+                    tdg.cid.WebApi_Update_With_Spinner("tasks", Listdata[i].activityid, data);
+                    $("#CompanyCompleteAll").css("display", "none");
                 }//end for
 
                 // $(".entity-grid").trigger("refresh");
-                setTimeout(tdg.cid.Refresh_EntityGrid, 6000);
+                // setTimeout(tdg.cid.Refresh_EntityGrid, 6000);
+                //$('#loader').hide();
             });
             //click event for site button
             $("#SiteCompleteAll").on("click", function () {
-                var Listdata = tdg.webapi.SelectedColumnlist("tasks", "activityid", "cid_tasklevel eq 100000001 and _regardingobjectid_value eq "
-                    + parentAccountid);
+                $('#loader').show();
+                var Listdata = tdg.webapi.SelectedColumnlist("tasks",
+                    "activityid", "cid_tasklevel eq 100000001 and _regardingobjectid_value eq "
+                + parentAccountid);
 
                 for (var i = 0; i < Listdata.length; i++) {
-
+                    $('#loader').show();
                     var data = {
                         "statecode": 1,
                         "statuscode": 5
                     };
-                    tdg.webapi.update("tasks", Listdata[i].activityid, data);
+                    tdg.cid.WebApi_Update_With_Spinner("tasks", Listdata[i].activityid, data);
                 }//end for
 
+                $("#SiteCompleteAll").css("display", "none");
+
                 // $(".entity-grid").trigger("refresh");
-                setTimeout(tdg.cid.Refresh_EntityGrid, 7000);
+                // setTimeout(tdg.cid.Refresh_EntityGrid, 7000);
             });
+            //hide or show complete button based on tasks completions
+            tdg.cid.Check_If_AnnualTasks_Completed(parentAccountid);
         },
+
 
         Setup_site_Profile_Title: function (CompanyName) {
             var SiteLable = tdg.error_message.message("m000127");
@@ -2314,9 +2371,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     invitation_msg = invitation_msg.replaceAll("{0}", data.cid_legalname);
                 }
             }
-            var address = data.address.AddressLine1Text + "\n" +
-                data.address.AddressLine2Text + "\n" +
-                (data.address.AddressLine3Text != ""? data.address.AddressLine3Text + "\n" : "") +
+            var address = data.address.AddressLine1Text + "<br>" +
+                data.address.AddressLine2Text + "<br>" +
+                (data.address.AddressLine3Text != "" ? data.address.AddressLine3Text + "<br>" : "") +
                 data.address.CityName + ", " + data.address.ProvinceStateCode + " " + data.address.PostalZipCode;
 
             var text1 = `
@@ -2338,7 +2395,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 `
                     <p>
                     <label for="address1_line1" class="field-label">Address</label><br>
-                    <textarea id="address1_line1" readonly rows="4" cols="61">${address}</textarea>
+                    <p>${address}</p>
 	                </div>
 	                <div class="modal-footer" style="text-align: left;">
                     <label for="opt_confirm" class="field-label">Confirmation that this is your Company:</label>
@@ -2523,8 +2580,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
 
         start_cid_reasonfornobnnumber_onchange: function (clear_ind) {
-            if (clear_ind)
-            {
+            if (clear_ind) {
                 $("#cid_reasonfornobnnumber_other").val("");
             }
 
@@ -2688,3 +2744,4 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
+

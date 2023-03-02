@@ -24,7 +24,7 @@ $(document).ready(function () {
 
     //add cancel button 
     $('#btn_save_new').after('<div role="group" class="btn-group entity-action-button">&nbsp;</div><input type="button" data-dismiss="modal" value="Cancel" id="CancelButton" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
-    $('#CancelButton').on('click', function(event){parent.$(".form-close").eq(0).click();});
+    $('#CancelButton').on('click', function (event) { parent.$(".form-close").eq(0).click(); });
 });
 
 $(window).unload(function () {
@@ -80,6 +80,7 @@ function btn_save_new_onclick() {
     //disable button to prevent adding duplicate classes by double click
     $("#btn_save_new").prop('disabled', true);
     //tdg.c.error_message_clear();
+    var value = false;
     if (typeof entityFormClientValidate === 'function') {
         if (entityFormClientValidate()) {
             if (typeof Page_ClientValidate === 'function') {
@@ -87,6 +88,8 @@ function btn_save_new_onclick() {
             }
         }
     };
+
+    if (!value) return;
 
     var operation_id = null;
     var url_search = window.location.search.replace("?", "");
@@ -188,7 +191,10 @@ function error_cb(msg) {
     debugger;
 
     var selected_language = '{{website.selected_language.code}}';
-    msg = tdg.c.text_language(msg, selected_language)
+    msg = tdg.c.text_language(msg, selected_language);
+    if (msg = "Common Data Service error occurred.") {
+        msg = tdg.error_message.message("m000048");
+    }
     show_error(msg);
 
     //enable button after all operations are finished

@@ -2,7 +2,7 @@ $(document).ready(function () {
     $("#cid_registrationasof").parent().parent().hide();
 
     var companyName = "{{user.parentcustomerid.name}}";
-    $(".tab-title").text('History Logs for ' + companyName);
+    $(".tab-title").text('History for ' + companyName);
 
     $(".entity-grid").on("loaded", function () {
         var lang = '{{website.selected_language.code}}';

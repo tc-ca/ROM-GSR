@@ -418,6 +418,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "The '{0}' Organization is currently set up as a by-invitation only Organization. Do you want to request to be on-boarded?_FR"
                     },
                     {
+                        "code": "m000048",
+                        "message_en": "For this site operation there is already a class record created",
+                        "message_fr": "Cette operation a déjà une classe avec le type"
+                    },
+                    {
                         "code": "m000098",
                         "message_en": "Your entered name and email account are already associated with an invitation tailored to you and your Organization. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
                         "message_fr": "Your entered name and email account are already associated with an invitation tailored to you and your Organization. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID._FR"
