@@ -5,10 +5,31 @@
 $(document).ready(function () {
     debugger;
 
+  //disable submit button by default  
+  $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", true);
+   var businessphone =  $("#telephone1").val() ;
+    //if telephon1 is not empty enable update button
+    if ($("#telephone1").val() != "" && $("#firstname").val() != "" && $("#lastname").val() != "") {
+             $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", false);
+        }
+     //phone number change event
+     $('#telephone1').change(function(){
+          if ($("#telephone1").val() != "") {
+             $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", false);
+        }
+        else
+        {
+            $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", true);
+        }
+
+     });   
+
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
+
     page_setup();
+
 
     tdg.c.control_hide("cid_contacttype");
  // $("#telephone1").attr('aria-required', "true");
@@ -118,9 +139,14 @@ function page_setup() {
 
 var MakeRequired = function (fieldName) {
     try {
+        console.log("get telephone 1 value");
+        console.log ("*" + $("#" + fieldName).val()+"*");
+
+
         if ($("#" + fieldName) != undefined) {
             $("#" + fieldName).prop('required', true);
             $("#" + fieldName).closest(".control").prev().addClass("required");
+
  
             // Create new validator
             var Requiredvalidator = document.createElement('span');
