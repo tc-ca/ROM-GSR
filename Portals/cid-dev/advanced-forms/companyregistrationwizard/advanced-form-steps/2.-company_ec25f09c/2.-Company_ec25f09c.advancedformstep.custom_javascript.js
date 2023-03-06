@@ -54,6 +54,7 @@ $(document).ready(function () {
 
 	tdg.cid.crw.start_cid_has_cra_bn_onchange("2");
 
+	tdg.c.control_hide("ovs_name_fr");
 	tdg.c.control_hide("cid_companyclaim");
 
 	var cid_legalname = $('#ovs_legalname').val();
@@ -112,7 +113,7 @@ $(document).ready(function () {
 	tdg.cid.convert_province_to_code(selected_language);
 
 	Disable_ContactTypeFieldsForSecondaryUser();
-	tdg.c.addValidator("ovs_name_fr");
+	//tdg.c.addValidator("ovs_name_fr");
 
 	var ovs_invitation_only = $("#ovs_invitation_only").val();
 	if (ovs_invitation_only == "1") {

@@ -601,6 +601,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "This action will deactivate the Organization and all of its Sites.</br></br>Please be aware that if any of the Sites are meant to be sold to another Organization, or merged into an existing Organization, then you will need to first begin the Transfer/Sale process for those Sites before deactivating the Organization.</br></br> <p style='color:red' >Be advised that this action cannot be undone.</p> Do you want to proceed with the Organization deactivation.</br></br>",
                         "message_fr": "In French - This action will deactivate the Organization and all of its Sites.</br></br>Please be aware that if any of the Sites are meant to be sold to another Organization, or merged into an existing Organization, then you will need to first begin the Transfer/Sale process for those Sites before deactivating the Organization.</br></br> <p style='color:red' >Be advised that this action cannot be undone.</p> Do you want to proceed with the Organization deactivation.</br></br>"
                     },
+					 {
+                        "code": "m000133",
+                        "message_en": "Note: This addition of a backup Contact has completed the requirements of the regulation. Any further Contact additions are completely optional.",
+                        "message_fr": "Note: This addition of a backup Contact has completed the requirements of the regulation. Any further Contact additions are completely optional._FR"
+                    },
                 ];
 
             return list;

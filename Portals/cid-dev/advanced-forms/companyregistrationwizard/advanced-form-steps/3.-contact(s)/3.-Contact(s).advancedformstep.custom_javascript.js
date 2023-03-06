@@ -3,15 +3,37 @@
 //
 function checkToDisplaycontactAddMessage()
 {
+    var parentcustomerid = '{{user.parentcustomerid.Id}}';
+
     debugger;
     var newcontactflag =    sessionStorage.getItem("NewContactFlag");
-   
-			 if (sessionStorage.getItem("FullName") != null  && sessionStorage.getItem("FullName") != "" ){
-				 var m000120 = tdg.error_message.message("m000120").replace("{0}",sessionStorage.getItem("FullName") );
-                    //"This Contact cannot be added as a Contact with this name and email address already exists in CID, but is assigned to a different Company.";                        
-                    tdg.c.dialog_OK(m000120.replace("{1}",  sessionStorage.getItem("Email")));
-					 sessionStorage.removeItem("FullName");
-			 }		 
+    
+        if (sessionStorage.getItem("FullName") != null  && sessionStorage.getItem("FullName") != "" )
+        {
+            var m000120 = tdg.error_message.message("m000120").replace("{0}",sessionStorage.getItem("FullName") );
+            //"This Contact cannot be added as a Contact with this name and email address already exists in CID, but is assigned to a different Company.";   
+        
+            if(parentcustomerid != null)
+            {
+                //Add message when first secondary contact  added
+                var SecondaryContactResuts = tdg.webapi.SelectedColumnlist("contacts",
+                "contactid,firstname,lastname",
+                "statecode eq 0 and cid_contacttype eq 100000001 and _parentcustomerid_value eq " + parentcustomerid);
+                    
+                if (SecondaryContactResuts && SecondaryContactResuts.length == 1) 
+                {
+                        var m000133 = tdg.error_message.message("m000133");
+                        tdg.c.page_instructions(m000133);
+                        m000120 = m000120 + "\n\n" + m000133;                  
+                }
+                else {
+                $(".instructions").remove();
+                }
+            }
+
+            tdg.c.dialog_OK(m000120.replace("{1}",  sessionStorage.getItem("Email")));
+            sessionStorage.removeItem("FullName");
+	}		 
 }
 
 $(document).ready(function ()

@@ -1987,22 +1987,22 @@ if (typeof (tdg.cid) == "undefined") {
             var CompanyListdata = tdg.webapi.SelectedColumnlist("tasks", "activityid", "cid_tasklevel eq 100000000 and statecode eq 0  and _regardingobjectid_value eq "
                 + parentAccountid);
             if (CompanyListdata != null)
-            if (CompanyListdata.length == 0) {
-                $("#CompanyCompleteAll").css("display", "none");
-            }
-            else {
-                $("#CompanyCompleteAll").css("display", "block");
-            }
+                if (CompanyListdata.length == 0) {
+                    $("#CompanyCompleteAll").css("display", "none");
+                }
+                else {
+                    $("#CompanyCompleteAll").css("display", "block");
+                }
             var SiteListdata = tdg.webapi.SelectedColumnlist("tasks",
                 "activityid", "cid_tasklevel eq 100000001 and statecode eq 0 and _regardingobjectid_value eq "
             + parentAccountid);
             if (SiteListdata != null)
-            if (SiteListdata.length == 0) {
-                $("#SiteCompleteAll").css("display", "none");
-            }
-            else {
-                $("#SiteCompleteAll").css("display", "block");
-            }
+                if (SiteListdata.length == 0) {
+                    $("#SiteCompleteAll").css("display", "none");
+                }
+                else {
+                    $("#SiteCompleteAll").css("display", "block");
+                }
 
         },
 
@@ -2398,7 +2398,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     <p>${address}</p>
 	                </div>
 	                <div class="modal-footer" style="text-align: left;">
-                    <label for="opt_confirm" class="field-label">Confirmation that this is your Company:</label>
+                    <label for="opt_confirm" class="field-label">Confirmation that this is your Organization:</label>
                     <p><br>
 	                <button id="btn_ok" type="button" class="pull-left btn btn-primary button next submit-btn">${msg_btn_ok}</button>
 	                <button id="btn_cancel" type="button" class="pull-left btn btn-primary button next submit-btn" data-dismiss="modal">${msg_btn_cancel}</button>

@@ -15,6 +15,7 @@ $(document).ready(function () {
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 
+	tdg.c.control_hide("ovs_name_fr");
 	tdg.c.control_hide("ovs_invitation_only");
 	tdg.c.control_hide("cid_addressoverwritten");
 	//update manually entered field if address fields changed
@@ -83,7 +84,7 @@ $(document).ready(function () {
 			tdg.c.control_hide("cid_reasonfornobnnumber_other");
 		}
 		tdg.c.addValidator("cid_reasonfornobnnumber");
-		tdg.c.addValidator("ovs_name_fr");
+		//tdg.c.addValidator("ovs_name_fr");
 		$("#name").on('keyup', function () {
 			var name = $("#name").val();
 			$("#ovs_name_fr").val(name);
@@ -139,7 +140,7 @@ $(document).ready(function () {
 	var currentUserId = '{{user.contactid}}';
 	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
 
-	tdg.c.addValidator("ovs_name_fr");
+	//tdg.c.addValidator("ovs_name_fr");
 });
 
 function btn_previous_click() {

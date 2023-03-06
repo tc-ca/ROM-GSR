@@ -49,7 +49,7 @@ $(document).ready(function () {
             // function will check of existing contact need to be linke to company
             //instead of add new else it will call the click event of the origional submit button
               invitation.New_and_Existing_Contact_Submit_Logic(ParentAccount);
-              
+                                           
         });
             var cancelLabel = tdg.error_message.message("BTN_CANCEL");
             $('#InsertUpdateButton').after('<input type="button" data-dismiss="modal" value="'+cancelLabel+'" id="CancelButton" style="margin-left: 10px;" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')

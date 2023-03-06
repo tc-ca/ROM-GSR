@@ -4,24 +4,24 @@
 
 $(document).ready(function () {
 	debugger;
-	console.log ("before changing div content");
-	$("#cid_reasonfornobnnumber_other").next("div").css("color","transparent");
-	$("#ovs_address1_province").next("div").css("color","transparent");
+	console.log("before changing div content");
+	$("#cid_reasonfornobnnumber_other").next("div").css("color", "transparent");
+	$("#ovs_address1_province").next("div").css("color", "transparent");
 	//innerHTML = "<p> </p>";
 	//hide empty message
-var gridview = $("#Naics_codes");
-gridview.on("loaded", function () {
-    const EmptyMessageDiv1 = document.querySelector(".view-empty");
-    EmptyMessageDiv1.style.display = "none";
-}
-);
-
+	var gridview = $("#Naics_codes");
+	gridview.on("loaded", function () {
+		const EmptyMessageDiv1 = document.querySelector(".view-empty");
+		EmptyMessageDiv1.style.display = "none";
+	}
+	);
 
 	$("#cid_registrationasof").parent().parent().hide();
 
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 
+	tdg.c.control_hide("ovs_name_fr");
 	tdg.c.control_hide("address1_stateorprovince");
 	var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
 	cid_crabusinessnumber = (cid_crabusinessnumber != "null" ? cid_crabusinessnumber : "");
@@ -57,7 +57,7 @@ gridview.on("loaded", function () {
 		}
 	});
 
-	
+
 });
 
 function printSummary() {

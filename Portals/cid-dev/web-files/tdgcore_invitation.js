@@ -306,7 +306,7 @@ if (typeof (invitation) == "undefined") {
                             tdg.webapi.update("adx_invitations", record_id, data);
 
                             sessionStorage.setItem("cid_has_invitation", "false");
-                            sessionStorage.setItem("cid_suppress_error","");
+                            sessionStorage.setItem("cid_suppress_error", "");
                             return;
                         } else {
                             debugger;
@@ -375,8 +375,8 @@ if (typeof (invitation) == "undefined") {
                                 parent.$(".entity-grid").trigger("refresh");
                                 parent.$(".form-close").eq(0).click();
                                 setTimeout($(".entity-grid").trigger("refresh"), 3000);
-                            });
 
+                            });
                             break;
                         }//end if
                         else {
@@ -546,6 +546,24 @@ if (typeof (invitation) == "undefined") {
                 }//end else if user login before
 
             }//end else
+        },
+
+        Show_Secondary_Message: function (ParentAccount, LanguageCode) {
+            debugger;
+            var SecondaryContactResuts = tdg.webapi.SelectedColumnlist("contacts",
+                "contactid,firstname,lastname",
+                "statecode eq 0 and cid_contacttype eq 100000001 and _parentcustomerid_value eq " + ParentAccount);
+
+            if (SecondaryContactResuts && SecondaryContactResuts.length == 1) {
+                var m000133 = tdg.error_message.message("m000133");
+                // "Note: This addition of a backup Contact has completed the requirements of the regulation. Any further Contact additions are completely optional.";
+                // show message
+                tdg.c.page_instructions(m000133);
+                tdg.c.dialog_OK(m000133);
+            }
+            else {
+                $(".instructions").remove();
+            }
         },
     }
 }
