@@ -251,10 +251,7 @@
   {
 
    UploadType = "Initial";
-   //add div
-   //$("div.actions")
-   //$("#Row_PreviousNextButton").append('<br><div id="DivNavbuttonGroup"  class="col-sm-6 clearfix"> </div>');
-   //add previous and next inside the div
+   
    $("#DivNavbuttonGroup").append('<div role="group" class= "btn-group entity-action-button"><span id="Div_Previous_next" class="tool-tip" tabindex="0" data-toggle="tooltip" data-placement="bottom"  > <button type="button" id="btn_Previous" class="btn btn-default button previous previous-btn">Previous</button></span></div>');
    $("#DivNavbuttonGroup").append('<div role="group" class= "btn-group entity-action-button">&nbsp;&nbsp;</div>');
    $("#DivNavbuttonGroup").append('<div role="group" class = "btn-group entity-action-button" > <span id="Div_btn_next" class="tool-tip" tabindex="0" data-toggle="tooltip" data-placement="bottom"  > <button type="button" id="btn_Next" class="submit-btn btn btn-primary form-action-container-left" disabled >Next</button></span></div>');
@@ -334,105 +331,82 @@ $('#btn_attachfile_and_scan').click(function(e)
    }
    else
    {
-       $('#loader').show();
-   // $("#mainContent").before("<div class='validation' style='color:black;margin-bottom: 20px;'>File is sent for scaning</div>");
-    var DocumentbodyContents;
-  // Get the name of the selected file
-    var FileName = $('#AttachFile')[0].files[0].name;
+     string = AttestconfirmationMessage = "By continuing, you are attesting that all information provided is accurate and complete to the best of your knowledge. Do you want to continue?"; 
+    //check if user attest
+       confirmDialog(AttestconfirmationMessage, (ans) => {
+                            if (ans) {
+                               // console.log("Yes");
+                                                                $('#loader').show();
+                            // $("#mainContent").before("<div class='validation' style='color:black;margin-bottom: 20px;'>File is sent for scaning</div>");
+                                var DocumentbodyContents;
+                            // Get the name of the selected file
+                                var FileName = $('#AttachFile')[0].files[0].name;
 
-    // Get the mime type of the selected file
-    var MimeType = $('#AttachFile')[0].files[0].type;
+                                // Get the mime type of the selected file
+                                var MimeType = $('#AttachFile')[0].files[0].type;
 
-    // Get the content of the selected file
-    var file = document.getElementById('AttachFile').files[0];
+                                // Get the content of the selected file
+                                var file = document.getElementById('AttachFile').files[0];
 
-                console.log("file name " + FileName);
-                  var langcode = '{{languagecode}}'  ;
+                                            console.log("file name " + FileName);
+                                            var langcode = '{{languagecode}}'  ;
 
-    if (MimeType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-   {
-       $('#loader').hide();
-       //get error message in english
-       var FileTypeErrorMessage = filter_BulkMessageArray("M2" , "en");
-           // check language if not english assign french transation
-            if ( langcode != 'en-US' && langcode !="en")
-            {
-             // responseMessage  =  "<p> Le système CID va maintenant commencer la deuxième des deux séries de validations du fichier en cours de téléchargement. Un e-mail sera envoyé à votre adresse e-mail de " + useremail +"(tel que défini via votre profil utilisateur), indiquant les résultats de la deuxième série de validations et les étapes ultérieures à suivre. <br><br>" +
-             //"À ce stade, vous pouvez attendre l'e-mail de notification et passer à l'étape suivante décrite à partir de celui-ci. Alternativement, vous pouvez quitter temporairement le processus d'inscription et le système vous ramènera à l'endroit où vous vous étiez arrêté à votre retour.[B1037]</p>"
-           FileTypeErrorMessage = filter_BulkMessageArray("M2" , "fr");
+                                if (MimeType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                            {
+                                $('#loader').hide();
+                                //get error message in english
+                                var FileTypeErrorMessage = filter_BulkMessageArray("M2" , "en");
+                                    // check language if not english assign french transation
+                                        if ( langcode != 'en-US' && langcode !="en")
+                                        {
+                                        // responseMessage  =  "<p> Le système CID va maintenant commencer la deuxième des deux séries de validations du fichier en cours de téléchargement. Un e-mail sera envoyé à votre adresse e-mail de " + useremail +"(tel que défini via votre profil utilisateur), indiquant les résultats de la deuxième série de validations et les étapes ultérieures à suivre. <br><br>" +
+                                        //"À ce stade, vous pouvez attendre l'e-mail de notification et passer à l'étape suivante décrite à partir de celui-ci. Alternativement, vous pouvez quitter temporairement le processus d'inscription et le système vous ramènera à l'endroit où vous vous étiez arrêté à votre retour.[B1037]</p>"
+                                    FileTypeErrorMessage = filter_BulkMessageArray("M2" , "fr");
 
-            }//end check language
-          $('#ErrorMessageDiv').css('display', 'block');
-          $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  FileTypeErrorMessage + "</p>");
-          Enable_Button('btn_attachfile_and_scan');
-          Enable_Button('btn_attachfile_and_scan');
-          Enable_Button('linkdownload_English');
-          Enable_Button('linkdownload_French');
-         // call the submit button to show error message
-         // $("#InsertButton").click();
+                                        }//end check language
+                                    $('#ErrorMessageDiv').css('display', 'block');
+                                    $('#ErrorMessageDiv').html("<h3>Error</h3> <p>" +  FileTypeErrorMessage + "</p>");
+                                    Enable_Button('btn_attachfile_and_scan');
+                                    Enable_Button('btn_attachfile_and_scan');
+                                    Enable_Button('linkdownload_English');
+                                    Enable_Button('linkdownload_French');
+                                    // call the submit button to show error message
+                                    // $("#InsertButton").click();
 
-   }
+                            }
 
-  else if (file) {
+                            else if (file) {
 
-       //start reading uploaded file
-        var reader = new FileReader();
+                                //start reading uploaded file
+                                    var reader = new FileReader();
 
-        reader.onload = function(e) {
-             //get the scan flow url from fetch xml  stored in liquid variable
-                 var Scan_API_URL = '{{Scan_flow_URL}}';
+                                    reader.onload = function(e) {
+                                        //get the scan flow url from fetch xml  stored in liquid variable
+                                            var Scan_API_URL = '{{Scan_flow_URL}}';
 
-                //call antivirus URL
-                Call_Virsu_Scan_API(Scan_API_URL
-                ,e.target.result , BulkActivitytype ,FileName,langcode );
-
-
-        };
-
-        reader.readAsBinaryString(file);
-
-           //else
-           //{
-
-            // Read the file
-       // var reader = new FileReader();
-
-      //  reader.readAsDataURL(file);
-
-        // The browser has finished reading the file, we can now do something with it...
-
-      //  reader.onload = function (e) {
-
-            // The browser has finished reading the file, we can now do something with it...
-
-         //   DocumentbodyContents = e.target.result;
-
-            // Split the string at the first comma (removing the base64 prefix)
-          //  DocumentbodyContents = DocumentbodyContents.substring(DocumentbodyContents.indexOf(',') + 1);
-           // debugger;
-
-            //  var Scan_API_URL = '{{Scan_flow_URL}}';
-           //   debugger;
-
-          //call antivirus URL
-         // Call_Virsu_Scan_API(Scan_API_URL
-          //  ,DocumentbodyContents , BulkActivitytype ,FileName,langcode );
+                                            //call antivirus URL
+                                            Call_Virsu_Scan_API(Scan_API_URL
+                                            ,e.target.result , BulkActivitytype ,FileName,langcode );
 
 
-       // ,btoa(c));
+                                    };
+
+                                    reader.readAsBinaryString(file);
+
+                                }///end if file
+                               
+
+                    }
+                    else {
+                                
+                    }});
 
 
 
-        // }//end loader
-        //}//end else if file content match file type
-
-
-    }///end if file
 
    }// end check file length
 
 
-//btoa(c) );
 });
 
 
