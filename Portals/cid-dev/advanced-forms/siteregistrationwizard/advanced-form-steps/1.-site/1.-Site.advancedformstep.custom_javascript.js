@@ -73,7 +73,7 @@ $(document).ready(function () {
 	if (cid_legalname == "") {
 		var cid_legalname = "{{user.cid_legalname}}";
 		cid_legalname = (cid_legalname == "" ? "N/A" : cid_legalname);
-    }
+	}
 
 	cid_legalname = tdg.c.replace_special_char(cid_legalname);
 	$("#ovs_legalname").val(cid_legalname);
@@ -108,7 +108,6 @@ $(document).ready(function () {
 			break;
 		default:
 			tdg.c.section_show("section_address");
-			$("#address1_line1").prop('disabled', true);
 			$("#address1_line2").prop('readonly', true);
 			$("#address1_line3").prop('readonly', true);
 			$("#address1_city").prop('readonly', true);
@@ -116,7 +115,6 @@ $(document).ready(function () {
 			$("#address1_stateorprovince").prop('readonly', true);
 			$("#address1_postalcode").prop('readonly', true);
 			if (addressReadOnly) {
-				$("#address1_line1").prop("disabled", true);
 				$("#ovs_address1_province").prop("disabled", true);
 				cid_input_read_only("section_address");
 			}
@@ -154,5 +152,4 @@ function cid_input_read_only(sectionName) {
 	$("#cid_same_as_company").attr("disabled", true);
 	$("#ovs_address_type").attr("disabled", true);
 	$(".section[data-name='" + sectionName + "']").find(':input').prop("disabled", true);
-	//$(".section[data-name='section_legal_land_description']").find('.picklist').prop("disabled", true);
 }
