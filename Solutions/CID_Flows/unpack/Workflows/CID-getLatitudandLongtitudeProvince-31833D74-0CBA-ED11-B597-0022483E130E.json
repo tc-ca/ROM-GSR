@@ -1,0 +1,329 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_bingmaps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedbingmaps_312c4"
+        },
+        "api": {
+          "name": "shared_bingmaps"
+        }
+      },
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "2eebacf8-a8f3-4f6a-8461-9ddded77125d"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 4,
+              "subscriptionRequest/entityname": "account",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "address1_latitude,address1_longitude,ovs_address_type ",
+              "subscriptionRequest/filterexpression": "customertypecode eq 948010001 and ovs_address_type eq 2"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Check_if_Lat_and_Long_are_not_empty_and_address_type_is_Lat_and_Long": {
+          "actions": {
+            "Longtitude": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "f57b069a-541b-4dca-b82b-c4b58c5a8b8f"
+              },
+              "type": "Compose",
+              "inputs": "@triggerOutputs()?['body/address1_longitude']"
+            },
+            "Latitude": {
+              "runAfter": {
+                "Longtitude": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "589f5789-27f9-4ff6-be13-135ff3db10ef"
+              },
+              "type": "Compose",
+              "inputs": "@triggerOutputs()?['body/address1_latitude']"
+            },
+            "Get_location_by_point": {
+              "runAfter": {
+                "Latitude": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "382d8753-8a2d-48f6-a3bb-54f4df11972f"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_bingmaps",
+                  "operationId": "GetLocationByPoint",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_bingmaps"
+                },
+                "parameters": {
+                  "latitude": "@outputs('Latitude')",
+                  "longitude": "@outputs('Longtitude')",
+                  "includeNeighborhood": true,
+                  "include": true
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Body": {
+              "runAfter": {
+                "Get_location_by_point": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "35715c02-f683-4fd6-9660-14be479b9ec5"
+              },
+              "type": "Compose",
+              "inputs": "@body('Get_location_by_point')"
+            },
+            "Province": {
+              "runAfter": {
+                "Body": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7dc2558c-a6d9-4328-ac80-0a96857eaea6"
+              },
+              "type": "Compose",
+              "inputs": "@outputs('Body')['address']['adminDistrict']"
+            },
+            "Filter_Province_array": {
+              "runAfter": {
+                "Province": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1a4de2d3-c2c6-40c6-b918-b0ffe6a40849"
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@variables('ProvinceList')",
+                "where": "@contains(item()['ProvinceCode'], outputs('Province'))"
+              }
+            },
+            "ProvinceIndex": {
+              "runAfter": {
+                "Filter_Province_array": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "17ad5f56-7123-4860-bd1a-a355cb03e3a0"
+              },
+              "type": "Compose",
+              "inputs": "@body('Filter_Province_array')[0]['index']"
+            },
+            "ProvinceCode": {
+              "runAfter": {
+                "ProvinceIndex": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b7de7b72-45b0-4788-8ce8-354224c4d44c"
+              },
+              "type": "Compose",
+              "inputs": "@body('Filter_Province_array')[0]['ProvinceCode']"
+            },
+            "Update_province": {
+              "runAfter": {
+                "ProvinceCode": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b74e5e0d-78f9-4984-b9ae-07430dd2ca59"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "recordId": "@triggerOutputs()?['body/accountid']",
+                  "item/ovs_address1_province": "@outputs('ProvinceIndex')"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_variable_Province_List": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/ovs_address_type']",
+                  2
+                ]
+              },
+              {
+                "greater": [
+                  "@length(string(triggerOutputs()?['body/address1_latitude']))",
+                  0
+                ]
+              },
+              {
+                "greater": [
+                  "@length(string(triggerOutputs()?['body/address1_longitude']))",
+                  0
+                ]
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9ff4e24d-4a8e-4c43-a4a1-a26f2b9b659d"
+          },
+          "type": "If"
+        },
+        "Initialize_variable_Province_List": {
+          "runAfter": {
+            "Terminate": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9d843d01-989c-48bc-8760-256041db9458"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ProvinceList",
+                "type": "array",
+                "value": [
+                  {
+                    "Province": "Alberta::Alberta",
+                    "index": 0,
+                    "ProvinceCode": "AB"
+                  },
+                  {
+                    "Province": "British Columbia::Colombie-Britannique",
+                    "index": 1,
+                    "ProvinceCode": "BC"
+                  },
+                  {
+                    "Province": "Manitoba::Manitoba",
+                    "index": 2,
+                    "ProvinceCode": "MB"
+                  },
+                  {
+                    "Province": "New Brunswick::Nouveau-Brunswick",
+                    "index": 3,
+                    "ProvinceCode": "NB"
+                  },
+                  {
+                    "Province": "Newfoundland and Labrador::Terre‑Neuve‑et‑Labrador",
+                    "index": 4,
+                    "ProvinceCode": "NL"
+                  },
+                  {
+                    "Province": "Northwest Territories::Territoires du Nord‑Ouest",
+                    "index": 5,
+                    "ProvinceCode": "NT"
+                  },
+                  {
+                    "Province": "Nova Scotia::Nouvelle-Écosse",
+                    "index": 6,
+                    "ProvinceCode": "NS"
+                  },
+                  {
+                    "Province": "Nunavut::Nunavut",
+                    "index": 7,
+                    "ProvinceCode": "NU"
+                  },
+                  {
+                    "Province": "Ontario::Ontario",
+                    "index": 8,
+                    "ProvinceCode": "ON"
+                  },
+                  {
+                    "Province": "Prince Edward Island::Île-du-Prince-Édouard",
+                    "index": 9,
+                    "ProvinceCode": "PE"
+                  },
+                  {
+                    "Province": "Quebec::Québec",
+                    "index": 10,
+                    "ProvinceCode": "QC"
+                  },
+                  {
+                    "Province": "Saskatchewan::Saskatchewan",
+                    "index": 11,
+                    "ProvinceCode": "SK"
+                  },
+                  {
+                    "Province": "Yukon::Yukon",
+                    "index": 12,
+                    "ProvinceCode": "YT"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "Terminate": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "1860b787-b2eb-4aaa-9d93-31a78efb2fde"
+          },
+          "type": "Terminate",
+          "inputs": {
+            "runStatus": "Cancelled"
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,408 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_office365": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceOutlookTDGCoreUser"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "7ea68ba2-150a-459f-a987-0c0bad5e4082"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 1,
+              "subscriptionRequest/entityname": "ovs_supportrequest",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/runas": 3
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "get-environment-settings": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "7ed63b1d-9cf8-403e-9d9c-56cdd03f198e"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "qm_environmentsettingses",
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"qm_environmentsettings\">\n<attribute name=\"qm_environmentsettingsid\"/>\n<attribute name=\"qm_name\"/>\n<attribute name=\"qm_value\"/>\n<order attribute=\"qm_name\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"qm_name\" operator=\"like\" value=\"%CID[_]%\"/>\n</filter>\n</entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Scope_-_email_Template_Standard_Text": {
+          "actions": {
+            "StandardSalutation": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "ffa8d1a6-89ec-434c-82e6-78e0fa2bd649"
+              },
+              "type": "Compose",
+              "inputs": "<em>*** The following is an automated email sent by the TDG Online - CID system. Please do not reply ***</em>"
+            },
+            "FrenchStandardSalutation": {
+              "runAfter": {
+                "StandardSalutation": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "ffa8d1a6-89ec-434c-82e6-78e0fa2bd649"
+              },
+              "type": "Compose",
+              "inputs": "<em>*** French-The following is an automated email sent by the TDG Online - CID system. Please do not reply ***</em>"
+            },
+            "English-EmailFooter": {
+              "runAfter": {
+                "FrenchStandardSalutation": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1535933c-0d10-4db3-9d01-208feac8f786"
+              },
+              "type": "Compose",
+              "inputs": "<div style=\"font-size:x-small;\"><br>Note:<br>\n   - To receive subsequent emails in French, you can update your Language of Preferred Correspondence choice via the [Account Settings] button in the TDG Online - CID data portal. <br><br> \n   - Please do not reply to this email. If necessary, use the Contact Us button, or link, in the CID data portal. </div>"
+            },
+            "French-EmailFooter": {
+              "runAfter": {
+                "English-EmailFooter": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "5ec93fa4-a5e7-451e-9327-290b6c88346b"
+              },
+              "type": "Compose",
+              "inputs": "<div style=\"font-size:x-small;\"><br>French-Note:<br>\n   - To receive subsequent emails in English, you can update your Language of Preferred Correspondence choice via the [Account Settings] button in the TDG Online - CID data portal. <br><br> \n   - Please do not reply to this email. If necessary, use the Contact Us button, or link, in the CID data portal. </div>"
+            },
+            "Filter_environment-CID_Environment": {
+              "runAfter": {
+                "French-EmailFooter": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('get-environment-settings')?['body/value']",
+                "where": "@equals(item()?['qm_name'], 'CID_Environment')"
+              }
+            }
+          },
+          "runAfter": {
+            "get-environment-settings": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4a4d30e6-367a-4728-93d1-e8fc48567195"
+          },
+          "type": "Scope"
+        },
+        "Get_a_row_by_ID-_get_contact_email": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "2744fc84-26ac-4d3b-8d87-0779d264138b"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "contacts",
+              "recordId": "@triggerOutputs()?['body/_ovs_createdbyexternaluser_value']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Check_environment": {
+          "actions": {
+            "Set_variable_TestingText": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "224fc033-5e58-423f-b235-e84df25189ec"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "TestingText",
+                "value": "Test email: This email is a test email, not an actual email representing what is indicated below. <br><br>                                                                                 "
+              }
+            },
+            "Set_variable_TestSubjectText": {
+              "runAfter": {
+                "Set_variable_TestingText": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7a6742f2-3215-413a-9225-11fd2574acab"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "TestSubjectText",
+                "value": "Test Email: "
+              }
+            },
+            "Set_variable_FrenchTestSubjectText": {
+              "runAfter": {
+                "Set_variable_TestSubjectText": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a71a8d8c-41f7-4d8b-9136-19ddffd73280"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "FrenchTestSubjectText",
+                "value": "French-Test Email: "
+              }
+            },
+            "Set_variable_FrenchTestingText": {
+              "runAfter": {
+                "Set_variable_FrenchTestSubjectText": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e2edab0d-d0a2-4152-8fae-2b793ec012aa"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "FrenchTestingText",
+                "value": "French-Test email: This email is a test email, not an actual email representing what is indicated below. <br><br>                                                                  "
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_variable_Testing_text_for_the_email": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "not": {
+              "equals": [
+                "@body('Filter_environment-CID_Environment')[0]['qm_value']",
+                "PROD"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "9be99f10-fa00-40ae-8580-da6ba08c2e07"
+          },
+          "type": "If"
+        },
+        "Initialize_variable_Testing_text_for_the_email": {
+          "runAfter": {
+            "Initialize_variable_TestSubjectText": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "056efd54-c348-4947-b42c-bab120c698de"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "TestingText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_TestSubjectText": {
+          "runAfter": {
+            "Initialize_variable_FrenchTestSubjectText": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "36348f7e-e55f-43ac-b622-3f00ecbc9c53"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "TestSubjectText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_FrenchTestSubjectText": {
+          "runAfter": {
+            "Initialize_variable_FrenchTesting_text_for_the_email": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "42321f2d-372c-4f1a-a435-a67ead702f1d"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FrenchTestSubjectText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_FrenchTesting_text_for_the_email": {
+          "runAfter": {
+            "Get_a_row_by_ID-_get_contact_email": [
+              "Succeeded"
+            ],
+            "Scope_-_email_Template_Standard_Text": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6b11f2fb-0032-45f1-83c0-6af6ad4db3b3"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FrenchTestingText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Check_language": {
+          "actions": {
+            "Send_an_email_(V2)": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "c70c9dbe-faa1-4d3f-8eec-841297c24ec8"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_office365",
+                  "operationId": "SendEmailV2",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                },
+                "parameters": {
+                  "emailMessage/To": "@outputs('Get_a_row_by_ID-_get_contact_email')?['body/emailaddress1']",
+                  "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: Request for support",
+                  "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nA representative will review your request as detailed below, and as required contact you via email.<br>\n<br>\nRegards<br>\n<br>\n<br>\nTransport Canada TDG CID Support Team<br>\n<br>\nDetails of the Request:<br>\n<br>\n@{outputs('RequestDetails')}<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                  "emailMessage/Importance": "Normal"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "RequestDetails": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Send_an_email_(V2)_2": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "c70c9dbe-faa1-4d3f-8eec-841297c24ec8"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_office365",
+                    "operationId": "SendEmailV2",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                  },
+                  "parameters": {
+                    "emailMessage/To": "@outputs('Get_a_row_by_ID-_get_contact_email')?['body/emailaddress1']",
+                    "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}French-TDG Online - CID: Request for support",
+                    "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nA representative will review your request as detailed below, and as required contact you via email.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\nDetails of the Request:<br>\n<br>\n@{outputs('RequestDetails')}<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                    "emailMessage/Importance": "Normal"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@outputs('Get_a_row_by_ID-_get_contact_email')?['body/cid_languageofcorrespondence']",
+              918640001
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "526cdd68-a226-4620-a7c0-6b7bc87c8164"
+          },
+          "type": "If"
+        },
+        "RequestDetails": {
+          "runAfter": {
+            "Check_environment": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "77d06431-3ea5-40df-ad82-0f148955b7ea"
+          },
+          "type": "Compose",
+          "inputs": "@replace(triggerOutputs()?['body/ovs_requestdetails'], decodeUriComponent('%0A'),'<br>')"
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

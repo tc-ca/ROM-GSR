@@ -150,7 +150,7 @@
                 },
                 "parameters": {
                   "entityName": "tasks",
-                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"task\">\n    <attribute name=\"activityid\" />\n    <filter type=\"and\">\n          <condition attribute=\"scheduledend\" operator=\"null\" />\n          <condition attribute=\"cid_annualcomplianceitem\" operator=\"eq\" value=\"@{items('Apply_to_each')?['cid_annualcomplianceitemid']}\" />\n      <condition attribute=\"regardingobjectid\" operator=\"eq\" value=\"@{outputs('Update_the_company_anniversary_and_reminder_dates')?['body/accountid']}\" />\n    </filter>\n  </entity>\n</fetch>"
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"task\">\n    <attribute name=\"activityid\" />\n    <attribute name=\"subject\" />\n    <filter type=\"and\">\n          <condition attribute=\"scheduledend\" operator=\"null\" />\n          <condition attribute=\"cid_annualcomplianceitem\" operator=\"eq\" value=\"@{items('Apply_to_each')?['cid_annualcomplianceitemid']}\" />\n      <condition attribute=\"regardingobjectid\" operator=\"eq\" value=\"@{outputs('Update_the_company_anniversary_and_reminder_dates')?['body/accountid']}\" />\n    </filter>\n  </entity>\n</fetch>"
                 },
                 "authentication": "@parameters('$authentication')"
               }

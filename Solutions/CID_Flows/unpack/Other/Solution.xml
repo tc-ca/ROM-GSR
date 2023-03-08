@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ImportExportXml version="9.2.23022.166" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ImportExportXml version="9.2.23023.158" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <UniqueName>CID_Flows</UniqueName>
     <LocalizedNames>
       <LocalizedName description="CID.Flows" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.0.0.75</Version>
+    <Version>1.0.0.77</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>CID_Solution</UniqueName>
@@ -81,6 +81,7 @@
       <RootComponent type="29" id="{02cc4aec-66ab-ed11-83ff-0022483d0343}" behavior="0" />
       <RootComponent type="29" id="{1167d04e-122e-ed11-9db0-0022483cb62f}" behavior="0" />
       <RootComponent type="29" id="{2d5439b3-408d-ed11-81ad-0022483d0343}" behavior="0" />
+      <RootComponent type="29" id="{31833d74-0cba-ed11-b597-0022483e130e}" behavior="0" />
       <RootComponent type="29" id="{39b01a17-a65d-ed11-9562-0022483d0c87}" behavior="0" />
       <RootComponent type="29" id="{463c7a4b-4155-ed11-9561-0022483d0343}" behavior="0" />
       <RootComponent type="29" id="{4da59ae0-c9a6-ec11-b3fe-0022483c4a6f}" behavior="0" />
@@ -96,6 +97,7 @@
       <RootComponent type="29" id="{a10c2d29-7db0-ec11-983e-000d3a84adbc}" behavior="0" />
       <RootComponent type="29" id="{ab1ec093-6055-ed11-9561-0022483cb62f}" behavior="0" />
       <RootComponent type="29" id="{bcbdf38e-f7ac-ed11-83ff-0022483e130e}" behavior="0" />
+      <RootComponent type="29" id="{c467392f-50bc-ed11-83ff-0022483d0343}" behavior="0" />
       <RootComponent type="29" id="{d089c223-eea6-ec11-b3fe-0022483c4a6f}" behavior="0" />
       <RootComponent type="29" id="{d8d6919a-ce65-ed11-9562-0022483d0c87}" behavior="0" />
       <RootComponent type="29" id="{f49e4ea0-7559-ed11-9562-0022483d0c87}" behavior="0" />
@@ -210,6 +212,18 @@
         <Dependent type="29" displayName="Start Site Upload Validation" id="{4da59ae0-c9a6-ec11-b3fe-0022483c4a6f}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="1" schemaName="ovs_supportrequest" displayName="Support Request" solution="Active" />
+        <Dependent type="29" displayName="CID - Send support request email" id="{c467392f-50bc-ed11-83ff-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="qm_environmentsettings" displayName="Environment Settings" solution="Active" />
+        <Dependent type="29" displayName="Account - Send  Annual Compliance Completion Email" id="{39b01a17-a65d-ed11-9562-0022483d0c87}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="qm_environmentsettings" displayName="Environment Settings" solution="Active" />
+        <Dependent type="29" displayName="CID Send Portal Contact Email by EmailCode" id="{463c7a4b-4155-ed11-9561-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="1" schemaName="qm_environmentsettings" displayName="Environment Settings" solution="Active" />
         <Dependent type="29" displayName="Start Site Upload Validation" id="{4da59ae0-c9a6-ec11-b3fe-0022483c4a6f}" />
       </MissingDependency>
@@ -220,6 +234,10 @@
       <MissingDependency>
         <Required type="1" schemaName="qm_environmentsettings" displayName="Environment Settings" solution="Active" />
         <Dependent type="29" displayName="CID Portal - Send Email Invitation for Secondary User Registration" id="{ab1ec093-6055-ed11-9561-0022483cb62f}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="qm_environmentsettings" displayName="Environment Settings" solution="Active" />
+        <Dependent type="29" displayName="CID - Send support request email" id="{c467392f-50bc-ed11-83ff-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="qm_environmentsettings" displayName="Environment Settings" solution="Active" />
@@ -238,7 +256,7 @@
         <Dependent type="29" displayName="Download Sites Info" id="{ff6ad38f-f8bb-ec11-983f-0022483d62f4}" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="2" schemaName="cid_annualcompliancecompletiondate" displayName="Annual Compliance Completion Date" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Required type="2" schemaName="cid_annualcompliancecompletiondate" displayName="Completion Date of the Previous Annual Compliance" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
         <Dependent type="29" displayName="CID Portal - Reset Annual Compliance Update info" id="{9cada12d-fe71-ed11-81ac-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
@@ -284,6 +302,10 @@
       <MissingDependency>
         <Required type="connectionreference" displayName="tdg_ConnectionReferenceDataverseServicePrinciple" solution="Active" id.connectionreferencelogicalname="tdg_ConnectionReferenceDataverseServicePrinciple" />
         <Dependent type="29" displayName="Account - Send  Annual Compliance Reminder - 30 days in advance of anniversary day" id="{1167d04e-122e-ed11-9db0-0022483cb62f}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="connectionreference" displayName="tdg_ConnectionReferenceDataverseServicePrinciple" solution="Active" id.connectionreferencelogicalname="tdg_ConnectionReferenceDataverseServicePrinciple" />
+        <Dependent type="29" displayName="CID - get Latitud and Longtitude Province " id="{31833d74-0cba-ed11-b597-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="connectionreference" displayName="tdg_ConnectionReferenceDataverseServicePrinciple" solution="Active" id.connectionreferencelogicalname="tdg_ConnectionReferenceDataverseServicePrinciple" />
@@ -343,6 +365,10 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="connectionreference" displayName="tdg_ConnectionReferenceDataverseServicePrinciple" solution="Active" id.connectionreferencelogicalname="tdg_ConnectionReferenceDataverseServicePrinciple" />
+        <Dependent type="29" displayName="CID - Send support request email" id="{c467392f-50bc-ed11-83ff-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="connectionreference" displayName="tdg_ConnectionReferenceDataverseServicePrinciple" solution="Active" id.connectionreferencelogicalname="tdg_ConnectionReferenceDataverseServicePrinciple" />
         <Dependent type="29" displayName="BulkUpload Initial validation" id="{d089c223-eea6-ec11-b3fe-0022483c4a6f}" />
       </MissingDependency>
       <MissingDependency>
@@ -372,6 +398,10 @@
       <MissingDependency>
         <Required type="connectionreference" displayName="tdg_ConnectionReferenceOutlookTDGCoreUser" solution="Active" id.connectionreferencelogicalname="tdg_ConnectionReferenceOutlookTDGCoreUser" />
         <Dependent type="29" displayName="Start Site Upload Validation" id="{4da59ae0-c9a6-ec11-b3fe-0022483c4a6f}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="connectionreference" displayName="tdg_ConnectionReferenceOutlookTDGCoreUser" solution="Active" id.connectionreferencelogicalname="tdg_ConnectionReferenceOutlookTDGCoreUser" />
+        <Dependent type="29" displayName="CID - Send support request email" id="{c467392f-50bc-ed11-83ff-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="connectionreference" displayName="tdg_ConnectionReferenceOutlookTDGCoreUser" solution="Active" id.connectionreferencelogicalname="tdg_ConnectionReferenceOutlookTDGCoreUser" />
