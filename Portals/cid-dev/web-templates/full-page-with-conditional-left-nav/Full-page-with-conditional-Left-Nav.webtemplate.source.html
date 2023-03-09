@@ -1,0 +1,69 @@
+
+<div class="container" style="width: 80%; margin: 0 auto;">
+    <div class="row">
+
+        <div class="col-sm-2 col-lg-3 left-column">
+
+            {% block sidebar %}
+            {% assign registerationDate = entities.account[user.parentcustomerid.id].cid_cidcompanystatus.value %}
+            {%if registerationDate != null and registerationDate != "" %}
+            {% assign nav = weblinks["Company Dashboard Navigation"] %}
+            {% if website.selected_language.code == 'fr' %}
+            {% assign nav = weblinks["Company Dashboard Navigation FR"] %}
+            {%endif%}
+            {% assign weblinkset_id = page.adx_navigation.id %}
+
+
+            {% if nav %}
+            <div class="list-group">
+
+                {% for link in nav.weblinks %}
+
+                {%if link.url contains "online-help" or link.url contains "OnlineHelp"   %}
+                {%if request.url contains "rd-tdgcore-dev" or request.url contains "tdgcore-qa" %}
+                <a class="list-group-item" href={{ link.url }}> {{ link.name }} </a>
+                {%else%}
+                <a class="list-group-item" style="pointer-events: none;" href={{ link.url }}> {{ link.name }} </a>
+                {% endif %}
+                {%else%}
+                <a class="list-group-item" href={{ link.url }}> {{ link.name }} </a>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {%endif%}
+
+            {%endif%}
+            {% endblock %}
+        </div>
+        <div class="col-sm-9 col-lg-9 right-column">
+
+            {% block breadcrumbs %}
+            {% include 'Breadcrumbs' %}
+            {% endblock %}
+            {% block title %}
+            {% include 'Page Header' %}
+            {% endblock %}
+
+
+            <div id="mainContent" class="row">
+
+                <div class="col-md-12">
+                    {% block main %}
+
+                    <div class="row sectionBlockLayout" style="display: flex; flex-wrap: wrap; padding: 8px; margin: 0px; text-align: left; min-height: 100px;">
+                    {% include 'Page Copy' %}
+                    </div>
+                    {% endblock %}
+                </div>
+               
+      
+                
+
+
+            </div>
+        </div>
+    </div>
+  
+</div>
+<script type="text/javascript" src="~/tdgcore_common.js"></script>
+

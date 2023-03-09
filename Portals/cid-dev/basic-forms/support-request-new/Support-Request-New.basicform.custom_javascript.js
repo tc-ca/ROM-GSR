@@ -3,14 +3,34 @@ $(document).ready(function () {
 
 page_setup();
 
+
+
 var selected_language = '{{website.selected_language.code}}';
 var email  = '{{user.emailaddress1}}';
-var contactemailLabel = "Contact Email";
-var contactusNote = "Note: This is your account’s official email, which may be updated via the [Account Settings] button at the top.";
-var confirmationMessage = "Your request has been sent to the Transport Canada TDG CID Support Team.";
-var detailNeedtobAddedMessage = "Details of Request needs to be entered";
-//to do :
-//add code to get lables from message to js file
+
+//cancel button text   
+	var ButtonCancel = tdg.error_message.message("BTN_CANCEL");
+	//add button next to save button
+	$(".actions").append('&nbsp;&nbsp;<input id ="cancelButton" type="button" value="' +
+		ButtonCancel + '" class="btn btn-default button previous previous-btn"> </input>');
+	//cancel button click event
+	$('#cancelButton').click(function (e) {
+		//click back button
+		history.back();
+	});
+//m000135
+var contactemailLabel = tdg.error_message.message("m000135");
+//"Contact Email";
+//m000136
+var contactusNote = tdg.error_message.message("m000136");
+//"Note: This is your account’s official email, which may be updated via the [Account Settings] button at the top.";
+//m000137
+var confirmationMessage = tdg.error_message.message("m000137");
+//"Your request has been sent to the Transport Canada TDG CID Support Team.";
+//m000138
+var detailNeedtobAddedMessage = tdg.error_message.message("m000138");
+//"Details of Request needs to be entered";
+
 
 //hide and create new submit button
 var submit_Lable = $("#InsertButton").val() ;
@@ -115,18 +135,51 @@ console.log(URLs);
 function Get_RequestDetails() {
 
   var selectedValue  = document.getElementById("ovs_requesttype").value;
- 
-  var MemoData = tdg.webapi.SelectedColumnlist("ovs_supportrequesttypes" ,"ovs_templateenglish , ovs_templatefrench" ,
-   "ovs_supportrequesttypeid eq " + selectedValue );   
-    
 
+  var MemoData = tdg.webapi.SelectedColumnlist("ovs_supportrequesttypes" ,"ovs_templateenglish ,_ovs_frenchknowledgearticle_value, ovs_templatefrench,_ovs_knowledgearticle_value" ,
+   "ovs_supportrequesttypeid eq " + selectedValue );   
+    console.log(MemoData[0]["_ovs_knowledgearticle_value"]);
+     
  
     var selected_language = '{{website.selected_language.code}}';
     var memo = MemoData[0]["ovs_templateenglish"];
+    
+       
+
+
      if (selected_language != "en")
     {
         memo = MemoData[0]["ovs_templatefrench"];
-    }
+        if ( MemoData[0]["_ovs_frenchknowledgearticle_value"] != null)
+        {
+          var MessageConfirm = "French-There is knowledge article information about this topic that may answer your request. Do you want to first view that information?";
+            console.log (" knowledge article found");
+            tdg.c.dialog_YN(MessageConfirm, (ans) => {
+                            if (ans) {
+                                window.location.href='~/KnowledgeArticlePage/?id=' +  MemoData[0]["_ovs_frenchknowledgearticle_value"];
+                             
+                                }else {}
+        });}//end if french article exist
+    }//end if language not en
+    else
+    {
+        if ( MemoData[0]["_ovs_knowledgearticle_value"] != null)
+        {
+            //m000139
+          var MessageConfirm = tdg.error_message.message("m000139");
+          //"There is knowledge article information about this topic that may answer your request. Do you want to first view that information?";
+       
+            tdg.c.dialog_YN(MessageConfirm, (ans) => {
+                            if (ans) {
+                                window.location.href='~/KnowledgeArticlePage/?id=' +  MemoData[0]["_ovs_knowledgearticle_value"];
+                             
+                                }else {}
+        });}//end check english article
+
+
+    }//end else if not english
+
+
     sessionStorage.setItem("MemoLength", memo.length);
   
     //update memo

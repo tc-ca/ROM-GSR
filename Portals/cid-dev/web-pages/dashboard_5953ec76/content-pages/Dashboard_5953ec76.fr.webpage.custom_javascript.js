@@ -5,15 +5,12 @@
 $(document).ready(function () {
     debugger;
 
-    var urlParams = new URLSearchParams(window.location.search);
-	if (urlParams.has('firsttime')) {
-        var firstTime = urlParams.get('firsttime')
+    sessionStorage.setItem('frominyearsites', 'false');
+    sessionStorage.setItem('fromannualcompliance', 'false');
+    sessionStorage.setItem('frominyearsitepage', 'false');
 
-        if(firstTime == "true"){
-            message = tdg.error_message.message("m000030");
-	        tdg.c.dialog_OK(message);
-        }
-    }
+    var companyName = "{{user.parentcustomerid.name}}";
+    $('div[data-name="tab_5"]').parent().before("<h2>" + companyName + "</h2><hr>");
 
     var topNav = $('#navbar');
     if (topNav) {
@@ -22,6 +19,8 @@ $(document).ready(function () {
         value = value.replace("{0}", companyName);
         $(value).insertAfter(topNav);
     }
+
+    tdg.c.control_hide("ovs_name_fr");
 
     var cid_crabusinessnumber = $('#cid_crabusinessnumber').val();
     if (cid_crabusinessnumber != "") {

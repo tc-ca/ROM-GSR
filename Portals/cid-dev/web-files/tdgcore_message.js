@@ -85,12 +85,17 @@ if (typeof (tdg.message) == "undefined") {
                 "- Quantité annuelle / Volume<br>" +
                 "- Nombre annuel d'envois</p>";
 
+            //var m000039_EN = "At this point, you cannot proceed back to the previous step to begin the registration process.<br><br>" +
+            //    "If you want to withdraw your registration altogether, including removing all entered data, then please choose No below. Next, choose the Contact Us button at the top of the screen, from which choose the ‘Request to withdraw this Registration’ option.<br><br>" +
+            //    "Do you instead want to request that TDG support personnel reach out to you in order to reset your account so that you can change the initial information from the registration process?";
+            //var m000039_FR = "At this point, you cannot proceed back to the previous step to begin the registration process.<br><br>" +
+            //    "If you want to withdraw your registration altogether, including removing all entered data, then please choose No below. Next, choose the Contact Us button at the top of the screen, from which choose the ‘Request to withdraw this Registration’ option.<br><br>" +
+            //    "Do you instead want to request that TDG support personnel reach out to you in order to reset your account so that you can change the initial information from the registration process?_FR";
+
             var m000039_EN = "At this point, you cannot proceed back to the previous step to begin the registration process.<br><br>" +
-                "If you want to withdraw your registration altogether, including removing all entered data, then please choose No below. Next, choose the Contact Us button at the top of the screen, from which choose the ‘Request to withdraw this Registration’ option.<br><br>" +
-                "Do you instead want to request that TDG support personnel reach out to you in order to reset your account so that you can change the initial information from the registration process?";
+                "If you want to withdraw your registration altogether, including removing all entered data, then please choose No below. Next, choose the Contact Us button at the top of the screen, from which choose the ‘Request to withdraw this Registration’ option."
             var m000039_FR = "At this point, you cannot proceed back to the previous step to begin the registration process.<br><br>" +
-                "If you want to withdraw your registration altogether, including removing all entered data, then please choose No below. Next, choose the Contact Us button at the top of the screen, from which choose the ‘Request to withdraw this Registration’ option.<br><br>" +
-                "Do you instead want to request that TDG support personnel reach out to you in order to reset your account so that you can change the initial information from the registration process?_FR";
+                "If you want to withdraw your registration altogether, including removing all entered data, then please choose No below. Next, choose the Contact Us button at the top of the screen, from which choose the ‘Request to withdraw this Registration’ option._FR" 
 
             var m000045_EN = "To proceed with the registration process you will need to either:<br><br>" +
                 "- Enter a different Business Number.<br><br>" +
@@ -601,10 +606,40 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "This action will deactivate the Organization and all of its Sites.</br></br>Please be aware that if any of the Sites are meant to be sold to another Organization, or merged into an existing Organization, then you will need to first begin the Transfer/Sale process for those Sites before deactivating the Organization.</br></br> <p style='color:red' >Be advised that this action cannot be undone.</p> Do you want to proceed with the Organization deactivation.</br></br>",
                         "message_fr": "In French - This action will deactivate the Organization and all of its Sites.</br></br>Please be aware that if any of the Sites are meant to be sold to another Organization, or merged into an existing Organization, then you will need to first begin the Transfer/Sale process for those Sites before deactivating the Organization.</br></br> <p style='color:red' >Be advised that this action cannot be undone.</p> Do you want to proceed with the Organization deactivation.</br></br>"
                     },
-					 {
+                    {
                         "code": "m000133",
                         "message_en": "Note: This addition of a backup Contact has completed the requirements of the regulation. Any further Contact additions are completely optional.",
                         "message_fr": "Note: This addition of a backup Contact has completed the requirements of the regulation. Any further Contact additions are completely optional._FR"
+                    },
+                    {
+                        "code": "m000134",
+                        "message_en": "This addition of a backup Contact has completed the requirements of the regulation. Any further Contact additions are completely optional.",
+                        "message_fr": "This addition of a backup Contact has completed the requirements of the regulation. Any further Contact additions are completely optional._FR"
+                    },
+                    {
+                        "code": "m000135",
+                        "message_en": "Contact Email",
+                        "message_fr": "Contact Email_fr"
+                    },
+                    {
+                        "code": "m000136",
+                        "message_en": "Note: This is your account’s official email, which may be updated via the [Account Settings] button at the top.",
+                        "message_fr": "Note: This is your account’s official email, which may be updated via the [Account Settings] button at the top._fr"
+                    },
+                    {
+                        "code": "m000137",
+                        "message_en": "Your request has been sent to the Transport Canada TDG CID Support Team.",
+                        "message_fr": "Your request has been sent to the Transport Canada TDG CID Support Team._fr"
+                    },
+                    {
+                        "code": "m000138",
+                        "message_en": "Details of Request needs to be entered.",
+                        "message_fr": "Details of Request needs to be entered._fr"
+                    },
+                    {
+                        "code": "m000139",
+                        "message_en": "There is knowledge article information about this topic that may answer your request. Do you want to first view that information?",
+                        "message_fr": "There is knowledge article information about this topic that may answer your request. Do you want to first view that information?_fr"
                     },
                 ];
 
@@ -612,3 +647,4 @@ if (typeof (tdg.message) == "undefined") {
         }
     }
 }
+

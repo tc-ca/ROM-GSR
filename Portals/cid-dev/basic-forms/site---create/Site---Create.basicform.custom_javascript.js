@@ -2,9 +2,17 @@
 // Basic Form - Site - Create.js
 //
 var _busy = false;
+
+
 $(document).ready(function () {
+  
 	debugger;
+
 	page_setup();
+
+     $("#InsertButton").click(function (e) {
+	   $("#ovs_address1_province").attr("disabled", false); });
+
 	//cancel button text   
 	var ButtonCancel = tdg.error_message.message("BTN_CANCEL");
 	//add button next to save button
@@ -101,4 +109,14 @@ function page_setup() {
 
 	// server error?
 	tdg.c.message_panel();
+}
+if (window.jQuery) {
+	(function ($) {
+		webFormClientValidate = function () {
+			
+		$("#ovs_address1_province").attr("disabled", false);
+		
+			return true;
+		}
+	}(window.jQuery));
 }

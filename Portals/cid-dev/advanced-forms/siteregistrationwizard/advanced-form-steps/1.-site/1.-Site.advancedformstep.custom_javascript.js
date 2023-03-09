@@ -4,6 +4,11 @@
 var _busy = false;
 $(document).ready(function () {
 	debugger;
+
+	 $("#NextButton").click(function (e) {
+	   $("#ovs_address1_province").attr("disabled", false); });
+
+
 	var inYear = sessionStorage.getItem('frominyearsites');
 	var annualCompliance = sessionStorage.getItem('fromannualcompliance');
 	var frominyearsitepage = sessionStorage.getItem('frominyearsitepage');
@@ -29,6 +34,8 @@ $(document).ready(function () {
 				}
 			}
 		});
+
+		
 
 		//Control address edit
 		var parent_Id = '{{ user.parentcustomerid.id }}';
@@ -84,7 +91,9 @@ $(document).ready(function () {
 	$("#cid_sitename").attr("autocomplete", "new-password");
 	$("#telephone1").attr("autocomplete", "new-password");
 	$("#fax").attr("autocomplete", "new-password");
+
 	tdg.cid.convert_province_to_code(selected_language);
+
 	$('#loader').hide();
 
 	var ovs_address_type = $("#ovs_address_type").val();
@@ -111,11 +120,11 @@ $(document).ready(function () {
 			$("#address1_line2").prop('readonly', true);
 			$("#address1_line3").prop('readonly', true);
 			$("#address1_city").prop('readonly', true);
-			$("#ovs_address1_province").prop('disabled', true);
+			//$("#ovs_address1_province").prop('disabled', true);
 			$("#address1_stateorprovince").prop('readonly', true);
 			$("#address1_postalcode").prop('readonly', true);
 			if (addressReadOnly) {
-				$("#ovs_address1_province").prop("disabled", true);
+				//$("#ovs_address1_province").prop("disabled", true);
 				cid_input_read_only("section_address");
 			}
 	}
@@ -129,8 +138,9 @@ $(document).ready(function () {
 		cid_same_as_company_change();
 	});
 	cid_same_as_company_change();
-});
 
+});
+	
 function cid_same_as_company_change() {
 	debugger;
 	if (_busy) return;
@@ -142,6 +152,8 @@ function cid_same_as_company_change() {
 if (window.jQuery) {
 	(function ($) {
 		webFormClientValidate = function () {
+		//$("#ovs_address1_province").attr("disabled", false);
+		
 			return true;
 		}
 	}(window.jQuery));

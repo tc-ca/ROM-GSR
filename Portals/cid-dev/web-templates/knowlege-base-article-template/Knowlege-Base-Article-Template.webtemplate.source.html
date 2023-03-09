@@ -1,0 +1,43 @@
+{% assign id = request.params['id'] %} 
+{% assign kb = entities.knowledgearticle[id] %} 
+{%assign regdate = {{entities.account[user.parentcustomerid.id].cid_officiallyregistrationcompletationdate}}%}
+<div class="container" >
+
+    <div class="container">
+  {% block breadcrumbs %}
+      {% include 'Breadcrumbs' %}
+    {% endblock %}
+  {% block title %}
+    {% include 'Page Header' %}
+  {% endblock %}
+  </div>
+ </div>
+ <div id="mainContent" class="row" >
+  <div class="col-sm-4 col-lg-3 left-column">
+  
+  </div>
+  <div class="col-sm-8 col-lg-9 right-column">
+   {% block main %}
+    {% include 'Page Copy' %}
+   {% endblock %}
+  </div>
+ </div>
+</div>
+<script type="text/javascript" src="~/tdgcore_common.js" ></script>
+
+<script>
+var  company_reg_date = "{{entities.account[user.parentcustomerid.id].cid_officiallyregistrationcompletationdate}}";
+	
+
+	if(company_reg_date !=null && company_reg_date !="")
+	{
+	//== '100000005'){//registration completed
+      
+    	 tdg.c.weblink_hide("/RegistrationWizard/");
+	}
+	else
+	{
+		window.location.replace( '~/OnlineHelpRegisteration/' );
+
+	}
+    </script>

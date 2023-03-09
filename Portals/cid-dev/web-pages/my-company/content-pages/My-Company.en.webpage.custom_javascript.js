@@ -7,7 +7,7 @@ $(document).ready(function () {
 
     sessionStorage.setItem('frominyearsites', 'false');
     sessionStorage.setItem('fromannualcompliance', 'false');
-	sessionStorage.setItem('frominyearsitepage', 'false');
+    sessionStorage.setItem('frominyearsitepage', 'false');
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
@@ -27,8 +27,8 @@ $(document).ready(function () {
     var updateCompanyBtn = "<div><input id='update_company' type='button' name='UpdateCompany' value='Update Company' class='btn btn-primary action create-action' nonactionlinkbutton='true'/></div>"
     $(".form-custom-actions").first().parent().after(updateCompanyBtn);
 
-    var cancelBtn = "&nbsp;<input id='cancel_company_update' type='button' name='CancelCompanyUpdate' value='"+ cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'/>";
-    $( ".form-action-container-left" ).eq(2).after(cancelBtn);
+    var cancelBtn = "&nbsp;<input id='cancel_company_update' type='button' name='CancelCompanyUpdate' value='" + cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'/>";
+    $(".form-action-container-left").eq(2).after(cancelBtn);
 
     var companyName = "{{user.parentcustomerid.name}}";
     $('div[data-name="company_details"]').parent().before("<h2>" + companyName + "</h2><hr>");
@@ -72,6 +72,7 @@ $(document).ready(function () {
 
     tdg.cid.WebResource_address_complete_readonly(false);
 
+    tdg.c.control_hide("ovs_name_fr");
     tdg.c.control_hide("cid_reasonfornobnnumber_other");
 
     //Phone number formatting
@@ -110,10 +111,10 @@ $(document).ready(function () {
 
     $('#address1_country').attr("readonly", true);
 
-   // var address1_stateorprovince = tdg.c.replace_special_char("{{user.address1_stateorprovince}}");
+    // var address1_stateorprovince = tdg.c.replace_special_char("{{user.address1_stateorprovince}}");
     //console.log("address province from liquid " + address1_stateorprovince);
-   // $("#address1_stateorprovince").val(address1_stateorprovince);
-   console.log( "Province from text " +  $("#address1_stateorprovince").val());
+    // $("#address1_stateorprovince").val(address1_stateorprovince);
+    console.log("Province from text " + $("#address1_stateorprovince").val());
     tdg.cid.convert_province_to_code(selected_language);
 
     if ($("#cid_addressoverwritten").val() == 0) { $("#ovs_address1_province").prop('disabled', true); }

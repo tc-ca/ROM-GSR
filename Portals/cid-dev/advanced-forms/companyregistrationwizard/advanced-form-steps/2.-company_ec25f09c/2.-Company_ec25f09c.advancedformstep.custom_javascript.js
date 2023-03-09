@@ -68,12 +68,11 @@ $(document).ready(function () {
 		var address1_line1 = $("#address1_line1").val();
 	}
 	else {
-		var cid_has_cra_bn = '{{user.cid_has_cra_bn}}';
-		cid_has_cra_bn = (cid_has_cra_bn == "true" ? 1 : 0);
+		var cid_has_cra_bn = $('#cid_has_cra_bn').val();
 		if (cid_has_cra_bn == 1) {
 			$('#cid_has_cra_bn').val(cid_has_cra_bn);
-			var cid_legalname = "{{user.cid_legalname}}";
-			var cid_operatingname = "{{user.cid_operatingname}}";
+			var cid_legalname = $('#ovs_legalname').val();
+			var cid_operatingname = $('#name').val();
 			var ovs_name_fr = cid_operatingname;
 			var address1_line1 = tdg.c.replace_special_char("{{user.address1_line1}}");
 			var address1_line2 = tdg.c.replace_special_char("{{user.address1_line2}}");
@@ -113,7 +112,6 @@ $(document).ready(function () {
 	tdg.cid.convert_province_to_code(selected_language);
 
 	Disable_ContactTypeFieldsForSecondaryUser();
-	//tdg.c.addValidator("ovs_name_fr");
 
 	var ovs_invitation_only = $("#ovs_invitation_only").val();
 	if (ovs_invitation_only == "1") {

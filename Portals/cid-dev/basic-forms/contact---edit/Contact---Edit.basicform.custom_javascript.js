@@ -6,10 +6,20 @@ $(document).ready(function () {
 
     page_setup();
 
+      sessionStorage.setItem("NewContactFlag", false);
+      sessionStorage.setItem("FullName", "");
+      sessionStorage.setItem("Email", "");
+
     //add cancel button
     var cancelLabel = tdg.error_message.message("BTN_CANCEL");
     $('#UpdateButton').after('<input type="button" data-dismiss="modal" value="'+cancelLabel+'" id="CancelButton" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
-	$('#CancelButton').on('click', function(event){   parent.$(".form-close").click();});  
+	$('#CancelButton').on('click', function(event){  
+         parent.$(".form-close").click();
+         sessionStorage.setItem("NewContactFlag", false);
+         sessionStorage.setItem("FullName", "");
+         sessionStorage.setItem("Email", "");
+         
+         });  
 //console.log("before close"); parent.$(".form-close").eq(0).click(); 
 
      //this function will get the origional value onload and before saving get new values if available and call flow to send email

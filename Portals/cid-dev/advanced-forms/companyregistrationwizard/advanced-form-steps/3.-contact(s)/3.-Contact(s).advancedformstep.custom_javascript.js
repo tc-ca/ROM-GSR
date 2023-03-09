@@ -22,9 +22,10 @@ function checkToDisplaycontactAddMessage()
                     
                 if (SecondaryContactResuts && SecondaryContactResuts.length == 1) 
                 {
-                        var m000133 = tdg.error_message.message("m000133");
+                        var m000133 = tdg.error_message.message("m000133"); //Instructions message
+                        var m000134 = tdg.error_message.message("m000134"); //Popup message
                         tdg.c.page_instructions(m000133);
-                        m000120 = m000120 + "\n\n" + m000133;                  
+                        m000120 = m000120 + "\n\n" + m000134;         
                 }
                 else {
                 $(".instructions").remove();

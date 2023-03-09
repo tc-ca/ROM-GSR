@@ -53,7 +53,13 @@ $(document).ready(function () {
         });
             var cancelLabel = tdg.error_message.message("BTN_CANCEL");
             $('#InsertUpdateButton').after('<input type="button" data-dismiss="modal" value="'+cancelLabel+'" id="CancelButton" style="margin-left: 10px;" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
-	        $('#CancelButton').on('click', function(event){parent.$(".form-close").eq(0).click();});
+	        $('#CancelButton').on('click', function(event){
+                parent.$(".form-close").eq(0).click();
+                sessionStorage.setItem("NewContactFlag", false);
+                sessionStorage.setItem("FullName", "");
+                sessionStorage.setItem("Email", "");
+            
+            });
             //<div role="group" class="btn-group entity-action-button">
 
 //********************************************* */

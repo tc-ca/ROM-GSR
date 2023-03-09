@@ -25,17 +25,17 @@ $(document).ready(function () {
         tdg.c.control_hide("cid_reasonfornobnnumber_other");
     }
 
+    tdg.c.control_hide("ovs_name_fr");
     tdg.c.control_hide("address1_stateorprovince");
     //check if province is not empty
-    if ($("#address1_stateorprovince").val() != "" && $("#address1_stateorprovince").val() !="")
-    {
+    if ($("#address1_stateorprovince").val() != "" && $("#address1_stateorprovince").val() != "") {
         //fill drop down with province value
-      tdg.cid.convert_province_to_code(selected_language);
+        tdg.cid.convert_province_to_code(selected_language);
     }
 
     //clear extra - that appear over the province field
-   document.getElementById("ovs_address1_province").nextSibling.innerHTML = "";
-   
+    document.getElementById("ovs_address1_province").nextSibling.innerHTML = "";
+
     if ($("#printSummary").length <= 0) {
         printSummary();
     }

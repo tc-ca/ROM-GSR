@@ -60,7 +60,7 @@ $(document).ready(function () {
 
 		var cid_reasonfornobnnumber = $('#cid_reasonfornobnnumber').val();
 		var cid_reasonfornobnnumber_other = $('#cid_reasonfornobnnumber_other').val();
-		var cid_legalname = $('#cid_legalname').val();
+		var cid_legalname = $('#ovs_legalname').val();
 		var cid_operatingname = $('#name').val();
 	}
 	var cid_legalname = tdg.c.replace_special_char(cid_legalname);

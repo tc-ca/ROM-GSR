@@ -8,8 +8,6 @@ $(document).ready(function () {
     debugger;
     sessionStorage.setItem("step_start", 1);
 
-    //if user skip adding first and last name
-    //redirect to profile page
     var userFullname = '{{user.fullname}}';
     if (userFullname.length == 0) { window.location.href = '~/profile/'; }
 
@@ -26,7 +24,6 @@ $(document).ready(function () {
     tdg.c.section_hide("section_address_1");
     tdg.c.control_hide("cid_contacttype");
 
-    // default has a cra bn
     $("#cid_has_cra_bn").val("1");
 
     tdg.c.control_hide("parentcustomerid", true);
@@ -135,17 +132,29 @@ function start_registration(rom_data, suppress_error) {
 
 function contact_update(data) {
     debugger;
-
+    if (data.PhysicalLocationAddress != null) {
+        data.ovs_legalname = data.LegalName;
+        data.name = data.OperatingName;
+        var a = data.PhysicalLocationAddress;
+        data.address1_line1 = a.AddressLine1Text;
+        data.address1_line2 = a.AddressLine2Text;
+        data.address1_line3 = a.AddressLine3Text;
+        data.address1_city = a.CityName;
+        data.address1_stateorprovince = a.ProvinceStateCode;
+        data.address1_postalcode = a.PostalZipCode;
+    }
     if (data.address != null) {
         data.ovs_legalname = data.cid_legalname;
         data.name = data.cid_operatingname;
-        data.address1_line1 = data.address.AddressLine1Text;
-        data.address1_line2 = data.address.AddressLine2Text;
-        data.address1_line3 = data.address.AddressLine3Text;
-        data.address1_city = data.address.CityName;
-        data.address1_stateorprovince = data.address.ProvinceStateCode;
-        data.address1_postalcode = data.address.PostalZipCode;
-   }
+        var a = data.address;
+        data.address1_line1 = a.AddressLine1Text;
+        data.address1_line2 = a.AddressLine2Text;
+        data.address1_line3 = a.AddressLine3Text;
+        data.address1_city = a.CityName;
+        data.address1_stateorprovince = a.ProvinceStateCode;
+        data.address1_postalcode = a.PostalZipCode;
+    }
+
     $('#cid_legalname').val(data.ovs_legalname);
     $('#cid_operatingname').val(data.name);
     $('#address1_line1').val(data.address1_line1);
@@ -196,7 +205,6 @@ if (window.jQuery) {
                 else {
                     debugger;
 
-                    //var data = tdg.cid.crw.start_cid_crabusinessnumber_onchange("1");
                     let data = _cra_record;
 
                     if (data == "") {
@@ -205,7 +213,7 @@ if (window.jQuery) {
                     else {
                         debugger;
 
-                        legalname = data.cid_legalname;
+                        legalname = data.LegalName;
                         let cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
 
                         validation = false;

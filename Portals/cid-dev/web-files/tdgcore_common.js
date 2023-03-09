@@ -1305,14 +1305,23 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#address1_stateorprovince").val(ovs_address1_province);
             });
 
-            $("#address1_postalcode").attr("maxlength", "6");
+            $("#address1_postalcode").attr("maxlength", "7");
             $("#address1_postalcode").on('keyup', function () {
                 var n = $(this).val().replace(/\W/g, '');
-                $(this).val(n);
-                var match = n.match(/^(\w{3})(\w{3})$/);
-                if (match) {
-                    $(this).val(match[1].toUpperCase() + ' ' + match[2].toUpperCase());
+                var length = n.length;
+                var nTrimmed = n.substring(0,length-1)
+                if (length % 2 == 1) {
+                    var temp = n.substring(length-1);
+                    n = nTrimmed + temp.replace(/[^A-Za-z]/g, ''); 
+                } else {
+                    var temp = n.substring(length-1);
+                    n = nTrimmed + temp.replace(/\D/g, '');
                 }
+								length = n.length;
+                if (length > 3 ) {
+                    n = n.substring(0,3) + " " + n.substring(3);
+                }
+                $(this).val(n.toUpperCase());
             });
 
             // resize WebResource_address_complete

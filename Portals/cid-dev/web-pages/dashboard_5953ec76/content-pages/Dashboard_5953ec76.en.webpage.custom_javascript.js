@@ -7,24 +7,10 @@ $(document).ready(function () {
 
     sessionStorage.setItem('frominyearsites', 'false');
     sessionStorage.setItem('fromannualcompliance', 'false');
-	sessionStorage.setItem('frominyearsitepage', 'false');
+    sessionStorage.setItem('frominyearsitepage', 'false');
 
-        var companyName = "{{user.parentcustomerid.name}}";
+    var companyName = "{{user.parentcustomerid.name}}";
     $('div[data-name="tab_5"]').parent().before("<h2>" + companyName + "</h2><hr>");
-
-//alert($("#companyAnniversaryDate").val());
-    //var urlParams = new URLSearchParams(window.location.search);
-//	if (urlParams.has('firsttime')) {
-   //     var firstTime = urlParams.get('firsttime')
-
-  //      if(firstTime == "true"){
-   //         var companyAnniversaryDate = $('#cid_companyanniversarydate').val();
-            
-   //         var message = tdg.error_message.message("m000030");
-   //         message = message.replace("{0}", companyAnniversaryDate.substring(0, 10));
-	//        tdg.c.dialog_OK(message);
-   //     }
-  //  }
 
     var topNav = $('#navbar');
     if (topNav) {
@@ -33,6 +19,8 @@ $(document).ready(function () {
         value = value.replace("{0}", companyName);
         $(value).insertAfter(topNav);
     }
+
+    tdg.c.control_hide("ovs_name_fr");
 
     var cid_crabusinessnumber = $('#cid_crabusinessnumber').val();
     if (cid_crabusinessnumber != "") {

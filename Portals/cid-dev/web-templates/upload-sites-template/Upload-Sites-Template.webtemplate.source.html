@@ -315,7 +315,7 @@ $("#InsertButton").css("display", "none");
 //upload button click event
 $('#btn_attachfile_and_scan').click(function(e)
 {
-
+  var langcode = '{{languagecode}}'  ;
   Disable_all_Buttons();
     //hide validation summary
     $("Div.validation-summary").css('display', 'none');
@@ -331,12 +331,22 @@ $('#btn_attachfile_and_scan').click(function(e)
    }
    else
    {
-     string = AttestconfirmationMessage = "By continuing, you are attesting that all information provided is accurate and complete to the best of your knowledge. Do you want to continue?"; 
+
+        var AttestconfirmationMessage = filter_BulkMessageArray("M65" , "en");
+                                    // check language if not english assign french transation
+                                        if ( langcode != 'en-US' && langcode !="en")
+                                        {
+                                          AttestconfirmationMessage = filter_BulkMessageArray("M2" , "fr");
+
+                                        }//end check language
+   
+
     //check if user attest
+
        confirmDialog(AttestconfirmationMessage, (ans) => {
                             if (ans) {
                                // console.log("Yes");
-                                                                $('#loader').show();
+                            $('#loader').show();
                             // $("#mainContent").before("<div class='validation' style='color:black;margin-bottom: 20px;'>File is sent for scaning</div>");
                                 var DocumentbodyContents;
                             // Get the name of the selected file
@@ -359,9 +369,7 @@ $('#btn_attachfile_and_scan').click(function(e)
                                     // check language if not english assign french transation
                                         if ( langcode != 'en-US' && langcode !="en")
                                         {
-                                        // responseMessage  =  "<p> Le système CID va maintenant commencer la deuxième des deux séries de validations du fichier en cours de téléchargement. Un e-mail sera envoyé à votre adresse e-mail de " + useremail +"(tel que défini via votre profil utilisateur), indiquant les résultats de la deuxième série de validations et les étapes ultérieures à suivre. <br><br>" +
-                                        //"À ce stade, vous pouvez attendre l'e-mail de notification et passer à l'étape suivante décrite à partir de celui-ci. Alternativement, vous pouvez quitter temporairement le processus d'inscription et le système vous ramènera à l'endroit où vous vous étiez arrêté à votre retour.[B1037]</p>"
-                                    FileTypeErrorMessage = filter_BulkMessageArray("M2" , "fr");
+                                          FileTypeErrorMessage = filter_BulkMessageArray("M2" , "fr");
 
                                         }//end check language
                                     $('#ErrorMessageDiv').css('display', 'block');
@@ -398,6 +406,10 @@ $('#btn_attachfile_and_scan').click(function(e)
 
                     }
                     else {
+
+                         Enable_Button('btn_attachfile_and_scan');
+                         Enable_Button('linkdownload_English');
+                         Enable_Button('linkdownload_French');
                                 
                     }});
 
@@ -1325,7 +1337,7 @@ function delay(milliseconds){
  
  {% for link in nav.weblinks %} 
 
- {%if link.url contains "online-help" or link.url contains "OnlineHelp" or link.url contains "ContactUs"  %}
+ {%if link.url contains "online-help" or link.url contains "OnlineHelp"  %}
   {%if request.url contains "rd-tdgcore-dev" or request.url contains "tdgcore-qa" %}
   <a class="list-group-item"  href={{ link.url }}> {{ link.name }} </a> 
    {%else%}
