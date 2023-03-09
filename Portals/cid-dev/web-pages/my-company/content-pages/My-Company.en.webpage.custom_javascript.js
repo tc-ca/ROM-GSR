@@ -15,6 +15,9 @@ $(document).ready(function () {
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
     var activationButon = $("#EntityFormPanel").find(".workflow-link");
 
+   
+     
+
     if (cidCompanyStatus.indexOf("Inactive") < 0) {
         activationButon.hide();
     }
@@ -132,6 +135,10 @@ $(document).ready(function () {
     if ($("#ovs_address1_province option:selected").text().trim() != $("#address1_stateorprovince").val().trim()) {
         $("#address1_stateorprovince").val($("#ovs_address1_province option:selected").text().trim());
     }
+
+    
+    tdg.cid.phone_init("telephone1", selected_language);
+
 });
 
 function subgrid_language() {

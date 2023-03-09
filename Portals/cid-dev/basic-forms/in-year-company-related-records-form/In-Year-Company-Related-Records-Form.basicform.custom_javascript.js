@@ -1,5 +1,6 @@
 $(document).ready(function () {
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
+    tdg.cid.phone_init("telephone1", selected_language);
 
     if (cidCompanyStatus.indexOf("Inactive") >= 0){       
         $(".submit-btn").prop("disabled", true); 

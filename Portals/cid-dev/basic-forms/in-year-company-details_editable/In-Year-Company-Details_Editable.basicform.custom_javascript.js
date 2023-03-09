@@ -3,6 +3,9 @@
 //
 $(document).ready(function () {
     debugger;
+    
+    var selected_language = '{{website.selected_language.code}}';
+     tdg.cid.phone_init("telephone1", selected_language);
 
     //page_setup();
     //tdg.c.control_hide("ovs_name_fr");

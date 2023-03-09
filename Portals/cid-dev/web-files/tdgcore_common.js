@@ -780,8 +780,7 @@ if (typeof (tdg.c) == "undefined") {
                     resolve();
                 }, 2 * 1000);
             });
-        }
-
+        }    
     }
 }
 
@@ -1309,17 +1308,17 @@ if (typeof (tdg.cid) == "undefined") {
             $("#address1_postalcode").on('keyup', function () {
                 var n = $(this).val().replace(/\W/g, '');
                 var length = n.length;
-                var nTrimmed = n.substring(0,length-1)
+                var nTrimmed = n.substring(0, length - 1)
                 if (length % 2 == 1) {
-                    var temp = n.substring(length-1);
-                    n = nTrimmed + temp.replace(/[^A-Za-z]/g, ''); 
+                    var temp = n.substring(length - 1);
+                    n = nTrimmed + temp.replace(/[^A-Za-z]/g, '');
                 } else {
-                    var temp = n.substring(length-1);
+                    var temp = n.substring(length - 1);
                     n = nTrimmed + temp.replace(/\D/g, '');
                 }
-								length = n.length;
-                if (length > 3 ) {
-                    n = n.substring(0,3) + " " + n.substring(3);
+                length = n.length;
+                if (length > 3) {
+                    n = n.substring(0, 3) + " " + n.substring(3);
                 }
                 $(this).val(n.toUpperCase());
             });
@@ -1393,6 +1392,23 @@ if (typeof (tdg.cid) == "undefined") {
                 }
             })
         },
+
+        //name_init: function (filedName) {
+        //    var regName = /^[a-zA-Z'- ]+$/;
+        //    if (filedName == null || filedName == "")
+        //        return; 
+
+        //    var field = "#" + filedName;
+        //    if ($(field) == null)
+        //        return;
+
+        //    $(field).on('keyup', function ()
+        //    {
+        //        //Strip all characters from the input except letters, spaces, ' and - 
+        //        var input = $(this).val().replace(regName, '');
+        //        $(this).val(input);
+        //    });
+        //},
 
         address_same_as_company: function (parent_id) {
             debugger;
