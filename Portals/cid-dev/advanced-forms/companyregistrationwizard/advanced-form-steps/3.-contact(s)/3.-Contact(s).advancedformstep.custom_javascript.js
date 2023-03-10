@@ -79,7 +79,7 @@ if (window.jQuery)
 			var validation = false;
 			var companyId = $("#EntityFormView_EntityID").val();
 			//var filter = "parentcustomerid/Id eq (guid'" + companyId + "')";
-			var filter = "_parentcustomerid_value eq '" + companyId + "'";
+			var filter = "statecode eq 0 and _parentcustomerid_value eq '" + companyId + "'";
 			//var data = ExecuteQuery("Validation_CompanyPrimarySecondaryContacts", filter);
 			var data = tdg.webapi.list("contacts", filter);
 			//var data = tdg.c.OData_List("contact", filter);

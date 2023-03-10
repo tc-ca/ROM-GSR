@@ -5,7 +5,8 @@
         <div class="col-sm-2 col-lg-3 left-column">
 
             {% block sidebar %}
-            {% assign registerationDate = entities.account[user.parentcustomerid.id].cid_cidcompanystatus.value %}
+            {%if user.parentcustomerid.id != null and user.parentcustomerid.id !="" and user.parentcustomerid.id != 'undefined' %}
+            {% assign registerationDate = entities.account[user.parentcustomerid.id].cid_officiallyregistrationcompletationdate %}
             {%if registerationDate != null and registerationDate != "" %}
             {% assign nav = weblinks["Company Dashboard Navigation"] %}
             {% if website.selected_language.code == 'fr' %}
@@ -32,6 +33,7 @@
             </div>
             {%endif%}
 
+            {%endif%}
             {%endif%}
             {% endblock %}
         </div>

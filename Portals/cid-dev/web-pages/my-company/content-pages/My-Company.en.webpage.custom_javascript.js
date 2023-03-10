@@ -5,6 +5,8 @@
 $(document).ready(function () {
     debugger;
 
+ 
+
     sessionStorage.setItem('frominyearsites', 'false');
     sessionStorage.setItem('fromannualcompliance', 'false');
     sessionStorage.setItem('frominyearsitepage', 'false');
@@ -137,8 +139,13 @@ $(document).ready(function () {
     }
 
     
-    tdg.cid.phone_init("telephone1", selected_language);
+    //tdg.cid.phone_init("telephone1", selected_language);
+    Formate_PhoneNumber_AllControlsWithSameID("telephone1");
+    Formate_PhoneNumber_AllControlsWithSameID("fax");
 
+       
+
+       
 });
 
 function subgrid_language() {
@@ -152,4 +159,45 @@ function subgrid_language() {
 
 function setManualAddressEntryFlag() {
     $("#cid_addressoverwritten").val(1);
+}
+
+function Formate_PhoneNumber_AllControlsWithSameID(TargetFieldId)
+{
+     $('table[data-name="tab_8_section_2"] tbody').find('tr td div.control input').each(function (i) { 
+           var fieldset = $(this);
+          var fieldid = fieldset[0].id ;
+          if (fieldid == TargetFieldId)
+          {
+               fieldset.attr("placeholder", "(___) ___-____");
+               fieldset.attr("maxlength", "14");
+               fieldset.on('keyup', function () {
+                //Strip all characters from the input except digits
+                var input = $(this).val().replace(/\D/g, '');
+                //Trim the remaining input to ten characters, to preserve phone number format
+                input = input.substring(0, 10);
+                //Based upon the length of the string, we add formatting as necessary
+                var inLength = input.length;
+                if (inLength == 0) {
+                    input = input;
+                } else if (inLength < 3) {
+                    input = '(' + input;
+                } else if (inLength < 6) {
+                    input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6);
+                } else {
+                    input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6) + '-' + input.substring(6, 10);
+                }
+
+                $(this).val(input);
+            });
+            fieldset.focusout(function () {
+                var inLength = $(this).val().replace(/\D/g, '').length;
+                if (inLength < 10 && inLength != 0) {
+                    alert(tdg.c.text_language("Invalid number::Numéro invalide", language));
+                    $(this).val("");
+                }
+            });
+           
+          }
+        
+        });
 }

@@ -1393,22 +1393,20 @@ if (typeof (tdg.cid) == "undefined") {
             })
         },
 
-        //name_init: function (filedName) {
-        //    var regName = /^[a-zA-Z'- ]+$/;
-        //    if (filedName == null || filedName == "")
-        //        return; 
-
-        //    var field = "#" + filedName;
-        //    if ($(field) == null)
-        //        return;
-
-        //    $(field).on('keyup', function ()
-        //    {
-        //        //Strip all characters from the input except letters, spaces, ' and - 
-        //        var input = $(this).val().replace(regName, '');
-        //        $(this).val(input);
-        //    });
-        //},
+        name_init: function (filedName) {
+            debugger;
+            var regName = /[^A-Za-z'-\s]/g;
+            if (filedName != null || filedName != "") {
+                var namefield = "#" + filedName;
+                if ($(namefield) != null) {
+                    $(namefield).on('keyup', function () {
+                        //Strip all characters from the input except letters, spaces, ' and -
+                        var input = $(this).val().replace(regName, '');
+                        $(this).val(input);
+                    });
+                }
+            }
+        },
 
         address_same_as_company: function (parent_id) {
             debugger;

@@ -3,7 +3,15 @@
 //
 $(document).ready(function () {
     debugger;
-    
+    window.addEventListener('load', (event) => {
+        //update_company
+    console.log('The page has fully loaded');
+     var selected_language = '{{website.selected_language.code}}';
+     tdg.cid.phone_init("telephone1", selected_language);
+});
+
+
+
     var selected_language = '{{website.selected_language.code}}';
      tdg.cid.phone_init("telephone1", selected_language);
 

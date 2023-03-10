@@ -52,8 +52,8 @@ $(document).ready(function () {
     tdg.cid.phone_init("fax", selected_language);
 
     //Name formatting
-    tdg.cid.phone_init("firstname");
-    tdg.cid.phone_init("lastname");  
+    tdg.cid.name_init("firstname");
+    tdg.cid.name_init("lastname");  
 
     var data = {};
     data.length = 0;

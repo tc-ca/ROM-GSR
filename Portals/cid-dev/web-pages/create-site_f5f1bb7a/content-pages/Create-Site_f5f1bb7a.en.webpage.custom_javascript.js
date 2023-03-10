@@ -169,17 +169,19 @@ var CheckDuplicate = function (_flowURl, _parameters) {
                             }
                             var data = {
                                 "cid_Company_cid_activityreviewlog@odata.bind": "/accounts(" + _parameters.Parent_Id + ")",
-                                "subject": "A duplicate Site was created | Legal Name: " + accName + "| Address Type: " + AddrType,
+                                "subject": "A user is tring to claim a Site which is owned by another organization | Legal Name: " + accName + "| Address Type: " + AddrType,
                                 "prioritycode": 1,
                                 "actualdurationminutes": 30,
                                 "cid_arlcategory": 100000000
                             };
                             tdg.webapi.create("cid_activityreviewlogs", data);
-                            entityFormClientValidate = true;
-                            originalValidationFunction = true;
+                            //entityFormClientValidate = true;
+                            //originalValidationFunction = true;
                             //trigger second button
-                            $("#InsertButton").click();
-                            return true;
+                            //$("#InsertButton").click();
+                            //return true;
+                            //TODO: send email to the owenr of the organization. 
+                            return false;
                         }
                     });
                 }

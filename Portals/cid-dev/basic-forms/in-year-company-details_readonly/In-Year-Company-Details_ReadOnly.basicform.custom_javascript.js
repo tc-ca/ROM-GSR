@@ -9,6 +9,7 @@ $(document).ready(function () {
     tdg.c.control_hide("ovs_name_fr");
 
     $("#update_company").click(function () {
+        var selected_language = '{{website.selected_language.code}}';
         $('div[data-name="tab_3"]').parent().parent().removeClass("hidden");
         $('div[data-name="company_details"]').parent().parent().addClass("hidden");
         $('#update_company').addClass("hidden");
@@ -18,6 +19,12 @@ $(document).ready(function () {
         var legend2 = $('fieldset[aria-label="Head Office"] legend').eq(1);
         legend2.text("");
         legend2.after("<h2>" + companyName + " - Head Office</h2><hr>");
+        tdg.cid.phone_init("telephone1", selected_language);
+        tdg.cid.phone_init("fax", selected_language);
+       
+
+
+        
     });
     $("#cancel_company_update").click(function () {
         window.location.href = "~/my-company";
