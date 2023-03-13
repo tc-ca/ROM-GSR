@@ -4,6 +4,12 @@
 
 $(document).ready(function () {
 	debugger;
+
+	var selected_language = '{{website.selected_language.code}}';
+	sessionStorage.setItem("selected_language", selected_language);
+
+	tdg.c.page_instructions("page_crw_attest");
+
 	$("#cid_reasonfornobnnumber_other").next("div").css("color", "transparent");
 	$("#ovs_address1_province").next("div").css("color", "transparent");
 	var gridview = $("#Naics_codes");
@@ -13,9 +19,6 @@ $(document).ready(function () {
 	});
 
 	$("#cid_registrationasof").parent().parent().hide();
-
-	var selected_language = '{{website.selected_language.code}}';
-	sessionStorage.setItem("selected_language", selected_language);
 
 	tdg.c.control_hide("ovs_name_fr");
 	tdg.c.control_hide("address1_stateorprovince");

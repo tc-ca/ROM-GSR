@@ -14,6 +14,8 @@ $(document).ready(function () {
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
+    tdg.c.page_instructions("page_crw_start");
+
     sessionStorage.setItem("cid_has_invitation", "false");
     sessionStorage.setItem("adx_invitationid", "");
 

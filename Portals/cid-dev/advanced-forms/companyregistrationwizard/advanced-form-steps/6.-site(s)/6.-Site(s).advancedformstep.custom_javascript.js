@@ -5,29 +5,30 @@
 $(document).ready(function () {
 	debugger;
 
-    sessionStorage.setItem("frominyearsites", 'false');
+	var selected_language = '{{website.selected_language.code}}';
+	sessionStorage.setItem("selected_language", selected_language);
+
+	tdg.c.page_instructions("page_crw_site");
+
+	sessionStorage.setItem("frominyearsites", 'false');
 	//change width and place holder div class to increase search width
-	var lang = '{{website.selected_language.code}}';
-	console.log(lang);
-    if (lang == "en")
-	{
-	$('.toolbar-actions').attr('style', "width:70%;");
-	$('.entitylist-search').addClass("col-md-8");
+	if (selected_language == "en") {
+		$('.toolbar-actions').attr('style', "width:70%;");
+		$('.entitylist-search').addClass("col-md-8");
+	}
+	else {
+		$('.toolbar-actions').attr('style', "width:90%;");
+		$('.entitylist-search').addClass("col-md-8");
+	}
 
-	}//end if
-	else
-	{
-	$('.toolbar-actions').attr('style', "width:90%;");
-	$('.entitylist-search').addClass("col-md-8");
-	}//end else
-
-	 $(".entity-grid").on("loaded", function () { const EmptyMessageDiv = document.querySelector(".view-empty");	
-         	EmptyMessageDiv.style.display = "none";
-      });
+	$(".entity-grid").on("loaded", function () {
+		const EmptyMessageDiv = document.querySelector(".view-empty");
+		EmptyMessageDiv.style.display = "none";
+	});
 
 	$("#cid_registrationasof").parent().parent().hide();
 
-    //add bulk upload button
+	//add bulk upload button
 	var UploadButtonText = tdg.error_message.message("m000111");
 	//if ('{{request.url}}'.includes("tdgcore-qa") || '{{request.url}}'.includes("rd-tdgcore-dev") || '{{request.url}}'.includes("tdgcore-acc")) 
 	{
@@ -35,23 +36,8 @@ $(document).ready(function () {
 		$(".toolbar-actions").append(BulkUploaddButton);
 	}
 
-	//var companyId = $("#EntityFormView_EntityID").val();
-	//var filter = "parentaccountid/Id eq (guid'" + companyId + "')";
-	//var data = ExecuteQuery("Validation_UnclaimedSites", filter);
-
-	//if (data.length > 0) {
-	//	message = tdg.error_message.message("m000013");
-	//	tdg.c.dialog_OK(data.length + "-" + message);
-	//}
-
 	$(".entity-grid").on("loaded", function () {
 		$(".info").hide();
-
-		var actionButtonsToolbar = $('.view-toolbar');
-		//if ($("#bulkUploadBtn").length <= 0)
-		//	actionButtonsToolbar.prepend("<div id='bulkUploadBtn' class='input-group pull-left'><a href='/Bulk_Site_Upload'  target='_blank' rel='noopener noreferrer' class='btn btn-info pull-left action' title='Bulk Site Upload'>Bulk Site Upload</a></div>");
-		//if ($("#attestMultipledBtn").length <= 0)
-		//	actionButtonsToolbar.prepend("<div id='attestMultipledBtn' class='input-group pull-left'><a href='#' class='btn btn-info pull-left action' title='Attest Multiple' disabled>Attest Multiple</a></div>");
 
 		$(this).find("tbody").find("tr").each(function () {
 			var trElement = $(this);
@@ -118,7 +104,7 @@ $(document).ready(function () {
 			}
 
 			sessionStorage.setItem("popup_message", true)
-        }
+		}
 
 		//make for readonly for secondary users
 		var currentUserId = '{{user.contactid}}';
@@ -134,7 +120,7 @@ $(document).ready(function () {
 		//var response = tdg.webapi.list("accounts", filter);
 
 		var response = tdg.webapi.SelectedColumnlist("accounts", "name",
-                 "_parentaccountid_value eq " + companyId + " and (cid_siteclaim eq 100000003 or cid_siteclaim eq null)");
+			"_parentaccountid_value eq " + companyId + " and (cid_siteclaim eq 100000003 or cid_siteclaim eq null)");
 		//if one or more sites found pending claim
 		if (response.length > 0) {
 			//display errror message

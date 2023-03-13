@@ -23,6 +23,21 @@ $(document).ready(function () {
 //console.log("before close"); parent.$(".form-close").eq(0).click(); 
 
      //this function will get the origional value onload and before saving get new values if available and call flow to send email
+
+    if (window.jQuery) {  
+   (function ($) {  
+     if (typeof (entityFormClientValidate) != 'undefined') {  
+       var originalValidationFunction = entityFormClientValidate;  
+       if (originalValidationFunction && typeof (originalValidationFunction) == "function") {  
+         entityFormClientValidate = function ()   
+          {  
+            return true;
+           //DO VALIDATION HERE. RETURN TRUE IF PASSED AND FALSE IF FAIL  
+         };  
+       }  
+     }  
+   }(window.jQuery));  
+ }   
      //there is event listner for onclick , change event for all fields
     tdg.cid.Get_Contact_Changes_and_SendEmail();
 

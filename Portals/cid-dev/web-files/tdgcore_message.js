@@ -95,7 +95,7 @@ if (typeof (tdg.message) == "undefined") {
             var m000039_EN = "At this point, you cannot proceed back to the previous step to begin the registration process.<br><br>" +
                 "If you want to withdraw your registration altogether, including removing all entered data, then please choose No below. Next, choose the Contact Us button at the top of the screen, from which choose the ‘Request to withdraw this Registration’ option."
             var m000039_FR = "At this point, you cannot proceed back to the previous step to begin the registration process.<br><br>" +
-                "If you want to withdraw your registration altogether, including removing all entered data, then please choose No below. Next, choose the Contact Us button at the top of the screen, from which choose the ‘Request to withdraw this Registration’ option._FR" 
+                "If you want to withdraw your registration altogether, including removing all entered data, then please choose No below. Next, choose the Contact Us button at the top of the screen, from which choose the ‘Request to withdraw this Registration’ option._FR"
 
             var m000045_EN = "To proceed with the registration process you will need to either:<br><br>" +
                 "- Enter a different Business Number.<br><br>" +
@@ -115,8 +115,116 @@ if (typeof (tdg.message) == "undefined") {
                 "      OR<br><br>" +
                 "- Continue with this organization name, which matches an existing Organization we already have on file. Note that in the screens to follow, you can change any existing Organization data fields as required._FR";
 
+            var page_crw_start_EN = "Enter the Organization’s Canada Revenue Agency Business Number (CRA BN) and then choose the <b>[Next]</b> button below.<br><br>" +
+                "Alternatively, if your Organization is from an Industry Type does not require a CRA BN, then choose ‘No‘, complete the two fields that follow and then choose the <b>[Next]</b> button below.<br><br>" +
+                "Note that throughout the application, all fields with a red asterisk are mandatory fields and must be completed before proceeding to the next step.";
+            var page_crw_start_FR = "Enter the Organization’s Canada Revenue Agency Business Number (CRA BN) and then choose the <b>[Next]</b> button below.<br><br>" +
+                "Alternatively, if your Organization is from an Industry Type does not require a CRA BN, then choose ‘No‘, complete the two fields that follow and then choose the <b>[Next]</b> button below.<br><br>" +
+                "Note that throughout the application, all fields with a red asterisk are mandatory fields and must be completed before proceeding to the next step._FR";
+            var page_crw_company_insert_EN = "As required, update any of the Organization information below, then choose the <b>[Next]</b> button below to continue.<br>" +
+                "If required: <br>" +
+                " - choose the <b>[Previous]</b> button below to re-start the Registration.<br>" +
+                " - choose the <b>[Contact Us]</b> button above to withdraw the Registration request.<br><br>" +
+                "Note that fields in the application that have a red star at the end of their label are mandatory."
+            var page_crw_company_insert_FR = "As required, update any of the Organization information below, then choose the <b>[Next]</b> button below to continue.<br>" +
+                "If required: <br>" +
+                " - choose the <b>[Previous]</b> button below to re-start the Registration.<br>" +
+                " - choose the <b>[Contact Us]</b> button above to withdraw the Registration request.<br><br>" +
+                "Note that fields in the application that have a red star at the end of their label are mandatory._FR"
+            var page_crw_company_edit_EN = "As required, update any of the Organization information below, then choose the <b>[Next]</b> button below to continue.<br>" +
+                "If required: <br>" +
+                " - choose the <b>[Previous]</b> button below to re-start the Registration.<br>" +
+                " - choose the <b>[Contact Us]</b> button above to withdraw the Registration request.<br><br>" +
+                "Note that fields in the application that have a red star at the end of their label are mandatory."
+            var page_crw_company_edit_FR = "As required, update any of the Organization information below, then choose the <b>[Next]</b> button below to continue.<br>" +
+                "If required: <br>" +
+                " - choose the <b>[Previous]</b> button below to re-start the Registration.<br>" +
+                " - choose the <b>[Contact Us]</b> button above to withdraw the Registration request.<br><br>" +
+                "Note that fields in the application that have a red star at the end of their label are mandatory._FR"
+            var page_crw_contact_EN = "Create at least one Secondary Contact by choosing the <b>[+ Add]</b> button below, then choose the <b>[Next]</b> button below to continue.</br><br>" +
+                "To edit or deactivate a Contact, then choose the <b>[V]</b> button to the far right of that row. If required, choose the <b>[Previous]</b> button to return to the Organization screen.";
+            var page_crw_contact_FR = "Create at least one Secondary Contact by choosing the <b>[+ Add]</b> button below, then choose the <b>[Next]</b> button below to continue.</br><br>" +
+                "To edit or deactivate a Contact, then choose the <b>[V]</b> button to the far right of that row. If required, choose the <b>[Previous]</b> button to return to the Organization screen._FR";
+            var page_crw_naics_EN = "Choose the <b>[+ Add]</b> button below to create NAICS Codes for the Organization, then choose the <b>[Next]</b> button below to continue.</br></br>" +
+                "To deactivate a NAICS, then choose the <b>[V]</b> button to the far right of that row. If required, choose the <b>[Previous]</b> button below to return to the Contact screen.";
+            var page_crw_naics_FR = "Choose the <b>[+ Add]</b> button below to create NAICS Codes for the Organization, then choose the <b>[Next]</b> button below to continue.</br></br>" +
+                "To deactivate a NAICS, then choose the <b>[V]</b> button to the far right of that row. If required, choose the <b>[Previous]</b> button below to return to the Contact screen._FR";
+            var page_crw_attest_EN = "If the Organization details are accurate and complete, then choose the <b>[Attest Organization Data]</b> button below.</br>Otherwise, use the <b>[Previous]</b> button below to first make any adjustments.";
+            var page_crw_attest_FR = "If the Organization details are accurate and complete, then choose the <b>[Attest Organization Data]</b> button below.</br>Otherwise, use the <b>[Previous]</b> button below to first make any adjustments._FR";
+            var page_crw_site_EN = "For each Site:<br>" +
+                "1. Choose the <b>[+ Add]</b> button below.<br>" +
+                "2. When complete, click the <u>Site ID</u> underline link of that new Site row to complete and attest the Site.<br>" +
+                "3. Choose the <b>[Next]</b> button below when all Sites are entered.<br><br>" +
+                "To edit or deactivate a Site, then choose the <b>[V]</b> button to the far right of that row.<br>" +
+                "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen.";
+            var page_crw_site_FR = "For each Site:<br>" +
+                "1. Choose the <b>[+ Add]</b> button below.<br>" +
+                "2. When complete, click the <u>Site ID</u> underline link of that new Site row to complete and attest the Site.<br>" +
+                "3. Choose the <b>[Next]</b> button below when all Sites are entered.<br><br>" +
+                "To edit or deactivate a Site, then choose the <b>[V]</b> button to the far right of that row.<br>" +
+                "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen._FR";
+            var page_crw_complete_EN = "If the Organization and site details are accurate and complete, then choose the <b>[Attest and Organization Registration]</b> button below to complete the Registration. Otherwise, use the <b>[Previous]</b> button below to first make any adjustments.";
+            var page_crw_complete_FR = "If the Organization and site details are accurate and complete, then choose the <b>[Attest and Organization Registration]</b> button below to complete the Registration. Otherwise, use the <b>[Previous]</b> button below to first make any adjustments._FR";
+            var page_srw_site_EN = "";
+            var page_srw_site_FR = "_FR";
+            var page_srw_activity_type_EN = "Choose the Site Activity Types. When complete, choose the <b>[Next]</b> button below.</br>If necessary, choose the <b>[Previous]</b> button below to return to the Basic/Extended screen.</br>" +
+                "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process.";
+            var page_srw_activity_type_FR = "Choose the Site Activity Types. When complete, choose the <b>[Next]</b> button below.</br>If necessary, choose the <b>[Previous]</b> button below to return to the Basic/Extended screen.</br>" +
+                "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process._FR";
+
             var list =
                 [
+                    {
+                        "code": "page_crw_start",
+                        "message_en": page_crw_start_EN,
+                        "message_fr": page_crw_start_FR
+                    },
+                    {
+                        "code": "page_crw_company_insert",
+                        "message_en": page_crw_company_insert_EN,
+                        "message_fr": page_crw_company_insert_FR
+                    },
+                    {
+                        "code": "page_crw_company_edit",
+                        "message_en": page_crw_company_edit_EN,
+                        "message_fr": page_crw_company_edit_FR
+                    },
+                    {
+                        "code": "page_crw_contact",
+                        "message_en": page_crw_contact_EN,
+                        "message_fr": page_crw_contact_FR
+                    },
+                    {
+                        "code": "page_crw_naics",
+                        "message_en": page_crw_naics_EN,
+                        "message_fr": page_crw_naics_FR
+                    },
+                    {
+                        "code": "page_crw_attest",
+                        "message_en": page_crw_attest_EN,
+                        "message_fr": page_crw_attest_FR
+                    },
+                    {
+                        "code": "page_crw_site",
+                        "message_en": page_crw_site_EN,
+                        "message_fr": page_crw_site_FR
+                    },
+                    {
+                        "code": "page_crw_complete",
+                        "message_en": page_crw_complete_EN,
+                        "message_fr": page_crw_complete_FR
+                    },
+                    {
+                        "code": "page_srw_site",
+                        "message_en": page_srw_site_EN,
+                        "message_fr": page_srw_site_FR
+                    },
+                    {
+                        "code": "page_srw_activity_type",
+                        "message_en": page_srw_activity_type_EN,
+                        "message_fr": page_srw_activity_type_FR
+                    },
+
                     {
                         "code": "CID_PORTAL",
                         "message_en": "TDG CLIENT IDENTIFICATION DATABASE",
@@ -647,4 +755,3 @@ if (typeof (tdg.message) == "undefined") {
         }
     }
 }
-

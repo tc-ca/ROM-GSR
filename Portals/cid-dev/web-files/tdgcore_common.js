@@ -1,4 +1,4 @@
-//To apply the Asterisk(*) Sign using custom JS:
+// //To apply the Asterisk(*) Sign using custom JS:
 //$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
 
 // tdgcore_common.js
@@ -90,9 +90,11 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         page_instructions: function (message) {
-            // $(".instructions").eq(0).find("p")[0].innerHTML = m000021;
+            debugger;
+            message = tdg.error_message.message(message);
             var value = "<div class='alert alert-info' style='background:#d7faff'><p>" + message + "</p></div>";
             $(".instructions").html(value);
+            //$('.alert.alert-info')[0].innerHTML = value;
         },
 
         button_create: function (name, from_button, label_code) {
@@ -780,7 +782,7 @@ if (typeof (tdg.c) == "undefined") {
                     resolve();
                 }, 2 * 1000);
             });
-        }    
+        }
     }
 }
 
@@ -1411,7 +1413,9 @@ if (typeof (tdg.cid) == "undefined") {
         address_same_as_company: function (parent_id) {
             debugger;
 
-            var value = $("#cid_same_as_company")[0].checked;
+            var value = $("#cid_same_as_company").val();    // $("#cid_same_as_company")[0].checked;
+            value = (value == 1 ? true : false);
+
             sessionStorage.setItem("AddressComplete_readonly", value);
 
             if (value) {
@@ -1908,10 +1912,29 @@ if (typeof (tdg.cid) == "undefined") {
             var MobilePhoneNameOnload = $("#mobilephone").val();
             var FaxOnload = $("#fax").val();
             var LanguageeOnload = $("#cid_languageofcorrespondence :selected").text();
+            var recordid = document.getElementById("EntityFormControl_EntityFormView_EntityID").value;
+
+            //get currect record email
+            var CurrentRecordContactSearch = tdg.webapi.SelectedColumnlist("contacts", "contactid,emailaddress1"
+                , "statecode eq 0 and contactid eq " + recordid );
+            var currentEmailAddressInDB = CurrentRecordContactSearch[0]["emailaddress1"];
+          
             //define change event
             document.getElementById("firstname").addEventListener('change', (event) => { FirstNameChangeFlag = true; });
             document.getElementById("lastname").addEventListener('change', (event) => { LastNameChangeFlag = true; });
-            document.getElementById("emailaddress1").addEventListener('change', (event) => { EmailaddressChangeFlag = true; });
+            document.getElementById("emailaddress1").addEventListener('change', (event) => {
+            var EmailSearchResultOnChange = tdg.webapi.SelectedColumnlist("contacts", "contactid,emailaddress1"
+                    , "statecode eq 0 and contactid ne '" + recordid + "' and  emailaddress1 eq '"
+                    + $("#emailaddress1").val() + "'");
+                if (EmailSearchResultOnChange <= 0)
+                {
+                    //check if changed email is not the existing email address
+                    if (currentEmailAddressInDB != $("#emailaddress1").val()) {
+                        EmailaddressChangeFlag = true;
+                    }
+                }
+                
+            });
             document.getElementById("telephone1").addEventListener('change', (event) => { PhoneChangeFlag = true; });
             document.getElementById("mobilephone").addEventListener('change', (event) => { MobileChangeFlag = true; });
             document.getElementById("fax").addEventListener('change', (event) => { FaxChangeFlag = true; });
@@ -1919,7 +1942,8 @@ if (typeof (tdg.cid) == "undefined") {
 
             document.getElementById("UpdateButton").addEventListener('click', (event) => {
                 //get current record id
-                var recordid = document.getElementById("EntityFormControl_EntityFormView_EntityID").value;
+              
+              
                 //if first name changed
                 if (FirstNameChangeFlag == true) {
                     if ($("#firstname").val() != "" && $("#firstname").val() != null && FirstNameOnload != $("#firstname").val()) {
@@ -1953,7 +1977,8 @@ if (typeof (tdg.cid) == "undefined") {
                     console.log(ChangeArr);
                 }
                 if (EmailaddressChangeFlag == true) {
-                    if ($("#emailaddress1").val() != null && $("#emailaddress1").val() != "" && $("#emailaddress1").val() != EmailAddressNameOnload) {
+                    if ($("#emailaddress1").val() != null && $("#emailaddress1").val() != ""
+                        && $("#emailaddress1").val() != EmailAddressNameOnload) {
                         ChangeArr.push('{"fieldName" : "Email", "OldValue" : "' + EmailAddressNameOnload +
                             '"' + ', "NewValue" : "' + $("#emailaddress1").val() + '"}');
                         console.log(ChangeArr);
@@ -1976,8 +2001,37 @@ if (typeof (tdg.cid) == "undefined") {
                 //call flow
                 var data = '{ "contactid" : "' + recordid + '", "ChangedInfo" : [' + ChangeArr + ']}';
                 console.log("lenth of array " + ChangeArr.length);
+
                 if (ChangeArr.length > 0) {
-                    tdg.cid.flow.Call_Flow("CID_Portal_Email_Contact_when_Information_is_changed", data);
+                   
+                    //make suer all required fields are entered before execut flow
+                    if ($("#telephone1").val() != "" && $("#emailaddress1").val() != "" && $("#firstname").val() != ""
+                        && $("#lastname").val() != "" ) {
+                        //check for duplicate email
+                        var EmailSearchResult = tdg.webapi.SelectedColumnlist("contacts", "contactid,emailaddress1"
+                            , "statecode eq 0 and contactid ne '" + recordid + "' and  emailaddress1 eq '"
+                            + $("#emailaddress1").val() + "'");
+                        
+                       
+                        
+                        //check if not duplicate email before executing flow
+                        if (EmailSearchResult.length <= 0) {
+
+                            tdg.cid.flow.Call_Flow("CID_Portal_Email_Contact_when_Information_is_changed", data);
+                        }
+                        else {
+                            EmailaddressChangeFlag = false;
+                            const indexOfObject = ChangeArr.findIndex(object => {
+                                return object.fieldName === "Email";
+                               
+                            });
+
+                            console.log("index of email to be removed: " + indexOfObject); 
+                            //remove index
+                            ChangeArr.splice(indexOfObject, 1);
+                        }//end else
+
+                    }
                 }
             });
         },
@@ -2767,4 +2821,3 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
-

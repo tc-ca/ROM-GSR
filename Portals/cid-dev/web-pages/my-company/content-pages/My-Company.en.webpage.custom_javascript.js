@@ -5,8 +5,6 @@
 $(document).ready(function () {
     debugger;
 
- 
-
     sessionStorage.setItem('frominyearsites', 'false');
     sessionStorage.setItem('fromannualcompliance', 'false');
     sessionStorage.setItem('frominyearsitepage', 'false');
@@ -17,9 +15,6 @@ $(document).ready(function () {
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
     var activationButon = $("#EntityFormPanel").find(".workflow-link");
 
-   
-     
-
     if (cidCompanyStatus.indexOf("Inactive") < 0) {
         activationButon.hide();
     }
@@ -29,7 +24,7 @@ $(document).ready(function () {
     }
 
     var cancelLabel = tdg.error_message.message("BTN_CANCEL");
-    var updateCompanyBtn = "<div><input id='update_company' type='button' name='UpdateCompany' value='Update Company' class='btn btn-primary action create-action' nonactionlinkbutton='true'/></div>"
+    var updateCompanyBtn = "<div><input id='update_company' type='button' name='UpdateCompany' value='Update Organization' class='btn btn-primary action create-action' nonactionlinkbutton='true'/></div>"
     $(".form-custom-actions").first().parent().after(updateCompanyBtn);
 
     var cancelBtn = "&nbsp;<input id='cancel_company_update' type='button' name='CancelCompanyUpdate' value='" + cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'/>";
@@ -116,10 +111,6 @@ $(document).ready(function () {
 
     $('#address1_country').attr("readonly", true);
 
-    // var address1_stateorprovince = tdg.c.replace_special_char("{{user.address1_stateorprovince}}");
-    //console.log("address province from liquid " + address1_stateorprovince);
-    // $("#address1_stateorprovince").val(address1_stateorprovince);
-    console.log("Province from text " + $("#address1_stateorprovince").val());
     tdg.cid.convert_province_to_code(selected_language);
 
     if ($("#cid_addressoverwritten").val() == 0) { $("#ovs_address1_province").prop('disabled', true); }
@@ -138,14 +129,9 @@ $(document).ready(function () {
         $("#address1_stateorprovince").val($("#ovs_address1_province option:selected").text().trim());
     }
 
-    
     //tdg.cid.phone_init("telephone1", selected_language);
     Formate_PhoneNumber_AllControlsWithSameID("telephone1");
     Formate_PhoneNumber_AllControlsWithSameID("fax");
-
-       
-
-       
 });
 
 function subgrid_language() {
@@ -161,16 +147,14 @@ function setManualAddressEntryFlag() {
     $("#cid_addressoverwritten").val(1);
 }
 
-function Formate_PhoneNumber_AllControlsWithSameID(TargetFieldId)
-{
-     $('table[data-name="tab_8_section_2"] tbody').find('tr td div.control input').each(function (i) { 
-           var fieldset = $(this);
-          var fieldid = fieldset[0].id ;
-          if (fieldid == TargetFieldId)
-          {
-               fieldset.attr("placeholder", "(___) ___-____");
-               fieldset.attr("maxlength", "14");
-               fieldset.on('keyup', function () {
+function Formate_PhoneNumber_AllControlsWithSameID(TargetFieldId) {
+    $('table[data-name="tab_8_section_2"] tbody').find('tr td div.control input').each(function (i) {
+        var fieldset = $(this);
+        var fieldid = fieldset[0].id;
+        if (fieldid == TargetFieldId) {
+            fieldset.attr("placeholder", "(___) ___-____");
+            fieldset.attr("maxlength", "14");
+            fieldset.on('keyup', function () {
                 //Strip all characters from the input except digits
                 var input = $(this).val().replace(/\D/g, '');
                 //Trim the remaining input to ten characters, to preserve phone number format
@@ -196,8 +180,6 @@ function Formate_PhoneNumber_AllControlsWithSameID(TargetFieldId)
                     $(this).val("");
                 }
             });
-           
-          }
-        
-        });
+        }
+    });
 }

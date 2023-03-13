@@ -5,9 +5,12 @@ var _busy = false;
 $(document).ready(function () {
 	debugger;
 
-	 $("#NextButton").click(function (e) {
-	   $("#ovs_address1_province").attr("disabled", false); });
+	var selected_language = '{{website.selected_language.code}}';
+	sessionStorage.setItem("selected_language", selected_language);
 
+	$("#NextButton").click(function (e) {
+		$("#ovs_address1_province").attr("disabled", false);
+	});
 
 	var inYear = sessionStorage.getItem('frominyearsites');
 	var annualCompliance = sessionStorage.getItem('fromannualcompliance');
@@ -35,8 +38,6 @@ $(document).ready(function () {
 			}
 		});
 
-		
-
 		//Control address edit
 		var parent_Id = '{{ user.parentcustomerid.id }}';
 
@@ -60,8 +61,7 @@ $(document).ready(function () {
 		var Longtitude = $("#address1_longitude").val();
 		$("#address1_longitude").val(Number.parseFloat(Longtitude).toFixed(4));
 	});
-	var selected_language = '{{website.selected_language.code}}';
-	sessionStorage.setItem("selected_language", selected_language);
+
 	// address
 	tdg.cid.address_init(true);
 	var urlParams = new URLSearchParams(window.location.search);
@@ -140,7 +140,7 @@ $(document).ready(function () {
 	cid_same_as_company_change();
 
 });
-	
+
 function cid_same_as_company_change() {
 	debugger;
 	if (_busy) return;
@@ -152,8 +152,8 @@ function cid_same_as_company_change() {
 if (window.jQuery) {
 	(function ($) {
 		webFormClientValidate = function () {
-		//$("#ovs_address1_province").attr("disabled", false);
-		
+			//$("#ovs_address1_province").attr("disabled", false);
+
 			return true;
 		}
 	}(window.jQuery));

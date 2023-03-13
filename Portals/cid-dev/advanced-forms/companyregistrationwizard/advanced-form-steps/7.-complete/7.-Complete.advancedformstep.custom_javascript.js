@@ -5,10 +5,12 @@
 $(document).ready(function () {
     debugger;
 
-    $("#cid_registrationasof").parent().parent().hide();
-
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
+
+    tdg.c.page_instructions("page_crw_complete");
+
+    $("#cid_registrationasof").parent().parent().hide();
 
     var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
     cid_crabusinessnumber = (cid_crabusinessnumber != "null" ? cid_crabusinessnumber : "");

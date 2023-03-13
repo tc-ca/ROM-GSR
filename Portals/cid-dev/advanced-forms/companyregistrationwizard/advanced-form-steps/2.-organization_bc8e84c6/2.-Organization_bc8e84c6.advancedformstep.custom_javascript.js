@@ -15,6 +15,8 @@ $(document).ready(function () {
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 
+	tdg.c.page_instructions("page_crw_company_insert");
+
 	tdg.c.control_hide("ovs_name_fr");
 	tdg.c.control_hide("ovs_invitation_only");
 	tdg.c.control_hide("cid_addressoverwritten");

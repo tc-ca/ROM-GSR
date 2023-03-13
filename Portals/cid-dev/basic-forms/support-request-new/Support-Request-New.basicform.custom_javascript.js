@@ -88,10 +88,14 @@ contactemailLabel +
 $("table").find('tbody').append(userEmailFieldandLable_HTML);
 //declare request and default to reg
 var requestType = "918640000";
+var  company_reg_date;
+var parent_companyID = '{{user.parentcustomerid.id}}';
 
-var  company_reg_date = "{{entities.account[user.parentcustomerid.id].cid_officiallyregistrationcompletationdate}}";
+if (parent_companyID != null && parent_companyID != '' &&  parent_companyID != 'undefined')
+{  
+    company_reg_date = "{{entities.account[user.parentcustomerid.id].cid_officiallyregistrationcompletationdate}}";
 	
-var requestType = "918640001";
+
 	if(company_reg_date !=null && company_reg_date !="")
 	{
         requestType = "918640001";
@@ -100,7 +104,7 @@ var requestType = "918640001";
 
     requestType = "918640000";
     }
-
+}
 
 var data = tdg.webapi.SelectedColumnlist("ovs_supportrequesttypes" ,"ovs_reasonenglish,ovs_reasonfrench,ovs_externaluser&$orderby=ovs_displayorder asc" 
 , "ovs_requesttype eq " + requestType + " and statecode eq 0 and ovs_externaluser eq true") ;  
