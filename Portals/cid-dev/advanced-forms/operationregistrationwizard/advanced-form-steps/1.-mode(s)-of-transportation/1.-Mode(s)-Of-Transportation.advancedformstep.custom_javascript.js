@@ -4,31 +4,31 @@
 $(document).ready(function () {
 	debugger;
 
-	var urlParams = new URLSearchParams(window.location.search);
+	var selected_language = '{{website.selected_language.code}}';
+	sessionStorage.setItem("selected_language", selected_language);
 
+	tdg.c.page_instructions("page_orw_mot");
+
+	var urlParams = new URLSearchParams(window.location.search);
 	if (urlParams.has('siteid')) {
 		var siteId = urlParams.get('siteid');
 		var sitePageURL = "";
-		
-		if (urlParams.has('in_year'))
-			{
-				sitePageURL = "~/my-sites/in-year-site/?id=" + siteId;  
-				tdg.c.weblink_hide("/RegistrationWizard/");
-				tdg.c.weblink_hide("/Bulk_Site_Upload/");
-				tdg.c.weblink_show("/company_dashboard/");
-                tdg.c.weblink_show("/Bulk_Site_Update/");
-			}
-		else 
-			{
-				sitePageURL = "~/SiteRegistrationWizard/?id=" + siteId; 
-			}
+
+		if (urlParams.has('in_year')) {
+			sitePageURL = "~/my-sites/in-year-site/?id=" + siteId;
+			tdg.c.weblink_hide("/RegistrationWizard/");
+			tdg.c.weblink_hide("/Bulk_Site_Upload/");
+			tdg.c.weblink_show("/company_dashboard/");
+			tdg.c.weblink_show("/Bulk_Site_Update/");
+		}
+		else {
+			sitePageURL = "~/SiteRegistrationWizard/?id=" + siteId;
+		}
 
 		sessionStorage.setItem('to_actvt_stp', 'true');
 
 		$("#NextButton").parent().before("<div id='previousButton' role='group' class='btn-group entity-action-button'><a href='" + sitePageURL + "'><input type='button' value='Previous' onclick='' id='PreviousButton' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>");
 	}
-	var selected_language = '{{website.selected_language.code}}';
-	sessionStorage.setItem("selected_language", selected_language);
 });
 
 if (window.jQuery) {
@@ -71,7 +71,3 @@ if (window.jQuery) {
 		}
 	}(window.jQuery));
 }
-
-//async function checkMOTExist(operationId, siteId){
-//	await SiteHasModesOfTransportation(operationId, siteId);
-//}

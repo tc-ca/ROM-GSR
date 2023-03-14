@@ -13,7 +13,12 @@ $(document).ready(function () {
     debugger;
     $('#loader').hide();
 
-    //$("#cid_issiteattested").prop("checked", true);
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
+    tdg.c.page_instructions("page_srw_further_attest_site");
+
+    page_setup();
 
     var inYear = sessionStorage.getItem('frominyearsites');
     var annualCompliance = sessionStorage.getItem('fromannualcompliance');
@@ -42,23 +47,18 @@ $(document).ready(function () {
         });
     }
 
-    var selected_language = '{{website.selected_language.code}}';
-    sessionStorage.setItem("selected_language", selected_language);
-
     var isExtendedSite = $("#cid_requirementlevel").find(":selected").text();
 
     if (isExtendedSite == 'Basic') {
         $('table[data-name="un_numbers_readonly"]').parent().addClass("hidden");
     }
 
-    page_setup();
-
     tdg.c.control_hide("ovs_address_type");
     tdg.cid.address_type_change(false);
 
     tdg.cid.convert_province_to_code(selected_language);
     tdg.c.control_hide("ovs_address1_province");
-  
+
 
     $('#PreviousButton').on('click', function () {
         var siteId = $("#EntityFormView_EntityID").val();

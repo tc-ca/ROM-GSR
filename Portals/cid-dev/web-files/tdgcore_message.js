@@ -171,6 +171,22 @@ if (typeof (tdg.message) == "undefined") {
                 "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process.";
             var page_srw_activity_type_FR = "Choose the Site Activity Types. When complete, choose the <b>[Next]</b> button below.</br>If necessary, choose the <b>[Previous]</b> button below to return to the Basic/Extended screen.</br>" +
                 "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process._FR";
+            var page_srw_further_site_details_EN = "Please choose the <b>[Next]</b> button below to review and attest the Site.</br>" +
+                "If necessary, choose the <b>[Previous]</b> button below to return to Further Site Details screen.</br>" +
+                "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process.";
+            var page_srw_further_site_details_FR = "Please choose the <b>[Next]</b> button below to review and attest the Site.</br>" +
+                "If necessary, choose the <b>[Previous]</b> button below to return to Further Site Details screen.</br>" +
+                "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process._FR";
+            var page_srw_further_attest_site_EN = "If the site details are accurate and complete, then choose the <b>[Attest Site Data]</b> button below.</br>Otherwise, use the <b>[Previous]</b> button to make any adjustments.</br>" +
+                "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process.";
+            var page_srw_further_attest_site_FR = "If the site details are accurate and complete, then choose the <b>[Attest Site Data]</b> button below.</br>Otherwise, use the <b>[Previous]</b> button to make any adjustments.</br>" +
+                "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process._FR";
+            var page_orw_mot_EN = "Choose the Mode(s) Of Transportation. When complete, choose the <b>[Next]</b> button below.<br>" +
+                "If necessary, choose the <b>[Previous]</b> button, or the <b>[Back to Activity Types Screen]</b> button, to return to the Activity Type screen.<br>" +
+                "Alternatively, choose the <b>[Back to Activity Types Screen]</b> to save the current site information and return to the Activity Types Screen.";
+            var page_orw_mot_FR = "Choose the Mode(s) Of Transportation. When complete, choose the <b>[Next]</b> button below.<br>" +
+                "If necessary, choose the <b>[Previous]</b> button, or the <b>[Back to Activity Types Screen]</b> button, to return to the Activity Type screen.<br>" +
+                "Alternatively, choose the <b>[Back to Activity Types Screen]</b> to save the current site information and return to the Activity Types Screen._FR";
 
             var list =
                 [
@@ -223,6 +239,21 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "page_srw_activity_type",
                         "message_en": page_srw_activity_type_EN,
                         "message_fr": page_srw_activity_type_FR
+                    },
+                    {
+                        "code": "page_srw_further_site_details",
+                        "message_en": page_srw_further_site_details_EN,
+                        "message_fr": page_srw_further_site_details_FR
+                    },
+                    {
+                        "code": "page_srw_further_attest_site",
+                        "message_en": page_srw_further_attest_site_EN,
+                        "message_fr": page_srw_further_attest_site_FR
+                    },
+                    {
+                        "code": "page_orw_mot",
+                        "message_en": page_orw_mot_EN,
+                        "message_fr": page_orw_mot_FR
                     },
 
                     {
