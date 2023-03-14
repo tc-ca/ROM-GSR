@@ -17,12 +17,14 @@ $(document).ready(function () {
 		if (urlParams.has('in_year')) {
 			sitePageURL = "~/my-sites/in-year-site/?id=" + siteId;
 			tdg.c.weblink_hide("/RegistrationWizard/");
-			tdg.c.weblink_hide("/Bulk_Site_Upload/");
+		
 			tdg.c.weblink_show("/company_dashboard/");
-			tdg.c.weblink_show("/Bulk_Site_Update/");
+
 		}
 		else {
 			sitePageURL = "~/SiteRegistrationWizard/?id=" + siteId;
+				tdg.c.weblink_show("/RegistrationWizard/");
+			    tdg.c.weblink_hide("/company_dashboard/");
 		}
 
 		sessionStorage.setItem('to_actvt_stp', 'true');

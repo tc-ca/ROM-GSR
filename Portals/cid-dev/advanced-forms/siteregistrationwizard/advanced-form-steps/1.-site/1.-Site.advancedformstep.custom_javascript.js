@@ -163,5 +163,6 @@ function cid_input_read_only(sectionName) {
 	//Disable Address Fileds
 	$("#cid_same_as_company").attr("disabled", true);
 	$("#ovs_address_type").attr("disabled", true);
-	$(".section[data-name='" + sectionName + "']").find(':input').prop("disabled", true);
+	//$(".section[data-name='" + sectionName + "']").find(':input').prop("disabled", true);
+    $(".section[data-name='" + sectionName + "']").find(':input').prop("readonly", "readonly");
 }

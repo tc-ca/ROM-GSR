@@ -12,36 +12,35 @@ $(document).ready(function () {
     sessionStorage.setItem('to_oprtn_wzrd', 'false');
 
     var urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('isExtended')) {
-        var isExtended = urlParams.get('isExtended');
+    //if (urlParams.has('isExtended')) {
+    //    var isExtended = urlParams.get('isExtended');
 
-        if (isExtended == 'false') {
-            $('.progress li').last().addClass("hidden");
-        }
-    }
+    //    if (isExtended == 'false') {
+    //        $('.progress li').last().addClass("hidden");
+    //    }
+    // }
 
     if (urlParams.has('siteid')) {
         var siteId = urlParams.get('siteid');
 
-        if ($("#backToActivityTypesStep").length > 0) {
-            $('#mainContent').remove();
-        }
-        var msg = tdg.error_message.message("m000108");
-        var text = "<div id='backToActivityTypesStep' class='input-group pull-left'><p><input type='button' id='backToActivityTypes' name='Back' value='{0}' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'><br><br></p></div>";
-        text = text.replace("{0}", msg);
-        $('#mainContent').prepend(text);
-
-        $("#backToActivityTypes").click(function () {
-            sessionStorage.setItem('to_actvt_stp', 'true');
-            window.location.href = "~/SiteRegistrationWizard/?id=" + siteId;
-        });
-
         if (!urlParams.has('in_year') || urlParams.get('in_year') != "true") {
-            
-	    tdg.c.weblink_hide("/RegistrationWizard/");
-        tdg.c.weblink_hide("/Bulk_Site_Upload/");
-        tdg.c.weblink_show("/company_dashboard/");
-        tdg.c.weblink_show("/Bulk_Site_Update/");
+
+            if ($("#backToActivityTypesStep").length > 0) {
+                $('#mainContent').remove();
+            }
+            var msg = tdg.error_message.message("m000108");
+            var text = "<div id='backToActivityTypesStep' class='input-group pull-left'><p><input type='button' id='backToActivityTypes' name='Back' value='{0}' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'><br><br></p></div>";
+            text = text.replace("{0}", msg);
+            $('#mainContent').prepend(text);
+
+            $("#backToActivityTypes").click(function () {
+                sessionStorage.setItem('to_actvt_stp', 'true');
+                window.location.href = "~/SiteRegistrationWizard/?id=" + siteId;
+            });
+            tdg.c.weblink_hide("/RegistrationWizard/");
+            tdg.c.weblink_hide("/Bulk_Site_Upload/");
+            tdg.c.weblink_show("/company_dashboard/");
+            tdg.c.weblink_show("/Bulk_Site_Update/");
         }
     }
 

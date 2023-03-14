@@ -1,16 +1,3 @@
-{% assign currentDate = now | date: "yyyyMMddHHmmss" %}<br>
-{% entityform name: 'Company Dashboard' %}<br>
-{% assign parentCompanyId = user.parentcustomerid.id %}<br>
-{% if parentCompanyId %} {% assign company = entities['account'][parentCompanyId] %}<br>
-{% if company.cid_cidcompanystatus.label contains "nactive" %}<br>
-<script>
-            $('a[href*="deactivate-company"]').addClass("hidden");
-        </script> {% else %}<br>
-<script>
-            $('a[href*="deactivate-company"]').removeClass("hidden");
-        </script> {% endif %}<br>
-{% endif %}<br>
-{% fetchxml result %}<br>
-<fetch distinct="false" mapping="logical" output-format="xml-platform" version="1.0"> <entity name="account"> <attribute name="accountid"></attribute> <attribute name="cid_companyanniversarydate"></attribute> <attribute name="statecode"></attribute> <attribute name="createdon"></attribute> <filter type="and"> <condition attribute="statecode" operator="eq" value="0"></condition> <condition attribute="accountid" operator="eq" value="{{ user.parentcustomerid.id }}"></condition> <condition attribute="name" operator="ne" value="' | append: {{ currentDate }} | append: '"></condition> </filter> </entity> </fetch> {% endfetchxml %}<br>
-<input id="companyAnniversaryDate" name="companyAnniversaryDate" type="hidden" value="{{ result.results.entities[0].cid_companyanniversarydate }}">
+{% assign currentDate = now | date: "yyyyMMddHHmmss" %} {% entityform name: 'Company Dashboard' %} {% assign parentCompanyId = user.parentcustomerid.id %} {% if parentCompanyId %} {% assign company = entities['account'][parentCompanyId] %} {% if company.cid_cidcompanystatus.label contains "nactive" %} &lt;script&gt; $('a[href*="deactivate-company"]').addClass("hidden"); &lt;/script&gt; {% else %} &lt;script&gt; $('a[href*="deactivate-company"]').removeClass("hidden"); &lt;/script&gt; {% endif %} {% endif %} {% fetchxml result %} &lt;fetch distinct="false" mapping="logical" output-format="xml-platform" version="1.0"&gt; &lt;entity name="account"&gt; &lt;attribute name="accountid"&gt;&lt;/attribute&gt; &lt;attribute name="cid_companyanniversarydate"&gt;&lt;/attribute&gt; &lt;attribute name="statecode"&gt;&lt;/attribute&gt; &lt;attribute name="createdon"&gt;&lt;/attribute&gt; &lt;filter type="and"&gt; &lt;condition attribute="statecode" operator="eq" value="0"&gt;&lt;/condition&gt; &lt;condition attribute="accountid" operator="eq" value="{{ user.parentcustomerid.id }}"&gt;&lt;/condition&gt; &lt;condition attribute="name" operator="ne" value="' | append: {{ currentDate }} | append: '"&gt;&lt;/condition&gt; &lt;/filter&gt; &lt;/entity&gt; &lt;/fetch&gt; {% endfetchxml %}&nbsp;<br>
+&lt;input type="hidden" id="companyAnniversaryDate" name="companyAnniversaryDate" value="{{ result.results.entities[0].cid_companyanniversarydate }}"&gt;
 

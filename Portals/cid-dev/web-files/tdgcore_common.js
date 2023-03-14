@@ -89,10 +89,17 @@ if (typeof (tdg.c) == "undefined") {
                 });
         },
 
-        page_instructions: function (message) {
+        page_instructions: function (message, scroll) {
             debugger;
             message = tdg.error_message.message(message);
-            var value = "<div class='alert alert-info' style='background:#d7faff'><p>" + message + "</p></div>";
+            if (!scroll)
+            {
+                var value = "<div class='alert alert-info' style='background:#d7faff'><p>" + message + "</p></div>";
+            }
+            else
+            {
+                var value = "<div class='alert alert-info' style='background:#d7faff; overflow-y: scroll; height:170px;'><p>" + message + "</p></div>";
+            }
             $(".instructions").html(value);
             //$('.alert.alert-info')[0].innerHTML = value;
         },
@@ -1916,24 +1923,23 @@ if (typeof (tdg.cid) == "undefined") {
 
             //get currect record email
             var CurrentRecordContactSearch = tdg.webapi.SelectedColumnlist("contacts", "contactid,emailaddress1"
-                , "statecode eq 0 and contactid eq " + recordid );
+                , "statecode eq 0 and contactid eq " + recordid);
             var currentEmailAddressInDB = CurrentRecordContactSearch[0]["emailaddress1"];
-          
+
             //define change event
             document.getElementById("firstname").addEventListener('change', (event) => { FirstNameChangeFlag = true; });
             document.getElementById("lastname").addEventListener('change', (event) => { LastNameChangeFlag = true; });
             document.getElementById("emailaddress1").addEventListener('change', (event) => {
-            var EmailSearchResultOnChange = tdg.webapi.SelectedColumnlist("contacts", "contactid,emailaddress1"
+                var EmailSearchResultOnChange = tdg.webapi.SelectedColumnlist("contacts", "contactid,emailaddress1"
                     , "statecode eq 0 and contactid ne '" + recordid + "' and  emailaddress1 eq '"
                     + $("#emailaddress1").val() + "'");
-                if (EmailSearchResultOnChange <= 0)
-                {
+                if (EmailSearchResultOnChange <= 0) {
                     //check if changed email is not the existing email address
                     if (currentEmailAddressInDB != $("#emailaddress1").val()) {
                         EmailaddressChangeFlag = true;
                     }
                 }
-                
+
             });
             document.getElementById("telephone1").addEventListener('change', (event) => { PhoneChangeFlag = true; });
             document.getElementById("mobilephone").addEventListener('change', (event) => { MobileChangeFlag = true; });
@@ -1942,8 +1948,8 @@ if (typeof (tdg.cid) == "undefined") {
 
             document.getElementById("UpdateButton").addEventListener('click', (event) => {
                 //get current record id
-              
-              
+
+
                 //if first name changed
                 if (FirstNameChangeFlag == true) {
                     if ($("#firstname").val() != "" && $("#firstname").val() != null && FirstNameOnload != $("#firstname").val()) {
@@ -2003,17 +2009,17 @@ if (typeof (tdg.cid) == "undefined") {
                 console.log("lenth of array " + ChangeArr.length);
 
                 if (ChangeArr.length > 0) {
-                   
+
                     //make suer all required fields are entered before execut flow
                     if ($("#telephone1").val() != "" && $("#emailaddress1").val() != "" && $("#firstname").val() != ""
-                        && $("#lastname").val() != "" ) {
+                        && $("#lastname").val() != "") {
                         //check for duplicate email
                         var EmailSearchResult = tdg.webapi.SelectedColumnlist("contacts", "contactid,emailaddress1"
                             , "statecode eq 0 and contactid ne '" + recordid + "' and  emailaddress1 eq '"
                             + $("#emailaddress1").val() + "'");
-                        
-                       
-                        
+
+
+
                         //check if not duplicate email before executing flow
                         if (EmailSearchResult.length <= 0) {
 
@@ -2023,10 +2029,10 @@ if (typeof (tdg.cid) == "undefined") {
                             EmailaddressChangeFlag = false;
                             const indexOfObject = ChangeArr.findIndex(object => {
                                 return object.fieldName === "Email";
-                               
+
                             });
 
-                            console.log("index of email to be removed: " + indexOfObject); 
+                            console.log("index of email to be removed: " + indexOfObject);
                             //remove index
                             ChangeArr.splice(indexOfObject, 1);
                         }//end else

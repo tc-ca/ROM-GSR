@@ -5,15 +5,24 @@
 $(document).ready(function () {
 	debugger;
 
+	var selected_language = '{{website.selected_language.code}}';
+	sessionStorage.setItem("selected_language", selected_language);
+
+	var inYear = sessionStorage.getItem('frominyearsites');
+	var annualCompliance = sessionStorage.getItem('fromannualcompliance');
+	var frominyearsitepage = sessionStorage.getItem('frominyearsitepage');
+
 	var urlParams = new URLSearchParams(window.location.search);
-	if (!urlParams.has('in_year') || urlParams.get('in_year') != 'true') {
-		header_setup();
-		
-	    tdg.c.weblink_hide("/RegistrationWizard/");
-        tdg.c.weblink_hide("/Bulk_Site_Upload/");
-        tdg.c.weblink_show("/company_dashboard/");
-        tdg.c.weblink_show("/Bulk_Site_Update/");
-	}
+	//if (!urlParams.has('in_year') || urlParams.get('in_year') != 'true') {
+	if (inYear == "true")
+		header_setup("inyear");
+	else if (annualCompliance == "true")
+		header_setup("annualcompliance");
+	else if (frominyearsitepage == "true")
+		header_setup("frominyearsitepage");
+	else
+		header_setup("initial");
+
 	var instructionBtns = $(".instruction-btn");
 
 	if (instructionBtns.length > 0) {
@@ -30,18 +39,42 @@ $(document).ready(function () {
 	});
 });
 
-function header_setup() {
+function header_setup(type) {
 	debugger;
 
+	var urlParams = new URLSearchParams(window.location.search);
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
+	var msg = "";
+	var href = "";
 
-	var msg = tdg.error_message.message("m000100");
-	if ($("#backToCompanyWizard").length > 0) {
-		$('#mainContent').remove();
-		//$('#mainContent').prepend("<div id='backToCompanyWizard' class='input-group pull-left'><p><a href='~/en-US/RegistrationWizard' class='entitylist-create btn btn-info pull-right action' title='Back'>" + msg + "</a><br><br></p></div>");
+	switch (type) {
+		case "inyear":
+			msg = "Back To In Year Sites Page";
+			href = "~/my-sites";
+			tdg.c.weblink_hide("/RegistrationWizard/");
+			tdg.c.weblink_hide("/Bulk_Site_Upload/");
+			tdg.c.weblink_show("/company_dashboard/");
+			tdg.c.weblink_show("/Bulk_Site_Update/");
+			break;
+		case "annualcompliance":
+			msg = "Back To Annual Compliance Update Page";
+			href = "~/my-company/annual-compliance-update";
+			break;
+		case "frominyearsitepage":
+			msg = "Back To In Year Site Update Page";
+
+			href = "~/my-sites/in-year-site/?id=" + urlParams.get('id');
+			break;
+		default:
+			msg = tdg.error_message.message("m000100");
+			href = "~/RegistrationWizard";
 	}
-	$('#mainContent').prepend("<div id='backToCompanyWizard' class='input-group'><p><a href='~/RegistrationWizard' class='entitylist-create btn btn-info pull-right action' title='Back'>" + msg + "</a><br><br></p></div>");
+
+	if ($("#backTo").length > 0) {
+		$('#mainContent').remove();
+	}
+	$('#mainContent').prepend("<div id='backTo' class='input-group'><p><a href='" + href + "' class='entitylist-create btn btn-info pull-right action' title='Back'>" + msg + "</a><br><br></p></div>");
 
 	try {
 		var code = "m000024";

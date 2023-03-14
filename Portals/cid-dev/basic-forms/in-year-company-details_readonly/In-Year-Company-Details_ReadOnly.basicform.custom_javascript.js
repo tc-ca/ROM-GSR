@@ -3,9 +3,13 @@
 //
 
 $(document).ready(function () {
+    debugger;
+
     var companyName = "{{user.parentcustomerid.name}}";
 
     page_setup();
+
+    tdg.c.page_instructions("page_my_company", true);
     tdg.c.control_hide("ovs_name_fr");
 
     $("#update_company").click(function () {
@@ -21,10 +25,10 @@ $(document).ready(function () {
         legend2.after("<h2>" + companyName + " - Head Office</h2><hr>");
         tdg.cid.phone_init("telephone1", selected_language);
         tdg.cid.phone_init("fax", selected_language);
-       
 
 
-        
+
+
     });
     $("#cancel_company_update").click(function () {
         window.location.href = "~/my-company";

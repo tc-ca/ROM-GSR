@@ -1,39 +1,38 @@
 //
-// Web Page-In Year Site Form
+// Basic Form-In Year Site Form.js
 //
-$(document).ready(function ()
-{
+
+$(document).ready(function () {
 	debugger;
+
+	var selected_language = '{{website.selected_language.code}}';
+	sessionStorage.setItem("selected_language", selected_language);
+
+	tdg.c.page_instructions("page_in_year_my_sites");
+
 	//increase search place hoder width	
 	$('.toolbar-actions').attr('style', "width:85%;");
 	$('.entitylist-search').addClass("col-md-7");
 	$('.query.form-control').css('border', 'solid 1px black');
 
-
-
 	$("#cid_registrationasof").parent().parent().hide();
-	
+
 	var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
 	$('#cid_cidcompanystatus').hide();
 	$('#cid_cidcompanystatus_label').hide();
-	if (cidCompanyStatus.indexOf("Inactive") >= 0)
-	{
+	if (cidCompanyStatus.indexOf("Inactive") >= 0) {
 		$(".create-action").hide();
-		$(".entity-grid").on("loaded", function ()
-		{
-			$(this).find("tbody").find("tr").each(function ()
-			{
+		$(".entity-grid").on("loaded", function () {
+			$(this).find("tbody").find("tr").each(function () {
 				$(this).find('td:last').remove();
 			});
 		});
 	}
 
-	console.log("before adding new button");
 	//create bulk upload button only for DEV and QA environment
-	if (cidCompanyStatus.indexOf("Inactive") < 0 
-	//&& ('{{request.url}}'.includes("tdgcore-qa") || '{{request.url}}'.includes("rd-tdgcore-dev"))
-	)
-	{
+	if (cidCompanyStatus.indexOf("Inactive") < 0
+		//&& ('{{request.url}}'.includes("tdgcore-qa") || '{{request.url}}'.includes("rd-tdgcore-dev"))
+	) {
 		//get bulk update button test
 		var UploadButtonText = tdg.error_message.message("m000111");
 		var BulkUploaddButton = '<div class="input-group pull-left"><a href="~/Bulk_Site_Update/" class="btn btn-primary pull-right action" title="BulkSiteUpdate">' + UploadButtonText + '</a></div>';
@@ -50,8 +49,7 @@ $(document).ready(function ()
 	tdg.c.control_hide("cid_siteclaim");
 	AddressComplete_Hide_address1_line1();
 	// cid_same_as_company
-	$("#cid_same_as_company").change(function ()
-	{
+	$("#cid_same_as_company").change(function () {
 		cid_same_as_company_change();
 	});
 	cid_same_as_company_change();
@@ -76,18 +74,15 @@ $(document).ready(function ()
 	// lat/long
 	$("#address1_latitude").attr("autocomplete", "new-password");
 	$("#address1_longitude").attr("autocomplete", "new-password");
-	$("#ovs_address_type").change(function ()
-	{
+	$("#ovs_address_type").change(function () {
 		ovs_address_type_change(true);
 	});
 	ovs_address_type_change(false);
 	$('#ovs_legalname').attr("readonly", true);
 });
 
-function clear_address_type_required_fields()
-{
-	for (var i = 0; i < 2; i++)
-	{
+function clear_address_type_required_fields() {
+	for (var i = 0; i < 2; i++) {
 		// address
 		tdg.c.removeValidator("address1_line1");
 		tdg.c.removeValidator("address1_city");
@@ -106,16 +101,14 @@ function clear_address_type_required_fields()
 	}
 }
 
-function address1_default(value)
-{
+function address1_default(value) {
 	$("#address1_line1").val(value);
 	$("#address1_city").val(value);
 	$("#address1_stateorprovince").val(value);
 	$("#address1_postalcode").val(value);
 }
 
-function ovs_address_type_change(reset_data)
-{
+function ovs_address_type_change(reset_data) {
 	debugger;
 	// hide sections
 	tdg.c.section_hide("section_address");
@@ -123,8 +116,7 @@ function ovs_address_type_change(reset_data)
 	tdg.c.section_hide("section_latitude_longitude");
 	clear_address_type_required_fields();
 	var ovs_address_type = $("#ovs_address_type").val();
-	switch (ovs_address_type)
-	{
+	switch (ovs_address_type) {
 		case "1":
 			// legal land description
 			tdg.c.section_show("section_legal_land_description");
@@ -134,8 +126,7 @@ function ovs_address_type_change(reset_data)
 			tdg.c.addValidator("ovs_lld_range", "Range");
 			tdg.c.addValidator("ovs_lld_meridian", "Meridian");
 			tdg.c.addValidator("ovs_lld_province", "Province / Territory");
-			if (reset_data)
-			{
+			if (reset_data) {
 				address1_default("N/A");
 			}
 			break;
@@ -144,8 +135,7 @@ function ovs_address_type_change(reset_data)
 			tdg.c.section_show("section_latitude_longitude");
 			tdg.c.addValidator("address1_latitude", "Latitude");
 			tdg.c.addValidator("address1_longitude", "Longitude");
-			if (reset_data)
-			{
+			if (reset_data) {
 				address1_default("N/A");
 			}
 			break;
@@ -155,45 +145,36 @@ function ovs_address_type_change(reset_data)
 			tdg.c.addValidator("address1_city", "City");
 			tdg.c.addValidator("address1_stateorprovince", "Province");
 			tdg.c.addValidator("address1_postalcode", "Postal Code");
-			if (reset_data)
-			{
+			if (reset_data) {
 				address1_default("");
 			}
 	}
 }
 
-function WebResource_address_complete_readonly(value)
-{
+function WebResource_address_complete_readonly(value) {
 	//debugger;
-	try
-	{
+	try {
 		var f = document.getElementById("WebResource_address_complete");
 		var c = f.contentWindow;
 		c.readonly(value);
 	}
-	catch (e)
-	{}
+	catch (e) { }
 }
 
-function WebResource_address_complete_address1_line1(value)
-{
+function WebResource_address_complete_address1_line1(value) {
 	//debugger;
-	try
-	{
+	try {
 		var f = document.getElementById("WebResource_address_complete");
 		var c = f.contentWindow;
 		c.address1_line1(value);
 	}
-	catch (e)
-	{}
+	catch (e) { }
 }
 
-function cid_same_as_company_change()
-{
+function cid_same_as_company_change() {
 	//debugger;
 	var value = $("#cid_same_as_company")[0].checked;
-	if (value)
-	{
+	if (value) {
 		//$("#WebResource_address_complete").hide();
 		WebResource_address_complete_readonly(true);
 		$("#address1_line2").prop('readonly', true);
@@ -211,8 +192,7 @@ function cid_same_as_company_change()
 		var address1_stateorprovince = "N/A";
 		var address1_postalcode = "N/A";
 		var address1_country = "Canada";
-		if (data.length > 0)
-		{
+		if (data.length > 0) {
 			var item = data[0];
 			address1_line1 = item.address1_line1;
 			address1_line2 = item.address1_line2;
@@ -234,8 +214,7 @@ function cid_same_as_company_change()
 		$("#address1_country").val(address1_country);
 		sessionStorage.setItem("AddressLine1Text", address1_line1);
 	}
-	else
-	{
+	else {
 		//$("#WebResource_address_complete").show();
 		WebResource_address_complete_readonly(false);
 		$("#address1_line2").prop('readonly', false);
@@ -254,18 +233,15 @@ function cid_same_as_company_change()
 	}
 }
 
-function AddressComplete_Hide_address1_line1()
-{
+function AddressComplete_Hide_address1_line1() {
 	tdg.c.control_hide("address1_line1");
 }
 
-function AddressComplete_address1_line1()
-{
+function AddressComplete_address1_line1() {
 	$("#address1_line1").val(sessionStorage.getItem("Line1"));
 }
 
-function AddressComplete_Selected()
-{
+function AddressComplete_Selected() {
 	$("#address1_line1").val(sessionStorage.getItem("Line1"));
 	$("#address1_line2").val(sessionStorage.getItem("Line2"));
 	$("#address1_line3").val(sessionStorage.getItem("Line3"));

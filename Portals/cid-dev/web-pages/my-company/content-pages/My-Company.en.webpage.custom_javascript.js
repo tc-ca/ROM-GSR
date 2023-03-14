@@ -5,12 +5,12 @@
 $(document).ready(function () {
     debugger;
 
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
     sessionStorage.setItem('frominyearsites', 'false');
     sessionStorage.setItem('fromannualcompliance', 'false');
     sessionStorage.setItem('frominyearsitepage', 'false');
-
-    var selected_language = '{{website.selected_language.code}}';
-    sessionStorage.setItem("selected_language", selected_language);
 
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
     var activationButon = $("#EntityFormPanel").find(".workflow-link");
@@ -63,9 +63,6 @@ $(document).ready(function () {
         $(this).css("font-weight", "bold");
         $(this).css("text-decoration", "underline");
     });
-
-    var selected_language = '{{website.selected_language.code}}';
-    sessionStorage.setItem("selected_language", selected_language);
 
     // address
     tdg.cid.address_init(false);

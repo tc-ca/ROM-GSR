@@ -187,6 +187,44 @@ if (typeof (tdg.message) == "undefined") {
             var page_orw_mot_FR = "Choose the Mode(s) Of Transportation. When complete, choose the <b>[Next]</b> button below.<br>" +
                 "If necessary, choose the <b>[Previous]</b> button, or the <b>[Back to Activity Types Screen]</b> button, to return to the Activity Type screen.<br>" +
                 "Alternatively, choose the <b>[Back to Activity Types Screen]</b> to save the current site information and return to the Activity Types Screen._FR";
+            var page_orw_class_EN = "Choose the <b>[+ Add]</b> button below for each applicable Site Class. When complete, choose the <b>[Next]</b> button below.</br>" +
+                "To edit or deactivate a Site Class, then choose the <b>[V]</b> button to the far right of that row.<br>" +
+                "If necessary, choose the <b>[Previous]</b> button below to return to the Mode(s) of Transportation screen<br>" +
+                "Alternatively, choose the <b>[Back to Activity Types Screen]</b> to save the current site information and return to the Activity Types Screen."
+            var page_orw_class_FR = "Choose the <b>[+ Add]</b> button below for each applicable Site Class. When complete, choose the <b>[Next]</b> button below.</br>" +
+                "To edit or deactivate a Site Class, then choose the <b>[V]</b> button to the far right of that row.<br>" +
+                "If necessary, choose the <b>[Previous]</b> button below to return to the Mode(s) of Transportation screen<br>" +
+                "Alternatively, choose the <b>[Back to Activity Types Screen]</b> to save the current site information and return to the Activity Types Screen._FR"
+            var page_my_company_EN = "Head Office details can be updated by choosing the <b>[Update Organization]</b> button at the bottom of this screen.</br></br>" +
+                "Following options are available via the menu options on the left:</br>" +
+                "- Organization History Log: Key past activities for this Organization.</br>" +
+                "- Annual Compliance Update: Allows completion of this mandatory annual update.</br>" +
+                "- Deactivate Organization: To deactivate this Organization.</br>" +
+                "- My Sites: To view a list of current Sites to add to, update, deactivate, reactivate or sale/transfer.</br>" +
+                "- Manage Application Users: To add or remove user access to this application.</br>" +
+                "- Online Help: To search for guidance on how to use this application.";
+            var page_my_company_FR = "Head Office details can be updated by choosing the <b>[Update Organization]</b> button at the bottom of this screen.</br></br>" +
+                "Following options are available via the menu options on the left:</br>" +
+                "- Organization History Log: Key past activities for this Organization.</br>" +
+                "- Annual Compliance Update: Allows completion of this mandatory annual update.</br>" +
+                "- Deactivate Organization: To deactivate this Organization.</br>" +
+                "- My Sites: To view a list of current Sites to add to, update, deactivate, reactivate or sale/transfer.</br>" +
+                "- Manage Application Users: To add or remove user access to this application.</br>" +
+                "- Online Help: To search for guidance on how to use this application._FR";
+            var page_my_company_contact_EN = "For actions, select the <b>[V]</b> button beside each row, or the <b>[+ Add]</b> button for a new entry.";
+            var page_my_company_contact_FR = "For actions, select the <b>[V]</b> button beside each row, or the <b>[+ Add]</b> button for a new entry._FR";
+            var page_in_year_my_sites_EN = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.<br>" +
+                "To add additional Sites individually, choose the <b>[+ Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.<br>" +
+                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.";
+            var page_in_year_my_sites_FR = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.<br>" +
+                "To add additional Sites individually, choose the <b>[+ Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.<br>" +
+                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end._FR";       
+            var page_annual_compliance_update_EN = "1- As applicable, perform each step's related update below, then it's 'Mark as complete' option.</br>" +
+                "2- Read and agree to the terms of service agreement and select the 'Attestation' section.</br>" +
+                "3- When complete, select the <b>[Complete Annual Compliance Update'</b> option.";
+            var page_annual_compliance_update_FR = "1- As applicable, perform each step's related update below, then it's 'Mark as complete' option.</br>" +
+                "2- Read and agree to the terms of service agreement and select the 'Attestation' section.</br>" +
+                "3- When complete, select the <b>[Complete Annual Compliance Update'</b> option._FR";
 
             var list =
                 [
@@ -254,6 +292,31 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "page_orw_mot",
                         "message_en": page_orw_mot_EN,
                         "message_fr": page_orw_mot_FR
+                    },
+                    {
+                        "code": "page_orw_class",
+                        "message_en": page_orw_class_EN,
+                        "message_fr": page_orw_class_FR
+                    },
+                    {
+                        "code": "page_my_company",
+                        "message_en": page_my_company_EN,
+                        "message_fr": page_my_company_FR
+                    },
+                    {
+                        "code": "page_my_company_contact",
+                        "message_en": page_my_company_contact_EN,
+                        "message_fr": page_my_company_contact_FR
+                    },
+                    {
+                        "code": "page_in_year_my_sites",
+                        "message_en": page_in_year_my_sites_EN,
+                        "message_fr": page_in_year_my_sites_FR
+                    },
+                    {
+                        "code": "page_annual_compliance_update",
+                        "message_en": page_annual_compliance_update_EN,
+                        "message_fr": page_annual_compliance_update_FR
                     },
 
                     {
@@ -747,13 +810,13 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000133",
-                        "message_en": "Note: This addition of a backup Contact has completed the requirements of the regulation. Any further Contact additions are completely optional.",
-                        "message_fr": "Note: This addition of a backup Contact has completed the requirements of the regulation. Any further Contact additions are completely optional._FR"
+                        "message_en": "Note: This addition of a backup Contact has completed the Contact requirements of the regulation. Any further Contact additions are completely optional.",
+                        "message_fr": "Note: This addition of a backup Contact has completed the Contact requirements of the regulation. Any further Contact additions are completely optional._FR"
                     },
                     {
                         "code": "m000134",
-                        "message_en": "This addition of a backup Contact has completed the requirements of the regulation. Any further Contact additions are completely optional.",
-                        "message_fr": "This addition of a backup Contact has completed the requirements of the regulation. Any further Contact additions are completely optional._FR"
+                        "message_en": "This addition of a backup Contact has completed the Contact requirements of the regulation. Any further Contact additions are completely optional.",
+                        "message_fr": "This addition of a backup Contact has completed the Contact requirements of the regulation. Any further Contact additions are completely optional._FR"
                     },
                     {
                         "code": "m000135",

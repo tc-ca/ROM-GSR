@@ -5,6 +5,11 @@ $(document).ready(function () {
 	debugger;
 
 	header_setup();
+
+	sessionStorage.setItem('frominyearsites', 'false');
+	sessionStorage.setItem('fromannualcompliance', 'false');
+	sessionStorage.setItem('frominyearsitepage', 'false');
+
 	var instructionBtns = $(".instruction-btn");
 
 	if (instructionBtns.length > 0) {
@@ -21,8 +26,7 @@ $(document).ready(function () {
 	});
 });
 
-function header_setup()
-{
+function header_setup() {
 	//var cid_cidcompanystatus = '{{account.cid_cidcompanystatus.code}}';
 
 	//tdg.c.weblink_hide("/RegistrationWizard/");

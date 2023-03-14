@@ -1,2 +1,4 @@
-{% entityform name: 'Annual Compliance Update' %}
+<p>{% entityform name: 'Annual Compliance Update' %}<br>
+{% assign id = user.parentcustomerid.id %} {% assign account = entities.account[id] %} {% fetchxml result %} <fetch distinct="false" mapping="logical" output-format="xml-platform" version="1.0"> <entity name="account"> <attribute name="accountid"></attribute> <attribute name="parentaccountid"></attribute> <attribute name="cid_issiteattested"></attribute> <attribute name="cid_companyanniversarydate"></attribute> <attribute name="statecode"></attribute> <filter type="and"> <condition attribute="statecode" operator="eq" value="0"></condition> <condition attribute="cid_issiteattested" operator="eq" value="0"></condition> <condition attribute="parentaccountid" operator="eq" value="{{ user.parentcustomerid.id }}"></condition> </filter> </entity> </fetch> {% endfetchxml %}</p>
+<input id="numberOfNotAttestedSites" name="numberOfNotAttestedSites" type="hidden" value="{{ result.results.entities.size }}">
 
