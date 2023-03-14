@@ -128,108 +128,125 @@
               "type": "Compose",
               "inputs": "@triggerOutputs()?['body/_ovs_lld_meridian_label']"
             },
-            "Longtitude": {
-              "runAfter": {
-                "Province": [
-                  "Succeeded"
-                ]
+            "Check_if_body_length_greater_than_zero": {
+              "actions": {
+                "Province": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "65a5d3ce-57f4-451b-8380-85b65f536a84"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('HTTP_-_all_LLD_converter_API')?['features'][1]['properties']['province']"
+                },
+                "Longtitude": {
+                  "runAfter": {
+                    "Province": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "229b9fbb-e6b1-4a41-bb5d-c358c16dfe16"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('HTTP_-_all_LLD_converter_API')?['features'][1]['geometry']['coordinates'][0]"
+                },
+                "Latitude": {
+                  "runAfter": {
+                    "Longtitude": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "8d0719c5-7e73-4d1b-9a75-e8fdf070f08e"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('HTTP_-_all_LLD_converter_API')?['features'][1]['geometry']['coordinates'][1]"
+                },
+                "Filter_Province_array": {
+                  "runAfter": {
+                    "Latitude": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "1a4de2d3-c2c6-40c6-b918-b0ffe6a40849"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@variables('ProvinceList')",
+                    "where": "@contains(item()['Province'], outputs('Province'))"
+                  }
+                },
+                "ProvinceIndex": {
+                  "runAfter": {
+                    "Filter_Province_array": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "17ad5f56-7123-4860-bd1a-a355cb03e3a0"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('Filter_Province_array')[0]['index']"
+                },
+                "ProvinceCode": {
+                  "runAfter": {
+                    "ProvinceIndex": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "b7de7b72-45b0-4788-8ce8-354224c4d44c"
+                  },
+                  "type": "Compose",
+                  "inputs": "@\r\nbody('Filter_Province_array')[0]['ProvinceCode']"
+                },
+                "Update_Site_LLD_Province_and_Lat_Long": {
+                  "runAfter": {
+                    "ProvinceCode": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "bc1fc229-8204-44ca-983d-2effc1d66cfa"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "UpdateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "accounts",
+                      "recordId": "@triggerOutputs()?['body/accountid']",
+                      "item/address1_stateorprovince": "@outputs('ProvinceCode')",
+                      "item/address1_latitude": "@outputs('Latitude')",
+                      "item/address1_longitude": "@outputs('Longtitude')",
+                      "item/ovs_address1_province": "@outputs('ProvinceIndex')",
+                      "item/ovs_lld_province": "@outputs('ProvinceIndex')"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
               },
-              "metadata": {
-                "operationMetadataId": "229b9fbb-e6b1-4a41-bb5d-c358c16dfe16"
-              },
-              "type": "Compose",
-              "inputs": "@body('HTTP_-_all_LLD_converter_API')?['features'][1]['geometry']['coordinates'][0]"
-            },
-            "Province": {
               "runAfter": {
                 "HTTP_-_all_LLD_converter_API": [
                   "Succeeded"
                 ]
               },
-              "metadata": {
-                "operationMetadataId": "65a5d3ce-57f4-451b-8380-85b65f536a84"
-              },
-              "type": "Compose",
-              "inputs": "@body('HTTP_-_all_LLD_converter_API')?['features'][1]['properties']['province']"
-            },
-            "Latitude": {
-              "runAfter": {
-                "Longtitude": [
-                  "Succeeded"
-                ]
+              "expression": {
+                "not": {
+                  "equals": [
+                    "@string(body('HTTP_-_all_LLD_converter_API'))",
+                    "@'{}'"
+                  ]
+                }
               },
               "metadata": {
-                "operationMetadataId": "8d0719c5-7e73-4d1b-9a75-e8fdf070f08e"
+                "operationMetadataId": "cd0f1bb1-24f2-45f8-a38b-52c431ed47be"
               },
-              "type": "Compose",
-              "inputs": "@body('HTTP_-_all_LLD_converter_API')?['features'][1]['geometry']['coordinates'][1]"
-            },
-            "Filter_Province_array": {
-              "runAfter": {
-                "Latitude": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "1a4de2d3-c2c6-40c6-b918-b0ffe6a40849"
-              },
-              "type": "Query",
-              "inputs": {
-                "from": "@variables('ProvinceList')",
-                "where": "@contains(item()['Province'], outputs('Province'))"
-              }
-            },
-            "ProvinceIndex": {
-              "runAfter": {
-                "Filter_Province_array": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "17ad5f56-7123-4860-bd1a-a355cb03e3a0"
-              },
-              "type": "Compose",
-              "inputs": "@body('Filter_Province_array')[0]['index']"
-            },
-            "Update_Site_LLD_Province_and_Lat_Long": {
-              "runAfter": {
-                "ProvinceCode": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "bc1fc229-8204-44ca-983d-2effc1d66cfa"
-              },
-              "type": "OpenApiConnection",
-              "inputs": {
-                "host": {
-                  "connectionName": "shared_commondataserviceforapps",
-                  "operationId": "UpdateRecord",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                },
-                "parameters": {
-                  "entityName": "accounts",
-                  "recordId": "@triggerOutputs()?['body/accountid']",
-                  "item/address1_stateorprovince": "@outputs('ProvinceCode')",
-                  "item/address1_latitude": "@outputs('Latitude')",
-                  "item/address1_longitude": "@outputs('Longtitude')",
-                  "item/ovs_address1_province": "@outputs('ProvinceIndex')",
-                  "item/ovs_lld_province": "@outputs('ProvinceIndex')"
-                },
-                "authentication": "@parameters('$authentication')"
-              }
-            },
-            "ProvinceCode": {
-              "runAfter": {
-                "ProvinceIndex": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "b7de7b72-45b0-4788-8ce8-354224c4d44c"
-              },
-              "type": "Compose",
-              "inputs": "@\r\nbody('Filter_Province_array')[0]['ProvinceCode']"
+              "type": "If"
             }
           },
           "runAfter": {

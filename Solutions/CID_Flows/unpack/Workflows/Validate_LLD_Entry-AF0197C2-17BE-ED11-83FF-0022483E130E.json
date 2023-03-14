@@ -1,0 +1,199 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "2f4df43f-8cdd-4555-837b-65e545afebae"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Quarter": {
+                  "type": "string"
+                },
+                "Section": {
+                  "type": "string"
+                },
+                "TownShip": {
+                  "type": "string"
+                },
+                "Range": {
+                  "type": "string"
+                },
+                "Meridian": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "Initialize_variable_Province_List": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "9d843d01-989c-48bc-8760-256041db9458"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ProvinceList",
+                "type": "array",
+                "value": [
+                  {
+                    "Province": "Alberta::Alberta",
+                    "index": 0,
+                    "ProvinceCode": "AB"
+                  },
+                  {
+                    "Province": "British Columbia::Colombie-Britannique",
+                    "index": 1,
+                    "ProvinceCode": "BC"
+                  },
+                  {
+                    "Province": "Manitoba::Manitoba",
+                    "index": 2,
+                    "ProvinceCode": "MB"
+                  },
+                  {
+                    "Province": "New Brunswick::Nouveau-Brunswick",
+                    "index": 3,
+                    "ProvinceCode": "NB"
+                  },
+                  {
+                    "Province": "Newfoundland and Labrador::Terre‑Neuve‑et‑Labrador",
+                    "index": 4,
+                    "ProvinceCode": "NL"
+                  },
+                  {
+                    "Province": "Northwest Territories::Territoires du Nord‑Ouest",
+                    "index": 5,
+                    "ProvinceCode": "NT"
+                  },
+                  {
+                    "Province": "Nova Scotia::Nouvelle-Écosse",
+                    "index": 6,
+                    "ProvinceCode": "NS"
+                  },
+                  {
+                    "Province": "Nunavut::Nunavut",
+                    "index": 7,
+                    "ProvinceCode": "NU"
+                  },
+                  {
+                    "Province": "Ontario::Ontario",
+                    "index": 8,
+                    "ProvinceCode": "ON"
+                  },
+                  {
+                    "Province": "Prince Edward Island::Île-du-Prince-Édouard",
+                    "index": 9,
+                    "ProvinceCode": "PE"
+                  },
+                  {
+                    "Province": "Quebec::Québec",
+                    "index": 10,
+                    "ProvinceCode": "QC"
+                  },
+                  {
+                    "Province": "Saskatchewan::Saskatchewan",
+                    "index": 11,
+                    "ProvinceCode": "SK"
+                  },
+                  {
+                    "Province": "Yukon::Yukon",
+                    "index": 12,
+                    "ProvinceCode": "YT"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "HTTP_-_all_LLD_converter_API": {
+          "runAfter": {
+            "Initialize_variable_Province_List": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3a6c3035-da4f-4e4b-8e21-a5478d2c15c6"
+          },
+          "type": "Http",
+          "inputs": {
+            "method": "GET",
+            "uri": "https://developer.townshipcanada.com/search/legal-location",
+            "headers": {
+              "X-API-Key": "0514affb0b774176b484d20a0438b458"
+            },
+            "queries": {
+              "location": "@{triggerBody()?['Quarter']}- @{triggerBody()?['Section']}-@{triggerBody()?['TownShip']}-\n@{triggerBody()?['Range']}-@{triggerBody()?['Meridian']}"
+            }
+          }
+        },
+        "check_if_LLD_not_found": {
+          "actions": {
+            "Response_LLD_not_found": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "be328f5e-82e5-4780-add8-2aac5273376e"
+              },
+              "type": "Response",
+              "kind": "Http",
+              "inputs": {
+                "statusCode": 201
+              }
+            }
+          },
+          "runAfter": {
+            "HTTP_-_all_LLD_converter_API": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Response_LLD_found_": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "463f2881-cfc4-49e2-944a-3119b1600dc7"
+                },
+                "type": "Response",
+                "kind": "Http",
+                "inputs": {
+                  "statusCode": 200
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@string(body('HTTP_-_all_LLD_converter_API'))",
+              "@'{}'"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "68bc2dc0-b3e0-44f9-beaf-094237ae57ca"
+          },
+          "type": "If"
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}
