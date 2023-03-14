@@ -21,9 +21,13 @@ $(document).ready(function () {
 	var urlParams = new URLSearchParams(window.location.search);
 	if (urlParams.has('in_year')) {
 		tdg.c.weblink_hide("/RegistrationWizard/");
-		tdg.c.weblink_hide("/Bulk_Site_Upload/");
 		tdg.c.weblink_show("/company_dashboard/");
-		tdg.c.weblink_show("/Bulk_Site_Update/");
+	
+	}
+	else
+	{
+			tdg.c.weblink_show("/RegistrationWizard/");
+			tdg.c.weblink_hide("/company_dashboard/");
 	}
 });
 
