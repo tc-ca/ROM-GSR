@@ -5,8 +5,11 @@
 $(document).ready(function () {
     debugger;
 
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
     var message = tdg.error_message.message("m000132");
-    
+
     tdg.c.dialog_YN(message, (ans) => {
         if (!ans) {
             window.location.href = "~/my-company";
@@ -20,10 +23,10 @@ $(document).ready(function () {
     effectiveDateControl.val('');
     $("#cid_companydeactivationeffectivedate").val(null);
 
-    $("#cid_reasonforcompanydeactivation option[value='']").attr('selected', true); 
+    $("#cid_reasonforcompanydeactivation option[value='']").attr('selected', true);
     $("#cid_memoforcompanydeactivation").val('');
     $("#cid_iscompanyattested").prop("checked", false);
-    
+
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
     $('#cid_cidcompanystatus').hide();
     $('#cid_cidcompanystatus_label').hide();
@@ -31,15 +34,15 @@ $(document).ready(function () {
     if (cidCompanyStatus.indexOf("Inactive") >= 0)
         $('#EntityFormPanel').find('input, textarea, button, select').attr('disabled', 'disabled');
 
-    $("#EntityFormPanel").click(function(){
+    $("#EntityFormPanel").click(function () {
         var futureDateMessageShown = sessionStorage.getItem("futureDateMessageShown");
 
-        if(futureDateMessageShown != 'true'){          
+        if (futureDateMessageShown != 'true') {
             var effectiveDate = Date.parse(effectiveDateControl.val());
 
-            if(effectiveDate >= new Date()){
+            if (effectiveDate >= new Date()) {
                 var message = "<p>Please be aware that the entered date is in the future.</p>";
-                tdg.c.dialog_OK(message);  
+                tdg.c.dialog_OK(message);
                 sessionStorage.setItem('futureDateMessageShown', 'true');
             }
         }

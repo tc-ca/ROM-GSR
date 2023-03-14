@@ -10,6 +10,10 @@ $(document).ready(function () {
       sessionStorage.setItem("FullName", "");
       sessionStorage.setItem("Email", "");
 
+    //Name formatting
+    tdg.cid.name_init("firstname");
+    tdg.cid.name_init("lastname");  
+
     //add cancel button
     var cancelLabel = tdg.error_message.message("BTN_CANCEL");
     $('#UpdateButton').after('<input type="button" data-dismiss="modal" value="'+cancelLabel+'" id="CancelButton" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')

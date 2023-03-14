@@ -26,6 +26,10 @@ $(document).ready(function () {
     tdg.cid.phone_init("fax", selected_language);
     
     tdg.c.addValidator("emailaddress1");
+    
+    //Name formatting
+    tdg.cid.name_init("firstname");
+    tdg.cid.name_init("lastname");  
 
     // autocomplete off
     try {

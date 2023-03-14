@@ -12,19 +12,18 @@
     var annualCompliance = sessionStorage.getItem('fromannualcompliance');
     var frominyearsitepage = sessionStorage.getItem('frominyearsitepage');
 
-    if(inYear == 'true' )
+    if(inYear == 'true' || frominyearsitepage == 'true')
         window.location.href = '~/my-sites/';
     else if(annualCompliance == 'true' )
         window.location.href = '~/my-company/annual-compliance-update/';
-    else if(frominyearsitepage == 'true' ){
-        var urlParams = new URLSearchParams(window.location.search);
-
-        if (urlParams.has('id')) {
-            var siteid = urlParams.get('id');
-            if(siteid != "")
-                window.location.href = '~/my-sites/in-year-site/?id=' + siteid;
-        }
-    }
+    //else if( ){
+   //     var urlParams = new URLSearchParams(window.location.search);
+    //    if (urlParams.has('id')) {
+   //         var siteid = urlParams.get('id');
+    //        if(siteid != "")
+    //            window.location.href = '~/my-sites/in-year-site/?id=' + siteid;
+   //     }
+    //}
     else{
         window.location.href = '~/RegistrationWizard';
     }

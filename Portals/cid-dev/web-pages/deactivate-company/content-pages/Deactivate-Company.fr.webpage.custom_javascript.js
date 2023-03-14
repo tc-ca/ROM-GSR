@@ -5,6 +5,9 @@
 $(document).ready(function () {
 	debugger;
 
+	var selected_language = '{{website.selected_language.code}}';
+	sessionStorage.setItem("selected_language", selected_language);
+
 	var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name}}');
 
 	var topNav = $('#navbar');
@@ -25,5 +28,5 @@ $(document).ready(function () {
 		value = value.replace("{0}", companyName);
 		value = value.replace("{1}", msg);
 		h2Header.html(value);
-    }
+	}
 });
