@@ -1,9 +1,15 @@
-{% comment %} {% include "entity_list" key:"Online_Helps" %} {% endcomment %}<br>
-{% assign parentCompanyId = user.parentcustomerid.id %} {% if parentCompanyId %} {% assign company = entities['account'][parentCompanyId] %} {% if company.cid_cidcompanystatus.label contains "nactive" %} <script>
+{% comment %}<br>
+{% include "entity_list" key:"Online_Helps" %}<br>
+{% endcomment %}<br>
+{% assign parentCompanyId = user.parentcustomerid.id %}<br>
+{% if parentCompanyId %}<br>
+{% assign company = entities['account'][parentCompanyId] %}<br>
+{% if company.cid_cidcompanystatus.label contains "nactive" %}<br>
+<script>
             $('a[href*="deactivate-company"]').addClass("hidden");
         </script> {% else %} <script>
             $('a[href*="deactivate-company"]').removeClass("hidden");
-        </script> {% endif %} {% endif %}<br>
-<br>
+        </script> {% endif %}<br>
+{% endif %}<br>
 {% entityform name: 'Online Help' %}
 

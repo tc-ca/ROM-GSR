@@ -9,6 +9,9 @@ $(document).ready(function () {
 	debugger;
 
 	page_setup();
+    var addressType = $("#ovs_address_type :selected").text();
+	console.log("address type :");
+	console.log(addressType);
 
      $("#InsertButton").click(function (e) {
 	   $("#ovs_address1_province").attr("disabled", false); });
@@ -20,8 +23,17 @@ $(document).ready(function () {
 		ButtonCancel + '" class="btn btn-default button previous previous-btn"> </input>');
 	//cancel button click event
 	$('#cancelButton').click(function (e) {
-		//click back button
-		history.back();
+		if (sessionStorage.getItem('frominyearsites') == "true" || sessionStorage.getItem('fromannualcompliance') == 'true') 
+        {
+            //history.back();
+            //Make Sure cancel button redirects to sites page
+            $('#cancelButton').click(function(){  window.location.href = '/my-sites/';  return false;});
+        }
+        else
+        {
+             //Make Sure cancel button redirects to sites page
+            $('#cancelButton').click(function(){  window.location.href = '/RegistrationWizard/';  return false;});
+        }
 	});
 
 	//latitude validation
@@ -112,11 +124,38 @@ function page_setup() {
 }
 if (window.jQuery) {
 	(function ($) {
-		webFormClientValidate = function () {
+		   if (typeof (entityFormClientValidate) != 'undefined') {
+         var originalValidationFunction = entityFormClientValidate;
+         if (originalValidationFunction && typeof (originalValidationFunction) == "function") {
+            entityFormClientValidate = function() {
 			
-		$("#ovs_address1_province").attr("disabled", false);
 		
+		var addressType = $("#ovs_address_type").val();
+		alert (addressType);
+            if (addressType == 1  &&  $("#ovs_lld_section").val() > 0 && $("#ovs_lld_township").val() > 0
+			&& $("#ovs_lld_range").val() > 0 && $("#ovs_lld_meridian").val() > 0 
+			 )
+			{
+				var valid = tdg.cid.LLD_validateAddress_combination_Selections();
+				alert (valid);
+				if (valid)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+
+			}
+			else
+			{
+			$("#ovs_address1_province").attr("disabled", false);
+
 			return true;
+			}
 		}
+		 }
+		   }
 	}(window.jQuery));
 }

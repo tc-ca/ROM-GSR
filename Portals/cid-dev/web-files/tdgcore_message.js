@@ -218,7 +218,7 @@ if (typeof (tdg.message) == "undefined") {
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.";
             var page_in_year_my_sites_FR = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.<br>" +
                 "To add additional Sites individually, choose the <b>[+ Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.<br>" +
-                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end._FR";       
+                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end._FR";
             var page_annual_compliance_update_EN = "1- As applicable, perform each step's related update below, then it's 'Mark as complete' option.</br>" +
                 "2- Read and agree to the terms of service agreement and select the 'Attestation' section.</br>" +
                 "3- When complete, select the <b>[Complete Annual Compliance Update'</b> option.";
@@ -723,26 +723,22 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000116",
                         "message_en": "This Contact cannot be added as a Contact with this name and email address already exists in CID, but is assigned to a different Organization.",
                         "message_fr": "This Contact cannot be added as a Contact with this name and email address already exists in CID, but is assigned to a different Organization._FR"
-                    }
-                    ,
+                    },
                     {
                         "code": "m000117",
                         "message_en": "The Secondary Contact {0} has been sent an on-boarding invitation to their email address of {1}.",
                         "message_fr": "The Secondary Contact {0} has been sent an on-boarding invitation to their email address of {1}._FR"
-                    }
-                    ,
+                    },
                     {
                         "code": "m000118",
                         "message_en": "Only the Primary Admin can deactivate a Secondary Admin.",
                         "message_fr": "Only the Primary Admin can deactivate a Secondary Admin._FR"
-                    }
-                    ,
+                    },
                     {
                         "code": "m000119",
                         "message_en": "At least one other active Secondary Admin needs to be added before you can deactivate this Secondary Admin.",
                         "message_fr": "At least one other active Secondary Admin needs to be added before you can deactivate this Secondary Admin._FR"
-                    }
-                    ,
+                    },
                     {
                         "code": "m000120",
                         "message_en": "The Secondary Contact {0} has been sent an on-boarding invitation to their email address of {1}.",
@@ -796,17 +792,17 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000130",
                         "message_en": "The Annual Compliance Update can only be completed as early as 30 days before your Organization’s Anniversary Date of {0}.",
-                        "message_fr": "In French - The Annual Compliance Update can only be completed as early as 30 days before your Organization’s Anniversary Date of {0}."
+                        "message_fr": "The Annual Compliance Update can only be completed as early as 30 days before your Organization’s Anniversary Date of {0}._FR"
                     },
                     {
                         "code": "m000131",
                         "message_en": "Note that another Organization has an active Site with the same information. Do you want to proceed, or stop this addition in order to make a correction to the entered Site data, and/or begin the Site Sale/Merger process via the Site Transfer menu option?",
-                        "message_fr": "In French - Note that another Organization has an active Site with the same information. Do you want to proceed, or stop this addition in order to make a correction to the entered Site data, and/or begin the Site Sale/Merger process via the Site Transfer menu option?"
+                        "message_fr": "Note that another Organization has an active Site with the same information. Do you want to proceed, or stop this addition in order to make a correction to the entered Site data, and/or begin the Site Sale/Merger process via the Site Transfer menu option?_FR"
                     },
                     {
                         "code": "m000132",
                         "message_en": "This action will deactivate the Organization and all of its Sites.</br></br>Please be aware that if any of the Sites are meant to be sold to another Organization, or merged into an existing Organization, then you will need to first begin the Transfer/Sale process for those Sites before deactivating the Organization.</br></br> <p style='color:red' >Be advised that this action cannot be undone.</p> Do you want to proceed with the Organization deactivation.</br></br>",
-                        "message_fr": "In French - This action will deactivate the Organization and all of its Sites.</br></br>Please be aware that if any of the Sites are meant to be sold to another Organization, or merged into an existing Organization, then you will need to first begin the Transfer/Sale process for those Sites before deactivating the Organization.</br></br> <p style='color:red' >Be advised that this action cannot be undone.</p> Do you want to proceed with the Organization deactivation.</br></br>"
+                        "message_fr": "This action will deactivate the Organization and all of its Sites.</br></br>Please be aware that if any of the Sites are meant to be sold to another Organization, or merged into an existing Organization, then you will need to first begin the Transfer/Sale process for those Sites before deactivating the Organization.</br></br> <p style='color:red' >Be advised that this action cannot be undone.</p> Do you want to proceed with the Organization deactivation.</br></br>_FR"
                     },
                     {
                         "code": "m000133",
@@ -821,27 +817,27 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000135",
                         "message_en": "Contact Email",
-                        "message_fr": "Contact Email_fr"
+                        "message_fr": "Contact Email_FR"
                     },
                     {
                         "code": "m000136",
-                        "message_en": "Note: This is your account’s official email, which may be updated via the [Account Settings] button at the top.",
-                        "message_fr": "Note: This is your account’s official email, which may be updated via the [Account Settings] button at the top._fr"
+                        "message_en": "Note: This is your account’s official email, which may be updated via the <b>[Account Settings]</b> button at the top.",
+                        "message_fr": "Note: This is your account’s official email, which may be updated via the <b>[Account Settings]</b> button at the top._FR"
                     },
                     {
                         "code": "m000137",
                         "message_en": "Your request has been sent to the Transport Canada TDG CID Support Team.",
-                        "message_fr": "Your request has been sent to the Transport Canada TDG CID Support Team._fr"
+                        "message_fr": "Your request has been sent to the Transport Canada TDG CID Support Team._FR"
                     },
                     {
                         "code": "m000138",
                         "message_en": "Details of Request needs to be entered.",
-                        "message_fr": "Details of Request needs to be entered._fr"
+                        "message_fr": "Details of Request needs to be entered._FR"
                     },
                     {
                         "code": "m000139",
                         "message_en": "There is knowledge article information about this topic that may answer your request. Do you want to first view that information?",
-                        "message_fr": "There is knowledge article information about this topic that may answer your request. Do you want to first view that information?_fr"
+                        "message_fr": "There is knowledge article information about this topic that may answer your request. Do you want to first view that information?_FR"
                     },
                 ];
 

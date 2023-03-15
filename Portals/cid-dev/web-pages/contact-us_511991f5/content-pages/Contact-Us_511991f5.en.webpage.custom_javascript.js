@@ -1,25 +1,21 @@
+// 
+// Web Page-Contact Us.js
+// 
 $(document).ready(function () {
+	debugger;
 	page_setup();
 
     var customerid = '{{user.parentcustomerid.id}}';
      if (customerid != "" && customerid != null && customerid != 'undefined')
 	 {
-		
-
 	 }
 	 else
 	 {
 		 tdg.c.weblink_hide("/company_dashboard/");
-		
-
 	 }
  
-
-
     var  company_status = "{{entities.account[user.parentcustomerid.id].cid_cidcompanystatus.value}}";
-
 	var  company_reg_date = "{{entities.account[user.parentcustomerid.id].cid_officiallyregistrationcompletationdate}}";
-	console.log(company_reg_date);
 
 	if(company_reg_date !=null && company_reg_date !="")
 	{
@@ -30,9 +26,7 @@ $(document).ready(function () {
 	else
 	{
 		tdg.c.weblink_hide("/company_dashboard/");
-
 	}
-
 });
 
 function page_setup() {

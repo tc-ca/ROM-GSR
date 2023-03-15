@@ -92,12 +92,10 @@ if (typeof (tdg.c) == "undefined") {
         page_instructions: function (message, scroll) {
             debugger;
             message = tdg.error_message.message(message);
-            if (!scroll)
-            {
+            if (!scroll) {
                 var value = "<div class='alert alert-info' style='background:#d7faff'><p>" + message + "</p></div>";
             }
-            else
-            {
+            else {
                 var value = "<div class='alert alert-info' style='background:#d7faff; overflow-y: scroll; height:170px;'><p>" + message + "</p></div>";
             }
             $(".instructions").html(value);
@@ -2220,6 +2218,66 @@ if (typeof (tdg.cid) == "undefined") {
 
         Refresh_EntityGrid() {
             $(".entity-grid").trigger("refresh");
+        },
+
+        LLD_validateAddress_combination_Selections() {
+
+            var FlowName = "CID_Portal_Validate_LLD_Entry";
+            var addressType = $("#ovs_address_type :selected").text();
+
+            var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses",
+                "qm_value", "qm_name eq '" + FlowName + "'");
+
+            if (EnvironmentSettingResult.length > 0) {
+                var FlowURL = EnvironmentSettingResult[0]["qm_value"];
+
+
+                var myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+                var Quarter = $("#ovs_lld_quarter :selected").text();
+                var Section = $("#ovs_lld_section :selected").text();
+                var Township = $("#ovs_lld_township :selected").text();
+                var Range = $("#ovs_lld_range :selected").text();
+                var Meridian = $("#ovs_lld_meridian :selected").text();
+
+
+                var raw = JSON.stringify({
+
+                    "Quarter": Quarter,
+                    "Section": Section,
+                    "TownShip": Township,
+                    "Range": Range,
+                    "Meridian": Meridian
+
+
+                });
+
+                var requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: 'follow'
+                };
+
+                fetch(FlowURL, requestOptions)
+                    .then(response => response.text())
+                    .then(result => {
+
+                        if (result == "Not found") {
+                            console.log("resut " + result);
+                            return false;
+                        }
+                        else {
+                            console.log("resut Success" + result);
+                            return true;
+                        }
+                    }
+                        
+                        )
+                    .catch(error => console.log('error', error));
+
+            }//end check if flow IRL is found
+
         }
     }
 }
@@ -2827,3 +2885,4 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
+
