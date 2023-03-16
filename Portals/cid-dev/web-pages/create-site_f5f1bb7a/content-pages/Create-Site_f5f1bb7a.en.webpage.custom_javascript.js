@@ -70,7 +70,10 @@ if (window.jQuery) {
                                 return CheckDuplicate(FlowURL, parameters);
                             } //end check if flow url found
                             else
-                                return true;
+                               {
+                                    return true;
+                                    
+                               }
 
                             break;
 
