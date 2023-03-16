@@ -12,6 +12,7 @@ $(document).ready(function () {
     var addressType = $("#ovs_address_type :selected").text();
 
      $("#InsertButton").click(function (e) {
+		 
 	   $("#ovs_address1_province").attr("disabled", false); 
 	   });
 

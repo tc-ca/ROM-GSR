@@ -12,13 +12,6 @@ $(document).ready(function () {
     sessionStorage.setItem('to_oprtn_wzrd', 'false');
 
     var urlParams = new URLSearchParams(window.location.search);
-    //if (urlParams.has('isExtended')) {
-    //    var isExtended = urlParams.get('isExtended');
-
-    //    if (isExtended == 'false') {
-    //        $('.progress li').last().addClass("hidden");
-    //    }
-    // }
 
     if (urlParams.has('siteid')) {
         var siteId = urlParams.get('siteid');
@@ -43,8 +36,6 @@ $(document).ready(function () {
             tdg.c.weblink_show("/Bulk_Site_Update/");
         }
     }
-
-    debugger;
 
     header_setup();
 
@@ -75,9 +66,16 @@ function header_setup() {
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
+    var urlParams = new URLSearchParams(window.location.search);
+
     try {
         var code = "m000024";
+        var site_id = urlParams.get('siteid');
+        var cid_sitename = "";
         var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name}}');
+        if (cid_sitename != "") {
+            companyName += " - " + cid_sitename;
+        }
         var value = tdg.error_message.message(code);
         value = value.replace("{0}", companyName);
         $('.page-header h1').text(value);

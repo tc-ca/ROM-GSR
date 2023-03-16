@@ -630,6 +630,21 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "Cette operation a déjà une classe avec le type"
                     },
                     {
+                        "code": "m000049",
+                        "message_en": "Back To In Year Sites Page",
+                        "message_fr": "Back To In Year Sites Page_FR"
+                    },
+                    {
+                        "code": "m000050",
+                        "message_en": "Back To Annual Compliance Update Page",
+                        "message_fr": "Back To Annual Compliance Update Page_FR"
+                    },
+                    {
+                        "code": "m000051",
+                        "message_en": "Back To In Year Site Update Page",
+                        "message_fr": "Back To In Year Site Update Page_FR"
+                    },
+                    {
                         "code": "m000098",
                         "message_en": "Your entered name and email account are already associated with an invitation tailored to you and your Organization. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
                         "message_fr": "Your entered name and email account are already associated with an invitation tailored to you and your Organization. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID._FR"
