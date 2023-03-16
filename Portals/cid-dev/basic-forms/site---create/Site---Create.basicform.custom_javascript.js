@@ -23,16 +23,19 @@ $(document).ready(function () {
 		ButtonCancel + '" class="btn btn-default button previous previous-btn"> </input>');
 	//cancel button click event
 	$('#cancelButton').click(function (e) {
+        debugger;
 		if (sessionStorage.getItem('frominyearsites') == "true" || sessionStorage.getItem('fromannualcompliance') == 'true') 
         {
             //history.back();
             //Make Sure cancel button redirects to sites page
-            $('#cancelButton').click(function(){  window.location.href = '/my-sites/';  return false;});
+             window.location.href = '/my-sites/';  
+             return false;
         }
         else
         {
              //Make Sure cancel button redirects to sites page
-            $('#cancelButton').click(function(){  window.location.href = '/RegistrationWizard/';  return false;});
+             window.location.href = '/RegistrationWizard/';  
+             return false;
         }
 	});
 
@@ -128,25 +131,59 @@ if (window.jQuery) {
          var originalValidationFunction = entityFormClientValidate;
          if (originalValidationFunction && typeof (originalValidationFunction) == "function") {
             entityFormClientValidate = function() {
-			
-		
+				originalValidationFunction.apply(this, arguments);
 		var addressType = $("#ovs_address_type").val();
-		alert (addressType);
+		
             if (addressType == 1  &&  $("#ovs_lld_section").val() > 0 && $("#ovs_lld_township").val() > 0
 			&& $("#ovs_lld_range").val() > 0 && $("#ovs_lld_meridian").val() > 0 
 			 )
 			{
-				var valid = tdg.cid.LLD_validateAddress_combination_Selections();
-				alert (valid);
-				if (valid)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				//var valid = tdg.cid.LLD_validateAddress_combination_Selections();
+            var FlowName = "CID_Portal_Validate_LLD_Entry";
+            var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses",
+                "qm_value", "qm_name eq '" + FlowName + "'");
 
+            if (EnvironmentSettingResult.length > 0) {
+                var FlowURL = EnvironmentSettingResult[0]["qm_value"];
+                var myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+                var Quarter = $("#ovs_lld_quarter :selected").text();
+                var Section = $("#ovs_lld_section :selected").text();
+                var Township = $("#ovs_lld_township :selected").text();
+                var Range = $("#ovs_lld_range :selected").text();
+                var Meridian = $("#ovs_lld_meridian :selected").text();
+                var raw = JSON.stringify({
+                    "Quarter": Quarter,
+                    "Section": Section,
+                    "TownShip": Township,
+                    "Range": Range,
+                    "Meridian": Meridian
+                });
+                var requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: 'follow'
+                };
+
+                fetch(FlowURL, requestOptions)
+                    .then(response => response.text())
+                    .then(result => {
+
+                        if (result == "Not found") {
+                            alert("result not found " + result);
+                            return false;
+                        }
+                        else {
+                           
+                            return true;
+                        }
+                    }
+                        
+                        )
+                    .catch(error => console.log('error', error));
+
+            }//end check if flow IRL is found
 			}
 			else
 			{
