@@ -35,6 +35,15 @@ $(document).ready(function () {
             tdg.c.weblink_show("/company_dashboard/");
             tdg.c.weblink_show("/Bulk_Site_Update/");
         }
+
+        if (sessionStorage.getItem('frominyearsites') == "true" || sessionStorage.getItem('fromannualcompliance') == 'true') {
+            tdg.c.weblink_hide("/RegistrationWizard/");
+            tdg.c.weblink_hide("/Bulk_Site_Upload/");
+        }
+        else {
+            tdg.c.weblink_hide("/company_dashboard/");
+            tdg.c.weblink_hide("/Bulk_Site_Update/");
+        }
     }
 
     header_setup();
@@ -71,7 +80,12 @@ function header_setup() {
     try {
         var code = "m000024";
         var site_id = urlParams.get('siteid');
-        var cid_sitename = "";
+        filter = "accountid eq '" + site_id + "'";
+        var account = tdg.webapi.SelectedColumnlist("accounts", "cid_sitename", filter);
+        var cid_sitename = ""
+        if (account.length > 0) {
+            var cid_sitename = account[0].cid_sitename;
+        }
         var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name}}');
         if (cid_sitename != "") {
             companyName += " - " + cid_sitename;

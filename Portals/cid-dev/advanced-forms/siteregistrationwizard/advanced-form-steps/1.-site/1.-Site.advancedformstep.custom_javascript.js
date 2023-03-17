@@ -7,6 +7,10 @@ $(document).ready(function () {
 
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
+    page_setup();
+    $("#WebFormPanel").before($('.text-danger').parent());
+
+	 tdg.c.message_panel();
 
 	$("#NextButton").click(function (e) {
 		$("#ovs_address1_province").attr("disabled", false);
@@ -165,4 +169,22 @@ function cid_input_read_only(sectionName) {
 	$("#ovs_address_type").attr("disabled", true);
 	//$(".section[data-name='" + sectionName + "']").find(':input').prop("disabled", true);
     $(".section[data-name='" + sectionName + "']").find(':input').prop("readonly", "readonly");
+}
+
+function page_setup() {
+	var selected_language = '{{website.selected_language.code}}';
+	sessionStorage.setItem("selected_language", selected_language);
+
+	const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
+	for (var i = 0; i < files.length; i++) {
+		var file = files[i];
+		var script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = file;
+
+		$("body").append(script);
+	}
+
+	// server error?
+	tdg.c.message_panel();
 }

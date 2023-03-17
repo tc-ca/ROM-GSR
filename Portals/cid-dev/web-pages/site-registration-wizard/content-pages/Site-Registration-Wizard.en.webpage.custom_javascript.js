@@ -81,8 +81,12 @@ function header_setup(type) {
 		var code = "m000024";
 		debugger;
 		var site_id = urlParams.get('id');
-
+		filter = "accountid eq '" + site_id + "'";
+		var account = tdg.webapi.SelectedColumnlist("accounts", "cid_sitename", filter);
 		var cid_sitename = ""
+		if (account.length > 0) {
+			var cid_sitename = account[0].cid_sitename;
+        }
 		var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name}}');
 		if (cid_sitename != "") {
 			companyName += " - " + cid_sitename;
