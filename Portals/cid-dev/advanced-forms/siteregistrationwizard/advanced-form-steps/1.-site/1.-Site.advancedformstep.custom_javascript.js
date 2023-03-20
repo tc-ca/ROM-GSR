@@ -7,10 +7,12 @@ $(document).ready(function () {
 
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
-    page_setup();
-    $("#WebFormPanel").before($('.text-danger').parent());
-
-	 tdg.c.message_panel();
+    
+   // $('.text-danger').parent().att("id", "MessagePanel");
+	  $("#ValidationSummaryEntityFormView").after($('.text-danger').parent());
+	  Show_PluginError_TextLanguag($('.text-danger').parent());
+      page_setup();
+	  tdg.c.message_panel();
 
 	$("#NextButton").click(function (e) {
 		$("#ovs_address1_province").attr("disabled", false);
@@ -74,6 +76,7 @@ $(document).ready(function () {
 		$('#instructions').hide();
 		$('#EntityFormView').hide();
 		$("#NextButton").click();
+        //return;
 	}
 	else $('#redirectInstruction').hide();
 	//Phone number formatting
@@ -188,3 +191,29 @@ function page_setup() {
 	// server error?
 	tdg.c.message_panel();
 }
+
+function Show_PluginError_TextLanguag(Field)
+{
+var language = sessionStorage.getItem("selected_language");
+
+            try {
+                var text = Field[0].innerText;
+                var index1 = text.indexOf("::");
+                if (index1 < 0) {
+                    text = text + "::" + text;
+                    index1 = text.indexOf("::");
+                }
+                //if (language == "en-US") {
+                if (language == "en") {
+                    value = text.substr(0, index1);
+                }
+                else {
+                    value = text.substr(index1 + 2);
+                }
+                Field[0].innerText = value;
+				Field[0].innerHTML = '<h3 class="validation-header" role="none"><span role="presentation" class="fa fa-info-circle"></span> The form could not be submitted for the following reasons:</h2>'
+				+  "<p>" + value + "</p>";
+            } catch (e) { }
+        }
+
+   

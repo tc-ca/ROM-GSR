@@ -110,9 +110,9 @@ if (window.jQuery) {
                             var parameters = {};
                             parameters.Parent_Id = account_id; // Edm.String
                             parameters.AddressType = 0; // Edm.Int32
-                            parameters.Address1_StateorProvince = address1_stateorprovince; // Edm.String
+                            parameters.Address1_Postal = address1_postalcode; // Edm.String
                             parameters.Address1_Line1 = address1_line1; // Edm.String
-                            parameters.Address1_City = address1_city;
+                            parameters.Address1_Line2 = address1_line2; // Edm.String
 
                             var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
                             var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
@@ -196,6 +196,10 @@ var CheckDuplicate = function (_flowURl, _parameters) {
                     return true;
                 }
             }
+            else
+                debugger;
+                return false; 
+        
         } //end ready status
     }; //end on ready function
     req.send(JSON.stringify(_parameters));

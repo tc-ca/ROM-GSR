@@ -1503,7 +1503,7 @@ if (typeof (tdg.cid) == "undefined") {
                 case "1": // legal land description
                     tdg.c.section_show("section_legal_land_description");
 
-                    //tdg.c.addValidator("ovs_lld_quarter");
+                    tdg.c.addValidator("ovs_lld_quarter");
                     tdg.c.addValidator("ovs_lld_section");
                     tdg.c.addValidator("ovs_lld_township");
                     tdg.c.addValidator("ovs_lld_range");
@@ -2272,8 +2272,8 @@ if (typeof (tdg.cid) == "undefined") {
                             return true;
                         }
                     }
-                        
-                        )
+
+                    )
                     .catch(error => console.log('error', error));
 
             }//end check if flow IRL is found
@@ -2885,4 +2885,6 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
+
+
 
