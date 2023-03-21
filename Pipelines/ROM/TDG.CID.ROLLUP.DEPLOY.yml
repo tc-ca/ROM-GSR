@@ -13,8 +13,8 @@ variables:
     value: 'TDG CORE QA'
   - name: PowerPlatformSPN_ACC
     value: 'ROM ACC TDG'
-  - name: PowerPlatformSPN_ACCDATA
-    value: 'ROM ACC TDG DATA'
+  - name: PowerPlatformSPN_DATA
+    value: 'TDG CORE DATA'
   - name: PowerPlatformSPN_PREPROD
     value: 'ROM PREPROD TDG'
   - name: PowerPlatformSPN_PROD
@@ -44,7 +44,7 @@ stages:
           Write-Host "PowerPlatformSPN_Dev:       $(PowerPlatformSPN_Dev)"
           Write-Host "PowerPlatformSPN_QA:        $(PowerPlatformSPN_QA)"
           Write-Host "PowerPlatformSPN_ACC:       $(PowerPlatformSPN_ACC)"
-          Write-Host "PowerPlatformSPN_ACCDATA:   $(PowerPlatformSPN_ACCDATA)"
+          Write-Host "PowerPlatformSPN_DATA:      $(PowerPlatformSPN_DATA)"
           Write-Host "PowerPlatformSPN_PREPROD:   $(PowerPlatformSPN_PREPROD)"
           Write-Host "PowerPlatformSPN_PROD:      $(PowerPlatformSPN_PROD)"
           Write-Host "============================================"
@@ -67,15 +67,6 @@ stages:
     StageName: 'CreatePatchOnDev'
     dependsOn: 
     - 'BuildAndPublishArtifacts'
-
-# - template: templates/stage/DeployHoldingSolution.yml  # Template reference
-#   parameters:
-#     SolutionName: $(SolutionName)
-#     PowerPlatformSPN: $(PowerPlatformSPN_QA)
-#     Environment: 'QA-TDG'
-#     StageName: 'DeployManagedSolutionToQA'
-#     dependsOn: 
-#     - 'BuildAndPublishArtifacts'
 
 - stage: ImportSolutionToQA
   pool:
@@ -149,16 +140,79 @@ stages:
         AsyncOperation: true
         MaxAsyncWaitTime: '9999'
 
-#deploy to acc-data as unmanaged solution
-# - template: templates/stage/DeploySolution.yml  # Template reference
-#   parameters:
-#     SolutionName: $(SolutionName)
-#     PowerPlatformSPN: $(PowerPlatformSPN_ACCDATA)
-#     Environment: 'ACC-TDG-DATA'
-#     StageName: 'DeployManagedSolutionToACCDATA'
-#     DeployUnmanagedSolution: true
-#     dependsOn: 
-#     - 'DeployManagedSolutionToQA'
+- stage: ImportSolutionToDATA
+  dependsOn:
+    - 'ApplySolutionUpgradeQA'
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - deployment: Deploy
+    displayName:  ImportSolutionToDATA
+    environment: ACC-TDG-DATA
+    timeoutInMinutes: 9999
+    cancelTimeoutInMinutes: 2
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: none
+            persistCredentials: true
+          - task: DownloadBuildArtifacts@1
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'zip'
+              downloadPath: '$(Agent.BuildDirectory)'
+          - task: PowerShell@2
+            inputs:
+              targetType: 'inline'
+              script: |
+                Write-Host "============================================"
+                Write-Host "Agent.BuildDirectory"
+                Get-ChildItem -Path "$(Agent.BuildDirectory)"
+                Write-Host "============================================"
+                Write-Host ""
+                Write-Host "============================================"
+                Write-Host "Agent.BuildDirectory/zip"
+                Get-ChildItem -Path "$(Agent.BuildDirectory)/zip"
+                Write-Host "============================================"
+              errorActionPreference: 'continue'
+          - task: PowerPlatformToolInstaller@0
+            inputs:
+              DefaultVersion: true
+          - task: PowerPlatformImportSolution@0
+            inputs:
+              authenticationType: 'PowerPlatformSPN'
+              PowerPlatformSPN: '$(PowerPlatformSPN_DATA)'
+              SolutionInputFile: '$(Agent.BuildDirectory)\zip\$(SolutionName)_Managed.zip'
+              AsyncOperation: true
+              MaxAsyncWaitTime: '9999'
+              HoldingSolution: true
+              OverwriteUnmanagedCustomizations: true
+
+- stage: ApplySolutionUpgradeDATA
+  dependsOn:
+    - 'ImportSolutionToDATA'
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: ApplySolutionUpgradeDATA
+    timeoutInMinutes: 0
+    steps:
+    - checkout: none
+      persistCredentials: true
+      clean: true
+    - task: PowerPlatformToolInstaller@0
+      inputs:
+        DefaultVersion: true
+    - task: PowerPlatformApplySolutionUpgrade@0
+      continueOnError: true
+      inputs:
+        authenticationType: 'PowerPlatformSPN'
+        PowerPlatformSPN: '$(PowerPlatformSPN_DATA)'
+        SolutionName: '$(SolutionName)'
+        AsyncOperation: true
+        MaxAsyncWaitTime: '9999'
 
 - stage: ImportSolutionToACC
   dependsOn:
@@ -221,24 +275,6 @@ stages:
         AsyncOperation: true
         MaxAsyncWaitTime: '9999'
 
-# - template: templates/stage/DeployHoldingSolution.yml  # Template reference
-#   parameters:
-#     SolutionName: $(SolutionName)
-#     PowerPlatformSPN: $(PowerPlatformSPN_ACC)
-#     Environment: 'ACC-TDG'
-#     StageName: 'DeployManagedSolutionToACC'
-#     dependsOn: 
-#     - 'DeployManagedSolutionToQA'
-
-# - template: templates/stage/DeployHoldingSolution.yml  # Template reference
-#   parameters:
-#     SolutionName: $(SolutionName)
-#     PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
-#     Environment: 'PREPROD-TDG'
-#     StageName: 'DeployManagedSolutionToPREPROD'
-#     dependsOn: 
-#     - 'DeployManagedSolutionToQA'
-
 - stage: ImportSolutionToPREPROD
   dependsOn:
     - 'ApplySolutionUpgradeQA'
@@ -299,15 +335,6 @@ stages:
         SolutionName: '$(SolutionName)'
         AsyncOperation: true
         MaxAsyncWaitTime: '9999'
-
-# - template: templates/stage/DeployHoldingSolution.yml  # Template reference
-#   parameters:
-#     SolutionName: $(SolutionName)
-#     PowerPlatformSPN: $(PowerPlatformSPN_PROD)
-#     Environment: 'PROD-TDG'
-#     StageName: 'DeployManagedSolutionToPROD'
-#     dependsOn: 
-#     - 'DeployManagedSolutionToQA'
 
 - stage: ImportSolutionToPROD
   dependsOn:
