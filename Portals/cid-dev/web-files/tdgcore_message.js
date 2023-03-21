@@ -811,8 +811,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000131",
-                        "message_en": "Note that another Organization has an active Site with the same information. Do you want to proceed, or stop this addition in order to make a correction to the entered Site data, and/or begin the Site Sale/Merger process via the Site Transfer menu option?",
-                        "message_fr": "Note that another Organization has an active Site with the same information. Do you want to proceed, or stop this addition in order to make a correction to the entered Site data, and/or begin the Site Sale/Merger process via the Site Transfer menu option?_FR"
+                        "message_en": "Another organization already has an active Site at this location. You will not be able to add a Site at this Location until the other organization first deactivates it.</br></br> If that other organization has agreed to sell you this Site, then please advise them to Deactivate the Site within the CID Portal, after which you will be able to add this Site.</br></br> If you are certain that the Site details entered are correct, and this Site is not part of a sale or transfer, then do you want to have a request sent to that organization asking them to release the Site?</br></br>",
+                        "message_fr": "Another organization already has an active Site at this location. You will not be able to add a Site at this Location until the other organization first deactivates it.</br></br> If that other organization has agreed to sell you this Site, then please advise them to Deactivate the Site within the CID Portal, after which you will be able to add this Site.</br></br> If you are certain that the Site details entered are correct, and this Site is not part of a sale or transfer, then do you want to have a request sent to that organization asking them to release the Site?_FR</br></br>"
                     },
                     {
                         "code": "m000132",
