@@ -90,18 +90,29 @@ if (typeof (invitation) == "undefined") {
             if (ans) {
                 debugger;
 
-                // send email
-                var data = {}
-                data.EmailCode = "S1B-1";
-                data.AccountId = rom_data.accountid;
-                data.Primary_Contactid = contact_id;
-                data.Secondary_Contactid = contact_id;
-                tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", JSON.stringify(data));
+                var status = rom_data.cid_cidcompanystatus;
+                var reg_not_started = ";100000010;100000003;100000004;100000002;";
+                var reg_status = true;
+                if (reg_not_started.includes(status) {
+                    reg_status = false;
+                }
+
+                if (reg_status) {
+                    // send email
+                    var data = {}
+                    data.EmailCode = "S1B-1";
+                    data.AccountId = rom_data.accountid;
+                    data.Primary_Contactid = contact_id;
+                    data.Secondary_Contactid = contact_id;
+                    tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", JSON.stringify(data));
+                }
+                else {
+                    // TODO: an ARL entry is added
+                }
 
                 // disable controls
                 debugger;
-                //$("#cid_has_cra_bn").prop('disabled', false);
-                $('#cid_has_cra_bn').attr("disabled", "disabled");
+                 $('#cid_has_cra_bn').attr("disabled", "disabled");
                 var cid_has_cra_bn = $("#cid_has_cra_bn").val();
                 cid_has_cra_bn = (cid_has_cra_bn == "1" ? true : false);
                 if (cid_has_cra_bn) {

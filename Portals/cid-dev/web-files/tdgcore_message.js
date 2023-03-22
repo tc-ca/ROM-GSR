@@ -854,6 +854,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "There is knowledge article information about this topic that may answer your request. Do you want to first view that information?",
                         "message_fr": "There is knowledge article information about this topic that may answer your request. Do you want to first view that information?_FR"
                     },
+					{
+                        "code": "m000140",
+                        "message_en": "The current owner orgnization of this site was contacted and informed to release this site.",
+                        "message_fr": "The current owner orgnization of this site was contacted and informed to release this site._FR"
+                    },
                 ];
 
             return list;

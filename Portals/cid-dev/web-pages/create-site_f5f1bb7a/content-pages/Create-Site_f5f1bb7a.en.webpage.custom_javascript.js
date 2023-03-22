@@ -146,45 +146,50 @@ var CheckDuplicate = function (_flowURl, _parameters) {
 
                 var result = JSON.parse(this.response);
                 var duplicatefound = result["DuplicateFound"]; // Edm.Boolean
+                var currentSiteOwner = result["CurrentSiteOwnerCompany"]; //string
+                var currentSiteId = result["CurrentSiteId"]; //string currentSiteId
+                var currentSiteOwnerId = result["CurrentSiteOwnerCompanyId"]; //string CurrentSiteOwnerCompanyId
 
                 if (duplicatefound) {
                     var message = tdg.error_message.message("m000131");
-                    //message = message.replaceAll("{0}", "AAA");
                     tdg.c.dialog_YN(message, (ans) => {
+                        var accName = "";
+                        var accId = "";
                         var contact_id = '{{user.id}}';
-                        //alert(ans);
-                        if (ans) {
-                            return false;
-                            //Do nothing
-                        }
-                        else {
-                            //Add ALM record. 
-                            var accName = "";
-                            var accId = "";
-                            var AddrType = "Postal Address"
-                            if (_parameters.AddressType == 1) AddrType = "LLD";
-                            else if (_parameters.AddressType == 2) AddrType = "Latitude / Longitude";
-
+                        if (ans) 
+                        {
                             var accountResult = tdg.webapi.SelectedColumnlist("accounts", "cid_crabusinessnumber,ovs_legalname", "accountid eq '" + _parameters.Parent_Id + "'");
                             if (accountResult.length > 0) {
                                 accName = accountResult[0]["ovs_legalname"];
                                 accId = accountResult[0]["cid_crabusinessnumber"];
                             }
                             var data = {
-                                "cid_Company_cid_activityreviewlog@odata.bind": "/accounts(" + _parameters.Parent_Id + ")",
-                                "subject": "A user is tring to claim a Site which is owned by another organization | Legal Name: " + accName + "| Address Type: " + AddrType,
-                                "prioritycode": 1,
-                                "actualdurationminutes": 30,
-                                "cid_arlcategory": 100000000
+                                "ovs_RequestType@odata.bind": "/ovs_supportrequesttypes(4c715208-2ac7-ed11-b597-0022483d0343)", // Lookup
+                                "ovs_Company@odata.bind": "/accounts(" + _parameters.Parent_Id + ")", // Lookup
+                                //"subject": "A user is tring to claim a Site which is owned by another organization | Legal Name: " + accName + "| Address Type: " + AddrType,
+                                "statuscode": 1,
+                                "ovs_priority": 5,
+                                "ovs_requestdetails": "A new Site for the organization '" +accName+ "' is being requested to be created, however Site ID '"
+                                                        +currentSiteId+ "', of the organization '" +currentSiteOwner+ "', already exists as an active Site at that location. The new Site will be blocked until the existing Site is inactivated by the original organization. \n\n This request needs to be monitored to ensure that the second organization follows through on the inactivation request, at which time this entry will automatically be marked as Complete. Otherwise the new Site will be blocked from being created, and in doing so that organization will be prevented from completing their Registration or Annual Compliance.\n" // Multiline Text
+                                //record["ovs_Site@odata.bind"] = "/accounts(22222222-2222-2222-2222-222222222222)"; // Lookup
                             };
-                            tdg.webapi.create("cid_activityreviewlogs", data);
-                            //entityFormClientValidate = true;
-                            //originalValidationFunction = true;
-                            //trigger second button
-                            //$("#InsertButton").click();
-                            //return true;
-                            //TODO: send email to the owenr of the organization. 
-                            return false;
+                            tdg.webapi.create("ovs_supportrequests", data);
+                            // Send email to the current owner
+                            var SendEmailFlowData = '{' +
+                                                    '"AccountId": "' + currentSiteOwnerId + '",' +
+                                                    '"EmailCode": "RD-1",' +
+                                                    '"SiteId": "' + currentSiteId + '",' +
+                                                    '"Portal_URL": "https://' + window.location.hostname + '"' +
+                                                    '}';
+
+                            tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", SendEmailFlowData);
+                            var sucessmessage = tdg.error_message.message("m000140");
+                            tdg.c.dialog_OK(sucessmessage);
+                            return false;             
+                        }
+                        else 
+                        {
+                            return false;   
                         }
                     });
                 }
