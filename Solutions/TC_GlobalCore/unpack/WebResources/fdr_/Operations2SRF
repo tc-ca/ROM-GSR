@@ -137,19 +137,17 @@
 
         }
 
-        function getOperations(langId) {
+        function getOperations(srId, langId) {
 
             Xrm.Utility.showProgressIndicator("Working ...");
 
             var parameters = {};
             parameters.langId = langId;
-            //parameters.cfId = cfId;
-            //parameters.srfId = srfId;
+            parameters.srId = srId;
 
             var fdr_Operations4SRFRequest = {
                 langId: parameters.langId,
-                //cfId: parameters.cfId,
-                //srfId: parameters.srfId,
+                srId: parameters.srId,
 
                 getMetadata: function () {
                     return {
@@ -158,15 +156,11 @@
                             "langId": {
                                 "typeName": "Edm.Int32",
                                 "structuralProperty": 1
+                            },
+                            "srId": {
+                                "typeName": "Edm.String",
+                                "structuralProperty": 1
                             }
-                            //"cfId": {
-                            //    "typeName": "Edm.String",
-                            //    "structuralProperty": 1
-                            //},
-                            //"srfId": {
-                            //    "typeName": "Edm.String",
-                            //    "structuralProperty": 1
-                            //}
                         },
                         operationType: 0,
                         operationName: "fdr_Operations4SRF"
@@ -298,7 +292,7 @@
             //get params
             var paramsObj = getDataParam();
 
-            if (paramsObj != null) getOperations(paramsObj.langId);
+            if (paramsObj != null) getOperations(paramsObj.srId, paramsObj.langId);
 
             $('#submitButton').on('click', function () {
                 var $btn = $(this).button('loading')

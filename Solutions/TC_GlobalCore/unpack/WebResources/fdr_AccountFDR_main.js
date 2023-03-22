@@ -99,6 +99,69 @@ var AccountFDRmain = (function (window, document) {
         );
 
     }
+    const TAB_NAME = "tab_Operations"
+    const SECTION_NAME = "tab_Operations_section_NOP_Plaaning";
+    const isPlanner = true;
+
+    function setFieldPermissions(formContext) {
+        var isPlanner = (glHelper.hasCurrentUserRole("TDG Planner"))
+        glHelper.SetSectionVisibility(formContext, TAB_NAME, SECTION_NAME, isPlanner);
+    }
+    function setFormUsage(formContext)
+    {
+        //ROM - Force the selection of a company when site is created
+
+        var formName = formContext.ui.formSelector.getCurrentItem().getLabel();
+        var langId = Xrm.Utility.getGlobalContext().userSettings.languageId;
+
+        if (langId == 1033)
+        {
+            if (formName == "FDR Site Profile")
+            {
+                //Parent company is required
+                glHelper.SetRequiredLevel(formContext, "parentaccountid", true);
+
+                //Company specific fields are not required and hidden
+                glHelper.SetRequiredLevel(formContext, "ovs_legalname", false);
+                glHelper.SetRequiredLevel(formContext, "ovs_legalnamefr", false);
+
+                glHelper.SetControlVisibility(formContext, "ovs_legalname", false);
+                glHelper.SetControlVisibility(formContext, "ovs_legalnamefr", false);
+
+                glHelper.SetRequiredLevel(formContext, "customertypecode", false);
+                glHelper.SetControlVisibility(formContext, "customertypecode", false);
+
+            }
+            else if (formName == "FDR Organization")
+            {
+                glHelper.SetRequiredLevel(formContext, "parentaccountid", false);
+                glHelper.SetControlVisibility(formContext, "parentaccountid", false);
+            }
+        }
+        else if (langId == 1036)
+        {
+            if (formName == "RIC profile de site")
+            {
+                //Parent company is required
+                glHelper.SetRequiredLevel(formContext, "parentaccountid", true);
+
+                //Company specific fields are not required and hidden
+                glHelper.SetRequiredLevel(formContext, "ovs_legalname", false);
+                glHelper.SetRequiredLevel(formContext, "ovs_legalnamefr", false);
+
+                glHelper.SetControlVisibility(formContext, "ovs_legalname", false);
+                glHelper.SetControlVisibility(formContext, "ovs_legalnamefr", false);
+
+                glHelper.SetRequiredLevel(formContext, "customertypecode", false);
+                glHelper.SetControlVisibility(formContext, "customertypecode", false);
+            }
+            else if (formName == "RIC organisations")
+            {
+                glHelper.SetRequiredLevel(formContext, "parentaccountid", false);
+                glHelper.SetControlVisibility(formContext, "parentaccountid", false);
+            }
+        }
+    }
 
     //********************private methods end***************
 
@@ -134,8 +197,12 @@ var AccountFDRmain = (function (window, document) {
 
             }
 
+            //Set form usage for Company Vs Site specific fields
+            setFormUsage(formContext);
+
+
             //setAddressFieldsLevel(formContext);            
-            
+            setFieldPermissions(formContext);
         },
 
 

@@ -5,7 +5,7 @@
     <IntroducedVersion>1.0</IntroducedVersion>
     <FormPresentation>1</FormPresentation>
     <FormActivationState>1</FormActivationState>
-    <form headerdensity="HighWithControls">
+    <form headerdensity="HighWithControls" shownavigationbar="true" showImage="false" maxWidth="1920">
       <tabs>
         <tab verticallayout="true" id="{ca08cc53-f115-467b-825b-2fd987d21968}" IsUserDefined="1">
           <labels>
@@ -30,19 +30,11 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{e35c51de-5594-442e-b79f-be63d2ee92fb}" locklevel="0" colspan="1" rowspan="1">
-                        <labels>
-                          <label description="Request Type" languagecode="1033" />
-                        </labels>
-                        <control id="ovs_requesttype" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ovs_requesttype" disabled="false" uniqueid="{54ae5ecc-c894-305b-3bee-e9945acad7d3}" />
-                      </cell>
-                    </row>
-                    <row>
                       <cell id="{a703ddbc-d1e8-468c-8e59-1f5366e4cceb}" locklevel="0" colspan="1" rowspan="1">
                         <labels>
                           <label description="Status" languagecode="1033" />
                         </labels>
-                        <control id="statecode" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="statecode" disabled="false" />
+                        <control id="statecode" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="statecode" disabled="true" />
                       </cell>
                     </row>
                     <row>
@@ -51,6 +43,22 @@
                           <label description="Status Reason" languagecode="1033" />
                         </labels>
                         <control id="statuscode" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="statuscode" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{e35c51de-5594-442e-b79f-be63d2ee92fb}" locklevel="0" colspan="1" rowspan="1">
+                        <labels>
+                          <label description="Request Type" languagecode="1033" />
+                        </labels>
+                        <control id="ovs_requesttype" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ovs_requesttype" disabled="true" uniqueid="{54ae5ecc-c894-305b-3bee-e9945acad7d3}" />
+                      </cell>
+                    </row>
+                    <row height="auto">
+                      <cell id="{9ef8beff-dd2c-4002-802a-026d214406c8}" locklevel="0" colspan="1" rowspan="1" auto="true">
+                        <labels>
+                          <label description="Request Details" languagecode="1033" />
+                        </labels>
+                        <control id="ovs_requestdetails" classid="{F9A8A302-114E-466A-B582-6771B2AE0D92}" datafieldname="ovs_requestdetails" disabled="true" uniqueid="{7e1a47e6-a8d2-4fb5-9053-1004869f0db2}" />
                       </cell>
                     </row>
                     <row>
@@ -67,14 +75,6 @@
                           <label description="Owner" languagecode="1033" />
                         </labels>
                         <control id="ownerid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ownerid" />
-                      </cell>
-                    </row>
-                    <row height="auto">
-                      <cell id="{9ef8beff-dd2c-4002-802a-026d214406c8}" locklevel="0" colspan="1" rowspan="1" auto="true">
-                        <labels>
-                          <label description="Request Details" languagecode="1033" />
-                        </labels>
-                        <control id="ovs_requestdetails" classid="{F9A8A302-114E-466A-B582-6771B2AE0D92}" datafieldname="ovs_requestdetails" disabled="false" uniqueid="{7e1a47e6-a8d2-4fb5-9053-1004869f0db2}" />
                       </cell>
                     </row>
                     <row>
@@ -94,11 +94,11 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{2bbae4ad-3465-4843-8f74-7085d99f6dc1}" locklevel="0" colspan="1" rowspan="1">
+                      <cell id="{368775fd-49b6-40c5-b742-f96abc88aceb}" locklevel="0" colspan="1" rowspan="1">
                         <labels>
-                          <label description="Created By" languagecode="1033" />
+                          <label description="Created By External User" languagecode="1033" />
                         </labels>
-                        <control id="createdby" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="createdby" disabled="false" />
+                        <control id="ovs_createdbyexternaluser" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ovs_createdbyexternaluser" disabled="false" />
                       </cell>
                     </row>
                     <row>
@@ -199,7 +199,7 @@
         </controlDescription>
       </controlDescriptions>
       <Navigation>
-        <NavBar></NavBar>
+        <NavBar />
         <NavBarAreas>
           <NavBarArea Id="Info">
             <Titles>
@@ -228,6 +228,17 @@
           </NavBarArea>
         </NavBarAreas>
       </Navigation>
+      <formLibraries>
+        <Library name="ovs_Support_Request_JS" libraryUniqueId="{a92487bd-9306-3460-db07-835976d6ee32}" />
+      </formLibraries>
+      <events>
+        <event name="onload" application="false" active="false">
+          <Handlers>
+            <Handler functionName="setInUseLocDisplayName" libraryName="ovs_Support_Request_JS" handlerUniqueId="{0c836938-aa78-c0d0-b91c-6d51a511d092}" enabled="true" parameters="" passExecutionContext="true" />
+            <Handler functionName="display_Legalname_CompanyLoolkup" libraryName="ovs_Support_Request_JS" handlerUniqueId="{0cc15a89-743c-2240-6ebe-a89a62c906cc}" enabled="true" parameters="" passExecutionContext="true" />
+          </Handlers>
+        </event>
+      </events>
       <DisplayConditions Order="0" FallbackForm="true">
         <Everyone />
       </DisplayConditions>

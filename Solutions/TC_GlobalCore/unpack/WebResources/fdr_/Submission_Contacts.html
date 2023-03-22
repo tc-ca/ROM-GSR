@@ -1,0 +1,501 @@
+﻿<html>
+
+<head>
+    <meta charset="utf-8" />
+    <link href="../qm_/Bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+
+    <script src="../ClientGlobalContext.js.aspx"></script>
+    <script src="../qm_/Scripts/jquery_3.1.1.min.js"></script>
+    <script src="../qm_/Bootstrap/js/bootstrap.min.js"></script>
+
+
+    <style>
+        .glyphicon {
+            font-size: 16px;
+            padding-left: 20px;
+        }
+
+        .glyphicon-remove {
+            color: red;
+        }
+
+        .glyphicon-ok {
+            color: green;
+        }
+
+        label {
+            font-weight: normal !important;
+        }
+
+        .font-weight-bold {
+            font-weight: bold;
+        }
+
+        legend {
+            font-size: 18px !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <fieldset>
+                <legend>Primary registration contact</legend>
+                <div class="row">
+                    <div class="col-xs-3"><label></label></div>
+                    <div class="col-xs-3"><label class="">Submitted Data</label></div>
+                    <div class="col-xs-3"><label class="">Data On File</label></div>
+                    <div class="col-xs-3"><label>Match</label></div>
+                </div>
+                <div class="row">
+                    <div id="" class="col-xs-3"><label>First Name</label></div>
+                    <div id="primary_firstname_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="primary_firstname_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="primary_firstname_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Last Name</label></div>
+                    <div id="primary_lastname_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="primary_lastname_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="primary_lastname_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Title</label></div>
+                    <div id="primary_title_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="primary_title_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="primary_title_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Business Phone Number</label></div>
+                    <div id="primary_businessnumber_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="primary_businessnumber_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="primary_businessnumber_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Mobile Phone Number</label></div>
+                    <div id="primary_mobilenumber_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="primary_mobilenumber_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="primary_mobilenumber_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Fax Number</label></div>
+                    <div id="primary_faxnumber_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="primary_faxnumber_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="primary_faxnumber_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Email</label></div>
+                    <div id="primary_email_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="primary_email_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="primary_email_match" class="col-xs-3"></div>
+
+                </div>
+            </fieldset>
+            <br>
+            <fieldset>
+                <legend>Secondary registration contact</legend>
+                <div class="row">
+                    <div class="col-xs-3"><label></label></div>
+                    <div class="col-xs-3"><label class="">Submitted Data</label></div>
+                    <div class="col-xs-3"><label class="">Data On File</label></div>
+                    <div class="col-xs-3"><label>Match</label></div>
+                </div>
+                <div class="row">
+                    <div id="" class="col-xs-3"><label>First Name</label></div>
+                    <div id="secondary_firstname_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="secondary_firstname_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="secondary_firstname_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Last Name</label></div>
+                    <div id="secondary_lastname_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="secondary_lastname_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="secondary_lastname_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Title</label></div>
+                    <div id="secondary_title_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="secondary_title_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="secondary_title_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Business Phone Number</label></div>
+                    <div id="secondary_businessnumber_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="secondary_businessnumber_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="secondary_businessnumber_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Mobile Phone Number</label></div>
+                    <div id="secondary_mobilenumber_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="secondary_mobilenumber_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="secondary_mobilenumber_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Fax Number</label></div>
+                    <div id="secondary_faxnumber_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="secondary_faxnumber_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="secondary_faxnumber_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Email</label></div>
+                    <div id="secondary_email_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="secondary_email_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="secondary_email_match" class="col-xs-3"></div>
+
+                </div>
+            </fieldset>
+            <br>
+
+            <fieldset>
+                <legend>Site 1 contact</legend>
+                <div class="row">
+                    <div class="col-xs-3"><label></label></div>
+                    <div class="col-xs-3"><label class="">Submitted Data</label></div>
+                    <div class="col-xs-3"><label class="">Data On File</label></div>
+                    <div class="col-xs-3"><label>Match</label></div>
+                </div>
+                <div class="row">
+                    <div id="" class="col-xs-3"><label>First Name</label></div>
+                    <div id="site1_firstname_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site1_firstname_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site1_firstname_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Last Name</label></div>
+                    <div id="site1_lastname_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site1_lastname_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site1_lastname_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Title</label></div>
+                    <div id="site1_title_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site1_title_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site1_title_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label></label></div>
+                    <div id="site1_businessnumber_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site1_businessnumber_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site1_businessnumber_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Mobile Phone Number</label></div>
+                    <div id="site1_mobilenumber_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site1_mobilenumber_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site1_mobilenumber_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Fax Number</label></div>
+                    <div id="site1_faxnumber_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site1_faxnumber_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site1_faxnumber_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Email</label></div>
+                    <div id="site1_email_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site1_email_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site1_email_match" class="col-xs-3"></div>
+
+                </div>
+            </fieldset>
+            <br>
+            <fieldset>
+                <legend>Site 2 contact</legend>
+                <div class="row">
+                    <div class="col-xs-3"><label></label></div>
+                    <div class="col-xs-3"><label class="">Submitted Data</label></div>
+                    <div class="col-xs-3"><label class="">Data On File</label></div>
+                    <div class="col-xs-3"><label>Match</label></div>
+                </div>
+                <div class="row">
+                    <div id="" class="col-xs-3"><label>First Name</label></div>
+                    <div id="site2_firstname_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site2_firstname_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site2_firstname_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Last Name</label></div>
+                    <div id="site2_lastname_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site2_lastname_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site2_lastname_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Title</label></div>
+                    <div id="site2_title_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site2_title_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site2_title_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label></label></div>
+                    <div id="site2_businessnumber_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site2_businessnumber_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site2_businessnumber_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Mobile Phone Number</label></div>
+                    <div id="site2_mobilenumber_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site2_mobilenumber_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site2_mobilenumber_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Fax Number</label></div>
+                    <div id="site2_faxnumber_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site2_faxnumber_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site2_faxnumber_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Email</label></div>
+                    <div id="site2_email_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site2_email_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="site2_email_match" class="col-xs-3"></div>
+
+                </div>
+            </fieldset>
+            <br>
+
+            <fieldset>
+                <legend>Compliance contact</legend>
+                <div class="row">
+                    <div class="col-xs-3"><label></label></div>
+                    <div class="col-xs-3"><label class="">Submitted Data</label></div>
+                    <div class="col-xs-3"><label class="">Data On File</label></div>
+                    <div class="col-xs-3"><label>Match</label></div>
+                </div>
+                <div class="row">
+                    <div id="" class="col-xs-3"><label>First Name</label></div>
+                    <div id="compliance_firstname_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="compliance_firstname_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="compliance_firstname_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Last Name</label></div>
+                    <div id="compliance_lastname_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="compliance_lastname_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="compliance_lastname_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Title</label></div>
+                    <div id="compliance_title_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="compliance_title_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="compliance_title_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Business Phone Number</label></div>
+                    <div id="compliance_businessnumber_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="compliance_businessnumber_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="compliance_businessnumber_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Mobile Phone Number</label></div>
+                    <div id="compliance_mobilenumber_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="compliance_mobilenumber_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="compliance_mobilenumber_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Fax Number</label></div>
+                    <div id="compliance_faxnumber_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="compliance_faxnumber_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="compliance_faxnumber_match" class="col-xs-3"></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-3"><label>Email</label></div>
+                    <div id="compliance_email_submitted" class="col-xs-3 font-weight-bold"></div>
+                    <div id="compliance_email_onfile" class="col-xs-3 font-weight-bold"></div>
+                    <div id="compliance_email_match" class="col-xs-3"></div>
+
+                </div>
+            </fieldset>
+
+
+        </div>
+
+
+
+
+        <script>
+
+
+
+
+            var globalContext = parent.Xrm.Utility.getGlobalContext();
+            var clientUrl = globalContext.getClientUrl();
+
+            const rolesId = {
+                CompanyPrimaryContact: "cf121971-848b-ed11-81ad-0022483d0343",
+                CompanySecondaryContact: "fcfbfac2-848b-ed11-81ad-0022483d0343",
+                Compliance: "56786d45-848b-ed11-81ad-0022483d0343",
+                SitePrimaryContact: "51925999-848b-ed11-81ad-0022483d0343",
+                SiteSecondaryContact: "2b4e0ff2-848b-ed11-81ad-0022483d0343",
+            }
+
+
+
+            $(document).ready(async function () {
+                let onFileData = JSON.parse(sessionStorage.getItem("fdr_submission_contacts"))
+                let submittedData = JSON.parse(sessionStorage.getItem("fdr_submission_json"))
+
+
+
+
+
+                if (!submittedData) {
+                    return;
+                }
+
+                displaySubmittedData("primary", "primary")
+                displaySubmittedData("secondary", "secondary")
+
+                switch (submittedData["hsite_contact_choice"]) {
+                    case "same_as_primary":
+                        displaySubmittedData("site1", "primary")
+                        displaySubmittedData("site2", "primary")
+
+
+                        break;
+                    case "same_as_secondary":
+                        displaySubmittedData("site1", "secondary")
+                        displaySubmittedData("site2", "secondary")
+
+                        break;
+                    default:
+                        displaySubmittedData("site1", "site")
+                        displaySubmittedData("site2", "site")
+                        break;
+                }
+
+
+                switch (submittedData["hcompliance_contact_choice"]) {
+                    case "same_as_primary":
+                        displaySubmittedData("compliance", "primary")
+                        break;
+                    case "same_as_secondary":
+                        displaySubmittedData("compliance", "secondary")
+                        break;
+                    default:
+                        displaySubmittedData("compliance", "compliance")
+                        break;
+                }
+
+
+
+
+
+
+
+                if (!onFileData) {
+                    return;
+                }
+                displayOnFileData("primary", rolesId.CompanyPrimaryContact)
+                displayOnFileData("secondary", rolesId.CompanySecondaryContact)
+                displayOnFileData("site1", rolesId.SitePrimaryContact)
+                displayOnFileData("site2", rolesId.SiteSecondaryContact)
+                displayOnFileData("compliance", rolesId.Compliance)
+
+
+                displayIsMatchingIcon("primary")
+                displayIsMatchingIcon("secondary")
+                displayIsMatchingIcon("site1")
+                displayIsMatchingIcon("site2")
+                displayIsMatchingIcon("compliance")
+
+
+
+                function isValueTheSame (contactRole, field) {
+                    let submittedValue = $(`#${contactRole}_${field}_submitted`).text();
+                    let onFileValue = $(`#${contactRole}_${field}_onfile`).text();
+
+                    return submittedValue === onFileValue;
+                }
+
+
+                function displaySubmittedData (targetedFieldForContactRole, pullValueFromContactRole) {
+
+                    $(`#${targetedFieldForContactRole}_firstname_submitted`).text(submittedData[`${pullValueFromContactRole}_contact_first_name`]);
+                    $(`#${targetedFieldForContactRole}_lastname_submitted`).text(submittedData[`${pullValueFromContactRole}_contact_last_name`]);
+                    $(`#${targetedFieldForContactRole}_title_submitted`).text(submittedData[`${pullValueFromContactRole}_contact_title`]);
+                    $(`#${targetedFieldForContactRole}_businessnumber_submitted`).text(submittedData[`${pullValueFromContactRole}_contact_phone`]);
+                    $(`#${targetedFieldForContactRole}_mobilenumber_submitted`).text(submittedData[`${pullValueFromContactRole}_contact_mobile`]);
+                    $(`#${targetedFieldForContactRole}_faxnumber_submitted`).text(submittedData[`${pullValueFromContactRole}_contact_fax`]);
+                    $(`#${targetedFieldForContactRole}_email_submitted`).text(submittedData[`${pullValueFromContactRole}_contact_email`]);
+
+                }
+
+                function displayOnFileData (contactRole, roleId) {
+                    if (onFileData[roleId]) {
+                        $(`#${contactRole}_firstname_onfile`).text(onFileData[roleId]["firstname"]);
+                        $(`#${contactRole}_lastname_onfile`).text(onFileData[roleId]["lastname"]);
+                        $(`#${contactRole}_title_onfile`).text(onFileData[roleId]["jobtitle"]);
+                        $(`#${contactRole}_businessnumber_onfile`).text(onFileData[roleId]["telephone1"]);
+                        $(`#${contactRole}_mobilenumber_onfile`).text(onFileData[roleId]["mobilephone"]);
+                        $(`#${contactRole}_faxnumber_onfile`).text(onFileData[roleId]["fax"]);
+                        $(`#${contactRole}_email_onfile`).text(onFileData[roleId]["emailaddress1"]);
+                    }
+
+                }
+
+                function displayIsMatchingIcon (contactRole) {
+
+
+
+                    isValueTheSame(contactRole, "firstname") ? $(`#${contactRole}_firstname_match`).addClass("glyphicon glyphicon-ok") : $(`#${contactRole}_firstname_match`).addClass("glyphicon glyphicon-remove");
+                    isValueTheSame(contactRole, "lastname") ? $(`#${contactRole}_lastname_match`).addClass("glyphicon glyphicon-ok") : $(`#${contactRole}_lastname_match`).addClass("glyphicon glyphicon-remove");
+                    isValueTheSame(contactRole, "title") ? $(`#${contactRole}_title_match`).addClass("glyphicon glyphicon-ok") : $(`#${contactRole}_title_match`).addClass("glyphicon glyphicon-remove");
+                    isValueTheSame(contactRole, "businessnumber") ? $(`#${contactRole}_businessnumber_match`).addClass("glyphicon glyphicon-ok") : $(`#${contactRole}_businessnumber_match`).addClass("glyphicon glyphicon-remove");
+                    isValueTheSame(contactRole, "mobilenumber") ? $(`#${contactRole}_mobilenumber_match`).addClass("glyphicon glyphicon-ok") : $(`#${contactRole}_mobilenumber_match`).addClass("glyphicon glyphicon-remove");
+                    isValueTheSame(contactRole, "faxnumber") ? $(`#${contactRole}_faxnumber_match`).addClass("glyphicon glyphicon-ok") : $(`#${contactRole}_faxnumber_match`).addClass("glyphicon glyphicon-remove");
+                    isValueTheSame(contactRole, "email") ? $(`#${contactRole}_email_match`).addClass("glyphicon glyphicon-ok") : $(`#${contactRole}_email_match`).addClass("glyphicon glyphicon-remove");
+                }
+
+            });
+
+
+
+
+
+        </script>
+
+
+
+
+
+    </div>
+
+
+
+
+</body>
+
+</html>

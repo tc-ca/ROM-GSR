@@ -1,0 +1,198 @@
+<html><head>
+    <meta charset="utf-8">
+    <link href="../qm_/Bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+
+
+    <script src="../ClientGlobalContext.js.aspx"></script>
+    <script src="../qm_/Scripts/jquery_3.1.1.min.js"></script>
+    <script src="../qm_/Bootstrap/js/bootstrap.min.js"></script>
+    <script src="../FDR_SubmissionFunctions.js"></script>
+
+    <style>
+        th {
+            font-weight: normal;
+            font-size: 12px;
+        }
+
+        tr {
+            font-size: 15px;
+        }
+
+        body {
+            font-family: "Segoe UI Regular", "Segoe UI";
+
+        }
+
+        label {
+            font-weight: normal !important;
+
+        }
+
+        .font-weight-bold {
+            font-weight: bold;
+        }
+    </style>
+
+<meta></head>
+
+<body>
+
+    <div class="container-fluid">
+        <div>
+            <div style="margin-bottom:15px">
+                <div>
+                    <div><label>Regulatory requirements: </label>
+                        <span id="regulatoryrequirements" class="font-weight-bold"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-bottom:15px">
+                <div>
+                    <div><label>Equipments: </label>
+                        <span id="equipments" class="font-weight-bold"></span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="div_functions" class="hidden">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Function</th>
+                            <th scope="col">Specs</th>
+                            <th scope="col">EC</th>
+                            <th scope="col">Mobile</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="functions">
+
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div id="div_designs" class="hidden">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Design</th>
+                            <th scope="col">Function</th>
+                            <th scope="col">Specs</th>
+                            <th scope="col">EC</th>
+                            <th scope="col">Design Requirements</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="designs">
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+
+
+
+        <script>
+
+            var globalContext = parent.Xrm.Utility.getGlobalContext();
+            var clientUrl = globalContext.getClientUrl();
+
+            function FunctionTableHtml (index, name, specs, ec, mobile) {
+                return `    <tr>
+                            <td>${index}</td>
+                            <td>${name}</td>
+                            <td>${specs}</td>
+                            <td>${ec}</td>
+                            <td>${mobile}</td>
+
+                            </tr>`
+            }
+
+            function DesignTableHtml (index, name, specs, ec, requirements) {
+                
+              let items = Object.entries(requirements)
+              items = items.map(x=> `<li>${x[0]}: ${x[1]}</li>`).join("")
+           
+
+                return `  <tr>
+                            <td>${index}</td>
+                            <td>${name}</td>
+                            <td>${specs}</td>
+                            <td>${ec}</td>
+                            <td>
+                                <ul>
+                                ${items}
+                                </ul>
+                            </td>
+
+
+                            </tr>`
+            }
+
+            $(document).ready(async function () {
+
+                let json = JSON.parse(sessionStorage.getItem("fdr_submission_json"))
+
+                //Regulatory Requirements
+                let regulatoryRequirements = await FDR_SubmissionFunctions.asrfHelpers.getRegulatoryRequirementFromJSON(json)
+                if (regulatoryRequirements.length > 0) {
+                    $('#regulatoryrequirements').text(regulatoryRequirements.map(x => x["fdr_name"]));
+                }
+
+                //Equipments
+                let equipments = await FDR_SubmissionFunctions.asrfHelpers.getEquipmentFromJSON(json)
+                if (equipments.length > 0) {
+                    $('#equipments').text(equipments.map(x => x["fdr_name"]));
+                }
+
+
+                //Functions
+                let functions = await FDR_SubmissionFunctions.asrfHelpers.getFunctionsFromJSON(json)
+                for (let i = 0; i < functions.length;) {
+                    const item = functions[i];
+                    const mobile = item.mobile;
+                    i++;
+                    $("#functions").append(FunctionTableHtml(i, item.entity["fdr_name"], item.specs.map(x => x["fdr_name"]).toString(), item.ec, mobile == null ? "" : mobile["fdr_name"]));
+
+                }
+
+
+                if (functions.length > 0) {
+                    $("#div_functions").removeClass("hidden")
+                }
+
+
+                //Functions With Designs
+                let functions_withDesigns = await FDR_SubmissionFunctions.asrfHelpers.getDesignsFromJSON(json);
+
+
+                for (let i = 0; i < functions_withDesigns.length; i++) {
+                    const func = functions_withDesigns[i];
+
+                    for (let y = 0; y < func.designs.length;) {
+                        const design = func.designs[y];
+                        y++;
+                        $("#designs").append(DesignTableHtml(y, func.entity["fdr_name"], design.specs.map(x => x["fdr_name"]).toString(), design.ec, design.requirements));
+
+                        if (y === 1) {
+                            $("#div_designs").removeClass("hidden")
+                        }
+
+                    }
+                }
+
+            });
+
+        </script>
+
+
+
+
+
+</div></body></html>

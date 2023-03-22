@@ -1,4 +1,4 @@
-﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+///<reference path="../../Utilities/GlobalHelper.js"/>
 ///<reference path="../../Utilities/questionnaireFunctions.js"/>
 
 var AccountTDGmain = (function (window, document) {
@@ -6,8 +6,8 @@ var AccountTDGmain = (function (window, document) {
     var formType;
      //optionset value: form name
     var formMapping_EN = {
-        "948010001": "TDG Site Profile",
-        "948010000": "TDG Organizations",
+        "948010001": "Site",
+        "948010000": "Company",
     };
 
     var formMapping_FR = {
@@ -136,7 +136,8 @@ var AccountTDGmain = (function (window, document) {
             rTypeCode.removeOnChange(AccountTDGmain.relationShip_OnChange); // avoid binding multiple event handlers
             rTypeCode.addOnChange(AccountTDGmain.relationShip_OnChange);
             
-            if (formType > 1) {
+            if (formType > 1)
+            {
 
                 rTypeCode.fireOnChange();
 
@@ -144,13 +145,77 @@ var AccountTDGmain = (function (window, document) {
                 getViolationHistory(formContext);
 
                 //TASK 165366
-              //  glHelper.SetRequiredLevel(formContext, PRIMARYCONTACT, true);
+                //  glHelper.SetRequiredLevel(formContext, PRIMARYCONTACT, true);
 
                 //var accountUN = formContext.getControl("Subgrid_AccountUNNumbers");
 
                 //if (accountUN != null)
                 //    accountUN.addOnLoad(AccountTDGmain.Refresh_AccountClass);
 
+            }
+            else
+            {
+
+
+            }
+
+
+            //ROM - Force the selection of a company when site is created
+
+            var formName = formContext.ui.formSelector.getCurrentItem().getLabel();
+            var langId = Xrm.Utility.getGlobalContext().userSettings.languageId;
+
+            if (langId == 1033)
+            {
+                if (formName == "Site")
+                {
+                    //Parent company is required
+                    glHelper.SetRequiredLevel(formContext, "parentaccountid", true);
+
+                    //Company specific fields are not required and hidden
+                    glHelper.SetRequiredLevel(formContext, "ovs_legalname", false);
+                    glHelper.SetRequiredLevel(formContext, "ovs_legalnamefr", false);
+                    glHelper.SetRequiredLevel(formContext, "ovs_legalnamefr", false);
+                    glHelper.SetRequiredLevel(formContext, "name", false);
+                    glHelper.SetRequiredLevel(formContext, "ovs_namefr", false);
+
+                    glHelper.SetControlVisibility(formContext, "ovs_legalname", false);
+                    glHelper.SetControlVisibility(formContext, "ovs_legalnamefr", false);
+                    glHelper.SetControlVisibility(formContext, "name", false);
+                    glHelper.SetControlVisibility(formContext, "ovs_namefr", false);
+
+                    glHelper.SetRequiredLevel(formContext, "customertypecode", false);
+                    glHelper.SetControlVisibility(formContext, "customertypecode", false);
+
+                }
+                else if (formName == "Company")
+                {
+                    glHelper.SetRequiredLevel(formContext, "parentaccountid", false);
+                    glHelper.SetControlVisibility(formContext, "parentaccountid", false);
+                }
+            }
+            else if (langId == 1036)
+            {
+                if (formName == "Profil du site de TMD")
+                {
+                    //Parent company is required
+                    glHelper.SetRequiredLevel(formContext, "parentaccountid", true);
+
+                    //Company specific fields are not required and hidden
+                    glHelper.SetRequiredLevel(formContext, "ovs_legalname", false);
+                    glHelper.SetRequiredLevel(formContext, "ovs_legalnamefr", false);
+
+                    glHelper.SetControlVisibility(formContext, "ovs_legalname", false);
+                    glHelper.SetControlVisibility(formContext, "ovs_legalnamefr", false);
+
+                    glHelper.SetRequiredLevel(formContext, "customertypecode", false);
+                    glHelper.SetControlVisibility(formContext, "customertypecode", false);
+                }
+                else if (formName == "Organisations TMD")
+                {
+                    glHelper.SetRequiredLevel(formContext, "parentaccountid", false);
+                    glHelper.SetControlVisibility(formContext, "parentaccountid", false);
+                }
             }
 
             //setAddressFieldsLevel(formContext);

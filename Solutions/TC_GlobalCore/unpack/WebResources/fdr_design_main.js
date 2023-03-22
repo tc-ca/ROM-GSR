@@ -11,6 +11,10 @@ var Design_main = (function (window, document) {
     var formType;
     var clientUrl;
     var isParent;
+    var isChild;
+    var isDraft = true;
+    var isActive = true;
+    var Status;
     var DMRs_IDs = new Array();
     var DRAs_IDs = new Array();
 
@@ -28,26 +32,26 @@ var Design_main = (function (window, document) {
 
         DMRs_IDs = new Array();
 
-        var fetchXml = [
-            "<fetch>",
-            "<entity name='fdr_servicerequestfunction'>",
-            "<filter type='or'>",
-            "<condition attribute='fdr_servicerequestfunctionid' operator='eq' value='", SRF_id, "' />",
-            "<condition entityname='RT' attribute='fdr_containertypeid' operator='eq' value='" + RT_id + "' />",
-            "</filter>",
-            "<link-entity name='fdr_containerfunction' from='fdr_containerfunctionid' to='fdr_containerfunction' alias='CF'>",
-            "<link-entity name='fdr_containerfunction_specification' from='fdr_containerfunctionid' to='fdr_containerfunctionid' alias='CFS' intersect='true'>",
-            "<link-entity name='fdr_specification' from='fdr_specificationid' to='fdr_specificationid' alias='Spec' intersect='true'>",
-            "<link-entity name='fdr_designmarkingrequirement' from='fdr_specification' to='fdr_specificationid' alias='DMR'>",
-            "<attribute name='fdr_designmarkingrequirementid' />",
-            "<link-entity name='fdr_containertype' from='fdr_containertypeid' to='fdr_containertype' alias='RT' />",
-            "</link-entity>",
-            "</link-entity>",
-            "</link-entity>",
-            "</link-entity>",
-            "</entity>",
-            "</fetch>",
-        ].join("");
+        var fetchXml = ["<fetch>"
+            + "<entity name='fdr_servicerequestfunction'>"
+                + "<attribute name='fdr_servicerequestfunctionid' />"
+                + "<filter type='and'>"
+                    + "<condition attribute='fdr_servicerequestfunctionid' operator='eq' value='" + SRF_id + "' />"
+                    + "<condition entityname='RT' attribute='fdr_containertypeid' operator='eq' value='" + RT_id + "' />"
+                + "</filter>"
+                + "<link-entity name='fdr_containerfunction' from='fdr_containerfunctionid' to='fdr_containerfunction' link-type='inner' alias='CF'>"
+                    + "<link-entity name='fdr_containerfunction_specification' from='fdr_containerfunctionid' to='fdr_containerfunctionid' link-type='inner' alias='CFS' intersect='true'>"
+                        + "<link-entity name='fdr_specification' from='fdr_specificationid' to='fdr_specificationid' link-type='inner' alias='Spec' intersect='true'>"
+                            + "<attribute name='fdr_englishname' />"
+                            + "<link-entity name='fdr_designmarkingrequirement' from='fdr_specification' to='fdr_specificationid' link-type='inner' alias='DMR'>"
+                                + "<attribute name='fdr_designmarkingrequirementid' />"
+                                + "<link-entity name='fdr_containertype' from='fdr_containertypeid' to='fdr_containertype' link-type='inner' alias='RT' />"
+                            + "</link-entity>"
+                        + "</link-entity>"
+                    + "</link-entity>"
+                + "</link-entity>"
+            + "</entity>"
+        + "</fetch>"].join("");
 
         var encodedFetchXML = encodeURIComponent(fetchXml);
 
@@ -155,7 +159,6 @@ var Design_main = (function (window, document) {
             return;
         }
 
-
         //blur screen
         Xrm.Utility.showProgressIndicator("Initilizing design requirements ...");
 
@@ -255,6 +258,9 @@ var Design_main = (function (window, document) {
                             glHelper.SetControlVisibility(formContext, dmrName, boolValue);
                             //glHelper.SetRequiredLevel(formContext, dmrName, boolValue);
                         }
+                        //247102 Remove registered mark field from Design
+                        if (dmrName == "fdr_registeredmark")
+                            glHelper.SetControlVisibility(formContext, dmrName, false);
 
                         break;
 
@@ -263,13 +269,23 @@ var Design_main = (function (window, document) {
                         //check number of options selected in dmr control
                         //if one  - check same option in design control and make it read only
                         if (dmrAttrValue != null && dmrAttrValue.length == 1) {
-
-                            glHelper.SetValue(formContext, dmrName, dmrAttrValue);
+                            if (formType == 1)
+                                glHelper.SetValue(formContext, dmrName, dmrAttrValue);
                             if (dmrName != "fdr_option")
                                 glHelper.SetControlReadOnly(formContext, dmrName, dmrAttrValue.length == 1)
                         }
                         //if more then one - leave only same options in design control and filter out others
                         if (dmrAttrValue != null && dmrAttrValue.length > 1) {
+
+                            //on create: just filter
+                            //not create => keep selection, but filter
+                            var selectedOptions = new Array
+                            var selectedOptionsArray = designCurrent.getSelectedOption();
+                            if (selectedOptionsArray != null)
+                                for (var i = 0; i < selectedOptionsArray.length; i++) {
+
+                                    selectedOptions.push(selectedOptionsArray[i].value);
+                                }
 
                             var options = new Array();
                             var dmrAttrText = qvControl.getAttribute().getText();
@@ -280,6 +296,10 @@ var Design_main = (function (window, document) {
 
                             currentDesignControl.clearOptions();
                             options.forEach(option => currentDesignControl.addOption(option));
+                            if (formType != 1 && isDraft && selectedOptionsArray != null)
+                                glHelper.SetValue(formContext, dmrName, selectedOptions);
+
+
                             //glHelper.SetRequiredLevel(formContext, dmrName, isRequired);
                             glHelper.SetControlReadOnly(formContext, dmrName, !(dmrAttrValue.length > 1));
                         }
@@ -306,7 +326,14 @@ var Design_main = (function (window, document) {
                         //if more then one - leave only same options in design control and filter out others
                         if (dmrAttrValue != null && dmrAttrValue.length > 1) {
 
+                            //on create: just filter
+                            //not create => keep selection, but filter
+                            var selectedOption = designCurrent.getSelectedOption();
+
                             glHelper.filterOptionSet(formContext, dmrName, dmrAttrValue, dmrAttrValue.length > 1);
+                            if (formType != 1 && isDraft && selectedOptionsArray != null)
+                                glHelper.SetValue(formContext, dmrName, selectedOption.value);
+
                             glHelper.SetRequiredLevel(formContext, dmrName, isRequired);
                         }
                         //if none - hide
@@ -366,6 +393,7 @@ var Design_main = (function (window, document) {
         }
     }
 
+
     //**************** Public methods
     return {
 
@@ -386,6 +414,11 @@ var Design_main = (function (window, document) {
             dType.removeOnChange(Design_main.DesignType_OnChange);
             dType.addOnChange(Design_main.DesignType_OnChange);
 
+            //status
+            var formStatus = formContext.getAttribute("statuscode");
+            formStatus.removeOnChange(Design_main.OnStatusReason_Change);
+            formStatus.addOnChange(Design_main.OnStatusReason_Change);
+
             //pre-filter lookup Design Review Agency
             var DRA_control = formContext.getControl("fdr_designreviewagency");
             getAllowedDesignReviewAgency(DRA_control);
@@ -393,7 +426,16 @@ var Design_main = (function (window, document) {
             //hide Design Requirements section for new forms
             glHelper.SetSectionVisibility(formContext, "General", "section_designRequirement", formType != 1);
 
-            if (formType == 1) {
+            //init globals
+            Status = glHelper.GetOptionsetValue(formContext, "statuscode");
+            isDraft = Status == 3;
+            isActive = Status == 1;
+
+            //lock form if active and set other status-based controls states
+            formStatus.fireOnChange();
+
+
+            if (formType == glHelper.FORMTYPE_CREATE) {
 
                 //hide parent design field - untill design type selected
                 glHelper.SetSectionVisibility(formContext, "General", "General_section_5", false);
@@ -462,9 +504,6 @@ var Design_main = (function (window, document) {
             }
             else {
 
-                var status = glHelper.GetOptionsetValue(formContext, "statuscode");
-
-                dType.fireOnChange();
                 //Design Marking Requirement=B620, TCRN only
                 SetTCRNOnlyBasedOnType(formContext);
 
@@ -472,40 +511,100 @@ var Design_main = (function (window, document) {
                 //glHelper.SetDisabled(formContext, "fdr_designmarkingrequirement", true);
                 initilizeDataObj(globalFormContext, "QVC_DMR");
 
-                //lock form if active 
-                if(status == 1) glHelper.SetFormReadOnly(formContext);
             }
+
+            //sets form behavior based on parent/child type
+            dType.fireOnChange();
+
+        },
+
+        OnStatusReason_Change: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+
+            //update globals
+            Status = glHelper.GetOptionsetValue(formContext, "statuscode");
+            isDraft = Status == 3;
+            isActive = Status == 1;
+
+            if (!isDraft) glHelper.SetFormReadOnly(formContext);
+            //glHelper.SetDisabled(formContext, "fdr_registrationdate", !isDraft);
+            if (isActive) glHelper.SetValue(formContext, "fdr_registrationdate", new Date());
         },
 
         DMR_OnChange: function (executionContext) {
 
             var formContext = executionContext.getFormContext();
 
-            var saveAndCalculate = false;
+            var isDMR = glHelper.GetLookupAttrId(globalFormContext, "fdr_designmarkingrequirement") != null;
             var name = glHelper.GetValue(globalFormContext, "fdr_name");
             var dType = glHelper.GetValue(globalFormContext, "fdr_designtype");
-            
-            if (glHelper.GetLookupAttrId(globalFormContext, "fdr_designmarkingrequirement") != null
-                && name != null && name != "" && name != undefined && dType != null && dType != undefined) {
 
-                //if parent - no extra required fields
-                if (isParent) saveAndCalculate = true;
-                else {
-                    var pDesignId = glHelper.GetLookupAttrId(formContext, "fdr_parentdesign");
-                    saveAndCalculate = (glHelper.isAttributeRequired(formContext, "fdr_parentdesign") &&  pDesignId != null) ? true : false;
-                }
+            if (name != null && name != "" && name != undefined
+                && dType != null && dType != undefined) {
 
-                if (saveAndCalculate) {
-                    globalFormContext.data.save().then(function () {
+                globalFormContext.data.save().then(function () {
 
-                        //init quick view control and collection of controls in quick view
-                        initilizeDataObj(globalFormContext, "QVC_DMR");
-                    }, function (e) {
+                    //init quick view control and collection of controls in quick view
+                    initilizeDataObj(globalFormContext, "QVC_DMR");
+                }, function (e) {
 
-                        Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Form must be saved before Design Marking requirement are applied. Please, fill all required fields." });
-                    });
-                }
+                    Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Form must be saved before Design Marking requirement are applied. Please, fill all required fields." });
+                });
             }
+        },
+
+        Parent_DMR_OnChange: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+
+            var pDesignId = glHelper.GetLookupAttrId(formContext, "fdr_parentdesign").replace('{', '').replace('}', '');
+
+            if (pDesignId == null) return;
+
+            //sync call to parent design to get DMR to populate
+            var req = new XMLHttpRequest();
+            req.open("GET", Xrm.Page.context.getClientUrl() + "/api/data/v9.2/fdr_designs(" + pDesignId + ")?$select=_fdr_designmarkingrequirement_value", false);
+            req.setRequestHeader("OData-MaxVersion", "4.0");
+            req.setRequestHeader("OData-Version", "4.0");
+            req.setRequestHeader("Accept", "application/json");
+            req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+            req.setRequestHeader("Prefer", "odata.include-annotations=\"*\"");
+            req.onreadystatechange = function () {
+                if (this.readyState === 4) {
+                    req.onreadystatechange = null;
+                    if (this.status === 200) {
+                        var result = JSON.parse(this.response);
+                        if (result["_fdr_designmarkingrequirement_value"] != null) {
+
+                            glHelper.ClearFieldNotification(formContext, "fdr_designmarkingrequirement");
+
+                            var dmr_id = result["_fdr_designmarkingrequirement_value"];
+                            var dmr_name = result["_fdr_designmarkingrequirement_value@OData.Community.Display.V1.FormattedValue"];
+                            var dmr_etn = result["_fdr_designmarkingrequirement_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                            glHelper.SetLookup(formContext, "fdr_designmarkingrequirement", dmr_etn, dmr_id, dmr_name);
+                        }
+                        else {
+                            //empty result - parent design has no DMR
+                            glHelper.SetValue(formContext, "fdr_designmarkingrequirement", null);
+                            glHelper.SetFieldNotification(formContext, "fdr_designmarkingrequirement", "No Design Marking Requirements available in parent desin");
+
+                            Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: "Cannot populate Design Marking Requirements. Parent design has none. Please check the data integrity." });
+
+                        }
+
+                    } else {
+                        //request error
+                        glHelper.SetValue(formContext, "fdr_designmarkingrequirement", null);
+                        glHelper.SetFieldNotification(formContext, "fdr_designmarkingrequirement", "Error occured while quering parent design");
+
+                        Xrm.Navigation.openErrorDialog({ message: "Something went wrong: " + this.statusText });
+                    }
+                }
+            };
+            req.send();
+
+            Design_main.DMR_OnChange(executionContext);
         },
 
         DesignType_OnChange: function (executionContext) {
@@ -514,15 +613,30 @@ var Design_main = (function (window, document) {
 
             var dTypeValue = glHelper.GetOptionsetValue(formContext, "fdr_designtype");
             isParent = dTypeValue == 794600000;
-            var pDesignId = glHelper.GetLookupAttrId(formContext, "fdr_parentdesign");
-            //var quickViewControl = formContext.ui.quickForms.get("parent_reqNumber_view");
+            isChild = dTypeValue == 794600001;
+            // dTypeValue == ""  - initial state
 
-            glHelper.SetRequiredLevel(formContext, "fdr_parentdesign", !isParent);
+            var pDesignId = glHelper.GetLookupAttrId(formContext, "fdr_parentdesign");
+            //parent design field
+            glHelper.SetRequiredLevel(formContext, "fdr_parentdesign", isChild);
+            //clean parent design
             if (isParent && pDesignId != null) glHelper.SetValue(formContext, "fdr_parentdesign", null);
-            glHelper.SetSectionVisibility(formContext, "General", "General_section_5", !isParent);
+            //clean desin marking requirements
+            //if (!isParent) glHelper.SetValue(formContext, "fdr_designmarkingrequirement", null);
+            //parent section
+            glHelper.SetSectionVisibility(formContext, "General", "General_section_5", isChild);
+            //design number
             glHelper.SetControlVisibility(formContext, "fdr_designregistrationnumber", isParent);
-            //glHelper.SetControlVisibility(formContext, "fdr_parentdesign", !isParent);
-            //if (quickViewControl && quickViewControl != undefined) quickViewControl.setVisible(!isParent) 
+            //design marking requirements
+            glHelper.SetDisabled(formContext, "fdr_designmarkingrequirement", !(isParent && formType == glHelper.FORMTYPE_CREATE));
+            glHelper.SetRequiredLevel(formContext, "fdr_designmarkingrequirement", isParent && formType == glHelper.FORMTYPE_CREATE);
+
+            //Parent DMR
+            var parent_DMR = formContext.getAttribute("fdr_parentdesign");
+            if (isParent)
+                parent_DMR.removeOnChange(Design_main.Parent_DMR_OnChange);
+            else
+                parent_DMR.addOnChange(Design_main.Parent_DMR_OnChange);
 
             Design_main.DMR_OnChange(executionContext);
         },

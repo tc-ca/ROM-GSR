@@ -70,8 +70,19 @@
         else { return null; }
     }
 
+    function GetFormId(formContext)
+    {
+        var fs = formContext.ui.formSelector;
+        if (fs != null)
+        {
+            return fs.getCurrentItem().getId();
+        }
+        else { return null; }
+    }
+
     function SwitchFormByName(formContext, formName) {
-        if (formContext.ui.formSelector.getCurrentItem().getLabel() != formName) {
+        if (formContext.ui.formSelector.getCurrentItem().getLabel() != formName)
+        {
             var items = formContext.ui.formSelector.items.get();
             for (var i in items) {
                 var item = items[i];
@@ -853,6 +864,7 @@
         getGlobalContext: getGlobalContext,
         GetFormName: GetFormName,
         GetFormType: GetFormType,
+        GetFormId : GetFormId,
         SetFormReadOnly: SetFormReadOnly,
         GetLookupAttrId: GetLookupAttrId,
         GetLookupName: GetLookupName,

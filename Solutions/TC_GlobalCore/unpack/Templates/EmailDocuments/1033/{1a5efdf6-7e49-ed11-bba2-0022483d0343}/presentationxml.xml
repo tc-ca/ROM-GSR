@@ -5,7 +5,7 @@
 <div><span style="font-size:12pt"><span><span style="font-family:&quot;Times New Roman&quot;,serif">From: Engineering Services, Transportation of Dangerous Goods, Transport Canada</span></span></span></div>
 <div>&nbsp;</div>
 <div><span style="font-size:12pt"><span class="keyboardFocusClass"><span style="font-family:&quot;Times New Roman&quot;,serif">You registration under number [operationName] has been closed. You are no longer registered, and any registered mark associated to this registration, shall no longer be applied.</span></span></span></div>
-<div><br><span style="font-size:12pt"><span><span style="font-family:&quot;Times New Roman&quot;,serif">Service Request ID number: [serviceRequestId]<br>Service Request Type: [serviceRequestType]<br>Registration Type: [registrationTypeEN]<br>Standard: [standardEN]<br>Company Name: [siteName]<br>Site address: [siteAddress]</span></span></span><br>&nbsp;</div>
+<div><br><span style="font-size:12pt"><span><span style="font-family:&quot;Times New Roman&quot;,serif">Service Request ID number: [serviceRequestId]<br>Service Request Type: [serviceRequestTypeEN]<br>Registration Type: [registrationTypeEN]<br>Standard: [standardEN]<br>Company Name: [siteName]<br>Site address: [siteAddress]</span></span></span><br>&nbsp;</div>
 <div>&nbsp;</div>
 <div>&nbsp;</div>
 <div><span style="font-size:12pt"><span><span style="font-family:&quot;Times New Roman&quot;,serif">----------------------------------------------------------</span></span></span></div>

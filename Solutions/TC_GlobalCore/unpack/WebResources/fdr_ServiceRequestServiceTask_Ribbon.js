@@ -90,7 +90,24 @@ var ServiceRequestServiceTask_Ribbon = (function (window, document) {
             entity.fdr_rejectionreason = rejectionReason;
             entity.statuscode = isApproved ? approved : rejected;
 
-            Xrm.WebApi.online.updateRecord("fdr_servicerequestservicetask", id, entity).then(
+            //if time is being to set approved, check to see if time has been entered. before changing to status to approve.
+            if(isApproved)
+            {
+                let isTimeEntered = false;
+                await Xrm.WebApi.online.retrieveRecord("fdr_servicerequestservicetask", id, "?$select=fdr_istimeentered").then(
+                    function success(result) {
+                        isTimeEntered = result["fdr_istimeentered"];
+                    },
+                    function(error) {
+                        Xrm.Navigation.openErrorDialog({ message: error.message });
+                    }
+                );
+
+         
+                if (!isTimeEntered){return}
+            }
+
+            await Xrm.WebApi.online.updateRecord("fdr_servicerequestservicetask", id, entity).then(
                 function success(result) {
                     var updatedEntityId = result.id;
                 },
@@ -98,6 +115,8 @@ var ServiceRequestServiceTask_Ribbon = (function (window, document) {
                     Xrm.Navigation.openErrorDialog({ message: error.message });
                 }
             );
+
+       
         },
     };
 

@@ -19,7 +19,12 @@ var SR_main = (function (window, document) {
     var serviceRquestType;
     var serviceRquestTypeOptions;
     var isStatusChanged;
+    var doRefresh;
     var operationStatus;
+    var excludedRegTypeIDs = new Array();
+    var excludedRegTypeOptions = new Array();
+    var globalFormContext;
+
 
     var statusMappingActive = {
         "Draft": {
@@ -495,6 +500,46 @@ var SR_main = (function (window, document) {
         SR_main.OnStatusReason_Change(executionContext);
     }
 
+    //One Site cannot have multiple Operations of the same Registration Type / Operation Type.
+    //filter out Registration Types whe Operation with the type is already exist fot the Account
+    function getAllowedRegistrationTypes(formContext, accountid) {
+
+        var regTypeControl = formContext.getControl("fdr_containertype");
+        excludedRegTypeIDs = new Array();
+        //not in use
+        excludedRegTypeOptions = new Array();
+
+
+        Xrm.WebApi.online.retrieveMultipleRecords("ovs_mocregistration", "?$select=_fdr_registrationtype_value,ovs_operationtype&$filter=_ovs_siteid_value eq " + accountid).then(
+            function success(results) {
+                for (var i = 0; i < results.entities.length; i++) {
+                    var _fdr_registrationtype_value = results.entities[i]["_fdr_registrationtype_value"];
+                    var _fdr_registrationtype_value_formatted = results.entities[i]["_fdr_registrationtype_value@OData.Community.Display.V1.FormattedValue"];
+                    var _fdr_registrationtype_value_lookuplogicalname = results.entities[i]["_fdr_registrationtype_value@Microsoft.Dynamics.CRM.lookuplogicalname"];
+                    var ovs_operationtype = results.entities[i]["ovs_operationtype"];
+                    var ovs_operationtype_formatted = results.entities[i]["ovs_operationtype@OData.Community.Display.V1.FormattedValue"];
+
+                    if (_fdr_registrationtype_value != null
+                        && !excludedRegTypeIDs.includes(_fdr_registrationtype_value))
+                        excludedRegTypeIDs.push(_fdr_registrationtype_value);
+                    //not in use
+                    if (ovs_operationtype != null
+                        && !excludedRegTypeOptions.includes(ovs_operationtype)) excludedRegTypeOptions.push(ovs_operationtype);
+
+                }
+            },
+            function (error) {
+                console.log("AllowedRegistrationTypes " + error);
+                excludedRegTypeIDs = new Array();
+                excludedRegTypeOptions = new Array();
+
+                Xrm.Navigation.openErrorDialog({ message: "Cannot find Allowed Registration Types. The lookup cannot be filtered. Error: " + error.message });
+            }
+        );
+
+        regTypeControl.addPreSearch(SR_main.Pre_filterRegistrationType);
+    }
+
 
     //********************private methods end***************
 
@@ -506,6 +551,7 @@ var SR_main = (function (window, document) {
 
             var globalContext = Xrm.Utility.getGlobalContext();
             var formContext = executionContext.getFormContext();
+            globalFormContext = formContext;
             isOffLine = glHelper.isOffline(executionContext);
             clientType = glHelper.getClientType(executionContext);
             isOnLoad = true;
@@ -679,11 +725,13 @@ var SR_main = (function (window, document) {
 
                 glHelper.SetValue(formContext, "fdr_operation", null);
                 glHelper.SetValue(formContext, "fdr_containertype", null);
-
+                console.log("Setting fdr_containertype to null");
             }
             //clear operation if changed and registration type
             else {
                 if (preID != null && preID != undefined && preID != hSite.id) {
+
+                    console.log("(preID != null && preID != undefined && preID != hSite.id) is" + (preID != null && preID != undefined && preID != hSite.id) + ". Setting fdr_containertype to null");
                     executionContext.setSharedVariable("fdr_site", hSite.id);
                     glHelper.SetValue(formContext, "fdr_operation", null);
                     glHelper.SetValue(formContext, "fdr_containertype", null);
@@ -755,12 +803,66 @@ var SR_main = (function (window, document) {
                 );
             }// no operation
             else {
+
+                if (hSite != null) {
+                    //One Site cannot have multiple Operations of the same Registration Type / Operation Type.
+                    getAllowedRegistrationTypes(formContext, hSite[0].id.replace("{", '').replace("}", ''));
+                }
                 operationStatus = 0;
                 ServiceRquestTypeFilter(executionContext, formContext);
                 glHelper.SetValue(formContext, "fdr_containertype", null);
                 glHelper.SetDisabled(formContext, "fdr_containertype", false);
             }
 
+        },
+
+        Pre_filterRegistrationType: function () {
+
+            var strTemplate = "<value>{0}</value>";
+            var currentContainerType = "";
+            var currentOperationType = "";
+
+            var filter = "<filter>"
+                + "<condition attribute='fdr_containertypeid' operator='not-in'>"
+                + "{0}"
+                + "</condition>"
+                //+ "<condition attribute='fdr_operationtype' operator='not-in'>"
+                //+ "{1}"
+                //+ "</condition>"
+                + "</filter>";
+
+            if (excludedRegTypeIDs.length == 0) currentContainerType = strTemplate.replace("{0}", "00000000-0000-0000-0000-000000000000");
+
+            //if (excludedRegTypeOptions.length == 0) currentOperationType = strTemplate.replace("{0}", "-1");
+
+
+            ////no regtypes and operation types found
+            //if (excludedRegTypeIDs.length == 0 && excludedRegTypeOptions.length == 0) {
+
+            //    // filter have to return an empty result
+            //}
+            else {
+
+                if (excludedRegTypeIDs.length > 0)
+                    for (var i = 0; i < excludedRegTypeIDs.length; i++) {
+
+                        if (excludedRegTypeIDs[i] != null)
+                            currentContainerType = currentContainerType + strTemplate.replace("{0}", excludedRegTypeIDs[i]);
+                    }
+                //if (excludedRegTypeOptions.length > 0)
+                //    for (var i = 0; i < excludedRegTypeOptions.length; i++) {
+
+                //        if (excludedRegTypeOptions[i] != null)
+                //            currentOperationType = currentOperationType + strTemplate.replace("{0}", excludedRegTypeOptions[i]);
+                //    }
+
+            }
+
+            //filter = filter.replace("{0}", currentContainerType).replace("{1}", currentOperationType);
+            filter = filter.replace("{0}", currentContainerType);
+
+
+            globalFormContext.getControl("fdr_containertype").addCustomFilter(filter, "fdr_containertype");
         },
 
         //the on save event will refresh if the statuscode ATTRIBUTE is dirty
@@ -771,27 +873,17 @@ var SR_main = (function (window, document) {
             if (formContext.getAttribute("statuscode").getIsDirty()) {
                 isStatusChanged = true;
             }
+            //If operation is null and Tech Review => no refresh, it will happen after operation is created and populated
+            var operationID = glHelper.GetLookupAttrId(formContext, "fdr_operation");
+            if (operationID == null && glHelper.GetOptionsetValue(formContext, "statuscode") == 794600002) doRefresh = false;
+            else doRefresh = true;
         },
 
         OnPostSave_Event: function (executionContext) {
             var formContext = executionContext.getFormContext();
             var formType = glHelper.GetFormType(formContext);
-
-            if (glHelper.GetOptionsetValue(formContext, "statuscode") == 794600002) {
-                setTimeout(function () {
-
-                    //if the form wasn't modified by back end  - in case of Technical Review creating operation -> initiates on operation change after save happened and makes changes before form refresh
-                    if (!formContext.data.entity.getIsDirty()) {
-                        //statuscode ATTRIBUTE is dirty refresh the form
-                        if (formType > 1 && isStatusChanged) {
-                            Xrm.Utility.openEntityForm(formContext.data.entity.getEntityName(), formContext.data.entity.getId());
-                        }
-                    }
-                    //else => re-save
-                    else formContext.data.save();
-                }, 2000);
-            }
-            else if (formType > 1 && isStatusChanged) {
+            //Refresh
+            if (formType > 1 && isStatusChanged && doRefresh) {
                 Xrm.Utility.openEntityForm(formContext.data.entity.getEntityName(), formContext.data.entity.getId());
             }
         }

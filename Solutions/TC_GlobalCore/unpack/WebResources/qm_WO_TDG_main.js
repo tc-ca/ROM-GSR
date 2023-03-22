@@ -802,7 +802,7 @@ var WO_TDG_main = (function (window, document) {
 
             switch (OperationTypeGlobalValue) {
 
-                case 918640038: filter = filterTemplate.replace('{0}', 'GC%'); break;
+                case 918640038: case 918640042: filter = filterTemplate.replace('{0}', 'GC%'); break;//HOTI and HOTI-GOA
                 case 918640040: filter = filterTemplate.replace('{0}', 'Civil%'); break;
                 default: filter = filterTemplate.replace('{0}', 'MOC%');
             }

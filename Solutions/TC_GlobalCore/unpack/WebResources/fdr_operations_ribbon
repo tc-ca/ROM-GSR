@@ -3,8 +3,8 @@
     function openOperationsPanel(srfId, LCID, gridControl, formConrol) {
              
         var formContext = formConrol;
-        //get container function id
-        //var cfID = formContext.getAttribute("fdr_containerfunction").getValue()[0].id;
+        //get service request id
+        var srId = formConrol.getAttribute("fdr_servicerequest").getValue()[0].id;
 
         var globalContext = Xrm.Utility.getGlobalContext();
         var clientUrl = globalContext.getClientUrl();
@@ -17,7 +17,7 @@
 
         var formParameters = {};
         formParameters["srfId"] = srfId.replace('{', '').replace('}', '');
-        //formParameters["cfId"] = cfID.replace('{', '').replace('}', '');
+        formParameters["srId"] = srId.replace('{', '').replace('}', '');
         formParameters["langId"] = LCID;
 
         var pageData = {

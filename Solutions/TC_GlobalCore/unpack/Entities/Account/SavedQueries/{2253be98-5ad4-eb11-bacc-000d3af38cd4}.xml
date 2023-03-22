@@ -11,7 +11,7 @@
       <grid name="resultset" jump="name" select="1" icon="1" preview="1">
         <row name="result" id="accountid">
           <cell name="name" width="275" />
-          <cell name="ovs_legalname" width="300" />
+          <cell name="a_57511732b5534cfbbcf2d280f9f8c6f1.ovs_legalname" width="300" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="ovs_mocid" width="139" />
           <cell name="address1_line1" width="131" />
           <cell name="address1_postalcode" width="129" />
@@ -25,9 +25,7 @@
       <fetch version="1.0" output-format="xml-platform" mapping="logical">
         <entity name="account">
           <attribute name="name" />
-          <attribute name="accountid" />
           <attribute name="address1_city" />
-          <attribute name="ovs_legalname" />
           <attribute name="address1_stateorprovince" />
           <attribute name="address1_line1" />
           <attribute name="address1_postalcode" />
@@ -36,6 +34,10 @@
             <condition attribute="customertypecode" operator="eq" value="948010001" />
             <condition attribute="statecode" operator="eq" value="1" />
           </filter>
+          <link-entity alias="a_57511732b5534cfbbcf2d280f9f8c6f1" name="account" from="accountid" to="parentaccountid" link-type="outer" visible="false">
+            <attribute name="ovs_legalname" />
+          </link-entity>
+          <attribute name="accountid" />
         </entity>
       </fetch>
     </fetchxml>

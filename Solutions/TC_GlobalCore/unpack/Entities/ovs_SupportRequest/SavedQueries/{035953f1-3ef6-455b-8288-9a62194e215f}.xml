@@ -16,12 +16,14 @@
           <cell name="statuscode" width="150" />
           <cell name="ovs_requestnumber" width="150" />
           <cell name="ownerid" width="100" />
-          <cell name="createdby" width="100" />
+          <cell name="ovs_createdbyexternaluser" width="200" />
           <cell name="modifiedon" width="100" />
           <cell name="modifiedby" width="100" />
           <cell name="a_22ae8269a36747699f24973573c3bbfe.ovs_reasonenglish" width="200" />
           <cell name="a_22ae8269a36747699f24973573c3bbfe.ovs_reasonfrench" width="200" />
+          <cell name="ovs_requestdetails" width="100" />
           <cell name="ovs_teammemo" width="300" />
+          <cell name="a_63671bd6d3a8446287dca585ce4c2774.ovs_romid" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -38,7 +40,6 @@
           <attribute name="statuscode" />
           <attribute name="ovs_priority" />
           <attribute name="ownerid" />
-          <attribute name="createdby" />
           <attribute name="modifiedby" />
           <attribute name="modifiedon" />
           <link-entity alias="a_22ae8269a36747699f24973573c3bbfe" name="ovs_supportrequesttype" to="ovs_requesttype" from="ovs_supportrequesttypeid" link-type="outer" visible="false">
@@ -51,6 +52,11 @@
           <order attribute="statecode" descending="false" />
           <order attribute="statuscode" descending="false" />
           <attribute name="ovs_supportrequestid" />
+          <attribute name="ovs_createdbyexternaluser" />
+          <attribute name="ovs_requestdetails" />
+          <link-entity alias="a_63671bd6d3a8446287dca585ce4c2774" name="account" to="ovs_site" from="accountid" link-type="outer" visible="false">
+            <attribute name="ovs_romid" />
+          </link-entity>
         </entity>
       </fetch>
     </fetchxml>
