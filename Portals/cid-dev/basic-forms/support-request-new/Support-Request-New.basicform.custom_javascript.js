@@ -6,12 +6,16 @@ $(document).ready(function () {
     debugger;
     page_setup();
 
-    var company_reg_date = "{{entities.account[user.parentcustomerid.id].cid_officiallyregistrationcompletationdate}}";
+    var company_reg_date ;
+
     var customerid = '{{user.parentcustomerid.id}}';
     if (customerid == null || customerid == "" || customerid == "undefined") {
         tdg.c.weblink_hide("/company_dashboard/");
     }
-    else if (company_reg_date != null && company_reg_date != "") {
+    else
+    {
+         company_reg_date = "{{entities.account[user.parentcustomerid.id].cid_officiallyregistrationcompletationdate}}";
+     if (company_reg_date != null && company_reg_date != "") {
         //== '100000005'){//registration completed
 
         tdg.c.weblink_hide("/RegistrationWizard/");
@@ -21,6 +25,7 @@ $(document).ready(function () {
 
     }
 
+    }
     var selected_language = '{{website.selected_language.code}}';
     var email = '{{user.emailaddress1}}';
 

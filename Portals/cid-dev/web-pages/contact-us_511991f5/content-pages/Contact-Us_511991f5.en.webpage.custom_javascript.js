@@ -5,11 +5,13 @@ $(document).ready(function () {
 	debugger;
 	page_setup();
 
+ 
     var customerid = '{{user.parentcustomerid.id}}';
+	console.log("customer id " + customerid);
      if (customerid != "" && customerid != null && customerid != 'undefined')
 	 {
 	 }
-	 else
+	 else if (customerid == "" || customerid == null || customerid == 'undefined')
 	 {
 		 tdg.c.weblink_hide("/company_dashboard/");
 	 }

@@ -1,6 +1,7 @@
 //
 // CompanyRegistrationWizard-Company Edit.js
 //
+
 var _cid_crabusinessnumber = "";
 $(document).ready(function () {
 	debugger;
@@ -114,8 +115,6 @@ $(document).ready(function () {
 	$("#websiteurl").attr("autocomplete", "new-password");
 	tdg.cid.convert_province_to_code(selected_language);
 
-	Disable_ContactTypeFieldsForSecondaryUser();
-
 	var ovs_invitation_only = $("#ovs_invitation_only").val();
 	if (ovs_invitation_only == "1") {
 		tdg.cid.crw.start_cid_has_cra_bn_onchange("2");
@@ -141,6 +140,8 @@ $(document).ready(function () {
 		});
 		tdg.cid.crw.start_cid_reasonfornobnnumber_onchange(false);
 	}
+
+	Disable_ContactTypeFieldsForSecondaryUser();
 });
 
 function ovs_legalname_onchange() {
@@ -229,6 +230,8 @@ if (window.jQuery) {
 			sessionStorage.setItem("step_start", "");
 			// cid claim company
 			$('#cid_companyclaim').val(1);
+
+			$("#cid_reasonfornobnnumber").prop("disabled", false);
 			return true;
 		}
 	}(window.jQuery));
@@ -253,6 +256,8 @@ function Disable_ContactTypeFieldsForSecondaryUser() {
 		$("#btn_previous").attr('disabled', true);
 
 		$("#name").prop("disabled", true);
+		$("#cid_reasonfornobnnumber").prop("disabled", true);
+		$("#cid_reasonfornobnnumber_other").prop("disabled", true);
 		$("#ovs_name_fr").prop("disabled", true);
 		$("#address1_line1").css("pointer-events", "none");
 		$("#WebResource_address_complete").css("pointer-events", "none");
