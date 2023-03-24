@@ -166,7 +166,7 @@
                 "value": "@true"
               }
             },
-            "isSubmitted": {
+            "IS_Submitted_OR_Info_Received": {
               "actions": {
                 "Update_an_existing_service_request_status_with_submission_date": {
                   "runAfter": {},
@@ -185,7 +185,7 @@
                       "userId": "@variables('FDR App User')",
                       "serviceRequestStatus": "@variables('CRSD_label')",
                       "app-jwt": "@parameters('FDR_MTOA_JWT (fdr_FDR_MTOA_JWT)')",
-                      "revisedUpdateDateUtc": "@triggerOutputs()?['body/fdr_submissiondate']"
+                      "revisedUpdateDateUtc": "@if(variables('isInfoReceived'),triggerOutputs()?['body/fdr_inforeceivedon'],triggerOutputs()?['body/fdr_submissiondate'])"
                     },
                     "authentication": "@parameters('$authentication')"
                   }
@@ -222,9 +222,19 @@
                 }
               },
               "expression": {
-                "equals": [
-                  "@variables('requestStatusValue')",
-                  794600010
+                "or": [
+                  {
+                    "equals": [
+                      "@variables('isSubmitted')",
+                      "@true"
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@variables('isInfoReceived')",
+                      "@true"
+                    ]
+                  }
                 ]
               },
               "metadata": {
@@ -369,7 +379,7 @@
                 }
               },
               "runAfter": {
-                "isSubmitted": [
+                "IS_Submitted_OR_Info_Received": [
                   "Succeeded"
                 ]
               },
@@ -696,7 +706,7 @@
         },
         "Initialize_Days": {
           "runAfter": {
-            "Status_Changed": [
+            "Is_Info_Received": [
               "Succeeded"
             ]
           },
@@ -811,6 +821,46 @@
               {
                 "name": "Service Performance Status Reason",
                 "type": "integer"
+              }
+            ]
+          }
+        },
+        "Is_Submitted": {
+          "runAfter": {
+            "Status_Changed": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9c3b6aae-8087-4773-9cff-79d298332c03"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "isSubmitted",
+                "type": "boolean",
+                "value": "@equals(variables('requestStatusValue'),794600010)"
+              }
+            ]
+          }
+        },
+        "Is_Info_Received": {
+          "runAfter": {
+            "Is_Submitted": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9aa3f65a-3f9d-4a3b-b715-678be84c000a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "isInfoReceived",
+                "type": "boolean",
+                "value": "@and(not(empty(triggerOutputs()?['body/fdr_inforeceivedon'])),or(equals(triggerOutputs()?['body/statuscode'],794600002),equals(triggerOutputs()?['body/statuscode'],794600006),equals(triggerOutputs()?['body/statuscode'],794600004)))"
               }
             ]
           }

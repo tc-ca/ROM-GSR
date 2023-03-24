@@ -1,0 +1,289 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_asrfconnector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_asrf"
+        },
+        "api": {
+          "name": "shared_asrfconnector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc"
+        }
+      },
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_dataverse_fdrsp"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "Recurrence": {
+          "recurrence": {
+            "frequency": "Hour",
+            "interval": 1,
+            "startTime": "2023-02-27T15:00:00Z"
+          },
+          "metadata": {
+            "operationMetadataId": "67c25c08-4441-4828-b43d-5b2a19b792f0"
+          },
+          "type": "Recurrence"
+        }
+      },
+      "actions": {
+        "Filter_array_-_To_only_Submitted": {
+          "runAfter": {
+            "Gets_a_list_of_service_requests_related_to_a_given_service": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "31e736ef-e269-478b-8807-f38456537f2a"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('Gets_a_list_of_service_requests_related_to_a_given_service')?['body/ServiceRequests']",
+            "where": "@equals(item()['RequestStatus'], 'Submitted')"
+          }
+        },
+        "Filter_array_-_To_only_request_submitted_via_ASRF": {
+          "runAfter": {
+            "Filter_array_-_To_only_Submitted": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0247143b-3300-4811-b9f9-f79220b754ec"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@body('Filter_array_-_To_only_Submitted')",
+            "where": "@not(equals(item()['Metadata'], 'null'))"
+          }
+        },
+        "Gets_a_list_of_service_requests_related_to_a_given_service": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "9e5f5095-fddb-40da-9b6c-9985cb8acaad"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_asrfconnector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc",
+              "operationId": "ServiceRequests_GetServiceRequestByServices",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_asrfconnector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc"
+            },
+            "parameters": {
+              "services": "251",
+              "app-jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJGRFIiLCJ1bmlxdWVfbmFtZSI6IkZhY2lsaXRpZXMgYW5kIERlc2lnbiBSZWdpc3RlciAoRkRSKSIsInJvbGUiOiJVc2VyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMi4wIiwiQ29ycmVsYXRpb25LZXkiOiI1YTkwYzkxNzdkYTMiLCJuYmYiOjE2NTM5NDA3NTgsImV4cCI6MTcxNzA5OTE1OCwiaWF0IjoxNjUzOTQwNzU4LCJpc3MiOiJUcmFuc3BvcnQgQ2FuYWRhIiwiYXVkIjoiVHJhbnNwb3J0IENhbmFkYSJ9.0CPTpmLiz29jJ4cpopnV9CtuPmrUuUqHolMh2Yqot0I",
+              "pageSize": 1000
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Apply_to_each": {
+          "foreach": "@body('Filter_array_-_Remove_Cancel_requests')",
+          "actions": {
+            "Get_Existing_Submissions_by_MTOA_Id": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "143c65a8-57d0-4f65-96d5-1871b2536b9c"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "fdr_submissions",
+                  "$filter": "(fdr_servicerequestid eq '@{items('Apply_to_each')['Id']}')"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "If_ExistingSubmissionCount_equals_0_then_create_submission": {
+              "actions": {
+                "Retrieve_existing_artifact_of_a_given_type_using_a_Service_Request_id": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "ad07545a-6d77-4693-9110-00a2c00dbe0f"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_asrfconnector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc",
+                      "operationId": "Artifacts_Get",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_asrfconnector-5f5cf23ef0bee9f3b2-5fa48e895a1997e6fc"
+                    },
+                    "parameters": {
+                      "serviceRequestId": "@items('Apply_to_each')?['Id']",
+                      "artifactType": "JsonDocument",
+                      "app-jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJGRFIiLCJ1bmlxdWVfbmFtZSI6IkZhY2lsaXRpZXMgYW5kIERlc2lnbiBSZWdpc3RlciAoRkRSKSIsInJvbGUiOiJVc2VyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy92ZXJzaW9uIjoiMi4wIiwiQ29ycmVsYXRpb25LZXkiOiI1YTkwYzkxNzdkYTMiLCJuYmYiOjE2NTM5NDA3NTgsImV4cCI6MTcxNzA5OTE1OCwiaWF0IjoxNjUzOTQwNzU4LCJpc3MiOiJUcmFuc3BvcnQgQ2FuYWRhIiwiYXVkIjoiVHJhbnNwb3J0IENhbmFkYSJ9.0CPTpmLiz29jJ4cpopnV9CtuPmrUuUqHolMh2Yqot0I"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "List_-_Cost_Recovery": {
+                  "runAfter": {
+                    "Retrieve_existing_artifact_of_a_given_type_using_a_Service_Request_id": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "8be101ec-8f8d-483f-b0aa-2e58d91b8c14"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "ListRecords",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "fdr_costrecoveryattributes",
+                      "$filter": "(fdr_serviceattributeid eq @{items('Apply_to_each')['ServiceAttributeId']})"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Compose": {
+                  "runAfter": {
+                    "List_-_Cost_Recovery": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "15b3d1d7-1375-4f05-86b4-df6a0cb90aa9"
+                  },
+                  "type": "Compose",
+                  "inputs": "/fdr_containertypes(@{first(outputs('List_-_Cost_Recovery')?['body/value'])?['_fdr_containertypeid_value']})\n"
+                },
+                "Add_Submission": {
+                  "runAfter": {
+                    "Compose": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "b0f7fbb5-b03f-4dde-899a-9805278cb3ba"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "CreateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "fdr_submissions",
+                      "item/fdr_name": "Submission - @{items('Apply_to_each')['Id']}",
+                      "item/fdr_json": "@body('Retrieve_existing_artifact_of_a_given_type_using_a_Service_Request_id')",
+                      "item/fdr_registrationtype@odata.bind": "/fdr_containertypes(@{first(outputs('List_-_Cost_Recovery')?['body/value'])?['_fdr_containertypeid_value']})",
+                      "item/fdr_serviceattributeid": "@items('Apply_to_each')['ServiceAttributeId']",
+                      "item/fdr_servicerequestid": "@item()['Id']",
+                      "item/fdr_servicerequesttype": "@first(outputs('List_-_Cost_Recovery')?['body/value'])?['fdr_servicerequesttype']"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Set_ExistingSubmissionCount": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "equals": [
+                  "@variables('ExistingSubmissionCount')",
+                  0
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "cf62679a-9563-459e-9baa-6e3f5c9dc26d"
+              },
+              "type": "If"
+            },
+            "Set_ExistingSubmissionCount": {
+              "runAfter": {
+                "Get_Existing_Submissions_by_MTOA_Id": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b231af7e-ce18-4f07-956c-c4629ffcfb80"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ExistingSubmissionCount",
+                "value": "@length(outputs('Get_Existing_Submissions_by_MTOA_Id')?['body/value'])"
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_ExistingSubmissionCount": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7db4ab14-b668-4448-8f2d-c6ba4c355d53"
+          },
+          "type": "Foreach"
+        },
+        "Initialize_ExistingSubmissionCount": {
+          "runAfter": {
+            "Filter_array_-_Remove_Cancel_requests": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a92b9f1f-7bbc-4417-a1f5-01427c7212be"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ExistingSubmissionCount",
+                "type": "integer"
+              }
+            ]
+          }
+        },
+        "Filter_array_-_Remove_Cancel_requests": {
+          "runAfter": {
+            "Filter_array_-_To_only_request_submitted_via_ASRF": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3b79f7b3-5ff7-41f8-891f-cf4d3568a170"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@body('Filter_array_-_To_only_request_submitted_via_ASRF')",
+            "where": "@not(equals(item()['Metadata'][0]['Value'], 'Cancel'))"
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
