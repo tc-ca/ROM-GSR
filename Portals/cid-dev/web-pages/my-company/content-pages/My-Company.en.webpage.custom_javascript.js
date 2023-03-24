@@ -25,7 +25,10 @@ $(document).ready(function () {
 
     var cancelLabel = tdg.error_message.message("BTN_CANCEL");
     var updateCompanyBtn = "<div><input id='update_company' type='button' name='UpdateCompany' value='Update Organization' class='btn btn-primary action create-action' nonactionlinkbutton='true'/></div>"
-    $(".form-custom-actions").first().parent().after(updateCompanyBtn);
+   // $(".form-custom-actions").first().parent().after(updateCompanyBtn);
+    $("#EntityFormPanel").append(updateCompanyBtn);
+   // $('div[data-name="company_details_section_3"]').after(updateCompanyBtn);
+  
 
     var cancelBtn = "&nbsp;<input id='cancel_company_update' type='button' name='CancelCompanyUpdate' value='" + cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'/>";
     $(".form-action-container-left").eq(2).after(cancelBtn);
