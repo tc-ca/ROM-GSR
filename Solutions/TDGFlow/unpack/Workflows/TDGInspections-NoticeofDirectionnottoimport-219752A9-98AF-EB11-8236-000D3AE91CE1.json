@@ -234,7 +234,7 @@
                   "entityName": "accounts",
                   "recordId": "@outputs('Get_a_WO._All_fields')?['body/_msdyn_serviceaccount_value']",
                   "$select": "name,emailaddress1,accountid,address1_composite,address1_city,address1_stateorprovince,address1_line1,address1_postalcode,ovs_legalname",
-                  "$expand": "primarycontactid($select=jobtitle,fullname,emailaddress1,telephone1,fax)"
+                  "$expand": "primarycontactid($select=jobtitle,fullname,emailaddress1,telephone1,fax),parentaccountid($select=ovs_legalname)"
                 },
                 "authentication": "@parameters('$authentication')"
               }
@@ -351,7 +351,7 @@
                       "dynamicFileSchema/2127340467": "@outputs('Get_Site_and_Primary_Contact')?['body/primarycontactid/telephone1']",
                       "dynamicFileSchema/-200784987": "@triggerOutputs()?['body/ovs_actionnumber']",
                       "dynamicFileSchema/-1969803082": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
-                      "dynamicFileSchema/-2136938967": "@outputs('Get_Site_and_Primary_Contact')?['body/ovs_legalname']",
+                      "dynamicFileSchema/-2136938967": "@outputs('Get_Site_and_Primary_Contact')?['body/parentaccountid/ovs_legalname']",
                       "dynamicFileSchema/-918322226": "@{outputs('Get_Site_and_Primary_Contact')?['body/primarycontactid/fullname']} - @{outputs('Get_Site_and_Primary_Contact')?['body/primarycontactid/jobtitle']}",
                       "dynamicFileSchema/-630020445": "@outputs('Get_Primary_Inspector')?['body/userid/fullname']",
                       "dynamicFileSchema/-446852119": "@outputs('Get_Primary_Inspector')?['body/userid/title']",
@@ -438,7 +438,7 @@
                         "dynamicFileSchema/2127340467": "@outputs('Get_Site_and_Primary_Contact')?['body/primarycontactid/telephone1']",
                         "dynamicFileSchema/-200784987": "@triggerOutputs()?['body/ovs_actionnumber']",
                         "dynamicFileSchema/-1969803082": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
-                        "dynamicFileSchema/-2136938967": "@outputs('Get_Site_and_Primary_Contact')?['body/ovs_legalname']",
+                        "dynamicFileSchema/-2136938967": "@outputs('Get_Site_and_Primary_Contact')?['body/parentaccountid/ovs_legalname']",
                         "dynamicFileSchema/-918322226": "@{outputs('Get_Site_and_Primary_Contact')?['body/primarycontactid/fullname']} - @{outputs('Get_Site_and_Primary_Contact')?['body/primarycontactid/jobtitle']}",
                         "dynamicFileSchema/-630020445": "@outputs('Get_Primary_Inspector')?['body/userid/fullname']",
                         "dynamicFileSchema/-446852119": "@outputs('Get_Primary_Inspector')?['body/userid/title']",
@@ -711,7 +711,7 @@
         },
         "Set_LocalTime": {
           "runAfter": {
-            "Init_-_LocalTime": [
+            "Init_-_LegalName": [
               "Succeeded"
             ]
           },
@@ -743,11 +743,30 @@
               }
             ]
           }
+        },
+        "Init_-_LegalName": {
+          "runAfter": {
+            "Init_-_LocalTime": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "bb485521-1fc3-4e0c-8f06-a02e7c1d536a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "legalName",
+                "type": "string"
+              }
+            ]
+          }
         }
       },
       "outputs": {}
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }

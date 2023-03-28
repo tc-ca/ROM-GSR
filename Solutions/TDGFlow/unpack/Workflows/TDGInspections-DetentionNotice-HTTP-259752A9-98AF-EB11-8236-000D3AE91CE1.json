@@ -218,7 +218,7 @@
               "dynamicFileSchema/-2028243656": "@triggerOutputs()?['body/ovs_actionnumber']",
               "dynamicFileSchema/-852727465": "@variables('IsHOTI')",
               "dynamicFileSchema/-1780937642": "@variables('IsMoC')",
-              "dynamicFileSchema/-1395809158": "@outputs('Get_Primary_Contact_For_Account')?['body/ovs_legalname']",
+              "dynamicFileSchema/-1395809158": "@outputs('Get_Primary_Contact_For_Account')?['body/parentaccountid/ovs_legalname']",
               "dynamicFileSchema/-745960806": "@{outputs('Get_Primary_Contact_For_Account')?['body/address1_line1']} @{outputs('Get_Primary_Contact_For_Account')?['body/address1_city']} @{outputs('Get_Primary_Contact_For_Account')?['body/address1_stateorprovince']} @{outputs('Get_Primary_Contact_For_Account')?['body/address1_postalcode']}",
               "dynamicFileSchema/-117922535": "@outputs('Get_Primary_Contact_For_Account')?['body/primarycontactid/jobtitle']",
               "dynamicFileSchema/-183747007": "@outputs('Get_Primary_Contact_For_Account')?['body/primarycontactid/telephone1']",
@@ -239,7 +239,7 @@
         },
         "Get_Inspector_Details": {
           "runAfter": {
-            "Get_Primary_Contact_For_Account": [
+            "Set_LegalName": [
               "Succeeded"
             ]
           },
@@ -843,7 +843,7 @@
               "entityName": "accounts",
               "recordId": "@outputs('Get_Work_Order_Details')?['body/_msdyn_serviceaccount_value']",
               "$select": "name,emailaddress1,accountid,address1_line1,address1_city,address1_postalcode,ovs_legalname,address1_stateorprovince",
-              "$expand": "primarycontactid($select=jobtitle,fullname,emailaddress1,telephone1,mobilephone,fax)"
+              "$expand": "primarycontactid($select=jobtitle,fullname,emailaddress1,telephone1,mobilephone,fax),parentaccountid($select=ovs_legalname)"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -945,7 +945,7 @@
         },
         "Get_Closing_Inspector_Details": {
           "runAfter": {
-            "Init_-_closingInspectorRINN": [
+            "Init_-_LegalName": [
               "Succeeded"
             ]
           },
@@ -967,10 +967,74 @@
             },
             "authentication": "@parameters('$authentication')"
           }
+        },
+        "Init_-_LegalName": {
+          "runAfter": {
+            "Init_-_closingInspectorRINN": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "bb485521-1fc3-4e0c-8f06-a02e7c1d536a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "legalName",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Set_LegalName": {
+          "actions": {
+            "Set_variable_8": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "a2ba52de-96c6-4643-aa44-e2af7763cf38"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "legalName",
+                "value": "@outputs('Get_Primary_Contact_For_Account')?['body/ovs_legalname']"
+              }
+            }
+          },
+          "runAfter": {
+            "Get_Primary_Contact_For_Account": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Set_variable_9": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "02737435-4028-4f43-ab97-48854ab941c9"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "legalName",
+                  "value": "@outputs('Get_Primary_Contact_For_Account')?['body/parentaccountid/ovs_legalname']"
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@outputs('Get_Primary_Contact_For_Account')?['body/_parentaccountid_value']",
+              "@null"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6eccce7f-06ef-40bd-9bcd-de51b1fe72ea"
+          },
+          "type": "If"
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }

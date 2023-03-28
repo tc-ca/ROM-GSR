@@ -242,7 +242,7 @@
               "dynamicFileSchema/1895389775": "@{outputs('Get_Primary_Contact_For_Account')?['body/primarycontactid/fullname']} - @{outputs('Get_Primary_Contact_For_Account')?['body/primarycontactid/jobtitle']}",
               "dynamicFileSchema/1976571402": "@variables('LocalTime')",
               "dynamicFileSchema/-2097462769": "@triggerOutputs()?['body/ovs_actionnumber']",
-              "dynamicFileSchema/-1395809158": "@outputs('Get_Primary_Contact_For_Account')?['body/ovs_legalname']",
+              "dynamicFileSchema/-1395809158": "@outputs('Get_Primary_Contact_For_Account')?['body/parentaccountid/ovs_legalname']",
               "dynamicFileSchema/-745960806": "@{outputs('Get_Primary_Contact_For_Account')?['body/address1_line1']} @{outputs('Get_Primary_Contact_For_Account')?['body/address1_city']} @{outputs('Get_Primary_Contact_For_Account')?['body/address1_stateorprovince']} @{outputs('Get_Primary_Contact_For_Account')?['body/address1_postalcode']}",
               "dynamicFileSchema/-1713186279": "@outputs('Get_Primary_Contact_For_Account')?['body/primarycontactid/emailaddress1']",
               "dynamicFileSchema/-183747007": "@outputs('Get_Primary_Contact_For_Account')?['body/primarycontactid/telephone1']",
@@ -840,7 +840,7 @@
               "entityName": "accounts",
               "recordId": "@outputs('Get_Work_Order_Details')?['body/_msdyn_serviceaccount_value']",
               "$select": "name,emailaddress1,accountid,address1_line1,address1_city,address1_postalcode,ovs_legalname,address1_stateorprovince",
-              "$expand": "primarycontactid($select=jobtitle,fullname,emailaddress1,telephone1,fax)"
+              "$expand": "primarycontactid($select=jobtitle,fullname,emailaddress1,telephone1,fax),parentaccountid($select=ovs_legalname)"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -904,7 +904,7 @@
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }

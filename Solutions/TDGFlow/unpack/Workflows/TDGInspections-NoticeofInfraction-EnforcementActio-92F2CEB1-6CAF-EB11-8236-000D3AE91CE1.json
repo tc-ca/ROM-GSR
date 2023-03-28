@@ -50,7 +50,7 @@
           "defaultValue": {},
           "type": "SecureObject"
         },
-        "Notice Of Infraction EN": {
+        "Notice Of Infraction EN (ovs_NoticeOfInfractionEN)": {
           "defaultValue": "-NI-AI-",
           "type": "String",
           "metadata": {
@@ -109,7 +109,7 @@
                   "entityName": "accounts",
                   "recordId": "@outputs('Get_a_WO._All_fields')?['body/_msdyn_serviceaccount_value']",
                   "$select": "name,emailaddress1,accountid,address1_composite, address1_city,address1_stateorprovince,address1_line1,address1_postalcode,address1_country,ovs_legalname",
-                  "$expand": "primarycontactid($select=jobtitle,fullname,emailaddress1,telephone1)"
+                  "$expand": "primarycontactid($select=jobtitle,fullname,emailaddress1,telephone1),parentaccountid($select=ovs_legalname)"
                 },
                 "authentication": "@parameters('$authentication')"
               }
@@ -345,7 +345,7 @@
               "type": "SetVariable",
               "inputs": {
                 "name": "filePathBlob",
-                "value": "@{outputs('Get_a_WO._All_fields')?['body/msdyn_name']}_@{variables('RegardingId')}/@{triggerOutputs()?['body/ovs_actionnumber']}@{parameters('Notice Of Infraction EN')}@{variables('filePostfix')}.pdf"
+                "value": "@{outputs('Get_a_WO._All_fields')?['body/msdyn_name']}_@{variables('RegardingId')}/@{triggerOutputs()?['body/ovs_actionnumber']}@{parameters('Notice Of Infraction EN (ovs_NoticeOfInfractionEN)')}@{variables('filePostfix')}.pdf"
               }
             },
             "Create_new_folder_in_SP": {
@@ -482,7 +482,7 @@
                       "dynamicFileSchema/465325485": "@outputs('Get_Primary_Inspector')?['body/userid/fullname']",
                       "dynamicFileSchema/1018354222": "@outputs('Get_Primary_Inspector')?['body/ovs_registeredinspectornumberrin']",
                       "dynamicFileSchema/1098905991": "@outputs('Get_Site_and_Primary_Contact')?['body/primarycontactid/fullname']",
-                      "dynamicFileSchema/1285996689": "@outputs('Get_Site_and_Primary_Contact')?['body/ovs_legalname']",
+                      "dynamicFileSchema/1285996689": "@outputs('Get_Site_and_Primary_Contact')?['body/parentaccountid/ovs_legalname']",
                       "dynamicFileSchema/1301888070": "@triggerOutputs()?['body/ovs_actiondate']",
                       "dynamicFileSchema/1539550161": "@outputs('Get_Site_and_Primary_Contact')?['body/ovs_legalname']",
                       "dynamicFileSchema/1592131855": "@variables('bookingStartTimeEN')",
@@ -562,9 +562,9 @@
                         "dynamicFileSchema/465325485": "@outputs('Get_Primary_Inspector')?['body/userid/fullname']",
                         "dynamicFileSchema/1018354222": "@outputs('Get_Primary_Inspector')?['body/ovs_registeredinspectornumberrin']",
                         "dynamicFileSchema/1098905991": "@outputs('Get_Site_and_Primary_Contact')?['body/primarycontactid/fullname']",
-                        "dynamicFileSchema/1285996689": "@outputs('Get_Site_and_Primary_Contact')?['body/ovs_legalname']",
+                        "dynamicFileSchema/1285996689": "@outputs('Get_Site_and_Primary_Contact')?['body/parentaccountid/ovs_legalname']",
                         "dynamicFileSchema/1301888070": "@triggerOutputs()?['body/ovs_actiondate']",
-                        "dynamicFileSchema/1539550161": "@outputs('Get_Site_and_Primary_Contact')?['body/ovs_legalname']",
+                        "dynamicFileSchema/1539550161": "@outputs('Get_Site_and_Primary_Contact')?['body/parentaccountid/ovs_legalname']",
                         "dynamicFileSchema/1592131855": "@variables('bookingStartTimeEN')",
                         "dynamicFileSchema/2034456519": "@triggerOutputs()?['body/ovs_noncompliancedetailstxt']",
                         "dynamicFileSchema/-565412095": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
@@ -661,7 +661,7 @@
                   "item/subject": "Work order @{outputs('Get_a_WO._All_fields')?['body/msdyn_name']}",
                   "item/isdocument": true,
                   "item/documentbody": "@base64(outputs('Convert_Word_Document_to_PDF')?['body'])",
-                  "item/filename": "@{triggerOutputs()?['body/ovs_actionnumber']}@{parameters('Notice Of Infraction EN')}@{variables('filePostfix')}.pdf",
+                  "item/filename": "@{triggerOutputs()?['body/ovs_actionnumber']}@{parameters('Notice Of Infraction EN (ovs_NoticeOfInfractionEN)')}@{variables('filePostfix')}.pdf",
                   "item/objectid_msdyn_workorder@odata.bind": "/msdyn_workorders/@{outputs('Get_a_WO._All_fields')?['body/msdyn_workorderid']}"
                 },
                 "authentication": "@parameters('$authentication')"
@@ -966,7 +966,7 @@
       },
       "outputs": {}
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
