@@ -60,7 +60,7 @@ $(document).ready(function () {
 	document.getElementById("address1_latitude").addEventListener('change', (event) => {
 		//get Latitude and set it to nearest 4 digits
 		var Lat = $("#address1_latitude").val();
-		$("#address1_latitude").val(Number.parseFloat(Lat).toFixed(4));
+		//$("#address1_latitude").val(Number.parseFloat(Lat).toFixed(4));
 	});
 	document.getElementById("address1_longitude").addEventListener('change', (event) => {
 		//get Lontitude and set it to nearest 4 digits
