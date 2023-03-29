@@ -219,12 +219,12 @@ if (typeof (tdg.message) == "undefined") {
             var page_in_year_my_sites_FR = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.<br>" +
                 "To add additional Sites individually, choose the <b>[+ Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.<br>" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end._FR";
-            var page_annual_compliance_update_EN = "1- As applicable, perform each step's related update below, then it's 'Mark as complete' option.</br>" +
+            var page_annual_compliance_update_EN = "To finalize the Annual Compliance Update:</br>1- As applicable, perform each step's related update below, then it's 'Mark as complete' option.</br>" +
                 "2- Read and agree to the terms of service agreement and select the 'Attestation' section.</br>" +
-                "3- When complete, select the <b>[Complete Annual Compliance Update'</b> option.";
-            var page_annual_compliance_update_FR = "1- As applicable, perform each step's related update below, then it's 'Mark as complete' option.</br>" +
+                "3- When complete, select the <b>[Finalize Annual Compliance]</b> option.";
+            var page_annual_compliance_update_FR = "To finalize the Annual Compliance Update:</br>1- As applicable, perform each step's related update below, then it's 'Mark as complete' option.</br>" +
                 "2- Read and agree to the terms of service agreement and select the 'Attestation' section.</br>" +
-                "3- When complete, select the <b>[Complete Annual Compliance Update'</b> option._FR";
+                "3- When complete, select the <b>[Finalize Annual Compliance]</b> option._FR";
 
             var list =
                 [
@@ -854,11 +854,21 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "There is knowledge article information about this topic that may answer your request. Do you want to first view that information?",
                         "message_fr": "There is knowledge article information about this topic that may answer your request. Do you want to first view that information?_FR"
                     },
-					{
+                    {
                         "code": "m000140",
                         "message_en": "The current owner orgnization of this site was contacted and informed to release this site.",
                         "message_fr": "The current owner orgnization of this site was contacted and informed to release this site._FR"
                     },
+                    {
+                        "code": "m000141",
+                        "message_en": "Activate Orgnization",
+                        "message_fr": "Activate Orgnization_FR"
+                    },
+                    {
+                        "code": "m000142",
+                        "message_en": "<p>Please be aware that the entered date is in the future.</p>",
+                        "message_fr": "<p>Please be aware that the entered date is in the future._FR</p>"
+                    }
                 ];
 
             return list;

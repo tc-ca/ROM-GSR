@@ -67,12 +67,26 @@ $(document).ready(function () {
 	});
 
 	var annualComplianceCompletionDate = $('#cid_annualcompliancecompletiondate').val();
+	var anniversaryDate = $('#cid_companyanniversarydate').val();
+
 	if (annualComplianceCompletionDate == null || annualComplianceCompletionDate == "") //uncheck attestation check box
 	{
-		$("#cid_iscompanyattested").prop("checked", false);
+		$('#cid_annualcompliancecompletiondate').parent().parent().prop("hidden", true);
+	}
+	else
+	{
+		var complianceCompletionDate = new Date(annualComplianceCompletionDate);
+
+		var newDate = new Date();
+
+		if(new Date(anniversaryDate).getDate() + 30 > newDate.getDate()){
+			//alert("test");
+		}
 	}
 
-	var anniversaryDate = $('#cid_companyanniversarydate').val();
+	$("#cid_iscompanyattested").prop("checked", false);
+
+
 	var complianceReadonly = true;
 	if (anniversaryDate != null && anniversaryDate != "") {
 		complianceReadonly = checkAnuualComplianceEligibility(new Date(anniversaryDate));
@@ -110,7 +124,6 @@ $(document).ready(function () {
 		$("#CompanyCompleteAll").attr("style", "display:none");
 		//$("#SiteCompleteAll").attr("style", "width:185px");
 		console.log("after hide");
-
 	}
 	entityFormClientValidate = function () {
 		var errorMessage = "";

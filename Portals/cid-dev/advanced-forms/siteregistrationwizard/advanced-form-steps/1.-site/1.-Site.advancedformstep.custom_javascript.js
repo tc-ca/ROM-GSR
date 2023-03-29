@@ -10,6 +10,7 @@ $(document).ready(function () {
     
    // $('.text-danger').parent().att("id", "MessagePanel");
 	  $("#ValidationSummaryEntityFormView").after($('.text-danger').parent());
+	  $("#ValidationSummaryEntityFormView").after('<div id="ErrorMessageDiv" class="alert alert-danger" role="alert" style="display: none;">  </div>');
 	  Show_PluginError_TextLanguag($('.text-danger').parent());
       page_setup();
 	  tdg.c.message_panel();
@@ -61,6 +62,20 @@ $(document).ready(function () {
 		//get Latitude and set it to nearest 4 digits
 		var Lat = $("#address1_latitude").val();
 		//$("#address1_latitude").val(Number.parseFloat(Lat).toFixed(4));
+	    var decimalIndex = Lat.toString().indexOf(".");
+		
+		 if (decimalIndex < 0) {
+             
+            } else {
+               var numberofdecimal =  Lat.toString().split('.')[1].length;
+			   if ( numberofdecimal != 4)
+			   {
+				   //alert ("length doesn't equal 4 " + numberofdecimal );
+			   }
+			}
+            
+
+
 	});
 	document.getElementById("address1_longitude").addEventListener('change', (event) => {
 		//get Lontitude and set it to nearest 4 digits
@@ -159,9 +174,30 @@ function cid_same_as_company_change() {
 if (window.jQuery) {
 	(function ($) {
 		webFormClientValidate = function () {
-			//$("#ovs_address1_province").attr("disabled", false);
+		   $('#ErrorMessageDiv').css('display', 'none');
+		var Lat = $("#address1_latitude").val();
+		
+	    var decimalIndex = Lat.toString().indexOf(".");
+		
+		 if (decimalIndex < 0) {
+			 return false ;
+             
+            } else {
+               var numberofdecimal =  Lat.toString().split('.')[1].length;
+			   if ( numberofdecimal != 4)
+			   {
+				    $('#ErrorMessageDiv').css('display', 'block');
+                    $('#ErrorMessageDiv').html("<h3>Error</h3> <p>Please enter a Latitude as a decimal, with the full four digit decimal point (e.g. 41.3251)</p>");
+				
 
-			return true;
+				  return false;
+			   }
+			   else{
+				   return true;
+			   }
+			}
+
+			
 		}
 	}(window.jQuery));
 }

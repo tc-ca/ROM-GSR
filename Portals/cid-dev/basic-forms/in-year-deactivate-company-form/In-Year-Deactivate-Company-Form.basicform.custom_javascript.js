@@ -41,7 +41,7 @@ $(document).ready(function () {
             var effectiveDate = Date.parse(effectiveDateControl.val());
 
             if (effectiveDate >= new Date()) {
-                var message = "<p>Please be aware that the entered date is in the future.</p>";
+                var message = tdg.error_message.message("m000142");
                 tdg.c.dialog_OK(message);
                 sessionStorage.setItem('futureDateMessageShown', 'true');
             }

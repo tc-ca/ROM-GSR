@@ -19,6 +19,7 @@ $(document).ready(function () {
         activationButon.hide();
     }
     else {
+        activationButon[0].innerHTML = tdg.error_message.message("m000141");
         activationButon.css("color", "#000000");
         activationButon.css("background-color", "#4CAF50");
     }
@@ -27,9 +28,9 @@ $(document).ready(function () {
     var updateCompanyBtn = "<div><input id='update_company' type='button' name='UpdateCompany' value='Update Organization' class='btn btn-primary action create-action' nonactionlinkbutton='true'/></div>"
     //$(".form-custom-actions").first().parent().append(updateCompanyBtn);
     // $(".form-custom-actions").append(updateCompanyBtn);
-   // $("#EntityFormPanel").append(updateCompanyBtn);
-   $('table[data-name="company_details_section_3"]').after(updateCompanyBtn);
-  
+    // $("#EntityFormPanel").append(updateCompanyBtn);
+    $('table[data-name="company_details_section_3"]').after(updateCompanyBtn);
+
 
     var cancelBtn = "&nbsp;<input id='cancel_company_update' type='button' name='CancelCompanyUpdate' value='" + cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'/>";
     $(".form-action-container-left").eq(2).after(cancelBtn);
