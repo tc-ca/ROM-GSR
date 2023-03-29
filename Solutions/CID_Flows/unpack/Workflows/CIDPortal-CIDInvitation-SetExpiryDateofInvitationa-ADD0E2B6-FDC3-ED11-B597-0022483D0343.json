@@ -1,0 +1,146 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "ac2d6fd6-d004-40db-a164-b6fac4a76743"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 6,
+              "subscriptionRequest/entityname": "cid_invitation",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filterexpression": "(cid_invitationvaliduntil lt @{AddHours(UTCNow(),-4)})"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Condition": {
+          "actions": {
+            "Update_CID_invitation": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "3022adc9-5d48-4169-b89d-9df1af80d9f1"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "cid_invitations",
+                  "recordId": "@triggerOutputs()?['body/cid_invitationid']",
+                  "item/cid_invitationvaliduntil": "@AddHours(UTCNow(),-5)"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Update_invitation_expiry_date": {
+              "runAfter": {
+                "Update_CID_invitation": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "bcdeb5f3-42d4-4d46-9153-d9df4279d193"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "adx_invitations",
+                  "recordId": "@outputs('Update_CID_invitation')?['body/_cid_invitation_value']",
+                  "item/adx_expirydate": "@AddHours(UTCNow(),-5)",
+                  "item/statecode": 1,
+                  "item/statuscode": 2
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {},
+          "expression": {
+            "and": [
+              {
+                "or": [
+                  {
+                    "equals": [
+                      "@triggerOutputs()?['body/statecode']",
+                      1
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@triggerOutputs()?['body/statuscode']",
+                      2
+                    ]
+                  }
+                ]
+              },
+              {
+                "or": [
+                  {
+                    "greater": [
+                      "@triggerOutputs()?['body/cid_invitationvaliduntil']",
+                      "@AddHours(UTCNow(),-4)"
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@triggerOutputs()?['body/cid_invitationvaliduntil']",
+                      "@null"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "73241095-e32a-4caf-86ee-ab77aff269b2"
+          },
+          "type": "If"
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

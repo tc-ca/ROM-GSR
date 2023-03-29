@@ -19,6 +19,24 @@
           "name": "shared_office365"
         }
       },
+      "shared_office365_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedoffice365_ee685"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      },
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
       "shared_sendmail": {
         "runtimeSource": "embedded",
         "connection": {
@@ -64,6 +82,9 @@
                 },
                 "Secondary_Contactid": {
                   "type": "string"
+                },
+                "SiteId": {
+                  "type": "string"
                 }
               }
             }
@@ -86,52 +107,6 @@
             ]
           }
         },
-        "Get_Secondary": {
-          "runAfter": {
-            "Check_environment": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "d357c557-f853-40ab-8d56-01878c9f05db"
-          },
-          "type": "OpenApiConnection",
-          "inputs": {
-            "host": {
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "GetItem",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-            },
-            "parameters": {
-              "entityName": "contacts",
-              "recordId": "@triggerBody()?['Secondary_Contactid']"
-            },
-            "authentication": "@parameters('$authentication')"
-          }
-        },
-        "Get_Parent_account_name": {
-          "runAfter": {
-            "Check_environment": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "4bf8ee07-0068-409b-a4ea-68cdc82fcab3"
-          },
-          "type": "OpenApiConnection",
-          "inputs": {
-            "host": {
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "GetItem",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-            },
-            "parameters": {
-              "entityName": "accounts",
-              "recordId": "@triggerBody()?['AccountId']"
-            },
-            "authentication": "@parameters('$authentication')"
-          }
-        },
         "List_rows_-_Get_all_Secondary_Contact": {
           "runAfter": {
             "Check_environment": [
@@ -151,29 +126,6 @@
             "parameters": {
               "entityName": "contacts",
               "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\" no-lock=\"false\">\n<entity name=\"contact\">\n<attribute name=\"firstname\"/>\n<attribute name=\"fullname\"/>\n<attribute name=\"emailaddress1\"/>\n<attribute name=\"lastname\"/>\n<order attribute=\"cid_contacttype\" descending=\"false\"/>\n<order attribute=\"fullname\" descending=\"false\"/>\n<attribute name=\"contactid\"/>\n<filter type=\"and\">\n<condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\n<condition attribute=\"emailaddress1\" operator=\"not-null\"/>\n<condition attribute=\"parentcustomerid\" operator=\"eq\" value=\"@{triggerBody()?['AccountId']}\" />\n<condition attribute=\"cid_contacttype\" operator=\"eq\" value=\"100000001\"/>\n</filter>\n</entity>\n</fetch>"
-            },
-            "authentication": "@parameters('$authentication')"
-          }
-        },
-        "GetPrimary": {
-          "runAfter": {
-            "Get_Secondary": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "75519be7-ee16-4c55-9d84-9aa3d594f183"
-          },
-          "type": "OpenApiConnection",
-          "inputs": {
-            "host": {
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "GetItem",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-            },
-            "parameters": {
-              "entityName": "contacts",
-              "recordId": "@triggerBody()?['Primary_Contactid']"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -261,53 +213,61 @@
                     },
                     "parameters": {
                       "entityName": "contacts",
-                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\" no-lock=\"false\">\n<entity name=\"contact\">\n<attribute name=\"firstname\"/>\n<attribute name=\"fullname\"/>\n<attribute name=\"emailaddress1\"/>\n<attribute name=\"lastname\"/>\n<order attribute=\"cid_contacttype\" descending=\"false\"/>\n<order attribute=\"fullname\" descending=\"false\"/>\n<attribute name=\"contactid\"/>\n<filter type=\"and\">\n<condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\n<condition attribute=\"emailaddress1\" operator=\"not-null\"/>\n<condition attribute=\"parentcustomerid\" operator=\"eq\" value=\"@{triggerBody()?['AccountId']}\" />\n<condition attribute=\"cid_contacttype\" operator=\"eq\" value=\"100000000\"/>\n</filter>\n</entity>\n</fetch>"
+                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\" no-lock=\"false\">\n<entity name=\"contact\">\n<attribute name=\"firstname\"/>\n<attribute name=\"fullname\"/>\n<attribute name=\"parentcustomerid\" />\n<attribute name=\"cid_languageofcorrespondence\" />\n<attribute name=\"emailaddress1\"/>\n<attribute name=\"lastname\"/>\n<order attribute=\"cid_contacttype\" descending=\"false\"/>\n<order attribute=\"fullname\" descending=\"false\"/>\n<attribute name=\"contactid\"/>\n<filter type=\"and\">\n<condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\n<condition attribute=\"emailaddress1\" operator=\"not-null\"/>\n<condition attribute=\"parentcustomerid\" operator=\"eq\" value=\"@{triggerBody()?['AccountId']}\" />\n<condition attribute=\"cid_contacttype\" operator=\"eq\" value=\"100000000\"/>\n</filter>\n</entity>\n</fetch>"
                     },
                     "authentication": "@parameters('$authentication')"
                   }
                 },
                 "Condition_-_check_user_language": {
                   "actions": {
-                    "Send_an_email_notification_(V3)_5_English": {
+                    "Send_an_email_(V2)-_English": {
                       "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "948e764e-fafe-4c29-ac68-428a81677087"
+                      },
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "connectionName": "shared_sendmail",
-                          "operationId": "SendEmailV3",
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                          "connectionName": "shared_office365_1",
+                          "operationId": "SendEmailV2",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                         },
                         "parameters": {
-                          "request/to": "@{outputs('Primary_email')};",
-                          "request/subject": "CID Data Platform: Request by @{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']} to be onboarded as a Secondary Admin for the @{outputs('Get_Parent_account_name')?['body/name']} Company",
-                          "request/text": "<p>Hello @{outputs('Primary_First_Name')} @{outputs('Primary_Last_Name')},<br>\n<br>\n@{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']}, at @{variables('ContactInfo')}, has requested to be on-boarded as a Secondary Admin for the @{outputs('Get_Parent_account_name')?['body/name']} Company within the CID Data Platform. If you would like to on-board them, then please add them as a Contact, which will trigger the emailing of an invitation to them.<br>\n</p>",
-                          "request/cc": "@variables('SecondaryContactsEmail')"
+                          "emailMessage/To": "@outputs('Primary_email')",
+                          "emailMessage/Subject": "@{variables('TestSubjectText')}CID Data Platform: Request by @{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']} to be onboarded as a Secondary Contact for the @{outputs('GetPrimary')?['body/cid_legalname']} organization",
+                          "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']}, at @{variables('SecondaryContactsEmail')}, has requested to be on-boarded as a Secondary Contact for the @{outputs('Get_Primary_Account_Name')?['body/ovs_legalname']}&nbsp;organization within the CID Data Platform. If you would like to on-board them, then please add them as a Contact, which will trigger the emailing of an invitation to them.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n<br>\n</p>",
+                          "emailMessage/Cc": "@variables('SecondaryContactsEmail')",
+                          "emailMessage/Importance": "Normal"
                         },
                         "authentication": "@parameters('$authentication')"
                       }
                     }
                   },
                   "runAfter": {
-                    "Primary_email": [
+                    "Get_Primary_Account_Name": [
                       "Succeeded"
                     ]
                   },
                   "else": {
                     "actions": {
-                      "Send_an_email_notification_(V3)_6_French": {
+                      "Send_an_email_(V2)_-French": {
                         "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "60cd9b44-5141-4dcd-ba5f-9baca18cd0e0"
+                        },
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "connectionName": "shared_sendmail",
-                            "operationId": "SendEmailV3",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                            "connectionName": "shared_office365_1",
+                            "operationId": "SendEmailV2",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                           },
                           "parameters": {
-                            "request/to": "@{outputs('Primary_email')};;",
-                            "request/subject": "French CID Data Platform: Request by @{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']} to be onboarded as a Secondary Admin for the @{outputs('Get_Parent_account_name')?['body/ovs_name_fr']} Company",
-                            "request/text": "<p>Hello @{outputs('Primary_First_Name')} @{outputs('Primary_Last_Name')},<br>\n<br>\n@{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']}, at @{variables('ContactInfo')}, has requested to be on-boarded as a Secondary Admin for the @{outputs('Get_Parent_account_name')?['body/ovs_name_fr']} Company within the CID Data Platform. If you would like to on-board them, then please add them as a Contact, which will trigger the emailing of an invitation to them.<br>\n<br>\n</p>",
-                            "request/cc": "@variables('SecondaryContactsEmail')"
+                            "emailMessage/To": "@outputs('Primary_email')",
+                            "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}CID Data Platform: Request by @{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']} to be onboarded as a Secondary Contact for the @{outputs('GetPrimary')?['body/cid_legalname']} organization",
+                            "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']}, at @{variables('SecondaryContactsEmail')}, has requested to be on-boarded as a Secondary Contact for the @{outputs('Get_Primary_Account_Name')?['body/ovs_legalname']} organization within the CID Data Platform. If you would like to on-board them, then please add them as a Contact, which will trigger the emailing of an invitation to them.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
+                            "emailMessage/Cc": "@variables('SecondaryContactsEmail')",
+                            "emailMessage/Importance": "Normal"
                           },
                           "authentication": "@parameters('$authentication')"
                         }
@@ -316,7 +276,7 @@
                   },
                   "expression": {
                     "equals": [
-                      "@outputs('GetPrimary')?['body/cid_languageofcorrespondence']",
+                      "@first(outputs('List_rows_-_get_primary_by_query')?['body/value'])['cid_languageofcorrespondence']",
                       918640001
                     ]
                   },
@@ -348,6 +308,27 @@
                   },
                   "type": "Compose",
                   "inputs": "@outputs('List_rows_-_get_primary_by_query')?['body/value'][0]['emailaddress1']"
+                },
+                "Get_Primary_Account_Name": {
+                  "runAfter": {
+                    "Primary_email": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "GetItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "accounts",
+                      "recordId": "@triggerBody()?['AccountId']",
+                      "$select": "ovs_legalname,ovs_legalnamefr"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
                 }
               }
             },
@@ -465,19 +446,21 @@
                 },
                 "Condition_2_check_Secondary_contact_Language_of_correspondence": {
                   "actions": {
-                    "Send_an_email_notification_(V3)-_Send_English": {
+                    "Send_an_email_notification_(V2)-_Send_English": {
                       "runAfter": {},
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "connectionName": "shared_sendmail",
-                          "operationId": "SendEmailV3",
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                          "connectionName": "shared_office365",
+                          "operationId": "SendEmailV2",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                         },
                         "parameters": {
-                          "request/to": "@{outputs('Get_Secondary')?['body/emailaddress1']};",
-                          "request/subject": "CID Data Platform: Login access into the CID Platform for the @{outputs('Get_Parent_account_name')?['body/ovs_name_fr']} Company has been removed",
-                          "request/text": "<p>Hello @{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']},<br>\n<br>\nPlease note that the CID Platform user account associated with this email address no longer has login access for the @{outputs('Get_Parent_account_name')?['body/ovs_name_fr']} Company. If this update was made by mistake, then please contact the CID Platform’s Primary Admin for that Company to resolve the matter. <br>\n<br>\n</p>"
+                          "emailMessage/To": "@outputs('Get_Secondary')?['body/emailaddress1']",
+                          "emailMessage/Subject": "@{variables('TestSubjectText')} TDG Online - CID: Login access into the CID Platform for the @{outputs('Get_Secondary')?['body/cid_legalname']} organization has been removed ",
+                          "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nPlease note that the CID Platform user account associated with this email address no longer has login access for the @{outputs('Get_Secondary')?['body/cid_legalname']} organization. If this update was made by mistake, then please contact the CID Platform’s Primary Contact for that organization to resolve the matter.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                          "emailMessage/Cc": "@{variables('SecondaryContactsEmail')};@{outputs('GetPrimary')?['body/emailaddress1']}",
+                          "emailMessage/Importance": "Normal"
                         },
                         "authentication": "@parameters('$authentication')"
                       }
@@ -490,19 +473,20 @@
                   },
                   "else": {
                     "actions": {
-                      "Send_an_email_notification_(V3)_2_-_Send_French_Text": {
+                      "Send_an_email_notification_(V2)_-_Send_French_Text": {
                         "runAfter": {},
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "connectionName": "shared_sendmail",
-                            "operationId": "SendEmailV3",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                            "connectionName": "shared_office365",
+                            "operationId": "SendEmailV2",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                           },
                           "parameters": {
-                            "request/to": "@{outputs('Get_Secondary')?['body/emailaddress1']};",
-                            "request/subject": "French CID Data Platform: Login access into the CID Platform for the @{outputs('Get_Parent_account_name')?['body/ovs_name_fr']} Company has been removed",
-                            "request/text": "<p>Hello @{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']},<br>\n<br>\nPlease note that the CID Platform user account associated with this email address no longer has login access for the @{outputs('Get_Parent_account_name')?['body/ovs_name_fr']} Company. If this update was made by mistake, then please contact the CID Platform’s Primary Admin for that Company to resolve the matter.&nbsp;</p>"
+                            "emailMessage/To": "@outputs('Get_Secondary')?['body/emailaddress1']",
+                            "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TDG Online - CID: Login access into the CID Platform for the @{outputs('Get_Secondary')?['body/cid_legalname']} organization has been removed ",
+                            "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nPlease note that the CID Platform user account associated with this email address no longer has login access for the @{outputs('Get_Secondary')?['body/cid_legalname']} organization. If this update was made by mistake, then please contact the CID Platform’s Primary Contact for that organization to resolve the matter.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                            "emailMessage/Importance": "Normal"
                           },
                           "authentication": "@parameters('$authentication')"
                         }
@@ -622,19 +606,21 @@
                 },
                 "Condition_2": {
                   "actions": {
-                    "Send_an_email_notification_(V3)_3": {
+                    "Send_an_email_notification_(V2)-_Send_English_2": {
                       "runAfter": {},
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "connectionName": "shared_sendmail",
-                          "operationId": "SendEmailV3",
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                          "connectionName": "shared_office365",
+                          "operationId": "SendEmailV2",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                         },
                         "parameters": {
-                          "request/to": "@{outputs('Get_Secondary')?['body/emailaddress1']};",
-                          "request/subject": "TDG Online - CID: Previous invitation to onboard to the CID Platform as a Secondary Admin for the is no longer valid. The option exists to register a new organization",
-                          "request/text": "<p>Hello @{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']},<br>\n<br>\nPlease note that the previous invitation to register the@{outputs('Get_Parent_account_name')?['body/name']} organization in the CID Data Platform is no longer valid. You do however have the option now to create an account in CID and register a different organization.<br>\n</p>"
+                          "emailMessage/To": "@outputs('Get_Secondary')?['body/emailaddress1']",
+                          "emailMessage/Subject": "@{variables('TestSubjectText')} TDG Online - CID: Previous invitation to onboard to the CID Platform as a Secondary Contact for the is no longer valid. The option exists to register a new organization",
+                          "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nPlease note that the previous invitation to register the &nbsp;@{outputs('Get_Parent_account_name')?['body/ovs_legalname']} organization in the CID Data Platform is no longer valid. You do however have the option now to create an account in CID and register a different organization.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                          "emailMessage/Cc": "@{variables('SecondaryContactsEmail')};@{outputs('GetPrimary')?['body/emailaddress1']}",
+                          "emailMessage/Importance": "Normal"
                         },
                         "authentication": "@parameters('$authentication')"
                       }
@@ -647,19 +633,20 @@
                   },
                   "else": {
                     "actions": {
-                      "Send_an_email_notification_(V3)_4": {
+                      "Send_an_email_notification_(V2)_-_Send_French_Text_2": {
                         "runAfter": {},
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "connectionName": "shared_sendmail",
-                            "operationId": "SendEmailV3",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                            "connectionName": "shared_office365",
+                            "operationId": "SendEmailV2",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                           },
                           "parameters": {
-                            "request/to": "@{outputs('Get_Secondary')?['body/emailaddress1']};",
-                            "request/subject": "French CID Data Platform: Previous invitation for the CID Platform is no longer valid. The option exists to register a new Company",
-                            "request/text": "<p>Hello @{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']},<br>\n<br>\nPlease note that the previous invitation to register the @{outputs('Get_Parent_account_name')?['body/ovs_name_fr']} Company in the CID Data Platform is no longer valid. You do however have the option now to create an account in CID and register a different Company.</p>"
+                            "emailMessage/To": "@outputs('Get_Secondary')?['body/emailaddress1']",
+                            "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TDG Online - CID: Previous invitation to onboard to the CID Platform as a Secondary Contact for the is no longer valid. The option exists to register a new organization",
+                            "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nPlease note that the previous invitation to register the @{outputs('Get_Parent_account_name')?['body/ovs_legalname']} organization in the CID Data Platform is no longer valid. You do however have the option now to create an account in CID and register a different organization.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                            "emailMessage/Importance": "Normal"
                           },
                           "authentication": "@parameters('$authentication')"
                         }
@@ -824,6 +811,65 @@
                   }
                 }
               }
+            },
+            "Case_RD-1": {
+              "case": "RD-1",
+              "actions": {
+                "Check_primary_contact_Laguage": {
+                  "actions": {
+                    "Send_an_email_-_English": {
+                      "runAfter": {},
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_office365",
+                          "operationId": "SendEmailV2",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                        },
+                        "parameters": {
+                          "emailMessage/To": "@variables('PrimaryContactEmail')",
+                          "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: Request to deactivate a Site.",
+                          "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nAnother organization is blocked within the TDG Online CID platform from adding a site as your organization has Site ID <strong></strong><strong>@{triggerBody()?['SiteId']}</strong><strong></strong> at that same location.<br>\n<br>\nIf that Site is part of a Sale or Transfer, or it should not be an active Site for your organization, or it should no longer have a status indicating that your organization still owns it, then please use the 'Deactivate Site' side-menu option to deactivate it. The other organization will be then be notified and then they will be able to proceed.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                          "emailMessage/Cc": "@variables('SecondaryContactsEmail')",
+                          "emailMessage/Importance": "Normal"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
+                  },
+                  "runAfter": {},
+                  "else": {
+                    "actions": {
+                      "Send_an_email_-_French": {
+                        "runAfter": {},
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_office365",
+                            "operationId": "SendEmailV2",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                          },
+                          "parameters": {
+                            "emailMessage/To": "@variables('PrimaryContactEmail')",
+                            "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TDG Online - CID: Request to deactivate a Site.",
+                            "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nAnother organization is blocked within the TDG Online CID platform from adding a site as your organization has Site ID <strong>@{triggerBody()?['SiteId']}</strong> at that same location.<br>\n<br>\nIf that Site is part of a Sale or Transfer, or it should not be an active Site for your organization, or it should no longer have a status indicating that your organization still owns it, then please use the 'Deactivate Site' side-menu option to deactivate it. The other organization will be then be notified and then they will be able to proceed.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                            "emailMessage/Cc": "@variables('SecondaryContactsEmail')",
+                            "emailMessage/Importance": "Normal"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      }
+                    }
+                  },
+                  "expression": {
+                    "equals": [
+                      "@first(body('Get_Account_Primary_Contact_By_Acc_Id')?['value'])?['cid_languageofcorrespondence']",
+                      918640001
+                    ]
+                  },
+                  "type": "If"
+                }
+              }
             }
           },
           "default": {
@@ -881,13 +927,13 @@
             }
           },
           "runAfter": {
-            "GetPrimary": [
-              "Succeeded"
-            ],
-            "Get_Parent_account_name": [
-              "Succeeded"
-            ],
             "List_rows_-_Get_all_Secondary_Contact": [
+              "Succeeded"
+            ],
+            "If_primary_contact_not_null_": [
+              "Succeeded"
+            ],
+            "Condition": [
               "Succeeded"
             ]
           },
@@ -903,7 +949,7 @@
         },
         "Initialize_variable_S1B_and_S2B_-_Contact_Infor": {
           "runAfter": {
-            "Initialize_variable_SecondaryContactsEmail": [
+            "Initialize_variable_PrimaryContactEmail": [
               "Succeeded"
             ]
           },
@@ -1220,6 +1266,188 @@
           },
           "metadata": {
             "operationMetadataId": "9be99f10-fa00-40ae-8580-da6ba08c2e07"
+          },
+          "type": "If"
+        },
+        "Initialize_variable_PrimaryContactEmail": {
+          "runAfter": {
+            "Initialize_variable_SecondaryContactsEmail": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e3ad0c7f-5ae0-46a8-b68d-0663d845c693"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "PrimaryContactEmail",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "If_secondary_contact_not_null_": {
+          "actions": {},
+          "runAfter": {
+            "Check_environment": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Get_Secondary": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "d357c557-f853-40ab-8d56-01878c9f05db"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps",
+                    "operationId": "GetItem",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "contacts",
+                    "recordId": "@triggerBody()?['Secondary_Contactid']"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@triggerBody()?['Secondary_Contactid']",
+              "@null"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6af18c29-916e-4279-abd4-bb7021731989"
+          },
+          "type": "If"
+        },
+        "If_primary_contact_not_null_": {
+          "actions": {},
+          "runAfter": {
+            "If_secondary_contact_not_null_": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "GetPrimary": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "75519be7-ee16-4c55-9d84-9aa3d594f183"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps",
+                    "operationId": "GetItem",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "contacts",
+                    "recordId": "@triggerBody()?['Primary_Contactid']"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@triggerBody()?['Primary_Contactid']",
+              "@null"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d47c5dc0-f2fe-4111-bf6b-5722e4ad7542"
+          },
+          "type": "If"
+        },
+        "Condition": {
+          "actions": {},
+          "runAfter": {
+            "Check_environment": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Get_Parent_account_name": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "4bf8ee07-0068-409b-a4ea-68cdc82fcab3"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps",
+                    "operationId": "GetItem",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "accounts",
+                    "recordId": "@triggerBody()?['AccountId']"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              },
+              "Get_Account_Primary_Contact_By_Acc_Id": {
+                "runAfter": {
+                  "Get_Parent_account_name": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "ca69d6df-0b5c-42fc-b59d-f824d413476d"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps_1",
+                    "operationId": "ListRecords",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "contacts",
+                    "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\" no-lock=\"false\">\n<entity name=\"contact\">\n<attribute name=\"firstname\"/>\n<attribute name=\"fullname\"/>\n<attribute name=\"emailaddress1\"/>\n<attribute name=\"cid_languageofcorrespondence\" />\n<attribute name=\"lastname\"/>\n<order attribute=\"cid_contacttype\" descending=\"false\"/>\n<order attribute=\"fullname\" descending=\"false\"/>\n<attribute name=\"contactid\"/>\n<filter type=\"and\">\n<condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\n<condition attribute=\"emailaddress1\" operator=\"not-null\"/>\n<condition attribute=\"parentcustomerid\" operator=\"eq\" value=\"@{triggerBody()?['AccountId']}\" />\n<condition attribute=\"cid_contacttype\" operator=\"eq\" value=\"100000000\"/>\n</filter>\n</entity>\n</fetch>"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              },
+              "Set_variable_PrimaryContactEmail": {
+                "runAfter": {
+                  "Get_Account_Primary_Contact_By_Acc_Id": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "ec5ea874-9807-47af-bae3-20ecaed09faa"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "PrimaryContactEmail",
+                  "value": "@{first(body('Get_Account_Primary_Contact_By_Acc_Id')?['value'])?['emailaddress1']}"
+                }
+              }
+            }
+          },
+          "expression": {
+            "not": {
+              "equals": [
+                "@triggerBody()?['AccountId']",
+                "@null"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "c2e76ab2-d547-419d-9b9a-edddd675ff43"
           },
           "type": "If"
         }

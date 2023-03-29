@@ -141,7 +141,7 @@
               "X-API-Key": "0514affb0b774176b484d20a0438b458"
             },
             "queries": {
-              "location": "@{triggerBody()?['Quarter']}- @{triggerBody()?['Section']}-@{triggerBody()?['TownShip']}-\n@{triggerBody()?['Range']}-@{triggerBody()?['Meridian']}"
+              "location": "@{triggerBody()?['Quarter']}-@{triggerBody()?['Section']}-@{triggerBody()?['TownShip']}-@{triggerBody()?['Range']}-@{triggerBody()?['Meridian']}"
             }
           }
         },
@@ -155,7 +155,8 @@
               "type": "Response",
               "kind": "Http",
               "inputs": {
-                "statusCode": 201
+                "statusCode": 201,
+                "body": "Not found"
               }
             }
           },
@@ -166,16 +167,71 @@
           },
           "else": {
             "actions": {
-              "Response_LLD_found_": {
+              "Province": {
                 "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "924e283b-91dc-4cb0-9198-33fd8331e749"
+                },
+                "type": "Compose",
+                "inputs": "@body('HTTP_-_all_LLD_converter_API')?['features'][1]['properties']['province']"
+              },
+              "Response_LLD_found_": {
+                "runAfter": {
+                  "ProvinceCode": [
+                    "Succeeded"
+                  ]
+                },
                 "metadata": {
                   "operationMetadataId": "463f2881-cfc4-49e2-944a-3119b1600dc7"
                 },
                 "type": "Response",
                 "kind": "Http",
                 "inputs": {
-                  "statusCode": 200
+                  "statusCode": 200,
+                  "headers": {
+                    "Province": "@{outputs('ProvinceCode')}"
+                  },
+                  "body": "@outputs('ProvinceCode')"
                 }
+              },
+              "Filter_Province_array": {
+                "runAfter": {
+                  "Province": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "1a4de2d3-c2c6-40c6-b918-b0ffe6a40849"
+                },
+                "type": "Query",
+                "inputs": {
+                  "from": "@variables('ProvinceList')",
+                  "where": "@contains(item()['Province'], outputs('Province'))"
+                }
+              },
+              "ProvinceIndex": {
+                "runAfter": {
+                  "Filter_Province_array": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "17ad5f56-7123-4860-bd1a-a355cb03e3a0"
+                },
+                "type": "Compose",
+                "inputs": "@body('Filter_Province_array')[0]['index']"
+              },
+              "ProvinceCode": {
+                "runAfter": {
+                  "ProvinceIndex": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "b7de7b72-45b0-4788-8ce8-354224c4d44c"
+                },
+                "type": "Compose",
+                "inputs": "@body('Filter_Province_array')[0]['ProvinceCode']"
               }
             }
           },
@@ -193,7 +249,7 @@
       },
       "outputs": {}
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
