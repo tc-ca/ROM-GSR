@@ -76,12 +76,6 @@ $(document).ready(function () {
 	else
 	{
 		var complianceCompletionDate = new Date(annualComplianceCompletionDate);
-
-		var newDate = new Date();
-
-		if(new Date(anniversaryDate).getDate() + 30 > newDate.getDate()){
-			//alert("test");
-		}
 	}
 
 	$("#cid_iscompanyattested").prop("checked", false);
@@ -178,13 +172,27 @@ checkAnuualComplianceEligibility = function (anniversaryDate) {
 		return true;
 	}
 	else {
-		var today = new Date();
-		//anniversaryDate = new Date(today.getFullYear(), anniversaryDate.getMonth(), anniversaryDate.getDate())
-		//if (anniversaryDate > today) anniversaryDate = new Date(anniversaryDate.getFullYear() - 1, anniversaryDate.getMonth(), anniversaryDate.getDate());
-		var dateDiff = Math.floor((Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) - Date.UTC(anniversaryDate.getFullYear(), anniversaryDate.getMonth(), anniversaryDate.getDate())) / (1000 * 60 * 60 * 24))
-		if (dateDiff > 30 || dateDiff < -30) { //Annual Compliance Update can only be completed on or 30 days within the Company’s Anniversary Date each year
+		var todayDateObject = new Date();
+		var thirtyDaysBeforeAnniversaryDate = new Date(anniversaryDate);
+		thirtyDaysBeforeAnniversaryDate.setDate(thirtyDaysBeforeAnniversaryDate.getDate() - 30);
+		
+		var thirtyDaysAfterAnniversaryDate = new Date(anniversaryDate);
+		thirtyDaysAfterAnniversaryDate.setDate(thirtyDaysAfterAnniversaryDate.getDate() + 30);	
+
+		//alert("Today: " + todayDateObject + " - 30 before Anniversary date " + thirtyDaysBeforeAnniversaryDate + " - 30 after Anniversary date " + thirtyDaysAfterAnniversaryDate);
+
+		if(todayDateObject < thirtyDaysBeforeAnniversaryDate || todayDateObject > thirtyDaysAfterAnniversaryDate){
 			return true;
 		}
+		else{
+			$("#UpdateButton").val("Re-Submit Previous Annual Compliance Update");
+		}
+
+		//var today = new Date();
+		//var dateDiff = Math.floor((Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) - Date.UTC(anniversaryDate.getFullYear(), anniversaryDate.getMonth(), anniversaryDate.getDate())) / (1000 * 60 * 60 * 24))
+		//if (dateDiff > 30 || dateDiff < -30) { //Annual Compliance Update can only be completed on or 30 days within the Company’s Anniversary Date each year
+		//	return true;
+		//}
 	}
 	return false;
 }

@@ -80,7 +80,7 @@ $(document).ready(function () {
 	document.getElementById("address1_longitude").addEventListener('change', (event) => {
 		//get Lontitude and set it to nearest 4 digits
 		var Longtitude = $("#address1_longitude").val();
-		$("#address1_longitude").val(Number.parseFloat(Longtitude).toFixed(4));
+		//$("#address1_longitude").val(Number.parseFloat(Longtitude).toFixed(4));
 	});
 
 	// address
@@ -174,28 +174,13 @@ function cid_same_as_company_change() {
 if (window.jQuery) {
 	(function ($) {
 		webFormClientValidate = function () {
-		   $('#ErrorMessageDiv').css('display', 'none');
+		$('#ErrorMessageDiv').css('display', 'none');
 		var Lat = $("#address1_latitude").val();
-		
-	    var decimalIndex = Lat.toString().indexOf(".");
-		
-		 if (decimalIndex < 0) {
-			 return false ;
-             
-            } else {
-               var numberofdecimal =  Lat.toString().split('.')[1].length;
-			   if ( numberofdecimal != 4)
-			   {
-				    $('#ErrorMessageDiv').css('display', 'block');
-                    $('#ErrorMessageDiv').html("<h3>Error</h3> <p>Please enter a Latitude as a decimal, with the full four digit decimal point (e.g. 41.3251)</p>");
-				
+		var Longtitude = $("#address1_longitude").val();
 
-				  return false;
-			   }
-			   else{
-				   return true;
-			   }
-			}
+		return true;
+		
+	
 
 			
 		}
@@ -251,5 +236,7 @@ var language = sessionStorage.getItem("selected_language");
 				+  "<p>" + value + "</p>";
             } catch (e) { }
         }
+
+
 
    
