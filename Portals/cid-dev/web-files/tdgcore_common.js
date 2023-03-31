@@ -1560,7 +1560,7 @@ if (typeof (tdg.cid) == "undefined") {
                 tdg.c.removeValidator("address1_postalcode");
 
                 // legal land description
-                //tdg.c.removeValidator("ovs_lld_quarter");
+                tdg.c.removeValidator("ovs_lld_quarter");
                 tdg.c.removeValidator("ovs_lld_section");
                 tdg.c.removeValidator("ovs_lld_township");
                 tdg.c.removeValidator("ovs_lld_range");
@@ -2885,6 +2885,3 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
-
-
-

@@ -73,17 +73,13 @@ $(document).ready(function () {
 	{
 		$('#cid_annualcompliancecompletiondate').parent().parent().prop("hidden", true);
 	}
-	else
-	{
-		var complianceCompletionDate = new Date(annualComplianceCompletionDate);
-	}
 
 	$("#cid_iscompanyattested").prop("checked", false);
 
 
 	var complianceReadonly = true;
 	if (anniversaryDate != null && anniversaryDate != "") {
-		complianceReadonly = checkAnuualComplianceEligibility(new Date(anniversaryDate));
+		complianceReadonly = checkAnuualComplianceEligibility(new Date(anniversaryDate), annualComplianceCompletionDate);
 	}
 	if (complianceReadonly) {
 		validation = false;
@@ -165,7 +161,7 @@ $(document).ready(function () {
 	}
 });
 
-checkAnuualComplianceEligibility = function (anniversaryDate) {
+checkAnuualComplianceEligibility = function (anniversaryDate, annualComplianceCompletionDate) {
 	debugger;
 	if (anniversaryDate == null || anniversaryDate == "") {
 		//show error message and hide  annual complience 
@@ -179,13 +175,18 @@ checkAnuualComplianceEligibility = function (anniversaryDate) {
 		var thirtyDaysAfterAnniversaryDate = new Date(anniversaryDate);
 		thirtyDaysAfterAnniversaryDate.setDate(thirtyDaysAfterAnniversaryDate.getDate() + 30);	
 
-		//alert("Today: " + todayDateObject + " - 30 before Anniversary date " + thirtyDaysBeforeAnniversaryDate + " - 30 after Anniversary date " + thirtyDaysAfterAnniversaryDate);
-
+		
 		if(todayDateObject < thirtyDaysBeforeAnniversaryDate || todayDateObject > thirtyDaysAfterAnniversaryDate){
 			return true;
 		}
 		else{
-			$("#UpdateButton").val("Re-Submit Previous Annual Compliance Update");
+			if (annualComplianceCompletionDate != null || annualComplianceCompletionDate != ""){
+				var annualComplianceCompletionDateObject = new Date(annualComplianceCompletionDate);
+
+				if(annualComplianceCompletionDateObject >= thirtyDaysBeforeAnniversaryDate && annualComplianceCompletionDateObject <= thirtyDaysAfterAnniversaryDate){				
+					$("#UpdateButton").val("Re-Submit Previous Annual Compliance Update");
+				}
+			}
 		}
 
 		//var today = new Date();

@@ -868,6 +868,16 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000142",
                         "message_en": "<p>Please be aware that the entered date is in the future.</p>",
                         "message_fr": "<p>Please be aware that the entered date is in the future._FR</p>"
+                    },
+                      {
+                        "code": "m000143",
+                        "message_en": "Please enter a Latitude as a decimal, with the full four digit decimal point (e.g. 41.3251).",
+                        "message_fr": "Please enter a Latitude as a decimal, with the full four digit decimal point (e.g. 41.3251)._FR"
+                    },
+                     {
+                        "code": "m000144",
+                        "message_en": "Please enter a Longitude as a decimal, with the full four digit decimal point (e.g. -74.7992).",
+                        "message_fr": "Please enter a Longitude as a decimal, with the full four digit decimal point (e.g. -74.7992)._FR"
                     }
                 ];
 

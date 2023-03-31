@@ -1,6 +1,8 @@
 // CreateSite.js
 $(document).ready(function () {
     debugger;
+    $("#EntityFormPanel").before('<div id="ErrorMessageDiv" class="alert alert-danger" role="alert" style="display: none;">  </div>');
+
     $("#createdon").closest("tr").hide();
     $("#cid_createdbyregistrant_label").closest("tr").hide();
     if (sessionStorage.getItem('frominyearsites') == "true" || sessionStorage.getItem('fromannualcompliance') == 'true') {
@@ -81,12 +83,21 @@ if (window.jQuery) {
                             // lat/long
                             var latitude = $("#address1_latitude").val();
                             var longitude = $("#address1_longitude").val();
+                            $('#ErrorMessageDiv').css('display', 'none');
+                            var checkresult =  CheckLatLongDecimal ();
+                            if (checkresult == false)
+                            {
+                                
+                                return false;
+                            }
+                            else
+                            {
 
                             var parameters = {};
                             parameters.Parent_Id = account_id; // Edm.String
                             parameters.AddressType = 2; // Edm.Int32
-                            if (latitude != (null || "")) { parameters.Address1_Latitude = parseFloat(latitude).toFixed(4); }   // Edm.Float                    
-                            if (longitude != (null || "")) { parameters.Address1_Longitude = parseFloat(longitude).toFixed(4); }   // Edm.Float    
+                             if (latitude != (null || "")) { parameters.Address1_Latitude = parseFloat(latitude).toFixed(4); }   // Edm.Float                    
+                             if (longitude != (null || "")) { parameters.Address1_Longitude = parseFloat(longitude).toFixed(4); }   // Edm.Float    
 
                             var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
                             var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
@@ -96,7 +107,9 @@ if (window.jQuery) {
                                 return CheckDuplicate(FlowURL, parameters);
                             }
                             else
-                                return true;
+                               { return true;}
+
+                            }
 
                             break;
 
@@ -208,4 +221,42 @@ var CheckDuplicate = function (_flowURl, _parameters) {
         } //end ready status
     }; //end on ready function
     req.send(JSON.stringify(_parameters));
+}
+
+function CheckLatLongDecimal() {
+	var Lat = $("#address1_latitude").val();
+	var Longtitude = $("#address1_longitude").val();
+	var decimalIndexLat = Lat.toString().indexOf(".");
+	var decimalIndexLong = Longtitude.toString().indexOf(".");
+	var error = "";
+	var checkResult = true;
+	//check latitude
+	//m000143
+    var m000143 = "<p>" +	tdg.error_message.message("m000143") + "</p>";
+	var m000144 = "<p>" +	tdg.error_message.message("m000144")  + "</p>";
+	if (decimalIndexLat < 0) {checkResult = false;
+	error = m000143;}
+	else {
+		var numberofdecimal = Lat.toString().split('.')[1].length;
+		if (numberofdecimal != 4) {
+			error = m000143;
+			//"<p>Please enter a Latitude as a decimal, with the full four digit decimal point (e.g. 41.3251)</p>";
+			checkResult = false;
+		}}
+
+	//check longtitude
+	if (decimalIndexLong < 0) {checkResult = false;
+	error  = error + m000144;}
+	else {
+		var Longtitudenumberofdecimal = Longtitude.toString().split('.')[1].length;
+		if (Longtitudenumberofdecimal != 4) {
+			error = error +  m000144;
+			//"<p>Please enter a Longitude as a decimal, with the full four digit decimal point (e.g. -74.7992)</p>";
+			checkResult = false;}}
+
+	if (checkResult == false) {
+		$('#ErrorMessageDiv').css('display', 'block');
+		$('#ErrorMessageDiv').html("<h3>Error</h3>" + error);
+    }
+	return checkResult;
 }

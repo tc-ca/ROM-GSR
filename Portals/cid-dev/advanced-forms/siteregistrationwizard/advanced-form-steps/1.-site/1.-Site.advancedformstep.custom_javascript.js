@@ -236,20 +236,27 @@ function CheckLatLongDecimal() {
 	var error = "";
 	var checkResult = true;
 	//check latitude
-	if (decimalIndexLat < 0) {checkResult = false;}
+	//m000143
+    var m000143 = "<p>" +	tdg.error_message.message("m000143") + "</p>";
+	var m000144 = "<p>" +	tdg.error_message.message("m000144")  + "</p>";
+	if (decimalIndexLat < 0) {checkResult = false;
+	error = m000143;}
 	else {
 		var numberofdecimal = Lat.toString().split('.')[1].length;
 		if (numberofdecimal != 4) {
-			error = "<p>Please enter a Latitude as a decimal, with the full four digit decimal point (e.g. 41.3251)</p>";
+			error = m000143;
+			//"<p>Please enter a Latitude as a decimal, with the full four digit decimal point (e.g. 41.3251)</p>";
 			checkResult = false;
 		}}
 
 	//check longtitude
-	if (decimalIndexLong < 0) {checkResult = false;}
+	if (decimalIndexLong < 0) {checkResult = false;
+	error  = error + m000144;}
 	else {
 		var Longtitudenumberofdecimal = Longtitude.toString().split('.')[1].length;
 		if (Longtitudenumberofdecimal != 4) {
-			error = error + "<p>Please enter a Longitude as a decimal, with the full four digit decimal point (e.g. -74.7992)</p>";
+			error = error +  m000144;
+			//"<p>Please enter a Longitude as a decimal, with the full four digit decimal point (e.g. -74.7992)</p>";
 			checkResult = false;}}
 
 	if (checkResult == false) {
