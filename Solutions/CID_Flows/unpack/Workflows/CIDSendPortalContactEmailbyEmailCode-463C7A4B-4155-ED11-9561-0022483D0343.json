@@ -933,7 +933,7 @@
             "If_primary_contact_not_null_": [
               "Succeeded"
             ],
-            "Condition": [
+            "If_AccountId_is_not_null": [
               "Succeeded"
             ]
           },
@@ -1370,73 +1370,70 @@
           },
           "type": "If"
         },
-        "Condition": {
-          "actions": {},
+        "If_AccountId_is_not_null": {
+          "actions": {
+            "Get_Parent_account_name": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "4bf8ee07-0068-409b-a4ea-68cdc82fcab3"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "recordId": "@triggerBody()?['AccountId']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Get_Account_Primary_Contact_By_Acc_Id": {
+              "runAfter": {
+                "Get_Parent_account_name": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "ca69d6df-0b5c-42fc-b59d-f824d413476d"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "contacts",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\" no-lock=\"false\">\n<entity name=\"contact\">\n<attribute name=\"firstname\"/>\n<attribute name=\"fullname\"/>\n<attribute name=\"emailaddress1\"/>\n<attribute name=\"cid_languageofcorrespondence\" />\n<attribute name=\"lastname\"/>\n<order attribute=\"cid_contacttype\" descending=\"false\"/>\n<order attribute=\"fullname\" descending=\"false\"/>\n<attribute name=\"contactid\"/>\n<filter type=\"and\">\n<condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\n<condition attribute=\"emailaddress1\" operator=\"not-null\"/>\n<condition attribute=\"parentcustomerid\" operator=\"eq\" value=\"@{triggerBody()?['AccountId']}\" />\n<condition attribute=\"cid_contacttype\" operator=\"eq\" value=\"100000000\"/>\n</filter>\n</entity>\n</fetch>"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Set_variable_PrimaryContactEmail": {
+              "runAfter": {
+                "Get_Account_Primary_Contact_By_Acc_Id": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "ec5ea874-9807-47af-bae3-20ecaed09faa"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "PrimaryContactEmail",
+                "value": "@{first(body('Get_Account_Primary_Contact_By_Acc_Id')?['value'])?['emailaddress1']}"
+              }
+            }
+          },
           "runAfter": {
             "Check_environment": [
               "Succeeded"
             ]
-          },
-          "else": {
-            "actions": {
-              "Get_Parent_account_name": {
-                "runAfter": {},
-                "metadata": {
-                  "operationMetadataId": "4bf8ee07-0068-409b-a4ea-68cdc82fcab3"
-                },
-                "type": "OpenApiConnection",
-                "inputs": {
-                  "host": {
-                    "connectionName": "shared_commondataserviceforapps",
-                    "operationId": "GetItem",
-                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                  },
-                  "parameters": {
-                    "entityName": "accounts",
-                    "recordId": "@triggerBody()?['AccountId']"
-                  },
-                  "authentication": "@parameters('$authentication')"
-                }
-              },
-              "Get_Account_Primary_Contact_By_Acc_Id": {
-                "runAfter": {
-                  "Get_Parent_account_name": [
-                    "Succeeded"
-                  ]
-                },
-                "metadata": {
-                  "operationMetadataId": "ca69d6df-0b5c-42fc-b59d-f824d413476d"
-                },
-                "type": "OpenApiConnection",
-                "inputs": {
-                  "host": {
-                    "connectionName": "shared_commondataserviceforapps_1",
-                    "operationId": "ListRecords",
-                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                  },
-                  "parameters": {
-                    "entityName": "contacts",
-                    "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\" no-lock=\"false\">\n<entity name=\"contact\">\n<attribute name=\"firstname\"/>\n<attribute name=\"fullname\"/>\n<attribute name=\"emailaddress1\"/>\n<attribute name=\"cid_languageofcorrespondence\" />\n<attribute name=\"lastname\"/>\n<order attribute=\"cid_contacttype\" descending=\"false\"/>\n<order attribute=\"fullname\" descending=\"false\"/>\n<attribute name=\"contactid\"/>\n<filter type=\"and\">\n<condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\n<condition attribute=\"emailaddress1\" operator=\"not-null\"/>\n<condition attribute=\"parentcustomerid\" operator=\"eq\" value=\"@{triggerBody()?['AccountId']}\" />\n<condition attribute=\"cid_contacttype\" operator=\"eq\" value=\"100000000\"/>\n</filter>\n</entity>\n</fetch>"
-                  },
-                  "authentication": "@parameters('$authentication')"
-                }
-              },
-              "Set_variable_PrimaryContactEmail": {
-                "runAfter": {
-                  "Get_Account_Primary_Contact_By_Acc_Id": [
-                    "Succeeded"
-                  ]
-                },
-                "metadata": {
-                  "operationMetadataId": "ec5ea874-9807-47af-bae3-20ecaed09faa"
-                },
-                "type": "SetVariable",
-                "inputs": {
-                  "name": "PrimaryContactEmail",
-                  "value": "@{first(body('Get_Account_Primary_Contact_By_Acc_Id')?['value'])?['emailaddress1']}"
-                }
-              }
-            }
           },
           "expression": {
             "not": {
