@@ -296,7 +296,6 @@
         return hasRole;
     }
 
-
     function isCurrentUserSystemAdministrator() {
         let currentUserRoles = getGlobalContext().userSettings.roles.getAll();
         if (currentUserRoles && currentUserRoles.find(r => r.name === "System Administrator")) return true;
@@ -716,6 +715,38 @@
 
     }
 
+    /****************************************************************************************
+    COMPARISON
+    ****************************************************************************************/
+
+    /**
+     * Return result of comparison
+     * @param {any} dateToValidate
+     * @param {any: if not set, Today is the default value} today
+     */
+    function isAfterDate(dateToValidate, today = new Date().setHours(0, 0, 0)) {
+
+        var dtv = new Date(dateToValidate).setHours(0, 0, 0);
+
+        return dtv > today;
+    }
+
+    function isBeforeDate(dateToValidate, dateEnd) {
+
+        var dtv = new Date(dateToValidate).setHours(0, 0, 0);
+        var end = new Date(dateEnd).setHours(0, 0, 0);
+
+        return dtv < end;
+    }
+
+    function isInDateRange(dateToValidate, dateStart, dateEnd) {
+
+        var dtv = new Date(dateToValidate).setHours(0, 0, 0);
+        var strt = new Date(dateStart).setHours(0, 0, 0);
+        var end = new Date(dateEnd).setHours(0, 0, 0);
+
+        return (dtv < end) && (dtv > strt);
+    }
 
     /****************************************************************************************
     MOBILE 
@@ -910,6 +941,9 @@
         generateUniqueIdString: generateUniqueIdString,
         DisplayFormNotificationModern: DisplayFormNotificationModern,
         ClearFormNotificationModern: ClearFormNotificationModern,
+        isAfterDate: isAfterDate,
+        isBeforeDate: isBeforeDate,
+        isInDateRange: isInDateRange,
     };
 
     //********************public methods end***************

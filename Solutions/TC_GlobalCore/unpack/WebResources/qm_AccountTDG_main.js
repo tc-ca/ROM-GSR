@@ -1,4 +1,4 @@
-///<reference path="../../Utilities/GlobalHelper.js"/>
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
 ///<reference path="../../Utilities/questionnaireFunctions.js"/>
 
 var AccountTDGmain = (function (window, document) {
@@ -165,6 +165,11 @@ var AccountTDGmain = (function (window, document) {
             var formName = formContext.ui.formSelector.getCurrentItem().getLabel();
             var langId = Xrm.Utility.getGlobalContext().userSettings.languageId;
 
+            //Hide customer type
+            glHelper.SetRequiredLevel(formContext, "customertypecode", false);
+            glHelper.SetControlVisibility(formContext, "customertypecode", false);
+
+
             if (langId == 1033)
             {
                 if (formName == "Site")
@@ -187,11 +192,32 @@ var AccountTDGmain = (function (window, document) {
                     glHelper.SetRequiredLevel(formContext, "customertypecode", false);
                     glHelper.SetControlVisibility(formContext, "customertypecode", false);
 
+                    if (formType == 1)
+                        glHelper.SetValue(formContext, "customertypecode", 948010001);
+
                 }
                 else if (formName == "Company")
                 {
                     glHelper.SetRequiredLevel(formContext, "parentaccountid", false);
                     glHelper.SetControlVisibility(formContext, "parentaccountid", false);
+
+                    glHelper.SetControlVisibility(formContext, "customertypecode", false);
+
+                    if (formType == 1)
+                        glHelper.SetValue(formContext, "customertypecode", 948010000);
+
+                    if (!glHelper.hasCurrentUserRole("System Administrator") && 
+                        (
+                        (glHelper.hasCurrentUserRole("TDG Inspector")) ||
+                        (glHelper.hasCurrentUserRole("TDG Analyst")) ||
+                        (glHelper.hasCurrentUserRole("TDG Manager"))
+                        ) 
+                      )
+                    {
+                        glHelper.SetControlReadOnly(formContext, "cid_crabusinessnumber",true);
+                    }
+
+
                 }
             }
             else if (langId == 1036)
@@ -210,11 +236,30 @@ var AccountTDGmain = (function (window, document) {
 
                     glHelper.SetRequiredLevel(formContext, "customertypecode", false);
                     glHelper.SetControlVisibility(formContext, "customertypecode", false);
+
+                    if (formType == 1)
+                        glHelper.SetValue(formContext, "customertypecode", 948010001);
                 }
                 else if (formName == "Organisations TMD")
                 {
                     glHelper.SetRequiredLevel(formContext, "parentaccountid", false);
                     glHelper.SetControlVisibility(formContext, "parentaccountid", false);
+
+                    glHelper.SetControlVisibility(formContext, "customertypecode", false);
+
+                    if (formType == 1)
+                        glHelper.SetValue(formContext, "customertypecode", 948010000);
+
+                    if (!glHelper.hasCurrentUserRole("System Administrator") &&
+                        (
+                            (glHelper.hasCurrentUserRole("TDG Inspector")) ||
+                            (glHelper.hasCurrentUserRole("TDG Analyst")) ||
+                            (glHelper.hasCurrentUserRole("TDG Manager"))
+                        )
+                    )
+                    {
+                        glHelper.SetControlReadOnly(formContext, "cid_crabusinessnumber", true);
+                    }
                 }
             }
 

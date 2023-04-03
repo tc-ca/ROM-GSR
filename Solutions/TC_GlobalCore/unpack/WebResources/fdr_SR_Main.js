@@ -19,6 +19,7 @@ var SR_main = (function (window, document) {
     var serviceRquestType;
     var serviceRquestTypeOptions;
     var isStatusChanged;
+    var statusPre;
     var doRefresh;
     var operationStatus;
     var excludedRegTypeIDs = new Array();
@@ -592,7 +593,7 @@ var SR_main = (function (window, document) {
             //set global values
             SR_status = glHelper.GetOptionsetValue(formContext, "statuscode");
             SR_state = glHelper.GetOptionsetValue(formContext, "statecode");
-
+            statusPre = SR_status;
 
             //Manage hide/show based on status
             SetStateDependantVisibility(formContext);
@@ -610,6 +611,14 @@ var SR_main = (function (window, document) {
             var site = formContext.getAttribute("fdr_site");
             site.removeOnChange(SR_main.OnSite_Change);
             site.addOnChange(SR_main.OnSite_Change);
+
+            var submissionDate = formContext.getAttribute("fdr_submissiondate");
+            submissionDate.removeOnChange(SR_main.SubmissionDate_Change);
+            submissionDate.addOnChange(SR_main.SubmissionDate_Change);
+
+            var infoReceivedOn = formContext.getAttribute("fdr_inforeceivedon");
+            infoReceivedOn.removeOnChange(SR_main.InfoReveivedOn_Change);
+            infoReceivedOn.addOnChange(SR_main.InfoReveivedOn_Change);
 
             var operation = formContext.getAttribute("fdr_operation");
             operation.removeOnChange(SR_main.OnOperation_Change);
@@ -659,6 +668,23 @@ var SR_main = (function (window, document) {
             SR_status = glHelper.GetOptionsetValue(formContext, "statuscode");
             SR_state = glHelper.GetOptionsetValue(formContext, "statecode");
 
+            //Info recieved on 
+            if (statusPre != null && statusPre != undefined && statusPre != SR_status) {
+
+                //we move from info to review status
+                glHelper.SetControlVisibility(formContext, "header_fdr_inforeceivedon", (statusPre == 794600000 || statusPre == 794600011 || statusPre == 794600012));
+                glHelper.SetRequiredLevel(formContext, "fdr_inforeceivedon", (statusPre == 794600000 || statusPre == 794600011 || statusPre == 794600012));
+
+                //if moves from Review to Info statuses - clear Info recieved date
+                if (statusPre == 794600000 || statusPre == 794600011 || statusPre == 794600012)
+                    glHelper.SetValue(formContext, "fdr_inforeceivedon", null);
+
+
+                //    //if moves from Review to Info statuses - clear Info recieved date
+                //    if (statusPre == 794600002 || statusPre == 794600006 || statusPre == 794600004) {
+                //        glHelper.SetValue(formContext, "fdr_inforeceivedon", null);
+                //    }
+            }
             //no reg type => means submitted or draft => shall not define status
             if (serviceRquestType == null || serviceRquestType == undefined) return;
 
@@ -863,6 +889,31 @@ var SR_main = (function (window, document) {
 
 
             globalFormContext.getControl("fdr_containertype").addCustomFilter(filter, "fdr_containertype");
+        },
+
+        SubmissionDate_Change: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+            var currentValue = glHelper.GetValue(formContext, "fdr_submissiondate");
+            if (glHelper.isAfterDate(currentValue)) {
+
+                glHelper.SetValue(formContext, "fdr_submissiondate", null);
+                Xrm.Navigation.openErrorDialog({ message: "Submission Date cannot be a future date!" });
+            }
+
+        },
+
+        InfoReveivedOn_Change: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+            var currentValue = glHelper.GetValue(formContext, "fdr_inforeceivedon");
+            var submissionDate = glHelper.GetValue(formContext, "fdr_submissiondate");
+
+            if (!glHelper.isInDateRange(currentValue, submissionDate, new Date())){
+
+                glHelper.SetValue(formContext, "fdr_inforeceivedon", null);
+                Xrm.Navigation.openErrorDialog({ message: "Date in the 'Info Received On' field cannot be a future date or earlier than Submission Date (" + (submissionDate.getMonth() + 1) + "/" + submissionDate.getDate() + "/" + submissionDate.getFullYear() + ")"});
+            }
         },
 
         //the on save event will refresh if the statuscode ATTRIBUTE is dirty

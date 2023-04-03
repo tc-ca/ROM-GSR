@@ -31,7 +31,7 @@ function setInUseLocDisplayName(executionContext) {
 
 function display_Legalname_CompanyLoolkup(executionContext) {
     debugger;
-    language =
+   // language =
         console.log("inside function company lookup");
     var formContext = executionContext.getFormContext();
     var attrInUseLocName = formContext.getAttribute("ovs_company");
@@ -43,6 +43,30 @@ function display_Legalname_CompanyLoolkup(executionContext) {
                 function success(result) {
                     debugger;
                     valueInUseLocName[0].name = result.ovs_legalname;
+                    attrInUseLocName.setValue(valueInUseLocName);
+
+                },
+                function (error) {
+                    console.log(error.message);
+                }
+            );
+    }
+}
+
+function display_SiteID(executionContext) {
+    debugger;
+    // language =
+    console.log("inside function for site id");
+    var formContext = executionContext.getFormContext();
+    var attrInUseLocName = formContext.getAttribute("ovs_site");
+    var valueInUseLocName = attrInUseLocName == null ? null : attrInUseLocName.getValue();
+
+    if (valueInUseLocName != null) {
+        Xrm.WebApi.retrieveRecord("account", valueInUseLocName[0].id,
+            "?$select=ovs_romid").then(
+                function success(result) {
+                    debugger;
+                    valueInUseLocName[0].name = result.ovs_romid;
                     attrInUseLocName.setValue(valueInUseLocName);
 
                 },

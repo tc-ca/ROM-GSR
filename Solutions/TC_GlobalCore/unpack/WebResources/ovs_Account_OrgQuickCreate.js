@@ -38,8 +38,12 @@ var OrgQuickCreate = (function (window, document) {
 
             var formContext = executionContext.getFormContext();
 
+            glHelper.SetValue(formContext, "customertypecode", 948010001);
+
             //filter Relationship Type
             filter_customertypecode(formContext);
+
+            
 
             //var rTypeCode = formContext.getAttribute("customertypecode");
             //rTypeCode.removeOnChange(OrgQuickCreate.relationShip_OnChange); // avoid binding multiple event handlers

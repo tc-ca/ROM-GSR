@@ -110,6 +110,8 @@ var AccountFDRmain = (function (window, document) {
     function setFormUsage(formContext)
     {
         //ROM - Force the selection of a company when site is created
+        // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+        formType = glHelper.GetFormType(formContext);
 
         var formName = formContext.ui.formSelector.getCurrentItem().getLabel();
         var langId = Xrm.Utility.getGlobalContext().userSettings.languageId;
@@ -124,18 +126,27 @@ var AccountFDRmain = (function (window, document) {
                 //Company specific fields are not required and hidden
                 glHelper.SetRequiredLevel(formContext, "ovs_legalname", false);
                 glHelper.SetRequiredLevel(formContext, "ovs_legalnamefr", false);
+                glHelper.SetRequiredLevel(formContext, "name", false);
+                glHelper.SetRequiredLevel(formContext, "ovs_namefr", false);
 
                 glHelper.SetControlVisibility(formContext, "ovs_legalname", false);
                 glHelper.SetControlVisibility(formContext, "ovs_legalnamefr", false);
+                glHelper.SetControlVisibility(formContext, "name", false);
+                glHelper.SetControlVisibility(formContext, "ovs_namefr", false);
 
                 glHelper.SetRequiredLevel(formContext, "customertypecode", false);
                 glHelper.SetControlVisibility(formContext, "customertypecode", false);
+                if (formType == 1)
+                    glHelper.SetValue(formContext, "customertypecode", 948010001);
 
             }
             else if (formName == "FDR Organization")
             {
                 glHelper.SetRequiredLevel(formContext, "parentaccountid", false);
                 glHelper.SetControlVisibility(formContext, "parentaccountid", false);
+
+                if (formType == 1)
+                    glHelper.SetValue(formContext, "customertypecode", 948010000);
             }
         }
         else if (langId == 1036)
@@ -154,11 +165,17 @@ var AccountFDRmain = (function (window, document) {
 
                 glHelper.SetRequiredLevel(formContext, "customertypecode", false);
                 glHelper.SetControlVisibility(formContext, "customertypecode", false);
+
+                if (formType == 1)
+                    glHelper.SetValue(formContext, "customertypecode", 948010001);
             }
             else if (formName == "RIC organisations")
             {
                 glHelper.SetRequiredLevel(formContext, "parentaccountid", false);
                 glHelper.SetControlVisibility(formContext, "parentaccountid", false);
+
+                if (formType == 1)
+                    glHelper.SetValue(formContext, "customertypecode", 948010000);
             }
         }
     }
@@ -187,7 +204,7 @@ var AccountFDRmain = (function (window, document) {
             var Street1 = formContext.getAttribute("address1_line1");
             Street1.removeOnChange(AccountFDRmain.Stree1_OnChange); 
             Street1.addOnChange(AccountFDRmain.Stree1_OnChange);
-            
+
             if (formType > 1) {
 
                 rTypeCode.fireOnChange();
