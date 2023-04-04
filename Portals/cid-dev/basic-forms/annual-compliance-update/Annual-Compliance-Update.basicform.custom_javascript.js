@@ -7,6 +7,7 @@ $(document).ready(function () {
 	page_setup();
 
 	tdg.c.page_instructions("page_annual_compliance_update");
+	$(".workflow-link").addClass("hidden");
 
 	$(".entity-grid").on("loaded", function () {
 		$("#CompanyCompleteAll").attr("style", "width:185px");
@@ -184,7 +185,12 @@ checkAnuualComplianceEligibility = function (anniversaryDate, annualComplianceCo
 				var annualComplianceCompletionDateObject = new Date(annualComplianceCompletionDate);
 
 				if(annualComplianceCompletionDateObject >= thirtyDaysBeforeAnniversaryDate && annualComplianceCompletionDateObject <= thirtyDaysAfterAnniversaryDate){				
-					$("#UpdateButton").val("Re-Submit Previous Annual Compliance Update");
+					//$("#UpdateButton").val("Re-Submit Previous Annual Compliance Update");
+					$("#UpdateButton").addClass("hidden");
+					$(".workflow-link").removeClass("hidden");
+
+					//$(".instructions").addClass("hidden");
+					tdg.c.page_instructions("page_annual_compliance_resubmit");
 				}
 			}
 		}

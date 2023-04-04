@@ -226,6 +226,13 @@ if (typeof (tdg.message) == "undefined") {
                 "2- Read and agree to the terms of service agreement and select the 'Attestation' section.</br>" +
                 "3- When complete, select the <b>[Finalize Annual Compliance]</b> option._FR";
 
+			var page_annual_compliance_resubmit_EN = "1- The next Annual Compliance Update can only be completed as early as 30 days before your Company’s Anniversary Date of {0}.</br>" +
+                "2- If it is required to re-submit the previous Annual Compliance, then please choose the <b>[Re-Submit Annual Compliance Update]</b> button below.</br>" +
+                "3- Note that the Annual Compliance should only be re-submitted if new data, or a date update, related to previous year that this Annual Compliance covers, was missed in the previous Compliance Update. </br>Any additions, or updates, that took place after the last Annual Compliance Completion Date of {1} should instead be done as regular in-year updates.";
+            var page_annual_compliance_resubmit_FR = "1- The next Annual Compliance Update can only be completed as early as 30 days before your Company’s Anniversary Date of {0}.</br>" +
+                "2- If it is required to re-submit the previous Annual Compliance, then please choose the <b>[Re-Submit Annual Compliance Update]</b> button below.</br>" +
+                "3- Note that the Annual Compliance should only be re-submitted if new data, or a date update, related to previous year that this Annual Compliance covers, was missed in the previous Compliance Update. </br>Any additions, or updates, that took place after the last Annual Compliance Completion Date of {1} should instead be done as regular in-year updates.";
+				
             var list =
                 [
                     {
@@ -318,7 +325,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": page_annual_compliance_update_EN,
                         "message_fr": page_annual_compliance_update_FR
                     },
-
+                    {
+                        "code": "page_annual_compliance_resubmit",
+                        "message_en": page_annual_compliance_resubmit_EN,
+                        "message_fr": page_annual_compliance_resubmit_FR
+                    },
                     {
                         "code": "CID_PORTAL",
                         "message_en": "TDG CLIENT IDENTIFICATION DATABASE",
