@@ -14,7 +14,7 @@ $(document).ready(function () {
 		var siteId = urlParams.get('siteid');
 		var sitePageURL = "";
 
-		if (urlParams.has('in_year')) {
+		if (urlParams.has('in_year') || sessionStorage.getItem('frominyearsites')) {
 			sitePageURL = "~/my-sites/in-year-site/?id=" + siteId;
 			tdg.c.weblink_hide("/RegistrationWizard/");
 		
