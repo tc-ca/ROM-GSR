@@ -11,8 +11,8 @@ var AccountTDGmain = (function (window, document) {
     };
 
     var formMapping_FR = {
-        "948010001": "Profil du site de TMD",
-        "948010000": "Organisations TMD",
+        "948010001": "Site",
+        "948010000": "Entreprise",
     };
     var formContextGlobalRef;
 
@@ -180,7 +180,6 @@ var AccountTDGmain = (function (window, document) {
                     //Company specific fields are not required and hidden
                     glHelper.SetRequiredLevel(formContext, "ovs_legalname", false);
                     glHelper.SetRequiredLevel(formContext, "ovs_legalnamefr", false);
-                    glHelper.SetRequiredLevel(formContext, "ovs_legalnamefr", false);
                     glHelper.SetRequiredLevel(formContext, "name", false);
                     glHelper.SetRequiredLevel(formContext, "ovs_namefr", false);
 
@@ -222,7 +221,7 @@ var AccountTDGmain = (function (window, document) {
             }
             else if (langId == 1036)
             {
-                if (formName == "Profil du site de TMD")
+                if (formName == "Site")
                 {
                     //Parent company is required
                     glHelper.SetRequiredLevel(formContext, "parentaccountid", true);
@@ -230,9 +229,13 @@ var AccountTDGmain = (function (window, document) {
                     //Company specific fields are not required and hidden
                     glHelper.SetRequiredLevel(formContext, "ovs_legalname", false);
                     glHelper.SetRequiredLevel(formContext, "ovs_legalnamefr", false);
+                    glHelper.SetRequiredLevel(formContext, "name", false);
+                    glHelper.SetRequiredLevel(formContext, "ovs_namefr", false);
 
                     glHelper.SetControlVisibility(formContext, "ovs_legalname", false);
                     glHelper.SetControlVisibility(formContext, "ovs_legalnamefr", false);
+                    glHelper.SetControlVisibility(formContext, "name", false);
+                    glHelper.SetControlVisibility(formContext, "ovs_namefr", false);
 
                     glHelper.SetRequiredLevel(formContext, "customertypecode", false);
                     glHelper.SetControlVisibility(formContext, "customertypecode", false);
@@ -240,12 +243,13 @@ var AccountTDGmain = (function (window, document) {
                     if (formType == 1)
                         glHelper.SetValue(formContext, "customertypecode", 948010001);
                 }
-                else if (formName == "Organisations TMD")
+                else if (formName == "Entreprise")
                 {
                     glHelper.SetRequiredLevel(formContext, "parentaccountid", false);
                     glHelper.SetControlVisibility(formContext, "parentaccountid", false);
 
                     glHelper.SetControlVisibility(formContext, "customertypecode", false);
+                    glHelper.SetControlVisibility(formContext, "cid_cidcompanystatus", false);
 
                     if (formType == 1)
                         glHelper.SetValue(formContext, "customertypecode", 948010000);
