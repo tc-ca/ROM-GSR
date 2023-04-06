@@ -1,1 +1,0 @@
-﻿Service Request - Partial Revocation
