@@ -173,8 +173,8 @@ function Disable_ContactTypeFieldsForSecondaryUser() {
 	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
 	//if not primary contact
 	if (cid_usercontacttype != 100000000) {
-		$(".create-action").attr("disabled", true);
-		$(".create-action").css("pointer-events", "none");
+		//$(".create-action").attr("disabled", true);
+		//$(".create-action").css("pointer-events", "none");
 
 		//Wait till subgrid load
 		$("#Contacts").on("loaded", function () {

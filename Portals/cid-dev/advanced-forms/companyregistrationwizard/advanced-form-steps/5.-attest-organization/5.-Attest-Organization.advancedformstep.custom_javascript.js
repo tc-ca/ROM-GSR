@@ -4,6 +4,7 @@
 
 $(document).ready(function () {
 	debugger;
+    var isCompanyAttested = "{{entities.account[user.parentcustomerid.id].cid_iscompanyattested}}";
 
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
@@ -123,7 +124,10 @@ function Disable_ContactTypeFieldsForSecondaryUser() {
 	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
 	//if not primary contact
 	if (cid_usercontacttype != 100000000) {
+		//if ( isCompanyAttested != true)
+		{
 		$("#NextButton").attr("disabled", true);
 		$("#NextButton").css("pointer-events", "none");
+		}
 	}
 }
