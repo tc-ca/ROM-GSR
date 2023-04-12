@@ -124,10 +124,9 @@ function Disable_ContactTypeFieldsForSecondaryUser() {
 	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
 	//if not primary contact
 	if (cid_usercontacttype != 100000000) {
-		//if ( isCompanyAttested != true)
-		{
-		$("#NextButton").attr("disabled", true);
-		$("#NextButton").css("pointer-events", "none");
-		}
+		
+		//$("#NextButton").attr("disabled", true);
+		//$("#NextButton").css("pointer-events", "none");
+		
 	}
 }
