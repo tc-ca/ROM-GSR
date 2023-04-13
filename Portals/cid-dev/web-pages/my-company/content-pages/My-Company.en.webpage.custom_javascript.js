@@ -4,6 +4,7 @@
 
 $(document).ready(function () {
     debugger;
+   
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
@@ -131,9 +132,9 @@ $(document).ready(function () {
         $("#address1_stateorprovince").val($("#ovs_address1_province option:selected").text().trim());
     }
 
-    //tdg.cid.phone_init("telephone1", selected_language);
-    Formate_PhoneNumber_AllControlsWithSameID("telephone1");
-    Formate_PhoneNumber_AllControlsWithSameID("fax");
+    tdg.cid.phone_init("telephone1", selected_language);
+    //Formate_PhoneNumber_AllControlsWithSameID("telephone1");
+    //Formate_PhoneNumber_AllControlsWithSameID("fax");
 });
 
 function subgrid_language() {

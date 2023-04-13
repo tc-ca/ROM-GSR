@@ -7,7 +7,9 @@ $(document).ready(function () {
 
     tdg.c.weblink_show("/company_dashboard/");
     tdg.c.weblink_show("/Bulk_Site_Update/");
-
+ var navindex = "{{page.adx_navigation.name}}";
+	console.log ("Nave index:");
+	console.log ("*" + navindex);
 
     $("legend").each(function() {
 		$(this).removeClass();

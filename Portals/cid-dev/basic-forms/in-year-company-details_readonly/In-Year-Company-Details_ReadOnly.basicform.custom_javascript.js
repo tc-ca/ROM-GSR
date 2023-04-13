@@ -9,6 +9,13 @@ $(document).ready(function () {
 
     page_setup();
 
+     	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
+	console.log(cid_usercontacttype);
+	//if not primary contact
+	if (cid_usercontacttype != 100000000) {
+		$("#update_company").attr('disabled','disabled');
+		//$("#update_company").css("pointer-events", "none");
+    }
     tdg.c.page_instructions("page_my_company", true);
     tdg.c.control_hide("ovs_name_fr");
 

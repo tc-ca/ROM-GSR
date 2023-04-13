@@ -119,7 +119,7 @@ function root_erap_setup() {
 function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 	debugger;
 	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
-	console.log(cid_usercontacttype);
+	
 	//if not primary contact
 	if (cid_usercontacttype != 100000000) {
 		$(".create-action").attr("disabled", true);

@@ -8,6 +8,9 @@ $(document).ready(function () {
 	sessionStorage.setItem('frominyearsites', 'true');
     sessionStorage.setItem('fromannualcompliance', 'false');
 	sessionStorage.setItem('frominyearsitepage', 'false');
+   
+    
+
 
 
     var topNav = $('#navbar');
