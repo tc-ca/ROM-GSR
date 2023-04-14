@@ -6,14 +6,7 @@ $(document).ready(function () {
     $("#cid_registrationasof").parent().parent().hide();
 
    page_setup();
-   var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
-	//if not primary contact
-	if (cid_usercontacttype != 100000000)
-	{
-        //disable add button
-		$(".create-action").attr("disabled", true);
-		$(".create-action").css("pointer-events", "none");
-    }
+  
 
     //*******Remove menu item basedon user type******** */
 		var gridList = $(".entity-grid");
@@ -21,6 +14,7 @@ $(document).ready(function () {
         tdg.grid.InYear_ContactGrid_Actions(gridList);    
           
     debugger;
+    Disable_ContactTypeFieldsForSecondaryUser();
 
     if (cidCompanyStatus.indexOf("Inactive") >= 0) {
         $(".create-action").hide();
@@ -180,4 +174,21 @@ function page_setup() {
 
     // server error?
     tdg.c.message_panel();
+}
+
+function Disable_ContactTypeFieldsForSecondaryUser() {
+	debugger;
+	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
+	
+	//if not primary contact
+	if (cid_usercontacttype != 100000000) {
+		$(".create-action").attr("disabled", true);
+		$(".create-action").css("pointer-events", "none");
+		//Wait till subgrid load
+		$("#Contacts").on("loaded", function () {
+			$(".btn.btn-default.btn-xs").prop("disabled", true);
+			$(".details-link").prop("disabled", true);
+			$(".details-link").css("pointer-events", "none");
+		});
+	}
 }

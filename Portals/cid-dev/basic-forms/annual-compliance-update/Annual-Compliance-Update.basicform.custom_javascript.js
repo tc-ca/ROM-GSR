@@ -6,6 +6,14 @@ $(document).ready(function () {
 	debugger;
 	page_setup();
 
+
+    var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
+	
+	//if not primary contact
+	if (cid_usercontacttype != 100000000) {
+		$("#UpdateButton").attr("disabled", true);
+		$("#UpdateButton").css("pointer-events", "none");
+	}
 	tdg.c.page_instructions("page_annual_compliance_update");
 	$(".workflow-link").addClass("hidden");
 

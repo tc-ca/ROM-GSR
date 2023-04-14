@@ -38,7 +38,8 @@ $(document).ready(function () {
 
 	//phone field formatting
 	tdg.cid.phone_init("telephone1", selected_language);
-	tdg.cid.phone_init("fax", selected_language);
+	//tdg.cid.phone_init("fax", selected_language);
+    format_phone("fax", selected_language);
 
 	tdg.c.control_hide("cid_reasonfornobnnumber_other");
 	tdg.c.control_hide("cid_companyclaim");
@@ -178,7 +179,7 @@ function address1_line1_set(value) {
 }
 
 function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
-	debugger;
+	//debugger;
 	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
 	//if not primary contact
 	if (cid_usercontacttype != 100000000) {
@@ -206,4 +207,34 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 			tdg.cid.WebResource_address_complete_readonly(true);
 		});
 	}
+}
+function format_phone(phoneField, language) {
+          var field = "#" + phoneField;
+            $(field).attr("placeholder", "(___) ___-____");
+            $(field).attr("maxlength", "14");
+             $(field).on('keyup', function (event) {
+                //Strip all characters from the input except digits
+                var input = $(this).val().replace(/\D/g, '');
+                //Trim the remaining input to ten characters, to preserve phone number format
+                input = input.substring(0, 10);
+                //Based upon the length of the string, we add formatting as necessary
+                var inLength = input.length;
+                if (inLength == 0) {
+                    input = input;
+                } else if (inLength < 4) {
+                    input = '(' + input;
+                } else if (inLength < 7) {
+                    input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6);
+                } else {
+                    input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6) + '-' + input.substring(6, 10);
+                }
+                $(this).val(input);
+            });
+            $(field).focusout(function () {
+                var inLength = $(this).val().replace(/\D/g, '').length;
+                if (inLength < 10 && inLength != 0) {
+                    alert(tdg.c.text_language("Invalid number::Numéro invalide", language));
+                    $(this).val("");
+                }
+            })
 }

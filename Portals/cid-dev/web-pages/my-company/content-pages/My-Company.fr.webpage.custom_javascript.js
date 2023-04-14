@@ -129,6 +129,9 @@ $(document).ready(function () {
     //tdg.cid.phone_init("telephone1", selected_language);
     Formate_PhoneNumber_AllControlsWithSameID("telephone1");
     Formate_PhoneNumber_AllControlsWithSameID("fax");
+    if ($("#fax").closest("div").get(0).children[1] != "undefined") {
+        $("#fax").closest("div").get(0).children[1].innerHTML = "<p> </p>";
+    }
 });
 
 function subgrid_language() {

@@ -132,9 +132,12 @@ $(document).ready(function () {
         $("#address1_stateorprovince").val($("#ovs_address1_province option:selected").text().trim());
     }
 
-    tdg.cid.phone_init("telephone1", selected_language);
-    //Formate_PhoneNumber_AllControlsWithSameID("telephone1");
-    //Formate_PhoneNumber_AllControlsWithSameID("fax");
+    //tdg.cid.phone_init("telephone1", selected_language);
+    Formate_PhoneNumber_AllControlsWithSameID("telephone1");
+    Formate_PhoneNumber_AllControlsWithSameID("fax");
+    if ($("#fax").closest("div").get(0).children[1] != "undefined") {
+        $("#fax").closest("div").get(0).children[1].innerHTML = "<p> </p>";
+    }
 });
 
 function subgrid_language() {
@@ -184,5 +187,6 @@ function Formate_PhoneNumber_AllControlsWithSameID(TargetFieldId) {
                 }
             });
         }
+
     });
 }

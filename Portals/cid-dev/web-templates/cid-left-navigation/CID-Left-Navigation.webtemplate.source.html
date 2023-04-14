@@ -2,17 +2,25 @@
 {% block sidebar %}
  {% assign weblinkset_id = page.adx_navigation.id %} 
  {%assign weblinkset_name = page.adx_navigation.name%}
+ {%assign user_type = user.cid_contacttype.Value%}
  {% if weblinkset_id %} {% assign nav = weblinks[page.adx_navigation.id] %} 
  {% if nav %} <div class="list-group"> {% for link in nav.weblinks %} 
  {%if link.url contains "online-help" or link.url contains "OnlineHelp"   %}
   {%if request.url contains "rd-tdgcore-dev" or request.url contains "tdgcore-qa" %}
-  <a class="list-group-item"  href={{ link.url }}> {{ link.name }} </a> 
-   {%else%}
-  <a class="list-group-item" style="pointer-events: none;" href={{ link.url }}> {{ link.name }} </a> 
+    <a class="list-group-item"  href={{ link.url }}> {{ link.name }} </a> 
+  {%else%}
+    <a class="list-group-item" style="pointer-events: none;" href={{ link.url }}> {{ link.name }} </a> 
   {% endif %}
  {%else%}
- <a class="list-group-item" href={{ link.url }}> {{ link.name }} </a> 
-  {% endif %} 
+  
+    {%if link.url contains "deactivate-company" and user_type != 100000000  %}
+     <a class="list-group-item" style="pointer-events: none;" href={{ link.url }}> {{ link.name }} </a> 
+   
+    {%else%}
+    <a class="list-group-item" href={{ link.url }}> {{ link.name }} </a> 
+    {% endif %} 
+ {% endif %} 
+ 
   {% if link.url contains 'my-sites' and weblinkset_name contains 'Company Dashboard Navigation' %}
   <br>
   {%endif%}
