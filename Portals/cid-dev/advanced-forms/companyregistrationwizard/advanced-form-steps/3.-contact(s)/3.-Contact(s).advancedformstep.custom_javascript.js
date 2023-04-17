@@ -3,7 +3,7 @@
 //
 function checkToDisplaycontactAddMessage() {
 	debugger;
-
+$("#ValidationSummaryEntityFormView").css("display", "none");
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 
@@ -38,6 +38,8 @@ function checkToDisplaycontactAddMessage() {
 }
 
 $(document).ready(function () {
+	debugger;
+	$("#ValidationSummaryEntityFormView").css("display", "none");
 
 
 	var list = $(".entity-grid");
@@ -47,6 +49,7 @@ $(document).ready(function () {
 	$(".create-action").click(function () {
 		//alert("Test");
 		$('#ValidationSummaryEntityFormView div').remove();
+		$("#ValidationSummaryEntityFormView").css("display", "none");
 	});
 	var currentUserId = '{{user.contactid}}';
 	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
@@ -71,6 +74,7 @@ if (window.jQuery) {
 	(function ($) {
 		webFormClientValidate = function () {
 			debugger;
+			$("#ValidationSummaryEntityFormView").css("display", "none");
 			var validation = false;
 			var companyId = $("#EntityFormView_EntityID").val();
 			//var filter = "parentcustomerid/Id eq (guid'" + companyId + "')";

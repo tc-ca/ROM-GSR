@@ -38,8 +38,8 @@ $(document).ready(function () {
 
 	//phone field formatting
 	tdg.cid.phone_init("telephone1", selected_language);
-	//tdg.cid.phone_init("fax", selected_language);
-    format_phone("fax", selected_language);
+	tdg.cid.phone_init("fax", selected_language);
+    //format_phone("fax", selected_language);
 
 	tdg.c.control_hide("cid_reasonfornobnnumber_other");
 	tdg.c.control_hide("cid_companyclaim");

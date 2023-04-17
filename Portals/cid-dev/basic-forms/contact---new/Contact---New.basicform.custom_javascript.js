@@ -5,6 +5,7 @@ var _reload = false;
 
 $(document).ready(function () {
     debugger;
+    $("#ValidationSummaryEntityFormView").css("display", "none");
     page_setup();
 
     // prevent none Alphabet char on key press and past
