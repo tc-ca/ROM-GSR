@@ -228,7 +228,9 @@ function format_phone(phoneField, language) {
                 } else {
                     input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6) + '-' + input.substring(6, 10);
                 }
-                $(this).val(input);
+				if (event.keyCode != 46 && event.keyCode != 8) {
+                	$(this).val(input);
+				}
             });
             $(field).focusout(function () {
                 var inLength = $(this).val().replace(/\D/g, '').length;
