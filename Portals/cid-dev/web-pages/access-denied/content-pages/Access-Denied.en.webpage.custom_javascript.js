@@ -4,6 +4,12 @@ if(document.getElementsByTagName('h1')[0])
     var source = document.getElementsByTagName('h1')[0].innerHTML;
     if(source.search("Terms") != -1){
         $(document).find("title").text("Terms and Conditions");
+        
+        //var cancelLabel = tdg.error_message.message("BTN_CANCEL");
+        $("#submit-agreement").after("&nbsp; <input id='cancelButton' type='button' name='CancelButton' value='Cancel' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");      
+        $('#cancelButton').click(function (e) {
+                window.location.href = '~/en/Account/Login/LogOff?returnUrl=%2Fen%2Fcompany_dashboard%2F';
+        });
     }
     //Condition for initial registration page
     if(source.search("Registration") != -1){
@@ -13,6 +19,7 @@ if(document.getElementsByTagName('h1')[0])
     //TODO add logic for the default access denied page
 }
 debugger;
+
 //account already existing
 if($('.xrm-attribute-value-encoded')[0].innerText =="Register your external account" )
 {
@@ -44,5 +51,13 @@ if($('.xrm-attribute-value-encoded')[0].innerText =="Sign up with an invitation 
              $('.validation-summary-errors')[0].innerText = "The Invitation Code is already redeemed or Invitation is no longer valid. If required, please choose the Contact Us link at the bottom of this screen to request a new invitation.";
         }
     }
+}
+
+if($(".btn.btn-primary:contains('Register')"))
+{
+$(".btn.btn-primary:contains('Register')").after("&nbsp; <input id='cancelButton' type='button' name='CancelButton' value='Cancel' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");      
+        $('#cancelButton').click(function (e) {
+                window.location.href = '~/en/SignIn?returnUrl=%2Fen%2F';
+        });
 }
 

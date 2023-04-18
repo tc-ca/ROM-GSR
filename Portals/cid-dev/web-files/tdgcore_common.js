@@ -1372,7 +1372,7 @@ if (typeof (tdg.cid) == "undefined") {
             var field = "#" + phoneField;
             $(field).attr("placeholder", "(___) ___-____");
             $(field).attr("maxlength", "14");
-            $(field).on('keyup', function () {
+            $(field).on('keyup', function (event) {
                 //Strip all characters from the input except digits
                 var input = $(this).val().replace(/\D/g, '');
                 //Trim the remaining input to ten characters, to preserve phone number format
@@ -1389,7 +1389,9 @@ if (typeof (tdg.cid) == "undefined") {
                     input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6) + '-' + input.substring(6, 10);
                 }
 
-                $(this).val(input);
+                if (event.keyCode != 46 && event.keyCode != 8) {
+                	$(this).val(input);
+				}
             });
             $(field).focusout(function () {
                 var inLength = $(this).val().replace(/\D/g, '').length;

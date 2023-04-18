@@ -3,7 +3,7 @@
 //
 function checkToDisplaycontactAddMessage() {
 	debugger;
-$("#ValidationSummaryEntityFormView").css("display", "none");
+
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 
@@ -39,7 +39,7 @@ $("#ValidationSummaryEntityFormView").css("display", "none");
 
 $(document).ready(function () {
 	debugger;
-	$("#ValidationSummaryEntityFormView").css("display", "none");
+	
 
 
 	var list = $(".entity-grid");
