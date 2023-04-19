@@ -8,21 +8,16 @@ if (typeof (tdg.message) == "undefined") {
                 "- Set as My Site Active\n" +
                 "- Set and Attest as My Site Inactive\n" +
                 "- Set and Attest Not My Site\n";
-            var m000013_FR = "Les sites affichés dans la grille de données ci-dessous, avec une revendication de site de 'Revendication de site en attente', " +
-                "sont considérés comme appartenant à votre entreprise.\n" +
-                "À l'aide du bouton (V) à droite de chacun de ces sites, veuillez choisir l'une des actions suivantes :\n" +
-                "- Définir comme Mon site actif\n" +
-                "- Définir et attester comme mon site inactif\n" +
-                "- Définir et attester qu'il ne s'agit pas de mon site\n";
+            var m000013_FR = "Les sites figurant dans le tableau ci-dessous, dont le statut est 'Revendication de site en attente', appartiennent à votre organisation. À l’aide du bouton [V] à droite de chacun de ces sites, veuillez choisir l’une des actions suivantes :\n" +
+                "- Configurer comme Mon site actif\n" +
+                "- Configurer et attester comme Mon site inactif\n" +
+                "- Configurer et attester comme qu'il ne s'agit pas de mon site\n";
 
             var m000020_EN = "The data grid below lists the Sites that are understood to be associated to your Organization. " +
                 "Please choose the <b>[V]</b> button on each row to update Attest each Site, or flag it as not your Organization's Site.\n\n" +
                 "When those updates are Complete, please add any remaining Sites individually by choosing the <b>[+Add]</b> button," +
                 "or all at once via Excel, by choosing the <b>[Bulk Add/Update]</b> button.";
-            var m000020_FR = "The data grid below lists the Sites that are understood to be associated to your Organization. " +
-                "Please choose the <b>[V]</b> button on each row to update Attest each Site, or flag it as not your Organization's Site.\n\n" +
-                "When those updates are Complete, please add any remaining Sites individually by choosing the <b>[+Add]</b> button," +
-                "or all at once via Excel, by choosing the <b>[Bulk Add/Update]</b> button._FR";
+            var m000020_FR = "Le tableau de données ci-dessous contient les sites qui sont associés à votre organisation. Veuillez cliquer sur le bouton <b>[V]</b> de chaque rangée pour attester chaque site ou marquer le site comme n’appartenant pas à votre organisation. Une fois les mises à jour terminées, ajouter tous les autres sites individuellement en cliquant sur le bouton <b>[+Add]</b> ou tous à la fois par Excel, en cliquant sur le bouton <b>[Bulk Add/Update]</b>.";
 
             var m000021_EN = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of " +
                 "the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.\n\n" +
@@ -118,9 +113,8 @@ if (typeof (tdg.message) == "undefined") {
             var page_crw_start_EN = "Enter the Organization’s Canada Revenue Agency Business Number (CRA BN) and then choose the <b>[Next]</b> button below.<br><br>" +
                 "Alternatively, if your Organization is from an Industry Type does not require a CRA BN, then choose ‘No‘, complete the two fields that follow and then choose the <b>[Next]</b> button below.<br><br>" +
                 "Note that throughout the application, all fields with a red asterisk are mandatory fields and must be completed before proceeding to the next step.";
-            var page_crw_start_FR = "Enter the Organization’s Canada Revenue Agency Business Number (CRA BN) and then choose the <b>[Next]</b> button below.<br><br>" +
-                "Alternatively, if your Organization is from an Industry Type does not require a CRA BN, then choose ‘No‘, complete the two fields that follow and then choose the <b>[Next]</b> button below.<br><br>" +
-                "Note that throughout the application, all fields with a red asterisk are mandatory fields and must be completed before proceeding to the next step._FR";
+            var page_crw_start_FR = "Saisir le numéro d’entreprise de l’Agence du revenu du Canada (NE ARC) et cliquer sur le bouton <b>[Suivant]</b> ci‑dessous.<br><br>" +
+                "Sinon, si votre compagnie appartient à un type d’industrie qui ne possède pas de NE ARC, cliquer sur ‘Non‘, remplir les champs et cliquer sur le bouton <b>[Suivant]</b> ci‑dessous.";
             var page_crw_company_insert_EN = "As required, update any of the Organization information below, then choose the <b>[Next]</b> button below to continue.<br>" +
                 "If required: <br>" +
                 " - choose the <b>[Previous]</b> button below to re-start the Registration.<br>" +

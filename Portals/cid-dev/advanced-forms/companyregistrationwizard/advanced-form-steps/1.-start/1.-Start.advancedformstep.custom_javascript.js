@@ -93,7 +93,8 @@ $(document).ready(function () {
     }
 
     $("#NextButton").hide();
-    tdg.c.button_create("btn_next", "#NextButton", "Next");
+    var msg = tdg.error_message.message("BTN_NEXT");
+    tdg.c.button_create("btn_next", "#NextButton", msg);
     $("#btn_next").bind("click", function () {
         tdg.cid.crw.start_btn_next_click();
     });

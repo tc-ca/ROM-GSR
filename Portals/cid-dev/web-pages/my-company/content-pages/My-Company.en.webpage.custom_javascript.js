@@ -160,7 +160,7 @@ function Formate_PhoneNumber_AllControlsWithSameID(TargetFieldId) {
         if (fieldid == TargetFieldId) {
             fieldset.attr("placeholder", "(___) ___-____");
             fieldset.attr("maxlength", "14");
-            fieldset.on('keyup', function () {
+            fieldset.on('keyup', function (event) {
                 //Strip all characters from the input except digits
                 var input = $(this).val().replace(/\D/g, '');
                 //Trim the remaining input to ten characters, to preserve phone number format
@@ -176,8 +176,8 @@ function Formate_PhoneNumber_AllControlsWithSameID(TargetFieldId) {
                 } else {
                     input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6) + '-' + input.substring(6, 10);
                 }
-
-                $(this).val(input);
+                if (event.keyCode != 46 && event.keyCode != 8)
+                    $(this).val(input);
             });
             fieldset.focusout(function () {
                 var inLength = $(this).val().replace(/\D/g, '').length;
