@@ -1390,8 +1390,8 @@ if (typeof (tdg.cid) == "undefined") {
                 }
 
                 if (event.keyCode != 46 && event.keyCode != 8) {
-                	$(this).val(input);
-				}
+                    $(this).val(input);
+                }
             });
             $(field).focusout(function () {
                 var inLength = $(this).val().replace(/\D/g, '').length;
@@ -2468,6 +2468,13 @@ if (typeof (tdg.cid.crw) == "undefined") {
             var header = tdg.error_message.message("CID_PORTAL");
             var msg_btn_ok = tdg.error_message.message("BTN_IS_MY_COMPANY");
             var msg_btn_cancel = tdg.error_message.message("BTN_IS_NOT_MY_COMPANY");
+            var lbl_legal_name = tdg.error_message.message("lbl_legal_name");
+            var lbl_operating_name = tdg.error_message.message("lbl_operating_name");
+            var lbl_cra_bn = tdg.error_message.message("lbl_cra_bn");
+            var lbl_address = tdg.error_message.message("lbl_address");
+            var lbl_reasonfornobnnumber = tdg.error_message.message("lbl_reasonfornobnnumber");
+            var lbl_reasonfornobnnumber_other = tdg.error_message.message("lbl_reasonfornobnnumber_other");
+            var lbl_confirm_is_company = tdg.error_message.message("m000052");
 
             data.address.AddressLine2Text = (data.address.AddressLine2Text == null ? "" : data.address.AddressLine2Text);
             data.address.AddressLine3Text = (data.address.AddressLine3Text == null ? "" : data.address.AddressLine3Text);
@@ -2476,24 +2483,21 @@ if (typeof (tdg.cid.crw) == "undefined") {
             if (data.cid_has_cra_bn == 1) {
                 text_middle = `
                     <p>
-                    <label for="cid_crabusinessnumber" class="field-label">CRA Business Number</label>
+                    <label for="cid_crabusinessnumber" class="field-label">${lbl_cra_bn}</label>
                     <input type="text" readonly class="text form-control" id="cid_crabusinessnumber" style="width:100%" value="${data.cid_crabusinessnumber}">
 	                `;
             }
             else {
-                //var list = $("#cid_reasonfornobnnumber")[0].options;
-                //var index1 = parseInt(data.cid_reasonfornobnnumber) + 1;
-                //var cid_reasonfornobnnumber = $("#cid_reasonfornobnnumber option:selected").text();
                 var cid_reasonfornobnnumber = data.cid_reasonfornobnnumber;
                 text_middle = `
                     <p>
-                    <label for="cid_reasonfornobnnumber" class="field-label">Reason for No CRA Business Number</label>
+                    <label for="cid_reasonfornobnnumber" class="field-label">${lbl_reasonfornobnnumber}</label>
                     <input type="text" readonly class="text form-control" id="cid_reasonfornobnnumber" style="width:100%" value="${cid_reasonfornobnnumber}">
 	                `;
                 if (data.cid_reasonfornobnnumber == 3) {
                     text_middle += `
                     <p>
-                    <label for="cid_reasonfornobnnumber_other" class="field-label">Further Details Regarding No CRA Business Number</label>
+                    <label for="cid_reasonfornobnnumber_other" class="field-label">${lbl_reasonfornobnnumber_other}</label>
                     <input type="text" readonly class="text form-control" id="cid_reasonfornobnnumber_other" style="width:100%" value="${data.cid_reasonfornobnnumber_other}">
 	                `;
                 }
@@ -2528,20 +2532,20 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     <p>
                     <b>${invitation_msg}</b><hr>
                     <p>
-                    <label for="cid_legalname" class="field-label">Legal Name</label>
+                    <label for="cid_legalname" class="field-label">${lbl_legal_name}</label>
                     <input type="text" readonly class="text form-control" id="cid_legalname" style="width:100%" value="${data.cid_legalname}">
                     <p>
-                    <label for="cid_operatingname" class="field-label">Operating Name</label>
+                    <label for="cid_operatingname" class="field-label">${lbl_operating_name}</label>
                     <input type="text" readonly class="text form-control" id="cid_operatingname" style="width:100%" value="${data.cid_operatingname}">
                     ` +
                 text_middle +
                 `
                     <p>
-                    <label for="address1_line1" class="field-label">Address</label><br>
+                    <label for="address1_line1" class="field-label">${lbl_address}</label><br>
                     <p>${address}</p>
 	                </div>
 	                <div class="modal-footer" style="text-align: left;">
-                    <label for="opt_confirm" class="field-label">Confirmation that this is your Organization:</label>
+                    <label for="opt_confirm" class="field-label">${lbl_confirm_is_company}</label>
                     <p><br>
 	                <button id="btn_ok" type="button" class="pull-left btn btn-primary button next submit-btn">${msg_btn_ok}</button>
 	                <button id="btn_cancel" type="button" class="pull-left btn btn-primary button next submit-btn" data-dismiss="modal">${msg_btn_cancel}</button>

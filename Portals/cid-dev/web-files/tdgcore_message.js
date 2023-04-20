@@ -96,19 +96,19 @@ if (typeof (tdg.message) == "undefined") {
                 "- Enter a different Business Number.<br><br>" +
                 "      OR<br><br>" +
                 "- Continue with the same Business Number, which is linked to an existing Organization we already have on file. Note that in the screens to follow, you can change the existing Organization data fields as required.";
-            var m000045_FR = "To proceed with the registration process you will need to either:<br><br>" +
-                "- Enter a different Business Number.<br><br>" +
-                "      OR<br><br>" +
-                "- Continue with the same Business Number, which is linked to an existing Organization we already have on file. Note that in the screens to follow, you can change the existing Organization data fields as required._FR";
+            var m000045_FR = "Pour procéder à l’enregistrement, vous devrez :<br><br>" +
+                "- saisir un numéro d’entreprise différent<br><br>" +
+                "      OU<br><br>" +
+                "- poursuivre avec le même numéro d’entreprise, qui est lié à une organisation existante déjà au dossier. Veuillez noter que dans les écrans suivants, vous pouvez changer les données des champs sur l’organisation au besoin.";
 
             var m000046_EN = "To proceed with the registration process you will need to either:<br><br>" +
                 "- Enter a different organization name.<br><br>" +
                 "      OR<br><br>" +
                 "- Continue with this organization name, which matches an existing Organization we already have on file. Note that in the screens to follow, you can change any existing Organization data fields as required.";
-            var m000046_FR = "To proceed with the registration process you will need to either:<br><br>" +
-                "- Enter a different organization name.<br><br>" +
-                "      OR<br><br>" +
-                "- Continue with this organization name, which matches an existing Organization we already have on file. Note that in the screens to follow, you can change any existing Organization data fields as required._FR";
+            var m000046_FR = "Pour procéder à l’enregistrement, vous devrez :<br><br>" +
+                "- saisir un nom d’organisation différent<br><br>" +
+                "      OU<br><br>" +
+                "- poursuivre avec le même nom d’organisation, qui correspond à une organisation existante déjà au dossier. Veuillez noter que dans les écrans suivants, vous pouvez changer les données des champs sur l’organisation au besoin.";
 
             var page_crw_start_EN = "Enter the Organization’s Canada Revenue Agency Business Number (CRA BN) and then choose the <b>[Next]</b> button below.<br><br>" +
                 "Alternatively, if your Organization is from an Industry Type does not require a CRA BN, then choose ‘No‘, complete the two fields that follow and then choose the <b>[Next]</b> button below.<br><br>" +
@@ -390,6 +390,36 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "This is not my Organization_FR"
                     },
                     {
+                        "code": "lbl_operating_name",
+                        "message_en": "Operating Name",
+                        "message_fr": "Nom commercial"
+                    },
+                    {
+                        "code": "lbl_legal_name",
+                        "message_en": "Legal Name",
+                        "message_fr": "Dénomination sociale"
+                    },
+                    {
+                        "code": "lbl_cra_bn",
+                        "message_en": "CRA Business Number",
+                        "message_fr": "Numéro d’organisation de l’ARC"
+                    },
+                    {
+                        "code": "lbl_address",
+                        "message_en": "Address",
+                        "message_fr": "Adresse"
+                    },
+                    {
+                        "code": "lbl_reasonfornobnnumber",
+                        "message_en": "Reason for No CRA Business Number",
+                        "message_fr": "Raison pour laquelle il n’y a aucun numéro d’organisation de l’ARC"
+                    },
+                    {
+                        "code": "lbl_reasonfornobnnumber_other",
+                        "message_en": "Further Details Regarding No CRA Business Number",
+                        "message_fr": "Autres détails concernant l’absence de numéro d’organisation de l’ARC"
+                    },
+                    {
                         "code": "m000001",
                         "message_en": "Invalid CRA Business Number",
                         "message_fr": "Numéro d'entreprise de l'ARC invalide"
@@ -447,7 +477,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000012",
                         "message_en": "You cannot proceed before attesting all the Organization Sites, via opening the site details and completing all the required information for each site.",
-                        "message_fr": "FR-You cannot proceed before attesting all the Organization Sites, via opening the site details and completing all the required information for each site."
+                        "message_fr": "You cannot proceed before attesting all the Organization Sites, via opening the site details and completing all the required information for each site._FR"
                     },
                     {
                         "code": "m000013",
@@ -582,7 +612,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000038",
                         "message_en": "Processing...",
-                        "message_fr": "Processing..._FR"
+                        "message_fr": "Processus"
                     },
                     {
                         "code": "m000039",
@@ -648,6 +678,11 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000051",
                         "message_en": "Back To In Year Site Update Page",
                         "message_fr": "Back To In Year Site Update Page_FR"
+                    },
+                    {
+                        "code": "m000052",
+                        "message_en": "Confirmation that this is your Organization:",
+                        "message_fr": "Confirmation that this is your Organization:_FR"
                     },
                     {
                         "code": "m000098",
