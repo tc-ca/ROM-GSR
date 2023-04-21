@@ -4,7 +4,10 @@
 
 $(document).ready(function () {
     debugger;
-
+    //redirect to my company after save success
+    if($('#ContentContainer_MainContent_MainContent_ContentBottom_ConfirmationMessage').find('.xrm-attribute-value').length > 0 && 
+    $('#ContentContainer_MainContent_MainContent_ContentBottom_ConfirmationMessage').find('.xrm-attribute-value')[0].innerHTML.contains("Your profile has been updated successfully"))
+        window.location.href = '~/my-company/';
     page_setup();
 
     //disable submit button by default  
@@ -110,9 +113,7 @@ $(document).ready(function () {
             clearInterval(checkEmaillinkExist);
         }
     }, 100); // check every 100ms
-    if($('#ContentContainer_MainContent_MainContent_ContentBottom_ConfirmationMessage').find('.xrm-attribute-value').length > 0 && 
-    $('#ContentContainer_MainContent_MainContent_ContentBottom_ConfirmationMessage').find('.xrm-attribute-value')[0].innerHTML.contains("Your profile has been updated successfully"))
-        window.location.href = '~/my-company/';
+ 
 });
 
 function page_setup() {

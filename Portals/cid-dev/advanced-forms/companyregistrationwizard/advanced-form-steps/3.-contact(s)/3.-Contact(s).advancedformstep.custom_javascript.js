@@ -69,6 +69,21 @@ $(document).ready(function () {
 	//make for readonly for secondary users
 	//var currentUserId = '{{user.contactid}}';
 	//Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
+    
+    if(sessionStorage.getItem("frominyearsitepage") == "false")
+    {
+        var parentcustomerid = '{{user.parentcustomerid.Id}}';
+        var filter = "statecode eq 0 and accountid eq '" + parentcustomerid + "'";
+        var accData = tdg.webapi.list("accounts", filter);
+        if (accData != null) 
+        {    
+            //if (!accData[i].cid_companyclaim) // Net New Site
+            //{
+                var withdrawLabel = "Withdraw"; //tdg.error_message.message("BTN_CANCEL");
+                $('#NextButton').parent().parent().after('<div role="group" class="pull-right toolbar-actions"><input type="button" data-dismiss="modal" value="'+withdrawLabel+'" id="WithdrawButton" style="margin-left: 10px;" name="WithdrawButton" class="btn btn-default button previous previous-btn"/></div>');
+           //}
+        }
+    }   
 });
 if (window.jQuery) {
 	(function ($) {

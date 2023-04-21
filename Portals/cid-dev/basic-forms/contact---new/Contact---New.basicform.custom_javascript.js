@@ -66,7 +66,6 @@ $(document).ready(function () {
             
             });
             //<div role="group" class="btn-group entity-action-button">
-
 //********************************************* */
 
 

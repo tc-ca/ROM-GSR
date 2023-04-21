@@ -4,8 +4,13 @@
 
 $(document).ready(function () {
     debugger;
+ 
+    //redirect to my company after save success
+    if($('#ContentContainer_MainContent_MainContent_ContentBottom_ConfirmationMessage').find('.xrm-attribute-value').length > 0 && 
+    $('#ContentContainer_MainContent_MainContent_ContentBottom_ConfirmationMessage').find('.xrm-attribute-value')[0].innerHTML.contains("Votre profil a été mis à jour"))
+        window.location.href = '~/my-company/';
 
-    page_setup();
+   page_setup();
 
     //disable submit button by default  
     $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", true);
