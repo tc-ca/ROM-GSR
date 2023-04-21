@@ -137,8 +137,8 @@ if (typeof (tdg.message) == "undefined") {
                 "Note that fields in the application that have a red star at the end of their label are mandatory._FR"
             var page_crw_contact_EN = "Create at least one Secondary Contact by choosing the <b>[+ Add]</b> button below, then choose the <b>[Next]</b> button below to continue.</br><br>" +
                 "To edit or deactivate a Contact, then choose the <b>[V]</b> button to the far right of that row. If required, choose the <b>[Previous]</b> button to return to the Organization screen.";
-            var page_crw_contact_FR = "Create at least one Secondary Contact by choosing the <b>[+ Add]</b> button below, then choose the <b>[Next]</b> button below to continue.</br><br>" +
-                "To edit or deactivate a Contact, then choose the <b>[V]</b> button to the far right of that row. If required, choose the <b>[Previous]</b> button to return to the Organization screen._FR";
+            var page_crw_contact_FR = "Créer au moins un contact secondaire en cliquant sur le bouton <b>[+Créer]</b> ci‑dessous, ensuite cliquer sur le bouton <b>[Suivant]</b> ci‑dessous pour poursuivre.</br><br>" +
+                "Pour modifier ou désactiver un contact, cliquer sur le bouton <b>[V]</b> à l’extrémité droite de cette rangée. Au besoin, cliquer sur le bouton <b>[Précédent]</b> pour revenir à l’écran organization .";
             var page_crw_naics_EN = "Choose the <b>[+ Add]</b> button below to create NAICS Codes for the Organization, then choose the <b>[Next]</b> button below to continue.</br></br>" +
                 "To deactivate a NAICS, then choose the <b>[V]</b> button to the far right of that row. If required, choose the <b>[Previous]</b> button below to return to the Contact screen.";
             var page_crw_naics_FR = "Choose the <b>[+ Add]</b> button below to create NAICS Codes for the Organization, then choose the <b>[Next]</b> button below to continue.</br></br>" +
@@ -327,7 +327,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "CID_PORTAL",
                         "message_en": "TDG CLIENT IDENTIFICATION DATABASE",
-                        "message_fr": "TDG CLIENT IDENTIFICATION DATABASE_FR"
+                        "message_fr": "BASE DE DONNÉES D’IDENTIFICATION DES CLIENTS DU TMD"
                     },
                     {
                         "code": "tdg_unnumberid",
@@ -337,7 +337,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "cid_naicscode",
                         "message_en": "NAICS Code",
-                        "message_fr": "Code SCIAN"
+                        "message_fr": "Codes du SCIAN"
                     },
                     {
                         "code": "OK",
@@ -380,14 +380,19 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "Précédent"
                     },
                     {
+                        "code": "BTN_WITHDRAW",
+                        "message_en": "Withdraw",
+                        "message_fr": "Retirer"
+                    },
+                    {
                         "code": "BTN_IS_MY_COMPANY",
                         "message_en": "This is my Organization",
-                        "message_fr": "This is my Organization_FR"
+                        "message_fr": "Il s’agit de mon organisation"
                     },
                     {
                         "code": "BTN_IS_NOT_MY_COMPANY",
                         "message_en": "This is not my Organization",
-                        "message_fr": "This is not my Organization_FR"
+                        "message_fr": "Il ne s’agit pas de mon organisation"
                     },
                     {
                         "code": "lbl_operating_name",
@@ -452,7 +457,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000007",
                         "message_en": "Print Summary",
-                        "message_fr": "Imprimer le résumé"
+                        "message_fr": "Imprimer le sommaire"
                     },
                     {
                         "code": "m000008",
@@ -467,17 +472,17 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000010",
                         "message_en": "Choose the same named button found below",
-                        "message_fr": "Sélectionnez le bouton identique ci-dessous"
+                        "message_fr": "Choisir le bouton du même nom ci-dessous"
                     },
                     {
                         "code": "m000011",
                         "message_en": "You cannot proceed before adding active Organization site(s).",
-                        "message_fr": "Vous ne pouvez pas continuer avant d'avoir ajouté le(s) site(s) d'entreprise actif(s)."
+                        "message_fr": "Vous ne pouvez pas procéder avant d’ajouter une ou des organisation(s) active(s)."
                     },
                     {
                         "code": "m000012",
                         "message_en": "You cannot proceed before attesting all the Organization Sites, via opening the site details and completing all the required information for each site.",
-                        "message_fr": "You cannot proceed before attesting all the Organization Sites, via opening the site details and completing all the required information for each site._FR"
+                        "message_fr": "Vous ne pouvez pas procéder avant d’attester tous les sites de l’organisation, en ouvrant les détails du site et en fournissant tous les renseignements requis pour chaque site."
                     },
                     {
                         "code": "m000013",
@@ -487,37 +492,37 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000014",
                         "message_en": "This registration for this Organization has already begun. Do you want to send a request to the Administrator of that registration process requesting to be on-boarded as a user for that Organization?",
-                        "message_fr": "This registration for this Organization has already begun. Do you want to send a request to the Administrator of that registration process requesting to be on-boarded as a user for that Organization?_FR"
+                        "message_fr": "L’enregistrement de cette organisation est déjà commencé. Voulez‑vous envoyer une demande à l’administrateur de ce processus d’enregistrement afin d’être ajouté comme utilisateur pour cette organisation?"
                     },
                     {
                         "code": "m000014B",
                         "message_en": "This registration for this Organization is already complete. Do you want to send a request to the Organization’s Administrator requesting to be on-boarded as a user for that Organization?",
-                        "message_fr": "This registration for this Organization is already complete. Do you want to send a request to the Organization’s Administrator requesting to be on-boarded as a user for that Organization?_FR"
+                        "message_fr": "L’enregistrement de cette organisation est déjà terminé. Voulez‑vous envoyer une demande à l’administrateur de ce processus d’enregistrement afin d’être ajouté comme utilisateur pour cette organisation?"
                     },
                     {
                         "code": "m000015",
                         "message_en": "You cannot proceed before adding at least one mode of transportation.",
-                        "message_fr": "Vous ne pouvez pas continuer avant d'avoir ajouté au moins un mode de transport."
+                        "message_fr": "Vous ne pouvez pas procéder avant d’ajouter au moins un mode de transport."
                     },
                     {
                         "code": "m000016",
                         "message_en": "You cannot proceed before adding class(es).",
-                        "message_fr": "Vous ne pouvez pas continuer avant d'ajouter des classes."
+                        "message_fr": "Vous ne pouvez pas procéder avant d’ajouter la ou les classes."
                     },
                     {
                         "code": "m000017",
                         "message_en": "You cannot proceed before adding UN Number(s).",
-                        "message_fr": "Vous ne pouvez pas continuer avant d'avoir ajouté le(s) numéro(s) UN."
+                        "message_fr": "Vous ne pouvez pas procéder avant d’ajouter le ou les numéros UN."
                     },
                     {
                         "code": "m000018",
                         "message_en": "Invalid province",
-                        "message_fr": "Invalid province_F"
+                        "message_fr": "Province non valide"
                     },
                     {
                         "code": "m000019",
                         "message_en": "ERAP {0} is assigned to another Organization. Are you sure you want to complete the add?",
-                        "message_fr": "ERAP {0} is assigned to another Organization. Are you sure you want to complete the add?_F"
+                        "message_fr": "PIU {0} est attribué à une autre organisation. Êtes‑vous certain de vouloir compléter cet ajout?"
                     },
                     {
                         "code": "m000020",
@@ -547,27 +552,27 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000025",
                         "message_en": "Operation Registration for {0}",
-                        "message_fr": "Enregistrement de l'opération pour {0}"
+                        "message_fr": "Enregistrement des opérations pour {0}"
                     },
                     {
                         "code": "m000026",
                         "message_en": "You cannot proceed before attesting your Organization data changes, please check the 'Attestation' box",
-                        "message_fr": "You cannot proceed before attesting your Organization data changes, please check the 'Attestation' box_FR"
+                        "message_fr": "Vous ne pouvez pas procéder avant d’attester les changements de données de votre organisation, veuillez cocher la case 'Attestation'"
                     },
                     {
                         "code": "m000027",
                         "message_en": "Further Site Details",
-                        "message_fr": "Further Site Details_FR"
+                        "message_fr": "Autres détails sur le site"
                     },
                     {
                         "code": "m000028",
                         "message_en": "This UN Number does not exist in the CID Regulation. Please enter a valid UN Number to proceed.",
-                        "message_fr": "This UN Number does not exist in the CID Regulation. Please enter a valid UN Number to proceed._FR"
+                        "message_fr": "Ce numéro UN n’existe pas dans le règlement du CID. Veuillez entrer un numéro UN valide pour continuer."
                     },
                     {
                         "code": "m000029",
                         "message_en": "Switch Site Type",
-                        "message_fr": "Switch Site Type_FR"
+                        "message_fr": "Changer le type de site"
                     },
                     {
                         "code": "m000030",
@@ -582,37 +587,37 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000032",
                         "message_en": "The registration of the {0} Organization is based on invitation only. Do you want to request to have an invitation sent to you to register this Organization?",
-                        "message_fr": "The registration of the {0} Organization is based on invitation only. Do you want to request to have an invitation sent to you to register this Organization?_FR"
+                        "message_fr": "L’enregistrement de l’organisation {0} ne peut se faire que sur invitation. Voulez‑vous recevoir une invitation pour inscrire cette organisation?"
                     },
                     {
                         "code": "m000033",
                         "message_en": "You are about to begin the process of registering the {0} Organization within CID. Would you like to proceed?",
-                        "message_fr": "You are about to begin the process of registering the {0} Organization within CID. Would you like to proceed?_FR"
+                        "message_fr": "Vous êtes sur le point de commencer le processus d’inscription de {0} organisation dans le CID. Voulez‑vous continuer?"
                     },
                     {
                         "code": "m000034",
                         "message_en": "The registration process for the {0} Organization has begun. If you proceed, then you will be on-boarded as a Secondary Admin for the {0} Corporation. Would you like to proceed?",
-                        "message_fr": "The registration process for the {0} Organization has begun. If you proceed, then you will be on-boarded as a Secondary Admin for the {0} Corporation. Would you like to proceed?_FR"
+                        "message_fr": "Le processus d’enregistrement pour l’organisation {0} est commencé. Si vous poursuivez, vous serez inscrit comme administrateur secondaire pour l’entreprise {0}. Voulez‑vous continuer?"
                     },
                     {
                         "code": "m000035",
                         "message_en": "The registration process for the {0} Organization is complete. If you proceed, then you will be on-boarded as a Secondary Admin for the {0} Corporation. Would you like to proceed?",
-                        "message_fr": "The registration process for the {0} Organization is complete. If you proceed, then you will be on-boarded as a Secondary Admin for the {0} Corporation. Would you like to proceed?_FR"
+                        "message_fr": "Le processus d’enregistrement pour l’organisation {0} est terminé. Si vous poursuivez, vous serez inscrit comme administrateur secondaire pour l’entreprise {0}. Voulez‑vous continuer?"
                     },
                     {
                         "code": "m000036",
                         "message_en": "If you proceed, you will no longer be attached to {0} Organization, after which you will have the option to register a new Organization instead. Do you want to continue and be disconnected from {0}?",
-                        "message_fr": "If you proceed, you will no longer be attached to {0} Organization, after which you will have the option to register a new Organization instead. Do you want to continue and be disconnected from {0}?_FR"
+                        "message_fr": "Si vous continuez, vous ne serez plus associé à l’organisation {0}, après quoi vous aurez l’option d’enregistrer à la place une autre organisation. Voulez‑vous continuer et être désaffilié de {0}?"
                     },
                     {
                         "code": "m000037",
                         "message_en": "CRA Business Number '{0}' already exists.",
-                        "message_fr": "CRA Business Number '{0}' already exists._FR"
+                        "message_fr": "Le numéro d'entreprise ARC {0} existe déjà."
                     },
                     {
                         "code": "m000038",
                         "message_en": "Processing...",
-                        "message_fr": "Processus"
+                        "message_fr": "Traitement…"
                     },
                     {
                         "code": "m000039",
@@ -622,27 +627,27 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000040",
                         "message_en": "TDG support personnel have been notified of your request and will contact you shortly at your email of {0}.",
-                        "message_fr": "TDG support personnel have been notified of your request and will contact you shortly at your email of {0}._FR"
+                        "message_fr": "Le personnel de soutien de TMD a été avisé de votre demande et communiquera avec vous sous peu à votre adresse {0}."
                     },
                     {
                         "code": "m000041",
                         "message_en": "The following Organization data was retrieved from Canada Revenue Agency for this BN {0}:",
-                        "message_fr": "The following Organization data was retrieved from Canada Revenue Agency for this BN {0}:_FR"
+                        "message_fr": "Les données suivantes sur l’organisation ont été récupérées auprès de l’Agence du revenu du Canada pour ce NE {0} :"
                     },
                     {
                         "code": "m000042",
-                        "message_en": "The following Organization, with the same Legal Name '{0}', has been found in our system:",
-                        "message_fr": "The following Organization, with the same Legal Name '{0}', has been found in our system:_FR"
+                        "message_en": "The following Organization, with the same Legal Name '{0}', has been found in our system.",
+                        "message_fr": "L’organisation suivante, portant le même nom commercial {0}, a été trouvée dans notre système."
                     },
                     {
                         "code": "m000043",
-                        "message_en": "The request has been sent to the primary administrator of this Organization to onboard you. If they agree, then an invitation email will be sent to you that will allow you complete the onboarding process.<br><br>Please choose the [Sign Out] option to leave the application.",
-                        "message_fr": "The request has been sent to the primary administrator of this Organization to onboard you. If they agree, then an invitation email will be sent to you that will allow you complete the onboarding process.<br><br>Please choose the [Sign Out] option to leave the application._FR"
+                        "message_en": "The request has been sent to the primary administrator of this Organization to onboard you. If they agree, then an invitation email will be sent to you that will allow you complete the onboarding process.<br><br>Please choose the <b>[Sign Out]</b> option to leave the application.",
+                        "message_fr": "La demande a été envoyée à l’administrateur principal de cette organisation afin de vous ajouter comme utilisateur. S’il est d’accord, un courriel d’invitation vous sera envoyé afin de compléter le processus.<br><br>Veuillez sélectionner l’option <b>[Fermer la session]</b> pour quitter l’application."
                     },
                     {
                         "code": "m000044",
-                        "message_en": "As requested, no request the primary administrator of this Organization was not sent a request to onboard you to this Organization.<br><br>Please choose the [Sign Out] option to leave the application.",
-                        "message_fr": "As requested, no request the primary administrator of this Organization was not sent a request to onboard you to this Organization.<br><br>Please choose the [Sign Out] option to leave the application._FR"
+                        "message_en": "As requested, no request the primary administrator of this Organization was not sent a request to onboard you to this Organization.<br><br>Please choose the <b>[Sign Out]</b> option to leave the application.",
+                        "message_fr": "Tel que demandé, l’administrateur principal de cette organisation n’a pas reçu de demande afin de vous ajouter comme utilisateur.<br><br>Veuillez sélectionner l’option <b>[Fermer la session]</b> pour quitter l’application."
                     },
                     {
                         "code": "m000045",
@@ -657,12 +662,12 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000047",
                         "message_en": "The '{0}' Organization is currently set up as a by-invitation only Organization. Do you want to request to be on-boarded?",
-                        "message_fr": "The '{0}' Organization is currently set up as a by-invitation only Organization. Do you want to request to be on-boarded?_FR"
+                        "message_fr": "L’organisation n’autorise l’accès que sur invitation. Souhaitez‑vous faire une demande afin d’être ajouté comme utilisateur?"
                     },
                     {
                         "code": "m000048",
                         "message_en": "For this site operation there is already a class record created",
-                        "message_fr": "Cette operation a déjà une classe avec le type"
+                        "message_fr": "Il existe déjà un dossier de classe pour les opérations de ce site."
                     },
                     {
                         "code": "m000049",
@@ -682,187 +687,187 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000052",
                         "message_en": "Confirmation that this is your Organization:",
-                        "message_fr": "Confirmation that this is your Organization:_FR"
+                        "message_fr": "Confirmation qu'il s'agit de votre organisation:"
                     },
                     {
                         "code": "m000098",
                         "message_en": "Your entered name and email account are already associated with an invitation tailored to you and your Organization. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
-                        "message_fr": "Your entered name and email account are already associated with an invitation tailored to you and your Organization. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID._FR"
+                        "message_fr": "Le nom et le compte de courriel saisis sont déjà associés à une invitation formulée pour vous et votre organisation. L’invitation vous sera retournée à cette adresse de courriel sous peu. Veuillez utiliser le lien figurant dans ce courriel pour être ajouté comme utilisateur du CID."
                     }, {
                         "code": "m000099",
-                        "message_en": "The Registration process is currently being processed by your Organization’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Organization or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen",
-                        "message_fr": "The Registration process is currently being processed by your Organization’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Organization or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen_FR"
+                        "message_en": "The Registration process is currently being processed by your Organization’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Organization or Sites. You will however be able to view the current state of the Registration via the <b>[Next]</b> and <b>[Previous]</b> buttons at the bottom of the screen.",
+                        "message_fr": "Le processus d’enregistrement est traité par l’administrateur principal de votre organisation. Tant que l’enregistrement ne sera pas terminé, vous ne pourrez pas ajouter ou changer les données, ni attester l’organisation ou les sites. Vous pourrez cependant voir l’état actuel de l’enregistrement en cliquant sur les boutons <b>[Suivant]</b> et <b>[Précédent]</b> au bas de l’écran."
                     },
                     {
                         "code": "m000100",
                         "message_en": "Back to Organization Registration",
-                        "message_fr": "Retour à l'enregistrement de société"
+                        "message_fr": "Retour à l’enregistrement de l’organisation"
                     },
                     {
                         "code": "m000101",
-                        "message_en": "As seen below your ERAP(s) from the TC ROOT systems have been transferred over If necessary add any remaining ERAPs, or choose the [Next] button to continue.",
-                        "message_fr": "As seen below your ERAP(s) from the TC ROOT systems have been transferred over If necessary add any remaining ERAPs, or choose the [Next] button to continue._FR"
+                        "message_en": "As seen below your ERAP(s) from the TC ROOT systems have been transferred over If necessary add any remaining ERAPs, or choose the <b>[Next]</b> button to continue.",
+                        "message_fr": "Comme vous pouvez le voir ci-dessous, votre ou vos PIU des systèmes ROOT de TC ont été transférés. Au besoin, ajoutez les autres PIU ou cliquez sur le bouton <b>[Suivant]</b> pour poursuivre."
                     },
                     {
                         "code": "m000102",
                         "message_en": "Air",
-                        "message_fr": "Aérien"
+                        "message_fr": "Transport aérien"
                     },
                     {
                         "code": "m000103",
                         "message_en": "Marine",
-                        "message_fr": "Maritime"
+                        "message_fr": "Transport maritime"
                     },
                     {
                         "code": "m000104",
                         "message_en": "Rail",
-                        "message_fr": "Ferroviaire"
+                        "message_fr": "Transport ferroviaire"
                     },
                     {
                         "code": "m000105",
                         "message_en": "Road",
-                        "message_fr": "Route"
+                        "message_fr": "Transport routier"
                     },
                     {
                         "code": "m000106",
                         "message_en": "<h2>TDG CLIENT IDENTIFICATION DATABASE: {0}</h2>",
-                        "message_fr": "<h2>TDG CLIENT IDENTIFICATION DATABASE_FR: {0}</h2>"
+                        "message_fr": "<h2>BASE DE DONNÉES D’IDENTIFICATION DES CLIENTS DU TMD: {0}</h2>"
                     },
                     {
                         "code": "m000107",
                         "message_en": "You must choose a valid NAICS Code from the NAICS Code drop- down list to continue.",
-                        "message_fr": "You must choose a valid NAICS Code from the NAICS Code drop- down list to continue. _FR"
+                        "message_fr": "Vous devez choisir un code SCIAN valide du menu déroulant NAICS Code pour continuer."
                     },
                     {
                         "code": "m000108",
                         "message_en": "Back to Activity Types Screen",
-                        "message_fr": "Back to Activity Types Screen_FR"
+                        "message_fr": "Retour à l’écran Activity Types"
                     },
                     {
                         "code": "m000109",
                         "message_en": "Deactivate Organization",
-                        "message_fr": "Désactiver l'entreprise"
+                        "message_fr": "Désactiver l’organisation"
                     },
                     {
                         "code": "m000110",
                         "message_en": "Before selecting the Bulk option, each Site where 'Site Claimed' is set to 'Site Claim Pending', needs to be claimed, by choosing one of the options (My Active Site, My Inactive Site, or Not My Site) via that row’s [V] button.",
-                        "message_fr": "Before selecting the Bulk option, each Site where 'Site Claimed' is set to 'Site Claim Pending', needs to be claimed, by choosing one of the options (My Active Site, My Inactive Site, or Not My Site) via that row’s [V] button."
+                        "message_fr": "Avant de sélectionner l’option en bloc, chaque site où le champ « Site Claimed » est « Site Claim Pending » doit être réclamé en choisissant l’une des options (My Active Site, My Inactive Site, ou Not My Site) au moyen du bouton [V] de la rangée."
                     },
                     {
                         "code": "m000111",
                         "message_en": "Bulk Add/Update",
-                        "message_fr": "Ajout/Mise à jour en masse"
+                        "message_fr": "Ajout/mise à jour en bloc"
                     },
                     {
                         "code": "m000112",
                         "message_en": "The Annual Compliance Update can only be completed 30 days before your Anniversary Date. On your Anniversary Date, you will have an additional 30 days to complete the Annual Compliance Update.",
-                        "message_fr": "The Annual Compliance Update can only be completed 30 days before your Anniversary Date. On your Anniversary Date, you will have an additional 30 days to complete the Annual Compliance Update_FR."
+                        "message_fr": "La mise à jour de la conformité annuelle ne peut être effectuée que 30 jours avant votre date d’anniversaire. Le jour de l’anniversaire, vous aurez 30 jours de plus pour effectuer la mise à jour de la conformité annuelle."
                     },
                     {
                         "code": "m000113",
                         "message_en": "The Assign as Primary Admin is restricted to only the Primary Admin for this Organization.",
-                        "message_fr": "The Assign as Primary Admin is restricted to only the Primary Admin for this Organization._FR."
+                        "message_fr": "La fonction d’administrateur principal ne peut être assignée qu’à l’administrateur principal de cette organisation."
                     },
                     {
                         "code": "m000114",
                         "message_en": "Are you sure you want to assign {0} as the Primary Admin for this Organization’s CID Platform, and in doing assign yourself as a Secondary Contact?",
-                        "message_fr": "Are you sure you want to assign {0} as the Primary Admin for this Organization’s CID Platform, and in doing assign yourself as a Secondary Contact?_FR."
+                        "message_fr": "Êtes‑vous certain de vouloir nommer {0} comme administrateur principal pour la plateforme CID de cette organisation et, ce faisant, vous nommer comme contact secondaire?"
 
                     },
                     {
                         "code": "m000115",
                         "message_en": "The Assign as Primary Admin can only be assigned to a Secondary Admin that has logged into the CID Platform at least one time.",
-                        "message_fr": "The Assign as Primary Admin can only be assigned to a Secondary Admin that has logged into the CID Platform at least one time._FR"
+                        "message_fr": "La fonction d’administrateur principal ne peut être assignée qu’à un administrateur secondaire qui a ouvert une session sur la plateforme du CID au moins une fois."
                     },
                     {
                         "code": "m000116",
                         "message_en": "This Contact cannot be added as a Contact with this name and email address already exists in CID, but is assigned to a different Organization.",
-                        "message_fr": "This Contact cannot be added as a Contact with this name and email address already exists in CID, but is assigned to a different Organization._FR"
+                        "message_fr": "Ce contact ne peut pas être ajouté, puisqu’un contact avec ce nom et cette adresse de courriel existe déjà dans le CID, mais est attribué à une organisation différente."
                     },
                     {
                         "code": "m000117",
                         "message_en": "The Secondary Contact {0} has been sent an on-boarding invitation to their email address of {1}.",
-                        "message_fr": "The Secondary Contact {0} has been sent an on-boarding invitation to their email address of {1}._FR"
+                        "message_fr": "Une invitation pour être ajouté comme utilisateur a été envoyée au contact secondaire {0} à son adresse de courriel {1}."
                     },
                     {
                         "code": "m000118",
                         "message_en": "Only the Primary Admin can deactivate a Secondary Admin.",
-                        "message_fr": "Only the Primary Admin can deactivate a Secondary Admin._FR"
+                        "message_fr": "Seul l’administrateur principal peut désactiver un administrateur secondaire."
                     },
                     {
                         "code": "m000119",
                         "message_en": "At least one other active Secondary Admin needs to be added before you can deactivate this Secondary Admin.",
-                        "message_fr": "At least one other active Secondary Admin needs to be added before you can deactivate this Secondary Admin._FR"
+                        "message_fr": "Au moins un autre administrateur secondaire doit être ajouté avant que vous puissiez désactiver cet administrateur secondaire."
                     },
                     {
                         "code": "m000120",
                         "message_en": "The Secondary Contact {0} has been sent an on-boarding invitation to their email address of {1}.",
-                        "message_fr": "The Secondary Contact {0} has been sent an on-boarding invitation to their email address of {1}._FR"
+                        "message_fr": "Une invitation pour être ajouté comme utilisateur a été envoyée au contact secondaire {0} à son adresse de courriel {1}."
                     },
                     {
                         "code": "m000121",
                         "message_en": "Mark All as Complete",
-                        "message_fr": "Mark All as Complete_FR"
+                        "message_fr": "Afficher tous comme terminé"
                     },
                     {
                         "code": "m000122",
                         "message_en": "Are you sure you would like to de-activate this contact record?",
-                        "message_fr": "Are you sure you would like to de-activate this contact record?_FR"
+                        "message_fr": "Êtes‑vous sûr de vouloir désactiver le dossier de ce contact?"
                     },
                     {
                         "code": "m000123",
                         "message_en": "Mark as Complete",
-                        "message_fr": "Mark as Complete_FR"
+                        "message_fr": "Afficher comme terminé"
                     },
                     {
                         "code": "m000124",
                         "message_en": "TDG Activity Types for",
-                        "message_fr": "TDG Activity Types for_FR"
+                        "message_fr": "Types d'activités TMD pour"
                     },
                     {
                         "code": "m000125",
                         "message_en": "Class / Divisions for",
-                        "message_fr": "Class / Divisions for_FR"
+                        "message_fr": "Classes/Divisions pour"
                     },
                     {
                         "code": "m000126",
                         "message_en": "Modes of Transportation for",
-                        "message_fr": "Modes of Transportation for_FR"
+                        "message_fr": "Modes de transport pour"
                     },
                     {
                         "code": "m000127",
                         "message_en": "Site",
-                        "message_fr": "Site_FR"
+                        "message_fr": "Site"
                     },
                     {
                         "code": "m000128",
                         "message_en": "Latitude",
-                        "message_fr": "Latitude_FR"
+                        "message_fr": "Latitude"
                     },
                     {
                         "code": "m000129",
                         "message_en": "Longitude",
-                        "message_fr": "Longitude_FR"
+                        "message_fr": "Longitude"
                     },
                     {
                         "code": "m000130",
                         "message_en": "The Annual Compliance Update can only be completed as early as 30 days before your Organization’s Anniversary Date of {0}.",
-                        "message_fr": "The Annual Compliance Update can only be completed as early as 30 days before your Organization’s Anniversary Date of {0}._FR"
+                        "message_fr": "La mise à jour de la conformité annuelle ne peut être effectuée avant les 30 jours précédant la date d’anniversaire de votre organisation, soit le {0}."
                     },
                     {
                         "code": "m000131",
-                        "message_en": "Another organization already has an active Site at this location. You will not be able to add a Site at this Location until the other organization first deactivates it.</br></br> If that other organization has agreed to sell you this Site, then please advise them to Deactivate the Site within the CID Portal, after which you will be able to add this Site.</br></br> If you are certain that the Site details entered are correct, and this Site is not part of a sale or transfer, then do you want to have a request sent to that organization asking them to release the Site?</br></br>",
-                        "message_fr": "Another organization already has an active Site at this location. You will not be able to add a Site at this Location until the other organization first deactivates it.</br></br> If that other organization has agreed to sell you this Site, then please advise them to Deactivate the Site within the CID Portal, after which you will be able to add this Site.</br></br> If you are certain that the Site details entered are correct, and this Site is not part of a sale or transfer, then do you want to have a request sent to that organization asking them to release the Site?_FR</br></br>"
+                        "message_en": "Another organization already has an active Site at this location. You will not be able to add a Site at this Location until the other organization first deactivates it.</br></br> If that other organization has agreed to sell you this Site, then please advise them to Deactivate the Site within the CID Portal, after which you will be able to add this Site.</br></br> If you are certain that the Site details entered are correct, and this Site is not part of a sale or transfer, then do you want to have a request sent to that organization asking them to release the Site?",
+                        "message_fr": "Veuillez noter qu’une autre organisation possède un site actif avec la même information. Voulez‑vous continuer ou mettre fin à cet ajout afin d’apporter des corrections aux données du site saisi ou commencer le processus de vente/fusion du site au moyen de l’option du menu Site transfer?"
                     },
                     {
                         "code": "m000132",
-                        "message_en": "This action will deactivate the Organization and all of its Sites.</br></br>Please be aware that if any of the Sites are meant to be sold to another Organization, or merged into an existing Organization, then you will need to first begin the Transfer/Sale process for those Sites before deactivating the Organization.</br></br> <p style='color:red' >Be advised that this action cannot be undone.</p> Do you want to proceed with the Organization deactivation.</br></br>",
-                        "message_fr": "This action will deactivate the Organization and all of its Sites.</br></br>Please be aware that if any of the Sites are meant to be sold to another Organization, or merged into an existing Organization, then you will need to first begin the Transfer/Sale process for those Sites before deactivating the Organization.</br></br> <p style='color:red' >Be advised that this action cannot be undone.</p> Do you want to proceed with the Organization deactivation.</br></br>_FR"
+                        "message_en": "This action will deactivate the Organization and all of its Sites.</br></br>Please be aware that if any of the Sites are meant to be sold to another Organization, or merged into an existing Organization, then you will need to first begin the Transfer/Sale process for those Sites before deactivating the Organization.</br></br> <p style='color:red' >Be advised that this action cannot be undone.</p> Do you want to proceed with the Organization deactivation.",
+                        "message_fr": "Cette action désactivera l’organisation et tous ses sites.</br></br>Soyez avisé que si l’un ou plusieurs de ces sites doivent être vendus à une autre organisation, ou fusionnés à une organisation existante, il vous faudra en premier lieu commencer le processus de transfert/vente pour ces sites avant de désactiver l’organisation.</br></br> <p style='color:red' >Soyez avisé que cette action ne peut pas être annulée.</p> Voulez-vous procéder à la désactivation de l’organisation?"
                     },
                     {
                         "code": "m000133",
                         "message_en": "Note: This addition of a backup Contact has completed the Contact requirements of the regulation. Any further Contact additions are completely optional.",
-                        "message_fr": "Note: This addition of a backup Contact has completed the Contact requirements of the regulation. Any further Contact additions are completely optional._FR"
+                        "message_fr": "Remarque : En ajoutant ce contact de réserve, vous répondez à toutes les exigences du règlement. Tout autre ajout de contact est entièrement facultatif."
                     },
                     {
                         "code": "m000134",
