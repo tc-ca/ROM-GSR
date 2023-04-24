@@ -9,7 +9,8 @@ $(document).ready(function () {
 	page_setup();
 	var cid_naicscode_label = tdg.error_message.message("cid_naicscode"); // NAICS Code
 	sessionStorage.setItem("cid_naicscode_label", cid_naicscode_label);
-	
+
+	tdg.c.page_instructions("page_company_naics_code");
 
 	// hide controls
 	tdg.c.control_hide("cid_naicscode", true);
@@ -24,13 +25,12 @@ $(document).ready(function () {
 	$("#cid_naicscode").attr("value", null);
 	$("#cid_naicscode_name").attr("value", null);
 
-	debugger; 
+	debugger;
 	var cancelLabel = tdg.error_message.message("BTN_CANCEL");
-    //$("#btn_save_new").after('<div role="group" class="form-action-container-left"> &nbsp; </div><input type="button" data-dismiss="modal" value="'+cancelLabel+'" id="CancelButton" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
-    $("#btn_save_new").after('<input type="button" data-dismiss="modal" value="'+cancelLabel+'" id="CancelButton" name="CancelButton" class="btn btn-default button previous previous-btn"/>')
-    $('#btn_save_new').attr('style', 'margin-right:4px;');
-    $("#CancelButton").on("click", function(){parent.$(".form-close").trigger("click");});  
-	//Test The NAICS Code must be selected using the NAICS Code drop-down. Enter at least the first two digits or your full NAICS Code to filter the drop-down and select the applicable NAICS Code from the list.</p>");
+	//$("#btn_save_new").after('<div role="group" class="form-action-container-left"> &nbsp; </div><input type="button" data-dismiss="modal" value="'+cancelLabel+'" id="CancelButton" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
+	$("#btn_save_new").after('<input type="button" data-dismiss="modal" value="' + cancelLabel + '" id="CancelButton" name="CancelButton" class="btn btn-default button previous previous-btn"/>')
+	$('#btn_save_new').attr('style', 'margin-right:4px;');
+	$("#CancelButton").on("click", function () { parent.$(".form-close").trigger("click"); });
 });
 
 $(window).unload(function () {
@@ -46,7 +46,7 @@ $(window).unload(function () {
 });
 
 function page_setup() {
-    debugger;
+	debugger;
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 	const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
@@ -94,9 +94,6 @@ function show_error(msg) {
 	validationSection.show();
 	$('.validation-summary div').focus();
 }
-
-
-
 
 // call back from tdg.c 
 function btn_save_new_onclick() {

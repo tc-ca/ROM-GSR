@@ -117,8 +117,9 @@ if (window.jQuery) {
                             //postal
                             debugger;
                             var address1_line1 = $("#address1_line1").val();
-                            var address1_city = $("#address1_city").val();
-                            var address1_stateorprovince = $("#address1_stateorprovince").val();
+                            var address1_line2 = $("#address1_line2").val();
+                            var address1_line3 = $("#address1_line3").val();
+                            var address1_postalcode = $("#address1_postalcode").val();
 
                             var parameters = {};
                             parameters.Parent_Id = account_id; // Edm.String
@@ -126,6 +127,7 @@ if (window.jQuery) {
                             parameters.Address1_Postal = address1_postalcode; // Edm.String
                             parameters.Address1_Line1 = address1_line1; // Edm.String
                             parameters.Address1_Line2 = address1_line2; // Edm.String
+                            parameters.Address1_Line3 = address1_line3; // Edm.String
 
                             var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
                             var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");

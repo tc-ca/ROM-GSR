@@ -115,6 +115,7 @@ if (typeof (tdg.message) == "undefined") {
                 "Note that throughout the application, all fields with a red asterisk are mandatory fields and must be completed before proceeding to the next step.";
             var page_crw_start_FR = "Saisir le numéro d’entreprise de l’Agence du revenu du Canada (NE ARC) et cliquer sur le bouton <b>[Suivant]</b> ci‑dessous.<br><br>" +
                 "Sinon, si votre compagnie appartient à un type d’industrie qui ne possède pas de NE ARC, cliquer sur ‘Non‘, remplir les champs et cliquer sur le bouton <b>[Suivant]</b> ci‑dessous.";
+            
             var page_crw_company_insert_EN = "As required, update any of the Organization information below, then choose the <b>[Next]</b> button below to continue.<br>" +
                 "If required: <br>" +
                 " - choose the <b>[Previous]</b> button below to re-start the Registration.<br>" +
@@ -125,6 +126,7 @@ if (typeof (tdg.message) == "undefined") {
                 " - choose the <b>[Previous]</b> button below to re-start the Registration.<br>" +
                 " - choose the <b>[Contact Us]</b> button above to withdraw the Registration request.<br><br>" +
                 "Note that fields in the application that have a red star at the end of their label are mandatory._FR"
+            
             var page_crw_company_edit_EN = "As required, update any of the Organization information below, then choose the <b>[Next]</b> button below to continue.<br>" +
                 "If required: <br>" +
                 " - choose the <b>[Previous]</b> button below to re-start the Registration.<br>" +
@@ -135,52 +137,64 @@ if (typeof (tdg.message) == "undefined") {
                 " - choose the <b>[Previous]</b> button below to re-start the Registration.<br>" +
                 " - choose the <b>[Contact Us]</b> button above to withdraw the Registration request.<br><br>" +
                 "Note that fields in the application that have a red star at the end of their label are mandatory._FR"
+            
             var page_crw_contact_EN = "Create at least one Secondary Contact by choosing the <b>[+ Add]</b> button below, then choose the <b>[Next]</b> button below to continue.</br><br>" +
                 "To edit or deactivate a Contact, then choose the <b>[V]</b> button to the far right of that row. If required, choose the <b>[Previous]</b> button to return to the Organization screen.";
             var page_crw_contact_FR = "Créer au moins un contact secondaire en cliquant sur le bouton <b>[+Créer]</b> ci‑dessous, ensuite cliquer sur le bouton <b>[Suivant]</b> ci‑dessous pour poursuivre.</br><br>" +
                 "Pour modifier ou désactiver un contact, cliquer sur le bouton <b>[V]</b> à l’extrémité droite de cette rangée. Au besoin, cliquer sur le bouton <b>[Précédent]</b> pour revenir à l’écran organization .";
-            var page_crw_naics_EN = "Choose the <b>[+ Add]</b> button below to create NAICS Codes for the Organization, then choose the <b>[Next]</b> button below to continue.</br></br>" +
+            
+            var page_crw_naics_EN = "Choose the <b>[+Add]</b> button below to create NAICS Codes for the Organization, then choose the <b>[Next]</b> button below to continue.</br></br>" +
                 "To deactivate a NAICS, then choose the <b>[V]</b> button to the far right of that row. If required, choose the <b>[Previous]</b> button below to return to the Contact screen.";
-            var page_crw_naics_FR = "Choose the <b>[+ Add]</b> button below to create NAICS Codes for the Organization, then choose the <b>[Next]</b> button below to continue.</br></br>" +
-                "To deactivate a NAICS, then choose the <b>[V]</b> button to the far right of that row. If required, choose the <b>[Previous]</b> button below to return to the Contact screen._FR";
-            var page_crw_attest_EN = "If the Organization details are accurate and complete, then choose the <b>[Attest Organization Data]</b> button below.</br>Otherwise, use the <b>[Previous]</b> button below to first make any adjustments.";
-            var page_crw_attest_FR = "If the Organization details are accurate and complete, then choose the <b>[Attest Organization Data]</b> button below.</br>Otherwise, use the <b>[Previous]</b> button below to first make any adjustments._FR";
+            var page_crw_naics_FR = "Cliquer sur le bouton <b>[+Créer]</b> ci‑dessous pour créer les codes SCIAN pour la compagnie, ensuite cliquer sur le bouton <b>[Suivant]</b> ci‑dessous pour poursuivre.<br><br>" +
+                "Pour désactiver un code SCIAN, cliquer sur le bouton <b>[V]</b> à l’extrémité droite de cette rangée. Au besoin, cliquer sur le bouton <b>[Précédent]</b> pour revenir à l’écran Contact.";
+            
+            var page_crw_attest_EN = "If the Organization details are accurate and complete, then choose the <b>[Submit]</b> button below.</br>Otherwise, use the <b>[Previous]</b> button below to first make any adjustments.";
+            var page_crw_attest_FR = "Si les détails de la compagnie sont exacts et complets, cliquer sur le bouton <b>[Envoyer]</b> ci‑dessous.<br>Sinon, cliquer sur le bouton <b>[Précédent]</b> ci‑dessous pour apporter des changements.";
+            
             var page_crw_site_EN = "For each Site:<br>" +
                 "1. Choose the <b>[+ Add]</b> button below.<br>" +
                 "2. When complete, click the <u>Site ID</u> underline link of that new Site row to complete and attest the Site.<br>" +
                 "3. Choose the <b>[Next]</b> button below when all Sites are entered.<br><br>" +
                 "To edit or deactivate a Site, then choose the <b>[V]</b> button to the far right of that row.<br>" +
                 "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen.";
-            var page_crw_site_FR = "For each Site:<br>" +
-                "1. Choose the <b>[+ Add]</b> button below.<br>" +
-                "2. When complete, click the <u>Site ID</u> underline link of that new Site row to complete and attest the Site.<br>" +
-                "3. Choose the <b>[Next]</b> button below when all Sites are entered.<br><br>" +
-                "To edit or deactivate a Site, then choose the <b>[V]</b> button to the far right of that row.<br>" +
-                "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen._FR";
+            var page_crw_site_FR = "Pour chaque site:<br>" +
+                "1. Cliquer sur le bouton <b>[+Créer]</b> ci‑dessous.<br>" +
+                "2. Ensuite, cliquer sur le lien <u>Site ID</u> souligné de la nouvelle rangée afin de compléter et d’attester le site.<br>" +
+                "3. Cliquer sur le bouton <b>[Suivant]</b> ci‑dessous une fois tous les sites saisis.<br><br>" +
+                "Pour modifier ou désactiver un site, cliquer sur le bouton <b>[V]</b> à l’extrémité droite de la rangée.<br>" +
+                "Au besoin, cliquer sur le bouton <b>[Précédent]</b> dessous pour retourner à l’écran Attester l'organisation.";
+
             var page_crw_complete_EN = "If the Organization and site details are accurate and complete, then choose the <b>[Attest and Organization Registration]</b> button below to complete the Registration. Otherwise, use the <b>[Previous]</b> button below to first make any adjustments.";
             var page_crw_complete_FR = "If the Organization and site details are accurate and complete, then choose the <b>[Attest and Organization Registration]</b> button below to complete the Registration. Otherwise, use the <b>[Previous]</b> button below to first make any adjustments._FR";
+            
             var page_srw_site_EN = "";
             var page_srw_site_FR = "_FR";
+            
             var page_srw_activity_type_EN = "Choose the Site Activity Types. When complete, choose the <b>[Next]</b> button below.</br>If necessary, choose the <b>[Previous]</b> button below to return to the Basic/Extended screen.</br>" +
                 "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process.";
+            
             var page_srw_activity_type_FR = "Choose the Site Activity Types. When complete, choose the <b>[Next]</b> button below.</br>If necessary, choose the <b>[Previous]</b> button below to return to the Basic/Extended screen.</br>" +
                 "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process._FR";
+            
             var page_srw_further_site_details_EN = "Please choose the <b>[Next]</b> button below to review and attest the Site.</br>" +
                 "If necessary, choose the <b>[Previous]</b> button below to return to Further Site Details screen.</br>" +
                 "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process.";
             var page_srw_further_site_details_FR = "Please choose the <b>[Next]</b> button below to review and attest the Site.</br>" +
                 "If necessary, choose the <b>[Previous]</b> button below to return to Further Site Details screen.</br>" +
                 "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process._FR";
+            
             var page_srw_further_attest_site_EN = "If the site details are accurate and complete, then choose the <b>[Attest Site Data]</b> button below.</br>Otherwise, use the <b>[Previous]</b> button to make any adjustments.</br>" +
                 "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process.";
             var page_srw_further_attest_site_FR = "If the site details are accurate and complete, then choose the <b>[Attest Site Data]</b> button below.</br>Otherwise, use the <b>[Previous]</b> button to make any adjustments.</br>" +
                 "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process._FR";
+            
             var page_orw_mot_EN = "Choose the Mode(s) Of Transportation. When complete, choose the <b>[Next]</b> button below.<br>" +
                 "If necessary, choose the <b>[Previous]</b> button, or the <b>[Back to Activity Types Screen]</b> button, to return to the Activity Type screen.<br>" +
                 "Alternatively, choose the <b>[Back to Activity Types Screen]</b> to save the current site information and return to the Activity Types Screen.";
             var page_orw_mot_FR = "Choose the Mode(s) Of Transportation. When complete, choose the <b>[Next]</b> button below.<br>" +
                 "If necessary, choose the <b>[Previous]</b> button, or the <b>[Back to Activity Types Screen]</b> button, to return to the Activity Type screen.<br>" +
                 "Alternatively, choose the <b>[Back to Activity Types Screen]</b> to save the current site information and return to the Activity Types Screen._FR";
+            
             var page_orw_class_EN = "Choose the <b>[+ Add]</b> button below for each applicable Site Class. When complete, choose the <b>[Next]</b> button below.</br>" +
                 "To edit or deactivate a Site Class, then choose the <b>[V]</b> button to the far right of that row.<br>" +
                 "If necessary, choose the <b>[Previous]</b> button below to return to the Mode(s) of Transportation screen<br>" +
@@ -189,6 +203,7 @@ if (typeof (tdg.message) == "undefined") {
                 "To edit or deactivate a Site Class, then choose the <b>[V]</b> button to the far right of that row.<br>" +
                 "If necessary, choose the <b>[Previous]</b> button below to return to the Mode(s) of Transportation screen<br>" +
                 "Alternatively, choose the <b>[Back to Activity Types Screen]</b> to save the current site information and return to the Activity Types Screen._FR"
+            
             var page_my_company_EN = "Head Office details can be updated by choosing the <b>[Update Organization]</b> button at the bottom of this screen.</br></br>" +
                 "Following options are available via the menu options on the left:</br>" +
                 "- Organization History Log: Key past activities for this Organization.</br>" +
@@ -205,14 +220,17 @@ if (typeof (tdg.message) == "undefined") {
                 "- My Sites: To view a list of current Sites to add to, update, deactivate, reactivate or sale/transfer.</br>" +
                 "- Manage Application Users: To add or remove user access to this application.</br>" +
                 "- Online Help: To search for guidance on how to use this application._FR";
+            
             var page_my_company_contact_EN = "For actions, select the <b>[V]</b> button beside each row, or the <b>[+ Add]</b> button for a new entry.";
             var page_my_company_contact_FR = "For actions, select the <b>[V]</b> button beside each row, or the <b>[+ Add]</b> button for a new entry._FR";
+            
             var page_in_year_my_sites_EN = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.<br>" +
                 "To add additional Sites individually, choose the <b>[+ Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.<br>" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.";
             var page_in_year_my_sites_FR = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.<br>" +
                 "To add additional Sites individually, choose the <b>[+ Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.<br>" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end._FR";
+            
             var page_annual_compliance_update_EN = "To finalize the Annual Compliance Update:</br>1- As applicable, perform each step's related update below, then it's 'Mark as complete' option.</br>" +
                 "2- Read and agree to the terms of service agreement and select the 'Attestation' section.</br>" +
                 "3- When complete, select the <b>[Finalize Annual Compliance]</b> option.";
@@ -226,7 +244,10 @@ if (typeof (tdg.message) == "undefined") {
             var page_annual_compliance_resubmit_FR = "1- The next Annual Compliance Update can only be completed as early as 30 days before your Company’s Anniversary Date of {0}.</br>" +
                 "2- If it is required to re-submit the previous Annual Compliance, then please choose the <b>[Re-Submit Annual Compliance Update]</b> button below.</br>" +
                 "3- Note that the Annual Compliance should only be re-submitted if new data, or a date update, related to previous year that this Annual Compliance covers, was missed in the previous Compliance Update. </br>Any additions, or updates, that took place after the last Annual Compliance Completion Date of {1} should instead be done as regular in-year updates.";
-				
+	
+            var page_company_naics_code_EN = "The NAICS Code must be selected using the NAICS Code drop-down. Enter at least the first two digits or your full NAICS Code to filter the drop-down and select the applicable NAICS Code from the list.";
+            var page_company_naics_code_FR = "Le code SCIAN doit être sélectionné au moyen du menu déroulant NAICS Code. Saisir au moins les deux premiers chiffres du code SCIAN, ou le code au complet, pour appliquer un filtre au menu déroulant et sélectionner le code SCIAN applicable à partir de la liste.";
+
             var list =
                 [
                     {
@@ -323,6 +344,11 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "page_annual_compliance_resubmit",
                         "message_en": page_annual_compliance_resubmit_EN,
                         "message_fr": page_annual_compliance_resubmit_FR
+                    },
+                    {
+                        "code": "page_company_naics_code",
+                        "message_en": page_company_naics_code_EN,
+                        "message_fr": page_company_naics_code_FR
                     },
                     {
                         "code": "CID_PORTAL",
@@ -447,7 +473,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000005",
                         "message_en": "{0} record(s) added",
-                        "message_fr": "{0} information(s) ont été ajoutées"
+                        "message_fr": "{0} de dossier(s) ajouté(s)"
                     },
                     {
                         "code": "m000006",
@@ -923,6 +949,12 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000144",
                         "message_en": "Please enter a Longitude as a decimal, with the full four digit decimal point (e.g. -74.7992).",
                         "message_fr": "Please enter a Longitude as a decimal, with the full four digit decimal point (e.g. -74.7992)._FR"
+                    }
+					,
+                     {
+                        "code": "m000145",
+                        "message_en": "Are you want to withdraw this registration?",
+                        "message_fr": "Are you want to withdraw this registration?_FR"
                     }
                 ];
 

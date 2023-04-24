@@ -83,7 +83,7 @@ $(document).ready(function () {
 				$("#WithdrawButton").bind("click", function () {
 					debugger;
 
-					var message = tdg.error_message.message("m000131");
+					var message = tdg.error_message.message("m000145");
 					tdg.c.dialog_YN(message, (ans) => {
 						//var contact_id = '{{user.id}}';
 						if (ans) {
