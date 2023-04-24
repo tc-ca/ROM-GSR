@@ -7,13 +7,14 @@ $(document).ready(function () {
 
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
-    
-   // $('.text-danger').parent().att("id", "MessagePanel");
-	  $("#ValidationSummaryEntityFormView").after($('.text-danger').parent());
-	  $("#ValidationSummaryEntityFormView").after('<div id="ErrorMessageDiv" class="alert alert-danger" role="alert" style="display: none;">  </div>');
-	  Show_PluginError_TextLanguag($('.text-danger').parent());
-      page_setup();
-	  tdg.c.message_panel();
+
+	$("#ValidationSummaryEntityFormView").after($('.text-danger').parent());
+	$("#ValidationSummaryEntityFormView").after('<div id="ErrorMessageDiv" class="alert alert-danger" role="alert" style="display: none;">  </div>');
+	Show_PluginError_TextLanguag($('.text-danger').parent());
+	page_setup();
+	tdg.c.message_panel();
+
+	tdg.c.page_instructions("page_srw_site");
 
 	$("#NextButton").click(function (e) {
 		$("#ovs_address1_province").attr("disabled", false);
@@ -77,7 +78,7 @@ $(document).ready(function () {
 		$('#instructions').hide();
 		$('#EntityFormView').hide();
 		$("#NextButton").click();
-        //return;
+		//return;
 	}
 	else $('#redirectInstruction').hide();
 	//Phone number formatting
@@ -115,10 +116,6 @@ $(document).ready(function () {
 			break;
 		case "2":
 			// lat/long
-			//tdg.c.section_show("section_latitude_longitude");
-			//tdg.c.addValidator("address1_latitude");
-			//tdg.c.addValidator("address1_longitude");
-			//this.address1_default("N/A");
 			if (addressReadOnly) {
 				cid_input_read_only("section_latitude_longitude");
 			}
@@ -160,21 +157,14 @@ function cid_same_as_company_change() {
 if (window.jQuery) {
 	(function ($) {
 		webFormClientValidate = function () {
-		$('#ErrorMessageDiv').css('display', 'none');
-	   var addressType= $("#ovs_address_type").val();
-	   if (addressType == 2)
-	   {
-		 var checkresult =  CheckLatLongDecimal ();
-		 return checkresult;
+			$('#ErrorMessageDiv').css('display', 'none');
+			var addressType = $("#ovs_address_type").val();
+			if (addressType == 2) {
+				var checkresult = CheckLatLongDecimal();
+				return checkresult;
 
-	   }
-	   else
-
-		{return true;}
-		
-	
-
-			
+			}
+			else { return true; }
 		}
 	}(window.jQuery));
 }
@@ -184,7 +174,7 @@ function cid_input_read_only(sectionName) {
 	$("#cid_same_as_company").attr("disabled", true);
 	$("#ovs_address_type").attr("disabled", true);
 	//$(".section[data-name='" + sectionName + "']").find(':input').prop("disabled", true);
-    $(".section[data-name='" + sectionName + "']").find(':input').prop("readonly", "readonly");
+	$(".section[data-name='" + sectionName + "']").find(':input').prop("readonly", "readonly");
 }
 
 function page_setup() {
@@ -205,29 +195,28 @@ function page_setup() {
 	tdg.c.message_panel();
 }
 
-function Show_PluginError_TextLanguag(Field)
-{
-var language = sessionStorage.getItem("selected_language");
+function Show_PluginError_TextLanguag(Field) {
+	var language = sessionStorage.getItem("selected_language");
 
-            try {
-                var text = Field[0].innerText;
-                var index1 = text.indexOf("::");
-                if (index1 < 0) {
-                    text = text + "::" + text;
-                    index1 = text.indexOf("::");
-                }
-                //if (language == "en-US") {
-                if (language == "en") {
-                    value = text.substr(0, index1);
-                }
-                else {
-                    value = text.substr(index1 + 2);
-                }
-                Field[0].innerText = value;
-				Field[0].innerHTML = '<h3 class="validation-header" role="none"><span role="presentation" class="fa fa-info-circle"></span> The form could not be submitted for the following reasons:</h2>'
-				+  "<p>" + value + "</p>";
-            } catch (e) { }
-        }
+	try {
+		var text = Field[0].innerText;
+		var index1 = text.indexOf("::");
+		if (index1 < 0) {
+			text = text + "::" + text;
+			index1 = text.indexOf("::");
+		}
+		//if (language == "en-US") {
+		if (language == "en") {
+			value = text.substr(0, index1);
+		}
+		else {
+			value = text.substr(index1 + 2);
+		}
+		Field[0].innerText = value;
+		Field[0].innerHTML = '<h3 class="validation-header" role="none"><span role="presentation" class="fa fa-info-circle"></span> The form could not be submitted for the following reasons:</h2>'
+			+ "<p>" + value + "</p>";
+	} catch (e) { }
+}
 function CheckLatLongDecimal() {
 	var Lat = $("#address1_latitude").val();
 	var Longtitude = $("#address1_longitude").val();
@@ -237,35 +226,38 @@ function CheckLatLongDecimal() {
 	var checkResult = true;
 	//check latitude
 	//m000143
-    var m000143 = "<p>" +	tdg.error_message.message("m000143") + "</p>";
-	var m000144 = "<p>" +	tdg.error_message.message("m000144")  + "</p>";
-	if (decimalIndexLat < 0) {checkResult = false;
-	error = m000143;}
+	var m000143 = "<p>" + tdg.error_message.message("m000143") + "</p>";
+	var m000144 = "<p>" + tdg.error_message.message("m000144") + "</p>";
+	if (decimalIndexLat < 0) {
+		checkResult = false;
+		error = m000143;
+	}
 	else {
 		var numberofdecimal = Lat.toString().split('.')[1].length;
 		if (numberofdecimal != 4) {
 			error = m000143;
 			//"<p>Please enter a Latitude as a decimal, with the full four digit decimal point (e.g. 41.3251)</p>";
 			checkResult = false;
-		}}
+		}
+	}
 
 	//check longtitude
-	if (decimalIndexLong < 0) {checkResult = false;
-	error  = error + m000144;}
+	if (decimalIndexLong < 0) {
+		checkResult = false;
+		error = error + m000144;
+	}
 	else {
 		var Longtitudenumberofdecimal = Longtitude.toString().split('.')[1].length;
 		if (Longtitudenumberofdecimal != 4) {
-			error = error +  m000144;
+			error = error + m000144;
 			//"<p>Please enter a Longitude as a decimal, with the full four digit decimal point (e.g. -74.7992)</p>";
-			checkResult = false;}}
+			checkResult = false;
+		}
+	}
 
 	if (checkResult == false) {
 		$('#ErrorMessageDiv').css('display', 'block');
 		$('#ErrorMessageDiv').html("<h3>Error</h3>" + error);
-    }
+	}
 	return checkResult;
 }
-
-
-
-   

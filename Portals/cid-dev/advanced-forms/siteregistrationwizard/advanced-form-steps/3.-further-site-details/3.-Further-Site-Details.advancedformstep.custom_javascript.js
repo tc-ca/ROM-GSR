@@ -12,7 +12,7 @@ $(document).ready(function () {
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 
-	tdg.c.page_instructions("page_srw_further_site_details");
+	//tdg.c.page_instructions("page_srw_further_site_details");
 
 	var operationWizardURL = "";
 	//$('#instructions').hide();

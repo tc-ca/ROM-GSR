@@ -53,7 +53,7 @@ if (window.jQuery) {
             var checkedCheckBoxes = $('[id*="cid_"]:checkbox:checked');
 
             if (checkedCheckBoxes && checkedCheckBoxes.length <= 0) {
-                errorMessage = "You cannot proceed before selecting the site activity types.";
+                errorMessage = tdg.error_message.message("m000146");
                 validation = false;
             }
 
