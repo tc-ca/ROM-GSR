@@ -196,6 +196,13 @@ checkAnuualComplianceEligibility = function (anniversaryDate, annualComplianceCo
 					//$("#UpdateButton").val("Re-Submit Previous Annual Compliance Update");
 					$("#UpdateButton").addClass("hidden");
 					$(".workflow-link").removeClass("hidden");
+					$(".entity-grid").on("loaded", function () {
+								$(".btn.btn-default.btn-xs").prop("disabled", true);
+								$(".details-link").prop("disabled", true);
+								$(".details-link").css("pointer-events", "none");
+							});
+
+							$('table[data-name="annual_compliance_section_3"]').addClass("hidden");
 
 					//$(".instructions").addClass("hidden");
 					tdg.c.page_instructions("page_annual_compliance_resubmit");
