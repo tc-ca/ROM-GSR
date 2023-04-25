@@ -2,7 +2,6 @@
   "properties": {
     "connectionReferences": {
       "shared_commondataserviceforapps": {
-        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
@@ -67,6 +66,14 @@
                       }
                     },
                     "Address1_Line2": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "Address1_Line3": {
                       "type": "object",
                       "properties": {
                         "type": {
@@ -173,16 +180,20 @@
       },
       "actions": {
         "Perform_a_bound_action": {
-          "runAfter": {},
+          "runAfter": {
+            "Compose": [
+              "Succeeded"
+            ]
+          },
           "metadata": {
             "operationMetadataId": "896b4302-8f3b-496e-a93b-a12c4d706a8b"
           },
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps",
-              "operationId": "PerformBoundAction"
+              "operationId": "PerformBoundAction",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "accounts",
@@ -191,8 +202,9 @@
               "item/Parent_Id": "@triggerBody()?['Parent_Id']",
               "item/AddressType": "@triggerBody()?['AddressType']",
               "item/Address1_Line1": "@triggerBody()?['Address1_Line1']",
-              "item/Address1_Postal": "@triggerBody()?['properties']?['Address1_Postal']",
-              "item/Address1_Line2": "@triggerBody()?['properties']?['Address1_Line2']",
+              "item/Address1_Postal": "@triggerBody()?['Address1_Postal']",
+              "item/Address1_Line2": "@triggerBody()?['Address1_Line2']",
+              "item/Address1_Line3": " @{triggerBody()?['Address1_Line3']}",
               "item/Lld_Province": "@triggerBody()?['Lld_Province']",
               "item/Lld_Quarter": "@triggerBody()?['Lld_Quarter']",
               "item/Lld_Section": "@triggerBody()?['Lld_Section']",
@@ -220,11 +232,19 @@
             "statusCode": 200,
             "body": "@body('Perform_a_bound_action')"
           }
+        },
+        "Compose": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "a3fc21f7-f93e-4ee3-97b5-d364c1264158"
+          },
+          "type": "Compose",
+          "inputs": "@{triggerBody()}\n\n\nProb\n\n\n\n"
         }
       },
       "outputs": {}
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
