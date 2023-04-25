@@ -5,17 +5,63 @@
 $(document).ready(function () {
 	debugger;
 	page_setup();
-
-
     var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
-	
+	//if
+	var URLs = new URLSearchParams(window.location.search);
+
+   //  var newrecordid = URLs.get('id');
+   var Resubmit = URLs.get('Resubmit');
+   if (Resubmit != null)
+    {
+		var cid_companyanniversarydate =new Date( $('#cid_companyanniversarydate').val());
+		
+	  var urlPath = window.location.href;
+      urlPath = urlPath.split('?')[0];
+      window.history.replaceState({}, document.title, urlPath);
+	  var afterRefreshMessage = "Annual Compliance has been successfully re-opened. Please now complete the Annual Compliance Update, which is due as of {0}.";
+     
+	 
+	  afterRefreshMessage = afterRefreshMessage.replace("{0}" , cid_companyanniversarydate) ;
+	  tdg.c.dialog_OK(afterRefreshMessage);
+	}
+
 	//if not primary contact
 	if (cid_usercontacttype != 100000000) {
 		$("#UpdateButton").attr("disabled", true);
 		$("#UpdateButton").css("pointer-events", "none");
 	}
+	//add loader
+	$("#UpdateButton").after ('<span id="loader" class="loader"></span>');
+	$('#loader').hide();
+
 	tdg.c.page_instructions("page_annual_compliance_update");
 	$(".workflow-link").addClass("hidden");
+	var CompanyId = '{{user.parentcustomerid.id}}';
+	$(".workflow-link").removeAttr("data-workflowid");
+	$(".workflow-link").on("click", function () {
+	 var message = "A re-submit of your Company’s previous Annual Compliance Update should only be done when there is a material change to your Company’s details covering up to your previous Update Anniversary Date. It should not be used when there is a new change to your data in the current year. For those changes, you should instead do a regular update. <br><br> Are you sure you want to reopen the submitted Annual Compliance so that you can submit a new one?" ;
+	 tdg.c.dialog_YN(message, (ans) => {
+                        if (ans) {
+                            debugger;
+                          	var accountdata = {cid_annualcompliancecompletiondate : null};
+							$('#loader').show();
+							tdg.webapi.update("accounts", CompanyId, accountdata);
+							var Listdata = tdg.webapi.SelectedColumnlist("tasks", "activityid", "scheduledend eq null and _regardingobjectid_value eq "
+								+ CompanyId);
+							Reset_Tasks_toInprogress(Listdata);
+
+                            return;
+                        } else {
+                            debugger;
+                            return;
+                        }
+                   
+	 });
+		//$("#UpdateButton").removeClass("hidden");
+		//$(".workflow-link").addClass("hidden");
+		//$('table[data-name="annual_compliance_section_3"]').removeClass("hidden");
+	
+        });
 
 	$(".entity-grid").on("loaded", function () {
 		$("#CompanyCompleteAll").attr("style", "width:185px");
@@ -197,9 +243,13 @@ checkAnuualComplianceEligibility = function (anniversaryDate, annualComplianceCo
 					$("#UpdateButton").addClass("hidden");
 					$(".workflow-link").removeClass("hidden");
 					$(".entity-grid").on("loaded", function () {
-								$(".btn.btn-default.btn-xs").prop("disabled", true);
-								$(".details-link").prop("disabled", true);
-								$(".details-link").css("pointer-events", "none");
+						
+							$(this).find("thead").find("tr").each(function () {
+									$(this).find('th:last').remove();
+								});
+								$(this).find("tbody").find("tr").each(function () {
+									$(this).find('td:last').remove();
+								});
 							});
 
 							$('table[data-name="annual_compliance_section_3"]').addClass("hidden");
@@ -233,4 +283,35 @@ function page_setup() {
 	}
 	// server error?
 	tdg.c.message_panel();
+}
+
+async function  Reset_Tasks_toInprogress( Listdata)
+{
+	 for (var i = 0; i < Listdata.length; i++) {
+        
+		var data = {"statecode": 0,"statuscode": 2};
+		await delayedUpdate(Listdata[i].activityid ,data);
+        //tdg.webapi.update("tasks", Listdata[i].activityid, data);
+    }
+	//$("#UpdateButton").removeClass("hidden");
+    //$(".workflow-link").addClass("hidden");
+	//$('table[data-name="annual_compliance_section_3"]').removeClass("hidden");
+	
+	
+	$('#loader').hide();
+	//$(".entity-grid").trigger("refresh");
+	window.location.href = window.location.href + "?Resubmit=Yes" ;
+	//var afterRefreshMessage = "Annual Compliance has been successfully re-opened. Please now complete the Annual Compliance Update, which is due as of {0}.";
+   // tdg.c.dialog_OK(afterRefreshMessage);
+}
+
+function delay() {
+  return new Promise(resolve => setTimeout(resolve, 300));
+}
+
+async function delayedUpdate(activityid ,data) {
+  // notice that we can await a function
+  // that returns a promise
+  await delay();
+  tdg.webapi.update("tasks", activityid, data);
 }
