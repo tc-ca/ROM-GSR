@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{77674403-cd18-4e76-ad60-5f617751f617}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ovs_requestnumber" select="1" icon="1" preview="1">
+        <row name="result" id="ovs_supportrequestid">
+          <cell name="ovs_requestnumber" width="300" />
+          <cell name="createdon" width="125" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="ovs_supportrequest">
+          <attribute name="ovs_supportrequestid" />
+          <attribute name="ovs_requestnumber" />
+          <attribute name="createdon" />
+          <order attribute="ovs_requestnumber" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="1" />
+          </filter>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Inactive Support Requests" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
