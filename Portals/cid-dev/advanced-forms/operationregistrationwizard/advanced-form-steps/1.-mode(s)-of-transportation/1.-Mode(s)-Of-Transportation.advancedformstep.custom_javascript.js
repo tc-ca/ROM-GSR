@@ -10,53 +10,41 @@ $(document).ready(function () {
 	tdg.c.page_instructions("page_orw_mot");
 
 	var urlParams = new URLSearchParams(window.location.search);
+	debugger;
 	if (urlParams.has('siteid')) {
 		var siteId = urlParams.get('siteid');
 		var sitePageURL = "";
 
 		if (urlParams.has('in_year') || sessionStorage.getItem('frominyearsites')) {
-			sitePageURL = "~/my-sites/in-year-site/?id=" + siteId  + '&in_year=true&stepid=ed4377eb-f997-ec11-b3fe-0022483c0c24';
+			sitePageURL = "~/my-sites/in-year-site/?id=" + siteId;
 			tdg.c.weblink_hide("/RegistrationWizard/");
-		
 			tdg.c.weblink_show("/company_dashboard/");
 
 		}
 		else {
-			sitePageURL = "~/SiteRegistrationWizard/?id=" + siteId  + '&in_year=true&stepid=ed4377eb-f997-ec11-b3fe-0022483c0c24';
-				tdg.c.weblink_show("/RegistrationWizard/");
+			sitePageURL = "~/SiteRegistrationWizard/?id=" + siteId;
+							tdg.c.weblink_show("/RegistrationWizard/");
 			    tdg.c.weblink_hide("/company_dashboard/");
 		}
 
 		sessionStorage.setItem('to_actvt_stp', 'true');
 
-		$("#NextButton").parent().before("<div id='previousButton' role='group' class='btn-group entity-action-button'><a href='" + sitePageURL + "'><input type='button' value='Previous' id='PreviousButton' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>");
-	//	$("#NextButton").parent().before("<div id='previousButton' role='group' class='btn-group entity-action-button'><input type='button' value='Previous' id='PreviousButton' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></div>");
+		$("#NextButton").parent().before("<div id='previousButton' role='group' class='btn-group entity-action-button'><input type='button' value='Previous' id='PreviousButton'class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>");
 		$('#PreviousButton').click(function (e) {
-			 e.preventDefault();
+
 			debugger;        
 			var urlParams = new URLSearchParams(window.location.search);
 			if (urlParams.has('id')) {
 					var siteid = urlParams.get('id');
 					if (siteid != "") 
 					{	
-						if(urlParams.has('in_year') || sessionStorage.getItem('frominyearsites'))
-                        {
-                                                       
-														var url_replace = '~/SiteRegistrationWizard/?id=' + siteid + '&in_year=true&stepid=ed4377eb-f997-ec11-b3fe-0022483c0c24';
-														debugger;                  
-														window.location.href = '~/SiteRegistrationWizard/?id=' + siteid + '&in_year=true&stepid=ed4377eb-f997-ec11-b3fe-0022483c0c24';
-                                                        //window.location.href = '~/SiteRegistrationWizard/?id=' + siteid + '&in_year=true';
-														
-
-														
-												//	else window.location.href = '~/SiteRegistrationWizard/?id=' + siteid + '&newsite=true&stepid=ed4377eb-f997-ec11-b3fe-0022483c0c24';
-                        }
+												sessionStorage.setItem('to_actvt_stp', 'true');
+										    	  window.location.href = "~/SiteRegistrationWizard/?id=" + siteId;
+					
                     }
 				}
 		});
-		//https://rd-tdgcore-dev.powerappsportals.com/en/SiteRegistrationWizard/?id=fc607dba-37dd-ed11-a81f-000d3af4e91d&in_year=true&stepid=fefc6fdb-bd95-ec11-b3fe-000d3ae9ac74
-		
-		//https://rd-tdgcore-dev.powerappsportals.com/en/SiteRegistrationWizard/?id=63ca5d93-9fe3-ed11-a81c-000d3af47669&newsite=true&stepid=ed4377eb-f997-ec11-b3fe-0022483c0c24
+	
 	}
 	
 });

@@ -17,7 +17,7 @@ if (typeof (tdg.message) == "undefined") {
                 "Please choose the <b>[V]</b> button on each row to update Attest each Site, or flag it as not your Organization's Site.\n\n" +
                 "When those updates are Complete, please add any remaining Sites individually by choosing the <b>[+Add]</b> button," +
                 "or all at once via Excel, by choosing the <b>[Bulk Add/Update]</b> button.";
-            var m000020_FR = "Le tableau de données ci-dessous contient les sites qui sont associés à votre organisation. Veuillez cliquer sur le bouton <b>[V]</b> de chaque rangée pour attester chaque site ou marquer le site comme n’appartenant pas à votre organisation. Une fois les mises à jour terminées, ajouter tous les autres sites individuellement en cliquant sur le bouton <b>[+Add]</b> ou tous à la fois par Excel, en cliquant sur le bouton <b>[Bulk Add/Update]</b>.";
+            var m000020_FR = "Le tableau de données ci-dessous contient les sites qui sont associés à votre organisation. Veuillez cliquer sur le bouton <b>[V]</b> de chaque rangée pour attester chaque site ou marquer le site comme n’appartenant pas à votre organisation. Une fois les mises à jour terminées, ajouter tous les autres sites individuellement en cliquant sur le bouton <b>[+Créer]</b> ou tous à la fois par Excel, en cliquant sur le bouton <b>[Bulk Add/Update]</b>.";
 
             var m000021_EN = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of " +
                 "the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.\n\n" +
@@ -38,19 +38,19 @@ if (typeof (tdg.message) == "undefined") {
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
                 "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen.";
-            var m000022_FR = "To add Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.\n\n" +
-                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
-                "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
-                "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen._FR";
+            var m000022_FR = "Pour ajouter les sites individuellement, cliquer sur le bouton [+Créer]. Sinon, cliquer sur le bouton <b>[Bulk Add/Update]</b> pour ajouter tous les nouveaux sites à la fois sur Excel.\n\n" +
+                "Pour modifier un des sites, cliquer sur le lien Site ID souligné dans la rangée, ou cliquer sur l’option du bouton <b>[V]</b> à l’extrémité de la rangée.\n\n" +
+                "Cliquer sur le bouton <b>[Suivant]</b> une fois tous les sites ajoutés et attestés.\n\n" +
+                "Au besoin, cliquer sur le bouton <b>[Précédent]</b> ci‑dessous pour retourner à l’écran Attest Organization.";
 
-            var m000023_EN = "To add Sites individually, choose the <b>[+Add]</b> button below.\n\n" +
+            var m000023_EN = "To add Sites individually, choose the <b>[+Add]</b> button.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Alternatively, choose the <b>[Bulk Add/Update]</b> button to edit existing, and add new, Sites all at once via Excel.\n\n" +
                 "If required, choose the 'Deactivate / Reactivate' option via the <b>[V]</b> button at the end of a Site's row.\n\n" +
                 "Note:\n" +
                 "- <b>[Bulk Add/Update]</b> will appear to the right of the <b>[+Add]</b> button\n" +
                 "- For In Year / Annual Compliance, the <b>[V]</b> options will be 'Open Site Details', 'Deactivate / Reactivate'";
-            var m000023_FR = "To add Sites individually, choose the <b>[+Add]</b> button below.\n\n" +
+            var m000023_FR = "Pour ajouter les sites individuellement, cliquer sur le bouton [+Créer]\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Alternatively, choose the <b>[Bulk Add/Update]</b> button to edit existing, and add new, Sites all at once via Excel.\n\n" +
                 "If required, choose the 'Deactivate / Reactivate' option via the <b>[V]</b> button at the end of a Site's row.\n\n" +
@@ -89,8 +89,8 @@ if (typeof (tdg.message) == "undefined") {
 
             var m000039_EN = "At this point, you cannot proceed back to the previous step to begin the registration process.<br><br>" +
                 "If you want to withdraw your registration altogether, including removing all entered data, then please choose No below. Next, choose the Contact Us button at the top of the screen, from which choose the ‘Request to withdraw this Registration’ option."
-            var m000039_FR = "At this point, you cannot proceed back to the previous step to begin the registration process.<br><br>" +
-                "If you want to withdraw your registration altogether, including removing all entered data, then please choose No below. Next, choose the Contact Us button at the top of the screen, from which choose the ‘Request to withdraw this Registration’ option._FR"
+            var m000039_FR = "Actuellement, vous ne pouvez pas revenir à l’étape précédente pour commencer le processus d’enregistrement<br><br>. Si vous souhaitez retirer votre enregistrement et supprimer toutes les données saisies, sélectionnez 'No' ci‑dessous. Ensuite, cliquez sur le bouton <b>[Contactez-nous]</b> en haut de l’écran, et sélectionnez l’option <b>[Request to withdraw this Registration]</b>».<br><br>" +
+                "Souhaitez‑vous plutôt que le personnel de TMD communique avec vous pour reconfigurer votre compte afin que vous puissiez changer les renseignements initiaux de l’enregistrement?<br><br>";
 
             var m000045_EN = "To proceed with the registration process you will need to either:<br><br>" +
                 "- Enter a different Business Number.<br><br>" +
@@ -165,7 +165,7 @@ if (typeof (tdg.message) == "undefined") {
                 "Au besoin, cliquer sur le bouton <b>[Précédent]</b> dessous pour retourner à l’écran Attester l'organisation.";
 
             var page_crw_complete_EN = "If the Organization and site details are accurate and complete, then choose the <b>[Attest and Organization Registration]</b> button below to complete the Registration. Otherwise, use the <b>[Previous]</b> button below to first make any adjustments.";
-            var page_crw_complete_FR = "If the Organization and site details are accurate and complete, then choose the <b>[Attest and Organization Registration]</b> button below to complete the Registration. Otherwise, use the <b>[Previous]</b> button below to first make any adjustments._FR";
+            var page_crw_complete_FR = "Si les détails sur la compagnie et le site sont exacts et complets, cliquer sur le bouton <b>[Attest and Complete Registration]</b> ci‑dessous pour terminer l’enregistrement. Sinon, cliquer sur le bouton <b>[Précédent]<b> dessous pour apporter des changements.";
             
             var page_srw_site_EN = "As required, update any of the Site information, then choose the <b>[Next]</b> button below to continue.</br></br>" + 
                 "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process.<br>" + 
@@ -215,19 +215,17 @@ if (typeof (tdg.message) == "undefined") {
                 "- Annual Compliance Update: Allows completion of this mandatory annual update.</br>" +
                 "- Deactivate Organization: To deactivate this Organization.</br>" +
                 "- My Sites: To view a list of current Sites to add to, update, deactivate, reactivate or sale/transfer.</br>" +
-                "- Manage Application Users: To add or remove user access to this application.</br>" +
                 "- Online Help: To search for guidance on how to use this application.";
-            var page_my_company_FR = "Head Office details can be updated by choosing the <b>[Update Organization]</b> button at the bottom of this screen.</br></br>" +
-                "Following options are available via the menu options on the left:</br>" +
-                "- Organization History Log: Key past activities for this Organization.</br>" +
-                "- Annual Compliance Update: Allows completion of this mandatory annual update.</br>" +
-                "- Deactivate Organization: To deactivate this Organization.</br>" +
-                "- My Sites: To view a list of current Sites to add to, update, deactivate, reactivate or sale/transfer.</br>" +
-                "- Manage Application Users: To add or remove user access to this application.</br>" +
-                "- Online Help: To search for guidance on how to use this application._FR";
+            var page_my_company_FR = "Les détails concernant le siège social peuvent être mis à jour en cliquant sur le bouton <b>[Update Company]</b> au bas de l’écran. </br></br>" +
+                "Les options de menu suivantes sont accessibles à partir du menu de gauche:</br>" +
+                "- Organization History Log: activités antérieures de cette compagnie.</br>" +
+                "- Annual Compliance: pour effectuer cette mise à jour annuelle obligatoire.</br>" +
+                "- Deactivate Organization: pour désactiver cette organisation.</br>" +
+                "- Mes sites: pour voir la liste des sites actuels à ajouter, mettre à jour, désactiver, réactiver, ou pour la vente/transfert.</br>" +
+                "- Aide en ligne: pour obtenir des conseils sur la façon d’utiliser cette application.";
             
             var page_my_company_contact_EN = "For actions, select the <b>[V]</b> button beside each row, or the <b>[+Add]</b> button for a new entry.";
-            var page_my_company_contact_FR = "For actions, select the <b>[V]</b> button beside each row, or the <b>[+Add]</b> button for a new entry._FR";
+            var page_my_company_contact_FR = "Pour toute action, sélectionner le bouton <b>[V]</b> à côté de chaque rangée, ou le bouton <b>[+Créer]</b> pour une nouvelle entrée.";
             
             var page_in_year_my_sites_EN = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.<br>" +
                 "To add additional Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.<br>" +
@@ -414,6 +412,11 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "BTN_WITHDRAW",
                         "message_en": "Withdraw",
                         "message_fr": "Retirer"
+                    },
+                    {
+                        "code": "BTN_UPDATE_ORG",
+                        "message_en": "Update Organization",
+                        "message_fr": "Update Organization_FR"
                     },
                     {
                         "code": "BTN_IS_MY_COMPANY",
@@ -903,7 +906,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000134",
                         "message_en": "This addition of a backup Contact has completed the Contact requirements of the regulation. Any further Contact additions are completely optional.",
-                        "message_fr": "This addition of a backup Contact has completed the Contact requirements of the regulation. Any further Contact additions are completely optional._FR"
+                        "message_fr": "En ajoutant ce contact de réserve, vous répondez à toutes les exigences du règlement. Tout autre ajout de contact est entièrement facultatif."
                     },
                     {
                         "code": "m000135",
@@ -913,7 +916,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000136",
                         "message_en": "Note: This is your account’s official email, which may be updated via the <b>[Account Settings]</b> button at the top.",
-                        "message_fr": "Note: This is your account’s official email, which may be updated via the <b>[Account Settings]</b> button at the top._FR"
+                        "message_fr": "Note: This is your account’s official email, which may be updated via the <b>[Paramètres du compte]</b> button at the top._FR"
                     },
                     {
                         "code": "m000137",
@@ -937,8 +940,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000141",
-                        "message_en": "Activate Orgnization",
-                        "message_fr": "Activate Orgnization_FR"
+                        "message_en": "Activate Organization",
+                        "message_fr": "Activate Organization_FR"
                     },
                     {
                         "code": "m000142",

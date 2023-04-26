@@ -1,5 +1,5 @@
 //
-// Web Page-My Sites
+// Web Page-My Sites.js
 //
 
 $(document).ready(function () {
@@ -9,10 +9,6 @@ $(document).ready(function () {
     sessionStorage.setItem('fromannualcompliance', 'false');
 	sessionStorage.setItem('frominyearsitepage', 'false');
    
-    
-
-
-
     var topNav = $('#navbar');
     if (topNav) {
         var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name}}');

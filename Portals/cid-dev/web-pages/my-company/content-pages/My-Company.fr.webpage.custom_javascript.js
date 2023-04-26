@@ -24,7 +24,9 @@ $(document).ready(function () {
     }
 
     var cancelLabel = tdg.error_message.message("BTN_CANCEL");
-    var updateCompanyBtn = "<div><input id='update_company' type='button' name='UpdateCompany' value='Update Organization' class='btn btn-primary action create-action' nonactionlinkbutton='true'/></div>"
+    var updateLabel = tdg.error_message.message("BTN_UPDATE_ORG");
+
+    var updateCompanyBtn = "<div><input id='update_company' type='button' name='UpdateCompany' value='" + updateLabel + "' class='btn btn-primary action create-action' nonactionlinkbutton='true'/></div>"
     $(".form-custom-actions").first().parent().after(updateCompanyBtn);
 
     var cancelBtn = "&nbsp;<input id='cancel_company_update' type='button' name='CancelCompanyUpdate' value='" + cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'/>";

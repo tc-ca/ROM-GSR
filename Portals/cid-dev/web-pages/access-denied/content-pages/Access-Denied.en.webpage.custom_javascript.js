@@ -2,13 +2,15 @@
 if(document.getElementsByTagName('h1')[0])
 {
     var source = document.getElementsByTagName('h1')[0].innerHTML;
-    if(source.search("Terms") != -1){
+    if(source.search("Terms and") != -1){
         $(document).find("title").text("Terms and Conditions");
+        $("#cdts-signin-btn").hide(); // Hide sing in button
         
         //var cancelLabel = tdg.error_message.message("BTN_CANCEL");
         $("#submit-agreement").after("&nbsp; <input id='cancelButton' type='button' name='CancelButton' value='Cancel' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");      
         $('#cancelButton').click(function (e) {
-                window.location.href = '~/en/Account/Login/LogOff?returnUrl=%2Fen%2Fcompany_dashboard%2F';
+                //window.location.href = '~/en/Account/Login/LogOff?returnUrl=%2Fen%2Fcompany_dashboard%2F';
+                window.location.href = '~/en/Account/Login/LogOff';
         });
     }
     //Condition for initial registration page
@@ -23,7 +25,7 @@ debugger;
 //account already existing
 if($('.xrm-attribute-value-encoded')[0].innerText =="Register your external account" )
 {
-    $('.xrm-attribute-value-encoded').css({ position: "relative" , left: "30px" });
+    //$('.xrm-attribute-value-encoded').css({ position: "relative" , left: "30px" });
     if($('.validation-summary-errors')[0])
     {
         var Innerhtml = $('.validation-summary-errors')[0].innerHTML;
@@ -59,5 +61,6 @@ $(".btn.btn-primary:contains('Register')").after("&nbsp; <input id='cancelButton
         $('#cancelButton').click(function (e) {
                 window.location.href = '~/en/SignIn?returnUrl=%2Fen%2F';
         });
+ $("#cdts-signin-btn").hide(); // Hide sing in button
 }
 

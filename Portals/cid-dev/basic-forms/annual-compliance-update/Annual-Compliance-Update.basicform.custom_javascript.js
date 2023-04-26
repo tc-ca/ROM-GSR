@@ -13,8 +13,9 @@ $(document).ready(function () {
    var Resubmit = URLs.get('Resubmit');
    if (Resubmit != null)
     {
-		var cid_companyanniversarydate =new Date( $('#cid_companyanniversarydate').val());
-		
+		var cid_companyanniversarydate = $('#cid_companyanniversarydate').val();
+		console.log(cid_companyanniversarydate);
+		cid_companyanniversarydate = cid_companyanniversarydate.split('T')[0]
 	  var urlPath = window.location.href;
       urlPath = urlPath.split('?')[0];
       window.history.replaceState({}, document.title, urlPath);
@@ -39,15 +40,34 @@ $(document).ready(function () {
 	var CompanyId = '{{user.parentcustomerid.id}}';
 	$(".workflow-link").removeAttr("data-workflowid");
 	$(".workflow-link").on("click", function () {
+	 //get history log code
+	 var historyLogCodeList = tdg.webapi.SelectedColumnlist("cid_audithistorycodes", "cid_audithistorycodeid,cid_name, statuscode",
+	  "statuscode eq 1 and cid_name eq 'CG5'");
+	 console.log ("history log " + historyLogCodeList.length);
 	 var message = "A re-submit of your Company’s previous Annual Compliance Update should only be done when there is a material change to your Company’s details covering up to your previous Update Anniversary Date. It should not be used when there is a new change to your data in the current year. For those changes, you should instead do a regular update. <br><br> Are you sure you want to reopen the submitted Annual Compliance so that you can submit a new one?" ;
 	 tdg.c.dialog_YN(message, (ans) => {
                         if (ans) {
                             debugger;
-                          	var accountdata = {cid_annualcompliancecompletiondate : null};
+							var portaluserId = '{{user.id}}';
+						
+                          	var accountdata = {
+								  "cid_ModifiedByRegistrant@odata.bind": "/contacts(" + portaluserId + ")",
+								  "cid_annualcompliancecompletiondate": null 
+							  };
 							$('#loader').show();
+							debugger;
 							tdg.webapi.update("accounts", CompanyId, accountdata);
+							debugger ;
 							var Listdata = tdg.webapi.SelectedColumnlist("tasks", "activityid", "scheduledend eq null and _regardingobjectid_value eq "
 								+ CompanyId);
+							if ( historyLogCodeList.length >0)
+							{
+								var historyData = {
+								"cid_HistoryCode@odata.bind": "/cid_audithistorycodes(" + historyLogCodeList[0]["cid_audithistorycodeid"] + ")",
+								"cid_Company@odata.bind": "/accounts(" +CompanyId+ ")",
+								"cid_CreatedByRegistrant@odata.bind": "/contacts(" + portaluserId + ")"}
+								tdg.webapi.create("cid_audithistorylogs", historyData);	
+							}
 							Reset_Tasks_toInprogress(Listdata);
 
                             return;
