@@ -739,13 +739,13 @@
         return dtv < end;
     }
 
-    function isInDateRange(dateToValidate, dateStart, dateEnd) {
+    function isInDateRange(dateToValidate, dateStart, dateEnd, includeEdges = false) {
 
         var dtv = new Date(dateToValidate).setHours(0, 0, 0);
         var strt = new Date(dateStart).setHours(0, 0, 0);
         var end = new Date(dateEnd).setHours(0, 0, 0);
 
-        return (dtv < end) && (dtv > strt);
+        return includeEdges ? (dtv <= end) && (dtv >= strt) : (dtv < end) && (dtv > strt);
     }
 
     /****************************************************************************************

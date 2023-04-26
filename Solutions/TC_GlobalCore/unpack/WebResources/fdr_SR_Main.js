@@ -908,11 +908,15 @@ var SR_main = (function (window, document) {
             var formContext = executionContext.getFormContext();
             var currentValue = glHelper.GetValue(formContext, "fdr_inforeceivedon");
             var submissionDate = glHelper.GetValue(formContext, "fdr_submissiondate");
+            var lastPerformanceChange = glHelper.GetValue(formContext, "fdr_latestperformancechange");
 
-            if (!glHelper.isInDateRange(currentValue, submissionDate, new Date())){
+            var dateToComapre = (lastPerformanceChange != null && lastPerformanceChange != undefined) ? lastPerformanceChange : submissionDate;
+            var dateMessage = (lastPerformanceChange != null && lastPerformanceChange != undefined) ? "last performance change date" : "Submission Date";
+
+            if (!glHelper.isInDateRange(currentValue, dateToComapre, new Date(), true)){
 
                 glHelper.SetValue(formContext, "fdr_inforeceivedon", null);
-                Xrm.Navigation.openErrorDialog({ message: "Date in the 'Info Received On' field cannot be a future date or earlier than Submission Date (" + (submissionDate.getMonth() + 1) + "/" + submissionDate.getDate() + "/" + submissionDate.getFullYear() + ")"});
+                Xrm.Navigation.openErrorDialog({ message: "Date in the 'Info Received On' field cannot be a future date or earlier than " + dateMessage + " (" + (dateToComapre.getMonth() + 1) + "/" + dateToComapre.getDate() + "/" + dateToComapre.getFullYear() + ")"});
             }
         },
 
