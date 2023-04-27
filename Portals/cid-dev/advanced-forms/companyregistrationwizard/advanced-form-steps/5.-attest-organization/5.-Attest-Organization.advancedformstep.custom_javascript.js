@@ -81,11 +81,9 @@ $(document).ready(function () {
 							tdg.cid.flow.Call_Flow("CID_Flow_RunCompanySitesDeleting", DeleteAccountFlowData);
 							tdg.c.sign_out();
 							return false;
-							//Do nothing
 						}
 						else {
 							return false;
-							//need to add ALM record.
 						}
 					});
 				});

@@ -153,16 +153,19 @@ $(document).ready(function () {
 		debugger;
 		var message = tdg.error_message.message("m000145");
 		tdg.c.dialog_YN(message, (ans) => {
-			//var contact_id = '{{user.id}}';
-			if (ans) {
-				tdg.webapi.delete("contacts", userId);
-				tdg.c.sign_out();
+			var contact_id = '{{user.id}}';
+			if (ans) 
+            {
+				var DeleteContactFlowData = '{' +
+								'"ContactId": "' + contact_id + '",' +
+								'}';
+				console.log(DeleteContactFlowData);
+				tdg.cid.flow.Call_Flow("CID_Flow_RunCompanySitesDeleting_Delete_Contact", DeleteContactFlowData);
+                tdg.c.sign_out();
 				return false;
-				//Do nothing
 			}
 			else {
 				return false;
-				//need to add ALM record.
 			}
 		});
 	});

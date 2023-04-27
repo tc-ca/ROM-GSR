@@ -33,8 +33,9 @@ function header_setup() {
 	//tdg.c.weblink_hide("/Bulk_Site_Upload/");
 	//tdg.c.weblink_hide("/company_dashboard/");
 	//tdg.c.weblink_hide("/Bulk_Site_Update/");
-
+   debugger;
 	var code = "m000009";
+	 
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 
@@ -49,6 +50,8 @@ function header_setup() {
 			code = "m000008";	// Company Registration
 			break;
 		}
+	 
+	
 		//text = tdg.error_message.message(text);
 		//item.innerText = text;
 	}

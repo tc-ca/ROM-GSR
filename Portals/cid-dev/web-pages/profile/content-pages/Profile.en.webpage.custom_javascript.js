@@ -4,11 +4,17 @@
 
 $(document).ready(function () {
     debugger;
-    //redirect to my company after save success
-    if($('#ContentContainer_MainContent_MainContent_ContentBottom_ConfirmationMessage').find('.xrm-attribute-value').length > 0 && 
-    $('#ContentContainer_MainContent_MainContent_ContentBottom_ConfirmationMessage').find('.xrm-attribute-value')[0].innerHTML.contains("Your profile has been updated successfully"))
-        window.location.href = '~/my-company/';
+
     page_setup();
+
+    //redirect to my company after save success
+    var msg = tdg.error_message.message("m000147");
+    if (msg != null) {
+        sessionStorage.setItem("profile_msg", msg);
+    }
+    if ($('#ContentContainer_MainContent_MainContent_ContentBottom_ConfirmationMessage').find('.xrm-attribute-value').length > 0 &&
+        $('#ContentContainer_MainContent_MainContent_ContentBottom_ConfirmationMessage').find('.xrm-attribute-value')[0].innerHTML.contains(sessionStorage.getItem("profile_msg"))) // "Your profile has been updated successfully"
+        window.location.href = '~/my-company/';
 
     //disable submit button by default  
     $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", true);
@@ -56,7 +62,7 @@ $(document).ready(function () {
 
     //Name formatting
     tdg.cid.name_init("firstname");
-    tdg.cid.name_init("lastname");  
+    tdg.cid.name_init("lastname");
 
     var data = {};
     data.length = 0;
@@ -67,8 +73,7 @@ $(document).ready(function () {
             "accountid eq " + parent_id);
     }
 
-    if (data.length == 0)
-    {
+    if (data.length == 0) {
         tdg.c.weblink_hide("/RegistrationWizard/");
         tdg.c.weblink_hide("/Bulk_Site_Upload/");
         tdg.c.weblink_hide("/company_dashboard/");
@@ -78,8 +83,7 @@ $(document).ready(function () {
         var cid_cidcompanystatus = data[0]['cid_cidcompanystatus'];
         var completionDate = data[0]['cid_officiallyregistrationcompletationdate'];
 
-        if (completionDate != "" && completionDate != null)
-        {
+        if (completionDate != "" && completionDate != null) {
             tdg.c.weblink_hide("/RegistrationWizard/");
             tdg.c.weblink_hide("/Bulk_Site_Upload/");
         }
@@ -113,7 +117,7 @@ $(document).ready(function () {
             clearInterval(checkEmaillinkExist);
         }
     }, 100); // check every 100ms
- 
+
 });
 
 function page_setup() {

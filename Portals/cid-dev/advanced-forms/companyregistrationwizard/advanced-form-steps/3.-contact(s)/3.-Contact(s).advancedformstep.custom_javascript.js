@@ -94,13 +94,10 @@ $(document).ready(function () {
 							console.log(DeleteAccountFlowData);
 							tdg.cid.flow.Call_Flow("CID_Flow_RunCompanySitesDeleting", DeleteAccountFlowData);
 							tdg.c.sign_out();
-							//window.location.href = '~/en/Account/Login/LogOff?returnUrl=%2Fen%2Fen-US%2F';
 							return false;
-							//Do nothing
 						}
 						else {
 							return false;
-							//need to add ALM record.
 						}
 					});
 				});

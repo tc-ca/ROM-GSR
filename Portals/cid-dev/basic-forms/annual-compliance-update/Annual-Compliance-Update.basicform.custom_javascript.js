@@ -45,30 +45,46 @@ $(document).ready(function () {
 	  "statuscode eq 1 and cid_name eq 'CG5'");
 	 console.log ("history log " + historyLogCodeList.length);
 	 var message = "A re-submit of your Company’s previous Annual Compliance Update should only be done when there is a material change to your Company’s details covering up to your previous Update Anniversary Date. It should not be used when there is a new change to your data in the current year. For those changes, you should instead do a regular update. <br><br> Are you sure you want to reopen the submitted Annual Compliance so that you can submit a new one?" ;
+	var portaluserId = "{{user.id}}" ;
 	 tdg.c.dialog_YN(message, (ans) => {
                         if (ans) {
                             debugger;
-							var portaluserId = '{{user.id}}';
+							$('#loader').show();
+							
 						
                           	var accountdata = {
-								  "cid_ModifiedByRegistrant@odata.bind": "/contacts(" + portaluserId + ")",
+								  "cid_ModifiedByRegistrant@odata.bind":"/contacts(" + portaluserId + ")",
 								  "cid_annualcompliancecompletiondate": null 
 							  };
-							$('#loader').show();
-							debugger;
+							
 							tdg.webapi.update("accounts", CompanyId, accountdata);
 							debugger ;
 							var Listdata = tdg.webapi.SelectedColumnlist("tasks", "activityid", "scheduledend eq null and _regardingobjectid_value eq "
 								+ CompanyId);
 							if ( historyLogCodeList.length >0)
 							{
+								debugger;
+								console.log ("audit history code:")
+								console.log(historyLogCodeList[0].cid_audithistorycodeid);
 								var historyData = {
-								"cid_HistoryCode@odata.bind": "/cid_audithistorycodes(" + historyLogCodeList[0]["cid_audithistorycodeid"] + ")",
-								"cid_Company@odata.bind": "/accounts(" +CompanyId+ ")",
-								"cid_CreatedByRegistrant@odata.bind": "/contacts(" + portaluserId + ")"}
-								tdg.webapi.create("cid_audithistorylogs", historyData);	
+								//"_cid_historycode_value": historyLogCodeList[0].cid_audithistorycodeid,
+								"cid_HistoryCode@odata.bind": "/cid_audithistorycodes(" + historyLogCodeList[0].cid_audithistorycodeid + ")",
+								"cid_Company@odata.bind": "/accounts(" + CompanyId + ")"
+								 //,
+								//"cid_createdbyregistrant@odata.bind": "/contacts(" + portaluserId + ")"
+								//"cid_memofrench" : "test french test test"
+
+								
+								}
+								//tdg.webapi.create("cid_historylogs", historyData);
+								debugger;
+							    
+									
+								
+
+
 							}
-							Reset_Tasks_toInprogress(Listdata);
+							Reset_Tasks_toInprogress(Listdata,historyData);
 
                             return;
                         } else {
@@ -305,7 +321,7 @@ function page_setup() {
 	tdg.c.message_panel();
 }
 
-async function  Reset_Tasks_toInprogress( Listdata)
+async function  Reset_Tasks_toInprogress( Listdata,historyData)
 {
 	 for (var i = 0; i < Listdata.length; i++) {
         
@@ -313,6 +329,7 @@ async function  Reset_Tasks_toInprogress( Listdata)
 		await delayedUpdate(Listdata[i].activityid ,data);
         //tdg.webapi.update("tasks", Listdata[i].activityid, data);
     }
+	tdg.webapi.create("cid_historylogs", historyData);
 	//$("#UpdateButton").removeClass("hidden");
     //$(".workflow-link").addClass("hidden");
 	//$('table[data-name="annual_compliance_section_3"]').removeClass("hidden");

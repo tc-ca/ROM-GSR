@@ -4,13 +4,11 @@
 
 $(document).ready(function () {
     debugger;
- 
     //redirect to my company after save success
     if($('#ContentContainer_MainContent_MainContent_ContentBottom_ConfirmationMessage').find('.xrm-attribute-value').length > 0 && 
     $('#ContentContainer_MainContent_MainContent_ContentBottom_ConfirmationMessage').find('.xrm-attribute-value')[0].innerHTML.contains("Votre profil a été mis à jour"))
         window.location.href = '~/my-company/';
-
-   page_setup();
+    page_setup();
 
     //disable submit button by default  
     $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", true);
@@ -55,6 +53,10 @@ $(document).ready(function () {
     tdg.cid.phone_init("telephone1", selected_language);
     tdg.cid.phone_init("mobilephone", selected_language);
     tdg.cid.phone_init("fax", selected_language);
+
+    //Name formatting
+    tdg.cid.name_init("firstname");
+    tdg.cid.name_init("lastname");  
 
     var data = {};
     data.length = 0;
@@ -111,6 +113,7 @@ $(document).ready(function () {
             clearInterval(checkEmaillinkExist);
         }
     }, 100); // check every 100ms
+ 
 });
 
 function page_setup() {
