@@ -17,7 +17,7 @@ if (typeof (tdg.message) == "undefined") {
                 "Please choose the <b>[V]</b> button on each row to update Attest each Site, or flag it as not your Organization's Site.\n\n" +
                 "When those updates are Complete, please add any remaining Sites individually by choosing the <b>[+Add]</b> button," +
                 "or all at once via Excel, by choosing the <b>[Bulk Add/Update]</b> button.";
-            var m000020_FR = "Le tableau de données ci-dessous contient les sites qui sont associés à votre organisation. Veuillez cliquer sur le bouton <b>[V]</b> de chaque rangée pour attester chaque site ou marquer le site comme n’appartenant pas à votre organisation. Une fois les mises à jour terminées, ajouter tous les autres sites individuellement en cliquant sur le bouton <b>[+Créer]</b> ou tous à la fois par Excel, en cliquant sur le bouton <b>[Bulk Add/Update]</b>.";
+            var m000020_FR = "Le tableau de données ci-dessous contient les sites qui sont associés à votre organisation. Veuillez cliquer sur le bouton <b>[V]</b> de chaque rangée pour attester chaque site ou marquer le site comme n’appartenant pas à votre organisation. Une fois les mises à jour terminées, ajouter tous les autres sites individuellement en cliquant sur le bouton <b>[+Add]</b> ou tous à la fois par Excel, en cliquant sur le bouton <b>[Bulk Add/Update]</b>.";
 
             var m000021_EN = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of " +
                 "the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.\n\n" +
@@ -38,19 +38,19 @@ if (typeof (tdg.message) == "undefined") {
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
                 "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen.";
-            var m000022_FR = "Pour ajouter les sites individuellement, cliquer sur le bouton [+Créer]. Sinon, cliquer sur le bouton <b>[Bulk Add/Update]</b> pour ajouter tous les nouveaux sites à la fois sur Excel.\n\n" +
-                "Pour modifier un des sites, cliquer sur le lien Site ID souligné dans la rangée, ou cliquer sur l’option du bouton <b>[V]</b> à l’extrémité de la rangée.\n\n" +
-                "Cliquer sur le bouton <b>[Suivant]</b> une fois tous les sites ajoutés et attestés.\n\n" +
-                "Au besoin, cliquer sur le bouton <b>[Précédent]</b> ci‑dessous pour retourner à l’écran Attest Organization.";
+            var m000022_FR = "To add Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.\n\n" +
+                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
+                "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
+                "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen._FR";
 
-            var m000023_EN = "To add Sites individually, choose the <b>[+Add]</b> button.\n\n" +
+            var m000023_EN = "To add Sites individually, choose the <b>[+Add]</b> button below.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Alternatively, choose the <b>[Bulk Add/Update]</b> button to edit existing, and add new, Sites all at once via Excel.\n\n" +
                 "If required, choose the 'Deactivate / Reactivate' option via the <b>[V]</b> button at the end of a Site's row.\n\n" +
                 "Note:\n" +
                 "- <b>[Bulk Add/Update]</b> will appear to the right of the <b>[+Add]</b> button\n" +
                 "- For In Year / Annual Compliance, the <b>[V]</b> options will be 'Open Site Details', 'Deactivate / Reactivate'";
-            var m000023_FR = "Pour ajouter les sites individuellement, cliquer sur le bouton [+Créer]\n\n" +
+            var m000023_FR = "To add Sites individually, choose the <b>[+Add]</b> button below.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Alternatively, choose the <b>[Bulk Add/Update]</b> button to edit existing, and add new, Sites all at once via Excel.\n\n" +
                 "If required, choose the 'Deactivate / Reactivate' option via the <b>[V]</b> button at the end of a Site's row.\n\n" +
@@ -89,8 +89,8 @@ if (typeof (tdg.message) == "undefined") {
 
             var m000039_EN = "At this point, you cannot proceed back to the previous step to begin the registration process.<br><br>" +
                 "If you want to withdraw your registration altogether, including removing all entered data, then please choose No below. Next, choose the Contact Us button at the top of the screen, from which choose the ‘Request to withdraw this Registration’ option."
-            var m000039_FR = "Actuellement, vous ne pouvez pas revenir à l’étape précédente pour commencer le processus d’enregistrement<br><br>. Si vous souhaitez retirer votre enregistrement et supprimer toutes les données saisies, sélectionnez 'No' ci‑dessous. Ensuite, cliquez sur le bouton <b>[Contactez-nous]</b> en haut de l’écran, et sélectionnez l’option <b>[Request to withdraw this Registration]</b>».<br><br>" +
-                "Souhaitez‑vous plutôt que le personnel de TMD communique avec vous pour reconfigurer votre compte afin que vous puissiez changer les renseignements initiaux de l’enregistrement?<br><br>";
+            var m000039_FR = "At this point, you cannot proceed back to the previous step to begin the registration process.<br><br>" +
+                "If you want to withdraw your registration altogether, including removing all entered data, then please choose No below. Next, choose the Contact Us button at the top of the screen, from which choose the ‘Request to withdraw this Registration’ option._FR"
 
             var m000045_EN = "To proceed with the registration process you will need to either:<br><br>" +
                 "- Enter a different Business Number.<br><br>" +
@@ -165,7 +165,7 @@ if (typeof (tdg.message) == "undefined") {
                 "Au besoin, cliquer sur le bouton <b>[Précédent]</b> dessous pour retourner à l’écran Attester l'organisation.";
 
             var page_crw_complete_EN = "If the Organization and site details are accurate and complete, then choose the <b>[Attest and Organization Registration]</b> button below to complete the Registration. Otherwise, use the <b>[Previous]</b> button below to first make any adjustments.";
-            var page_crw_complete_FR = "Si les détails sur la compagnie et le site sont exacts et complets, cliquer sur le bouton <b>[Attest and Complete Registration]</b> ci‑dessous pour terminer l’enregistrement. Sinon, cliquer sur le bouton <b>[Précédent]<b> dessous pour apporter des changements.";
+            var page_crw_complete_FR = "Si les détails de l'organisation et du site sont exacts et complets, choisissez le bouton <b>[Attestation et inscription de l'organisation]</b> ci-dessous pour terminer l'inscription. Sinon, utilisez le bouton <b>[Précédent]</b> ci-dessous pour effectuer d'abord les ajustements.";
             
             var page_srw_site_EN = "As required, update any of the Site information, then choose the <b>[Next]</b> button below to continue.</br></br>" + 
                 "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process.<br>" + 
@@ -197,8 +197,8 @@ if (typeof (tdg.message) == "undefined") {
                 "If necessary, choose the <b>[Previous]</b> button, or the <b>[Back to Activity Types Screen]</b> button, to return to the Activity Type screen.<br>" +
                 "Alternatively, choose the <b>[Back to Activity Types Screen]</b> to save the current site information and return to the Activity Types Screen.";
             var page_orw_mot_FR = "Choisir le ou les modes de transport. Ensuite, cliquer sur le bouton <b>[Suivant]</b> ci‑dessous.<br>" +
-                "Au besoin, cliquer sur le bouton <b>[Précédent]</b>, ou le bouton de l’écran Back to Type(s) d'activité pour revenir à l’écran Type(s) d'activité.<br>" +
-                "Sinon, cliquer sur le bouton de l’écran <b>[Retour à l’écran Activity Types]</b> pour sauvegarder l’information à jour sur le site et revenir à l’écran Type(s) d'activité.";
+                "Au besoin, cliquer sur le bouton <b>[Précédent]</b>, ou le bouton de l’écran <b>[Retour à l'écran Type d'activité]</b> pour revenir à l’écran Type(s) d'activité.<br>" +
+                "Sinon, cliquer sur le bouton de l’écran <b>[Retour à l'écran Type d'activité]</b> pour sauvegarder l’information à jour sur le site et revenir à l’écran Type(s) d'activité.";
             
             var page_orw_class_EN = "Choose the <b>[+Add]</b> button below for each applicable Site Class. When complete, choose the <b>[Next]</b> button below.</br>" +
                 "To edit or deactivate a Site Class, then choose the <b>[V]</b> button to the far right of that row.<br>" +
@@ -207,7 +207,7 @@ if (typeof (tdg.message) == "undefined") {
             var page_orw_class_FR = "Cliquer sur le bouton <b>[+Créer]</b> ci‑dessous pour chaque classe de site applicable. Ensuite, cliquer sur le bouton <b>[Suivant]</b> ci‑dessous.</br>" +
                 "Pour modifier ou désactiver une classe de site, cliquer sur le bouton <b>[V]</b> à l’extrémité droite de la rangée.<br>" +
                 "Au besoin, cliquer sur le bouton <b>[Précédent]</b> ci‑dessous pour revenir à l’écran [Mode(s) de Transport.<br>" +
-                "Sinon, sélectionner l’écran <b>[Back to Activity Types]</b> pour sauvegarder l’information à jour sur le site et revenir à l’écran Type(s) d'activité."
+                "Sinon, sélectionner l’écran <b>[Retour à l'écran Type d'activité]</b> pour sauvegarder l’information à jour sur le site et revenir à l’écran Type(s) d'activité."
             
             var page_my_company_EN = "Head Office details can be updated by choosing the <b>[Update Organization]</b> button at the bottom of this screen.</br></br>" +
                 "Following options are available via the menu options on the left:</br>" +
@@ -215,17 +215,19 @@ if (typeof (tdg.message) == "undefined") {
                 "- Annual Compliance Update: Allows completion of this mandatory annual update.</br>" +
                 "- Deactivate Organization: To deactivate this Organization.</br>" +
                 "- My Sites: To view a list of current Sites to add to, update, deactivate, reactivate or sale/transfer.</br>" +
+                "- Manage Application Users: To add or remove user access to this application.</br>" +
                 "- Online Help: To search for guidance on how to use this application.";
-            var page_my_company_FR = "Les détails concernant le siège social peuvent être mis à jour en cliquant sur le bouton <b>[Update Company]</b> au bas de l’écran. </br></br>" +
-                "Les options de menu suivantes sont accessibles à partir du menu de gauche:</br>" +
-                "- Organization History Log: activités antérieures de cette compagnie.</br>" +
-                "- Annual Compliance: pour effectuer cette mise à jour annuelle obligatoire.</br>" +
-                "- Deactivate Organization: pour désactiver cette organisation.</br>" +
-                "- Mes sites: pour voir la liste des sites actuels à ajouter, mettre à jour, désactiver, réactiver, ou pour la vente/transfert.</br>" +
-                "- Aide en ligne: pour obtenir des conseils sur la façon d’utiliser cette application.";
+            var page_my_company_FR = "Head Office details can be updated by choosing the <b>[Update Organization]</b> button at the bottom of this screen.</br></br>" +
+                "Following options are available via the menu options on the left:</br>" +
+                "- Organization History Log: Key past activities for this Organization.</br>" +
+                "- Annual Compliance Update: Allows completion of this mandatory annual update.</br>" +
+                "- Deactivate Organization: To deactivate this Organization.</br>" +
+                "- My Sites: To view a list of current Sites to add to, update, deactivate, reactivate or sale/transfer.</br>" +
+                "- Manage Application Users: To add or remove user access to this application.</br>" +
+                "- Online Help: To search for guidance on how to use this application._FR";
             
             var page_my_company_contact_EN = "For actions, select the <b>[V]</b> button beside each row, or the <b>[+Add]</b> button for a new entry.";
-            var page_my_company_contact_FR = "Pour toute action, sélectionner le bouton <b>[V]</b> à côté de chaque rangée, ou le bouton <b>[+Créer]</b> pour une nouvelle entrée.";
+            var page_my_company_contact_FR = "For actions, select the <b>[V]</b> button beside each row, or the <b>[+Add]</b> button for a new entry._FR";
             
             var page_in_year_my_sites_EN = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.<br>" +
                 "To add additional Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.<br>" +
@@ -412,11 +414,6 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "BTN_WITHDRAW",
                         "message_en": "Withdraw",
                         "message_fr": "Retirer"
-                    },
-                    {
-                        "code": "BTN_UPDATE_ORG",
-                        "message_en": "Update Organization",
-                        "message_fr": "Update Organization_FR"
                     },
                     {
                         "code": "BTN_IS_MY_COMPANY",
@@ -706,17 +703,17 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000049",
                         "message_en": "Back To In Year Sites Page",
-                        "message_fr": "Back To In Year Sites Page_FR"
+                        "message_fr": "Retour à la page des sites en cours d'année"
                     },
                     {
                         "code": "m000050",
                         "message_en": "Back To Annual Compliance Update Page",
-                        "message_fr": "Back To Annual Compliance Update Page_FR"
+                        "message_fr": "Retour à la page de mise à jour annuelle de la conformité"
                     },
                     {
                         "code": "m000051",
                         "message_en": "Back To In Year Site Update Page",
-                        "message_fr": "Back To In Year Site Update Page_FR"
+                        "message_fr": "Retour à la page de mise à jour du site en cours d'année"
                     },
                     {
                         "code": "m000052",
@@ -775,7 +772,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000108",
                         "message_en": "Back to Activity Types Screen",
-                        "message_fr": "Retour à l’écran Activity Types"
+                        "message_fr": "Retour à l'écran Type d'activité"
                     },
                     {
                         "code": "m000109",
@@ -891,7 +888,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000131",
                         "message_en": "Another organization already has an active Site at this location. You will not be able to add a Site at this Location until the other organization first deactivates it.</br></br> If that other organization has agreed to sell you this Site, then please advise them to Deactivate the Site within the CID Portal, after which you will be able to add this Site.</br></br> If you are certain that the Site details entered are correct, and this Site is not part of a sale or transfer, then do you want to have a request sent to that organization asking them to release the Site?",
-                        "message_fr": "Veuillez noter qu’une autre organisation possède un site actif avec la même information. Voulez‑vous continuer ou mettre fin à cet ajout afin d’apporter des corrections aux données du site saisi ou commencer le processus de vente/fusion du site au moyen de l’option du menu Site transfer?"
+                        "message_fr": "Une autre organisation a déjà un site actif à cet emplacement. Vous ne pourrez pas ajouter de site à cet emplacement tant que l'autre organisation ne l'aura pas désactivé.</br></br> Si cette autre organisation a accepté de vous vendre ce site, veuillez lui conseiller de désactiver le site dans le délai imparti dans le portail du BDIC, après quoi vous pourrez ajouter ce site.</br></br> Si vous êtes certain que les détails du site saisis sont corrects et que ce site ne fait pas partie d'une vente ou d'un transfert, alors voulez-vous faire envoyer une demande à cette organisation lui demandant de libérer le Site?"
                     },
                     {
                         "code": "m000132",
@@ -906,57 +903,57 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000134",
                         "message_en": "This addition of a backup Contact has completed the Contact requirements of the regulation. Any further Contact additions are completely optional.",
-                        "message_fr": "En ajoutant ce contact de réserve, vous répondez à toutes les exigences du règlement. Tout autre ajout de contact est entièrement facultatif."
+                        "message_fr": "Cet ajout d'un second contact a complété les exigences de contact du règlement. Tout autre ajout de contact est entièrement facultatif."
                     },
                     {
                         "code": "m000135",
                         "message_en": "Contact Email",
-                        "message_fr": "Contact Email_FR"
+                        "message_fr": "Courriel de la personne contact"
                     },
                     {
                         "code": "m000136",
                         "message_en": "Note: This is your account’s official email, which may be updated via the <b>[Account Settings]</b> button at the top.",
-                        "message_fr": "Note: This is your account’s official email, which may be updated via the <b>[Paramètres du compte]</b> button at the top._FR"
+                        "message_fr": "Remarque: il s'agit de l'adresse courriel officielle de votre compte, qui peut être mise à jour via le bouton <b>[Paramètres du compte]</b> en haut."
                     },
                     {
                         "code": "m000137",
                         "message_en": "Your request has been sent to the Transport Canada TDG CID Support Team.",
-                        "message_fr": "Your request has been sent to the Transport Canada TDG CID Support Team._FR"
+                        "message_fr": "Votre demande a été envoyée à l'équipe de soutien BDIC du TMD de Transports Canada."
                     },
                     {
                         "code": "m000138",
                         "message_en": "Details of Request needs to be entered.",
-                        "message_fr": "Details of Request needs to be entered._FR"
+                        "message_fr": "Les détails de la demande doivent être saisis."
                     },
                     {
                         "code": "m000139",
                         "message_en": "There is knowledge article information about this topic that may answer your request. Do you want to first view that information?",
-                        "message_fr": "There is knowledge article information about this topic that may answer your request. Do you want to first view that information?_FR"
+                        "message_fr": "Il existe des informations et des articles sur ce sujet qui peuvent répondre à votre demande. Voulez-vous d'abord consulter ces informations ?"
                     },
                     {
                         "code": "m000140",
                         "message_en": "The current owner orgnization of this site was contacted and informed to release this site.",
-                        "message_fr": "The current owner orgnization of this site was contacted and informed to release this site._FR"
+                        "message_fr": "L'organisation actuellement propriétaire de ce site a été contactée et informée pour libérer ce site dans le système."
                     },
                     {
                         "code": "m000141",
-                        "message_en": "Activate Organization",
-                        "message_fr": "Activate Organization_FR"
+                        "message_en": "Activate Orgnization",
+                        "message_fr": "Activer l'organisation"
                     },
                     {
                         "code": "m000142",
                         "message_en": "<p>Please be aware that the entered date is in the future.</p>",
-                        "message_fr": "<p>Please be aware that the entered date is in the future._FR</p>"
+                        "message_fr": "<p>Veuillez noter que la date saisie est dans le futur.</p>"
                     },
                       {
                         "code": "m000143",
                         "message_en": "Please enter a Latitude as a decimal, with the full four digit decimal point (e.g. 41.3251).",
-                        "message_fr": "Please enter a Latitude as a decimal, with the full four digit decimal point (e.g. 41.3251)._FR"
+                        "message_fr": "Veuillez saisir une latitude sous forme décimale, avec le point et  quatre décimales (par exemple, 41.3251)."
                     },
                     {
                         "code": "m000144",
                         "message_en": "Please enter a Longitude as a decimal, with the full four digit decimal point (e.g. -74.7992).",
-                        "message_fr": "Please enter a Longitude as a decimal, with the full four digit decimal point (e.g. -74.7992)._FR"
+                        "message_fr": "Veuillez saisir une longitude sous forme décimale, avec le point et  quatre décimales (par exemple, 41.3251)."
                     },
                     {
                         "code": "m000145",

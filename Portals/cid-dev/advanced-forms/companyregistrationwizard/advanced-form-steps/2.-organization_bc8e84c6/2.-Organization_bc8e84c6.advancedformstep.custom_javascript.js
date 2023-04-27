@@ -39,7 +39,7 @@ $(document).ready(function () {
 	//phone field formatting
 	tdg.cid.phone_init("telephone1", selected_language);
 	tdg.cid.phone_init("fax", selected_language);
-    //format_phone("fax", selected_language);
+	//tdg.c.Format_Phone("fax", selected_language);
 
 	tdg.c.control_hide("cid_reasonfornobnnumber_other");
 	tdg.c.control_hide("cid_companyclaim");
@@ -144,6 +144,28 @@ $(document).ready(function () {
 	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
 
 	//tdg.c.addValidator("ovs_name_fr");
+	debugger;
+	var userId = '{{user.id}}';
+	var withdrawLabel = tdg.error_message.message("BTN_WITHDRAW");
+	$('#NextButton').parent().parent().after('<div role="group" class="pull-right toolbar-actions"><input type="button" data-dismiss="modal" value="' + withdrawLabel + '" id="WithdrawButton" style="margin-left: 10px;" name="WithdrawButton" class="btn btn-default button previous previous-btn"/></div>');
+	// bind the click event to this custom buttton
+	$("#WithdrawButton").bind("click", function () {
+		debugger;
+		var message = tdg.error_message.message("m000145");
+		tdg.c.dialog_YN(message, (ans) => {
+			//var contact_id = '{{user.id}}';
+			if (ans) {
+				tdg.webapi.delete("contacts", userId);
+				tdg.c.sign_out();
+				return false;
+				//Do nothing
+			}
+			else {
+				return false;
+				//need to add ALM record.
+			}
+		});
+	});
 });
 
 function btn_previous_click() {
@@ -207,36 +229,4 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 			tdg.cid.WebResource_address_complete_readonly(true);
 		});
 	}
-}
-function format_phone(phoneField, language) {
-          var field = "#" + phoneField;
-            $(field).attr("placeholder", "(___) ___-____");
-            $(field).attr("maxlength", "14");
-             $(field).on('keyup', function (event) {
-                //Strip all characters from the input except digits
-                var input = $(this).val().replace(/\D/g, '');
-                //Trim the remaining input to ten characters, to preserve phone number format
-                input = input.substring(0, 10);
-                //Based upon the length of the string, we add formatting as necessary
-                var inLength = input.length;
-                if (inLength == 0) {
-                    input = input;
-                } else if (inLength < 4) {
-                    input = '(' + input;
-                } else if (inLength < 7) {
-                    input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6);
-                } else {
-                    input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6) + '-' + input.substring(6, 10);
-                }
-				if (event.keyCode != 46 && event.keyCode != 8) {
-                	$(this).val(input);
-				}
-            });
-            $(field).focusout(function () {
-                var inLength = $(this).val().replace(/\D/g, '').length;
-                if (inLength < 10 && inLength != 0) {
-                    alert(tdg.c.text_language("Invalid number::Numéro invalide", language));
-                    $(this).val("");
-                }
-            })
 }

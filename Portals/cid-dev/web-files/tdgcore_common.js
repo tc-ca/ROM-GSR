@@ -787,7 +787,40 @@ if (typeof (tdg.c) == "undefined") {
                     resolve();
                 }, 2 * 1000);
             });
-        }
+        },
+		Format_Phone:  function (phoneField, language) {
+			var field = "#" + phoneField;
+				$(field).attr("placeholder", "(___) ___-____");
+				$(field).attr("maxlength", "14");
+				 $(field).on('keyup', function (event) {
+					//Strip all characters from the input except digits
+					var input = $(this).val().replace(/\D/g, '');
+					//Trim the remaining input to ten characters, to preserve phone number format
+					input = input.substring(0, 10);
+					//Based upon the length of the string, we add formatting as necessary
+					var inLength = input.length;
+					if (inLength == 0) {
+						input = input;
+					} else if (inLength < 4) {
+						input = '(' + input;
+					} else if (inLength < 7) {
+						input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6);
+					} else {
+						input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6) + '-' + input.substring(6, 10);
+					}
+					if (event.keyCode != 46 && event.keyCode != 8) {
+						$(this).val(input);
+					}
+				});
+				$(field).focusout(function () {
+					var inLength = $(this).val().replace(/\D/g, '').length;
+					if (inLength < 10 && inLength != 0) {
+						alert(tdg.c.text_language("Invalid number::Numéro invalide", language));
+						$(this).val("");
+					}
+				})
+		}//end function
+		
     }
 }
 

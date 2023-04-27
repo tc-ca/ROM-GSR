@@ -72,9 +72,9 @@ $(document).ready(function () {
 
 	if (sessionStorage.getItem("frominyearsitepage") == "false") {
 		var parentcustomerid = '{{user.parentcustomerid.Id}}';
-		var filter = "statecode eq 0 and accountid eq '" + parentcustomerid + "'";
+		var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq '" + parentcustomerid + "'";
 		var accData = tdg.webapi.list("accounts", filter);
-		if (accData != null) {
+		if (accData != null && accData.length > 0) {
 			if (accData[0].cid_portalrecordcreationdetails) // Net New Site
 			{
 				var withdrawLabel = tdg.error_message.message("BTN_WITHDRAW");
@@ -87,6 +87,14 @@ $(document).ready(function () {
 					tdg.c.dialog_YN(message, (ans) => {
 						//var contact_id = '{{user.id}}';
 						if (ans) {
+
+							var DeleteAccountFlowData = '{' +
+								'"AccountId": "' + parentcustomerid + '",' +
+								'}';
+							console.log(DeleteAccountFlowData);
+							tdg.cid.flow.Call_Flow("CID_Flow_RunCompanySitesDeleting", DeleteAccountFlowData);
+							tdg.c.sign_out();
+							//window.location.href = '~/en/Account/Login/LogOff?returnUrl=%2Fen%2Fen-US%2F';
 							return false;
 							//Do nothing
 						}

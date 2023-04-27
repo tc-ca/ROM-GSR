@@ -50,12 +50,48 @@ $(document).ready(function () {
 	$('table').each(function () {
 		debugger;
 		var selectedTable = $(this);
-		if (selectedTable.attr('data-name').includes('_readonly')) {
+		if (selectedTable.attr('data-name') && selectedTable.attr('data-name').includes('_readonly')) {
 			selectedTable.find("tr").each(function () {
 				$(this).css("background-color", "#F0F0F0");
 			});
 		}
 	});
+    debugger;
+    if (sessionStorage.getItem("frominyearsitepage") == "false") {
+		var parentcustomerid = '{{user.parentcustomerid.Id}}';
+		var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq '" + parentcustomerid + "'";
+		var accData = tdg.webapi.list("accounts", filter);
+		if (accData != null && accData.length >0) {
+			if (accData[0].cid_portalrecordcreationdetails) // Net New Site
+			{
+				var withdrawLabel = tdg.error_message.message("BTN_WITHDRAW");
+				$('#NextButton').parent().parent().after('<div role="group" class="pull-right toolbar-actions"><input type="button" data-dismiss="modal" value="' + withdrawLabel + '" id="WithdrawButton" style="margin-left: 10px;" name="WithdrawButton" class="btn btn-default button previous previous-btn"/></div>');
+				// bind the click event to this custom buttton
+				$("#WithdrawButton").bind("click", function () {
+					debugger;
+
+					var message = tdg.error_message.message("m000145");
+					tdg.c.dialog_YN(message, (ans) => {
+						if (ans) {
+
+							var DeleteAccountFlowData = '{' +
+								'"AccountId": "' + parentcustomerid + '",' +
+								'}';
+							console.log(DeleteAccountFlowData);
+							tdg.cid.flow.Call_Flow("CID_Flow_RunCompanySitesDeleting", DeleteAccountFlowData);
+							tdg.c.sign_out();
+							return false;
+							//Do nothing
+						}
+						else {
+							return false;
+							//need to add ALM record.
+						}
+					});
+				});
+			}
+		}
+	}
 });
 
 function printSummary() {
