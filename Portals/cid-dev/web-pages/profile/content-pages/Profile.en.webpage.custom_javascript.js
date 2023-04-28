@@ -14,7 +14,10 @@ $(document).ready(function () {
     }
     if ($('#ContentContainer_MainContent_MainContent_ContentBottom_ConfirmationMessage').find('.xrm-attribute-value').length > 0 &&
         $('#ContentContainer_MainContent_MainContent_ContentBottom_ConfirmationMessage').find('.xrm-attribute-value')[0].innerHTML.contains(sessionStorage.getItem("profile_msg"))) // "Your profile has been updated successfully"
-        window.location.href = '~/my-company/';
+    {
+        //window.location.href = '~/my-company/';
+        window.location.href = '~/';
+    }
 
     //disable submit button by default  
     $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", true);

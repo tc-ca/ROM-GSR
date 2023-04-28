@@ -98,75 +98,49 @@ $(document).ready(function () {
     $("#btn_next").bind("click", function () {
         tdg.cid.crw.start_btn_next_click();
     });
-});
 
-function start_registration(rom_data, suppress_error) {
-    debugger;
-    contact_update(rom_data);
-    if (rom_data.ovs_invitation_only) {
-        var ovs_invitation_only = true;
-        switch (rom_data.cid_cidcompanystatus) {
-            case 100000001:
-                ovs_invitation_only = false;
-                break;
+    //Withdraw
+    var parentcustomerid = '{{user.parentcustomerid.Id}}';
+    var showWithdraw = true; 
+    if(parentcustomerid)
+    {
+        var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq '" + parentcustomerid + "'";
+		var accData = tdg.webapi.list("accounts", filter);
+		if (accData != null && accData.length > 0 && accData[0].cid_portalrecordcreationdetails) { // Net New Site
+            showWithdraw = true;
         }
-        rom_data.ovs_invitation_only = ovs_invitation_only;
+        else
+        {
+             showWithdraw = false;
+        }
     }
-
-    if (rom_data.ovs_invitation_only) {
-        validation = false;
-        var message = tdg.error_message.message("BTN_NEXT");
-        $("#btn_next").prop("value", message);
-
-        var message = tdg.error_message.message("m000047");
-        message = message.replaceAll("{0}", rom_data.ovs_legalname);
-        tdg.c.dialog_YN(message, (ans) => {
-            var contact_id = '{{user.id}}';
-            invitation.request_onboard(rom_data, contact_id, ans, false)
+    if(showWithdraw){
+        var userId = '{{user.id}}';
+        var withdrawLabel = tdg.error_message.message("BTN_WITHDRAW");
+        $('#NextButton').parent().parent().after('<div role="group" class="pull-right toolbar-actions"><input type="button" data-dismiss="modal" value="' + withdrawLabel + '" id="WithdrawButton" style="margin-left: 10px;" name="WithdrawButton" class="btn btn-default button previous previous-btn"/></div>');
+        // bind the click event to this custom buttton
+        $("#WithdrawButton").bind("click", function () {
+            debugger;
+            var message = tdg.error_message.message("m000145");
+            tdg.c.dialog_YN(message, (ans) => {
+                var contact_id = '{{user.id}}';
+                if (ans) 
+                {
+                    var DeleteContactFlowData = '{' +
+                                    '"ContactId": "' + contact_id + '",' +
+                                    '}';
+                    console.log(DeleteContactFlowData);
+                    tdg.cid.flow.Call_Flow("CID_Flow_RunCompanySitesDeleting_Delete_Contact", DeleteContactFlowData);
+                    tdg.c.sign_out();
+                    return false;
+                }
+                else {
+                    return false;
+                }
+            });
         });
-        return validation;
     }
-    else {
-        var contact_id = '{{user.id}}';
-        validation = invitation.in_current_registration(rom_data, suppress_error, contact_id);
-        return validation;
-    }
-}
-
-function contact_update(data) {
-    debugger;
-    if (data.PhysicalLocationAddress != null) {
-        data.ovs_legalname = data.LegalName;
-        data.name = data.OperatingName;
-        var a = data.PhysicalLocationAddress;
-        data.address1_line1 = a.AddressLine1Text;
-        data.address1_line2 = a.AddressLine2Text;
-        data.address1_line3 = a.AddressLine3Text;
-        data.address1_city = a.CityName;
-        data.address1_stateorprovince = a.ProvinceStateCode;
-        data.address1_postalcode = a.PostalZipCode;
-    }
-    if (data.address != null) {
-        data.ovs_legalname = data.cid_legalname;
-        data.name = data.cid_operatingname;
-        var a = data.address;
-        data.address1_line1 = a.AddressLine1Text;
-        data.address1_line2 = a.AddressLine2Text;
-        data.address1_line3 = a.AddressLine3Text;
-        data.address1_city = a.CityName;
-        data.address1_stateorprovince = a.ProvinceStateCode;
-        data.address1_postalcode = a.PostalZipCode;
-    }
-
-    $('#cid_legalname').val(data.ovs_legalname);
-    $('#cid_operatingname').val(data.name);
-    $('#address1_line1').val(data.address1_line1);
-    $('#address1_line2').val(data.address1_line2);
-    $('#address1_line3').val(data.address1_line3);
-    $('#address1_city').val(data.address1_city);
-    $('#address1_stateorprovince').val(data.address1_stateorprovince);
-    $('#address1_postalcode').val(data.address1_postalcode);
-}
+});
 
 if (window.jQuery) {
     (function ($) {
@@ -197,7 +171,8 @@ if (window.jQuery) {
                     rom_data = tdg.cid.crw.start_account_by_name(legalname);
                     if (rom_data.length > 0) {
                         rom_data = rom_data[0];
-                        validation = start_registration(rom_data, suppress_error);
+                        //validation = start_registration(rom_data, suppress_error);
+                        validation = tdg.cid.crw.start_registration(rom_data, suppress_error);
 
                         $("#cid_operatingname").val(rom_data.name);
                     }
@@ -225,10 +200,12 @@ if (window.jQuery) {
                         rom_data = tdg.c.WebApi_List("accounts", filter);
                         if (rom_data.length > 0) {
                             rom_data = rom_data[0];
-                            validation = start_registration(rom_data, suppress_error);
+                            //validation = start_registration(rom_data, suppress_error);
+                            validation = tdg.cid.crw.start_registration(rom_data, suppress_error);
                         }
                         else {
-                            contact_update(data);
+                            //contact_update(data);
+                            tdg.cid.contact_update(data);
                             validation = true;
                         }
                     }

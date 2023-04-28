@@ -81,9 +81,9 @@ if (typeof (tdg.message) == "undefined") {
                 "- Nombre annuel d'envois</p>";
 
             var m000039_EN = "At this point, you cannot proceed back to the previous step to begin the registration process.<br><br>" +
-                "If you want to withdraw your registration altogether, including removing all entered data, then please choose No below. Next, choose the Contact Us button at the top of the screen, from which choose the ‘Request to withdraw this Registration’ option."
-            var m000039_FR = "At this point, you cannot proceed back to the previous step to begin the registration process.<br><br>" +
-                "If you want to withdraw your registration altogether, including removing all entered data, then please choose No below. Next, choose the Contact Us button at the top of the screen, from which choose the ‘Request to withdraw this Registration’ option._FR"
+                "If you want to withdraw your registration altogether, including removing all entered data, then please choose No below. Next, choose the Contact Us button at the top of the screen, from which choose the ‘Request to withdraw this Registration’ option.";
+            var m000039_FR = "À ce stade, vous ne pouvez pas revenir à l'étape précédente pour commencer le processus d'inscription.<br><br>" +
+                "Si vous souhaitez annuler complètement votre inscription, y compris la suppression de toutes les données saisies, veuillez choisir Non ci-dessous. Ensuite, choisissez le bouton Contactez-nous en haut de l'écran, à partir duquel choisissez l'option Demande de retrait de cette inscription.";
 
             var m000045_EN = "To proceed with the registration process you will need to either:<br><br>" +
                 "- Enter a different Business Number.<br><br>" +
@@ -953,7 +953,37 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000147",
                         "message_en": "Your profile has been updated successfully",
                         "message_fr": "Votre profil a été mis à jour"
-                    }
+                    },
+                    {
+                        "code": "m000148",
+                        "message_en": "Annual Organization has been successfully re-opened. Please now complete the Annual Compliance Update, which is due as of {0}.",
+                        "message_fr": "La conformité annuelle a été ré-ouverte avec succès. Veuillez maintenant remplir la mise à jour annuelle de conformité, qui est due à partir du {0}."
+                    },
+                    {
+                        "code": "m000149",
+                        "message_en": "A re-submit of your Organizatio’s previous Annual Compliance Update should only be done when there is a material change to your Organizatio’s details covering up to your previous Update Anniversary Date. It should not be used when there is a new change to your data in the current year. For those changes, you should instead do a regular update. <br><br> Are you sure you want to reopen the submitted Annual Compliance so that you can submit a new one?",
+                        "message_fr": "Une nouvelle soumission de la précédente mise à jour annuelle de conformité de votre entreprise ne doit être effectuée que lorsqu'il y a un changement important dans les détails de votre entreprise couvrant jusqu'à votre date anniversaire de mise à jour précédente. Il ne doit pas être utilisé lorsqu'il y a un nouveau changement dans vos données dans l'année en cours. Pour ces changements, vous devriez plutôt faire une mise à jour régulière. <br><br> Êtes-vous sûr de vouloir rouvrir la conformité annuelle soumise afin de pouvoir en soumettre une nouvelle ?"
+                    },
+                    {
+                        "code": "m000150",
+                        "message_en": "You cannot proceed before completing the checklist items in the Organization Management section<br>",
+                        "message_fr": "Vous ne pouvez pas continuer avant d'avoir rempli les éléments de la liste de contrôle dans la section Gestion de l'entreprise<br>"
+                    },
+                    {
+                        "code": "m000151",
+                        "message_en": "You cannot proceed before completing the checklist items in the Sites Management section<br>",
+                        "message_fr": "Vous ne pouvez pas continuer avant d'avoir terminé les éléments de la liste de contrôle dans la section Gestion des sites<br>"
+                    },
+                    {
+                        "code": "m000152",
+                        "message_en": "You cannot proceed before attesting all Organizations sites",
+                        "message_fr": "Vous ne pouvez pas continuer avant d'avoir attesté tous les sites de l'entreprise"
+                    },
+                    {
+                        "code": "m000153",
+                        "message_en": "You cannot proceed before attesting your Organization annual compliance update changes, please check the 'Attestation' box<br>",
+                        "message_fr": "Vous ne pouvez pas continuer avant d'avoir attesté les modifications apportées à la mise à jour annuelle de la conformité de votre entreprise, veuillez cocher la case 'Attestation'<br>"
+                    },
                 ];
 
             return list;

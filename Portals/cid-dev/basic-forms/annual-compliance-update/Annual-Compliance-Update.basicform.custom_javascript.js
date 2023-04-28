@@ -19,7 +19,8 @@ $(document).ready(function () {
 	  var urlPath = window.location.href;
       urlPath = urlPath.split('?')[0];
       window.history.replaceState({}, document.title, urlPath);
-	  var afterRefreshMessage = "Annual Compliance has been successfully re-opened. Please now complete the Annual Compliance Update, which is due as of {0}.";
+	  var afterRefreshMessage = tdg.error_message.message("m000148");
+	  //"Annual Compliance has been successfully re-opened. Please now complete the Annual Compliance Update, which is due as of {0}.";
      
 	 
 	  afterRefreshMessage = afterRefreshMessage.replace("{0}" , cid_companyanniversarydate) ;
@@ -44,7 +45,8 @@ $(document).ready(function () {
 	 var historyLogCodeList = tdg.webapi.SelectedColumnlist("cid_audithistorycodes", "cid_audithistorycodeid,cid_name, statuscode",
 	  "statuscode eq 1 and cid_name eq 'CG5'");
 	 console.log ("history log " + historyLogCodeList.length);
-	 var message = "A re-submit of your Company’s previous Annual Compliance Update should only be done when there is a material change to your Company’s details covering up to your previous Update Anniversary Date. It should not be used when there is a new change to your data in the current year. For those changes, you should instead do a regular update. <br><br> Are you sure you want to reopen the submitted Annual Compliance so that you can submit a new one?" ;
+	 var message =  tdg.error_message.message("m000149");
+	 //"A re-submit of your Company’s previous Annual Compliance Update should only be done when there is a material change to your Company’s details covering up to your previous Update Anniversary Date. It should not be used when there is a new change to your data in the current year. For those changes, you should instead do a regular update. <br><br> Are you sure you want to reopen the submitted Annual Compliance so that you can submit a new one?" ;
 	var portaluserId = "{{user.id}}" ;
 	 tdg.c.dialog_YN(message, (ans) => {
                         if (ans) {
@@ -142,7 +144,9 @@ $(document).ready(function () {
 		$("#company_annual_compliance_update table tbody").find("tr").each(function () {
 			var trElement = $(this);
 			trElement.find("td").each(function () {
-				if ($(this).attr('data-attribute') == 'statuscode' && $(this).attr('aria-label') == 'Completed') {
+				if ($(this).attr('data-attribute') == 'statuscode' && 
+				($(this).attr('aria-label') == 'Completed' || $(this).attr('aria-label') == 'Terminé' ) ) 
+				{
 					trElement.css("background-color", "#dff0d8");
 				}
 			});
@@ -150,7 +154,8 @@ $(document).ready(function () {
 		$("#sites_annual_compliance_update table tbody").find("tr").each(function () {
 			var trElement = $(this);
 			trElement.find("td").each(function () {
-				if ($(this).attr('data-attribute') == 'statuscode' && $(this).attr('aria-label') == 'Completed') {
+				if ($(this).attr('data-attribute') == 'statuscode' &&
+				($(this).attr('aria-label') == 'Completed'|| $(this).attr('aria-label') == 'Terminé' )) {
 					trElement.css("background-color", "#dff0d8");
 				}
 			});
@@ -214,9 +219,15 @@ $(document).ready(function () {
 		$("#company_annual_compliance_update table tbody").find("tr").each(function () {
 			if (!firstErrorFound) {
 				$(this).find("td").each(function () {
-					if ($(this).attr('data-attribute') == 'statuscode' && $(this).attr('aria-label') != 'Completed') {
+					if (
+						($(this).attr('data-attribute') == 'statuscode' || $(this).attr("L'état d'achèvement")) 
+					&& 
+					($(this).attr('aria-label') != 'Completed'|| $(this).attr('aria-label') == 'Terminé' )
+					) {
 						validation = false;
-						errorMessage = errorMessage + "You cannot proceed before completing the checklist items in the Company Management section<br>";
+						var m000150 = tdg.error_message.message("m000150");
+						errorMessage = errorMessage + m000150;
+						//"You cannot proceed before completing the checklist items in the Company Management section<br>";
 						firstErrorFound = true;
 					}
 				});
@@ -225,9 +236,14 @@ $(document).ready(function () {
 		$("#sites_annual_compliance_update table tbody").find("tr").each(function () {
 			if (!secondErrorFound) {
 				$(this).find("td").each(function () {
-					if ($(this).attr('data-attribute') == 'statuscode' && $(this).attr('aria-label') != 'Completed') {
+					if (($(this).attr('data-attribute') == 'statuscode' || $(this).attr("L'état d'achèvement")) 
+					&& 
+					($(this).attr('aria-label') != 'Completed' || $(this).attr('aria-label') == 'Terminé' )
+					) {
 						validation = false;
-						errorMessage = errorMessage + "You cannot proceed before completing the checklist items in the Sites Management section<br>";
+						var m000151 = tdg.error_message.message("m000151");
+						errorMessage = errorMessage + m000151;
+						//"You cannot proceed before completing the checklist items in the Sites Management section<br>";
 						secondErrorFound = true;
 					}
 				});
@@ -235,11 +251,15 @@ $(document).ready(function () {
 		});
 		if ($("#numberOfNotAttestedSites").val() != 0) {
 			validation = false;
-			errorMessage = errorMessage + "You cannot proceed before attesting all companies sites<br>";
+			var m000152 = tdg.error_message.message("m000152");
+			errorMessage = errorMessage + m000152;
+			//"You cannot proceed before attesting all companies sites<br>";
 		}
 		if (!$("#cid_iscompanyattested").prop('checked')) {
 			validation = false;
-			errorMessage = errorMessage + "You cannot proceed before attesting your company annual compliance update changes, please check the 'Attestation' box<br>";
+			var m000153 = tdg.error_message.message("m000153");
+			errorMessage = errorMessage + m000153;
+			//"You cannot proceed before attesting your company annual compliance update changes, please check the 'Attestation' box<br>";
 		}
 		if (errorMessage != "") {
 			$('.validation-summary div').eq(0).remove();

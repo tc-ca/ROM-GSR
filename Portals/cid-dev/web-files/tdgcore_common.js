@@ -2254,6 +2254,42 @@ if (typeof (tdg.cid) == "undefined") {
         Refresh_EntityGrid() {
             $(".entity-grid").trigger("refresh");
         },
+		
+		contact_update: function (data) {
+			debugger;
+			if (data.PhysicalLocationAddress != null) {
+				data.ovs_legalname = data.LegalName;
+				data.name = data.OperatingName;
+				var a = data.PhysicalLocationAddress;
+				data.address1_line1 = a.AddressLine1Text;
+				data.address1_line2 = a.AddressLine2Text;
+				data.address1_line3 = a.AddressLine3Text;
+				data.address1_city = a.CityName;
+				data.address1_stateorprovince = a.ProvinceStateCode;
+				data.address1_postalcode = a.PostalZipCode;
+			}
+			if (data.address != null) {
+				data.ovs_legalname = data.cid_legalname;
+				data.name = data.cid_operatingname;
+				var a = data.address;
+				data.address1_line1 = a.AddressLine1Text;
+				data.address1_line2 = a.AddressLine2Text;
+				data.address1_line3 = a.AddressLine3Text;
+				data.address1_city = a.CityName;
+				data.address1_stateorprovince = a.ProvinceStateCode;
+				data.address1_postalcode = a.PostalZipCode;
+			}
+
+			$('#cid_legalname').val(data.ovs_legalname);
+			$('#cid_operatingname').val(data.name);
+			$('#address1_line1').val(data.address1_line1);
+			$('#address1_line2').val(data.address1_line2);
+			$('#address1_line3').val(data.address1_line3);
+			$('#address1_city').val(data.address1_city);
+			$('#address1_stateorprovince').val(data.address1_stateorprovince);
+			$('#address1_postalcode').val(data.address1_postalcode);
+			
+		},
 
         LLD_validateAddress_combination_Selections() {
 
@@ -2870,6 +2906,39 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#address1_stateorprovince").val(address.ProvinceStateCode);
             $("#address1_postalcode").val(address.PostalZipCode);
         },
+		
+		start_registration: function (rom_data, suppress_error) {
+            debugger;			
+			tdg.cid.contact_update(rom_data);
+			if (rom_data.ovs_invitation_only) {
+				var ovs_invitation_only = true;
+				switch (rom_data.cid_cidcompanystatus) {
+					case 100000001:
+						ovs_invitation_only = false;
+						break;
+				}
+				rom_data.ovs_invitation_only = ovs_invitation_only;
+			}
+
+			if (rom_data.ovs_invitation_only) {
+				validation = false;
+				var message = tdg.error_message.message("BTN_NEXT");
+				$("#btn_next").prop("value", message);
+
+				var message = tdg.error_message.message("m000047");
+				message = message.replaceAll("{0}", rom_data.ovs_legalname);
+				tdg.c.dialog_YN(message, (ans) => {
+					var contact_id = '{{user.id}}';
+					invitation.request_onboard(rom_data, contact_id, ans, false)
+				});
+				return validation;
+			}
+			else {
+				var contact_id = '{{user.id}}';
+				validation = invitation.in_current_registration(rom_data, suppress_error, contact_id);
+				return validation;
+			}
+		},
 
         step2_previous_click: function (email, account_id, contact_id) {
             debugger;
@@ -2893,7 +2962,63 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 else {
                 }
             });
-        }
+        },
+		
+		step2_Disable_ContactTypeFieldsForSecondaryUser: function (){
+			debugger;
+			var cid_contacttype = '{{user.cid_contacttype.Value}}';
+			//if not primary contact
+			if (cid_contacttype != 100000000) {
+				$("#btn_previous").attr('disabled', true);
+
+				$("#name").prop("disabled", true);
+				$("#cid_reasonfornobnnumber").prop("disabled", true);
+				$("#cid_reasonfornobnnumber_other").prop("disabled", true);
+				$("#ovs_name_fr").prop("disabled", true);
+				$("#address1_line1").css("pointer-events", "none");
+				$("#WebResource_address_complete").css("pointer-events", "none");
+				$("#address1_line2").prop("disabled", true);
+				$("#address1_line3").prop("disabled", true);
+				$("#address1_city").prop("disabled", true);
+				$("#address1_postalcode").prop("disabled", true);
+				$("#ovs_address1_province").prop("disabled", true);
+				$("#address1_country").prop("disabled", true);
+				$("#telephone1").prop("disabled", true);
+				$("#websiteurl").prop("disabled", true);
+				$("#fax").prop("disabled", true);
+
+				// disable address lookup web resource
+				$('#WebResource_address_complete').on('load', function () {
+					tdg.cid.WebResource_address_complete_readonly(true);
+				});
+			}	
+		},
+		
+		step2_address1_line1_set: function(value) {
+			debugger;
+			try {
+				var f = document.getElementById("WebResource_address_complete");
+				var c = f.contentWindow;
+				c.document.getElementById("address1_line1").value = value;
+			}
+			catch (e) { }
+		},
+		
+		step2_advanced_form_header: function (companyName) {
+			try {
+				var value = tdg.error_message.message("m000009");
+				value = value.replace("{0}", companyName);
+				$('h1:first')[0].innerHTML = value;
+			}
+			catch (e) { }
+			var steps = $('li.list-group-item');
+			for (var i = 0; i < steps.length; i++) {
+				var item = steps[i];
+				var text = item.innerText;
+				text = tdg.error_message.message(text);
+				item.innerText = text;
+			}
+		}
     }
 }
 

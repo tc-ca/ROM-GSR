@@ -9,8 +9,8 @@ if(document.getElementsByTagName('h1')[0])
         //var cancelLabel = tdg.error_message.message("BTN_CANCEL");
         $("#submit-agreement").after("&nbsp; <input id='cancelButton' type='button' name='CancelButton' value='Cancel' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");      
         $('#cancelButton').click(function (e) {
-                //window.location.href = '~/en/Account/Login/LogOff?returnUrl=%2Fen%2Fcompany_dashboard%2F';
-                window.location.href = '~/en/Account/Login/LogOff';
+                tdg.c.sign_out();
+                //window.location.href = '~/en/Account/Login/LogOff';
         });
     }
     //Condition for initial registration page

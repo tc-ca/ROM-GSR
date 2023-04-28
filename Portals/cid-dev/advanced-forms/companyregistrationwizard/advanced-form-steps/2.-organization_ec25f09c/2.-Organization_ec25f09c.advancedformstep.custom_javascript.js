@@ -49,7 +49,10 @@ $(document).ready(function () {
 	tdg.cid.address_init(false);
 	tdg.cid.WebResource_address_complete_readonly(false);
 
-	advanced_form_header();
+	var selected_language = '{{website.selected_language.code}}';
+	sessionStorage.setItem("selected_language", selected_language);
+	var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name}}');
+	tdg.cid.crw.step2_advanced_form_header(companyName);
 
 	$("#websiteurl").width('100%');
 
@@ -103,7 +106,7 @@ $(document).ready(function () {
 
 		debugger;
 		var value = $("#address1_line1").val();
-		address1_line1_set(value);
+		tdg.cid.crw.step2_address1_line1_set(value);
 	}
 	// autocomplete off
 	$("#name").attr("autocomplete", "new-password");
@@ -141,7 +144,42 @@ $(document).ready(function () {
 		tdg.cid.crw.start_cid_reasonfornobnnumber_onchange(false);
 	}
 
-	Disable_ContactTypeFieldsForSecondaryUser();
+	tdg.cid.crw.step2_Disable_ContactTypeFieldsForSecondaryUser();
+
+	if (sessionStorage.getItem("frominyearsitepage") == "false") {
+		var parentcustomerid = '{{user.parentcustomerid.Id}}';
+		var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq '" + parentcustomerid + "'";
+		var accData = tdg.webapi.list("accounts", filter);
+		if (accData != null && accData.length > 0) {
+			if (accData[0].cid_portalrecordcreationdetails) // Net New Site
+			{
+				var withdrawLabel = tdg.error_message.message("BTN_WITHDRAW");
+				$('#NextButton').parent().parent().after('<div role="group" class="pull-right toolbar-actions"><input type="button" data-dismiss="modal" value="' + withdrawLabel + '" id="WithdrawButton" style="margin-left: 10px;" name="WithdrawButton" class="btn btn-default button previous previous-btn"/></div>');
+				// bind the click event to this custom buttton
+				$("#WithdrawButton").bind("click", function () {
+					debugger;
+
+					var message = tdg.error_message.message("m000145");
+					tdg.c.dialog_YN(message, (ans) => {
+						//var contact_id = '{{user.id}}';
+						if (ans) {
+
+							var DeleteAccountFlowData = '{' +
+								'"AccountId": "' + parentcustomerid + '",' +
+								'}';
+							console.log(DeleteAccountFlowData);
+							tdg.cid.flow.Call_Flow("CID_Flow_RunCompanySitesDeleting", DeleteAccountFlowData);
+							tdg.c.sign_out();
+							return false;
+						}
+						else {
+							return false;
+						}
+					});
+				});
+			}
+		}
+	}
 });
 
 function ovs_legalname_onchange() {
@@ -193,7 +231,7 @@ function cid_crabusinessnumber_onchange() {
 			$("#address1_postalcode").val(address.PostalZipCode);
 
 			sessionStorage.setItem("AddressLine1Text", address.AddressLine1Text);
-			address1_line1_set(address.AddressLine1Text);
+			tdg.cid.crw.step2_address1_line1_set(address.AddressLine1Text);
 
 			var selected_language = '{{website.selected_language.code}}';
 			tdg.cid.convert_province_to_code(selected_language);
@@ -203,24 +241,6 @@ function cid_crabusinessnumber_onchange() {
 	}
 }
 
-function advanced_form_header() {
-	var selected_language = '{{website.selected_language.code}}';
-	sessionStorage.setItem("selected_language", selected_language);
-	var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name}}');
-	try {
-		var value = tdg.error_message.message("m000009");
-		value = value.replace("{0}", companyName);
-		$('h1:first')[0].innerHTML = value;
-	}
-	catch (e) { }
-	var steps = $('li.list-group-item');
-	for (var i = 0; i < steps.length; i++) {
-		var item = steps[i];
-		var text = item.innerText;
-		text = tdg.error_message.message(text);
-		item.innerText = text;
-	}
-}
 if (window.jQuery) {
 	(function ($) {
 		webFormClientValidate = function () {
@@ -235,45 +255,4 @@ if (window.jQuery) {
 			return true;
 		}
 	}(window.jQuery));
-}
-
-function address1_line1_set(value) {
-	debugger;
-	try {
-		var f = document.getElementById("WebResource_address_complete");
-		var c = f.contentWindow;
-		c.document.getElementById("address1_line1").value = value;
-	}
-	catch (e) { }
-}
-
-function Disable_ContactTypeFieldsForSecondaryUser() {
-	debugger;
-
-	var cid_contacttype = '{{user.cid_contacttype.Value}}';
-	//if not primary contact
-	if (cid_contacttype != 100000000) {
-		$("#btn_previous").attr('disabled', true);
-
-		$("#name").prop("disabled", true);
-		$("#cid_reasonfornobnnumber").prop("disabled", true);
-		$("#cid_reasonfornobnnumber_other").prop("disabled", true);
-		$("#ovs_name_fr").prop("disabled", true);
-		$("#address1_line1").css("pointer-events", "none");
-		$("#WebResource_address_complete").css("pointer-events", "none");
-		$("#address1_line2").prop("disabled", true);
-		$("#address1_line3").prop("disabled", true);
-		$("#address1_city").prop("disabled", true);
-		$("#address1_postalcode").prop("disabled", true);
-		$("#ovs_address1_province").prop("disabled", true);
-		$("#address1_country").prop("disabled", true);
-		$("#telephone1").prop("disabled", true);
-		$("#websiteurl").prop("disabled", true);
-		$("#fax").prop("disabled", true);
-
-		// disable address lookup web resource
-		$('#WebResource_address_complete').on('load', function () {
-			tdg.cid.WebResource_address_complete_readonly(true);
-		});
-	}
 }
