@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{bb20c95b-1918-ed11-b83f-000d3a84cfdd}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
+        <row name="result" id="ovs_mocregistrationid">
+          <cell name="ovs_name" width="200" />
+          <cell name="ovs_mocregistrationname" width="192" />
+          <cell name="fdr_registrationtype" width="201" />
+          <cell name="fdr_authorizedlocation" width="168" />
+          <cell name="ovs_hubind" width="100" />
+          <cell name="ovs_operationtype" width="202" />
+          <cell name="ovs_lineofbusiness" width="100" />
+          <cell name="ovs_mocinitialregistrationdate" width="100" />
+          <cell name="ovs_registrationexpiry" width="100" />
+          <cell name="ovs_mocprogram" width="100" />
+          <cell name="ovs_cdriskscore" width="100" />
+          <cell name="ovs_cdpriorityscore" width="100" />
+          <cell name="ovs_cdriskcategory" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+        <entity name="ovs_mocregistration">
+          <attribute name="ovs_name" />
+          <attribute name="ovs_mocregistrationname" />
+          <attribute name="ovs_hubind" />
+          <attribute name="ovs_operationtype" />
+          <attribute name="ovs_lineofbusiness" />
+          <attribute name="ovs_mocinitialregistrationdate" />
+          <attribute name="ovs_registrationexpiry" />
+          <attribute name="ovs_mocprogram" />
+          <attribute name="ovs_cdriskscore" />
+          <attribute name="ovs_cdpriorityscore" />
+          <attribute name="ovs_cdriskcategory" />
+          <filter type="and">
+            <condition attribute="ovs_operationtype" operator="not-in">
+              <value>918640038</value>
+              <value>918640042</value>
+              <value>918640040</value>
+            </condition>
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="ovs_mocregistrationid" />
+          <attribute name="fdr_authorizedlocation" />
+          <attribute name="fdr_registrationtype" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.137.6.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="FDR - Active Related Registrations" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="Active Operations with Authorized Location Flag Or Completed Registrations" languagecode="1033" />
+    </Descriptions>
+  </savedquery>
+</savedqueries>
