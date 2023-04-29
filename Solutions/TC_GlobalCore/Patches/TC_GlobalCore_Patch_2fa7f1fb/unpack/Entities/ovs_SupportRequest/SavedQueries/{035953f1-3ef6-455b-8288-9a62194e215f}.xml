@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{035953f1-3ef6-455b-8288-9a62194e215f}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ovs_requestnumber" select="1" icon="1" preview="1">
+        <row name="result" id="ovs_supportrequestid">
+          <cell name="ovs_priority" width="100" />
+          <cell name="createdon" width="125" />
+          <cell name="statecode" width="100" />
+          <cell name="statuscode" width="150" />
+          <cell name="ovs_requestnumber" width="150" />
+          <cell name="ownerid" width="100" />
+          <cell name="ovs_createdbyexternaluser" width="200" />
+          <cell name="modifiedon" width="100" />
+          <cell name="modifiedby" width="100" />
+          <cell name="a_22ae8269a36747699f24973573c3bbfe.ovs_reasonenglish" width="200" />
+          <cell name="a_22ae8269a36747699f24973573c3bbfe.ovs_reasonfrench" width="200" />
+          <cell name="ovs_requestdetails" width="100" />
+          <cell name="ovs_teammemo" width="300" />
+          <cell name="a_63671bd6d3a8446287dca585ce4c2774.ovs_romid" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="ovs_supportrequest">
+          <attribute name="ovs_requestnumber" />
+          <attribute name="createdon" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="statecode" />
+          <attribute name="statuscode" />
+          <attribute name="ovs_priority" />
+          <attribute name="ownerid" />
+          <attribute name="modifiedby" />
+          <attribute name="modifiedon" />
+          <link-entity alias="a_22ae8269a36747699f24973573c3bbfe" name="ovs_supportrequesttype" to="ovs_requesttype" from="ovs_supportrequesttypeid" link-type="outer" visible="false">
+            <attribute name="ovs_reasonenglish" />
+            <attribute name="ovs_reasonfrench" />
+          </link-entity>
+          <attribute name="ovs_teammemo" />
+          <order attribute="ovs_priority" descending="false" />
+          <order attribute="createdon" descending="true" />
+          <order attribute="statecode" descending="false" />
+          <order attribute="statuscode" descending="false" />
+          <attribute name="ovs_supportrequestid" />
+          <attribute name="ovs_createdbyexternaluser" />
+          <attribute name="ovs_requestdetails" />
+          <link-entity alias="a_63671bd6d3a8446287dca585ce4c2774" name="account" to="ovs_site" from="accountid" link-type="outer" visible="false">
+            <attribute name="ovs_romid" />
+          </link-entity>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Active Support Requests" languagecode="1033" />
+      <LocalizedName description="Active Support Requests_FR" languagecode="1036" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

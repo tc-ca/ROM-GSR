@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{9698eba4-c5a2-ed11-aad1-0022483d0343}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="subject" select="1" preview="1" icon="1">
+        <row name="result" id="activityid">
+          <cell name="createdon" width="100" />
+          <cell name="cid_createdbyregistrant" width="100" />
+          <cell name="a_0b485f73c3a2ed11aad10022483d0343.cid_historydescriptionenglish" width="100" disableSorting="1" />
+          <cell name="a_0b485f73c3a2ed11aad10022483d0343.cid_historydescriptionfrench" width="100" disableSorting="1" />
+          <cell name="cid_memoenglish" width="100" disableSorting="1" />
+          <cell name="cid_memofrench" width="100" disableSorting="1" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+        <entity name="cid_historylog">
+          <attribute name="cid_memofrench" />
+          <attribute name="cid_memoenglish" />
+          <attribute name="createdon" />
+          <attribute name="cid_createdbyregistrant" />
+          <order attribute="createdon" descending="true" />
+          <filter type="and">
+            <filter type="and">
+              <condition attribute="cid_company" operator="not-null" />
+              <condition attribute="cid_site" operator="null" />
+            </filter>
+            <condition attribute="cid_externallyvisible" operator="eq" value="1" />
+          </filter>
+          <link-entity name="cid_audithistorycode" from="cid_audithistorycodeid" to="cid_historycode" visible="false" link-type="outer" alias="a_0b485f73c3a2ed11aad10022483d0343">
+            <attribute name="cid_historydescriptionfrench" />
+            <attribute name="cid_historydescriptionenglish" />
+          </link-entity>
+          <attribute name="activityid" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="CID Portal - Organization History Logs" languagecode="1033" />
+      <LocalizedName description="Portail de la BDIC – Journaux d’historique de l’organisation" languagecode="1036" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
