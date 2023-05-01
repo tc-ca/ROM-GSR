@@ -22,9 +22,9 @@ $(document).ready(function () {
                 $('#mainContent').remove();
             }
             var msg = tdg.error_message.message("m000108");
-            var text = "<div id='backToActivityTypesStep' class='input-group pull-left'><p><input type='button' id='backToActivityTypes' name='Back' value='{0}' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'><br><br></p></div>";
-            text = text.replace("{0}", msg);
+            var text = "<div id='backToActivityTypesStep' class='input-group pull-left'><p><input type='button' id='backToActivityTypes' name='Back' value='' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'><br><br></p></div>";
             $('#mainContent').prepend(text);
+            $("#backToActivityTypes")[0].value = msg;
 
             $("#backToActivityTypes").click(function () {
                 sessionStorage.setItem('to_actvt_stp', 'true');

@@ -13,7 +13,6 @@ $(document).ready(function () {
 	debugger;
 	if (urlParams.has('siteid')) {
 		var siteId = urlParams.get('siteid');
-		var sitePageURL = "";
 
 		if (urlParams.has('in_year') || sessionStorage.getItem('frominyearsites')) {
 			sitePageURL = "~/my-sites/in-year-site/?id=" + siteId;
@@ -23,30 +22,28 @@ $(document).ready(function () {
 		}
 		else {
 			sitePageURL = "~/SiteRegistrationWizard/?id=" + siteId;
-							tdg.c.weblink_show("/RegistrationWizard/");
-			    tdg.c.weblink_hide("/company_dashboard/");
+			tdg.c.weblink_show("/RegistrationWizard/");
+			tdg.c.weblink_hide("/company_dashboard/");
 		}
 
 		sessionStorage.setItem('to_actvt_stp', 'true');
 
-		$("#NextButton").parent().before("<div id='previousButton' role='group' class='btn-group entity-action-button'><input type='button' value='Previous' id='PreviousButton'class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>");
+		var message = tdg.error_message.message("BTN_PREVIOUS");
+		$("#NextButton").parent().before("<div id='previousButton' role='group' class='btn-group entity-action-button'><input type='button' value='" + message + "' id='PreviousButton'class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>");
 		$('#PreviousButton').click(function (e) {
 
-			debugger;        
+			debugger;
 			var urlParams = new URLSearchParams(window.location.search);
 			if (urlParams.has('id')) {
-					var siteid = urlParams.get('id');
-					if (siteid != "") 
-					{	
-												sessionStorage.setItem('to_actvt_stp', 'true');
-										    	  window.location.href = "~/SiteRegistrationWizard/?id=" + siteId;
-					
-                    }
+				var siteid = urlParams.get('id');
+				if (siteid != "") {
+					sessionStorage.setItem('to_actvt_stp', 'true');
+					window.location.href = "~/SiteRegistrationWizard/?id=" + siteId;
 				}
+			}
 		});
-	
 	}
-	
+
 });
 
 if (window.jQuery) {
@@ -54,23 +51,6 @@ if (window.jQuery) {
 		webFormClientValidate = function () {
 			var validation = true;
 			var errorMessage = "";
-
-			//var rows = $("#mode_of_transportations .view-grid table").find("tbody > tr");
-			//if (rows.length <= 0) {
-			//    errorMessage = "You cannot proceed before adding at least one mode of transportation.";
-			//    validation = false;
-			//}
-
-			//var urlParams = new URLSearchParams(window.location.search);
-
-			//if (urlParams.has('id')) {
-			//    var operationId = urlParams.get('id');
-
-			//	if(!checkMOTExist(operationId, null)){
-			//		errorMessage = "You cannot proceed before adding at least one mode of transportation.";
-			//		validation = false;
-			//	}
-			//}
 
 			var checkedCheckBoxes = $('[id*="cid_"]:checkbox:checked');
 

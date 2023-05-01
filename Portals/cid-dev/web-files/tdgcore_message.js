@@ -114,7 +114,7 @@ if (typeof (tdg.message) == "undefined") {
                 " - choose the <b>[Previous]</b> button below to re-start the Registration.<br>" +
                 " - choose the <b>[Contact Us]</b> button above to withdraw the Registration request.<br><br>" +
                 "Note that fields in the application that have a red star at the end of their label are mandatory."
-            var page_crw_company_insert_FR = "Pour ajouter les sites individuellement, cliquer sur le bouton [+Créer]. Sinon, cliquer sur le bouton <b>[Ajout/mise à jour en bloc]</b> pour ajouter tous les nouveaux sites à la fois sur Excel.<br>" +
+            var page_crw_company_insert_FR = "Pour ajouter les sites individuellement, cliquer sur le bouton <b>[+Créer]</b>. Sinon, cliquer sur le bouton <b>[Ajout/mise à jour en bloc]</b> pour ajouter tous les nouveaux sites à la fois sur Excel.<br>" +
                 "Pour modifier un des sites, cliquer sur le lien Site ID souligné dans la rangée, ou cliquer sur l’option du bouton <b>[V]</b> à l’extrémité de la rangée.<br>" +
                 "Cliquer sur le bouton <b>[Suivant]</b> une fois tous les sites ajoutés et attestés.<br><br>" +
                 "Au besoin, cliquer sur le bouton <b>[Précédent]</b> ci‑dessous pour retourner à l’écran Attest Organization."
@@ -130,7 +130,7 @@ if (typeof (tdg.message) == "undefined") {
             var page_crw_naics_EN = "Choose the <b>[+Add]</b> button below to create NAICS Codes for the Organization, then choose the <b>[Next]</b> button below to continue.</br></br>" +
                 "To deactivate a NAICS, then choose the <b>[V]</b> button to the far right of that row. If required, choose the <b>[Previous]</b> button below to return to the Contact screen.";
             var page_crw_naics_FR = "Cliquer sur le bouton <b>[+Créer]</b> ci‑dessous pour créer les codes SCIAN pour la compagnie, ensuite cliquer sur le bouton <b>[Suivant]</b> ci‑dessous pour poursuivre.<br><br>" +
-                "Pour désactiver un code SCIAN, cliquer sur le bouton <b>[V]</b> à l’extrémité droite de cette rangée. Au besoin, cliquer sur le bouton <b>[Précédent]</b> pour revenir à l’écran Contact.";
+                "Pour désactiver un code SCIAN, cliquer sur le bouton <b>[V]</b> à l’extrémité droite de cette rangée. Au besoin, cliquer sur le bouton <b>[Précédent]</b> pour revenir à l’écran Personnes-ressources.";
             
             var page_crw_attest_EN = "If the Organization details are accurate and complete, then choose the <b>[Submit]</b> button below.</br>Otherwise, use the <b>[Previous]</b> button below to first make any adjustments.";
             var page_crw_attest_FR = "Si les détails de la compagnie sont exacts et complets, cliquer sur le bouton <b>[Envoyer]</b> ci‑dessous.<br>Sinon, cliquer sur le bouton <b>[Précédent]</b> ci‑dessous pour apporter des changements.";
@@ -160,7 +160,7 @@ if (typeof (tdg.message) == "undefined") {
             
             var page_srw_activity_type_EN = "Choose the Site Activity Types. When complete, choose the <b>[Next]</b> button below.</br>If necessary, choose the <b>[Previous]</b> button below to return to the Basic/Extended screen.</br>" +
                 "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process.";       
-            var page_srw_activity_type_FR = "Choisir les types d’activités du site. Ensuite, cliquer sur le bouton <b>[Suivant]</b> ci‑dessous. Au besoin, cliquer sur le bouton <b>[Précédent]</b> ci‑dessous pour revenir à l’écran Basic/Extended.</br>" +
+            var page_srw_activity_type_FR = "Choisir les types d’activités du site. Ensuite, cliquer sur le bouton <b>[Suivant]</b> ci‑dessous. Au besoin, cliquer sur le bouton <b>[Précédent]</b> ci‑dessous pour revenir à l’écran De base/Prolongé.</br>" +
                 "Sinon, cliquer sur <b>[Retour à l’enregistrement de l’organisation]</b> pour sauvegarder l’information à jour sur le site et revenir au processus d’enregistrement de l’organisation.";
             
             var page_srw_further_site_details_EN = "Please choose the <b>[Next]</b> button below to review and attest the Site.</br>" +
@@ -190,7 +190,7 @@ if (typeof (tdg.message) == "undefined") {
                 "Alternatively, choose the <b>[Back to Activity Types Screen]</b> to save the current site information and return to the Activity Types Screen."
             var page_orw_class_FR = "Cliquer sur le bouton <b>[+Créer]</b> ci‑dessous pour chaque classe de site applicable. Ensuite, cliquer sur le bouton <b>[Suivant]</b> ci‑dessous.</br>" +
                 "Pour modifier ou désactiver une classe de site, cliquer sur le bouton <b>[V]</b> à l’extrémité droite de la rangée.<br>" +
-                "Au besoin, cliquer sur le bouton <b>[Précédent]</b> ci‑dessous pour revenir à l’écran [Mode(s) de Transport.<br>" +
+                "Au besoin, cliquer sur le bouton <b>[Précédent]</b> ci‑dessous pour revenir à l’écran Mode(s) de Transport.<br>" +
                 "Sinon, sélectionner l’écran <b>[Retour à l'écran Type d'activité]</b> pour sauvegarder l’information à jour sur le site et revenir à l’écran Type(s) d'activité."
             
             var page_my_company_EN = "Head Office details can be updated by choosing the <b>[Update Organization]</b> button at the bottom of this screen.</br></br>" +
@@ -477,12 +477,12 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000008",
                         "message_en": "Organization Registration",
-                        "message_fr": "Organization Registration_FR"
+                        "message_fr": "Inscription de l’organisation"
                     },
                     {
                         "code": "m000009",
                         "message_en": "Organization Registration for {0}",
-                        "message_fr": "Organization Registration for {0}_FR"
+                        "message_fr": "Inscription de l’organisation pour {0}"
                     },
                     {
                         "code": "m000010",
@@ -984,6 +984,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "You cannot proceed before attesting your Organization annual compliance update changes, please check the 'Attestation' box<br>",
                         "message_fr": "Vous ne pouvez pas continuer avant d'avoir attesté les modifications apportées à la mise à jour annuelle de la conformité de votre entreprise, veuillez cocher la case 'Attestation'<br>"
                     },
+                       {
+                        "code": "m000154",
+                        "message_en": "The Resend Onboarding Invitation is only available to Secondary Admins that have not yet logged into the CID Platform.",
+                        "message_fr": "The Resend Onboarding Invitation is only available to Secondary Admins that have not yet logged into the CID Platform._FR"
+                    }
                 ];
 
             return list;

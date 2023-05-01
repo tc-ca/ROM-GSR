@@ -105,12 +105,17 @@ $(document).ready(function () {
     $('#cid_contacttype').attr("readonly", true);
     $('#cid_contacttype').css("pointer-events", "none");
     
+    $('#cid_contacttypetext').attr("readonly", true);
+    $('#cid_contactTypetext').css("pointer-events", "none");
+    
+
 });
 
 function page_setup() {
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
-
+ 
+    
     const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
     for (var i = 0; i < files.length; i++) {
         var file = files[i];
@@ -123,6 +128,7 @@ function page_setup() {
 
     // server error?
     tdg.c.message_panel();
+	
 }
 
 if (window.jQuery) {
@@ -142,9 +148,13 @@ function Disable_ContactTypeFieldsForSecondaryUser() {
     $('#cid_contacttype').attr("readonly", true);
     $('#cid_contacttype').css("pointer-events", "none");
 
+    $('#cid_contacttypetext').attr("readonly", true);
+    $('#cid_contacttypetext').css("pointer-events", "none");
 
     var Current_User_contacttype = '{{user.cid_contacttype.Value}}';
     var Record_contact_type = $('#cid_contacttype').val() ;
+	//$("#cid_contacttypetext").val(Record_contact_type);
+	
     //if not primary contact and current record is for primary
     if (Current_User_contacttype != 100000000  && Record_contact_type == 100000000 ) {
         $("#firstname").prop("disabled", true);

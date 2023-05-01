@@ -193,7 +193,9 @@ function ResendInvitation(contactid, fullname) {
 			"contactid eq " + contactid);
 		//if contact doesn't have agreement date
 		if (result[0]["msdyn_portaltermsagreementdate"] == null) {
-			var m2 = "The Secondary Contact {0} has been re-sent an on-boarding invitation email to {1}.";
+			//m000117
+			var m2 = tdg.error_message.message("m000117");
+			//"The Secondary Contact {0} has been re-sent an on-boarding invitation email to {1}.";
 			m2 = m2.replace("{0}", fullname).replace("{1}", result[0]["emailaddress1"]);
 			tdg.c.dialog_OK(m2);
 			var SendEmailFlowData = '{' +
@@ -205,7 +207,9 @@ function ResendInvitation(contactid, fullname) {
 			tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Invitations", SendEmailFlowData);
 		}
 		else {
-			var m = "The Resend Onboarding Invitation is only available to Secondary Admins that have not yet logged into the CID Platform.";
+			//m000154
+			var m = tdg.error_message.message("m000154");
+			//"The Resend Onboarding Invitation is only available to Secondary Admins that have not yet logged into the CID Platform.";
 			tdg.c.dialog_OK(m);
 
 		}

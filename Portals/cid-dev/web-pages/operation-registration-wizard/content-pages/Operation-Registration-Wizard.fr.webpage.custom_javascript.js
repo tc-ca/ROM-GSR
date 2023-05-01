@@ -22,9 +22,9 @@ $(document).ready(function () {
                 $('#mainContent').remove();
             }
             var msg = tdg.error_message.message("m000108");
-            var text = "<div id='backToActivityTypesStep' class='input-group pull-left'><p><input type='button' id='backToActivityTypes' name='Back' value='{0}' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'><br><br></p></div>";
-            text = text.replace("{0}", msg);
+            var text = "<div id='backToActivityTypesStep' class='input-group pull-left'><p><input type='button' id='backToActivityTypes' name='Back' value='' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'><br><br></p></div>";
             $('#mainContent').prepend(text);
+            $("#backToActivityTypes")[0].value = msg;
 
             $("#backToActivityTypes").click(function () {
                 sessionStorage.setItem('to_actvt_stp', 'true');
@@ -34,6 +34,15 @@ $(document).ready(function () {
             tdg.c.weblink_hide("/Bulk_Site_Upload/");
             tdg.c.weblink_show("/company_dashboard/");
             tdg.c.weblink_show("/Bulk_Site_Update/");
+        }
+
+        if (sessionStorage.getItem('frominyearsites') == "true" || sessionStorage.getItem('fromannualcompliance') == 'true') {
+            tdg.c.weblink_hide("/RegistrationWizard/");
+            tdg.c.weblink_hide("/Bulk_Site_Upload/");
+        }
+        else {
+            tdg.c.weblink_hide("/company_dashboard/");
+            tdg.c.weblink_hide("/Bulk_Site_Update/");
         }
     }
 
@@ -71,7 +80,12 @@ function header_setup() {
     try {
         var code = "m000024";
         var site_id = urlParams.get('siteid');
-        var cid_sitename = "";
+        filter = "accountid eq '" + site_id + "'";
+        var account = tdg.webapi.SelectedColumnlist("accounts", "cid_sitename", filter);
+        var cid_sitename = ""
+        if (account.length > 0) {
+            var cid_sitename = account[0].cid_sitename;
+        }
         var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name}}');
         if (cid_sitename != "") {
             companyName += " - " + cid_sitename;
