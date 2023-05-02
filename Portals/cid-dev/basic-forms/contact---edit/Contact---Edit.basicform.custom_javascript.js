@@ -145,15 +145,23 @@ function Disable_ContactTypeFieldsForSecondaryUser() {
     debugger;
     //contact type should be read only even for primary
     //to switch contact type they need to use the custom action on the grid Assign Primary admin 
+	var Record_contact_type = $('#cid_contacttype').val() ;
+	
+	var Record_contact_type_text = $('#cid_contacttype').find(":selected").text();
+	
     $('#cid_contacttype').attr("readonly", true);
     $('#cid_contacttype').css("pointer-events", "none");
+
+    $("#cid_contacttype").hide();
+    $("#cid_contacttype_label").hide();
+	
 
     $('#cid_contacttypetext').attr("readonly", true);
     $('#cid_contacttypetext').css("pointer-events", "none");
 
     var Current_User_contacttype = '{{user.cid_contacttype.Value}}';
-    var Record_contact_type = $('#cid_contacttype').val() ;
-	//$("#cid_contacttypetext").val(Record_contact_type);
+    
+	$("#cid_contacttypetext").val(Record_contact_type_text);
 	
     //if not primary contact and current record is for primary
     if (Current_User_contacttype != 100000000  && Record_contact_type == 100000000 ) {
