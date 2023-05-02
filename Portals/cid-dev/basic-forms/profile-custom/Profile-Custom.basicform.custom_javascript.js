@@ -1,6 +1,9 @@
-$(document).ready(function(){
-debugger;
-    //maskPhoneFields();
+//
+// Basic Form-Profile Custom.js
+//
+
+$(document).ready(function () {
+    debugger;
 
     //Phone masking
     $("#telephone1").attr("maxlength", "10");
@@ -9,9 +12,4 @@ debugger;
 
     //Format phone numbers
     tdg.cid.address_init("#telephone1", "mobilephone", "#fax");
-
 });
-
-//function maskPhoneFields(){
-//    $("#mobilephone").mask("(000) 000-0000");
-//};

@@ -1,4 +1,10 @@
+//
+// Basic Form-In Year Company Related Records Form.js
+//
+
 $(document).ready(function () {
+	debugger;
+
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
     tdg.cid.phone_init("telephone1", selected_language);
 
@@ -14,12 +20,6 @@ $(document).ready(function () {
                 $(this).find('td:last').remove();
             });
         });
-
-        //$("#eraps").on("loaded", function () {
-		//   $(this).find("tbody").find("tr").each(function () {
-        //        $(this).find('td:last').remove();
-        //    });
-        //});
     }
 });
 

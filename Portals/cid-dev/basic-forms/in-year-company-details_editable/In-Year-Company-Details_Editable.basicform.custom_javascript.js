@@ -1,19 +1,18 @@
 //
 // Basic Form-In Year Company Details_Editable.js
 //
+
 $(document).ready(function () {
     debugger;
+
     window.addEventListener('load', (event) => {
         //update_company
-    console.log('The page has fully loaded');
-     var selected_language = '{{website.selected_language.code}}';
-     tdg.cid.phone_init("telephone1", selected_language);
-});
-
-
+        var selected_language = '{{website.selected_language.code}}';
+        tdg.cid.phone_init("telephone1", selected_language);
+    });
 
     var selected_language = '{{website.selected_language.code}}';
-     tdg.cid.phone_init("telephone1", selected_language);
+    tdg.cid.phone_init("telephone1", selected_language);
 
     //page_setup();
     //tdg.c.control_hide("ovs_name_fr");

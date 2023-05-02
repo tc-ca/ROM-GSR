@@ -1,19 +1,14 @@
 //
 // Basic Form-Contact - New.js
 //
+
 var _reload = false;
 
 $(document).ready(function () {
     debugger;
+
     $("#ValidationSummaryEntityFormView").css("display", "none");
     page_setup();
-
-    // prevent none Alphabet char on key press and past
-   // $('#firstname').bind('keypress', ValidateAlphabetInput);
-   // $('#firstname').bind('paste', ValidateAlphabetPast); 
-   // $('#lastname').bind('keypress', ValidateAlphabetInput);
-   // $('#lastname').bind('paste', ValidateAlphabetPast);
-   // $('#emailaddress1').bind('change' , EmailAddressValidation);
      
     $('input[type="text"]').attr('autocomplete', 'off');
 
@@ -41,34 +36,31 @@ $(document).ready(function () {
         $("#mobilephone").attr("autocomplete", "new-password");
         $("#fax").attr("autocomplete", "new-password");
 
-//*************************submit button **********************/      
+        //*************************submit button **********************/      
         $("#InsertButton").css("display", "none");
             //get submit button value to use it with the new button  
             var SubmitButtonValue = $("#InsertButton").val();
             //add new insert and update button
-            $("#InsertButton").after('<input type="button" onclick="" id="InsertUpdateButton" class="submit-btn btn btn-primary form-action-container-left" value="'+SubmitButtonValue +'"/>');
-             var ParentAccount = '{{user.parentcustomerid.id}}' ;
+            $("#InsertButton").after('<input type="button" onclick="" id="InsertUpdateButton" class="submit-btn btn btn-primary form-action-container-left" value=""/>');
+            $("#InsertUpdateButton")[0].value = SubmitButtonValue;
+            var ParentAccount = '{{user.parentcustomerid.id}}';
             //define click event
             $('#InsertUpdateButton').on('click', function () {
         
             // function will check of existing contact need to be linke to company
             //instead of add new else it will call the click event of the origional submit button
-              invitation.New_and_Existing_Contact_Submit_Logic(ParentAccount);
-                                           
+            invitation.New_and_Existing_Contact_Submit_Logic(ParentAccount);                                        
         });
             var cancelLabel = tdg.error_message.message("BTN_CANCEL");
-            $('#InsertUpdateButton').after('<input type="button" data-dismiss="modal" value="'+cancelLabel+'" id="CancelButton" style="margin-left: 10px;" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
-	        $('#CancelButton').on('click', function(event){
+            $('#InsertUpdateButton').after('<input type="button" data-dismiss="modal" value="" id="CancelButton" style="margin-left: 10px;" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
+            $("#CancelButton")[0].value = cancelLabel;
+            $('#CancelButton').on('click', function (event) {
                 parent.$(".form-close").eq(0).click();
                 sessionStorage.setItem("NewContactFlag", false);
                 sessionStorage.setItem("FullName", "");
                 sessionStorage.setItem("Email", "");
-            
             });
-            //<div role="group" class="btn-group entity-action-button">
-//********************************************* */
-
-
+            //********************************************* */
     } catch (e) { }
 });
 
@@ -82,12 +74,10 @@ $(window).unload(function () {
             //wp.location.reload()
         } catch (e) { }
     }
-
 });
 
 if (window.jQuery) {
     (function ($) {
-
         entityFormClientValidate = function () {
             debugger;
             var validation = true;
@@ -144,32 +134,31 @@ function page_setup() {
 	}
 	webapi.safeAjax = safeAjax;
 })(window.webapi = window.webapi || {}, jQuery)
+
 // used to force alphabet only
 function ValidateAlphabetInput(event) {
    var value = String.fromCharCode(event.which);
    var pattern = new RegExp(/^[a-zA-Z àâäèéêëîïôœùûüÿçÀÂÄÈÉÊËÎÏÔŒÙÛÜŸÇ]*$/);
-   //new RegExp(/[a-zåäö ]/i);
    return pattern.test(value);
 }
+
 function ValidateAlphabetPast(event) {
     var textContent = event.originalEvent.clipboardData.getData("text/plain");
     var letters = new RegExp(/^[a-zA-Z àâäèéêëîïôœùûüÿçÀÂÄÈÉÊËÎÏÔŒÙÛÜŸÇ]*$/);
-    //(/^[A-Za-z]+$/);     
+  
    var compareResult = (letters.test(textContent));
  
    return compareResult;
 }
+
 //email address validation
 function EmailAddressValidation(event)
 {
-    console.log("inside email address validation");
    var pattern = new RegExp( /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
    var emailaddressText =  $("#emailaddress1").val();
    var result = pattern.test(emailaddressText);
-    console.log(result);
    if (result == false)
    {
        
    }
-
 }

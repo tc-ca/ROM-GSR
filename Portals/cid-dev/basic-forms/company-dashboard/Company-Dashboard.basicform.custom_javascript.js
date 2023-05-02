@@ -1,8 +1,9 @@
+//
+// Basic Form-Company Dashboard.js
+// 
+
 $(document).ready(function () {
     debugger;
-
-//alert($("#companyAnniversaryDate").val()); 
-//alert($('#cid_companyanniversarydate').val());
 
     var urlParams = new URLSearchParams(window.location.search);
 	if (urlParams.has('firsttime')) {

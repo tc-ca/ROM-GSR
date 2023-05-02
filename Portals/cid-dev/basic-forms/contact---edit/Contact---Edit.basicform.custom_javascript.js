@@ -1,48 +1,45 @@
 //
 // Basic Form-Contact - Edit.js
 //
+
 $(document).ready(function () {
     debugger;
 
     page_setup();
 
-      sessionStorage.setItem("NewContactFlag", false);
-      sessionStorage.setItem("FullName", "");
-      sessionStorage.setItem("Email", "");
+    sessionStorage.setItem("NewContactFlag", false);
+    sessionStorage.setItem("FullName", "");
+    sessionStorage.setItem("Email", "");
 
     //Name formatting
     tdg.cid.name_init("firstname");
-    tdg.cid.name_init("lastname");  
+    tdg.cid.name_init("lastname");
 
     //add cancel button
     var cancelLabel = tdg.error_message.message("BTN_CANCEL");
-    $('#UpdateButton').after('<input type="button" data-dismiss="modal" value="'+cancelLabel+'" id="CancelButton" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
-	$('#CancelButton').on('click', function(event){  
-         parent.$(".form-close").click();
-         sessionStorage.setItem("NewContactFlag", false);
-         sessionStorage.setItem("FullName", "");
-         sessionStorage.setItem("Email", "");
-         
-         });  
-//console.log("before close"); parent.$(".form-close").eq(0).click(); 
+    $('#UpdateButton').after('<input type="button" data-dismiss="modal" value="" id="CancelButton" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
+    $("#CancelButton")[0].value = cancelLabel;
+    $('#CancelButton').on('click', function (event) {
+        parent.$(".form-close").click();
+        sessionStorage.setItem("NewContactFlag", false);
+        sessionStorage.setItem("FullName", "");
+        sessionStorage.setItem("Email", "");
+    });
 
-     //this function will get the origional value onload and before saving get new values if available and call flow to send email
-
-    if (window.jQuery) {  
-   (function ($) {  
-     if (typeof (entityFormClientValidate) != 'undefined') {  
-       var originalValidationFunction = entityFormClientValidate;  
-       if (originalValidationFunction && typeof (originalValidationFunction) == "function") {  
-         entityFormClientValidate = function ()   
-          {  
-            return true;
-           //DO VALIDATION HERE. RETURN TRUE IF PASSED AND FALSE IF FAIL  
-         };  
-       }  
-     }  
-   }(window.jQuery));  
- }   
-     //there is event listner for onclick , change event for all fields
+    if (window.jQuery) {
+        (function ($) {
+            if (typeof (entityFormClientValidate) != 'undefined') {
+                var originalValidationFunction = entityFormClientValidate;
+                if (originalValidationFunction && typeof (originalValidationFunction) == "function") {
+                    entityFormClientValidate = function () {
+                        return true;
+                        //DO VALIDATION HERE. RETURN TRUE IF PASSED AND FALSE IF FAIL  
+                    };
+                }
+            }
+        }(window.jQuery));
+    }
+    //there is event listner for onclick , change event for all fields
     tdg.cid.Get_Contact_Changes_and_SendEmail();
 
     //when the page is done loading, disable autocomplete on all inputs[text]
@@ -70,10 +67,7 @@ $(document).ready(function () {
     var userfullname = '{{user.fullname}}';
     var today = new Date();
     var dd = String(today.getDate());
-    //.padStart(2, '0');
     var mm = String(today.getMonth() + 1);
-    //.padStart(2, '0'); //January is 0!
-    console.log(mm);
     var yyyy = today.getFullYear();
 
     today = mm + '/' + dd + '/' + yyyy;
@@ -104,18 +98,15 @@ $(document).ready(function () {
 
     $('#cid_contacttype').attr("readonly", true);
     $('#cid_contacttype').css("pointer-events", "none");
-    
+
     $('#cid_contacttypetext').attr("readonly", true);
     $('#cid_contactTypetext').css("pointer-events", "none");
-    
-
 });
 
 function page_setup() {
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
- 
-    
+
     const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
     for (var i = 0; i < files.length; i++) {
         var file = files[i];
@@ -128,7 +119,6 @@ function page_setup() {
 
     // server error?
     tdg.c.message_panel();
-	
 }
 
 if (window.jQuery) {
@@ -145,26 +135,26 @@ function Disable_ContactTypeFieldsForSecondaryUser() {
     debugger;
     //contact type should be read only even for primary
     //to switch contact type they need to use the custom action on the grid Assign Primary admin 
-	var Record_contact_type = $('#cid_contacttype').val() ;
-	
-	var Record_contact_type_text = $('#cid_contacttype').find(":selected").text();
-	
+    var Record_contact_type = $('#cid_contacttype').val();
+
+    var Record_contact_type_text = $('#cid_contacttype').find(":selected").text();
+
     $('#cid_contacttype').attr("readonly", true);
     $('#cid_contacttype').css("pointer-events", "none");
 
     $("#cid_contacttype").hide();
     $("#cid_contacttype_label").hide();
-	
+
 
     $('#cid_contacttypetext').attr("readonly", true);
     $('#cid_contacttypetext').css("pointer-events", "none");
 
     var Current_User_contacttype = '{{user.cid_contacttype.Value}}';
-    
-	$("#cid_contacttypetext").val(Record_contact_type_text);
-	
+
+    $("#cid_contacttypetext").val(Record_contact_type_text);
+
     //if not primary contact and current record is for primary
-    if (Current_User_contacttype != 100000000  && Record_contact_type == 100000000 ) {
+    if (Current_User_contacttype != 100000000 && Record_contact_type == 100000000) {
         $("#firstname").prop("disabled", true);
         $("#lastname").prop("disabled", true);
         $("#emailaddress1").prop("disabled", true);
@@ -176,18 +166,11 @@ function Disable_ContactTypeFieldsForSecondaryUser() {
         $('#cid_contacttype').css("pointer-events", "none");
         //disable update button
         $('#UpdateButton').prop('disabled', true);
-   
-    }
-    //lock email address update if current user is not admin
-    else if (Current_User_contacttype != 100000000  && Record_contact_type != 100000000 )
-    {
-         $("#emailaddress1").prop("disabled", true);
 
     }
-//UpdateButton
-    //if primary contact and not the primary contact record
-   // if (cid_contacttype != 100000000 || $('#cid_contacttype').val() == 100000000) {
-     //   $('#cid_contacttype').attr("readonly", true);
-       // $('#cid_contacttype').css("pointer-events", "none");
-   // }
+    //lock email address update if current user is not admin
+    else if (Current_User_contacttype != 100000000 && Record_contact_type != 100000000) {
+        $("#emailaddress1").prop("disabled", true);
+
+    }
 }

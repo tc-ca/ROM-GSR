@@ -1,3 +1,7 @@
+//
+// Basic Form-In Year Company inbox.js
+//
+
 $(document).ready(function () {
 	$(".entity-grid").on("loaded", function () {
 		$(this).find("tbody").find("tr").each(function () {

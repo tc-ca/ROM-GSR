@@ -30,9 +30,7 @@ $(document).ready(function () {
 	}
 
 	//create bulk upload button only for DEV and QA environment
-	if (cidCompanyStatus.indexOf("Inactive") < 0
-		//&& ('{{request.url}}'.includes("tdgcore-qa") || '{{request.url}}'.includes("rd-tdgcore-dev"))
-	) {
+	if (cidCompanyStatus.indexOf("Inactive") < 0) {
 		//get bulk update button test
 		var UploadButtonText = tdg.error_message.message("m000111");
 		var BulkUploaddButton = '<div class="input-group pull-left"><a href="~/Bulk_Site_Update/" class="btn btn-primary pull-right action" title="BulkSiteUpdate">' + UploadButtonText + '</a></div>';

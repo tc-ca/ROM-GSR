@@ -1,8 +1,12 @@
+//
+// Basic Form-ManageCompany.js
+//
+
 $(document).ready(function () {
+	debugger;
+
 	var primarycontactid = '{{user.Id}}';
 	var fullname = '{{user.fullname}}';
-
-	//alert(fullname + " > " + primarycontactid);
 
 	$("#primarycontactid").attr("value", primarycontactid);
 	$("#primarycontactid_name").attr("value", fullname);

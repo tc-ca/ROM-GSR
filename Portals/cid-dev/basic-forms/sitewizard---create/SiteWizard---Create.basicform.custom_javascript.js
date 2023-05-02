@@ -1,6 +1,10 @@
-// SiteWizard-Create.js
+//
+// Basic Form - SiteWizard - Create.js
+//
 
 $(document).ready(function () {
+    debugger;
+
     // resize WebResource_address_complete
     $("#WebResource_address_complete").height('72px');
 
@@ -8,12 +12,6 @@ $(document).ready(function () {
     var cid_legalname = ("{{user.cid_legalname}}");
     $("#ovs_legalname").val(cid_legalname);
     $("#name").val(cid_legalname);
-
-    //addValidator("address1_line1", "Street 1");
-    //addValidator("address1_city", "City");
-    //addValidator("address1_stateorprovince", "Province");
-    //addValidator("address1_postalcode", "Postal Code");
-    //addValidator("address1_country", "Country");
 });
 
 function AddressComplete_Hide_address1_line1() {

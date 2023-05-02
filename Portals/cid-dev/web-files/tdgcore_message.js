@@ -395,6 +395,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "Précédent"
                     },
                     {
+                        "code": "BTN_ADD",
+                        "message_en": "+Add",
+                        "message_fr": "+Créer"
+                    },
+                    {
                         "code": "BTN_WITHDRAW",
                         "message_en": "Withdraw",
                         "message_fr": "Retirer"
@@ -408,6 +413,11 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "BTN_IS_NOT_MY_COMPANY",
                         "message_en": "This is not my Organization",
                         "message_fr": "Il ne s’agit pas de mon organisation"
+                    },
+                    {
+                        "code": "BTN_UPDATE_ORG",
+                        "message_en": "Update Organization",
+                        "message_fr": "Mettre à jour l'organisation"
                     },
                     {
                         "code": "lbl_operating_name",
@@ -987,7 +997,27 @@ if (typeof (tdg.message) == "undefined") {
                        {
                         "code": "m000154",
                         "message_en": "The Resend Onboarding Invitation is only available to Secondary Admins that have not yet logged into the CID Platform.",
-                        "message_fr": "The Resend Onboarding Invitation is only available to Secondary Admins that have not yet logged into the CID Platform._FR"
+                        "message_fr": "L'invitation Renvoyer l'intégration n'est disponible que pour les administrateurs secondaires qui ne se sont pas encore connectés à la plate-forme BDIC."
+                    },
+                    {
+                        "code": "m000155",
+                        "message_en": "Only Primary Admin can Resend invitation.",
+                        "message_fr": "Seul l'administrateur principal peut renvoyer l'invitation."
+                    },
+                    {
+                        "code": "m000156",
+                        "message_en": "Head Office",
+                        "message_fr": "Siège social"
+                    },
+                    {
+                        "code": "m000157",
+                        "message_en": "You cannot proceed before attesting your site data changes, please check the 'Attestation' box",
+                        "message_fr": "You cannot proceed before attesting your site data changes, please check the 'Attestation' box_FR"
+                    },
+                    {
+                        "code": "m000158",
+                        "message_en": "Update Mode(s) of transportation",
+                        "message_fr": "Update Mode(s) of transportation_FR"
                     }
                 ];
 

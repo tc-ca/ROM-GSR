@@ -27,7 +27,6 @@ $(document).ready(function () {
 
 	debugger;
 	var cancelLabel = tdg.error_message.message("BTN_CANCEL");
-	//$("#btn_save_new").after('<div role="group" class="form-action-container-left"> &nbsp; </div><input type="button" data-dismiss="modal" value="'+cancelLabel+'" id="CancelButton" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
 	$("#btn_save_new").after('<input type="button" data-dismiss="modal" value="' + cancelLabel + '" id="CancelButton" name="CancelButton" class="btn btn-default button previous previous-btn"/>')
 	$('#btn_save_new').attr('style', 'margin-right:4px;');
 	$("#CancelButton").on("click", function () { parent.$(".form-close").trigger("click"); });
@@ -100,7 +99,6 @@ function btn_save_new_onclick() {
 	//disable button to prevent adding duplicate classes by double click
 	$("#btn_save_new").prop('disabled', true);
 	var value = false;
-	//tdg.c.error_message_clear();
 	if (typeof entityFormClientValidate === 'function') {
 		if (entityFormClientValidate()) {
 			if (typeof Page_ClientValidate === 'function') {
@@ -110,7 +108,6 @@ function btn_save_new_onclick() {
 	};
 	debugger;
 	if (!value) {
-		// clear form
 		$("#btn_save_new").prop('disabled', false);
 		return;
 	}
@@ -159,7 +156,6 @@ function error_cb(msg) {
 	var selected_language = '{{website.selected_language.code}}';
 	msg = tdg.c.text_language(msg, selected_language);
 	show_error(msg);
-	//tdg.c.message_panel_set("EntityFormControl", msg);
 
 	$("#btn_save_new").prop('disabled', false);
 }

@@ -1,55 +1,51 @@
 //
 // Basic Form - Site - Create.js
 //
+
 var _busy = false;
-
-
 $(document).ready(function () {
-  
 	debugger;
-
 	page_setup();
-    var addressType = $("#ovs_address_type :selected").text();
-	
-     $("#InsertButton").click(function (e) {
-		 
-	   $("#ovs_address1_province").attr("disabled", false); 
-	   });
-
+	var addressType = $("#ovs_address_type :selected").text();
+	$("#InsertButton").click(function (e) {
+		$("#ovs_address1_province").attr("disabled", false);
+	});
 	//cancel button text   
 	var ButtonCancel = tdg.error_message.message("BTN_CANCEL");
 	//add button next to save button
-	$(".actions").append('<input id ="cancelButton" type="button" value="' +
-		ButtonCancel + '" class="btn btn-default button previous previous-btn"> </input>');
+	$(".actions").append('<input id ="cancelButton" type="button" value="" class="btn btn-default button previous previous-btn"> </input>');
+	$("#cancelButton")[0].value = ButtonCancel;
+
 	//cancel button click event
 	$('#cancelButton').click(function (e) {
-		if (sessionStorage.getItem('frominyearsites') == "true" || sessionStorage.getItem('fromannualcompliance') == 'true') 
-        {
-            //history.back();
-            //Make Sure cancel button redirects to sites page
-            $('#cancelButton').click(function(){  window.location.href = '/my-sites/';  return false;});
-        }
-        else
-        {
-             //Make Sure cancel button redirects to sites page
-            $('#cancelButton').click(function(){  window.location.href = '/RegistrationWizard/';  return false;});
-        }
+		if (sessionStorage.getItem('frominyearsites') == "true" || sessionStorage.getItem('fromannualcompliance') == 'true') {
+			//history.back();
+			//Make Sure cancel button redirects to sites page
+			$('#cancelButton').click(function () {
+				window.location.href = '/my-sites/';
+				return false;
+			});
+		}
+		else {
+			//Make Sure cancel button redirects to sites page
+			$('#cancelButton').click(function () {
+				window.location.href = '/RegistrationWizard/';
+				return false;
+			});
+		}
 	});
-
 	//latitude validation
-	document.getElementById("address1_latitude").addEventListener('change', (event) => {
+	document.getElementById("address1_latitude").addEventListener('change', (event) = > {
 		//get Latitude and set it to nearest 4 digits
 		var Lat = $("#address1_latitude").val();
 		//$("#address1_latitude").val(Number.parseFloat(Lat).toFixed(4));
 	});
-	document.getElementById("address1_longitude").addEventListener('change', (event) => {
+	document.getElementById("address1_longitude").addEventListener('change', (event) = > {
 		//get Lontitude and set it to nearest 4 digits
 		var Longtitude = $("#address1_longitude").val();
 		//$("#address1_longitude").val(Number.parseFloat(Longtitude).toFixed(4));
 	});
-
 	var account = get_parent()[0];
-	
 	// address
 	tdg.cid.address_init(true);
 	$("#ovs_legalname").val(account.ovs_legalname);
@@ -105,35 +101,28 @@ function get_parent() {
 function setManualAddressEntryFlag() {
 	$("#cid_addressoverwritten").val(1);
 }
+
 function page_setup() {
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
-
 	const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
 	for (var i = 0; i < files.length; i++) {
 		var file = files[i];
 		var script = document.createElement('script');
 		script.type = 'text/javascript';
 		script.src = file;
-
 		$("body").append(script);
 	}
-
 	// server error?
 	tdg.c.message_panel();
 }
 if (window.jQuery) {
 	(function ($) {
-	//webFormClientValidate = function () {
-	if (typeof (entityFormClientValidate) != 'undefined') {
-       
-	 
-		
+		//webFormClientValidate = function () {
+		if (typeof (entityFormClientValidate) != 'undefined') {
 			$("#ovs_address1_province").attr("disabled", false);
-
 			return true;
-		   
-		   }
+		}
 	}(window.jQuery));
 }
 
@@ -146,31 +135,36 @@ function CheckLatLongDecimal() {
 	var checkResult = true;
 	//check latitude
 	//m000143
-    var m000143 = "<p>" +	tdg.error_message.message("m000143") + "</p>";
-	var m000144 = "<p>" +	tdg.error_message.message("m000144")  + "</p>";
-	if (decimalIndexLat < 0) {checkResult = false;
-	error = m000143;}
+	var m000143 = "<p>" + tdg.error_message.message("m000143") + "</p>";
+	var m000144 = "<p>" + tdg.error_message.message("m000144") + "</p>";
+	if (decimalIndexLat < 0) {
+		checkResult = false;
+		error = m000143;
+	}
 	else {
 		var numberofdecimal = Lat.toString().split('.')[1].length;
 		if (numberofdecimal != 4) {
 			error = m000143;
 			//"<p>Please enter a Latitude as a decimal, with the full four digit decimal point (e.g. 41.3251)</p>";
 			checkResult = false;
-		}}
-
+		}
+	}
 	//check longtitude
-	if (decimalIndexLong < 0) {checkResult = false;
-	error  = error + m000144;}
+	if (decimalIndexLong < 0) {
+		checkResult = false;
+		error = error + m000144;
+	}
 	else {
 		var Longtitudenumberofdecimal = Longtitude.toString().split('.')[1].length;
 		if (Longtitudenumberofdecimal != 4) {
-			error = error +  m000144;
+			error = error + m000144;
 			//"<p>Please enter a Longitude as a decimal, with the full four digit decimal point (e.g. -74.7992)</p>";
-			checkResult = false;}}
-
+			checkResult = false;
+		}
+	}
 	if (checkResult == false) {
 		$('#ErrorMessageDiv').css('display', 'block');
 		$('#ErrorMessageDiv').html("<h3>Error</h3>" + error);
-    }
+	}
 	return checkResult;
 }

@@ -1,4 +1,10 @@
-$(document).ready(function () {	
+//
+// Basic Form-In Year Company History Log.js
+//
+
+$(document).ready(function () {
+    debugger;
+
     $("#cid_registrationasof").parent().parent().hide();
 
     var companyName = "{{user.parentcustomerid.name}}";

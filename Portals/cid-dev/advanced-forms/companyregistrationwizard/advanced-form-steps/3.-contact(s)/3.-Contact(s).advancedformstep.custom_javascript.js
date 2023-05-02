@@ -215,7 +215,10 @@ function ResendInvitation(contactid, fullname) {
 		}
 	}
 	else {
-		var mm = "Only Primary Admin can Resend invitation.";
+		//m000155
+		var mm = tdg.error_message.message("m000155");
+		//"Only Primary Admin can Resend invitation.";
+
 		tdg.c.dialog_OK(mm);
 	}
 }

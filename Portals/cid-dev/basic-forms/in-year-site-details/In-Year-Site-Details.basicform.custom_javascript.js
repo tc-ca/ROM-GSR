@@ -7,11 +7,9 @@ var _busy = false;
 $(document).ready(function () {
     debugger;
     var CompanyName = '{{user.parentcustomerid.name}}';
-    //code used to change titles to include company Name - site name or Company Name  - address (if site name is empty)
     tdg.cid.Setup_site_Profile_Title (CompanyName);
  
     $("#update_site").click(function(){
-        //sessionStorage.setItem('frominyearsitepage', 'tzrue');
         var urlParams = new URLSearchParams(window.location.search);
 	    if (urlParams.has('id')) {
 		    var siteid = urlParams.get('id');
@@ -20,11 +18,9 @@ $(document).ready(function () {
             var siteWizardURL = "~/SiteRegistrationWizard/?id=" + siteid;
             var win = window.open(siteWizardURL, 'Site Update', 'resizable=yes, width= 1200, height= 800, top= 1000, left=100');
 
-win.addEventListener('beforeunload', () => {
-  win.onunload = window.opener.location.reload();
-})
-
-            
+            win.addEventListener('beforeunload', () => {
+              win.onunload = window.opener.location.reload();
+            })           
         }
     });
 
@@ -41,7 +37,6 @@ win.addEventListener('beforeunload', () => {
 
     });
 
-
     $('.validation-summary').eq(1).remove();
 
     // address
@@ -56,7 +51,6 @@ win.addEventListener('beforeunload', () => {
 
     // hide controls
     tdg.c.control_hide("name");
-    //tdg.c.control_hide("cid_siteclaim");
 
     // cid_same_as_company
     $("#cid_same_as_company").change(function () {
@@ -85,8 +79,6 @@ win.addEventListener('beforeunload', () => {
                 var validation = true;
                 var errorMessage = "";
 
-                //$('table[data-name="further_site_details_section_3"]').find("#cid_issiteattested").prop('checked')
-
                 var handlingType = $('table[data-name="tab_5_section_1"]').find("#cid_handlingsitetype").prop('checked');
                 var offeringType = $('table[data-name="tab_5_section_1"]').find("#cid_offeringfortransportsitetype").prop('checked');
                 var transportType = $('table[data-name="tab_5_section_1"]').find("#cid_transportingsitetype").prop('checked');
@@ -97,33 +89,20 @@ win.addEventListener('beforeunload', () => {
                     errorMessage += "TDG Activity Types required</br>";
                 }
 
-                //var requirementLevel = $("#cid_requirementlevel").find(":selected").text();
-
-                //if(requirementLevel == "" || requirementLevel == null || requirementLevel == " "){
-                //    validation = false;
-                //    errorMessage += "Missing Site Requirement Level</br>";
-                //}
-
                 if($('table[data-name="further_site_details_section_3"]').find("#cid_issiteattested").prop('checked') == false){
-                    errorMessage += "You cannot proceed before attesting your site data changes, please check the 'Attestation' box</br>";
+                    var msg = tdg.error_message.message("m000157");
+                    errorMessage += msg + "</br>";
                     validation = false;
                 }
                 var urlParams = new URLSearchParams(window.location.search);
                 var siteId = urlParams.get('id');
 
-            //Classes validation
-            if (!SiteHasOperationClasses(null, siteId)) {
-                var msg = tdg.error_message.message("m000016"); // You cannot proceed before adding class(es).
-                errorMessage += msg + "</br>";
-                validation = false;
-            }
-
-            ////UN Numbers validation
-            //if (requirementLevel == 'Extended' && !SiteHasOperationUNNumbers(null, siteId)) {
-            //    var msg = tdg.error_message.message("m000017"); // UN ??
-           //     errorMessage += msg + "</br>";
-            //    validation = false;
-            //}
+                //Classes validation
+                if (!SiteHasOperationClasses(null, siteId)) {
+                    var msg = tdg.error_message.message("m000016");
+                    errorMessage += msg + "</br>";
+                    validation = false;
+                }
 
                  if (!validation) {
                     $('.validation-summary div').remove();
@@ -136,8 +115,7 @@ win.addEventListener('beforeunload', () => {
                 return validation;
             }
         }(window.jQuery));
-    }   
-    
+    }     
 });
 
 function cid_same_as_company_change() {

@@ -4,12 +4,10 @@
 
 $(document).ready(function () {
     debugger;
-
+    page_setup();
     var companyName = "{{user.parentcustomerid.name}}";
 
-    page_setup();
-
-     	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
+    var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
 	console.log(cid_usercontacttype);
 	//if not primary contact
 	if (cid_usercontacttype != 100000000) {
@@ -29,13 +27,10 @@ $(document).ready(function () {
 
         var legend2 = $('fieldset[aria-label="Head Office"] legend').eq(1);
         legend2.text("");
-        legend2.after("<h2>" + companyName + " - Head Office</h2><hr>");
+        var ho = tdg.error_message.message("m000156");
+        legend2.after("<h2>" + companyName + " - " + ho + "</h2><hr>");
         tdg.cid.phone_init("telephone1", selected_language);
         tdg.cid.phone_init("fax", selected_language);
-
-
-
-
     });
     $("#cancel_company_update").click(function () {
         window.location.href = "~/my-company";
