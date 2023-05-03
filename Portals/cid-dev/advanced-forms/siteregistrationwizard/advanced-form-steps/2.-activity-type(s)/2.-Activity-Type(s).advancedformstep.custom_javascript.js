@@ -1,6 +1,7 @@
 //
 // SiteRegistrationWizard-Activity Type.js
 //
+
 $(document).load(function () {
     $('#loader').show();
 });
@@ -22,7 +23,8 @@ $(document).ready(function () {
     if (inYear == 'true' || annualCompliance == 'true' || frominyearsitepage == 'true') {
         if ($("#cancelButton").length <= 0) {
             var cancelLabel = tdg.error_message.message("BTN_CANCEL");
-            $("#NextButton").parent().after("<div role='group' class='btn-group entity-action-button'><input id='cancelButton' type='button' name='CancelButton' value='" + cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></div>");
+            $("#NextButton").parent().after("<div role='group' class='btn-group entity-action-button'><input id='cancelButton' type='button' name='CancelButton' value='' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></div>");
+            $("#cancelButton")[0].value = cancelLabel;
         }
 
         $('#cancelButton').click(function (e) {

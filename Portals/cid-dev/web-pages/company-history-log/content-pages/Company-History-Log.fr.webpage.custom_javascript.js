@@ -12,8 +12,10 @@ $(document).ready(function () {
     var topNav = $('#navbar');
 
     if (companyName)
-        if (topNav)
-            $("<h2>TDG Site Registration Database: " + companyName + "</h2>").insertAfter(topNav);
+        if (topNav) {
+            var msg = tdg.error_message.message("CID_PORTAL");
+            $("<h2>" + msg + ": " + companyName + "</h2>").insertAfter(topNav);
+        }
 
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
 

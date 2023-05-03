@@ -1,0 +1,35 @@
+{% assign currentDate = now | date: "yyyyMMddHHmmss" %}
+
+{% entityform name: 'Company Dashboard' %}
+
+{% assign parentCompanyId = user.parentcustomerid.id %}
+{% if parentCompanyId %}
+    {% assign company = entities['account'][parentCompanyId] %}
+   
+    {% if company.cid_cidcompanystatus.label contains "nactive" %}
+        <script>
+            $('a[href*="deactivate-company"]').addClass("hidden");
+        </script>
+    {% else %}
+         <script>
+            $('a[href*="deactivate-company"]').removeClass("hidden");
+        </script>
+    {% endif %}
+{% endif %}
+
+{% fetchxml result %}
+<fetch distinct="false" mapping="logical" output-format="xml-platform" version="1.0">
+  <entity name="account">
+    <attribute name="accountid"></attribute>
+    <attribute name="cid_companyanniversarydate"></attribute>
+    <attribute name="statecode"></attribute>
+    <attribute name="createdon"></attribute>
+    <filter type="and">
+      <condition attribute="statecode" operator="eq" value="0"></condition>
+      <condition attribute="accountid" operator="eq" value="{{ user.parentcustomerid.id }}"></condition>
+      <condition attribute="name" operator="ne" value="' | append: {{ currentDate }} | append: '"></condition>
+    </filter>
+  </entity>
+</fetch>
+{% endfetchxml %}
+<input type="hidden" id="companyAnniversaryDate" name="companyAnniversaryDate" value="{{ result.results.entities[0].cid_companyanniversarydate }}">

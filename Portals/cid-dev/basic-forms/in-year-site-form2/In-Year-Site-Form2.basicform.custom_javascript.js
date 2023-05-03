@@ -1,5 +1,5 @@
 //
-// Basic Form-In Year Site Form.js
+// Basic Form-In Year Site Form2.js
 //
 
 var _busy = false;
@@ -7,12 +7,8 @@ var _busy = false;
 $(document).ready(function () {
     debugger;
     var CompanyName = '{{user.parentcustomerid.name}}';
-    //code used to change titles to include company Name - site name or Company Name  - address (if site name is empty)
     tdg.cid.Setup_site_Profile_Title (CompanyName);
  
-
-
-
     document.getElementById("address1_latitude").addEventListener('change', (event) => {
     //get Latitude and set it to nearest 4 digits
     var Lat = $("#address1_latitude").val();
@@ -22,9 +18,7 @@ $(document).ready(function () {
     //get Lontitude and set it to nearest 4 digits
     var Longtitude = $("#address1_longitude").val();
     $("#address1_longitude").val(Number.parseFloat(Longtitude).toFixed(4));
-
     });
-
 
     $('.validation-summary').eq(1).remove();
 
@@ -40,7 +34,6 @@ $(document).ready(function () {
 
     // hide controls
     tdg.c.control_hide("name");
-    //tdg.c.control_hide("cid_siteclaim");
 
     // cid_same_as_company
     $("#cid_same_as_company").change(function () {
@@ -69,8 +62,6 @@ $(document).ready(function () {
                 var validation = true;
                 var errorMessage = "";
 
-                //$('table[data-name="further_site_details_section_3"]').find("#cid_issiteattested").prop('checked')
-
                 var handlingType = $('table[data-name="tab_5_section_1"]').find("#cid_handlingsitetype").prop('checked');
                 var offeringType = $('table[data-name="tab_5_section_1"]').find("#cid_offeringfortransportsitetype").prop('checked');
                 var transportType = $('table[data-name="tab_5_section_1"]').find("#cid_transportingsitetype").prop('checked');
@@ -78,18 +69,13 @@ $(document).ready(function () {
                 
                 if(handlingType != true && offeringType != true && transportType != true && importType != true){
                     validation = false;
-                    errorMessage += "TDG Activity Types required</br>";
+                    var msg = tdg.error_message.message("m000159");
+                    errorMessage += msg + "</br>";
                 }
 
-                //var requirementLevel = $("#cid_requirementlevel").find(":selected").text();
-
-                //if(requirementLevel == "" || requirementLevel == null || requirementLevel == " "){
-                //    validation = false;
-                //    errorMessage += "Missing Site Requirement Level</br>";
-                //}
-
                 if($('table[data-name="further_site_details_section_3"]').find("#cid_issiteattested").prop('checked') == false){
-                    errorMessage += "You cannot proceed before attesting your site data changes, please check the 'Attestation' box</br>";
+                    var msg = tdg.error_message.message("m000157");
+                    errorMessage += msg + "</br>";
                     validation = false;
                 }
                 var urlParams = new URLSearchParams(window.location.search);
@@ -97,27 +83,20 @@ $(document).ready(function () {
 
             //Classes validation
             if (!SiteHasOperationClasses(null, siteId)) {
-                var msg = tdg.error_message.message("m000016"); // You cannot proceed before adding class(es).
+                var msg = tdg.error_message.message("m000016"); 
                 errorMessage += msg + "</br>";
                 validation = false;
             }
 
-            ////UN Numbers validation
-            //if (requirementLevel == 'Extended' && !SiteHasOperationUNNumbers(null, siteId)) {
-            //    var msg = tdg.error_message.message("m000017"); // UN ??
-           //     errorMessage += msg + "</br>";
-            //    validation = false;
-            //}
+            if (!validation) {
+            $('.validation-summary div').remove();
+            var validationSection = $('div[data-name="site_details2"]').parent().find(".validation-summary");
 
-                 if (!validation) {
-                    $('.validation-summary div').remove();
-                    var validationSection = $('div[data-name="site_details2"]').parent().find(".validation-summary");
-
-                    validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>")); 
-                    validationSection.show(); 
-                    $('.validation-summary div').focus(); 
-                }
-                return validation;
+            validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>")); 
+            validationSection.show(); 
+            $('.validation-summary div').focus(); 
+        }
+        return validation;
             }
         }(window.jQuery));
     }   

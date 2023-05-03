@@ -1,6 +1,7 @@
 //
 // SiteRegistrationWizard-Attest Site.js
 //
+
 $(document).load(function () {
     $('#loader').show();
 });
@@ -11,6 +12,7 @@ async function OperationDetailsProvided(operationId, flag) {
 
 $(document).ready(function () {
     debugger;
+
     $('#loader').hide();
 
     var selected_language = '{{website.selected_language.code}}';
@@ -100,7 +102,7 @@ if (window.jQuery) {
 
             //Classes validation
             if (!SiteHasOperationClasses(null, siteId)) {
-                var msg = tdg.error_message.message("m000016"); // You cannot proceed before adding class(es).
+                var msg = tdg.error_message.message("m000016"); 
                 errorMessage = errorMessage + msg + "</br>";
                 validation = false;
             }
@@ -109,7 +111,7 @@ if (window.jQuery) {
             var isExtendedSite = $("#cid_requirementlevel").find(":selected").text();
 
             if (IsExtendedSite == 'Extended' && !SiteHasOperationUNNumbers(null, siteId)) {
-                var msg = tdg.error_message.message("m000017"); // UN ??
+                var msg = tdg.error_message.message("m000017");
                 errorMessage = errorMessage + msg + "</br>";
                 validation = false;
             }

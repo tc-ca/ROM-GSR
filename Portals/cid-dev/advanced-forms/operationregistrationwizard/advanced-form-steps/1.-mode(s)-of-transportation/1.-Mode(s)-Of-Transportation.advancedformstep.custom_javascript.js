@@ -18,7 +18,6 @@ $(document).ready(function () {
 			sitePageURL = "~/my-sites/in-year-site/?id=" + siteId;
 			tdg.c.weblink_hide("/RegistrationWizard/");
 			tdg.c.weblink_show("/company_dashboard/");
-
 		}
 		else {
 			sitePageURL = "~/SiteRegistrationWizard/?id=" + siteId;
@@ -29,9 +28,9 @@ $(document).ready(function () {
 		sessionStorage.setItem('to_actvt_stp', 'true');
 
 		var message = tdg.error_message.message("BTN_PREVIOUS");
-		$("#NextButton").parent().before("<div id='previousButton' role='group' class='btn-group entity-action-button'><input type='button' value='" + message + "' id='PreviousButton'class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>");
+		$("#NextButton").parent().before("<div role='group' class='btn-group entity-action-button'><input type='button' value='' id='PreviousButton' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>");
+		$("#PreviousButton")[0].value = message;
 		$('#PreviousButton').click(function (e) {
-
 			debugger;
 			var urlParams = new URLSearchParams(window.location.search);
 			if (urlParams.has('id')) {

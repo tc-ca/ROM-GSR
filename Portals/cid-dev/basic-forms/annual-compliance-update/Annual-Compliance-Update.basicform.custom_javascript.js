@@ -44,7 +44,7 @@ $(document).ready(function ()
 		console.log("history log " + historyLogCodeList.length);
 		var message = tdg.error_message.message("m000149");
 		var portaluserId = "{{user.id}}";
-		tdg.c.dialog_YN(message, (ans) = > {
+		tdg.c.dialog_YN(message, (ans) => {
 			if (ans)
 			{
 				debugger;
@@ -340,16 +340,10 @@ function page_setup()
 	// server error?
 	tdg.c.message_panel();
 }
-async
-function Reset_Tasks_toInprogress(Listdata, historyData)
-{
-	for (var i = 0; i < Listdata.length; i++)
-	{
-		var data = {
-			"statecode": 0,
-			"statuscode": 2
-		};
-		await delayedUpdate(Listdata[i].activityid, data);
+async function Reset_Tasks_toInprogress(Listdata, historyData)
+{for (var i = 0; i < Listdata.length; i++)
+	{var data = {"statecode": 0,"statuscode": 2};
+	 await delayedUpdate(Listdata[i].activityid, data);
 		//tdg.webapi.update("tasks", Listdata[i].activityid, data);
 	}
 	tdg.webapi.create("cid_historylogs", historyData);
@@ -365,12 +359,11 @@ function Reset_Tasks_toInprogress(Listdata, historyData)
 
 function delay()
 {
-	return new Promise(resolve = > setTimeout(resolve, 300));
+	return new Promise(resolve => setTimeout(resolve, 300));
 }
-async
-function delayedUpdate(activityid, data)
+async function delayedUpdate(activityid, data)
 {
-	// notice that we can await a function
+	//  await a function
 	// that returns a promise
 	await delay();
 	tdg.webapi.update("tasks", activityid, data);

@@ -1,6 +1,15 @@
-$(document).ready(function() {
-    if ($("#backToCompanyWizard").length <= 0)
-        $('#mainContent').prepend("<div id='backToCompanyWizard' class='input-group pull-left'><p><a href='~/en-US/RegistrationWizard' class='entitylist-create btn btn-info pull-right action' title='Back'>Back to Company Registration Wizard</a><br><br></p></div>"); 
+//
+// SiteRegistrationWizard-Mode(s) Of Transportation.js
+//
+
+$(document).ready(function () {
+    debugger;
+
+    if ($("#backToCompanyWizard").length <= 0) {
+        var msg = tdg.error_message.message("m000100");  // Back to Company Registration Wizard
+        $('#mainContent').prepend("<div id='backToCompanyWizard' class='input-group pull-left'><p><a href='~/en-US/RegistrationWizard' class='entitylist-create btn btn-info pull-right action' title='Back'></a><br><br></p></div>");
+        $("#backToCompanyWizard")[0].value = msg;
+    }
 
     var companyName = '{{user.parentcustomerid.name }}';
     var header = $('.page-header h1');
@@ -27,16 +36,9 @@ if (window.jQuery) {
             var urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('id')) {
                 var siteid = urlParams.get('id');
-                //var data = await site_has_mode_of_transportation(siteid);
-                //var rows = $("#Modes_Of_Transportation .view-grid table").find("tbody > tr");
-				//if (rows.length <= 0) {
-				//    errorMessage = "You cannot proceed before adding at least one mode of transportation.";
-				//    validation = false;
-				//      //alert('You cannot proceed before adding at least one mode of transportation.');
-				//}
 				if(!SiteHasModeOfTransportations(siteid))
-				{
-					errorMessage = "You cannot proceed before adding at least one mode of transportation.";
+                {
+                    errorMessage = tdg.error_message.message("m000015");
 					validation = false;
 				}
 			}

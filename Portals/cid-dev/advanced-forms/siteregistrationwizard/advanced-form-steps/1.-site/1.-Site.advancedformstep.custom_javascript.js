@@ -1,9 +1,12 @@
 //
 // SiteRegistrationWizard-Site.js
 //
+
 var _busy = false;
 $(document).ready(function () {
 	debugger;
+
+	page_setup();
 
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
@@ -11,7 +14,7 @@ $(document).ready(function () {
 	$("#ValidationSummaryEntityFormView").after($('.text-danger').parent());
 	$("#ValidationSummaryEntityFormView").after('<div id="ErrorMessageDiv" class="alert alert-danger" role="alert" style="display: none;">  </div>');
 	Show_PluginError_TextLanguag($('.text-danger').parent());
-	page_setup();
+
 	tdg.c.message_panel();
 
 	tdg.c.page_instructions("page_srw_site");
@@ -60,14 +63,10 @@ $(document).ready(function () {
 	}
 
 	document.getElementById("address1_latitude").addEventListener('change', (event) => {
-		//get Latitude and set it to nearest 4 digits
 		var Lat = $("#address1_latitude").val();
-		//$("#address1_latitude").val(Number.parseFloat(Lat).toFixed(4));	
 	});
 	document.getElementById("address1_longitude").addEventListener('change', (event) => {
-		//get Lontitude and set it to nearest 4 digits
 		var Longtitude = $("#address1_longitude").val();
-		//$("#address1_longitude").val(Number.parseFloat(Longtitude).toFixed(4));
 	});
 
 	// address
@@ -154,6 +153,7 @@ function cid_same_as_company_change() {
 	tdg.cid.address_same_as_company(parent_id);
 	_busy = false;
 }
+
 if (window.jQuery) {
 	(function ($) {
 		webFormClientValidate = function () {
@@ -173,7 +173,6 @@ function cid_input_read_only(sectionName) {
 	//Disable Address Fileds
 	$("#cid_same_as_company").attr("disabled", true);
 	$("#ovs_address_type").attr("disabled", true);
-	//$(".section[data-name='" + sectionName + "']").find(':input').prop("disabled", true);
 	$(".section[data-name='" + sectionName + "']").find(':input').prop("readonly", "readonly");
 }
 
@@ -213,10 +212,11 @@ function Show_PluginError_TextLanguag(Field) {
 			value = text.substr(index1 + 2);
 		}
 		Field[0].innerText = value;
-		Field[0].innerHTML = '<h3 class="validation-header" role="none"><span role="presentation" class="fa fa-info-circle"></span> The form could not be submitted for the following reasons:</h2>'
-			+ "<p>" + value + "</p>";
+		var msg = tdg.error_message.message("m000166");
+		Field[0].innerHTML = '<h3 id="plugin_error" class="validation-header" role="none"><span role="presentation" class="fa fa-info-circle"></span>' + msg + '</h2><p>' + value + '</p>';
 	} catch (e) { }
 }
+
 function CheckLatLongDecimal() {
 	var Lat = $("#address1_latitude").val();
 	var Longtitude = $("#address1_longitude").val();
@@ -225,7 +225,6 @@ function CheckLatLongDecimal() {
 	var error = "";
 	var checkResult = true;
 	//check latitude
-	//m000143
 	var m000143 = "<p>" + tdg.error_message.message("m000143") + "</p>";
 	var m000144 = "<p>" + tdg.error_message.message("m000144") + "</p>";
 	if (decimalIndexLat < 0) {
@@ -236,7 +235,6 @@ function CheckLatLongDecimal() {
 		var numberofdecimal = Lat.toString().split('.')[1].length;
 		if (numberofdecimal != 4) {
 			error = m000143;
-			//"<p>Please enter a Latitude as a decimal, with the full four digit decimal point (e.g. 41.3251)</p>";
 			checkResult = false;
 		}
 	}
@@ -250,7 +248,6 @@ function CheckLatLongDecimal() {
 		var Longtitudenumberofdecimal = Longtitude.toString().split('.')[1].length;
 		if (Longtitudenumberofdecimal != 4) {
 			error = error + m000144;
-			//"<p>Please enter a Longitude as a decimal, with the full four digit decimal point (e.g. -74.7992)</p>";
 			checkResult = false;
 		}
 	}

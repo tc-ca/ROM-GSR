@@ -1360,6 +1360,11 @@ if (typeof (tdg.cid) == "undefined") {
                 if (length > 3) {
                     n = n.substring(0, 3) + " " + n.substring(3);
                 }
+                length = n.length;
+                if (length == 7 && !/^([a-zA-Z]\d[a-zA-Z] \d[a-zA-Z]\d)$/.test(n)){
+                    n = "";
+                    alert(tdg.c.text_language("Invalid postal code::Code Postal invalide", language));
+                }
                 $(this).val(n.toUpperCase());
             });
 

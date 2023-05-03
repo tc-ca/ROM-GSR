@@ -4,12 +4,12 @@
 
 $(document).ready(function () {
     debugger;
-  
-	//hide empty message for registeration only
-	$(".entity-grid").on("loaded", function () { const EmptyMessageDiv = document.querySelector(".view-empty");	
-         	EmptyMessageDiv.style.display = "none";
-      });
-  
+
+    //hide empty message for registeration only
+    $(".entity-grid").on("loaded", function () {
+        const EmptyMessageDiv = document.querySelector(".view-empty");
+        EmptyMessageDiv.style.display = "none";
+    });
 
     $('#NextButton').on('click', function () {
         sessionStorage.setItem('to_attst_site', 'true');
@@ -24,34 +24,30 @@ $(document).ready(function () {
     subgrid_language();
     debugger;
     //****Logic used to add comma to annual number of consigment in the UN number grid */
-   //define digit function to update Grid Cell
-   $.fn.digits = function(){
-    return this.each(function(){
-        var selected_language = '{{website.selected_language.code}}';
-        console.log(selected_language);
-       if (selected_language == "en")
-       { 
-        $(this).text( $(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
-       }
-       else
-       {
-           $(this).text( $(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1 "));
+    //define digit function to update Grid Cell
+    $.fn.digits = function () {
+        return this.each(function () {
+            var selected_language = '{{website.selected_language.code}}';
+            console.log(selected_language);
+            if (selected_language == "en") {
+                $(this).text($(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+            }
+            else {
+                $(this).text($(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1 "));
 
-       }
-      });};
-       
-    //define variable to reference UN Grid
+            }
+        });
+    };
+
     var list = $(".entity-grid");
-     //add onload event to grid 
-     list.on("loaded", function () {
-      //loop for each UN number in the current page
-      list.find("td[data-attribute='cid_annualnumberofshipment']").each(function (i, e){
-          //call function to update whole number format to include comma
-          $(this).digits();
-        }); 
-    }); 
-    /******************** */
-
+    //add onload event to grid 
+    list.on("loaded", function () {
+        //loop for each UN number in the current page
+        list.find("td[data-attribute='cid_annualnumberofshipment']").each(function (i, e) {
+            //call function to update whole number format to include comma
+            $(this).digits();
+        });
+    });
 });
 
 function subgrid_language() {
@@ -74,7 +70,7 @@ if (window.jQuery) {
             if (urlParams.has('id')) {
                 var operationId = urlParams.get('id');
                 if (!SiteHasOperationUNNumbers(operationId, null)) {
-                    errorMessage = tdg.error_message.message("m000017"); // "You cannot proceed before adding UN Number(s).";
+                    errorMessage = tdg.error_message.message("m000017");
                     validation = false;
                 }
             }

@@ -13,6 +13,5 @@ $(document).ready(function () {
     }
     //tdg.c.weblink_hide("/RegistrationWizard/");
     //tdg.c.weblink_hide("/Bulk_Site_Upload/");
-    //tdg.c.weblink_hide("/company_dashboard/");
-    //tdg.c.weblink_hide("/Bulk_Site_Update/");
 });
+

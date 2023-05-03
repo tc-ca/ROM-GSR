@@ -6,7 +6,6 @@ var _busy = false;
 
 $(document).ready(function () {
     debugger;
-   
 
     // address
     tdg.cid.address_init(true);
@@ -20,7 +19,6 @@ $(document).ready(function () {
 
     // hide controls
     tdg.c.control_hide("name");
-    //tdg.c.control_hide("cid_siteclaim");
 
     // cid_same_as_company
     $("#cid_same_as_company").change(function () {

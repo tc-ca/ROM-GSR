@@ -1,6 +1,7 @@
 //
 // OperationRegistrationWizard-Class.js 
 //
+
 $(document).ready(function () {
 	debugger;
 
@@ -22,7 +23,6 @@ $(document).ready(function () {
 	if (urlParams.has('in_year')) {
 		tdg.c.weblink_hide("/RegistrationWizard/");
 		tdg.c.weblink_show("/company_dashboard/");
-	
 	}
 	else
 	{
@@ -42,7 +42,6 @@ if (window.jQuery) {
 				var operationId = urlParams.get('id');
 				if (!SiteHasOperationClasses(operationId, null)) {
 					errorMessage = tdg.error_message.message("m000016");
-					// You cannot proceed before adding classes(s). 
 					validation = false;
 				}
 
@@ -56,7 +55,6 @@ if (window.jQuery) {
 					return validation;
 				}
 				else {
-					//if (!IsExtendedSite(operationId, null)) {
 					OperationDetailsProvided(operationId, true);
 					if (urlParams.has('siteid')) {
 						var siteId = urlParams.get('siteid');
@@ -67,10 +65,6 @@ if (window.jQuery) {
 							window.location.href = "~/SiteRegistrationWizard/?id=" + siteId;
 						}
 					}
-					//}
-					//else {
-					//	return validation;
-					//}
 				}
 				//return validation; 
 			}

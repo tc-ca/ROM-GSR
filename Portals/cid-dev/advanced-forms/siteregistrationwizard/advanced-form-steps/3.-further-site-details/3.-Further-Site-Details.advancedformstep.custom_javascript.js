@@ -33,10 +33,8 @@ $(document).ready(function () {
 					operationWizardURL = "~/OperationRegistrationWizard/?id=" + operationId + "&siteid=" + siteid + (extendedSite ? "&isExtended=true" : "&isExtended=false");
 
 					if ($("#further_site_details").length <= 0) {
-						var furtherDetailsBtn = "<div id='further_site_details' role='group' class='btn-group entity-action-button'><a href='" + operationWizardURL + "'><input type='button' name='Previous' value='Previous' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>";
-
-						//var furtherDetailsBtn = "<div id='further_site_details' role='group' class='btn-group entity-action-button'><input id ='furtherDetailsBtn' type='button' name='Previous' value='Previouss' class='furtherDetailsBtn btn btn-default button previous previous-btn'></div>";
-
+						var msg = tdg.error_message.message("BTN_PREVIOUS");
+						var furtherDetailsBtn = "<div id='further_site_details' role='group' class='btn-group entity-action-button'><a href='" + operationWizardURL + "'><input type='button' name='Previous' value='" + msg + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'></a></div>";
 						$("#PreviousButton").parent().after(furtherDetailsBtn);
 
 						$("#PreviousButton").hide();
@@ -65,20 +63,6 @@ $(document).ready(function () {
 						$("#NextButton").prop('disabled', false);
 						//$("#NextButton").click();
 					}
-
-					//firstRow.find('td').each(function(){
-					//var tdElement = $(this);
-
-					//if(tdElement.attr('data-attribute') == 'cid_operationdetailsprovided')
-					//{
-					//	if ($("#HOTI_Details").length <= 0)
-					//		$("#PreviousButton").parent().after("<div id='HOTI_Details' role='group' class='btn-group entity-action-button'><a href='~/OperationRegistrationWizard/?id=" + operationId + "&siteid=" + siteid + "'><input type='button' name='further_site_details' value='Further Site Details' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'></a></div>");
-					//	
-					//	if((! extendedSite && SiteHasOperationClasses(operationId, null)) ||
-					//		(extendedSite && SiteHasOperationUNNumbers(operationId, null)))
-					//		$("#NextButton").prop('disabled', false);
-					//}
-					//})
 				}
 			}
 		});
@@ -93,15 +77,13 @@ $(document).ready(function () {
 
 				if (validation == true && tdElement.attr('data-attribute') == 'cid_operationdetailsprovided') {
 					if (tdElement.attr('data-value') == 'false') {
-						//validation = false;
-						//alert('You cannot proceed before completing site operation details.');
 					}
 				}
 			})
 		});
 
 		if (!validation) {
-			var errorMessage = 'You cannot proceed before completing site operation details.';
+			var errorMessage = tdg.error_message.message("m000167");
 			$('#ValidationSummaryEntityFormView div').remove();
 
 			var validationSection = $('#ValidationSummaryEntityFormView');
