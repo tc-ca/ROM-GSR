@@ -1,4 +1,10 @@
+//
+// Web Page-Create User.js
+//    
+
 $(document).ready(function() {
+    debugger;
+
 	var name = '{{user.fullname}}';
 	//alert(name);
 });

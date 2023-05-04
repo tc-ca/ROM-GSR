@@ -956,8 +956,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000145",
-                        "message_en": "Are you want to withdraw this registration?",
-                        "message_fr": "Are you want to withdraw this registration?_FR"
+                        "message_en": "Proceeding with this option will result in a complete withdrawal from the CID registration process. All data entered to date will be deleted. Do you still want to proceed?",
+                        "message_fr": "Poursuivre avec cette option entraînera un retrait complet du processus d'enregistrement BDIC. Toutes les données saisies à ce jour seront supprimées. Voulez-vous toujours continuer?"
                     },
                     {
                         "code": "m000146",

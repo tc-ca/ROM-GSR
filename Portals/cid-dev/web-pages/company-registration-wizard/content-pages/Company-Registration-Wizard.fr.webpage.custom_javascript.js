@@ -1,6 +1,7 @@
 //
 // Web Page-Company Registration Wizard
 //
+
 $(document).ready(function () {
 	debugger;
 
@@ -14,7 +15,7 @@ $(document).ready(function () {
 
 	if (instructionBtns.length > 0) {
 		instructionBtns.click(function () {
-			var msg = tdg.error_message.message("m000010");	// Choose the same named button found below
+			var msg = tdg.error_message.message("m000010");
 			tdg.c.dialog_OK(msg);
 		});
 	}
@@ -33,9 +34,9 @@ function header_setup() {
 	//tdg.c.weblink_hide("/Bulk_Site_Upload/");
 	//tdg.c.weblink_hide("/company_dashboard/");
 	//tdg.c.weblink_hide("/Bulk_Site_Update/");
-   debugger;
+	debugger;
 	var code = "m000009";
-	 
+
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 
@@ -50,8 +51,6 @@ function header_setup() {
 			code = "m000008";	// Company Registration
 			break;
 		}
-	 
-	
 		//text = tdg.error_message.message(text);
 		//item.innerText = text;
 	}

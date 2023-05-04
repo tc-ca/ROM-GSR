@@ -1,4 +1,10 @@
+//
+// Web Page-Edit Site.js
+//
+
 $(document).ready(function() {
+    debugger;
+
 	var name = '{{user.fullname}}';
 	//alert(name);
 });

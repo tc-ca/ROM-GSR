@@ -47,6 +47,10 @@ if (document.getElementsByTagName('h1')[0]) {
     }
     //TODO add logic for the default access denied page
 }
+var xpath = "//li[contains(text(),'Le champ de')]";
+var matchingElement = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+matchingElement.textContent = "Le champ de l'adresse de messagerie est obligatoire.";
+
 debugger;
 
 //account already existing

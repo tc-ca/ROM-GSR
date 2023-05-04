@@ -1,6 +1,9 @@
+//
+// Web Page-.Edit Userjs
+//
+
 $(document).ready(function() {
-	var name = '{{user.fullname}}';
-	//alert(name);
+    debugger;
 });
 
 function AddressComplete_Selected()

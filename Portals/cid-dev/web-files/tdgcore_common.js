@@ -1360,13 +1360,17 @@ if (typeof (tdg.cid) == "undefined") {
                 if (length > 3) {
                     n = n.substring(0, 3) + " " + n.substring(3);
                 }
-                length = n.length;
-                if (length == 7 && !/^([a-zA-Z]\d[a-zA-Z] \d[a-zA-Z]\d)$/.test(n)){
-                    n = "";
-                    alert(tdg.c.text_language("Invalid postal code::Code Postal invalide", language));
-                }
                 $(this).val(n.toUpperCase());
             });
+            $("#address1_postalcode").focusout(function () {
+                var n = $(this).val().replace(/\W/g, '');
+                if ((n.length > 6 || n.length < 6) && n.length > 0) {
+                    $(this).val("");
+                }
+                if (n.length == 6 && !/^([a-zA-Z]\d[a-zA-Z]\d[a-zA-Z]\d)$/.test(n)){
+                    $(this).val("");
+                }
+            })
 
             // resize WebResource_address_complete
             $("#WebResource_address_complete").height('72px');
@@ -2385,6 +2389,11 @@ if (typeof (tdg.cid.crw) == "undefined") {
             else {
                 // retrieve information from FakeBN entity in dynamics
                 data = await tdg.cid.crw.Production_start_Retrieve_cra(cid_crabusinessnumber, step_start);
+            }
+            //show notice if the data is empty
+            if(data.length == 0){
+                var msg = tdg.error_message.message("m000164");
+                tdg.c.dialog_OK(msg);
             }
             return data;
         },
