@@ -5,7 +5,6 @@
 $(document).ready(function () {
 
     debugger;
-    //page_setup();
 
     var company_reg_date;
 
@@ -34,7 +33,6 @@ $(document).ready(function () {
         else {
             tdg.c.weblink_hide("/company_dashboard/");
             tdg.c.weblink_show("/RegistrationWizard/");
-
         }
     }
 
@@ -62,7 +60,8 @@ $(document).ready(function () {
     var confirmationMessage = tdg.error_message.message("m000137");
     var detailNeedtobAddedMessage = tdg.error_message.message("m000138");
     //hide and create new submit button
-    var submit_Lable = $("#InsertButton").val();
+    var submit_Lable = tdg.error_message.message("BTN_SUBMIT");
+    $("#InsertButton")[0].value = submit_Lable;
     $("#InsertButton").css("display", "none");
     var NewSubmitButton = '<button type="button" id="btn_submit_request" class="submit-btn btn btn-primary form-action-container-left">'
         + submit_Lable + '</button>'
@@ -158,21 +157,19 @@ function Get_RequestDetails() {
                     window.location.href = '~/KnowledgeArticlePage/?id=' + MemoData[0]["_ovs_frenchknowledgearticle_value"];
                 } else { }
             });
-        }//end if french article exist
-    }//end if language not en
+        }
+    }
     else {
         if (MemoData[0]["_ovs_knowledgearticle_value"] != null) {
-            //m000139
             var MessageConfirm = tdg.error_message.message("m000139");
-            //"There is knowledge article information about this topic that may answer your request. Do you want to first view that information?";
 
             tdg.c.dialog_YN(MessageConfirm, (ans) => {
                 if (ans) {
                     window.location.href = '~/KnowledgeArticlePage/?id=' + MemoData[0]["_ovs_knowledgearticle_value"];
                 } else { }
             });
-        }//end check english article
-    }//end else if not english
+        }
+    }
 
     sessionStorage.setItem("MemoLength", memo.length);
 

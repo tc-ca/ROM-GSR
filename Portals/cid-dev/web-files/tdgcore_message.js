@@ -26,22 +26,22 @@ if (typeof (tdg.message) == "undefined") {
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
                 "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen.";
-            var m000021_FR = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of " +
-                "the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.\n\n" +
-                "To add additional Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Ajout/mise à jour en bloc]</b> " +
-                "button to add all new Sites at once via Excel.\n\n" +
-                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
-                "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
-                "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen._FR";
+            var m000021_FR = "Les sites existants où 'Is Site Attested' est défini sur 'Non', doivent être attestés en choisissant l'un des " +
+                "les options via le bouton <b>[V]</b> à l'extrême droite de ces lignes. Tous les sites doivent être attestés avant que l'option En vrac puisse être choisie.\n\n" +
+                "Pour ajouter des sites supplémentaires individuellement, choisissez le bouton <b>[+Ajouter]</b>. Vous pouvez également choisir le bouton <b>[Ajouter/Mettre à jour en masse]</b>" +
+                "bouton pour ajouter tous les nouveaux sites à la fois via Excel.\n\n" +
+                "Pour modifier l'un des sites, cliquez avec la souris sur le lien souligné de l'ID de site de cette ligne ou choisissez l'option à partir du bouton <b>[V]</b> à la fin.\n\n" +
+                "Choisissez le bouton <b>[Suivant]</b>, une fois tous les sites ajoutés et attestés.\n\n" +
+                "Si nécessaire, choisissez le bouton <b>[Précédent]</b> ci-dessous pour revenir à l'écran Attester l'organisation.";
 
             var m000022_EN = "To add Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
                 "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen.";
-            var m000022_FR = "To add Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Ajout/mise à jour en bloc]</b> button to add all new Sites at once via Excel.\n\n" +
-                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
-                "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
-                "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen._FR";
+            var m000022_FR = "Pour ajouter des sites individuellement, choisissez le bouton <b>[+Ajouter]</b>. Sinon, choisissez le bouton <b>[Ajouter/Mettre à jour en masse]</b> pour ajouter tous les nouveaux sites en une seule fois via Excel.\ n\n" +
+                "Pour modifier l'un des sites, cliquez avec la souris sur le lien souligné de l'ID de site de cette ligne ou choisissez l'option à partir du bouton <b>[V]</b> à la fin.\n\n" +
+                "Choisissez le bouton <b>[Suivant]</b>, une fois tous les sites ajoutés et attestés.\n\n" +
+                "Si nécessaire, choisissez le bouton <b>[Précédent]</b> ci-dessous pour revenir à l'écran Attester l'organisation.";
 
             var m000023_EN = "To add Sites individually, choose the <b>[+Add]</b> button below.\n\n" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
@@ -50,13 +50,13 @@ if (typeof (tdg.message) == "undefined") {
                 "Note:\n" +
                 "- <b>[Bulk Add/Update]</b> will appear to the right of the <b>[+Add]</b> button\n" +
                 "- For In Year / Annual Compliance, the <b>[V]</b> options will be 'Open Site Details', 'Deactivate / Reactivate'";
-            var m000023_FR = "To add Sites individually, choose the <b>[+Add]</b> button below.\n\n" +
-                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
-                "Alternatively, choose the <b>[Ajout/mise à jour en bloc]</b> button to edit existing, and add new, Sites all at once via Excel.\n\n" +
-                "If required, choose the 'Deactivate / Reactivate' option via the <b>[V]</b> button at the end of a Site's row.\n\n" +
-                "Note:\n" +
-                "- <b>[Ajout/mise à jour en bloc]</b> will appear to the right of the <b>[+Add]</b> button\n" +
-                "- For In Year / Annual Compliance, the <b>[V]</b> options will be 'Open Site Details', 'Deactivate / Reactivate'_FR";
+            var m000023_FR = "Pour ajouter des sites individuellement, choisissez le bouton <b>[+Ajouter]</b> ci-dessous.\n\n" +
+                "Pour modifier l'un des sites, cliquez avec la souris sur le lien souligné de l'ID de site de cette ligne ou choisissez l'option à partir du bouton <b>[V]</b> à la fin.\n\n" +
+                "Vous pouvez également choisir le bouton <b>[Ajouter/Mettre à jour en masse]</b> pour modifier les sites existants et en ajouter de nouveaux en une seule fois via Excel.\n\n" +
+                "Si nécessaire, choisissez l'option 'Désactiver / Réactiver' via le bouton <b>[V]</b> à la fin de la ligne d'un site.\n\n" +
+                "Remarque :\n" +
+                "- <b>[Ajouter/Mettre à jour en masse]</b> apparaîtra à droite du bouton <b>[+Ajouter]</b>\n" +
+                "- Pour la conformité dans l'année / annuelle, les options <b>[V]</b> seront 'Ouvrir les détails du site', 'Désactiver / Réactiver'";
 
             var m000030_EN = "The registration of your Organization in the CID Data Platform is now complete. " +
                 "An email has been sent to your address, confirming the completion of the registration." +
@@ -105,8 +105,8 @@ if (typeof (tdg.message) == "undefined") {
 
             var m000161_EN = "You are changing the site requirement level from extended to basic.<br>" +
                 "Continuing with the update would result in the loss of the Extended Processing details assigned to the site."
-            var m000161_FR = "You are changing the site requirement level from extended to basic.<br>" +
-                "Continuing with the update would result in the loss of the Extended Processing details assigned to the site."
+            var m000161_FR = "Vous modifiez le niveau d'exigence du site d'étendu à essentiel.<br>" +
+                "Poursuivre la mise à jour entraînerait la perte des détails du niveau étendu attribués à ce site."
 
             var page_crw_start_EN = "Enter the Organization’s Canada Revenue Agency Business Number (CRA BN) and then choose the <b>[Next]</b> button below.<br><br>" +
                 "Alternatively, if your Organization is from an Industry Type does not require a CRA BN, then choose ‘No‘, complete the two fields that follow and then choose the <b>[Next]</b> button below.<br><br>" +
@@ -171,9 +171,9 @@ if (typeof (tdg.message) == "undefined") {
             var page_srw_further_site_details_EN = "Please choose the <b>[Next]</b> button below to review and attest the Site.</br>" +
                 "If necessary, choose the <b>[Previous]</b> button below to return to Further Site Details screen.</br>" +
                 "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process.";
-            var page_srw_further_site_details_FR = "Please choose the <b>[Next]</b> button below to review and attest the Site.</br>" +
-                "If necessary, choose the <b>[Previous]</b> button below to return to Further Site Details screen.</br>" +
-                "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process._FR";
+            var page_srw_further_site_details_FR = "Veuillez choisir le bouton <b>[Suivant]</b> ci-dessous pour examiner et attester le site.</br>" +
+                "Si nécessaire, choisissez le bouton <b>[Précédent]</b> ci-dessous pour revenir à l'écran Détails supplémentaires du site.</br>" +
+                "Vous pouvez également choisir <b>[Retour à l'enregistrement de l'organisation]</b> pour enregistrer les informations actuelles du site et revenir au processus d'enregistrement de l'organisation.";
 
             var page_srw_further_attest_site_EN = "If the site details are accurate and complete, then choose the <b>[Attest Site Data]</b> button below.</br>" +
                 "Otherwise, use the <b>[Previous]</b> button to make any adjustments.</br>" +
@@ -206,41 +206,41 @@ if (typeof (tdg.message) == "undefined") {
                 "- My Sites: To view a list of current Sites to add to, update, deactivate, reactivate or sale/transfer.</br>" +
                 "- Manage Application Users: To add or remove user access to this application.</br>" +
                 "- Online Help: To search for guidance on how to use this application.";
-            var page_my_company_FR = "Head Office details can be updated by choosing the <b>[Update Organization]</b> button at the bottom of this screen.</br></br>" +
-                "Following options are available via the menu options on the left:</br>" +
-                "- Organization History Log: Key past activities for this Organization.</br>" +
-                "- Annual Compliance Update: Allows completion of this mandatory annual update.</br>" +
-                "- Deactivate Organization: To deactivate this Organization.</br>" +
-                "- My Sites: To view a list of current Sites to add to, update, deactivate, reactivate or sale/transfer.</br>" +
-                "- Manage Application Users: To add or remove user access to this application.</br>" +
-                "- Online Help: To search for guidance on how to use this application._FR";
+            var page_my_company_FR = "Les détails du siège social peuvent être mis à jour en choisissant le bouton <b>[Mettre à jour l'organisation]</b> en bas de cet écran.</br></br>" +
+                "Les options suivantes sont disponibles via les options de menu à gauche :</br>" +
+                "- Journal de l'historique de l'organisation : principales activités passées de cette organisation.</br>" +
+                "- Mise à jour annuelle de conformité : permet de compléter cette mise à jour annuelle obligatoire.</br>" +
+                "- Désactiver l'organisation : pour désactiver cette organisation.</br>" +
+                "- Mes sites : pour afficher une liste des sites actuels à ajouter, mettre à jour, désactiver, réactiver ou vendre/transférer.</br>" +
+                "- Gérer les utilisateurs de l'application : pour ajouter ou supprimer l'accès des utilisateurs à cette application.</br>" +
+                "- Aide en ligne : pour rechercher des conseils sur l'utilisation de cette application.";
 
             var page_my_company_contact_EN = "For actions, select the <b>[V]</b> button beside each row, or the <b>[+Add]</b> button for a new entry.";
-            var page_my_company_contact_FR = "For actions, select the <b>[V]</b> button beside each row, or the <b>[+Add]</b> button for a new entry._FR";
+            var page_my_company_contact_FR = "Pour les actions, sélectionnez le bouton <b>[V]</b> à côté de chaque ligne, ou le bouton <b>[+Ajouter]</b> pour une nouvelle entrée.";
 
             var page_in_year_my_sites_EN = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.<br>" +
                 "To add additional Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.<br>" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.";
-            var page_in_year_my_sites_FR = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.<br>" +
-                "To add additional Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Ajout/mise à jour en bloc]</b> button to add all new Sites at once via Excel.<br>" +
-                "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end._FR";
+            var page_in_year_my_sites_FR = "Les sites existants où 'Is Site Attested' est défini sur 'Non' doivent être attestés en appliquant l'une des options via le bouton <b>[V]</b> à l'extrême droite de ces lignes. Tous les les sites doivent attester avant que l'option Bulk puisse être choisie.<br>" +
+                "Pour ajouter des sites supplémentaires individuellement, choisissez le bouton <b>[+Ajouter]</b>. Vous pouvez également choisir le bouton <b>[Ajouter/Mettre à jour en masse]</b> pour ajouter tous les nouveaux sites en une seule fois via Excel. <br>" +
+                "Pour modifier l'un des sites, cliquez avec la souris sur le lien souligné de l'ID de site de cette ligne ou choisissez l'option à partir du bouton <b>[V]</b> à la fin.";
 
             var page_annual_compliance_update_EN = "To finalize the Annual Compliance Update:</br>1- As applicable, perform each step's related update below, then it's 'Mark as complete' option.</br>" +
                 "2- Read and agree to the terms of service agreement and select the 'Attestation' section.</br>" +
                 "3- When complete, select the <b>[Finalize Annual Compliance]</b> option.";
-            var page_annual_compliance_update_FR = "To finalize the Annual Compliance Update:</br>1- As applicable, perform each step's related update below, then it's 'Mark as complete' option.</br>" +
-                "2- Read and agree to the terms of service agreement and select the 'Attestation' section.</br>" +
-                "3- When complete, select the <b>[Finalize Annual Compliance]</b> option._FR";
+            var page_annual_compliance_update_FR = "Pour finaliser la mise à jour annuelle de conformité :</br>1- Le cas échéant, effectuez la mise à jour associée à chaque étape ci-dessous, puis l'option 'Marquer comme terminée'.</br>" +
+                "2- Lisez et acceptez les termes du contrat de service et sélectionnez la section 'Attestation'.</br>" +
+                "3- Une fois terminé, sélectionnez l'option <b>[Finaliser la conformité annuelle]</b>.";
 
             var page_annual_compliance_resubmit_EN = "1- The next Annual Compliance Update can only be completed as early as 30 days before your Company’s Anniversary Date of {0}.</br>" +
                 "2- If it is required to re-submit the previous Annual Compliance, then please choose the <b>[Re-Submit Annual Compliance Update]</b> button below.</br>" +
                 "3- Note that the Annual Compliance should only be re-submitted if new data, or a date update, related to previous year that this Annual Compliance covers, was missed in the previous Compliance Update. </br>Any additions, or updates, that took place after the last Annual Compliance Completion Date of {1} should instead be done as regular in-year updates.";
-            var page_annual_compliance_resubmit_FR = "1- The next Annual Compliance Update can only be completed as early as 30 days before your Company’s Anniversary Date of {0}.</br>" +
-                "2- If it is required to re-submit the previous Annual Compliance, then please choose the <b>[Re-Submit Annual Compliance Update]</b> button below.</br>" +
-                "3- Note that the Annual Compliance should only be re-submitted if new data, or a date update, related to previous year that this Annual Compliance covers, was missed in the previous Compliance Update. </br>Any additions, or updates, that took place after the last Annual Compliance Completion Date of {1} should instead be done as regular in-year updates.";
+            var page_annual_compliance_resubmit_FR = "1- La prochaine mise à jour annuelle de conformité ne peut être effectuée que 30 jours avant la date anniversaire de votre entreprise, le {0}.</br>" +
+                "2- S'il est nécessaire de soumettre à nouveau la conformité annuelle précédente, veuillez choisir le bouton <b>[Re-Submit Annual Compliance Update]</b> ci-dessous.</br>" +
+                "3- Notez que la conformité annuelle ne doit être soumise à nouveau que si de nouvelles données ou une mise à jour de la date, liées à l'année précédente couverte par cette conformité annuelle, ont été manquées dans la mise à jour de conformité précédente. </br> Tout ajout ou mise à jour , qui ont eu lieu après la dernière date d'achèvement de la conformité annuelle du {1} doivent plutôt être effectuées sous forme de mises à jour régulières en cours d'année.";
 
             var page_company_naics_code_EN = "The NAICS Code must be selected using the NAICS Code drop-down. Enter at least the first two digits or your full NAICS Code to filter the drop-down and select the applicable NAICS Code from the list.";
-            var page_company_naics_code_FR = "Le code SCIAN doit être sélectionné au moyen du menu déroulant NAICS Code. Saisir au moins les deux premiers chiffres du code SCIAN, ou le code au complet, pour appliquer un filtre au menu déroulant et sélectionner le code SCIAN applicable à partir de la liste.";
+            var page_company_naics_code_FR = "Le code SCIAN doit être sélectionné au moyen du menu déroulant. Saisir au moins les deux premiers chiffres du code SCIAN, ou le code au complet, pour appliquer un filtre au menu déroulant et sélectionner le code SCIAN applicable à partir de la liste.";
 
             var list =
                 [
@@ -367,7 +367,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "Yes",
                         "message_en": "Yes",
-                        "message_fr": "Qui"
+                        "message_fr": "Oui"
                     },
                     {
                         "code": "No",
@@ -380,9 +380,14 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "Titre",
                     },
                     {
+                        "code": "BTN_SUBMIT",
+                        "message_en": "Submit",
+                        "message_fr": "Soumettre"
+                    },
+                    {
                         "code": "BTN_OK",
                         "message_en": "OK",
-                        "message_fr": "Qui"
+                        "message_fr": "Oui"
                     },
                     {
                         "code": "BTN_CANCEL",
@@ -886,8 +891,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000131",
-                        "message_en": "Another organization already has an active Site at this location. You will not be able to add a Site at this Location until the other organization first deactivates it.</br></br> If that other organization has agreed to sell you this Site, then please advise them to Deactivate the Site within the CID Portal, after which you will be able to add this Site.</br></br> If you are certain that the Site details entered are correct, and this Site is not part of a sale or transfer, then do you want to have a request sent to that organization asking them to release the Site?",
-                        "message_fr": "Une autre organisation a déjà un site actif à cet emplacement. Vous ne pourrez pas ajouter de site à cet emplacement tant que l'autre organisation ne l'aura pas désactivé.</br></br> Si cette autre organisation a accepté de vous vendre ce site, veuillez lui conseiller de désactiver le site dans le délai imparti dans le portail du BDIC, après quoi vous pourrez ajouter ce site.</br></br> Si vous êtes certain que les détails du site saisis sont corrects et que ce site ne fait pas partie d'une vente ou d'un transfert, alors voulez-vous faire envoyer une demande à cette organisation lui demandant de libérer le Site?"
+                        "message_en": "The address you entered is currently registered and active and used by another organization. The site at this address must be de-activated before changes can be made.",
+                        "message_fr": "L'adresse que vous avez entrée est actuellement enregistrée, active et utilisée par une autre organisation. Le site à cette adresse doit être désactivé avant que des modifications puissent être apportées."
                     },
                     {
                         "code": "m000132",
@@ -1068,6 +1073,21 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000167",
                         "message_en": "You cannot proceed before completing site operation details.",
                         "message_fr": "Vous ne pouvez pas continuer avant d’avoir terminé l'entrée des détails des opérations du site."
+                    },
+                    {
+                        "code": "m000168",
+                        "message_en": "Add the Site Name, Address 2 and Address 3 to separate the site from similar addresses.",
+                        "message_fr": "Ajoutez le nom du site, l'adresse 2 et l'adresse 3 pour séparer le site des adresses similaires."
+                    },
+                    {
+                        "code": "m000169",
+                        "message_en": "Add the Site Name in Address 2 or 3 for extra detail that would set it apart from other site addresses.",
+                        "message_fr": "Ajoutez le nom du site dans l'adresse 2 ou 3 pour des détails supplémentaires qui le distingueraient des autres adresses de site."
+                    },
+                    {
+                        "code": "m000170",
+                        "message_en": "Update Site",
+                        "message_fr": "Mise à jour du Site"
                     }
                 ];
 

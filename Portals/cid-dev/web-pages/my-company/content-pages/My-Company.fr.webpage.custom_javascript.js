@@ -5,6 +5,7 @@
 $(document).ready(function () {
     debugger;
 
+
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
@@ -19,15 +20,14 @@ $(document).ready(function () {
         activationButon.hide();
     }
     else {
+        activationButon[0].innerHTML = tdg.error_message.message("m000141");
         activationButon.css("color", "#000000");
         activationButon.css("background-color", "#4CAF50");
     }
 
     var cancelLabel = tdg.error_message.message("BTN_CANCEL");
-    var updateLabel = tdg.error_message.message("BTN_UPDATE_ORG");
-
-    var updateCompanyBtn = "<div><input id='update_company' type='button' name='UpdateCompany' value='" + updateLabel + "' class='btn btn-primary action create-action' nonactionlinkbutton='true'/></div>"
-    $(".form-custom-actions").first().parent().after(updateCompanyBtn);
+    var updateCompanyBtn = "<div><input id='update_company' type='button' name='UpdateCompany' value='Update Organization' class='btn btn-primary action create-action' nonactionlinkbutton='true'/></div>"
+    $('table[data-name="company_details_section_3"]').after(updateCompanyBtn);
 
     var cancelBtn = "&nbsp;<input id='cancel_company_update' type='button' name='CancelCompanyUpdate' value='" + cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'/>";
     $(".form-action-container-left").eq(2).after(cancelBtn);
@@ -36,7 +36,8 @@ $(document).ready(function () {
     $('div[data-name="company_details"]').parent().before("<h2>" + companyName + "</h2><hr>");
     var legend = $('fieldset[aria-label="Head Office"] legend').first();
     legend.text("");
-    legend.after("<h2>" + companyName + " - Head Office</h2><hr>");
+    var msg = tdg.error_message.message("m000156");
+    legend.after("<h2>" + companyName + " - " + msg + "</h2><hr>");
 
     $('div[data-name="tab_3"]').parent().parent().addClass("hidden");
 
@@ -183,5 +184,6 @@ function Formate_PhoneNumber_AllControlsWithSameID(TargetFieldId) {
                 }
             });
         }
+
     });
 }

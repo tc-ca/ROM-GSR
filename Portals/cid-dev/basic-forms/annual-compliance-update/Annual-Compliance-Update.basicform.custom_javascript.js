@@ -4,8 +4,12 @@
 $(document).ready(function ()
 {
 	debugger;
+	
 	page_setup();
+	tdg.c.control_hide("cid_nextannualcomplianceupdate");
+	tdg.c.control_hide("cid_nextannualcomplianceupdate_datepicker_description");
 	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
+	var selected_language = '{{website.selected_language.code}}';
 	//if
 	var URLs = new URLSearchParams(window.location.search);
 	//  var newrecordid = URLs.get('id');
@@ -14,14 +18,15 @@ $(document).ready(function ()
 	{
 		var cid_companyanniversarydate = $('#cid_companyanniversarydate').val();
 		console.log(cid_companyanniversarydate);
-		cid_companyanniversarydate = cid_companyanniversarydate.split('T')[0]
+		cid_companyanniversarydate = cid_companyanniversarydate.split('T')[0];
+		var m000148 = tdg.error_message.message("m000148");
+		console.log ( m000148 );
+		m000148 = m000148.replace("{0}", cid_companyanniversarydate);
+		tdg.c.dialog_OK(m000148);
 		var urlPath = window.location.href;
 		urlPath = urlPath.split('?')[0];
-		window.history.replaceState(
-		{}, document.title, urlPath);
-		var afterRefreshMessage = tdg.error_message.message("m000148");
-		afterRefreshMessage = afterRefreshMessage.replace("{0}", cid_companyanniversarydate);
-		tdg.c.dialog_OK(afterRefreshMeacssage);
+		window.history.replaceState({}, document.title, urlPath);
+	
 	}
 	//if not primary contact
 	if (cid_usercontacttype != 100000000)
@@ -140,6 +145,22 @@ $(document).ready(function ()
 				{
 					trElement.css("background-color", "#dff0d8");
 				}
+			
+
+				if ($(this).html().indexOf("::") > 0)
+				{
+					var htmlcontent = $(this).html();
+					if (selected_language == "en")
+					{
+						var splitTextEn =  htmlcontent.split('::')[0];
+						$(this).html(splitTextEn);
+					}
+					else{
+						var splitTextFr =  htmlcontent.split('::')[1];
+						$(this).html(splitTextFr);
+					}
+				
+				}
 			});
 		});
 		$("#sites_annual_compliance_update table tbody").find("tr").each(function ()
@@ -215,7 +236,7 @@ $(document).ready(function ()
 				$(this).find("td").each(function ()
 				{
 					if (
-					($(this).attr('data-attribute') == 'statuscode' || $(this).attr("L'état d'achèvement")) && ($(this).attr('aria-label') != 'Completed' || $(this).attr('aria-label') == 'Terminé'))
+					($(this).attr('data-attribute') == 'statuscode' || $(this).attr("L'état d'achèvement")) && ($(this).attr('aria-label') != 'Completed' && $(this).attr('aria-label') != 'Terminé'))
 					{
 						validation = false;
 						var m000150 = tdg.error_message.message("m000150");
@@ -232,7 +253,7 @@ $(document).ready(function ()
 			{
 				$(this).find("td").each(function ()
 				{
-					if (($(this).attr('data-attribute') == 'statuscode' || $(this).attr("L'état d'achèvement")) && ($(this).attr('aria-label') != 'Completed' || $(this).attr('aria-label') == 'Terminé'))
+					if (($(this).attr('data-attribute') == 'statuscode' || $(this).attr("L'état d'achèvement")) && ($(this).attr('aria-label') != 'Completed' && $(this).attr('aria-label') != 'Terminé'))
 					{
 						validation = false;
 						var m000151 = tdg.error_message.message("m000151");
@@ -311,6 +332,13 @@ checkAnuualComplianceEligibility = function (anniversaryDate, annualComplianceCo
 					$('table[data-name="annual_compliance_section_3"]').addClass("hidden");
 					//$(".instructions").addClass("hidden");
 					tdg.c.page_instructions("page_annual_compliance_resubmit");
+					var nextAnnualComplianceDate =$("#cid_nextannualcomplianceupdate").val();
+					var nextAnnualComplianceDateObject =new Date(nextAnnualComplianceDate);
+					$("#cid_nextannualcomplianceupdate").addClass("hidden");
+
+					console.log("instruction: " +  $(".instructions").html().replace('{1}',annualComplianceCompletionDate));
+					var updatedInstructionParamater = $(".instructions").html().replace('{0}',nextAnnualComplianceDate.split('T')[0]).replace('{1}',annualComplianceCompletionDate.split('T')[0]);
+					$(".instructions").html(updatedInstructionParamater);
 				}
 			}
 		}
