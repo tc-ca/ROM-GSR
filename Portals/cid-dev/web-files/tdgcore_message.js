@@ -163,9 +163,9 @@ if (typeof (tdg.message) == "undefined") {
                 "Sinon, sélectionner <b>[Retour à l’enregistrement de l’organisation]</b> pour sauvegarder l’information à jour sur le site et revenir au processus d’enregistrement de l’organisation.<br>" +
                 "<div id ='redirectInstruction'><h4>Veuillez patienter. Vous allez être redirigé vers les étapes relatives aux sites</h4></div>";
 
-            var page_srw_activity_type_EN = "Choose the Site Activity Types. When complete, choose the <b>[Next]</b> button below.</br>If necessary, choose the <b>[Previous]</b> button below to return to the Basic/Extended screen.</br>" +
+            var page_srw_activity_type_EN = "Choose the Site Activity Types. When complete, choose the <b>[Next]</b> button below.</br>If necessary, choose the <b>[Previous]</b> button below to return to the Site Information screen.</br>" +
                 "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process.";
-            var page_srw_activity_type_FR = "Choisir les types d’activités du site. Ensuite, cliquer sur le bouton <b>[Suivant]</b> ci‑dessous. Au besoin, cliquer sur le bouton <b>[Précédent]</b> ci‑dessous pour revenir à l’écran De base/Prolongé.</br>" +
+            var page_srw_activity_type_FR = "Choisir les types d’activités du site. Ensuite, cliquer sur le bouton <b>[Suivant]</b> ci‑dessous. Au besoin, cliquer sur le bouton <b>[Précédent]</b> ci‑dessous pour revenir à l’écran d'informations sur le site.</br>" +
                 "Sinon, cliquer sur <b>[Retour à l’enregistrement de l’organisation]</b> pour sauvegarder l’information à jour sur le site et revenir au processus d’enregistrement de l’organisation.";
 
             var page_srw_further_site_details_EN = "Please choose the <b>[Next]</b> button below to review and attest the Site.</br>" +
@@ -458,6 +458,11 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "lbl_reasonfornobnnumber_other",
                         "message_en": "Further Details Regarding No CRA Business Number",
                         "message_fr": "Autres détails concernant l’absence de numéro d’organisation de l’ARC"
+                    },
+                    {
+                        "code": "lbl_inactive",
+                        "message_en": "Inactive",
+                        "message_fr": "inactif"
                     },
                     {
                         "code": "m000001",
@@ -1088,7 +1093,62 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000170",
                         "message_en": "Update Site",
                         "message_fr": "Mise à jour du Site"
+                    },
+                    {
+                        "code": "m000171",
+                        "message_en": "Invalid number",
+                        "message_fr": "Numéro invalide"
                     }
+                    ,
+                    {
+                        "code": "m000172",
+                        "message_en": "Step 1. Download the custom Site Bulk Upload Excel template.",
+                        "message_fr": "Étape 1. Téléchargez le modèle Excel personnalisé de téléchargement en masse du site."
+                    }
+                    ,
+                    {
+                        "code": "m000173",
+                        "message_en": "Step 2. Upload the completed custom Site Bulk Upload Excel workbook.",
+                        "message_fr": "Étape 2. Téléchargez le classeur Excel personnalisé de téléchargement en masse du site."
+                    }
+                   
+                    ,
+                    {
+                        "code": "m000174",
+                        "message_en": "2B. Start Upload",
+                        "message_fr": "2B.Commence le téléchargement"
+                    }
+                    ,
+                    {
+                        "code": "m000175",
+                        "message_en": "Start Upload",
+                        "message_fr": "Commence le téléchargement"
+                    }
+                    ,
+                    {
+                        "code": "m000176",
+                        "message_en": "Choose File",
+                        "message_fr": "Choisir le fichier"
+                    }
+                    ,
+                    {
+                        "code": "m000177",
+                        "message_en": "Select File name here",
+                        "message_fr": "Sélectionnez le nom du fichier ici"
+                    }
+                    ,
+                    {
+                        "code": "m000178",
+                        "message_en": "English version",
+                        "message_fr": "Version anglaise"
+                    }
+                    ,
+                    {
+                        "code": "m000179",
+                        "message_en": "French Version",
+                        "message_fr": "Version française"
+                    }
+
                 ];
 
             return list;

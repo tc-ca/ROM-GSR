@@ -5,9 +5,10 @@
 $(document).ready(function () {
     debugger;
 
-
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
+
+    var lbl_inactive = tdg.error_message.message("lbl_inactive");
 
     sessionStorage.setItem('frominyearsites', 'false');
     sessionStorage.setItem('fromannualcompliance', 'false');
@@ -16,7 +17,7 @@ $(document).ready(function () {
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
     var activationButon = $("#EntityFormPanel").find(".workflow-link");
 
-    if (cidCompanyStatus.indexOf("Inactive") < 0) {
+    if (cidCompanyStatus.indexOf(lbl_inactive) < 0) {
         activationButon.hide();
     }
     else {
@@ -25,11 +26,14 @@ $(document).ready(function () {
         activationButon.css("background-color", "#4CAF50");
     }
 
-    var cancelLabel = tdg.error_message.message("BTN_CANCEL");
-    var updateCompanyBtn = "<div><input id='update_company' type='button' name='UpdateCompany' value='Update Organization' class='btn btn-primary action create-action' nonactionlinkbutton='true'/></div>"
+    // Update Organization
+    var updateCompanyBtn = "<div><input id='update_company' type='button' name='update_company' value='' class='btn btn-primary action create-action' nonactionlinkbutton='true'/></div>"
     $('table[data-name="company_details_section_3"]').after(updateCompanyBtn);
+    var msg = tdg.error_message.message("BTN_UPDATE_ORG");
+    $("#update_company")[0].value = msg;
 
-    var cancelBtn = "&nbsp;<input id='cancel_company_update' type='button' name='CancelCompanyUpdate' value='" + cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'/>";
+    var cancelLabel = tdg.error_message.message("BTN_CANCEL");
+    var cancelBtn = "&nbsp;<input id='cancel_company_update' type='button' name='cancel_company_update' value='" + cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'/>";
     $(".form-action-container-left").eq(2).after(cancelBtn);
 
     var companyName = "{{user.parentcustomerid.name}}";
@@ -45,7 +49,7 @@ $(document).ready(function () {
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
     var deactivateCompanyWebLink = $('a[href*="deactivate-company"]');
 
-    if (cidCompanyStatus.indexOf("Inactive") >= 0) {
+    if (cidCompanyStatus.indexOf(lbl_inactive) >= 0) {
         deactivateCompanyWebLink.addClass("hidden");
     }
     else {
@@ -179,7 +183,8 @@ function Formate_PhoneNumber_AllControlsWithSameID(TargetFieldId) {
             fieldset.focusout(function () {
                 var inLength = $(this).val().replace(/\D/g, '').length;
                 if (inLength < 10 && inLength != 0) {
-                    alert(tdg.c.text_language("Invalid number::Numéro invalide", language));
+                    var msg = tdg.error_message.message("m000171");
+                    alert(msg);
                     $(this).val("");
                 }
             });

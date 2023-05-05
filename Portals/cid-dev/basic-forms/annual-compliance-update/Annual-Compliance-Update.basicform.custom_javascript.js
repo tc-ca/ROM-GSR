@@ -172,6 +172,20 @@ $(document).ready(function ()
 				{
 					trElement.css("background-color", "#dff0d8");
 				}
+				if ($(this).html().indexOf("::") > 0)
+				{
+					var htmlcontent = $(this).html();
+					if (selected_language == "en")
+					{
+						var splitTextEn =  htmlcontent.split('::')[0];
+						$(this).html(splitTextEn);
+					}
+					else{
+						var splitTextFr =  htmlcontent.split('::')[1];
+						$(this).html(splitTextFr);
+					}
+				
+				}
 			});
 		});
 	});

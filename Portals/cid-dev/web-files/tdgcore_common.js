@@ -1417,7 +1417,7 @@ if (typeof (tdg.cid) == "undefined") {
             $(field).on('keyup', function (event) {
                 //Strip all characters from the input except digits
                 var input = $(this).val().replace(/\D/g, '');
-                //Trim the remaining input to ten characters, to preserve phone number format
+               //Trim the remaining input to ten characters, to preserve phone number format
                 input = input.substring(0, 10);
                 //Based upon the length of the string, we add formatting as necessary
                 var inLength = input.length;
@@ -1431,8 +1431,14 @@ if (typeof (tdg.cid) == "undefined") {
                     input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6) + '-' + input.substring(6, 10);
                 }
 
-                if (event.keyCode != 46 && event.keyCode != 8) {
-                    $(this).val(input);
+                if (event.keyCode >= 49 && event.keyCode <= 57) {
+                    if (inLength == 10) {
+                        $(this).val(input);
+                    }
+                } else {
+                    if (event.keyCode != 46 && event.keyCode != 8) {
+                        $(this).val(input);
+                    }
                 }
             });
             $(field).focusout(function () {
@@ -2422,6 +2428,12 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 if (environment == "PreProd" || environment == "Prod") {
                     //use CRA API to get information
                     cra_data = await tdg.cid.crw.Production_start_Retrieve_cra(bn, "");
+ 
+                    //show notice if the data is empty
+                    if(cra_data.length == 0){
+                        var msg = tdg.error_message.message("m000164");
+                        tdg.c.dialog_OK(msg);
+                    }
                     // save to use in step1
                     _cra_record = cra_data;
                 }
