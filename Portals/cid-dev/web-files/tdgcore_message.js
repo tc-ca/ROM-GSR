@@ -61,7 +61,7 @@ if (typeof (tdg.message) == "undefined") {
             var m000030_EN = "The registration of your Organization in the CID Data Platform is now complete. " +
                 "An email has been sent to your address, confirming the completion of the registration." +
                 "<br><br>You are currently in the initial in-year page, which will be your starting page for each future CID sessions. {0} is your Organization annual compliance anniversary date."
-            var m000030_FR = "L'enregistrement de votre entreprise dans la plateforme de données CID est maintenant terminé. " +
+            var m000030_FR = "L'enregistrement de votre entreprise dans la plateforme de données BDIC est maintenant terminé. " +
                 "Un e-mail a été envoyé à votre adresse, confirmant la finalisation de l'inscription." +
                 "<br><br>Vous êtes actuellement dans la page initiale en cours d'année, qui sera votre page de démarrage pour chaque future session CID. {0} is your Organization annual compliance anniversary date."
 
@@ -129,12 +129,12 @@ if (typeof (tdg.message) == "undefined") {
 
             var page_crw_contact_EN = "Create at least one Secondary Contact by choosing the <b>[+Add]</b> button below, then choose the <b>[Next]</b> button below to continue.</br><br>" +
                 "To edit or deactivate a Contact, then choose the <b>[V]</b> button to the far right of that row. If required, choose the <b>[Previous]</b> button to return to the Organization screen.";
-            var page_crw_contact_FR = "Créer au moins un contact secondaire en cliquant sur le bouton <b>[+Créer]</b> ci‑dessous, ensuite cliquer sur le bouton <b>[Suivant]</b> ci‑dessous pour poursuivre.</br><br>" +
+            var page_crw_contact_FR = "Créer au moins un contact secondaire en cliquant sur le bouton <b>[+Créer]</b> ci-dessous, ensuite cliquer sur le bouton <b>[Suivant]</b> ci‑dessous pour poursuivre.</br><br>" +
                 "Pour modifier ou désactiver un contact, cliquer sur le bouton <b>[V]</b> à l’extrémité droite de cette rangée. Au besoin, cliquer sur le bouton <b>[Précédent]</b> pour revenir à l’écran organization .";
 
             var page_crw_naics_EN = "Choose the <b>[+Add]</b> button below to create NAICS Codes for the Organization, then choose the <b>[Next]</b> button below to continue.</br></br>" +
                 "To deactivate a NAICS, then choose the <b>[V]</b> button to the far right of that row. If required, choose the <b>[Previous]</b> button below to return to the Contact screen.";
-            var page_crw_naics_FR = "Cliquer sur le bouton <b>[+Créer]</b> ci‑dessous pour créer les codes SCIAN pour la compagnie, ensuite cliquer sur le bouton <b>[Suivant]</b> ci‑dessous pour poursuivre.<br><br>" +
+            var page_crw_naics_FR = "Cliquer sur le bouton <b>[+Créer]</b> ci-dessous pour créer les codes SCIAN pour la compagnie, ensuite cliquer sur le bouton <b>[Suivant]</b> ci‑dessous pour poursuivre.<br><br>" +
                 "Pour désactiver un code SCIAN, cliquer sur le bouton <b>[V]</b> à l’extrémité droite de cette rangée. Au besoin, cliquer sur le bouton <b>[Précédent]</b> pour revenir à l’écran Personnes-ressources.";
 
             var page_crw_attest_EN = "If the Organization details are accurate and complete, then choose the <b>[Submit]</b> button below.</br>Otherwise, use the <b>[Previous]</b> button below to first make any adjustments.";
@@ -159,7 +159,7 @@ if (typeof (tdg.message) == "undefined") {
             var page_srw_site_EN = "As required, update any of the Site information, then choose the <b>[Next]</b> button below to continue.</br></br>" +
                 "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process.<br>" +
                 "<div id ='redirectInstruction'><h4>Please wait. You will be redirected to the site details steps</h4></div>";
-            var page_srw_site_FR = "Au besoin, mettre à jour l’information sur le site, ensuite cliquer sur le bouton <b>[Suivant]</b> ci‑dessous pour continuer.</br></br>" +
+            var page_srw_site_FR = "Au besoin, mettre à jour l’information sur le site, ensuite cliquer sur le bouton <b>[Suivant]</b> ci-dessous pour continuer.</br></br>" +
                 "Sinon, sélectionner <b>[Retour à l’enregistrement de l’organisation]</b> pour sauvegarder l’information à jour sur le site et revenir au processus d’enregistrement de l’organisation.<br>" +
                 "<div id ='redirectInstruction'><h4>Veuillez patienter. Vous allez être redirigé vers les étapes relatives aux sites</h4></div>";
 
@@ -185,7 +185,7 @@ if (typeof (tdg.message) == "undefined") {
             var page_orw_mot_EN = "Choose the Mode(s) Of Transportation. When complete, choose the <b>[Next]</b> button below.<br>" +
                 "If necessary, choose the <b>[Previous]</b> button, or the <b>[Back to Activity Types Screen]</b> button, to return to the Activity Type screen.<br>" +
                 "Alternatively, choose the <b>[Back to Activity Types Screen]</b> to save the current site information and return to the Activity Types Screen.";
-            var page_orw_mot_FR = "Choisir le ou les modes de transport. Ensuite, cliquer sur le bouton <b>[Suivant]</b> ci‑dessous.<br>" +
+            var page_orw_mot_FR = "Choisir le ou les modes de transport. Ensuite, cliquer sur le bouton <b>[Suivant]</b> ci-dessous.<br>" +
                 "Au besoin, cliquer sur le bouton <b>[Précédent]</b>, ou le bouton de l’écran <b>[Retour à l'écran Type d'activité]</b> pour revenir à l’écran Type(s) d'activité.<br>" +
                 "Sinon, cliquer sur le bouton de l’écran <b>[Retour à l'écran Type d'activité]</b> pour sauvegarder l’information à jour sur le site et revenir à l’écran Type(s) d'activité.";
 
@@ -193,9 +193,9 @@ if (typeof (tdg.message) == "undefined") {
                 "To edit or deactivate a Site Class, then choose the <b>[V]</b> button to the far right of that row.<br>" +
                 "If necessary, choose the <b>[Previous]</b> button below to return to the Mode(s) of Transportation screen<br>" +
                 "Alternatively, choose the <b>[Back to Activity Types Screen]</b> to save the current site information and return to the Activity Types Screen."
-            var page_orw_class_FR = "Cliquer sur le bouton <b>[+Créer]</b> ci‑dessous pour chaque classe de site applicable. Ensuite, cliquer sur le bouton <b>[Suivant]</b> ci‑dessous.</br>" +
+            var page_orw_class_FR = "Cliquer sur le bouton <b>[+Créer]</b> ci-dessous pour chaque classe de site applicable. Ensuite, cliquer sur le bouton <b>[Suivant]</b> ci‑dessous.</br>" +
                 "Pour modifier ou désactiver une classe de site, cliquer sur le bouton <b>[V]</b> à l’extrémité droite de la rangée.<br>" +
-                "Au besoin, cliquer sur le bouton <b>[Précédent]</b> ci‑dessous pour revenir à l’écran Mode(s) de Transport.<br>" +
+                "Au besoin, cliquer sur le bouton <b>[Précédent]</b> ci-dessous pour revenir à l’écran Mode(s) de Transport.<br>" +
                 "Sinon, sélectionner l’écran <b>[Retour à l'écran Type d'activité]</b> pour sauvegarder l’information à jour sur le site et revenir à l’écran Type(s) d'activité."
 
             var page_my_company_EN = "Head Office details can be updated by choosing the <b>[Update Organization]</b> button at the bottom of this screen.</br></br>" +
@@ -502,12 +502,12 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000008",
                         "message_en": "Organization Registration",
-                        "message_fr": "Inscription de l’organisation"
+                        "message_fr": "Enregistrement de l'organisation"
                     },
                     {
                         "code": "m000009",
                         "message_en": "Organization Registration for {0}",
-                        "message_fr": "Inscription de l’organisation pour {0}"
+                        "message_fr": "Enregistrement de l'organisation pour {0}"
                     },
                     {
                         "code": "m000010",
