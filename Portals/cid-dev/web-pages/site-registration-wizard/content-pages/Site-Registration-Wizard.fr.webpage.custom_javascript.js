@@ -68,7 +68,6 @@ function header_setup(type) {
 			href = "~/my-sites/in-year-site/?id=" + urlParams.get('id');
 			tdg.c.weblink_hide("/RegistrationWizard/");
 			tdg.c.weblink_show("/company_dashboard/");
-
 			break;
 		default:
 			msg = tdg.error_message.message("m000100");

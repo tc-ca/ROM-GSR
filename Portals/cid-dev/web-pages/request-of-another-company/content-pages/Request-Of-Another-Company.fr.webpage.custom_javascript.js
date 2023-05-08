@@ -1,5 +1,5 @@
 //
-// Web Page-Request Of Another Company - request-of-another-company
+// Web Page-Request Of Another Company
 //    
 
 $(document).ready(function () {

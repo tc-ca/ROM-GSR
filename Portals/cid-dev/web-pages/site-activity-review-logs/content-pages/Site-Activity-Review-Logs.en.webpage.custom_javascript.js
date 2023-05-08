@@ -1,5 +1,11 @@
+//
+// Web Page-Site Activity Review Log.js
+//
+
 $(document).ready(function () {
 	debugger;
+
+    var lbl_inactive = tdg.error_message.message("lbl_inactive");
 
     var cidSiteStatus = $('#cid_cidsitestatus').find(":selected").text();
 
@@ -9,7 +15,7 @@ $(document).ready(function () {
     var deactivateSiteWebLink = $('a[href*="deactivate-site"]');
     var activateSiteWebLink = $('a[href*="activate-site"]');
     
-    if (cidSiteStatus.indexOf("Inactive") >= 0) {
+    if (cidSiteStatus.indexOf(lbl_inactive) >= 0) {
         activateSiteWebLink.removeClass("hidden");
         deactivateSiteWebLink.addClass("hidden");
     }

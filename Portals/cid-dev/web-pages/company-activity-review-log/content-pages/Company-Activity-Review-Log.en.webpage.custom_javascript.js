@@ -5,13 +5,14 @@
 $(document).ready(function () {
     debugger;
 
+    var lbl_inactive = tdg.error_message.message("lbl_inactive");
 	var companyName = '{{user.parentcustomerid.name }}';
 	var topNav = $('#navbar');
 
     if (companyName)
         if (topNav) {
-            // TONY : TODO
-            $("<h2>TDG Site Registration Database: " + companyName + "</h2>").insertAfter(topNav);
+            var msg = tdg.error_message.message("CID_PORTAL");
+            $("<h2>" + msg + ": " + companyName + "</h2>").insertAfter(topNav);
         }
 
 	var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
@@ -21,8 +22,7 @@ $(document).ready(function () {
     
     var deactivateCompanyWebLink = $('a[href*="deactivate-company"]');
 
-    // TONY : TODO
-    if (cidCompanyStatus.indexOf("Inactive") >= 0) {
+    if (cidCompanyStatus.indexOf(lbl_inactive) >= 0) {
         deactivateCompanyWebLink.addClass("hidden");
     }
     else{

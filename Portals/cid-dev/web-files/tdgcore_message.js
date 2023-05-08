@@ -63,7 +63,7 @@ if (typeof (tdg.message) == "undefined") {
                 "<br><br>You are currently in the initial in-year page, which will be your starting page for each future CID sessions. {0} is your Organization annual compliance anniversary date."
             var m000030_FR = "L'enregistrement de votre entreprise dans la plateforme de données BDIC est maintenant terminé. " +
                 "Un e-mail a été envoyé à votre adresse, confirmant la finalisation de l'inscription." +
-                "<br><br>Vous êtes actuellement dans la page initiale en cours d'année, qui sera votre page de démarrage pour chaque future session CID. {0} is your Organization annual compliance anniversary date."
+                "<br><br>Vous êtes actuellement dans la page initiale en cours d'année, qui sera votre page de démarrage pour chaque future session CID. {0} est la date anniversaire de conformité annuelle de votre organisation."
 
             var m000031_EN = "You are changing the site requirement level from basic to extended. " +
                 "You are required to complete the extended processing requirements for the site before the site can be attested.<br><br>" +
@@ -119,10 +119,11 @@ if (typeof (tdg.message) == "undefined") {
                 " - choose the <b>[Previous]</b> button below to re-start the Registration.<br>" +
                 " - choose the <b>[Contact Us]</b> button above to withdraw the Registration request.<br><br>" +
                 "Note that fields in the application that have a red star at the end of their label are mandatory."
-            var page_crw_company_insert_FR = "Pour ajouter les sites individuellement, cliquer sur le bouton <b>[+Créer]</b>. Sinon, cliquer sur le bouton <b>[Ajout/mise à jour en bloc]</b> pour ajouter tous les nouveaux sites à la fois sur Excel.<br>" +
-                "Pour modifier un des sites, cliquer sur le lien Site ID souligné dans la rangée, ou cliquer sur l’option du bouton <b>[V]</b> à l’extrémité de la rangée.<br>" +
-                "Cliquer sur le bouton <b>[Suivant]</b> une fois tous les sites ajoutés et attestés.<br><br>" +
-                "Au besoin, cliquer sur le bouton <b>[Précédent]</b> ci‑dessous pour retourner à l’écran Attest Organization."
+            var page_crw_company_insert_FR = "Si nécessaire, mettez à jour les informations sur l'organisation ci-dessous, puis cliquez sur le bouton <b>[Suivant]</b> ci-dessous pour continuer.<br>" +
+                "Si nécessaire : <br>" +
+                " - choisissez le bouton <b>[Précédent]</b> ci-dessous pour redémarrer l'enregistrement.<br>" +
+                " - choisissez le bouton <b>[Contactez-nous]</b> ci-dessus pour retirer la demande d'enregistrement.<br><br>" +
+                "Notez que les champs de l'application qui ont une étoile rouge à la fin de leur étiquette sont obligatoires."
 
             var page_crw_company_edit_EN = page_crw_company_insert_EN;
             var page_crw_company_edit_FR = page_crw_company_insert_FR;
@@ -236,7 +237,7 @@ if (typeof (tdg.message) == "undefined") {
                 "2- If it is required to re-submit the previous Annual Compliance, then please choose the <b>[Re-Submit Annual Compliance Update]</b> button below.</br>" +
                 "3- Note that the Annual Compliance should only be re-submitted if new data, or a date update, related to previous year that this Annual Compliance covers, was missed in the previous Compliance Update. </br>Any additions, or updates, that took place after the last Annual Compliance Completion Date of {1} should instead be done as regular in-year updates.";
             var page_annual_compliance_resubmit_FR = "1- La prochaine mise à jour annuelle de conformité ne peut être effectuée que 30 jours avant la date anniversaire de votre entreprise, le {0}.</br>" +
-                "2- S'il est nécessaire de soumettre à nouveau la conformité annuelle précédente, veuillez choisir le bouton <b>[Re-Submit Annual Compliance Update]</b> ci-dessous.</br>" +
+                "2- S'il est nécessaire de soumettre à nouveau la conformité annuelle précédente, veuillez choisir le bouton <b>[Soumettre à nouveau la mise à jour annuelle de conformité]</b> ci-dessous.</br>" +
                 "3- Notez que la conformité annuelle ne doit être soumise à nouveau que si de nouvelles données ou une mise à jour de la date, liées à l'année précédente couverte par cette conformité annuelle, ont été manquées dans la mise à jour de conformité précédente. </br> Tout ajout ou mise à jour , qui ont eu lieu après la dernière date d'achèvement de la conformité annuelle du {1} doivent plutôt être effectuées sous forme de mises à jour régulières en cours d'année.";
 
             var page_company_naics_code_EN = "The NAICS Code must be selected using the NAICS Code drop-down. Enter at least the first two digits or your full NAICS Code to filter the drop-down and select the applicable NAICS Code from the list.";
@@ -607,7 +608,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000028",
                         "message_en": "This UN Number does not exist in the CID Regulation. Please enter a valid UN Number to proceed.",
-                        "message_fr": "Ce numéro UN n’existe pas dans le règlement du CID. Veuillez entrer un numéro UN valide pour continuer."
+                        "message_fr": "Ce numéro UN n’existe pas dans le règlement du BDIC. Veuillez entrer un numéro UN valide pour continuer."
                     },
                     {
                         "code": "m000029",
@@ -632,7 +633,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000033",
                         "message_en": "You are about to begin the process of registering the {0} Organization within CID. Would you like to proceed?",
-                        "message_fr": "Vous êtes sur le point de commencer le processus d’inscription de {0} organisation dans le CID. Voulez‑vous continuer?"
+                        "message_fr": "Vous êtes sur le point de commencer le processus d’inscription de {0} organisation dans le BDIC. Voulez‑vous continuer?"
                     },
                     {
                         "code": "m000034",
@@ -732,7 +733,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000098",
                         "message_en": "Your entered name and email account are already associated with an invitation tailored to you and your Organization. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
-                        "message_fr": "Le nom et le compte de courriel saisis sont déjà associés à une invitation formulée pour vous et votre organisation. L’invitation vous sera retournée à cette adresse de courriel sous peu. Veuillez utiliser le lien figurant dans ce courriel pour être ajouté comme utilisateur du CID."
+                        "message_fr": "Le nom et le compte de courriel saisis sont déjà associés à une invitation formulée pour vous et votre organisation. L’invitation vous sera retournée à cette adresse de courriel sous peu. Veuillez utiliser le lien figurant dans ce courriel pour être ajouté comme utilisateur du BDIC."
                     }, {
                         "code": "m000099",
                         "message_en": "The Registration process is currently being processed by your Organization’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Organization or Sites. You will however be able to view the current state of the Registration via the <b>[Next]</b> and <b>[Previous]</b> buttons at the bottom of the screen.",
@@ -776,7 +777,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000107",
                         "message_en": "You must choose a valid NAICS Code from the NAICS Code drop- down list to continue.",
-                        "message_fr": "Vous devez choisir un code SCIAN valide du menu déroulant NAICS Code pour continuer."
+                        "message_fr": "Vous devez choisir un code SCIAN valide du menu déroulant code SCIAN pour continuer."
                     },
                     {
                         "code": "m000108",
@@ -791,7 +792,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000110",
                         "message_en": "Before selecting the Bulk option, each Site where 'Site Claimed' is set to 'Site Claim Pending', needs to be claimed, by choosing one of the options (My Active Site, My Inactive Site, or Not My Site) via that row’s [V] button.",
-                        "message_fr": "Avant de sélectionner l’option en bloc, chaque site où le champ « Site Claimed » est « Site Claim Pending » doit être réclamé en choisissant l’une des options (My Active Site, My Inactive Site, ou Not My Site) au moyen du bouton [V] de la rangée."
+                        "message_fr": "Avant de sélectionner l’option en bloc, chaque site où le champ « Réclamation du site » est « Réclamation du site en attente » doit être réclamé en choisissant l’une des options (Mon site actif, Mon site inactif ou Pas mon site) au moyen du bouton [V] de la rangée."
                     },
                     {
                         "code": "m000111",
@@ -811,18 +812,18 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000114",
                         "message_en": "Are you sure you want to assign {0} as the Primary Admin for this Organization’s CID Platform, and in doing assign yourself as a Secondary Contact?",
-                        "message_fr": "Êtes‑vous certain de vouloir nommer {0} comme administrateur principal pour la plateforme CID de cette organisation et, ce faisant, vous nommer comme contact secondaire?"
+                        "message_fr": "Êtes‑vous certain de vouloir nommer {0} comme administrateur principal pour la plateforme BDIC de cette organisation et, ce faisant, vous nommer comme contact secondaire?"
 
                     },
                     {
                         "code": "m000115",
                         "message_en": "The Assign as Primary Admin can only be assigned to a Secondary Admin that has logged into the CID Platform at least one time.",
-                        "message_fr": "La fonction d’administrateur principal ne peut être assignée qu’à un administrateur secondaire qui a ouvert une session sur la plateforme du CID au moins une fois."
+                        "message_fr": "La fonction d’administrateur principal ne peut être assignée qu’à un administrateur secondaire qui a ouvert une session sur la plateforme du BDIC au moins une fois."
                     },
                     {
                         "code": "m000116",
                         "message_en": "This Contact cannot be added as a Contact with this name and email address already exists in CID, but is assigned to a different Organization.",
-                        "message_fr": "Ce contact ne peut pas être ajouté, puisqu’un contact avec ce nom et cette adresse de courriel existe déjà dans le CID, mais est attribué à une organisation différente."
+                        "message_fr": "Ce contact ne peut pas être ajouté, puisqu’un contact avec ce nom et cette adresse de courriel existe déjà dans le BDIC, mais est attribué à une organisation différente."
                     },
                     {
                         "code": "m000117",
