@@ -17,7 +17,7 @@ if (typeof (tdg.message) == "undefined") {
                 "Please choose the <b>[V]</b> button on each row to update Attest each Site, or flag it as not your Organization's Site.\n\n" +
                 "When those updates are Complete, please add any remaining Sites individually by choosing the <b>[+Add]</b> button," +
                 "or all at once via Excel, by choosing the <b>[Bulk Add/Update]</b> button.";
-            var m000020_FR = "Le tableau de données ci-dessous contient les sites qui sont associés à votre organisation. Veuillez cliquer sur le bouton <b>[V]</b> de chaque rangée pour attester chaque site ou marquer le site comme n’appartenant pas à votre organisation. Une fois les mises à jour terminées, ajouter tous les autres sites individuellement en cliquant sur le bouton <b>[+Add]</b> ou tous à la fois par Excel, en cliquant sur le bouton <b>[Ajout/mise à jour en bloc]</b>.";
+            var m000020_FR = "Le tableau de données ci-dessous contient les sites qui sont associés à votre organisation. Veuillez cliquer sur le bouton <b>[V]</b> de chaque rangée pour attester chaque site ou marquer le site comme n’appartenant pas à votre organisation. Une fois les mises à jour terminées, ajouter tous les autres sites individuellement en cliquant sur le bouton <b>[+Ajouter]</b> ou tous à la fois par Excel, en cliquant sur le bouton <b>[Ajout/mise à jour en bloc]</b>.";
 
             var m000021_EN = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of " +
                 "the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.\n\n" +
@@ -63,7 +63,7 @@ if (typeof (tdg.message) == "undefined") {
                 "<br><br>You are currently in the initial in-year page, which will be your starting page for each future CID sessions. {0} is your Organization annual compliance anniversary date."
             var m000030_FR = "L'enregistrement de votre entreprise dans la plateforme de données BDIC est maintenant terminé. " +
                 "Un e-mail a été envoyé à votre adresse, confirmant la finalisation de l'inscription." +
-                "<br><br>Vous êtes actuellement dans la page initiale en cours d'année, qui sera votre page de démarrage pour chaque future session CID. {0} est la date anniversaire de conformité annuelle de votre organisation."
+                "<br><br>Vous êtes actuellement dans la page initiale en cours d'année, qui sera votre page de démarrage pour chaque session BDIC future. {0} est la date anniversaire de conformité annuelle de votre organisation."
 
             var m000031_EN = "You are changing the site requirement level from basic to extended. " +
                 "You are required to complete the extended processing requirements for the site before the site can be attested.<br><br>" +
@@ -119,7 +119,7 @@ if (typeof (tdg.message) == "undefined") {
                 " - choose the <b>[Previous]</b> button below to re-start the Registration.<br>" +
                 " - choose the <b>[Contact Us]</b> button above to withdraw the Registration request.<br><br>" +
                 "Note that fields in the application that have a red star at the end of their label are mandatory."
-            var page_crw_company_insert_FR = "Si nécessaire, mettez à jour les informations sur l'organisation ci-dessous, puis cliquez sur le bouton <b>[Suivant]</b> ci-dessous pour continuer.<br>" +
+            var page_crw_company_insert_FR = "Si nécessaire, mettez à jour les informations sur l'organisation ci-dessous, puis cliquez sur le bouton <b>[Suivant]</b> ci-dessous pour continuer.<br>" +
                 "Si nécessaire : <br>" +
                 " - choisissez le bouton <b>[Précédent]</b> ci-dessous pour redémarrer l'enregistrement.<br>" +
                 " - choisissez le bouton <b>[Contactez-nous]</b> ci-dessus pour retirer la demande d'enregistrement.<br><br>" +
@@ -429,6 +429,11 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "BTN_UPDATE_ORG",
                         "message_en": "Update Organization",
                         "message_fr": "Mettre à jour l'organisation"
+                    },
+                    {
+                        "code": "BTN_ATTEST_COMPLETE_REG",
+                        "message_en": "Attest and Complete Registration",
+                        "message_fr": "Attestation et inscription de l'organisation"
                     },
                     {
                         "code": "lbl_operating_name",
@@ -1099,60 +1104,76 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000171",
                         "message_en": "Invalid number",
                         "message_fr": "Numéro invalide"
-                    }
-                    ,
+                    },
                     {
                         "code": "m000172",
                         "message_en": "Step 1. Download the custom Site Bulk Upload Excel template.",
-                        "message_fr": "Étape 1. Téléchargez le modèle Excel personnalisé de téléchargement en masse du site."
-                    }
-                    ,
+                        "message_fr": "Étape 1. Téléchargez le modèle Excel personnalisé de téléchargement en bloc des sites."
+                    },
                     {
                         "code": "m000173",
                         "message_en": "Step 2. Upload the completed custom Site Bulk Upload Excel workbook.",
-                        "message_fr": "Étape 2. Téléchargez le classeur Excel personnalisé de téléchargement en masse du site."
-                    }
-                   
-                    ,
+                        "message_fr": "Étape 2. Téléchargez le classeur Excel de téléchargement en bloc des sites personnalisé complété."
+                    },
                     {
                         "code": "m000174",
                         "message_en": "2B. Start Upload",
-                        "message_fr": "2B.Commence le téléchargement"
-                    }
-                    ,
+                        "message_fr": "2B. Commencer le téléchargement"
+                    },
                     {
                         "code": "m000175",
                         "message_en": "Start Upload",
-                        "message_fr": "Commence le téléchargement"
-                    }
-                    ,
+                        "message_fr": "Commencer le téléchargement"
+                    },
                     {
                         "code": "m000176",
                         "message_en": "Choose File",
                         "message_fr": "Choisir le fichier"
-                    }
-                    ,
+                    },
                     {
                         "code": "m000177",
                         "message_en": "Select File name here",
                         "message_fr": "Sélectionnez le nom du fichier ici"
-                    }
-                    ,
+                    },
                     {
                         "code": "m000178",
                         "message_en": "English version",
                         "message_fr": "Version anglaise"
-                    }
-                    ,
+                    },
                     {
                         "code": "m000179",
                         "message_en": "French Version",
                         "message_fr": "Version française"
+                    },
+                    {
+                        "code": "m000180",
+                        "message_en": " is a mandatory field.",
+                        "message_fr": " est obligatoire."
+                    },
+                    {
+                        "code": "m000181",
+                        "message_en": "",
+                        "message_fr": "Le champ "
+                    },
+                    {
+                        "code": "m000182",
+                        "message_en": "Resend Invitation",
+                        "message_fr": "Renvoyer l'invitation"
+                    },
+                    {
+                        "code": "m000183",
+                        "message_en": "Deactivate",
+                        "message_fr": "Désactiver"
+                    },
+                    {
+                        "code": "m000184",
+                        "message_en": "Assign as Primary Admin",
+                        "message_fr": "Attribuer en tant qu'administrateur principal"
                     }
-
                 ];
 
             return list;
         }
     }
 }
+

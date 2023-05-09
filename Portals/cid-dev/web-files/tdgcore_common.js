@@ -172,6 +172,8 @@ if (typeof (tdg.c) == "undefined") {
                 if (typeof (Page_Validators) == 'undefined') return;
 
                 var fieldLabel = $("#" + fieldName + "_label")[0].innerHTML;
+                var msg = tdg.error_message.message("m000180");
+                var msg_pre = tdg.error_message.message("m000181");
 
                 // Create new validator
                 $("#" + fieldName + "_label").parent().addClass("required");
@@ -180,7 +182,8 @@ if (typeof (tdg.c) == "undefined") {
                 newValidator.style.display = "none";
                 newValidator.id = "RequiredFieldValidator" + fieldName;
                 newValidator.controltovalidate = "casetypecode";
-                newValidator.errormessage = "<a href='#" + fieldName + "_label'>" + fieldLabel + " is a mandatory field.</a>";
+
+                newValidator.errormessage = "<a href='#" + fieldName + "_label'>" + msg_pre + fieldLabel + msg + "</a>";
                 newValidator.validationGroup = "";
                 newValidator.initialvalue = "";
                 newValidator.evaluationfunction = function () {
@@ -788,39 +791,39 @@ if (typeof (tdg.c) == "undefined") {
                 }, 2 * 1000);
             });
         },
-		Format_Phone:  function (phoneField, language) {
-			var field = "#" + phoneField;
-				$(field).attr("placeholder", "(___) ___-____");
-				$(field).attr("maxlength", "14");
-				 $(field).on('keyup', function (event) {
-					//Strip all characters from the input except digits
-					var input = $(this).val().replace(/\D/g, '');
-					//Trim the remaining input to ten characters, to preserve phone number format
-					input = input.substring(0, 10);
-					//Based upon the length of the string, we add formatting as necessary
-					var inLength = input.length;
-					if (inLength == 0) {
-						input = input;
-					} else if (inLength < 4) {
-						input = '(' + input;
-					} else if (inLength < 7) {
-						input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6);
-					} else {
-						input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6) + '-' + input.substring(6, 10);
-					}
-					if (event.keyCode != 46 && event.keyCode != 8) {
-						$(this).val(input);
-					}
-				});
-				$(field).focusout(function () {
-					var inLength = $(this).val().replace(/\D/g, '').length;
-					if (inLength < 10 && inLength != 0) {
-						alert(tdg.c.text_language("Invalid number::Numéro invalide", language));
-						$(this).val("");
-					}
-				})
-		}//end function
-		
+        Format_Phone: function (phoneField, language) {
+            var field = "#" + phoneField;
+            $(field).attr("placeholder", "(___) ___-____");
+            $(field).attr("maxlength", "14");
+            $(field).on('keyup', function (event) {
+                //Strip all characters from the input except digits
+                var input = $(this).val().replace(/\D/g, '');
+                //Trim the remaining input to ten characters, to preserve phone number format
+                input = input.substring(0, 10);
+                //Based upon the length of the string, we add formatting as necessary
+                var inLength = input.length;
+                if (inLength == 0) {
+                    input = input;
+                } else if (inLength < 4) {
+                    input = '(' + input;
+                } else if (inLength < 7) {
+                    input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6);
+                } else {
+                    input = '(' + input.substring(0, 3) + ') ' + input.substring(3, 6) + '-' + input.substring(6, 10);
+                }
+                if (event.keyCode != 46 && event.keyCode != 8) {
+                    $(this).val(input);
+                }
+            });
+            $(field).focusout(function () {
+                var inLength = $(this).val().replace(/\D/g, '').length;
+                if (inLength < 10 && inLength != 0) {
+                    alert(tdg.c.text_language("Invalid number::Numéro invalide", language));
+                    $(this).val("");
+                }
+            })
+        }//end function
+
     }
 }
 
@@ -852,18 +855,19 @@ if (typeof (tdg.grid) == "undefined") {
                         var ul = $(this).find("ul");
                         if (contactType != "Primary") {
                             //add the "Dectivation" action
+                            var msg = tdg.error_message.message("m000183");
                             $(ul).append('<li role="none"><a href="#" onclick="DeactivateContact(' + "'" + contactid + "'" +
-                                ')" role="menuitem" tabindex="-1" title="Deactivate" aria-setsize="4" aria-posinset="4">Deactivate</a></li>');
+                                ')" role="menuitem" tabindex="-1" title="' + msg + '" aria-setsize="4" aria-posinset="4">' + msg + '</a></li>');
 
                             //add the "resend invitation" action
+                            var msg = tdg.error_message.message("m000182");
                             $(ul).append('<li role="none"><a href="#" onclick="ResendInvitation(' + "'" + contactid + "','"
-                                + ContactFullName + "'" + ')" role="menuitem" tabindex="-1" title="Resend Invitation" aria-setsize="4" aria-posinset="4">Resend Invitation</a></li>');
+                                + ContactFullName + "'" + ')" role="menuitem" tabindex="-1" title="' + msg + '" aria-setsize="4" aria-posinset="4">' + msg + '</a></li>');
 
                             //add "Assign as Primary Admin" action
+                            var msg = tdg.error_message.message("m000184");
                             $(ul).append('<li role="none"><a href="#" onclick="AssignAsAdmin(' + "'" + contactid + "','"
-                                + ContactFullName + "'" + ')" role="menuitem" tabindex="-1" title="Assign as Primary Admin" aria-setsize="4" aria-posinset="4">Assign as Primary Admin</a></li>');
-
-
+                                + ContactFullName + "'" + ')" role="menuitem" tabindex="-1" title="' + msg + '" aria-setsize="4" aria-posinset="4">' + msg + '</a></li>');
                         }
                         //find list item (Li)
                         $(ul).find("li").each(function () {
@@ -900,14 +904,15 @@ if (typeof (tdg.grid) == "undefined") {
                     $(this).find('td[aria-label="action menu"]').each(function () {
                         //find ul
                         var ul = $(this).find("ul");
-                        //add the "resend invitation" action
 
                         //add the "resend invitation" action
+                        var msg = tdg.error_message.message("m000182");
                         $(ul).append('<li role="none"><a href="#" onclick="ResendInvitation(' + "'" + contctId + "','"
-                            + ContactFullName + "'" + ')" role="menuitem" tabindex="-1" title="Resend Invitation" aria-setsize="4" aria-posinset="4">Resend Invitation</a></li>');
+                            + ContactFullName + "'" + ')" role="menuitem" tabindex="-1" title="' + msg + '" aria-setsize="4" aria-posinset="4">' + msg + '</a></li>');
 
                         //add deactivate action
-                        $(ul).append('<li role="none"><a href="#" onclick="DeactivateContact(' + "'" + contctId + "'" + ')" role="menuitem" tabindex="-1" title="Deactivate" aria-setsize="4" aria-posinset="4">Deactivate</a></li>');
+                        var msg = tdg.error_message.message("m000183");
+                        $(ul).append('<li role="none"><a href="#" onclick="DeactivateContact(' + "'" + contctId + "'" + ')" role="menuitem" tabindex="-1" title="' + msg + '" aria-setsize="4" aria-posinset="4">' + msg + '</a></li>');
 
                         //find list item (Li)
                         $(ul).find("li").each(function () {
@@ -1367,7 +1372,7 @@ if (typeof (tdg.cid) == "undefined") {
                 if ((n.length > 6 || n.length < 6) && n.length > 0) {
                     $(this).val("");
                 }
-                if (n.length == 6 && !/^([a-zA-Z]\d[a-zA-Z]\d[a-zA-Z]\d)$/.test(n)){
+                if (n.length == 6 && !/^([a-zA-Z]\d[a-zA-Z]\d[a-zA-Z]\d)$/.test(n)) {
                     $(this).val("");
                 }
             })
@@ -1417,7 +1422,7 @@ if (typeof (tdg.cid) == "undefined") {
             $(field).on('keyup', function (event) {
                 //Strip all characters from the input except digits
                 var input = $(this).val().replace(/\D/g, '');
-               //Trim the remaining input to ten characters, to preserve phone number format
+                //Trim the remaining input to ten characters, to preserve phone number format
                 input = input.substring(0, 10);
                 //Based upon the length of the string, we add formatting as necessary
                 var inLength = input.length;
@@ -2269,42 +2274,42 @@ if (typeof (tdg.cid) == "undefined") {
         Refresh_EntityGrid() {
             $(".entity-grid").trigger("refresh");
         },
-		
-		contact_update: function (data) {
-			debugger;
-			if (data.PhysicalLocationAddress != null) {
-				data.ovs_legalname = data.LegalName;
-				data.name = data.OperatingName;
-				var a = data.PhysicalLocationAddress;
-				data.address1_line1 = a.AddressLine1Text;
-				data.address1_line2 = a.AddressLine2Text;
-				data.address1_line3 = a.AddressLine3Text;
-				data.address1_city = a.CityName;
-				data.address1_stateorprovince = a.ProvinceStateCode;
-				data.address1_postalcode = a.PostalZipCode;
-			}
-			if (data.address != null) {
-				data.ovs_legalname = data.cid_legalname;
-				data.name = data.cid_operatingname;
-				var a = data.address;
-				data.address1_line1 = a.AddressLine1Text;
-				data.address1_line2 = a.AddressLine2Text;
-				data.address1_line3 = a.AddressLine3Text;
-				data.address1_city = a.CityName;
-				data.address1_stateorprovince = a.ProvinceStateCode;
-				data.address1_postalcode = a.PostalZipCode;
-			}
 
-			$('#cid_legalname').val(data.ovs_legalname);
-			$('#cid_operatingname').val(data.name);
-			$('#address1_line1').val(data.address1_line1);
-			$('#address1_line2').val(data.address1_line2);
-			$('#address1_line3').val(data.address1_line3);
-			$('#address1_city').val(data.address1_city);
-			$('#address1_stateorprovince').val(data.address1_stateorprovince);
-			$('#address1_postalcode').val(data.address1_postalcode);
-			
-		},
+        contact_update: function (data) {
+            debugger;
+            if (data.PhysicalLocationAddress != null) {
+                data.ovs_legalname = data.LegalName;
+                data.name = data.OperatingName;
+                var a = data.PhysicalLocationAddress;
+                data.address1_line1 = a.AddressLine1Text;
+                data.address1_line2 = a.AddressLine2Text;
+                data.address1_line3 = a.AddressLine3Text;
+                data.address1_city = a.CityName;
+                data.address1_stateorprovince = a.ProvinceStateCode;
+                data.address1_postalcode = a.PostalZipCode;
+            }
+            if (data.address != null) {
+                data.ovs_legalname = data.cid_legalname;
+                data.name = data.cid_operatingname;
+                var a = data.address;
+                data.address1_line1 = a.AddressLine1Text;
+                data.address1_line2 = a.AddressLine2Text;
+                data.address1_line3 = a.AddressLine3Text;
+                data.address1_city = a.CityName;
+                data.address1_stateorprovince = a.ProvinceStateCode;
+                data.address1_postalcode = a.PostalZipCode;
+            }
+
+            $('#cid_legalname').val(data.ovs_legalname);
+            $('#cid_operatingname').val(data.name);
+            $('#address1_line1').val(data.address1_line1);
+            $('#address1_line2').val(data.address1_line2);
+            $('#address1_line3').val(data.address1_line3);
+            $('#address1_city').val(data.address1_city);
+            $('#address1_stateorprovince').val(data.address1_stateorprovince);
+            $('#address1_postalcode').val(data.address1_postalcode);
+
+        },
 
         LLD_validateAddress_combination_Selections() {
 
@@ -2397,7 +2402,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 data = await tdg.cid.crw.Production_start_Retrieve_cra(cid_crabusinessnumber, step_start);
             }
             //show notice if the data is empty
-            if(data.length == 0){
+            if (data.length == 0) {
                 var msg = tdg.error_message.message("m000164");
                 tdg.c.dialog_OK(msg);
             }
@@ -2428,9 +2433,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 if (environment == "PreProd" || environment == "Prod") {
                     //use CRA API to get information
                     cra_data = await tdg.cid.crw.Production_start_Retrieve_cra(bn, "");
- 
+
                     //show notice if the data is empty
-                    if(cra_data.length == 0){
+                    if (cra_data.length == 0) {
                         var msg = tdg.error_message.message("m000164");
                         tdg.c.dialog_OK(msg);
                     }
@@ -2932,39 +2937,39 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#address1_stateorprovince").val(address.ProvinceStateCode);
             $("#address1_postalcode").val(address.PostalZipCode);
         },
-		
-		start_registration: function (rom_data, suppress_error) {
-            debugger;			
-			tdg.cid.contact_update(rom_data);
-			if (rom_data.ovs_invitation_only) {
-				var ovs_invitation_only = true;
-				switch (rom_data.cid_cidcompanystatus) {
-					case 100000001:
-						ovs_invitation_only = false;
-						break;
-				}
-				rom_data.ovs_invitation_only = ovs_invitation_only;
-			}
 
-			if (rom_data.ovs_invitation_only) {
-				validation = false;
-				var message = tdg.error_message.message("BTN_NEXT");
-				$("#btn_next").prop("value", message);
+        start_registration: function (rom_data, suppress_error) {
+            debugger;
+            tdg.cid.contact_update(rom_data);
+            if (rom_data.ovs_invitation_only) {
+                var ovs_invitation_only = true;
+                switch (rom_data.cid_cidcompanystatus) {
+                    case 100000001:
+                        ovs_invitation_only = false;
+                        break;
+                }
+                rom_data.ovs_invitation_only = ovs_invitation_only;
+            }
 
-				var message = tdg.error_message.message("m000047");
-				message = message.replaceAll("{0}", rom_data.ovs_legalname);
-				tdg.c.dialog_YN(message, (ans) => {
-					var contact_id = '{{user.id}}';
-					invitation.request_onboard(rom_data, contact_id, ans, false)
-				});
-				return validation;
-			}
-			else {
-				var contact_id = '{{user.id}}';
-				validation = invitation.in_current_registration(rom_data, suppress_error, contact_id);
-				return validation;
-			}
-		},
+            if (rom_data.ovs_invitation_only) {
+                validation = false;
+                var message = tdg.error_message.message("BTN_NEXT");
+                $("#btn_next").prop("value", message);
+
+                var message = tdg.error_message.message("m000047");
+                message = message.replaceAll("{0}", rom_data.ovs_legalname);
+                tdg.c.dialog_YN(message, (ans) => {
+                    var contact_id = '{{user.id}}';
+                    invitation.request_onboard(rom_data, contact_id, ans, false)
+                });
+                return validation;
+            }
+            else {
+                var contact_id = '{{user.id}}';
+                validation = invitation.in_current_registration(rom_data, suppress_error, contact_id);
+                return validation;
+            }
+        },
 
         step2_previous_click: function (email, account_id, contact_id) {
             debugger;
@@ -2989,62 +2994,62 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 }
             });
         },
-		
-		step2_Disable_ContactTypeFieldsForSecondaryUser: function (){
-			debugger;
-			var cid_contacttype = '{{user.cid_contacttype.Value}}';
-			//if not primary contact
-			if (cid_contacttype != 100000000) {
-				$("#btn_previous").attr('disabled', true);
 
-				$("#name").prop("disabled", true);
-				$("#cid_reasonfornobnnumber").prop("disabled", true);
-				$("#cid_reasonfornobnnumber_other").prop("disabled", true);
-				$("#ovs_name_fr").prop("disabled", true);
-				$("#address1_line1").css("pointer-events", "none");
-				$("#WebResource_address_complete").css("pointer-events", "none");
-				$("#address1_line2").prop("disabled", true);
-				$("#address1_line3").prop("disabled", true);
-				$("#address1_city").prop("disabled", true);
-				$("#address1_postalcode").prop("disabled", true);
-				$("#ovs_address1_province").prop("disabled", true);
-				$("#address1_country").prop("disabled", true);
-				$("#telephone1").prop("disabled", true);
-				$("#websiteurl").prop("disabled", true);
-				$("#fax").prop("disabled", true);
+        step2_Disable_ContactTypeFieldsForSecondaryUser: function () {
+            debugger;
+            var cid_contacttype = '{{user.cid_contacttype.Value}}';
+            //if not primary contact
+            if (cid_contacttype != 100000000) {
+                $("#btn_previous").attr('disabled', true);
 
-				// disable address lookup web resource
-				$('#WebResource_address_complete').on('load', function () {
-					tdg.cid.WebResource_address_complete_readonly(true);
-				});
-			}	
-		},
-		
-		step2_address1_line1_set: function(value) {
-			debugger;
-			try {
-				var f = document.getElementById("WebResource_address_complete");
-				var c = f.contentWindow;
-				c.document.getElementById("address1_line1").value = value;
-			}
-			catch (e) { }
-		},
-		
-		step2_advanced_form_header: function (companyName) {
-			try {
-				var value = tdg.error_message.message("m000009");
-				value = value.replace("{0}", companyName);
-				$('h1:first')[0].innerHTML = value;
-			}
-			catch (e) { }
-			var steps = $('li.list-group-item');
-			for (var i = 0; i < steps.length; i++) {
-				var item = steps[i];
-				var text = item.innerText;
-				text = tdg.error_message.message(text);
-				item.innerText = text;
-			}
-		}
+                $("#name").prop("disabled", true);
+                $("#cid_reasonfornobnnumber").prop("disabled", true);
+                $("#cid_reasonfornobnnumber_other").prop("disabled", true);
+                $("#ovs_name_fr").prop("disabled", true);
+                $("#address1_line1").css("pointer-events", "none");
+                $("#WebResource_address_complete").css("pointer-events", "none");
+                $("#address1_line2").prop("disabled", true);
+                $("#address1_line3").prop("disabled", true);
+                $("#address1_city").prop("disabled", true);
+                $("#address1_postalcode").prop("disabled", true);
+                $("#ovs_address1_province").prop("disabled", true);
+                $("#address1_country").prop("disabled", true);
+                $("#telephone1").prop("disabled", true);
+                $("#websiteurl").prop("disabled", true);
+                $("#fax").prop("disabled", true);
+
+                // disable address lookup web resource
+                $('#WebResource_address_complete').on('load', function () {
+                    tdg.cid.WebResource_address_complete_readonly(true);
+                });
+            }
+        },
+
+        step2_address1_line1_set: function (value) {
+            debugger;
+            try {
+                var f = document.getElementById("WebResource_address_complete");
+                var c = f.contentWindow;
+                c.document.getElementById("address1_line1").value = value;
+            }
+            catch (e) { }
+        },
+
+        step2_advanced_form_header: function (companyName) {
+            try {
+                var value = tdg.error_message.message("m000009");
+                value = value.replace("{0}", companyName);
+                $('h1:first')[0].innerHTML = value;
+            }
+            catch (e) { }
+            var steps = $('li.list-group-item');
+            for (var i = 0; i < steps.length; i++) {
+                var item = steps[i];
+                var text = item.innerText;
+                text = tdg.error_message.message(text);
+                item.innerText = text;
+            }
+        }
     }
 }
 

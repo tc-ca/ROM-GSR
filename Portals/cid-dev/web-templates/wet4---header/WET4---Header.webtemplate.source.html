@@ -8,12 +8,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
 
-   <noscript>
-	<!-- Write closure fall-back static file -->
-	<!-- /ROOT/etc/designs/canada/cdts/gcweb/v4_0_28/cdts/static/refTop.html -->
-	<!--#include virtual="/app/cls/WET/gcweb/v4_0_28/cdts/static/refTop.html" -->
-</noscript>
-        <script>
+    <noscript>
+        <!-- Write closure fall-back static file -->
+        <!-- /ROOT/etc/designs/canada/cdts/gcweb/v4_0_28/cdts/static/refTop.html -->
+        <!--#include virtual="/app/cls/WET/gcweb/v4_0_28/cdts/static/refTop.html" -->
+    </noscript>
+    <script>
         document.write(
             wet.builder.refTop({
                 isApplication: true,
@@ -21,63 +21,58 @@
             })
         )
     </script>
-  
-  <link rel="stylesheet" type="text/css" href="~/modalbackDroptransparentbackground.css">
+
+    <link rel="stylesheet" type="text/css" href="~/modalbackDroptransparentbackground.css">
 </head>
 
 <body>
 
-{% assign AppNameSnippet = {{snippets["WET4 - menuLinks"]}} %}
+    {% assign AppNameSnippet = {{snippets["WET4 - menuLinks"]}} %}
     <div id="mount">
     </div>
     <main>
-   
+
     </main>
 
     <script>
         function applyHeader() {
+            // mm = mm.replace("&nbsp;" , "").replace("<br>" ,"").trim() ;
+            //convert contents snippet output to json array
 
-  // mm = mm.replace("&nbsp;" , "").replace("<br>" ,"").trim() ;
-   //convert contents snippet output to json array
-
-//const MenueLinksLiquidVar =  '{{SnippetMenueLinks}}' ;
-  // const MenuArrayobj = JSON.parse(MenueLinksLiquidVar);
+            //const MenueLinksLiquidVar =  '{{SnippetMenueLinks}}' ;
+            // const MenuArrayobj = JSON.parse(MenueLinksLiquidVar);
             const options = {
                 cdnEnv: "prod",
                 appName: [{
-                    text: {%if website.selected_language.code == "en"%} "Transport Canada CID Platform"  {%else %} "Plateforme CID de Transports Canada" {% endif %},
+                    text: {%if website.selected_language.code == "en"%} "Transport Canada CID Platform"  {%else %} "Plateforme BDIC de Transports Canada" {% endif %},
                     href: "javascript:;",
                 }],
                 topSecMenu: false
                 ,
-        // menuLinks: [{%for link in primary_nav.weblinks %}{% assign sublinks = link.weblinks %} {% if sublinks.size == 0 %}{% if link.name == "Home" %}{"text":"{{ link.name }}", "href":"{{ link.url }}"}{% else %},{"text":"{{ link.name }}", "href":"{{ link.url }}"}{% endif %}{% else %} { "text":"{{ link.name }}","href":"{{ link.url }}","subLinks":[{ "subhref": "{{ link.url }}", "subtext":"{{ link.name | default:link.title }}" },{% for sublink in sublinks %}
-//{ "subhref": "{{ sublink.url }}","subtext": "{{ sublink.name | default:sublink.title }}" },{% endfor %} ] }, {% endif %} {% endfor %}],
                 {%- if user.id -%}
                 "appSettings": [{"href": "{{sitemarkers['Profile'].url}}"}],
                 "signOut": [{"href": "{{website.sign_out_url_substitution}}"}],
                 {%- else -%}
                 "signIn": [{"href": "{{website.sign_in_url_substitution}}"}],
                 {%- endif -%}
-               {% for language in page.languages %}
-                      {% if language.code == "en" %}
-                       {% assign en_url_substitution = language.url_substitution %}
-                      {% else %}
-                           {% assign fr_url_substitution = language.url_substitution %}
-                      {% endif %}
-               {% endfor %}
+                {% for language in page.languages %}
+                    {% if language.code == "en" %}
+                        {% assign en_url_substitution = language.url_substitution %}
+                    {% else %}
+                        {% assign fr_url_substitution = language.url_substitution %}
+                    {% endif %}
+                {% endfor %}
 
-               
+                {%- if website.selected_language.code == "en" -%}
+                {% if request.url contains "rd-tdgcore-dev" or  request.url contains "tdgcore-qa"  %}
+                    "lngLinks": [{"href":"/{{fr_url_substitution}}","lang":"fr","text":"Français"}],
+                {%endif%}
+                {%- else -%}
+                    "lngLinks": [{"href":"/{{en_url_substitution}}","lang":"en","text":"English"}],
+                {%- endif -%}
 
-               {%- if website.selected_language.code == "en" -%}
-               {% if request.url contains "rd-tdgcore-dev" or  request.url contains "tdgcore-qa"  %}
-                   "lngLinks": [{"href":"/{{fr_url_substitution}}","lang":"fr","text":"Français"}],
-               {%endif%}
-               {%- else -%}
-                 "lngLinks": [{"href":"/{{en_url_substitution}}","lang":"en","text":"English"}],
-               {%- endif -%}
-              
              "customSearch": [{
-                "action" : "https://www.canada.ca/{{ website.selected_language.code }}/sr/srb.html", 
+                "action" : "https://www.canada.ca/{{ website.selected_language.code }}/sr/srb.html",
                 "placeholder" : "Canada.ca",
                 "id" : "wb-srch-q",
                 "name" : "q",
@@ -85,14 +80,14 @@
                 "hiddenInput" : [{
                     "name" : "cdn",
                     "value" : "canada"
-                }] 
-            }],       
+                }]
+            }],
             };
 
             document.querySelector("#mount").innerHTML = window.wet.builder.appTop(options);
-			
+
             if (document.readyState === "complete") {
-               // window.$(".wb-menu").trigger("timerpoke.wb");
+                // window.$(".wb-menu").trigger("timerpoke.wb");
                 console.log("3 sec delay");
             }
         };

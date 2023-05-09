@@ -8,6 +8,9 @@ $(document).ready(function () {
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
+    //var msg = tdg.error_message.message("BTN_ATTEST_COMPLETE_REG");
+    //$("#NextButton")[0].val = msg;
+
     Disable_ContactTypeFieldsForSecondaryUser();
     tdg.c.page_instructions("page_crw_complete");
 
@@ -59,7 +62,7 @@ $(document).ready(function () {
             });
         }
     });
-   
+
 });
 
 function printSummary() {
@@ -98,14 +101,11 @@ function subgrid_language() {
 }
 
 function Disable_ContactTypeFieldsForSecondaryUser() {
-	debugger;
-	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
-	//if not primary contact
-	if (cid_usercontacttype != 100000000) {
-		
-		
-		$("#NextButton").attr("disabled", true);
-		$("#NextButton").css("pointer-events", "none");
-		
-	}
+    debugger;
+    var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
+    //if not primary contact
+    if (cid_usercontacttype != 100000000) {
+        $("#NextButton").attr("disabled", true);
+        $("#NextButton").css("pointer-events", "none");
+    }
 }

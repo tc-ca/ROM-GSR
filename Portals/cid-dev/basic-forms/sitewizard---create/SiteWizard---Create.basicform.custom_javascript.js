@@ -39,11 +39,13 @@ function addValidator(fieldName, fieldLabel) {
     // Create new validator
     $("#" + fieldName + "_label").parent().addClass("required");
 
+    var msg = tdg.error_message.message("m000180");
+
     var newValidator = document.createElement('span');
     newValidator.style.display = "none";
     newValidator.id = "RequiredFieldValidator" + fieldName;
     newValidator.controltovalidate = "casetypecode";
-    newValidator.errormessage = "<a href='#" + fieldName + "_label'>" + fieldLabel + " is a mandatory field.</a>";
+    newValidator.errormessage = "<a href='#" + fieldName + "_label'>" + fieldLabel + msg + "</a>";
     newValidator.validationGroup = "";
     newValidator.initialvalue = "";
     newValidator.evaluationfunction = function () {
