@@ -3,7 +3,9 @@
 //
 $(document).ready(function () {
 	debugger;
-
+	//console.log ("show danger element:");
+	 //console.log( $(".text-danger").html());
+        //message_panel_set($(".text-danger") ,$(".text-danger").html() );
 	var msg = tdg.error_message.message("BTN_PREVIOUS");
 	$("#PreviousButton").hide();
 	tdg.c.button_create("btn_previous", "#PreviousButton", msg);
