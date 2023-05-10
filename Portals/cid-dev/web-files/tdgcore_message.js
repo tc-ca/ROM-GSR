@@ -17,7 +17,7 @@ if (typeof (tdg.message) == "undefined") {
                 "Please choose the <b>[V]</b> button on each row to update Attest each Site, or flag it as not your Organization's Site.\n\n" +
                 "When those updates are Complete, please add any remaining Sites individually by choosing the <b>[+Add]</b> button," +
                 "or all at once via Excel, by choosing the <b>[Bulk Add/Update]</b> button.";
-            var m000020_FR = "Le tableau de données ci-dessous contient les sites qui sont associés à votre organisation. Veuillez cliquer sur le bouton <b>[V]</b> de chaque rangée pour attester chaque site ou marquer le site comme n’appartenant pas à votre organisation. Une fois les mises à jour terminées, ajouter tous les autres sites individuellement en cliquant sur le bouton <b>[+Ajouter]</b> ou tous à la fois par Excel, en cliquant sur le bouton <b>[Ajout/mise à jour en bloc]</b>.";
+            var m000020_FR = "Le tableau de données ci-dessous contient les sites qui sont associés à votre organisation. Veuillez cliquer sur le bouton <b>[V]</b> de chaque rangée pour attester chaque site ou marquer le site comme n’appartenant pas à votre organisation. Une fois les mises à jour terminées, ajouter tous les autres sites individuellement en cliquant sur le bouton <b>[+Créer]</b> ou tous à la fois par Excel, en cliquant sur le bouton <b>[Ajout/mise à jour en bloc]</b>.";
 
             var m000021_EN = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of " +
                 "the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.\n\n" +
@@ -28,7 +28,7 @@ if (typeof (tdg.message) == "undefined") {
                 "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen.";
             var m000021_FR = "Les sites existants où 'Is Site Attested' est défini sur 'Non', doivent être attestés en choisissant l'un des " +
                 "les options via le bouton <b>[V]</b> à l'extrême droite de ces lignes. Tous les sites doivent être attestés avant que l'option En vrac puisse être choisie.\n\n" +
-                "Pour ajouter des sites supplémentaires individuellement, choisissez le bouton <b>[+Ajouter]</b>. Vous pouvez également choisir le bouton <b>[Ajouter/Mettre à jour en masse]</b>" +
+                "Pour ajouter des sites supplémentaires individuellement, choisissez le bouton <b>[+Créer]</b>. Vous pouvez également choisir le bouton <b>[Ajouter/Mettre à jour en masse]</b>" +
                 "bouton pour ajouter tous les nouveaux sites à la fois via Excel.\n\n" +
                 "Pour modifier l'un des sites, cliquez avec la souris sur le lien souligné de l'ID de site de cette ligne ou choisissez l'option à partir du bouton <b>[V]</b> à la fin.\n\n" +
                 "Choisissez le bouton <b>[Suivant]</b>, une fois tous les sites ajoutés et attestés.\n\n" +
@@ -38,7 +38,7 @@ if (typeof (tdg.message) == "undefined") {
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
                 "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen.";
-            var m000022_FR = "Pour ajouter des sites individuellement, choisissez le bouton <b>[+Ajouter]</b>. Sinon, choisissez le bouton <b>[Ajouter/Mettre à jour en masse]</b> pour ajouter tous les nouveaux sites en une seule fois via Excel.\ n\n" +
+            var m000022_FR = "Pour ajouter des sites individuellement, choisissez le bouton <b>[+Créer]</b>. Sinon, choisissez le bouton <b>[Ajouter/Mettre à jour en masse]</b> pour ajouter tous les nouveaux sites en une seule fois via Excel.\ n\n" +
                 "Pour modifier l'un des sites, cliquez avec la souris sur le lien souligné de l'ID de site de cette ligne ou choisissez l'option à partir du bouton <b>[V]</b> à la fin.\n\n" +
                 "Choisissez le bouton <b>[Suivant]</b>, une fois tous les sites ajoutés et attestés.\n\n" +
                 "Si nécessaire, choisissez le bouton <b>[Précédent]</b> ci-dessous pour revenir à l'écran Attester l'organisation.";
@@ -50,12 +50,12 @@ if (typeof (tdg.message) == "undefined") {
                 "Note:\n" +
                 "- <b>[Bulk Add/Update]</b> will appear to the right of the <b>[+Add]</b> button\n" +
                 "- For In Year / Annual Compliance, the <b>[V]</b> options will be 'Open Site Details', 'Deactivate / Reactivate'";
-            var m000023_FR = "Pour ajouter des sites individuellement, choisissez le bouton <b>[+Ajouter]</b> ci-dessous.\n\n" +
+            var m000023_FR = "Pour ajouter des sites individuellement, choisissez le bouton <b>[+Créer]</b> ci-dessous.\n\n" +
                 "Pour modifier l'un des sites, cliquez avec la souris sur le lien souligné de l'ID de site de cette ligne ou choisissez l'option à partir du bouton <b>[V]</b> à la fin.\n\n" +
                 "Vous pouvez également choisir le bouton <b>[Ajouter/Mettre à jour en masse]</b> pour modifier les sites existants et en ajouter de nouveaux en une seule fois via Excel.\n\n" +
                 "Si nécessaire, choisissez l'option 'Désactiver / Réactiver' via le bouton <b>[V]</b> à la fin de la ligne d'un site.\n\n" +
                 "Remarque :\n" +
-                "- <b>[Ajouter/Mettre à jour en masse]</b> apparaîtra à droite du bouton <b>[+Ajouter]</b>\n" +
+                "- <b>[Ajouter/Mettre à jour en masse]</b> apparaîtra à droite du bouton <b>[+Créer]</b>\n" +
                 "- Pour la conformité dans l'année / annuelle, les options <b>[V]</b> seront 'Ouvrir les détails du site', 'Désactiver / Réactiver'";
 
             var m000030_EN = "The registration of your Organization in the CID Data Platform is now complete. " +
@@ -217,13 +217,13 @@ if (typeof (tdg.message) == "undefined") {
                 "- Aide en ligne : pour rechercher des conseils sur l'utilisation de cette application.";
 
             var page_my_company_contact_EN = "For actions, select the <b>[V]</b> button beside each row, or the <b>[+Add]</b> button for a new entry.";
-            var page_my_company_contact_FR = "Pour les actions, sélectionnez le bouton <b>[V]</b> à côté de chaque ligne, ou le bouton <b>[+Ajouter]</b> pour une nouvelle entrée.";
+            var page_my_company_contact_FR = "Pour les actions, sélectionnez le bouton <b>[V]</b> à côté de chaque ligne, ou le bouton <b>[+Créer]</b> pour une nouvelle entrée.";
 
             var page_in_year_my_sites_EN = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.<br>" +
                 "To add additional Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.<br>" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.";
             var page_in_year_my_sites_FR = "Les sites existants où 'Is Site Attested' est défini sur 'Non' doivent être attestés en appliquant l'une des options via le bouton <b>[V]</b> à l'extrême droite de ces lignes. Tous les les sites doivent attester avant que l'option Bulk puisse être choisie.<br>" +
-                "Pour ajouter des sites supplémentaires individuellement, choisissez le bouton <b>[+Ajouter]</b>. Vous pouvez également choisir le bouton <b>[Ajouter/Mettre à jour en masse]</b> pour ajouter tous les nouveaux sites en une seule fois via Excel. <br>" +
+                "Pour ajouter des sites supplémentaires individuellement, choisissez le bouton <b>[+Créer]</b>. Vous pouvez également choisir le bouton <b>[Ajouter/Mettre à jour en masse]</b> pour ajouter tous les nouveaux sites en une seule fois via Excel. <br>" +
                 "Pour modifier l'un des sites, cliquez avec la souris sur le lien souligné de l'ID de site de cette ligne ou choisissez l'option à partir du bouton <b>[V]</b> à la fin.";
 
             var page_annual_compliance_update_EN = "To finalize the Annual Compliance Update:</br>1- As applicable, perform each step's related update below, then it's 'Mark as complete' option.</br>" +

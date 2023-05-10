@@ -6,6 +6,8 @@ $(document).ready(function () {
     debugger;
 
     page_setup();
+    //remove heading role and aria-level not allowed role for legend by accessbility check
+    $( 'legend[role="heading"]' ).removeAttr('aria-level').removeAttr("role");
 
     //redirect to my company after save success
     var msg = tdg.error_message.message("m000147");

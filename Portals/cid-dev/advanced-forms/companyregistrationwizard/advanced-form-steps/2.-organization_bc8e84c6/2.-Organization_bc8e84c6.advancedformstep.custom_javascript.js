@@ -3,9 +3,13 @@
 //
 $(document).ready(function () {
 	debugger;
-	//console.log ("show danger element:");
-	 //console.log( $(".text-danger").html());
-        //message_panel_set($(".text-danger") ,$(".text-danger").html() );
+	$('#WebResource_address_complete').attr("title" , "Address Lookup");
+	 $("#EntityFormView").before('<div id="MessagePanel" class="alert alert-danger" role="alert" style="display: none;"></div>');
+	 if ($(".text-danger").length){ $("#MessagePanel").html($(".text-danger").html());
+		 $(".text-danger").parent().hide();
+		 tdg.c.message_panel();
+		  $("#MessagePanel").show();
+		}
 	var msg = tdg.error_message.message("BTN_PREVIOUS");
 	$("#PreviousButton").hide();
 	tdg.c.button_create("btn_previous", "#PreviousButton", msg);
@@ -16,9 +20,7 @@ $(document).ready(function () {
 	$("#cid_registrationasof").parent().parent().hide();
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
-
 	tdg.c.page_instructions("page_crw_company_insert");
-
 	tdg.c.control_hide("ovs_name_fr");
 	tdg.c.control_hide("ovs_invitation_only");
 	tdg.c.control_hide("cid_addressoverwritten");
@@ -31,23 +33,18 @@ $(document).ready(function () {
 	//disable/enable province based on enterd manually
 	if ($("#cid_addressoverwritten").val() == 0) { $("#ovs_address1_province").prop('disabled', true); }
 	else { $("#ovs_address1_province").prop('disabled', false); }
-
 	var cid_contacttype = '{{user.cid_contacttype.Value}}';
-
 	tdg.cid.address_init(false);
 	tdg.cid.WebResource_address_complete_readonly(false);
 	$("#websiteurl").width('100%');
-
 	//phone field formatting
 	tdg.cid.phone_init("telephone1", selected_language);
 	tdg.cid.phone_init("fax", selected_language);
-	//tdg.c.Format_Phone("fax", selected_language);
 
 	tdg.c.control_hide("cid_reasonfornobnnumber_other");
 	tdg.c.control_hide("cid_companyclaim");
 	var step_start = sessionStorage.getItem("step_start") + "";
 	step_start = (step_start == "null" ? "1" : step_start);
-
 	if (step_start == "1") {
 		var cid_has_cra_bn = '{{user.cid_has_cra_bn}}';
 		var cid_has_cra_bn = (cid_has_cra_bn == "true" ? 1 : 0);
@@ -74,7 +71,6 @@ $(document).ready(function () {
 
 	$('#cid_has_cra_bn').val(cid_has_cra_bn);
 	tdg.c.control_hide("cid_has_cra_bn");
-
 	// do not have a business number?
 	if (cid_has_cra_bn != 1) {
 		tdg.c.control_hide("cid_crabusinessnumber");
@@ -172,14 +168,12 @@ $(document).ready(function () {
 		});
 	});
 });
-
 function btn_previous_click() {
 	var account_id = '{{user.parentcustomerid.Id}}';
 	var contact_id = '{{user.id}}';
 	var email = "{{user.emailaddress1}}";
 	tdg.cid.crw.step2_previous_click(email, account_id, contact_id);
 }
-
 if (window.jQuery) {
 	(function ($) {
 		webFormClientValidate = function () {
@@ -194,7 +188,6 @@ if (window.jQuery) {
 		}
 	}(window.jQuery));
 }
-
 function address1_line1_set(value) {
 	debugger;
 	try {
@@ -204,14 +197,12 @@ function address1_line1_set(value) {
 	}
 	catch (e) { }
 }
-
 function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 	//debugger;
 	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
 	//if not primary contact
 	if (cid_usercontacttype != 100000000) {
 		//var message = "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen.";
-		//tdg.c.dialog_OK(message);
 		$("#name").attr("readonly", true);
 		$("#ovs_name_fr").attr("readonly", true);
 		$("#address1_line2").attr("readonly", true);
@@ -231,7 +222,7 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 		$('#cid_reasonfornobnnumber_other').attr("readonly", true);
 		//Disable address lookup web resource
 		$('#WebResource_address_complete').on('load', function () {
-			tdg.cid.WebResource_address_complete_readonly(true);
+		tdg.cid.WebResource_address_complete_readonly(true);
 		});
 	}
 }
