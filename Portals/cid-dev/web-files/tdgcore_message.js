@@ -603,7 +603,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000026",
                         "message_en": "You cannot proceed before attesting your Organization data changes, please check the 'Attestation' box",
-                        "message_fr": "Vous ne pouvez pas procéder avant d’attester les changements de données de votre organisation, veuillez cocher la case 'Attestation'"
+                        "message_fr": "Vous ne pouvez pas procéder avant d’attester les changements de données de votre organisation, veuillez cocher la case 'Certification'"
                     },
                     {
                         "code": "m000027",
