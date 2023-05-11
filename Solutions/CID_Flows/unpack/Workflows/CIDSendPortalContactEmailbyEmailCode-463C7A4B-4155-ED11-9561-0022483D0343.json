@@ -264,8 +264,8 @@
                           },
                           "parameters": {
                             "emailMessage/To": "@outputs('Primary_email')",
-                            "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}CID Data Platform: Request by @{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']} to be onboarded as a Secondary Contact for the @{outputs('GetPrimary')?['body/cid_legalname']} organization",
-                            "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']}, at @{outputs('Get_Secondary')?['body/emailaddress1']}, has requested to be on-boarded as a Secondary Contact for the @{outputs('Get_Primary_Account_Name')?['body/ovs_legalname']} organization within the CID Data Platform. If you would like to on-board them, then please add them as a Contact, which will trigger the emailing of an invitation to them.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
+                            "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}Plateforme de données de la BDIC : Demande de la part de @{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']} d’être intégré en tant que contact secondaire pour l’organisation @{outputs('GetPrimary')?['body/cid_legalname']}.",
+                            "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']}, au @{outputs('Get_Secondary')?['body/emailaddress1']}, a demandé à être intégré en tant que contact secondaire pour l’organisation @{outputs('Get_Primary_Account_Name')?['body/ovs_legalname']} au sein de la plateforme de données de la BDIC. Si vous souhaitez les intégrer, ajoutez-les en tant que contact, ce qui déclenchera l’envoi d’une invitation par courriel.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
                             "emailMessage/Cc": "@variables('SecondaryContactsEmail')",
                             "emailMessage/Importance": "Normal"
                           },
@@ -364,8 +364,8 @@
                         },
                         "parameters": {
                           "request/to": "@{outputs('Primary_Email_Address')};",
-                          "request/subject": "CID Data Platform: Secondary Admin @{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']} has logged into CID Platform for the first time ",
-                          "request/text": "<p>Hello @{outputs('Primary_Full_name')} ,<br>\n<br>\n@{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']}, at @{variables('ContactInfo')}, has logged into CID Platform for the first time as a Secondary Admin for the @{outputs('Get_Parent_account_name')?['body/name']} Company.<br>\n<br>\nIf this individual should not be accessing CID for this company, then from Contacts, you have the option to:<br>\nDeactivate their Contact record, which will prevent further logins.<br>\n</p>"
+                          "request/subject": "TDG Online - CID: Secondary Contact @{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']} has logged into CID Data Platform for the first time",
+                          "request/text": "<p>@{variables('TestingText')} @{outputs('Primary_Full_name')}<br>\n<br>\n@{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']}, at @{variables('ContactInfo')}, has logged into CID Platform for the first time as a Secondary Admin for the @{outputs('Get_Parent_account_name')?['body/name']} Company.<br>\n<br>\nIf this individual should not be accessing CID for this company, then from Contacts, you have the option to Deactivate their Contact record, which will prevent further logins.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n</p>"
                         },
                         "authentication": "@parameters('$authentication')"
                       }
@@ -389,8 +389,8 @@
                           },
                           "parameters": {
                             "request/to": "@{outputs('Primary_Email_Address')};",
-                            "request/subject": "French CID Data Platform: Secondary Admin @{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']} has logged into CID Platform for the first time ",
-                            "request/text": "<p>Hello  @{outputs('Primary_Full_name')},<br>\n<br>\n@{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']}, at @{variables('ContactInfo')}, has logged into CID Platform for the first time as a Secondary Admin for the @{outputs('Get_Parent_account_name')?['body/ovs_name_fr']} Company.<br>\n<br>\nIf this individual should not be accessing CID for this company, then from Contacts, you have the option to:<br>\nDeactivate their Contact record, which will prevent further logins.</p>"
+                            "request/subject": "TMD en ligne – BDIC : Le contact secondaire @{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']} s’est connecté à la plateforme de données de la BDIC pour la première fois.",
+                            "request/text": "<p>@{variables('FrenchTestingText')} @{outputs('Primary_Full_name')}<br>\n<br>\n@{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']}, au @{variables('ContactInfo')}, has s’est connecté à la plateforme de données de la BDIC de Transports Canada pour la première fois en tant qu’administrateur secondaire pour l’organisation@{outputs('Get_Parent_account_name')?['body/ovs_name_fr']}.<br>\n<br>\nSi cette personne ne doit pas accéder à la BDIC pour cette organisation, vous avez la possibilité de désactiver son inscription en tant que contact à partir du dossier de Contact, ce qui empêchera toute connexion ultérieure.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}</p>"
                           },
                           "authentication": "@parameters('$authentication')"
                         }
@@ -484,8 +484,8 @@
                           },
                           "parameters": {
                             "emailMessage/To": "@outputs('Get_Secondary')?['body/emailaddress1']",
-                            "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TDG Online - CID: Login access into the CID Platform for the @{outputs('Get_Secondary')?['body/cid_legalname']} organization has been removed ",
-                            "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nPlease note that the CID Platform user account associated with this email address no longer has login access for the @{outputs('Get_Secondary')?['body/cid_legalname']} organization. If this update was made by mistake, then please contact the CID Platform’s Primary Contact for that organization to resolve the matter.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                            "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : L’accès à la plateforme de la BDIC pour l’organisation @{outputs('Get_Secondary')?['body/cid_legalname']} a été supprimé.",
+                            "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nVeuillez noter que le compte d’utilisateur de la plateforme de la BDIC associé à cette adresse courriel n’a plus d’accès de connexion pour l’organisation @{outputs('Get_Secondary')?['body/cid_legalname']}. Si cette mise à jour a été effectuée par erreur, veuillez communiquer avec la personne-ressource de la plateforme de la BDIC pour cette organisation afin de résoudre le problème.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
                             "emailMessage/Importance": "Normal"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -852,7 +852,7 @@
                           "parameters": {
                             "emailMessage/To": "@variables('PrimaryContactEmail')",
                             "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TDG Online - CID: Request to deactivate a Site.",
-                            "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nAnother organization is blocked within the TDG Online CID platform from adding a site as your organization has Site ID <strong>@{triggerBody()?['SiteId']}</strong> at that same location.<br>\n<br>\nIf that Site is part of a Sale or Transfer, or it should not be an active Site for your organization, or it should no longer have a status indicating that your organization still owns it, then please use the 'Deactivate Site' side-menu option to deactivate it. The other organization will be then be notified and then they will be able to proceed.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                            "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLa plateforme TMD en ligne – BDIC empêche une autre organisation d’ajouter un site, car votre organisation possède l’ID de site <strong></strong><strong>@{triggerBody()?['SiteId']}</strong><strong></strong> au même endroit.<br>\n<br>\nSi ce site fait partie d’une vente ou d’un transfert, s’il ne doit pas être un site actif pour votre organisation ou s’il ne doit plus avoir de statut indiquant que votre organisation en est toujours propriétaire, veuillez utiliser l’option « Désactiver le site » du menu latéral pour le désactiver. L’autre organisation en sera alors informée et pourra poursuivre son action.<br>\n<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTMD en ligne – Équipe de soutien de la BDIC<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
                             "emailMessage/Cc": "@variables('SecondaryContactsEmail')",
                             "emailMessage/Importance": "Normal"
                           },
@@ -1041,7 +1041,7 @@
                 "operationMetadataId": "ffa8d1a6-89ec-434c-82e6-78e0fa2bd649"
               },
               "type": "Compose",
-              "inputs": "<em>*** French-The following is an automated email sent by the TDG Online - CID system. Please do not reply ***</em>"
+              "inputs": "<em>*** Le message suivant est un courriel automatisé envoyé par le TMD en ligne – Système de la BDIC. Veuillez ne pas répondre ***</em>"
             },
             "English-EmailFooter": {
               "runAfter": {
@@ -1065,7 +1065,7 @@
                 "operationMetadataId": "5ec93fa4-a5e7-451e-9327-290b6c88346b"
               },
               "type": "Compose",
-              "inputs": "<div style=\"font-size:x-small;\">French-Note:<br>\n   - To receive subsequent emails in English, you can update your Language of Preferred Correspondence choice via the [Account Settings] button in the TDG Online - CID data portal. <br><br> \n   - Please do not reply to this email. If necessary, use the Contact Us button, or link, in the CID data portal. </div>"
+              "inputs": "<div style=\"font-size:x-small;\">Remarque:<br>\n   - Pour recevoir les courriels suivants en français, vous pouvez mettre à jour votre choix de langue de correspondance préférée à l’aide du bouton [Paramètres du compte] du portail de données TMD en ligne – BDIC. <br><br> \n   - Veuillez ne pas répondre à ce courriel. Au besoin, utilisez le bouton ou le lien « Communiquer avec nous » du portail de données de la BDIC.  </div>"
             },
             "Filter_environment-CID_Environment": {
               "runAfter": {
@@ -1232,7 +1232,7 @@
               "type": "SetVariable",
               "inputs": {
                 "name": "FrenchTestSubjectText",
-                "value": "French-Test Email: "
+                "value": "Tester le courriel: "
               }
             },
             "Set_variable_FrenchTestingText": {
@@ -1247,7 +1247,7 @@
               "type": "SetVariable",
               "inputs": {
                 "name": "FrenchTestingText",
-                "value": "French-Test email: This email is a test email, not an actual email representing what is indicated below. <br><br>                                                                  "
+                "value": "Tester le courriel: Ce courriel est un courriel de test, et non un courriel réel représentant ce qui est indiqué ci-dessous. <br><br>                                                                  "
               }
             }
           },

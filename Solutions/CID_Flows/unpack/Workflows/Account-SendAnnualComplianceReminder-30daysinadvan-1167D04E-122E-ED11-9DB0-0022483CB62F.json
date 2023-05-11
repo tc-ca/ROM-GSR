@@ -333,8 +333,8 @@
                           },
                           "parameters": {
                             "emailMessage/To": "@variables('ToEmailRecipients')",
-                            "emailMessage/Subject": "@{variables('FrenchTestSubjectText')} TDG Online - CID: Reminder that the Annual Compliance process for the @{items('Apply_to_each_Account')?['ovs_legalname']} organization is due to be completed by @{formatDateTime(outputs('Update_a_row')?['body/cid_companyanniversarydate'], 'yyyy-MM-dd')}",
-                            "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')},<br>\n<br>\nThe Transport Canada CID Data Platform's Annual Compliance process for the @{items('Apply_to_each_Account')?['ovs_legalnamefr']} organization is due on @{formatDateTime(outputs('Update_a_row')?['body/cid_companyanniversarydate'], 'yyyy-MM-dd')}, owever it can be entered as early as today. Please login to the CID Data Platform to complete that company's Annual Compliance process.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                            "emailMessage/Subject": "@{variables('FrenchTestSubjectText')} TMD en ligne – BDIC : Rappel que le processus de conformité annuelle pour l’organisation @{items('Apply_to_each_Account')?['ovs_legalname']} doit être achevé pour @{formatDateTime(outputs('Update_a_row')?['body/cid_companyanniversarydate'], 'yyyy-MM-dd')}.",
+                            "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')},<br>\n<br>\nLe processus de conformité annuelle de la plateforme de données de la BDIC de Transports Canada pour l’organisation @{items('Apply_to_each_Account')?['ovs_legalnamefr']} est attendu le @{formatDateTime(outputs('Update_a_row')?['body/cid_companyanniversarydate'], 'yyyy-MM-dd')}, mais il peut fait dès aujourd’hui. Veuillez vous connecter à la plateforme de données de la BDIC pour compléter le processus de conformité annuelle de cette entreprise.<br>\n<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
                             "emailMessage/Cc": "@variables('CCEmailRecipients')",
                             "emailMessage/Importance": "Normal"
                           },
@@ -547,7 +547,7 @@
                 "operationMetadataId": "ffa8d1a6-89ec-434c-82e6-78e0fa2bd649"
               },
               "type": "Compose",
-              "inputs": "<em>*** French-The following is an automated email sent by the TDG Online - CID system. Please do not reply ***</em>"
+              "inputs": "<em>*** Le message suivant est un courriel automatisé envoyé par le TMD en ligne – Système de la BDIC. Veuillez ne pas répondre ***</em>"
             },
             "English-EmailFooter": {
               "runAfter": {
@@ -571,7 +571,7 @@
                 "operationMetadataId": "5ec93fa4-a5e7-451e-9327-290b6c88346b"
               },
               "type": "Compose",
-              "inputs": "<div style=\"font-size:x-small;\"><br>French-Note:<br>\n   - To receive subsequent emails in English, you can update your Language of Preferred Correspondence choice via the [Account Settings] button in the TDG Online - CID data portal. <br><br> \n   - Please do not reply to this email. If necessary, use the Contact Us button, or link, in the CID data portal. </div>"
+              "inputs": "<div style=\"font-size:x-small;\">Remarque:<br>\n   - Pour recevoir les courriels suivants en français, vous pouvez mettre à jour votre choix de langue de correspondance préférée à l’aide du bouton [Paramètres du compte] du portail de données TMD en ligne – BDIC. <br><br> \n   - Veuillez ne pas répondre à ce courriel. Au besoin, utilisez le bouton ou le lien « Communiquer avec nous » du portail de données de la BDIC.  </div>"
             },
             "Filter_environment-CID_Environment": {
               "runAfter": {
@@ -715,7 +715,7 @@
               "type": "SetVariable",
               "inputs": {
                 "name": "FrenchTestSubjectText",
-                "value": "French-Test Email: "
+                "value": "Tester le courriel: "
               }
             },
             "Set_variable_FrenchTestingText": {
@@ -730,7 +730,7 @@
               "type": "SetVariable",
               "inputs": {
                 "name": "FrenchTestingText",
-                "value": "French-Test email: This email is a test email, not an actual email representing what is indicated below. <br><br>                                                                  "
+                "value": "Tester le courriel: Ce courriel est un courriel de test, et non un courriel réel représentant ce qui est indiqué ci-dessous. <br><br>                                                          "
               }
             }
           },

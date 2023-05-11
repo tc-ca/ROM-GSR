@@ -302,8 +302,8 @@
                         },
                         "parameters": {
                           "emailMessage/To": "@outputs('Get_a_row_by_ID_Contact')?['body/emailaddress1']",
-                          "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}French-TDG Online - CID: Assignment as a Secondary Admininstrator for the @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} organization",
-                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Contact')?['body/fullname']}, the Primary Administrator for the @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} organization of the Transport Canada Online CID Data Platform, has added you as a Secondary Admininstrator for that organization.<br>\n<br>\nTo on-board to the CID Platform, please copy the following link into your Web browser:<br>\n@{variables('Environment')}<br>\n<br>\nOn the Web page that appears, please provide the following information for the requested Invitation code:<br>\n@{triggerOutputs()?['body/adx_invitationcode']}<br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to this email. If you know the name and email address of the individual who should register this organization, then please provide this as well.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                          "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Affectation en tant que contact secondaire pour l’organisation @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']}.",
+                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Contact')?['body/fullname']}, le contact principal de l’organisation@{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} de la plateforme de données de la BDIC en ligne de Transports Canada, vous a ajouté en tant que contact secondaire pour cette organisation. <br>\n<br>\nPour accéder à la plateforme de la BDIC, veuillez copier le lien suivant dans votre navigateur Web : <br>\n@{variables('Environment')}<br>\n<br>\nSur la page Web qui s’affiche, veuillez fournir les renseignements suivants pour le code d’invitation demandé :<br>\n@{triggerOutputs()?['body/adx_invitationcode']}<br>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de messagerie. &nbsp;Si vous n’êtes pas la personne qui doit inscrire cette organisation, veuillez l’indiquer en répondant à ce courriel. Si vous connaissez le nom et l’adresse courriel de la personne chargée d’inscrire cette organisation, veuillez les indiquer également.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
                           "emailMessage/Importance": "Normal"
                         },
                         "authentication": "@parameters('$authentication')"
@@ -331,8 +331,8 @@
                           },
                           "parameters": {
                             "emailMessage/To": "@outputs('Get_a_row_by_ID_Contact')?['body/emailaddress1']",
-                            "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: Assignment as a Secondary Admininstrator for the @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} organization",
-                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Contact')?['body/fullname']}, the Primary Administrator for the @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} organization of the Transport Canada Online CID Data Platform, has added you as a Secondary Admininstrator for that organization.<br>\n<br>\nTo on-board to the CID Platform, please copy the following link into your Web browser:<br>\n@{variables('Environment')}<br>\n<br>\nOn the Web page that appears, please provide the following information for the requested Invitation code:<br>\n@{triggerOutputs()?['body/adx_invitationcode']}<br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to this email. If you know the name and email address of the individual who should register this organization, then please provide this as well.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                            "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: Assignment as a Secondary Contact for the @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} organization",
+                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Contact')?['body/fullname']}, the Primary Contact for the @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} organization of the Transport Canada Online CID Data Platform, has added you as a Secondary Contact for that organization. <br>\n<br>\nTo on-board to the CID Platform, please copy the following link into your Web browser: <br>\n@{variables('Environment')}<br>\n<br>\nOn the Web page that appears, please provide the following information for the requested Invitation code:<br>\n@{triggerOutputs()?['body/adx_invitationcode']}<br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to this email. If you know the name and email address of the individual who should register this organization, then please provide this as well.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
                             "emailMessage/Importance": "Normal"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -659,7 +659,7 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "FrenchTestSubjectText",
-                    "value": "French-Test Email: "
+                    "value": "Tester le courriel:"
                   }
                 },
                 "Set_variable_FrenchTestingText": {
@@ -674,7 +674,7 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "FrenchTestingText",
-                    "value": "French-Test email: This email is a test email, not an actual email representing what is indicated below. <br><br>                                                                  "
+                    "value": "Tester le courriel: Ce courriel est un courriel de test, et non un courriel réel représentant ce qui est indiqué ci-dessous. <br><br>                                                                     "
                   }
                 }
               },
@@ -703,12 +703,24 @@
             ]
           },
           "expression": {
-            "not": {
-              "equals": [
-                "@outputs('Get_a_row_by_ID_Contact')?['body/_cid_createdbyregistrant_value']",
-                "@null"
-              ]
-            }
+            "and": [
+              {
+                "not": {
+                  "equals": [
+                    "@outputs('Get_a_row_by_ID_Contact')?['body/_cid_createdbyregistrant_value']",
+                    "@null"
+                  ]
+                }
+              },
+              {
+                "not": {
+                  "equals": [
+                    "@outputs('Get_a_row_by_ID_Contact')?['body/_parentcustomerid_value']",
+                    "@null"
+                  ]
+                }
+              }
+            ]
           },
           "metadata": {
             "operationMetadataId": "350f47e3-2a05-4508-aae0-91ddf5e4f7cb"
@@ -758,7 +770,7 @@
                 "operationMetadataId": "ffa8d1a6-89ec-434c-82e6-78e0fa2bd649"
               },
               "type": "Compose",
-              "inputs": "<em>*** French-The following is an automated email sent by the TDG Online - CID system. Please do not reply ***</em>"
+              "inputs": "<em>*** Le message suivant est un courriel automatisé envoyé par le TMD en ligne – Système de la BDIC. Veuillez ne pas répondre ***</em>"
             },
             "English-EmailFooter": {
               "runAfter": {
@@ -782,7 +794,7 @@
                 "operationMetadataId": "5ec93fa4-a5e7-451e-9327-290b6c88346b"
               },
               "type": "Compose",
-              "inputs": "<div style=\"font-size:x-small;\">French-Note:<br>\n   - To receive subsequent emails in English, you can update your Language of Preferred Correspondence choice via the [Account Settings] button in the TDG Online - CID data portal. <br><br> \n   - Please do not reply to this email. If necessary, use the Contact Us button, or link, in the CID data portal. </div>"
+              "inputs": "<div style=\"font-size:x-small;\">Remarque:<br>\n   - Pour recevoir les courriels suivants en français, vous pouvez mettre à jour votre choix de langue de correspondance préférée à l’aide du bouton [Paramètres du compte] du portail de données TMD en ligne – BDIC. <br><br> \n   - Veuillez ne pas répondre à ce courriel. Au besoin, utilisez le bouton ou le lien « Communiquer avec nous » du portail de données de la BDIC.  </div>"
             },
             "Filter_environment-CID_Environment": {
               "runAfter": {
