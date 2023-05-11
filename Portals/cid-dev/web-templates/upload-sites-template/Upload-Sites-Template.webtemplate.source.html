@@ -845,27 +845,29 @@ function confirmDialog(message ,YesLabel, NoLabel, handler)
 {
     
 
-        $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
+        $(`<div class="wb-lbx modal" id="myModal" role="alert" aria-labelledby="newID1" aria-describedby="newID2">
+           <div class="modal-dialog modal-content overlay-def" role="document">
             <header class="modal-header">
-                <h2 class="modal-title">CID Portal</h2>
+                <h2 id="newID1"  class="modal-title">CID Portal</h2>
             </header>
-            <div class="modal-body">
+            <div class="modal-body" id="newID2" >
                 ${message}
 
             </div>
         <div class="modal-footer">
             <button id="btnYes" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">${YesLabel}</button>
             <button  id="btnNo" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" data-dismiss="modal">${NoLabel}</button>
-
-        </section>
+        </div>
+        </div> 
+        </div>
         `).appendTo('body');
 
-       $('#btnNo').focus();
+      // $('#btnNo').focus();
 
        $("#myModal").css('top' , '15%');
         $("#myModal").css('left' , '40%');
-        $("#myModal").css('position', 'fixed');
-        $("#myModal").css('z-index', '9999');
+       // $("#myModal").css('position', 'fixed');
+        //$("#myModal").css('z-index', '9999');
 
 
     $("#btnYes").click(function () {
@@ -882,6 +884,15 @@ function confirmDialog(message ,YesLabel, NoLabel, handler)
             $("#myModal").remove();
              handler(false);
         });
+        $('#myModal').modal('show')
+$('#myModal').focus();
+$("#newID2").focus();
+$("#mainContent").parent().parent().parent().attr('aria-hidden', true);
+//$("#mainContent").parent().parent().parent().attr('tabindex', '-1');
+$("#btn_attachfile_and_scan").attr('aria-hidden', true);
+//$("#btn_attachfile_and_scan").attr('tabindex', '-1');
+
+
 
 }
 
