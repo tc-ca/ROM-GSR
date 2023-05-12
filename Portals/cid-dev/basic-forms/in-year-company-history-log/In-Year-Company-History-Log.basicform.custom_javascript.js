@@ -8,7 +8,8 @@ $(document).ready(function () {
     $("#cid_registrationasof").parent().parent().hide();
 
     var companyName = "{{user.parentcustomerid.name}}";
-    $(".tab-title").text('History for ' + companyName);
+    var msg = tdg.error_message.message("m000160");
+    $(".tab-title").text(msg + companyName);
 
     $(".entity-grid").on("loaded", function () {
         var lang = '{{website.selected_language.code}}';

@@ -182,9 +182,11 @@ function dialog_OK(message) {
     var header = tdg.error_message.message("CID_PORTAL");
     var OK = tdg.error_message.message("OK");
 
-    $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
+     $(`<section class="wb-lbx overlay-def" id="myModal" aria-modal="true" aria-live="assertive" aria-labelledby ="headerid" >
+               <div class="modal-dialog" role="document">
+                <div class="modal-content" >
 	            <header class="modal-header">
-	            <h2 class="modal-title">${header}</h2>
+	            <h2 id="headerid" class="modal-title">${header}</h2>
 	            </header>
 	            <div class="modal-body">
 	            ${message}

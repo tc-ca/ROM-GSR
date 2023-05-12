@@ -110,6 +110,18 @@
         -webkit-animation: spin 2s linear infinite;
         animation: spin 2s linear infinite;
     }
+    
+#Overlay {
+  position: absolute;
+  z-index: 150;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0,0,0,.75);
+  display: none;
+  backdrop-filter: blur(.1em); /* Maybe no */
+}
 </style>
 
 <script type="text/javascript" src="~/tdgcore_common.js"></script>
@@ -843,37 +855,47 @@ function call_Inital_validation(Language , bulkactivitytype)
 
 function confirmDialog(message ,YesLabel, NoLabel, handler)
 {
-    
-
-        $(`<div class="wb-lbx modal" id="myModal" role="alert" aria-labelledby="newID1" aria-describedby="newID2">
-           <div class="modal-dialog modal-content overlay-def" role="document">
+    var header = tdg.error_message.message("CID_PORTAL");
+  var body = document.getElementsByTagName("body");
+    var landmarks = document.querySelectorAll("header, main, footer");
+    var overlay = document.getElementById("Overlay");  
+    //tabindex="-1" hidden
+    $(`<section class="wb-lbx overlay-def" id="myModal" aria-modal="true" aria-live="assertive" aria-labelledby ="headerid" >
+    <div class="modal-dialog" role="document">
+    <div class="modal-content" >
             <header class="modal-header">
-                <h2 id="newID1"  class="modal-title">CID Portal</h2>
+                <h2 id="headerid" role="document" class="modal-title">${header}</h2>
             </header>
-            <div class="modal-body" id="newID2" >
+            <div class="modal-body">
                 ${message}
 
             </div>
         <div class="modal-footer">
             <button id="btnYes" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">${YesLabel}</button>
             <button  id="btnNo" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" data-dismiss="modal">${NoLabel}</button>
-        </div>
-        </div> 
-        </div>
+            </div>
+            </div>
+            </div>
+
+        </section>
         `).appendTo('body');
 
-      // $('#btnNo').focus();
+     //  $('#btnNo').focus();
 
        $("#myModal").css('top' , '15%');
         $("#myModal").css('left' , '40%');
-       // $("#myModal").css('position', 'fixed');
-        //$("#myModal").css('z-index', '9999');
+        $("#myModal").css('position', 
+        //'absolute');
+        'fixed');
+        $("#myModal").css('z-index', '99990000');
 
 
     $("#btnYes").click(function () {
-           // handler(true);
+          //  handler(true);
           //  $("#myModal").modal("hide");
           $("#myModal").remove();
+          //overlay.style.display = "none";
+          //body[0].style.overflow = "block";
            handler(true);
         });
 
@@ -882,16 +904,33 @@ function confirmDialog(message ,YesLabel, NoLabel, handler)
 
             //handler(lse);
             $("#myModal").remove();
+          //  dialog.setAttribute("aria-modal","false");
+           // overlay.style.display = "none";
              handler(false);
+             //body[0].style.overflow = "block";
+               /*for (var i = 0; i < landmarks.length; i++) {
+                 landmarks[i].setAttribute("aria-hidden","false");}
+                 */
         });
-        $('#myModal').modal('show')
-$('#myModal').focus();
-$("#newID2").focus();
-$("#mainContent").parent().parent().parent().attr('aria-hidden', true);
-//$("#mainContent").parent().parent().parent().attr('tabindex', '-1');
-$("#btn_attachfile_and_scan").attr('aria-hidden', true);
-//$("#btn_attachfile_and_scan").attr('tabindex', '-1');
-
+       /*  
+    var dialog = document.getElementById("myModal"); 
+         // Hide the content regions from AT
+    for (var i = 0; i < landmarks.length; i++) {
+      landmarks[i].setAttribute("aria-hidden","true");
+      landmarks[i].setAttribute("inert","");
+    }*/
+    // Hide the content behind the overlay
+   // overlay.style.display = "block";
+    // Add click handler to overlay
+    //overlay.setAttribute("onclick","CloseDialog('" + btnID + "');");
+    // Kill the page scroll
+   // body[0].style.overflow = "hidden";
+    // Set the dialog to modal
+   // dialog.setAttribute("aria-modal","true");
+  //  dialog.setAttribute("aria-live","assertive");
+   
+  //  dialog.removeAttribute("hidden"); 
+    $("#myModal").focus();
 
 
 }
@@ -1491,6 +1530,7 @@ function delay(milliseconds){
     </div>
 </div>
 </div>
+ <div id="Overlay"></div>
 <div id="DivNavbuttonGroup" class="col-sm-6 clearfix">
 
 </div>

@@ -1048,7 +1048,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000160",
                         "message_en": "History for ",
-                        "message_fr": "Historique pour"
+                        "message_fr": "Historique pour "
                     },
                     {
                         "code": "m000161",
@@ -1169,6 +1169,16 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000184",
                         "message_en": "Assign as Primary Admin",
                         "message_fr": "Attribuer en tant qu'administrateur principal"
+                    },
+                    {
+                        "code": "m000185",
+                        "message_en": "Postal code needs to match province.",
+                        "message_fr": "Le code postal n'est pas valide pour la province désignée."
+                    },
+                    {
+                        "code": "m000186",
+                        "message_en": "Street 1 can not have PO Box.",
+                        "message_fr": "Rue 1 ne peut pas avoir de case postale or Rue 1 ne peut pas avoir de CP."
                     }
                 ];
 

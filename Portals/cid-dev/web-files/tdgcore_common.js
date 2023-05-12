@@ -395,9 +395,11 @@ if (typeof (tdg.c) == "undefined") {
             var yes = tdg.error_message.message("Yes");
             var no = tdg.error_message.message("No");
 
-            $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
-	            <header class="modal-header">
-	            <h2 class="modal-title">${header}</h2>
+            $(`<section class="wb-lbx overlay-def" id="myModal" aria-modal="true" aria-live="assertive" aria-labelledby ="headerid" >
+                <div class="modal-dialog" role="document">
+                <div class="modal-content" >
+                <header class="modal-header">
+	            <h2 id="headerid" class="modal-title">${header}</h2>
 	            </header>
 	            <div class="modal-body">
 	            ${message}
@@ -405,9 +407,12 @@ if (typeof (tdg.c) == "undefined") {
 	            <div class="modal-footer">
 	            <button id="btnYes" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">${yes}</button>
 	            <button id="btnNo" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" data-dismiss="modal">${no}</button>
-	            </section>c.message
+                </div>
+                </div>
+                </div>
+	            </section>
 	            `).appendTo('body');
-
+            //c.message
             $("#myModal").css('top', '15%');
             $("#myModal").css('left', '40%');
             $("#myModal").css('position', 'fixed');
@@ -424,6 +429,11 @@ if (typeof (tdg.c) == "undefined") {
                 $("#myModal").remove();
                 handler(false);
             });
+            var dialog = $("#myModal");
+
+            //   dialog.attr("aria-modal", "true");
+            // dialog.attr("aria-live", "assertive");
+            dialog.focus();
         },
 
         dialog_OK: function (message) {
@@ -431,9 +441,11 @@ if (typeof (tdg.c) == "undefined") {
             var header = tdg.error_message.message("CID_PORTAL");
             var OK = tdg.error_message.message("OK");
 
-            $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
+            $(`<section class="wb-lbx overlay-def" id="myModal" aria-modal="true" aria-live="assertive" aria-labelledby ="headerid" >
+               <div class="modal-dialog" role="document">
+                <div class="modal-content" >
 	            <header class="modal-header">
-	            <h2 class="modal-title">${header}</h2>
+	            <h2 id="headerid" class="modal-title">${header}</h2>
 	            </header>
 	            <div class="modal-body">
 	            ${message}
@@ -617,15 +629,8 @@ if (typeof (tdg.c) == "undefined") {
 
         Add_Validation_For_Postal_Code_with_Province: function (selected_language) {
             try {
-                console.log("inside validation function 2");
-                var validationMessage = "";
-                if (selected_language == "en") {
-                    validationMessage = "Postal code need to match province.";
-                }
-                else {
-                    validationMessage = "Postal code need to match province._fr";
+                var validationMessage = tdg.error_message.message("m000185");
 
-                }
                 if (typeof (Page_Validators) == 'undefined') return;
                 // Create new validator
                 var newValidator = document.createElement('span');
@@ -650,22 +655,15 @@ if (typeof (tdg.c) == "undefined") {
 
                 // Add the new validator to the page validators array:
                 Page_Validators.push(newValidator);
-
-
             } catch (e) { }
 
         },
-        Prevent_Po_Box_address_Validation: function (selected_language) {
 
+        Prevent_Po_Box_address_Validation: function (selected_language) {
             //add validation error message
             try {
-                var validationMessage = "";
-                if (selected_language == "en") {
-                    validationMessage = "Street 1 can not have PO Box.";
-                }
-                else {
-                    validationMessage = "Street 1 can not have PO Box._fr";
-                }
+                var validationMessage = tdg.error_message.message("m000186");
+
                 if (typeof (Page_Validators) == 'undefined') return;
                 // Create new validator
                 var newValidator = document.createElement('span');
@@ -818,12 +816,12 @@ if (typeof (tdg.c) == "undefined") {
             $(field).focusout(function () {
                 var inLength = $(this).val().replace(/\D/g, '').length;
                 if (inLength < 10 && inLength != 0) {
-                    alert(tdg.c.text_language("Invalid number::Numéro invalide", language));
+                    var msg = tdg.error_message.message("m000171");
+                    alert(msg);
                     $(this).val("");
                 }
             })
         }//end function
-
     }
 }
 
@@ -2331,16 +2329,12 @@ if (typeof (tdg.cid) == "undefined") {
                 var Range = $("#ovs_lld_range :selected").text();
                 var Meridian = $("#ovs_lld_meridian :selected").text();
 
-
                 var raw = JSON.stringify({
-
                     "Quarter": Quarter,
                     "Section": Section,
                     "TownShip": Township,
                     "Range": Range,
                     "Meridian": Meridian
-
-
                 });
 
                 var requestOptions = {
@@ -2368,7 +2362,6 @@ if (typeof (tdg.cid) == "undefined") {
                     .catch(error => console.log('error', error));
 
             }//end check if flow IRL is found
-
         }
     }
 }
@@ -2821,10 +2814,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
             if (results.length > 0) {
                 environment = results[0]["qm_value"];
             }
-
             return environment;
         },
-
 
         start_cid_reasonfornobnnumber_onchange: function (clear_ind) {
             if (clear_ind) {
