@@ -4,12 +4,12 @@
 
 $(document).ready(function () {
 	debugger;
-   
+
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 
-   //Commited - Need clarification 
-   // From Aaron comments: development team agrees that this header is correct and should say organization registration. Once you start adding a site you are brought to the site registration portion of the registration and the header changes 
+	//Commited - Need clarification 
+	// From Aaron comments: development team agrees that this header is correct and should say organization registration. Once you start adding a site you are brought to the site registration portion of the registration and the header changes 
 	/*
 	var code = "m000024";
 	
@@ -68,12 +68,13 @@ $(document).ready(function () {
 						}
 					}
 					else {
-						//if ($("#chk_" + recId).length <= 0)
-						//	firstTdElement.prepend("<input type='checkbox' id='chk_' + recId +'>&nbsp;&nbsp;&nbsp;");
 					}
 				}
-				if ((tdElement.attr('data-attribute') == 'statuscode' && tdElement.attr('aria-label') == 'Inactive') ||
-					(tdElement.attr('data-attribute') == 'cid_siteclaim' && tdElement.attr('aria-label') != 'My Site Active')) {
+
+				var label_inactive = tdg.error_message.message("lbl_inactive");
+				var label_my_site_active = tdg.error_message.message("lbl_my_site_active");
+				if ((tdElement.attr('data-attribute') == 'statuscode' && tdElement.attr('aria-label') == label_inactive) ||
+					(tdElement.attr('data-attribute') == 'cid_siteclaim' && tdElement.attr('aria-label') != label_my_site_active)) {
 					firstTdElement.find('a').removeAttr("href");
 					firstTdElement.find('span').remove();
 					firstTdElement.find('input').remove();
@@ -125,18 +126,12 @@ $(document).ready(function () {
 	});
 
 	$('#BulkUploadButton').click(function (e) {
-		//company id
 		var companyId = $("#EntityFormView_EntityID").val();
-		console.log(companyId);
-		//get all sites with pending claim
-		//var filter = "_parentaccountid_value eq " + companyId + " and cid_siteclaim eq 100000003";
-		//var response = tdg.webapi.list("accounts", filter);
 
 		var response = tdg.webapi.SelectedColumnlist("accounts", "name",
 			"_parentaccountid_value eq " + companyId + " and (cid_siteclaim eq 100000003 or cid_siteclaim eq null)");
 		//if one or more sites found pending claim
 		if (response.length > 0) {
-			//display errror message
 			var m000110 = tdg.error_message.message("m000110");
 			tdg.c.dialog_OK(m000110);
 		}
@@ -155,7 +150,7 @@ $(document).ready(function () {
 		var data = ExecuteQuery("Validation_CompanySites", filter);
 
 		if (data == null) {
-			errorMessage = "m000011";	// "You cannot proceed before adding active company site(s).";
+			errorMessage = "m000011";
 			validation = false;
 		}
 		else {
@@ -168,7 +163,7 @@ $(document).ready(function () {
 				data = ExecuteQuery("Validation_CompanyNotAttestedSites", filter);
 
 				if (data != null && data.length > 0) {
-					errorMessage = "m000012";	// You cannot proceed before attesting all the company sites.
+					errorMessage = "m000012"
 					validation = false;
 				}
 			}

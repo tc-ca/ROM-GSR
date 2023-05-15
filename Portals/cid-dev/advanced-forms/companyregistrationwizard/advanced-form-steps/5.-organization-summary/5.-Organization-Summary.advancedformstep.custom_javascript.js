@@ -12,6 +12,11 @@ $(document).ready(function () {
 	tdg.c.page_instructions("page_crw_attest");
 
 	$("#cid_reasonfornobnnumber_other").next("div").css("color", "transparent");
+	$("#websiteurl").css("display" ,"block");
+	//$("#websiteurl").children().css("display" ,"none");
+	
+	$("#websiteurl:first-child").css("display" ,"none");
+
 	$("#ovs_address1_province").next("div").css("color", "transparent");
 	var gridview = $("#Naics_codes");
 	gridview.on("loaded", function () {
@@ -112,6 +117,11 @@ function printSummary() {
 		debugger;
 		window.print();
 	});
+
+	$("#printSummary").on ("keypress", function () {
+        debugger;
+		window.print();
+	 });
 }
 
 if (window.jQuery) {

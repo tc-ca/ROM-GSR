@@ -471,6 +471,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "inactif"
                     },
                     {
+                        "code": "lbl_my_site_active",
+                        "message_en": "My Site Active",
+                        "message_fr": "Mon site actif"
+                    },
+                    {
                         "code": "m000001",
                         "message_en": "Invalid CRA Business Number",
                         "message_fr": "Numéro d'entreprise de l'ARC invalide"
