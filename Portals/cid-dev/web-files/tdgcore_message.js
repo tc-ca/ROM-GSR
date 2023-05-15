@@ -26,9 +26,9 @@ if (typeof (tdg.message) == "undefined") {
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
                 "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen.";
-            var m000021_FR = "Les sites existants où 'Is Site Attested' est défini sur 'Non', doivent être attestés en choisissant l'un des " +
-                "les options via le bouton <b>[V]</b> à l'extrême droite de ces lignes. Tous les sites doivent être attestés avant que l'option En vrac puisse être choisie.\n\n" +
-                "Pour ajouter des sites supplémentaires individuellement, choisissez le bouton <b>[+Créer]</b>. Vous pouvez également choisir le bouton <b>[Ajouter/Mettre à jour en masse]</b>" +
+            var m000021_FR = "Les sites existants où 'Le site est-il certifié' est défini sur 'Non', doivent être attestés en choisissant l'un des " +
+                "les options via le bouton <b>[V]</b> à l'extrême droite de ces lignes. Tous les sites doivent être attestés avant que l'option en vrac puisse être choisie.\n\n" +
+                "Pour ajouter des sites supplémentaires individuellement, choisissez le bouton <b>[+Créer]</b>. Vous pouvez également choisir le bouton <b>[Ajouter/Mettre à jour en bloc]</b>" +
                 "bouton pour ajouter tous les nouveaux sites à la fois via Excel.\n\n" +
                 "Pour modifier l'un des sites, cliquez avec la souris sur le lien souligné de l'ID de site de cette ligne ou choisissez l'option à partir du bouton <b>[V]</b> à la fin.\n\n" +
                 "Choisissez le bouton <b>[Suivant]</b>, une fois tous les sites ajoutés et attestés.\n\n" +
@@ -222,8 +222,8 @@ if (typeof (tdg.message) == "undefined") {
             var page_in_year_my_sites_EN = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.<br>" +
                 "To add additional Sites individually, choose the <b>[+Add]</b> button. Alternatively, choose the <b>[Bulk Add/Update]</b> button to add all new Sites at once via Excel.<br>" +
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.";
-            var page_in_year_my_sites_FR = "Les sites existants où 'Is Site Attested' est défini sur 'Non' doivent être attestés en appliquant l'une des options via le bouton <b>[V]</b> à l'extrême droite de ces lignes. Tous les les sites doivent attester avant que l'option Bulk puisse être choisie.<br>" +
-                "Pour ajouter des sites supplémentaires individuellement, choisissez le bouton <b>[+Créer]</b>. Vous pouvez également choisir le bouton <b>[Ajouter/Mettre à jour en masse]</b> pour ajouter tous les nouveaux sites en une seule fois via Excel. <br>" +
+            var page_in_year_my_sites_FR = "Les sites existants où 'Le site est-il certifié' est défini sur 'Non' doivent être attestés en appliquant l'une des options via le bouton <b>[V]</b> à l'extrême droite de ces lignes. Tous les sites doivent être attestés avant que l'option en vrac puisse être choisie.<br>" +
+                "Pour ajouter des sites supplémentaires individuellement, choisissez le bouton <b>[+Créer]</b>. Vous pouvez également choisir le bouton <b>[Ajouter/Mettre à jour en bloc]</b> pour ajouter tous les nouveaux sites en une seule fois via Excel. <br>" +
                 "Pour modifier l'un des sites, cliquez avec la souris sur le lien souligné de l'ID de site de cette ligne ou choisissez l'option à partir du bouton <b>[V]</b> à la fin.";
 
             var page_annual_compliance_update_EN = "To finalize the Annual Compliance Update:</br>1- As applicable, perform each step's related update below, then it's 'Mark as complete' option.</br>" +
