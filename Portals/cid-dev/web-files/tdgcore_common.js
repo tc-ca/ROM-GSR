@@ -1,3 +1,4 @@
+
 // //To apply the Asterisk(*) Sign using custom JS:
 //$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
 
@@ -871,8 +872,8 @@ if (typeof (tdg.grid) == "undefined") {
                         $(ul).find("li").each(function () {
                             //get the menue titel
                             var menueTitle = $(this).find("a").attr("title");
-                            if (contactType == "Primary") {
-                                if (menueTitle != "Edit") {
+                            if (contactType == "Primary" || contactType == "Principal") {
+                                if (menueTitle != "Edit" && menueTitle != "Mise à jour") {
                                     $(this).attr("hidden", "true");
                                 }
                             }//end check if primary
@@ -916,8 +917,8 @@ if (typeof (tdg.grid) == "undefined") {
                         $(ul).find("li").each(function () {
                             //get the menue titel
                             var menueTitle = $(this).find("a").attr("title");
-                            if (contactType == "Primary") {
-                                if (menueTitle != "View details") {
+                            if (contactType == "Primary" || contactType == "Principal") {
+                                if (menueTitle != "Edit" && menueTitle != "Mise à jour") {
                                     $(this).attr("hidden", "true");
                                 }
                             } //end check if primary
@@ -1711,7 +1712,7 @@ if (typeof (tdg.cid) == "undefined") {
             var row1 = ' <tr style="background-color: rgb(240, 240, 240);">' +
                 '<td colspan="1" rowspan="1" class="clearfix cell checkbox-cell">' +
                 '<div class="info">' +
-                '<label for="cid_Road" id="cid_Road_label" class="field-label" role="none">' + cid_Road_label + '</label>' +
+                '<label for="cid_Road" id="cid_Road_label" class="field-label" >' + cid_Road_label + '</label>' +
                 '</div>' +
                 '<div class="control">' +
                 '<span class="checkbox ">' +
@@ -1723,7 +1724,7 @@ if (typeof (tdg.cid) == "undefined") {
                 '<td class="cell zero-cell"></td>' +
                 '<td colspan = "1" rowspan = "1" class="clearfix cell checkbox-cell" >' +
                 '<div class="info">' +
-                '<label for="cid_Rail" id="cid_Rail_label" class="field-label" role="none">' + cid_Rail_label + '</label>' +
+                '<label for="cid_Rail" id="cid_Rail_label" class="field-label" >' + cid_Rail_label + '</label>' +
                 '</div>' +
                 '<div class="control">' +
                 '<span class="checkbox ">' +
@@ -1737,7 +1738,7 @@ if (typeof (tdg.cid) == "undefined") {
             var row2 = ' <tr style="background-color: rgb(240, 240, 240);">' +
                 '<td colspan = "1" rowspan = "1" class="clearfix cell checkbox-cell" >' +
                 '<div class="info">' +
-                '<label for="cid_Air" id="cid_Air_label" class="field-label" role="none">' + cid_Air_label + '</label>' +
+                '<label for="cid_Air" id="cid_Air_label" class="field-label" >' + cid_Air_label + '</label>' +
                 '</div>' +
                 '<div class="control">' +
                 '<span class="checkbox ">' +
@@ -1748,7 +1749,7 @@ if (typeof (tdg.cid) == "undefined") {
                 '</td>' +
                 '<td colspan="1" rowspan="1" class="clearfix cell checkbox-cell">' +
                 '<div class="info">' +
-                '<label for="cid_Maritime" id="cid_Maritime_label" class="field-label" role="none">' + cid_Maritime_label + '</label>' +
+                '<label for="cid_Maritime" id="cid_Maritime_label" class="field-label" >' + cid_Maritime_label + '</label>' +
                 '</div>' +
                 '<div class="control">' +
                 '<span class="checkbox ">' +
@@ -3071,3 +3072,4 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
+

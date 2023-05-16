@@ -12,15 +12,15 @@ async function OperationDetailsProvided(operationId, flag) {
 
 $(document).ready(function () {
     debugger;
-
+   
     $('#loader').hide();
-
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
     tdg.c.page_instructions("page_srw_further_attest_site");
 
     page_setup();
+
 
     var inYear = sessionStorage.getItem('frominyearsites');
     var annualCompliance = sessionStorage.getItem('fromannualcompliance');
@@ -81,6 +81,12 @@ $(document).ready(function () {
     }
 
     subgrid_language();
+    debugger;
+        //PBI 262824 accessibility issue role is not allowed with label
+     $("#cid_importingsitetype_label").attr("role", "");
+     $("#cid_offeringfortransportsitetype_label").attr("role","");
+     $("#cid_handlingsitetype_label").attr("role","");
+     $("#cid_transportingsitetype_label").attr("role","");
 
     $('table').each(function () {
         debugger;

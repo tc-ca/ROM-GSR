@@ -13,9 +13,9 @@ $(document).ready(function () {
 
 	$("#cid_reasonfornobnnumber_other").next("div").css("color", "transparent");
 	$("#websiteurl").css("display" ,"block");
-	//$("#websiteurl").children().css("display" ,"none");
-	
-	$("#websiteurl:first-child").css("display" ,"none");
+	$(".text-primary").css("display", "none");
+	var webSiteURLParent = document.getElementById('websiteurl');
+
 
 	$("#ovs_address1_province").next("div").css("color", "transparent");
 	var gridview = $("#Naics_codes");

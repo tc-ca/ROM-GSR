@@ -151,7 +151,8 @@ function Get_RequestDetails() {
     if (selected_language != "en") {
         memo = MemoData[0]["ovs_templatefrench"];
         if (MemoData[0]["_ovs_frenchknowledgearticle_value"] != null) {
-            var MessageConfirm = "French-There is knowledge article information about this topic that may answer your request. Do you want to first view that information?";
+            var MessageConfirm = tdg.error_message.message("m000139");
+            //"French-There is knowledge article information about this topic that may answer your request. Do you want to first view that information?";
             tdg.c.dialog_YN(MessageConfirm, (ans) => {
                 if (ans) {
                     window.location.href = '~/KnowledgeArticlePage/?id=' + MemoData[0]["_ovs_frenchknowledgearticle_value"];
