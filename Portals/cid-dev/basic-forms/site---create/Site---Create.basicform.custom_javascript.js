@@ -6,6 +6,7 @@ var _busy = false;
 $(document).ready(function () {
 	debugger;
 	page_setup();
+	$("#WebResource_address_complete").attr("title" , "Address Lookup");
 	var addressType = $("#ovs_address_type :selected").text();
 	$("#InsertButton").click(function (e) {
 		$("#ovs_address1_province").attr("disabled", false);

@@ -7,7 +7,7 @@ var _busy = false;
 $(document).ready(function ()
 {
     debugger;
-
+    $("#WebResource_address_complete").attr("title" , "Address Lookup");
     // address
     tdg.cid.address_init(true);
 

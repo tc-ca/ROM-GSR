@@ -8,7 +8,7 @@ $(document).ready(function () {
 
     var company_reg_date;
 
-    sessionStorage.setItem("company_reg_date", company_reg_date);
+    sessionStorage.setItem("company_reg_date", null);
     var customerid = '{{user.parentcustomerid.id}}';
 
     //declare request and default to reg
@@ -16,6 +16,7 @@ $(document).ready(function () {
 
     if (customerid == null || customerid == "" || customerid == "undefined") {
         tdg.c.weblink_hide("/company_dashboard/");
+        sessionStorage.setItem("company_reg_date", null);
     }
     else {
         customerid = '{{user.parentcustomerid.id}}';
@@ -43,16 +44,33 @@ $(document).ready(function () {
     var ButtonCancel = tdg.error_message.message("BTN_CANCEL");
     //add button next to save button
     $(".actions").append('&nbsp;&nbsp;<input id ="cancelButton" type="button" value="' +
-        ButtonCancel + '" class="btn btn-default button previous previous-btn"> </input>');
+        ButtonCancel + '"  class="btn btn-default button previous previous-btn" onclick="javascript:clearIsDirty();disableButtons();window.history.back();"  nonactionlinkbutton="true" onkeypress="Cancel()"> </input>');
     //cancel button click event
     $('#cancelButton').click(function (e) {
-        var regdate = sessionStorage.getItem("company_reg_date", company_reg_date);
-        if (regdate != null && regdate != "") {
+     
+       var regdate = sessionStorage.getItem("company_reg_date", company_reg_date);
+        if (regdate != null && regdate != "" && regdate != "null") {
             window.location.href = '~/company_dashboard/';
         }
+        else
         {
             window.location.href = '~/RegistrationWizard/';
         }
+       
+    });
+
+    $("#cancelButton").on ("keypress", function () {
+       var keyCode = event.keyCode || event.which;
+       if (keyCode == '13'){var regdate = sessionStorage.getItem("company_reg_date", company_reg_date);
+      
+        if (regdate != null && regdate != "" && regdate != "null") {
+            window.location.href = '~/company_dashboard/';
+        }
+        else
+        {
+            window.location.href = '~/RegistrationWizard/';
+        }
+       }
     });
 
     var contactemailLabel = tdg.error_message.message("m000135");
@@ -63,15 +81,18 @@ $(document).ready(function () {
     var submit_Lable = tdg.error_message.message("BTN_SUBMIT");
     $("#InsertButton")[0].value = submit_Lable;
     $("#InsertButton").css("display", "none");
+    $("#InsertButton").attr('disabled','disabled');
     var NewSubmitButton = '<button type="button" id="btn_submit_request" class="submit-btn btn btn-primary form-action-container-left">'
         + submit_Lable + '</button>'
     $("#InsertButton").after(NewSubmitButton);
+
 
     $("#btn_submit_request").click(function (e) {
         var lengthofCurrentMemo = $("#ovs_requestdetails").val().length;
         var TemplateLength = sessionStorage.getItem("MemoLength");
 
         if (lengthofCurrentMemo > TemplateLength) {
+             $("#InsertButton").removeAttr('disabled');
             $("#InsertButton").click();
             // tdg.c.
             //dialog_OK(confirmationMessage);
@@ -220,4 +241,19 @@ function dialog_OK(message) {
             window.location.href = '~/RegistrationWizard/';
         }
     });
+}
+
+function Cancel()
+{
+    var keyCode = event.keyCode || event.which;
+    if (keyCode == '13'){
+     var regdate = sessionStorage.getItem("company_reg_date", company_reg_date);
+        if (regdate != null && regdate != "" && regdate != "null") {
+            window.location.href = '~/company_dashboard/';
+        }
+        else
+        {
+            window.location.href = '~/RegistrationWizard/';
+        }
+    }
 }

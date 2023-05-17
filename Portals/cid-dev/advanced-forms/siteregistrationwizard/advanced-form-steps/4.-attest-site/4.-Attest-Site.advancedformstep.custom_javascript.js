@@ -78,15 +78,20 @@ $(document).ready(function () {
     if ($("#printSummary").length <= 0) {
         var msg = tdg.error_message.message("m000007"); // Print Summary
         $("#NextButton").parent().after("<div id='printSummary' role='group' class='btn-group entity-action-button'><input type='button' name='PrintButton' value='" + msg + "' onclick='window.print();' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'></div>");
+        $("#printSummary").on ("keypress", function () {
+        debugger;
+        var keyCode = event.keyCode || event.which;
+        if (keyCode == '13'){
+            window.print();
+            }
+     });
+   
     }
-
-    subgrid_language();
+     
+    
     debugger;
-        //PBI 262824 accessibility issue role is not allowed with label
-     $("#cid_importingsitetype_label").attr("role", "");
-     $("#cid_offeringfortransportsitetype_label").attr("role","");
-     $("#cid_handlingsitetype_label").attr("role","");
-     $("#cid_transportingsitetype_label").attr("role","");
+
+      
 
     $('table').each(function () {
         debugger;
@@ -97,6 +102,9 @@ $(document).ready(function () {
             });
         }
     });
+    
+ 
+  
 });
 
 if (window.jQuery) {
@@ -130,6 +138,7 @@ if (window.jQuery) {
                 validationSection.show();
                 $('#alertMessages').focus();
             }
+            $('.field-label').attr("role", "");
             return validation;
         }
     }(window.jQuery));

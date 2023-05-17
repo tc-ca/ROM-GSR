@@ -1,4 +1,5 @@
 
+
 // //To apply the Asterisk(*) Sign using custom JS:
 //$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
 
@@ -1749,7 +1750,7 @@ if (typeof (tdg.cid) == "undefined") {
                 '</td>' +
                 '<td colspan="1" rowspan="1" class="clearfix cell checkbox-cell">' +
                 '<div class="info">' +
-                '<label for="cid_Maritime" id="cid_Maritime_label" class="field-label" >' + cid_Maritime_label + '</label>' +
+                '<label for="cid_Marine" id="cid_Marine_label" class="field-label" >' + cid_Maritime_label + '</label>' +
                 '</div>' +
                 '<div class="control">' +
                 '<span class="checkbox ">' +
@@ -1766,6 +1767,10 @@ if (typeof (tdg.cid) == "undefined") {
                 $(this).append(row1);
 
                 $(this).append(row2);
+                $("#cid_importingsitetype_label").attr("role", "");            
+                $("#cid_offeringfortransportsitetype_label").attr("role", "");
+                $("#cid_handlingsitetype_label").attr("role", "");
+                $("#cid_transportingsitetype_label").attr("role", "");
 
             })
         },

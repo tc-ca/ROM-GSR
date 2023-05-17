@@ -38,7 +38,7 @@ if (typeof (tdg.message) == "undefined") {
                 "To edit one of the Sites, mouse-click the underlined Site ID link of that row, or choose the option from the <b>[V]</b> button at the end.\n\n" +
                 "Choose the <b>[Next]</b> button, once all Sites are added and attested.\n\n" +
                 "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen.";
-            var m000022_FR = "Pour ajouter des sites individuellement, choisissez le bouton <b>[+Créer]</b>. Sinon, choisissez le bouton <b>[Ajouter/Mettre à jour en masse]</b> pour ajouter tous les nouveaux sites en une seule fois via Excel.\ n\n" +
+            var m000022_FR = "Pour ajouter des sites individuellement, choisissez le bouton <b>[+Créer]</b>. Sinon, choisissez le bouton <b>[Ajouter/mise à jour en bloc]</b> pour ajouter tous les nouveaux sites en une seule fois via Excel.\n\n" +
                 "Pour modifier l'un des sites, cliquez avec la souris sur le lien souligné de l'ID de site de cette ligne ou choisissez l'option à partir du bouton <b>[V]</b> à la fin.\n\n" +
                 "Choisissez le bouton <b>[Suivant]</b>, une fois tous les sites ajoutés et attestés.\n\n" +
                 "Si nécessaire, choisissez le bouton <b>[Précédent]</b> ci-dessous pour revenir à l'écran Attester l'organisation.";
@@ -62,7 +62,7 @@ if (typeof (tdg.message) == "undefined") {
                 "An email has been sent to your address, confirming the completion of the registration." +
                 "<br><br>You are currently in the initial in-year page, which will be your starting page for each future CID sessions. {0} is your Organization annual compliance anniversary date."
             var m000030_FR = "L'enregistrement de votre entreprise dans la plateforme de données BDIC est maintenant terminé. " +
-                "Un e-mail a été envoyé à votre adresse, confirmant la finalisation de l'inscription." +
+                "Un courriel a été envoyé à votre adresse, confirmant la finalisation de l'inscription." +
                 "<br><br>Vous êtes actuellement dans la page initiale en cours d'année, qui sera votre page de démarrage pour chaque session BDIC future. {0} est la date anniversaire de conformité annuelle de votre organisation."
 
             var m000031_EN = "You are changing the site requirement level from basic to extended. " +
@@ -90,9 +90,9 @@ if (typeof (tdg.message) == "undefined") {
                 "      OR<br><br>" +
                 "- Continue with the same Business Number, which is linked to an existing Organization we already have on file. Note that in the screens to follow, you can change the existing Organization data fields as required.";
             var m000045_FR = "Pour procéder à l’enregistrement, vous devrez :<br><br>" +
-                "- saisir un numéro d’entreprise différent<br><br>" +
+                "- saisir un numéro d'organisation différent<br><br>" +
                 "      OU<br><br>" +
-                "- poursuivre avec le même numéro d’entreprise, qui est lié à une organisation existante déjà au dossier. Veuillez noter que dans les écrans suivants, vous pouvez changer les données des champs sur l’organisation au besoin.";
+                "- poursuivre avec le même numéro d'organisation, qui est lié à une organisation existante déjà au dossier. Veuillez noter que dans les écrans suivants, vous pouvez changer les données des champs sur l’organisation au besoin.";
 
             var m000046_EN = "To proceed with the registration process you will need to either:<br><br>" +
                 "- Enter a different organization name.<br><br>" +
@@ -111,7 +111,7 @@ if (typeof (tdg.message) == "undefined") {
             var page_crw_start_EN = "Enter the Organization’s Canada Revenue Agency Business Number (CRA BN) and then choose the <b>[Next]</b> button below.<br><br>" +
                 "Alternatively, if your Organization is from an Industry Type does not require a CRA BN, then choose ‘No‘, complete the two fields that follow and then choose the <b>[Next]</b> button below.<br><br>" +
                 "Note that throughout the application, all fields with a red asterisk are mandatory fields and must be completed before proceeding to the next step.";
-            var page_crw_start_FR = "Saisir le numéro d’entreprise de l’Agence du revenu du Canada (NE ARC) et cliquer sur le bouton <b>[Suivant]</b> ci‑dessous.<br><br>" +
+            var page_crw_start_FR = "Saisir le numéro d'organisation de l’Agence du revenu du Canada (NE ARC) et cliquer sur le bouton <b>[Suivant]</b> ci‑dessous.<br><br>" +
                 "Sinon, si votre compagnie appartient à un type d’industrie qui ne possède pas de NE ARC, cliquer sur ‘Non‘, remplir les champs et cliquer sur le bouton <b>[Suivant]</b> ci‑dessous.";
 
             var page_crw_company_insert_EN = "As required, update any of the Organization information below, then choose the <b>[Next]</b> button below to continue.<br>" +
@@ -139,7 +139,7 @@ if (typeof (tdg.message) == "undefined") {
                 "Pour désactiver un code SCIAN, cliquer sur le bouton <b>[V]</b> à l’extrémité droite de cette rangée. Au besoin, cliquer sur le bouton <b>[Précédent]</b> pour revenir à l’écran Personnes-ressources.";
 
             var page_crw_attest_EN = "If the Organization details are accurate and complete, then choose the <b>[Submit]</b> button below.</br>Otherwise, use the <b>[Previous]</b> button below to first make any adjustments.";
-            var page_crw_attest_FR = "Si les détails de la compagnie sont exacts et complets, cliquer sur le bouton <b>[Envoyer]</b> ci‑dessous.<br>Sinon, cliquer sur le bouton <b>[Précédent]</b> ci‑dessous pour apporter des changements.";
+            var page_crw_attest_FR = "Si les détails de la compagnie sont exacts et complets, cliquer sur le bouton <b>[Soumettre]</b> ci‑dessous.<br>Sinon, cliquer sur le bouton <b>[Précédent]</b> ci‑dessous pour apporter des changements.";
 
             var page_crw_site_EN = "For each Site:<br>" +
                 "1. Choose the <b>[+Add]</b> button below.<br>" +
@@ -194,8 +194,8 @@ if (typeof (tdg.message) == "undefined") {
                 "To edit or deactivate a Site Class, then choose the <b>[V]</b> button to the far right of that row.<br>" +
                 "If necessary, choose the <b>[Previous]</b> button below to return to the Mode(s) of Transportation screen<br>" +
                 "Alternatively, choose the <b>[Back to Activity Types Screen]</b> to save the current site information and return to the Activity Types Screen."
-            var page_orw_class_FR = "Cliquer sur le bouton <b>[+Créer]</b> ci-dessous pour chaque classe de site applicable. Ensuite, cliquer sur le bouton <b>[Suivant]</b> ci‑dessous.</br>" +
-                "Pour modifier ou désactiver une classe de site, cliquer sur le bouton <b>[V]</b> à l’extrémité droite de la rangée.<br>" +
+            var page_orw_class_FR = "Cliquer sur le bouton <b>[+Créer]</b> ci-dessous pour chaque catégorie de site applicable. Ensuite, cliquer sur le bouton <b>[Suivant]</b> ci‑dessous.</br>" +
+                "Pour modifier ou désactiver une catégorie de site, cliquer sur le bouton <b>[V]</b> à l’extrémité droite de la ligne.<br>" +
                 "Au besoin, cliquer sur le bouton <b>[Précédent]</b> ci-dessous pour revenir à l’écran Mode(s) de Transport.<br>" +
                 "Sinon, sélectionner l’écran <b>[Retour à l'écran Type d'activité]</b> pour sauvegarder l’information à jour sur le site et revenir à l’écran Type(s) d'activité."
 
@@ -478,7 +478,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000001",
                         "message_en": "Invalid CRA Business Number",
-                        "message_fr": "Numéro d'entreprise de l'ARC invalide"
+                        "message_fr": "Numéro l'organisation de l'ARC invalide"
                     },
                     {
                         "code": "m000002",
@@ -663,7 +663,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000037",
                         "message_en": "CRA Business Number '{0}' already exists.",
-                        "message_fr": "Le numéro d'entreprise ARC {0} existe déjà."
+                        "message_fr": "Le numéro d'organisation ARC {0} existe déjà."
                     },
                     {
                         "code": "m000038",
@@ -1073,7 +1073,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000164",
                         "message_en": "We are currently experiencing issues with the Canada Revenue Agency (CRA) Application Program Interface (API). You will not be able to create a new company by using a CRA Business Number. Please try again at a later date.",
-                        "message_fr": "Nous rencontrons actuellement des problèmes avec l'interface du programme d'application (API) de l'Agence du revenu du Canada (ARC). Vous ne pourrez pas créer une nouvelle entreprise en utilisant un numéro d'entreprise de l'ARC. Veuillez réessayer ultérieurement."
+                        "message_fr": "Nous rencontrons actuellement des problèmes avec l'interface du programme d'application (API) de l'Agence du revenu du Canada (ARC). Vous ne pourrez pas créer une nouvelle entreprise en utilisant un numéro d'organisation de l'ARC. Veuillez réessayer ultérieurement."
                     },
                     {
                         "code": "m000165",
