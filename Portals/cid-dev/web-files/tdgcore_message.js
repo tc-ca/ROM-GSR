@@ -17,7 +17,7 @@ if (typeof (tdg.message) == "undefined") {
                 "Please choose the <b>[V]</b> button on each row to update Attest each Site, or flag it as not your Organization's Site.\n\n" +
                 "When those updates are Complete, please add any remaining Sites individually by choosing the <b>[+Add]</b> button," +
                 "or all at once via Excel, by choosing the <b>[Bulk Add/Update]</b> button.";
-            var m000020_FR = "Le tableau de données ci-dessous contient les sites qui sont associés à votre organisation. Veuillez cliquer sur le bouton <b>[V]</b> de chaque rangée pour attester chaque site ou marquer le site comme n’appartenant pas à votre organisation. Une fois les mises à jour terminées, ajouter tous les autres sites individuellement en cliquant sur le bouton <b>[+Créer]</b> ou tous à la fois par Excel, en cliquant sur le bouton <b>[Ajout/mise à jour en bloc]</b>.";
+            var m000020_FR = "Le tableau de données ci-dessous contient les sites qui sont associés à votre organisation. Veuillez cliquez sur le bouton <b>[V]</b> de chaque rangée pour attester chaque site ou marquer le site comme n’appartenant pas à votre organisation. Une fois les mises à jour terminées, ajouter tous les autres sites individuellement en cliquant sur le bouton <b>[+Créer]</b> ou tous à la fois par Excel, en cliquant sur le bouton <b>[Ajout/mise à jour en bloc]</b>.";
 
             var m000021_EN = "Existing Sites where 'Is Site Attested' is set to 'No', need to be attested by choosing one of " +
                 "the options via the <b>[V]</b> button at the far right of those rows. All sites need to be attested before the Bulk option can be chosen.\n\n" +
@@ -111,8 +111,8 @@ if (typeof (tdg.message) == "undefined") {
             var page_crw_start_EN = "Enter the Organization’s Canada Revenue Agency Business Number (CRA BN) and then choose the <b>[Next]</b> button below.<br><br>" +
                 "Alternatively, if your Organization is from an Industry Type does not require a CRA BN, then choose ‘No‘, complete the two fields that follow and then choose the <b>[Next]</b> button below.<br><br>" +
                 "Note that throughout the application, all fields with a red asterisk are mandatory fields and must be completed before proceeding to the next step.";
-            var page_crw_start_FR = "Saisir le numéro d'organisation de l’Agence du revenu du Canada (NE ARC) et cliquer sur le bouton <b>[Suivant]</b> ci‑dessous.<br><br>" +
-                "Sinon, si votre compagnie appartient à un type d’industrie qui ne possède pas de NE ARC, cliquer sur ‘Non‘, remplir les champs et cliquer sur le bouton <b>[Suivant]</b> ci‑dessous.";
+            var page_crw_start_FR = "Saisir le numéro d'organisation de l’Agence du revenu du Canada (NE ARC) et cliquez sur le bouton <b>[Suivant]</b> ci‑dessous.<br><br>" +
+                "Sinon, si votre compagnie appartient à un type d’industrie qui ne possède pas de NE ARC, cliquez sur ‘Non‘, remplir les champs et cliquez sur le bouton <b>[Suivant]</b> ci‑dessous.";
 
             var page_crw_company_insert_EN = "As required, update any of the Organization information below, then choose the <b>[Next]</b> button below to continue.<br>" +
                 "If required: <br>" +
@@ -130,16 +130,16 @@ if (typeof (tdg.message) == "undefined") {
 
             var page_crw_contact_EN = "Create at least one Secondary Contact by choosing the <b>[+Add]</b> button below, then choose the <b>[Next]</b> button below to continue.</br><br>" +
                 "To edit or deactivate a Contact, then choose the <b>[V]</b> button to the far right of that row. If required, choose the <b>[Previous]</b> button to return to the Organization screen.";
-            var page_crw_contact_FR = "Créer au moins un contact secondaire en cliquant sur le bouton <b>[+Créer]</b> ci-dessous, ensuite cliquer sur le bouton <b>[Suivant]</b> ci‑dessous pour poursuivre.</br><br>" +
-                "Pour modifier ou désactiver un contact, cliquer sur le bouton <b>[V]</b> à l’extrémité droite de cette rangée. Au besoin, cliquer sur le bouton <b>[Précédent]</b> pour revenir à l’écran organization .";
+            var page_crw_contact_FR = "Créer au moins un contact secondaire en cliquant sur le bouton <b>[+Créer]</b> ci-dessous, ensuite cliquez sur le bouton <b>[Suivant]</b> ci‑dessous pour poursuivre.</br><br>" +
+                "Pour modifier ou désactiver un contact, cliquez sur le bouton <b>[V]</b> à l’extrémité droite de cette rangée. Au besoin, cliquez sur le bouton <b>[Précédent]</b> pour revenir à l’écran organization .";
 
             var page_crw_naics_EN = "Choose the <b>[+Add]</b> button below to create NAICS Codes for the Organization, then choose the <b>[Next]</b> button below to continue.</br></br>" +
                 "To deactivate a NAICS, then choose the <b>[V]</b> button to the far right of that row. If required, choose the <b>[Previous]</b> button below to return to the Contact screen.";
-            var page_crw_naics_FR = "Cliquer sur le bouton <b>[+Créer]</b> ci-dessous pour créer les codes SCIAN pour la compagnie, ensuite cliquer sur le bouton <b>[Suivant]</b> ci‑dessous pour poursuivre.<br><br>" +
-                "Pour désactiver un code SCIAN, cliquer sur le bouton <b>[V]</b> à l’extrémité droite de cette rangée. Au besoin, cliquer sur le bouton <b>[Précédent]</b> pour revenir à l’écran Personnes-ressources.";
+            var page_crw_naics_FR = "Cliquer sur le bouton <b>[+Créer]</b> ci-dessous pour créer les codes SCIAN pour la compagnie, ensuite cliquez sur le bouton <b>[Suivant]</b> ci‑dessous pour poursuivre.<br><br>" +
+                "Pour désactiver un code SCIAN, cliquez sur le bouton <b>[V]</b> à l’extrémité droite de cette rangée. Au besoin, cliquez sur le bouton <b>[Précédent]</b> pour revenir à l’écran Personnes-ressources.";
 
             var page_crw_attest_EN = "If the Organization details are accurate and complete, then choose the <b>[Submit]</b> button below.</br>Otherwise, use the <b>[Previous]</b> button below to first make any adjustments.";
-            var page_crw_attest_FR = "Si les détails de la compagnie sont exacts et complets, cliquer sur le bouton <b>[Soumettre]</b> ci‑dessous.<br>Sinon, cliquer sur le bouton <b>[Précédent]</b> ci‑dessous pour apporter des changements.";
+            var page_crw_attest_FR = "Si les détails de la compagnie sont exacts et complets, cliquez sur le bouton <b>[Soumettre]</b> ci‑dessous.<br>Sinon, cliquez sur le bouton <b>[Précédent]</b> ci‑dessous pour apporter des changements.";
 
             var page_crw_site_EN = "For each Site:<br>" +
                 "1. Choose the <b>[+Add]</b> button below.<br>" +
@@ -149,10 +149,10 @@ if (typeof (tdg.message) == "undefined") {
                 "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen.";
             var page_crw_site_FR = "Pour chaque site:<br>" +
                 "1. Cliquer sur le bouton <b>[+Créer]</b> ci‑dessous.<br>" +
-                "2. Ensuite, cliquer sur le lien <u>Site ID</u> souligné de la nouvelle rangée afin de compléter et d’attester le site.<br>" +
+                "2. Ensuite, cliquez sur le lien <u>Site ID</u> souligné de la nouvelle rangée afin de compléter et d’attester le site.<br>" +
                 "3. Cliquer sur le bouton <b>[Suivant]</b> ci‑dessous une fois tous les sites saisis.<br><br>" +
-                "Pour modifier ou désactiver un site, cliquer sur le bouton <b>[V]</b> à l’extrémité droite de la rangée.<br>" +
-                "Au besoin, cliquer sur le bouton <b>[Précédent]</b> dessous pour retourner à l’écran Attester l'organisation.";
+                "Pour modifier ou désactiver un site, cliquez sur le bouton <b>[V]</b> à l’extrémité droite de la rangée.<br>" +
+                "Au besoin, cliquez sur le bouton <b>[Précédent]</b> dessous pour retourner à l’écran Attester l'organisation.";
 
             var page_crw_complete_EN = "If the Organization and site details are accurate and complete, then choose the <b>[Attest and Organization Registration]</b> button below to complete the Registration. Otherwise, use the <b>[Previous]</b> button below to first make any adjustments.";
             var page_crw_complete_FR = "Si les détails de l'organisation et du site sont exacts et complets, choisissez le bouton <b>[Attestation et inscription de l'organisation]</b> ci-dessous pour terminer l'inscription. Sinon, utilisez le bouton <b>[Précédent]</b> ci-dessous pour effectuer d'abord les ajustements.";
@@ -160,14 +160,14 @@ if (typeof (tdg.message) == "undefined") {
             var page_srw_site_EN = "As required, update any of the Site information, then choose the <b>[Next]</b> button below to continue.</br></br>" +
                 "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process.<br>" +
                 "<div id ='redirectInstruction'><h4>Please wait. You will be redirected to the site details steps</h4></div>";
-            var page_srw_site_FR = "Au besoin, mettre à jour l’information sur le site, ensuite cliquer sur le bouton <b>[Suivant]</b> ci-dessous pour continuer.</br></br>" +
+            var page_srw_site_FR = "Au besoin, mettre à jour l’information sur le site, ensuite cliquez sur le bouton <b>[Suivant]</b> ci-dessous pour continuer.</br></br>" +
                 "Sinon, sélectionner <b>[Retour à l’enregistrement de l’organisation]</b> pour sauvegarder l’information à jour sur le site et revenir au processus d’enregistrement de l’organisation.<br>" +
                 "<div id ='redirectInstruction'><h4>Veuillez patienter. Vous allez être redirigé vers les étapes relatives aux sites</h4></div>";
 
             var page_srw_activity_type_EN = "Choose the Site Activity Types. When complete, choose the <b>[Next]</b> button below.</br>If necessary, choose the <b>[Previous]</b> button below to return to the Site Information screen.</br>" +
                 "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process.";
-            var page_srw_activity_type_FR = "Choisir les types d’activités du site. Ensuite, cliquer sur le bouton <b>[Suivant]</b> ci‑dessous. Au besoin, cliquer sur le bouton <b>[Précédent]</b> ci‑dessous pour revenir à l’écran d'informations sur le site.</br>" +
-                "Sinon, cliquer sur <b>[Retour à l’enregistrement de l’organisation]</b> pour sauvegarder l’information à jour sur le site et revenir au processus d’enregistrement de l’organisation.";
+            var page_srw_activity_type_FR = "Choisir les types d’activités du site. Ensuite, cliquez sur le bouton <b>[Suivant]</b> ci‑dessous. Au besoin, cliquez sur le bouton <b>[Précédent]</b> ci‑dessous pour revenir à l’écran d'informations sur le site.</br>" +
+                "Sinon, cliquez sur <b>[Retour à l’enregistrement de l’organisation]</b> pour sauvegarder l’information à jour sur le site et revenir au processus d’enregistrement de l’organisation.";
 
             var page_srw_further_site_details_EN = "Please choose the <b>[Next]</b> button below to review and attest the Site.</br>" +
                 "If necessary, choose the <b>[Previous]</b> button below to return to Further Site Details screen.</br>" +
@@ -179,24 +179,24 @@ if (typeof (tdg.message) == "undefined") {
             var page_srw_further_attest_site_EN = "If the site details are accurate and complete, then choose the <b>[Attest Site Data]</b> button below.</br>" +
                 "Otherwise, use the <b>[Previous]</b> button to make any adjustments.</br>" +
                 "Alternatively, choose the <b>[Back to Organization Registration]</b> to save the current site information and return to the Organization Registration process.";
-            var page_srw_further_attest_site_FR = "Si les détails du site sont exacts et complets, cliquer sur le bouton <b>[Attester les données du site]</b> ci‑dessous.</br>" +
-                "Sinon, cliquer sur le bouton <b>[Précédent]</b> pour apporter des changements.</br>" +
+            var page_srw_further_attest_site_FR = "Si les détails du site sont exacts et complets, cliquez sur le bouton <b>[Attester les données du site]</b> ci‑dessous.</br>" +
+                "Sinon, cliquez sur le bouton <b>[Précédent]</b> pour apporter des changements.</br>" +
                 "Vous pouvez également sélectionner <b>[Retour à l’enregistrement de l’organisation]</b> pour sauvegarder l’information à jour sur le site et revenir au processus d’enregistrement de l’organisation.";
 
             var page_orw_mot_EN = "Choose the Mode(s) Of Transportation. When complete, choose the <b>[Next]</b> button below.<br>" +
                 "If necessary, choose the <b>[Previous]</b> button, or the <b>[Back to Activity Types Screen]</b> button, to return to the Activity Type screen.<br>" +
                 "Alternatively, choose the <b>[Back to Activity Types Screen]</b> to save the current site information and return to the Activity Types Screen.";
-            var page_orw_mot_FR = "Choisir le ou les modes de transport. Ensuite, cliquer sur le bouton <b>[Suivant]</b> ci-dessous.<br>" +
-                "Au besoin, cliquer sur le bouton <b>[Précédent]</b>, ou le bouton de l’écran <b>[Retour à l'écran Type d'activité]</b> pour revenir à l’écran Type(s) d'activité.<br>" +
-                "Sinon, cliquer sur le bouton de l’écran <b>[Retour à l'écran Type d'activité]</b> pour sauvegarder l’information à jour sur le site et revenir à l’écran Type(s) d'activité.";
+            var page_orw_mot_FR = "Choisir le ou les modes de transport. Ensuite, cliquez sur le bouton <b>[Suivant]</b> ci-dessous.<br>" +
+                "Au besoin, cliquez sur le bouton <b>[Précédent]</b>, ou le bouton de l’écran <b>[Retour à l'écran Type d'activité]</b> pour revenir à l’écran Type(s) d'activité.<br>" +
+                "Sinon, cliquez sur le bouton de l’écran <b>[Retour à l'écran Type d'activité]</b> pour sauvegarder l’information à jour sur le site et revenir à l’écran Type(s) d'activité.";
 
             var page_orw_class_EN = "Choose the <b>[+Add]</b> button below for each applicable Site Class. When complete, choose the <b>[Next]</b> button below.</br>" +
                 "To edit or deactivate a Site Class, then choose the <b>[V]</b> button to the far right of that row.<br>" +
                 "If necessary, choose the <b>[Previous]</b> button below to return to the Mode(s) of Transportation screen<br>" +
                 "Alternatively, choose the <b>[Back to Activity Types Screen]</b> to save the current site information and return to the Activity Types Screen."
-            var page_orw_class_FR = "Cliquer sur le bouton <b>[+Créer]</b> ci-dessous pour chaque catégorie de site applicable. Ensuite, cliquer sur le bouton <b>[Suivant]</b> ci‑dessous.</br>" +
-                "Pour modifier ou désactiver une catégorie de site, cliquer sur le bouton <b>[V]</b> à l’extrémité droite de la ligne.<br>" +
-                "Au besoin, cliquer sur le bouton <b>[Précédent]</b> ci-dessous pour revenir à l’écran Mode(s) de Transport.<br>" +
+            var page_orw_class_FR = "Cliquer sur le bouton <b>[+Créer]</b> ci-dessous pour chaque catégorie de site applicable. Ensuite, cliquez sur le bouton <b>[Suivant]</b> ci‑dessous.</br>" +
+                "Pour modifier ou désactiver une catégorie de site, cliquez sur le bouton <b>[V]</b> à l’extrémité droite de la ligne.<br>" +
+                "Au besoin, cliquez sur le bouton <b>[Précédent]</b> ci-dessous pour revenir à l’écran Mode(s) de Transport.<br>" +
                 "Sinon, sélectionner l’écran <b>[Retour à l'écran Type d'activité]</b> pour sauvegarder l’information à jour sur le site et revenir à l’écran Type(s) d'activité."
 
             var page_my_company_EN = "Head Office details can be updated by choosing the <b>[Update Organization]</b> button at the bottom of this screen.</br></br>" +
@@ -229,7 +229,7 @@ if (typeof (tdg.message) == "undefined") {
             var page_annual_compliance_update_EN = "To finalize the Annual Compliance Update:</br>1- As applicable, perform each step's related update below, then it's 'Mark as complete' option.</br>" +
                 "2- Read and agree to the terms of service agreement and select the 'Attestation' section.</br>" +
                 "3- When complete, select the <b>[Finalize Annual Compliance]</b> option.";
-            var page_annual_compliance_update_FR = "Pour finaliser la mise à jour annuelle de conformité :</br>1- Le cas échéant, effectuez la mise à jour associée à chaque étape ci-dessous, puis l'option 'Marquer comme terminée'.</br>" +
+            var page_annual_compliance_update_FR = "Pour finaliser la mise à jour annuelle de conformité :</br>1- Le cas échéant, effectuez la mise à jour associée à chaque étape ci-dessous, puis l'option 'Indiquer comme terminé'.</br>" +
                 "2- Lisez et acceptez les termes du contrat de service et sélectionnez la section 'Attestation'.</br>" +
                 "3- Une fois terminé, sélectionnez l'option <b>[Finaliser la conformité annuelle]</b>.";
 
