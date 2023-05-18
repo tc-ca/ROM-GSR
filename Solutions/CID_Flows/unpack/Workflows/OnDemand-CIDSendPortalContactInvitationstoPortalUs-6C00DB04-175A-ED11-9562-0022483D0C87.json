@@ -27,6 +27,15 @@
         "api": {
           "name": "shared_sendmail"
         }
+      },
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
       }
     },
     "definition": {
@@ -299,7 +308,7 @@
                   "actions": {
                     "Condition_2_-_Check_contact_Language": {
                       "actions": {
-                        "Send_an_email_notification_(V3)_2": {
+                        "Send_an_email_notification_-_French_S3": {
                           "runAfter": {},
                           "metadata": {
                             "operationMetadataId": "4c6eb0e1-e4fd-4955-86a4-7a288db18da9"
@@ -313,8 +322,8 @@
                             },
                             "parameters": {
                               "request/to": "@{outputs('Get_a_row_by_ID_Invited_Contact')?['body/emailaddress1']};",
-                              "request/subject": "FRENCH: Beta Testing: CID Data Platform: Assignment as a Secondary Admin for the @{variables('Company Name')} Company",
-                              "request/text": "<p>Hello @{outputs('Get_a_row_by_ID_Invited_Contact')?['body/firstname']} @{outputs('Get_a_row_by_ID_Invited_Contact')?['body/lastname']}<br>\n<br>\n@{variables('Invited By')} Primary Admin for the @{variables('Company Name')} Company of the CID Data Platform has added you as a Secondary Admin for that Company.<br>\n<br>\nOnce you are ready to use the CID Data Platform, you can use the following:<br>\n&nbsp;&nbsp;&nbsp;On-boarding link : @{variables('Environment')}<br>\n&nbsp;&nbsp;&nbsp;Activation Code &nbsp;: @{first(outputs('Filter_Invitations')?['body/value'])?['adx_invitationcode']}<br>\nto on-board to the CID Platform.<br>\n<br>\n<br>\nTransport Canada – CID</p>"
+                              "request/subject": "@{variables('FrenchTestSubjectText')} TMD en ligne – BDIC : Affectation en tant que contact secondaire pour l’organisation @{variables('Company Name')}",
+                              "request/text": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{variables('Invited By')}, le contact principal de l’organisation &nbsp;@{variables('Company Name')} de la plateforme de données de la BDIC en ligne de Transports Canada, vous a ajouté en tant que contact secondaire pour cette organisation. <br>\n<br>\nPour accéder à la plateforme de la BDIC, veuillez copier le lien suivant dans votre navigateur Web: <br>\n@{variables('Environment')}<br>\n<br>\nSur la page Web qui s’affiche, veuillez fournir les renseignements suivants pour le code d’invitation demandé:<br>\n@{first(outputs('Filter_Invitations')?['body/value'])?['adx_invitationcode']}<br>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de messagerie. &nbsp;Si vous n’êtes pas la personne qui doit inscrire cette organisation, veuillez l’indiquer en répondant à ce courriel. Si vous connaissez le nom et l’adresse courriel de la personne chargée d’inscrire cette organisation, veuillez les indiquer également.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}</p>"
                             },
                             "authentication": "@parameters('$authentication')"
                           }
@@ -323,7 +332,7 @@
                       "runAfter": {},
                       "else": {
                         "actions": {
-                          "Send_an_email_notification_(V3)": {
+                          "Send_an_email_notification_-_English_S3": {
                             "runAfter": {},
                             "metadata": {
                               "operationMetadataId": "21ca975c-4645-4ec1-abb5-2be151919b5c"
@@ -337,8 +346,8 @@
                               },
                               "parameters": {
                                 "request/to": "@{outputs('Get_a_row_by_ID_Invited_Contact')?['body/emailaddress1']};",
-                                "request/subject": "Beta Testing: CID Data Platform: Assignment as a Secondary Admin for the @{variables('Company Name')} Company",
-                                "request/text": "<p>Hello @{outputs('Get_a_row_by_ID_Invited_Contact')?['body/firstname']} @{outputs('Get_a_row_by_ID_Invited_Contact')?['body/lastname']},<br>\n<br>\n@{variables('Invited By')} Primary Admin for the @{variables('Company Name')} Company of the CID Data Platform has added you as a Secondary Admin for that Company.<br>\n<br>\nOnce you are ready to use the CID Data Platform, you can use the following:<br>\n&nbsp;&nbsp;&nbsp;On-boarding link : @{variables('Environment')}<br>\n&nbsp;&nbsp;&nbsp;Activation Code &nbsp;: @{first(outputs('Filter_Invitations')?['body/value'])?['adx_invitationcode']}<br>\nto on-board to the CID Platform.<br>\n<br>\n<br>\nTransport Canada – CID</p>"
+                                "request/subject": "@{variables('TestSubjectText')} TDG Online - CID: Assignment as a Secondary Contact for the @{variables('Company Name')} organization",
+                                "request/text": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{variables('Invited By')}, the Primary Contact for the @{variables('Company Name')} organization of the Transport Canada Online CID Data Platform, has added you as a Secondary Contact for that organization. <br>\n<br>\nTo on-board to the CID Platform, please copy the following link into your Web browser: <br>\n@{variables('Environment')}<br>\n<br>\nOn the Web page that appears, please provide the following information for the requested Invitation code: <br>\n@{first(outputs('Filter_Invitations')?['body/value'])?['adx_invitationcode']}<br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to this email. If you know the name and email address of the individual who should register this organization, then please provide this as well.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>"
                               },
                               "authentication": "@parameters('$authentication')"
                             }
@@ -363,7 +372,7 @@
                   "actions": {
                     "Condition_2_Check_secondary_contact_Language_of_Correspondence": {
                       "actions": {
-                        "Send_an_email_notification_(V3)_3": {
+                        "Send_an_email_notification_-_S3-2_French": {
                           "runAfter": {},
                           "metadata": {
                             "operationMetadataId": "4c6eb0e1-e4fd-4955-86a4-7a288db18da9"
@@ -377,8 +386,8 @@
                             },
                             "parameters": {
                               "request/to": "@{outputs('Get_a_row_by_ID_Invited_Contact')?['body/emailaddress1']};",
-                              "request/subject": "FRENCH: Beta Testing: CID Data Platform: Assignment as a Secondary Admin for the @{variables('Company Name')} Company",
-                              "request/text": "<p>Hello @{outputs('Get_a_row_by_ID_Invited_Contact')?['body/firstname']} @{outputs('Get_a_row_by_ID_Invited_Contact')?['body/lastname']},<br>\n<br>\n@{variables('Invited By')} Primary Admin for the @{variables('Company Name')} Company of the CID Data Platform has added you as a Secondary Admin for that Company.<br>\n<br>\nOnce you are ready to use the CID Data Platform, you use the link you previously used @{triggerBody()?['Portal_URL']} to on-board to the CID Platform.<br>\n<br>\nTransport Canada – CID</p>"
+                              "request/subject": "@{variables('FrenchTestSubjectText')} TMD en ligne – BDIC : Affectation en tant que contact secondaire pour l’organisation @{variables('Company Name')}",
+                              "request/text": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{variables('Invited By')}, le contact principal de l’organisation @{variables('Company Name')} de la plateforme de données de la BDIC en ligne, vous a ajouté en tant que contact secondaire pour cette organisation. <br>\n<br>\nUne fois que vous êtes prêt à utiliser la plateforme de la BDIC, vous pouvez utiliser le lien que vous avez précédemment utilisé @{triggerBody()?['Portal_URL']} pour vous connecter à la plateforme.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}</p>"
                             },
                             "authentication": "@parameters('$authentication')"
                           }
@@ -387,7 +396,7 @@
                       "runAfter": {},
                       "else": {
                         "actions": {
-                          "Send_an_email_notification_(V3)_4": {
+                          "Send_an_email_notification_-_S3-2_English": {
                             "runAfter": {},
                             "metadata": {
                               "operationMetadataId": "4c6eb0e1-e4fd-4955-86a4-7a288db18da9"
@@ -401,8 +410,8 @@
                               },
                               "parameters": {
                                 "request/to": "@{outputs('Get_a_row_by_ID_Invited_Contact')?['body/emailaddress1']};",
-                                "request/subject": "Beta Testing: CID Data Platform: Assignment as a Secondary Admin for the @{variables('Company Name')} Company",
-                                "request/text": "<p>Hello @{outputs('Get_a_row_by_ID_Invited_Contact')?['body/firstname']} @{outputs('Get_a_row_by_ID_Invited_Contact')?['body/lastname']},<br>\n<br>\n@{variables('Invited By')} Primary Admin for the @{variables('Company Name')} Company of the CID Data Platform has added you as a Secondary Admin for that Company.<br>\n<br>\nOnce you are ready to use the CID Data Platform, you use the link you previously used @{triggerBody()?['Portal_URL']} to on-board to the CID Platform.<br>\n<br>\nTransport Canada – CID</p>"
+                                "request/subject": "@{variables('TestSubjectText')} TDG Online - CID: Assignment as a Secondary Contact for the @{variables('Company Name')} organization",
+                                "request/text": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{variables('Invited By')}, the Primary Contact for the @{variables('Company Name')} organization of the CID Data Platform has added you as a Secondary Contact for that organization. <br>\n<br>\nOnce you are ready to use the CID Data Platform, you can use the link you previously used @{triggerBody()?['Portal_URL']} to on-board to the CID Platform.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>"
                               },
                               "authentication": "@parameters('$authentication')"
                             }
@@ -563,7 +572,7 @@
             }
           },
           "runAfter": {
-            "Get_a_row_by_ID_Invited_Contact": [
+            "Check_environment": [
               "Succeeded"
             ]
           },
@@ -654,7 +663,7 @@
         },
         "Filter_Invitations": {
           "runAfter": {
-            "Initialize_Variable_Environment": [
+            "Scope_-_email_Template_Standard_Text": [
               "Succeeded"
             ]
           },
@@ -696,6 +705,254 @@
               "recordId": "@replace(replace(triggerBody()?['Secondary_Contactid'],'{',''),'}','')"
             },
             "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Scope_-_email_Template_Standard_Text": {
+          "actions": {
+            "StandardSalutation": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "ffa8d1a6-89ec-434c-82e6-78e0fa2bd649"
+              },
+              "type": "Compose",
+              "inputs": "<em>*** The following is an automated email sent by the TDG Online - CID system. Please do not reply ***</em>"
+            },
+            "FrenchStandardSalutation": {
+              "runAfter": {
+                "StandardSalutation": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "ffa8d1a6-89ec-434c-82e6-78e0fa2bd649"
+              },
+              "type": "Compose",
+              "inputs": "<em>*** Le message suivant est un courriel automatisé envoyé par le TMD en ligne – Système de la BDIC. Veuillez ne pas répondre ***</em>"
+            },
+            "English-EmailFooter": {
+              "runAfter": {
+                "FrenchStandardSalutation": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1535933c-0d10-4db3-9d01-208feac8f786"
+              },
+              "type": "Compose",
+              "inputs": "<div style=\"font-size:x-small;\"><br>Note:<br>\n   - To receive subsequent emails in French, you can update your Language of Preferred Correspondence choice via the [Account Settings] button in the TDG Online - CID data portal. <br><br> \n   - Please do not reply to this email. If necessary, use the Contact Us button, or link, in the CID data portal. </div>"
+            },
+            "French-EmailFooter": {
+              "runAfter": {
+                "English-EmailFooter": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "5ec93fa4-a5e7-451e-9327-290b6c88346b"
+              },
+              "type": "Compose",
+              "inputs": "<div style=\"font-size:x-small;\">Remarque:<br>\n   - Pour recevoir les courriels suivants en français, vous pouvez mettre à jour votre choix de langue de correspondance préférée à l’aide du bouton [Paramètres du compte] du portail de données TMD en ligne – BDIC. <br><br> \n   - Veuillez ne pas répondre à ce courriel. Au besoin, utilisez le bouton ou le lien « Communiquer avec nous » du portail de données de la BDIC.  </div>"
+            },
+            "Filter_environment-CID_Environment": {
+              "runAfter": {
+                "French-EmailFooter": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('get-environment-settings')?['body/value']",
+                "where": "@equals(item()?['qm_name'], 'CID_Environment')"
+              }
+            }
+          },
+          "runAfter": {
+            "get-environment-settings": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4a4d30e6-367a-4728-93d1-e8fc48567195"
+          },
+          "type": "Scope"
+        },
+        "get-environment-settings": {
+          "runAfter": {
+            "Initialize_variable_FrenchTesting_text_for_the_email": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7ed63b1d-9cf8-403e-9d9c-56cdd03f198e"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "qm_environmentsettingses",
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"qm_environmentsettings\">\n<attribute name=\"qm_environmentsettingsid\"/>\n<attribute name=\"qm_name\"/>\n<attribute name=\"qm_value\"/>\n<order attribute=\"qm_name\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"qm_name\" operator=\"like\" value=\"%CID[_]%\"/>\n</filter>\n</entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Check_environment": {
+          "actions": {
+            "Set_variable_TestingText": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "224fc033-5e58-423f-b235-e84df25189ec"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "TestingText",
+                "value": "Test email: This email is a test email, not an actual email representing what is indicated below. <br><br>                                                                                 "
+              }
+            },
+            "Set_variable_TestSubjectText": {
+              "runAfter": {
+                "Set_variable_TestingText": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7a6742f2-3215-413a-9225-11fd2574acab"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "TestSubjectText",
+                "value": "Test Email: "
+              }
+            },
+            "Set_variable_FrenchTestSubjectText": {
+              "runAfter": {
+                "Set_variable_TestSubjectText": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a71a8d8c-41f7-4d8b-9136-19ddffd73280"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "FrenchTestSubjectText",
+                "value": "Tester le courriel: "
+              }
+            },
+            "Set_variable_FrenchTestingText": {
+              "runAfter": {
+                "Set_variable_FrenchTestSubjectText": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e2edab0d-d0a2-4152-8fae-2b793ec012aa"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "FrenchTestingText",
+                "value": "Tester le courriel: Ce courriel est un courriel de test, et non un courriel réel représentant ce qui est indiqué ci-dessous. <br><br>                                                                  "
+              }
+            }
+          },
+          "runAfter": {
+            "Get_a_row_by_ID_Invited_Contact": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "not": {
+              "equals": [
+                "@body('Filter_environment-CID_Environment')[0]['qm_value']",
+                "PROD"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "9be99f10-fa00-40ae-8580-da6ba08c2e07"
+          },
+          "type": "If"
+        },
+        "Initialize_variable_Testing_text_for_the_email": {
+          "runAfter": {
+            "Initialize_variable_FrenchTestSubjectText": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "056efd54-c348-4947-b42c-bab120c698de"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "TestingText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_TestSubjectText": {
+          "runAfter": {
+            "Initialize_Variable_Environment": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "36348f7e-e55f-43ac-b622-3f00ecbc9c53"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "TestSubjectText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_FrenchTestSubjectText": {
+          "runAfter": {
+            "Initialize_variable_TestSubjectText": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e099354-7d1c-45fa-8905-3cb8d5e3c32d"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FrenchTestSubjectText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_FrenchTesting_text_for_the_email": {
+          "runAfter": {
+            "Initialize_variable_Testing_text_for_the_email": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6b11f2fb-0032-45f1-83c0-6af6ad4db3b3"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FrenchTestingText",
+                "type": "string"
+              }
+            ]
           }
         }
       }
