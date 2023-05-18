@@ -19,6 +19,16 @@ $(document).ready(function () {
     var inYear = sessionStorage.getItem('frominyearsites');
     var annualCompliance = sessionStorage.getItem('fromannualcompliance');
     var frominyearsitepage = sessionStorage.getItem('frominyearsitepage');
+     //remove role from label control- issue flaged by accessibility PBI #     
+     setTimeout( function(){ 
+                    
+                $("#cid_importingsitetype_label").attr("role", "");            
+                $("#cid_offeringfortransportsitetype_label").attr("role", "");
+                $("#cid_handlingsitetype_label").attr("role", "");
+                $("#cid_transportingsitetype_label").attr("role", "");
+             
+    }, 1000); 
+                
 
     if (inYear == 'true' || annualCompliance == 'true' || frominyearsitepage == 'true') {
         if ($("#cancelButton").length <= 0) {

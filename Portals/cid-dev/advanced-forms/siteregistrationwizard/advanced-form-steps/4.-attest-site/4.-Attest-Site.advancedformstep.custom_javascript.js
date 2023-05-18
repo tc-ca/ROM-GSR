@@ -76,14 +76,20 @@ $(document).ready(function () {
     tdg.cid.Display_Modes(siteid);
 
     if ($("#printSummary").length <= 0) {
+    
+       
         var msg = tdg.error_message.message("m000007"); // Print Summary
         $("#NextButton").parent().after("<div id='printSummary' role='group' class='btn-group entity-action-button'><input type='button' name='PrintButton' value='" + msg + "' onclick='window.print();' class='btn btn-primary button next submit-btn' nonactionlinkbutton='true'></div>");
         $("#printSummary").on ("keypress", function () {
         debugger;
+         $("#NextButton").attr('disabled','disabled');
         var keyCode = event.keyCode || event.which;
         if (keyCode == '13'){
             window.print();
             }
+             $("#NextButton").removeAttr('disabled');
+
+
      });
    
     }

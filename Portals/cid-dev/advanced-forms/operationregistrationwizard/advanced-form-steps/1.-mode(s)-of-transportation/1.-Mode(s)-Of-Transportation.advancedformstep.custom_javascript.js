@@ -43,6 +43,16 @@ $(document).ready(function () {
 		});
 	}
 
+// remove role attribute from lables due accessiblity issue in PBI #262949
+	     setTimeout( function(){
+                   
+                $("#cid_modeoftransportationroad_label").attr("role", "");            
+                $("#cid_modeoftransportationrail_label").attr("role", "");
+                $("#cid_modeoftransportationair_label").attr("role", "");
+                $("#cid_modeoftransportationmarine_label").attr("role", "");
+             
+    }, 1000);
+
 });
 
 if (window.jQuery) {

@@ -135,7 +135,7 @@ if (typeof (tdg.message) == "undefined") {
 
             var page_crw_naics_EN = "Choose the <b>[+Add]</b> button below to create NAICS Codes for the Organization, then choose the <b>[Next]</b> button below to continue.</br></br>" +
                 "To deactivate a NAICS, then choose the <b>[V]</b> button to the far right of that row. If required, choose the <b>[Previous]</b> button below to return to the Contact screen.";
-            var page_crw_naics_FR = "Cliquer sur le bouton <b>[+Créer]</b> ci-dessous pour créer les codes SCIAN pour la compagnie, ensuite cliquez sur le bouton <b>[Suivant]</b> ci‑dessous pour poursuivre.<br><br>" +
+            var page_crw_naics_FR = "Cliquez sur le bouton <b>[+Créer]</b> ci-dessous pour créer les codes SCIAN pour la compagnie, ensuite cliquez sur le bouton <b>[Suivant]</b> ci‑dessous pour poursuivre.<br><br>" +
                 "Pour désactiver un code SCIAN, cliquez sur le bouton <b>[V]</b> à l’extrémité droite de cette rangée. Au besoin, cliquez sur le bouton <b>[Précédent]</b> pour revenir à l’écran Personnes-ressources.";
 
             var page_crw_attest_EN = "If the Organization details are accurate and complete, then choose the <b>[Submit]</b> button below.</br>Otherwise, use the <b>[Previous]</b> button below to first make any adjustments.";
@@ -148,9 +148,9 @@ if (typeof (tdg.message) == "undefined") {
                 "To edit or deactivate a Site, then choose the <b>[V]</b> button to the far right of that row.<br>" +
                 "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen.";
             var page_crw_site_FR = "Pour chaque site:<br>" +
-                "1. Cliquer sur le bouton <b>[+Créer]</b> ci‑dessous.<br>" +
+                "1. Cliquez sur le bouton <b>[+Créer]</b> ci‑dessous.<br>" +
                 "2. Ensuite, cliquez sur le lien <u>Site ID</u> souligné de la nouvelle rangée afin de compléter et d’attester le site.<br>" +
-                "3. Cliquer sur le bouton <b>[Suivant]</b> ci‑dessous une fois tous les sites saisis.<br><br>" +
+                "3. Cliquez sur le bouton <b>[Suivant]</b> ci‑dessous une fois tous les sites saisis.<br><br>" +
                 "Pour modifier ou désactiver un site, cliquez sur le bouton <b>[V]</b> à l’extrémité droite de la rangée.<br>" +
                 "Au besoin, cliquez sur le bouton <b>[Précédent]</b> dessous pour retourner à l’écran Attester l'organisation.";
 
@@ -194,7 +194,7 @@ if (typeof (tdg.message) == "undefined") {
                 "To edit or deactivate a Site Class, then choose the <b>[V]</b> button to the far right of that row.<br>" +
                 "If necessary, choose the <b>[Previous]</b> button below to return to the Mode(s) of Transportation screen<br>" +
                 "Alternatively, choose the <b>[Back to Activity Types Screen]</b> to save the current site information and return to the Activity Types Screen."
-            var page_orw_class_FR = "Cliquer sur le bouton <b>[+Créer]</b> ci-dessous pour chaque catégorie de site applicable. Ensuite, cliquez sur le bouton <b>[Suivant]</b> ci‑dessous.</br>" +
+            var page_orw_class_FR = "Cliquez sur le bouton <b>[+Créer]</b> ci-dessous pour chaque catégorie de site applicable. Ensuite, cliquez sur le bouton <b>[Suivant]</b> ci‑dessous.</br>" +
                 "Pour modifier ou désactiver une catégorie de site, cliquez sur le bouton <b>[V]</b> à l’extrémité droite de la ligne.<br>" +
                 "Au besoin, cliquez sur le bouton <b>[Précédent]</b> ci-dessous pour revenir à l’écran Mode(s) de Transport.<br>" +
                 "Sinon, sélectionner l’écran <b>[Retour à l'écran Type d'activité]</b> pour sauvegarder l’information à jour sur le site et revenir à l’écran Type(s) d'activité."

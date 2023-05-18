@@ -1,5 +1,3 @@
-
-
 // //To apply the Asterisk(*) Sign using custom JS:
 //$('#FieldName_label').after('<span id="spanId" style="color: red;"> *</span>');
 
@@ -644,9 +642,7 @@ if (typeof (tdg.c) == "undefined") {
                 newValidator.initialvalue = "";
                 newValidator.evaluationfunction = function () {
                     var Postalvalue = $("#address1_postalcode").val();
-                    console.log(" postal code :" + Postalvalue);
                     var province = $("#ovs_address1_province :selected").text();
-                    console.log("Province :" + province);
                     var ValidationFlag = tdg.c.Check_if_PostalFirstLetter_MatchProvince(Postalvalue, province);
                     if (ValidationFlag == false) {
                         return false;
@@ -679,7 +675,6 @@ if (typeof (tdg.c) == "undefined") {
                 newValidator.evaluationfunction = function () {
                     var addressline1 = $("#address1_line1").val();
                     if (addressline1.toUpperCase().indexOf("PO BOX") >= 0 || addressline1.toUpperCase().indexOf("P.O") >= 0) {
-
                         return false;
                     }
                     else {
@@ -819,7 +814,7 @@ if (typeof (tdg.c) == "undefined") {
                 var inLength = $(this).val().replace(/\D/g, '').length;
                 if (inLength < 10 && inLength != 0) {
                     var msg = tdg.error_message.message("m000171");
-                    alert(msg);
+                    tdg.c.dialog_OK(msg);
                     $(this).val("");
                 }
             })
@@ -1449,7 +1444,8 @@ if (typeof (tdg.cid) == "undefined") {
             $(field).focusout(function () {
                 var inLength = $(this).val().replace(/\D/g, '').length;
                 if (inLength < 10 && inLength != 0) {
-                    alert(tdg.c.text_language("Invalid number::Numéro invalide", language));
+                    var msg = tdg.error_message.message("m000171");
+                    tdg.c.dialog_OK(msg);
                     $(this).val("");
                 }
             })
@@ -1767,7 +1763,7 @@ if (typeof (tdg.cid) == "undefined") {
                 $(this).append(row1);
 
                 $(this).append(row2);
-                $("#cid_importingsitetype_label").attr("role", "");            
+                $("#cid_importingsitetype_label").attr("role", "");
                 $("#cid_offeringfortransportsitetype_label").attr("role", "");
                 $("#cid_handlingsitetype_label").attr("role", "");
                 $("#cid_transportingsitetype_label").attr("role", "");
@@ -3077,4 +3073,3 @@ if (typeof (tdg.cid.flow) == "undefined") {
         }
     }
 }
-
