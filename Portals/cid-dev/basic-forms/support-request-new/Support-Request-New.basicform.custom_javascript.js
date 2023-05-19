@@ -58,6 +58,7 @@ $(document).ready(function () {
         }
        
     });
+     $("#ovs_requestdetails").attr("contenteditable" ,"true");
 
     $("#cancelButton").on ("keypress", function () {
        var keyCode = event.keyCode || event.which;
@@ -114,6 +115,7 @@ $(document).ready(function () {
         '</td><td class="cell zero-cell"></td></tr>'
         + '<tr><td colspan="1" rowspan="1" class="clearfix cell" ><div class="xrm-attribute-value">'
         + contactusNote + '</Div></td></tr>'
+        + "<tr> <td> <div id='HiddenDiv' hidden> </div> </td> </tr>"
         ;
 
     $("table").find('tbody').append(userEmailFieldandLable_HTML);
@@ -194,9 +196,20 @@ function Get_RequestDetails() {
     }
 
     sessionStorage.setItem("MemoLength", memo.length);
+    
+    $("#HiddenDiv").html(memo);
+    console.log ("new text");
+    console.log ($("#HiddenDiv").text());
+    console.log ("html");
+    console.log($("#HiddenDiv").html());
 
+    $("#ovs_requestdetails").attr("contenteditable" ,"true");
+
+    
     //update memo
-    $("#ovs_requestdetails").val(memo);
+   $("#ovs_requestdetails").html(memo);
+
+    //.text(memo).html();
 }
 
 function dialog_OK(message) {
