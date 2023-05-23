@@ -218,10 +218,23 @@ var CheckDuplicate = function (_flowURl, _parameters) {
 }
 
 function CheckLatLongDecimal() {
-    var Lat = $("#address1_latitude").val();
+    debugger;
+    /* var Lat = $("#address1_latitude").val();
     var Longtitude = $("#address1_longitude").val();
-    var decimalIndexLat = Lat.toString().indexOf(".");
-    var decimalIndexLong = Longtitude.toString().indexOf(".");
+    var lang =  selected_language = '{{website.selected_language.code}}';
+    var decimalIndexLat ;
+    var decimalIndexLong ;
+  debugger;
+    if (lang == "fr")
+	{
+		 decimalIndexLat = Lat.toString().indexOf(",");
+	     decimalIndexLong = Longtitude.toString().indexOf(",");
+	}
+    else
+    {
+         decimalIndexLat = Lat.toString().indexOf(".");
+         decimalIndexLong = Longtitude.toString().indexOf(".");
+    }
     var error = "";
     var checkResult = true;
     //check latitude
@@ -233,7 +246,16 @@ function CheckLatLongDecimal() {
         error = m000143;
     }
     else {
-        var numberofdecimal = Lat.toString().split('.')[1].length;
+        var numberofdecimal ;
+        //= Lat.toString().split('.')[1].length;
+         if (lang == "fr")
+	     {
+             numberofdecimal = Lat.toString().split(',')[1].length;
+         }
+         else{
+             numberofdecimal = Lat.toString().split('.')[1].length;
+         }
+
         if (numberofdecimal != 4) {
             error = m000143;
             //"<p>Please enter a Latitude as a decimal, with the full four digit decimal point (e.g. 41.3251)</p>";
@@ -247,7 +269,19 @@ function CheckLatLongDecimal() {
         error = error + m000144;
     }
     else {
-        var Longtitudenumberofdecimal = Longtitude.toString().split('.')[1].length;
+        var Longtitudenumberofdecimal ,
+        // = Longtitude.toString().split('.')[1].length;
+         if (lang == "fr")
+	     {
+             Longtitudenumberofdecimal = Longtitude.toString().split(',')[1].length;
+         }
+         else
+         {
+             Longtitudenumberofdecimal = Longtitude.toString().split('.')[1].length;
+
+         }
+
+
         if (Longtitudenumberofdecimal != 4) {
             error = error + m000144;
             //"<p>Please enter a Longitude as a decimal, with the full four digit decimal point (e.g. -74.7992)</p>";
@@ -260,4 +294,6 @@ function CheckLatLongDecimal() {
         $('#ErrorMessageDiv').html("<h3>Error</h3>" + error);
     }
     return checkResult;
+    */
+    return true;
 }

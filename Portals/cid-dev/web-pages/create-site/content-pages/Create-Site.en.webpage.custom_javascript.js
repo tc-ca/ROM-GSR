@@ -218,22 +218,39 @@ var CheckDuplicate = function (_flowURl, _parameters) {
 }
 
 function CheckLatLongDecimal() {
+    
     var Lat = $("#address1_latitude").val();
     var Longtitude = $("#address1_longitude").val();
-    var decimalIndexLat = Lat.toString().indexOf(".");
-    var decimalIndexLong = Longtitude.toString().indexOf(".");
+    var lang = sessionStorage.getItem("selected_language");
+    var decimalIndexLat  = -1 ;
+    var decimalIndexLong  = -1;
+    var splitChar = "." ;
+     if (lang == 'fr')
+	{
+        splitChar = "," ;
+    }
+
+		 decimalIndexLat = Lat.toString().indexOf (splitChar);
+         //(",");
+	     decimalIndexLong = Longtitude.toString().indexOf(splitChar);
+	
+  
     var error = "";
     var checkResult = true;
     //check latitude
     //m000143
     var m000143 = "<p>" + tdg.error_message.message("m000143") + "</p>";
     var m000144 = "<p>" + tdg.error_message.message("m000144") + "</p>";
+
     if (decimalIndexLat < 0) {
         checkResult = false;
         error = m000143;
     }
     else {
-        var numberofdecimal = Lat.toString().split('.')[1].length;
+        var numberofdecimal = 0 ;
+       
+         numberofdecimal = Lat.toString().split(',')[splitChar].length;
+
         if (numberofdecimal != 4) {
             error = m000143;
             //"<p>Please enter a Latitude as a decimal, with the full four digit decimal point (e.g. 41.3251)</p>";
@@ -247,7 +264,10 @@ function CheckLatLongDecimal() {
         error = error + m000144;
     }
     else {
-        var Longtitudenumberofdecimal = Longtitude.toString().split('.')[1].length;
+        var Longtitudenumberofdecimal  = 0;
+        // = Longtitude.toString().split('.')[1].length;
+             Longtitudenumberofdecimal = Longtitude.toString().split(',')[splitChar].length;
+       
         if (Longtitudenumberofdecimal != 4) {
             error = error + m000144;
             //"<p>Please enter a Longitude as a decimal, with the full four digit decimal point (e.g. -74.7992)</p>";
@@ -260,4 +280,6 @@ function CheckLatLongDecimal() {
         $('#ErrorMessageDiv').html("<h3>Error</h3>" + error);
     }
     return checkResult;
+ 
+   
 }

@@ -476,6 +476,16 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "Mon site actif"
                     },
                     {
+                        "code": "lbl_primary",
+                        "message_en": "Primary",
+                        "message_fr": "Principal"
+                    },
+                    {
+                        "code": "lbl_edit",
+                        "message_en": "Update Contact",
+                        "message_fr": "Mettre à jour un contact"
+                    },
+                    {
                         "code": "m000001",
                         "message_en": "Invalid CRA Business Number",
                         "message_fr": "Numéro l'organisation de l'ARC invalide"

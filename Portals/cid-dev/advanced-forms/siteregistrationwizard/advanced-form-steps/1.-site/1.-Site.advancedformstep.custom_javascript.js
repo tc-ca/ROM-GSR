@@ -9,6 +9,7 @@ $(document).ready(function () {
 	page_setup();
 
 	var selected_language = '{{website.selected_language.code}}';
+	console.log ("language code  "  + selected_language );
 	sessionStorage.setItem("selected_language", selected_language);
 
 	$("#ValidationSummaryEntityFormView").after($('.text-danger').parent());
@@ -165,6 +166,7 @@ if (window.jQuery) {
 
 			}
 			else { return true; }
+			
 		}
 	}(window.jQuery));
 }
@@ -218,43 +220,80 @@ function Show_PluginError_TextLanguag(Field) {
 }
 
 function CheckLatLongDecimal() {
-	var Lat = $("#address1_latitude").val();
-	var Longtitude = $("#address1_longitude").val();
-	var decimalIndexLat = Lat.toString().indexOf(".");
-	var decimalIndexLong = Longtitude.toString().indexOf(".");
-	var error = "";
-	var checkResult = true;
-	//check latitude
-	var m000143 = "<p>" + tdg.error_message.message("m000143") + "</p>";
-	var m000144 = "<p>" + tdg.error_message.message("m000144") + "</p>";
-	if (decimalIndexLat < 0) {
-		checkResult = false;
-		error = m000143;
-	}
-	else {
-		var numberofdecimal = Lat.toString().split('.')[1].length;
-		if (numberofdecimal != 4) {
-			error = m000143;
-			checkResult = false;
-		}
-	}
+   /*  var Lat = $("#address1_latitude").val();
+    var Longtitude = $("#address1_longitude").val();
+    var lang =  selected_language = '{{website.selected_language.code}}';
+    var decimalIndexLat ;
+    var decimalIndexLong ;
 
-	//check longtitude
-	if (decimalIndexLong < 0) {
-		checkResult = false;
-		error = error + m000144;
+    if (lang == "fr")
+	{
+		 decimalIndexLat = Lat.toString().indexOf(",");
+	     decimalIndexLong = Longtitude.toString().indexOf(",");
 	}
-	else {
-		var Longtitudenumberofdecimal = Longtitude.toString().split('.')[1].length;
-		if (Longtitudenumberofdecimal != 4) {
-			error = error + m000144;
-			checkResult = false;
-		}
-	}
+    else
+    {
+         decimalIndexLat = Lat.toString().indexOf(".");
+         decimalIndexLong = Longtitude.toString().indexOf(".");
+    }
+    var error = "";
+    var checkResult = true;
+    //check latitude
+    //m000143
+    var m000143 = "<p>" + tdg.error_message.message("m000143") + "</p>";
+    var m000144 = "<p>" + tdg.error_message.message("m000144") + "</p>";
+    if (decimalIndexLat < 0) {
+        checkResult = false;
+        error = m000143;
+    }
+    else {
+        var numberofdecimal ;
+        //= Lat.toString().split('.')[1].length;
+         if (lang == "fr")
+	     {
+             numberofdecimal = Lat.toString().split(',')[1].length;
+         }
+         else{
+             numberofdecimal = Lat.toString().split('.')[1].length;
+         }
 
-	if (checkResult == false) {
-		$('#ErrorMessageDiv').css('display', 'block');
-		$('#ErrorMessageDiv').html("<h3>Error</h3>" + error);
-	}
-	return checkResult;
+        if (numberofdecimal != 4) {
+            error = m000143;
+            //"<p>Please enter a Latitude as a decimal, with the full four digit decimal point (e.g. 41.3251)</p>";
+            checkResult = false;
+        }
+    }
+
+    //check longtitude
+    if (decimalIndexLong < 0) {
+        checkResult = false;
+        error = error + m000144;
+    }
+    else {
+        var Longtitudenumberofdecimal ,
+        // = Longtitude.toString().split('.')[1].length;
+         if (lang == "fr")
+	     {
+             Longtitudenumberofdecimal = Longtitude.toString().split(',')[1].length;
+         }
+         else
+         {
+             Longtitudenumberofdecimal = Longtitude.toString().split('.')[1].length;
+
+         }
+
+
+        if (Longtitudenumberofdecimal != 4) {
+            error = error + m000144;
+            //"<p>Please enter a Longitude as a decimal, with the full four digit decimal point (e.g. -74.7992)</p>";
+            checkResult = false;
+        }
+    }
+
+    if (checkResult == false) {
+        $('#ErrorMessageDiv').css('display', 'block');
+        $('#ErrorMessageDiv').html("<h3>Error</h3>" + error);
+    }
+    return checkResult;*/
+	return true;
 }

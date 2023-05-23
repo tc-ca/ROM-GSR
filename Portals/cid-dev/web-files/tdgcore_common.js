@@ -848,7 +848,8 @@ if (typeof (tdg.grid) == "undefined") {
                     $(this).find('td[aria-label="action menu"]').each(function () {
                         //find ul
                         var ul = $(this).find("ul");
-                        if (contactType != "Primary") {
+                        var lbl_primary = tdg.error_message.message("lbl_primary");
+                        if (contactType != lbl_primary) {
                             //add the "Dectivation" action
                             var msg = tdg.error_message.message("m000183");
                             $(ul).append('<li role="none"><a href="#" onclick="DeactivateContact(' + "'" + contactid + "'" +
@@ -866,10 +867,12 @@ if (typeof (tdg.grid) == "undefined") {
                         }
                         //find list item (Li)
                         $(ul).find("li").each(function () {
-                            //get the menue titel
+                            //get the menu title
                             var menueTitle = $(this).find("a").attr("title");
-                            if (contactType == "Primary" || contactType == "Principal") {
-                                if (menueTitle != "Edit" && menueTitle != "Mise à jour") {
+                            var lbl_primary = tdg.error_message.message("lbl_primary");
+                            var lbl_edit = tdg.error_message.message("lbl_edit");
+                            if (contactType == lbl_primary) {
+                                if (menueTitle != lbl_edit) {
                                     $(this).attr("hidden", "true");
                                 }
                             }//end check if primary
@@ -911,10 +914,12 @@ if (typeof (tdg.grid) == "undefined") {
 
                         //find list item (Li)
                         $(ul).find("li").each(function () {
-                            //get the menue titel
+                            //get the menu title
                             var menueTitle = $(this).find("a").attr("title");
-                            if (contactType == "Primary" || contactType == "Principal") {
-                                if (menueTitle != "Edit" && menueTitle != "Mise à jour") {
+                            var lbl_primary = tdg.error_message.message("lbl_primary");
+                            var lbl_edit = tdg.error_message.message("lbl_edit");
+                            if (contactType == lbl_primary) {
+                                if (menueTitle != lbl_edit) {
                                     $(this).attr("hidden", "true");
                                 }
                             } //end check if primary

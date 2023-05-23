@@ -30,8 +30,8 @@ $(document).ready(function () {
 		$('.entitylist-search').addClass("col-md-8");
 	}
 	else {
-		$('.toolbar-actions').attr('style', "width:90%;");
-		$('.entitylist-search').addClass("col-md-8");
+		$('.toolbar-actions').attr('style', "width:75%;");
+		$('.entitylist-search').addClass("col-md-7");
 	}
 
 	$(".entity-grid").on("loaded", function () {
