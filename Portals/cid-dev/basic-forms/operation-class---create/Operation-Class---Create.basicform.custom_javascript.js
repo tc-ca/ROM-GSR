@@ -17,6 +17,12 @@ $(document).ready(function () {
 
     // insert button
     tdg.c.btn_save_new_setup();
+     $("#btn_save_new").bind("keydown", function (event) {
+                debugger;
+                var keyCode = event.keyCode || event.which;
+                if (keyCode == '13')
+                  {btn_save_new_onclick();}
+            });
 
     // hide controls 
     tdg.c.control_hide("ovs_class_division", true);
@@ -27,6 +33,30 @@ $(document).ready(function () {
     $('#btn_save_new').after('<div role="group" class="btn-group entity-action-button">&nbsp;</div><input type="button" data-dismiss="modal" value="" id="CancelButton" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
     $("#CancelButton")[0].value = message;
     $('#CancelButton').on('click', function (event) { parent.$(".form-close").eq(0).click(); });
+    
+      //accessiblity issue with cancel button - adding keydown event to allow closing button using keyboard
+    $("#CancelButton").on("keydown", function (event) {
+     
+       var keyCode = event.keyCode || event.which;
+       if (keyCode == '13')
+       {parent.$('.form-close').eq(0).click();}
+      });
+
+        
+      var Formclosebutton  =parent.$('.form-close');
+    //accessiblity issue with close button - adding keydown event to allow closing button using keyboard
+      Formclosebutton.keydown(function (event) {
+            var keyCode = event.keyCode || event.which;
+            if (keyCode == '13')
+            {   event.preventDefault();
+                $(this).eq(0).click();
+                }
+
+            });
+      
+
+  
+
 });
 
 $(window).unload(function () {
@@ -45,6 +75,10 @@ if (window.jQuery) {
     (function ($) {
 
         entityFormClientValidate = function () {
+          
+            console.log($(this));
+            
+             
             debugger;
             var validation = true;
 

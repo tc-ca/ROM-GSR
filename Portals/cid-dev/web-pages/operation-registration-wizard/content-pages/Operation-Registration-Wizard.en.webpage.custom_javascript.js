@@ -87,7 +87,7 @@ function header_setup() {
             var cid_sitename = account[0].cid_sitename;
         }
         var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name}}');
-        if (cid_sitename != "") {
+        if (cid_sitename != null) {
             companyName += " - " + cid_sitename;
         }
         var value = tdg.error_message.message(code);

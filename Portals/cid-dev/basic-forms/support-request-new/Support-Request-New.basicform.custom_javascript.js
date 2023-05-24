@@ -61,6 +61,7 @@ $(document).ready(function () {
      $("#ovs_requestdetails").attr("contenteditable" ,"true");
 
     $("#cancelButton").on ("keypress", function () {
+       
        var keyCode = event.keyCode || event.which;
        if (keyCode == '13'){var regdate = sessionStorage.getItem("company_reg_date", company_reg_date);
       
