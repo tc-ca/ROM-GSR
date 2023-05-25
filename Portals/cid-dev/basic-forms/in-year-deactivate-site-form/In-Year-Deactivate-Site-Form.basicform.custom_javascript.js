@@ -13,7 +13,21 @@ $(document).ready(function () {
     $("#cid_reasonforsitedeactivation option[value='']").attr('selected', true); 
     $("#cid_memositedeactivation").val('');
     $("#cid_issiteattested").prop( "checked", false );
- 
+     
+     //as per accessibility requirement labels should not have role
+     setTimeout( function(){
+    $("#cid_issiteattested_label").removeAttr("role");
+     },1000);
+    //all disabled fields will not be accessible with keyboard tab which is not compliant with accessiblity
+    //switch the disabled drop down with div to be accessible 
+   var SiteStatusValue =  $("#cid_cidsitestatus :selected").text();
+    $("#cid_cidsitestatus").after('<div class="readonly form-control picklist" tabindex="0">'+SiteStatusValue +' </div>')
+    //hid disbled drop down
+    $("#cid_cidsitestatus").css("display" , "none");
+    //add tab index to controls to be accessible by keyboard tab key
+   $(".description").attr("tabindex" , "0");
+   $("#cid_cidsitestatus_label").attr("tabindex" , "0");
+
     $("#EntityFormPanel").click(function(){
         var futureDateMessageShown = sessionStorage.getItem("futureDateMessageShown");
 
