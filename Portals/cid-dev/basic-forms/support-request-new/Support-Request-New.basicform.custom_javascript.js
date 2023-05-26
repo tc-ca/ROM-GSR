@@ -60,7 +60,7 @@ $(document).ready(function () {
     });
      $("#ovs_requestdetails").attr("contenteditable" ,"true");
 
-    $("#cancelButton").on ("keypress", function () {
+    $("#cancelButton").on ("keydown", function (event) {
        
        var keyCode = event.keyCode || event.which;
        if (keyCode == '13'){var regdate = sessionStorage.getItem("company_reg_date", company_reg_date);
@@ -103,6 +103,25 @@ $(document).ready(function () {
             tdg.c.dialog_OK(detailNeedtobAddedMessage);
 
         }
+    });
+    $("#btn_submit_request").keydown(function (event) {
+         var keyCode = event.keyCode || event.which;
+       if (keyCode == '13')
+       {
+        var lengthofCurrentMemo = $("#ovs_requestdetails").val().length;
+        var TemplateLength = sessionStorage.getItem("MemoLength");
+
+        if (lengthofCurrentMemo > TemplateLength) {
+             $("#InsertButton").removeAttr('disabled');
+            $("#InsertButton").click();
+            // tdg.c.
+            //dialog_OK(confirmationMessage);
+        }//end if
+        else {
+            tdg.c.dialog_OK(detailNeedtobAddedMessage);
+
+        }
+       }
     });
 
     var userEmailFieldandLable_HTML = '<tr><td colspan="1" rowspan="1" class="clearfix cell"></td>' +
@@ -217,25 +236,50 @@ function dialog_OK(message) {
     message = message.replaceAll("\n", "<br>");
     var header = tdg.error_message.message("CID_PORTAL");
     var OK = tdg.error_message.message("OK");
-
-     $(`<section class="wb-lbx overlay-def" id="myModal" aria-modal="true" aria-live="assertive" aria-labelledby ="headerid" >
-               <div class="modal-dialog" role="document">
-                <div class="modal-content" >
+    //data-backdrop="static"
+//overlay-def
+//tabindex="-1"
+//role="dialog"
+//modal
+// aria-modal="true"
+//aria-live="assertive"
+     $(`<section class="modal overlay-def"  id="myModal" role="dialog"  
+     aria-modal="true"  aria-labelledby ="headerid" aria-describedby="DialogBodyID" tabindex="-1">
+     <div class="modal-dialog modal-content modal-dialog-centered" role="document">
 	            <header class="modal-header">
 	            <h2 id="headerid" class="modal-title">${header}</h2>
 	            </header>
-	            <div class="modal-body">
+	            <div class="modal-body" id="DialogBodyID" >
 	            ${message}
 	            </div>
 	            <div class="modal-footer">
 	            <button id="btnOK" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">${OK}</button>
+                 </div>
+                </div>
+               
 	            </section>
 	            `).appendTo('body');
-
+   /*  $("#btnOK").focus();
     $("#myModal").css('top', '15%');
     $("#myModal").css('left', '40%');
     $("#myModal").css('position', 'fixed');
     $("#myModal").css('z-index', '9999');
+
+     $("#btnOK").focus();*/
+      $("#btnOK").keydown(function (event) {
+           var keyCode = event.keyCode || event.which;
+           if (keyCode == "9")
+           {
+                $('#myModal').focus();
+
+           }
+           else if (keyCode == "13")
+           {
+                $("#btnOK").click();
+
+           }
+      
+      });
 
     $("#btnOK").click(function () {
         var customerid = '{{user.parentcustomerid.id}}';
@@ -245,9 +289,13 @@ function dialog_OK(message) {
 
             company_reg_date = parentAccountdata[0]["cid_officiallyregistrationcompletationdate"];
             if (company_reg_date != null && company_reg_date != "") {
-                $("#myModal").remove();
+               
+                $('#myModal').modal('hide');
+                 $("#myModal").remove();
+                //.remove();
             }
             else {
+
                 window.location.href = '~/RegistrationWizard/';
             }
         }
@@ -255,6 +303,19 @@ function dialog_OK(message) {
             window.location.href = '~/RegistrationWizard/';
         }
     });
+
+     //$('#myModal').modal('show') ;
+    /* $('#myModal').modal({
+        focus: true
+            });*/
+       // $('#myModal').modal('toggle');
+    
+       
+       $('#myModal').modal({backdrop: 'static', keyboard: false , show:true , focus:true }) ; 
+       $("#DialogBodyID").focus();
+    
+
+     
 }
 
 function Cancel()

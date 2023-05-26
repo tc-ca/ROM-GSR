@@ -395,13 +395,13 @@ if (typeof (tdg.c) == "undefined") {
             var yes = tdg.error_message.message("Yes");
             var no = tdg.error_message.message("No");
 
-            $(`<section class="wb-lbx overlay-def" id="myModal" aria-modal="true" aria-live="assertive" aria-labelledby ="headerid" >
-                <div class="modal-dialog" role="document">
-                <div class="modal-content" >
-                <header class="modal-header">
+            $(`<section class="modal overlay-def"  id="myModal" role="dialog"  
+     aria-modal="true"  aria-labelledby ="headerid" aria-describedby="DialogBodyID" tabindex="-1">
+     <div class="modal-dialog modal-content modal-dialog-centered" role="document">
+	            <header class="modal-header">
 	            <h2 id="headerid" class="modal-title">${header}</h2>
 	            </header>
-	            <div class="modal-body">
+	            <div class="modal-body" id="DialogBodyID" >
 	            ${message}
 	            </div>
 	            <div class="modal-footer">
@@ -409,31 +409,54 @@ if (typeof (tdg.c) == "undefined") {
 	            <button id="btnNo" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" data-dismiss="modal">${no}</button>
                 </div>
                 </div>
-                </div>
+                
 	            </section>
 	            `).appendTo('body');
             //c.message
-            $("#myModal").css('top', '15%');
+           /* $("#myModal").css('top', '15%');
             $("#myModal").css('left', '40%');
             $("#myModal").css('position', 'fixed');
             $("#myModal").css('z-index', '9999');
-
+            */
             $("#btnYes").click(function () {
+                $('#myModal').modal('hide');
                 $("#myModal").remove();
                 handler(true);
             });
+            $("#btnYes").keydown(function (event) {
+                var keyCode = event.keyCode || event.which;
+                //check if key pressis tab key
+                if (keyCode == "13") {
+                    $("#btnYes").click();
+                }
+                   }
+                );
 
             //Pass false to callback function
             $("#btnNo").click(function () {
                 //handler(lse);
+                $('#myModal').modal('hide');
                 $("#myModal").remove();
                 handler(false);
             });
-            var dialog = $("#myModal");
+            $("#btnNo").keydown(function (event) {
+                var keyCode = event.keyCode || event.which;
+                //check if key pressis tab key
+                if (keyCode == "9") {
+                    $('#myModal').focus();
+                }
+                else if (keyCode == "13") {
+                    $("#btnNo").click();
+                }
+
+            });
+
+            //var dialog = $("#myModal");
 
             //   dialog.attr("aria-modal", "true");
             // dialog.attr("aria-live", "assertive");
-            dialog.focus();
+            //dialog.focus();
+            $('#myModal').modal({ backdrop: 'static', keyboard: false, show: true, focus: true });
         },
 
         dialog_OK: function (message) {
@@ -441,7 +464,21 @@ if (typeof (tdg.c) == "undefined") {
             var header = tdg.error_message.message("CID_PORTAL");
             var OK = tdg.error_message.message("OK");
 
-            $(`<section class="wb-lbx overlay-def" id="myModal" aria-modal="true" aria-live="assertive" aria-labelledby ="headerid" >
+            $(`<section class="modal overlay-def"  id="myModal" role="dialog"  
+                 aria-modal="true"  aria-labelledby ="headerid" aria-describedby="DialogBodyID" tabindex="-1">
+                 <div class="modal-dialog modal-content modal-dialog-centered" role="document">
+	            <header class="modal-header">
+	            <h2 id="headerid" class="modal-title">${header}</h2>
+	            </header>
+	            <div class="modal-body" id="DialogBodyID" >
+	            ${message}
+	            </div>
+	            <div class="modal-footer">
+	            <button id="btnOK" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">${OK}</button>
+	            </section>
+	            `).appendTo('body');
+            /*
+              $(`<section class="wb-lbx overlay-def" id="myModal" aria-modal="true" aria-live="assertive" aria-labelledby ="headerid" >
                <div class="modal-dialog" role="document">
                 <div class="modal-content" >
 	            <header class="modal-header">
@@ -454,15 +491,31 @@ if (typeof (tdg.c) == "undefined") {
 	            <button id="btnOK" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">${OK}</button>
 	            </section>
 	            `).appendTo('body');
+             * /
 
-            $("#myModal").css('top', '15%');
+           /* $("#myModal").css('top', '15%');
             $("#myModal").css('left', '40%');
             $("#myModal").css('position', 'fixed');
             $("#myModal").css('z-index', '9999');
+            */
 
             $("#btnOK").click(function () {
+                $('#myModal').modal('hide');
                 $("#myModal").remove();
             });
+            $("#btnOK").keydown(function (event) {
+                var keyCode = event.keyCode || event.which;
+                //check if key pressis tab key
+                if (keyCode == "9") {
+                    $('#myModal').focus();
+                }
+                else if (keyCode == "13") {
+                    $("#btnOK").click();
+                }
+
+            });
+
+            $('#myModal').modal({ backdrop: 'static', keyboard: false, show: true, focus: true });
         },
 
         validate_address: function (language, country, province, postalCode, city) {

@@ -860,36 +860,67 @@ function confirmDialog(message ,YesLabel, NoLabel, handler)
     var landmarks = document.querySelectorAll("header, main, footer");
     var overlay = document.getElementById("Overlay");  
     //tabindex="-1" hidden
-    $(`<section class="wb-lbx overlay-def" id="myModal" aria-modal="true" aria-live="assertive" aria-labelledby ="headerid" >
-    <div class="modal-dialog" role="document">
-    <div class="modal-content" >
-            <header class="modal-header">
-                <h2 id="headerid" role="document" class="modal-title">${header}</h2>
-            </header>
-            <div class="modal-body">
-                ${message}
-
-            </div>
+    $(`<section class="modal overlay-def"  id="myModal" role="dialog"  
+     aria-modal="true"  aria-labelledby ="headerid" aria-describedby="DialogBodyID" tabindex="-1">
+     <div class="modal-dialog modal-content modal-dialog-centered" role="document">
+	            <header class="modal-header">
+	            <h2 id="headerid" class="modal-title">${header}</h2>
+	            </header>
+	            <div class="modal-body" id="DialogBodyID" >
+	            ${message}
+	            </div>
         <div class="modal-footer">
             <button id="btnYes" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">${YesLabel}</button>
             <button  id="btnNo" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" data-dismiss="modal">${NoLabel}</button>
             </div>
             </div>
-            </div>
+         
 
         </section>
         `).appendTo('body');
+        $("#btnYes").click(function () {
+                $('#myModal').modal('hide');
+                $("#myModal").remove();
+                handler(true);
+            });
+            $("#btnYes").keydown(function (event) {
+                var keyCode = event.keyCode || event.which;
+                //check if key pressis tab key
+                if (keyCode == "13") {
+                    $("#btnYes").click();
+                }
+                   }
+                );
+
+            //Pass false to callback function
+            $("#btnNo").click(function () {
+                //handler(lse);
+                $('#myModal').modal('hide');
+                $("#myModal").remove();
+                handler(false);
+            });
+            $("#btnNo").keydown(function (event) {
+                var keyCode = event.keyCode || event.which;
+                //check if key pressis tab key
+                if (keyCode == "9") {
+                    $('#myModal').focus();
+                }
+                else if (keyCode == "13") {
+                    $("#btnNo").click();
+                }
+            });
+             $('#myModal').modal({ backdrop: 'static', keyboard: false, show: true, focus: true });
 
      //  $('#btnNo').focus();
 
-       $("#myModal").css('top' , '15%');
+      /* $("#myModal").css('top' , '15%');
         $("#myModal").css('left' , '40%');
         $("#myModal").css('position', 
         //'absolute');
         'fixed');
         $("#myModal").css('z-index', '99990000');
-
-
+*/
+/*
     $("#btnYes").click(function () {
           //  handler(true);
           //  $("#myModal").modal("hide");
@@ -908,10 +939,11 @@ function confirmDialog(message ,YesLabel, NoLabel, handler)
            // overlay.style.display = "none";
              handler(false);
              //body[0].style.overflow = "block";
-               /*for (var i = 0; i < landmarks.length; i++) {
-                 landmarks[i].setAttribute("aria-hidden","false");}
-                 */
+               //*for (var i = 0; i < landmarks.length; i++) {
+                 //landmarks[i].setAttribute("aria-hidden","false");}
+               
         });
+        */
        /*  
     var dialog = document.getElementById("myModal"); 
          // Hide the content regions from AT
@@ -930,52 +962,12 @@ function confirmDialog(message ,YesLabel, NoLabel, handler)
   //  dialog.setAttribute("aria-live","assertive");
    
   //  dialog.removeAttribute("hidden"); 
-    $("#myModal").focus();
+  //  $("#myModal").focus();
 
 
 }
 
-//popu message
-function Popup_Message(message, handler)
-{
 
-        $(`<section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
-            <header class="modal-header">
-                <h2 class="modal-title">CID Portal</h2>
-            </header>
-            <div class="modal-body">
-                ${message}
-
-            </div>
-        <div class="modal-footer">
-            <button id="btnYes" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">Ok</button>
-
-        </section>
-        `).appendTo('body');
-
-       //$('#btnNo').focus();
-
-       $("#myModal").css('top' , '25%');
-        $("#myModal").css('left' , '40%');
-        $("#myModal").css('position', 'fixed');
-        $("#myModal").css('z-index', '9999');
-
-
-    $("#btnYes").click(function () {
-           // handler(true);
-          //  $("#myModal").modal("hide");
-          $("#myModal").remove();
-           handler(true);
-        });
-
-        //Pass false to callback function
-      //  $("#btnNo").click(function () {
-            //handler(lse);
-           // $("#myModal").remove();
-          //   handler(false);
-        //});
-
-}
 
 
 
