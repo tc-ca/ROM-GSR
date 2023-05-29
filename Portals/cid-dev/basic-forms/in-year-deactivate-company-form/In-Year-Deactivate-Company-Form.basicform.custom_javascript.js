@@ -4,6 +4,7 @@
 
 $(document).ready(function () {
     debugger;
+     setTimeout( function(){ $("#cid_iscompanyattested_label").removeAttr("role");}, 1000);  
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);

@@ -4,6 +4,7 @@
 
 $(document).ready(function () {
     debugger;
+ 
 
     var operationId = sessionStorage.getItem("siteOperationId");
     var urlParams = new URLSearchParams(window.location.search);

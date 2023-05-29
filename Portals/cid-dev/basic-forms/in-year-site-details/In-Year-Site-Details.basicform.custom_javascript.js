@@ -6,8 +6,22 @@ var _busy = false;
 
 $(document).ready(function () {
     debugger;
+    console.log("before lables role removal");
+   
+        setTimeout( function(){ 
+
+            $('table[data-name="tab_5_section_1"]').find("#cid_handlingsitetype").attr("role", "");
+            $('table[data-name="tab_5_section_1"]').find("#cid_offeringfortransportsitetype").attr("role", "");
+            $('table[data-name="tab_5_section_1"]').find("#cid_transportingsitetype").attr("role", "");
+            $('table[data-name="tab_5_section_1"]').find("#cid_importingsitetype").attr("role", "");
+
+        }, 1000);  
+        console.log("after lables role removal");
+
+
     var CompanyName = '{{user.parentcustomerid.name}}';
     tdg.cid.Setup_site_Profile_Title (CompanyName);
+
  
     $("#update_site").click(function(){
         var urlParams = new URLSearchParams(window.location.search);
@@ -72,6 +86,7 @@ $(document).ready(function () {
     $('#ovs_legalname').attr("readonly", true);
 
     subgrid_language();
+      
 
         if (window.jQuery) {
         (function ($) {
