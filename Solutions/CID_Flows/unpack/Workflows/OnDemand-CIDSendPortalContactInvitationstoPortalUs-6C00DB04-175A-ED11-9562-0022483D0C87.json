@@ -10,6 +10,15 @@
           "name": "shared_commondataserviceforapps"
         }
       },
+      "shared_sendmail": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedsendmail_883c5"
+        },
+        "api": {
+          "name": "shared_sendmail"
+        }
+      },
       "shared_commondataserviceforapps_2": {
         "runtimeSource": "embedded",
         "connection": {
@@ -19,13 +28,13 @@
           "name": "shared_commondataserviceforapps"
         }
       },
-      "shared_sendmail": {
+      "shared_commondataserviceforapps_3": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "cid_sharedsendmail_883c5"
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
         },
         "api": {
-          "name": "shared_sendmail"
+          "name": "shared_commondataserviceforapps"
         }
       },
       "shared_commondataserviceforapps": {
@@ -80,11 +89,7 @@
         "Condition": {
           "actions": {
             "Get_a_row_by_ID_Accounts": {
-              "runAfter": {
-                "Condition_3": [
-                  "Succeeded"
-                ]
-              },
+              "runAfter": {},
               "metadata": {
                 "operationMetadataId": "2dd83585-2c35-458b-94ff-9782ce5e36ec"
               },
@@ -104,7 +109,7 @@
             },
             "Set_Variable_Assigned_Company": {
               "runAfter": {
-                "Get_a_row_by_ID_Accounts": [
+                "Set_Inviteted_By_Field": [
                   "Succeeded"
                 ]
               },
@@ -231,70 +236,6 @@
                 "operationMetadataId": "b1e5dbee-3b93-4a5d-8205-2a7a863e70f1"
               },
               "type": "Switch"
-            },
-            "Condition_3": {
-              "actions": {
-                "Get_a_row_by_ID_Invited_By_Admin": {
-                  "runAfter": {},
-                  "metadata": {
-                    "operationMetadataId": "7f77d863-b9a0-4483-bac3-bf747590bb72"
-                  },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "host": {
-                      "connectionName": "shared_commondataserviceforapps_2",
-                      "operationId": "GetItem",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                    },
-                    "parameters": {
-                      "entityName": "contacts",
-                      "recordId": "@first(outputs('Filter_Invitations')?['body/value'])?['_adx_invitercontact_value']"
-                    },
-                    "authentication": "@parameters('$authentication')"
-                  }
-                },
-                "Set_variable_Invited_by_name": {
-                  "runAfter": {
-                    "Get_a_row_by_ID_Invited_By_Admin": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "61296ecb-8620-42c6-a79e-d3323d6a9dc9"
-                  },
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "Invited By",
-                    "value": "@{if(empty(outputs('Get_a_row_by_ID_Invited_By_Admin')?['body/firstname']),'The',concat(outputs('Get_a_row_by_ID_Invited_By_Admin')?['body/firstname'],' ',outputs('Get_a_row_by_ID_Invited_By_Admin')?['body/lastname'],', the'))}"
-                  }
-                }
-              },
-              "runAfter": {},
-              "else": {
-                "actions": {
-                  "Set_variable": {
-                    "runAfter": {},
-                    "metadata": {
-                      "operationMetadataId": "f1cba80d-18b5-45e0-8127-2be9b912ee6c"
-                    },
-                    "type": "SetVariable",
-                    "inputs": {
-                      "name": "Invited By",
-                      "value": "The"
-                    }
-                  }
-                }
-              },
-              "expression": {
-                "equals": [
-                  "@contains(string(first(outputs('Filter_Invitations')?['body/value'])),'_adx_invitercontact_value')",
-                  true
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "17e8300c-9b76-42ac-8273-43fda2a84f31"
-              },
-              "type": "If"
             },
             "Switch": {
               "runAfter": {
@@ -567,6 +508,99 @@
               },
               "metadata": {
                 "operationMetadataId": "9d86bfb7-0e20-4a1c-804d-cb7ae3e533bb"
+              },
+              "type": "If"
+            },
+            "Set_Inviteted_By_Field": {
+              "actions": {
+                "Get_a_row_by_ID_Invited_By_Admin": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "7f77d863-b9a0-4483-bac3-bf747590bb72"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_2",
+                      "operationId": "GetItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "contacts",
+                      "recordId": "@first(outputs('Filter_Invitations')?['body/value'])?['_adx_invitercontact_value']"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Set_variable_Invited_by_name": {
+                  "runAfter": {
+                    "Get_a_row_by_ID_Invited_By_Admin": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "61296ecb-8620-42c6-a79e-d3323d6a9dc9"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Invited By",
+                    "value": "@{if(empty(outputs('Get_a_row_by_ID_Invited_By_Admin')?['body/firstname']),'The',concat(outputs('Get_a_row_by_ID_Invited_By_Admin')?['body/firstname'],' ',outputs('Get_a_row_by_ID_Invited_By_Admin')?['body/lastname'],', the'))}"
+                  }
+                }
+              },
+              "runAfter": {
+                "Get_a_row_by_ID_Accounts": [
+                  "Succeeded"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "Get_primary_contact_of_the_Organization": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "f9291997-adce-47be-8272-80044258d785"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_commondataserviceforapps_3",
+                        "operationId": "ListRecords",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      },
+                      "parameters": {
+                        "entityName": "contacts",
+                        "$select": "fullname",
+                        "fetchXml": "<fetch top=\"50\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <filter>\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" value=\"@{outputs('Get_a_row_by_ID_Invited_Contact')?['body/_parentcustomerid_value']}\"/>\n      <condition attribute=\"cid_contacttype\" operator=\"eq\" value=\"100000000\" />\n    </filter>\n  </entity>\n</fetch>",
+                        "$top": 1
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Set_variable_Invited_By": {
+                    "runAfter": {
+                      "Get_primary_contact_of_the_Organization": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "f1cba80d-18b5-45e0-8127-2be9b912ee6c"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "Invited By",
+                      "value": "@{first(outputs('Get_primary_contact_of_the_Organization')?['body/value'])?['fullname']}"
+                    }
+                  }
+                }
+              },
+              "expression": {
+                "equals": [
+                  "@contains(string(first(outputs('Filter_Invitations')?['body/value'])),'_adx_invitercontact_value')",
+                  true
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "17e8300c-9b76-42ac-8273-43fda2a84f31"
               },
               "type": "If"
             }
