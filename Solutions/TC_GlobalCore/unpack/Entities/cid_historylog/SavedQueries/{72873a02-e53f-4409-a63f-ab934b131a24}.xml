@@ -10,10 +10,12 @@
     <layoutxml>
       <grid name="resultset" jump="subject" select="1" icon="1" preview="1">
         <row name="result" id="activityid">
-          <cell name="subject" width="300" />
-          <cell name="createdon" width="125" />
+          <cell name="cid_historycode" width="100" />
+          <cell name="cid_createdbyregistrant" width="100" />
+          <cell name="cid_externallyvisible" width="100" />
+          <cell name="cid_relatedorganization" width="100" />
           <cell name="statecode" width="100" />
-          <cell name="createdby" width="100" />
+          <cell name="createdon" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -21,23 +23,24 @@
     <fetchxml>
       <fetch version="1.0" mapping="logical">
         <entity name="cid_historylog">
-          <attribute name="activityid" />
-          <attribute name="subject" />
-          <attribute name="createdon" />
           <filter type="and">
             <condition attribute="statecode" operator="not-null" />
           </filter>
           <attribute name="statecode" />
-          <attribute name="createdby" />
-          <order attribute="subject" descending="false" />
-          <order attribute="createdon" descending="false" />
-          <order attribute="createdby" descending="false" />
+          <order attribute="cid_historycode" descending="false" />
+          <attribute name="cid_relatedorganization" />
+          <attribute name="cid_historycode" />
+          <attribute name="cid_externallyvisible" />
+          <attribute name="cid_createdbyregistrant" />
+          <attribute name="createdon" />
+          <attribute name="activityid" />
         </entity>
       </fetch>
     </fetchxml>
     <IntroducedVersion>1.0.0.0</IntroducedVersion>
     <LocalizedNames>
-      <LocalizedName description="All History Logs" languagecode="1033" />
+      <LocalizedName description="History Logs (All)" languagecode="1033" />
+      <LocalizedName description="Tous les journaux d’historique" languagecode="1036" />
     </LocalizedNames>
   </savedquery>
 </savedqueries>

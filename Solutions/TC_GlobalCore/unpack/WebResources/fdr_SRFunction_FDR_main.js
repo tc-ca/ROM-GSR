@@ -15,7 +15,6 @@ var SRFunctions_FDR_main = (function (window, document) {
     var hasOperation = false;
     var isNewRegistration = false;
     var pastOnTechReview = false;
-
     var containerFunctions = new Array();
 
 
@@ -276,8 +275,7 @@ var SRFunctions_FDR_main = (function (window, document) {
 
                     //populate Service Request Function name
                     var currentName = glHelper.GetValue(formContext, "fdr_name");
-                    if (currentName == "" || currentName == null || currentName == undefined)
-                        glHelper.SetValue(formContext, "fdr_name", glHelper.GetLookupName(formContext, "fdr_containerfunction"));
+                    //glHelper.SetValue(formContext, "fdr_name", glHelper.GetLookupName(formContext, "fdr_containerfunction"));
 
                     //select Container Functions that have already been added to a Service Request.
                     var SR_id = glHelper.GetLookupAttrId(formContext, "fdr_servicerequest");
@@ -303,13 +301,25 @@ var SRFunctions_FDR_main = (function (window, document) {
                 //update, Michael. September 1, 2022
                 //logic changed to make design registration option to change on Container function level, task 198729
                 //get and save design allowence value on create only, no futher mutations!
-                Xrm.WebApi.online.retrieveRecord("fdr_containerfunction", containerId, "?$select=fdr_supportsdesignregistration").then(
+                Xrm.WebApi.online.retrieveRecord("fdr_containerfunction", containerId, "?$select=fdr_supportsdesignregistration, fdr_englishname, fdr_frenchname").then(
                     function success(result) {
 
                         isDesignRegSupported = result["fdr_supportsdesignregistration"];
                         //var sdr_value = result["fdr_supportsdesignregistration@OData.Community.Display.V1.FormattedValue"];
                         glHelper.SetValue(formContext, "fdr_supportsdesignregistration", isDesignRegSupported);
 
+                        // set service request function full name: english_containerfunctionname::french_containerfunctionname
+                        if (formType == 1) {
+                            var containerfunction_englishname = result["fdr_englishname"];
+                            var containerfunction_frenchname = result["fdr_frenchname"];
+                            var containerfunction_fullname;
+                            if (containerfunction_englishname != null && containerfunction_frenchname != null)
+                                containerfunction_fullname = containerfunction_englishname + "::" + containerfunction_frenchname;
+                            else if (containerfunction_frenchname != null)
+                                containerfunction_fullname = containerfunction_frenchname;
+                            else containerfunction_fullname = containerfunction_englishname;
+                            glHelper.SetValue(formContext, "fdr_name", containerfunction_fullname);
+                        }
                         //set notification about design grid absence
                         if (isDesignRegSupported && !displayDesign) {
 

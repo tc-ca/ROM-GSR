@@ -266,16 +266,19 @@ var Design_main = (function (window, document) {
 
                     case "multiselectoptionset-multiselectoptionset":
 
-                        //check number of options selected in dmr control
-                        //if one  - check same option in design control and make it read only
-                        if (dmrAttrValue != null && dmrAttrValue.length == 1) {
-                            if (formType == 1)
-                                glHelper.SetValue(formContext, dmrName, dmrAttrValue);
-                            if (dmrName != "fdr_option")
-                                glHelper.SetControlReadOnly(formContext, dmrName, dmrAttrValue.length == 1)
-                        }
-                        //if more then one - leave only same options in design control and filter out others
-                        if (dmrAttrValue != null && dmrAttrValue.length > 1) {
+                        ////check number of options selected in dmr control
+                        ////if one  - check same option in design control and make it read only
+                        //if (dmrAttrValue != null && dmrAttrValue.length == 1) {
+                        //    if (formType == 1)
+                        //        glHelper.SetValue(formContext, dmrName, dmrAttrValue);
+                        //        //task 263601 enable edit
+                        ////    if (dmrName != "fdr_option")
+                        ////        glHelper.SetControlReadOnly(formContext, dmrName, dmrAttrValue.length == 1)
+                        //}
+                        ////if more then one - leave only same options in design control and filter out others
+                        ////if (dmrAttrValue != null && dmrAttrValue.length > 1) {
+                        //one for all
+                        if (dmrAttrValue != null && dmrAttrValue.length > 0) {
 
                             //on create: just filter
                             //not create => keep selection, but filter
@@ -301,7 +304,8 @@ var Design_main = (function (window, document) {
 
 
                             //glHelper.SetRequiredLevel(formContext, dmrName, isRequired);
-                            glHelper.SetControlReadOnly(formContext, dmrName, !(dmrAttrValue.length > 1));
+                            //task 263601 enable edit
+                            //glHelper.SetControlReadOnly(formContext, dmrName, !(dmrAttrValue.length > 1));
                         }
                         //if none - hide
                         if (dmrAttrValue == null || dmrAttrValue.length == 0) {
@@ -315,16 +319,20 @@ var Design_main = (function (window, document) {
 
                     case "multiselectoptionset-optionset":
 
-                        //if(dmr attribute value == true)                   
-                        //check number of options selected in dmr control
-                        //if one  - check same option in design control and make it read only
-                        if (dmrAttrValue != null && dmrAttrValue.length == 1) {
+                        ////if(dmr attribute value == true)                   
+                        ////check number of options selected in dmr control
+                        ////if one  - check same option in design control and make it read only
+                        //if (dmrAttrValue != null && dmrAttrValue.length == 1) {
 
-                            glHelper.SetOptionsetByValue(formContext, dmrName, dmrAttrValue[0]);
-                            glHelper.SetControlReadOnly(formContext, dmrName, dmrAttrValue.length == 1)
-                        }
-                        //if more then one - leave only same options in design control and filter out others
-                        if (dmrAttrValue != null && dmrAttrValue.length > 1) {
+                        //    glHelper.SetOptionsetByValue(formContext, dmrName, dmrAttrValue[0]);
+                        //    //task 263601 enable edit
+                        //    //glHelper.SetControlReadOnly(formContext, dmrName, dmrAttrValue.length == 1)
+                        //}
+                        ////if more then one - leave only same options in design control and filter out others
+                        ////if (dmrAttrValue != null && dmrAttrValue.length > 1)
+
+                        //one for all
+                        if (dmrAttrValue != null && dmrAttrValue.length > 0) {
 
                             //on create: just filter
                             //not create => keep selection, but filter
@@ -351,7 +359,8 @@ var Design_main = (function (window, document) {
                         if (dmrAttrValue != null) {
 
                             glHelper.SetOptionsetByValue(formContext, dmrName, dmrAttrValue);
-                            glHelper.SetControlReadOnly(formContext, dmrName, true);
+                            //task 263601 enable edit
+                            //glHelper.SetControlReadOnly(formContext, dmrName, true);
                         }
                         //else => leave option set as is
                         break;
@@ -391,6 +400,20 @@ var Design_main = (function (window, document) {
                 }
             );
         }
+    }
+
+    function parentDesignVisible(formContext, isVisible) {
+
+        if (!isVisible) glHelper.SetValue(formContext, "fdr_parentdesign", null);
+
+
+        formContext.getAttribute('fdr_parentdesign').controls.forEach(function (ctrl) {
+            ctrl.setVisible(isVisible);
+        });
+
+        //glHelper.SetControlVisibility(formContext, "fdr_parentdesign", isVisible);
+        
+        //glHelper.SetControlVisibility(formContext, "parent_reqNumber_view", isVisible);
     }
 
 
@@ -438,7 +461,8 @@ var Design_main = (function (window, document) {
             if (formType == glHelper.FORMTYPE_CREATE) {
 
                 //hide parent design field - untill design type selected
-                glHelper.SetSectionVisibility(formContext, "General", "General_section_5", false);
+                //glHelper.SetSectionVisibility(formContext, "General", "General_section_5", false);
+                parentDesignVisible(formContext, formType != glHelper.FORMTYPE_CREATE);
 
                 //DMR Lookup
                 var DMR_control = formContext.getControl("fdr_designmarkingrequirement");
@@ -504,6 +528,9 @@ var Design_main = (function (window, document) {
             }
             else {
 
+                //only design type is disabled
+                glHelper.SetDisabled(formContext, "fdr_designtype", formType != glHelper.FORMTYPE_CREATE)
+
                 //Design Marking Requirement=B620, TCRN only
                 SetTCRNOnlyBasedOnType(formContext);
 
@@ -527,9 +554,13 @@ var Design_main = (function (window, document) {
             isDraft = Status == 3;
             isActive = Status == 1;
 
-            if (!isDraft) glHelper.SetFormReadOnly(formContext);
-            //glHelper.SetDisabled(formContext, "fdr_registrationdate", !isDraft);
-            if (isActive) glHelper.SetValue(formContext, "fdr_registrationdate", new Date());
+
+            //task 263691 = > on design type has to be not editable
+            //if (!isDraft) glHelper.SetFormReadOnly(formContext);
+
+            //ste reg date if empty
+            var setRegDate = glHelper.GetValue(formContext, "fdr_registrationdate");
+            if (isActive && (setRegDate == null || setRegDate == "")) glHelper.SetValue(formContext, "fdr_registrationdate", new Date());
         },
 
         DMR_OnChange: function (executionContext) {
@@ -623,8 +654,9 @@ var Design_main = (function (window, document) {
             if (isParent && pDesignId != null) glHelper.SetValue(formContext, "fdr_parentdesign", null);
             //clean desin marking requirements
             //if (!isParent) glHelper.SetValue(formContext, "fdr_designmarkingrequirement", null);
-            //parent section
-            glHelper.SetSectionVisibility(formContext, "General", "General_section_5", isChild);
+            //parent section => section removed
+            //glHelper.SetSectionVisibility(formContext, "General", "General_section_5", isChild);
+            parentDesignVisible(formContext, isChild);
             //design number
             glHelper.SetControlVisibility(formContext, "fdr_designregistrationnumber", isParent);
             //design marking requirements

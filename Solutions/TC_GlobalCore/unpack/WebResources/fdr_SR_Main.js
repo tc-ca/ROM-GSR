@@ -910,8 +910,8 @@ var SR_main = (function (window, document) {
             var submissionDate = glHelper.GetValue(formContext, "fdr_submissiondate");
             var lastPerformanceChange = glHelper.GetValue(formContext, "fdr_latestperformancechange");
 
-            var dateToComapre = (lastPerformanceChange != null && lastPerformanceChange != undefined) ? lastPerformanceChange : submissionDate;
-            var dateMessage = (lastPerformanceChange != null && lastPerformanceChange != undefined) ? "last performance change date" : "Submission Date";
+            var dateToComapre = (lastPerformanceChange != null && lastPerformanceChange != undefined && lastPerformanceChange != "") ? lastPerformanceChange : submissionDate;
+            var dateMessage = (lastPerformanceChange != null && lastPerformanceChange != undefined && lastPerformanceChange != "") ? "last performance change date" : "Submission Date";
 
             if (!glHelper.isInDateRange(currentValue, dateToComapre, new Date(), true)){
 
