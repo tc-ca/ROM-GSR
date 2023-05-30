@@ -7,7 +7,12 @@ var _busy = false;
 $(document).ready(function () {
     debugger;
     console.log("before lables role removal");
-   
+    var tablesectionParent =$('table[data-name="tab_5_section_1"]').parent();
+    console.log ("table selection22:");
+    console.log(tablesectionParent);
+    console.log(tablesectionParent.children(0)[0].innerHTML);
+
+
         setTimeout( function(){ 
 
             $('table[data-name="tab_5_section_1"]').find("#cid_handlingsitetype").attr("role", "");
@@ -16,7 +21,7 @@ $(document).ready(function () {
             $('table[data-name="tab_5_section_1"]').find("#cid_importingsitetype").attr("role", "");
 
         }, 1000);  
-        console.log("after lables role removal");
+       
 
 
     var CompanyName = '{{user.parentcustomerid.name}}';
@@ -31,6 +36,7 @@ $(document).ready(function () {
             var top = (screen.height ) ;
             var siteWizardURL = "~/SiteRegistrationWizard/?id=" + siteid;
             var win = window.open(siteWizardURL, 'Site Update', 'resizable=yes, width= 1200, height= 800, top= 1000, left=100');
+            
 
             win.addEventListener('beforeunload', () => {
               win.onunload = window.opener.location.reload();
@@ -38,18 +44,19 @@ $(document).ready(function () {
         }
     });
 
-
-    document.getElementById("address1_latitude").addEventListener('change', (event) => {
+  
+   /* document.getElementById("address1_latitude").addEventListener('change', (event) => {
     //get Latitude and set it to nearest 4 digits
     var Lat = $("#address1_latitude").val();
     $("#address1_latitude").val(Number.parseFloat(Lat).toFixed(4));
-    });
-    document.getElementById("address1_longitude").addEventListener('change', (event) => {
+    });*/
+   
+   /* document.getElementById("address1_longitude").addEventListener('change', (event) => {
     //get Lontitude and set it to nearest 4 digits
     var Longtitude = $("#address1_longitude").val();
     $("#address1_longitude").val(Number.parseFloat(Longtitude).toFixed(4));
 
-    });
+    });*/
 
     $('.validation-summary').eq(1).remove();
 
@@ -81,11 +88,11 @@ $(document).ready(function () {
     });
     tdg.cid.address_type_change(false);
 
-    tdg.cid.convert_province_to_code(selected_language);
+    //tdg.cid.convert_province_to_code(selected_language);
 
     $('#ovs_legalname').attr("readonly", true);
 
-    subgrid_language();
+  //  subgrid_language();
       
 
         if (window.jQuery) {

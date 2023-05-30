@@ -2320,10 +2320,14 @@ if (typeof (tdg.cid) == "undefined") {
                 const titleElement = document.getElementsByClassName("tab-title");
                 console.log("before title");
                 titleElement[0].innerHTML = pageTitle;
-                const TDGActivitiesHeaderElement = document.querySelector('[aria-label="TDG Activity Types"]');
-                const ClassesHeaderElement = document.querySelector('[ aria-label="Classes"]');
-                TDGActivitiesHeaderElement.children[0].innerHTML = TDGActivityHeaderLabel + " " + pageTitle;
-                ClassesHeaderElement.children[0].innerHTML = ClassHeaderLabel + " " + pageTitle;
+                const TDGActivitiesHeaderElement = $('table[data-name="tab_5_section_1"]').parent();
+                    //document.querySelector('[aria-label="TDG Activity Types"]');
+                const ClassesHeaderElement = $('table[data-name="site_details_section_5"]').parent();
+                    //document.querySelector('[ aria-label="Classes"]');
+                TDGActivitiesHeaderElement.children(0)[0].innerHTML =TDGActivityHeaderLabel + " " + pageTitle;
+                //innerHTML = TDGActivityHeaderLabel + " " + pageTitle;
+                ClassesHeaderElement.children(0)[0].innerHTML =ClassHeaderLabel + " " + pageTitle;
+                    //= ClassHeaderLabel + " " + pageTitle;
                 var ModeTable = document.getElementById('siteModesOfTransportation');
                 ModeTable.closest('fieldset').children[0].innerHTML = ModeOftransportationHeaderLable + " " + pageTitle;
             }
