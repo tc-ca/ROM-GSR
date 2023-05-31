@@ -173,7 +173,7 @@ var CheckDuplicate = function (_flowURl, _parameters) {
                                 accId = accountResult[0]["cid_crabusinessnumber"];
                             }
                             var data = {
-                                "ovs_RequestType@odata.bind": "/ovs_supportrequesttypes(4c715208-2ac7-ed11-b597-0022483d0343)", // Lookup
+                                "ovs_RequestType@odata.bind": "/ovs_supportrequesttypes(4c715208-2ac7-ed11-b597-0022483d0343)", // Lookup - DuplicateActiveSiteBlock
                                 "ovs_Company@odata.bind": "/accounts(" + _parameters.Parent_Id + ")", // Lookup
                                 //"subject": "A user is tring to claim a Site which is owned by another organization | Legal Name: " + accName + "| Address Type: " + AddrType,
                                 "statuscode": 1,

@@ -4,6 +4,7 @@
 
 $(document).ready(function () {
     debugger;
+    
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
@@ -120,6 +121,9 @@ $(document).ready(function () {
     if ($("#cid_addressoverwritten").val() == 0) { $("#ovs_address1_province").prop('disabled', true); }
     else { $("#ovs_address1_province").prop('disabled', false); }
 
+
+    change_duplicatefieldID();
+
     subgrid_language();
 
     //Add listeners for the address fields to change the "manually entered" flag
@@ -153,10 +157,43 @@ function subgrid_language() {
 function setManualAddressEntryFlag() {
     $("#cid_addressoverwritten").val(1);
 }
+function change_duplicatefieldID()
+{
+    //data-name="ACCOUNT_INFORMATION"
+      $('table[data-name="ACCOUNT_INFORMATION"] tbody').find('tr td div.control input').each(function (i) {
+        var fieldset = $(this);
+        $(this).attr("id", fieldset[0].id + "_1" );
+      });
+      $('table[data-name="ACCOUNT_INFORMATION"] tbody').find('tr td div.info label').each(function (i) {
+        var fieldset = $(this);
+        var id = fieldset[0].id;
+        
+       var forattribute = "";
+       //cid_companyanniversarydate_1_datepicker_description
+       if (id.indexOf("date")>0)
+       {    forattribute = id.replace("_label" , "")  + "_1_datepicker_description";  }
+       else
+       {forattribute = id.replace("_label" , "") + "_1";}
+        //_label
+        //datepicker_description
+        $(this).attr("for", forattribute );
+      });
+        $('table[data-name="ACCOUNT_INFORMATION"] tbody').find('tr td div.control select').each(function (i) {
+        var fieldset = $(this);
+        $(this).attr("id", fieldset[0].id + "_1" );
+      });
 
+    //tab_3
+      $('table[data-name="company_details_section_4"] tbody').find('tr td div.control input').each(function (i) {
+        var fieldset = $(this);
+        $(this).attr("id", fieldset[0].id + "_2" );
+      });
+    
+}
 function Formate_PhoneNumber_AllControlsWithSameID(TargetFieldId) {
     $('table[data-name="tab_8_section_2"] tbody').find('tr td div.control input').each(function (i) {
         var fieldset = $(this);
+        $(this).attr("id", fieldset[0].id + "2" );
         var fieldid = fieldset[0].id;
         if (fieldid == TargetFieldId) {
             fieldset.attr("placeholder", "(___) ___-____");
