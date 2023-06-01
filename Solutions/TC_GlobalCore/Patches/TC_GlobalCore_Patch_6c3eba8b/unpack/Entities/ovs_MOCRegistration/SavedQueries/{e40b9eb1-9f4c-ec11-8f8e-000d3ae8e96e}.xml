@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{e40b9eb1-9f4c-ec11-8f8e-000d3ae8e96e}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
+        <row name="result" id="ovs_mocregistrationid">
+          <cell name="ovs_siteid" width="100" />
+          <cell name="a_17f5c55886f4eb1194ef000d3a84a4e1.territoryid" width="100" disableSorting="1" />
+          <cell name="a_17f5c55886f4eb1194ef000d3a84a4e1.ovs_romid" width="100" disableSorting="1" />
+          <cell name="ovs_name" width="187" />
+          <cell name="ovs_operationtype" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_lineofbusiness" width="100" />
+          <cell name="ovs_mocregistrationname" width="100" />
+          <cell name="ovs_mocinitialregistrationdate" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_mocprogram" width="100" />
+          <cell name="ovs_cdriskscore" width="100" />
+          <cell name="ovs_cdpriorityscore" width="100" />
+          <cell name="ovs_cdriskcategory" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+        <entity name="ovs_mocregistration">
+          <attribute name="ovs_name" />
+          <attribute name="ovs_mocinitialregistrationdate" />
+          <attribute name="ovs_mocprogram" />
+          <attribute name="ovs_cdriskscore" />
+          <attribute name="ovs_cdpriorityscore" />
+          <attribute name="ovs_cdriskcategory" />
+          <attribute name="ovs_operationtype" />
+          <attribute name="ovs_siteid" />
+          <order attribute="ovs_name" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="1" />
+          </filter>
+          <link-entity name="account" from="accountid" to="ovs_siteid" visible="false" link-type="outer" alias="a_17f5c55886f4eb1194ef000d3a84a4e1">
+            <attribute name="territoryid" />
+            <attribute name="ovs_romid" />
+          </link-entity>
+          <attribute name="ovs_mocregistrationid" />
+          <attribute name="ovs_lineofbusiness" />
+          <attribute name="ovs_mocregistrationname" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Inactive Operations for the Planner Application" languagecode="1033" />
+      <LocalizedName description="Opérations inactives pour l'application Planner" languagecode="1036" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
