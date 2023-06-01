@@ -19,14 +19,14 @@ $(document).ready(function () {
             $('table[data-name="tab_5_section_1"]').find("#cid_offeringfortransportsitetype").attr("role", "");
             $('table[data-name="tab_5_section_1"]').find("#cid_transportingsitetype").attr("role", "");
             $('table[data-name="tab_5_section_1"]').find("#cid_importingsitetype").attr("role", "");
-            $("#cid_importingsitetype").removeAttr("disabled");
+          //  $("#cid_importingsitetype").removeAttr("disabled");
 
         }, 1000);  
        
 
- $("#cid_importingsitetype").click(function(event){
+/* $("#cid_importingsitetype").click(function(event){
                     event.preventDefault ();
-                });
+                });*/
                   //event.preventDefault ();
 
     var CompanyName = '{{user.parentcustomerid.name}}';
