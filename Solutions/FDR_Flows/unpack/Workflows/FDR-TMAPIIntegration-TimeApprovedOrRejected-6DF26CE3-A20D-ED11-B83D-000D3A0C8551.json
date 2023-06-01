@@ -16,7 +16,7 @@
           "connectionReferenceLogicalName": "fdr_conref_tmapi"
         },
         "api": {
-          "name": "shared_tc-5Ftmapiconnector-5F5cf23ef0bee9f3b2",
+          "name": "shared_tc-5ftmapiconnector-5f5cf23ef0bee9f3b2",
           "logicalName": "tc_5Ftmapiconnector"
         }
       }
@@ -93,19 +93,24 @@
                 "host": {
                   "connectionName": "shared_tc-5ftmapiconnector-5f5cf23ef0bee9f3b2",
                   "operationId": "timeentryApproveOrRejectHours",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Ftmapiconnector-5F5cf23ef0bee9f3b2"
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5ftmapiconnector-5f5cf23ef0bee9f3b2"
                 },
                 "parameters": {
                   "body/HourIds": [
                     "@triggerOutputs()?['body/fdr_tmhourid']"
                   ],
-                  "body/Approve": "@triggerOutputs()?['body/fdr_approvetime']"
+                  "body/Approve": "@triggerOutputs()?['body/fdr_approvetime']",
+                  "body/ApproverNetworkId": "@outputs('Get_modifying_user_domainname')?['body/domainname']"
                 },
                 "authentication": "@parameters('$authentication')"
               }
             }
           },
-          "runAfter": {},
+          "runAfter": {
+            "Get_modifying_user_domainname": [
+              "Succeeded"
+            ]
+          },
           "metadata": {
             "operationMetadataId": "82e3af13-315d-4c71-a25c-18638e01608c"
           },
@@ -159,6 +164,26 @@
             "operationMetadataId": "09cb40c0-fd98-494d-b0dc-5406f2ed83c0"
           },
           "type": "Scope"
+        },
+        "Get_modifying_user_domainname": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "22771aeb-5cb6-425d-8195-829cc2a3ddcb"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "systemusers",
+              "recordId": "@triggerOutputs()?['body/_modifiedby_value']",
+              "$select": "domainname"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
         }
       }
     },
