@@ -2327,9 +2327,11 @@ if (typeof (tdg.cid) == "undefined") {
                 TDGActivitiesHeaderElement.children(0)[0].innerHTML =TDGActivityHeaderLabel + " " + pageTitle;
                 //innerHTML = TDGActivityHeaderLabel + " " + pageTitle;
                 ClassesHeaderElement.children(0)[0].innerHTML =ClassHeaderLabel + " " + pageTitle;
-                    //= ClassHeaderLabel + " " + pageTitle;
-                var ModeTable = document.getElementById('siteModesOfTransportation');
-                ModeTable.closest('fieldset').children[0].innerHTML = ModeOftransportationHeaderLable + " " + pageTitle;
+                //= ClassHeaderLabel + " " + pageTitle;
+                var ModeTable = $('table[data-name="site_details2_section_6"]').parent();
+                   // document.getElementById('siteModesOfTransportation');
+                ModeTable.children(0)[0].innerHTML = ModeOftransportationHeaderLable + " " + pageTitle;
+                    //.closest('fieldset').children[0].innerHTML = ModeOftransportationHeaderLable + " " + pageTitle;
             }
         },
 

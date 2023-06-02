@@ -4,13 +4,15 @@
 
 $(document).ready(function () {
     debugger;
-console.log("before role removal from web");
+ 
+
        setTimeout( function(){ 
                     
                 $("#cid_importingsitetype_label").attr("role", "");            
                 $("#cid_offeringfortransportsitetype_label").attr("role", "");
                 $("#cid_handlingsitetype_label").attr("role", "");
                 $("#cid_transportingsitetype_label").attr("role", "");
+           
              
     }, 1000); 
 

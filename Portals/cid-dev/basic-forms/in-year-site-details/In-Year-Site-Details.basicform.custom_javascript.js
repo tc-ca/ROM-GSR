@@ -6,22 +6,69 @@ var _busy = false;
 
 $(document).ready(function () {
     debugger;
-    console.log("before lables role removal");
+ 
     var tablesectionParent =$('table[data-name="tab_5_section_1"]').parent();
-    console.log ("table selection22:");
-    console.log(tablesectionParent);
-    console.log(tablesectionParent.children(0)[0].innerHTML);
+   console.log ("add tab index");
+   $('#Subgrid_new_1').find('div table tbody tr td ').each(function (i) {
+        var fieldset = $(this);
+        fieldset.attr("tabindex" , "0");
+   });
+     var importLabel = "Import";
+     var OfferTransferLabel="Offer for Transport";
+     var HandleLabel = "Handle";
+     var TransportLabel = "Transport";
+     var YesLabel = tdg.error_message.message("Yes");
+     var NoLabel = tdg.error_message.message("No");
+     var ImportCheckValue = YesLabel;
+     var offerCheckValue = YesLabel;
+     var HandleCheckValue = YesLabel;
+     var TransportCheckValue =YesLabel;
+     if  ( $("#cid_importingsitetype:checked").val() != "on")
+     {
+        ImportCheckValue  = NoLabel;
+     }
+     if  ( $("#cid_offeringfortransportsitetype:checked").val() != "on")
+     {
+        offerCheckValue  = NoLabel;
+     }
+     if  ( $("#cid_handlingsitetype:checked").val() != "on")
+     {
+        HandleCheckValue   = NoLabel;
+     }
+     if  ( $("#cid_transportingsitetype:checked").val()!= "on")
+     {
+         TransportCheckValue = NoLabel;
+     }
 
 
-        setTimeout( function(){ 
+ 
+var tdgTable =` <div id="tdgactivityParentDiv" colspan="1" rowspan="4" class="clearfix cell subgrid-cell">
+<div class="view-grid" id="TDGativities_Grid">
+ <table aria-relevant="additions" id="tdgActivitiesGrid" role="grid" class="table table-striped table-fluid">
+ <thead>
+    <tr>
+        <th tabindex="0" scope="col" aria-readonly="true" style="width:25%;">${importLabel}</th>
+        <th tabindex="0" scope="col" aria-readonly="true" style="width:25%;">${OfferTransferLabel}</th>
+        <th tabindex="0" scope="col" aria-readonly="true" style="width:25%;">${HandleLabel}</th>
+        <th tabindex="0" scope="col" aria-readonly="true" style="width:25%;">${TransportLabel}</th>
+    </tr>
+  </thead>
+    <tbody style="">
+    <tr>
+    <td tabindex="0" aria-readonly="true" >${ImportCheckValue}</td>
+    <td tabindex="0" aria-readonly="true" >${offerCheckValue}</td>
+    <td tabindex="0"  aria-readonly="true">${HandleCheckValue}</td>
+    <td tabindex="0" aria-readonly="true" >${TransportCheckValue}</td></tr>
+    </tbody>
+    </table>
+    </div>
+    </div>
+    `;
+    $('table[data-name="tab_5_section_1"]').after(tdgTable);
+    $('table[data-name="tab_5_section_1"]').css("display" ,"none");
+        
 
-            $('table[data-name="tab_5_section_1"]').find("#cid_handlingsitetype").attr("role", "");
-            $('table[data-name="tab_5_section_1"]').find("#cid_offeringfortransportsitetype").attr("role", "");
-            $('table[data-name="tab_5_section_1"]').find("#cid_transportingsitetype").attr("role", "");
-            $('table[data-name="tab_5_section_1"]').find("#cid_importingsitetype").attr("role", "");
-          //  $("#cid_importingsitetype").removeAttr("disabled");
-
-        }, 1000);  
+              
        
 
 /* $("#cid_importingsitetype").click(function(event){

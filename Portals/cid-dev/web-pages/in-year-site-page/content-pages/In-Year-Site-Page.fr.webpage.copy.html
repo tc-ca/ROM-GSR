@@ -6,7 +6,7 @@
 <script>
     $('#loader').show();
   </script> {% assign siteId = request.params.id %} {% fetchxml result %} <fetch distinct="false" mapping="logical" output-format="xml-platform" version="1.0"> <entity name="ovs_mocregistration"> <attribute name="ovs_mocregistrationid"></attribute> <attribute name="ovs_operationtype"></attribute> <attribute name="ovs_siteid"></attribute> <attribute name="statecode"></attribute> <filter type="and"> {% comment %} Active Operation {% endcomment %} <condition attribute="statecode" operator="eq" value="0"></condition> {% comment %} HOTI Operation {% endcomment %} <condition attribute="ovs_operationtype" operator="eq" value="918640038"></condition> <condition attribute="ovs_siteid" operator="eq" value="{{ siteId }}"></condition> </filter> </entity> </fetch> {% endfetchxml %} {% if result.results.entities.size &gt; 0 %} {% assign operationId = result.results.entities[0].ovs_mocregistrationid %} {% assign oper = entities.ovs_mocregistration[operationId] %} {% if oper %}
-
+<!--
 <fieldset><legend class="section-title show-bar">Mode(s) of transportation</legend>
 
 <table class="section" id="siteModesOfTransportation" role="presentation" style="width:90%;">
@@ -31,6 +31,7 @@
 </table>
 </fieldset>
 <br>
+-->
 {% endif %} {% else %}
 <p style="color:red">Error retrieving modes of transportation.</p>
 {% endif %}<br>
