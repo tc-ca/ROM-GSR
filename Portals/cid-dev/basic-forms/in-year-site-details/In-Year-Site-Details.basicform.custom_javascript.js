@@ -6,12 +6,30 @@ var _busy = false;
 
 $(document).ready(function () {
     debugger;
- 
+   
     var tablesectionParent =$('table[data-name="tab_5_section_1"]').parent();
+   setTimeout( function(){ 
+   $('table[data-name="site_details2_section_6"] tbody').find("tr").each(function()
+   { console.log ("inside 767");
+         var trElement = $(this);
+		trElement.find('td:first').attr("tabindex","0");
+        console.log(trElement.id)
+        console.log(trElement.find('td:first').val());
+     //  $(this).attr("tabindex" , "0");
+      // console.log($(this));
+      // $('td[data-attribute="cid_modeoftransportationair"]').attr ("tabindex" ,"0");
+   }) 
+   , 1000 } ); 
    console.log ("add tab index");
-   $('#Subgrid_new_1').find('div table tbody tr td ').each(function (i) {
+   $('.entity-grid').on("loaded", function ()
+	{
+		
+		$(this).find('td').each(function (i) {
+            console.log ("td foundqqqq");
         var fieldset = $(this);
         fieldset.attr("tabindex" , "0");
+        }
+        );
    });
      var importLabel = "Import";
      var OfferTransferLabel="Offer for Transport";
@@ -44,7 +62,7 @@ $(document).ready(function () {
  
 var tdgTable =` <div id="tdgactivityParentDiv" colspan="1" rowspan="4" class="clearfix cell subgrid-cell">
 <div class="view-grid" id="TDGativities_Grid">
- <table aria-relevant="additions" id="tdgActivitiesGrid" role="grid" class="table table-striped table-fluid">
+ <table  aria-relevant="additions" id="tdgActivitiesGrid" role="grid" class="table table-striped table-fluid">
  <thead>
     <tr>
         <th tabindex="0" scope="col" aria-readonly="true" style="width:25%;">${importLabel}</th>

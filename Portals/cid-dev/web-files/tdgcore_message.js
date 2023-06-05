@@ -1194,6 +1194,16 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000186",
                         "message_en": "Street 1 can not have PO Box.",
                         "message_fr": "Rue 1 ne peut pas avoir de case postale or Rue 1 ne peut pas avoir de CP."
+                    },
+                    {
+                        "code": "m000187",
+                        "message_en": "Are you sure you want to deactivate the Organization ?",
+                        "message_fr": "Êtes vous certain de désactiver l'organisation ?"
+                    },
+                    {
+                        "code": "m000188",
+                        "message_en": "Deactivate Organization and Sites",
+                        "message_fr": "Désactiver l'organisation et les sites"
                     }
                 ];
 

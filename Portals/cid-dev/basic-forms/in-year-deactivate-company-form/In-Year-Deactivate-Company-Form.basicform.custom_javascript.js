@@ -4,7 +4,7 @@
 
 $(document).ready(function () {
     debugger;
-     setTimeout( function(){ $("#cid_iscompanyattested_label").removeAttr("role");}, 1000);  
+    setTimeout(function () { $("#cid_iscompanyattested_label").removeAttr("role"); }, 1000);
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
@@ -32,8 +32,35 @@ $(document).ready(function () {
     $('#cid_cidcompanystatus').hide();
     $('#cid_cidcompanystatus_label').hide();
 
-    if (cidCompanyStatus.indexOf("Inactive") >= 0)
+    var lbl_inactive = tdg.error_message.message("lbl_inactive");
+    if (cidCompanyStatus.indexOf(lbl_inactive) >= 0)
         $('#EntityFormPanel').find('input, textarea, button, select').attr('disabled', 'disabled');
+
+    $("#UpdateButton").hide();
+    var msg = tdg.error_message.message("m000188");
+    tdg.c.button_create("btn_update", "#UpdateButton", msg);
+    $("#btn_update").click(function () {
+        debugger;
+
+        if ($("#cid_iscompanyattested").prop('checked')) {
+            var message = tdg.error_message.message("m000187");
+            tdg.c.dialog_YN(message, (ans) => {
+                if (ans) {
+                    debugger;
+                    $("#UpdateButton").click();
+                }
+            });
+        }
+        else {
+            var errorMessage = tdg.error_message.message("m000026");
+            $('.validation-summary div').remove();
+            var validationSection = $('.validation-summary');
+            validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
+            validationSection.show();
+            $('.validation-summary div').focus();
+        }
+
+    });
 
     $("#EntityFormPanel").click(function () {
         var futureDateMessageShown = sessionStorage.getItem("futureDateMessageShown");
@@ -55,19 +82,7 @@ if (window.jQuery) {
         entityFormClientValidate = function () {
             debugger;
 
-            if ($("#cid_iscompanyattested").prop('checked')) {
-                return true;
-            }
-            else {
-                var errorMessage = tdg.error_message.message("m000026");
-                $('.validation-summary div').remove();
-                var validationSection = $('.validation-summary');
-                validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
-                validationSection.show();
-                $('.validation-summary div').focus();
-
-                return false;
-            }
+            return true;
         }
     }(window.jQuery));
 }
