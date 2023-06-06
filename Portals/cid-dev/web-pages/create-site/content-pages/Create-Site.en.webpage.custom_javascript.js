@@ -249,7 +249,7 @@ function CheckLatLongDecimal() {
     else {
         var numberofdecimal = 0 ;
        
-         numberofdecimal = Lat.toString().split(',')[splitChar].length;
+         numberofdecimal = Lat.toString().split(splitChar)[1].length;
 
         if (numberofdecimal != 4) {
             error = m000143;
@@ -266,7 +266,7 @@ function CheckLatLongDecimal() {
     else {
         var Longtitudenumberofdecimal  = 0;
         // = Longtitude.toString().split('.')[1].length;
-             Longtitudenumberofdecimal = Longtitude.toString().split(',')[splitChar].length;
+             Longtitudenumberofdecimal = Longtitude.toString().split(splitChar)[1].length;
        
         if (Longtitudenumberofdecimal != 4) {
             error = error + m000144;

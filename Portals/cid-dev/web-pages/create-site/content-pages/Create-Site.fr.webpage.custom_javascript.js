@@ -309,6 +309,8 @@ function CheckLatLongDecimal() {
          console.log (decimalIndexLat);
          //(",");
 	     decimalIndexLong = Longtitude.toString().indexOf(splitChar);
+          console.log("Longtitude decimal index:");
+         console.log (decimalIndexLong);
 	
   
     var error = "";
@@ -317,6 +319,7 @@ function CheckLatLongDecimal() {
     //m000143
     var m000143 = "<p>" + tdg.error_message.message("m000143") + "</p>";
     var m000144 = "<p>" + tdg.error_message.message("m000144") + "</p>";
+    console.log ("after message");
 
     if (decimalIndexLat < 0) {
         checkResult = false;
@@ -325,7 +328,7 @@ function CheckLatLongDecimal() {
     else {
         var numberofdecimal = 0 ;
        
-         numberofdecimal = Lat.toString().split(',')[splitChar].length;
+         numberofdecimal = Lat.toString().split(',')[1].length;
          console.log("number of decimal :");
          console.log(numberofdecimal);
 
@@ -344,7 +347,7 @@ function CheckLatLongDecimal() {
     else {
         var Longtitudenumberofdecimal  = 0;
         // = Longtitude.toString().split('.')[1].length;
-             Longtitudenumberofdecimal = Longtitude.toString().split(',')[splitChar].length;
+             Longtitudenumberofdecimal = Longtitude.toString().split(',')[1].length;
        
         if (Longtitudenumberofdecimal != 4) {
             error = error + m000144;
