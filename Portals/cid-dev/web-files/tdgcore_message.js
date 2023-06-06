@@ -917,8 +917,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000131",
-                        "message_en": "The address you entered is currently registered and active and used by another organization. The site at this address must be de-activated before changes can be made.",
-                        "message_fr": "L'adresse que vous avez entrée est actuellement enregistrée, active et utilisée par une autre organisation. Le site à cette adresse doit être désactivé avant que des modifications puissent être apportées."
+                        "message_en": "The existing site at this address is already claimed by another organization. Do you want the Transport Canada to initiate a request to process your claim.",
+                        "message_fr": "Le site existant à cette adresse est déjà revendiqué par une autre organisation. Voulez-vous que Transports Canada initie une demande pour traiter votre réclamation."
                     },
                     {
                         "code": "m000132",
@@ -962,8 +962,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000140",
-                        "message_en": "The current owner orgnization of this site was contacted and informed to release this site.",
-                        "message_fr": "L'organisation actuellement propriétaire de ce site a été contactée et informée pour libérer ce site dans le système."
+                        "message_en": "Your request has been successfully received by Transport Canada.",
+                        "message_fr": "Votre demande a bien été reçue par Transports Canada."
                     },
                     {
                         "code": "m000141",
