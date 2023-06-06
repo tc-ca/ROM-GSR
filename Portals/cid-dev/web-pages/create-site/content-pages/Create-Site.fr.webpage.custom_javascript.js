@@ -295,5 +295,67 @@ function CheckLatLongDecimal() {
     }
     return checkResult;
     */
-    return true;
+   
+    var Lat = $("#address1_latitude").val();
+    var Longtitude = $("#address1_longitude").val();
+    var lang = sessionStorage.getItem("selected_language");
+    var decimalIndexLat  = -1 ;
+    var decimalIndexLong  = -1;
+    var splitChar = "," ;
+    
+
+		 decimalIndexLat = Lat.toString().indexOf (splitChar);
+         console.log("decimal index:");
+         console.log (decimalIndexLat);
+         //(",");
+	     decimalIndexLong = Longtitude.toString().indexOf(splitChar);
+	
+  
+    var error = "";
+    var checkResult = true;
+    //check latitude
+    //m000143
+    var m000143 = "<p>" + tdg.error_message.message("m000143") + "</p>";
+    var m000144 = "<p>" + tdg.error_message.message("m000144") + "</p>";
+
+    if (decimalIndexLat < 0) {
+        checkResult = false;
+        error = m000143;
+    }
+    else {
+        var numberofdecimal = 0 ;
+       
+         numberofdecimal = Lat.toString().split(',')[splitChar].length;
+         console.log("number of decimal :");
+         console.log(numberofdecimal);
+
+        if (numberofdecimal != 4) {
+            error = m000143;
+            //"<p>Please enter a Latitude as a decimal, with the full four digit decimal point (e.g. 41.3251)</p>";
+            checkResult = false;
+        }
+    }
+
+    //check longtitude
+    if (decimalIndexLong < 0) {
+        checkResult = false;
+        error = error + m000144;
+    }
+    else {
+        var Longtitudenumberofdecimal  = 0;
+        // = Longtitude.toString().split('.')[1].length;
+             Longtitudenumberofdecimal = Longtitude.toString().split(',')[splitChar].length;
+       
+        if (Longtitudenumberofdecimal != 4) {
+            error = error + m000144;
+            //"<p>Please enter a Longitude as a decimal, with the full four digit decimal point (e.g. -74.7992)</p>";
+            checkResult = false;
+        }
+    }
+
+    if (checkResult == false) {
+        $('#ErrorMessageDiv').css('display', 'block');
+        $('#ErrorMessageDiv').html("<h3>Error</h3>" + error);
+    }
+    return checkResult;
 }
