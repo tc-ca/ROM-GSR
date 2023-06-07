@@ -6,15 +6,37 @@ var _busy = false;
 
 $(document).ready(function () {
     debugger;
+   $(".tab-title").attr("tabindex" , "0");
+   $(".tab-title").focus();
    
+    
+    var SiteStatusValue =  $("#cid_cidsitestatus :selected").text();
+    $("#cid_cidsitestatus").after('<div class="readonly form-control picklist" tabindex="0">'+SiteStatusValue +' </div>');
+    $("#cid_cidsitestatus").css("display", "none");
+
+   // ovs_address_type
+    var ovs_address_type =  $("#ovs_address_type :selected").text();
+    $("#ovs_address_type").after('<div class="readonly form-control picklist" tabindex="0">'+ ovs_address_type +' </div>');
+    $("#ovs_address_type").css("display", "none");
+
+    var TDGActivitiesHeaderElement = $('table[data-name="tab_5_section_1"]').parent();
+    TDGActivitiesHeaderElement.attr("tabindex","0");
+    TDGActivitiesHeaderElement.children(0).attr("tabindex","0");
+     var ClassesHeaderElement = $('table[data-name="site_details_section_5"]').parent();
+     var ModeTable = $('table[data-name="site_details2_section_6"]').parent();
+     ClassesHeaderElement.children(0).attr("tabindex","0");
+     ModeTable.children(0).attr("tabindex","0");
+
+
+
+
     var tablesectionParent =$('table[data-name="tab_5_section_1"]').parent();
    setTimeout( function(){ 
    $('table[data-name="site_details2_section_6"] tbody').find("tr").each(function()
-   { console.log ("inside 767");
+   { 
          var trElement = $(this);
 		trElement.find('td:first').attr("tabindex","0");
-        console.log(trElement.id)
-        console.log(trElement.find('td:first').val());
+  
      //  $(this).attr("tabindex" , "0");
       // console.log($(this));
       // $('td[data-attribute="cid_modeoftransportationair"]').attr ("tabindex" ,"0");

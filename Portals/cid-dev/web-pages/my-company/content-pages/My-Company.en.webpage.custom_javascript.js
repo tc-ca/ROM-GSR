@@ -143,6 +143,10 @@ $(document).ready(function () {
     if ($("#fax").closest("div").get(0).children[1] != "undefined") {
         $("#fax").closest("div").get(0).children[1].innerHTML = "<p> </p>";
     }
+
+
+
+
 });
 
 function subgrid_language() {
@@ -159,6 +163,9 @@ function setManualAddressEntryFlag() {
 }
 function change_duplicatefieldID()
 {
+  //add id to iframe 
+  $("#WebResource_address_complete").attr("title", "Address Complete lookup");
+
     //data-name="ACCOUNT_INFORMATION"
       $('table[data-name="ACCOUNT_INFORMATION"] tbody').find('tr td div.control input').each(function (i) {
         var fieldset = $(this);
@@ -178,7 +185,8 @@ function change_duplicatefieldID()
         //datepicker_description
         $(this).attr("for", forattribute );
       });
-        $('table[data-name="ACCOUNT_INFORMATION"] tbody').find('tr td div.control select').each(function (i) {
+
+     $('table[data-name="ACCOUNT_INFORMATION"] tbody').find('tr td div.control select').each(function (i) {
         var fieldset = $(this);
         $(this).attr("id", fieldset[0].id + "_1" );
       });
@@ -188,12 +196,77 @@ function change_duplicatefieldID()
         var fieldset = $(this);
         $(this).attr("id", fieldset[0].id + "_2" );
       });
+      
+      $('table[data-name="company_details_section_4"] tbody').find('tr td div.control select').each(function (i) {
+        var fieldset = $(this);
+        $(this).attr("id", fieldset[0].id + "_2" );
+      });
+
+   $('table[data-name="company_details_section_4"] tbody').find('tr td div.info label').each(function (i) {
+        var fieldset = $(this);
+        var id = fieldset[0].id;   
+       var forattribute = "";
+       //cid_companyanniversarydate_1_datepicker_description
+       if (id.indexOf("date")>0)
+       {    forattribute = id.replace("_label" , "")  + "_2_datepicker_description";  }
+       else
+       { forattribute = id.replace("_label" , "") + "_2";  }
+        //_label
+        //datepicker_description
+        $(this).attr("for", forattribute );
+       
+      });
+
+        $('table[data-name="tab_8_section_2"] tbody').find('tr td div.control input').each(function (i) {
+        var fieldset = $(this);
+        $(this).attr("id", fieldset[0].id + "_3" );
+        });
+
+        $('table[data-name="tab_8_section_2"] tbody').find('tr td div.control select').each(function (i) {
+        var fieldset = $(this);
+        $(this).attr("id", fieldset[0].id + "_3" );
+        });
+
+       $('table[data-name="tab_8_section_2"] tbody').find('tr td div.info label').each(function (i) {
+         var fieldset = $(this);
+         var id = fieldset[0].id;   
+         var forattribute = "";
+            //cid_companyanniversarydate_1_datepicker_description
+            if (id.indexOf("date")>0)
+            {    forattribute = id.replace("_label" , "")  + "_3_datepicker_description";  }
+            else
+            { forattribute = id.replace("_label" , "") + "_3";  }
+                //_label
+                //datepicker_description
+                $(this).attr("for", forattribute );
+               /*  if (id == "cid_iscompanyattested_label")
+                {
+                    console.log("before");
+                    console.log( $(this));
+
+                   $(this).attr("role", "");
+                  //  $(this).removeAttr("role");
+                     console.log("after");
+                    console.log( $(this));
+                   
+                }*/
+              
+       });
+ 
+     // $("#cid_iscompanyattested_label").removeAttr("role");
+    /*setTimeout( function(){ 
+        //$("#cid_iscompanyattested_label").removeAttr("role"),
+         $("#cid_iscompanyattested_label").removeAttr("role" , "")  ,
+         1000000 });*/
+
+
+     
     
 }
 function Formate_PhoneNumber_AllControlsWithSameID(TargetFieldId) {
     $('table[data-name="tab_8_section_2"] tbody').find('tr td div.control input').each(function (i) {
         var fieldset = $(this);
-        $(this).attr("id", fieldset[0].id + "2" );
+      
         var fieldid = fieldset[0].id;
         if (fieldid == TargetFieldId) {
             fieldset.attr("placeholder", "(___) ___-____");

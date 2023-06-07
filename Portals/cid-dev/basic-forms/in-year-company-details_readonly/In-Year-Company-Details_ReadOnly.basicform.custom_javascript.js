@@ -31,6 +31,7 @@ $(document).ready(function () {
         legend2.after("<h2>" + companyName + " - " + ho + "</h2><hr>");
         tdg.cid.phone_init("telephone1", selected_language);
         tdg.cid.phone_init("fax", selected_language);
+         $("#cid_iscompanyattested_label").removeAttr("role" , "") ;
     });
     $("#cancel_company_update").click(function () {
         window.location.href = "~/my-company";
