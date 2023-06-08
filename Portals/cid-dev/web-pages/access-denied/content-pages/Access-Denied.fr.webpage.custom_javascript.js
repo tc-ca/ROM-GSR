@@ -49,7 +49,15 @@ if (document.getElementsByTagName('h1')[0]) {
 }
 var xpath = "//li[contains(text(),'Le champ de')]";
 var matchingElement = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-matchingElement.textContent = "Le champ de l'adresse de messagerie est obligatoire.";
+if(matchingElement){
+    matchingElement.textContent = "Le champ de l'adresse de messagerie est obligatoire.";
+}
+
+xpath = "//button[contains(text(),'Sign In Canada')]";
+matchingElement = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+if(matchingElement){
+    matchingElement.textContent = "Authenti-Canada EEAC";
+}
 
 debugger;
 
