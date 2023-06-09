@@ -768,7 +768,6 @@ if (typeof (tdg.c) == "undefined") {
                         if (res) {
                             var message = tdg.error_message.message("m000131");
                             tdg.c.dialog_YN(message, (ans) => {
-                                //var contact_id = '{{user.id}}';
                                 if (ans) {
                                     return false;
                                     //Do nothing
@@ -814,7 +813,6 @@ if (typeof (tdg.c) == "undefined") {
                             if (res) {
                                 var message = tdg.error_message.message("m000131");
                                 tdg.c.dialog_YN(message, (ans) => {
-                                    //var contact_id = '{{user.id}}';
                                     if (ans) {
                                         return false;
                                         //Do nothing
@@ -2995,7 +2993,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#address1_postalcode").val(address.PostalZipCode);
         },
 
-        start_registration: function (rom_data, suppress_error) {
+        start_registration: function (rom_data, suppress_error, contact_id) {
             debugger;
             tdg.cid.contact_update(rom_data);
             if (rom_data.ovs_invitation_only) {
@@ -3016,13 +3014,11 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 var message = tdg.error_message.message("m000047");
                 message = message.replaceAll("{0}", rom_data.ovs_legalname);
                 tdg.c.dialog_YN(message, (ans) => {
-                    var contact_id = '{{user.id}}';
                     invitation.request_onboard(rom_data, contact_id, ans, false)
                 });
                 return validation;
             }
             else {
-                var contact_id = '{{user.id}}';
                 validation = invitation.in_current_registration(rom_data, suppress_error, contact_id);
                 return validation;
             }
@@ -3052,9 +3048,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
             });
         },
 
-        step2_Disable_ContactTypeFieldsForSecondaryUser: function () {
+        step2_Disable_ContactTypeFieldsForSecondaryUser: function (cid_contacttype) {
             debugger;
-            var cid_contacttype = '{{user.cid_contacttype.Value}}';
+
             //if not primary contact
             if (cid_contacttype != 100000000) {
                 $("#btn_previous").attr('disabled', true);

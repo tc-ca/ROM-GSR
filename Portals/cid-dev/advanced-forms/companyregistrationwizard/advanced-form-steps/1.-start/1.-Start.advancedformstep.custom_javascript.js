@@ -1,6 +1,7 @@
 //
 // CompanyRegistrationWizard-Start.js
 //
+
 var _account;
 var _cra_record = null;
 
@@ -146,7 +147,7 @@ if (window.jQuery) {
     (function ($) {
         webFormClientValidate = function () {
             debugger;
-
+            var contact_id = '{{user.id}}';
             let has_invitation = sessionStorage.getItem("cid_has_invitation");
             if (has_invitation != "true") {
                 tdg.cid.crw.start_clear_contact_address();
@@ -171,8 +172,7 @@ if (window.jQuery) {
                     rom_data = tdg.cid.crw.start_account_by_name(legalname);
                     if (rom_data.length > 0) {
                         rom_data = rom_data[0];
-                        //validation = start_registration(rom_data, suppress_error);
-                        validation = tdg.cid.crw.start_registration(rom_data, suppress_error);
+                        validation = tdg.cid.crw.start_registration(rom_data, suppress_error, contact_id);
 
                         $("#cid_operatingname").val(rom_data.name);
                     }
@@ -200,8 +200,7 @@ if (window.jQuery) {
                         rom_data = tdg.c.WebApi_List("accounts", filter);
                         if (rom_data.length > 0) {
                             rom_data = rom_data[0];
-                            //validation = start_registration(rom_data, suppress_error);
-                            validation = tdg.cid.crw.start_registration(rom_data, suppress_error);
+                            validation = tdg.cid.crw.start_registration(rom_data, suppress_error, contact_id);
                         }
                         else {
                             //contact_update(data);

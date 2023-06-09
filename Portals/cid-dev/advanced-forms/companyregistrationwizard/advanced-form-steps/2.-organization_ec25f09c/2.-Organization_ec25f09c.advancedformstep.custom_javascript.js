@@ -145,7 +145,7 @@ $(document).ready(function () {
 		tdg.cid.crw.start_cid_reasonfornobnnumber_onchange(false);
 	}
 
-	tdg.cid.crw.step2_Disable_ContactTypeFieldsForSecondaryUser();
+	tdg.cid.crw.step2_Disable_ContactTypeFieldsForSecondaryUser(cid_contacttype);
 
 	if (sessionStorage.getItem("frominyearsitepage") == "false") {
 		var parentcustomerid = '{{user.parentcustomerid.Id}}';
