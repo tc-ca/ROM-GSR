@@ -43,6 +43,7 @@ stages:
             --clientSecret ${env:PowerPlatformAadApplicationSecret}
           pac auth select --name PORTAL_DEV
           pac paportal download --path $(Build.ArtifactStagingDirectory) --webSiteId ${env:PowerPlatformDevPortalWebSiteId}
+    #Commit and push the portal data to GitHub
     - task: PowerShell@2
       displayName: Push code to GitHub
       env:
@@ -58,6 +59,8 @@ stages:
           git commit -m "Update portal"
           echo "Push solution changes to the remote repository"
           git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
+    #TODO Copy the deployment profiles folder from the repo and place them in the portal folder (Copy Files)
+    #TODO Replace variables in deployment files with their secret values (Replace Tokens)
     #Publish the portal config to Artifact staging
     - task: PublishBuildArtifacts@1
       displayName: Publish Configuration Artifact
