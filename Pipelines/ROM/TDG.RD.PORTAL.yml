@@ -37,7 +37,7 @@ stages:
           $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
           pac install latest
           pac auth create --name PORTAL_DEV `
-            --url ${env:PowerPlatformDEVURL} `
+            --url ${env:DEVPowerPlatformURL} `
             --tenant ${env:PowerPlatformAadDirectoryId} `
             --applicationId ${env:PowerPlatformAadApplicationId} `
             --clientSecret ${env:PowerPlatformAadApplicationSecret}
@@ -61,6 +61,20 @@ stages:
           git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
     #TODO Copy the deployment profiles folder from the repo and place them in the portal folder (Copy Files)
     #TODO Replace variables in deployment files with their secret values (Replace Tokens)
+    - task: replacetokens@5
+      inputs:
+        rootDirectory: '$(Build.ArtifactStagingDirectory)\cid-dev'
+        targetFiles: '*.deployment.yml'
+        encoding: 'auto'
+        tokenPattern: 'doublebraces'
+        writeBOM: true
+        actionOnMissing: 'warn'
+        keepToken: false
+        actionOnNoFiles: 'continue'
+        enableTransforms: false
+        enableRecursion: false
+        useLegacyPattern: false
+        enableTelemetry: true
     #Publish the portal config to Artifact staging
     - task: PublishBuildArtifacts@1
       displayName: Publish Configuration Artifact
@@ -105,7 +119,7 @@ stages:
                 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
                 pac install latest
                 pac auth create --name PORTAL_QA `
-                  --url ${env:PowerPlatformQAURL} `
+                  --url ${env:QAPowerPlatformURL} `
                   --tenant ${env:PowerPlatformAadDirectoryId} `
                   --applicationId ${env:PowerPlatformAadApplicationId} `
                   --clientSecret ${env:PowerPlatformAadApplicationSecret}
@@ -148,7 +162,7 @@ stages:
                 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
                 pac install latest
                 pac auth create --name PORTAL_ACC `
-                  --url ${env:PowerPlatformACCURL} `
+                  --url ${env:ACCPowerPlatformURL} `
                   --tenant ${env:PowerPlatformAadDirectoryId} `
                   --applicationId ${env:PowerPlatformAadApplicationId} `
                   --clientSecret ${env:PowerPlatformAadApplicationSecret}
@@ -189,7 +203,7 @@ stages:
                 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
                 pac install latest
                 pac auth create --name PORTAL_PREPROD `
-                  --url ${env:PowerPlatformPREPRODURL} `
+                  --url ${env:PREPRODPowerPlatformURL} `
                   --tenant ${env:PowerPlatformAadDirectoryId} `
                   --applicationId ${env:PowerPlatformAadApplicationId} `
                   --clientSecret ${env:PowerPlatformAadApplicationSecret}
