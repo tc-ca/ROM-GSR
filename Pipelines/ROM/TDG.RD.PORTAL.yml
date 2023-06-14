@@ -129,7 +129,7 @@ stages:
                   --applicationId ${env:PowerPlatformAadApplicationId} `
                   --clientSecret ${env:PowerPlatformAadApplicationSecret}
                 pac auth select --name PORTAL_QA
-                pac paportal upload --path $(Pipeline.Workspace)\cid-dev #--deploymentProfile qa
+                pac paportal upload --path $(Pipeline.Workspace)\cid-dev --deploymentProfile qa
 
   #Deploy to ACC
 - stage: DeployToACC
@@ -172,13 +172,13 @@ stages:
                   --applicationId ${env:PowerPlatformAadApplicationId} `
                   --clientSecret ${env:PowerPlatformAadApplicationSecret}
                 pac auth select --name PORTAL_ACC
-                pac paportal upload --path $(Pipeline.Workspace)\cid-dev #--deploymentProfile acc
+                pac paportal upload --path $(Pipeline.Workspace)\cid-dev --deploymentProfile acc
 
   #Deploy to PREPROD
 - stage: DeployToPREPROD
   pool:
       vmImage: 'windows-latest'
-  dependsOn: DeployToQA
+  dependsOn: DeployToACC
   jobs:
   - deployment: Deploy
     displayName: DeployToPREPROD
@@ -189,6 +189,8 @@ stages:
       runOnce:
         deploy:
           steps:
+          - download: current
+            artifact: cid-dev
           #Install the Power Platform CLI
           - task: PowerShell@2
             displayName: Download Power Platform CLI
@@ -213,5 +215,47 @@ stages:
                   --applicationId ${env:PowerPlatformAadApplicationId} `
                   --clientSecret ${env:PowerPlatformAadApplicationSecret}
                 pac auth select --name PORTAL_PREPROD
-                pac paportal upload --path $(Agent.BuildDirectory)\cid-dev
-                #Make sure to add the --deploymentProfile tag when the preprod profile is created
+                pac paportal upload --path $(Pipeline.Workspace)\cid-dev --deploymentProfile preprod
+
+  #Deploy to PROD
+- stage: DeployToPROD
+  pool:
+      vmImage: 'windows-latest'
+  dependsOn: DeployToPREPROD
+  jobs:
+  - deployment: Deploy
+    displayName: DeployToPROD
+    environment: PROD-TDG
+    timeoutInMinutes: 360
+    cancelTimeoutInMinutes: 2
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: cid-dev
+          #Install the Power Platform CLI
+          - task: PowerShell@2
+            displayName: Download Power Platform CLI
+            inputs:
+              targetType: 'inline'
+              script: |
+                Invoke-WebRequest https://aka.ms/PowerAppsCLI -OutFile pac.msi
+                msiexec /i pac.msi /quiet /norestart
+          
+          - task: PowerShell@2
+            displayName: Upload portal configuration
+            env:
+              PowerPlatformAadApplicationSecret: $(PowerPlatformAadApplicationSecret)
+            inputs:
+              targetType: 'inline'
+              script: |
+                $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+                pac install latest
+                pac auth create --name PORTAL_PROD `
+                  --url ${env:PRODPowerPlatformURL} `
+                  --tenant ${env:PowerPlatformAadDirectoryId} `
+                  --applicationId ${env:PowerPlatformAadApplicationId} `
+                  --clientSecret ${env:PowerPlatformAadApplicationSecret}
+                pac auth select --name PORTAL_PROD
+                pac paportal upload --path $(Pipeline.Workspace)\cid-dev --deploymentProfile prod
