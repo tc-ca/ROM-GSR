@@ -748,6 +748,16 @@
         return includeEdges ? (dtv <= end) && (dtv >= strt) : (dtv < end) && (dtv > strt);
     }
 
+    function isInDateTimeRange(dateToValidate, dateStart, dateEnd, includeEdges = false) {
+
+        var dtv = dateToValidate.getTime();
+        var strt = dateStart.getTime();
+        var end = dateEnd.getTime();
+
+        return includeEdges ? (dtv <= end) && (dtv >= strt) : (dtv < end) && (dtv > strt);
+    }
+
+
     /****************************************************************************************
     MOBILE 
     ****************************************************************************************/
@@ -944,6 +954,7 @@
         isAfterDate: isAfterDate,
         isBeforeDate: isBeforeDate,
         isInDateRange: isInDateRange,
+        isInDateTimeRange: isInDateTimeRange,
     };
 
     //********************public methods end***************

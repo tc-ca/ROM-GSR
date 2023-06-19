@@ -520,9 +520,9 @@ var SR_main = (function (window, document) {
                     var ovs_operationtype = results.entities[i]["ovs_operationtype"];
                     var ovs_operationtype_formatted = results.entities[i]["ovs_operationtype@OData.Community.Display.V1.FormattedValue"];
 
-                    if (_fdr_registrationtype_value != null
-                        && !excludedRegTypeIDs.includes(_fdr_registrationtype_value))
-                        excludedRegTypeIDs.push(_fdr_registrationtype_value);
+                    //if (_fdr_registrationtype_value != null
+                    //    && !excludedRegTypeIDs.includes(_fdr_registrationtype_value))
+                    //    excludedRegTypeIDs.push(_fdr_registrationtype_value);
                     //not in use
                     if (ovs_operationtype != null
                         && !excludedRegTypeOptions.includes(ovs_operationtype)) excludedRegTypeOptions.push(ovs_operationtype);
@@ -913,7 +913,7 @@ var SR_main = (function (window, document) {
             var dateToComapre = (lastPerformanceChange != null && lastPerformanceChange != undefined && lastPerformanceChange != "") ? lastPerformanceChange : submissionDate;
             var dateMessage = (lastPerformanceChange != null && lastPerformanceChange != undefined && lastPerformanceChange != "") ? "last performance change date" : "Submission Date";
 
-            if (!glHelper.isInDateRange(currentValue, dateToComapre, new Date(), true)){
+            if (!glHelper.isInDateRange(currentValue, dateToComapre, new Date(), true)) {
 
                 glHelper.SetValue(formContext, "fdr_inforeceivedon", null);
                 Xrm.Navigation.openErrorDialog({ message: "Date in the 'Info Received On' field cannot be a future date or earlier than " + dateMessage + " (" + (dateToComapre.getMonth() + 1) + "/" + dateToComapre.getDate() + "/" + dateToComapre.getFullYear() + ")"});
