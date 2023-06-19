@@ -1007,7 +1007,7 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000149",
-                        "message_en": "A re-submit of your Organizatio’s previous Annual Compliance Update should only be done when there is a material change to your Organizatio’s details covering up to your previous Update Anniversary Date. It should not be used when there is a new change to your data in the current year. For those changes, you should instead do a regular update. <br><br> Are you sure you want to reopen the submitted Annual Compliance so that you can submit a new one?",
+                        "message_en": "A re-submit of your Organization's previous Annual Compliance Update should only be done when there is a material change to your Organizatio’s details covering up to your previous Update Anniversary Date. It should not be used when there is a new change to your data in the current year. For those changes, you should instead do a regular update. <br><br> Are you sure you want to reopen the submitted Annual Compliance so that you can submit a new one?",
                         "message_fr": "Une nouvelle soumission de la précédente mise à jour annuelle de conformité de votre entreprise ne doit être effectuée que lorsqu'il y a un changement important dans les détails de votre entreprise couvrant jusqu'à votre date anniversaire de mise à jour précédente. Il ne doit pas être utilisé lorsqu'il y a un nouveau changement dans vos données dans l'année en cours. Pour ces changements, vous devriez plutôt faire une mise à jour régulière. <br><br> Êtes-vous sûr de vouloir rouvrir la conformité annuelle soumise afin de pouvoir en soumettre une nouvelle ?"
                     },
                     {

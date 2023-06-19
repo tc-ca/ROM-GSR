@@ -7,7 +7,7 @@ var _count = 0;
 $(document).ready(function () {
     debugger;
 
-    page_setup();
+    page_setup();  
 
     //when the page is done loading, disable autocomplete on all inputs[text]
     $('input[type="text"]').attr('autocomplete', 'off');
@@ -23,7 +23,10 @@ $(document).ready(function () {
                 if (keyCode == '13')
                   {btn_save_new_onclick();}
             });
-
+          $("#WebResource_primaryclass").attr("title", "Class/Division");
+      
+           
+          
     // hide controls 
     tdg.c.control_hide("ovs_class_division", true);
     tdg.c.control_hide("ovs_compatibility_group", true);

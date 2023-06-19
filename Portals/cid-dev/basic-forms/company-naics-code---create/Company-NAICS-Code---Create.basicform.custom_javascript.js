@@ -7,8 +7,10 @@ var _count = 0;
 $(document).ready(function () {
 	debugger;
 	page_setup();
+	
 	var cid_naicscode_label = tdg.error_message.message("cid_naicscode"); // NAICS Code
 	sessionStorage.setItem("cid_naicscode_label", cid_naicscode_label);
+	$("#WebResource_naicscode").attr("title", cid_naicscode_label);
 
 	tdg.c.page_instructions("page_company_naics_code");
 
