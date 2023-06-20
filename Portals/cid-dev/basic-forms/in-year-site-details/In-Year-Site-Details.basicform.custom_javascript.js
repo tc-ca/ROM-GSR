@@ -24,8 +24,8 @@ $(document).ready(function () {
     TDGActivitiesHeaderElement.children(0).attr("tabindex","0");
      var ClassesHeaderElement = $('table[data-name="site_details_section_5"]').parent();
      var ModeTable = $('table[data-name="site_details2_section_6"]').parent();
-     ClassesHeaderElement.children(0).attr("tabindex","0");
-     ModeTable.children(0).attr("tabindex","0");
+    // ClassesHeaderElement.children(0).attr("tabindex","0");
+    // ModeTable.children(0).attr("tabindex","0");
 
 
 

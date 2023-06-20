@@ -123,20 +123,20 @@ if (window.jQuery) {
             var errorMessage = "";
 
             //Classes validation
-            if (!SiteHasOperationClasses(null, siteId)) {
+           /* if (!SiteHasOperationClasses(null, siteId)) {
                 var msg = tdg.error_message.message("m000016"); 
                 errorMessage = errorMessage + msg + "</br>";
                 validation = false;
-            }
+            }*/
 
             //UN Numbers validation
-            var isExtendedSite = $("#cid_requirementlevel").find(":selected").text();
+            //var isExtendedSite = $("#cid_requirementlevel").find(":selected").text();
 
-            if (IsExtendedSite == 'Extended' && !SiteHasOperationUNNumbers(null, siteId)) {
+          /*  if (IsExtendedSite == 'Extended' && !SiteHasOperationUNNumbers(null, siteId)) {
                 var msg = tdg.error_message.message("m000017");
                 errorMessage = errorMessage + msg + "</br>";
                 validation = false;
-            }
+            }*/
 
             if (!validation) {
                 $('#ValidationSummaryEntityFormView div').remove();

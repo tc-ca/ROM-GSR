@@ -413,11 +413,11 @@ if (typeof (tdg.c) == "undefined") {
 	            </section>
 	            `).appendTo('body');
             //c.message
-           /* $("#myModal").css('top', '15%');
-            $("#myModal").css('left', '40%');
-            $("#myModal").css('position', 'fixed');
-            $("#myModal").css('z-index', '9999');
-            */
+            /* $("#myModal").css('top', '15%');
+             $("#myModal").css('left', '40%');
+             $("#myModal").css('position', 'fixed');
+             $("#myModal").css('z-index', '9999');
+             */
             $("#btnYes").click(function () {
                 $('#myModal').modal('hide');
                 $("#myModal").remove();
@@ -429,8 +429,8 @@ if (typeof (tdg.c) == "undefined") {
                 if (keyCode == "13") {
                     $("#btnYes").click();
                 }
-                   }
-                );
+            }
+            );
 
             //Pass false to callback function
             $("#btnNo").click(function () {
@@ -481,16 +481,16 @@ if (typeof (tdg.c) == "undefined") {
               $(`<section class="wb-lbx overlay-def" id="myModal" aria-modal="true" aria-live="assertive" aria-labelledby ="headerid" >
                <div class="modal-dialog" role="document">
                 <div class="modal-content" >
-	            <header class="modal-header">
-	            <h2 id="headerid" class="modal-title">${header}</h2>
-	            </header>
-	            <div class="modal-body">
-	            ${message}
-	            </div>
-	            <div class="modal-footer">
-	            <button id="btnOK" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">${OK}</button>
-	            </section>
-	            `).appendTo('body');
+                <header class="modal-header">
+                <h2 id="headerid" class="modal-title">${header}</h2>
+                </header>
+                <div class="modal-body">
+                ${message}
+                </div>
+                <div class="modal-footer">
+                <button id="btnOK" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">${OK}</button>
+                </section>
+                `).appendTo('body');
              * /
 
            /* $("#myModal").css('top', '15%');
@@ -2319,17 +2319,17 @@ if (typeof (tdg.cid) == "undefined") {
                 console.log("before title");
                 titleElement[0].innerHTML = pageTitle;
                 const TDGActivitiesHeaderElement = $('table[data-name="tab_5_section_1"]').parent();
-                    //document.querySelector('[aria-label="TDG Activity Types"]');
+                //document.querySelector('[aria-label="TDG Activity Types"]');
                 const ClassesHeaderElement = $('table[data-name="site_details_section_5"]').parent();
-                    //document.querySelector('[ aria-label="Classes"]');
-                TDGActivitiesHeaderElement.children(0)[0].innerHTML =TDGActivityHeaderLabel + " " + pageTitle;
+                //document.querySelector('[ aria-label="Classes"]');
+                TDGActivitiesHeaderElement.children(0)[0].innerHTML = TDGActivityHeaderLabel + " " + pageTitle;
                 //innerHTML = TDGActivityHeaderLabel + " " + pageTitle;
-                ClassesHeaderElement.children(0)[0].innerHTML =ClassHeaderLabel + " " + pageTitle;
+                ClassesHeaderElement.children(0)[0].innerHTML = ClassHeaderLabel + " " + pageTitle;
                 //= ClassHeaderLabel + " " + pageTitle;
                 var ModeTable = $('table[data-name="site_details2_section_6"]').parent();
-                   // document.getElementById('siteModesOfTransportation');
+                // document.getElementById('siteModesOfTransportation');
                 ModeTable.children(0)[0].innerHTML = ModeOftransportationHeaderLable + " " + pageTitle;
-                    //.closest('fieldset').children[0].innerHTML = ModeOftransportationHeaderLable + " " + pageTitle;
+                //.closest('fieldset').children[0].innerHTML = ModeOftransportationHeaderLable + " " + pageTitle;
             }
         },
 
@@ -2458,9 +2458,10 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 // retrieve information from FakeBN entity in dynamics
                 data = await tdg.cid.crw.Production_start_Retrieve_cra(cid_crabusinessnumber, step_start);
             }
+
             //show notice if the data is empty
             if (data.length == 0) {
-                var msg = tdg.error_message.message("m000164");
+                var msg = tdg.error_message.message("m000001");
                 tdg.c.dialog_OK(msg);
             }
             return data;
@@ -2493,7 +2494,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
                     //show notice if the data is empty
                     if (cra_data.length == 0) {
-                        var msg = tdg.error_message.message("m000164");
+                        var msg = tdg.error_message.message("m000001");
                         tdg.c.dialog_OK(msg);
                     }
                     // save to use in step1

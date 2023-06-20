@@ -19,6 +19,22 @@ $(document).ready(function () {
     var inYear = sessionStorage.getItem('frominyearsites');
     var annualCompliance = sessionStorage.getItem('fromannualcompliance');
     var frominyearsitepage = sessionStorage.getItem('frominyearsitepage');
+
+    var urlParams = new URLSearchParams(window.location.search);
+     if (urlParams.has('id')) {
+		var siteid = urlParams.get('id');
+       
+        var operationDataset = tdg.webapi.SelectedColumnlist("ovs_mocregistrations", "ovs_mocregistrationid",
+			"statuscode eq 1 and ovs_operationtype eq 918640038 and _ovs_siteid_value eq "  + siteid);
+            var operationid = operationDataset[0].ovs_mocregistrationid ;
+           
+            var formaction = $('#liquid_form').attr('action') ;
+             if ( formaction.indexOf('&operationid=' + operationid) <0)
+             { $('#liquid_form').attr('action', $('#liquid_form').attr('action')+ '&operationid=' + operationid);}
+
+    }
+     
+     
      //remove role from label control- issue flaged by accessibility PBI #     
      setTimeout( function(){ 
                     

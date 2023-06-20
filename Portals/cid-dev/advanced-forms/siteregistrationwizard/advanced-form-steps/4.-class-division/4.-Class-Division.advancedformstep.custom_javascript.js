@@ -8,10 +8,7 @@ $(document).ready(function () {
 
      var urlParams = new URLSearchParams(window.location.search);
 	if (urlParams.has('id')) {
-		var siteid = urlParams.get('id');
-        console.log ("site id :" + siteid);
-       
-          
+		var siteid = urlParams.get('id');          
                 
     if (urlParams.has('operationid')) {
         var operationid = urlParams.get('operationid');
@@ -21,7 +18,7 @@ $(document).ready(function () {
     }
 
     else {
-        console.log("getting id ...");
+       
         var operationDataset = tdg.webapi.SelectedColumnlist("ovs_mocregistrations", "ovs_mocregistrationid",
             "statuscode eq 1 and ovs_operationtype eq 918640038 and _ovs_siteid_value eq " + siteid);
         var operationid = operationDataset[0].ovs_mocregistrationid;
@@ -35,15 +32,33 @@ $(document).ready(function () {
     
 	tdg.c.page_instructions("page_orw_class");
 
-	$('#NextButton').on('click', function () {
-		sessionStorage.setItem('to_attst_site', 'true');
-	});
 
 	//hide grid empty message
 	$(".entity-grid").on("loaded", function () {
 		const EmptyMessageDiv = document.querySelector(".view-empty");
 		EmptyMessageDiv.style.display = "none";
 	});
+	//get totla number of rows in the class grid
+	var entityGrid = $(".entity-grid.subgrid").eq(0);
+	entityGrid.on("loaded", function () {
+		var rowTotal = 0;
+		entityGrid.find("table tbody > tr").each(function(index, tr) {
+			rowTotal++;  
+		});
+	
+	    //check if at least one class is added
+		if (rowTotal >0)
+		{
+			sessionStorage.setItem('IsClassAdded', 'true');
+		}
+		else
+		{
+			sessionStorage.setItem('IsClassAdded', 'false');
+
+		}
+	});
+
+     //show and hide menue items based on inyear paramater in the url
 	var urlParams = new URLSearchParams(window.location.search);
 	if (urlParams.has('in_year')) {
 		tdg.c.weblink_hide("/RegistrationWizard/");
@@ -89,15 +104,11 @@ if (window.jQuery) {
 		webFormClientValidate = function () {
 			var validation = true;
 			var errorMessage = "";
-			var urlParams = new URLSearchParams(window.location.search);
-
-			if (urlParams.has('id')) {
-				var operationId = urlParams.get('id');
-				if (!SiteHasOperationClasses(operationId, null)) {
+		        //check if no class is added to show error message and prevent proceeding to next step
+				if (sessionStorage.getItem('IsClassAdded') == 'false') {
 					errorMessage = tdg.error_message.message("m000016");
 					validation = false;
-				}
-
+				
 				if (!validation) {
 					$('#ValidationSummaryEntityFormView div').remove();
 					var validationSection = $('#ValidationSummaryEntityFormView');
@@ -107,20 +118,10 @@ if (window.jQuery) {
 
 					return validation;
 				}
-				else {
-					OperationDetailsProvided(operationId, true);
-					if (urlParams.has('siteid')) {
-						var siteId = urlParams.get('siteid');
-						if (urlParams.has('in_year')) {
-							window.location.href = "~/my-sites/in-year-site/?id=" + siteId;
-						}
-						else {
-							window.location.href = "~/SiteRegistrationWizard/?id=" + siteId;
-						}
-					}
-				}
-				//return validation; 
+				
+				
 			}
+			return validation; 
 		}
 	}(window.jQuery));
 }
