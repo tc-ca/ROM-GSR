@@ -6,6 +6,11 @@ var _cid_crabusinessnumber = "";
 $(document).ready(function () {
 	debugger;
 	$('#WebResource_address_complete').attr("title" , "Address Lookup");
+	console.log ("user id:");
+	var currentPortaluserid = '{{user.Id}}' ;
+	console.log(currentPortaluserid);
+
+
 
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);

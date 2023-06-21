@@ -26,6 +26,7 @@ $(document).ready(function () {
 
     tdg.c.section_hide("section_address_1");
     tdg.c.control_hide("cid_contacttype");
+    
 
     $("#cid_has_cra_bn").val("1");
 
@@ -141,6 +142,8 @@ $(document).ready(function () {
             });
         });
     }
+
+     tdg.c.control_hide("adx_modifiedbyusername");
 });
 
 if (window.jQuery) {

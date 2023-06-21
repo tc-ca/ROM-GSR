@@ -1,8 +1,8 @@
-//
 // CompanyRegistrationWizard-Company Create.js
-//
 $(document).ready(function () {
 	debugger;
+	$("#adx_modifiedbyusername").val('{{user.Id}}');
+	 tdg.c.control_hide("adx_modifiedbyusername");
 	$('#WebResource_address_complete').attr("title" , "Address Lookup");
 	 $("#EntityFormView").before('<div id="MessagePanel" class="alert alert-danger" role="alert" style="display: none;"></div>');
 	 if ($(".text-danger").length){ $("#MessagePanel").html($(".text-danger").html());
@@ -16,7 +16,6 @@ $(document).ready(function () {
 	$("#btn_previous").bind("click", function () {
 		btn_previous_click();
 	});
-
 	$("#cid_registrationasof").parent().parent().hide();
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
@@ -28,7 +27,6 @@ $(document).ready(function () {
 	tdg.cid.Update_AdderssOverwritten_Field();
 	//validate postal code with province - first letter of postal code need to matched allowed province letters
 	tdg.c.Add_Validation_For_Postal_Code_with_Province(selected_language);
-	// PO Box address validation
 	tdg.c.Prevent_Po_Box_address_Validation(selected_language);
 	//disable/enable province based on enterd manually
 	if ($("#cid_addressoverwritten").val() == 0) { $("#ovs_address1_province").prop('disabled', true); }
@@ -37,10 +35,8 @@ $(document).ready(function () {
 	tdg.cid.address_init(false);
 	tdg.cid.WebResource_address_complete_readonly(false);
 	$("#websiteurl").width('100%');
-	//phone field formatting
 	tdg.cid.phone_init("telephone1", selected_language);
 	tdg.cid.phone_init("fax", selected_language);
-
 	tdg.c.control_hide("cid_reasonfornobnnumber_other");
 	tdg.c.control_hide("cid_companyclaim");
 	var step_start = sessionStorage.getItem("step_start") + "";
@@ -85,12 +81,11 @@ $(document).ready(function () {
 			tdg.c.control_hide("cid_reasonfornobnnumber_other");
 		}
 		tdg.c.addValidator("cid_reasonfornobnnumber");
-		//tdg.c.addValidator("ovs_name_fr");
+
 		$("#name").on('keyup', function () {
 			var name = $("#name").val();
 			$("#ovs_name_fr").val(name);
 		});
-
 		$("#cid_reasonfornobnnumber").change(function () {
 			tdg.cid.crw.start_cid_reasonfornobnnumber_onchange(true);
 		});
@@ -106,7 +101,6 @@ $(document).ready(function () {
 		$("#ovs_legalname").val(cid_legalname);
 		$("#name").val(cid_operatingname);
 		$("#ovs_name_fr").val(ovs_name_fr);
-
 		debugger;
 		var value = $("#address1_line1").val();
 		address1_line1_set(value);
@@ -140,7 +134,6 @@ $(document).ready(function () {
 	tdg.cid.convert_province_to_code(selected_language);
 	var currentUserId = '{{user.contactid}}';
 	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
-
 	//tdg.c.addValidator("ovs_name_fr");
 	debugger;
 	var userId = '{{user.id}}';
