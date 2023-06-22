@@ -143,7 +143,7 @@ $(document).ready(function () {
         });
     }
 
-     tdg.c.control_hide("adx_modifiedbyusername");
+     
 });
 
 if (window.jQuery) {

@@ -6,9 +6,7 @@ var _cid_crabusinessnumber = "";
 $(document).ready(function () {
 	debugger;
 	$('#WebResource_address_complete').attr("title" , "Address Lookup");
-	console.log ("user id:");
-	var currentPortaluserid = '{{user.Id}}' ;
-	console.log(currentPortaluserid);
+
 
 
 
@@ -186,6 +184,9 @@ $(document).ready(function () {
 			}
 		}
 	}
+
+	$("#adx_modifiedbyusername").val('{{user.Id}}');
+	 tdg.c.control_hide("adx_modifiedbyusername");
 });
 
 function ovs_legalname_onchange() {
