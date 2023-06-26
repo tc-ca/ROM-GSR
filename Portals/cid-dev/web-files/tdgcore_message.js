@@ -1213,57 +1213,52 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000190",
                         "message_en": "Registration",
-                        "message_fr": "Conditions générales"
+                        "message_fr": "Enregistrement"
                     },
                     {
                         "code": "m000191",
                         "message_en": "Register your external account",
-                        "message_fr": "Register your external account_FR"
+                        "message_fr": "Enregistrez votre compte externe"
                     },
                     {
                         "code": "m000192",
-                        "message_en": "The email ",
-                        "message_fr": "The email _FR"
+                        "message_en": "<ul><li>The email ",
+                        "message_fr": "<ul><li>Le courriel "
                     },
                     {
                         "code": "m000193",
-                        "message_en": "The email ",
-                        "message_fr": "Le courriel "
+                        "message_en": "<ul><li>This email is already in use. This may be due to an invitation previously being sent to this email address. You can use that invitation to access the application.</li><li>If this is not the case, or you require further details, then please choose the Contact Us link below.</li></ul>",
+                        "message_fr": "<ul><li>Ce courriel est déjà utilisé. Cela peut être dû à une invitation précédemment envoyée à cette adresse courriel. Vous pouvez utiliser cette invitation pour accéder à l'application."
                     },
                     {
                         "code": "m000194",
-                        "message_en": "This email is already in use. This may be due to an invitation previously being sent to this email address. You can use that invitation to access the application.",
-                        "message_fr": "This email is already in use. This may be due to an invitation previously being sent to this email address. You can use that invitation to access the application._FR"
+                        "message_en": "Invalid invitation code.",
+                        "message_fr": "Code d'invitation invalide."
                     },
                     {
                         "code": "m000195",
-                        "message_en": "Invalid invitation code.",
-                        "message_fr": "Invalid invitation code._FR"
+                        "message_en": "The Invitation Code is already redreemed or expired.",
+                        "message_fr": "Le code d'invitation a déjà été utilisé ou a expiré."
                     },
-
                     {
                         "code": "m000196",
-                        "message_en": "The Invitation Code is already redreemed or expired.",
-                        "message_fr": "The Invitation Code is already redreemed or expired._FR"
+                        "message_en": "Sign up with an invitation code",
+                        "message_fr": "Inscrivez-vous avec un code d'invitation"
                     },
-
                     {
                         "code": "m000197",
-                        "message_en": "Sign up with an invitation code",
-                        "message_fr": "Sign up with an invitation code_FR"
+                        "message_en": "The Invitation Code is already redeemed or Invitation is no longer valid. If required, please choose the Contact Us link at the bottom of this screen to request a new invitation.",
+                        "message_fr": "Le code d'invitation a déjà été utilisé ou l'invitation n'est plus valide. Si nécessaire, veuillez choisir le lien Contactez-nous au bas de cet écran pour demander une nouvelle invitation."
                     },
-
-
                     {
                         "code": "m000198",
-                        "message_en": "The Invitation Code is already redeemed or Invitation is no longer valid. If required, please choose the Contact Us link at the bottom of this screen to request a new invitation.",
-                        "message_fr": "The Invitation Code is already redeemed or Invitation is no longer valid. If required, please choose the Contact Us link at the bottom of this screen to request a new invitation._FR"
+                        "message_en": "Register",
+                        "message_fr": "Enregistrement"
                     },
-
                     {
                         "code": "m000199",
-                        "message_en": "Register",
-                        "message_fr": "Register_FR"
+                        "message_en": "Terms and",
+                        "message_fr": "Conditions"
                     }
                 ];
 
