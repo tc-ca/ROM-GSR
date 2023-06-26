@@ -178,7 +178,7 @@ stages:
 - stage: DeployToPREPROD
   pool:
       vmImage: 'windows-latest'
-  dependsOn: DeployToACC
+  dependsOn: DeployToQA
   jobs:
   - deployment: Deploy
     displayName: DeployToPREPROD
@@ -221,7 +221,7 @@ stages:
 - stage: DeployToPROD
   pool:
       vmImage: 'windows-latest'
-  dependsOn: DeployToPREPROD
+  dependsOn: DeployToQA
   jobs:
   - deployment: Deploy
     displayName: DeployToPROD
