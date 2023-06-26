@@ -1204,6 +1204,66 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000188",
                         "message_en": "Deactivate Organization and Sites",
                         "message_fr": "Désactiver l'organisation et les sites"
+                    },
+                    {
+                        "code": "m000189",
+                        "message_en": "Terms and Conditions",
+                        "message_fr": "Conditions générales"
+                    },
+                    {
+                        "code": "m000190",
+                        "message_en": "Registration",
+                        "message_fr": "Conditions générales"
+                    },
+                    {
+                        "code": "m000191",
+                        "message_en": "Register your external account",
+                        "message_fr": "Register your external account_FR"
+                    },
+                    {
+                        "code": "m000192",
+                        "message_en": "The email ",
+                        "message_fr": "The email _FR"
+                    },
+                    {
+                        "code": "m000193",
+                        "message_en": "The email ",
+                        "message_fr": "Le courriel "
+                    },
+                    {
+                        "code": "m000194",
+                        "message_en": "This email is already in use. This may be due to an invitation previously being sent to this email address. You can use that invitation to access the application.",
+                        "message_fr": "This email is already in use. This may be due to an invitation previously being sent to this email address. You can use that invitation to access the application._FR"
+                    },
+                    {
+                        "code": "m000195",
+                        "message_en": "Invalid invitation code.",
+                        "message_fr": "Invalid invitation code._FR"
+                    },
+
+                    {
+                        "code": "m000196",
+                        "message_en": "The Invitation Code is already redreemed or expired.",
+                        "message_fr": "The Invitation Code is already redreemed or expired._FR"
+                    },
+
+                    {
+                        "code": "m000197",
+                        "message_en": "Sign up with an invitation code",
+                        "message_fr": "Sign up with an invitation code_FR"
+                    },
+
+
+                    {
+                        "code": "m000198",
+                        "message_en": "The Invitation Code is already redeemed or Invitation is no longer valid. If required, please choose the Contact Us link at the bottom of this screen to request a new invitation.",
+                        "message_fr": "The Invitation Code is already redeemed or Invitation is no longer valid. If required, please choose the Contact Us link at the bottom of this screen to request a new invitation._FR"
+                    },
+
+                    {
+                        "code": "m000199",
+                        "message_en": "Register",
+                        "message_fr": "Register_FR"
                     }
                 ];
 
