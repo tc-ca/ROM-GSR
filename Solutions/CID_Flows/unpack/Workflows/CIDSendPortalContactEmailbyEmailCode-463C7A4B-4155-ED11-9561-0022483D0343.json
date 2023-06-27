@@ -144,6 +144,9 @@
                   "actions": {
                     "Outlook_-_Send_a_English_email_notification_(V3)": {
                       "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "f85d708c-a81c-42ee-ac01-1540b5aed8d0"
+                      },
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
@@ -167,6 +170,9 @@
                     "actions": {
                       "Send_an_email_(V2)_French": {
                         "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "c0753877-ced4-4ee9-8cf5-39ca485b030a"
+                        },
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
@@ -196,6 +202,68 @@
                     "operationMetadataId": "7b089191-fde6-45d5-81e5-29f485c29aa4"
                   },
                   "type": "If"
+                },
+                "historycode": {
+                  "runAfter": {
+                    "List_rows_-_Get_IR4": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "62a73c8a-b0cd-487e-9700-f6b86ae70bc5"
+                  },
+                  "type": "Compose",
+                  "inputs": "@outputs('List_rows_-_Get_IR4')?['body/value'][0]['cid_audithistorycodeid']"
+                },
+                "List_rows_-_Get_IR4": {
+                  "runAfter": {
+                    "Check_user_Language": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "25bb3611-3af7-4fcc-b51b-17944e8ca9ec"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "ListRecords",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "cid_audithistorycodes",
+                      "fetchXml": "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\n<entity name='cid_audithistorycode'>\n<attribute name='cid_audithistorycodeid'/>\n<attribute name='cid_name'/>\n<attribute name='createdon'/>\n<order attribute='cid_name' descending='false'/>\n<filter type='and'>\n<condition attribute='cid_name' operator='eq' value='IR4'/>\n</filter>\n</entity>\n</fetch>"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Add_a_new_row_-_History_code": {
+                  "runAfter": {
+                    "historycode": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "63e8f384-79d3-43bf-a610-9cc0ec4621f6"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "CreateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "cid_historylogs",
+                      "item/subject": "  ",
+                      "item/cid_subject": "    ",
+                      "item/cid_HistoryCode_cid_historylog@odata.bind": "@concat('\\cid_audithistorycodes\\',outputs('historycode'))",
+                      "item/cid_memotemplateinputparameters": "@{outputs('GetPrimary')?['body/fullname']}|@{outputs('Get_Secondary')?['body/fullname']}",
+                      "item/cid_Company_cid_historylog@odata.bind": "@concat('/account/',outputs('GetPrimary')?['body/_parentcustomerid_value'])"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
                 }
               }
             },
@@ -204,6 +272,9 @@
               "actions": {
                 "List_rows_-_get_primary_by_query": {
                   "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "4e2c6d97-7228-4694-a62b-d04741fa2cec"
+                  },
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
@@ -280,6 +351,9 @@
                       918640001
                     ]
                   },
+                  "metadata": {
+                    "operationMetadataId": "3020ffb3-c502-45b0-bba4-73eccea49bc6"
+                  },
                   "type": "If"
                 },
                 "Primary_First_Name": {
@@ -287,6 +361,9 @@
                     "List_rows_-_get_primary_by_query": [
                       "Succeeded"
                     ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "bcfec5d6-d439-436d-bf9d-86436981cee3"
                   },
                   "type": "Compose",
                   "inputs": "@outputs('List_rows_-_get_primary_by_query')?['body/value'][0]['firstname']"
@@ -297,6 +374,9 @@
                       "Succeeded"
                     ]
                   },
+                  "metadata": {
+                    "operationMetadataId": "cdc2febd-ccb6-4c5a-ba26-91239a1e7937"
+                  },
                   "type": "Compose",
                   "inputs": "@outputs('List_rows_-_get_primary_by_query')?['body/value'][0]['lastname']"
                 },
@@ -306,6 +386,9 @@
                       "Succeeded"
                     ]
                   },
+                  "metadata": {
+                    "operationMetadataId": "7d7e19c7-36ab-4b18-93f9-0b21b0c9a7f5"
+                  },
                   "type": "Compose",
                   "inputs": "@outputs('List_rows_-_get_primary_by_query')?['body/value'][0]['emailaddress1']"
                 },
@@ -314,6 +397,9 @@
                     "Primary_email": [
                       "Succeeded"
                     ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3d6eae60-749e-4003-8421-e15730a0ca92"
                   },
                   "type": "OpenApiConnection",
                   "inputs": {
@@ -337,6 +423,9 @@
               "actions": {
                 "Get_Primary_contact": {
                   "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "a66865c8-5416-45c9-9776-332e99da9fdc"
+                  },
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
@@ -355,6 +444,9 @@
                   "actions": {
                     "Send_an_email_notification_(V3)_5": {
                       "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "ed55690f-7f98-4244-87c4-d2bbc5b99f18"
+                      },
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
@@ -380,6 +472,9 @@
                     "actions": {
                       "Send_an_email_notification_(V3)_6": {
                         "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "31a4d6df-3a08-4b80-9d6b-d64a9db26d4f"
+                        },
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
@@ -403,6 +498,9 @@
                       918640001
                     ]
                   },
+                  "metadata": {
+                    "operationMetadataId": "07ec8f7d-9aee-4533-ab7e-bf09d755a51e"
+                  },
                   "type": "If"
                 },
                 "Primary_Email_Address": {
@@ -410,6 +508,9 @@
                     "Get_Primary_contact": [
                       "Succeeded"
                     ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "266a2593-aa43-434b-9df0-f72515e93568"
                   },
                   "type": "Compose",
                   "inputs": "@outputs('Get_Primary_contact')?['body/value'][0]['emailaddress1']"
@@ -419,6 +520,9 @@
                     "Primary_Email_Address": [
                       "Succeeded"
                     ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "159d1a84-df17-4b5e-8773-aa7808499d7f"
                   },
                   "type": "Compose",
                   "inputs": "@outputs('Get_Primary_contact')?['body/value'][0]['fullname']"
@@ -430,6 +534,9 @@
               "actions": {
                 "List_rows_-_Get_Secondary_Contacts_Invitation": {
                   "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "c5e6bff0-29c6-489d-9fb2-8b72e1c8b022"
+                  },
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
@@ -448,6 +555,9 @@
                   "actions": {
                     "Send_an_email_notification_(V2)-_Send_English": {
                       "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "d8d43071-6ab6-447e-b494-ad39381a82dd"
+                      },
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
@@ -475,6 +585,9 @@
                     "actions": {
                       "Send_an_email_notification_(V2)_-_Send_French_Text": {
                         "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "11e5d454-38ab-473a-99f4-f0bcc5d95c41"
+                        },
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
@@ -499,6 +612,9 @@
                       918640001
                     ]
                   },
+                  "metadata": {
+                    "operationMetadataId": "194b1ccf-fda4-4173-9fdd-86174a958d1a"
+                  },
                   "type": "If"
                 },
                 "Apply_to_each_Invitation": {
@@ -506,6 +622,9 @@
                   "actions": {
                     "Update_a_row": {
                       "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "bb1934f7-3308-45bf-bb0c-9b9020ae170a"
+                      },
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
@@ -529,6 +648,9 @@
                       "Succeeded"
                     ]
                   },
+                  "metadata": {
+                    "operationMetadataId": "e3b1da88-e908-4eba-a36c-dde828232535"
+                  },
                   "type": "Foreach"
                 },
                 "Update_a_row_4_deactivate_contact": {
@@ -536,6 +658,9 @@
                     "Apply_to_each_Invitation": [
                       "Succeeded"
                     ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "c1bcfe3a-d733-4298-bcde-b38cb5f73db7"
                   },
                   "type": "OpenApiConnection",
                   "inputs": {
@@ -560,6 +685,9 @@
               "actions": {
                 "List_rows_-_S4-2_Invivation": {
                   "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "46165799-eacb-40c6-8d81-dee05c4b60b8"
+                  },
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
@@ -579,6 +707,9 @@
                   "actions": {
                     "Update_a_row_2": {
                       "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "0a1dce80-8bb2-4ef8-bc09-ec0d6e5b0a6b"
+                      },
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
@@ -602,12 +733,18 @@
                       "Succeeded"
                     ]
                   },
+                  "metadata": {
+                    "operationMetadataId": "e74d5a28-fbd9-4f7d-aa11-cc4689e73e9a"
+                  },
                   "type": "Foreach"
                 },
                 "Condition_2": {
                   "actions": {
                     "Send_an_email_notification_(V2)-_Send_English_2": {
                       "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "aaa9dffb-bb64-42dc-acee-bd672ace11bc"
+                      },
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
@@ -635,6 +772,9 @@
                     "actions": {
                       "Send_an_email_notification_(V2)_-_Send_French_Text_2": {
                         "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "a6fc414c-927d-485e-82c3-4a99785eb793"
+                        },
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
@@ -659,6 +799,9 @@
                       918640001
                     ]
                   },
+                  "metadata": {
+                    "operationMetadataId": "9b39d138-07b0-428d-83c4-854286ac7032"
+                  },
                   "type": "If"
                 },
                 "Update_a_row_4_-_deactivate_contact": {
@@ -666,6 +809,9 @@
                     "Apply_to_each_2": [
                       "Succeeded"
                     ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "7928873e-b0de-4cbb-94d7-3814179736d0"
                   },
                   "type": "OpenApiConnection",
                   "inputs": {
@@ -690,6 +836,9 @@
               "actions": {
                 "List_rows_S4-2_Invitation": {
                   "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "fb525db2-1512-4048-b509-19d8f77d9d8d"
+                  },
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
@@ -708,6 +857,9 @@
                   "actions": {
                     "Send_an_email_notification_(V3)": {
                       "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "504e68dc-76cb-4011-a3fc-7bcca5dca126"
+                      },
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
@@ -733,6 +885,9 @@
                     "actions": {
                       "Send_an_email_notification_(V3)_2": {
                         "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "7955543f-ada3-4af2-b6d2-d3188291358b"
+                        },
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
@@ -756,6 +911,9 @@
                       918640001
                     ]
                   },
+                  "metadata": {
+                    "operationMetadataId": "a6b4b008-d502-4fab-a402-050f6d020af4"
+                  },
                   "type": "If"
                 },
                 "Apply_to_each_3": {
@@ -763,6 +921,9 @@
                   "actions": {
                     "Update_a_row_3": {
                       "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "64c918ce-1dfc-41cf-ac72-e978b97c76fa"
+                      },
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
@@ -786,6 +947,9 @@
                       "Succeeded"
                     ]
                   },
+                  "metadata": {
+                    "operationMetadataId": "33e1efa4-619b-4312-be30-e95cfa1c7692"
+                  },
                   "type": "Foreach"
                 },
                 "Update_a_row_-_deactivate_contact": {
@@ -793,6 +957,9 @@
                     "Apply_to_each_3": [
                       "Succeeded"
                     ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "03e8ca45-28bf-4d33-9099-10247897ffdf"
                   },
                   "type": "OpenApiConnection",
                   "inputs": {
@@ -819,6 +986,9 @@
                   "actions": {
                     "Send_an_email_-_English": {
                       "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "7e9e686f-146c-4518-b0b3-90a75b79beb9"
+                      },
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
@@ -842,6 +1012,9 @@
                     "actions": {
                       "Send_an_email_-_French": {
                         "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "fd6f3cfb-ccc6-44e3-94d7-4b702145b9ec"
+                        },
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
@@ -866,6 +1039,9 @@
                       "@first(body('Get_Account_Primary_Contact_By_Acc_Id')?['value'])?['cid_languageofcorrespondence']",
                       918640001
                     ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "2573f07c-3f24-4bf5-ae93-eb68e4f003c4"
                   },
                   "type": "If"
                 }

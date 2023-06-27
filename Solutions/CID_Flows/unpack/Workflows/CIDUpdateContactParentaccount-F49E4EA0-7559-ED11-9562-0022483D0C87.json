@@ -145,7 +145,11 @@
           }
         },
         "Update_a_row": {
-          "runAfter": {},
+          "runAfter": {
+            "Get_a_row_by_ID_-_get_contact": [
+              "Succeeded"
+            ]
+          },
           "metadata": {
             "operationMetadataId": "f03e4b09-38d2-4631-a580-11154e53807b"
           },
@@ -160,6 +164,88 @@
               "entityName": "contacts",
               "recordId": "@triggerBody()?['ContactId']",
               "item/parentcustomerid_account@odata.bind": "@concat('/accounts/' , triggerBody()?['ParentAccount'] )"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "List_rows_-_Get_IR3": {
+          "runAfter": {
+            "HTTP": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "25bb3611-3af7-4fcc-b51b-17944e8ca9ec"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "cid_audithistorycodes",
+              "fetchXml": "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\n<entity name='cid_audithistorycode'>\n<attribute name='cid_audithistorycodeid'/>\n<attribute name='cid_name'/>\n<attribute name='createdon'/>\n<order attribute='cid_name' descending='false'/>\n<filter type='and'>\n<condition attribute='cid_name' operator='eq' value='IR3'/>\n</filter>\n</entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "historycode": {
+          "runAfter": {
+            "List_rows_-_Get_IR3": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "62a73c8a-b0cd-487e-9700-f6b86ae70bc5"
+          },
+          "type": "Compose",
+          "inputs": "@outputs('List_rows_-_Get_IR3')?['body/value'][0]['cid_audithistorycodeid']"
+        },
+        "Add_a_new_History_Log": {
+          "runAfter": {
+            "historycode": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0dabfa68-fb42-410c-9733-d8ca666e006c"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "cid_historylogs",
+              "item/subject": "  ",
+              "item/cid_subject": "   ",
+              "item/cid_HistoryCode_cid_historylog@odata.bind": "@concat('\\cid_audithistorycodes\\',outputs('historycode'))",
+              "item/cid_memotemplateinputparameters": "@{outputs('Get_a_row_by_ID_-_get_contact')?['body/fullname']}|@{outputs('Update_a_row')?['body/emailaddress1']}",
+              "item/cid_Company_cid_historylog@odata.bind": "@concat('/accounts/' , triggerBody()?['ParentAccount'])"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Get_a_row_by_ID_-_get_contact": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "5f0d5585-77ce-4905-9443-58e3f6c46004"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "contacts",
+              "recordId": "@triggerBody()?['ContactId']",
+              "$select": "fullname,emailaddress1"
             },
             "authentication": "@parameters('$authentication')"
           }
