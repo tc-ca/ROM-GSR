@@ -19,15 +19,6 @@
           "name": "shared_office365"
         }
       },
-      "shared_office365_1": {
-        "runtimeSource": "embedded",
-        "connection": {
-          "connectionReferenceLogicalName": "cid_sharedoffice365_ee685"
-        },
-        "api": {
-          "name": "shared_office365"
-        }
-      },
       "shared_commondataserviceforapps_1": {
         "runtimeSource": "embedded",
         "connection": {
@@ -35,6 +26,15 @@
         },
         "api": {
           "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_office365_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedoffice365_ee685"
+        },
+        "api": {
+          "name": "shared_office365"
         }
       },
       "shared_sendmail": {
@@ -233,7 +233,7 @@
                     },
                     "parameters": {
                       "entityName": "cid_audithistorycodes",
-                      "fetchXml": "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\n<entity name='cid_audithistorycode'>\n<attribute name='cid_audithistorycodeid'/>\n<attribute name='cid_name'/>\n<attribute name='createdon'/>\n<order attribute='cid_name' descending='false'/>\n<filter type='and'>\n<condition attribute='cid_name' operator='eq' value='IR4'/>\n</filter>\n</entity>\n</fetch>"
+                      "fetchXml": "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\n<entity name='cid_audithistorycode'>\n<attribute name='cid_audithistorycodeid'/>\n<attribute name='cid_name'/>\n<attribute name='createdon'/>\n<order attribute='cid_name' descending='false'/>\n<filter type='and'>\n<condition attribute='cid_name' operator='eq' value='IY4'/>\n</filter>\n</entity>\n</fetch>"
                     },
                     "authentication": "@parameters('$authentication')"
                   }
@@ -258,9 +258,9 @@
                       "entityName": "cid_historylogs",
                       "item/subject": "  ",
                       "item/cid_subject": "    ",
-                      "item/cid_HistoryCode_cid_historylog@odata.bind": "@concat('\\cid_audithistorycodes\\',outputs('historycode'))",
+                      "item/cid_HistoryCode_cid_historylog@odata.bind": "@concat('/cid_audithistorycodes/',outputs('historycode'))",
                       "item/cid_memotemplateinputparameters": "@{outputs('GetPrimary')?['body/fullname']}|@{outputs('Get_Secondary')?['body/fullname']}",
-                      "item/cid_Company_cid_historylog@odata.bind": "@concat('/account/',outputs('GetPrimary')?['body/_parentcustomerid_value'])"
+                      "item/cid_Company_cid_historylog@odata.bind": "@concat('/accounts/',outputs('GetPrimary')?['body/_parentcustomerid_value'])"
                     },
                     "authentication": "@parameters('$authentication')"
                   }
