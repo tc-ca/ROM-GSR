@@ -5,7 +5,7 @@
 $(document).ready(function () {
     debugger;
 
-    page_setup();
+   // page_setup();
 });
 
 function page_setup() {
@@ -28,13 +28,15 @@ function page_setup() {
 
 if (document.getElementsByTagName('h1')[0]) {
     debugger;
+    page_setup();
     var source = document.getElementsByTagName('h1')[0].innerHTML;
-    if (source.search("Terms and") != -1) {
-        $(document).find("title").text("Terms and Conditions");
+    var terms_and = tdg.error_message.message("m000199");
+    var terms_and_conditions = tdg.error_message.message("m000189");
+    if (source.search(terms_and) != -1) {
+        $(document).find("title").text(terms_and_conditions);
         $("#cdts-signin-btn").hide(); // Hide sing in button
-
-        //var cancelLabel = tdg.error_message.message("BTN_CANCEL");
-        $("#submit-agreement").after("&nbsp; <input id='cancelButton' type='button' name='CancelButton' value='Cancel' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");
+        var cancelLabel = tdg.error_message.message("BTN_CANCEL");
+        $("#submit-agreement").after("&nbsp; <input id='cancelButton' type='button' name='CancelButton' value='"+ cancelLabel +"' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");
         $('#cancelButton').click(function (e) {
             tdg.c.sign_out();
             //window.location.href = '~/en/Account/Login/LogOff';
@@ -42,53 +44,50 @@ if (document.getElementsByTagName('h1')[0]) {
     }
     //Condition for initial registration page
     if (source.search("Registration") != -1) {
-        $(document).find("title").text("Registration");
+        var registration = tdg.error_message.message("m000190");
+        $(document).find("title").text(registration);
         //TODO logic for post login invitation
     }
     //TODO add logic for the default access denied page
 }
-var xpath = "//li[contains(text(),'Le champ de')]";
-var matchingElement = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-if(matchingElement){
-    matchingElement.textContent = "Le champ de l'adresse de messagerie est obligatoire.";
-}
-
-xpath = "//button[contains(text(),'Sign In Canada')]";
-matchingElement = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-if(matchingElement){
-    matchingElement.textContent = "Authenti-Canada EEAC";
-}
-
 debugger;
 
 //account already existing
-if ($('.xrm-attribute-value-encoded')[0].innerText == "Register your external account") {
+var Register_external_account = tdg.error_message.message("m000191");
+if ($('.xrm-attribute-value-encoded')[0].innerText == Register_external_account) {
     //$('.xrm-attribute-value-encoded').css({ position: "relative" , left: "30px" });
     if ($('.validation-summary-errors')[0]) {
         var Innerhtml = $('.validation-summary-errors')[0].innerHTML;
         var InnerText = $('.validation-summary-errors')[0].innerText;
-        if (Innerhtml != null && Innerhtml.substring(0, 18) == "<ul><li>The email ") {
-            $('.validation-summary-errors')[0].innerHTML =
-                "<ul><li>This email is already in use. This may be due to an invitation previously being sent to this email address. You can use that invitation to access the application.</li><li>If this is not the case, or you require further details, then please choose the Contact Us link below.</li></ul>";
+        var The_email = tdg.error_message.message("m000192");
+        var invalid_invitation = tdg.error_message.message("m000194");
+        if (Innerhtml != null && Innerhtml.substring(0, 18) == The_email) {
+            var email_in_use = tdg.error_message.message("m000193");
+            $('.validation-summary-errors')[0].innerHTML = email_in_use;
         }
-        else if (InnerText != null && InnerText == "Invalid invitation code.") {
-            $('.validation-summary-errors')[0].InnerText = "The Invitation Code is already redreemed or expired.";
+        else if (InnerText != null && InnerText == invalid_invitation) {
+            var invitation_expired = tdg.error_message.message("m000195");
+            $('.validation-summary-errors')[0].InnerText = invitation_expired ;
         }
     }
 }
 
 //invalid invitation Code
-if ($('.xrm-attribute-value-encoded')[0].innerText == "Sign up with an invitation code") {
+var sign_up_invitation = tdg.error_message.message("m000196");
+if ($('.xrm-attribute-value-encoded')[0].innerText == sign_up_invitation) {
+    var invalid_invitation = tdg.error_message.message("m000194");
     if ($('.validation-summary-errors')[0]) {
         var InnerText = $('.validation-summary-errors')[0].innerText;
-        if (InnerText != null && InnerText == "Invalid invitation code.") {
-            $('.validation-summary-errors')[0].innerText = "The Invitation Code is already redeemed or Invitation is no longer valid. If required, please choose the Contact Us link at the bottom of this screen to request a new invitation.";
+        if (InnerText != null && InnerText == invalid_invitation) {
+            var redeemed_invitation = tdg.error_message.message("m000197");
+            $('.validation-summary-errors')[0].innerText = redeemed_invitation;
         }
     }
 }
 
 if ($(".btn.btn-primary:contains('Register')")) {
-    $(".btn.btn-primary:contains('Register')").after("&nbsp; <input id='cancelButton' type='button' name='CancelButton' value='Cancel' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");
+   var cancelLabel = tdg.error_message.message("BTN_CANCEL");
+    $(".btn.btn-primary:contains('Register')").after("&nbsp; <input id='cancelButton' type='button' name='"+ cancelLabel +"' value='Cancel' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");   
     $('#cancelButton').click(function (e) {
         window.location.href = '~/en/SignIn?returnUrl=%2Fen%2F';
     });

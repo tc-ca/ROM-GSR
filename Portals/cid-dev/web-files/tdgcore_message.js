@@ -1228,7 +1228,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000193",
                         "message_en": "<ul><li>This email is already in use. This may be due to an invitation previously being sent to this email address. You can use that invitation to access the application.</li><li>If this is not the case, or you require further details, then please choose the Contact Us link below.</li></ul>",
-                        "message_fr": "<ul><li>Ce courriel est déjà utilisé. Cela peut être dû à une invitation précédemment envoyée à cette adresse courriel. Vous pouvez utiliser cette invitation pour accéder à l'application."
+                        "message_fr": "<ul><li>Ce courriel est déjà utilisé. Cela peut être dû à une invitation précédemment envoyée à cette adresse courriel. Vous pouvez utiliser cette invitation pour accéder à l'application.</li><li>Si ce n'est pas le cas, ou si vous avez besoin de plus de détails, veuillez choisir le lien Contactez-nous ci-dessous.</li></ul>"
                     },
                     {
                         "code": "m000194",
