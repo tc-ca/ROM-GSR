@@ -59,7 +59,7 @@ stages:
           git commit -m "Update portal"
           echo "Push solution changes to the remote repository"
           git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
-    #TODO Copy the deployment profiles folder from the repo and place them in the portal folder (Copy Files)
+    #Copy the deployment profiles folder from the repo and place them in the portal folder (Copy Files)
     - task: CopyFiles@2
       inputs:
         SourceFolder: '$(Build.SourcesDirectory)\Portals\deployment-profiles'
