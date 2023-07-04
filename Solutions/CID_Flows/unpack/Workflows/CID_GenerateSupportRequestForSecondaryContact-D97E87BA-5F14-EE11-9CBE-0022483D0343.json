@@ -1,0 +1,381 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_dd1df"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "179906fb-8fa2-4def-8fa0-b75fbcaacaa1"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 4,
+              "subscriptionRequest/entityname": "cid_invitation",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filterexpression": "statuscode eq 756150000",
+              "subscriptionRequest/runas": 3
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Delay_30_days_after_the_invitation_is_sent": {
+          "runAfter": {
+            "Condition_2": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "bdac4b3e-91f8-4114-9d62-9f426aad6643"
+          },
+          "type": "Wait",
+          "inputs": {
+            "interval": {
+              "count": "@variables('Days_User_Invitation_Valid')",
+              "unit": "Day"
+            }
+          }
+        },
+        "Condition": {
+          "actions": {
+            "List_rows:_Get_Support_Request_Type_by_Name": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "9c3eedae-0bfa-41a6-9789-c04b5ae4ea95"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "ovs_supportrequesttypes",
+                  "$filter": "ovs_code eq 'InvitationNotAccepted'",
+                  "$top": 1
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Add_a_new_row:_Create_Support_Request": {
+              "runAfter": {
+                "Condition:_If_Support_Request_Type_Exists": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "66b2cb85-96d2-4137-b538-761360f90f51"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "ovs_supportrequests",
+                  "item/ovs_CreatedByExternalUser@odata.bind": "/contacts/@{triggerOutputs()?['body/_cid_invitedcontact_value']}",
+                  "item/ovs_Company@odata.bind": "/accounts/@{triggerOutputs()?['body/_cid_companyname_value']}",
+                  "item/ovs_requestdetails": "@variables('SupportRequestDetails')",
+                  "item/ovs_RequestType@odata.bind": "@if(\r\nempty(variables('SupportRequestType')),\r\n'',\r\n concat('ovs_supportrequesttypes(',\r\n     variables('SupportRequestType'),\r\n      ')'\r\n ))"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Condition:_If_Support_Request_Type_Exists": {
+              "actions": {
+                "Set_variable:_Support_Request_Type": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "73b940ee-20fe-4190-846f-69381dbf96fd"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "SupportRequestType",
+                    "value": "@{first(body('List_rows:_Get_Support_Request_Type_by_Name')?['value'])?['ovs_supportrequesttypeid']}"
+                  }
+                },
+                "Set_variable:_Support_Request_Details": {
+                  "runAfter": {
+                    "Set_variable:_Support_Request_Type": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "d28004d8-3633-4388-a78d-6a8249acf433"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "SupportRequestDetails",
+                    "value": "@{first(body('List_rows:_Get_Support_Request_Type_by_Name')?['value'])?['ovs_templateenglish']}::@{first(body('List_rows:_Get_Support_Request_Type_by_Name')?['value'])?['ovs_templatefrench']}"
+                  }
+                }
+              },
+              "runAfter": {
+                "List_rows:_Get_Support_Request_Type_by_Name": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "and": [
+                  {
+                    "not": {
+                      "equals": [
+                        "@body('List_rows:_Get_Support_Request_Type_by_Name')",
+                        "@null"
+                      ]
+                    }
+                  },
+                  {
+                    "greater": [
+                      "@length(outputs('List_rows:_Get_Support_Request_Type_by_Name')?['body/value'])",
+                      0
+                    ]
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b70aecff-4d0b-479c-8a12-a43d4c13db68"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "Get_a_row_by_ID_-_Refresh_CID_Invitations": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "not": {
+              "equals": [
+                "@outputs('Get_a_row_by_ID_-_Refresh_CID_Invitations')?['body/statuscode']",
+                756150001
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "1358ac78-b175-41c7-82a8-73d06608cf02"
+          },
+          "type": "If"
+        },
+        "Get_a_row_by_ID_-_Refresh_CID_Invitations": {
+          "runAfter": {
+            "Delay_30_days_after_the_invitation_is_sent": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "62fb6fee-5b63-4966-8a2b-e4cde6ba2dca"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "cid_invitations",
+              "recordId": "@triggerOutputs()?['body/cid_invitationid']",
+              "$select": "statuscode"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_variable:_Support_Request_Type": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "0dacc01d-51d3-483c-9148-9bb2dc120713"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "SupportRequestType",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_Support_Request_Details_": {
+          "runAfter": {
+            "Initialize_variable:_Support_Request_Type": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5b79911c-269a-42be-8179-4640f5280e60"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "SupportRequestDetails",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_Days_User_Invitation_Valid": {
+          "runAfter": {
+            "Initialize_variable:_Support_Request_Details_": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e7382233-72c8-4484-beb6-66c3a65d7243"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Days_User_Invitation_Valid",
+                "type": "integer",
+                "value": 30
+              }
+            ]
+          }
+        },
+        "List_rows:_Environment_Settings": {
+          "runAfter": {
+            "Initialize_variable:_IsInteger": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4aa301eb-e9ae-4fbd-925d-11b7c847f512"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "qm_environmentsettingses",
+              "$filter": "qm_name eq 'CID_Days_User_Invitation_Valid'",
+              "$top": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Condition_2": {
+          "actions": {
+            "Set_variable:_Days_User_Invitation_Valid": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "b5480f7e-a7e6-40a0-8a13-dd318489a017"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Days_User_Invitation_Valid",
+                "value": "@Int(first(body('List_rows:_Environment_Settings')?['value'])?['qm_value'])"
+              }
+            }
+          },
+          "runAfter": {
+            "List_rows:_Environment_Settings": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "and": [
+              {
+                "not": {
+                  "equals": [
+                    "@outputs('List_rows:_Environment_Settings')?['body/value']",
+                    "@null"
+                  ]
+                }
+              },
+              {
+                "greater": [
+                  "@length(outputs('List_rows:_Environment_Settings')?['body/value'])",
+                  0
+                ]
+              },
+              {
+                "not": {
+                  "equals": [
+                    "@first(body('List_rows:_Environment_Settings')?['value'])?['qm_value']",
+                    "@null"
+                  ]
+                }
+              },
+              {
+                "equals": [
+                  "@isInt(first(body('List_rows:_Environment_Settings')?['value'])?['qm_value'])",
+                  "@true"
+                ]
+              },
+              {
+                "greater": [
+                  "@int(first(body('List_rows:_Environment_Settings')?['value'])?['qm_value'])",
+                  0
+                ]
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4ec63ca3-6b70-408e-ba1f-95eeac20e358"
+          },
+          "type": "If"
+        },
+        "Initialize_variable:_IsInteger": {
+          "runAfter": {
+            "Initialize_variable:_Days_User_Invitation_Valid": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d3112585-1610-4ab6-962e-cef9b5ff3579"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "IsInteger",
+                "type": "boolean",
+                "value": true
+              }
+            ]
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
