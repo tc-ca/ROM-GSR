@@ -2519,6 +2519,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
             }
             else {
                 var account = tdg.cid.crw.start_account_by_name(legalname);
+                // parent and active records
+                account = account.filter(a => a.customertypecode == 948010000 && a.statecode == 0);
                 if (account.length > 0) {
                     account = account[0];
                     data.length = 1;
