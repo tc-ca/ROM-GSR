@@ -42,7 +42,9 @@ $(document).ready(function () {
                 sessionStorage.setItem('futureDateMessageShown', 'true');
             }
         }
+      
     });
+
 });
 
 if (window.jQuery) {
@@ -63,6 +65,7 @@ if (window.jQuery) {
 
                 return false;
             }
+              
         }
     }(window.jQuery));
 }

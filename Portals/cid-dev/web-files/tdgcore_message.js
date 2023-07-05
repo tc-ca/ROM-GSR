@@ -1259,6 +1259,11 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000199",
                         "message_en": "Terms and",
                         "message_fr": "Conditions"
+                    },
+                    {
+                        "code": "m000200",
+                        "message_en": "A support request is created.",
+                        "message_fr": "A support request is created_FR."
                     }
                 ];
 

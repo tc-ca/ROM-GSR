@@ -2519,8 +2519,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
             }
             else {
                 var account = tdg.cid.crw.start_account_by_name(legalname);
-                // parent and active records
-                account = account.filter(a => a.customertypecode == 948010000 && a.statecode == 0);
                 if (account.length > 0) {
                     account = account[0];
                     data.length = 1;
@@ -2615,12 +2613,13 @@ if (typeof (tdg.cid.crw) == "undefined") {
         },
 
         start_account_by_name: function (legalname) {
-            //var legalname = $("#cid_legalname").val();
             legalname = legalname.replaceAll("'", "''");
 
             var filter = "ovs_legalname eq '" + legalname + "'";
             filter = filter.replaceAll("&", "%26");
-            return tdg.c.WebApi_List("accounts", filter);
+            var account = tdg.c.WebApi_List("accounts", filter);
+            account = account.filter(a => a.customertypecode == 948010000 && a.statecode == 0);
+            return account;
         },
 
         start_confirm: function (data, handler) {
