@@ -6,15 +6,12 @@ var _cid_crabusinessnumber = "";
 $(document).ready(function () {
 	debugger;
 	$('#WebResource_address_complete').attr("title" , "Address Lookup");
+	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
 
-
-
-
+	 tdg.c.control_hide("adx_modifiedbyusername");
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
-
 	tdg.c.page_instructions("page_crw_company_edit");
-
 	var msg = tdg.error_message.message("BTN_PREVIOUS");
 	$("#PreviousButton").hide();
 	tdg.c.button_create("btn_previous", "#PreviousButton", msg);
@@ -185,7 +182,6 @@ $(document).ready(function () {
 		}
 	}
 
-	$("#adx_modifiedbyusername").val('{{user.Id}}');
 	 tdg.c.control_hide("adx_modifiedbyusername");
 });
 

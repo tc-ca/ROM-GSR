@@ -40,8 +40,6 @@ function checkToDisplaycontactAddMessage() {
 $(document).ready(function () {
 	debugger;
 
-
-
 	var list = $(".entity-grid");
 	list.on("loaded", checkToDisplaycontactAddMessage);
 
@@ -105,6 +103,7 @@ $(document).ready(function () {
 		}
 	}
 });
+
 if (window.jQuery) {
 	(function ($) {
 		webFormClientValidate = function () {
@@ -114,15 +113,12 @@ if (window.jQuery) {
 			var companyId = $("#EntityFormView_EntityID").val();
 			//var filter = "parentcustomerid/Id eq (guid'" + companyId + "')";
 			var filter = "statecode eq 0 and _parentcustomerid_value eq '" + companyId + "'";
-			//var data = ExecuteQuery("Validation_CompanyPrimarySecondaryContacts", filter);
 			var data = tdg.webapi.list("contacts", filter);
-			//var data = tdg.c.OData_List("contact", filter);
+			data = data.filter(a => a.emailaddress1 != null);
 			if (data != null) {
 				var primaryFound = false;
 				var secondaryFound = false;
 				for (i = 0; i < data.length; i++) {
-					//if (data[i].cid_contacttype.Value == 100000000) primaryFound = true;
-					//if (data[i].cid_contacttype.Value == 100000001) secondaryFound = true;
 					if (data[i].cid_contacttype == 100000000) primaryFound = true;
 					if (data[i].cid_contacttype == 100000001) secondaryFound = true;
 				}
@@ -133,12 +129,6 @@ if (window.jQuery) {
 			}
 			if (!validation) {
 				tdg.c.error_message_advanced_form("m000002", true); // You cannot proceed before adding at least one secondary contact.
-				//$('#ValidationSummaryEntityFormView div').remove();
-				//var validationSection = $('#ValidationSummaryEntityFormView');
-				//var errorMessage = "You cannot proceed before adding at least one secondary contact.";
-				//validationSection.append($("<div id='alertMessages' tabindex='0' class='notification alert-danger' role='alert'>" + errorMessage + "</div>"));
-				//validationSection.show();
-				//$('#alertMessages').focus();
 			}
 			return validation;
 		}

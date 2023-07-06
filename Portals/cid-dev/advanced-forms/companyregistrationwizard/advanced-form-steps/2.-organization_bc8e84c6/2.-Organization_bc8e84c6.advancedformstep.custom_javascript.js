@@ -1,7 +1,7 @@
 // CompanyRegistrationWizard-Company Create.js
 $(document).ready(function () {
 	debugger;
-	$("#adx_modifiedbyusername").val('{{user.Id}}');
+	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
 	 tdg.c.control_hide("adx_modifiedbyusername");
 	$('#WebResource_address_complete').attr("title" , "Address Lookup");
 	 $("#EntityFormView").before('<div id="MessagePanel" class="alert alert-danger" role="alert" style="display: none;"></div>');
@@ -107,7 +107,6 @@ $(document).ready(function () {
 	}
 	$('#cid_crabusinessnumber').attr("readonly", true);
 	$('#ovs_legalname').attr("readonly", true);
-
 	if (step_start == "1") {
 		var address1_line1 = tdg.c.replace_special_char("{{user.address1_line1}}");
 		var address1_line2 = tdg.c.replace_special_char("{{user.address1_line2}}");
@@ -123,7 +122,6 @@ $(document).ready(function () {
 		$("#address1_postalcode").val(address1_postalcode);
 		sessionStorage.setItem("AddressLine1Text", address1_line1);
 	}
-	// autocomplete off
 	$("#name").attr("autocomplete", "new-password");
 	$("#address1_longitude").attr("autocomplete", "new-password");
 	$("#address1_latitude").attr("autocomplete", "new-password");
