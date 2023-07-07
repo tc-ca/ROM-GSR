@@ -2467,6 +2467,21 @@ if (typeof (tdg.cid.crw) == "undefined") {
             return data;
         },
 
+        Create_SupportRequest_For_Duplicate_Organization: function (rom_data , contactid) {
+            var SupportRequestType = tdg.webapi.SelectedColumnlist("ovs_supportrequesttypes", "ovs_supportrequesttypeid", "ovs_code eq 'PreDuplicateOrganization'");
+            console.log("request type length : " + SupportRequestType.length);
+            console.log(SupportRequestType[0].ovs_supportrequesttypeid);
+            var value = {
+                "ovs_Company@odata.bind": "/accounts(" + rom_data[0].accountid + ")",
+                "ovs_CreatedByExternalUser@odata.bind": "/contacts(" + contactid + ")",
+                "ovs_RequestType@odata.bind": "/ovs_supportrequesttypes(" + SupportRequestType[0].ovs_supportrequesttypeid + ")",
+                "ovs_requestdetails": "The details provided about the support request."
+               
+            };
+            tdg.webapi.create("ovs_supportrequests", value);
+            tdg.c.dialog_OK("There was a problem with your registration. You will be notified when the problem is resolved.");
+        },
+
         start_buttons_confirm: function (value, btn_next_name) {
             $('#cid_has_cra_bn').prop("disabled", !value);
             $('#cid_crabusinessnumber').attr("readonly", !value);
@@ -2520,32 +2535,52 @@ if (typeof (tdg.cid.crw) == "undefined") {
             else {
                 var account = tdg.cid.crw.start_account_by_name(legalname);
                 if (account.length > 0) {
+                    console.log("account length: " + account.length);
                     account = account[0];
-                    data.length = 1;
-                    data.cid_has_cra_bn = account.cid_has_cra_bn;
-                    data.cid_crabusinessnumber = account.cid_crabusinessnumber;
-                    data.cid_legalname = account.ovs_legalname;
-                    data.cid_operatingname = account.name;
-                    var cid_reasonfornobnnumber = account.cid_reasonfornobnnumber;
-                    for (var i = 0; i < cid_reasonfornobnnumber_list.length; i++) {
-                        if (cid_reasonfornobnnumber == cid_reasonfornobnnumber_list[i].value) {
-                            cid_reasonfornobnnumber = cid_reasonfornobnnumber_list[i].text;
-                            break;
-                        }
+                    if (account.length > 1) {
+                        var contactid = sessionStorage.getItem("portaluserID");
+                        var SupportRequestType = tdg.webapi.SelectedColumnlist("ovs_supportrequesttypes", "ovs_supportrequesttypeid", "ovs_code eq 'PreDuplicateOrganization'");
+                        console.log("request type length : " + SupportRequestType.length);
+                        console.log(SupportRequestType[0].ovs_supportrequesttypeid);
+
+                        data = {};
+                        data.ovs_CreatedByExternalUser = contactid;
+                        data.ovs_Company = account.accountid;
+                        data.ovs_RequestType = SupportRequestType[0].ovs_supportrequesttypeid;
+                        data.ovs_requestdetails = "The details provided about the support request.";
+                        data.ovs_priority = 5;
+                        tdg.cid.ovs_supportrequest_insert(data);
+
+                        tdg.c.dialog_OK("There was a problem with your registration. You will be notified when the problem is resolved.");
                     }
-                    data.cid_reasonfornobnnumber = cid_reasonfornobnnumber;
-                    data.cid_reasonfornobnnumber_other = account.cid_reasonfornobnnumber_other;
+                    else {
 
-                    var address = {};
-                    address.AddressLine1Text = account.address1_line1;
-                    address.AddressLine2Text = account.address1_line2;
-                    address.AddressLine3Text = account.address1_line3;
-                    address.CityName = account.address1_city;
-                    address.ProvinceStateCode = account.address1_stateorprovince;
-                    address.PostalZipCode = account.address1_postalcode;
+                        data.length = 1;
+                        data.cid_has_cra_bn = account.cid_has_cra_bn;
+                        data.cid_crabusinessnumber = account.cid_crabusinessnumber;
+                        data.cid_legalname = account.ovs_legalname;
+                        data.cid_operatingname = account.name;
+                        var cid_reasonfornobnnumber = account.cid_reasonfornobnnumber;
+                        for (var i = 0; i < cid_reasonfornobnnumber_list.length; i++) {
+                            if (cid_reasonfornobnnumber == cid_reasonfornobnnumber_list[i].value) {
+                                cid_reasonfornobnnumber = cid_reasonfornobnnumber_list[i].text;
+                                break;
+                            }
+                        }
+                        data.cid_reasonfornobnnumber = cid_reasonfornobnnumber;
+                        data.cid_reasonfornobnnumber_other = account.cid_reasonfornobnnumber_other;
 
-                    data.address = address;
-                }
+                        var address = {};
+                        address.AddressLine1Text = account.address1_line1;
+                        address.AddressLine2Text = account.address1_line2;
+                        address.AddressLine3Text = account.address1_line3;
+                        address.CityName = account.address1_city;
+                        address.ProvinceStateCode = account.address1_stateorprovince;
+                        address.PostalZipCode = account.address1_postalcode;
+
+                        data.address = address;
+                    }//end else if only one account is found by legal name
+                }//end check account length is greater than zero
             }
             return data;
         },
