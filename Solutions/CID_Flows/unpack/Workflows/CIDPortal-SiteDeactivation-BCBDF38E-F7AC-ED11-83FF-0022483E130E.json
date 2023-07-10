@@ -9,6 +9,15 @@
         "api": {
           "name": "shared_commondataserviceforapps"
         }
+      },
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
       }
     },
     "definition": {
@@ -114,10 +123,11 @@
                         "parameters": {
                           "entityName": "cid_historylogs",
                           "item/subject": "Site Deactivation",
-                          "item/cid_Company_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/_parentaccountid_value']})",
+                          "item/cid_subject": " ",
                           "item/cid_externallyvisible": false,
                           "item/cid_HistoryCode_cid_historylog@odata.bind": "cid_audithistorycodes(@{first(body('Get_Site_Deactivation_History_Code_record_SJ1')?['value'])?['cid_audithistorycodeid']})",
                           "item/cid_memotemplateinputparameters": "@{triggerOutputs()?['body/cid_reasonforsitedeactivation']}|@{triggerOutputs()?['body/cid_sitedeactivationeffectivedate']}|@{triggerOutputs()?['body/cid_memositedeactivation']}",
+                          "item/cid_Company_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/_parentaccountid_value']})",
                           "item/cid_processingstatus": 100000000,
                           "item/cid_Site_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/accountid']})"
                         },
@@ -162,10 +172,11 @@
                           "parameters": {
                             "entityName": "cid_historylogs",
                             "item/subject": "Site Deactivation",
-                            "item/cid_Company_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/_parentaccountid_value']})",
+                            "item/cid_subject": " ",
                             "item/cid_externallyvisible": false,
                             "item/cid_HistoryCode_cid_historylog@odata.bind": "cid_audithistorycodes(@{first(body('Get_Site_Deactivation_History_Code_record_SG1')?['value'])?['cid_audithistorycodeid']})",
                             "item/cid_memotemplateinputparameters": "@{triggerOutputs()?['body/cid_reasonforsitedeactivation']}|@{triggerOutputs()?['body/cid_sitedeactivationeffectivedate']}|@{triggerOutputs()?['body/cid_memositedeactivation']}",
+                            "item/cid_Company_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/_parentaccountid_value']})",
                             "item/cid_processingstatus": 100000000,
                             "item/cid_Site_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/accountid']})"
                           },
@@ -255,6 +266,56 @@
                   "$select": "cid_audithistorycodeid",
                   "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"cid_audithistorycode\">\n    <attribute name=\"cid_audithistorycodeid\" />\n    <attribute name=\"cid_name\" />\n    <order attribute=\"cid_name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"cid_name\" operator=\"eq\" value=\"SG1\" />\n      <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\" />\n    </filter>\n  </entity>\n</fetch>",
                   "$top": 1
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Get_Site_Deactivation_Support_Request_Type": {
+              "runAfter": {
+                "Parent_Company_inactivated_via_CID": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "36cf6df5-cc4c-4759-b284-6c476dec87d2"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "ovs_supportrequesttypes",
+                  "$select": "ovs_code",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n\n<entity name=\"ovs_supportrequesttype\">\n\n<attribute name=\"ovs_supportrequesttypeid\"/>\n\n<attribute name=\"ovs_code\"/>\n\n<attribute name=\"createdon\"/>\n\n<order attribute=\"ovs_code\" descending=\"false\"/>\n\n<filter type=\"and\">\n\n<condition attribute=\"ovs_code\" operator=\"eq\" value=\"deactivatesite\"/>\n\n</filter>\n\n</entity>\n\n</fetch>",
+                  "$top": 1
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Add_new_support_request": {
+              "runAfter": {
+                "Get_Site_Deactivation_Support_Request_Type": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "8eb6015c-6670-4605-b289-54b8895a82bf"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "ovs_supportrequests",
+                  "item/ovs_Company@odata.bind": "accounts(@{triggerOutputs()?['body/_parentaccountid_value']})",
+                  "item/ovs_RequestType@odata.bind": "ovs_supportrequesttypes(@{first(body('Get_Site_Deactivation_Support_Request_Type')?['value'])?['ovs_supportrequesttypeid']})",
+                  "item/statuscode": 1
                 },
                 "authentication": "@parameters('$authentication')"
               }
