@@ -1265,6 +1265,12 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "A support request is created.",
                         "message_fr": "A support request is created_FR."
                     }
+                    ,
+                    {
+                        "code": "m000201",
+                        "message_en": "There was a problem with your registration. You will be notified when the problem is resolved.",
+                        "message_fr": "Un problème s'est produit avec votre inscription. Vous serez averti lorsque le problème sera résolu."
+                    }
                 ];
 
             return list;

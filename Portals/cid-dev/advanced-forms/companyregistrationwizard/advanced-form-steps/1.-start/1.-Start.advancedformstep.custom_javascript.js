@@ -1,16 +1,12 @@
 // CompanyRegistrationWizard-Start.js
-
 var _account;
 var _cra_record = null;
-
 $(document).ready(function () {
     debugger;
     sessionStorage.setItem("step_start", 1);
     sessionStorage.setItem("portaluserID", '{{user.id}}');
- 
     var userFullname = '{{user.fullname}}';
     if (userFullname.length == 0) { window.location.href = '~/profile/'; }
-
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
     tdg.c.page_instructions("page_crw_start");
@@ -86,9 +82,7 @@ $(document).ready(function () {
     $("#NextButton").hide();
     var msg = tdg.error_message.message("BTN_NEXT");
     tdg.c.button_create("btn_next", "#NextButton", msg);
-    $("#btn_next").bind("click", function () {
-        tdg.cid.crw.start_btn_next_click();
-    });
+    $("#btn_next").bind("click", function () {tdg.cid.crw.start_btn_next_click();});
     //Withdraw
     var parentcustomerid = '{{user.parentcustomerid.Id}}';
     var showWithdraw = true; 
@@ -116,9 +110,7 @@ $(document).ready(function () {
                 var contact_id = '{{user.id}}';
                 if (ans) 
                 {
-                    var DeleteContactFlowData = '{' +
-                                    '"ContactId": "' + contact_id + '",' +
-                                    '}';
+                    var DeleteContactFlowData = '{' + '"ContactId": "' + contact_id + '",' + '}';
                     tdg.cid.flow.Call_Flow("CID_Flow_RunCompanySitesDeleting_Delete_Contact", DeleteContactFlowData);
                     tdg.c.sign_out();
                     return false;
@@ -140,31 +132,28 @@ if (window.jQuery) {
             if (has_invitation != "true") {
                 tdg.cid.crw.start_clear_contact_address();
             }
-
             let suppress_error = sessionStorage.getItem("cid_suppress_error");
             suppress_error = (suppress_error != "" ? true : false);
             sessionStorage.setItem("step_start", "1");
-
             let cid_has_cra_bn = $("#cid_has_cra_bn").val();
-
             let validation = false;
             let rom_data, filter, legalname;
-
             tdg.c.error_message_clear();
-
             if (has_invitation != "true") {
                 if (cid_has_cra_bn == 0) {
                     let legalname = $("#cid_legalname").val();
                     debugger;
                     rom_data = tdg.cid.crw.start_account_by_name(legalname);
                     if (rom_data.length > 0) {
-                        rom_data = rom_data[0];
+                       
                            if (rom_data.length > 1)
                             {
                                 tdg.cid.crw. Create_SupportRequest_For_Duplicate_Organization (rom_data ,'{{user.id}}') ;
+                                validation = false;
                             }
                             else
                             {
+                                 rom_data = rom_data[0];
                                 validation = tdg.cid.crw.start_registration(rom_data, suppress_error, contact_id);
                                 $("#cid_operatingname").val(rom_data.name);
                             }
@@ -177,23 +166,17 @@ if (window.jQuery) {
                     debugger;
 
                     let data = _cra_record;
-
                     if (data == "") {
                         tdg.c.error_message_advanced_form("m000001", true);
                     }
                     else {
                         debugger;
-
                         legalname = data.LegalName;
                         let cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
-
                         validation = false;
-
-                        filter = "cid_crabusinessnumber eq '" + cid_crabusinessnumber + "'";
-                        rom_data = tdg.c.WebApi_List("accounts", filter);
-                      
+                        filter = "cid_crabusinessnumber eq '" + cid_crabusinessnumber + "' or ovs_legalname eq '" + legalname + "'";
+                        rom_data = tdg.c.WebApi_List("accounts", filter);  
                         if (rom_data.length > 0) {
-
                             if (rom_data.length > 1)
                             {
                              tdg.cid.crw. Create_SupportRequest_For_Duplicate_Organization (rom_data , '{{user.id}}' ) ;
@@ -233,7 +216,6 @@ if (window.jQuery) {
                     $("#cid_contacttype").val(100000000);
                 }
             }
-
             return validation;
         }
     }(window.jQuery));

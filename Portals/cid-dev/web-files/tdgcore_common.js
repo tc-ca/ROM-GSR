@@ -2467,7 +2467,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             return data;
         },
 
-        Create_SupportRequest_For_Duplicate_Organization: function (rom_data , contactid) {
+        Create_SupportRequest_For_Duplicate_Organization: function (rom_data, contactid) {
             var SupportRequestType = tdg.webapi.SelectedColumnlist("ovs_supportrequesttypes", "ovs_supportrequesttypeid", "ovs_code eq 'PreDuplicateOrganization'");
             console.log("request type length : " + SupportRequestType.length);
             console.log(SupportRequestType[0].ovs_supportrequesttypeid);
@@ -2476,10 +2476,25 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 "ovs_CreatedByExternalUser@odata.bind": "/contacts(" + contactid + ")",
                 "ovs_RequestType@odata.bind": "/ovs_supportrequesttypes(" + SupportRequestType[0].ovs_supportrequesttypeid + ")",
                 "ovs_requestdetails": "The details provided about the support request."
-               
+
             };
             tdg.webapi.create("ovs_supportrequests", value);
-            tdg.c.dialog_OK("There was a problem with your registration. You will be notified when the problem is resolved.");
+            //m000201
+            var PopUpd_msg = tdg.error_message.message("m000201");
+            var i;
+            for ( i = 0; i < rom_data.length; i++ )
+            {
+                var data = {
+                    "cid_cidcompanystatus": 278410001
+                    };
+
+                tdg.webapi.update("accounts", rom_data[i].accountid, data);
+            }//end for loop
+
+            tdg.c.dialog_OK(PopUpd_msg);
+            var message = tdg.error_message.message("BTN_NEXT");
+            $("#btn_next").prop("value", message);
+            //"There was a problem with your registration. You will be notified when the problem is resolved.
         },
 
         start_buttons_confirm: function (value, btn_next_name) {
