@@ -145,7 +145,7 @@ if (window.jQuery) {
                     debugger;
                     rom_data = tdg.cid.crw.start_account_by_name(legalname);
                     if (rom_data.length > 0) {
-                       
+                            //check if claimed company is duplicate
                            if (rom_data.length > 1)
                             {
                                 tdg.cid.crw. Create_SupportRequest_For_Duplicate_Organization (rom_data ,'{{user.id}}') ;
@@ -174,17 +174,11 @@ if (window.jQuery) {
                         legalname = data.LegalName;
                         let cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
                         validation = false;
-                        filter = "cid_crabusinessnumber eq '" + cid_crabusinessnumber + "' or ovs_legalname eq '" + legalname + "'";
+                        filter = "cid_crabusinessnumber eq '" + cid_crabusinessnumber + "'";
                         rom_data = tdg.c.WebApi_List("accounts", filter);  
                         if (rom_data.length > 0) {
-                            if (rom_data.length > 1)
-                            {
-                             tdg.cid.crw. Create_SupportRequest_For_Duplicate_Organization (rom_data , '{{user.id}}' ) ;
-                            }
-                            else
-                            {  rom_data = rom_data[0];
-                                validation = tdg.cid.crw.start_registration(rom_data, suppress_error, contact_id);
-                            }
+                             rom_data = rom_data[0];
+                            validation = tdg.cid.crw.start_registration(rom_data, suppress_error, contact_id);
                         }
                         else {
                             tdg.cid.contact_update(data);

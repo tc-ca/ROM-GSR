@@ -4,9 +4,12 @@
 
 $(document).ready(function () {
     debugger;
-   tdg.c.control_hide("#adx_modifiedbyusername");
-   $("#adx_modifiedbyusername").val ('{{user.adx_identity_username}}');
-
+  // tdg.c.control_hide("#adx_modifiedbyusername");
+  $("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
+   $("#adx_modifiedbyusername").css("display" , "none");
+   $("#adx_modifiedbyusername_label").css("display" , "none");
+   
+ 
     sessionStorage.setItem('futureDateMessageShown', 'false');
     var effectiveDateControl = $("#cid_sitedeactivationeffectivedate_datepicker_description");
     effectiveDateControl.val('');
