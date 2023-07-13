@@ -5,10 +5,10 @@
 var _cid_crabusinessnumber = "";
 $(document).ready(function () {
 	debugger;
-	$('#WebResource_address_complete').attr("title" , "Address Lookup");
+	$('#WebResource_address_complete').attr("title", "Address Lookup");
 	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
 
-	 tdg.c.control_hide("adx_modifiedbyusername");
+	tdg.c.control_hide("adx_modifiedbyusername");
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 	tdg.c.page_instructions("page_crw_company_edit");
@@ -76,6 +76,7 @@ $(document).ready(function () {
 		var address1_line1 = $("#address1_line1").val();
 	}
 	else {
+		var cid_has_cra_bn = '{{user.cid_has_cra_bn.Value}}';
 		var cid_has_cra_bn = $('#cid_has_cra_bn').val();
 		if (cid_has_cra_bn == 1) {
 			$('#cid_has_cra_bn').val(cid_has_cra_bn);
@@ -181,8 +182,7 @@ $(document).ready(function () {
 			}
 		}
 	}
-
-	 tdg.c.control_hide("adx_modifiedbyusername");
+	tdg.c.control_hide("adx_modifiedbyusername");
 });
 
 function ovs_legalname_onchange() {

@@ -1,4 +1,7 @@
+//
 // CompanyRegistrationWizard-Company Create.js
+//
+
 $(document).ready(function () {
 	debugger;
 	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
