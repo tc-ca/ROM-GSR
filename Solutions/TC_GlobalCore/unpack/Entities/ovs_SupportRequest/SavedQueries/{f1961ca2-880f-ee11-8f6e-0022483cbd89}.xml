@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{f1961ca2-880f-ee11-8f6e-0022483cbd89}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ovs_requestnumber" select="1" icon="1" preview="1">
+        <row name="result" id="ovs_supportrequestid">
+          <cell name="ovs_requestnumber" width="139" />
+          <cell name="ovs_priority" width="67" />
+          <cell name="ovs_requestdetails" width="233" />
+          <cell name="ovs_requesttype" width="143" />
+          <cell name="a_22ae8269a36747699f24973573c3bbfe.ovs_reasonenglish" width="241" />
+          <cell name="ovs_support_request_outcome" width="176" />
+          <cell name="ovs_createdbyexternaluser" width="98" />
+          <cell name="createdon" width="125" />
+          <cell name="statecode" width="65" />
+          <cell name="statuscode" width="83" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="ovs_supportrequest">
+          <attribute name="ovs_requestnumber" />
+          <attribute name="createdon" />
+          <attribute name="statecode" />
+          <attribute name="statuscode" />
+          <attribute name="ovs_priority" />
+          <link-entity alias="a_22ae8269a36747699f24973573c3bbfe" name="ovs_supportrequesttype" to="ovs_requesttype" from="ovs_supportrequesttypeid" link-type="outer" visible="false">
+            <attribute name="ovs_reasonenglish" />
+          </link-entity>
+          <order attribute="ovs_priority" descending="false" />
+          <order attribute="createdon" descending="true" />
+          <order attribute="statecode" descending="false" />
+          <order attribute="statuscode" descending="false" />
+          <attribute name="ovs_supportrequestid" />
+          <attribute name="ovs_requestdetails" />
+          <attribute name="ovs_requesttype" />
+          <attribute name="ovs_support_request_outcome" />
+          <attribute name="ovs_createdbyexternaluser" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Related Support Requests" languagecode="1033" />
+      <LocalizedName description="Demandes d'assistance connexes" languagecode="1036" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

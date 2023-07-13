@@ -19,7 +19,6 @@
           <cell name="address1_country" width="100" />
           <cell name="statecode" width="100" />
           <cell name="primarycontactid" width="133" />
-          <cell name="cid_sitename" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -38,14 +37,15 @@
           <attribute name="address1_country" />
           <attribute name="statecode" />
           <attribute name="primarycontactid" />
-          <attribute name="cid_sitename" />
           <filter type="and">
             <condition attribute="customertypecode" operator="eq" value="948010000" />
           </filter>
-          <link-entity name="ovs_mocregistration" alias="ab" link-type="inner" from="ovs_siteid" to="accountid">
-            <filter type="and">
-              <condition attribute="ovs_operationtype" operator="eq" value="918640038" />
-            </filter>
+          <link-entity name="account" alias="aa" link-type="inner" from="parentaccountid" to="accountid">
+            <link-entity name="ovs_mocregistration" alias="ab" link-type="inner" from="ovs_siteid" to="accountid">
+              <filter type="and">
+                <condition attribute="ovs_operationtype" operator="eq" value="918640038" />
+              </filter>
+            </link-entity>
           </link-entity>
         </entity>
       </fetch>

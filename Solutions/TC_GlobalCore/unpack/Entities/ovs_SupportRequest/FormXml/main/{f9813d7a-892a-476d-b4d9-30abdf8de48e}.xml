@@ -18,7 +18,7 @@
                 <section showlabel="true" showbar="false" IsUserDefined="0" id="{6c238182-d91b-4796-a39a-914618f719b3}" height="auto" name="{6c238182-d91b-4796-a39a-914618f719b3}" columns="1" locklevel="0" labelwidth="130" celllabelalignment="Left" celllabelposition="Left">
                   <labels>
                     <label description="Support Request Meta-data" languagecode="1033" />
-                    <label description="Généralités" languagecode="1036" />
+                    <label description="Métadonnées de la demande d'assistance" languagecode="1036" />
                   </labels>
                   <rows>
                     <row>
@@ -36,12 +36,36 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{65c537d3-4f65-4f3c-976f-db7450d18bc4}" locklevel="0" colspan="1" rowspan="1">
+                      <cell id="{49221250-1da4-4c80-a30e-63a4e9102861}" locklevel="0" colspan="1" rowspan="1">
+                        <labels>
+                          <label description="Support Request Outcome" languagecode="1033" />
+                          <label description="Résultats des demandes d'assistance" languagecode="1036" />
+                        </labels>
+                        <control id="ovs_support_request_outcome" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ovs_support_request_outcome" disabled="false" uniqueid="{95a054e5-c67e-b950-dae5-cab65438cc69}">
+                          <parameters>
+                            <DependentAttributeName>ovs_supportrequest.ovs_requesttype</DependentAttributeName>
+                            <DependentAttributeType>ovs_supportrequesttype</DependentAttributeType>
+                            <FilterRelationshipName>ovs_ovs_support_request_outcome_support_reque</FilterRelationshipName>
+                          </parameters>
+                        </control>
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{65c537d3-4f65-4f3c-976f-db7450d18bc4}" locklevel="0" colspan="1" rowspan="1" showlabel="true">
                         <labels>
                           <label description="Created On" languagecode="1033" />
                           <label description="Créé le" languagecode="1036" />
                         </labels>
-                        <control id="createdon" classid="{5B773807-9FB2-42DB-97C3-7A91EFF8ADFF}" datafieldname="createdon" disabled="false" />
+                        <control id="createdon" classid="{5B773807-9FB2-42DB-97C3-7A91EFF8ADFF}" datafieldname="createdon" disabled="false" uniqueid="{d83bb2b6-b7a8-68b4-541e-37eedd649d01}" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{5da79a25-65c4-c408-7a1e-1e5a0d5b5175}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="Closed Date" languagecode="1033" />
+                          <label description="Date de fermeture" languagecode="1036" />
+                        </labels>
+                        <control id="ovs_closeddate" classid="{5B773807-9FB2-42db-97C3-7A91EFF8ADFF}" datafieldname="ovs_closeddate" disabled="true" uniqueid="{a4d3b9b9-43cc-9c2d-c753-e2bdb6d0aaec}" />
                       </cell>
                     </row>
                   </rows>
@@ -49,7 +73,7 @@
                 <section name="{ca08cc53-f115-467b-825b-2fd987d21968}_section_4" showlabel="true" showbar="false" locklevel="0" id="{33286594-e5b1-6758-b625-9a861696bd49}" IsUserDefined="0" layout="varwidth" columns="1" labelwidth="115" celllabelalignment="Left" celllabelposition="Left">
                   <labels>
                     <label description="User Information" languagecode="1033" />
-                    <label description="informations de l'utilisateur" languagecode="1036" />
+                    <label description="Informations de l'utilisateur" languagecode="1036" />
                   </labels>
                   <rows>
                     <row>
@@ -116,32 +140,79 @@
                   </labels>
                   <rows>
                     <row>
-                      <cell id="{e35c51de-5594-442e-b79f-be63d2ee92fb}" locklevel="0" colspan="1" rowspan="1">
+                      <cell id="{e35c51de-5594-442e-b79f-be63d2ee92fb}" locklevel="0" colspan="1" rowspan="1" showlabel="true">
                         <labels>
                           <label description="Request Type" languagecode="1033" />
                           <label description="Type de requête" languagecode="1036" />
                         </labels>
-                        <control id="ovs_requesttype" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ovs_requesttype" disabled="true" uniqueid="{54ae5ecc-c894-305b-3bee-e9945acad7d3}" />
+                        <control id="ovs_requesttype" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ovs_requesttype" disabled="false" uniqueid="{54ae5ecc-c894-305b-3bee-e9945acad7d3}">
+                          <parameters>
+                            <AutoResolve>true</AutoResolve>
+                            <DisableMru>false</DisableMru>
+                            <DisableQuickFind>false</DisableQuickFind>
+                            <DisableViewPicker>false</DisableViewPicker>
+                            <DefaultViewId>{DAF40171-1972-4DC0-B43C-8DD1E4F6C7EB}</DefaultViewId>
+                            <AllowFilterOff>false</AllowFilterOff>
+                          </parameters>
+                        </control>
                       </cell>
                     </row>
                     <row>
-                      <cell id="{8c8af400-46cf-4ad8-9cb6-2fca8cd05e02}" locklevel="0" colspan="1" rowspan="1">
+                      <cell id="{8c8af400-46cf-4ad8-9cb6-2fca8cd05e02}" locklevel="0" colspan="1" rowspan="1" showlabel="true">
                         <labels>
                           <label description="Priority" languagecode="1033" />
                           <label description="Priorité" languagecode="1036" />
                         </labels>
-                        <control id="ovs_priority" classid="{C6D124CA-7EDA-4A60-AEA9-7FB8D318B68F}" datafieldname="ovs_priority" disabled="false" />
+                        <control id="ovs_priority" classid="{C6D124CA-7EDA-4A60-AEA9-7FB8D318B68F}" datafieldname="ovs_priority" disabled="false" uniqueid="{01e6dc3e-9d32-3e7d-a036-05e82d9a459d}" />
                       </cell>
                     </row>
-                    <row height="auto">
-                      <cell id="{9ef8beff-dd2c-4002-802a-026d214406c8}" locklevel="0" colspan="1" rowspan="1" auto="true">
+                    <row>
+                      <cell id="{9ef8beff-dd2c-4002-802a-026d214406c8}" locklevel="0" colspan="1" rowspan="1" auto="false" showlabel="true">
                         <labels>
                           <label description="Request Details" languagecode="1033" />
                           <label description="Détails de la requête" languagecode="1036" />
                         </labels>
-                        <control id="ovs_requestdetails" classid="{F9A8A302-114E-466A-B582-6771B2AE0D92}" datafieldname="ovs_requestdetails" disabled="true" uniqueid="{7e1a47e6-a8d2-4fb5-9053-1004869f0db2}" />
+                        <control id="ovs_requestdetails" classid="{F9A8A302-114E-466A-B582-6771B2AE0D92}" datafieldname="ovs_requestdetails" disabled="false" uniqueid="{7e1a47e6-a8d2-4fb5-9053-1004869f0db2}" />
                       </cell>
                     </row>
+                  </rows>
+                </section>
+                <section name="{ca08cc53-f115-467b-825b-2fd987d21968}_section_5" showlabel="false" showbar="false" locklevel="0" id="{175d9790-0469-98c1-4125-71e3b91e2302}" IsUserDefined="0" layout="varwidth" columns="1" labelwidth="115" celllabelalignment="Left" celllabelposition="Left">
+                  <labels>
+                    <label description="Timeline" languagecode="1033" />
+                    <label description="Calendrier" languagecode="1036" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{e1d6d213-a73b-0eb5-ac31-4944a37962ab}" showlabel="false">
+                        <labels>
+                          <label description="" languagecode="1033" />
+                        </labels>
+                      </cell>
+                    </row>
+                    <row>
+                      <cell locklevel="0" id="{b0993d0b-e7c8-435d-9b76-4b44349cfcfc}" rowspan="15" colspan="1">
+                        <labels>
+                          <label description="Note Text" languagecode="1033" />
+                          <label description="Texte de la note" languagecode="1036" />
+                        </labels>
+                        <control id="notescontrol" classid="{06375649-C143-495E-A496-C962E5B4488E}" disabled="false" />
+                      </cell>
+                    </row>
+                    <row />
+                    <row />
+                    <row />
+                    <row />
+                    <row />
+                    <row />
+                    <row />
+                    <row />
+                    <row />
+                    <row />
+                    <row />
+                    <row />
+                    <row />
+                    <row />
                   </rows>
                 </section>
               </sections>
@@ -209,17 +280,17 @@
           </customControl>
           <customControl formFactor="0" name="MscrmControls.RichTextEditor.RichTextEditorControl">
             <parameters>
-              <value type="Multiple">ovs_requestdetails</value>
-            </parameters>
-          </customControl>
-          <customControl formFactor="2" name="MscrmControls.RichTextEditor.RichTextEditorControl">
-            <parameters>
-              <value type="Multiple">ovs_requestdetails</value>
+              <value>ovs_requestdetails</value>
             </parameters>
           </customControl>
           <customControl formFactor="1" name="MscrmControls.RichTextEditor.RichTextEditorControl">
             <parameters>
-              <value type="Multiple">ovs_requestdetails</value>
+              <value>ovs_requestdetails</value>
+            </parameters>
+          </customControl>
+          <customControl formFactor="2" name="MscrmControls.RichTextEditor.RichTextEditorControl">
+            <parameters>
+              <value>ovs_requestdetails</value>
             </parameters>
           </customControl>
         </controlDescription>

@@ -49,7 +49,7 @@ var EnvironmentSettings_Main = (function (window, document) {
             glHelper.disableAllFields(formContext);
 
             var _enabled = glHelper.GetValue(formContext, FIELD_ENABLE_FOR_USER);
-            if (glHelper.hasCurrentUserRole("TDG Planner") && formContext.getControl(FIELD_VALUE) != null && _enabled) {
+            if ((glHelper.hasCurrentUserRole("TDG Planner") || glHelper.hasCurrentUserRole("CID User")) && formContext.getControl(FIELD_VALUE) != null && _enabled) {
                     glHelper.SetDisabled(formContext, FIELD_VALUE, false);
             }
 

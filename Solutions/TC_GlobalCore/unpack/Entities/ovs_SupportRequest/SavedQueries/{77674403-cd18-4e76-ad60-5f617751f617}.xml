@@ -11,7 +11,17 @@
       <grid name="resultset" jump="ovs_requestnumber" select="1" icon="1" preview="1">
         <row name="result" id="ovs_supportrequestid">
           <cell name="ovs_requestnumber" width="300" />
-          <cell name="createdon" width="125" />
+          <cell name="ovs_priority" width="100" />
+          <cell name="statuscode" width="119" />
+          <cell name="ownerid" width="100" />
+          <cell name="createdon" width="105" />
+          <cell name="ovs_closeddate" width="109" />
+          <cell name="ovs_support_request_outcome" width="188" />
+          <cell name="ovs_createdbyexternaluser" width="185" />
+          <cell name="ovs_requesttype" width="117" />
+          <cell name="ovs_requestdetails" width="129" />
+          <cell name="ovs_company" width="113" />
+          <cell name="ovs_site" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -21,17 +31,28 @@
         <entity name="ovs_supportrequest">
           <attribute name="ovs_supportrequestid" />
           <attribute name="ovs_requestnumber" />
-          <attribute name="createdon" />
-          <order attribute="ovs_requestnumber" descending="false" />
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="1" />
           </filter>
+          <attribute name="ovs_priority" />
+          <attribute name="statuscode" />
+          <attribute name="ownerid" />
+          <attribute name="createdon" />
+          <attribute name="ovs_closeddate" />
+          <attribute name="ovs_support_request_outcome" />
+          <attribute name="ovs_createdbyexternaluser" />
+          <attribute name="ovs_requesttype" />
+          <attribute name="ovs_requestdetails" />
+          <attribute name="ovs_company" />
+          <attribute name="ovs_site" />
+          <order attribute="ovs_priority" descending="false" />
+          <order attribute="createdon" descending="false" />
         </entity>
       </fetch>
     </fetchxml>
     <IntroducedVersion>1.0</IntroducedVersion>
     <LocalizedNames>
-      <LocalizedName description="Inactive Support Requests" languagecode="1033" />
+      <LocalizedName description="Support Requests (Inactive)" languagecode="1033" />
       <LocalizedName description="Demandes d'assistance inactives" languagecode="1036" />
     </LocalizedNames>
   </savedquery>

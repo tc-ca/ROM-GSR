@@ -96,8 +96,108 @@ var AccountTDGmain = (function (window, document) {
         
     }
 
+    /// Update by Elena K - fixing a bug when switching forms reset customertypecode
+    function setFormUsage(formContext) {
+        //ROM - Force the selection of a company when site is created
+        // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+        formType = glHelper.GetFormType(formContext);
+
+        var formName = formContext.ui.formSelector.getCurrentItem().getLabel();
+        var langId = Xrm.Utility.getGlobalContext().userSettings.languageId;
+
+        if (langId == 1033) {
+
+            if (formName.toUpperCase() == "SITE") {
+                //Parent company is required
+                glHelper.SetRequiredLevel(formContext, "parentaccountid", true);
+
+                //Company specific fields are not required and hidden
+                glHelper.SetRequiredLevel(formContext, "ovs_legalname", false);
+                glHelper.SetRequiredLevel(formContext, "ovs_legalnamefr", false);
+                glHelper.SetRequiredLevel(formContext, "name", false);
+                glHelper.SetRequiredLevel(formContext, "ovs_namefr", false);
+
+                glHelper.SetControlVisibility(formContext, "ovs_legalname", false);
+                glHelper.SetControlVisibility(formContext, "ovs_legalnamefr", false);
+                glHelper.SetControlVisibility(formContext, "name", false);
+                glHelper.SetControlVisibility(formContext, "ovs_namefr", false);
+
+                glHelper.SetRequiredLevel(formContext, "customertypecode", false);
+                glHelper.SetControlVisibility(formContext, "customertypecode", false);
+
+                if (formType == 1)
+                    glHelper.SetValue(formContext, "customertypecode", 948010001);
+
+            }
+            else if (formName.toUpperCase()  == "COMPANY") {
+                glHelper.SetRequiredLevel(formContext, "parentaccountid", false);
+                glHelper.SetControlVisibility(formContext, "parentaccountid", false);
+
+                glHelper.SetControlVisibility(formContext, "customertypecode", false);
+
+                if (formType == 1)
+                    glHelper.SetValue(formContext, "customertypecode", 948010000);
+
+                if (!glHelper.hasCurrentUserRole("System Administrator") &&
+                    (
+                        (glHelper.hasCurrentUserRole("TDG Inspector")) ||
+                        (glHelper.hasCurrentUserRole("TDG Analyst")) ||
+                        (glHelper.hasCurrentUserRole("TDG Manager"))
+                    )
+                ) {
+                    if (formContext.getAttribute("cid_crabusinessnumber"))
+                        glHelper.SetControlReadOnly(formContext, "cid_crabusinessnumber", true);
+                }
 
 
+            }
+        }
+        else if (langId == 1036) {
+            if (formName.toUpperCase()  == "SITE") {
+                //Parent company is required
+                glHelper.SetRequiredLevel(formContext, "parentaccountid", true);
+
+                //Company specific fields are not required and hidden
+                glHelper.SetRequiredLevel(formContext, "ovs_legalname", false);
+                glHelper.SetRequiredLevel(formContext, "ovs_legalnamefr", false);
+                glHelper.SetRequiredLevel(formContext, "name", false);
+                glHelper.SetRequiredLevel(formContext, "ovs_namefr", false);
+
+                glHelper.SetControlVisibility(formContext, "ovs_legalname", false);
+                glHelper.SetControlVisibility(formContext, "ovs_legalnamefr", false);
+                glHelper.SetControlVisibility(formContext, "name", false);
+                glHelper.SetControlVisibility(formContext, "ovs_namefr", false);
+
+                glHelper.SetRequiredLevel(formContext, "customertypecode", false);
+                glHelper.SetControlVisibility(formContext, "customertypecode", false);
+
+                if (formType == 1)
+                    glHelper.SetValue(formContext, "customertypecode", 948010001);
+            }
+
+            else if (formName.toUpperCase()  == "ENTREPRISE") {
+                glHelper.SetRequiredLevel(formContext, "parentaccountid", false);
+                glHelper.SetControlVisibility(formContext, "parentaccountid", false);
+
+                glHelper.SetControlVisibility(formContext, "customertypecode", false);
+                glHelper.SetControlVisibility(formContext, "cid_cidcompanystatus", false);
+
+                if (formType == 1)
+                    glHelper.SetValue(formContext, "customertypecode", 948010000);
+
+                if (!glHelper.hasCurrentUserRole("System Administrator") &&
+                    (
+                        (glHelper.hasCurrentUserRole("TDG Inspector")) ||
+                        (glHelper.hasCurrentUserRole("TDG Analyst")) ||
+                        (glHelper.hasCurrentUserRole("TDG Manager"))
+                    )
+                ) {
+                    if (formContext.getAttribute("cid_crabusinessnumber"))
+                        glHelper.SetControlReadOnly(formContext, "cid_crabusinessnumber", true);
+                }
+            }
+        }
+    }
 
     //composite control fields manipulation
     //function setAddressFieldsLevel(formContext) {
@@ -121,18 +221,16 @@ var AccountTDGmain = (function (window, document) {
             const formContext = executionContext.getFormContext();
             formContextGlobalRef = formContext;
 
-            //if (AccountTDGmain.hasCurrentUserRole("TDG QA")) {
-            //    if (formContext.ui.tabs.get("tab_Operations") != null)
-            //        glHelper.SetTabVisibility(formContext, "tab_Operations", true);
-            //}
-
             //filter Relationship Type
             filter_customertypecode(formContext);
 
             // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
             formType = glHelper.GetFormType(formContext);
-
+            // Retrieve customertypecode 
+            var _customerType;
             var rTypeCode = formContext.getAttribute("customertypecode");
+            if (rTypeCode) _customerType = formContext.getAttribute("customertypecode").getValue();
+
             rTypeCode.removeOnChange(AccountTDGmain.relationShip_OnChange); // avoid binding multiple event handlers
             rTypeCode.addOnChange(AccountTDGmain.relationShip_OnChange);
             
@@ -144,128 +242,22 @@ var AccountTDGmain = (function (window, document) {
                 //prepare data for Violations History grid
                 getViolationHistory(formContext);
 
-                //TASK 165366
-                //  glHelper.SetRequiredLevel(formContext, PRIMARYCONTACT, true);
-
-                //var accountUN = formContext.getControl("Subgrid_AccountUNNumbers");
-
-                //if (accountUN != null)
-                //    accountUN.addOnLoad(AccountTDGmain.Refresh_AccountClass);
-
             }
-            else
-            {
-
-
-            }
+            
+            //Set form usage for Company Vs Site specific fields
+            setFormUsage(formContext);
 
 
             //ROM - Force the selection of a company when site is created
 
-            var formName = formContext.ui.formSelector.getCurrentItem().getLabel();
-            var langId = Xrm.Utility.getGlobalContext().userSettings.languageId;
+           // var formName = formContext.ui.formSelector.getCurrentItem().getLabel();
+           // var langId = Xrm.Utility.getGlobalContext().userSettings.languageId;
 
             //Hide customer type
             glHelper.SetRequiredLevel(formContext, "customertypecode", false);
             glHelper.SetControlVisibility(formContext, "customertypecode", false);
 
 
-            if (langId == 1033)
-            {
-                if (formName == "Site")
-                {
-                    //Parent company is required
-                    glHelper.SetRequiredLevel(formContext, "parentaccountid", true);
-
-                    //Company specific fields are not required and hidden
-                    glHelper.SetRequiredLevel(formContext, "ovs_legalname", false);
-                    glHelper.SetRequiredLevel(formContext, "ovs_legalnamefr", false);
-                    glHelper.SetRequiredLevel(formContext, "name", false);
-                    glHelper.SetRequiredLevel(formContext, "ovs_namefr", false);
-
-                    glHelper.SetControlVisibility(formContext, "ovs_legalname", false);
-                    glHelper.SetControlVisibility(formContext, "ovs_legalnamefr", false);
-                    glHelper.SetControlVisibility(formContext, "name", false);
-                    glHelper.SetControlVisibility(formContext, "ovs_namefr", false);
-
-                    glHelper.SetRequiredLevel(formContext, "customertypecode", false);
-                    glHelper.SetControlVisibility(formContext, "customertypecode", false);
-
-                    if (formType == 1)
-                        glHelper.SetValue(formContext, "customertypecode", 948010001);
-
-                }
-                else if (formName == "Company")
-                {
-                    glHelper.SetRequiredLevel(formContext, "parentaccountid", false);
-                    glHelper.SetControlVisibility(formContext, "parentaccountid", false);
-
-                    glHelper.SetControlVisibility(formContext, "customertypecode", false);
-
-                    if (formType == 1)
-                        glHelper.SetValue(formContext, "customertypecode", 948010000);
-
-                    if (!glHelper.hasCurrentUserRole("System Administrator") && 
-                        (
-                        (glHelper.hasCurrentUserRole("TDG Inspector")) ||
-                        (glHelper.hasCurrentUserRole("TDG Analyst")) ||
-                        (glHelper.hasCurrentUserRole("TDG Manager"))
-                        ) 
-                      )
-                    {
-                        glHelper.SetControlReadOnly(formContext, "cid_crabusinessnumber",true);
-                    }
-
-
-                }
-            }
-            else if (langId == 1036)
-            {
-                if (formName == "Site")
-                {
-                    //Parent company is required
-                    glHelper.SetRequiredLevel(formContext, "parentaccountid", true);
-
-                    //Company specific fields are not required and hidden
-                    glHelper.SetRequiredLevel(formContext, "ovs_legalname", false);
-                    glHelper.SetRequiredLevel(formContext, "ovs_legalnamefr", false);
-                    glHelper.SetRequiredLevel(formContext, "name", false);
-                    glHelper.SetRequiredLevel(formContext, "ovs_namefr", false);
-
-                    glHelper.SetControlVisibility(formContext, "ovs_legalname", false);
-                    glHelper.SetControlVisibility(formContext, "ovs_legalnamefr", false);
-                    glHelper.SetControlVisibility(formContext, "name", false);
-                    glHelper.SetControlVisibility(formContext, "ovs_namefr", false);
-
-                    glHelper.SetRequiredLevel(formContext, "customertypecode", false);
-                    glHelper.SetControlVisibility(formContext, "customertypecode", false);
-
-                    if (formType == 1)
-                        glHelper.SetValue(formContext, "customertypecode", 948010001);
-                }
-                else if (formName == "Entreprise")
-                {
-                    glHelper.SetRequiredLevel(formContext, "parentaccountid", false);
-                    glHelper.SetControlVisibility(formContext, "parentaccountid", false);
-
-                    glHelper.SetControlVisibility(formContext, "customertypecode", false);
-                    glHelper.SetControlVisibility(formContext, "cid_cidcompanystatus", false);
-
-                    if (formType == 1)
-                        glHelper.SetValue(formContext, "customertypecode", 948010000);
-
-                    if (!glHelper.hasCurrentUserRole("System Administrator") &&
-                        (
-                            (glHelper.hasCurrentUserRole("TDG Inspector")) ||
-                            (glHelper.hasCurrentUserRole("TDG Analyst")) ||
-                            (glHelper.hasCurrentUserRole("TDG Manager"))
-                        )
-                    )
-                    {
-                        glHelper.SetControlReadOnly(formContext, "cid_crabusinessnumber", true);
-                    }
-                }
-            }
 
             //setAddressFieldsLevel(formContext);
 

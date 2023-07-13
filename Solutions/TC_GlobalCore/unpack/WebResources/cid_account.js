@@ -1,3 +1,8 @@
+var k_form_org = "CID - Organization::BDIC - Organisation";
+var k_form_site = "CID - Site::BDIC - Site";
+var k_customertypecode_org = 948010000;
+var k_customertypecode_site = 948010001;
+var k_customertypecode = "cid_customertypecode";
 
 var _form;
 var _CRAFlowURL;
@@ -6,15 +11,27 @@ var _cid_crabusinessnumber;
 
 function Me_OnLoad(context) {
     debugger;
+
     _form = context.getFormContext();
+
+    var customertypecode = null;
+    var parentaccountid = _form.getAttribute("parentaccountid");
+
+    // create?
+    if (_form.ui.getFormType() == 1) {
+        customertypecode = k_customertypecode_org;
+    }
+    else {
+        customertypecode = _form.getAttribute("customertypecode").getValue();
+    }
+
+    var value = form_setup(_form, customertypecode);
+    if (value) return;
+
+    sessionStorage.setItem(k_customertypecode, k_customertypecode_org);
 
     _form.getAttribute("ovs_address1_province").setRequiredLevel("required");
     _form.getAttribute("address1_country").setValue("Canada");
-
-    // test
-    //var data = cra_api_get("134688019")
-    //tdg.cid.crw.start_Retrieve_cra("134688019","1");
-    //return;
 
     _cid_crabusinessnumber = _form.getAttribute("cid_crabusinessnumber").getValue();
 
@@ -42,8 +59,12 @@ function Me_OnLoad(context) {
 
     _form.getAttribute("cid_reasonfornobnnumber").addOnChange(cid_reasonfornobnnumber_OnChange);
 
-    form_setup();
     Get_FlowURL_and_Environment();
+}
+
+function Me_OnSave(context) {
+    debugger;
+    sessionStorage.setItem(k_customertypecode, "");
 }
 
 function Get_FlowURL_and_Environment() {
@@ -70,6 +91,7 @@ function Get_FlowURL_and_Environment() {
             }
         );
 }
+
 function cra_api_get_v2() {
     debugger;
    
@@ -246,18 +268,40 @@ function cid_reasonfornobnnumber_OnChange() {
     }
 }
 
-function form_setup() {
-    //debugger;
+function form_setup(context, customertypecode) {
+    debugger;
+
+    var load_form_name = "";
+    switch (customertypecode)
+    {
+        case k_customertypecode_org:
+            load_form_name = k_form_org;
+            break;
+        case k_customertypecode_site:
+            load_form_name = k_form_site;
+            break;
+        default:
+            return false;
+    }
+    load_form_name = load_form_name.toLowerCase();
 
     var current_form = Xrm.Page.ui.formSelector.getCurrentItem();
-    var label = current_form.getLabel();
+    var label = current_form.getLabel().toLowerCase();
 
-    // create?
-    if (_form.ui.getFormType() == 1) {
+    if (load_form_name.indexOf(label) != -1) return false;
 
+    var forms = context.ui.formSelector.items.get();
+    var form_name = load_form_name.toLowerCase();
+
+    for (var item in forms) {
+        var form = forms[item];
+        var curent_form_name = form.getLabel().toLowerCase();
+        if (form_name.indexOf(curent_form_name) != -1) {
+            form.navigate();
+            return true;
+        }
     }
-    else {
-    }
+    return false;
 }
 
 function cra_api_get_callback(data) {
