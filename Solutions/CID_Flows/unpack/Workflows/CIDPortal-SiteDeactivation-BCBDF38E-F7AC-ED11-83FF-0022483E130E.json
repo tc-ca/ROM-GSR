@@ -272,7 +272,7 @@
             },
             "Get_Site_Deactivation_Support_Request_Type": {
               "runAfter": {
-                "Parent_Company_inactivated_via_CID": [
+                "Get_modified_by_contact": [
                   "Succeeded"
                 ]
               },
@@ -295,6 +295,29 @@
                 "authentication": "@parameters('$authentication')"
               }
             },
+            "Get_modified_by_contact": {
+              "runAfter": {
+                "Parent_Company_inactivated_via_CID": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7f5c42c1-aff7-4ece-ae50-8b1e1c00866c"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "contacts",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"contact\">\n<attribute name=\"fullname\"/>\n<attribute name=\"telephone1\"/>\n<attribute name=\"contactid\"/>\n<order attribute=\"fullname\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"adx_identity_username\" operator=\"eq\" value=\"@{triggerOutputs()?['body/adx_modifiedbyusername']}\"/>\n</filter>\n</entity>\n</fetch>"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
             "Add_new_support_request": {
               "runAfter": {
                 "Get_Site_Deactivation_Support_Request_Type": [
@@ -313,9 +336,9 @@
                 },
                 "parameters": {
                   "entityName": "ovs_supportrequests",
+                  "item/ovs_CreatedByExternalUser@odata.bind": "contacts(@{first(body('Get_modified_by_contact')?['value'])?['contactid']})",
                   "item/ovs_Company@odata.bind": "accounts(@{triggerOutputs()?['body/_parentaccountid_value']})",
-                  "item/ovs_RequestType@odata.bind": "ovs_supportrequesttypes(@{first(body('Get_Site_Deactivation_Support_Request_Type')?['value'])?['ovs_supportrequesttypeid']})",
-                  "item/statuscode": 1
+                  "item/ovs_RequestType@odata.bind": "ovs_supportrequesttypes(@{first(body('Get_Site_Deactivation_Support_Request_Type')?['value'])?['ovs_supportrequesttypeid']})"
                 },
                 "authentication": "@parameters('$authentication')"
               }
