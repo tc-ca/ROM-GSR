@@ -6,7 +6,7 @@
       <LocalizedName description="RD.CID.Plugins" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.2.0.65</Version>
+    <Version>1.2.0.66</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>transportationofdangerousgoods</UniqueName>
@@ -113,13 +113,16 @@
       <RootComponent type="92" id="{be2e398b-197b-ed11-81ac-0022483e130e}" behavior="0" />
       <RootComponent type="92" id="{c2857cbe-167b-ed11-81ad-0022483d0343}" behavior="0" />
       <RootComponent type="92" id="{ccdb14b6-127b-ed11-81ad-0022483d0343}" behavior="0" />
+      <RootComponent type="92" id="{d8646245-e321-ee11-9966-0022483d0c87}" behavior="0" />
       <RootComponent type="92" id="{da1f07e4-127b-ed11-81ac-0022483e130e}" behavior="0" />
       <RootComponent type="92" id="{de0e2770-ac0f-ee11-8f6e-0022483d0c87}" behavior="0" />
       <RootComponent type="92" id="{e368766a-177b-ed11-81ac-0022483e130e}" behavior="0" />
       <RootComponent type="92" id="{e4d8ab44-137b-ed11-81ad-0022483d0343}" behavior="0" />
       <RootComponent type="92" id="{e51a2b8f-c80e-ee11-8f6e-0022483d0343}" behavior="0" />
+      <RootComponent type="92" id="{e66a84c5-e321-ee11-9966-0022483e130e}" behavior="0" />
       <RootComponent type="92" id="{e80c4105-9ca5-ed11-aad0-0022483d0343}" behavior="0" />
       <RootComponent type="92" id="{f1852367-24a7-ed11-aad0-0022483d0343}" behavior="0" />
+      <RootComponent type="92" id="{f7e14281-331c-ee11-8f6d-0022483d0343}" behavior="0" />
       <RootComponent type="92" id="{f877112c-157b-ed11-81ac-0022483e130e}" behavior="0" />
     </RootComponents>
     <MissingDependencies>
@@ -182,6 +185,14 @@
         <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Operation.Operation_ResetSiteAttestation: Update of ovs_mocregistration" id="{3a8eff2a-187b-ed11-81ac-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="1" schemaName="ovs_mocregistration" displayName="Operation" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Common.HistoryLog_CreateLog: Update of ovs_mocregistration" id="{d8646245-e321-ee11-9966-0022483d0c87}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="ovs_mocregistration" displayName="Operation" solution="Active" />
+        <Dependent type="93" id="{c9305ba2-e321-ee11-9966-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="1" schemaName="ovs_operationclass" displayName="Operation Class" solution="Active" />
         <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.SiteClass.SiteClass_PreUpdate: Update of ovs_operationclass" id="{342998c3-187b-ed11-81ad-0022483d0343}" />
       </MissingDependency>
@@ -204,6 +215,10 @@
       <MissingDependency>
         <Required type="1" schemaName="ovs_operationclass" displayName="Operation Class" solution="Active" />
         <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Common.ConcatenateCreateAndModifyFields: Create of ovs_operationclass" id="{e4d8ab44-137b-ed11-81ad-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="ovs_operationclass" displayName="Operation Class" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Common.HistoryLog_CreateLog: Create of ovs_operationclass" id="{e66a84c5-e321-ee11-9966-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="ovs_operationclass" displayName="Operation Class" solution="Active" />
@@ -253,11 +268,21 @@
         <Required type="2" schemaName="adx_modifiedbyusername" displayName="Modified By (User Name)" parentSchemaName="account" parentDisplayName="Account" solution="MicrosoftPortalDependencies (9.2.2103.0)">
           <package>CDSBasePortal (9.3.2109.20)</package>
         </Required>
+        <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Common.HistoryLog_CreateLog: Update of account" id="{2f2fa2e8-7810-ee11-8f6e-0022483d0c87}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="adx_modifiedbyusername" displayName="Modified By (User Name)" parentSchemaName="account" parentDisplayName="Account" solution="MicrosoftPortalDependencies (9.2.2103.0)">
+          <package>CDSBasePortal (9.3.2109.20)</package>
+        </Required>
         <Dependent type="93" id="{66182292-7c10-ee11-8f6e-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="cid_annualcompliancecompletiondate" displayName="Completion Date of the Previous Annual Compliance" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
         <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Account.Account_CompleteAnnualCompliance: Update of account" id="{46027023-1f7b-ed11-81ac-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_attestationdate" displayName="Attestation Date" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="93" id="{66182292-7c10-ee11-8f6e-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="cid_cidcompanystatus" displayName="Organization Status" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
@@ -313,6 +338,10 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="cid_iscompanyattested" displayName="Is Organization Attested?" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="93" id="{4d1ddc63-341c-ee11-8f6d-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_iscompanyattested" displayName="Is Organization Attested?" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
         <Dependent type="93" id="{66182292-7c10-ee11-8f6e-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
@@ -321,7 +350,15 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="cid_modifiedbyregistrant" displayName="Modified By" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Common.HistoryLog_CreateLog: Update of account" id="{2f2fa2e8-7810-ee11-8f6e-0022483d0c87}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_modifiedbyregistrant" displayName="Modified By" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
         <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Common.ConcatenateCreateAndModifyFields: Update of account" id="{b87657d6-137b-ed11-81ac-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_modifiedbyregistrant" displayName="Modified By" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="93" id="{66182292-7c10-ee11-8f6e-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="cid_offeringfortransportsitetype" displayName="Offer for Transport" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
@@ -349,6 +386,14 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="cid_registrationasof" displayName="Registration As Of" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Common.HistoryLog_CreateLog: Update of account reg Complete" id="{f7e14281-331c-ee11-8f6d-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_registrationasof" displayName="Registration As Of" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="93" id="{4d1ddc63-341c-ee11-8f6d-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_registrationasof" displayName="Registration As Of" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
         <Dependent type="93" id="{66182292-7c10-ee11-8f6e-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
@@ -366,6 +411,10 @@
       <MissingDependency>
         <Required type="2" schemaName="cid_siteid" displayName="Site ID" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
         <Dependent type="93" id="{66182292-7c10-ee11-8f6e-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_sitename" displayName="Site Name" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Common.HistoryLog_CreateLog: Update of account" id="{2f2fa2e8-7810-ee11-8f6e-0022483d0c87}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="cid_sitename" displayName="Site Name" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
@@ -440,6 +489,10 @@
       <MissingDependency>
         <Required type="2" schemaName="ovs_legalname" displayName="Legal Name" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
         <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Common.HistoryLog_CreateLog: Update of account" id="{2f2fa2e8-7810-ee11-8f6e-0022483d0c87}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_legalname" displayName="Legal Name" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="93" id="{4d1ddc63-341c-ee11-8f6d-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="ovs_legalname" displayName="Legal Name" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
@@ -770,24 +823,100 @@
         <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Common.ConcatenateCreateAndModifyFields: Update of contact" id="{890234bc-147b-ed11-81ac-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="2" schemaName="cid_createdbyregistrant" displayName="Created By" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="93" id="{c9305ba2-e321-ee11-9966-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="2" schemaName="cid_modeoftransportationair" displayName="Air" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
         <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Operation.Operation_ResetSiteAttestation: Update of ovs_mocregistration" id="{3a8eff2a-187b-ed11-81ac-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_modeoftransportationair" displayName="Air" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Common.HistoryLog_CreateLog: Update of ovs_mocregistration" id="{d8646245-e321-ee11-9966-0022483d0c87}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_modeoftransportationair" displayName="Air" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="93" id="{c9305ba2-e321-ee11-9966-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="cid_modeoftransportationmarine" displayName="Marine" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
         <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Operation.Operation_ResetSiteAttestation: Update of ovs_mocregistration" id="{3a8eff2a-187b-ed11-81ac-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="2" schemaName="cid_modeoftransportationmarine" displayName="Marine" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Common.HistoryLog_CreateLog: Update of ovs_mocregistration" id="{d8646245-e321-ee11-9966-0022483d0c87}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_modeoftransportationmarine" displayName="Marine" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="93" id="{c9305ba2-e321-ee11-9966-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="2" schemaName="cid_modeoftransportationrail" displayName="Rail" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
         <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Operation.Operation_ResetSiteAttestation: Update of ovs_mocregistration" id="{3a8eff2a-187b-ed11-81ac-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_modeoftransportationrail" displayName="Rail" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Common.HistoryLog_CreateLog: Update of ovs_mocregistration" id="{d8646245-e321-ee11-9966-0022483d0c87}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_modeoftransportationrail" displayName="Rail" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="93" id="{c9305ba2-e321-ee11-9966-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="cid_modeoftransportationroad" displayName="Road" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
         <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Operation.Operation_ResetSiteAttestation: Update of ovs_mocregistration" id="{3a8eff2a-187b-ed11-81ac-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="2" schemaName="cid_modeoftransportationroad" displayName="Road" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Common.HistoryLog_CreateLog: Update of ovs_mocregistration" id="{d8646245-e321-ee11-9966-0022483d0c87}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_modeoftransportationroad" displayName="Road" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="93" id="{c9305ba2-e321-ee11-9966-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="2" schemaName="cid_modifiedbyregistrant" displayName="Modified By" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
         <Dependent type="92" displayName="TC.PowerApps.RD.Plugins.Entities.Operation.Operation_ResetSiteAttestation: Update of ovs_mocregistration" id="{3a8eff2a-187b-ed11-81ac-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_modifiedbyregistrant" displayName="Modified By" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="93" id="{c9305ba2-e321-ee11-9966-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="cid_operationdetailsprovided" displayName="Operation details provided?" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="93" id="{c9305ba2-e321-ee11-9966-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="createdby" displayName="Created By" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="93" id="{c9305ba2-e321-ee11-9966-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="createdon" displayName="Created On" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="93" id="{c9305ba2-e321-ee11-9966-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="modifiedby" displayName="Modified By" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="93" id="{c9305ba2-e321-ee11-9966-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="modifiedon" displayName="Modified On" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="93" id="{c9305ba2-e321-ee11-9966-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_mocregistrationid" displayName="Operation Id" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="93" id="{c9305ba2-e321-ee11-9966-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_name" displayName="Operation ID" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="93" id="{c9305ba2-e321-ee11-9966-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_operationtype" displayName="Operation Type" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="93" id="{c9305ba2-e321-ee11-9966-0022483e130e}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_siteid" displayName="Site" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="93" id="{c9305ba2-e321-ee11-9966-0022483e130e}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="statecode" displayName="Status" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
