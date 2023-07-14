@@ -2482,11 +2482,10 @@ if (typeof (tdg.cid.crw) == "undefined") {
             //m000201
             var PopUpd_msg = tdg.error_message.message("m000201");
             var i;
-            for ( i = 0; i < rom_data.length; i++ )
-            {
+            for (i = 0; i < rom_data.length; i++) {
                 var data = {
                     "cid_cidcompanystatus": 278410001
-                    };
+                };
 
                 tdg.webapi.update("accounts", rom_data[i].accountid, data);
             }//end for loop
@@ -2504,6 +2503,24 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $('#cid_reasonfornobnnumber_other').attr("readonly", !value);
 
             $('#' + btn_next_name).prop("disabled", !value);
+        },
+
+        update_address_from_cra: function (bn) {
+            debugger;
+
+            var address1_line1 = sessionStorage.getItem("address1_line1");
+            var address1_line2 = sessionStorage.getItem("address1_line2");
+            address1_line2 = (address1_line2 == "null" ? "" : address1_line2);
+            var address1_city = sessionStorage.getItem("address1_city");
+            var address1_stateorprovince = sessionStorage.getItem("address1_stateorprovince");
+            var address1_postalcode = sessionStorage.getItem("address1_postalcode");
+
+            $("#address1_line1").val(address1_line1);
+            $("#address1_line2").val(address1_line2);
+            $("#address1_line3").val("");
+            $("#address1_city").val(address1_city);
+            $("#address1_stateorprovince").val(address1_stateorprovince);
+            $("#address1_postalcode").val(address1_postalcode);
         },
 
         data_confirm_dialog: async function (cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber_list) {
@@ -2597,6 +2614,23 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     }//end else if only one account is found by legal name
                 }//end check account length is greater than zero
             }
+
+            var a = data.address;
+
+            $("#address1_line1").val(address1_line1);
+            $("#address1_line2").val(address1_line2);
+            $("#address1_line3").val(address1_line3);
+            $("#address1_city").val(address1_city);
+            $("#address1_stateorprovince").val(address1_stateorprovince);
+            $("#address1_postalcode").val(address1_postalcode);
+
+            sessionStorage.setItem("address1_line1", a.AddressLine1Text);
+            sessionStorage.setItem("address1_line2", a.AddressLine2Text);
+            sessionStorage.setItem("address1_line3", a.AddressLine3Text);
+            sessionStorage.setItem("address1_city", a.CityName);
+            sessionStorage.setItem("address1_stateorprovince", a.ProvinceStateCode);
+            sessionStorage.setItem("address1_postalcode", a.PostalZipCode);
+
             return data;
         },
 

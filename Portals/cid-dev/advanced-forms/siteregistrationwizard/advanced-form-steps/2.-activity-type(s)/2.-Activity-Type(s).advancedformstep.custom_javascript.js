@@ -10,6 +10,8 @@ $(document).ready(function () {
     debugger;
 
     $('#loader').hide();
+    $("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
+	 tdg.c.control_hide("adx_modifiedbyusername");
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);

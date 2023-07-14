@@ -7,6 +7,8 @@ $(document).ready(function () {
 	debugger;
 
 	page_setup();
+	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
+	 tdg.c.control_hide("adx_modifiedbyusername");
 
 	var selected_language = '{{website.selected_language.code}}';
 	console.log ("language code  "  + selected_language );

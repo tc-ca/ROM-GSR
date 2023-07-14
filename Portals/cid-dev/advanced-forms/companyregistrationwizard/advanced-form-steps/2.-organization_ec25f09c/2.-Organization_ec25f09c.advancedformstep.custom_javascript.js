@@ -5,6 +5,7 @@
 var _cid_crabusinessnumber = "";
 $(document).ready(function () {
 	debugger;
+
 	$('#WebResource_address_complete').attr("title", "Address Lookup");
 	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
 
@@ -22,22 +23,24 @@ $(document).ready(function () {
 	_cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
 	$("#cid_registrationasof").parent().parent().hide();
 
-	//update manually entered field if address fields changed
+	cid_has_cra_bn = $('#cid_has_cra_bn').val();
+	if (cid_has_cra_bn == 1) {
+		debugger;
+		tdg.cid.crw.update_address_from_cra(_cid_crabusinessnumber);
+	}
+
 	tdg.cid.Update_AdderssOverwritten_Field();
 
 	tdg.c.control_hide("ovs_invitation_only");
 	tdg.c.control_hide("cid_addressoverwritten");
 
-	//validate postal code with province - first letter of postal code need to matched allowed province letters
 	tdg.c.Add_Validation_For_Postal_Code_with_Province(selected_language);
-	// PO Box address validation
 	tdg.c.Prevent_Po_Box_address_Validation(selected_language);
-	//disable/enable province based on enterd manually
 	if ($("#cid_addressoverwritten").val() == 0) { $("#ovs_address1_province").prop('disabled', true); }
 	else { $("#ovs_address1_province").prop('disabled', false); }
 
 	var cid_contacttype = '{{user.cid_contacttype.Value}}';
-	//if not primary contact
+	// not primary
 	if (cid_contacttype != 100000000) {
 		var code = sessionStorage.getItem("cid_suppress_error_code") + "";
 		if (code != "null" && code != "") {
@@ -157,15 +160,12 @@ $(document).ready(function () {
 			{
 				var withdrawLabel = tdg.error_message.message("BTN_WITHDRAW");
 				$('#NextButton').parent().parent().after('<div role="group" class="pull-right toolbar-actions"><input type="button" data-dismiss="modal" value="' + withdrawLabel + '" id="WithdrawButton" style="margin-left: 10px;" name="WithdrawButton" class="btn btn-default button previous previous-btn"/></div>');
-				// bind the click event to this custom buttton
 				$("#WithdrawButton").bind("click", function () {
 					debugger;
 
 					var message = tdg.error_message.message("m000145");
 					tdg.c.dialog_YN(message, (ans) => {
-						//var contact_id = '{{user.id}}';
 						if (ans) {
-
 							var DeleteAccountFlowData = '{' +
 								'"AccountId": "' + parentcustomerid + '",' +
 								'}';
@@ -183,6 +183,7 @@ $(document).ready(function () {
 		}
 	}
 	tdg.c.control_hide("adx_modifiedbyusername");
+	$("#address1_country").val("Canada");
 });
 
 function ovs_legalname_onchange() {
@@ -251,7 +252,7 @@ if (window.jQuery) {
 			var address1_line1 = $("#address1_line1").val();
 			sessionStorage.setItem("AddressLine1Text", address1_line1);
 			sessionStorage.setItem("step_start", "");
-			// cid claim company
+			// claim company
 			$('#cid_companyclaim').val(1);
 
 			$("#cid_reasonfornobnnumber").prop("disabled", false);
