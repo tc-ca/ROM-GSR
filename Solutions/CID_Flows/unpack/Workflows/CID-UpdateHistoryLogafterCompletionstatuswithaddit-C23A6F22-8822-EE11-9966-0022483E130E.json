@@ -1,0 +1,244 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "e2a9da6c-1508-45d4-b5f7-1065f5bab204"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "cid_historylog",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "cid_processingstatus",
+              "subscriptionRequest/filterexpression": "cid_processingstatus eq 100000001",
+              "subscriptionRequest/runas": 3
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "List_rows_-_get_history_code_list": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "bd7eac67-3804-444d-8d63-e499f34c911f"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "cid_audithistorycodes"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Filter_array_-_get_IR5": {
+          "runAfter": {
+            "List_rows_-_get_history_code_list": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f0bc43a1-a6f0-4a15-a210-2e18618f2e13"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('List_rows_-_get_history_code_list')?['body/value']",
+            "where": "@equals(item()?['cid_name'], 'IR5')"
+          }
+        },
+        "check_if_IR5": {
+          "actions": {
+            "currentFrenchText": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "27dc7e08-5b36-42b3-82fc-6d9121eb65b8"
+              },
+              "type": "Compose",
+              "inputs": "@triggerOutputs()?['body/cid_memofrench']"
+            },
+            "Update_a_row": {
+              "runAfter": {
+                "ReplacedFrenchParamater": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "8a68ff08-5fe9-453f-8b5e-b7b6a6bccb4c"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "cid_historylogs",
+                  "recordId": "@triggerOutputs()?['body/activityid']",
+                  "item/cid_memofrench": "@outputs('ReplacedFrenchParamater')"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "ReplacedFrenchParamater": {
+              "runAfter": {
+                "currentFrenchText": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "290d526e-8117-4c65-a2fa-3a254789686a"
+              },
+              "type": "Compose",
+              "inputs": "@replace(replace(outputs('currentFrenchText'),'Single','Seul'),'Bulk','En gros')"
+            }
+          },
+          "runAfter": {
+            "Filter_array_-_get_IR6": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "equals": [
+              "@triggerOutputs()?['body/_cid_historycode_value']",
+              "@body('Filter_array_-_get_IR5')[0]['cid_audithistorycodeid']"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "55f44f0d-b606-48c2-8b43-141b8f11138b"
+          },
+          "type": "If"
+        },
+        "Filter_array_-_get_IR6": {
+          "runAfter": {
+            "Filter_array_-_get_IR5": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f0bc43a1-a6f0-4a15-a210-2e18618f2e13"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('List_rows_-_get_history_code_list')?['body/value']",
+            "where": "@equals(item()?['cid_name'], 'IR6')"
+          }
+        },
+        "check_if_IR6": {
+          "actions": {
+            "currentFrenchTextIR6": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "38025fac-465f-4267-90ee-902360c09cb3"
+              },
+              "type": "Compose",
+              "inputs": "@triggerOutputs()?['body/cid_memofrench']"
+            },
+            "Update_a_row_2": {
+              "runAfter": {
+                "ReplacedFrenchParamaterTDG": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a65bc5b6-3807-49f2-a9e5-521cefe223c0"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "cid_historylogs",
+                  "recordId": "@triggerOutputs()?['body/activityid']",
+                  "item/cid_memofrench": "@outputs('ReplacedFrenchParamaterTDG')"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "ReplacedFrenchParamaterModes": {
+              "runAfter": {
+                "currentFrenchTextIR6": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0aef77d0-3522-4789-b2ba-60f95c5f0bc2"
+              },
+              "type": "Compose",
+              "inputs": "@replace(replace(replace(replace(replace(outputs('currentFrenchTextIR6'), 'Road', 'Routier'), 'Rail', 'Ferroviaire'),'Air','Aérien'),'Marine','Maritime'),'No','Non')"
+            },
+            "ReplacedFrenchParamaterTDG": {
+              "runAfter": {
+                "ReplacedFrenchParamaterModes": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e66e9e13-2607-417d-9ab1-c4853cb7a274"
+              },
+              "type": "Compose",
+              "inputs": "@replace(replace(replace(replace(replace(outputs('ReplacedFrenchParamaterModes'), 'Import', 'Importation'), 'Handle', 'Manutention'), 'Transport', 'Transport'), 'Offer for Transport', 'Offre de transport'),'Yes','Oui')"
+            }
+          },
+          "runAfter": {
+            "check_if_IR5": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "equals": [
+              "@triggerOutputs()?['body/_cid_historycode_value']",
+              "@body('Filter_array_-_get_IR6')[0]['cid_audithistorycodeid']"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f89dff7d-e257-45c8-8fdc-22893915fa6c"
+          },
+          "type": "If"
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

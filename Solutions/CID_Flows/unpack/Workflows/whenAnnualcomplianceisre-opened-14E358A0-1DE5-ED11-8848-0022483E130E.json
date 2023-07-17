@@ -91,8 +91,8 @@
                     "parameters": {
                       "entityName": "cid_historylogs",
                       "recordId": "@outputs('Add_a_new_row_-_history_log')?['body/activityid']",
-                      "item/cid_memofrench": "@outputs('FrenchMemo')",
-                      "item/cid_memoenglish": "@outputs('EnglishMemo')"
+                      "item/cid_memoenglish": "@outputs('EnglishMemo')",
+                      "item/cid_memofrench": "@outputs('FrenchMemo')"
                     },
                     "authentication": "@parameters('$authentication')"
                   }
@@ -160,13 +160,14 @@
                     "parameters": {
                       "entityName": "cid_historylogs",
                       "item/subject": "@triggerOutputs()?['body/ovs_legalname']",
-                      "item/cid_CreatedByRegistrant_cid_historylog@odata.bind": "\\contacts\\@{triggerOutputs()?['body/_primarycontactid_value']}",
+                      "item/cid_subject": "   ",
                       "item/description": "@outputs('List_rows_-_get_history_code')?['body/value'][0]['cid_historydescriptionenglish']",
                       "item/cid_externallyvisible": true,
                       "item/cid_HistoryCode_cid_historylog@odata.bind": "\\cid_audithistorycodes\\@{outputs('historycode')}",
-                      "item/cid_memofrench": "@outputs('FrenchMemo')",
                       "item/cid_memoenglish": "@outputs('EnglishMemo')",
-                      "item/cid_Company_cid_historylog@odata.bind": "\\accounts\\@{triggerOutputs()?['body/accountid']}"
+                      "item/cid_memofrench": "@outputs('FrenchMemo')",
+                      "item/cid_Company_cid_historylog@odata.bind": "\\accounts\\@{triggerOutputs()?['body/accountid']}",
+                      "item/cid_CreatedByRegistrant_cid_historylog@odata.bind": "\\contacts\\@{triggerOutputs()?['body/_primarycontactid_value']}"
                     },
                     "authentication": "@parameters('$authentication')"
                   }
