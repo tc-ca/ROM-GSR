@@ -2569,23 +2569,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 if (account.length > 0) {
                     console.log("account length: " + account.length);
                     account = account[0];
-                    if (account.length > 1) {
-                        var contactid = sessionStorage.getItem("portaluserID");
-                        var SupportRequestType = tdg.webapi.SelectedColumnlist("ovs_supportrequesttypes", "ovs_supportrequesttypeid", "ovs_code eq 'PreDuplicateOrganization'");
-                        console.log("request type length : " + SupportRequestType.length);
-                        console.log(SupportRequestType[0].ovs_supportrequesttypeid);
-
-                        data = {};
-                        data.ovs_CreatedByExternalUser = contactid;
-                        data.ovs_Company = account.accountid;
-                        data.ovs_RequestType = SupportRequestType[0].ovs_supportrequesttypeid;
-                        data.ovs_requestdetails = "The details provided about the support request.";
-                        data.ovs_priority = 5;
-                        tdg.cid.ovs_supportrequest_insert(data);
-
-                        tdg.c.dialog_OK("There was a problem with your registration. You will be notified when the problem is resolved.");
-                    }
-                    else {
+              
+                     
 
                         data.length = 1;
                         data.cid_has_cra_bn = account.cid_has_cra_bn;
@@ -2611,7 +2596,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                         address.PostalZipCode = account.address1_postalcode;
 
                         data.address = address;
-                    }//end else if only one account is found by legal name
+                    
                 }//end check account length is greater than zero
             }
 
@@ -2623,14 +2608,14 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#address1_city").val(address1_city);
             $("#address1_stateorprovince").val(address1_stateorprovince);
             $("#address1_postalcode").val(address1_postalcode);
-
-            sessionStorage.setItem("address1_line1", a.AddressLine1Text);
-            sessionStorage.setItem("address1_line2", a.AddressLine2Text);
-            sessionStorage.setItem("address1_line3", a.AddressLine3Text);
-            sessionStorage.setItem("address1_city", a.CityName);
-            sessionStorage.setItem("address1_stateorprovince", a.ProvinceStateCode);
-            sessionStorage.setItem("address1_postalcode", a.PostalZipCode);
-
+            if (a != null) {
+                sessionStorage.setItem("address1_line1", a.AddressLine1Text);
+                sessionStorage.setItem("address1_line2", a.AddressLine2Text);
+                sessionStorage.setItem("address1_line3", a.AddressLine3Text);
+                sessionStorage.setItem("address1_city", a.CityName);
+                sessionStorage.setItem("address1_stateorprovince", a.ProvinceStateCode);
+                sessionStorage.setItem("address1_postalcode", a.PostalZipCode);
+            }
             return data;
         },
 
