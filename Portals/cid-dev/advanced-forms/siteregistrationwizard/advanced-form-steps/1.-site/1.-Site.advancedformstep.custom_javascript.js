@@ -54,8 +54,12 @@ $(document).ready(function () {
 
 		//Control address edit
 		var parent_Id = '{{ user.parentcustomerid.id }}';
+		
 
 		var created_On = new Date($("#createdon").val()).getTime();
+		console.log( $("#createdon").val());
+		console.log("created date : " + created_On);
+		console.log((Date.now() - created_On) / 1000 / 60 / 60 / 24);
 		if ($("#cid_createdbyregistrant").val() != parent_Id && (Date.now() - created_On) / 1000 / 60 / 60 / 24 < 1) {
 			$("#cid_same_as_company").attr("disabled", false);
 			$("#ovs_address_type").attr("disabled", false);
@@ -222,80 +226,5 @@ function Show_PluginError_TextLanguag(Field) {
 }
 
 function CheckLatLongDecimal() {
-   /*  var Lat = $("#address1_latitude").val();
-    var Longtitude = $("#address1_longitude").val();
-    var lang =  selected_language = '{{website.selected_language.code}}';
-    var decimalIndexLat ;
-    var decimalIndexLong ;
-
-    if (lang == "fr")
-	{
-		 decimalIndexLat = Lat.toString().indexOf(",");
-	     decimalIndexLong = Longtitude.toString().indexOf(",");
-	}
-    else
-    {
-         decimalIndexLat = Lat.toString().indexOf(".");
-         decimalIndexLong = Longtitude.toString().indexOf(".");
-    }
-    var error = "";
-    var checkResult = true;
-    //check latitude
-    //m000143
-    var m000143 = "<p>" + tdg.error_message.message("m000143") + "</p>";
-    var m000144 = "<p>" + tdg.error_message.message("m000144") + "</p>";
-    if (decimalIndexLat < 0) {
-        checkResult = false;
-        error = m000143;
-    }
-    else {
-        var numberofdecimal ;
-        //= Lat.toString().split('.')[1].length;
-         if (lang == "fr")
-	     {
-             numberofdecimal = Lat.toString().split(',')[1].length;
-         }
-         else{
-             numberofdecimal = Lat.toString().split('.')[1].length;
-         }
-
-        if (numberofdecimal != 4) {
-            error = m000143;
-            //"<p>Please enter a Latitude as a decimal, with the full four digit decimal point (e.g. 41.3251)</p>";
-            checkResult = false;
-        }
-    }
-
-    //check longtitude
-    if (decimalIndexLong < 0) {
-        checkResult = false;
-        error = error + m000144;
-    }
-    else {
-        var Longtitudenumberofdecimal ,
-        // = Longtitude.toString().split('.')[1].length;
-         if (lang == "fr")
-	     {
-             Longtitudenumberofdecimal = Longtitude.toString().split(',')[1].length;
-         }
-         else
-         {
-             Longtitudenumberofdecimal = Longtitude.toString().split('.')[1].length;
-
-         }
-
-
-        if (Longtitudenumberofdecimal != 4) {
-            error = error + m000144;
-            //"<p>Please enter a Longitude as a decimal, with the full four digit decimal point (e.g. -74.7992)</p>";
-            checkResult = false;
-        }
-    }
-
-    if (checkResult == false) {
-        $('#ErrorMessageDiv').css('display', 'block');
-        $('#ErrorMessageDiv').html("<h3>Error</h3>" + error);
-    }
-    return checkResult;*/
-	return true;
+ 	return true;
 }
