@@ -148,7 +148,7 @@ if (typeof (tdg.message) == "undefined") {
                 "To edit or deactivate a Site, then choose the <b>[V]</b> button to the far right of that row.<br>" +
                 "If required, choose the <b>[Previous]</b> button below to return to the Attest Organization screen.";
             var page_crw_site_FR = "Pour chaque site:<br>" +
-                "1. Cliquez sur le bouton <b>[+Créer]</b> ci‑dessous.<br>" +
+                "1. Cliquez sur le bouton <b>[Ajouter un site]</b> ci‑dessous.<br>" +
                 "2. Ensuite, cliquez sur le lien <u>Site ID</u> souligné de la nouvelle rangée afin de compléter et d’attester le site.<br>" +
                 "3. Cliquez sur le bouton <b>[Suivant]</b> ci‑dessous une fois tous les sites saisis.<br><br>" +
                 "Pour modifier ou désactiver un site, cliquez sur le bouton <b>[V]</b> à l’extrémité droite de la rangée.<br>" +
@@ -1128,7 +1128,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000173",
                         "message_en": "Step 2. Upload the completed custom Site Bulk Upload Excel workbook.",
-                        "message_fr": "Étape 2. Téléchargez le classeur Excel de téléversement/téléverser plutôt en bloc des sites personnalisé complété."
+                        "message_fr": "Étape 2. Téléchargez le classeur Excel de téléchargement en bloc des sites personnalisé complété."
                     },
                     {
                         "code": "m000174",
@@ -1138,7 +1138,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000175",
                         "message_en": "Start Upload",
-                        "message_fr": "Commencer le téléchargement"
+                        "message_fr": "Commencer le téléversement/téléverser "
                     },
                     {
                         "code": "m000176",
