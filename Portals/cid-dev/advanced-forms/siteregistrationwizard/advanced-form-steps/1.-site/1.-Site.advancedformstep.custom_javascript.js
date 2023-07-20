@@ -6,6 +6,7 @@ var _busy = false;
 $(document).ready(function () {
 	debugger;
 
+
 	page_setup();
 	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
 	 tdg.c.control_hide("adx_modifiedbyusername");
@@ -63,9 +64,24 @@ $(document).ready(function () {
 		if ($("#cid_createdbyregistrant").val() != parent_Id && (Date.now() - created_On) / 1000 / 60 / 60 / 24 < 1) {
 			$("#cid_same_as_company").attr("disabled", false);
 			$("#ovs_address_type").attr("disabled", false);
+			$("#EntityFormView :input").prop("disabled",  false);
 		}
 		else {
+			//$("#ovs_address1_province").prop("disabled", true);
+			$("#EntityFormView :input").prop("disabled", true);
+			
+			var f = document.getElementById("WebResource_address_complete");
+			var c = f.contentWindow;
+			c.document.getElementById("address1_line1").disabled = true ;
+			
+			//form-control picklist 
+			 var provincevalue =  $("#ovs_address1_province :selected").text();
+    		$("#ovs_address1_province").after('<div class="readonly form-control picklist" tabindex="0">'+provincevalue +' </div>')
+            //hid disbled drop down
+    		$("#ovs_address1_province").css("display" , "none");
+		
 			addressReadOnly = true;
+
 		}
 	}
 
