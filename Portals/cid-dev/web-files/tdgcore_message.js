@@ -1271,6 +1271,12 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "There was a problem with your registration. You will be notified when the problem is resolved.",
                         "message_fr": "Un problème s'est produit avec votre inscription. Vous serez averti lorsque le problème sera résolu."
                     }
+                    ,
+                    {
+                        "code": "m000202",
+                        "message_en": "Please ensure the Site Address information entered below is correct. A site's address can only be updated in the first 24 hours after the site is created.",
+                        "message_fr": "Veuillez vous assurer que les informations  relatives à l'adresse du site saisies ci-dessous sont correctes. L'adresse d'un site ne peut être mise à jour que dans les premières 24 heures suivant la création du site."
+                    }
                 ];
 
             return list;
