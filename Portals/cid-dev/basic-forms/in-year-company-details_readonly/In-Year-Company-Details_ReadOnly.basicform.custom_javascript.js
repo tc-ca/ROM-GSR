@@ -6,7 +6,9 @@ $(document).ready(function () {
     debugger;
     page_setup();
     var companyName = "{{user.parentcustomerid.name}}";
-
+    let url = new URL(window.location.href);
+    console.log("url editorg 2: " + url);
+  
     var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
 	console.log(cid_usercontacttype);
 	//if not primary contact
@@ -36,6 +38,22 @@ $(document).ready(function () {
     $("#cancel_company_update").click(function () {
         window.location.href = "~/my-company";
     });
+
+    let currentURL = window.location.href;
+    console.log ("current url " + currentURL);
+  
+   if(currentURL.indexOf('EditOrg') && cid_usercontacttype == 100000000)
+         {
+                    console.log('editorg found');
+                    let editOrgValue = url.searchParams.get('EditOrg');
+                    console.log ("edit org value " + editOrgValue );
+                     var urlPath = window.location.href;
+                     urlPath = urlPath.split('?')[0];
+                    // window.history.replaceState({}, document.title, urlPath);
+                   // $("#update_company").click();
+            }
+
+
 });
 
 function page_setup() {

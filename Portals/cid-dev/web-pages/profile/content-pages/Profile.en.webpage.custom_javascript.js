@@ -8,7 +8,7 @@ $(document).ready(function () {
     page_setup();
     //remove heading role and aria-level not allowed role for legend by accessbility check
     $( 'legend[role="heading"]' ).removeAttr('aria-level').removeAttr("role");
-
+           
     //redirect to my company after save success
     var msg = tdg.error_message.message("m000147");
     if (msg != null) {
@@ -23,12 +23,22 @@ $(document).ready(function () {
 
     //disable submit button by default  
     $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", true);
-    if ($("#telephone1").val() != "" && $("#firstname").val() != "" && $("#lastname").val() != "") {
+    if ($("#telephone1").val() != "" && $("#firstname").val() != "" && $("#lastname").val() != "" && $("#cid_languageofcorrespondence").val() != "") {
         $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", false);
     }
     //phone number change event
     $('#telephone1').change(function () {
         if ($("#telephone1").val() != "") {
+            $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", false);
+        }
+        else {
+            $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", true);
+        }
+    });
+
+    //language of correspondence change event
+    $('#cid_languageofcorrespondence').change(function () {
+        if ($("#cid_languageofcorrespondence").val() != "") {
             $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", false);
         }
         else {

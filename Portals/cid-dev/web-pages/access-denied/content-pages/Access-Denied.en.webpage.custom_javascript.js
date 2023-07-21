@@ -32,6 +32,7 @@ if (document.getElementsByTagName('h1')[0]) {
     var source = document.getElementsByTagName('h1')[0].innerHTML;
     var terms_and = tdg.error_message.message("m000199");
     var terms_and_conditions = tdg.error_message.message("m000189");
+          
     if (source.search(terms_and) != -1) {
         $(document).find("title").text(terms_and_conditions);
         $("#cdts-signin-btn").hide(); // Hide sing in button
@@ -41,6 +42,7 @@ if (document.getElementsByTagName('h1')[0]) {
             tdg.c.sign_out();
             //window.location.href = '~/en/Account/Login/LogOff';
         });
+       
     }
     //Condition for initial registration page
     if (source.search("Registration") != -1) {
@@ -92,4 +94,5 @@ if ($(".btn.btn-primary:contains('Register')")) {
         window.location.href = '~/en/SignIn?returnUrl=%2Fen%2F';
     });
     $("#cdts-signin-btn").hide(); // Hide sing in button
+    
 }

@@ -23,12 +23,22 @@ $(document).ready(function () {
 
     //disable submit button by default  
     $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", true);
-    if ($("#telephone1").val() != "" && $("#firstname").val() != "" && $("#lastname").val() != "") {
+    if ($("#telephone1").val() != "" && $("#firstname").val() != "" && $("#lastname").val() != ""  && $("#cid_languageofcorrespondence").val() != "") {
         $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", false);
     }
     //phone number change event
     $('#telephone1').change(function () {
         if ($("#telephone1").val() != "") {
+            $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", false);
+        }
+        else {
+            $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", true);
+        }
+    });
+
+    //language of correspondence change event
+    $('#cid_languageofcorrespondence').change(function () {
+        if ($("#cid_languageofcorrespondence").val() != "") {
             $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", false);
         }
         else {
