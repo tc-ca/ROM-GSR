@@ -138,7 +138,12 @@ $(document).ready(function () {
 function page_setup() {
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
-
+                $('#cdts-signout-btn').tooltip({
+                 trigger: 'hover',
+                   placement: 'bottom',
+                   container: 'body',
+                   title: "You must close your browser to complete the logout process." 
+                    });
     const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
     for (var i = 0; i < files.length; i++) {
         var file = files[i];
@@ -147,5 +152,6 @@ function page_setup() {
         script.src = file;
 
         $("body").append(script);
+
     }
 }

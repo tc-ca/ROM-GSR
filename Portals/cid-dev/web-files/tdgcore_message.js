@@ -1262,8 +1262,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000200",
-                        "message_en": "A support request is created.",
-                        "message_fr": "A support request is created_FR."
+                        "message_en": "You must close your browser to complete the logout process.",
+                        "message_fr": "Vous devez fermer votre navigateur pour terminer le processus de déconnexion."
                     }
                     ,
                     {
