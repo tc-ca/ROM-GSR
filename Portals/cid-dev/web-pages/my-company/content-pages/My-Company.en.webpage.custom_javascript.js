@@ -122,7 +122,7 @@ $(document).ready(function () {
     else { $("#ovs_address1_province").prop('disabled', false); }
 
 
-    //change_duplicatefieldID();
+    change_duplicatefieldID();
 
     subgrid_language();
 
@@ -166,16 +166,45 @@ function change_duplicatefieldID()
   //add id to iframe 
   $("#WebResource_address_complete").attr("title", "Address Complete lookup");
 
+  
+    //company_details_section_3
+     $('table[data-name="company_details_section_3"] tbody').find('tr td div.control input').each(function (i) {
+        var fieldset = $(this);
+         var fieldid = fieldset[0].id;
+       
+        
+        $(this).attr("id", fieldset[0].id + "_1" );
+        
+      });
+       $('table[data-name="company_details_section_3"] tbody').find('tr td div.info label').each(function (i) {
+        var fieldset = $(this);
+        var id = fieldset[0].id;
+        
+       var forattribute = "";
+       //cid_companyanniversarydate_1_datepicker_description
+       if (id.indexOf("date")>0)
+       {   
+            forattribute = id.replace("_label" , "")  + "_1_datepicker_description"; 
+             }
+       else
+       {
+           forattribute = id.replace("_label" , "") + "_1";}
+        //_label
+        //datepicker_description
+        $(this).attr("for", forattribute );
+      });
+
+
+
     //data-name="ACCOUNT_INFORMATION"
       $('table[data-name="ACCOUNT_INFORMATION"] tbody').find('tr td div.control input').each(function (i) {
         var fieldset = $(this);
          var fieldid = fieldset[0].id;
-       
-        if (fieldid.indexOf("date") == -1 && fieldid != "cid_reasonfornobnnumber_other")
-        {
-        $(this).attr("id", fieldset[0].id + "_1" );
-        }
+       if ((fieldid.indexOf("date") ==  -1 && fieldid !="cid_reasonfornobnnumber_other") || fieldid =="cid_officiallyregistrationcompletationdate")
+        {$(this).attr("id", fieldset[0].id + "_1" );}
+        
       });
+
       $('table[data-name="ACCOUNT_INFORMATION"] tbody').find('tr td div.info label').each(function (i) {
         var fieldset = $(this);
         var id = fieldset[0].id;
@@ -184,7 +213,9 @@ function change_duplicatefieldID()
        //cid_companyanniversarydate_1_datepicker_description
        if (id.indexOf("date")>0)
        {   
-         //   forattribute = id.replace("_label" , "")  + "_1_datepicker_description"; 
+            forattribute = id.replace("_label" , "")  + "_1_datepicker_description"; 
+            $(this).attr("for", forattribute );
+             
              }
        else
        {
@@ -200,7 +231,7 @@ function change_duplicatefieldID()
        
         if (fieldid.indexOf("date") == -1)
         {
-      //  $(this).attr("id", fieldset[0].id + "_1" );
+           $(this).attr("id", fieldset[0].id + "_1" );
         }
       });
 
@@ -211,7 +242,7 @@ function change_duplicatefieldID()
        
         if (fieldid.indexOf("date") == -1 && fieldid != "cid_reasonfornobnnumber_other")
         {
-        $(this).attr("id", fieldset[0].id + "_2" );
+        //$(this).attr("id", fieldset[0].id + "_2" );
         }
       });
       
@@ -241,7 +272,7 @@ function change_duplicatefieldID()
            forattribute = id.replace("_label" , "") + "_2";  }
         //_label
         //datepicker_description
-        $(this).attr("for", forattribute );
+       // $(this).attr("for", forattribute );
        
       });
 
