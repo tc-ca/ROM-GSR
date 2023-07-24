@@ -9,15 +9,6 @@
         "api": {
           "name": "shared_commondataserviceforapps"
         }
-      },
-      "shared_commondataservice": {
-        "runtimeSource": "embedded",
-        "connection": {
-          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseLegacyServicePrinciple"
-        },
-        "api": {
-          "name": "shared_commondataservice"
-        }
       }
     },
     "definition": {
@@ -34,24 +25,23 @@
         }
       },
       "triggers": {
-        "When_a_row_is_modified": {
+        "When_a_row_is_added,_modified_or_deleted": {
           "metadata": {
-            "operationMetadataId": "c187651d-adf8-4ddf-847c-4630046ebc6b"
+            "operationMetadataId": "888a1d79-44f3-4357-9d0a-00a3355e47cb"
           },
           "type": "OpenApiConnectionWebhook",
           "inputs": {
             "host": {
-              "connectionName": "shared_commondataservice",
-              "operationId": "SubscribeOnUpdatedItems",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataservice"
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "dataset": "default.cds",
-              "table": "accounts",
-              "scope": "Organization",
-              "subscriptionRequest/AttributeFilters": [
-                "cid_cidcompanystatus"
-              ]
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "account",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "cid_cidcompanystatus",
+              "subscriptionRequest/runas": 3
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -207,7 +197,7 @@
                 },
                 "parameters": {
                   "entityName": "accounts",
-                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"account\">\n    <attribute name=\"accountid\" />\n    <attribute name=\"cid_cidsitestatus\" />\n    <order attribute=\"cid_cidsitestatus\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"customertypecode\" operator=\"eq\" value=\"948010001\" />\n      <condition attribute=\"parentaccountid\" operator=\"eq\" value=\"@{triggerOutputs()?['body/accountid']}\" />\n    </filter>\n  </entity>\n</fetch>"
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"account\">\n    <attribute name=\"accountid\" />\n    <attribute name=\"cid_cidsitestatus\" />\n    <order attribute=\"cid_cidsitestatus\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"customertypecode\" operator=\"eq\" value=\"948010001\" />\n      <condition attribute=\"parentaccountid\" operator=\"eq\" value=\"\" />\n    </filter>\n  </entity>\n</fetch>"
                 },
                 "authentication": "@parameters('$authentication')"
               }
@@ -232,8 +222,8 @@
                       "item/cid_subject": "   ",
                       "item/cid_externallyvisible": false,
                       "item/cid_HistoryCode_cid_historylog@odata.bind": "cid_audithistorycodes(@{first(body('Get_Company_Deactivation_History_Code_record')?['value'])?['cid_audithistorycodeid']})",
-                      "item/cid_memotemplateinputparameters": "@{triggerOutputs()?['body/cid_reasonforcompanydeactivation']}|@{triggerOutputs()?['body/cid_companydeactivationeffectivedate']}|@{triggerOutputs()?['body/cid_memoforcompanydeactivation']}",
-                      "item/cid_Company_cid_historylog@odata.bind": "accounts(@{triggerOutputs()?['body/accountid']})",
+                      "item/cid_memotemplateinputparameters": "||",
+                      "item/cid_Company_cid_historylog@odata.bind": "accounts()",
                       "item/cid_processingstatus": 100000000
                     },
                     "authentication": "@parameters('$authentication')"

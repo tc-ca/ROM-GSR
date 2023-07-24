@@ -4,13 +4,13 @@
       "shared_commondataserviceforapps": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
         },
         "api": {
           "name": "shared_commondataserviceforapps"
         }
       },
-      "shared_office365": {
+      "shared_office365_1": {
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "cid_sharedoffice365_ee685"
@@ -31,12 +31,20 @@
         "$authentication": {
           "defaultValue": {},
           "type": "SecureObject"
+        },
+        "CID_HistoryCode_Initial_Registry_Complete  (cid_HistoryCode_Initial_Registry_Complete)": {
+          "defaultValue": "f2e4e457-0c12-ee11-8f6e-0022483d0343",
+          "type": "String",
+          "metadata": {
+            "schemaName": "cid_HistoryCode_Initial_Registry_Complete",
+            "description": "History Code for Initial Registry Completed"
+          }
         }
       },
       "triggers": {
-        "When_the_\"Registration_As_Of\"_is_modified_in_the_company_record": {
+        "When_a_row_is_added,_modified_or_deleted": {
           "metadata": {
-            "operationMetadataId": "d8b28241-477d-46fc-be28-13a0aaec14db"
+            "operationMetadataId": "09058601-ca09-46f6-af77-0daddf81a298"
           },
           "type": "OpenApiConnectionWebhook",
           "inputs": {
@@ -46,21 +54,243 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "subscriptionRequest/message": 3,
-              "subscriptionRequest/entityname": "account",
+              "subscriptionRequest/message": 1,
+              "subscriptionRequest/entityname": "cid_historylog",
               "subscriptionRequest/scope": 4,
-              "subscriptionRequest/filteringattributes": "cid_registrationasof",
-              "subscriptionRequest/runas": 3
+              "subscriptionRequest/filterexpression": "_cid_historycode_value eq @{parameters('CID_HistoryCode_Initial_Registry_Complete  (cid_HistoryCode_Initial_Registry_Complete)')} and\n _cid_company_value ne null"
             },
             "authentication": "@parameters('$authentication')"
           }
         }
       },
       "actions": {
-        "Condition:_Check_if_\"Registration_As_Of\"_field_in_not_empty": {
+        "Condition_2": {
           "actions": {
-            "Update_the_company_registration,_anniversary,_and_reminder_dates": {
+            "Get_a_row_by_ID:_Organization_by_History_Log": {
               "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "4889eb20-9b3f-4b0c-a4ab-5476bf275d9d"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "recordId": "@outputs('Get_a_row_by_ID:_Get_account_by_History_Log_OrganizationID')?['body/accountid']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "get-environment-settings": {
+              "runAfter": {
+                "Get_a_row_by_ID:_Organization_by_History_Log": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7ed63b1d-9cf8-403e-9d9c-56cdd03f198e"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "qm_environmentsettingses",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"qm_environmentsettings\">\n<attribute name=\"qm_environmentsettingsid\"/>\n<attribute name=\"qm_name\"/>\n<attribute name=\"qm_value\"/>\n<order attribute=\"qm_name\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"qm_name\" operator=\"eq\" value=\"CID_Environment\"/>\n</filter>\n</entity>\n</fetch>",
+                  "$top": 1
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Scope_-_email_Template_Standard_Text": {
+              "actions": {
+                "StandardSalutation": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "ffa8d1a6-89ec-434c-82e6-78e0fa2bd649"
+                  },
+                  "type": "Compose",
+                  "inputs": "<em>*** The following is an automated email sent by the TDG Online - CID system. Please do not reply ***</em>"
+                },
+                "FrenchStandardSalutation": {
+                  "runAfter": {
+                    "StandardSalutation": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "ffa8d1a6-89ec-434c-82e6-78e0fa2bd649"
+                  },
+                  "type": "Compose",
+                  "inputs": "<em>*** Le message suivant est un courriel automatisé envoyé par le TMD en ligne – Système de la BDIC. Veuillez ne pas répondre ***</em>"
+                },
+                "English-EmailFooter": {
+                  "runAfter": {
+                    "FrenchStandardSalutation": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "1535933c-0d10-4db3-9d01-208feac8f786"
+                  },
+                  "type": "Compose",
+                  "inputs": "<div style=\"font-size:x-small;\"><br>Note:<br>\n   - To receive subsequent emails in French, you can update your Language of Preferred Correspondence choice via the [Account Settings] button in the TDG Online - CID data portal. <br><br> \n   - Please do not reply to this email. If necessary, use the Contact Us button, or link, in the CID data portal. </div>"
+                },
+                "French-EmailFooter": {
+                  "runAfter": {
+                    "English-EmailFooter": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "5ec93fa4-a5e7-451e-9327-290b6c88346b"
+                  },
+                  "type": "Compose",
+                  "inputs": "<div style=\"font-size:x-small;\">Remarque:<br>\n   - Pour recevoir les courriels suivants en français, vous pouvez mettre à jour votre choix de langue de correspondance préférée à l’aide du bouton [Paramètres du compte] du portail de données TMD en ligne – BDIC. <br><br> \n   - Veuillez ne pas répondre à ce courriel. Au besoin, utilisez le bouton ou le lien « Communiquer avec nous » du portail de données de la BDIC.  </div>"
+                }
+              },
+              "runAfter": {
+                "get-environment-settings": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "4a4d30e6-367a-4728-93d1-e8fc48567195"
+              },
+              "type": "Scope"
+            },
+            "Condition:_Check_If_Environment_Settings_has_Environment_Value": {
+              "actions": {
+                "Set_variable": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "6d8e3def-f04a-41dd-a786-97db3d0faa8e"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "CurrentEnvironment",
+                    "value": "@{first(body('get-environment-settings')?['value'])?['qm_value']}"
+                  }
+                }
+              },
+              "runAfter": {
+                "Scope_-_email_Template_Standard_Text": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "and": [
+                  {
+                    "not": {
+                      "equals": [
+                        "@outputs('get-environment-settings')?['body/value']",
+                        "@null"
+                      ]
+                    }
+                  },
+                  {
+                    "greater": [
+                      "@length(outputs('get-environment-settings')?['body/value'])",
+                      0
+                    ]
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e0718f07-b9b3-4371-9358-9176c09ca2db"
+              },
+              "type": "If"
+            },
+            "Check_environment": {
+              "actions": {
+                "Set_variable_TestingText": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "224fc033-5e58-423f-b235-e84df25189ec"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "TestingText",
+                    "value": "Test email: This email is a test email, not an actual email representing what is indicated below. <br><br>                                                                                 "
+                  }
+                },
+                "Set_variable_TestSubjectText": {
+                  "runAfter": {
+                    "Set_variable_TestingText": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "7a6742f2-3215-413a-9225-11fd2574acab"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "TestSubjectText",
+                    "value": "Test Email: "
+                  }
+                },
+                "Set_variable_FrenchTestSubjectText": {
+                  "runAfter": {
+                    "Set_variable_TestSubjectText": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "a71a8d8c-41f7-4d8b-9136-19ddffd73280"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "FrenchTestSubjectText",
+                    "value": "Tester le courriel: "
+                  }
+                },
+                "Set_variable_FrenchTestingText": {
+                  "runAfter": {
+                    "Set_variable_FrenchTestSubjectText": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "e2edab0d-d0a2-4152-8fae-2b793ec012aa"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "FrenchTestingText",
+                    "value": "Tester le courriel: Ce courriel est un courriel de test, et non un courriel réel représentant ce qui est indiqué ci-dessous. <br><br>                                                                      "
+                  }
+                }
+              },
+              "runAfter": {
+                "Condition:_Check_If_Environment_Settings_has_Environment_Value": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "not": {
+                  "equals": [
+                    "@variables('CurrentEnvironment')",
+                    "PROD"
+                  ]
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "9be99f10-fa00-40ae-8580-da6ba08c2e07"
+              },
+              "type": "If"
+            },
+            "Update_the_company_registration,_anniversary,_and_reminder_dates": {
+              "runAfter": {
+                "Check_environment": [
+                  "Succeeded"
+                ]
+              },
               "metadata": {
                 "operationMetadataId": "06565992-756e-4694-8171-6b2d86579855"
               },
@@ -73,10 +303,10 @@
                 },
                 "parameters": {
                   "entityName": "accounts",
-                  "recordId": "@triggerOutputs()?['body/accountid']",
+                  "recordId": "@outputs('Get_a_row_by_ID:_Organization_by_History_Log')?['body/accountid']",
                   "item/cid_companyanniversarydate": "@body('Convert_\"Anniversary_Date\"_variable_time_zone_from_UTC_to_ET')",
                   "item/cid_nextannualcomplianceupdate": "@variables('Anniversary Date')",
-                  "item/cid_officiallyregistrationcompletationdate": "@triggerOutputs()?['body/cid_registrationasof']"
+                  "item/cid_officiallyregistrationcompletationdate": "@outputs('Get_a_row_by_ID:_Organization_by_History_Log')?['body/cid_registrationasof']"
                 },
                 "authentication": "@parameters('$authentication')"
               }
@@ -178,6 +408,29 @@
               },
               "type": "Foreach"
             },
+            "Get_all_company_contacts": {
+              "runAfter": {
+                "Condition_3": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "22e5af7d-64ea-42f0-b3c8-6cb1f0f1ef84"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "contacts",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <attribute name=\"emailaddress1\" />\n    <attribute name=\"cid_contacttype\" />\n    <attribute name=\"cid_portalrecordcreationdetails\" />\n    <attribute name=\"cid_portalrecordmodificationdetails\" />\n    <attribute name=\"cid_languageofcorrespondence\" />\n    <attribute name=\"contactid\" />\n    <order attribute=\"cid_contacttype\" descending=\"false\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\" />\n      <condition attribute=\"cid_contacttype\" operator=\"not-null\" />\n      <condition attribute=\"emailaddress1\" operator=\"not-null\" />\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" value=\"@{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/accountid']}\" />\n    </filter>\n  </entity>\n</fetch>"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
             "Send_registration_completion_email_to_each_contact": {
               "foreach": "@outputs('Get_all_company_contacts')?['body/value']",
               "actions": {
@@ -191,14 +444,14 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "connectionName": "shared_office365",
+                          "connectionName": "shared_office365_1",
                           "operationId": "SendEmailV2",
                           "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                         },
                         "parameters": {
                           "emailMessage/To": "@items('Send_registration_completion_email_to_each_contact')?['emailaddress1']",
                           "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC :  La procédure d’inscription de l’organisation @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalnamefr']} dans les paramètres de la plateforme de données de la BDIC de Transports Canada est réussie.",
-                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLa procédure d’inscription de l’organisation @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalnamefr']} dans la plateforme de données de la BDIC en ligne de Transports Canada est réussie.<br>\n<br>\nConformément à la réglementation, vous êtes tenu de mettre à jour les renseignements relatifs à votre organisation dans la plateforme de données de la BDIC au cours de l’année, si un changement important est intervenu concernant les données gérées ici pour votre organisation et les sites de votre organisation.<br>\n<br>\nEn outre, les données de votre organisation doivent être entièrement mises à jour chaque année, la première mise à jour étant requise un an après la date d’entrée en vigueur de la directive.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n<br>\n</p>",
+                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLa procédure d’inscription de l’organisation @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalnamefr']} dans la plateforme de données de la BDIC en ligne de Transports Canada est réussie.<br>\n<br>\nConformément à la réglementation, vous êtes tenu de mettre à jour les renseignements relatifs à votre organisation dans la plateforme de données de la BDIC au cours de l’année, si un changement important est intervenu concernant les données gérées ici pour votre organisation et les sites de votre organisation.<br>\n<br>\n<strong>Numéro de confirmation</strong>: @{triggerOutputs()?['body/cid_record_id']}<br>\n<br>\nCette inscription comprend l'ajout des sites suivants:<br>\n<br>\n@{body('Create_HTML_table')}<br>\nEn outre, les données de votre organisation doivent être entièrement mises à jour chaque année, la première mise à jour étant requise un an après la date d’entrée en vigueur de la directive.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n<br>\n</p>",
                           "emailMessage/Importance": "Normal"
                         },
                         "authentication": "@parameters('$authentication')"
@@ -216,14 +469,14 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "connectionName": "shared_office365",
+                            "connectionName": "shared_office365_1",
                             "operationId": "SendEmailV2",
                             "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                           },
                           "parameters": {
                             "emailMessage/To": "@items('Send_registration_completion_email_to_each_contact')?['emailaddress1']",
-                            "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID:  Successful completion of the registration process for the @{triggerOutputs()?['body/ovs_legalname']} organization in the Transport Canada CID Data Platform",
-                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe registration process of the @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalname']} organization in the Transport Canada Online CID Data Platform has been successfully completed.<br>\n<br>\nPer the regulations, you are required to update your organization’s information in the CID Data Platform during the year, if a material change has occurred related to the data being managed here for your organization and your organization's sites.<br>\n<br>\nFurther, your organization’s data is required to be fully updated on an annual basis, with the initial update being required one year from today.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                            "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID:  Successful completion of the registration process for the  organization in the Transport Canada CID Data Platform",
+                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe registration for @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalname']} in the Transport Canada CID Application has been successfully completed.<br>\n<br>\nPer the regulations, you are required to update your organization’s information in the CID Application during the year if a material change has occurred.<br>\n<br>\n<strong>Confirmation Number:</strong> @{triggerOutputs()?['body/cid_record_id']}<br>\n<br>\nThis registration includes the addition of the following sites:<br>\n<br>\n@{body('Create_HTML_table')}<br>\nFurther, your organization’s data is required to be fully updated on an annual basis.<br>\n<br>\nRegards,<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n<br>\n</p>",
                             "emailMessage/Importance": "Normal"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -253,14 +506,14 @@
               },
               "type": "Foreach"
             },
-            "Get_all_company_contacts": {
+            "List_rows:_Get_All_Sites": {
               "runAfter": {
                 "Apply_to_each": [
                   "Succeeded"
                 ]
               },
               "metadata": {
-                "operationMetadataId": "22e5af7d-64ea-42f0-b3c8-6cb1f0f1ef84"
+                "operationMetadataId": "a3f730ef-58bd-40ee-ac4e-b59ce72408c1"
               },
               "type": "OpenApiConnection",
               "inputs": {
@@ -270,33 +523,114 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
-                  "entityName": "contacts",
-                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <attribute name=\"emailaddress1\" />\n    <attribute name=\"cid_contacttype\" />\n    <attribute name=\"cid_portalrecordcreationdetails\" />\n    <attribute name=\"cid_portalrecordmodificationdetails\" />\n    <attribute name=\"cid_languageofcorrespondence\" />\n    <attribute name=\"contactid\" />\n    <order attribute=\"cid_contacttype\" descending=\"false\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\" />\n      <condition attribute=\"cid_contacttype\" operator=\"not-null\" />\n      <condition attribute=\"emailaddress1\" operator=\"not-null\" />\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" value=\"@{triggerOutputs()?['body/accountid']}\" />\n    </filter>\n  </entity>\n</fetch>"
+                  "entityName": "accounts",
+                  "$select": "ovs_romid, ovs_legalname",
+                  "$filter": "_parentaccountid_value eq @{outputs('Get_a_row_by_ID:_Organization_by_History_Log')?['body/accountid']}"
                 },
                 "authentication": "@parameters('$authentication')"
               }
+            },
+            "Condition_3": {
+              "actions": {
+                "Create_HTML_table": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "4fa5138f-e6e0-4377-b758-84e6aaf267c1"
+                  },
+                  "type": "Table",
+                  "inputs": {
+                    "from": "@outputs('List_rows:_Get_All_Sites')?['body/value']",
+                    "format": "HTML",
+                    "columns": [
+                      {
+                        "header": "",
+                        "value": "@item()?['ovs_romid']"
+                      },
+                      {
+                        "header": "",
+                        "value": "-"
+                      },
+                      {
+                        "header": "",
+                        "value": "@item()?['ovs_legalname']"
+                      }
+                    ]
+                  }
+                }
+              },
+              "runAfter": {
+                "List_rows:_Get_All_Sites": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "and": [
+                  {
+                    "not": {
+                      "equals": [
+                        "@outputs('List_rows:_Get_All_Sites')?['body/value']",
+                        "@null"
+                      ]
+                    }
+                  },
+                  {
+                    "greater": [
+                      "@length(outputs('List_rows:_Get_All_Sites')?['body/value'])",
+                      0
+                    ]
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7b8f4409-33e5-42d8-92e2-d901f20a54c2"
+              },
+              "type": "If"
             }
           },
           "runAfter": {
-            "Check_environment": [
+            "Initialize_variable_FrenchTestSubjectText": [
               "Succeeded"
             ]
           },
           "expression": {
             "not": {
               "equals": [
-                "@triggerOutputs()?['body/cid_registrationasof']",
+                "@outputs('Get_a_row_by_ID:_Get_account_by_History_Log_OrganizationID')?['body/accountid']",
                 "@null"
               ]
             }
           },
           "metadata": {
-            "operationMetadataId": "754c9247-6750-4eda-8985-3450997cb556"
+            "operationMetadataId": "94427795-3072-446a-87fd-5d3f20ca9daa"
           },
           "type": "If"
         },
+        "Initialize_variable_Current_Environment": {
+          "runAfter": {
+            "Get_a_row_by_ID:_Get_account_by_History_Log_OrganizationID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "cb26c260-64a8-44d6-b534-8884262303fe"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CurrentEnvironment",
+                "type": "string",
+                "value": "DEV"
+              }
+            ]
+          }
+        },
         "Initialize_\"Anniversary_Date\"_variable": {
-          "runAfter": {},
+          "runAfter": {
+            "Initialize_variable_Current_Environment": [
+              "Succeeded"
+            ]
+          },
           "metadata": {
             "operationMetadataId": "93bb21ee-1c6c-44bc-b6a2-c52fb0500143"
           },
@@ -329,104 +663,9 @@
             "destinationTimeZone": "Eastern Standard Time"
           }
         },
-        "get-environment-settings": {
-          "runAfter": {
-            "Convert_\"Anniversary_Date\"_variable_time_zone_from_UTC_to_ET": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "7ed63b1d-9cf8-403e-9d9c-56cdd03f198e"
-          },
-          "type": "OpenApiConnection",
-          "inputs": {
-            "host": {
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "ListRecords",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-            },
-            "parameters": {
-              "entityName": "qm_environmentsettingses",
-              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"qm_environmentsettings\">\n<attribute name=\"qm_environmentsettingsid\"/>\n<attribute name=\"qm_name\"/>\n<attribute name=\"qm_value\"/>\n<order attribute=\"qm_name\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"qm_name\" operator=\"like\" value=\"%CID[_]%\"/>\n</filter>\n</entity>\n</fetch>"
-            },
-            "authentication": "@parameters('$authentication')"
-          }
-        },
-        "Scope_-_email_Template_Standard_Text": {
-          "actions": {
-            "StandardSalutation": {
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "ffa8d1a6-89ec-434c-82e6-78e0fa2bd649"
-              },
-              "type": "Compose",
-              "inputs": "<em>*** The following is an automated email sent by the TDG Online - CID system. Please do not reply ***</em>"
-            },
-            "FrenchStandardSalutation": {
-              "runAfter": {
-                "StandardSalutation": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "ffa8d1a6-89ec-434c-82e6-78e0fa2bd649"
-              },
-              "type": "Compose",
-              "inputs": "<em>*** Le message suivant est un courriel automatisé envoyé par le TMD en ligne – Système de la BDIC. Veuillez ne pas répondre ***</em>"
-            },
-            "English-EmailFooter": {
-              "runAfter": {
-                "FrenchStandardSalutation": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "1535933c-0d10-4db3-9d01-208feac8f786"
-              },
-              "type": "Compose",
-              "inputs": "<div style=\"font-size:x-small;\"><br>Note:<br>\n   - To receive subsequent emails in French, you can update your Language of Preferred Correspondence choice via the [Account Settings] button in the TDG Online - CID data portal. <br><br> \n   - Please do not reply to this email. If necessary, use the Contact Us button, or link, in the CID data portal. </div>"
-            },
-            "French-EmailFooter": {
-              "runAfter": {
-                "English-EmailFooter": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "5ec93fa4-a5e7-451e-9327-290b6c88346b"
-              },
-              "type": "Compose",
-              "inputs": "<div style=\"font-size:x-small;\">Remarque:<br>\n   - Pour recevoir les courriels suivants en français, vous pouvez mettre à jour votre choix de langue de correspondance préférée à l’aide du bouton [Paramètres du compte] du portail de données TMD en ligne – BDIC. <br><br> \n   - Veuillez ne pas répondre à ce courriel. Au besoin, utilisez le bouton ou le lien « Communiquer avec nous » du portail de données de la BDIC.  </div>"
-            },
-            "Filter_environment-CID_Environment": {
-              "runAfter": {
-                "French-EmailFooter": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
-              },
-              "type": "Query",
-              "inputs": {
-                "from": "@outputs('get-environment-settings')?['body/value']",
-                "where": "@equals(item()?['qm_name'], 'CID_Environment')"
-              }
-            }
-          },
-          "runAfter": {
-            "get-environment-settings": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "4a4d30e6-367a-4728-93d1-e8fc48567195"
-          },
-          "type": "Scope"
-        },
         "Initialize_variable_Testing_text_for_the_email": {
           "runAfter": {
-            "Scope_-_email_Template_Standard_Text": [
+            "Convert_\"Anniversary_Date\"_variable_time_zone_from_UTC_to_ET": [
               "Succeeded"
             ]
           },
@@ -500,82 +739,24 @@
             ]
           }
         },
-        "Check_environment": {
-          "actions": {
-            "Set_variable_TestingText": {
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "224fc033-5e58-423f-b235-e84df25189ec"
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "TestingText",
-                "value": "Test email: This email is a test email, not an actual email representing what is indicated below. <br><br>                                                                                 "
-              }
-            },
-            "Set_variable_TestSubjectText": {
-              "runAfter": {
-                "Set_variable_TestingText": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "7a6742f2-3215-413a-9225-11fd2574acab"
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "TestSubjectText",
-                "value": "Test Email: "
-              }
-            },
-            "Set_variable_FrenchTestSubjectText": {
-              "runAfter": {
-                "Set_variable_TestSubjectText": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "a71a8d8c-41f7-4d8b-9136-19ddffd73280"
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "FrenchTestSubjectText",
-                "value": "Tester le courriel: "
-              }
-            },
-            "Set_variable_FrenchTestingText": {
-              "runAfter": {
-                "Set_variable_FrenchTestSubjectText": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "e2edab0d-d0a2-4152-8fae-2b793ec012aa"
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "FrenchTestingText",
-                "value": "Tester le courriel: Ce courriel est un courriel de test, et non un courriel réel représentant ce qui est indiqué ci-dessous. <br><br>                                                                      "
-              }
-            }
-          },
-          "runAfter": {
-            "Initialize_variable_FrenchTestSubjectText": [
-              "Succeeded"
-            ]
-          },
-          "expression": {
-            "not": {
-              "equals": [
-                "@body('Filter_environment-CID_Environment')[0]['qm_value']",
-                "PROD"
-              ]
-            }
-          },
+        "Get_a_row_by_ID:_Get_account_by_History_Log_OrganizationID": {
+          "runAfter": {},
           "metadata": {
-            "operationMetadataId": "9be99f10-fa00-40ae-8580-da6ba08c2e07"
+            "operationMetadataId": "4c841237-91f2-402b-b3bd-f51dee48f057"
           },
-          "type": "If"
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "accounts",
+              "recordId": "@triggerOutputs()?['body/_cid_company_value']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
         }
       }
     },
