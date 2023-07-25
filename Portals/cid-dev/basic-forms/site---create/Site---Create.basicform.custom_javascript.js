@@ -52,6 +52,7 @@ $(document).ready(function () {
 	$("#ovs_legalname").val(account.ovs_legalname);
 	$("#name").val(account.name);
 	// hide controls
+	tdg.c.control_hide("ovs_duplicatesiteflag");
 	tdg.c.control_hide("name");
 	tdg.c.control_hide("cid_siteclaim");
 	$("#ovs_legalname").attr("readonly", "true");

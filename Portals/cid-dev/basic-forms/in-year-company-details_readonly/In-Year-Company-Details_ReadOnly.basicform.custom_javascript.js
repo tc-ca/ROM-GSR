@@ -5,9 +5,16 @@
 $(document).ready(function () {
     debugger;
     page_setup();
+    if (sessionStorage.getItem("updateOrgCheckList") == "Yes")
+    {
+        sessionStorage.setItem("updateOrgCheckList", "No");
+        window.location.href = "~/my-company/annual-compliance-update";
+    }
+    
+    
     var companyName = "{{user.parentcustomerid.name}}";
     let url = new URL(window.location.href);
-    console.log("url editorg 2: " + url);
+ 
   
     var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
 	console.log(cid_usercontacttype);
@@ -36,21 +43,30 @@ $(document).ready(function () {
          $("#cid_iscompanyattested_label").removeAttr("role" , "") ;
     });
     $("#cancel_company_update").click(function () {
-        window.location.href = "~/my-company";
+     
+        if (sessionStorage.getItem("EditOrg") != "none")
+        {
+            sessionStorage.setItem("EditOrg" , "none");
+            window.location.href = "~/my-company/annual-compliance-update";
+        }
+        else
+        {
+            window.location.href = "~/my-company";
+        }
     });
 
     let currentURL = window.location.href;
-    console.log ("current url " + currentURL);
-  
-   if(currentURL.indexOf('EditOrg') && cid_usercontacttype == 100000000)
+    
+   sessionStorage.setItem("EditOrg", "none");
+   if(currentURL.indexOf('EditOrg') > 0 && cid_usercontacttype == 100000000)
          {
-                    console.log('editorg found');
                     let editOrgValue = url.searchParams.get('EditOrg');
-                    console.log ("edit org value " + editOrgValue );
+                    sessionStorage.setItem("EditOrg", editOrgValue);
+                   
                      var urlPath = window.location.href;
                      urlPath = urlPath.split('?')[0];
-                    // window.history.replaceState({}, document.title, urlPath);
-                   // $("#update_company").click();
+                     window.history.replaceState({}, document.title, urlPath);
+                    $("#update_company").click();
             }
 
 

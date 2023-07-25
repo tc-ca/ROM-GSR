@@ -161,18 +161,20 @@ var CheckDuplicate = function (_flowURl, _parameters) {
                 var currentSiteOwnerId = result["CurrentSiteOwnerCompanyId"]; //string CurrentSiteOwnerCompanyId
 
                 if (duplicatefound) {
-                    var message = tdg.error_message.message("m000131");
-                    tdg.c.dialog_YN(message, (ans) => {
+                    var message = "There is already an active Organization at this address. Is your Organization sharing this Site with another Organization or is this the result of a sale, merger or acquisition? If you entered the wrong address, select cancel and re-enter the correct address.";
+                    //tdg.error_message.message("m000131");
+                    //tdg.c.dialog_YN
+                    DialogWith_DropDown(message, (ans) => {
                         var accName = "";
                         var accId = "";
                         var contact_id = '{{user.id}}';
                         if (ans) {
-                            var accountResult = tdg.webapi.SelectedColumnlist("accounts", "cid_crabusinessnumber,ovs_legalname", "accountid eq '" + _parameters.Parent_Id + "'");
+                          /*  var accountResult = tdg.webapi.SelectedColumnlist("accounts", "cid_crabusinessnumber,ovs_legalname", "accountid eq '" + _parameters.Parent_Id + "'");
                             if (accountResult.length > 0) {
                                 accName = accountResult[0]["ovs_legalname"];
                                 accId = accountResult[0]["cid_crabusinessnumber"];
                             }
-                            var data = {
+                           var data = {
                                 "ovs_RequestType@odata.bind": "/ovs_supportrequesttypes(4c715208-2ac7-ed11-b597-0022483d0343)", // Lookup - DuplicateActiveSiteBlock
                                 "ovs_Company@odata.bind": "/accounts(" + _parameters.Parent_Id + ")", // Lookup
                                 //"subject": "A user is tring to claim a Site which is owned by another organization | Legal Name: " + accName + "| Address Type: " + AddrType,
@@ -181,20 +183,23 @@ var CheckDuplicate = function (_flowURl, _parameters) {
                                 "ovs_requestdetails": "A new Site for the organization '" + accName + "' is being requested to be created, however Site ID '"
                                     + currentSiteId + "', of the organization '" + currentSiteOwner + "', already exists as an active Site at that location. The new Site will be blocked until the existing Site is inactivated by the original organization. \n\n This request needs to be monitored to ensure that the second organization follows through on the inactivation request, at which time this entry will automatically be marked as Complete. Otherwise the new Site will be blocked from being created, and in doing so that organization will be prevented from completing their Registration or Annual Compliance.\n" // Multiline Text
                                 //record["ovs_Site@odata.bind"] = "/accounts(22222222-2222-2222-2222-222222222222)"; // Lookup
-                            };
-                            tdg.webapi.create("ovs_supportrequests", data);
+                            };*/
+                           // tdg.webapi.create("ovs_supportrequests", data);
                             // Send email to the current owner
-                            var SendEmailFlowData = '{' +
+                          /*  var SendEmailFlowData = '{' +
                                 '"AccountId": "' + currentSiteOwnerId + '",' +
                                 '"EmailCode": "RD-1",' +
                                 '"SiteId": "' + currentSiteId + '",' +
                                 '"Portal_URL": "https://' + window.location.hostname + '"' +
-                                '}';
+                                '}';*/
 
-                            tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", SendEmailFlowData);
-                            var sucessmessage = tdg.error_message.message("m000140");
-                            tdg.c.dialog_OK(sucessmessage);
-                            return false;
+                          //  tdg.cid.flow.Call_Flow("CID_Send_Portal_Contact_Email_by_Email_Code", SendEmailFlowData);
+                          //  var sucessmessage = tdg.error_message.message("m000140");
+                          //  tdg.c.dialog_OK(sucessmessage);
+                           entityFormClientValidate = true;
+                           originalValidationFunction = true;
+                           $("#InsertButton").click();
+                            return true;
                         }
                         else {
                             return false;
@@ -282,4 +287,105 @@ function CheckLatLongDecimal() {
     return checkResult;
  
    
+}
+
+
+function DialogWith_DropDown (message, handler) {
+    message = message.replaceAll("\n", "<br>");
+    var header = tdg.error_message.message("CID_PORTAL");
+    var yes = tdg.error_message.message("Yes");
+    var no = tdg.error_message.message("No");
+
+    $(`<section class="modal overlay-def"  id="myModal" role="dialog"  
+     aria-modal="true"  aria-labelledby ="headerid" aria-describedby="DialogBodyID" tabindex="-1">
+     <div class="modal-dialog modal-content modal-dialog-centered" role="document">
+	            <header class="modal-header">
+	            <h2 id="headerid" class="modal-title">${header}</h2>
+	            </header>
+	            <div class="modal-body" id="DialogBodyID" >
+	            ${message}
+                <br>
+                <p> </p>
+                 <div>
+                        <label for="duplicateFlagOptions">Please select option:</label>
+                        <select name="duplicateFlagOptions" id="duplicateFlagOptions">
+                            <option value="1"></option>
+                            <option value="918640000">sale / merger / acquisition</option>
+                            <option value="918640001">Shared</option>
+
+                        </select>
+                </div>
+	            </div>
+               
+	            <div class="modal-footer">
+	            <button id="btnYes" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" disabled>${yes}</button>
+	            <button id="btnNo" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" data-dismiss="modal">${no}</button>
+                </div>
+                </div>
+                
+	            </section>
+	            `).appendTo('body');
+                
+  
+
+
+    $("#duplicateFlagOptions").change(function()
+    {
+        var Listselection = $("#duplicateFlagOptions :selected").val();
+        if (Listselection== 918640000 || Listselection == 918640001)
+        {
+           $("#btnYes").removeAttr("disabled"); 
+        }
+        else
+        {
+             $("#btnYes").attr("disabled","disabled"); 
+        }
+
+    });
+    $("#btnYes").click(function () {
+        var Listselection = $("#duplicateFlagOptions :selected").val();
+        $("#ovs_duplicatesiteflag").val(Listselection);
+        $('#myModal').modal('hide');
+        $("#myModal").remove();
+        handler(true);
+    });
+
+    $("#btnYes").keydown(function (event) {
+        var Listselection = $("#duplicateFlagOptions :selected").val();
+        $("#ovs_duplicatesiteflag").val(Listselection);
+    
+        var keyCode = event.keyCode || event.which;
+        //check if key pressis tab key
+        if (keyCode == "13") {
+            $("#btnYes").click();
+        }
+    }
+    );
+
+    //Pass false to callback function
+    $("#btnNo").click(function () {
+        //handler(lse);
+          
+      
+        $('#myModal').modal('hide');
+        $("#myModal").remove();
+        handler(false);
+    });
+    $("#btnNo").keydown(function (event) {
+          var Listselection = $("#duplicateFlagOptions :selected").text();
+        console.log("selection : ");
+        console.log(Listselection);
+        var keyCode = event.keyCode || event.which;
+        //check if key pressis tab key
+        if (keyCode == "9") {
+            $('#myModal').focus();
+        }
+        else if (keyCode == "13") {
+            $("#btnNo").click();
+        }
+
+    });
+
+  
+    $('#myModal').modal({ backdrop: 'static', keyboard: false, show: true, focus: true });
 }

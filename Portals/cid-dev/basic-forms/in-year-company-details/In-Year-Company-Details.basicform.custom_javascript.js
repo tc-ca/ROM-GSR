@@ -60,12 +60,15 @@ $(document).ready(function () {
 
     $('#cid_crabusinessnumber').attr("readonly", true);
     $('#ovs_legalname').attr("readonly", true);
+    $('#ovs_legalnamefr').attr("readonly", true);
+
     $('#cid_reasonfornobnnumber').attr("readonly", true);
     $('#cid_reasonfornobnnumber').css("pointer-events", "none");
     $('#cid_reasonfornobnnumber_other').attr("readonly", true);
 
     // autocomplete off
     $("#name").attr("autocomplete", "new-password");
+    $("#ovs_name_fr").attr("autocomplete", "new-password");
     $("#telephone1").attr("autocomplete", "new-password");
     $("#fax").attr("autocomplete", "new-password");
     $("#cid_reasonfornobnnumber_other").attr("autocomplete", "new-password");

@@ -5,14 +5,15 @@
 $(document).ready(function () {
 	debugger;
 	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
-	 tdg.c.control_hide("adx_modifiedbyusername");
-	$('#WebResource_address_complete').attr("title" , "Address Lookup");
-	 $("#EntityFormView").before('<div id="MessagePanel" class="alert alert-danger" role="alert" style="display: none;"></div>');
-	 if ($(".text-danger").length){ $("#MessagePanel").html($(".text-danger").html());
-		 $(".text-danger").parent().hide();
-		 tdg.c.message_panel();
-		  $("#MessagePanel").show();
-		}
+	tdg.c.control_hide("adx_modifiedbyusername");
+	$('#WebResource_address_complete').attr("title", "Address Lookup");
+	$("#EntityFormView").before('<div id="MessagePanel" class="alert alert-danger" role="alert" style="display: none;"></div>');
+	if ($(".text-danger").length) {
+		$("#MessagePanel").html($(".text-danger").html());
+		$(".text-danger").parent().hide();
+		tdg.c.message_panel();
+		$("#MessagePanel").show();
+	}
 	var msg = tdg.error_message.message("BTN_PREVIOUS");
 	$("#PreviousButton").hide();
 	tdg.c.button_create("btn_previous", "#PreviousButton", msg);
@@ -23,7 +24,7 @@ $(document).ready(function () {
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 	tdg.c.page_instructions("page_crw_company_insert");
-	tdg.c.control_hide("ovs_name_fr");
+	//tdg.c.control_hide("ovs_name_fr");
 	tdg.c.control_hide("ovs_invitation_only");
 	tdg.c.control_hide("cid_addressoverwritten");
 	//update manually entered field if address fields changed
@@ -54,6 +55,7 @@ $(document).ready(function () {
 		var cid_legalname = "{{user.cid_legalname}}";
 		var cid_operatingname = "{{user.cid_operatingname}}";
 		var ovs_name_fr = cid_operatingname;
+		var ovs_legalnamefr = cid_legalname;
 	}
 	else {
 		var cid_crabusinessnumber = $('#cid_crabusinessnumber').val();
@@ -67,6 +69,7 @@ $(document).ready(function () {
 	var cid_legalname = tdg.c.replace_special_char(cid_legalname);
 	var cid_operatingname = tdg.c.replace_special_char(cid_operatingname);
 	var ovs_name_fr = tdg.c.replace_special_char(ovs_name_fr);
+	var ovs_legalnamefr = tdg.c.replace_special_char(ovs_legalnamefr);
 
 	$('#cid_has_cra_bn').val(cid_has_cra_bn);
 	tdg.c.control_hide("cid_has_cra_bn");
@@ -89,6 +92,14 @@ $(document).ready(function () {
 			var name = $("#name").val();
 			$("#ovs_name_fr").val(name);
 		});
+
+		//ovs_legalname
+		$("#ovs_legalname").on('keyup', function () {
+			var ovs_legalname = $("#ovs_legalname").val();
+			$("#ovs_legalnamefr").val(ovs_legalname);
+		});
+
+
 		$("#cid_reasonfornobnnumber").change(function () {
 			tdg.cid.crw.start_cid_reasonfornobnnumber_onchange(true);
 		});
@@ -104,6 +115,8 @@ $(document).ready(function () {
 		$("#ovs_legalname").val(cid_legalname);
 		$("#name").val(cid_operatingname);
 		$("#ovs_name_fr").val(ovs_name_fr);
+		$("#ovs_legalnamefr").val(ovs_legalnamefr);
+
 		debugger;
 		var value = $("#address1_line1").val();
 		address1_line1_set(value);
@@ -146,14 +159,13 @@ $(document).ready(function () {
 		var message = tdg.error_message.message("m000145");
 		tdg.c.dialog_YN(message, (ans) => {
 			var contact_id = '{{user.id}}';
-			if (ans) 
-            {
+			if (ans) {
 				var DeleteContactFlowData = '{' +
-								'"ContactId": "' + contact_id + '",' +
-								'}';
+					'"ContactId": "' + contact_id + '",' +
+					'}';
 				console.log(DeleteContactFlowData);
 				tdg.cid.flow.Call_Flow("CID_Flow_RunCompanySitesDeleting_Delete_Contact", DeleteContactFlowData);
-                tdg.c.sign_out();
+				tdg.c.sign_out();
 				return false;
 			}
 			else {
@@ -199,6 +211,8 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 		//var message = "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen.";
 		$("#name").attr("readonly", true);
 		$("#ovs_name_fr").attr("readonly", true);
+		$("#ovs_legalnamefr").attr("readonly", true);
+
 		$("#address1_line2").attr("readonly", true);
 		$("#address1_line3").attr("readonly", true);
 		$("#address1_city").attr("readonly", true);
@@ -216,7 +230,7 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 		$('#cid_reasonfornobnnumber_other').attr("readonly", true);
 		//Disable address lookup web resource
 		$('#WebResource_address_complete').on('load', function () {
-		tdg.cid.WebResource_address_complete_readonly(true);
+			tdg.cid.WebResource_address_complete_readonly(true);
 		});
 	}
 }

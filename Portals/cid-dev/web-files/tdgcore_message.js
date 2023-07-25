@@ -135,7 +135,7 @@ if (typeof (tdg.message) == "undefined") {
 
             var page_crw_naics_EN = "Choose the <b>[Add NAICS Code]</b> button below to create NAICS Codes for the Organization, then choose the <b>[Next]</b> button below to continue.</br></br>" +
                 "To deactivate a NAICS, then choose the <b>[V]</b> button to the far right of that row. If required, choose the <b>[Previous]</b> button below to return to the Contact screen.";
-            var page_crw_naics_FR = "Cliquez sur le bouton <b>[Ajouter uncode SCIAN]</b> ci-dessous pour créer les codes SCIAN pour la compagnie, ensuite cliquez sur le bouton <b>[Suivant]</b> ci‑dessous pour poursuivre.<br><br>" +
+            var page_crw_naics_FR = "Cliquez sur le bouton <b>[Ajouter un code SCIAN]</b> ci-dessous pour créer les codes SCIAN pour la compagnie, ensuite cliquez sur le bouton <b>[Suivant]</b> ci‑dessous pour poursuivre.<br><br>" +
                 "Pour désactiver un code SCIAN, cliquez sur le bouton <b>[V]</b> à l’extrémité droite de cette rangée. Au besoin, cliquez sur le bouton <b>[Précédent]</b> pour revenir à l’écran Personnes-ressources.";
 
             var page_crw_attest_EN = "If the Organization details are accurate and complete, then choose the <b>[Submit]</b> button below.</br>Otherwise, use the <b>[Previous]</b> button below to first make any adjustments.";

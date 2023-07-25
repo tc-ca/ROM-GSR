@@ -4,7 +4,24 @@
 
 $(document).ready(function () {
     debugger;
-    
+ 
+      
+    document.getElementById("UpdateButton").addEventListener('click', (event) => {
+        
+        if (sessionStorage.getItem("EditOrg") != "none")
+        {
+            taskid = sessionStorage.getItem("EditOrg");
+            sessionStorage.setItem("updateOrgCheckList", "Yes");
+            sessionStorage.setItem("EditOrg", "none");
+             var data = {
+                        "statecode": 1,
+                        "statuscode": 5
+                    };
+            tdg.cid.WebApi_Update_With_Spinner("tasks", taskid, data);
+
+
+        }
+      });
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
@@ -77,7 +94,7 @@ $(document).ready(function () {
 
     tdg.cid.WebResource_address_complete_readonly(false);
 
-    tdg.c.control_hide("ovs_name_fr");
+    //tdg.c.control_hide("ovs_name_fr");
     tdg.c.control_hide("cid_reasonfornobnnumber_other");
 
     //Phone number formatting
@@ -110,6 +127,8 @@ $(document).ready(function () {
 
     $('#cid_crabusinessnumber').attr("readonly", true);
     $('#ovs_legalname').attr("readonly", true);
+    $('#ovs_legalnamefr').attr("readonly", true);
+
     $('#cid_reasonfornobnnumber').attr("readonly", true);
     $('#cid_reasonfornobnnumber').css("pointer-events", "none");
     $('#cid_reasonfornobnnumber_other').attr("readonly", true);
@@ -166,13 +185,11 @@ function change_duplicatefieldID()
   //add id to iframe 
   $("#WebResource_address_complete").attr("title", "Address Complete lookup");
 
-  
     //company_details_section_3
      $('table[data-name="company_details_section_3"] tbody').find('tr td div.control input').each(function (i) {
         var fieldset = $(this);
          var fieldid = fieldset[0].id;
        
-        
         $(this).attr("id", fieldset[0].id + "_1" );
         
       });
@@ -208,7 +225,8 @@ function change_duplicatefieldID()
       $('table[data-name="ACCOUNT_INFORMATION"] tbody').find('tr td div.info label').each(function (i) {
         var fieldset = $(this);
         var id = fieldset[0].id;
-        
+        if (id.indexOf("cid_officiallyregistrationcompletationdate") != -1)
+       {$(this).attr("id", id + "_1" );}
        var forattribute = "";
        //cid_companyanniversarydate_1_datepicker_description
        if (id.indexOf("date")>0)
@@ -234,96 +252,7 @@ function change_duplicatefieldID()
            $(this).attr("id", fieldset[0].id + "_1" );
         }
       });
-
-    //tab_3
-      $('table[data-name="company_details_section_4"] tbody').find('tr td div.control input').each(function (i) {
-        var fieldset = $(this);
-         var fieldid = fieldset[0].id;
-       
-        if (fieldid.indexOf("date") == -1 && fieldid != "cid_reasonfornobnnumber_other")
-        {
-        //$(this).attr("id", fieldset[0].id + "_2" );
-        }
-      });
-      
-      $('table[data-name="company_details_section_4"] tbody').find('tr td div.control select').each(function (i) {
-        var fieldset = $(this);
-        var fieldid = fieldset[0].id;
-       
-        if (fieldid.indexOf("date") == -1)
-        {
-          //  $(this).attr("id", fieldset[0].id + "_2" );
-        }
-        
-      });
-
-   $('table[data-name="company_details_section_4"] tbody').find('tr td div.info label').each(function (i) {
-        var fieldset = $(this);
-        var id = fieldset[0].id;   
-       var forattribute = "";
-       //cid_companyanniversarydate_1_datepicker_description
-       if (id.indexOf("date")>0)
-       {   
-           
-          //  forattribute = id.replace("_label" , "")  + "_2_datepicker_description";  
-       }
-       else
-       { 
-           forattribute = id.replace("_label" , "") + "_2";  }
-        //_label
-        //datepicker_description
-       // $(this).attr("for", forattribute );
-       
-      });
-
-  /*      $('table[data-name="tab_8_section_2"] tbody').find('tr td div.control input').each(function (i) {
-        var fieldset = $(this);
-        //$(this).attr("id", fieldset[0].id + "_3" );
-        });
-
-        $('table[data-name="tab_8_section_2"] tbody').find('tr td div.control select').each(function (i) {
-        var fieldset = $(this);
-       // $(this).attr("id", fieldset[0].id + "_3" );
-        });
-
-       $('table[data-name="tab_8_section_2"] tbody').find('tr td div.info label').each(function (i) {
-         var fieldset = $(this);
-         var id = fieldset[0].id;   
-         var forattribute = "";
-            //cid_companyanniversarydate_1_datepicker_description
-            if (id.indexOf("date")>0)
-            {    
-                //forattribute = id.replace("_label" , "")  + "_3_datepicker_description"; 
-             }
-            else
-            { 
-                //forattribute = id.replace("_label" , "") + "_3";  
-                }
-                //_label
-                //datepicker_description
-                $(this).attr("for", forattribute );
-               /*  if (id == "cid_iscompanyattested_label")
-                {
-                    console.log("before");
-                    console.log( $(this));
-
-                   $(this).attr("role", "");
-                  //  $(this).removeAttr("role");
-                     console.log("after");
-                    console.log( $(this));
-                   
-                }
-              
-       });
- */
-     // $("#cid_iscompanyattested_label").removeAttr("role");
-    /*setTimeout( function(){ 
-        //$("#cid_iscompanyattested_label").removeAttr("role"),
-         $("#cid_iscompanyattested_label").removeAttr("role" , "")  ,
-         1000000 });*/
-
-
-     
+   
     
 }
 function Formate_PhoneNumber_AllControlsWithSameID(TargetFieldId) {

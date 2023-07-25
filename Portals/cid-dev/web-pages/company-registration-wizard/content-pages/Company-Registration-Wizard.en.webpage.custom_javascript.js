@@ -61,10 +61,5 @@ function header_setup() {
 		value = value.replace("{0}", companyName);
 		$('.page-header h1').text(value);
 	} catch (e) { }
-	$('#cdts-signout-btn').tooltip({
-                 trigger: 'hover',
-                   placement: 'bottom',
-                   container: 'body',
-                   title: "Vous devez fermer votre navigateur pour terminer le processus de déconnexion." 
-                    });
+	
 }

@@ -5,7 +5,6 @@
 var _cid_crabusinessnumber = "";
 $(document).ready(function () {
 	debugger;
-
 	$('#WebResource_address_complete').attr("title", "Address Lookup");
 	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
 
@@ -65,12 +64,13 @@ $(document).ready(function () {
 
 	tdg.cid.crw.start_cid_has_cra_bn_onchange("2");
 
-	tdg.c.control_hide("ovs_name_fr");
+	//tdg.c.control_hide("ovs_name_fr");
 	tdg.c.control_hide("cid_companyclaim");
 
 	var cid_legalname = $('#ovs_legalname').val();
 	var cid_operatingname = $('#name').val();
 	var ovs_name_fr = $('#ovs_name_fr').val();
+	var ovs_legalnamefr = $('#ovs_legalnamefr').val();
 
 	var step_start = sessionStorage.getItem("step_start");
 	step_start = (step_start == "null" ? "" : step_start);
@@ -86,6 +86,7 @@ $(document).ready(function () {
 			var cid_legalname = $('#ovs_legalname').val();
 			var cid_operatingname = $('#name').val();
 			var ovs_name_fr = cid_operatingname;
+			var ovs_legalnamefr = cid_legalname;
 			var address1_line1 = tdg.c.replace_special_char("{{user.address1_line1}}");
 			var address1_line2 = tdg.c.replace_special_char("{{user.address1_line2}}");
 			var address1_line3 = tdg.c.replace_special_char("{{user.address1_line3}}");
@@ -104,10 +105,13 @@ $(document).ready(function () {
 	var cid_legalname = tdg.c.replace_special_char(cid_legalname);
 	var cid_operatingname = tdg.c.replace_special_char(cid_operatingname);
 	var ovs_name_fr = tdg.c.replace_special_char(ovs_name_fr);
+	var ovs_legalnamefr = tdg.c.replace_special_char(ovs_legalnamefr);
+
 	if (step_start != "2") {
 		$("#ovs_legalname").val(cid_legalname);
 		$("#name").val(cid_operatingname);
 		$("#ovs_name_fr").val(ovs_name_fr);
+		$("#ovs_legalnamefr").val(ovs_legalnamefr);
 
 		debugger;
 		var value = $("#address1_line1").val();
@@ -226,6 +230,8 @@ function cid_crabusinessnumber_onchange() {
 			$("#ovs_legalname").val(LegalName);
 			$("#name").val(OperatingName);
 			$("#ovs_name_fr").val(OperatingName);
+			$("#ovs_legalnamefr").val(LegalName);
+
 
 			$("#address1_line1").val(address.AddressLine1Text);
 			$("#address1_line2").val(address.AddressLine2Text);
