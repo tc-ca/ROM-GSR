@@ -5,6 +5,7 @@
 $(document).ready(function () {
 
     debugger;
+    page_setup();
 
     var company_reg_date;
 
@@ -41,7 +42,8 @@ $(document).ready(function () {
     var email = '{{user.emailaddress1}}';
 
     //cancel button text   
-    var ButtonCancel = tdg.error_message.message("BTN_CANCEL");
+    var ButtonCancel = 
+    tdg.error_message.message("BTN_CANCEL");
     //add button next to save button
     $(".actions").append('&nbsp;&nbsp;<input id ="cancelButton" type="button" value="' +
         ButtonCancel + '"  class="btn btn-default button previous previous-btn" onclick="javascript:clearIsDirty();disableButtons();window.history.back();"  nonactionlinkbutton="true" onkeypress="Cancel()"> </input>');
@@ -331,4 +333,23 @@ function Cancel()
             window.location.href = '~/RegistrationWizard/';
         }
     }
+}
+
+
+function page_setup() {
+    var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+
+    const files = ["/tdgcore_common.js", "/tdgcore_message.js", "/tdgcore_invitation.js"];
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = file;
+
+        $("body").append(script);
+    }
+
+    // server error?
+    tdg.c.message_panel();
 }

@@ -64,7 +64,7 @@ $(document).ready(function () {
 
 	tdg.cid.crw.start_cid_has_cra_bn_onchange("2");
 
-	//tdg.c.control_hide("ovs_name_fr");
+	tdg.c.control_hide("ovs_name_fr");
 	tdg.c.control_hide("cid_companyclaim");
 
 	var cid_legalname = $('#ovs_legalname').val();

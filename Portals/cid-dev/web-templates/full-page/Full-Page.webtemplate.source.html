@@ -2,11 +2,12 @@
 
 {% block main %}
 
-<script type="text/javascript" src="~/tdgcore_common.js" ></script>
-<script type="text/javascript" src="~/tdgcore_message.js" ></script>
-<script type="text/javascript" src="~/tdgcore_invitation.js" ></script>
+<script type="text/javascript" src="~/tdgcore_common.js"></script>
+<script type="text/javascript" src="~/tdgcore_message.js"></script>
+<script type="text/javascript" src="~/tdgcore_invitation.js"></script>
 
 <script>
+    // Web Template - Full Page
     debugger;
 
     tdg.c.weblink_hide("/company_dashboard/");
@@ -14,6 +15,10 @@
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
+
+    var title = tdg.error_message.message("m000200");
+    var ctl = $('#cdts-signout-btn').tooltip()[0];
+    ctl.title = title;
 </script>
 
   {% include 'Page Copy' %}

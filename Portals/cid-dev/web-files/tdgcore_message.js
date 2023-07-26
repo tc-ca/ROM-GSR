@@ -1133,12 +1133,12 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000174",
                         "message_en": "2B. Start Upload",
-                        "message_fr": "2B. Commencer le téléchargement"
+                        "message_fr": "2B. Commencer le téléversement"
                     },
                     {
                         "code": "m000175",
                         "message_en": "Start Upload",
-                        "message_fr": "Commencer le téléversement/téléverser "
+                        "message_fr": "Commencer le téléversement"
                     },
                     {
                         "code": "m000176",

@@ -4,7 +4,7 @@
 
 $(document).ready(function () {
     debugger;
-
+    
    // page_setup();
 });
 
@@ -21,7 +21,7 @@ function page_setup() {
 
         $("body").append(script);
     }
-
+    
     // server error?
     tdg.c.message_panel();
 }

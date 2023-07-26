@@ -2341,7 +2341,9 @@ if (typeof (tdg.cid) == "undefined") {
             debugger;
             if (data.PhysicalLocationAddress != null) {
                 data.ovs_legalname = data.LegalName;
+				data.ovs_legalnamefr = data.LegalName;
                 data.name = data.OperatingName;
+				data.ovs_namefr = data.OperatingName;
                 var a = data.PhysicalLocationAddress;
                 data.address1_line1 = a.AddressLine1Text;
                 data.address1_line2 = a.AddressLine2Text;
@@ -2352,7 +2354,9 @@ if (typeof (tdg.cid) == "undefined") {
             }
             if (data.address != null) {
                 data.ovs_legalname = data.cid_legalname;
+				data.ovs_legalnamefr = data.cid_legalname;
                 data.name = data.cid_operatingname;
+				data.ovs_namefr = data.cid_operatingname;
                 var a = data.address;
                 data.address1_line1 = a.AddressLine1Text;
                 data.address1_line2 = a.AddressLine2Text;
@@ -2363,7 +2367,9 @@ if (typeof (tdg.cid) == "undefined") {
             }
 
             $('#cid_legalname').val(data.ovs_legalname);
+			$('#ovs_legalnamefr').val(data.ovs_legalnamefr);
             $('#cid_operatingname').val(data.name);
+			$('#cid_operatingname').val(data.name);
             $('#address1_line1').val(data.address1_line1);
             $('#address1_line2').val(data.address1_line2);
             $('#address1_line3').val(data.address1_line3);
@@ -2560,7 +2566,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 data.length = 1;
                 data.cid_has_cra_bn = 1;
                 data.cid_legalname = cra_data.LegalName;
+				data.cid_legalnameFr = cra_data.LegalName;
                 data.cid_operatingname = cra_data.OperatingName;
+				data.cid_operatingnameFr = cra_data.OperatingName;
                 data.cid_crabusinessnumber = bn;
                 data.address = cra_data.PhysicalLocationAddress;
             }
@@ -2576,7 +2584,10 @@ if (typeof (tdg.cid.crw) == "undefined") {
                         data.cid_has_cra_bn = account.cid_has_cra_bn;
                         data.cid_crabusinessnumber = account.cid_crabusinessnumber;
                         data.cid_legalname = account.ovs_legalname;
+						data.cid_legalnameFR = account.ovs_legalnamefr;
                         data.cid_operatingname = account.name;
+						data.cid_operatingnameFr = account.ovs_namefr;
+						
                         var cid_reasonfornobnnumber = account.cid_reasonfornobnnumber;
                         for (var i = 0; i < cid_reasonfornobnnumber_list.length; i++) {
                             if (cid_reasonfornobnnumber == cid_reasonfornobnnumber_list[i].value) {
@@ -2822,7 +2833,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
             data = data[0];
 
             fake.LegalName = data.cid_legalname;
+			fake.LegalNameFr = data.cid_legalname;
             fake.OperatingName = data.cid_legalname;
+			fake.OperatingNameFr = data.cid_legalname;
             fake.BusinessRegistrationNumber = bn;
             var a = {};
             a.AddressLine1Text = data.cid_addressline1text;

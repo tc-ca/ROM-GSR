@@ -36,6 +36,8 @@
 
     <script>
         function applyHeader() {
+            debugger;
+            
             // mm = mm.replace("&nbsp;" , "").replace("<br>" ,"").trim() ;
             //convert contents snippet output to json array
 
@@ -51,7 +53,7 @@
                 ,
                 {%- if user.id -%}
                 "appSettings": [{"href": "{{sitemarkers['Profile'].url}}"}],
-                "signOut": [{"href": "{{website.sign_out_url_substitution}}"}],
+                "signOut": [{ "href": "{{website.sign_out_url_substitution}}", "text" : "Hello"}],
                 {%- else -%}
                 "signIn": [{"href": "{{website.sign_in_url_substitution}}"}],
                 {%- endif -%}
@@ -64,9 +66,7 @@
                 {% endfor %}
 
                 {%- if website.selected_language.code == "en" -%}
-               
                     "lngLinks": [{"href":"/{{fr_url_substitution}}","lang":"fr","text":"Français"}],
-               
                 {%- else -%}
                     "lngLinks": [{"href":"/{{en_url_substitution}}","lang":"en","text":"English"}],
                 {%- endif -%}
@@ -87,8 +87,17 @@
             document.querySelector("#mount").innerHTML = window.wet.builder.appTop(options);
 
             if (document.readyState === "complete") {
+                debugger;
+
                 // window.$(".wb-menu").trigger("timerpoke.wb");
                 console.log("3 sec delay");
+
+                $('#cdts-signout-btn').tooltip({
+                    trigger: 'hover',
+                    placement: 'right',
+                    container: 'body',
+                    title: "Testing"
+                });
             }
         };
 

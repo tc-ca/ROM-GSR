@@ -5,6 +5,14 @@
 $(document).ready(function () {
 	debugger;
 
+	// format sign-out's tooltip
+	
+	$('#cdts-signout-btn').tooltip({
+					trigger: 'hover',
+					placement: 'right',
+					container: 'body'
+						});
+
 	header_setup();
 
 	sessionStorage.setItem('frominyearsites', 'false');
