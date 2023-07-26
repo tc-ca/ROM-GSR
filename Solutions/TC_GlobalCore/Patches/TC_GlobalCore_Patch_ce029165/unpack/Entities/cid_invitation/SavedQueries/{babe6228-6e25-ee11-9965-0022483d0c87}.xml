@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{babe6228-6e25-ee11-9965-0022483d0c87}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="cid_name" select="1" icon="1" preview="1">
+        <row name="result" id="cid_invitationid">
+          <cell name="ovs_id" width="100" />
+          <cell name="cid_invitedcontact" width="127" />
+          <cell name="cid_invitedcontactemail" width="164" />
+          <cell name="cid_companyname" width="150" />
+          <cell name="cid_companystatus" width="151" />
+          <cell name="cid_invitationsenton" width="144" />
+          <cell name="cid_invitationvaliduntil" width="160" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
+        <entity name="cid_invitation">
+          <attribute name="cid_invitationid" />
+          <attribute name="cid_invitedcontact" />
+          <attribute name="cid_invitedcontactemail" />
+          <attribute name="cid_companyname" />
+          <attribute name="cid_companystatus" />
+          <attribute name="cid_invitationsenton" />
+          <attribute name="cid_invitationvaliduntil" />
+          <filter type="and">
+            <condition attribute="statuscode" operator="eq" value="1" />
+          </filter>
+          <attribute name="ovs_id" />
+          <order attribute="ovs_id" descending="true" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Unsent Invitations" languagecode="1033" />
+      <LocalizedName description="Invitations non envoyées" languagecode="1036" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
