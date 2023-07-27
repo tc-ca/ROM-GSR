@@ -4,6 +4,8 @@
 
 $(document).ready(function () {
     debugger;
+
+
     $("#EntityFormPanel").before('<div id="ErrorMessageDiv" class="alert alert-danger" role="alert" style="display: none;">  </div>');
 
     $("#createdon").closest("tr").hide();
@@ -159,8 +161,20 @@ var CheckDuplicate = function (_flowURl, _parameters) {
                 var currentSiteOwner = result["CurrentSiteOwnerCompany"]; //string
                 var currentSiteId = result["CurrentSiteId"]; //string currentSiteId
                 var currentSiteOwnerId = result["CurrentSiteOwnerCompanyId"]; //string CurrentSiteOwnerCompanyId
+                var InactiveSiteFound = result["InactiveSiteFound"];
+                if (InactiveSiteFound == true)
+                {
+                    var ReActivatedSiteGUID = result["InactiveSiteGUID"];
+                    var currentURL = window.location.href;
+                     console.log ("split :" );
+                     console.log (currentURL.replace("https://", "").split("/")[0]);
+                     window.location.href ="~/SiteRegistrationWizard?id=" +ReActivatedSiteGUID + "&newsite=true" 
+                    //currentURL.replace("https://", "").split("/")[0] +"/SiteRegistrationWizard?" +ReActivatedSiteGUID;
+                    return false;
 
-                if (duplicatefound) {
+                }
+
+                else if (duplicatefound) {
                     var message = "There is already an active Organization at this address. Is your Organization sharing this Site with another Organization or is this the result of a sale, merger or acquisition? If you entered the wrong address, select cancel and re-enter the correct address.";
                     //tdg.error_message.message("m000131");
                     //tdg.c.dialog_YN

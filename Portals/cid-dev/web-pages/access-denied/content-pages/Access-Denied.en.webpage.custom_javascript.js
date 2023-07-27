@@ -4,13 +4,6 @@
 
 $(document).ready(function () {
     debugger;
-    $('#cdts-signout-btn').tooltip({
-					trigger: 'hover',
-					placement: 'right',
-					container: 'body'
-						});
-
-   // page_setup();
 });
 
 function page_setup() {
@@ -26,7 +19,7 @@ function page_setup() {
 
         $("body").append(script);
     }
-    
+
     // server error?
     tdg.c.message_panel();
 }
@@ -37,19 +30,19 @@ if (document.getElementsByTagName('h1')[0]) {
     var source = document.getElementsByTagName('h1')[0].innerHTML;
     var terms_and = tdg.error_message.message("m000199");
     var terms_and_conditions = tdg.error_message.message("m000189");
-          
+
     if (source.search(terms_and) != -1) {
         $(document).find("title").text(terms_and_conditions);
-        $("#cdts-signin-btn").hide(); // Hide sing in button
+        $("#cdts-signin-btn").hide();
         var cancelLabel = tdg.error_message.message("BTN_CANCEL");
-        $("#submit-agreement").after("&nbsp; <input id='cancelButton' type='button' name='CancelButton' value='"+ cancelLabel +"' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");
+        $("#submit-agreement").after("&nbsp; <input id='cancelButton' type='button' name='CancelButton' value='" + cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");
         $('#cancelButton').click(function (e) {
             tdg.c.sign_out();
             //window.location.href = '~/en/Account/Login/LogOff';
         });
-       
     }
-    //Condition for initial registration page
+
+    // Condition for initial registration page
     if (source.search("Registration") != -1) {
         var registration = tdg.error_message.message("m000190");
         $(document).find("title").text(registration);
@@ -57,7 +50,17 @@ if (document.getElementsByTagName('h1')[0]) {
     }
     //TODO add logic for the default access denied page
 }
+
 debugger;
+
+var urlParams = new URLSearchParams(window.location.search);
+if (urlParams.has('invitation_code')) {
+    var invitation_code = urlParams.get('invitation_code');
+    if (invitation_code != "") {
+        $('#InvitationCode')[0].value = invitation_code;
+        $('#submit-redeem-invitation').trigger('click');
+    }
+}
 
 //account already existing
 var Register_external_account = tdg.error_message.message("m000191");
@@ -74,7 +77,7 @@ if ($('.xrm-attribute-value-encoded')[0].innerText == Register_external_account)
         }
         else if (InnerText != null && InnerText == invalid_invitation) {
             var invitation_expired = tdg.error_message.message("m000195");
-            $('.validation-summary-errors')[0].InnerText = invitation_expired ;
+            $('.validation-summary-errors')[0].InnerText = invitation_expired;
         }
     }
 }
@@ -93,11 +96,10 @@ if ($('.xrm-attribute-value-encoded')[0].innerText == sign_up_invitation) {
 }
 
 if ($(".btn.btn-primary:contains('Register')")) {
-   var cancelLabel = tdg.error_message.message("BTN_CANCEL");
-    $(".btn.btn-primary:contains('Register')").after("&nbsp; <input id='cancelButton' type='button' name='"+ cancelLabel +"' value='Cancel' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");   
+    var cancelLabel = tdg.error_message.message("BTN_CANCEL");
+    $(".btn.btn-primary:contains('Register')").after("&nbsp; <input id='cancelButton' type='button' name='" + cancelLabel + "' value='Cancel' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");
     $('#cancelButton').click(function (e) {
         window.location.href = '~/en/SignIn?returnUrl=%2Fen%2F';
     });
     $("#cdts-signin-btn").hide(); // Hide sing in button
-    
 }

@@ -7,7 +7,12 @@ $(document).ready(function () {
 
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
-	
+	// format sign-out's tooltip
+	$('#cdts-signout-btn').tooltip({
+					trigger: 'hover',
+					placement: 'right',
+					container: 'body'
+						});
 	var inYear = sessionStorage.getItem('frominyearsites');
 	var annualCompliance = sessionStorage.getItem('fromannualcompliance');
 	var frominyearsitepage = sessionStorage.getItem('frominyearsitepage');
@@ -44,7 +49,10 @@ function header_setup(type) {
 
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
-
+	
+	//var title = tdg.error_message.message("m000200");
+	//var ctl = $('#cdts-signout-btn').tooltip()[0];
+   //     ctl.title = title;
 	var urlParams = new URLSearchParams(window.location.search);
 	var msg = "";
 	var href = "";
