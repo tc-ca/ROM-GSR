@@ -7,7 +7,7 @@ $(document).ready(function () {
 
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
-
+	
 	var inYear = sessionStorage.getItem('frominyearsites');
 	var annualCompliance = sessionStorage.getItem('fromannualcompliance');
 	var frominyearsitepage = sessionStorage.getItem('frominyearsitepage');
@@ -35,6 +35,8 @@ $(document).ready(function () {
 		$(this).css("font-size", "24px");
 		$(this).css("font-weight", "bold");
 	});
+
+
 });
 
 function header_setup(type) {

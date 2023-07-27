@@ -42,7 +42,11 @@ function header_setup(type) {
 
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
-
+	$('#cdts-signout-btn').tooltip({
+					trigger: 'hover',
+					placement: 'right',
+					container: 'body'
+						});
 	var urlParams = new URLSearchParams(window.location.search);
 	var msg = "";
 	var href = "";

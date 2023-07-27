@@ -4,6 +4,11 @@
 
 $(document).ready(function () {
     debugger;
+$('#cdts-signout-btn').tooltip({
+					trigger: 'hover',
+					placement: 'right',
+					container: 'body'
+						});
 
    // page_setup();
 });

@@ -4,6 +4,7 @@
 
 $(document).ready(function () {
     debugger;
+    
 
     sessionStorage.setItem('frominyearsites', 'false');
     sessionStorage.setItem('fromannualcompliance', 'false');
