@@ -4,7 +4,8 @@
 
 $(document).ready(function () {
     debugger;
-
+    
+   // page_setup();
     window.addEventListener('load', (event) => {
         //update_company
         var selected_language = '{{website.selected_language.code}}';
@@ -14,7 +15,20 @@ $(document).ready(function () {
     var selected_language = '{{website.selected_language.code}}';
     tdg.cid.phone_init("telephone1", selected_language);
 
-    //page_setup();
+
+    tdg.c.addValidator("ovs_legalnamefr");
+    
+    tdg.c.addValidator("ovs_legalnamefr");
+    tdg.c.addValidator("ovs_legalname_fr");
+       
+   
+    tdg.c.control_show("ovs_namefr");
+    tdg.c.removeValidator("ovs_namefr");
+    //tdg.c.addValidator("ovs_namefr_1");
+    tdg.c.addValidator("ovs_name_fr");
+    
+    
+   
     //tdg.c.control_hide("ovs_name_fr");
 });
 

@@ -1277,6 +1277,30 @@ if (typeof (tdg.message) == "undefined") {
                         "message_en": "Please ensure the Site Address information entered below is correct. A site's address can only be updated in the first 24 hours after the site is created.",
                         "message_fr": "Veuillez vous assurer que les informations  relatives à l'adresse du site saisies ci-dessous sont correctes. L'adresse d'un site ne peut être mise à jour que dans les premières 24 heures suivant la création du site."
                     }
+                    ,
+                    {
+                        "code": "m000203",
+                        "message_en": "There is already an active Organization at this address. Is your Organization sharing this Site with another Organization or is this the result of a sale, merger or acquisition? If you entered the wrong address, select cancel and re-enter the correct address.",
+                        "message_fr": "Il y a déjà une organisation active à cette adresse. Votre organisation se partage-t-elle cette site avec une autre organisation, ou, est-ce le résultat d'une vente, d'une fusion ou d'une acquisition ? Si vous avez  entré la mauvaise adresse, sélectionnez annuler et entrez à nouveau l'adresse corriger."
+                    }
+                    ,
+                    {
+                        "code": "m000204",
+                        "message_en": "Sale / Merger / Acquisition",
+                        "message_fr": "Cession / Fusion / Same word for acq."
+                    }
+                    ,
+                    {
+                        "code": "m000205",
+                        "message_en": "Shared",
+                        "message_fr": "Partagė"
+                    }
+                    ,
+                    {
+                        "code": "m000206",
+                        "message_en": "Please select an option:",
+                        "message_fr": "veuillez sélectionner une option:"
+                    }
                 ];
 
             return list;

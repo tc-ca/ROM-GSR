@@ -28,6 +28,11 @@ $(document).ready(function () {
 
     var lbl_inactive = tdg.error_message.message("lbl_inactive");
 
+  // Set setRequiredLevel = Required
+     tdg.c.addValidator("ovs_legalnamefr");
+      tdg.c.addValidator("ovs_namefr");
+
+
     sessionStorage.setItem('frominyearsites', 'false');
     sessionStorage.setItem('fromannualcompliance', 'false');
     sessionStorage.setItem('frominyearsitepage', 'false');
@@ -105,7 +110,7 @@ $(document).ready(function () {
     var cid_reasonfornobnnumber = $('#cid_reasonfornobnnumber').val();
 
     tdg.c.control_hide("cid_has_cra_bn");
-
+  
     // do not have a business number?
     if (cid_has_cra_bn != "1") {
         tdg.c.control_hide("cid_crabusinessnumber");

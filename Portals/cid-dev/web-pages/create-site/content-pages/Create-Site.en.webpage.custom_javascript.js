@@ -175,7 +175,8 @@ var CheckDuplicate = function (_flowURl, _parameters) {
                 }
 
                 else if (duplicatefound) {
-                    var message = "There is already an active Organization at this address. Is your Organization sharing this Site with another Organization or is this the result of a sale, merger or acquisition? If you entered the wrong address, select cancel and re-enter the correct address.";
+                    var message = tdg.error_message.message("m000203");
+                    //"There is already an active Organization at this address. Is your Organization sharing this Site with another Organization or is this the result of a sale, merger or acquisition? If you entered the wrong address, select cancel and re-enter the correct address.";
                     //tdg.error_message.message("m000131");
                     //tdg.c.dialog_YN
                     DialogWith_DropDown(message, (ans) => {
@@ -309,6 +310,9 @@ function DialogWith_DropDown (message, handler) {
     var header = tdg.error_message.message("CID_PORTAL");
     var yes = tdg.error_message.message("Yes");
     var no = tdg.error_message.message("No");
+    var optionLabel = tdg.error_message.message("m000206");
+    var option1 = tdg.error_message.message("m000204");
+    var option2 = tdg.error_message.message("m000205");
 
     $(`<section class="modal overlay-def"  id="myModal" role="dialog"  
      aria-modal="true"  aria-labelledby ="headerid" aria-describedby="DialogBodyID" tabindex="-1">
@@ -321,11 +325,11 @@ function DialogWith_DropDown (message, handler) {
                 <br>
                 <p> </p>
                  <div>
-                        <label for="duplicateFlagOptions">Please select option:</label>
+                        <label for="duplicateFlagOptions">${optionLabel}</label>
                         <select name="duplicateFlagOptions" id="duplicateFlagOptions">
                             <option value="1"></option>
-                            <option value="918640000">sale / merger / acquisition</option>
-                            <option value="918640001">Shared</option>
+                            <option value="918640000">${option1}</option>
+                            <option value="918640001">${option2}</option>
 
                         </select>
                 </div>
@@ -387,8 +391,7 @@ function DialogWith_DropDown (message, handler) {
     });
     $("#btnNo").keydown(function (event) {
           var Listselection = $("#duplicateFlagOptions :selected").text();
-        console.log("selection : ");
-        console.log(Listselection);
+
         var keyCode = event.keyCode || event.which;
         //check if key pressis tab key
         if (keyCode == "9") {

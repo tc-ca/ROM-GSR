@@ -5,17 +5,16 @@
 $(document).ready(function () {
     debugger;
     page_setup();
+
     if (sessionStorage.getItem("updateOrgCheckList") == "Yes")
     {
         sessionStorage.setItem("updateOrgCheckList", "No");
         window.location.href = "~/my-company/annual-compliance-update";
     }
-    
-    
+        
     var companyName = "{{user.parentcustomerid.name}}";
     let url = new URL(window.location.href);
- 
-  
+   
     var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
 	console.log(cid_usercontacttype);
 	//if not primary contact
@@ -24,14 +23,19 @@ $(document).ready(function () {
 		//$("#update_company").css("pointer-events", "none");
     }
     tdg.c.page_instructions("page_my_company", true);
-    tdg.c.control_hide("ovs_name_fr");
+    
+    tdg.c.addValidator("ovs_legalnamefr");
+    tdg.c.addValidator("ovs_namefr");
+
+
+   // tdg.c.control_hide("ovs_name_fr");
 
     $("#update_company").click(function () {
         var selected_language = '{{website.selected_language.code}}';
         $('div[data-name="tab_3"]').parent().parent().removeClass("hidden");
         $('div[data-name="company_details"]').parent().parent().addClass("hidden");
         $('#update_company').addClass("hidden");
-
+      
         $('div[data-name="tab_3"]').parent().before("<h2>" + companyName + "</h2><hr>");
 
         var legend2 = $('fieldset[aria-label="Head Office"] legend').eq(1);
@@ -41,6 +45,7 @@ $(document).ready(function () {
         tdg.cid.phone_init("telephone1", selected_language);
         tdg.cid.phone_init("fax", selected_language);
          $("#cid_iscompanyattested_label").removeAttr("role" , "") ;
+       
     });
     $("#cancel_company_update").click(function () {
      

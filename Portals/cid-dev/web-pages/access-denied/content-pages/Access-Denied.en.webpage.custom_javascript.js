@@ -4,6 +4,7 @@
 
 $(document).ready(function () {
     debugger;
+    // page_setup();
 });
 
 function page_setup() {
@@ -33,16 +34,16 @@ if (document.getElementsByTagName('h1')[0]) {
 
     if (source.search(terms_and) != -1) {
         $(document).find("title").text(terms_and_conditions);
-        $("#cdts-signin-btn").hide();
+        $("#cdts-signin-btn").hide(); // Hide sing in button
         var cancelLabel = tdg.error_message.message("BTN_CANCEL");
         $("#submit-agreement").after("&nbsp; <input id='cancelButton' type='button' name='CancelButton' value='" + cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");
         $('#cancelButton').click(function (e) {
             tdg.c.sign_out();
             //window.location.href = '~/en/Account/Login/LogOff';
         });
-    }
 
-    // Condition for initial registration page
+    }
+    //Condition for initial registration page
     if (source.search("Registration") != -1) {
         var registration = tdg.error_message.message("m000190");
         $(document).find("title").text(registration);
@@ -50,22 +51,28 @@ if (document.getElementsByTagName('h1')[0]) {
     }
     //TODO add logic for the default access denied page
 }
-
 debugger;
 
 var urlParams = new URLSearchParams(window.location.search);
-if (urlParams.has('invitation_code')) {
-    var invitation_code = urlParams.get('invitation_code');
-    if (invitation_code != "") {
-        $('#InvitationCode')[0].value = invitation_code;
-        $('#submit-redeem-invitation').trigger('click');
+if (urlParams.has('invitationCode')) {
+    debugger;
+    var invitation_code = urlParams.get('invitationCode');
+    var code = sessionStorage.getItem('invitation_code');
+    if (invitation_code.length > 0) {
+        var submit = $(":button.btn.btn-primary.btn-line");
+        submit.trigger('click');
     }
 }
 
 //account already existing
 var Register_external_account = tdg.error_message.message("m000191");
-if ($('.xrm-attribute-value-encoded')[0].innerText == Register_external_account) {
-    //$('.xrm-attribute-value-encoded').css({ position: "relative" , left: "30px" });
+try {
+    text = $('.xrm-attribute-value-encoded')[0].innerText;
+} catch (e) {
+    text = "";
+}
+if (text == Register_external_account) {
+    debugger;
     if ($('.validation-summary-errors')[0]) {
         var Innerhtml = $('.validation-summary-errors')[0].innerHTML;
         var InnerText = $('.validation-summary-errors')[0].innerText;
@@ -84,7 +91,21 @@ if ($('.xrm-attribute-value-encoded')[0].innerText == Register_external_account)
 
 //invalid invitation Code
 var sign_up_invitation = tdg.error_message.message("m000196");
-if ($('.xrm-attribute-value-encoded')[0].innerText == sign_up_invitation) {
+try {
+    page_header = $('.xrm-attribute-value-encoded')[0].innerText;
+} catch (e) {
+    page_header = "";
+}
+if (page_header == sign_up_invitation) {
+    debugger;
+
+    var invitation_code = urlParams.get('invitation_code');
+    if (invitation_code != null) {
+        sessionStorage.setItem('invitation_code', invitation_code);
+        $('#InvitationCode')[0].value = invitation_code;
+        $('#submit-redeem-invitation').trigger('click');
+    }
+
     var invalid_invitation = tdg.error_message.message("m000194");
     if ($('.validation-summary-errors')[0]) {
         var InnerText = $('.validation-summary-errors')[0].innerText;
@@ -95,7 +116,13 @@ if ($('.xrm-attribute-value-encoded')[0].innerText == sign_up_invitation) {
     }
 }
 
-if ($(".btn.btn-primary:contains('Register')")) {
+try {
+    text = $(".btn.btn-primary:contains('Register')");
+} catch (e) {
+    text = false;
+}
+if (text) {
+    debugger;
     var cancelLabel = tdg.error_message.message("BTN_CANCEL");
     $(".btn.btn-primary:contains('Register')").after("&nbsp; <input id='cancelButton' type='button' name='" + cancelLabel + "' value='Cancel' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");
     $('#cancelButton').click(function (e) {
