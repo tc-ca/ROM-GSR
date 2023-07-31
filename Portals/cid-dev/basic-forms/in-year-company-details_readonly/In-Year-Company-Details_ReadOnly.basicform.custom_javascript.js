@@ -36,11 +36,7 @@ $(document).ready(function () {
         $('div[data-name="tab_3"]').parent().parent().removeClass("hidden");
         $('div[data-name="company_details"]').parent().parent().addClass("hidden");
         $('#update_company').addClass("hidden");
-       
-        tdg.c.addValidator("ovs_legalnamefr");
-       // $('#ovs_legalnamefr').attr("readonly", true);
-
-
+     
         $('div[data-name="tab_3"]').parent().before("<h2>" + companyName + "</h2><hr>");
 
         var legend2 = $('fieldset[aria-label="Head Office"] legend').eq(1);

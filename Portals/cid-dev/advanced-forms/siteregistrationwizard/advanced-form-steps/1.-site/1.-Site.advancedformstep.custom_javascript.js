@@ -10,6 +10,7 @@ $(document).ready(function () {
 	page_setup();
 	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
 	 tdg.c.control_hide("adx_modifiedbyusername");
+	 tdg.c.control_hide("ovs_duplicatesiteflag");
 
 	var selected_language = '{{website.selected_language.code}}';
 	console.log ("language code  "  + selected_language );
@@ -67,20 +68,9 @@ $(document).ready(function () {
 			$("#EntityFormView :input").prop("disabled",  false);
 		}
 		else {
-			//$("#ovs_address1_province").prop("disabled", true);
-			$("#EntityFormView :input").prop("disabled", true);
-			
-			var f = document.getElementById("WebResource_address_complete");
-			var c = f.contentWindow;
-			c.document.getElementById("address1_line1").disabled = true ;
-			
-			//form-control picklist 
-			 var provincevalue =  $("#ovs_address1_province :selected").text();
-    		$("#ovs_address1_province").after('<div class="readonly form-control picklist" tabindex="0">'+provincevalue +' </div>')
-            //hid disbled drop down
-    		$("#ovs_address1_province").css("display" , "none");
+
+			setTimeout(disable_All_Address_fields , 2000);
 		
-			addressReadOnly = true;
 
 		}
 	}
@@ -118,6 +108,7 @@ $(document).ready(function () {
 	$("#name").val(cid_legalname);
 	// hide controls
 	tdg.c.control_hide("name");
+	
 	tdg.c.control_hide("cid_siteclaim");
 	$("#cid_sitename").attr("autocomplete", "new-password");
 	$("#telephone1").attr("autocomplete", "new-password");
@@ -133,13 +124,13 @@ $(document).ready(function () {
 			// legal land description
 			tdg.c.section_show("section_legal_land_description");
 			if (addressReadOnly) {
-				cid_input_read_only("section_legal_land_description");
+				//cid_input_read_only("section_legal_land_description");
 			}
 			break;
 		case "2":
 			// lat/long
 			if (addressReadOnly) {
-				cid_input_read_only("section_latitude_longitude");
+				//cid_input_read_only("section_latitude_longitude");
 			}
 			break;
 		default:
@@ -152,7 +143,7 @@ $(document).ready(function () {
 			$("#address1_postalcode").prop('readonly', true);
 			if (addressReadOnly) {
 				//$("#ovs_address1_province").prop("disabled", true);
-				cid_input_read_only("section_address");
+				//cid_input_read_only("section_address");
 			}
 	}
 
@@ -200,6 +191,21 @@ function cid_input_read_only(sectionName) {
 	$(".section[data-name='" + sectionName + "']").find(':input').prop("readonly", "readonly");
 }
 
+function disable_All_Address_fields()
+{
+	        $("#EntityFormView :input").prop("disabled", true);
+			
+			var f = document.getElementById("WebResource_address_complete");
+			var c = f.contentWindow;
+			c.document.getElementById("address1_line1").disabled = true ;
+			
+			//form-control picklist 
+			 var provincevalue =  $("#ovs_address1_province :selected").text();
+    		$("#ovs_address1_province").after('<div class="readonly form-control picklist" tabindex="0">'+provincevalue +' </div>')
+            //hid disbled drop down
+    		$("#ovs_address1_province").css("display" , "none");
+}
+
 function page_setup() {
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
@@ -244,3 +250,4 @@ function Show_PluginError_TextLanguag(Field) {
 function CheckLatLongDecimal() {
  	return true;
 }
+
