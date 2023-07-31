@@ -1,0 +1,507 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "197dce02-219b-4103-9b3e-08c31d5267ab"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 1,
+              "subscriptionRequest/entityname": "account",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filterexpression": "ovs_duplicatesiteflag ne null",
+              "subscriptionRequest/runas": 3
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "check_if__site_is_share_or_transfer": {
+          "actions": {
+            "List_rows_-_select_support_request_type": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "51eb3590-6276-4e88-ac73-ce2674bd54e8"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "ovs_supportrequesttypes",
+                  "fetchXml": "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\n<entity name='ovs_supportrequesttype'>\n<attribute name='ovs_supportrequesttypeid'/>\n<attribute name='ovs_code'/>\n<attribute name='createdon'/>\n<order attribute='ovs_code' descending='false'/>\n<filter type='and'>\n<condition attribute='ovs_code' operator='eq' value='DuplicateActiveSite'/>\n</filter>\n</entity>\n</fetch>"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "create_support_request": {
+              "runAfter": {
+                "Requesttypeid": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "078c229a-486c-496e-ae0a-e6099db1f6b2"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "ovs_supportrequests",
+                  "item/ovs_CreatedByExternalUser@odata.bind": "\\contacts\\@{triggerOutputs()?['body/_cid_createdbyregistrant_value']}",
+                  "item/ovs_Company@odata.bind": "\\accounts\\@{triggerOutputs()?['body/_parentaccountid_value']}",
+                  "item/ovs_requestdetails": "@variables('SiteList')",
+                  "item/ovs_RequestType@odata.bind": "\\ovs_supportrequesttypes\\@{outputs('Requesttypeid')}",
+                  "item/ovs_Site@odata.bind": "\\accounts\\@{triggerOutputs()?['body/accountid']}"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Requesttypeid": {
+              "runAfter": {
+                "Switch": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "27cf5bc5-df7b-4cc0-b2f0-7c5d10b9943a"
+              },
+              "type": "Compose",
+              "inputs": "@outputs('List_rows_-_select_support_request_type')?['body']['value'][0]['ovs_supportrequesttypeid']"
+            },
+            "Switch": {
+              "runAfter": {
+                "List_rows_-_select_support_request_type": [
+                  "Succeeded"
+                ]
+              },
+              "cases": {
+                "Case": {
+                  "case": 0,
+                  "actions": {
+                    "Apply_to_each": {
+                      "foreach": "@outputs('List_rows_-_List_Duplicate_rows_by_postal_address')?['body/value']",
+                      "actions": {
+                        "siteID": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "1583a628-4a5f-47e2-a729-b977efde2d56"
+                          },
+                          "type": "Compose",
+                          "inputs": "@items('Apply_to_each')?['ovs_romid']"
+                        },
+                        "Append_to_string_variable_-_sitelist": {
+                          "runAfter": {
+                            "siteID": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "9d00b656-8568-42cf-b53d-c21a11760aa1"
+                          },
+                          "type": "AppendToStringVariable",
+                          "inputs": {
+                            "name": "SiteList",
+                            "value": "@{outputs('siteID')} "
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "List_rows_-_List_Duplicate_rows_by_postal_address": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "e775fe89-493e-4e1e-9552-85319aa8a6ad"
+                      },
+                      "type": "Foreach"
+                    },
+                    "check_if_street_2_is_not_null": {
+                      "actions": {
+                        "Set_variable_street_2_to_the_value": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "ddc664b0-5ba1-4981-a86f-5ebf32c48b9d"
+                          },
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Street2",
+                            "value": "operator='eq' value='@{triggerOutputs()?['body/address1_line2']}'"
+                          }
+                        }
+                      },
+                      "runAfter": {},
+                      "expression": {
+                        "and": [
+                          {
+                            "not": {
+                              "equals": [
+                                "@triggerOutputs()?['body/address1_line2']",
+                                "@null"
+                              ]
+                            }
+                          },
+                          {
+                            "not": {
+                              "equals": [
+                                "@trim(triggerOutputs()?['body/address1_line2'])",
+                                "@''"
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "bba8a965-1d92-4fb4-9ac9-ed916c35c9e9"
+                      },
+                      "type": "If"
+                    },
+                    "List_rows_-_List_Duplicate_rows_by_postal_address": {
+                      "runAfter": {
+                        "check_if_street_3_is_not_null": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "21f6690f-e177-43d7-a580-7e6f879ce020"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "ListRecords",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "accounts",
+                          "fetchXml": "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\n<entity name='account'>\n<attribute name='name'/>\n<attribute name='primarycontactid'/>\n<attribute name='ovs_romid'/>\n<attribute name='accountid'/>\n<attribute name='ovs_duplicatesiteflag'/>\n<order attribute='name' descending='false'/>\n<filter type='and'>\n<condition attribute='address1_line1' operator='eq' value='@{triggerOutputs()?['body/address1_line1']}'/>\n<condition attribute='address1_line2'  @{variables('Street2')}/>\n<condition attribute='address1_line3'  @{variables('Street3')}/>\n<condition attribute='parentaccountid' operator='ne'  value='@{triggerOutputs()?['body/_parentaccountid_value']}'/>\n<condition attribute='address1_postalcode' operator='eq' value='@{triggerOutputs()?['body/address1_postalcode']}'/>\n\n<condition attribute=\"customertypecode\" operator=\"eq\" value=\"948010001\"/>\n</filter>\n</entity>\n</fetch>"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "check_if_street_3_is_not_null": {
+                      "actions": {
+                        "_set_street_3": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "9c0af25e-a7bb-41f6-9101-24c6f921974d"
+                          },
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Street3",
+                            "value": "operator='eq' value='@{triggerOutputs()?['body/address1_line3']}'"
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "check_if_street_2_is_not_null": [
+                          "Succeeded"
+                        ]
+                      },
+                      "expression": {
+                        "and": [
+                          {
+                            "not": {
+                              "equals": [
+                                "@triggerOutputs()?['body/address1_line3']",
+                                "@null"
+                              ]
+                            }
+                          },
+                          {
+                            "not": {
+                              "equals": [
+                                "@trim(triggerOutputs()?['body/address1_line3'])",
+                                "@''"
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "f97a5ba1-5aaa-4e24-86b5-ece8185b8be1"
+                      },
+                      "type": "If"
+                    }
+                  }
+                },
+                "Case_2": {
+                  "case": 1,
+                  "actions": {
+                    "match_duplicate_address_by_LLD": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "425211e3-c8a8-438e-8194-c4389a28bcd0"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "ListRecords",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "accounts",
+                          "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"account\">\n<attribute name=\"name\"/>\n<attribute name=\"primarycontactid\"/>\n<attribute name=\"ovs_romid\"/>\n<attribute name=\"accountid\"/>\n<attribute name=\"ovs_duplicatesiteflag\"/>\n<order attribute=\"name\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"ovs_lld_quarter\" operator=\"eq\" value=\"@{triggerOutputs()?['body/ovs_lld_quarter']}\"/>\n<condition attribute=\"ovs_lld_section\" operator=\"eq\" value=\"@{triggerOutputs()?['body/ovs_lld_section']}\"/>\n<condition attribute=\"customertypecode\" operator=\"eq\" value=\"948010001\"/>\n<condition attribute=\"ovs_lld_township\" operator=\"eq\" value=\"@{triggerOutputs()?['body/ovs_lld_township']}\"/>\n<condition attribute=\"ovs_lld_range\" operator=\"eq\" value=\"@{triggerOutputs()?['body/ovs_lld_range']}\"/>\n<condition attribute=\"ovs_lld_meridian\" operator=\"eq\" value=\"@{triggerOutputs()?['body/ovs_lld_meridian']}\"/>\n</filter>\n</entity>\n</fetch>"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Apply_to_each_Address_match_by_LLD": {
+                      "foreach": "@body('match_duplicate_address_by_LLD')",
+                      "actions": {
+                        "Apply_to_each_2": {
+                          "foreach": "@outputs('match_duplicate_address_by_LLD')?['body/value']",
+                          "actions": {
+                            "SiteID_duplicate_address_by_LLD": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "b37d8f41-1137-4818-95f8-fba6b55a6d91"
+                              },
+                              "type": "Compose",
+                              "inputs": "@items('Apply_to_each_2')?['ovs_romid']"
+                            },
+                            "Append_to_string_variable_2_-_Sitelist_variable": {
+                              "runAfter": {
+                                "SiteID_duplicate_address_by_LLD": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "b2931bce-feac-45b7-8051-0da53da105d1"
+                              },
+                              "type": "AppendToStringVariable",
+                              "inputs": {
+                                "name": "SiteList",
+                                "value": "@{outputs('SiteID_duplicate_address_by_LLD')} "
+                              }
+                            }
+                          },
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "9c854c62-ab8b-412a-bee2-7971ea38fb56"
+                          },
+                          "type": "Foreach"
+                        }
+                      },
+                      "runAfter": {
+                        "match_duplicate_address_by_LLD": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "c6c61511-10e0-49a6-a125-c9516044d9eb"
+                      },
+                      "type": "Foreach"
+                    }
+                  }
+                },
+                "Case_3": {
+                  "case": 2,
+                  "actions": {
+                    "List_rows_-_match_by_lat-long": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "6776db6c-5e63-4bb8-95ba-d1c8801e2857"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "ListRecords",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "accounts",
+                          "fetchXml": "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\n<entity name='account'>\n<attribute name='name'/>\n<attribute name='primarycontactid'/>\n<attribute name='ovs_romid'/>\n<attribute name='accountid'/>\n<attribute name='ovs_duplicatesiteflag'/>\n<order attribute='name' descending='false'/>\n<filter type='and'>\n<condition attribute='address1_latitude' operator='eq' value='@{triggerOutputs()?['body/address1_latitude']}'/>\n<condition attribute='address1_longitude' operator='eq' value='@{triggerOutputs()?['body/address1_longitude']}'/>\n<condition attribute=\"customertypecode\" operator=\"eq\" value=\"948010001\"/>\n</filter>\n</entity>\n</fetch>"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Apply_to_each_duplicate_address_by_Lat_Long": {
+                      "foreach": "@body('List_rows_-_match_by_lat-long')",
+                      "actions": {
+                        "Apply_to_each_3": {
+                          "foreach": "@outputs('List_rows_-_match_by_lat-long')?['body/value']",
+                          "actions": {
+                            "SiteID_by_duplicate_LatLong": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "a692dcb2-783d-4c3a-8ad7-0a85174afd9b"
+                              },
+                              "type": "Compose",
+                              "inputs": "@items('Apply_to_each_3')?['ovs_romid']"
+                            },
+                            "Append_to_string_variable_3_to_sitelist_variable": {
+                              "runAfter": {
+                                "SiteID_by_duplicate_LatLong": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "daab9b97-6991-4609-8ccd-34707a70a75a"
+                              },
+                              "type": "AppendToStringVariable",
+                              "inputs": {
+                                "name": "SiteList",
+                                "value": "@{outputs('SiteID_by_duplicate_LatLong')} "
+                              }
+                            }
+                          },
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "f629dd90-1209-47f0-8749-9cfcdbc0fd04"
+                          },
+                          "type": "Foreach"
+                        }
+                      },
+                      "runAfter": {
+                        "List_rows_-_match_by_lat-long": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "3f15e58f-de41-4fad-abdc-b3d5a60d6f0b"
+                      },
+                      "type": "Foreach"
+                    }
+                  }
+                }
+              },
+              "default": {
+                "actions": {}
+              },
+              "expression": "@triggerOutputs()?['body/ovs_address_type']",
+              "metadata": {
+                "operationMetadataId": "2fe7d08b-9a2a-43c4-913e-8087a400effc"
+              },
+              "type": "Switch"
+            }
+          },
+          "runAfter": {
+            "Initialize_variable_street3": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "or": [
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/ovs_duplicatesiteflag']",
+                  918640000
+                ]
+              },
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/ovs_duplicatesiteflag']",
+                  918640001
+                ]
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "51724879-e151-45f5-a0a9-58d4242cf2c2"
+          },
+          "type": "If"
+        },
+        "Initialize_variable_-_site_ID_list": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "161aab73-5fc1-4b5e-8240-bdc6d8f69bfd"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "SiteList",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_-_Street2": {
+          "runAfter": {
+            "Initialize_variable_-_site_ID_list": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b1d0a69e-7555-4a82-8868-0cc8623ac4e5"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Street2",
+                "type": "string",
+                "value": "operator='null'"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_street3": {
+          "runAfter": {
+            "Initialize_variable_-_Street2": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2b850957-68a6-4d4c-b28a-b9a84868c0f7"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Street3",
+                "type": "string",
+                "value": "operator='null'"
+              }
+            ]
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

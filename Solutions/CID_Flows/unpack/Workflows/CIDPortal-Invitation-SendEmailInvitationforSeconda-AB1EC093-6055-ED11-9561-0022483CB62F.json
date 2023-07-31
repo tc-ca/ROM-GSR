@@ -214,7 +214,7 @@
                           "type": "SetVariable",
                           "inputs": {
                             "name": "Environment",
-                            "value": "https://rd-tdgcore-dev.powerappsportals.com/en/Register"
+                            "value": "https://rd-tdgcore-dev.powerappsportals.com/en/Account/Login/Register?returnUrl=%2Fen%2F&invitationCode="
                           }
                         }
                       }
@@ -230,7 +230,7 @@
                           "type": "SetVariable",
                           "inputs": {
                             "name": "Environment",
-                            "value": "https://tdgcore-qa.powerappsportals.com/en/Register"
+                            "value": "https://tdgcore-qa.powerappsportals.com/en/Account/Login/Register?returnUrl=%2Fen%2F&invitationCode="
                           }
                         }
                       }
@@ -246,7 +246,7 @@
                           "type": "SetVariable",
                           "inputs": {
                             "name": "Environment",
-                            "value": "https://tdgcore-acc.powerappsportals.com/en/Register"
+                            "value": "https://tdgcore-acc.powerappsportals.com/en/Account/Login/Register?returnUrl=%2Fen%2F&invitationCode="
                           }
                         }
                       }
@@ -262,7 +262,7 @@
                           "type": "SetVariable",
                           "inputs": {
                             "name": "Environment",
-                            "value": "https://tdgcore-preprod.powerappsportals.com/en/Register"
+                            "value": "https://tdgcore-preprod.powerappsportals.com/en/Account/Login/Register?returnUrl=%2Fen%2F&invitationCode="
                           }
                         }
                       }
@@ -321,7 +321,7 @@
                         "parameters": {
                           "emailMessage/To": "@outputs('Get_a_row_by_ID_Contact')?['body/emailaddress1']",
                           "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Affectation en tant que contact secondaire pour l’organisation @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']}.",
-                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Contact')?['body/fullname']}, le contact principal de l’organisation @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} de la plateforme de données de la BDIC en ligne de Transports Canada, vous a ajouté en tant que contact secondaire pour cette organisation.<br>\n<br>\nPour accéder à la plateforme de la BDIC, veuillez copier le lien suivant dans votre navigateur Web :<br>\n@{variables('Environment')}<br>\n<br>\nSur la page Web qui s’affiche, veuillez fournir les renseignements suivants pour le code d’invitation demandé :<br>\n@{triggerOutputs()?['body/adx_invitationcode']}<br>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de messagerie. &nbsp;Si vous n’êtes pas la personne qui doit inscrire cette organisation, veuillez l’indiquer en répondant à ce courriel. Si vous connaissez le nom et l’adresse courriel de la personne chargée d’inscrire cette organisation, veuillez les indiquer également.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Contact')?['body/fullname']}, le contact principal de l’organisation @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} de la plateforme de données de la BDIC en ligne de Transports Canada, vous a ajouté en tant que contact secondaire pour cette organisation.<br>\n<br>\nPour accéder à la plateforme de la BDIC, veuillez copier le lien suivant dans votre navigateur Web :<br>\n@{variables('Environment')}@{triggerOutputs()?['body/adx_invitationcode']}<br>\n<br>\nSur la page Web qui s’affiche, veuillez fournir les renseignements suivants pour le code d’invitation demandé :<br>\n@{triggerOutputs()?['body/adx_invitationcode']}<br>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de messagerie. &nbsp;Si vous n’êtes pas la personne qui doit inscrire cette organisation, veuillez l’indiquer en répondant à ce courriel. Si vous connaissez le nom et l’adresse courriel de la personne chargée d’inscrire cette organisation, veuillez les indiquer également.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
                           "emailMessage/Importance": "Normal"
                         },
                         "authentication": "@parameters('$authentication')"
@@ -350,7 +350,7 @@
                           "parameters": {
                             "emailMessage/To": "@outputs('Get_a_row_by_ID_Contact')?['body/emailaddress1']",
                             "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: Assignment as a Secondary Contact for the @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} organization",
-                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Contact')?['body/fullname']}, the Primary Contact for the @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} organization of the Transport Canada Online CID Data Platform, has added you as a Secondary Contact for that organization.<br>\n<br>\nTo on-board to the CID Platform, please copy the following link into your Web browser:<br>\n@{variables('Environment')}<br>\n<br>\nOn the Web page that appears, please provide the following information for the requested Invitation code:<br>\n@{triggerOutputs()?['body/adx_invitationcode']}<br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to this email. If you know the name and email address of the individual who should register this organization, then please provide this as well.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Contact')?['body/fullname']}, the Primary Contact for the @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} organization of the Transport Canada Online CID Data Platform, has added you as a Secondary Contact for that organization.<br>\n<br>\n<br>\n<br>\nTo on-board to the CID Platform, please copy the following link into your Web browser:<br>\n@{variables('Environment')}@{triggerOutputs()?['body/adx_invitationcode']}<br>\n<br>\nOn the Web page that appears, please provide the following information for the requested Invitation code:<br>\n@{triggerOutputs()?['body/adx_invitationcode']}<br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to this email. If you know the name and email address of the individual who should register this organization, then please provide this as well.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
                             "emailMessage/Importance": "Normal"
                           },
                           "authentication": "@parameters('$authentication')"
