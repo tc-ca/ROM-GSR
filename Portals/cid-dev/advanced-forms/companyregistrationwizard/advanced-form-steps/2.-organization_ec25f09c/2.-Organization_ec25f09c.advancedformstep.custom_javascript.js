@@ -22,8 +22,10 @@ $(document).ready(function () {
 	_cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
 	$("#cid_registrationasof").parent().parent().hide();
 
+	var cid_contacttype = '{{user.cid_contacttype.Value}}';
+
 	cid_has_cra_bn = $('#cid_has_cra_bn').val();
-	if (cid_has_cra_bn == 1) {
+	if ((cid_has_cra_bn == 1) && (cid_contacttype == 100000000)) {
 		debugger;
 		tdg.cid.crw.update_address_from_cra(_cid_crabusinessnumber);
 	}
@@ -38,7 +40,6 @@ $(document).ready(function () {
 	if ($("#cid_addressoverwritten").val() == 0) { $("#ovs_address1_province").prop('disabled', true); }
 	else { $("#ovs_address1_province").prop('disabled', false); }
 
-	var cid_contacttype = '{{user.cid_contacttype.Value}}';
 	// not primary
 	if (cid_contacttype != 100000000) {
 		var code = sessionStorage.getItem("cid_suppress_error_code") + "";
