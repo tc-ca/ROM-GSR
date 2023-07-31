@@ -4,7 +4,13 @@
 
 $(document).ready(function () {
 	debugger;
-
+    // format sign-out's tooltip
+	
+	$('#cdts-signout-btn').tooltip({
+					trigger: 'hover',
+					placement: 'right',
+					container: 'body'
+						});
     var cidSiteStatus = $('#cid_cidsitestatus').find(":selected").text();
     var deactivateSiteWebLink = $('a[href*="deactivate-site"]');
     var activateSiteWebLink = $('a[href*="activate-site"]');

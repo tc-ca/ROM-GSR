@@ -8,7 +8,13 @@ $(document).ready(function () {
     var cidSiteStatus = $('#cid_cidsitestatus').find(":selected").text();
     var deactivateSiteWebLink = $('a[href*="deactivate-site"]');
     var activateSiteWebLink = $('a[href*="activate-site"]');
+	// format sign-out's tooltip
 	
+	$('#cdts-signout-btn').tooltip({
+					trigger: 'hover',
+					placement: 'right',
+					container: 'body'
+						});
     if (cidSiteStatus.indexOf("Inactive") >= 0) {
         activateSiteWebLink.removeClass("hidden");
         deactivateSiteWebLink.addClass("hidden");

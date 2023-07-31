@@ -4,7 +4,9 @@
 
 $(document).ready(function () {
     debugger;
-       document.getElementById("UpdateButton").addEventListener('click', (event) => {
+ 
+      
+    document.getElementById("UpdateButton").addEventListener('click', (event) => {
         
         if (sessionStorage.getItem("EditOrg") != "none")
         {
@@ -21,11 +23,21 @@ $(document).ready(function () {
         }
       });
 
-
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
-
+    // format sign-out's tooltip
+	
+	$('#cdts-signout-btn').tooltip({
+					trigger: 'hover',
+					placement: 'right',
+					container: 'body'
+						});
     var lbl_inactive = tdg.error_message.message("lbl_inactive");
+
+  // Set setRequiredLevel = Required
+     tdg.c.addValidator("ovs_legalnamefr");
+      tdg.c.addValidator("ovs_namefr");
+
 
     sessionStorage.setItem('frominyearsites', 'false');
     sessionStorage.setItem('fromannualcompliance', 'false');
@@ -93,7 +105,7 @@ $(document).ready(function () {
 
     tdg.cid.WebResource_address_complete_readonly(false);
 
-    tdg.c.control_hide("ovs_name_fr");
+    //tdg.c.control_hide("ovs_name_fr");
     tdg.c.control_hide("cid_reasonfornobnnumber_other");
 
     //Phone number formatting
@@ -104,7 +116,7 @@ $(document).ready(function () {
     var cid_reasonfornobnnumber = $('#cid_reasonfornobnnumber').val();
 
     tdg.c.control_hide("cid_has_cra_bn");
-
+  
     // do not have a business number?
     if (cid_has_cra_bn != "1") {
         tdg.c.control_hide("cid_crabusinessnumber");
@@ -126,6 +138,8 @@ $(document).ready(function () {
 
     $('#cid_crabusinessnumber').attr("readonly", true);
     $('#ovs_legalname').attr("readonly", true);
+    $('#ovs_legalnamefr').attr("readonly", true);
+
     $('#cid_reasonfornobnnumber').attr("readonly", true);
     $('#cid_reasonfornobnnumber').css("pointer-events", "none");
     $('#cid_reasonfornobnnumber_other').attr("readonly", true);
@@ -136,6 +150,7 @@ $(document).ready(function () {
 
     if ($("#cid_addressoverwritten").val() == 0) { $("#ovs_address1_province").prop('disabled', true); }
     else { $("#ovs_address1_province").prop('disabled', false); }
+
 
     change_duplicatefieldID();
 
@@ -158,6 +173,10 @@ $(document).ready(function () {
     if ($("#fax").closest("div").get(0).children[1] != "undefined") {
         $("#fax").closest("div").get(0).children[1].innerHTML = "<p> </p>";
     }
+
+
+
+
 });
 
 function subgrid_language() {
@@ -250,6 +269,7 @@ function change_duplicatefieldID()
 function Formate_PhoneNumber_AllControlsWithSameID(TargetFieldId) {
     $('table[data-name="tab_8_section_2"] tbody').find('tr td div.control input').each(function (i) {
         var fieldset = $(this);
+      
         var fieldid = fieldset[0].id;
         if (fieldid == TargetFieldId) {
             fieldset.attr("placeholder", "(___) ___-____");

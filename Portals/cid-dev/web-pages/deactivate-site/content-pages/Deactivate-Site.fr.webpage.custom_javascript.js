@@ -7,7 +7,13 @@ $(document).ready(function () {
 
 	var companyName = tdg.c.replace_special_char('{{user.parentcustomerid.name}}');
 	var topNav = $('#navbar');
-
+	// format sign-out's tooltip
+	
+	$('#cdts-signout-btn').tooltip({
+					trigger: 'hover',
+					placement: 'right',
+					container: 'body'
+						});
 	if (companyName)
 		if (topNav) {
 			var msg = tdg.error_message.message("m000108");

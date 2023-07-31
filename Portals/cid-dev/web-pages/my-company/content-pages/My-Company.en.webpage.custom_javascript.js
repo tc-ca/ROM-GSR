@@ -25,7 +25,13 @@ $(document).ready(function () {
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
-
+    // format sign-out's tooltip
+	
+	$('#cdts-signout-btn').tooltip({
+					trigger: 'hover',
+					placement: 'right',
+					container: 'body'
+						});
     var lbl_inactive = tdg.error_message.message("lbl_inactive");
 
   // Set setRequiredLevel = Required

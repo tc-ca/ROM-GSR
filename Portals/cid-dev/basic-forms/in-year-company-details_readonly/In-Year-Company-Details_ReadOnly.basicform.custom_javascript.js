@@ -31,11 +31,17 @@ $(document).ready(function () {
    // tdg.c.control_hide("ovs_name_fr");
 
     $("#update_company").click(function () {
+        debugger;
         var selected_language = '{{website.selected_language.code}}';
         $('div[data-name="tab_3"]').parent().parent().removeClass("hidden");
         $('div[data-name="company_details"]').parent().parent().addClass("hidden");
         $('#update_company').addClass("hidden");
-      
+        
+        $('#ovs_legalnamefr').attr("readonly", false);
+        tdg.c.addValidator("ovs_legalnamefr");
+
+
+
         $('div[data-name="tab_3"]').parent().before("<h2>" + companyName + "</h2><hr>");
 
         var legend2 = $('fieldset[aria-label="Head Office"] legend').eq(1);

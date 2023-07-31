@@ -50,9 +50,6 @@ function header_setup(type) {
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 	
-	//var title = tdg.error_message.message("m000200");
-	//var ctl = $('#cdts-signout-btn').tooltip()[0];
-   //     ctl.title = title;
 	var urlParams = new URLSearchParams(window.location.search);
 	var msg = "";
 	var href = "";

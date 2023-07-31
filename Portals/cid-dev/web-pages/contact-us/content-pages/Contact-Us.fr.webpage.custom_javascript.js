@@ -7,7 +7,14 @@ $(document).ready(function () {
 
 	page_setup();
 	var customerid = '{{user.parentcustomerid.id}}';
-
+	
+	// format sign-out's tooltip
+	
+	$('#cdts-signout-btn').tooltip({
+					trigger: 'hover',
+					placement: 'right',
+					container: 'body'
+						});
 	if (customerid != "" && customerid != null && customerid != 'undefined') {
 		//  var company_reg_date = "{{entities.account[user.parentcustomerid.id].cid_officiallyregistrationcompletationdate}}";
 		//  if(company_reg_date !=null && company_reg_date !="")

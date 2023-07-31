@@ -10,7 +10,13 @@ $(document).ready(function () {
 function page_setup() {
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
+    // format sign-out's tooltip
 
+    $('#cdts-signout-btn').tooltip({
+        trigger: 'hover',
+        placement: 'right',
+        container: 'body'
+    });
     const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
     for (var i = 0; i < files.length; i++) {
         var file = files[i];
@@ -124,7 +130,7 @@ try {
 if (text) {
     debugger;
     var cancelLabel = tdg.error_message.message("BTN_CANCEL");
-    $(".btn.btn-primary:contains('Register')").after("&nbsp; <input id='cancelButton' type='button' name='" + cancelLabel + "' value='Cancel' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");
+    $(".btn.btn-primary:contains('Register')").after("&nbsp; <input id='cancelButton' name='cancelButton' type='button' value='" + cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");
     $('#cancelButton').click(function (e) {
         window.location.href = '~/en/SignIn?returnUrl=%2Fen%2F';
     });

@@ -14,7 +14,13 @@ $(document).ready(function () {
     
     var deactivateSiteWebLink = $('a[href*="deactivate-site"]');
     var activateSiteWebLink = $('a[href*="activate-site"]');
-    
+    // format sign-out's tooltip
+	
+	$('#cdts-signout-btn').tooltip({
+					trigger: 'hover',
+					placement: 'right',
+					container: 'body'
+						});
     if (cidSiteStatus.indexOf(lbl_inactive) >= 0) {
         activateSiteWebLink.removeClass("hidden");
         deactivateSiteWebLink.addClass("hidden");

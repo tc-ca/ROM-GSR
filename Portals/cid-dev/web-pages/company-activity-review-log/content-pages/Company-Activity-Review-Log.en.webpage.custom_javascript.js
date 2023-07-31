@@ -8,7 +8,13 @@ $(document).ready(function () {
     var lbl_inactive = tdg.error_message.message("lbl_inactive");
 	var companyName = '{{user.parentcustomerid.name }}';
 	var topNav = $('#navbar');
-
+    // format sign-out's tooltip
+	
+	$('#cdts-signout-btn').tooltip({
+					trigger: 'hover',
+					placement: 'right',
+					container: 'body'
+						});
     if (companyName)
         if (topNav) {
             var msg = tdg.error_message.message("CID_PORTAL");

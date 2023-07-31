@@ -4,7 +4,13 @@
 
 $(document).ready(function () {
     debugger;
-
+    // format sign-out's tooltip
+	
+	$('#cdts-signout-btn').tooltip({
+					trigger: 'hover',
+					placement: 'right',
+					container: 'body'
+						});
     tdg.c.weblink_show("/company_dashboard/");
     tdg.c.weblink_show("/Bulk_Site_Update/");
     var navindex = "{{page.adx_navigation.name}}";

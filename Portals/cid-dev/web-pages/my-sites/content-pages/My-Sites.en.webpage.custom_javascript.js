@@ -4,7 +4,13 @@
 
 $(document).ready(function () {
     debugger;
-
+	// format sign-out's tooltip
+	
+	$('#cdts-signout-btn').tooltip({
+					trigger: 'hover',
+					placement: 'right',
+					container: 'body'
+						});
 	sessionStorage.setItem('frominyearsites', 'true');
     sessionStorage.setItem('fromannualcompliance', 'false');
 	sessionStorage.setItem('frominyearsitepage', 'false');

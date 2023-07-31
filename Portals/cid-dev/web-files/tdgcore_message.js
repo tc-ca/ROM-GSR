@@ -1299,7 +1299,8 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000206",
                         "message_en": "Please select an option:",
-                        "message_fr": "veuillez sélectionner une option:"
+                        "message_fr": "Veuillez choisir une option:"
+                        
                     }
                 ];
 

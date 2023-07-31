@@ -7,7 +7,13 @@ $(document).ready(function () {
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
-
+    // format sign-out's tooltip
+	
+	$('#cdts-signout-btn').tooltip({
+					trigger: 'hover',
+					placement: 'right',
+					container: 'body'
+						});
     var companyName = '{{user.parentcustomerid.name }}';
     var topNav = $('#navbar');
 

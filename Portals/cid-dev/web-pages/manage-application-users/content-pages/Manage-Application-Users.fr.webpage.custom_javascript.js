@@ -4,7 +4,13 @@
 
 $(document).ready(function () {
     debugger;
-
+    // format sign-out's tooltip
+	
+	$('#cdts-signout-btn').tooltip({
+					trigger: 'hover',
+					placement: 'right',
+					container: 'body'
+						});
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
     var deactivateCompanyWebLink = $('a[href*="deactivate-company"]');
 
