@@ -15,16 +15,12 @@ $(document).ready(function () {
     var selected_language = '{{website.selected_language.code}}';
     tdg.cid.phone_init("telephone1", selected_language);
 
-
+    debugger;
     tdg.c.addValidator("ovs_legalnamefr");
-    
-    tdg.c.addValidator("ovs_legalnamefr");
-    tdg.c.addValidator("ovs_legalname_fr");
-       
    
     tdg.c.control_show("ovs_namefr");
     tdg.c.removeValidator("ovs_namefr");
-    //tdg.c.addValidator("ovs_namefr_1");
+ 
     tdg.c.addValidator("ovs_name_fr");
     
     
