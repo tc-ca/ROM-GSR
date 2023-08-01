@@ -7,6 +7,24 @@ $(document).ready(function () {
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
+      console.log ("turn off mode");
+      var softLunchmode = "off";
+       var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_Soft_lunch_mode'");
+console.log ("resuts");
+        console.log(EnvironmentSettingResult) ; 
+            if (EnvironmentSettingResult.length > 0) {
+                 softLunchmode = EnvironmentSettingResult[0]["qm_value"];
+                 if ( softLunchmode == "ON")
+                 {
+                     $("#NextButton").attr("disabled", true);
+                     var m000207 = tdg.error_message.message("m000207");
+                     tdg.c.dialog_OK(m000207);
+                         //"Thank you for testing Transport Canada's Client Identification Database (CID). Once CID is officially launched, you will be able to log in and return to this screen to attest and complete your registration.<br><br>Please take a few minutes to complete this anonymous survey: <a href='https://forms.office.com/r/gLEmNr6Wa9'>https://forms.office.com/r/gLEmNr6Wa9</a><br><br>Your feedback will be important in helping us make sure that this application meets the needs of our stakeholders.");
+                 }
+
+
+            }
+
 
     //var msg = tdg.error_message.message("BTN_ATTEST_COMPLETE_REG");
     //$("#NextButton")[0].val = msg;
@@ -62,6 +80,20 @@ $(document).ready(function () {
             });
         }
     });
+
+       var softLunchmode = "off";
+       var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'Soft lunch mode'");
+
+            if (EnvironmentSettingResult.length > 0) {
+                 softLunchmode = EnvironmentSettingResult[0]["qm_value"];
+                 if ( softLunchmode == "ON")
+                 {
+                     $("#NextButton").attr("disabled", true);
+                     tdg.c.dialog_OK("Thank you for testing Transport Canada's Client Identification Database (CID). Once CID is officially launched, you will be able to log in and return to this screen to attest and complete your registration.<br><br>Please take a few minutes to complete this anonymous survey: https://forms.office.com/r/gLEmNr6Wa9<br><br>Your feedback will be important in helping us make sure that this application meets the needs of our stakeholders.");
+                 }
+
+
+            }
 
 });
 

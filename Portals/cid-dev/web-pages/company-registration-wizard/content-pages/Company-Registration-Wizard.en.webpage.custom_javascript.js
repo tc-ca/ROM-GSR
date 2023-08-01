@@ -15,6 +15,9 @@ $(document).ready(function () {
 
 	header_setup();
 
+    tdg.c.addValidator("ovs_legalnamefr");
+    tdg.c.addValidator("ovs_name_fr");
+
 	sessionStorage.setItem('frominyearsites', 'false');
 	sessionStorage.setItem('fromannualcompliance', 'false');
 	sessionStorage.setItem('frominyearsitepage', 'false');

@@ -2341,9 +2341,9 @@ if (typeof (tdg.cid) == "undefined") {
             debugger;
             if (data.PhysicalLocationAddress != null) {
                 data.ovs_legalname = data.LegalName;
-				data.ovs_legalnamefr = data.LegalName;
+                data.ovs_legalnamefr = data.LegalName;
                 data.name = data.OperatingName;
-				data.ovs_namefr = data.OperatingName;
+                data.ovs_namefr = data.OperatingName;
                 var a = data.PhysicalLocationAddress;
                 data.address1_line1 = a.AddressLine1Text;
                 data.address1_line2 = a.AddressLine2Text;
@@ -2354,9 +2354,9 @@ if (typeof (tdg.cid) == "undefined") {
             }
             if (data.address != null) {
                 data.ovs_legalname = data.cid_legalname;
-				data.ovs_legalnamefr = data.cid_legalname;
+                data.ovs_legalnamefr = data.cid_legalname;
                 data.name = data.cid_operatingname;
-				data.ovs_namefr = data.cid_operatingname;
+                data.ovs_namefr = data.cid_operatingname;
                 var a = data.address;
                 data.address1_line1 = a.AddressLine1Text;
                 data.address1_line2 = a.AddressLine2Text;
@@ -2367,9 +2367,9 @@ if (typeof (tdg.cid) == "undefined") {
             }
 
             $('#cid_legalname').val(data.ovs_legalname);
-			$('#ovs_legalnamefr').val(data.ovs_legalnamefr);
+            $('#ovs_legalnamefr').val(data.ovs_legalnamefr);
             $('#cid_operatingname').val(data.name);
-			$('#cid_operatingname').val(data.name);
+            $('#cid_operatingname').val(data.name);
             $('#address1_line1').val(data.address1_line1);
             $('#address1_line2').val(data.address1_line2);
             $('#address1_line3').val(data.address1_line3);
@@ -2514,7 +2514,10 @@ if (typeof (tdg.cid.crw) == "undefined") {
         update_address_from_cra: function (bn) {
             debugger;
 
-            var address1_line1 = sessionStorage.getItem("address1_line1");
+            var address1_line1 = sessionStorage.getItem("address1_line1") + "";
+
+            if (address1_line1 == "null") return;
+
             var address1_line2 = sessionStorage.getItem("address1_line2");
             address1_line2 = (address1_line2 == "null" ? "" : address1_line2);
             var address1_city = sessionStorage.getItem("address1_city");
@@ -2527,6 +2530,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#address1_city").val(address1_city);
             $("#address1_stateorprovince").val(address1_stateorprovince);
             $("#address1_postalcode").val(address1_postalcode);
+
+            sessionStorage.setItem("address1_line1", null);
         },
 
         data_confirm_dialog: async function (cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber_list) {
@@ -2566,9 +2571,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 data.length = 1;
                 data.cid_has_cra_bn = 1;
                 data.cid_legalname = cra_data.LegalName;
-				data.cid_legalnameFr = cra_data.LegalName;
+                data.cid_legalnameFr = cra_data.LegalName;
                 data.cid_operatingname = cra_data.OperatingName;
-				data.cid_operatingnameFr = cra_data.OperatingName;
+                data.cid_operatingnameFr = cra_data.OperatingName;
                 data.cid_crabusinessnumber = bn;
                 data.address = cra_data.PhysicalLocationAddress;
             }
@@ -2577,37 +2582,37 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 if (account.length > 0) {
                     console.log("account length: " + account.length);
                     account = account[0];
-              
-                     
 
-                        data.length = 1;
-                        data.cid_has_cra_bn = account.cid_has_cra_bn;
-                        data.cid_crabusinessnumber = account.cid_crabusinessnumber;
-                        data.cid_legalname = account.ovs_legalname;
-						data.cid_legalnameFR = account.ovs_legalnamefr;
-                        data.cid_operatingname = account.name;
-						data.cid_operatingnameFr = account.ovs_namefr;
-						
-                        var cid_reasonfornobnnumber = account.cid_reasonfornobnnumber;
-                        for (var i = 0; i < cid_reasonfornobnnumber_list.length; i++) {
-                            if (cid_reasonfornobnnumber == cid_reasonfornobnnumber_list[i].value) {
-                                cid_reasonfornobnnumber = cid_reasonfornobnnumber_list[i].text;
-                                break;
-                            }
+
+
+                    data.length = 1;
+                    data.cid_has_cra_bn = account.cid_has_cra_bn;
+                    data.cid_crabusinessnumber = account.cid_crabusinessnumber;
+                    data.cid_legalname = account.ovs_legalname;
+                    data.cid_legalnameFR = account.ovs_legalnamefr;
+                    data.cid_operatingname = account.name;
+                    data.cid_operatingnameFr = account.ovs_namefr;
+
+                    var cid_reasonfornobnnumber = account.cid_reasonfornobnnumber;
+                    for (var i = 0; i < cid_reasonfornobnnumber_list.length; i++) {
+                        if (cid_reasonfornobnnumber == cid_reasonfornobnnumber_list[i].value) {
+                            cid_reasonfornobnnumber = cid_reasonfornobnnumber_list[i].text;
+                            break;
                         }
-                        data.cid_reasonfornobnnumber = cid_reasonfornobnnumber;
-                        data.cid_reasonfornobnnumber_other = account.cid_reasonfornobnnumber_other;
+                    }
+                    data.cid_reasonfornobnnumber = cid_reasonfornobnnumber;
+                    data.cid_reasonfornobnnumber_other = account.cid_reasonfornobnnumber_other;
 
-                        var address = {};
-                        address.AddressLine1Text = account.address1_line1;
-                        address.AddressLine2Text = account.address1_line2;
-                        address.AddressLine3Text = account.address1_line3;
-                        address.CityName = account.address1_city;
-                        address.ProvinceStateCode = account.address1_stateorprovince;
-                        address.PostalZipCode = account.address1_postalcode;
+                    var address = {};
+                    address.AddressLine1Text = account.address1_line1;
+                    address.AddressLine2Text = account.address1_line2;
+                    address.AddressLine3Text = account.address1_line3;
+                    address.CityName = account.address1_city;
+                    address.ProvinceStateCode = account.address1_stateorprovince;
+                    address.PostalZipCode = account.address1_postalcode;
 
-                        data.address = address;
-                    
+                    data.address = address;
+
                 }//end check account length is greater than zero
             }
 
@@ -2833,9 +2838,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
             data = data[0];
 
             fake.LegalName = data.cid_legalname;
-			fake.LegalNameFr = data.cid_legalname;
+            fake.LegalNameFr = data.cid_legalname;
             fake.OperatingName = data.cid_legalname;
-			fake.OperatingNameFr = data.cid_legalname;
+            fake.OperatingNameFr = data.cid_legalname;
             fake.BusinessRegistrationNumber = bn;
             var a = {};
             a.AddressLine1Text = data.cid_addressline1text;

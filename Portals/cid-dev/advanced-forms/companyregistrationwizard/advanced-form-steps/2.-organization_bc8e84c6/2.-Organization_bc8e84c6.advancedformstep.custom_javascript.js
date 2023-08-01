@@ -25,7 +25,10 @@ $(document).ready(function () {
 	sessionStorage.setItem("selected_language", selected_language);
 	tdg.c.page_instructions("page_crw_company_insert");
 	//tdg.c.control_hide("ovs_name_fr");
-	tdg.c.control_hide("ovs_invitation_only");
+	 // Set setRequiredLevel = Required
+    tdg.c.addValidator("ovs_legalnamefr");
+    tdg.c.addValidator("ovs_name_fr");
+ 	tdg.c.control_hide("ovs_invitation_only");
 	tdg.c.control_hide("cid_addressoverwritten");
 	//update manually entered field if address fields changed
 	tdg.cid.Update_AdderssOverwritten_Field();
