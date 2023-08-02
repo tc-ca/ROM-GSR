@@ -157,7 +157,7 @@
                 }
               },
               "runAfter": {
-                "get-environment-settings": [
+                "Set_variable_2": [
                   "Succeeded"
                 ]
               },
@@ -451,7 +451,8 @@
                         "parameters": {
                           "emailMessage/To": "@items('Send_registration_completion_email_to_each_contact')?['emailaddress1']",
                           "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC :  La procédure d’inscription de l’organisation @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalnamefr']} dans les paramètres de la plateforme de données de la BDIC de Transports Canada est réussie.",
-                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLa procédure d’inscription de l’organisation @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalnamefr']} dans la plateforme de données de la BDIC en ligne de Transports Canada est réussie.<br>\n<br>\nConformément à la réglementation, vous êtes tenu de mettre à jour les renseignements relatifs à votre organisation dans la plateforme de données de la BDIC au cours de l’année, si un changement important est intervenu concernant les données gérées ici pour votre organisation et les sites de votre organisation.<br>\n<br>\n<strong>Numéro de confirmation</strong>: @{triggerOutputs()?['body/cid_record_id']}<br>\n<br>\nCette inscription comprend l'ajout des sites suivants:<br>\n<br>\n@{body('Create_HTML_table')}<br>\nEn outre, les données de votre organisation doivent être entièrement mises à jour chaque année, la première mise à jour étant requise un an après la date d’entrée en vigueur de la directive.<br>\n<br>\nSalutations,<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
+                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLa procédure d’inscription de l’organisation @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalnamefr']} dans la plateforme de données de la BDIC en ligne de Transports Canada est réussie.<br>\n<br>\nConformément à la réglementation, vous êtes tenu de mettre à jour les renseignements relatifs à votre organisation dans la plateforme de données de la BDIC au cours de l’année, si un changement important est intervenu concernant les données gérées ici pour votre organisation et les sites de votre organisation.<br>\n<br>\n<strong>Numéro de confirmation</strong>: @{triggerOutputs()?['body/cid_record_id']}<br>\n<br>\nCette inscription comprend l'ajout des sites suivants:<br>\n<br>\n@{body('Create_HTML_table')}<br>\nEn outre, les données de votre organisation doivent être entièrement mises à jour chaque année, la première mise à jour étant requise un an après la date d’entrée en vigueur de la directive.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
+                          "emailMessage/From": "@variables('CID_Email_Sender')",
                           "emailMessage/Importance": "Normal"
                         },
                         "authentication": "@parameters('$authentication')"
@@ -476,7 +477,8 @@
                           "parameters": {
                             "emailMessage/To": "@items('Send_registration_completion_email_to_each_contact')?['emailaddress1']",
                             "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID:  Successful completion of the registration process for the  organization in the Transport Canada CID Data Platform",
-                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe registration for @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalname']} in the Transport Canada CID Application has been successfully completed.<br>\n<br>\nPer the regulations, you are required to update your organization’s information in the CID Application during the year if a material change has occurred.<br>\n<br>\n<strong>Confirmation Number:</strong> @{triggerOutputs()?['body/cid_record_id']}<br>\n<br>\nThis registration includes the addition of the following sites:<br>\n<br>\n@{body('Create_HTML_table')}<br>\nFurther, your organization’s data is required to be fully updated on an annual basis.<br>\n<br>\nRegards,<br>\nTransport Canada - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n<br>\n</p>",
+                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe registration for @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalname']} in the Transport Canada CID Application has been successfully completed.<br>\n<br>\nPer the regulations, you are required to update your organization’s information in the CID Application during the year if a material change has occurred.<br>\n<br>\n<strong>Confirmation Number:</strong> @{triggerOutputs()?['body/cid_record_id']}<br>\n<br>\nThis registration includes the addition of the following sites:<br>\n<br>\n@{body('Create_HTML_table')}<br>\nFurther, your organization’s data is required to be fully updated on an annual basis.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n<br>\n</p>",
+                            "emailMessage/From": "@variables('CID_Email_Sender')",
                             "emailMessage/Importance": "Normal"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -585,10 +587,40 @@
                 "operationMetadataId": "7b8f4409-33e5-42d8-92e2-d901f20a54c2"
               },
               "type": "If"
+            },
+            "Filter_environment-CID__Email_Sender": {
+              "runAfter": {
+                "get-environment-settings": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('get-environment-settings')?['body/value']",
+                "where": "@equals(item()?['qm_name'], 'CID_Email_Sender')"
+              }
+            },
+            "Set_variable_2": {
+              "runAfter": {
+                "Filter_environment-CID__Email_Sender": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "502cf0c8-2cd9-4355-9d70-85f1b96d1c9e"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "CID_Email_Sender",
+                "value": "@{body('Filter_environment-CID__Email_Sender')[0]['qm_value']}"
+              }
             }
           },
           "runAfter": {
-            "Initialize_variable_FrenchTestSubjectText": [
+            "Initialize_variable_CID_Email_Sender": [
               "Succeeded"
             ]
           },
@@ -756,6 +788,25 @@
               "recordId": "@triggerOutputs()?['body/_cid_company_value']"
             },
             "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_variable_CID_Email_Sender": {
+          "runAfter": {
+            "Initialize_variable_FrenchTestSubjectText": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b4438035-c99c-4227-a7b6-4b8e941eab1d"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CID_Email_Sender",
+                "type": "string"
+              }
+            ]
           }
         }
       }

@@ -28,15 +28,6 @@
           "name": "shared_commondataserviceforapps"
         }
       },
-      "shared_office365_1": {
-        "runtimeSource": "embedded",
-        "connection": {
-          "connectionReferenceLogicalName": "cid_sharedoffice365_ee685"
-        },
-        "api": {
-          "name": "shared_office365"
-        }
-      },
       "shared_sendmail": {
         "runtimeSource": "embedded",
         "connection": {
@@ -158,6 +149,7 @@
                           "emailMessage/To": "@outputs('GetPrimary')?['body/emailaddress1']",
                           "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: Reassignment of @{outputs('GetPrimary')?['body/firstname']} @{outputs('GetPrimary')?['body/lastname']} as the new Primary Admin for the @{outputs('Get_Parent_account_name')?['body/ovs_legalname']} organization. ",
                           "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>\nYou have been assigned as the Primary Admin for the @{outputs('Get_Parent_account_name')?['body/ovs_legalname']} organization within the CID Data Platform. The previous Primary Admin, &nbsp;@{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']} has been re-assigned as a Secondary Admin.<br>\n<br>\nIf these updates are not correct, then please adjust them accordingly in the CID Data Platform.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                          "emailMessage/From": "@variables('CID_Email_Sender')",
                           "emailMessage/Cc": "@variables('SecondaryContactsEmail')",
                           "emailMessage/Importance": "Normal"
                         },
@@ -184,6 +176,7 @@
                             "emailMessage/To": "@outputs('GetPrimary')?['body/emailaddress1']",
                             "emailMessage/Subject": "@{variables('FrenchTestSubjectText')} TMD en ligne – BDIC : Réaffectation de @{outputs('GetPrimary')?['body/firstname']} @{outputs('GetPrimary')?['body/lastname']} en tant que nouveau contact principal pour l’organisation @{outputs('Get_Parent_account_name')?['body/ovs_legalname']}. ",
                             "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>\nVous avez été désigné comme contact principal pour l’organisation @{outputs('Get_Parent_account_name')?['body/ovs_legalname']} au sein de la plateforme de données de la BDIC. Le précédent contact principal, &nbsp;@{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']} , a été réaffecté en tant que contact secondaire.<br>\n<br>\nSi ces mises à jour ne sont pas correctes, veuillez les adapter en conséquence dans la plateforme de données de la BDIC.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                            "emailMessage/From": "@variables('CID_Email_Sender')",
                             "emailMessage/Cc": "@variables('SecondaryContactsEmail')",
                             "emailMessage/Importance": "Normal"
                           },
@@ -300,7 +293,7 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "connectionName": "shared_office365_1",
+                          "connectionName": "shared_office365",
                           "operationId": "SendEmailV2",
                           "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                         },
@@ -308,6 +301,7 @@
                           "emailMessage/To": "@outputs('Primary_email')",
                           "emailMessage/Subject": "@{variables('TestSubjectText')}CID Data Platform: Request by @{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']} to be onboarded as a Secondary Contact for the @{outputs('GetPrimary')?['body/cid_legalname']} organization",
                           "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']}, at @{outputs('Get_Secondary')?['body/emailaddress1']}, has requested to be on-boarded as a Secondary Contact for the @{outputs('Get_Primary_Account_Name')?['body/ovs_legalname']}&nbsp;organization within the CID Data Platform. If you would like to on-board them, then please add them as a Contact, which will trigger the emailing of an invitation to them.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n<br>\n</p>",
+                          "emailMessage/From": "@variables('CID_Email_Sender')",
                           "emailMessage/Cc": "@variables('SecondaryContactsEmail')",
                           "emailMessage/Importance": "Normal"
                         },
@@ -330,7 +324,7 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "connectionName": "shared_office365_1",
+                            "connectionName": "shared_office365",
                             "operationId": "SendEmailV2",
                             "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                           },
@@ -338,6 +332,7 @@
                             "emailMessage/To": "@outputs('Primary_email')",
                             "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}Plateforme de données de la BDIC : Demande de la part de @{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']} d’être intégré en tant que contact secondaire pour l’organisation @{outputs('GetPrimary')?['body/cid_legalname']}.",
                             "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{outputs('Get_Secondary')?['body/firstname']} @{outputs('Get_Secondary')?['body/lastname']}, au @{outputs('Get_Secondary')?['body/emailaddress1']}, a demandé à être intégré en tant que contact secondaire pour l’organisation @{outputs('Get_Primary_Account_Name')?['body/ovs_legalname']} au sein de la plateforme de données de la BDIC. Si vous souhaitez les intégrer, ajoutez-les en tant que contact, ce qui déclenchera l’envoi d’une invitation par courriel.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
+                            "emailMessage/From": "@variables('CID_Email_Sender')",
                             "emailMessage/Cc": "@variables('SecondaryContactsEmail')",
                             "emailMessage/Importance": "Normal"
                           },
@@ -570,6 +565,7 @@
                           "emailMessage/To": "@outputs('Get_Secondary')?['body/emailaddress1']",
                           "emailMessage/Subject": "@{variables('TestSubjectText')} TDG Online - CID: Login access into the CID Platform for the @{outputs('Get_Secondary')?['body/cid_legalname']} organization has been removed ",
                           "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nPlease note that the CID Platform user account associated with this email address no longer has login access for the @{outputs('Get_Secondary')?['body/cid_legalname']} organization. If this update was made by mistake, then please contact the CID Platform’s Primary Contact for that organization to resolve the matter.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                          "emailMessage/From": "@variables('CID_Email_Sender')",
                           "emailMessage/Cc": "@{variables('SecondaryContactsEmail')};@{outputs('GetPrimary')?['body/emailaddress1']}",
                           "emailMessage/Importance": "Normal"
                         },
@@ -600,6 +596,7 @@
                             "emailMessage/To": "@outputs('Get_Secondary')?['body/emailaddress1']",
                             "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : L’accès à la plateforme de la BDIC pour l’organisation @{outputs('Get_Secondary')?['body/cid_legalname']} a été supprimé.",
                             "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nVeuillez noter que le compte d’utilisateur de la plateforme de la BDIC associé à cette adresse courriel n’a plus d’accès de connexion pour l’organisation @{outputs('Get_Secondary')?['body/cid_legalname']}. Si cette mise à jour a été effectuée par erreur, veuillez communiquer avec la personne-ressource de la plateforme de la BDIC pour cette organisation afin de résoudre le problème.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                            "emailMessage/From": "@variables('CID_Email_Sender')",
                             "emailMessage/Importance": "Normal"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -757,6 +754,7 @@
                           "emailMessage/To": "@outputs('Get_Secondary')?['body/emailaddress1']",
                           "emailMessage/Subject": "@{variables('TestSubjectText')} TDG Online - CID: Previous invitation to onboard to the CID Platform as a Secondary Contact for the is no longer valid. The option exists to register a new organization",
                           "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nPlease note that the previous invitation to register the &nbsp;@{outputs('Get_Parent_account_name')?['body/ovs_legalname']} organization in the CID Data Platform is no longer valid. You do however have the option now to create an account in CID and register a different organization.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                          "emailMessage/From": "@variables('CID_Email_Sender')",
                           "emailMessage/Cc": "@{variables('SecondaryContactsEmail')};@{outputs('GetPrimary')?['body/emailaddress1']}",
                           "emailMessage/Importance": "Normal"
                         },
@@ -787,6 +785,7 @@
                             "emailMessage/To": "@outputs('Get_Secondary')?['body/emailaddress1']",
                             "emailMessage/Subject": "@{variables('FrenchTestSubjectText')} TMD en ligne – BDIC : L’invitation précédente à rejoindre la plateforme de la BDIC en tant que contact secondaire pour le n’est plus valable. Il est possible d’inscrire une nouvelle organisation",
                             "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nVeuillez noter que l’invitation précédente à inscrire l’organisation @{outputs('Get_Parent_account_name')?['body/ovs_legalname']} dans la plateforme de données de la BDIC n’est plus valable. Vous avez toutefois la possibilité de créer un compte dans la BDIC et d’inscrire une autre organisation.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                            "emailMessage/From": "@variables('CID_Email_Sender')",
                             "emailMessage/Importance": "Normal"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -1001,6 +1000,7 @@
                           "emailMessage/To": "@variables('PrimaryContactEmail')",
                           "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: Request to deactivate a Site.",
                           "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nAnother organization is blocked within the TDG Online CID platform from adding a site as your organization has Site ID <strong></strong><strong>@{triggerBody()?['SiteId']}</strong><strong></strong> at that same location.<br>\n<br>\nIf that Site is part of a Sale or Transfer, or it should not be an active Site for your organization, or it should no longer have a status indicating that your organization still owns it, then please use the 'Deactivate Site' side-menu option to deactivate it. The other organization will be then be notified and then they will be able to proceed.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                          "emailMessage/From": "@variables('CID_Email_Sender')",
                           "emailMessage/Cc": "@variables('SecondaryContactsEmail')",
                           "emailMessage/Importance": "Normal"
                         },
@@ -1027,6 +1027,7 @@
                             "emailMessage/To": "@variables('PrimaryContactEmail')",
                             "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TDG Online - CID: Request to deactivate a Site.",
                             "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLa plateforme TMD en ligne – BDIC empêche une autre organisation d’ajouter un site, car votre organisation possède l’ID de site <strong></strong><strong>@{triggerBody()?['SiteId']}</strong><strong></strong> au même endroit.<br>\n<br>\nSi ce site fait partie d’une vente ou d’un transfert, s’il ne doit pas être un site actif pour votre organisation ou s’il ne doit plus avoir de statut indiquant que votre organisation en est toujours propriétaire, veuillez utiliser l’option « Désactiver le site » du menu latéral pour le désactiver. L’autre organisation en sera alors informée et pourra poursuivre son action.<br>\n<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                            "emailMessage/From": "@variables('CID_Email_Sender')",
                             "emailMessage/Cc": "@variables('SecondaryContactsEmail')",
                             "emailMessage/Importance": "Normal"
                           },
@@ -1261,7 +1262,7 @@
             }
           },
           "runAfter": {
-            "get-environment-settings": [
+            "Initialize_variable_CID_Email_Sender": [
               "Succeeded"
             ]
           },
@@ -1624,6 +1625,41 @@
             "operationMetadataId": "c2e76ab2-d547-419d-9b9a-edddd675ff43"
           },
           "type": "If"
+        },
+        "Filter_environment-CID__Email_Sender": {
+          "runAfter": {
+            "get-environment-settings": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('get-environment-settings')?['body/value']",
+            "where": "@equals(item()?['qm_name'], 'CID_Email_Sender')"
+          }
+        },
+        "Initialize_variable_CID_Email_Sender": {
+          "runAfter": {
+            "Filter_environment-CID__Email_Sender": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c068ea6c-92cb-411f-9c4a-2464a31e0468"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CID_Email_Sender",
+                "type": "string",
+                "value": "@{body('Filter_environment-CID__Email_Sender')[0]['qm_value']}"
+              }
+            ]
+          }
         }
       }
     },

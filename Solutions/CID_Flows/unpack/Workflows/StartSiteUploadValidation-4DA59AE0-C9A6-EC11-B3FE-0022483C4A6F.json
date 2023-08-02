@@ -28,6 +28,15 @@
           "name": "shared_commondataserviceforapps"
         }
       },
+      "shared_office365_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedoffice365_ee685"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      },
       "shared_office365": {
         "runtimeSource": "embedded",
         "connection": {
@@ -854,7 +863,7 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "connectionName": "shared_office365",
+                          "connectionName": "shared_office365_1",
                           "operationId": "SendEmailV2",
                           "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                         },
@@ -862,6 +871,7 @@
                           "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
                           "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID:  Successful Bulk Data Upload during the processing of the @{variables('UploadTypeName')} in the Transport Canada CID Data Platform. Please see the details for the next steps.",
                           "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('FrenchStandardSalutation')} ,<br>\n<br>\nThe Bulk Data Upload processing of the @{variables('UploadTypeName')} for the @{outputs('Get_a_account_by_ID')?['body/ovs_legalname']} organization, within the Transport Canada CID Data Platform, was successful.<br>\n<br>\nThe @{outputs('totalNumberOfSites')} Site entries from the ‘ @{outputs('Update_Bulk_activity_log_summary_2')?['body/cid_filename']}’ file were successfully updated in the Transport Canada CID Data Platform. @{variables('NextStepText')}<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n<br>\n@{variables('SiteRemoveWarnning')}<br>\n<br>\n@{outputs('html_table_with_style_Missing_Site')}<br>\n@{outputs('English-EmailFooter')}</p>",
+                          "emailMessage/From": "@variables('CID_Email_Sender')",
                           "emailMessage/Importance": "Normal"
                         },
                         "authentication": "@parameters('$authentication')"
@@ -879,7 +889,7 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "connectionName": "shared_office365",
+                            "connectionName": "shared_office365_1",
                             "operationId": "SendEmailV2",
                             "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                           },
@@ -887,6 +897,7 @@
                             "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
                             "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID:  Successful Bulk Data Upload during the processing of the @{variables('UploadTypeName')} in the Transport Canada CID Data Platform. Please see the details for the next steps.",
                             "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe Bulk Data Upload processing of the @{variables('UploadTypeName')} for the @{outputs('Get_a_account_by_ID')?['body/ovs_legalname']} organization, within the Transport Canada CID Data Platform, was successful.<br>\n<br>\nThe @{outputs('totalNumberOfSites')} Site entries from the ‘ @{outputs('Update_Bulk_activity_log_summary_2')?['body/cid_filename']}’ file were successfully updated in the Transport Canada CID Data Platform. @{variables('NextStepText')}<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n@{outputs('English-EmailFooter')}<br>\n</p>",
+                            "emailMessage/From": "@variables('CID_Email_Sender')",
                             "emailMessage/Importance": "Normal"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -1033,7 +1044,7 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "connectionName": "shared_office365",
+                            "connectionName": "shared_office365_1",
                             "operationId": "SendEmailV2",
                             "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                           },
@@ -1041,6 +1052,7 @@
                             "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
                             "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Le téléchargement de données en masse est réussi pendant le traitement de @{variables('UploadType-French')} dans la plateforme de données de la BDIC de Transports Canada. Veuillez consulter les détails pour voir les étapes suivantes.",
                             "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLe traitement de téléchargement de données en masse de @{variables('UploadType-French')} pour l’organisation @{outputs('Get_a_account_by_ID')?['body/ovs_name_fr']}, au sein de la plateforme de données de la BDIC de Transports Canada, est réussi.<br>\n<br>\n<br>\nLes entrées @{outputs('totalNumberOfSites')} &nbsp;du fichier «@{outputs('Update_Bulk_activity_log_summary_2')?['body/cid_filename']}» ont été mises à jour avec succès dans la plateforme de données de la BDIC de Transports Canada.<br>\n@{variables('French-NextStepText')}<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{variables('SiteRemoveWarnning')}<br>\n<br>\n@{outputs('html_table_with_style_Missing_Site_French')}<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
+                            "emailMessage/From": "@variables('CID_Email_Sender')",
                             "emailMessage/Importance": "Normal"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -1058,7 +1070,7 @@
                           "type": "OpenApiConnection",
                           "inputs": {
                             "host": {
-                              "connectionName": "shared_office365",
+                              "connectionName": "shared_office365_1",
                               "operationId": "SendEmailV2",
                               "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                             },
@@ -1066,6 +1078,7 @@
                               "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
                               "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Le téléchargement de données en masse est réussi pendant le traitement de @{variables('UploadType-French')} dans la plateforme de données de la BDIC de Transports Canada. Veuillez consulter les détails pour voir les étapes suivantes.\n",
                               "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLe traitement de téléchargement de données en masse de @{variables('UploadType-French')} pour l’organisation @{outputs('Get_a_account_by_ID')?['body/ovs_name_fr']}, au sein de la plateforme de données de la BDIC de Transports Canada, est réussi.<br>\n<br>\nLes entrées @{outputs('totalNumberOfSites')}du fichier « @{outputs('Update_Bulk_activity_log_summary_2')?['body/cid_filename']} » ont été mises à jour avec succès dans la plateforme de données de la BDIC de Transports Canada.<br>\n@{variables('French-NextStepText')}<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
+                              "emailMessage/From": "@variables('CID_Email_Sender')",
                               "emailMessage/Importance": "Normal"
                             },
                             "authentication": "@parameters('$authentication')"
@@ -2699,7 +2712,7 @@
             }
           },
           "runAfter": {
-            "Filter_environment-CID_Flow_Environment_Folder": [
+            "Initialize_variable_CID_Email_Sender": [
               "Succeeded"
             ]
           },
@@ -2744,6 +2757,41 @@
           "inputs": {
             "from": "@outputs('get-environment-settings')?['body/value']",
             "where": "@equals(item()?['qm_name'], 'CID_Flow_Environment_Folder')"
+          }
+        },
+        "Initialize_variable_CID_Email_Sender": {
+          "runAfter": {
+            "Filter_environment-CID__Email_Sender": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c068ea6c-92cb-411f-9c4a-2464a31e0468"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CID_Email_Sender",
+                "type": "string",
+                "value": "@{body('Filter_environment-CID__Email_Sender')[0]['qm_value']}"
+              }
+            ]
+          }
+        },
+        "Filter_environment-CID__Email_Sender": {
+          "runAfter": {
+            "Filter_environment-CID_Flow_Environment_Folder": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('get-environment-settings')?['body/value']",
+            "where": "@equals(item()?['qm_name'], 'CID_Email_Sender')"
           }
         }
       }

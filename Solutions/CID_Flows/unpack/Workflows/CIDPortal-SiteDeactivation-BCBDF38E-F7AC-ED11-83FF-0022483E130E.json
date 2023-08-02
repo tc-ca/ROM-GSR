@@ -633,69 +633,28 @@
           },
           "type": "If"
         },
-        "Apply_to_each_4": {
-          "foreach": "@outputs('Get_modified_by_contact')?['body/value']",
+        "Condition_2": {
           "actions": {
-            "Check_Language": {
-              "actions": {
-                "Send_an_email_(V2)": {
-                  "runAfter": {},
-                  "metadata": {
-                    "operationMetadataId": "a2e138b0-232a-44df-bac1-c9eb964678bf"
-                  },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "host": {
-                      "connectionName": "shared_office365",
-                      "operationId": "SendEmailV2",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
-                    },
-                    "parameters": {
-                      "emailMessage/To": "@items('Apply_to_each_4')?['emailaddress1']",
-                      "emailMessage/Subject": "TDG Online - CID : Confirmation of Site Deactivation",
-                      "emailMessage/Body": "<p>@{outputs('English_-_StandardSalutation')}<br>\n<br>\n@{items('Apply_to_each_4')?['fullname']}<br>\n<br>\nYou've successfully removed @{triggerOutputs()?['body/cid_siteid']} -@{triggerOutputs()?['body/cid_sitename']} from your CID Registration for @{outputs('Get_a_row_by_ID')?['body/name']}<br>\n<br>\nHere's a list of your currently Active Sites:<br>\n@{body('Create_HTML_table')}<br>\nTransaction Number: @{outputs('Add_Site_Deactivation_History_Log_for_SG1')?['body/cid_record_id']}<br>\n<br>\nRegards,<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n<br>\n@{outputs('English_-_EmailFooter')}</p>",
-                      "emailMessage/Importance": "Normal"
-                    },
-                    "authentication": "@parameters('$authentication')"
-                  }
-                }
-              },
+            "Send_an_email_(V2)_3": {
               "runAfter": {},
-              "else": {
-                "actions": {
-                  "Send_an_email_(V2)_2": {
-                    "runAfter": {},
-                    "metadata": {
-                      "operationMetadataId": "a0561794-b6ef-4ef7-93ca-195b16ae12df"
-                    },
-                    "type": "OpenApiConnection",
-                    "inputs": {
-                      "host": {
-                        "connectionName": "shared_office365",
-                        "operationId": "SendEmailV2",
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
-                      },
-                      "parameters": {
-                        "emailMessage/To": "@items('Apply_to_each_4')?['emailaddress1']",
-                        "emailMessage/Subject": "TMD en ligne – BDIC : Confirmation que la demande de désactivation du site",
-                        "emailMessage/Body": "<p>@{outputs('French_-_StandardSalutation')}<br>\n<br>\n@{items('Apply_to_each_4')?['fullname']}<br>\n<br>\nVous avez supprimé avec succès @{triggerOutputs()?['body/cid_siteid']} - @{triggerOutputs()?['body/cid_sitename']} de votre enregistrement CID pour @{outputs('Get_a_row_by_ID')?['body/name']}<br>\n<br>\nVoici une liste de vos sites actuellement actifs :<br>\n@{body('Create_HTML_table_French')}<br>\nNuméro de transaction: @{outputs('Add_Site_Deactivation_History_Log_for_SG1')?['body/cid_record_id']}<br>\n<br>\nSalutations,<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n<br>\n@{outputs('French_-_EmailFooter')}</p>",
-                        "emailMessage/Importance": "Normal"
-                      },
-                      "authentication": "@parameters('$authentication')"
-                    }
-                  }
-                }
-              },
-              "expression": {
-                "equals": [
-                  "@items('Apply_to_each_4')?['cid_languageofcorrespondence']",
-                  918640001
-                ]
-              },
               "metadata": {
-                "operationMetadataId": "44b8e5b1-1342-4271-9877-19fda73388c2"
+                "operationMetadataId": "a2e138b0-232a-44df-bac1-c9eb964678bf"
               },
-              "type": "If"
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_office365",
+                  "operationId": "SendEmailV2",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                },
+                "parameters": {
+                  "emailMessage/To": "@first(outputs('Get_modified_by_contact')?['body/value'])?['emailaddress1']",
+                  "emailMessage/Subject": "TDG Online - CID : Confirmation of Site Deactivation",
+                  "emailMessage/Body": "<p>@{outputs('English_-_StandardSalutation')}<br>\n<br>\n@{first(outputs('Get_modified_by_contact')?['body/value'])?['fullname']},<br>\n<br>\nYou've successfully removed @{triggerOutputs()?['body/cid_siteid']} -@{triggerOutputs()?['body/cid_sitename']} from your CID Registration for @{outputs('Get_a_row_by_ID')?['body/name']}<br>\n<br>\nHere's a list of your currently Active Sites:<br>\n@{body('Create_HTML_table')}<br>\nTransaction Number: @{outputs('Add_Site_Deactivation_History_Log_for_SG1')?['body/cid_record_id']}<br>\n<br>\nRegards,<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n<br>\n@{outputs('English_-_EmailFooter')}</p>",
+                  "emailMessage/Importance": "Normal"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
             }
           },
           "runAfter": {
@@ -703,10 +662,41 @@
               "Succeeded"
             ]
           },
-          "metadata": {
-            "operationMetadataId": "eeb67d2d-c3dc-4623-b231-c472a333560d"
+          "else": {
+            "actions": {
+              "Send_an_email_(V2)_4": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "a0561794-b6ef-4ef7-93ca-195b16ae12df"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_office365",
+                    "operationId": "SendEmailV2",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                  },
+                  "parameters": {
+                    "emailMessage/To": "@first(outputs('Get_modified_by_contact')?['body/value'])?['emailaddress1']",
+                    "emailMessage/Subject": "TMD en ligne – BDIC : Confirmation que la demande de désactivation du site",
+                    "emailMessage/Body": "<p>@{outputs('French_-_StandardSalutation')}<br>\n<br>\n@{first(outputs('Get_modified_by_contact')?['body/value'])?['fullname']},<br>\n<br>\nVous avez supprimé avec succès @{triggerOutputs()?['body/cid_siteid']} - @{triggerOutputs()?['body/cid_sitename']} de votre enregistrement CID pour @{outputs('Get_a_row_by_ID')?['body/name']}<br>\n<br>\nVoici une liste de vos sites actuellement actifs :<br>\n@{body('Create_HTML_table_French')}<br>\nNuméro de transaction: @{outputs('Add_Site_Deactivation_History_Log_for_SG1')?['body/cid_record_id']}<br>\n<br>\nSalutations,<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n<br>\n@{outputs('French_-_EmailFooter')}</p>",
+                    "emailMessage/Importance": "Normal"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              }
+            }
           },
-          "type": "Foreach"
+          "expression": {
+            "equals": [
+              "@first(outputs('Get_modified_by_contact')?['body/value'])?['cid_languageofcorrespondence']",
+              918640001
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "840a2a26-4630-4fc8-8735-602ca910330e"
+          },
+          "type": "If"
         }
       }
     },

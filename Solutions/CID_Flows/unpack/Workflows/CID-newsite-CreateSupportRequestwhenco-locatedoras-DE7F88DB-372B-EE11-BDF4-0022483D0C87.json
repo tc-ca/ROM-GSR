@@ -286,41 +286,31 @@
                         "authentication": "@parameters('$authentication')"
                       }
                     },
-                    "Apply_to_each_Address_match_by_LLD": {
-                      "foreach": "@body('match_duplicate_address_by_LLD')",
+                    "Apply_to_each_2": {
+                      "foreach": "@outputs('match_duplicate_address_by_LLD')?['body/value']",
                       "actions": {
-                        "Apply_to_each_2": {
-                          "foreach": "@outputs('match_duplicate_address_by_LLD')?['body/value']",
-                          "actions": {
-                            "SiteID_duplicate_address_by_LLD": {
-                              "runAfter": {},
-                              "metadata": {
-                                "operationMetadataId": "b37d8f41-1137-4818-95f8-fba6b55a6d91"
-                              },
-                              "type": "Compose",
-                              "inputs": "@items('Apply_to_each_2')?['ovs_romid']"
-                            },
-                            "Append_to_string_variable_2_-_Sitelist_variable": {
-                              "runAfter": {
-                                "SiteID_duplicate_address_by_LLD": [
-                                  "Succeeded"
-                                ]
-                              },
-                              "metadata": {
-                                "operationMetadataId": "b2931bce-feac-45b7-8051-0da53da105d1"
-                              },
-                              "type": "AppendToStringVariable",
-                              "inputs": {
-                                "name": "SiteList",
-                                "value": "@{outputs('SiteID_duplicate_address_by_LLD')} "
-                              }
-                            }
-                          },
+                        "SiteID_duplicate_address_by_LLD": {
                           "runAfter": {},
                           "metadata": {
-                            "operationMetadataId": "9c854c62-ab8b-412a-bee2-7971ea38fb56"
+                            "operationMetadataId": "b37d8f41-1137-4818-95f8-fba6b55a6d91"
                           },
-                          "type": "Foreach"
+                          "type": "Compose",
+                          "inputs": "@items('Apply_to_each_2')?['ovs_romid']"
+                        },
+                        "Append_to_string_variable_2_-_Sitelist_variable": {
+                          "runAfter": {
+                            "SiteID_duplicate_address_by_LLD": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "b2931bce-feac-45b7-8051-0da53da105d1"
+                          },
+                          "type": "AppendToStringVariable",
+                          "inputs": {
+                            "name": "SiteList",
+                            "value": "@{outputs('SiteID_duplicate_address_by_LLD')} "
+                          }
                         }
                       },
                       "runAfter": {
@@ -329,7 +319,7 @@
                         ]
                       },
                       "metadata": {
-                        "operationMetadataId": "c6c61511-10e0-49a6-a125-c9516044d9eb"
+                        "operationMetadataId": "9c854c62-ab8b-412a-bee2-7971ea38fb56"
                       },
                       "type": "Foreach"
                     }
@@ -357,41 +347,31 @@
                         "authentication": "@parameters('$authentication')"
                       }
                     },
-                    "Apply_to_each_duplicate_address_by_Lat_Long": {
-                      "foreach": "@body('List_rows_-_match_by_lat-long')",
+                    "Apply_to_each_3": {
+                      "foreach": "@outputs('List_rows_-_match_by_lat-long')?['body/value']",
                       "actions": {
-                        "Apply_to_each_3": {
-                          "foreach": "@outputs('List_rows_-_match_by_lat-long')?['body/value']",
-                          "actions": {
-                            "SiteID_by_duplicate_LatLong": {
-                              "runAfter": {},
-                              "metadata": {
-                                "operationMetadataId": "a692dcb2-783d-4c3a-8ad7-0a85174afd9b"
-                              },
-                              "type": "Compose",
-                              "inputs": "@items('Apply_to_each_3')?['ovs_romid']"
-                            },
-                            "Append_to_string_variable_3_to_sitelist_variable": {
-                              "runAfter": {
-                                "SiteID_by_duplicate_LatLong": [
-                                  "Succeeded"
-                                ]
-                              },
-                              "metadata": {
-                                "operationMetadataId": "daab9b97-6991-4609-8ccd-34707a70a75a"
-                              },
-                              "type": "AppendToStringVariable",
-                              "inputs": {
-                                "name": "SiteList",
-                                "value": "@{outputs('SiteID_by_duplicate_LatLong')} "
-                              }
-                            }
-                          },
+                        "SiteID_by_duplicate_LatLong": {
                           "runAfter": {},
                           "metadata": {
-                            "operationMetadataId": "f629dd90-1209-47f0-8749-9cfcdbc0fd04"
+                            "operationMetadataId": "a692dcb2-783d-4c3a-8ad7-0a85174afd9b"
                           },
-                          "type": "Foreach"
+                          "type": "Compose",
+                          "inputs": "@items('Apply_to_each_3')?['ovs_romid']"
+                        },
+                        "Append_to_string_variable_3_to_sitelist_variable": {
+                          "runAfter": {
+                            "SiteID_by_duplicate_LatLong": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "daab9b97-6991-4609-8ccd-34707a70a75a"
+                          },
+                          "type": "AppendToStringVariable",
+                          "inputs": {
+                            "name": "SiteList",
+                            "value": "@{outputs('SiteID_by_duplicate_LatLong')} "
+                          }
                         }
                       },
                       "runAfter": {
@@ -400,7 +380,7 @@
                         ]
                       },
                       "metadata": {
-                        "operationMetadataId": "3f15e58f-de41-4fad-abdc-b3d5a60d6f0b"
+                        "operationMetadataId": "f629dd90-1209-47f0-8749-9cfcdbc0fd04"
                       },
                       "type": "Foreach"
                     }
