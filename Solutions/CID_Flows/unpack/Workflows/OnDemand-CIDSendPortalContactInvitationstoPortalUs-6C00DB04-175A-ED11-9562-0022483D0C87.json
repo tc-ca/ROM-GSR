@@ -10,6 +10,15 @@
           "name": "shared_commondataserviceforapps"
         }
       },
+      "shared_office365": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedoffice365_ee685"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      },
       "shared_sendmail": {
         "runtimeSource": "embedded",
         "connection": {
@@ -86,7 +95,7 @@
         }
       },
       "actions": {
-        "Condition": {
+        "In_invitations_available_on_the_request": {
           "actions": {
             "Get_a_row_by_ID_Accounts": {
               "runAfter": {},
@@ -159,99 +168,6 @@
                 "value": "@{substring(body('Parse_JSON')?['@odata.id'],0,indexOf(body('Parse_JSON')?['@odata.id'], '.crm3'))}"
               }
             },
-            "Switch_-_legacy_should_be_removed": {
-              "runAfter": {
-                "Set_variable_Environment": [
-                  "Succeeded"
-                ]
-              },
-              "cases": {
-                "Case": {
-                  "case": "https://tdgcore-dev-tcd365",
-                  "actions": {
-                    "Set_variable_Environment_to_Dev": {
-                      "runAfter": {},
-                      "metadata": {
-                        "operationMetadataId": "973c41f0-c4e0-4d0f-9a13-501d9edb0918"
-                      },
-                      "type": "SetVariable",
-                      "inputs": {
-                        "name": "Environment",
-                        "value": "https://rd-tdgcore-dev.powerappsportals.com/en/SignIn?returnUrl=%2Fen%2Fen-US%2F"
-                      }
-                    }
-                  }
-                },
-                "Case_2": {
-                  "case": "https://tdgcore-qa",
-                  "actions": {
-                    "Set_variable_Environment_to_QA": {
-                      "runAfter": {},
-                      "metadata": {
-                        "operationMetadataId": "5e6f757b-8ccc-4de7-9437-9773621f0d1d"
-                      },
-                      "type": "SetVariable",
-                      "inputs": {
-                        "name": "Environment",
-                        "value": "https://tdgcore-qa.powerappsportals.com/en/Register"
-                      }
-                    }
-                  }
-                },
-                "Case_3": {
-                  "case": "https://tdgcore-acc",
-                  "actions": {
-                    "Set_variable_Environment_to_Acc": {
-                      "runAfter": {},
-                      "metadata": {
-                        "operationMetadataId": "c3d3815a-82e9-4f26-9414-4120343eba18"
-                      },
-                      "type": "SetVariable",
-                      "inputs": {
-                        "name": "Environment",
-                        "value": "https://tdgcore-acc.powerappsportals.com/en/SignIn?ReturnUrl=%2Fen%2F"
-                      }
-                    }
-                  }
-                },
-                "Case_4": {
-                  "case": "https://tdgcore-preprod",
-                  "actions": {
-                    "Set_variable_Environment_to_PreProd": {
-                      "runAfter": {},
-                      "metadata": {
-                        "operationMetadataId": "06dc1c2f-63d3-4eee-927f-e1f4d1e04faa"
-                      },
-                      "type": "SetVariable",
-                      "inputs": {
-                        "name": "Environment",
-                        "value": "https://tdgcore-preprod.powerappsportals.com/en/Register?returnUrl=%2Fen%2F"
-                      }
-                    }
-                  }
-                }
-              },
-              "default": {
-                "actions": {
-                  "Set_variable_Environment_": {
-                    "runAfter": {},
-                    "metadata": {
-                      "operationMetadataId": "78c95eca-a10e-4ab6-9053-402a6032b272"
-                    },
-                    "type": "SetVariable",
-                    "inputs": {
-                      "name": "Environment",
-                      "value": "https://rd-tdgcore-dev.powerappsportals.com/en/Register?returnUrl=%2Fen%2Fen-US%2F"
-                    }
-                  }
-                }
-              },
-              "expression": "@variables('Environment')",
-              "metadata": {
-                "operationMetadataId": "b1e5dbee-3b93-4a5d-8205-2a7a863e70f1"
-              },
-              "type": "Switch"
-            },
             "Switch": {
               "runAfter": {
                 "Condition_-_check_if_portal_URL_parameter_is_passed": [
@@ -264,22 +180,23 @@
                   "actions": {
                     "Condition_2_-_Check_contact_Language": {
                       "actions": {
-                        "Send_an_email_notification_-_French_S3": {
+                        "Send_an_email_French": {
                           "runAfter": {},
                           "metadata": {
-                            "operationMetadataId": "4c6eb0e1-e4fd-4955-86a4-7a288db18da9"
+                            "operationMetadataId": "f3e50706-9143-40ed-b464-f50e8d59d759"
                           },
                           "type": "OpenApiConnection",
                           "inputs": {
                             "host": {
-                              "connectionName": "shared_sendmail",
-                              "operationId": "SendEmailV3",
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                              "connectionName": "shared_office365",
+                              "operationId": "SendEmailV2",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                             },
                             "parameters": {
-                              "request/to": "@{outputs('Get_a_row_by_ID_Invited_Contact')?['body/emailaddress1']};",
-                              "request/subject": "@{variables('FrenchTestSubjectText')} TMD en ligne – BDIC : Affectation en tant que contact secondaire pour l’organisation @{variables('Company Name')}",
-                              "request/text": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{variables('Invited By')}, le contact principal de l’organisation &nbsp;@{variables('Company Name')} de la plateforme de données de la BDIC en ligne de Transports Canada, vous a ajouté en tant que contact secondaire pour cette organisation. <br>\n<br>\nPour accéder à la plateforme de la BDIC, veuillez copier le lien suivant dans votre navigateur Web: <br>\n@{variables('Environment')}<br>\n<br>\nSur la page Web qui s’affiche, veuillez fournir les renseignements suivants pour le code d’invitation demandé:<br>\n@{first(outputs('Filter_Invitations')?['body/value'])?['adx_invitationcode']}<br>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de messagerie. &nbsp;Si vous n’êtes pas la personne qui doit inscrire cette organisation, veuillez l’indiquer en répondant à ce courriel. Si vous connaissez le nom et l’adresse courriel de la personne chargée d’inscrire cette organisation, veuillez les indiquer également.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}</p>"
+                              "emailMessage/To": "@outputs('Get_a_row_by_ID_Invited_Contact')?['body/emailaddress1']",
+                              "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Affectation en tant que contact secondaire pour l’organisation @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']}.",
+                              "emailMessage/Body": "<p>Ce courriel est une invitation à vous inscrire @{variables('Company Name')} dans la base de données d'identification des clients (BDIC) de Transports Canada. Pour enregistrer votre organisation, veuillez sélectionner ou copier et coller le lien suivant dans votre navigateur :<br>\n<a href=\"@{variables('varHyperLink')}\">@{variables('varHyperLink')}</a><br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de courrier électronique. &nbsp;Si vous n'êtes pas la personne qui doit enregistrer cette organisation, veuillez l'indiquer en répondant à tc.tdgengagement-engagementtmd.tc@tc.gc.ca. Si vous connaissez le nom et l'adresse électronique de la personne qui devrait enregistrer cette organisation, veuillez également fournir ces informations.<br>\n<br>\n</p>",
+                              "emailMessage/Importance": "Normal"
                             },
                             "authentication": "@parameters('$authentication')"
                           }
@@ -288,22 +205,23 @@
                       "runAfter": {},
                       "else": {
                         "actions": {
-                          "Send_an_email_notification_-_English_S3": {
+                          "Send_an_email_English": {
                             "runAfter": {},
                             "metadata": {
-                              "operationMetadataId": "21ca975c-4645-4ec1-abb5-2be151919b5c"
+                              "operationMetadataId": "dbf5710e-9b01-4698-83e8-f344ad7edbc5"
                             },
                             "type": "OpenApiConnection",
                             "inputs": {
                               "host": {
-                                "connectionName": "shared_sendmail",
-                                "operationId": "SendEmailV3",
-                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+                                "connectionName": "shared_office365",
+                                "operationId": "SendEmailV2",
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                               },
                               "parameters": {
-                                "request/to": "@{outputs('Get_a_row_by_ID_Invited_Contact')?['body/emailaddress1']};",
-                                "request/subject": "@{variables('TestSubjectText')} TDG Online - CID: Assignment as a Secondary Contact for the @{variables('Company Name')} organization",
-                                "request/text": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{variables('Invited By')}, the Primary Contact for the @{variables('Company Name')} organization of the Transport Canada Online CID Data Platform, has added you as a Secondary Contact for that organization.<br>\n<br>\nTo on-board to the CID Platform, please copy the following link into your Web browser:<br>\n@{variables('Environment')}<br>\n<br>\nOn the Web page that appears, please provide the following information for the requested Invitation code:<br>\n@{first(outputs('Filter_Invitations')?['body/value'])?['adx_invitationcode']}<br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to this email. If you know the name and email address of the individual who should register this organization, then please provide this as well.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('English-EmailFooter')}</p>"
+                                "emailMessage/To": "@outputs('Get_a_row_by_ID_Invited_Contact')?['body/emailaddress1']",
+                                "emailMessage/Subject": "@{variables('TestSubjectText')} TDG Online - CID: Assignment as a Secondary Contact for the @{variables('Company Name')} organization",
+                                "emailMessage/Body": "<p>This email is an invitation for you to register @{variables('Company Name')} in Transport Canada’s Client Identification Database (CID). To register your organization, please select or copy and paste the following link into your browser:<br>\n<br>\n<a href=\"@{variables('varHyperLink')}\">@{variables('varHyperLink')}</a><br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to tc.tdgengagement-engagementtmd.tc@tc.gc.ca . If you know the name and email address of the individual who should register this organization, then please provide this information as well.<br>\n<br>\nRegards<br>\n<br>\n<br>\nTransport Canada TDG CID Support Team</p>",
+                                "emailMessage/Importance": "Normal"
                               },
                               "authentication": "@parameters('$authentication')"
                             }
@@ -407,12 +325,27 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "Environment",
-                    "value": "@{concat(triggerBody()?['Portal_URL'], '/Register?returnUrl=%2Fen')}"
+                    "value": "@{concat(triggerBody()?['Portal_URL'], '/Register?returnUrl=%2Fen%2F&invitation_code=')}"
+                  }
+                },
+                "Set_variable_varHyperlink": {
+                  "runAfter": {
+                    "Set_variable_Environment_with_URL": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "aae64a18-5249-41d0-9c66-2375cc0886a3"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "varHyperLink",
+                    "value": "@{variables('Environment')}@{first(outputs('Filter_Invitations')?['body/value'])?['adx_invitationcode']}"
                   }
                 }
               },
               "runAfter": {
-                "Switch_-_legacy_should_be_removed": [
+                "Set_variable_Environment": [
                   "Succeeded"
                 ]
               },
@@ -833,7 +766,7 @@
         },
         "get-environment-settings": {
           "runAfter": {
-            "Initialize_variable_FrenchTesting_text_for_the_email": [
+            "Initialize_variable_varHyperLink": [
               "Succeeded"
             ]
           },
@@ -1002,6 +935,25 @@
             "variables": [
               {
                 "name": "FrenchTestingText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_varHyperLink": {
+          "runAfter": {
+            "Initialize_variable_FrenchTesting_text_for_the_email": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c2edeb56-53b2-4be9-89e6-188312c1ac76"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varHyperLink",
                 "type": "string"
               }
             ]
