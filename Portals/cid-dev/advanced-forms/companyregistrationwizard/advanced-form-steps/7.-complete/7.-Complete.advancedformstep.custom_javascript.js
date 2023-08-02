@@ -7,11 +7,11 @@ $(document).ready(function () {
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
-      console.log ("turn off mode");
+     
       var softLunchmode = "off";
-       var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_Soft_lunch_mode'");
-console.log ("resuts");
-        console.log(EnvironmentSettingResult) ; 
+      var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_Soft_lunch_mode'");
+
+       
             if (EnvironmentSettingResult.length > 0) {
                  softLunchmode = EnvironmentSettingResult[0]["qm_value"];
                  if ( softLunchmode == "ON")
