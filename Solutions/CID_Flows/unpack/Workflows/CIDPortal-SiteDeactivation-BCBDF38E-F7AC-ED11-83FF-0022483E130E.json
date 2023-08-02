@@ -18,6 +18,15 @@
         "api": {
           "name": "shared_commondataserviceforapps"
         }
+      },
+      "shared_office365": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "ovs_sharedoffice365_0d789"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
       }
     },
     "definition": {
@@ -314,7 +323,7 @@
                 },
                 "parameters": {
                   "entityName": "contacts",
-                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"contact\">\n<attribute name=\"fullname\"/>\n<attribute name=\"telephone1\"/>\n<attribute name=\"contactid\"/>\n<order attribute=\"fullname\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"adx_identity_username\" operator=\"eq\" value=\"@{triggerOutputs()?['body/adx_modifiedbyusername']}\"/>\n</filter>\n</entity>\n</fetch>"
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"contact\">\n<attribute name=\"fullname\"/>\n<attribute name=\"telephone1\"/>\n<attribute name=\"emailaddress1\"/>\n<attribute name=\"cid_languageofcorrespondence\"/>\n<attribute name=\"contactid\"/>\n<order attribute=\"fullname\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"adx_identity_username\" operator=\"eq\" value=\"@{triggerOutputs()?['body/adx_modifiedbyusername']}\"/>\n</filter>\n</entity>\n</fetch>"
                 },
                 "authentication": "@parameters('$authentication')"
               }
@@ -340,6 +349,233 @@
                   "item/ovs_CreatedByExternalUser@odata.bind": "contacts(@{first(body('Get_modified_by_contact')?['value'])?['contactid']})",
                   "item/ovs_Company@odata.bind": "accounts(@{triggerOutputs()?['body/_parentaccountid_value']})",
                   "item/ovs_RequestType@odata.bind": "ovs_supportrequesttypes(@{first(body('Get_Site_Deactivation_Support_Request_Type')?['value'])?['ovs_supportrequesttypeid']})"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Scope_-_email_Template_Standard_Text": {
+              "actions": {
+                "English_-_StandardSalutation": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "c5bbe992-aefa-4690-a9d9-b28ba700b18a"
+                  },
+                  "type": "Compose",
+                  "inputs": "<em>*** The following is an automated email sent by the TDG Online - CID system. Please do not reply ***</em>"
+                },
+                "French_-_StandardSalutation": {
+                  "runAfter": {
+                    "English_-_StandardSalutation": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3ffe9b8c-3247-4772-a82d-a16a9b0a3146"
+                  },
+                  "type": "Compose",
+                  "inputs": "<em>*** Le message suivant est un courriel automatisé envoyé par le TMD en ligne – Système de la BDIC. Veuillez ne pas répondre ***</em>"
+                },
+                "English_-_EmailFooter": {
+                  "runAfter": {
+                    "French_-_StandardSalutation": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "ff547754-b606-4a7c-807a-b1775658848a"
+                  },
+                  "type": "Compose",
+                  "inputs": "<div style=\"font-size:x-small;\"><br>Note:<br>\n   - To receive subsequent emails in French, you can update your Language of Preferred Correspondence choice via the [Account Settings] button in the TDG Online - CID data portal. <br><br> \n   - Please do not reply to this email. If necessary, use the Contact Us button, or link, in the CID data portal. </div>"
+                },
+                "French_-_EmailFooter": {
+                  "runAfter": {
+                    "English_-_EmailFooter": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "54e72a64-041f-4530-8469-411b73f4f746"
+                  },
+                  "type": "Compose",
+                  "inputs": "<div style=\"font-size:x-small;\">Remarque:<br>\n   - Pour recevoir les courriels suivants en français, vous pouvez mettre à jour votre choix de langue de correspondance préférée à l’aide du bouton [Paramètres du compte] du portail de données TMD en ligne – BDIC. <br><br> \n   - Veuillez ne pas répondre à ce courriel. Au besoin, utilisez le bouton ou le lien « Communiquer avec nous » du portail de données de la BDIC.  </div>"
+                },
+                "Filter_Environment_-_CID_Environment": {
+                  "runAfter": {
+                    "French_-_EmailFooter": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "5f1dd01c-3fc3-4eae-a228-d11184c64bf6"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@outputs('Get_environment_settings')?['body/value']",
+                    "where": "@equals(triggerOutputs()?['body/address1_name'], 'CID_Environment')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Get_environment_settings": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7483284e-a82b-4ca9-8208-a443a56aa43c"
+              },
+              "type": "Scope"
+            },
+            "Get_environment_settings": {
+              "runAfter": {
+                "Create_HTML_table_French": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "f2093940-0ad7-4558-bd06-7c7fbb3254e0"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "qm_environmentsettingses",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"qm_environmentsettings\">\n<attribute name=\"qm_environmentsettingsid\"/>\n<attribute name=\"qm_name\"/>\n<attribute name=\"qm_value\"/>\n<order attribute=\"qm_name\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"qm_name\" operator=\"like\" value=\"%CID[_]%\"/>\n</filter>\n</entity>\n</fetch>"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Get_list_of_active_sites": {
+              "runAfter": {
+                "Get_a_row_by_ID": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "237a21e8-d983-448f-8ea1-b71a9da49a18"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"account\">\n<attribute name=\"name\"/>\n<attribute name=\"accountid\"/>\n<attribute name=\"cid_sitename\"/>\n<attribute name=\"cid_siteid\"/>\n<order attribute=\"name\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"parentaccountid\" operator=\"eq\"  uitype=\"account\" value=\"@{triggerOutputs()?['body/_parentaccountid_value']} \"/>\n<condition attribute=\"cid_cidsitestatus\" operator=\"in\">\n<value>100000018</value>\n<value>100000014</value>\n<value>100000013</value>\n<value>100000000</value>\n<value>100000009</value>\n<value>100000006</value>\n<value>100000025</value>\n<value>100000004</value>\n<value>100000005</value>\n<value>100000011</value>\n</condition>\n</filter>\n</entity>\n</fetch>"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Create_HTML_table": {
+              "runAfter": {
+                "Compose_Nom_du_site": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0af4e33a-9cb5-4057-aa19-fd3c9903165c"
+              },
+              "type": "Table",
+              "inputs": {
+                "from": "@outputs('Get_list_of_active_sites')?['body/value']",
+                "format": "HTML",
+                "columns": [
+                  {
+                    "header": "@outputs('Compose_Site_ID')",
+                    "value": "@item()?['cid_siteid']"
+                  },
+                  {
+                    "header": "@outputs('Compose_Site_Name')",
+                    "value": "@item()?['cid_sitename']"
+                  }
+                ]
+              }
+            },
+            "Compose_Site_Name": {
+              "runAfter": {
+                "Compose_Site_ID": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "291e9a76-1188-4439-8141-044a5eea65fe"
+              },
+              "type": "Compose",
+              "inputs": "Site Name"
+            },
+            "Compose_Site_ID": {
+              "runAfter": {
+                "Get_list_of_active_sites": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "6dbfdd07-d7bb-4318-83d3-25a245a46366"
+              },
+              "type": "Compose",
+              "inputs": "Site ID                                            "
+            },
+            "Compose_Nom_du_site": {
+              "runAfter": {
+                "Compose_Site_Name": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "747432f9-f9ed-405a-9683-46a718440e0c"
+              },
+              "type": "Compose",
+              "inputs": "Nom du site"
+            },
+            "Create_HTML_table_French": {
+              "runAfter": {
+                "Create_HTML_table": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "f85e362a-fe35-4e67-a266-aa70f7d09d36"
+              },
+              "type": "Table",
+              "inputs": {
+                "from": "@outputs('Get_list_of_active_sites')?['body/value']",
+                "format": "HTML",
+                "columns": [
+                  {
+                    "header": "@outputs('Compose_Site_ID')",
+                    "value": "@item()?['cid_siteid']"
+                  },
+                  {
+                    "header": "@outputs('Compose_Nom_du_site')",
+                    "value": "@item()?['cid_sitename']"
+                  }
+                ]
+              }
+            },
+            "Get_a_row_by_ID": {
+              "runAfter": {
+                "Add_new_support_request": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "295d17d1-3d73-4f24-ae42-adf837c42fb1"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "recordId": "@outputs('Add_new_support_request')?['body/_ovs_company_value']"
                 },
                 "authentication": "@parameters('$authentication')"
               }
@@ -396,6 +632,81 @@
             "operationMetadataId": "e03bd0cd-9341-4c74-ad9f-5b93d8b1455c"
           },
           "type": "If"
+        },
+        "Apply_to_each_4": {
+          "foreach": "@outputs('Get_modified_by_contact')?['body/value']",
+          "actions": {
+            "Check_Language": {
+              "actions": {
+                "Send_an_email_(V2)": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "a2e138b0-232a-44df-bac1-c9eb964678bf"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_office365",
+                      "operationId": "SendEmailV2",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                    },
+                    "parameters": {
+                      "emailMessage/To": "@items('Apply_to_each_4')?['emailaddress1']",
+                      "emailMessage/Subject": "TDG Online - CID : Confirmation of Site Deactivation",
+                      "emailMessage/Body": "<p>@{outputs('English_-_StandardSalutation')}<br>\n<br>\n@{items('Apply_to_each_4')?['fullname']}<br>\n<br>\nYou've successfully removed @{triggerOutputs()?['body/cid_siteid']} -@{triggerOutputs()?['body/cid_sitename']} from your CID Registration for @{outputs('Get_a_row_by_ID')?['body/name']}<br>\n<br>\nHere's a list of your currently Active Sites:<br>\n@{body('Create_HTML_table')}<br>\nTransaction Number: @{outputs('Add_Site_Deactivation_History_Log_for_SG1')?['body/cid_record_id']}<br>\n<br>\nRegards,<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n<br>\n@{outputs('English_-_EmailFooter')}</p>",
+                      "emailMessage/Importance": "Normal"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {},
+              "else": {
+                "actions": {
+                  "Send_an_email_(V2)_2": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "a0561794-b6ef-4ef7-93ca-195b16ae12df"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_office365",
+                        "operationId": "SendEmailV2",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                      },
+                      "parameters": {
+                        "emailMessage/To": "@items('Apply_to_each_4')?['emailaddress1']",
+                        "emailMessage/Subject": "TMD en ligne – BDIC : Confirmation que la demande de désactivation du site",
+                        "emailMessage/Body": "<p>@{outputs('French_-_StandardSalutation')}<br>\n<br>\n@{items('Apply_to_each_4')?['fullname']}<br>\n<br>\nVous avez supprimé avec succès @{triggerOutputs()?['body/cid_siteid']} - @{triggerOutputs()?['body/cid_sitename']} de votre enregistrement CID pour @{outputs('Get_a_row_by_ID')?['body/name']}<br>\n<br>\nVoici une liste de vos sites actuellement actifs :<br>\n@{body('Create_HTML_table_French')}<br>\nNuméro de transaction: @{outputs('Add_Site_Deactivation_History_Log_for_SG1')?['body/cid_record_id']}<br>\n<br>\nSalutations,<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n<br>\n@{outputs('French_-_EmailFooter')}</p>",
+                        "emailMessage/Importance": "Normal"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  }
+                }
+              },
+              "expression": {
+                "equals": [
+                  "@items('Apply_to_each_4')?['cid_languageofcorrespondence']",
+                  918640001
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "44b8e5b1-1342-4271-9877-19fda73388c2"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "Condition": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "eeb67d2d-c3dc-4623-b231-c472a333560d"
+          },
+          "type": "Foreach"
         }
       }
     },

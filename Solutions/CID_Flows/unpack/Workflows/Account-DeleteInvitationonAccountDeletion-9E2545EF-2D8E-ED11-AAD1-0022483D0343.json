@@ -25,9 +25,9 @@
         }
       },
       "triggers": {
-        "Trigger_when_account_was_deleted": {
+        "When_a_row_is_added,_modified_or_deleted": {
           "metadata": {
-            "operationMetadataId": "22ea7b42-c7da-4e22-a8c7-9b5132f5fd78"
+            "operationMetadataId": "5fb7e186-e5d5-4184-80b3-dd84999352c2"
           },
           "type": "OpenApiConnectionWebhook",
           "inputs": {
@@ -39,7 +39,8 @@
             "parameters": {
               "subscriptionRequest/message": 2,
               "subscriptionRequest/entityname": "account",
-              "subscriptionRequest/scope": 2
+              "subscriptionRequest/scope": 2,
+              "subscriptionRequest/runas": 3
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -60,7 +61,7 @@
             },
             "parameters": {
               "entityName": "adx_invitations",
-              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"adx_invitation\">\n    <attribute name=\"adx_name\" />\n    <attribute name=\"createdon\" />\n    <attribute name=\"adx_type\" />\n    <attribute name=\"statuscode\" />\n    <attribute name=\"adx_invitationcode\" />\n    <attribute name=\"adx_expirydate\" />\n    <attribute name=\"adx_invitationid\" />\n    <attribute name=\"adx_assigntoaccount\" />\n    <order attribute=\"createdon\" descending=\"false\" />\n    <order attribute=\"adx_name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"adx_assigntoaccount\" operator=\"eq\" uitype=\"account\" value=\"@{triggerOutputs()?['body/accountid']}\" />\n    </filter>\n  </entity>\n</fetch>"
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"adx_invitation\">\n    <attribute name=\"adx_name\" />\n    <attribute name=\"createdon\" />\n    <attribute name=\"adx_type\" />\n    <attribute name=\"statuscode\" />\n    <attribute name=\"adx_invitationcode\" />\n    <attribute name=\"adx_expirydate\" />\n    <attribute name=\"adx_invitationid\" />\n    <attribute name=\"adx_assigntoaccount\" />\n    <order attribute=\"createdon\" descending=\"false\" />\n    <order attribute=\"adx_name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"adx_assigntoaccount\" operator=\"eq\" uitype=\"account\" value=\"\" />\n    </filter>\n  </entity>\n</fetch>"
             },
             "authentication": "@parameters('$authentication')"
           }

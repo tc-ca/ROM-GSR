@@ -214,7 +214,7 @@
                           "type": "SetVariable",
                           "inputs": {
                             "name": "Environment",
-                            "value": "https://rd-tdgcore-dev.powerappsportals.com/en/Account/Login/Register?returnUrl=%2Fen%2F&invitationCode="
+                            "value": "https://rd-tdgcore-dev.powerappsportals.com/en/Register?returnUrl=%2Fen%2F&invitation_code="
                           }
                         }
                       }
@@ -230,7 +230,7 @@
                           "type": "SetVariable",
                           "inputs": {
                             "name": "Environment",
-                            "value": "https://tdgcore-qa.powerappsportals.com/en/Account/Login/Register?returnUrl=%2Fen%2F&invitationCode="
+                            "value": "https://tdgcore-qa.powerappsportals.com/en/Register?returnUrl=%2Fen%2F&invitation_code="
                           }
                         }
                       }
@@ -246,7 +246,7 @@
                           "type": "SetVariable",
                           "inputs": {
                             "name": "Environment",
-                            "value": "https://tdgcore-acc.powerappsportals.com/en/Account/Login/Register?returnUrl=%2Fen%2F&invitationCode="
+                            "value": "https://tdgcore-acc.powerappsportals.com/en/Register?returnUrl=%2Fen%2F&invitation_code="
                           }
                         }
                       }
@@ -262,7 +262,7 @@
                           "type": "SetVariable",
                           "inputs": {
                             "name": "Environment",
-                            "value": "https://tdgcore-preprod.powerappsportals.com/en/Account/Login/Register?returnUrl=%2Fen%2F&invitationCode="
+                            "value": "https://tdgcore-preprod.powerappsportals.com/en/Register?returnUrl=%2Fen%2F&invitation_code="
                           }
                         }
                       }
@@ -278,7 +278,7 @@
                         "type": "SetVariable",
                         "inputs": {
                           "name": "Environment",
-                          "value": "@{concat(envivariables('Environment'), '/en/Register?returnUrl=%2Fen%2F')}"
+                          "value": "@{concat(envivariables('Environment'), '/en/Register?returnUrl=%2Fen%2F&invitation_code=')}"
                         }
                       },
                       "Set_variable": {
@@ -304,7 +304,7 @@
                   },
                   "type": "Switch"
                 },
-                "Condition_2": {
+                "Check_Language_and_send_email_": {
                   "actions": {
                     "Send_email_notification_(V3)_-French": {
                       "runAfter": {},
@@ -321,7 +321,7 @@
                         "parameters": {
                           "emailMessage/To": "@outputs('Get_a_row_by_ID_Contact')?['body/emailaddress1']",
                           "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Affectation en tant que contact secondaire pour l’organisation @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']}.",
-                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Contact')?['body/fullname']}, le contact principal de l’organisation @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} de la plateforme de données de la BDIC en ligne de Transports Canada, vous a ajouté en tant que contact secondaire pour cette organisation.<br>\n<br>\nPour accéder à la plateforme de la BDIC, veuillez copier le lien suivant dans votre navigateur Web :<br>\n@{variables('Environment')}@{triggerOutputs()?['body/adx_invitationcode']}<br>\n<br>\nSur la page Web qui s’affiche, veuillez fournir les renseignements suivants pour le code d’invitation demandé :<br>\n@{triggerOutputs()?['body/adx_invitationcode']}<br>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de messagerie. &nbsp;Si vous n’êtes pas la personne qui doit inscrire cette organisation, veuillez l’indiquer en répondant à ce courriel. Si vous connaissez le nom et l’adresse courriel de la personne chargée d’inscrire cette organisation, veuillez les indiquer également.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Contact')?['body/fullname']}, le contact principal de @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} dans la base de données d'identification des clients (BDIC) de Transports Canada, vous a ajouté en tant que contact secondaire pour cette organisation.<br>\n<br>\nPour rejoindre votre organisation, veuillez sélectionner ou copier et coller le lien suivant dans votre navigateur :<br>\n<a href=\"@{variables('varHyperLink')}\">@{variables('varHyperLink')}</a>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de courrier électronique. &nbsp;Si vous n'êtes pas la personne qui doit enregistrer cette organisation, veuillez l'indiquer en répondant à tc.tdgengagement-engagementtmd.tc@tc.gc.ca. Si vous connaissez le nom et l'adresse électronique de la personne qui devrait enregistrer cette organisation, veuillez également fournir ces informations.<br>\n<br>\n@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
                           "emailMessage/Importance": "Normal"
                         },
                         "authentication": "@parameters('$authentication')"
@@ -329,7 +329,7 @@
                     }
                   },
                   "runAfter": {
-                    "Switch": [
+                    "Set_variable_varHyperLink_": [
                       "Succeeded"
                     ]
                   },
@@ -350,7 +350,7 @@
                           "parameters": {
                             "emailMessage/To": "@outputs('Get_a_row_by_ID_Contact')?['body/emailaddress1']",
                             "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: Assignment as a Secondary Contact for the @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} organization",
-                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Contact')?['body/fullname']}, the Primary Contact for the @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} organization of the Transport Canada Online CID Data Platform, has added you as a Secondary Contact for that organization.<br>\n<br>\n<br>\n<br>\nTo on-board to the CID Platform, please copy the following link into your Web browser:<br>\n@{variables('Environment')}@{triggerOutputs()?['body/adx_invitationcode']}<br>\n<br>\nOn the Web page that appears, please provide the following information for the requested Invitation code:<br>\n@{triggerOutputs()?['body/adx_invitationcode']}<br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to this email. If you know the name and email address of the individual who should register this organization, then please provide this as well.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Contact')?['body/fullname']}, the Primary Contact for @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} in Transport Canada’s Client Identification Database (CID), has added you as a Secondary Contact for that organization.<br>\n<br>\nTo join your organization, please select or copy and paste the following link into your browser:<br>\n<br>\n<a href=\"@{variables('varHyperLink')}\">@{variables('varHyperLink')}</a>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to tc.tdgengagement-engagementtmd.tc@tc.gc.ca. If you know the name and email address of the individual who should register this organization, then please provide this information as well.<br>\n<br>\n@{outputs('StandardSalutation')}<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
                             "emailMessage/Importance": "Normal"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -481,7 +481,7 @@
                 },
                 "Update_Invitation_Table": {
                   "runAfter": {
-                    "Condition_2": [
+                    "Check_Language_and_send_email_": [
                       "Succeeded"
                     ]
                   },
@@ -563,6 +563,21 @@
                     "operationMetadataId": "d3d8b392-57ff-425b-8f15-82cee95c9308"
                   },
                   "type": "If"
+                },
+                "Set_variable_varHyperLink_": {
+                  "runAfter": {
+                    "Switch": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "4e206445-bca6-41c7-8633-6a07e8487551"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "varHyperLink",
+                    "value": "@{variables('Environment')}@{triggerOutputs()?['body/adx_invitationcode']}"
+                  }
                 }
               },
               "runAfter": {
@@ -747,7 +762,7 @@
         },
         "get-environment-settings": {
           "runAfter": {
-            "Initialize_Invited_By": [
+            "Initialize_variable_varHyperLink": [
               "Succeeded"
             ]
           },
@@ -986,6 +1001,25 @@
             "variables": [
               {
                 "name": "TestSubjectText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_varHyperLink": {
+          "runAfter": {
+            "Initialize_Invited_By": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5a9e445c-150f-45ce-95af-b66a99c28458"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varHyperLink",
                 "type": "string"
               }
             ]

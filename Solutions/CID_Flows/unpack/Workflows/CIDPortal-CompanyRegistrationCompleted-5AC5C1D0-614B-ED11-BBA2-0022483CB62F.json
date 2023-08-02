@@ -451,7 +451,7 @@
                         "parameters": {
                           "emailMessage/To": "@items('Send_registration_completion_email_to_each_contact')?['emailaddress1']",
                           "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC :  La procédure d’inscription de l’organisation @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalnamefr']} dans les paramètres de la plateforme de données de la BDIC de Transports Canada est réussie.",
-                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLa procédure d’inscription de l’organisation @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalnamefr']} dans la plateforme de données de la BDIC en ligne de Transports Canada est réussie.<br>\n<br>\nConformément à la réglementation, vous êtes tenu de mettre à jour les renseignements relatifs à votre organisation dans la plateforme de données de la BDIC au cours de l’année, si un changement important est intervenu concernant les données gérées ici pour votre organisation et les sites de votre organisation.<br>\n<br>\n<strong>Numéro de confirmation</strong>: @{triggerOutputs()?['body/cid_record_id']}<br>\n<br>\nCette inscription comprend l'ajout des sites suivants:<br>\n<br>\n@{body('Create_HTML_table')}<br>\nEn outre, les données de votre organisation doivent être entièrement mises à jour chaque année, la première mise à jour étant requise un an après la date d’entrée en vigueur de la directive.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nTDG Online - Équipe de soutien CID<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n<br>\n</p>",
+                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLa procédure d’inscription de l’organisation @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalnamefr']} dans la plateforme de données de la BDIC en ligne de Transports Canada est réussie.<br>\n<br>\nConformément à la réglementation, vous êtes tenu de mettre à jour les renseignements relatifs à votre organisation dans la plateforme de données de la BDIC au cours de l’année, si un changement important est intervenu concernant les données gérées ici pour votre organisation et les sites de votre organisation.<br>\n<br>\n<strong>Numéro de confirmation</strong>: @{triggerOutputs()?['body/cid_record_id']}<br>\n<br>\nCette inscription comprend l'ajout des sites suivants:<br>\n<br>\n@{body('Create_HTML_table')}<br>\nEn outre, les données de votre organisation doivent être entièrement mises à jour chaque année, la première mise à jour étant requise un an après la date d’entrée en vigueur de la directive.<br>\n<br>\nSalutations,<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
                           "emailMessage/Importance": "Normal"
                         },
                         "authentication": "@parameters('$authentication')"
@@ -476,7 +476,7 @@
                           "parameters": {
                             "emailMessage/To": "@items('Send_registration_completion_email_to_each_contact')?['emailaddress1']",
                             "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID:  Successful completion of the registration process for the  organization in the Transport Canada CID Data Platform",
-                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe registration for @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalname']} in the Transport Canada CID Application has been successfully completed.<br>\n<br>\nPer the regulations, you are required to update your organization’s information in the CID Application during the year if a material change has occurred.<br>\n<br>\n<strong>Confirmation Number:</strong> @{triggerOutputs()?['body/cid_record_id']}<br>\n<br>\nThis registration includes the addition of the following sites:<br>\n<br>\n@{body('Create_HTML_table')}<br>\nFurther, your organization’s data is required to be fully updated on an annual basis.<br>\n<br>\nRegards,<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n<br>\n</p>",
+                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe registration for @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalname']} in the Transport Canada CID Application has been successfully completed.<br>\n<br>\nPer the regulations, you are required to update your organization’s information in the CID Application during the year if a material change has occurred.<br>\n<br>\n<strong>Confirmation Number:</strong> @{triggerOutputs()?['body/cid_record_id']}<br>\n<br>\nThis registration includes the addition of the following sites:<br>\n<br>\n@{body('Create_HTML_table')}<br>\nFurther, your organization’s data is required to be fully updated on an annual basis.<br>\n<br>\nRegards,<br>\nTransport Canada - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n<br>\n</p>",
                             "emailMessage/Importance": "Normal"
                           },
                           "authentication": "@parameters('$authentication')"
@@ -524,7 +524,7 @@
                 },
                 "parameters": {
                   "entityName": "accounts",
-                  "$select": "ovs_romid, ovs_legalname",
+                  "$select": "ovs_romid, ovs_legalname, address1_composite, ovs_address_type, ovs_lld_quarter, ovs_lld_section,ovs_lld_township,ovs_lld_township, ovs_lld_meridian, ovs_address_display, ovs_calculatedlatitudelongitude",
                   "$filter": "_parentaccountid_value eq @{outputs('Get_a_row_by_ID:_Organization_by_History_Log')?['body/accountid']}"
                 },
                 "authentication": "@parameters('$authentication')"
@@ -552,7 +552,7 @@
                       },
                       {
                         "header": "",
-                        "value": "@item()?['ovs_legalname']"
+                        "value": "@item()?['ovs_address_display']"
                       }
                     ]
                   }

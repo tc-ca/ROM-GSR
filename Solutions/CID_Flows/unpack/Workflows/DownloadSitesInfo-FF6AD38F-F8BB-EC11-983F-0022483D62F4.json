@@ -585,7 +585,7 @@
                           "item/notetext": "*WEB*",
                           "item/isdocument": true,
                           "item/documentbody": "@base64(outputs('French_GetContentInstructionPdf')?['body'])",
-                          "item/filename": "French-TC CID - Site Bulk Upload Instructions.PDF",
+                          "item/filename": "BDIC TC - Procédures de téléversement de sites en bloc.PDF",
                           "item/objectid_cid_bulkactivitylogsummary@odata.bind": "@concat('/cid_bulkactivitylogsummaries/', outputs('activityid'))"
                         },
                         "authentication": "@parameters('$authentication')"
@@ -958,7 +958,7 @@
                         "item/notetext": "*WEB*",
                         "item/isdocument": true,
                         "item/documentbody": "@base64(outputs('French_GetContentInstructionPdf_2')?['body'])",
-                        "item/filename": "French-TC CID - Site Bulk Upload Instructions.PDF",
+                        "item/filename": "BDIC TC - Procédures de téléversement de sites en bloc.PDF",
                         "item/objectid_cid_bulkactivitylogsummary@odata.bind": "@concat('/cid_bulkactivitylogsummaries/', outputs('activityid'))"
                       },
                       "authentication": "@parameters('$authentication')"
@@ -1724,6 +1724,21 @@
                     "name": "ExcelHeaderPrefix",
                     "value": "Enregistrement BDIC de Transports Canada pour \n"
                   }
+                },
+                "Set_variable_filenamePrefix_2": {
+                  "runAfter": {
+                    "Set_variable_2": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "84d463cb-25e6-4fc1-bb81-87cb486e93f4"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "FileNamePrefix",
+                    "value": "Enregistrement BDIC de TC - Ajout d’un bloc de sites - @{variables('CompanyName')}, as of"
+                  }
                 }
               },
               "runAfter": {
@@ -1802,6 +1817,21 @@
                     "inputs": {
                       "name": "ExcelHeaderPrefix",
                       "value": "Conformité annuelle BDIC de Transports Canada pour"
+                    }
+                  },
+                  "Set_variable_filenamePrefix_3": {
+                    "runAfter": {
+                      "Set_Excel_Header_Prefix_to_french_annual_compliance": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "84d463cb-25e6-4fc1-bb81-87cb486e93f4"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "FileNamePrefix",
+                      "value": "BDIC TC Mise à jour annuelle de la conformité - Ajout d’un bloc de sites - @{variables('CompanyName')}, as of"
                     }
                   }
                 },
