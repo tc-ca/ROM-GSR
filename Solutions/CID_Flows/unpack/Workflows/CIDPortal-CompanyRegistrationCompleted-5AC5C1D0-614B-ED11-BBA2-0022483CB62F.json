@@ -64,7 +64,7 @@
         }
       },
       "actions": {
-        "Condition_2": {
+        "Condition_if_accountid_is_null": {
           "actions": {
             "Get_a_row_by_ID:_Organization_by_History_Log": {
               "runAfter": {},
@@ -103,8 +103,7 @@
                 },
                 "parameters": {
                   "entityName": "qm_environmentsettingses",
-                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"qm_environmentsettings\">\n<attribute name=\"qm_environmentsettingsid\"/>\n<attribute name=\"qm_name\"/>\n<attribute name=\"qm_value\"/>\n<order attribute=\"qm_name\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"qm_name\" operator=\"eq\" value=\"CID_Environment\"/>\n</filter>\n</entity>\n</fetch>",
-                  "$top": 1
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"qm_environmentsettings\">\n<attribute name=\"qm_environmentsettingsid\"/>\n<attribute name=\"qm_name\"/>\n<attribute name=\"qm_value\"/>\n<order attribute=\"qm_name\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"qm_name\" operator=\"like\" value=\"%CID[_]%\"/>\n</filter>\n</entity>\n</fetch>"
                 },
                 "authentication": "@parameters('$authentication')"
               }
@@ -157,7 +156,7 @@
                 }
               },
               "runAfter": {
-                "Set_variable_2": [
+                "Set_variable_CId_Email_Sender": [
                   "Succeeded"
                 ]
               },
@@ -603,7 +602,7 @@
                 "where": "@equals(item()?['qm_name'], 'CID_Email_Sender')"
               }
             },
-            "Set_variable_2": {
+            "Set_variable_CId_Email_Sender": {
               "runAfter": {
                 "Filter_environment-CID__Email_Sender": [
                   "Succeeded"

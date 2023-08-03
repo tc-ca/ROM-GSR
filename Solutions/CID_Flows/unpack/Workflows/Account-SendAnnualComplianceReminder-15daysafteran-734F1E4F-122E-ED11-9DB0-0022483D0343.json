@@ -271,7 +271,8 @@
                         "parameters": {
                           "emailMessage/To": "@{variables('ToEmailRecipients')};",
                           "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: The Annual Compliance process for the @{items('Apply_to_each_Account')?['ovs_legalname']} organization was due to be completed on @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'] , 'yyyy-MM-dd')}, and is now past due",
-                          "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe Transport Canada CID Data Platform's Annual Compliance process for the @{items('Apply_to_each_Account')?['ovs_legalname']} organization was due on @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'] , 'yyyy-MM-dd')} and needs to be completed by @{addDays(variables('DueDate'), 30, 'yyyy-MM-dd')}. Please login to the CID Data Platform to complete that company's Annual Compliance process.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n<br>\n</p>",
+                          "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe Transport Canada CID Data Platform's Annual Compliance process for the @{items('Apply_to_each_Account')?['ovs_legalname']} organization was due on @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'] , 'yyyy-MM-dd')} and needs to be completed by @{addDays(variables('DueDate'), 30, 'yyyy-MM-dd')}. Please login to the CID Data Platform to complete that company's Annual Compliance process.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n<br>\n</p>",
+                          "emailMessage/From": "@variables('CID_Email_Sender')",
                           "emailMessage/Cc": "@variables('CCEmailRecipients')",
                           "emailMessage/Importance": "Normal"
                         },
@@ -302,6 +303,7 @@
                             "emailMessage/To": "@{variables('ToEmailRecipients')};",
                             "emailMessage/Subject": "@{variables('FrenchTestSubjectText')} TMD en ligne – BDIC : Le processus de conformité annuelle pour l’organisation @{items('Apply_to_each_Account')?['ovs_legalnamefr']} devait être achevé le @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'] , 'yyyy-MM-dd')}, et est maintenant en retard.",
                             "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLe processus de conformité annuelle de la plateforme de données de la BDIC de Transports Canada pour l’organisation @{items('Apply_to_each_Account')?['ovs_legalname']} était dû le @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'] , 'yyyy-MM-dd')}, et il doit être complété d’ici le @{addDays(variables('DueDate'), 30, 'yyyy-MM-dd')}. Veuillez vous connecter à la plateforme de données de la BDIC pour compléter le processus de conformité annuelle de cette entreprise.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
+                            "emailMessage/From": "@variables('CID_Email_Sender')",
                             "emailMessage/Cc": "@variables('CCEmailRecipients')",
                             "emailMessage/Importance": "Normal"
                           },
@@ -527,29 +529,6 @@
             ]
           }
         },
-        "get-environment-settings": {
-          "runAfter": {
-            "Initialize_variable_TestSubjectText": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "7ed63b1d-9cf8-403e-9d9c-56cdd03f198e"
-          },
-          "type": "OpenApiConnection",
-          "inputs": {
-            "host": {
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "ListRecords",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-            },
-            "parameters": {
-              "entityName": "qm_environmentsettingses",
-              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"qm_environmentsettings\">\n<attribute name=\"qm_environmentsettingsid\"/>\n<attribute name=\"qm_name\"/>\n<attribute name=\"qm_value\"/>\n<order attribute=\"qm_name\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"qm_name\" operator=\"like\" value=\"%CID[_]%\"/>\n</filter>\n</entity>\n</fetch>"
-            },
-            "authentication": "@parameters('$authentication')"
-          }
-        },
         "Scope_-_email_Template_Standard_Text": {
           "actions": {
             "StandardSalutation": {
@@ -613,7 +592,7 @@
             }
           },
           "runAfter": {
-            "get-environment-settings": [
+            "Initialize_variable_CID_Email_Sender": [
               "Succeeded"
             ]
           },
@@ -774,6 +753,64 @@
             "operationMetadataId": "9be99f10-fa00-40ae-8580-da6ba08c2e07"
           },
           "type": "If"
+        },
+        "Filter_environment-CID__Email_Sender": {
+          "runAfter": {
+            "get-environment-settings": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('get-environment-settings')?['body/value']",
+            "where": "@equals(item()?['qm_name'], 'CID_Email_Sender')"
+          }
+        },
+        "Initialize_variable_CID_Email_Sender": {
+          "runAfter": {
+            "Filter_environment-CID__Email_Sender": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c068ea6c-92cb-411f-9c4a-2464a31e0468"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CID_Email_Sender",
+                "type": "string",
+                "value": "@{body('Filter_environment-CID__Email_Sender')[0]['qm_value']}"
+              }
+            ]
+          }
+        },
+        "get-environment-settings": {
+          "runAfter": {
+            "Initialize_variable_TestSubjectText": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7ed63b1d-9cf8-403e-9d9c-56cdd03f198e"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "qm_environmentsettingses",
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"qm_environmentsettings\">\n<attribute name=\"qm_environmentsettingsid\"/>\n<attribute name=\"qm_name\"/>\n<attribute name=\"qm_value\"/>\n<order attribute=\"qm_name\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"qm_name\" operator=\"like\" value=\"%CID[_]%\"/>\n</filter>\n</entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
         }
       }
     },

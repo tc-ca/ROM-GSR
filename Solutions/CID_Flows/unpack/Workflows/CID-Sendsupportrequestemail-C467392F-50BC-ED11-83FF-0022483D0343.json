@@ -10,10 +10,10 @@
           "name": "shared_commondataserviceforapps"
         }
       },
-      "shared_office365": {
+      "shared_office365_1": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "tdg_ConnectionReferenceOutlookTDGCoreUser"
+          "connectionReferenceLogicalName": "cid_sharedoffice365_ee685"
         },
         "api": {
           "name": "shared_office365"
@@ -305,7 +305,7 @@
             "Get_a_row_by_ID-_get_contact_email": [
               "Succeeded"
             ],
-            "Scope_-_email_Template_Standard_Text": [
+            "Initialize_variable_CID_Email_Sender": [
               "Succeeded"
             ]
           },
@@ -332,14 +332,15 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "connectionName": "shared_office365",
+                  "connectionName": "shared_office365_1",
                   "operationId": "SendEmailV2",
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                 },
                 "parameters": {
                   "emailMessage/To": "@outputs('Get_a_row_by_ID-_get_contact_email')?['body/emailaddress1']",
                   "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: Request for support",
-                  "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nA representative will review your request as detailed below, and as required contact you via email.<br>\n<br>\nRegards<br>\n<br>\n<br>\nTransport Canada TDG CID Support Team<br>\n<br>\nDetails of the Request:<br>\n<br>\n@{outputs('RequestDetails')}<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                  "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nA representative will review your request as detailed below, and as required contact you via email.<br>\n<br>\nRegards<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\nDetails of the Request:<br>\n<br>\n@{outputs('RequestDetails')}<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                  "emailMessage/From": "@variables('CID_Email_Sender')",
                   "emailMessage/Importance": "Normal"
                 },
                 "authentication": "@parameters('$authentication')"
@@ -361,7 +362,7 @@
                 "type": "OpenApiConnection",
                 "inputs": {
                   "host": {
-                    "connectionName": "shared_office365",
+                    "connectionName": "shared_office365_1",
                     "operationId": "SendEmailV2",
                     "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                   },
@@ -369,6 +370,7 @@
                     "emailMessage/To": "@outputs('Get_a_row_by_ID-_get_contact_email')?['body/emailaddress1']",
                     "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Demande d’assistance",
                     "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nUn représentant examinera votre demande comme indiqué ci-dessous et, le cas échéant, vous contactera par courriel.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\nDétails de la demande :<br>\n<br>\n@{outputs('RequestDetails')}<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                    "emailMessage/From": "@variables('CID_Email_Sender')",
                     "emailMessage/Importance": "Normal"
                   },
                   "authentication": "@parameters('$authentication')"
@@ -398,6 +400,41 @@
           },
           "type": "Compose",
           "inputs": "@replace(triggerOutputs()?['body/ovs_requestdetails'], decodeUriComponent('%0A'),'<br>')"
+        },
+        "Filter_environment-CID__Email_Sender": {
+          "runAfter": {
+            "Scope_-_email_Template_Standard_Text": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('get-environment-settings')?['body/value']",
+            "where": "@equals(item()?['qm_name'], 'CID_Email_Sender')"
+          }
+        },
+        "Initialize_variable_CID_Email_Sender": {
+          "runAfter": {
+            "Filter_environment-CID__Email_Sender": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c068ea6c-92cb-411f-9c4a-2464a31e0468"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CID_Email_Sender",
+                "type": "string",
+                "value": "@{body('Filter_environment-CID__Email_Sender')[0]['qm_value']}"
+              }
+            ]
+          }
         }
       },
       "outputs": {}

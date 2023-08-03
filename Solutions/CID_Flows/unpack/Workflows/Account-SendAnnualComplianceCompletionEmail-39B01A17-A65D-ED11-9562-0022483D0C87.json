@@ -2,7 +2,6 @@
   "properties": {
     "connectionReferences": {
       "shared_commondataserviceforapps_2": {
-        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
@@ -21,7 +20,6 @@
         }
       },
       "shared_commondataserviceforapps": {
-        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
@@ -52,16 +50,15 @@
           "type": "OpenApiConnectionWebhook",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps_2",
-              "operationId": "SubscribeWebhookTrigger"
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "subscriptionRequest/message": 3,
               "subscriptionRequest/entityname": "account",
               "subscriptionRequest/scope": 4,
-              "subscriptionRequest/filteringattributes": "cid_annualcompliancecompletiondate",
-              "subscriptionRequest/name": "39b01a17-a65d-ed11-9562-0022483d0c87"
+              "subscriptionRequest/filteringattributes": "cid_annualcompliancecompletiondate"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -78,9 +75,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps_2",
-                  "operationId": "ListRecords"
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
                   "entityName": "contacts",
@@ -249,14 +246,15 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
                       "connectionName": "shared_office365",
-                      "operationId": "SendEmailV2"
+                      "operationId": "SendEmailV2",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                     },
                     "parameters": {
                       "emailMessage/To": "@variables('ToEmailRecipients')",
                       "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: The Annual Compliance process for the @{triggerOutputs()?['body/ovs_legalname']} organization was sucessfully completed",
-                      "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe Transport Canada Online CID Data Platform's Annual Compliance process for the @{triggerOutputs()?['body/ovs_legalname']} organization was successfully completed on @{triggerOutputs()?['body/cid_annualcompliancecompletiondate']}. The next Annual Compliance is due on @{triggerOutputs()?['body/cid_nextannualcomplianceupdate']}<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n</p>",
+                      "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe Transport Canada Online CID Data Platform's Annual Compliance process for the @{triggerOutputs()?['body/ovs_legalname']} organization was successfully completed on @{triggerOutputs()?['body/cid_annualcompliancecompletiondate']}. The next Annual Compliance is due on @{triggerOutputs()?['body/cid_nextannualcomplianceupdate']}<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n</p>",
+                      "emailMessage/From": "@variables('CID_Email_Sender')",
                       "emailMessage/Cc": "@variables('CCEmailRecipients')",
                       "emailMessage/Importance": "Normal"
                     },
@@ -279,14 +277,15 @@
                     "type": "OpenApiConnection",
                     "inputs": {
                       "host": {
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
                         "connectionName": "shared_office365",
-                        "operationId": "SendEmailV2"
+                        "operationId": "SendEmailV2",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                       },
                       "parameters": {
                         "emailMessage/To": "@variables('ToEmailRecipients')",
                         "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Le processus de conformité annuelle pour l’organisation @{triggerOutputs()?['body/ovs_legalnamefr']} a été mené à bien.",
                         "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLe processus de conformité annuelle de la plateforme de données de la BDIC en ligne de Transports Canada pour l’organisation @{triggerOutputs()?['body/ovs_legalnamefr']} a été achevé avec succès le @{triggerOutputs()?['body/cid_annualcompliancecompletiondate']}. Le prochain rapport annuel de conformité doit être remis le @{triggerOutputs()?['body/cid_nextannualcomplianceupdate']}<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n</p>",
+                        "emailMessage/From": "@variables('CID_Email_Sender')",
                         "emailMessage/Cc": "@variables('CCEmailRecipients')",
                         "emailMessage/Importance": "Normal"
                       },
@@ -509,7 +508,7 @@
             }
           },
           "runAfter": {
-            "get-environment-settings": [
+            "Initialize_variable_CID_Email_Sender": [
               "Succeeded"
             ]
           },
@@ -530,9 +529,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps",
-              "operationId": "ListRecords"
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "qm_environmentsettingses",
@@ -693,10 +692,45 @@
             "operationMetadataId": "9be99f10-fa00-40ae-8580-da6ba08c2e07"
           },
           "type": "If"
+        },
+        "Filter_environment-CID__Email_Sender": {
+          "runAfter": {
+            "get-environment-settings": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('get-environment-settings')?['body/value']",
+            "where": "@equals(item()?['qm_name'], 'CID_Email_Sender')"
+          }
+        },
+        "Initialize_variable_CID_Email_Sender": {
+          "runAfter": {
+            "Filter_environment-CID__Email_Sender": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c068ea6c-92cb-411f-9c4a-2464a31e0468"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CID_Email_Sender",
+                "type": "string",
+                "value": "@{body('Filter_environment-CID__Email_Sender')[0]['qm_value']}"
+              }
+            ]
+          }
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
