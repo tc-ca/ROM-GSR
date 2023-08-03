@@ -23,10 +23,6 @@ $(document).ready(function () {
 		//$("#update_company").css("pointer-events", "none");
     }
     tdg.c.page_instructions("page_my_company", true);
-    
-    tdg.c.addValidator("ovs_legalnamefr");
-    tdg.c.addValidator("ovs_namefr");
-
 
    // tdg.c.control_hide("ovs_name_fr");
 
@@ -46,7 +42,7 @@ $(document).ready(function () {
         tdg.cid.phone_init("telephone1", selected_language);
         tdg.cid.phone_init("fax", selected_language);
          $("#cid_iscompanyattested_label").removeAttr("role" , "") ;
-       
+   
     });
     $("#cancel_company_update").click(function () {
      

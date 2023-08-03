@@ -5,7 +5,8 @@
 $(document).ready(function () {
     debugger;
     
-   // page_setup();
+    page_setup();
+    
     window.addEventListener('load', (event) => {
         //update_company
         var selected_language = '{{website.selected_language.code}}';
@@ -18,9 +19,7 @@ $(document).ready(function () {
     debugger;
     tdg.c.addValidator("ovs_legalnamefr");
    
-    tdg.c.control_show("ovs_namefr");
-    tdg.c.removeValidator("ovs_namefr");
- 
+    //tdg.c.control_show("ovs_name_fr");
     tdg.c.addValidator("ovs_name_fr");
     
     

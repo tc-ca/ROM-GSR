@@ -27,7 +27,9 @@ $(document).ready(function () {
         $(value).insertAfter(topNav);
     }
 
-    tdg.c.control_hide("ovs_name_fr");
+    //tdg.c.control_hide("ovs_name_fr");
+    tdg.c.addValidator("ovs_legalnamefr");
+    tdg.c.addValidator("ovs_name_fr");
 
     var cid_crabusinessnumber = $('#cid_crabusinessnumber').val();
     if (cid_crabusinessnumber != "") {

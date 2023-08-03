@@ -2530,8 +2530,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#address1_city").val(address1_city);
             $("#address1_stateorprovince").val(address1_stateorprovince);
             $("#address1_postalcode").val(address1_postalcode);
-
-            sessionStorage.setItem("address1_line1", null);
         },
 
         data_confirm_dialog: async function (cid_has_cra_bn, bn, legalname, cid_reasonfornobnnumber_list) {
@@ -2583,8 +2581,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     console.log("account length: " + account.length);
                     account = account[0];
 
-
-
                     data.length = 1;
                     data.cid_has_cra_bn = account.cid_has_cra_bn;
                     data.cid_crabusinessnumber = account.cid_crabusinessnumber;
@@ -2617,20 +2613,24 @@ if (typeof (tdg.cid.crw) == "undefined") {
             }
 
             var a = data.address;
+            sessionStorage.setItem("cid_found_account", 0); // false
 
-            $("#address1_line1").val(address1_line1);
-            $("#address1_line2").val(address1_line2);
-            $("#address1_line3").val(address1_line3);
-            $("#address1_city").val(address1_city);
-            $("#address1_stateorprovince").val(address1_stateorprovince);
-            $("#address1_postalcode").val(address1_postalcode);
             if (a != null) {
+                sessionStorage.setItem("cid_found_account", 1); // true
+
                 sessionStorage.setItem("address1_line1", a.AddressLine1Text);
                 sessionStorage.setItem("address1_line2", a.AddressLine2Text);
                 sessionStorage.setItem("address1_line3", a.AddressLine3Text);
                 sessionStorage.setItem("address1_city", a.CityName);
                 sessionStorage.setItem("address1_stateorprovince", a.ProvinceStateCode);
                 sessionStorage.setItem("address1_postalcode", a.PostalZipCode);
+
+                $("#address1_line1").val(a.AddressLine1Text);
+                $("#address1_line2").val(a.AddressLine2Text);
+                $("#address1_line3").val(a.AddressLine3Text);
+                $("#address1_city").val(a.CityName);
+                $("#address1_stateorprovince").val(a.ProvinceStateCode);
+                $("#address1_postalcode").val(a.PostalZipCode);
             }
             return data;
         },

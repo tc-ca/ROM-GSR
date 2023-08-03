@@ -65,7 +65,7 @@ $(document).ready(function () {
 
 	tdg.cid.crw.start_cid_has_cra_bn_onchange("2");
 
-	tdg.c.control_hide("ovs_name_fr");
+	//tdg.c.control_hide("ovs_name_fr");
 	tdg.c.control_hide("cid_companyclaim");
 
 	var cid_legalname = $('#ovs_legalname').val();
@@ -88,18 +88,23 @@ $(document).ready(function () {
 			var cid_operatingname = $('#name').val();
 			var ovs_name_fr = cid_operatingname;
 			var ovs_legalnamefr = cid_legalname;
-			var address1_line1 = tdg.c.replace_special_char("{{user.address1_line1}}");
-			var address1_line2 = tdg.c.replace_special_char("{{user.address1_line2}}");
-			var address1_line3 = tdg.c.replace_special_char("{{user.address1_line3}}");
-			var address1_city = tdg.c.replace_special_char("{{user.address1_city}}");
-			var address1_stateorprovince = tdg.c.replace_special_char("{{user.address1_stateorprovince}}");
-			var address1_postalcode = tdg.c.replace_special_char("{{user.address1_postalcode}}");
-			$("#address1_line1").val(address1_line1);
-			$("#address1_line2").val(address1_line2);
-			$("#address1_line3").val(address1_line3);
-			$("#address1_city").val(address1_city);
-			$("#address1_stateorprovince").val(address1_stateorprovince);
-			$("#address1_postalcode").val(address1_postalcode);
+
+			var cid_found_account = sessionStorage.getItem("cid_found_account")
+			if (cid_found_account != "1")
+			{
+				var address1_line1 = tdg.c.replace_special_char("{{user.address1_line1}}");
+				var address1_line2 = tdg.c.replace_special_char("{{user.address1_line2}}");
+				var address1_line3 = tdg.c.replace_special_char("{{user.address1_line3}}");
+				var address1_city = tdg.c.replace_special_char("{{user.address1_city}}");
+				var address1_stateorprovince = tdg.c.replace_special_char("{{user.address1_stateorprovince}}");
+				var address1_postalcode = tdg.c.replace_special_char("{{user.address1_postalcode}}");
+				$("#address1_line1").val(address1_line1);
+				$("#address1_line2").val(address1_line2);
+				$("#address1_line3").val(address1_line3);
+				$("#address1_city").val(address1_city);
+				$("#address1_stateorprovince").val(address1_stateorprovince);
+				$("#address1_postalcode").val(address1_postalcode);
+			}
 		}
 	}
 	tdg.c.control_hide("cid_has_cra_bn");
@@ -233,7 +238,6 @@ function cid_crabusinessnumber_onchange() {
 			$("#ovs_name_fr").val(OperatingName);
 			$("#ovs_legalnamefr").val(LegalName);
 
-
 			$("#address1_line1").val(address.AddressLine1Text);
 			$("#address1_line2").val(address.AddressLine2Text);
 			$("#address1_line3").val("");
@@ -263,6 +267,9 @@ if (window.jQuery) {
 			$('#cid_companyclaim').val(1);
 
 			$("#cid_reasonfornobnnumber").prop("disabled", false);
+
+			sessionStorage.setItem("address1_line1", null);
+
 			return true;
 		}
 	}(window.jQuery));

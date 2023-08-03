@@ -48,12 +48,12 @@ $(document).ready(function () {
 	});
 	var account = get_parent()[0];
 	// address
-	tdg.cid.address_init(true);
+	tdg.cid.address_init(true);	
 	$("#ovs_legalname").val(account.ovs_legalname);
 	$("#name").val(account.name);
 	// hide controls
 	tdg.c.control_hide("ovs_duplicatesiteflag");
-	tdg.c.control_hide("name");
+	//tdg.c.control_hide("name");
 	tdg.c.control_hide("cid_siteclaim");
 	$("#ovs_legalname").attr("readonly", "true");
 	$("#address1_country").attr("readonly", "true");

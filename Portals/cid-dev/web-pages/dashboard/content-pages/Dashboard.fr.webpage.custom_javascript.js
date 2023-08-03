@@ -5,11 +5,13 @@
 $(document).ready(function () {
     debugger;
     // format sign-out's tooltip
-    $('#cdts-signout-btn').tooltip({
+	
+	$('#cdts-signout-btn').tooltip({
 					trigger: 'hover',
 					placement: 'right',
 					container: 'body'
 						});
+
     sessionStorage.setItem('frominyearsites', 'false');
     sessionStorage.setItem('fromannualcompliance', 'false');
     sessionStorage.setItem('frominyearsitepage', 'false');
@@ -25,7 +27,9 @@ $(document).ready(function () {
         $(value).insertAfter(topNav);
     }
 
-    tdg.c.control_hide("ovs_name_fr");
+    //tdg.c.control_hide("ovs_name_fr");
+    tdg.c.addValidator("ovs_legalnamefr");
+    tdg.c.addValidator("ovs_name_fr");
 
     var cid_crabusinessnumber = $('#cid_crabusinessnumber').val();
     if (cid_crabusinessnumber != "") {

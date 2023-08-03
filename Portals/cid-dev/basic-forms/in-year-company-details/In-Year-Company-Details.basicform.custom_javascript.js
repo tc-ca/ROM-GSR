@@ -23,6 +23,7 @@ $(document).ready(function () {
 
     $("#cid_iscompanyattested").prop("checked", false);
 
+
     // address
     tdg.cid.address_init(false);
 
@@ -77,6 +78,9 @@ $(document).ready(function () {
     // readonly
     $('#statuscode').attr("readonly", true);
     $('#address1_country').attr("readonly", true);
+    
+   // tdg.c.addValidator("ovs_legalnamefr");
+   // tdg.c.addValidator("ovs_name_fr");
 
     subgrid_language();
 });

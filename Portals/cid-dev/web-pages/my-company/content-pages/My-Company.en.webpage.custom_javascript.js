@@ -34,11 +34,7 @@ $(document).ready(function () {
 						});
     var lbl_inactive = tdg.error_message.message("lbl_inactive");
 
-  // Set setRequiredLevel = Required
-     tdg.c.addValidator("ovs_legalnamefr");
-      tdg.c.addValidator("ovs_namefr");
-
-
+  
     sessionStorage.setItem('frominyearsites', 'false');
     sessionStorage.setItem('fromannualcompliance', 'false');
     sessionStorage.setItem('frominyearsitepage', 'false');
