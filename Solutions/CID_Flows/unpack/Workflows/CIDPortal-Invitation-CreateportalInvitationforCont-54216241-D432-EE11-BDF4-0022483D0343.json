@@ -27,7 +27,7 @@
       "triggers": {
         "When_a_row_is_added,_modified_or_deleted": {
           "metadata": {
-            "operationMetadataId": "8a5b6939-397c-4335-8c44-d8c554a54aba"
+            "operationMetadataId": "7b1c37de-0f10-40ad-b0f2-2fc8bfb0486d"
           },
           "type": "OpenApiConnectionWebhook",
           "inputs": {
@@ -37,10 +37,9 @@
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "subscriptionRequest/message": 3,
+              "subscriptionRequest/message": 1,
               "subscriptionRequest/entityname": "contact",
               "subscriptionRequest/scope": 4,
-              "subscriptionRequest/filteringattributes": "parentcustomerid",
               "subscriptionRequest/runas": 3
             },
             "authentication": "@parameters('$authentication')"
@@ -48,6 +47,21 @@
         }
       },
       "actions": {
+        "Initialize_Invitation_Id": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "0ed6ae35-2163-4c38-8476-5c38bd5d5913"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "InvitationId",
+                "type": "string"
+              }
+            ]
+          }
+        },
         "If_Company_removed_from_the_contact": {
           "actions": {
             "Get_existing_active_invitations_of_the_contact_when_Company_Removed": {
@@ -222,12 +236,12 @@
                             },
                             "parameters": {
                               "entityName": "adx_invitations",
-                              "item/adx_name": "@{triggerOutputs()?['body/fullname']} - @{formatDateTime(utcNow() , 'yyyy-MM-dd')}",
+                              "item/adx_name": "@{triggerOutputs()?['body/fullname']} - @{formatDateTime(utcNow(), 'yyyy-MM-dd')}",
                               "item/adx_type": 756150000,
                               "item/adx_assignToAccount@odata.bind": "accounts(@{triggerOutputs()?['body/_parentcustomerid_value']})",
                               "item/adx_expirydate": "@addDays(utcNow(), 730, 'yyyy-MM-dd')",
                               "item/adx_inviteContact@odata.bind": "contacts(@{triggerOutputs()?['body/contactid']})",
-                              "item/adx_invitercontact@odata.bind": "@if(equals(triggerOutputs()?['body/_createdbyexternalparty_value'], null), null, concat('contacts(',triggerOutputs()?['body/_createdbyexternalparty_value'], ')'))",
+                              "item/adx_invitercontact@odata.bind": "@if(equals(triggerOutputs()?['body/_createdbyexternalparty_value'], null), null, concat('contacts(', triggerOutputs()?['body/_createdbyexternalparty_value'], ')'))",
                               "item/adx_maximumredemptions": 1,
                               "item/statuscode": 1
                             },
@@ -486,42 +500,10 @@
             "operationMetadataId": "b2749f89-bb79-4669-a643-b12ba08db310"
           },
           "type": "If"
-        },
-        "Initialize_Invitation_Id": {
-          "runAfter": {
-            "Delay": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "0ed6ae35-2163-4c38-8476-5c38bd5d5913"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "InvitationId",
-                "type": "string"
-              }
-            ]
-          }
-        },
-        "Delay": {
-          "runAfter": {},
-          "metadata": {
-            "operationMetadataId": "5566609d-6a25-4402-9d94-0102aea8ed27"
-          },
-          "type": "Wait",
-          "inputs": {
-            "interval": {
-              "count": 30,
-              "unit": "Second"
-            }
-          }
         }
       }
     },
-    "templateName": ""
+    "templateName": null
   },
   "schemaVersion": "1.0.0.0"
 }

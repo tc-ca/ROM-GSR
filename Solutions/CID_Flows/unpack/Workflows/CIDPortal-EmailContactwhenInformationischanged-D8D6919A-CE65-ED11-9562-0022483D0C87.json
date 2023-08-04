@@ -158,7 +158,7 @@
             }
           },
           "runAfter": {
-            "Initialize_variable_-_ChangeInfo": [
+            "Scope_-_email_Template_Standard_Text": [
               "Succeeded"
             ]
           },
@@ -250,9 +250,9 @@
                 },
                 "parameters": {
                   "emailMessage/To": "@outputs('Get_Updated_Contact')?['body/emailaddress1']",
-                  "emailMessage/Subject": "Your Profile in CID has been changed",
-                  "emailMessage/Body": "<p>Hi @{outputs('Get_Updated_Contact')?['body/fullname']},<br>\nYour information has been modified by @{substring(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'] , add(2, indexOf(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'],',') ) )}.<br>\n<br>\n@{variables('ChangeInfo')}<br>\n<br>\nTransport Canada</p>",
-                  "emailMessage/From": "TDG.Core@034gc.onmicrosoft.com",
+                  "emailMessage/Subject": "TDG Online - CID: Your Profile in CID has been changed",
+                  "emailMessage/Body": "<p>Hi @{outputs('Get_Updated_Contact')?['body/fullname']},<br>\n<br>\nYour information has been modified by @{substring(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'] , add(2, indexOf(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'],',') ) )}.<br>\n<br>\n@{variables('ChangeInfo')}<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                  "emailMessage/From": "@variables('CID_Email_Sender')",
                   "emailMessage/Importance": "Normal"
                 },
                 "authentication": "@parameters('$authentication')"
@@ -280,9 +280,9 @@
                   },
                   "parameters": {
                     "emailMessage/To": "@outputs('Get_Updated_Contact')?['body/emailaddress1']",
-                    "emailMessage/Subject": "French -  Your Profile in CID has been changed",
-                    "emailMessage/Body": "<p>Hi @{outputs('Get_Updated_Contact')?['body/fullname']},<br>\nYour information has been modified by @{substring(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'], add(2, indexOf(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'], ',')))}.<br>\n<br>\n@{variables('ChangeInfo')}<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada</p>",
-                    "emailMessage/From": "TDG.Core@034gc.onmicrosoft.com",
+                    "emailMessage/Subject": "TDG Online - CID: French -  Your Profile in CID has been changed",
+                    "emailMessage/Body": "<p>Hi @{outputs('Get_Updated_Contact')?['body/fullname']},<br>\nYour information has been modified by @{substring(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'], add(2, indexOf(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'], ',')))}.<br>\n<br>\n@{variables('ChangeInfo')}<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                    "emailMessage/From": "@variables('CID_Email_Sender')",
                     "emailMessage/Importance": "Normal"
                   },
                   "authentication": "@parameters('$authentication')"
@@ -300,6 +300,136 @@
             "operationMetadataId": "4a27d600-a6b6-46db-a915-56219a19d767"
           },
           "type": "If"
+        },
+        "Filter_environment-CID__Email_Sender": {
+          "runAfter": {
+            "get-environment-settings": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('get-environment-settings')?['body/value']",
+            "where": "@equals(item()?['qm_name'], 'CID_Email_Sender')"
+          }
+        },
+        "get-environment-settings": {
+          "runAfter": {
+            "Initialize_variable_-_ChangeInfo": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7ed63b1d-9cf8-403e-9d9c-56cdd03f198e"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "qm_environmentsettingses",
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"qm_environmentsettings\">\n<attribute name=\"qm_environmentsettingsid\"/>\n<attribute name=\"qm_name\"/>\n<attribute name=\"qm_value\"/>\n<order attribute=\"qm_name\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"qm_name\" operator=\"like\" value=\"%CID[_]%\"/>\n</filter>\n</entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_variable_CID_Email_Sender": {
+          "runAfter": {
+            "Filter_environment-CID__Email_Sender": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c068ea6c-92cb-411f-9c4a-2464a31e0468"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CID_Email_Sender",
+                "type": "string",
+                "value": "@{body('Filter_environment-CID__Email_Sender')[0]['qm_value']}"
+              }
+            ]
+          }
+        },
+        "Scope_-_email_Template_Standard_Text": {
+          "actions": {
+            "StandardSalutation": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "ffa8d1a6-89ec-434c-82e6-78e0fa2bd649"
+              },
+              "type": "Compose",
+              "inputs": "<em>*** The following is an automated email sent by the TDG Online - CID system. Please do not reply ***</em>"
+            },
+            "FrenchStandardSalutation": {
+              "runAfter": {
+                "StandardSalutation": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "ffa8d1a6-89ec-434c-82e6-78e0fa2bd649"
+              },
+              "type": "Compose",
+              "inputs": "<em>*** Le message suivant est un courriel automatisé envoyé par le TMD en ligne – Système de la BDIC. Veuillez ne pas répondre ***</em>"
+            },
+            "English-EmailFooter": {
+              "runAfter": {
+                "FrenchStandardSalutation": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1535933c-0d10-4db3-9d01-208feac8f786"
+              },
+              "type": "Compose",
+              "inputs": "<div style=\"font-size:x-small;\"><br>Note:<br>\n   - To receive subsequent emails in French, you can update your Language of Preferred Correspondence choice via the [Account Settings] button in the TDG Online - CID data portal. <br><br> \n   - Please do not reply to this email. If necessary, use the Contact Us button, or link, in the CID data portal. </div>"
+            },
+            "French-EmailFooter": {
+              "runAfter": {
+                "English-EmailFooter": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "5ec93fa4-a5e7-451e-9327-290b6c88346b"
+              },
+              "type": "Compose",
+              "inputs": "<div style=\"font-size:x-small;\">Remarque:<br>\n   - Pour recevoir les courriels suivants en français, vous pouvez mettre à jour votre choix de langue de correspondance préférée à l’aide du bouton [Paramètres du compte] du portail de données TMD en ligne – BDIC. <br><br> \n   - Veuillez ne pas répondre à ce courriel. Au besoin, utilisez le bouton ou le lien « Communiquer avec nous » du portail de données de la BDIC.  </div>"
+            },
+            "Filter_environment-CID_Environment": {
+              "runAfter": {
+                "French-EmailFooter": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('get-environment-settings')?['body/value']",
+                "where": "@equals(item()?['qm_name'], 'CID_Environment')"
+              }
+            }
+          },
+          "runAfter": {
+            "Initialize_variable_CID_Email_Sender": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4a4d30e6-367a-4728-93d1-e8fc48567195"
+          },
+          "type": "Scope"
         }
       }
     },

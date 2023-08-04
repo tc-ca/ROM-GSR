@@ -2,6 +2,7 @@
   "properties": {
     "connectionReferences": {
       "shared_commondataserviceforapps_2": {
+        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
@@ -11,6 +12,7 @@
         }
       },
       "shared_commondataserviceforapps_1": {
+        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
@@ -29,6 +31,7 @@
         }
       },
       "shared_commondataserviceforapps": {
+        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
@@ -59,15 +62,16 @@
           "type": "OpenApiConnectionWebhook",
           "inputs": {
             "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "SubscribeWebhookTrigger",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              "operationId": "SubscribeWebhookTrigger"
             },
             "parameters": {
               "subscriptionRequest/message": 1,
               "subscriptionRequest/entityname": "adx_invitation",
               "subscriptionRequest/scope": 4,
-              "subscriptionRequest/runas": 3
+              "subscriptionRequest/runas": 3,
+              "subscriptionRequest/name": "ab1ec093-6055-ed11-9561-0022483cb62f"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -86,9 +90,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps_2",
-              "operationId": "GetItem",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              "operationId": "GetItem"
             },
             "parameters": {
               "entityName": "contacts",
@@ -107,9 +111,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "GetItem",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  "operationId": "GetItem"
                 },
                 "parameters": {
                   "entityName": "accounts",
@@ -147,9 +151,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                       "connectionName": "shared_commondataserviceforapps_1",
-                      "operationId": "GetItem",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      "operationId": "GetItem"
                     },
                     "parameters": {
                       "entityName": "contacts",
@@ -314,14 +318,14 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
                           "connectionName": "shared_office365",
-                          "operationId": "SendEmailV2",
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                          "operationId": "SendEmailV2"
                         },
                         "parameters": {
                           "emailMessage/To": "@outputs('Get_a_row_by_ID_Contact')?['body/emailaddress1']",
                           "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Affectation en tant que contact secondaire pour l’organisation @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']}.",
-                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Contact')?['body/fullname']}, le contact principal de @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} dans la base de données d'identification des clients (BDIC) de Transports Canada, vous a ajouté en tant que contact secondaire pour cette organisation.<br>\n<br>\nPour rejoindre votre organisation, veuillez sélectionner ou copier et coller le lien suivant dans votre navigateur :<br>\n<a href=@{variables('varHyperLink')}></a>@{variables('varHyperLink')}<br><br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de courrier électronique. &nbsp;Si vous n'êtes pas la personne qui doit enregistrer cette organisation, veuillez l'indiquer en répondant à tc.tdgengagement-engagementtmd.tc@tc.gc.ca. Si vous connaissez le nom et l'adresse électronique de la personne qui devrait enregistrer cette organisation, veuillez également fournir ces informations.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Contact')?['body/fullname']}, le contact principal de @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} dans la base de données d'identification des clients (BDIC) de Transports Canada, vous a ajouté en tant que contact secondaire pour cette organisation.<br>\n<br>\nPour rejoindre votre organisation, veuillez sélectionner ou copier et coller le lien suivant dans votre navigateur :<br>\n<a href=\"@{variables('varHyperLink')}\">@{variables('varHyperLink')}</a><br>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de courrier électronique. &nbsp;Si vous n'êtes pas la personne qui doit enregistrer cette organisation, veuillez l'indiquer en répondant à tc.tdgengagement-engagementtmd.tc@tc.gc.ca. Si vous connaissez le nom et l'adresse électronique de la personne qui devrait enregistrer cette organisation, veuillez également fournir ces informations.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
                           "emailMessage/From": "@variables('CID_Email_Sender')",
                           "emailMessage/Importance": "Normal"
                         },
@@ -344,14 +348,14 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
                             "connectionName": "shared_office365",
-                            "operationId": "SendEmailV2",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                            "operationId": "SendEmailV2"
                           },
                           "parameters": {
                             "emailMessage/To": "@outputs('Get_a_row_by_ID_Contact')?['body/emailaddress1']",
                             "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: Assignment as a Secondary Contact for the @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} organization",
-                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Contact')?['body/fullname']}, the Primary Contact for @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} in Transport Canada’s Client Identification Database (CID), has added you as a Secondary Contact for that organization.<br>\n<br>\nTo join your organization, please select or copy and paste the following link into your browser:<br>\n<br>\n<a href=\"&lt;object\">@{variables('varHyperLink')}&gt;</a>@{variables('varHyperLink')}<br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to tc.tdgengagement-engagementtmd.tc@tc.gc.ca. If you know the name and email address of the individual who should register this organization, then please provide this information as well.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Contact')?['body/fullname']}, the Primary Contact for @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} in Transport Canada’s Client Identification Database (CID), has added you as a Secondary Contact for that organization.<br>\n<br>\nTo join your organization, please select or copy and paste the following link into your browser:<br>\n<br>\n<a href=\"@{variables('varHyperLink')}\">@{variables('varHyperLink')}</a><br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to tc.tdgengagement-engagementtmd.tc@tc.gc.ca. If you know the name and email address of the individual who should register this organization, then please provide this information as well.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
                             "emailMessage/From": "@variables('CID_Email_Sender')",
                             "emailMessage/Importance": "Normal"
                           },
@@ -384,9 +388,9 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                             "connectionName": "shared_commondataserviceforapps_1",
-                            "operationId": "GetItem",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            "operationId": "GetItem"
                           },
                           "parameters": {
                             "entityName": "contacts",
@@ -436,9 +440,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                       "connectionName": "shared_commondataserviceforapps",
-                      "operationId": "ListRecords",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      "operationId": "ListRecords"
                     },
                     "parameters": {
                       "entityName": "cid_invitations",
@@ -458,9 +462,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                           "connectionName": "shared_commondataserviceforapps",
-                          "operationId": "UpdateRecord",
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                          "operationId": "UpdateRecord"
                         },
                         "parameters": {
                           "entityName": "cid_invitations",
@@ -493,9 +497,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                       "connectionName": "shared_commondataserviceforapps_1",
-                      "operationId": "UpdateRecord",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      "operationId": "UpdateRecord"
                     },
                     "parameters": {
                       "entityName": "adx_invitations",
@@ -515,9 +519,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                           "connectionName": "shared_commondataserviceforapps",
-                          "operationId": "UpdateRecord",
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                          "operationId": "UpdateRecord"
                         },
                         "parameters": {
                           "entityName": "accounts",
@@ -774,9 +778,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps",
-              "operationId": "ListRecords",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              "operationId": "ListRecords"
             },
             "parameters": {
               "entityName": "qm_environmentsettingses",
@@ -1064,7 +1068,7 @@
         }
       }
     },
-    "templateName": ""
+    "templateName": null
   },
   "schemaVersion": "1.0.0.0"
 }
