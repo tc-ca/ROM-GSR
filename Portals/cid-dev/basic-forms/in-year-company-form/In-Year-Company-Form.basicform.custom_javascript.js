@@ -22,6 +22,9 @@ $(document).ready(function () {
     var cid_reasonfornobnnumber = $('#cid_reasonfornobnnumber').val();
 
     tdg.c.control_hide("cid_has_cra_bn");
+    
+    tdg.c.addValidator("ovs_legalnamefr");
+    tdg.c.addValidator("ovs_name_fr");
 
     // do not have a business number?
     if (cid_has_cra_bn != "1") {

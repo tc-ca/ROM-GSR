@@ -17,10 +17,10 @@ $(document).ready(function () {
     tdg.cid.phone_init("telephone1", selected_language);
 
     debugger;
-    tdg.c.addValidator("ovs_legalnamefr");
+   // tdg.c.addValidator("ovs_legalnamefr");
    
     //tdg.c.control_show("ovs_name_fr");
-    tdg.c.addValidator("ovs_name_fr");
+   // tdg.c.addValidator("ovs_name_fr");
     
     
    

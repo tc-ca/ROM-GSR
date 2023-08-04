@@ -4,7 +4,14 @@
 
 $(document).ready(function () {
     debugger;
-    // page_setup();
+     page_setup();
+ 
+    if ($('.validation-summary-errors')[0]) {
+        var Innerhtml = $('.validation-summary-errors')[0].innerHTML;
+        var InnerText = $('.validation-summary-errors')[0].innerText;
+        $('.validation-summary-errors')[0].innerText = tdg.c.replace_special_char(InnerText) ;
+    
+    }
 });
 
 function page_setup() {
