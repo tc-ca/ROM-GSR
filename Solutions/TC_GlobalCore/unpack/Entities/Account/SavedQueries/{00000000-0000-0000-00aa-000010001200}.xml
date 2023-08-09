@@ -9,9 +9,15 @@
     <layoutxml>
       <grid name="accounts" jump="name" select="1" icon="1" preview="1">
         <row name="account" id="accountid">
-          <cell name="name" width="300" />
+          <cell name="cid_sitename" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_legalname" width="143" />
+          <cell name="address1_line1" width="132" />
+          <cell name="address1_city" width="100" />
+          <cell name="address1_stateorprovince" width="100" />
+          <cell name="address1_country" width="100" />
+          <cell name="cid_cidsitestatus" width="100" />
+          <cell name="statecode" width="100" />
           <cell name="primarycontactid" width="150" />
-          <cell name="telephone1" width="100" />
         </row>
       </grid>
     </layoutxml>
@@ -19,14 +25,20 @@
     <fetchxml>
       <fetch distinct="false" mapping="logical">
         <entity name="account">
-          <attribute name="name" />
           <attribute name="primarycontactid" />
-          <attribute name="telephone1" />
-          <attribute name="accountid" />
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="0" />
           </filter>
-          <order attribute="name" descending="false" />
+          <order attribute="cid_sitename" descending="false" />
+          <attribute name="cid_sitename" />
+          <attribute name="ovs_legalname" />
+          <attribute name="address1_line1" />
+          <attribute name="address1_city" />
+          <attribute name="address1_stateorprovince" />
+          <attribute name="address1_country" />
+          <attribute name="cid_cidsitestatus" />
+          <attribute name="statecode" />
+          <attribute name="accountid" />
         </entity>
       </fetch>
     </fetchxml>

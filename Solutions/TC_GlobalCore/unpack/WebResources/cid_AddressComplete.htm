@@ -1,4 +1,5 @@
-<html><head>
+﻿<html>
+<head>
     <title>Address Lookup</title>
     <style>
         body {
@@ -42,33 +43,15 @@
     </style>
     <!-- Using jquery library -->
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-    <meta>
-    <meta>
-    <meta>
-    <meta>
-    <meta>
-    <meta>
-    <meta>
-    <meta>
-    <meta>
-    <meta>
-    <meta>
-    <meta>
-    <meta>
-    <meta>
-<meta><meta><meta><meta><meta><meta><meta><meta></head>
+</head>
 <body style="overflow-wrap: break-word;" onfocusout="parent.setEmailRange();">
     <script type="text/javascript">
         function search() {
-
-            // tony-july 27, 2022
-
-            debugger;
+            //debugger;
 
             var selected_language = sessionStorage.getItem("selected_language");
             var address1_line1 = document.getElementById("address1_line1").value
             var SearchTerm = address1_line1;
-            //var LanguagePreference = 'en';
             var LanguagePreference = (selected_language != "fr" ? "en" : "fr");
 
             AddressComplete.Find(SearchTerm, LanguagePreference, false);
@@ -92,7 +75,7 @@
                 parent.$("#address1_line1").val(sessionStorage.getItem("Line1"));
             } catch (e) { }
 
-            debugger;
+            //debugger;
             index = -1;
             for (var i = 0; i < options.length; i++) {
                 var current = options[i].value;
@@ -107,10 +90,10 @@
             sessionStorage.setItem("foundFlag", found);
 
             if (found) {
-                debugger;
+                //debugger;
                 parent.$("#cid_addressoverwritten").val(0);
                 parent.$("#ovs_address1_province").attr("disabled", true);
-               
+
                 var id = AddressComplete.GetId(index);
                 var list = id.split(";");
 
@@ -121,9 +104,7 @@
                 action = action.replace("undefined", "");
                 switch (action) {
                     case "Retrieve":
-                        debugger;
-
-                        console.log("Retrieve->Id = " + list[0]);
+                        //debugger;
 
                         AddressComplete.Retrieve(list[0]);
 
@@ -150,13 +131,6 @@
 
                         break;
                     case "":
-                        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                        console.log("Index = " + index);
-                        console.log(address_list_id);
-                        console.log(address1_line1);
-                        console.log(list);
-                        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>");
-
                         break;
                 }
             }
@@ -164,7 +138,6 @@
                 search();
                 parent.$("#cid_addressoverwritten").val(1);
                 parent.$("#ovs_address1_province").attr("disabled", false);
-              
             }
         }
     </script>
@@ -199,7 +172,6 @@
             // language
             try {
                 var selected_language = sessionStorage.getItem("selected_language");
-                //var value = (selected_language == "en-US" ? "Street 1" : "Rue 1");
                 var value = (selected_language == "en" ? "Street 1 (Address Lookup)" : "Rue 1 (Recherche d'adresse)");
                 $("#address1_line1")[0].labels[0].innerHTML = value;
             } catch (e) { }
@@ -218,7 +190,7 @@
 
     <script>
         function readonly(value) {
-            debugger;
+            //debugger;
             sessionStorage.setItem("AddressComplete_readonly", value);
 
             var address1_line1 = sessionStorage.getItem("AddressLine1Text");
@@ -247,16 +219,10 @@
             _SearchFor: 'Everything',
 
             GetId: function (index) {
-                debugger;
+                //debugger;
 
                 var value = document.getElementById("address_list_id")[index].value;
                 var text = document.getElementById("address_list_id")[index].text;
-
-                console.log("+++++++++++++++++++++++++++");
-                console.log("Index = " + index);
-                console.log("value = " + value);
-                console.log("text = " + text);
-                console.log("+++++++++++++++++++++++++++");
 
                 return value;
             },
@@ -270,7 +236,7 @@
                 this.removeOptions(listname);
                 this.removeOptions(listname2);
 
-                var Country = '';
+                var Country = 'CAN';
                 var url = 'https://ws1.postescanada-canadapost.ca/AddressComplete/Interactive/Find/v2.10/json3.ws';
 
                 var params = '';
@@ -298,7 +264,7 @@
                         // Test for an error
                         if (response.Items.length == 1 && typeof (response.Items[0].Error) != "undefined") {
                             // Show the error message
-                            console.log("error:  " );
+                            console.log("error:  ");
                             console.log(response.Items[0].Description);
                         }
                         else {
@@ -307,7 +273,7 @@
                                 console.log("Sorry, there were no results");
                             }
                             else {
-                                debugger;
+                                //debugger;
                                 var items = response.Items;
 
                                 var address_list = document.getElementById(listname);
@@ -388,7 +354,7 @@
             },
 
             ovs_address1_province: function (stateorprovince, selected_language) {
-                debugger;
+                //debugger;
 
                 //if (selected_language = "en-US") {
                 if (selected_language = "en") {
@@ -411,8 +377,14 @@
                 debugger;
 
                 var selected_language = sessionStorage.getItem("selected_language");
-                //var item_e = (selected_language == "en-US" ? data[0] : data[1]);
-                var item_e = (selected_language == "en" ? data[0] : data[1]);
+                var item_e = data[0];
+                selected_language = (selected_language == "en" ? "ENG": "FRE");
+                for (var index1 = 0; index1 < data.length; index1++) {
+                    if (selected_language == data[index1].Language) {
+                        var item_e = data[index1];
+                        break;
+                    }
+                }
 
                 sessionStorage.setItem("POBoxNumber", item_e.POBoxNumber);
                 sessionStorage.setItem("Line1", item_e.Line1);
@@ -448,7 +420,5 @@
             }
         }
     </script>
-
-
-
-</body></html>
+</body>
+</html>

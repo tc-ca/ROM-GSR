@@ -10,7 +10,7 @@
     <layoutxml>
       <grid name="resultset" jump="name" select="1" preview="1" icon="1">
         <row name="result" id="accountid">
-          <cell name="cid_siteid" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="ovs_romid" width="150" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="cid_issiteattested" width="75" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="ovs_address1_province" width="100" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
           <cell name="cid_sitename" width="125" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
@@ -24,25 +24,19 @@
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="account">
           <attribute name="cid_issiteattested" />
-          <attribute name="cid_siteid" />
           <attribute name="cid_sitename" />
           <attribute name="cid_siteclaim" />
           <attribute name="ovs_address_display" />
-          <filter type="and">
-            <condition attribute="customertypecode" operator="eq" value="948010001" />
-            <condition attribute="statuscode" operator="eq" value="1" />
-            <condition attribute="cid_siteclaim" operator="in">
-              <value>100000000</value>
-              <value>100000001</value>
-              <value>100000002</value>
-              <value>100000003</value>
-            </condition>
-          </filter>
           <attribute name="ovs_address1_province" />
-          <attribute name="accountid" />
           <order attribute="cid_issiteattested" descending="false" />
           <order attribute="ovs_address1_province" descending="false" />
           <order attribute="cid_sitename" descending="false" />
+          <attribute name="ovs_romid" />
+          <attribute name="accountid" />
+          <filter type="and">
+            <condition attribute="customertypecode" operator="eq" value="948010001" />
+            <condition attribute="statuscode" operator="eq" value="1" />
+          </filter>
         </entity>
       </fetch>
     </fetchxml>

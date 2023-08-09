@@ -10,9 +10,9 @@
     <layoutxml>
       <grid name="resultset" jump="name" select="1" icon="1" preview="1">
         <row name="result" id="accountid">
-          <cell name="name" width="200" />
+          <cell name="ovs_romid" width="100" />
           <cell name="cid_sitename" width="100" />
-          <cell name="ovs_legalname" width="109" />
+          <cell name="a_ded78adb78204dd7a11a613af72fb3d0.ovs_legalname" width="195" />
           <cell name="address1_line1" width="100" />
           <cell name="address1_city" width="100" />
           <cell name="address1_stateorprovince" width="122" />
@@ -27,19 +27,14 @@
     <fetchxml>
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
         <entity name="account">
-          <attribute name="name" />
           <attribute name="accountid" />
-          <order attribute="name" descending="false" />
           <attribute name="cid_sitename" />
-          <attribute name="ovs_legalname" />
           <attribute name="address1_line1" />
           <attribute name="address1_city" />
           <attribute name="address1_stateorprovince" />
           <attribute name="address1_country" />
           <filter type="and">
             <condition attribute="customertypecode" operator="eq" value="948010001" />
-            <condition attribute="name" operator="not-null" />
-            <condition attribute="cid_sitename" operator="not-null" />
           </filter>
           <link-entity name="ovs_mocregistration" alias="ac" link-type="inner" from="ovs_siteid" to="accountid">
             <filter type="and">
@@ -49,6 +44,11 @@
           <attribute name="cid_cidsitestatus" />
           <attribute name="statecode" />
           <attribute name="primarycontactid" />
+          <attribute name="ovs_romid" />
+          <order attribute="ovs_romid" descending="true" />
+          <link-entity alias="a_ded78adb78204dd7a11a613af72fb3d0" name="account" to="parentaccountid" from="accountid" link-type="outer" visible="false">
+            <attribute name="ovs_legalname" />
+          </link-entity>
         </entity>
       </fetch>
     </fetchxml>

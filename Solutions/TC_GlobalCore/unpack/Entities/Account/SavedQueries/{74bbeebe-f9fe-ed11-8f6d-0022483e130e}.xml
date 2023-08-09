@@ -10,7 +10,7 @@
     <layoutxml>
       <grid name="resultset" jump="name" select="1" icon="1" preview="1">
         <row name="result" id="accountid">
-          <cell name="name" width="200" />
+          <cell name="name" width="133" />
           <cell name="ovs_legalname" width="109" />
           <cell name="cid_crabusinessnumber" width="172" />
           <cell name="address1_line1" width="100" />
@@ -27,9 +27,7 @@
     <fetchxml>
       <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
         <entity name="account">
-          <attribute name="name" />
           <attribute name="accountid" />
-          <order attribute="name" descending="false" />
           <attribute name="ovs_legalname" />
           <attribute name="cid_crabusinessnumber" />
           <attribute name="address1_line1" />
@@ -42,6 +40,7 @@
           <filter type="and">
             <condition attribute="customertypecode" operator="eq" value="948010000" />
           </filter>
+          <attribute name="name" />
         </entity>
       </fetch>
     </fetchxml>
