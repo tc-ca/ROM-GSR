@@ -10,6 +10,8 @@ $(document).ready(function () {
 function page_setup() {
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
+    var terms_and_conditions = tdg.error_message.message("m000189");
+  
     // format sign-out's tooltip
 
     $('#cdts-signout-btn').tooltip({
@@ -34,10 +36,14 @@ function page_setup() {
 if (document.getElementsByTagName('h1')[0]) {
     debugger;
     page_setup();
+    var signin_label = tdg.error_message.message("BTN_SIGNIN");
+    $(":button.btn.btn-primary.btn-line").text(signin_label);
+    var signin_ttip = tdg.error_message.message("ttip_SIGNIN");
+    $(":button.btn.btn-primary.btn-line")[0].title = signin_ttip ;
     var source = document.getElementsByTagName('h1')[0].innerHTML;
     var terms_and = tdg.error_message.message("m000199");
-    var terms_and_conditions = tdg.error_message.message("m000189");
-
+    
+   
     if (source.search(terms_and) != -1) {
         $(document).find("title").text(terms_and_conditions);
         $("#cdts-signin-btn").hide(); // Hide sing in button
@@ -53,6 +59,7 @@ if (document.getElementsByTagName('h1')[0]) {
     if (source.search("Registration") != -1) {
         var registration = tdg.error_message.message("m000190");
         $(document).find("title").text(registration);
+         
         //TODO logic for post login invitation
     }
     //TODO add logic for the default access denied page

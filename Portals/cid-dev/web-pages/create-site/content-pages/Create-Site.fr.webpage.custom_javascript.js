@@ -5,7 +5,7 @@
 $(document).ready(function () {
     debugger;
     $("#EntityFormPanel").before('<div id="ErrorMessageDiv" class="alert alert-danger" role="alert" style="display: none;">  </div>');
-
+    page_setup();
     $("#createdon").closest("tr").hide();
     $("#cid_createdbyregistrant_label").closest("tr").hide();
     if (sessionStorage.getItem('frominyearsites') == "true" || sessionStorage.getItem('fromannualcompliance') == 'true') {
@@ -482,4 +482,19 @@ function DialogWith_DropDown (message, handler) {
 
   
     $('#myModal').modal({ backdrop: 'static', keyboard: false, show: true, focus: true });
+}
+
+function page_setup() {
+	var selected_language = '{{website.selected_language.code}}';
+	sessionStorage.setItem("selected_language", selected_language);
+	const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
+	for (var i = 0; i < files.length; i++) {
+		var file = files[i];
+		var script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = file;
+		$("body").append(script);
+	}
+	// server error?
+	tdg.c.message_panel();
 }
