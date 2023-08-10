@@ -2,10 +2,18 @@
   "properties": {
     "connectionReferences": {
       "shared_commondataserviceforapps": {
-        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
         },
         "api": {
           "name": "shared_commondataserviceforapps"
@@ -33,9 +41,9 @@
           "type": "OpenApiConnectionWebhook",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps",
-              "operationId": "SubscribeWebhookTrigger"
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "subscriptionRequest/message": 4,
@@ -43,8 +51,7 @@
               "subscriptionRequest/scope": 4,
               "subscriptionRequest/filteringattributes": "ovs_lld_quarter,ovs_lld_section,ovs_lld_township,ovs_lld_range,ovs_lld_meridian",
               "subscriptionRequest/filterexpression": "customertypecode eq 948010001 and ovs_address_type eq 1",
-              "subscriptionRequest/runas": 3,
-              "subscriptionRequest/name": "8cce4e5b-3fa2-ed11-aad1-0022483d0343"
+              "subscriptionRequest/runas": 3
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -215,9 +222,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                       "connectionName": "shared_commondataserviceforapps",
-                      "operationId": "UpdateRecord"
+                      "operationId": "UpdateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                     },
                     "parameters": {
                       "entityName": "accounts",
@@ -227,6 +234,47 @@
                       "item/address1_longitude": "@outputs('Longtitude')",
                       "item/ovs_address1_province": "@outputs('ProvinceIndex')",
                       "item/ovs_lld_province": "@outputs('ProvinceIndex')"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Delay": {
+                  "runAfter": {
+                    "Update_Site_LLD_Province_and_Lat_Long": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "f02ccd41-b33d-46df-ae69-c57e6ed264ba"
+                  },
+                  "type": "Wait",
+                  "inputs": {
+                    "interval": {
+                      "count": 2,
+                      "unit": "Second"
+                    }
+                  }
+                },
+                "Update_operating_name": {
+                  "runAfter": {
+                    "Delay": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "329b8689-e79b-4394-95c3-e940a9914c68"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "UpdateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "accounts",
+                      "recordId": "@triggerOutputs()?['body/accountid']",
+                      "item/name": "@triggerOutputs()?['body/name']"
                     },
                     "authentication": "@parameters('$authentication')"
                   }
@@ -352,7 +400,7 @@
       },
       "outputs": {}
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }

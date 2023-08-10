@@ -2,7 +2,6 @@
   "properties": {
     "connectionReferences": {
       "shared_commondataserviceforapps_2": {
-        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
@@ -12,7 +11,6 @@
         }
       },
       "shared_commondataserviceforapps_1": {
-        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
@@ -31,7 +29,6 @@
         }
       },
       "shared_commondataserviceforapps": {
-        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
@@ -62,16 +59,15 @@
           "type": "OpenApiConnectionWebhook",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "SubscribeWebhookTrigger"
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "subscriptionRequest/message": 1,
               "subscriptionRequest/entityname": "adx_invitation",
               "subscriptionRequest/scope": 4,
-              "subscriptionRequest/runas": 3,
-              "subscriptionRequest/name": "ab1ec093-6055-ed11-9561-0022483cb62f"
+              "subscriptionRequest/runas": 3
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -90,9 +86,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps_2",
-              "operationId": "GetItem"
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "contacts",
@@ -111,9 +107,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "GetItem"
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
                   "entityName": "accounts",
@@ -151,9 +147,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                       "connectionName": "shared_commondataserviceforapps_1",
-                      "operationId": "GetItem"
+                      "operationId": "GetItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                     },
                     "parameters": {
                       "entityName": "contacts",
@@ -310,17 +306,32 @@
                 },
                 "Check_Language_and_send_email_": {
                   "actions": {
-                    "Send_email_notification_(V3)_-French": {
+                    "Set_variable_varHyperLink__2": {
                       "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "4e206445-bca6-41c7-8633-6a07e8487551"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "varHyperLink",
+                        "value": "@{variables('PortalURL')}/fr/Account/Login/Register?returnUrl=%2Fen%2F&invitationCode=@{triggerOutputs()?['body/adx_invitationcode']}"
+                      }
+                    },
+                    "Send_email_notification_(V3)_-French": {
+                      "runAfter": {
+                        "Set_variable_varHyperLink__2": [
+                          "Succeeded"
+                        ]
+                      },
                       "metadata": {
                         "operationMetadataId": "cfc8d355-3dc8-4e9e-bb8a-31d1950791f4"
                       },
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
                           "connectionName": "shared_office365",
-                          "operationId": "SendEmailV2"
+                          "operationId": "SendEmailV2",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                         },
                         "parameters": {
                           "emailMessage/To": "@outputs('Get_a_row_by_ID_Contact')?['body/emailaddress1']",
@@ -340,17 +351,32 @@
                   },
                   "else": {
                     "actions": {
-                      "Send_email_notification_(V3)_-English": {
+                      "Set_variable_varHyperLink__3": {
                         "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "4e206445-bca6-41c7-8633-6a07e8487551"
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "varHyperLink",
+                          "value": "@{variables('PortalURL')}/en/Account/Login/Register?returnUrl=%2Fen%2F&invitationCode=@{triggerOutputs()?['body/adx_invitationcode']}"
+                        }
+                      },
+                      "Send_email_notification_(V3)_-English": {
+                        "runAfter": {
+                          "Set_variable_varHyperLink__3": [
+                            "Succeeded"
+                          ]
+                        },
                         "metadata": {
                           "operationMetadataId": "85028265-16bf-465d-80ef-3cee5fd0c9f2"
                         },
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
                             "connectionName": "shared_office365",
-                            "operationId": "SendEmailV2"
+                            "operationId": "SendEmailV2",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                           },
                           "parameters": {
                             "emailMessage/To": "@outputs('Get_a_row_by_ID_Contact')?['body/emailaddress1']",
@@ -388,9 +414,9 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                             "connectionName": "shared_commondataserviceforapps_1",
-                            "operationId": "GetItem"
+                            "operationId": "GetItem",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                           },
                           "parameters": {
                             "entityName": "contacts",
@@ -440,9 +466,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                       "connectionName": "shared_commondataserviceforapps",
-                      "operationId": "ListRecords"
+                      "operationId": "ListRecords",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                     },
                     "parameters": {
                       "entityName": "cid_invitations",
@@ -462,9 +488,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                           "connectionName": "shared_commondataserviceforapps",
-                          "operationId": "UpdateRecord"
+                          "operationId": "UpdateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                         },
                         "parameters": {
                           "entityName": "cid_invitations",
@@ -497,9 +523,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                       "connectionName": "shared_commondataserviceforapps_1",
-                      "operationId": "UpdateRecord"
+                      "operationId": "UpdateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                     },
                     "parameters": {
                       "entityName": "adx_invitations",
@@ -519,9 +545,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                           "connectionName": "shared_commondataserviceforapps",
-                          "operationId": "UpdateRecord"
+                          "operationId": "UpdateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                         },
                         "parameters": {
                           "entityName": "accounts",
@@ -768,7 +794,7 @@
         },
         "get-environment-settings": {
           "runAfter": {
-            "Initialize_variable_varHyperLink": [
+            "Initialize_variable_Portal_URL": [
               "Succeeded"
             ]
           },
@@ -778,9 +804,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps",
-              "operationId": "ListRecords"
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "qm_environmentsettingses",
@@ -852,7 +878,7 @@
             }
           },
           "runAfter": {
-            "Initialize_variable_CID_Email_Sender": [
+            "Set_Filter_environment-CID_PortalURL": [
               "Succeeded"
             ]
           },
@@ -1065,10 +1091,59 @@
               }
             ]
           }
+        },
+        "Initialize_variable_Portal_URL": {
+          "runAfter": {
+            "Initialize_variable_varHyperLink": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0991d2d7-ec46-48d4-b67d-eecee640a209"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "PortalURL",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Filter_environment-CID_PortalURL": {
+          "runAfter": {
+            "Initialize_variable_CID_Email_Sender": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('get-environment-settings')?['body/value']",
+            "where": "@equals(item()?['qm_name'], 'CID_PortalURL')"
+          }
+        },
+        "Set_Filter_environment-CID_PortalURL": {
+          "runAfter": {
+            "Filter_environment-CID_PortalURL": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b02c4818-27f3-4bce-8a54-5c6c12c7eb3c"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "PortalURL",
+            "value": "@{body('Filter_environment-CID_PortalURL')[0]['qm_value']}"
+          }
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
