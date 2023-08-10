@@ -28,6 +28,28 @@ $(document).ready(function () {
 		$("#ovs_address1_province").attr("disabled", false);
 	});
 
+        var urlParams = new URLSearchParams(window.location.search);
+		if (urlParams.has('id')) 
+		{
+					var siteid = urlParams.get('id');
+				if (siteid != "") 
+				{
+				     var operationDataset = tdg.webapi.SelectedColumnlist("ovs_mocregistrations", "ovs_mocregistrationid",
+						"statuscode eq 1 and ovs_operationtype eq 918640038 and _ovs_siteid_value eq "  + siteid);
+						//var operationid = operationDataset[0].ovs_mocregistrationid ;
+						console.log( "operation length :" +  operationDataset.length);
+						if (operationDataset.length == 0)
+						{
+							var data = {
+								"ovs_SiteId@odata.bind": "/accounts(" + siteid + ")",
+								"ovs_operationtype": 918640038
+							};
+							tdg.webapi.create("ovs_mocregistrations", data);
+
+						}
+				}
+		}
+
 	var inYear = sessionStorage.getItem('frominyearsites');
 	var annualCompliance = sessionStorage.getItem('fromannualcompliance');
 	var frominyearsitepage = sessionStorage.getItem('frominyearsitepage');
