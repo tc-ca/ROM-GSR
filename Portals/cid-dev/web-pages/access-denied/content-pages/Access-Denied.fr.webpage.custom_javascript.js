@@ -4,14 +4,7 @@
 
 $(document).ready(function () {
     debugger;
-     page_setup();
- 
-    if ($('.validation-summary-errors')[0]) {
-        var Innerhtml = $('.validation-summary-errors')[0].innerHTML;
-        var InnerText = $('.validation-summary-errors')[0].innerText;
-        $('.validation-summary-errors')[0].innerText = tdg.c.replace_special_char(InnerText) ;
-    
-    }
+    // page_setup();
 });
 
 function page_setup() {
@@ -41,10 +34,12 @@ function page_setup() {
 if (document.getElementsByTagName('h1')[0]) {
     debugger;
     page_setup();
+
     var signin_label = tdg.error_message.message("BTN_SIGNIN");
     $(":button.btn.btn-primary.btn-line").text(signin_label);
     var signin_ttip = tdg.error_message.message("ttip_SIGNIN");
-    $(":button.btn.btn-primary.btn-line")[0].title = signin_ttip ;
+    $(":button.btn.btn-primary.btn-line")[0].title = signin_ttip;
+
     var source = document.getElementsByTagName('h1')[0].innerHTML;
     var terms_and = tdg.error_message.message("m000199");
     var terms_and_conditions = tdg.error_message.message("m000189");
