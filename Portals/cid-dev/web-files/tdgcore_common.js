@@ -2456,7 +2456,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
             var data;
             var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
             //if pre prod or prod
-            if (environment == "PreProd" || environment == "Prod") {
+            console.log("environment.toLowerCase() : " + environment.toLowerCase());
+            if (environment.toLowerCase() == "preprod" || environment.toLowerCase() == "prod") {
                 //use CRA API to get iformation
                 data = await tdg.cid.crw.Production_start_Retrieve_cra(cid_crabusinessnumber, step_start);
             }
@@ -2544,7 +2545,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 var cra_data;
                 var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
                 //if pre prod or prod
-                if (environment == "PreProd" || environment == "Prod") {
+                console.log( "environment : " + environment.toLowerCase());
+                if (environment.toLowerCase() == "preprod" || environment.toLowerCase() == "prod") {
                     //use CRA API to get information
                     cra_data = await tdg.cid.crw.Production_start_Retrieve_cra(bn, "");
 
