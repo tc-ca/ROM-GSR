@@ -2545,10 +2545,16 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 var cra_data;
                 var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
                 //if pre prod or prod
-                console.log( "environment : " + environment.toLowerCase());
+                console.log("environment : " + environment.toLowerCase());
                 if (environment.toLowerCase() == "preprod" || environment.toLowerCase() == "prod") {
                     //use CRA API to get information
-                    cra_data = await tdg.cid.crw.Production_start_Retrieve_cra(bn, "");
+                    if ((/^[0-9]+$/.test(bn)) && (bn.trim().length == 9)) {
+                        cra_data = await tdg.cid.crw.Production_start_Retrieve_cra(bn, "");
+                    }
+                    else {
+                        cra_data = {};
+                        cra_data.length = 0;
+                    }
 
                     //show notice if the data is empty
                     if (cra_data.length == 0) {
