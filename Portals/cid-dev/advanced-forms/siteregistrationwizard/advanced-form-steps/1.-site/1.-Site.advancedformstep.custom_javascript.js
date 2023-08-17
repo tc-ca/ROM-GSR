@@ -35,7 +35,15 @@ $(document).ready(function () {
 				if (siteid != "") 
 				{
 				     var operationDataset = tdg.webapi.SelectedColumnlist("ovs_mocregistrations", "ovs_mocregistrationid",
-						"statuscode eq 1 and ovs_operationtype eq 918640038 and _ovs_siteid_value eq "  + siteid);
+						"statuscode eq 1 and  ovs_operationtype eq 918640038  and _ovs_siteid_value eq "  + siteid);
+						console.log ("province : "  + $("#address1_stateorprovince").val());
+						if ( $("#address1_stateorprovince").val() == "AB")
+						{
+							 operationDataset = tdg.webapi.SelectedColumnlist("ovs_mocregistrations", "ovs_mocregistrationid",
+						"statuscode eq 1 and ( ovs_operationtype eq 918640038 or ovs_operationtype eq 918640042 ) and _ovs_siteid_value eq "  + siteid);
+
+						}
+						
 						//var operationid = operationDataset[0].ovs_mocregistrationid ;
 						console.log( "operation length :" +  operationDataset.length);
 						if (operationDataset.length == 0)

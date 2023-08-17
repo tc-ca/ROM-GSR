@@ -54,9 +54,9 @@ $(document).ready(function () {
 		var cid_reasonfornobnnumber = "{{user.cid_reasonfornobnnumber.Value}}";
 		var cid_reasonfornobnnumber_other = tdg.c.replace_special_char("{{user.cid_reasonfornobnnumber_other}}");
 		var cid_legalname = "{{user.cid_legalname}}";
+		var ovs_legalnamefr = "{{user.ovs_legalnamefr}}";
 		var cid_operatingname = "{{user.cid_operatingname}}";
 		var ovs_name_fr = cid_operatingname;
-		var ovs_legalnamefr = cid_legalname;
 	}
 	else {
 		var cid_crabusinessnumber = $('#cid_crabusinessnumber').val();
@@ -68,9 +68,9 @@ $(document).ready(function () {
 		var cid_operatingname = $('#name').val();
 	}
 	var cid_legalname = tdg.c.replace_special_char(cid_legalname);
+	var ovs_legalnamefr = tdg.c.replace_special_char(ovs_legalnamefr);
 	var cid_operatingname = tdg.c.replace_special_char(cid_operatingname);
 	var ovs_name_fr = tdg.c.replace_special_char(ovs_name_fr);
-	var ovs_legalnamefr = tdg.c.replace_special_char(ovs_legalnamefr);
 
 	$('#cid_has_cra_bn').val(cid_has_cra_bn);
 	tdg.c.control_hide("cid_has_cra_bn");
