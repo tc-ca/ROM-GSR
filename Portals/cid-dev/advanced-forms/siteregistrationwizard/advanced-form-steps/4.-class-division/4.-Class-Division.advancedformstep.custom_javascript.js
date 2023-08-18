@@ -20,7 +20,7 @@ $(document).ready(function () {
     else {
        
         var operationDataset = tdg.webapi.SelectedColumnlist("ovs_mocregistrations", "ovs_mocregistrationid",
-            "statuscode eq 1 and ovs_operationtype eq 918640038 and _ovs_siteid_value eq " + siteid);
+            "statuscode eq 1 and ( ovs_operationtype eq 918640038 or ovs_operationtype eq 918640042 ) and _ovs_siteid_value eq " + siteid);
         var operationid = operationDataset[0].ovs_mocregistrationid;
         insertParam("operationid", operationid);
       

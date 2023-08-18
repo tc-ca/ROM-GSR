@@ -2597,7 +2597,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     data.cid_legalname = account.ovs_legalname;
                     data.cid_legalnameFR = account.ovs_legalnamefr;
                     data.cid_operatingname = account.name;
-                    data.cid_operatingnameFr = account.ovs_namefr;
+                    data.cid_operatingnameFr = account.ovs_name_fr;
 
                     var cid_reasonfornobnnumber = account.cid_reasonfornobnnumber;
                     for (var i = 0; i < cid_reasonfornobnnumber_list.length; i++) {
@@ -2724,12 +2724,17 @@ if (typeof (tdg.cid.crw) == "undefined") {
             var msg_btn_ok = tdg.error_message.message("BTN_IS_MY_COMPANY");
             var msg_btn_cancel = tdg.error_message.message("BTN_IS_NOT_MY_COMPANY");
             var lbl_legal_name = tdg.error_message.message("lbl_legal_name");
+            var lbl_legal_name_fr = tdg.error_message.message("lbl_legal_name_fr");
             var lbl_operating_name = tdg.error_message.message("lbl_operating_name");
+            var lbl_operating_name_fr = tdg.error_message.message("lbl_operating_name_fr");
             var lbl_cra_bn = tdg.error_message.message("lbl_cra_bn");
             var lbl_address = tdg.error_message.message("lbl_address");
             var lbl_reasonfornobnnumber = tdg.error_message.message("lbl_reasonfornobnnumber");
             var lbl_reasonfornobnnumber_other = tdg.error_message.message("lbl_reasonfornobnnumber_other");
             var lbl_confirm_is_company = tdg.error_message.message("m000052");
+
+            data.cid_legalnameFR = (data.cid_legalnameFR == null ? "" : data.cid_legalnameFR);
+            data.cid_operatingnameFr = (data.cid_operatingnameFr == null ? "" : data.cid_operatingnameFr);
 
             data.address.AddressLine2Text = (data.address.AddressLine2Text == null ? "" : data.address.AddressLine2Text);
             data.address.AddressLine3Text = (data.address.AddressLine3Text == null ? "" : data.address.AddressLine3Text);
@@ -2790,8 +2795,14 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     <label for="cid_legalname" class="field-label">${lbl_legal_name}</label>
                     <input type="text" readonly class="text form-control" id="cid_legalname" style="width:100%" value="${data.cid_legalname}">
                     <p>
+                    <label for="cid_legalname_fr" class="field-label">${lbl_legal_name_fr}</label>
+                    <input type="text" readonly class="text form-control" id="cid_legalname_fr" style="width:100%" value="${data.cid_legalnameFR}">
+                   <p>
                     <label for="cid_operatingname" class="field-label">${lbl_operating_name}</label>
                     <input type="text" readonly class="text form-control" id="cid_operatingname" style="width:100%" value="${data.cid_operatingname}">
+                   <p>
+                    <label for="cid_operatingname_fr" class="field-label">${lbl_operating_name_fr}</label>
+                    <input type="text" readonly class="text form-control" id="cid_operatingname_fr" style="width:100%" value="${data.cid_operatingnameFr}">
                     ` +
                 text_middle +
                 `

@@ -27,7 +27,7 @@ $(document).ready(function () {
 		var siteid = urlParams.get('id');
        
         var operationDataset = tdg.webapi.SelectedColumnlist("ovs_mocregistrations", "ovs_mocregistrationid",
-			"statuscode eq 1 and ovs_operationtype eq 918640038 and _ovs_siteid_value eq "  + siteid);
+			"statuscode eq 1 and ( ovs_operationtype eq 918640038 or ovs_operationtype eq 918640042 ) and _ovs_siteid_value eq "  + siteid);
             var operationid = operationDataset[0].ovs_mocregistrationid ;
            
             var formaction = $('#liquid_form').attr('action') ;
