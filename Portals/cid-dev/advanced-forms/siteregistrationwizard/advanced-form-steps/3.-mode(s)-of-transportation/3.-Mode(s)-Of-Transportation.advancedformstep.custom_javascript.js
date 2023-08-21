@@ -2,7 +2,9 @@ $(document).ready(function () {
     debugger;
 
     $('#loader').hide();
-
+     console.log ("road value : " + $("#cid_modeoftransportationroad").prop("checked"));
+	 //cid_modeoftransportationrail
+	 console.log ("rail value : " + $("#cid_modeoftransportationrail").prop("checked"));
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
@@ -106,3 +108,9 @@ $(document).ready(function () {
 				}
 			}(window.jQuery));
 		}
+function update_Operation_Type_Based_on(operationid)
+{
+	var cid_modeoftransportationroad  = $("#cid_modeoftransportationroad").prop("checked");
+	var cid_modeoftransportationrail  = $("#cid_modeoftransportationrail").prop("checked");
+
+}
