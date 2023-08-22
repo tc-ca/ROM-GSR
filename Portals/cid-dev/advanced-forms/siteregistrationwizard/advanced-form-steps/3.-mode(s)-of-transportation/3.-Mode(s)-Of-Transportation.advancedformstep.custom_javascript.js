@@ -2,9 +2,7 @@ $(document).ready(function () {
     debugger;
 
     $('#loader').hide();
-     console.log ("road value : " + $("#cid_modeoftransportationroad").prop("checked"));
-	 //cid_modeoftransportationrail
-	 console.log ("rail value : " + $("#cid_modeoftransportationrail").prop("checked"));
+   
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
@@ -13,11 +11,13 @@ $(document).ready(function () {
 		var siteid = urlParams.get('id');
         var operationid = urlParams.get('operationid');
         if (urlParams.has('operationid')) {
+			update_Operation_Type_Based_on(operationid);
 
 				if (urlParams.has('in_year') || sessionStorage.getItem('frominyearsites')) {
 					sitePageURL = "~/my-sites/in-year-site/?id=" + siteid;
 					tdg.c.weblink_hide("/RegistrationWizard/");
 					tdg.c.weblink_show("/company_dashboard/");
+					
 				}
 				else {
 					sitePageURL = "~/SiteRegistrationWizard/?id=" + siteid;
@@ -36,6 +36,7 @@ $(document).ready(function () {
 			"statuscode eq 1 and ( ovs_operationtype eq 918640038 or ovs_operationtype eq 918640042 ) and _ovs_siteid_value eq "  + siteid);
             var operationid = operationDataset[0].ovs_mocregistrationid ;
             insertParam("operationid",operationid ); 
+			update_Operation_Type_Based_on(operationid);
 
        }  //$('#liquid_form').attr('action', $('#liquid_form').attr('action')+ '&operationid=' + operationid);
     }
@@ -110,7 +111,22 @@ $(document).ready(function () {
 		}
 function update_Operation_Type_Based_on(operationid)
 {
-	var cid_modeoftransportationroad  = $("#cid_modeoftransportationroad").prop("checked");
-	var cid_modeoftransportationrail  = $("#cid_modeoftransportationrail").prop("checked");
+	console.log ("inside operation function");
+	var cid_modeoftransportationroad = $("#cid_modeoftransportationroad").prop("checked");
+	var cid_modeoftransportationrail = $("#cid_modeoftransportationrail").prop("checked");
+	var cid_modeoftransportationair = $("#cid_modeoftransportationair").prop("checked");
+	var cid_modeoftransportationmarine = $("#cid_modeoftransportationmarine").prop("checked");
+
+	////address1_stateorprovince
+	 var urlParams = new URLSearchParams(window.location.search);
+		if (urlParams.has('id'))
+		 {
+			 var siteid = urlParams.get('id');
+			  var SiteDataSet = tdg.webapi.SelectedColumnlist("accounts", "address1_stateorprovince",
+			"statuscode eq 1 and accountid eq "  + siteid);
+			 var province = SiteDataSet[0].address1_stateorprovince ;
+			 console.log ("province : " + province);
+		}
+
 
 }
