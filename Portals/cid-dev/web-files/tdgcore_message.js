@@ -454,7 +454,7 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "lbl_legal_name_fr",
                         "message_en": "Legal Name (French)",
                         "message_fr": "Dénomination sociale (français)"
-                    },                   {
+                    }, {
                         "code": "lbl_cra_bn",
                         "message_en": "CRA Business Number",
                         "message_fr": "Numéro d’organisation de l’ARC"
@@ -1308,6 +1308,11 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000207",
                         "message_en": "Thank you for testing Transport Canada's Client Identification Database (CID). Once CID is officially launched, you will be able to log in and return to this screen to attest and complete your registration.<br><br>Please take a few minutes to complete this anonymous survey: <a href='https://forms.office.com/r/gLEmNr6Wa9'>https://forms.office.com/r/gLEmNr6Wa9</a><br><br>Your feedback will be important in helping us make sure that this application meets the needs of our stakeholders.",
                         "message_fr": "Nous vous remercions d'avoir testé la base de données d'identification des clients (BDIC) de Transports Canada. Une fois que la BDIC sera officiellement lancée, vous pourrez vous connecter et revenir à cet écran pour attester et compléter votre enregistrement.<br><br> Veuillez prendre quelques minutes pour répondre à ce sondage anonyme : <a href='https://forms.office.com/r/gLEmNr6Wa9'>https://forms.office.com/r/gLEmNr6Wa9</a><br><br> Vos commentaires nous aideront à faire en sorte que cette application réponde aux besoins de notre communauté réglementée."
+                    },
+                    {
+                        "code": "m000208",
+                        "message_en": "Your contact record already exists. A support request was created to send an Invitation to login to the system.",
+                        "message_fr": "Votre enregistrement de contact existe déjà. Une demande d’assistance a été créée pour envoyer une invitation à se connecter au système."
                     },
                     {
                         "code": "BTN_SIGNIN",

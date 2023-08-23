@@ -126,6 +126,38 @@ function update_Operation_Type_Based_on(operationid)
 			"statuscode eq 1 and accountid eq "  + siteid);
 			 var province = SiteDataSet[0].address1_stateorprovince ;
 			 console.log ("province : " + province);
+
+			 var OpeartionDataSet = tdg.webapi.SelectedColumnlist("ovs_mocregistrations", "ovs_operationtype",
+			"statuscode eq 1 and ovs_mocregistrationid eq "  + operationid);
+			 var operationType = OpeartionDataSet[0].ovs_operationtype ;
+			 console.log ("type  : " + operationType);
+			 if (province == "AB")
+			 {
+				 if (cid_modeoftransportationroad == false)
+				 {
+					 if (operationType  != 918640042 )
+					 if (cid_modeoftransportationrail == true || cid_modeoftransportationair == true
+					 || cid_modeoftransportationmarine == true )
+					 {
+						 // update operation type
+						  var data = {
+							"ovs_operationtype":918640042
+						};
+						console.log("operation id " + operationid);
+						tdg.webapi.update("ovs_mocregistrations", operationid, data);
+
+					 }
+				 }
+				 else if (cid_modeoftransportationroad == true)
+				 {
+					  // update operation type
+						  var data = {
+							"ovs_operationtype":918640038
+						};
+						tdg.webapi.update("ovs_mocregistrations", operationid, data);
+
+				 }//end check if road was selected
+			 }//end check province
 		}
 
 

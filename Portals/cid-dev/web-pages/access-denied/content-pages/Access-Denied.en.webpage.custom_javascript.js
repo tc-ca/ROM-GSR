@@ -31,9 +31,12 @@ function page_setup() {
     tdg.c.message_panel();
 }
 
+debugger;
+page_setup();
+
 if (document.getElementsByTagName('h1')[0]) {
     debugger;
-    page_setup();
+    //page_setup();
 
     var signin_label = tdg.error_message.message("BTN_SIGNIN");
     $(":button.btn.btn-primary.btn-line").text(signin_label);
@@ -93,6 +96,10 @@ if (text == Register_external_account) {
         if (Innerhtml != null && Innerhtml.substring(0, 18) == The_email) {
             var email_in_use = tdg.error_message.message("m000193");
             $('.validation-summary-errors')[0].innerHTML = email_in_use;
+
+            // popup msg
+            var msg = tdg.error_message.message("m000208");
+            tdg.c.dialog_OK(msg);
         }
         else if (InnerText != null && InnerText == invalid_invitation) {
             var invitation_expired = tdg.error_message.message("m000195");
