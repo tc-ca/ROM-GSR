@@ -1,0 +1,284 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "impersonation": {},
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "aa54ded2-c219-4512-a74f-d4686e85db33"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 4,
+              "subscriptionRequest/entityname": "contact",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "parentcustomerid",
+              "subscriptionRequest/runas": 3,
+              "subscriptionRequest/name": "cb3f3785-8642-ee11-be6e-0022483e130e"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Condition:_Check_if_parentcustomerid_is_not_null": {
+          "actions": {
+            "Get_Account_by_parentcustomerid": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "325e55a5-6961-4f23-ac4b-85c5c24a5a87"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "GetItem"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "recordId": "@triggerOutputs()?['body/_parentcustomerid_value']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Condition:_Check_if_the_account_is_null_and_the_parent_is_a_site": {
+              "actions": {
+                "Get_a_row_by_ID:_Get_parent_for_site": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "5f716c74-d12f-4a25-80aa-457c7d8d4350"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "GetItem"
+                    },
+                    "parameters": {
+                      "entityName": "accounts",
+                      "recordId": "@outputs('Get_Account_by_parentcustomerid')?['body/_parentaccountid_value']"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Condition:_check_if_parent_Organization_exists": {
+                  "actions": {
+                    "Update_a_row:_reparent_contact_to_Organization": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "4988d94d-7263-4604-a18b-a7627c374832"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "UpdateRecord"
+                        },
+                        "parameters": {
+                          "entityName": "contacts",
+                          "recordId": "@triggerOutputs()?['body/contactid']",
+                          "item/parentcustomerid_account@odata.bind": "accounts/@{outputs('Get_a_row_by_ID:_Get_parent_for_site')?['body/accountid']}"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Get_a_row_by_ID:_Get_parent_for_site": [
+                      "Succeeded"
+                    ]
+                  },
+                  "else": {
+                    "actions": {
+                      "Update_a_row:_reset_parent_company_to_null": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "f861384b-6b40-4370-a5af-665bb6df96cb"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                            "connectionName": "shared_commondataserviceforapps",
+                            "operationId": "UpdateRecord"
+                          },
+                          "parameters": {
+                            "entityName": "contacts",
+                            "recordId": "@triggerOutputs()?['body/contactid']",
+                            "item/parentcustomerid_account@odata.bind": "@null"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      }
+                    }
+                  },
+                  "expression": {
+                    "not": {
+                      "equals": [
+                        "@outputs('Get_a_row_by_ID:_Get_parent_for_site')?['body/accountid']",
+                        "@null"
+                      ]
+                    }
+                  },
+                  "metadata": {
+                    "operationMetadataId": "c582aed1-9a2b-4817-828e-58e212cc55db"
+                  },
+                  "type": "If"
+                }
+              },
+              "runAfter": {
+                "Get_Account_by_parentcustomerid": [
+                  "Succeeded"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "Condition:_Check_if_site_doesn't_have_parent_Organization": {
+                    "actions": {
+                      "Update_a_row:_reset_parent_company_to_null_if_no_Parent_for_Site": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "f861384b-6b40-4370-a5af-665bb6df96cb"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                            "connectionName": "shared_commondataserviceforapps",
+                            "operationId": "UpdateRecord"
+                          },
+                          "parameters": {
+                            "entityName": "contacts",
+                            "recordId": "@triggerOutputs()?['body/contactid']",
+                            "item/parentcustomerid_account@odata.bind": "@null"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      }
+                    },
+                    "runAfter": {},
+                    "expression": {
+                      "and": [
+                        {
+                          "not": {
+                            "equals": [
+                              "@outputs('Get_Account_by_parentcustomerid')?['body/accountid']",
+                              "@null"
+                            ]
+                          }
+                        },
+                        {
+                          "equals": [
+                            "@outputs('Get_Account_by_parentcustomerid')?['body/customertypecode']",
+                            948010001
+                          ]
+                        },
+                        {
+                          "equals": [
+                            "@outputs('Get_Account_by_parentcustomerid')?['body/_parentaccountid_value']",
+                            "@null"
+                          ]
+                        }
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "e9cbdb2e-f72c-409b-b690-6cc08cc4a57a"
+                    },
+                    "type": "If"
+                  }
+                }
+              },
+              "expression": {
+                "and": [
+                  {
+                    "not": {
+                      "equals": [
+                        "@outputs('Get_Account_by_parentcustomerid')?['body/accountid']",
+                        "@null"
+                      ]
+                    }
+                  },
+                  {
+                    "equals": [
+                      "@outputs('Get_Account_by_parentcustomerid')?['body/customertypecode']",
+                      948010001
+                    ]
+                  },
+                  {
+                    "not": {
+                      "equals": [
+                        "@outputs('Get_Account_by_parentcustomerid')?['body/_parentaccountid_value']",
+                        "@null"
+                      ]
+                    }
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e9cbdb2e-f72c-409b-b690-6cc08cc4a57a"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {},
+          "expression": {
+            "and": [
+              {
+                "not": {
+                  "equals": [
+                    "@triggerOutputs()?['body/_parentcustomerid_value']",
+                    "@null"
+                  ]
+                }
+              },
+              {
+                "equals": [
+                  "@empty(triggerOutputs()?['body/_parentcustomerid_value'])",
+                  "@false"
+                ]
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a24ff75a-da20-4d8c-902a-43a3556cb882"
+          },
+          "type": "If"
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

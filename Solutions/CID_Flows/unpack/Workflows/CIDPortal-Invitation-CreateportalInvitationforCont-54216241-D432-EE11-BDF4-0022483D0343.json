@@ -147,163 +147,6 @@
               },
               "Check_if_contact_has_existing_login_and_company_assigned": {
                 "actions": {
-                  "If_Company_not_registered_yet": {
-                    "actions": {
-                      "Create_New_Invitation_Record_-Organization_Registration_not_started_": {
-                        "runAfter": {},
-                        "metadata": {
-                          "operationMetadataId": "2a47fd97-f023-43a0-8e5f-efe1c5e8eeaa"
-                        },
-                        "type": "OpenApiConnection",
-                        "inputs": {
-                          "host": {
-                            "connectionName": "shared_commondataserviceforapps",
-                            "operationId": "CreateRecord",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                          },
-                          "parameters": {
-                            "entityName": "adx_invitations",
-                            "item/adx_name": "@{triggerOutputs()?['body/fullname']} - @{formatDateTime(utcNow(), 'yyyy-MM-dd')}",
-                            "item/adx_type": 756150001,
-                            "item/adx_assignToAccount@odata.bind": "accounts(@{triggerOutputs()?['body/_parentcustomerid_value']})",
-                            "item/adx_expirydate": "@addDays(utcNow(), 730, 'yyyy-MM-dd')",
-                            "item/adx_inviteContact@odata.bind": "contacts(@{triggerOutputs()?['body/contactid']})",
-                            "item/adx_invitercontact@odata.bind": "@if(equals(triggerOutputs()?['body/_createdbyexternalparty_value'], null), null, concat('contacts(', triggerOutputs()?['body/_createdbyexternalparty_value'], ')'))",
-                            "item/adx_maximumredemptions": 1,
-                            "item/statuscode": 1
-                          },
-                          "authentication": "@parameters('$authentication')"
-                        }
-                      },
-                      "Update_Invitation_Only_Flag_to_Yes": {
-                        "runAfter": {
-                          "Set_variable_value_Invitation_Id": [
-                            "Succeeded"
-                          ]
-                        },
-                        "metadata": {
-                          "operationMetadataId": "dd96729b-9580-4a08-808a-e2c0eaa4a025"
-                        },
-                        "type": "OpenApiConnection",
-                        "inputs": {
-                          "host": {
-                            "connectionName": "shared_commondataserviceforapps",
-                            "operationId": "UpdateRecord",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                          },
-                          "parameters": {
-                            "entityName": "accounts",
-                            "recordId": "@triggerOutputs()?['body/_parentcustomerid_value']",
-                            "item/ovs_invitation_only": true
-                          },
-                          "authentication": "@parameters('$authentication')"
-                        }
-                      },
-                      "Set_variable_value_Invitation_Id": {
-                        "runAfter": {
-                          "Create_New_Invitation_Record_-Organization_Registration_not_started_": [
-                            "Succeeded"
-                          ]
-                        },
-                        "metadata": {
-                          "operationMetadataId": "630b1f5a-f833-44b5-9cd9-81646d2768ae"
-                        },
-                        "type": "SetVariable",
-                        "inputs": {
-                          "name": "InvitationId",
-                          "value": "@outputs('Create_New_Invitation_Record_-Organization_Registration_not_started_')?['body/adx_invitationid']"
-                        }
-                      }
-                    },
-                    "runAfter": {
-                      "Apply_to_each_Deactivate_all_existing_invitations": [
-                        "Succeeded"
-                      ]
-                    },
-                    "else": {
-                      "actions": {
-                        "Create_New_Invitation_Record": {
-                          "runAfter": {},
-                          "metadata": {
-                            "operationMetadataId": "2a47fd97-f023-43a0-8e5f-efe1c5e8eeaa"
-                          },
-                          "type": "OpenApiConnection",
-                          "inputs": {
-                            "host": {
-                              "connectionName": "shared_commondataserviceforapps",
-                              "operationId": "CreateRecord",
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                            },
-                            "parameters": {
-                              "entityName": "adx_invitations",
-                              "item/adx_name": "@{triggerOutputs()?['body/fullname']} - @{formatDateTime(utcNow(), 'yyyy-MM-dd')}",
-                              "item/adx_type": 756150000,
-                              "item/adx_assignToAccount@odata.bind": "accounts(@{triggerOutputs()?['body/_parentcustomerid_value']})",
-                              "item/adx_expirydate": "@addDays(utcNow(), 730, 'yyyy-MM-dd')",
-                              "item/adx_inviteContact@odata.bind": "contacts(@{triggerOutputs()?['body/contactid']})",
-                              "item/adx_invitercontact@odata.bind": "@if(equals(triggerOutputs()?['body/_createdbyexternalparty_value'], null), null, concat('contacts(', triggerOutputs()?['body/_createdbyexternalparty_value'], ')'))",
-                              "item/adx_maximumredemptions": 1,
-                              "item/statuscode": 1
-                            },
-                            "authentication": "@parameters('$authentication')"
-                          }
-                        },
-                        "Set_variable_value_2_Invitation_Id": {
-                          "runAfter": {
-                            "Create_New_Invitation_Record": [
-                              "Succeeded"
-                            ]
-                          },
-                          "metadata": {
-                            "operationMetadataId": "8057a94e-9a2a-43c0-a8c8-26fdf6de3aee"
-                          },
-                          "type": "SetVariable",
-                          "inputs": {
-                            "name": "InvitationId",
-                            "value": "@outputs('Create_New_Invitation_Record')?['body/adx_invitationid']"
-                          }
-                        }
-                      }
-                    },
-                    "expression": {
-                      "or": [
-                        {
-                          "equals": [
-                            "@outputs('Get_Account_Details')?['body/cid_cidcompanystatus']",
-                            "@null"
-                          ]
-                        },
-                        {
-                          "equals": [
-                            "@outputs('Get_Account_Details')?['body/cid_cidcompanystatus']",
-                            100000002
-                          ]
-                        },
-                        {
-                          "equals": [
-                            "@outputs('Get_Account_Details')?['body/cid_cidcompanystatus']",
-                            100000010
-                          ]
-                        },
-                        {
-                          "equals": [
-                            "@outputs('Get_Account_Details')?['body/cid_cidcompanystatus']",
-                            100000004
-                          ]
-                        },
-                        {
-                          "equals": [
-                            "@outputs('Get_Account_Details')?['body/cid_cidcompanystatus']",
-                            100000003
-                          ]
-                        }
-                      ]
-                    },
-                    "metadata": {
-                      "operationMetadataId": "fb05e924-d30b-4e35-a371-8765eefd9725"
-                    },
-                    "type": "If"
-                  },
                   "Get_Account_Details": {
                     "runAfter": {},
                     "metadata": {
@@ -320,55 +163,6 @@
                         "entityName": "accounts",
                         "recordId": "@triggerOutputs()?['body/_parentcustomerid_value']",
                         "$select": "cid_cidcompanystatus,customertypecode,statecode"
-                      },
-                      "authentication": "@parameters('$authentication')"
-                    }
-                  },
-                  "Assign_Web_Role_Authenticated_Users": {
-                    "runAfter": {
-                      "Get_Web_Role_Guid": [
-                        "Succeeded"
-                      ]
-                    },
-                    "metadata": {
-                      "operationMetadataId": "63bfd703-1cd9-4167-8034-7806ece02eaf"
-                    },
-                    "type": "OpenApiConnection",
-                    "inputs": {
-                      "host": {
-                        "connectionName": "shared_commondataserviceforapps",
-                        "operationId": "AssociateEntities",
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                      },
-                      "parameters": {
-                        "entityName": "adx_invitations",
-                        "recordId": "@variables('InvitationId')",
-                        "associationEntityRelationship": "adx_invitation_webrole",
-                        "item/@odata.id": "@outputs('Get_Web_Role_Guid')?['body/value'][0]?['@odata.id']"
-                      },
-                      "authentication": "@parameters('$authentication')"
-                    }
-                  },
-                  "Get_Web_Role_Guid": {
-                    "runAfter": {
-                      "If_Company_not_registered_yet": [
-                        "Succeeded"
-                      ]
-                    },
-                    "metadata": {
-                      "operationMetadataId": "cad4edff-3040-4d06-89e5-0eade238cc62"
-                    },
-                    "type": "OpenApiConnection",
-                    "inputs": {
-                      "host": {
-                        "connectionName": "shared_commondataserviceforapps",
-                        "operationId": "ListRecords",
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                      },
-                      "parameters": {
-                        "entityName": "adx_webroles",
-                        "$select": "adx_webroleid,adx_name",
-                        "$filter": "adx_name eq 'Authenticated Users'"
                       },
                       "authentication": "@parameters('$authentication')"
                     }
@@ -430,6 +224,231 @@
                       "operationMetadataId": "ca137ec9-f513-4b46-a551-a10f3015c784"
                     },
                     "type": "Foreach"
+                  },
+                  "If_not_parent_company_(If_site)_ignore": {
+                    "actions": {
+                      "If_Company_not_registered_yet_and_if_parent_company": {
+                        "actions": {
+                          "Create_New_Invitation_Record_-Organization_Registration_not_started_": {
+                            "runAfter": {},
+                            "metadata": {
+                              "operationMetadataId": "2a47fd97-f023-43a0-8e5f-efe1c5e8eeaa"
+                            },
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "host": {
+                                "connectionName": "shared_commondataserviceforapps",
+                                "operationId": "CreateRecord",
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                              },
+                              "parameters": {
+                                "entityName": "adx_invitations",
+                                "item/adx_name": "@{triggerOutputs()?['body/fullname']} - @{formatDateTime(utcNow(), 'yyyy-MM-dd')}",
+                                "item/adx_type": 756150001,
+                                "item/adx_assignToAccount@odata.bind": "accounts(@{triggerOutputs()?['body/_parentcustomerid_value']})",
+                                "item/adx_expirydate": "@addDays(utcNow(), 730, 'yyyy-MM-dd')",
+                                "item/adx_inviteContact@odata.bind": "contacts(@{triggerOutputs()?['body/contactid']})",
+                                "item/adx_invitercontact@odata.bind": "@if(equals(triggerOutputs()?['body/_createdbyexternalparty_value'], null), null, concat('contacts(', triggerOutputs()?['body/_createdbyexternalparty_value'], ')'))",
+                                "item/adx_maximumredemptions": 1,
+                                "item/statuscode": 1
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            }
+                          },
+                          "Update_Invitation_Only_Flag_to_Yes": {
+                            "runAfter": {
+                              "Set_variable_value_Invitation_Id": [
+                                "Succeeded"
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "dd96729b-9580-4a08-808a-e2c0eaa4a025"
+                            },
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "host": {
+                                "connectionName": "shared_commondataserviceforapps",
+                                "operationId": "UpdateRecord",
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                              },
+                              "parameters": {
+                                "entityName": "accounts",
+                                "recordId": "@triggerOutputs()?['body/_parentcustomerid_value']",
+                                "item/ovs_invitation_only": true
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            }
+                          },
+                          "Set_variable_value_Invitation_Id": {
+                            "runAfter": {
+                              "Create_New_Invitation_Record_-Organization_Registration_not_started_": [
+                                "Succeeded"
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "630b1f5a-f833-44b5-9cd9-81646d2768ae"
+                            },
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "InvitationId",
+                              "value": "@outputs('Create_New_Invitation_Record_-Organization_Registration_not_started_')?['body/adx_invitationid']"
+                            }
+                          }
+                        },
+                        "runAfter": {},
+                        "else": {
+                          "actions": {
+                            "Create_New_Invitation_Record": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "2a47fd97-f023-43a0-8e5f-efe1c5e8eeaa"
+                              },
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_commondataserviceforapps",
+                                  "operationId": "CreateRecord",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                },
+                                "parameters": {
+                                  "entityName": "adx_invitations",
+                                  "item/adx_name": "@{triggerOutputs()?['body/fullname']} - @{formatDateTime(utcNow(), 'yyyy-MM-dd')}",
+                                  "item/adx_type": 756150000,
+                                  "item/adx_assignToAccount@odata.bind": "accounts(@{triggerOutputs()?['body/_parentcustomerid_value']})",
+                                  "item/adx_expirydate": "@addDays(utcNow(), 730, 'yyyy-MM-dd')",
+                                  "item/adx_inviteContact@odata.bind": "contacts(@{triggerOutputs()?['body/contactid']})",
+                                  "item/adx_invitercontact@odata.bind": "@if(equals(triggerOutputs()?['body/_createdbyexternalparty_value'], null), null, concat('contacts(', triggerOutputs()?['body/_createdbyexternalparty_value'], ')'))",
+                                  "item/adx_maximumredemptions": 1,
+                                  "item/statuscode": 1
+                                },
+                                "authentication": "@parameters('$authentication')"
+                              }
+                            },
+                            "Set_variable_value_2_Invitation_Id": {
+                              "runAfter": {
+                                "Create_New_Invitation_Record": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "8057a94e-9a2a-43c0-a8c8-26fdf6de3aee"
+                              },
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "InvitationId",
+                                "value": "@outputs('Create_New_Invitation_Record')?['body/adx_invitationid']"
+                              }
+                            }
+                          }
+                        },
+                        "expression": {
+                          "and": [
+                            {
+                              "or": [
+                                {
+                                  "equals": [
+                                    "@outputs('Get_Account_Details')?['body/cid_cidcompanystatus']",
+                                    "@null"
+                                  ]
+                                },
+                                {
+                                  "equals": [
+                                    "@outputs('Get_Account_Details')?['body/cid_cidcompanystatus']",
+                                    100000002
+                                  ]
+                                },
+                                {
+                                  "equals": [
+                                    "@outputs('Get_Account_Details')?['body/cid_cidcompanystatus']",
+                                    100000010
+                                  ]
+                                },
+                                {
+                                  "equals": [
+                                    "@outputs('Get_Account_Details')?['body/cid_cidcompanystatus']",
+                                    100000004
+                                  ]
+                                },
+                                {
+                                  "equals": [
+                                    "@outputs('Get_Account_Details')?['body/cid_cidcompanystatus']",
+                                    100000003
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "fb05e924-d30b-4e35-a371-8765eefd9725"
+                        },
+                        "type": "If"
+                      },
+                      "Get_Web_Role_Guid": {
+                        "runAfter": {
+                          "If_Company_not_registered_yet_and_if_parent_company": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "cad4edff-3040-4d06-89e5-0eade238cc62"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_commondataserviceforapps",
+                            "operationId": "ListRecords",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                          },
+                          "parameters": {
+                            "entityName": "adx_webroles",
+                            "$select": "adx_webroleid,adx_name",
+                            "$filter": "adx_name eq 'Authenticated Users'"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      },
+                      "Assign_Web_Role_Authenticated_Users": {
+                        "runAfter": {
+                          "Get_Web_Role_Guid": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "63bfd703-1cd9-4167-8034-7806ece02eaf"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_commondataserviceforapps",
+                            "operationId": "AssociateEntities",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                          },
+                          "parameters": {
+                            "entityName": "adx_invitations",
+                            "recordId": "@variables('InvitationId')",
+                            "associationEntityRelationship": "adx_invitation_webrole",
+                            "item/@odata.id": "@outputs('Get_Web_Role_Guid')?['body/value'][0]?['@odata.id']"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Apply_to_each_Deactivate_all_existing_invitations": [
+                        "Succeeded"
+                      ]
+                    },
+                    "expression": {
+                      "equals": [
+                        "@outputs('Get_Account_Details')?['body/customertypecode']",
+                        948010000
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "72638924-de4e-48b8-85be-ad264843bebb"
+                    },
+                    "type": "If"
                   }
                 },
                 "runAfter": {
@@ -503,7 +522,7 @@
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
