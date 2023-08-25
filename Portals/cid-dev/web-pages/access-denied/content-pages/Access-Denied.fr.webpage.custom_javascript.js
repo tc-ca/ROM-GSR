@@ -35,9 +35,6 @@ debugger;
 page_setup();
 
 if (document.getElementsByTagName('h1')[0]) {
-    debugger;
-    //page_setup();
-
     var signin_label = tdg.error_message.message("BTN_SIGNIN");
     $(":button.btn.btn-primary.btn-line").text(signin_label);
     var signin_ttip = tdg.error_message.message("ttip_SIGNIN");
@@ -66,7 +63,6 @@ if (document.getElementsByTagName('h1')[0]) {
     }
     //TODO add logic for the default access denied page
 }
-debugger;
 
 var urlParams = new URLSearchParams(window.location.search);
 if (urlParams.has('invitationCode')) {
@@ -98,8 +94,29 @@ if (text == Register_external_account) {
             $('.validation-summary-errors')[0].innerHTML = email_in_use;
 
             // popup msg
-            var msg = tdg.error_message.message("m000208");
-            tdg.c.dialog_OK(msg);
+            var email = $("#Email")[0].value;
+            var filter = "statecode eq 0 and emailaddress1 eq '" + email + "'";
+            var data = tdg.webapi.list("contacts", filter);
+
+            var parentcustomerid = data[0]._parentcustomerid_value;
+            if (parentcustomerid != null) {
+                var filter = "accountid eq '" + parentcustomerid + "'";
+                var data = tdg.webapi.list("accounts", filter);
+
+                var customertypecode = data[0].customertypecode;
+                switch (customertypecode) {
+                    case 948010000:
+                        // parent
+
+                        break;
+                    case 948010001:
+                        // site
+                        var msg = tdg.error_message.message("m000208");
+                        tdg.c.dialog_OK(msg);
+
+                        break;
+                }
+            }
         }
         else if (InnerText != null && InnerText == invalid_invitation) {
             var invitation_expired = tdg.error_message.message("m000195");
