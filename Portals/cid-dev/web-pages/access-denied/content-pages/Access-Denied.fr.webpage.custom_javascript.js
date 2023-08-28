@@ -33,6 +33,8 @@ function page_setup() {
 
 debugger;
 page_setup();
+ var InnerText = $('.validation-summary-errors')[0].innerText;
+ $('.validation-summary-errors')[0].innerText = tdg.c.replace_special_char(InnerText);
 
 if (document.getElementsByTagName('h1')[0]) {
     var signin_label = tdg.error_message.message("BTN_SIGNIN");

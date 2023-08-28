@@ -5,11 +5,31 @@ $(document).ready(function () {
    
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
+		
 
      var urlParams = new URLSearchParams(window.location.search);
 	if (urlParams.has('id')) {
 		var siteid = urlParams.get('id');
         var operationid = urlParams.get('operationid');
+		
+	
+	  //prevent update mode of transportation
+		if (
+		$("#cid_modeoftransportationroad").prop("checked") ==  true ||
+		$("#cid_modeoftransportationrail").prop("checked") ==  true ||
+		$("#cid_modeoftransportationair").prop("checked") == true ||
+		$("#cid_modeoftransportationmarine").prop("checked") == true)
+		{
+			$("#cid_modeoftransportationroad").attr("disabled" , "disabled");
+			$("#cid_modeoftransportationrail").attr("disabled" , "disabled");
+			$("#cid_modeoftransportationair").attr("disabled" , "disabled");
+			$("#cid_modeoftransportationmarine").attr("disabled" , "disabled");
+
+		}
+
+
+
+
         if (urlParams.has('operationid')) {
 			update_Operation_Type_Based_on(operationid);
 

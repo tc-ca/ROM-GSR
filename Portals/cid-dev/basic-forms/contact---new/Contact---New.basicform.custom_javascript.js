@@ -36,6 +36,12 @@ $(document).ready(function () {
         $("#mobilephone").attr("autocomplete", "new-password");
         $("#fax").attr("autocomplete", "new-password");
 
+         //add Privace Statement
+         var privaceStatementLabel = tdg.error_message.message("BTN_CANCEL");
+         $("table.section").after('<input type="checkbox" name="PrivaceStatement" id="privacestatement" name="privacestatement"/><label for="privacestatement" style="font-weight: 200; padding: 0 23px;"><p>I acknowledge that I have read and agree to the <a href="../registration/privacystatement" target="_blank">Privace Statement</a>.</p></label><br>');
+         //$("#cid_languageofcorrespondence").parent().parent().parent().parent().parent().after('<input type="checkbox" name="PrivaceStatement" id="privacestatement" name="privacestatement"/><label for="privacestatement">I acknowledge that I have read and agree to the Privace Statement.</label><br>');
+        $("#privacestatement").css("padding", "0 23px");
+    
         //*************************submit button **********************/      
         $("#InsertButton").css("display", "none");
         //get submit button value to use it with the new button  
@@ -53,7 +59,7 @@ $(document).ready(function () {
             invitation.New_and_Existing_Contact_Submit_Logic(ParentAccount);
         });
         var cancelLabel = tdg.error_message.message("BTN_CANCEL");
-        $('#InsertUpdateButton').after('<input type="button" data-dismiss="modal" value="" id="CancelButton" style="margin-left: 10px;" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
+        $('#InsertUpdateButton').after('<input type="button" data-dismiss="modal" class=".form-control" value="" id="CancelButton" style="margin-left: 10px;" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
         $("#CancelButton")[0].value = cancelLabel;
         $('#CancelButton').on('click', function (event) {
             parent.$(".form-close").eq(0).click();

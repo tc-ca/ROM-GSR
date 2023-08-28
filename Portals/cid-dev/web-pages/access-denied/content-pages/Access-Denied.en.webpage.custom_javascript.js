@@ -33,6 +33,30 @@ function page_setup() {
 
 debugger;
 page_setup();
+ var InnerText = $('.validation-summary-errors')[0].innerText;
+ 
+ //if ($("#Email").val().trim() == "")
+ {
+     //btn btn-primary
+    // $(".btn-primary").prop('disabled', true);
+ }
+ 
+ //fix special char issue
+ $('.validation-summary-errors')[0].innerText = tdg.c.replace_special_char(InnerText);
+ //change style from error to info 
+
+ if ($('.validation-summary-errors')[0].innerText == "The Email field is required.")//need the text to message file
+ {
+     $('.validation-summary-errors').removeClass("alert-danger");
+     $('.validation-summary-errors').addClass("alert-info");
+  
+ }
+ else
+ {
+     $('.validation-summary-errors').removeClass("alert-info");
+     $('.validation-summary-errors').addClass("alert-danger");
+ }
+  $('legend').after("<br><br>");
 
 if (document.getElementsByTagName('h1')[0]) {
     var signin_label = tdg.error_message.message("BTN_SIGNIN");
