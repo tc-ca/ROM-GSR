@@ -26,12 +26,6 @@ $(document).ready(function () {
         sessionStorage.setItem("Email", "");
     });
 
-    //add Privace Statement
-    var privaceStatementLabel = tdg.error_message.message("BTN_CANCEL");
-
-    $("#cid_languageofcorrespondence").parent().parent().parent().after('<input type="checkbox" name="PrivaceStatement" id="privacestatement" name="privacestatement" value="I acknowledge that I have read and agree to the Privace Statement."/>');
-    
-
     if (window.jQuery) {
         (function ($) {
             if (typeof (entityFormClientValidate) != 'undefined') {

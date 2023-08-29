@@ -34,7 +34,42 @@ function page_setup() {
 debugger;
 page_setup();
  var InnerText = $('.validation-summary-errors')[0].innerText;
- $('.validation-summary-errors')[0].innerText = tdg.c.replace_special_char(InnerText);
+//fix special char issue
+$('.validation-summary-errors')[0].innerText = tdg.c.replace_special_char(InnerText);
+//change style from error to info 
+ var emialfileRequiredMessage =  tdg.error_message.message("m000209");
+if ($('.validation-summary-errors')[0].innerText == emialfileRequiredMessage
+//"Le champ de l'adresse de messagerie est obligatoire."
+)//need the text to message file
+{
+    $('.validation-summary-errors').removeClass("alert-danger");
+    $('.validation-summary-errors').addClass("alert-info");
+}
+else 
+{
+    $('.validation-summary-errors').removeClass("alert-info");
+    $('.validation-summary-errors').addClass("alert-danger");
+}
+$('legend').after("<br><br><br><br>");
+
+
+//disabled register key if email is not entered on the change event of the text box
+$("#Email").on("change", function () {
+    if ($("#Email").val().trim() == "") {
+        $(".btn-primary").prop('disabled', true);
+    }
+    else {
+        $(".btn-primary").prop('disabled', false);
+    }
+});//end change event
+
+//disable register key if  email is not entered
+if ($("#Email").val().trim() == "") {
+    $(".btn-primary").prop('disabled', true);
+}
+else {
+    $(".btn-primary").prop('disabled', false);
+}
 
 if (document.getElementsByTagName('h1')[0]) {
     var signin_label = tdg.error_message.message("BTN_SIGNIN");

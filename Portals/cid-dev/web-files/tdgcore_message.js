@@ -1323,6 +1323,26 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "ttip_SIGNIN",
                         "message_en": "Sign in with your Sign In Canada - CATE account.",
                         "message_fr": "Connectez-vous avec votre compte Authenti - Canada EEAC."
+                    },
+                    {
+                        "code": "PRIV_STMT_ERR",
+                        "message_en": "You must agree to the Privacy Statement before you proceed with entering personal information.",
+                        "message_fr": "Vous devez accepter la déclaration de confidentialité avant de procéder à la saisie de renseignements personnels."
+                    },
+                    {
+                        "code": "PRIV_STMT1",
+                        "message_en": "I acknowledge that I have read and agree to the ",
+                        "message_fr": "Je reconnais avoir lu et accepte la "
+                    },
+                    {
+                        "code": "PRIV_STMT2",
+                        "message_en": "Privacy Statement",
+                        "message_fr": "Déclaration de confidentialité"
+                    },
+                    {
+                        "code": "m000209",
+                        "message_en": "The Email field is required.",
+                        "message_fr": "Le champ de l'adresse de messagerie est obligatoire."
                     }
                 ];
 

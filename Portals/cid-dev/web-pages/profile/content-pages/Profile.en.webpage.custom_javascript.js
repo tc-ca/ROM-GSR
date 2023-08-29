@@ -24,8 +24,32 @@ $(document).ready(function () {
     //disable submit button by default  
     $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", true);
     if ($("#telephone1").val() != "" && $("#firstname").val() != "" && $("#lastname").val() != "" && $("#cid_languageofcorrespondence").val() != "") {
-        $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", false);
+        $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", false);    
     }
+    else{
+        //add Privace Statement
+        var privaceStatementLabelPre = tdg.error_message.message("PRIV_STMT1");
+        var privaceStatementLabelPost = tdg.error_message.message("PRIV_STMT2");
+        var psUrl = window.location.origin + "/registration/privacystatement"; 
+        $("table.section").after('<div style="padding-left: 20px;padding-top: 10px;" ><input type="checkbox" name="PrivaceStatement" id="privacestatement" name="privacestatement"/><label for="privacestatement" style="font-weight: 200; padding: 0 8px;"><p>'+ privaceStatementLabelPre + '<a href="' + psUrl +'" target="_blank">' + privaceStatementLabelPost + '</a>.</p></label><br></div>');
+        $("#privacestatement").css("padding", "0 23px");
+
+        $("form").submit(function(e){
+                e.preventDefault();
+        });     
+
+        $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').on('click', function(event) {
+            if(!$("#privacestatement").is(":checked"))
+            {    
+                    
+                var psError = tdg.error_message.message("PRIV_STMT_ERR");
+                tdg.c.dialog_OK(psError);
+            }
+        });
+    }
+
+         
+
     //phone number change event
     $('#telephone1').change(function () {
         if ($("#telephone1").val() != "") {

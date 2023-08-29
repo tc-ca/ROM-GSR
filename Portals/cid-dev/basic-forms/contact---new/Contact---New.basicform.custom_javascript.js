@@ -38,9 +38,9 @@ $(document).ready(function () {
 
          //add Privace Statement
          var privaceStatementLabel = tdg.error_message.message("BTN_CANCEL");
-         $("table.section").after('<input type="checkbox" name="PrivaceStatement" id="privacestatement" name="privacestatement"/><label for="privacestatement" style="font-weight: 200; padding: 0 23px;"><p>I acknowledge that I have read and agree to the <a href="../registration/privacystatement" target="_blank">Privace Statement</a>.</p></label><br>');
-         //$("#cid_languageofcorrespondence").parent().parent().parent().parent().parent().after('<input type="checkbox" name="PrivaceStatement" id="privacestatement" name="privacestatement"/><label for="privacestatement">I acknowledge that I have read and agree to the Privace Statement.</label><br>');
-        $("#privacestatement").css("padding", "0 23px");
+         var psUrl = window.location.origin + "/registration/privacystatement"; 
+         $("table.section").after('<div style="padding-left: 20px;" ><input type="checkbox" name="PrivaceStatement" id="privacestatement" name="privacestatement"/><label for="privacestatement" style="font-weight: 200; padding: 0 8px;"><p>I acknowledge that I have read and agree to the <a href="' + psUrl +'" target="_blank">Privacy Statement</a>.</p></label><br></div>');
+         $("#privacestatement").css("padding", "0 23px");
     
         //*************************submit button **********************/      
         $("#InsertButton").css("display", "none");
@@ -54,9 +54,18 @@ $(document).ready(function () {
         //define click event
         $('#InsertUpdateButton').on('click', function () {
 
-            // function will check of existing contact need to be linke to company
-            //instead of add new else it will call the click event of the origional submit button
-            invitation.New_and_Existing_Contact_Submit_Logic(ParentAccount);
+            if($("#privacestatement").is(":checked"))
+            {         
+                // function will check of existing contact need to be linke to company
+                //instead of add new else it will call the click event of the origional submit button
+                invitation.New_and_Existing_Contact_Submit_Logic(ParentAccount);
+            }   
+            else
+            {
+                var psError = tdg.error_message.message("PRIV_STMT_ERR");
+                tdg.c.dialog_OK(psError);
+            }
+
         });
         var cancelLabel = tdg.error_message.message("BTN_CANCEL");
         $('#InsertUpdateButton').after('<input type="button" data-dismiss="modal" class=".form-control" value="" id="CancelButton" style="margin-left: 10px;" name="CancelButton" class="submit-btn btn btn-primary form-action-container-left"/>')
