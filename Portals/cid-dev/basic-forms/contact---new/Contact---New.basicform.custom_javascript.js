@@ -38,8 +38,11 @@ $(document).ready(function () {
 
          //add Privace Statement
          var privaceStatementLabel = tdg.error_message.message("BTN_CANCEL");
-         var psUrl = window.location.origin + "/registration/privacystatement"; 
-         $("table.section").after('<div style="padding-left: 20px;" ><input type="checkbox" name="PrivaceStatement" id="privacestatement" name="privacestatement"/><label for="privacestatement" style="font-weight: 200; padding: 0 8px;"><p>I acknowledge that I have read and agree to the <a href="' + psUrl +'" target="_blank">Privacy Statement</a>.</p></label><br></div>');
+         //var psUrl = window.location.origin + "/registration/privacystatement"; 
+         //$("table.section").after('<div style="padding-left: 20px;" ><input type="checkbox" name="PrivaceStatement" id="privacestatement" name="privacestatement"/><label for="privacestatement" style="font-weight: 200; padding: 0 8px;"><p>I acknowledge that I have read and agree to the <a href="' + psUrl +'" target="_blank">Privacy Statement</a>.</p></label><br></div>');
+         debugger;
+         var psUrl =  window.location.origin + "/_portal/modal-form-template-path/d78574f9-20c3-4dcc-8d8d-85cf5b7ac141?id=ff7a276a-8480-4d1a-819a-be6df76ffe17&entityformid=5502413f-72e1-ec11-bb3d-000d3a848097&languagecode=1033"; 
+         $("table.section").after('<div style="padding-left: 20px;" ><input type="checkbox" name="PrivaceStatement" id="privacestatement" name="privacestatement"/><label for="privacestatement" style="font-weight: 200; padding: 0 8px;"><p>I acknowledge that I have read and agree to the <a href="' + psUrl +'" onclick="window.open(this.href, new, popup); return false;">Privacy Statement</a>.</p></label><br></div>');
          $("#privacestatement").css("padding", "0 23px");
     
         //*************************submit button **********************/      
