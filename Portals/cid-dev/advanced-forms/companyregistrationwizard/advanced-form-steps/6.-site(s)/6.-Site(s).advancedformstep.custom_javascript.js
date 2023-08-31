@@ -160,7 +160,7 @@ $(document).ready(function () {
 			}
 			else {
 				filter = "parentaccountid/Id eq (guid'" + companyId + "')";
-				data = tdg.webapi.SelectedColumnlist("accounts", "name", "cid_issiteattested eq 0 and cid_issiteattested eq false and (cid_siteclaim eq 100000000 or cid_siteclaim eq 100000001 or cid_siteclaim eq 100000003 or cid_siteclaim eq null) and _parentaccountid_value eq " + companyId);
+				data = tdg.webapi.SelectedColumnlist("accounts", "name", "statecode eq 0 and cid_issiteattested eq false and (cid_siteclaim eq 100000000 or cid_siteclaim eq 100000001 or cid_siteclaim eq 100000003 or cid_siteclaim eq null) and _parentaccountid_value eq " + companyId);
 				
 				//ExecuteQuery("Validation_CompanyNotAttestedSites", filter);
 
