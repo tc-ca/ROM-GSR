@@ -2,7 +2,6 @@
   "properties": {
     "connectionReferences": {
       "shared_commondataserviceforapps_2": {
-        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "fdr_conref_dataverse_fdrsp"
@@ -51,9 +50,9 @@
           "type": "OpenApiConnectionWebhook",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps_2",
-              "operationId": "SubscribeWebhookTrigger"
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "subscriptionRequest/message": 3,
@@ -77,9 +76,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps_2",
-                  "operationId": "GetItem"
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
                   "entityName": "systemusers",
@@ -116,9 +115,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_powerplatformforadmins",
                   "connectionName": "shared_powerplatformforadmins",
-                  "operationId": "GetSingleEnvironment"
+                  "operationId": "GetSingleEnvironment",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_powerplatformforadmins"
                 },
                 "parameters": {
                   "environment": "@workflow()['tags']['environmentName']",
@@ -181,9 +180,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
                   "connectionName": "shared_teams",
-                  "operationId": "PostMessageToConversation"
+                  "operationId": "PostMessageToConversation",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams"
                 },
                 "parameters": {
                   "poster": "Flow bot",
@@ -264,9 +263,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps_2",
-                  "operationId": "GetItem"
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
                   "entityName": "fdr_servicerequests",
@@ -288,9 +287,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps_2",
-                  "operationId": "GetItem"
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
                   "entityName": "msdyn_servicetasktypes",
@@ -339,6 +338,9 @@
                   "actions": {
                     "Set_French_Reason_Too_High": {
                       "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "6ea3d2a9-3332-4114-a777-6f9e3432aec1"
+                      },
                       "type": "SetVariable",
                       "inputs": {
                         "name": "Rejection Reason French",
@@ -352,6 +354,9 @@
                   "actions": {
                     "Set_French_Reason_Too_Low": {
                       "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "8784a10d-fa64-48ef-802e-67e2e29be2c3"
+                      },
                       "type": "SetVariable",
                       "inputs": {
                         "name": "Rejection Reason French",
@@ -365,6 +370,9 @@
                 "actions": {
                   "Set_variable": {
                     "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "b4d7278a-974d-4f1d-86ae-02f0570307ba"
+                    },
                     "type": "SetVariable",
                     "inputs": {
                       "name": "Rejection Reason French",
@@ -546,7 +554,7 @@
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
