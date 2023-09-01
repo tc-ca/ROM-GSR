@@ -55,6 +55,14 @@ $(document).ready(function () {
            var operationDataset = tdg.webapi.SelectedColumnlist("ovs_mocregistrations", "ovs_mocregistrationid",
 			"statuscode eq 1 and ( ovs_operationtype eq 918640038 or ovs_operationtype eq 918640042 ) and _ovs_siteid_value eq "  + siteid);
             var operationid = operationDataset[0].ovs_mocregistrationid ;
+			  if (operationDataset.length == 2)
+            {
+                if (operationDataset[1].ovs_operationtype == 918640038 )
+                {
+                    operationid = operationDataset[1].ovs_mocregistrationid ;
+                }
+
+            }
             insertParam("operationid",operationid ); 
 			update_Operation_Type_Based_on(operationid);
 

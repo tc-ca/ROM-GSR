@@ -26,9 +26,17 @@ $(document).ready(function () {
      if (urlParams.has('id')) {
 		var siteid = urlParams.get('id');
        
-        var operationDataset = tdg.webapi.SelectedColumnlist("ovs_mocregistrations", "ovs_mocregistrationid",
+        var operationDataset = tdg.webapi.SelectedColumnlist("ovs_mocregistrations", "ovs_mocregistrationid,ovs_operationtype",
 			"statuscode eq 1 and ( ovs_operationtype eq 918640038 or ovs_operationtype eq 918640042 ) and _ovs_siteid_value eq "  + siteid);
             var operationid = operationDataset[0].ovs_mocregistrationid ;
+            if (operationDataset.length == 2)
+            {
+                if (operationDataset[1].ovs_operationtype == 918640038 )
+                {
+                    operationid = operationDataset[1].ovs_mocregistrationid ;
+                }
+
+            }
            
             var formaction = $('#liquid_form').attr('action') ;
              if ( formaction.indexOf('&operationid=' + operationid) <0)
