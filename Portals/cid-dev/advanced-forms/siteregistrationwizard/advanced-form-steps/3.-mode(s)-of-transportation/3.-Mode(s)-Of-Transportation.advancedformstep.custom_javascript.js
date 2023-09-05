@@ -190,3 +190,19 @@ function update_Operation_Type_Based_on(operationid)
 
 
 }
+
+
+if (window.jQuery) {
+	(function ($) {
+		webFormClientValidate = function () {
+		$("#cid_modeoftransportationroad").removeAttr("disabled" );
+			$("#cid_modeoftransportationrail").removeAttr("disabled");
+			$("#cid_modeoftransportationair").removeAttr("disabled");
+			$("#cid_modeoftransportationmarine").removeAttr("disabled");
+
+
+		return true;
+			
+		}
+	}(window.jQuery));
+}

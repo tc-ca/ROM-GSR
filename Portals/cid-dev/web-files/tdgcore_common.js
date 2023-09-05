@@ -1970,7 +1970,7 @@ if (typeof (tdg.cid) == "undefined") {
             var operationid;
             console.log("input site id " + siteid);
             //cid_ModeOfTransportationAir,Marine,cid_ModeOfTransportationRoad,cid_modeoftransportationrail
-            var queryURL = "$select=cid_modeoftransportationair,cid_modeoftransportationmarine,cid_modeoftransportationroad,cid_modeoftransportationrail&$filter=(ovs_operationtype eq 918640038 or ovs_operationtype eq 918640042) and ovs_SiteId/accountid eq " + siteid;
+            var queryURL = "$select=cid_modeoftransportationair,cid_modeoftransportationmarine,cid_modeoftransportationroad,cid_modeoftransportationrail&$orderby=ovs_operationtype asc&$filter=(ovs_operationtype eq 918640038 or ovs_operationtype eq 918640042) and ovs_SiteId/accountid eq " + siteid;
 
             webapi.safeAjax({
                 type: "GET",
