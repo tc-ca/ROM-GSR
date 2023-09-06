@@ -227,6 +227,7 @@ if (typeof (invitation) == "undefined") {
                         $("#cid_has_cra_bn").val(0);
                         tdg.cid.crw.start_cid_has_cra_bn_onchange("1");
                         $("#cid_legalname").val(_account.ovs_legalname);
+                        $("#ovs_legalnamefr").val(_account.ovs_legalnamefr);
                         $("#cid_reasonfornobnnumber").val(_account.cid_reasonfornobnnumber);
                         tdg.cid.crw.start_cid_reasonfornobnnumber_onchange(false);
                         $("#cid_reasonfornobnnumber_other").val(_account.cid_reasonfornobnnumber_other);
@@ -293,6 +294,7 @@ if (typeof (invitation) == "undefined") {
                         $("#cid_reasonfornobnnumber").val(_account.cid_reasonfornobnnumber);
                         $("#cid_reasonfornobnnumber_other").val(_account.cid_reasonfornobnnumber_other);
                         $("#cid_legalname").val(_account.ovs_legalname);
+                        $("#ovs_legalnamefr").val(_account.ovs_legalnamefr);
                     }
                     invitation.invitation_go_next(_account, false, contact_id);
                     return;

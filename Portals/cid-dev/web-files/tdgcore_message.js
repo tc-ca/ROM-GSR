@@ -765,8 +765,8 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "Le nom et le compte de courriel saisis sont déjà associés à une invitation formulée pour vous et votre organisation. L’invitation vous sera retournée à cette adresse de courriel sous peu. Veuillez utiliser le lien figurant dans ce courriel pour être ajouté comme utilisateur du BDIC."
                     }, {
                         "code": "m000099",
-                        "message_en": "The Registration process is currently being processed by your Organization’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Organization or Sites. You will however be able to view the current state of the Registration via the <b>[Next]</b> and <b>[Previous]</b> buttons at the bottom of the screen.",
-                        "message_fr": "Le processus d’enregistrement est traité par l’administrateur principal de votre organisation. Tant que l’enregistrement ne sera pas terminé, vous ne pourrez pas ajouter ou changer les données, ni attester l’organisation ou les sites. Vous pourrez cependant voir l’état actuel de l’enregistrement en cliquant sur les boutons <b>[Suivant]</b> et <b>[Précédent]</b> au bas de l’écran."
+                        "message_en": "The Registration process is currently being processed by your Organization's Primary Contact. Until the Registration is complete, you will not be able to add or change any Organization level data. However, you will be able add Sites to your Organization and view the current state of the Registration.",
+                        "message_fr": "Le processus d’inscription est actuellement en cours de traitement par la personne-ressource principale de votre organisation. Tant que l’inscription n’est pas terminée, vous ne pourrez pas ajouter ou modifier de données au niveau de l’organisation. Toutefois, vous pourrez ajouter des sites à votre organisation et voir l’état actuel de l’inscription."
                     },
                     {
                         "code": "m000100",

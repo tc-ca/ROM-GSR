@@ -1,4 +1,5 @@
 // CompanyRegistrationWizard-Start.js
+
 var _account;
 var _cra_record = null;
 $(document).ready(function () {
@@ -18,7 +19,7 @@ $(document).ready(function () {
 
     tdg.c.section_hide("section_address_1");
     tdg.c.control_hide("cid_contacttype");
-    
+
     $("#cid_has_cra_bn").val("1");
     tdg.c.control_hide("parentcustomerid", true);
     tdg.c.control_hide("cid_operatingname");
@@ -82,23 +83,21 @@ $(document).ready(function () {
     $("#NextButton").hide();
     var msg = tdg.error_message.message("BTN_NEXT");
     tdg.c.button_create("btn_next", "#NextButton", msg);
-    $("#btn_next").bind("click", function () {tdg.cid.crw.start_btn_next_click();});
+    $("#btn_next").bind("click", function () { tdg.cid.crw.start_btn_next_click(); });
     //Withdraw
     var parentcustomerid = '{{user.parentcustomerid.Id}}';
-    var showWithdraw = true; 
-    if(parentcustomerid)
-    {
+    var showWithdraw = true;
+    if (parentcustomerid) {
         var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq '" + parentcustomerid + "'";
-		var accData = tdg.webapi.list("accounts", filter);
-		if (accData != null && accData.length > 0 && accData[0].cid_portalrecordcreationdetails) { // Net New Site
+        var accData = tdg.webapi.list("accounts", filter);
+        if (accData != null && accData.length > 0 && accData[0].cid_portalrecordcreationdetails) { // Net New Site
             showWithdraw = true;
         }
-        else
-        {
-             showWithdraw = false;
+        else {
+            showWithdraw = false;
         }
     }
-    if(showWithdraw){
+    if (showWithdraw) {
         var userId = '{{user.id}}';
         var withdrawLabel = tdg.error_message.message("BTN_WITHDRAW");
         $('#NextButton').parent().parent().after('<div role="group" class="pull-right toolbar-actions"><input type="button" data-dismiss="modal" value="' + withdrawLabel + '" id="WithdrawButton" style="margin-left: 10px;" name="WithdrawButton" class="btn btn-default button previous previous-btn"/></div>');
@@ -108,8 +107,7 @@ $(document).ready(function () {
             var message = tdg.error_message.message("m000145");
             tdg.c.dialog_YN(message, (ans) => {
                 var contact_id = '{{user.id}}';
-                if (ans) 
-                {
+                if (ans) {
                     var DeleteContactFlowData = '{' + '"ContactId": "' + contact_id + '",' + '}';
                     tdg.cid.flow.Call_Flow("CID_Flow_RunCompanySitesDeleting_Delete_Contact", DeleteContactFlowData);
                     tdg.c.sign_out();
@@ -120,7 +118,14 @@ $(document).ready(function () {
                 }
             });
         });
-    }  
+    }
+
+    $("#cid_legalname").on("change", function () {
+        if ($("#ovs_legalnamefr").val() == "") {
+            var value = $("#cid_legalname").val();
+            $("#ovs_legalnamefr").val(value);
+        }
+    });
 });
 
 if (window.jQuery) {
@@ -137,7 +142,7 @@ if (window.jQuery) {
             sessionStorage.setItem("step_start", "1");
             let cid_has_cra_bn = $("#cid_has_cra_bn").val();
             let validation = false;
-            let rom_data, filter, legalname;
+            let rom_data, filter;
             tdg.c.error_message_clear();
             if (has_invitation != "true") {
                 if (cid_has_cra_bn == 0) {
@@ -145,18 +150,16 @@ if (window.jQuery) {
                     debugger;
                     rom_data = tdg.cid.crw.start_account_by_name(legalname);
                     if (rom_data.length > 0) {
-                            //check if claimed company is duplicate
-                           if (rom_data.length > 1)
-                            {
-                                tdg.cid.crw. Create_SupportRequest_For_Duplicate_Organization (rom_data ,'{{user.id}}') ;
-                                validation = false;
-                            }
-                            else
-                            {
-                                 rom_data = rom_data[0];
-                                validation = tdg.cid.crw.start_registration(rom_data, suppress_error, contact_id);
-                                $("#cid_operatingname").val(rom_data.name);
-                            }
+                        //check if claimed company is duplicate
+                        if (rom_data.length > 1) {
+                            tdg.cid.crw.Create_SupportRequest_For_Duplicate_Organization(rom_data, '{{user.id}}');
+                            validation = false;
+                        }
+                        else {
+                            rom_data = rom_data[0];
+                            validation = tdg.cid.crw.start_registration(rom_data, suppress_error, contact_id);
+                            $("#cid_operatingname").val(rom_data.name);
+                        }
                     }
                     else {
                         validation = true;
@@ -175,9 +178,9 @@ if (window.jQuery) {
                         let cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
                         validation = false;
                         filter = "cid_crabusinessnumber eq '" + cid_crabusinessnumber + "'";
-                        rom_data = tdg.c.WebApi_List("accounts", filter);  
+                        rom_data = tdg.c.WebApi_List("accounts", filter);
                         if (rom_data.length > 0) {
-                             rom_data = rom_data[0];
+                            rom_data = rom_data[0];
                             validation = tdg.cid.crw.start_registration(rom_data, suppress_error, contact_id);
                         }
                         else {
@@ -187,7 +190,7 @@ if (window.jQuery) {
                     }
                 }
             }
-            else {               
+            else {
                 tdg.cid.crw.start_parentcustomerid_setup(_account.accountid, _account.ovs_legalname);
                 validation = true;
             }

@@ -197,7 +197,7 @@ try {
 if (text) {
     debugger;
     var cancelLabel = tdg.error_message.message("BTN_CANCEL");
-    $(".btn.btn-primary:contains('Register')").after("&nbsp; <input id='cancelButton' name='cancelButton' type='button' value='" + cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");
+    $(".btn.btn-primary:contains('inscrire')").after("&nbsp; <input id='cancelButton' name='cancelButton' type='button' value='" + cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");
     $('#cancelButton').click(function (e) {
         window.location.href = '~/en/SignIn?returnUrl=%2Fen%2F';
     });
