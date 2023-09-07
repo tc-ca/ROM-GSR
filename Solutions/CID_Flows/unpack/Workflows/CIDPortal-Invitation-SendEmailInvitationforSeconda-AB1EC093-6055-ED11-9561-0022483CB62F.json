@@ -36,6 +36,15 @@
         "api": {
           "name": "shared_commondataserviceforapps"
         }
+      },
+      "shared_commondataserviceforapps_3": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
       }
     },
     "definition": {
@@ -137,7 +146,7 @@
               "actions": {
                 "Get_a_row_by_ID_Invitation_Receiver": {
                   "runAfter": {
-                    "Condition_3": [
+                    "Set_variable_Invited_By": [
                       "Succeeded"
                     ]
                   },
@@ -196,87 +205,6 @@
                     "value": "@{substring(body('Parse_JSON')?['@odata.id'],0,indexOf(body('Parse_JSON')?['@odata.id'], '.crm3'))}"
                   }
                 },
-                "Switch": {
-                  "runAfter": {
-                    "Set_Environment_variable": [
-                      "Succeeded"
-                    ]
-                  },
-                  "cases": {
-                    "Case": {
-                      "case": "https://tdgcore-dev-tcd365",
-                      "actions": {
-                        "Set_variable_2": {
-                          "runAfter": {},
-                          "metadata": {
-                            "operationMetadataId": "73cd44e5-c32f-41c6-b6c0-eccb6ae00e81"
-                          },
-                          "type": "SetVariable",
-                          "inputs": {
-                            "name": "Environment",
-                            "value": "https://rd-tdgcore-dev.powerappsportals.com/en/Register?returnUrl=%2Fen%2F&invitation_code="
-                          }
-                        }
-                      }
-                    },
-                    "Case_2": {
-                      "case": "https://tdgcore-qa",
-                      "actions": {
-                        "Set_variable_3": {
-                          "runAfter": {},
-                          "metadata": {
-                            "operationMetadataId": "4f514d75-039e-4805-a35e-c40a00ab0736"
-                          },
-                          "type": "SetVariable",
-                          "inputs": {
-                            "name": "Environment",
-                            "value": "https://tdgcore-qa.powerappsportals.com/en/Register?returnUrl=%2Fen%2F&invitation_code="
-                          }
-                        }
-                      }
-                    },
-                    "Case_3": {
-                      "case": "https://tdgcore-acc",
-                      "actions": {
-                        "Set_variable_5": {
-                          "runAfter": {},
-                          "metadata": {
-                            "operationMetadataId": "0878dd8a-3337-42bd-bc20-ad69fafb93bf"
-                          },
-                          "type": "SetVariable",
-                          "inputs": {
-                            "name": "Environment",
-                            "value": "https://tdgcore-acc.powerappsportals.com/en/Register?returnUrl=%2Fen%2F&invitation_code="
-                          }
-                        }
-                      }
-                    },
-                    "Case_4": {
-                      "case": "https://tdgcore-preprod",
-                      "actions": {
-                        "Set_variable_6": {
-                          "runAfter": {},
-                          "metadata": {
-                            "operationMetadataId": "803ab85c-7654-47a0-a714-9c943c8e309e"
-                          },
-                          "type": "SetVariable",
-                          "inputs": {
-                            "name": "Environment",
-                            "value": "https://tdgcore-preprod.powerappsportals.com/en/Register?returnUrl=%2Fen%2F&invitation_code="
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "default": {
-                    "actions": {}
-                  },
-                  "expression": "@variables('Environment')",
-                  "metadata": {
-                    "operationMetadataId": "b1e5dbee-3b93-4a5d-8205-2a7a863e70f1"
-                  },
-                  "type": "Switch"
-                },
                 "Check_Language_and_send_email_": {
                   "actions": {
                     "Set_variable_varHyperLink__2": {
@@ -309,7 +237,7 @@
                         "parameters": {
                           "emailMessage/To": "@outputs('Get_a_row_by_ID_Contact')?['body/emailaddress1']",
                           "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Affectation en tant que contact secondaire pour l’organisation @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']}.",
-                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Contact')?['body/fullname']}, le contact principal de @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} dans la base de données d'identification des clients (BDIC) de Transports Canada, vous a ajouté en tant que contact secondaire pour cette organisation.<br>\n<br>\nPour rejoindre votre organisation, veuillez sélectionner ou copier et coller le lien suivant dans votre navigateur :<br>\n<a href=\"@{variables('varHyperLink')}\">@{variables('varHyperLink')}</a><br>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de courrier électronique. &nbsp;Si vous n'êtes pas la personne qui doit enregistrer cette organisation, veuillez l'indiquer en répondant à tc.tdgengagement-engagementtmd.tc@tc.gc.ca. Si vous connaissez le nom et l'adresse électronique de la personne qui devrait enregistrer cette organisation, veuillez également fournir ces informations.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{variables('Invited By')}, le contact principal de @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} dans la base de données d'identification des clients (BDIC) de Transports Canada, vous a ajouté en tant que contact secondaire pour cette organisation.<br>\n<br>\nPour rejoindre votre organisation, veuillez sélectionner ou copier et coller le lien suivant dans votre navigateur :<br>\n<a href=\"@{variables('varHyperLink')}\">@{variables('varHyperLink')}</a><br>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de courrier électronique. &nbsp;Si vous n'êtes pas la personne qui doit enregistrer cette organisation, veuillez l'indiquer en répondant à tc.tdgengagement-engagementtmd.tc@tc.gc.ca. Si vous connaissez le nom et l'adresse électronique de la personne qui devrait enregistrer cette organisation, veuillez également fournir ces informations.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
                           "emailMessage/From": "@variables('CID_Email_Sender')",
                           "emailMessage/Importance": "Normal"
                         },
@@ -354,7 +282,7 @@
                           "parameters": {
                             "emailMessage/To": "@outputs('Get_a_row_by_ID_Contact')?['body/emailaddress1']",
                             "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: Assignment as a Secondary Contact for the @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} organization",
-                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Contact')?['body/fullname']}, the Primary Contact for @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} in Transport Canada’s Client Identification Database (CID), has added you as a Secondary Contact for that organization.<br>\n<br>\nTo join your organization, please select or copy and paste the following link into your browser:<br>\n<br>\n<a href=\"@{variables('varHyperLink')}\">@{variables('varHyperLink')}</a><br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to tc.tdgengagement-engagementtmd.tc@tc.gc.ca. If you know the name and email address of the individual who should register this organization, then please provide this information as well.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{variables('Invited By')}, the Primary Contact for @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} in Transport Canada’s Client Identification Database (CID), has added you as a Secondary Contact for that organization.<br>\n<br>\nTo join your organization, please select or copy and paste the following link into your browser:<br>\n<br>\n<a href=\"@{variables('varHyperLink')}\">@{variables('varHyperLink')}</a><br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to tc.tdgengagement-engagementtmd.tc@tc.gc.ca. If you know the name and email address of the individual who should register this organization, then please provide this information as well.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
                             "emailMessage/From": "@variables('CID_Email_Sender')",
                             "emailMessage/Importance": "Normal"
                           },
@@ -371,59 +299,6 @@
                   },
                   "metadata": {
                     "operationMetadataId": "d1f56c7c-3617-4128-acdd-287b00b852b1"
-                  },
-                  "type": "If"
-                },
-                "Condition_3": {
-                  "actions": {},
-                  "runAfter": {},
-                  "else": {
-                    "actions": {
-                      "Get_a_row_by_ID_Invited_By": {
-                        "runAfter": {},
-                        "metadata": {
-                          "operationMetadataId": "aacd9444-4067-4f62-a551-910b3e8b0de2"
-                        },
-                        "type": "OpenApiConnection",
-                        "inputs": {
-                          "host": {
-                            "connectionName": "shared_commondataserviceforapps_1",
-                            "operationId": "GetItem",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                          },
-                          "parameters": {
-                            "entityName": "contacts",
-                            "recordId": "@triggerOutputs()?['body/_adx_invitercontact_value']",
-                            "$select": "fullname"
-                          },
-                          "authentication": "@parameters('$authentication')"
-                        }
-                      },
-                      "Set_variable_Invited_By": {
-                        "runAfter": {
-                          "Get_a_row_by_ID_Invited_By": [
-                            "Succeeded"
-                          ]
-                        },
-                        "metadata": {
-                          "operationMetadataId": "a69640fd-9cc4-4567-a92c-174bc53bc2a5"
-                        },
-                        "type": "SetVariable",
-                        "inputs": {
-                          "name": "Invited By",
-                          "value": "@outputs('Get_a_row_by_ID_Invited_By')?['body/fullname']"
-                        }
-                      }
-                    }
-                  },
-                  "expression": {
-                    "equals": [
-                      "@triggerOutputs()?['body/_adx_invitercontact_value']",
-                      "@null"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "90a5f9da-6443-48bd-95e9-2864fc3a4eae"
                   },
                   "type": "If"
                 },
@@ -571,7 +446,7 @@
                 },
                 "Set_variable_varHyperLink_": {
                   "runAfter": {
-                    "Switch": [
+                    "Set_Environment_variable": [
                       "Succeeded"
                     ]
                   },
@@ -582,6 +457,42 @@
                   "inputs": {
                     "name": "varHyperLink",
                     "value": "@{variables('Environment')}@{triggerOutputs()?['body/adx_invitationcode']}"
+                  }
+                },
+                "Get_primary_contact_of_the_Organization": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "f9291997-adce-47be-8272-80044258d785"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_3",
+                      "operationId": "ListRecords",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "contacts",
+                      "$select": "fullname",
+                      "fetchXml": "<fetch top=\"50\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <filter>\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" value=\"@{outputs('Get_a_row_by_ID_Contact')?['body/_parentcustomerid_value']}\"/>\n      <condition attribute=\"cid_contacttype\" operator=\"eq\" value=\"100000000\" />\n    </filter>\n  </entity>\n</fetch>",
+                      "$top": 1
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Set_variable_Invited_By": {
+                  "runAfter": {
+                    "Get_primary_contact_of_the_Organization": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "a69640fd-9cc4-4567-a92c-174bc53bc2a5"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Invited By",
+                    "value": "@{first(outputs('Get_primary_contact_of_the_Organization')?['body/value'])?['fullname']}"
                   }
                 }
               },

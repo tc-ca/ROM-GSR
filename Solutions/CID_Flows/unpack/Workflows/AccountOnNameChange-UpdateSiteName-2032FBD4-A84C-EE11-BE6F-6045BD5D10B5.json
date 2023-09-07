@@ -1,0 +1,244 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "b1b52933-e946-43c9-b2ee-3089a35e2214"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 4,
+              "subscriptionRequest/entityname": "account",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "ovs_legalname"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Compose": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "3cbda12c-3a68-4c5d-914d-37d999a08a3c"
+          },
+          "type": "Compose",
+          "inputs": "@triggerOutputs()?['body/accountid']"
+        },
+        "List_rows": {
+          "runAfter": {
+            "Compose": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "386071be-9624-4b17-b944-f338b9be3ee2"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "accounts",
+              "fetchXml": "<fetch>\n  <entity name=\"account\">\n    <attribute name=\"name\" />\n    <attribute name=\"primarycontactid\" />\n    <attribute name=\"telephone1\" />\n    <attribute name=\"accountid\" />\n   <attribute name=\"_parentaccountid_value\" />\n   <attribute name=\"customertypecode\" />\n    <order attribute=\"name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"parentaccountid\" operator=\"eq\"  value=\"@{triggerOutputs()?['body/accountid']}\" />\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n      <condition attribute=\"customertypecode\" operator=\"eq\" value=\"948010001\" />\n    </filter>\n  </entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Condition": {
+          "actions": {
+            "Terminate": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "ffa58909-7aef-419c-856a-66c0e41896a9"
+              },
+              "type": "Terminate",
+              "inputs": {
+                "runStatus": "Cancelled"
+              }
+            }
+          },
+          "runAfter": {
+            "List_rows": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "equals": [
+              "@length(outputs('List_rows')?['body/value'])",
+              0
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "76932772-3289-4430-a396-bcba65e1ba78"
+          },
+          "type": "If"
+        },
+        "Apply_to_each": {
+          "foreach": "@outputs('List_rows')?['body/value']",
+          "actions": {
+            "Condition_2": {
+              "actions": {},
+              "runAfter": {},
+              "else": {
+                "actions": {
+                  "Compose_-_CombinedAddress": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "48a975ee-0dcd-4f87-8f53-bc8ddd4f71b4"
+                    },
+                    "type": "Compose",
+                    "inputs": "@items('Apply_to_each')?['ovs_address_display']"
+                  },
+                  "Compose_-_LegalNameE": {
+                    "runAfter": {
+                      "Compose_-_CombinedAddress": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "2776d0ca-20ee-4bcc-a611-26559a561c98"
+                    },
+                    "type": "Compose",
+                    "inputs": "@triggerOutputs()?['body/ovs_legalname']"
+                  },
+                  "Compose_-_LegalNameF": {
+                    "runAfter": {
+                      "Compose_-_LegalNameE": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "6d56bb14-e1e7-43e6-88b5-9b9bf49333e3"
+                    },
+                    "type": "Compose",
+                    "inputs": "@triggerOutputs()?['body/ovs_legalnamefr']"
+                  },
+                  "Compose_-_OperatingNameE": {
+                    "runAfter": {
+                      "Compose_-_LegalNameF": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "cda73d82-d4ac-427a-b16f-1ead54b2add0"
+                    },
+                    "type": "Compose",
+                    "inputs": "@concat(outputs('Compose_-_LegalNameE'), ' - ', outputs('Compose_-_CombinedAddress'))"
+                  },
+                  "Compose_-_OperatingNameF": {
+                    "runAfter": {
+                      "Compose_-_OperatingNameE": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "3d447757-3e30-4c1b-8231-6f61be50771a"
+                    },
+                    "type": "Compose",
+                    "inputs": "@concat(outputs('Compose_-_LegalNameF'), ' - ', outputs('Compose_-_CombinedAddress'))"
+                  },
+                  "Update_a_row": {
+                    "runAfter": {
+                      "Compose_-_OperatingNameF": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "8321792b-f1ea-474b-b68d-846211785234"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_commondataserviceforapps",
+                        "operationId": "UpdateRecord",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                      },
+                      "parameters": {
+                        "entityName": "accounts",
+                        "recordId": "@items('Apply_to_each')?['accountid']",
+                        "item/name": "@outputs('Compose_-_OperatingNameE')",
+                        "item/ovs_name_fr": "@outputs('Compose_-_OperatingNameF')"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  }
+                }
+              },
+              "expression": {
+                "or": [
+                  {
+                    "equals": [
+                      "@items('Apply_to_each')?['_parentaccountid_value']",
+                      "@null"
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@items('Apply_to_each')?['customertypecode']",
+                      "@null"
+                    ]
+                  },
+                  {
+                    "equals": [
+                      "@items('Apply_to_each')?['customertypecode']",
+                      948010000
+                    ]
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d8cc3db5-5786-47e5-a4ea-87ffee38ad17"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "Condition": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "09ca7d30-a786-4659-a52c-dd128b572f4e"
+          },
+          "type": "Foreach"
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}
