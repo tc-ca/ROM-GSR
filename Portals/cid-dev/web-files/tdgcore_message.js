@@ -116,13 +116,11 @@ if (typeof (tdg.message) == "undefined") {
 
             var page_crw_company_insert_EN = "As required, update any of the Organization information below, then choose the <b>[Next]</b> button below to continue.<br>" +
                 "If required: <br>" +
-                " - choose the <b>[Previous]</b> button below to re-start the Registration.<br>" +
-                " - choose the <b>[Contact Us]</b> button above to withdraw the Registration request.<br><br>" +
+                " - choose the <b>[Withdraw]</b> button above to withdraw the Registration request.<br><br>" +
                 "Note that fields in the application that have a red star at the end of their label are mandatory."
             var page_crw_company_insert_FR = "Si nécessaire, mettez à jour les informations sur l'organisation ci-dessous, puis cliquez sur le bouton <b>[Suivant]</b> ci-dessous pour continuer.<br>" +
                 "Si nécessaire : <br>" +
-                " - choisissez le bouton <b>[Précédent]</b> ci-dessous pour redémarrer l'enregistrement.<br>" +
-                " - choisissez le bouton <b>[Contactez-nous]</b> ci-dessus pour retirer la demande d'enregistrement.<br><br>" +
+                " - choisissez le bouton <b>[Supprimer]</b> ci-dessus pour retirer la demande d'enregistrement.<br><br>" +
                 "Notez que les champs de l'application qui ont une étoile rouge à la fin de leur étiquette sont obligatoires."
 
             var page_crw_company_edit_EN = page_crw_company_insert_EN;

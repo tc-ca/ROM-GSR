@@ -13,11 +13,13 @@ $(document).ready(function () {
 	sessionStorage.setItem("selected_language", selected_language);
 	tdg.c.page_instructions("page_crw_company_edit");
 	var msg = tdg.error_message.message("BTN_PREVIOUS");
+	
 	$("#PreviousButton").hide();
 	tdg.c.button_create("btn_previous", "#PreviousButton", msg);
 	$("#btn_previous").bind("click", function () {
 		btn_previous_click();
 	});
+	$("#btn_previous").hide();
 
 	_cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
 	$("#cid_registrationasof").parent().parent().hide();

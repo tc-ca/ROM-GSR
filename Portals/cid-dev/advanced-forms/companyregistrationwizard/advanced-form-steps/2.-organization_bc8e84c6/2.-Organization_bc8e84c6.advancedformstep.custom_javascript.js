@@ -15,11 +15,13 @@ $(document).ready(function () {
 		$("#MessagePanel").show();
 	}
 	var msg = tdg.error_message.message("BTN_PREVIOUS");
+	
 	$("#PreviousButton").hide();
 	tdg.c.button_create("btn_previous", "#PreviousButton", msg);
 	$("#btn_previous").bind("click", function () {
-		btn_previous_click();
+	 	btn_previous_click();
 	});
+	$("#btn_previous").hide();
 	$("#cid_registrationasof").parent().parent().hide();
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
