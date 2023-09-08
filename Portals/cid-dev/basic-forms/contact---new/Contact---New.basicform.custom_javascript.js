@@ -37,13 +37,37 @@ $(document).ready(function () {
         $("#fax").attr("autocomplete", "new-password");
 
          //add Privace Statement
-         var privaceStatementLabel = tdg.error_message.message("BTN_CANCEL");
-         //var psUrl = window.location.origin + "/registration/privacystatement"; 
-         //$("table.section").after('<div style="padding-left: 20px;" ><input type="checkbox" name="PrivaceStatement" id="privacestatement" name="privacestatement"/><label for="privacestatement" style="font-weight: 200; padding: 0 8px;"><p>I acknowledge that I have read and agree to the <a href="' + psUrl +'" target="_blank">Privacy Statement</a>.</p></label><br></div>');
+         var privaceStatementLabel = tdg.error_message.message("PRIV_STMT1");
+         var privaceStatement = tdg.error_message.message("PRIV_STMT2");
+
+         var results = "";
+         if(selected_language == 'fr')
+         {
+            results = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_PrivacyStatementArticle_URL_FR'");
+         }
+         else
+         {
+            results = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_PrivacyStatementArticle_URL_EN'");
+         }
+         if(results.length > 0)
+         {
+            var articleURL = results[0]["qm_value"];
+         }
+         
          debugger;
-         var psUrl =  window.location.origin + "/_portal/modal-form-template-path/d78574f9-20c3-4dcc-8d8d-85cf5b7ac141?id=ff7a276a-8480-4d1a-819a-be6df76ffe17&entityformid=5502413f-72e1-ec11-bb3d-000d3a848097&languagecode=1033"; 
-         $("table.section").after('<div style="padding-left: 20px;" ><input type="checkbox" name="PrivaceStatement" id="privacestatement" name="privacestatement"/><label for="privacestatement" style="font-weight: 200; padding: 0 8px;"><p>I acknowledge that I have read and agree to the <a href="' + psUrl +'" onclick="window.open(this.href, new, popup); return false;">Privacy Statement</a>.</p></label><br></div>');
+         var psUrl =  window.location.origin + "/_portal/modal-form-template-path/" + articleURL; 
+        
+         $("table.section").after('<div style="padding-left: 20px;" ><input type="checkbox" name="PrivaceStatement" id="privacestatement" name="privacestatement"/><label for="privacestatement" style="font-weight: 200; padding: 0 8px;"><p>' + privaceStatementLabel + '<a href="#" id="theArticle">' + privaceStatement + '</a>.</p></label><br></div>');
+         
+         $("#theArticle").bind('click',function(){
+                var left = (screen.width - 600) / 2;
+                var top = (screen.height - 400) / 4;
+             
+                window.open(psUrl, "Privace Statement", "scrollbars=1,resizable=no,status=0,toolbar=1,location=1,menubar=0,width=600,height=400,left="+left+",top="+top);
+            });
+
          $("#privacestatement").css("padding", "0 23px");
+
     
         //*************************submit button **********************/      
         $("#InsertButton").css("display", "none");
