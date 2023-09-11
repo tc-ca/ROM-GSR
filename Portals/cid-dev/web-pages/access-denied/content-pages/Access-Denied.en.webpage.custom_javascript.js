@@ -126,7 +126,7 @@ if (text == Register_external_account) {
 			var data = tdg.webapi.list("contacts", filter);
 			var parentcustomerid = data[0]._parentcustomerid_value;
 			if (parentcustomerid != null) {
-				var filter = "accountid eq '" + parentcustomerid + "'";
+				var filter = "accountid eq " + parentcustomerid ;
 				var data = tdg.webapi.list("accounts", filter);
 				var customertypecode = data[0].customertypecode;
 				switch (customertypecode) {
@@ -140,11 +140,11 @@ if (text == Register_external_account) {
 
 						var request = {};
 						request.ovs_Company = parentcustomerid;
-						request.ovs_CreatedByExternalUser = data[0].contactid;
+						//request.ovs_CreatedByExternalUser = data[0].contactid;
 						request.ovs_RequestType = "b4669233-8e4d-ee11-be6f-0022483d0c87";
 						request.ovs_requacestdetails = "Contact record already exists in CORE Data::Les données du contact existent dans le CORE";
 						request.ovs_priority = 2;
-						tdg.cid.ovs_supportrequest_insert(request);
+						//tdg.cid.ovs_supportrequest_insert(request);
 
 						var msg = tdg.error_message.message("m000208");
 						tdg.c.dialog_OK(msg);

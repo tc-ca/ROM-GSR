@@ -126,7 +126,7 @@ if (text == Register_external_account) {
 			var data = tdg.webapi.list("contacts", filter);
 			var parentcustomerid = data[0]._parentcustomerid_value;
 			if (parentcustomerid != null) {
-				var filter = "accountid eq '" + parentcustomerid + "'";
+				var filter = "accountid eq " + parentcustomerid ;
 				var data = tdg.webapi.list("accounts", filter);
 				var customertypecode = data[0].customertypecode;
 				switch (customertypecode) {

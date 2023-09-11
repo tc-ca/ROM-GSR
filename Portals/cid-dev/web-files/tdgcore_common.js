@@ -1541,7 +1541,8 @@ if (typeof (tdg.cid) == "undefined") {
                 //var filter = "accountid eq guid'" + parent_id + "'";
                 //var data = tdg.c.OData_List("account", filter);
                 var select_col = "address1_city,address1_country,ovs_address1_province,address1_stateorprovince,address1_line1,address1_line2,address1_line3,address1_postalcode";
-                var filter = "accountid eq '" + parent_id + "'";
+                var filter = "accountid eq " + parent_id;
+                    //+ "'";
                 var data = tdg.webapi.SelectedColumnlist("accounts", select_col, filter);
                 //var data = tdg.webapi.list("accounts", filter);
 
@@ -2040,7 +2041,7 @@ if (typeof (tdg.cid) == "undefined") {
             document.getElementById("lastname").addEventListener('change', (event) => { LastNameChangeFlag = true; });
             document.getElementById("emailaddress1").addEventListener('change', (event) => {
                 var EmailSearchResultOnChange = tdg.webapi.SelectedColumnlist("contacts", "contactid,emailaddress1"
-                    , "statecode eq 0 and contactid ne '" + recordid + "' and  emailaddress1 eq '"
+                    , "statecode eq 0 and contactid ne " + recordid + " and  emailaddress1 eq '"
                     + $("#emailaddress1").val() + "'");
                 if (EmailSearchResultOnChange <= 0) {
                     //check if changed email is not the existing email address
@@ -2124,7 +2125,7 @@ if (typeof (tdg.cid) == "undefined") {
                         && $("#lastname").val() != "") {
                         //check for duplicate email
                         var EmailSearchResult = tdg.webapi.SelectedColumnlist("contacts", "contactid,emailaddress1"
-                            , "statecode eq 0 and contactid ne '" + recordid + "' and  emailaddress1 eq '"
+                            , "statecode eq 0 and contactid ne " + recordid + " and  emailaddress1 eq '"
                             + $("#emailaddress1").val() + "'");
 
 
@@ -2477,8 +2478,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
         Create_SupportRequest_For_Duplicate_Organization: function (rom_data, contactid) {
             var SupportRequestType = tdg.webapi.SelectedColumnlist("ovs_supportrequesttypes", "ovs_supportrequesttypeid", "ovs_code eq 'PreDuplicateOrganization'");
-            console.log("request type length : " + SupportRequestType.length);
-            console.log(SupportRequestType[0].ovs_supportrequesttypeid);
+         
             var value = {
                 "ovs_Company@odata.bind": "/accounts(" + rom_data[0].accountid + ")",
                 "ovs_CreatedByExternalUser@odata.bind": "/contacts(" + contactid + ")",

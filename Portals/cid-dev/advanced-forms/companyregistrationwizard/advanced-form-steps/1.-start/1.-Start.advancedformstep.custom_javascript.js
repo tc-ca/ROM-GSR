@@ -49,12 +49,12 @@ $(document).ready(function () {
         if (account_id != "") {
             debugger;
             var contact_id = '{{user.id}}';
-            var filter = "_adx_invitecontact_value eq '" + contact_id + "'";
+            var filter = "_adx_invitecontact_value eq " + contact_id;
             var inv = tdg.c.WebApi_List("adx_invitations", filter);
             if (inv.length > 0) {
                 sessionStorage.setItem("cid_has_invitation", "true");
                 sessionStorage.setItem("adx_invitationid", inv[0].adx_invitationid);
-                filter = "accountid eq '" + account_id + "'";
+                filter = "accountid eq " + account_id ;
                 _account = tdg.c.WebApi_List("accounts", filter)[0];
                 switch (_account.cid_cidcompanystatus) {
                     case 100000004:
@@ -88,7 +88,7 @@ $(document).ready(function () {
     var parentcustomerid = '{{user.parentcustomerid.Id}}';
     var showWithdraw = true;
     if (parentcustomerid) {
-        var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq '" + parentcustomerid + "'";
+        var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq " + parentcustomerid ;
         var accData = tdg.webapi.list("accounts", filter);
         if (accData != null && accData.length > 0 && accData[0].cid_portalrecordcreationdetails) { // Net New Site
             showWithdraw = true;

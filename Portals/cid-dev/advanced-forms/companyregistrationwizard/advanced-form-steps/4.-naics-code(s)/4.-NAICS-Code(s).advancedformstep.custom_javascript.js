@@ -21,7 +21,7 @@ $(document).ready(function () {
 
 	if (sessionStorage.getItem("frominyearsitepage") == "false") {
 		var parentcustomerid = '{{user.parentcustomerid.Id}}';
-		var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq '" + parentcustomerid + "'";
+		var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq " + parentcustomerid ;
 		var accData = tdg.webapi.list("accounts", filter);
 		if (accData != null) {
 			if (accData[0].cid_portalrecordcreationdetails) // Net New Site
