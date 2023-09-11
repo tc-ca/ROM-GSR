@@ -112,7 +112,8 @@ if (window.jQuery) {
 			var validation = false;
 			var companyId = $("#EntityFormView_EntityID").val();
 			//var filter = "parentcustomerid/Id eq (guid'" + companyId + "')";
-			var filter = "statecode eq 0 and _parentcustomerid_value eq '" + companyId + "'";
+			var filter = "statecode eq 0 and _parentcustomerid_value eq " + companyId ;
+			//+ "'";
 			var data = tdg.webapi.list("contacts", filter);
 			data = data.filter(a => a.emailaddress1 != null);
 			if (data != null) {

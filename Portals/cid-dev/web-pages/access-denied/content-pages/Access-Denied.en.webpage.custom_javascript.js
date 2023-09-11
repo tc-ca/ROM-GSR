@@ -138,13 +138,13 @@ if (text == Register_external_account) {
 
 						debugger;
 
-						//var request = {};
-						//request.ovs_Company = parentcustomerid;
-						//request.ovs_CreatedByExternalUser = data[0].contactid;
-						//request.ovs_RequestType = "b4669233-8e4d-ee11-be6f-0022483d0c87";
-						//request.ovs_requestdetails = "Contact record already exists in CORE Data::Contact record already exists in CORE Data_FR";
-						//request.ovs_priority = 2;
-						//tdg.cid.ovs_supportrequest_insert(request);
+						var request = {};
+						request.ovs_Company = parentcustomerid;
+						request.ovs_CreatedByExternalUser = data[0].contactid;
+						request.ovs_RequestType = "b4669233-8e4d-ee11-be6f-0022483d0c87";
+						request.ovs_requacestdetails = "Contact record already exists in CORE Data::Les données du contact existent dans le CORE";
+						request.ovs_priority = 2;
+						tdg.cid.ovs_supportrequest_insert(request);
 
 						var msg = tdg.error_message.message("m000208");
 						tdg.c.dialog_OK(msg);
