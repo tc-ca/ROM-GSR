@@ -117,6 +117,11 @@ if (text == Register_external_account) {
 		var InnerText = $('.validation-summary-errors')[0].innerText;
 		var The_email = tdg.error_message.message("m000192");
 		var invalid_invitation = tdg.error_message.message("m000194");
+	//Adding new text box	
+		var label = $('label[for="Email"]');
+		var formGroup = $(label).parent();
+		$(formGroup).after('<div class="form-group"><label class="col-sm-2 control-label" for="ConfirmEmail"><div class="xrm-editable-text xrm-attribute"><div class="xrm-attribute-value-encoded xrm-attribute-value">Confirm Email</div></div></label><div class="col-sm-10"><input class="form-control" data-val="true" data-val-required="Email Confirmation field is required." id="ConfirmEmail" type="text" value=""><p class="help-block"><span class="xrm-editable-text xrm-attribute"><span class="xrm-attribute-value-encoded xrm-attribute-value">Re-enter email address.</span></span></p></div></div>');
+
 		if (Innerhtml != null && Innerhtml.substring(0, 18) == The_email) {
 			var email_in_use = tdg.error_message.message("m000193");
 			$('.validation-summary-errors')[0].innerHTML = email_in_use;

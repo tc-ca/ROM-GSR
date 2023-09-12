@@ -2712,8 +2712,10 @@ if (typeof (tdg.cid.crw) == "undefined") {
         Manage_Invitation_Confirmation_Form: function () {
             $("#cid_reasonfornobnnumberpopup").hide();
             $("#cid_reasonfornobnnumberpopup_label").hide();
+                
+       
             $("#cid_reasonfornobnnumber_other_popup").hide();
-            $("#cid_reasonfornobnnumber_other_label").hide();
+            $("#cid_reasonfornobnnumber_other_popup_label").hide();
             var list = $("#cid_reasonfornobnnumber")[0].options;
 
             for (var i = 0; i < list.length; i++) {
@@ -2725,6 +2727,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 $("#cid_reasonfornobnnumberpopup").append(option);
 
             }
+          
+
+
             //hasCRABN
             $("#hasCRABN").change(function () {
                 console.log("change has fired");
@@ -2742,6 +2747,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
                     $("#cid_reasonfornobnnumberpopup").hide();
                     $("#cid_reasonfornobnnumberpopup_label").hide();
+                    $("#cid_reasonfornobnnumber_other_popup").hide();
+                    $("#cid_reasonfornobnnumber_other_popup_label").hide();
 
                     $("#cid_crabusinessnumberpopup_label").show();
                     $("#cid_crabusinessnumberpopup").show();
@@ -2750,16 +2757,16 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
             });
 
-            $("#hasCRABN").change(function () {
+            $("#cid_reasonfornobnnumberpopup").change(function () {
                 console.log("change has fired");
-                if ($("#hasCRABN :selected").val() == 3) {
+                if ($("#cid_reasonfornobnnumberpopup :selected").val() == 3) {
 
                     $("#cid_reasonfornobnnumber_other_popup").show();
-                    $("#cid_reasonfornobnnumber_other_label").show();
+                    $("#cid_reasonfornobnnumber_other_popup_label").show();
                 }
                 else {
                     $("#cid_reasonfornobnnumber_other_popup").hide();
-                    $("#cid_reasonfornobnnumber_other_label").hide();
+                    $("#cid_reasonfornobnnumber_other_popup_label").hide();
 
                 }
 
@@ -2827,28 +2834,30 @@ if (typeof (tdg.cid.crw) == "undefined") {
             if (data.invitation_ind) {
                 invitation_msg = tdg.error_message.message("m000033");
                 invitation_msg = invitation_msg.replaceAll("{0}", data.cid_legalname);
-              /* text_middle = `
+               text_middle = `
                 <p>
                  <label for="hasCRABN">Organization has Canada Revenue Business Number?</label>
                  <select name="hasCRABN" id="hasCRABN" class="form-control" style="width:100%">
                       <option value="1">${yes}</option>
                       <option value="2">${no}</option>
                   </select>
-                <label for="cid_reasonfornobnnumberpoup" id="cid_reasonfornobnnumberpoup_label"  class="field-label">${lbl_reasonfornobnnumber}</label>
+
+
+                  <label for="cid_crabusinessnumberpopup" id="cid_crabusinessnumberpopup_label" class="field-label">${lbl_cra_bn}</label>
+                  <input type="text" class="text form-control"  id="cid_crabusinessnumberpopup" style="width:100%" value="">
+
+                   <label for="cid_reasonfornobnnumberpopup" id="cid_reasonfornobnnumberpopup_label"  class="field-label">${lbl_reasonfornobnnumber}</label>
                    
-                       <select name="cid_reasonfornobnnumberpopup"  id="cid_reasonfornobnnumberpopup" class="form-control" style="width:100%">
+                   <select name="cid_reasonfornobnnumberpopup"  id="cid_reasonfornobnnumberpopup" class="form-control" style="width:100%">
                       <option value="-1"></option>
                     
-                  </select>
+                   </select>
 
-                    <label for="cid_crabusinessnumberpopup" id="cid_crabusinessnumberpopup_label" class="field-label">${lbl_cra_bn}</label>
-                    <input type="text" class="text form-control"  id="cid_crabusinessnumberpopup" style="width:100%" value="">
-
-                    <label id="cid_reasonfornobnnumber_other_label" for="cid_reasonfornobnnumber_other_popup" class="field-label">${lbl_reasonfornobnnumber_other}</label>
+                    <label id="cid_reasonfornobnnumber_other_popup_label" for="cid_reasonfornobnnumber_other_popup" class="field-label">${lbl_reasonfornobnnumber_other}</label>
                     <input type="text"  class="text form-control" id="cid_reasonfornobnnumber_other_popup" style="width:100%" value="${data.cid_reasonfornobnnumber_other}">
 	                `;
 
-                */
+                
 
                
 
@@ -2904,9 +2913,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
 	                </section>
 	                `;
             $(text1).appendTo('body');
-            /*if (data.invitation_ind) {
+            if (data.invitation_ind) {
                 tdg.cid.crw.Manage_Invitation_Confirmation_Form();
-            }*/
+            }
 
             $("#cid_legalname").focus();
 
@@ -2915,9 +2924,30 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#myModal").css('position', 'fixed');
             $("#myModal").css('z-index', '9999');
 
-            $("#btn_ok").click(function () {
-                $("#myModal").remove();
-                handler(true);
+            $("#btn_ok").click( async function () {
+                var cid_crabusinessnumber = $("#cid_crabusinessnumberpopup").val();
+                var data;
+                var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
+                //if pre prod or prod
+             
+                if (environment.toLowerCase() == "preprod" || environment.toLowerCase() == "prod") {
+                    //use CRA API to get iformation
+                    data = await tdg.cid.crw.Production_start_Retrieve_cra(cid_crabusinessnumber, "");
+                }
+                else {
+                    // retrieve information from FakeBN entity in dynamics
+                    data = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, "");
+                }
+                console.log(data);
+                //show notice if the data is empty
+                if (data.length == 0) {
+                    var msg = tdg.error_message.message("m000001");
+                    tdg.c.dialog_OK(msg);
+                }
+
+
+                //$("#myModal").remove();
+                //handler(true);
             });
 
             //Pass false to callback function

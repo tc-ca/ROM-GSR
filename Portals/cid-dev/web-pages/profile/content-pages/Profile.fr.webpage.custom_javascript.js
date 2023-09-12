@@ -81,12 +81,62 @@ $(document).ready(function () {
 
     
      //add Privace Statement
-     var privaceStatementLabelPre = tdg.error_message.message("PRIV_STMT1");
-     var privaceStatementLabelPost = tdg.error_message.message("PRIV_STMT2");
-     var psUrl = window.location.origin + "/registration/privacystatement"; 
-     $("table.section").after('<div style="padding-left: 20px;padding-top: 10px;" ><input type="checkbox" name="PrivaceStatement" id="privacestatement" name="privacestatement"/><label for="privacestatement" style="font-weight: 200; padding: 0 8px;"><p>'+ privaceStatementLabelPre + '<a href="' + psUrl +'" target="_blank">' + privaceStatementLabelPost + '</a>.</p></label><br></div>');
-     $("#privacestatement").css("padding", "0 23px");
+         var privaceStatementLabel = tdg.error_message.message("PRIV_STMT1");
+         var privaceStatement = tdg.error_message.message("PRIV_STMT2");
 
+         var results = "";
+         if(selected_language == 'fr')
+         {
+            results = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_PrivacyStatementArticle_URL_FR'");
+         }
+         else
+         {
+            results = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_PrivacyStatementArticle_URL_EN'");
+         }
+         if(results.length > 0)
+         {
+            var articleURL = results[0]["qm_value"];
+         }
+
+         debugger;
+         var psUrl =  window.location.origin + "/_portal/modal-form-template-path/" + articleURL; 
+
+        $("table.section").after('<div style="padding-left: 20px;" ><input type="checkbox" name="PrivaceStatement" id="privacestatement" name="privacestatement"/><label for="privacestatement" style="font-weight: 200; padding: 0 8px;"><p>' + privaceStatementLabel + '<a href="#" id="theArticle">' + privaceStatement + '</a>.</p></label><br></div>');
+         
+         $("#theArticle").bind('click',function(){
+                var left = (screen.width - 600) / 2;
+                var top = (screen.height - 400) / 4;
+             
+                window.open(psUrl, "Privace Statement", "scrollbars=1,resizable=no,status=0,toolbar=1,location=1,menubar=0,width=600,height=400,left="+left+",top="+top);
+            });
+
+         $("#privacestatement").css("padding", "0 23px");
+            debugger;
+            //Make sure privace statement was clicked
+            if (typeof (Page_Validators) == 'undefined') return;
+             
+            $('#privacestatement').parent().addClass("required");
+
+            var msg = tdg.error_message.message("PRIV_STMT_ERR");
+
+            var newValidator = document.createElement('span');
+            newValidator.style.display = "none";
+            newValidator.id = "RequiredFieldValidatorPrivaceStatement";
+            newValidator.controltovalidate = "casetypecode";
+            newValidator.errormessage = "<a href='#privacestatement_label'>Énoncé de confidentialité: " + msg + "</a>";
+            newValidator.validationGroup = "Profile";
+            newValidator.initialvalue = "";
+            newValidator.evaluationfunction = function () {
+                var value = $('#privacestatement').prop('checked');
+                if (value) {
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+
+            // Add the new validator to the page validators array:
+            Page_Validators.push(newValidator);
 
     var data = {};
     data.length = 0;
