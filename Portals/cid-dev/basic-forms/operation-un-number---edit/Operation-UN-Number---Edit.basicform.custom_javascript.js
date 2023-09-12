@@ -73,7 +73,7 @@ function tdg_unnumberid_selected(text, id) {
 }
 
 function tdg_unnumber_get(id) {
-    var filter = "tdg_unnumberid eq '" + id + "'";
+    var filter = "tdg_unnumberid eq " + id;
     var item = tdg.c.WebApi_List("tdg_unnumbers", filter);
     return item[0];
 }

@@ -54,7 +54,7 @@ if (typeof (invitation) == "undefined") {
 
                     // current primary user of selected company?
                     if (!suppress_error) {
-                        var filter = "_parentcustomerid_value eq '" + rom_data.accountid + "'";
+                        var filter = "_parentcustomerid_value eq " + rom_data.accountid;
                         var list = tdg.webapi.list("contacts", filter);
                         list = list.filter(x => x.cid_contacttype == 100000000 && x.contactid == contact_id);
                         if (list.length == 1) {

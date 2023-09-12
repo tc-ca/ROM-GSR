@@ -184,7 +184,7 @@ var CheckDuplicate = function (_flowURl, _parameters) {
                         var accId = "";
                         var contact_id = '{{user.id}}';
                         if (ans) {
-                          /*  var accountResult = tdg.webapi.SelectedColumnlist("accounts", "cid_crabusinessnumber,ovs_legalname", "accountid eq '" + _parameters.Parent_Id + "'");
+                          /*  var accountResult = tdg.webapi.SelectedColumnlist("accounts", "cid_crabusinessnumber,ovs_legalname", "accountid eq " + _parameters.Parent_Id);
                             if (accountResult.length > 0) {
                                 accName = accountResult[0]["ovs_legalname"];
                                 accId = accountResult[0]["cid_crabusinessnumber"];

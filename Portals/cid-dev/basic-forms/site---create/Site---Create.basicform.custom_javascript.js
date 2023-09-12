@@ -97,7 +97,7 @@ function cid_same_as_company_change() {
 function get_parent() {
 	debugger;
 	var account_id = '{{user.parentcustomerid.Id}}';
-	filter = "accountid eq '" + account_id + "'";
+	filter = "accountid eq " + account_id;
 	var account = tdg.c.WebApi_List("accounts", filter);
 	return account; // account[0];
 }

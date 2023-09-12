@@ -2708,6 +2708,64 @@ if (typeof (tdg.cid.crw) == "undefined") {
             }
         },
 
+
+        Manage_Invitation_Confirmation_Form: function () {
+            $("#cid_reasonfornobnnumberpopup").hide();
+            $("#cid_reasonfornobnnumberpopup_label").hide();
+            $("#cid_reasonfornobnnumber_other_popup").hide();
+            $("#cid_reasonfornobnnumber_other_label").hide();
+            var list = $("#cid_reasonfornobnnumber")[0].options;
+
+            for (var i = 0; i < list.length; i++) {
+
+
+                let option = document.createElement("option");
+                option.value = list[i].value;
+                option.innerHTML = list[i].text;
+                $("#cid_reasonfornobnnumberpopup").append(option);
+
+            }
+            //hasCRABN
+            $("#hasCRABN").change(function () {
+                console.log("change has fired");
+                if ($("#hasCRABN :selected").val() == 2) {
+                    // $("#cid_reasonfornobnnumberpopup").removeAttr("hidden");
+                    // $("#cid_crabusinessnumber").attr("hidden","true");
+                    $("#cid_reasonfornobnnumberpopup").show();
+                    $("#cid_reasonfornobnnumberpopup_label").show();
+
+                    $("#cid_crabusinessnumberpopup_label").hide();
+                    $("#cid_crabusinessnumberpopup").hide();
+
+                }
+                else if ($("#hasCRABN :selected").val() == 1) {
+
+                    $("#cid_reasonfornobnnumberpopup").hide();
+                    $("#cid_reasonfornobnnumberpopup_label").hide();
+
+                    $("#cid_crabusinessnumberpopup_label").show();
+                    $("#cid_crabusinessnumberpopup").show();
+
+                }
+
+            });
+
+            $("#hasCRABN").change(function () {
+                console.log("change has fired");
+                if ($("#hasCRABN :selected").val() == 3) {
+
+                    $("#cid_reasonfornobnnumber_other_popup").show();
+                    $("#cid_reasonfornobnnumber_other_label").show();
+                }
+                else {
+                    $("#cid_reasonfornobnnumber_other_popup").hide();
+                    $("#cid_reasonfornobnnumber_other_label").hide();
+
+                }
+
+            });
+        },
+
         start_account_by_name: function (legalname) {
             legalname = legalname.replaceAll("'", "''");
 
@@ -2732,6 +2790,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
             var lbl_reasonfornobnnumber = tdg.error_message.message("lbl_reasonfornobnnumber");
             var lbl_reasonfornobnnumber_other = tdg.error_message.message("lbl_reasonfornobnnumber_other");
             var lbl_confirm_is_company = tdg.error_message.message("m000052");
+            var yes = tdg.error_message.message("Yes");
+            var no = tdg.error_message.message("No");
 
             data.cid_legalnameFR = (data.cid_legalnameFR == null ? "" : data.cid_legalnameFR);
             data.cid_operatingnameFr = (data.cid_operatingnameFr == null ? "" : data.cid_operatingnameFr);
@@ -2767,6 +2827,32 @@ if (typeof (tdg.cid.crw) == "undefined") {
             if (data.invitation_ind) {
                 invitation_msg = tdg.error_message.message("m000033");
                 invitation_msg = invitation_msg.replaceAll("{0}", data.cid_legalname);
+              /* text_middle = `
+                <p>
+                 <label for="hasCRABN">Organization has Canada Revenue Business Number?</label>
+                 <select name="hasCRABN" id="hasCRABN" class="form-control" style="width:100%">
+                      <option value="1">${yes}</option>
+                      <option value="2">${no}</option>
+                  </select>
+                <label for="cid_reasonfornobnnumberpoup" id="cid_reasonfornobnnumberpoup_label"  class="field-label">${lbl_reasonfornobnnumber}</label>
+                   
+                       <select name="cid_reasonfornobnnumberpopup"  id="cid_reasonfornobnnumberpopup" class="form-control" style="width:100%">
+                      <option value="-1"></option>
+                    
+                  </select>
+
+                    <label for="cid_crabusinessnumberpopup" id="cid_crabusinessnumberpopup_label" class="field-label">${lbl_cra_bn}</label>
+                    <input type="text" class="text form-control"  id="cid_crabusinessnumberpopup" style="width:100%" value="">
+
+                    <label id="cid_reasonfornobnnumber_other_label" for="cid_reasonfornobnnumber_other_popup" class="field-label">${lbl_reasonfornobnnumber_other}</label>
+                    <input type="text"  class="text form-control" id="cid_reasonfornobnnumber_other_popup" style="width:100%" value="${data.cid_reasonfornobnnumber_other}">
+	                `;
+
+                */
+
+               
+
+
             }
             else {
                 invitation_msg = (data.cid_has_cra_bn == 1 ? "m000041" : "m000042");
@@ -2818,6 +2904,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
 	                </section>
 	                `;
             $(text1).appendTo('body');
+            /*if (data.invitation_ind) {
+                tdg.cid.crw.Manage_Invitation_Confirmation_Form();
+            }*/
 
             $("#cid_legalname").focus();
 

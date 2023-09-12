@@ -80,7 +80,7 @@ function header_setup() {
     try {
         var code = "m000024";
         var site_id = urlParams.get('siteid');
-        filter = "accountid eq '" + site_id + "'";
+        filter = "accountid eq " + site_id ;
         var account = tdg.webapi.SelectedColumnlist("accounts", "cid_sitename", filter);
         var cid_sitename = ""
         if (account.length > 0) {

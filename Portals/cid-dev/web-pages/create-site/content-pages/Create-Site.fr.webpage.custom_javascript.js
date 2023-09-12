@@ -4,8 +4,10 @@
 
 $(document).ready(function () {
     debugger;
+
+
     $("#EntityFormPanel").before('<div id="ErrorMessageDiv" class="alert alert-danger" role="alert" style="display: none;">  </div>');
-    page_setup();
+
     $("#createdon").closest("tr").hide();
     $("#cid_createdbyregistrant_label").closest("tr").hide();
     if (sessionStorage.getItem('frominyearsites') == "true" || sessionStorage.getItem('fromannualcompliance') == 'true') {
@@ -145,7 +147,7 @@ if (window.jQuery) {
 var cb = function (v) { console.log('value', v); return v; };
 
 var CheckDuplicate = function (_flowURl, _parameters) {
-var req = new XMLHttpRequest();
+    var req = new XMLHttpRequest();
     req.open("POST", _flowURl, true);
     req.setRequestHeader('Content-Type', 'application/json');
     req.onreadystatechange = function () {
@@ -182,7 +184,7 @@ var req = new XMLHttpRequest();
                         var accId = "";
                         var contact_id = '{{user.id}}';
                         if (ans) {
-                          /*  var accountResult = tdg.webapi.SelectedColumnlist("accounts", "cid_crabusinessnumber,ovs_legalname", "accountid eq '" + _parameters.Parent_Id + "'");
+                          /*  var accountResult = tdg.webapi.SelectedColumnlist("accounts", "cid_crabusinessnumber,ovs_legalname", "accountid eq " + _parameters.Parent_Id);
                             if (accountResult.length > 0) {
                                 accName = accountResult[0]["ovs_legalname"];
                                 accId = accountResult[0]["cid_crabusinessnumber"];
@@ -236,99 +238,21 @@ var req = new XMLHttpRequest();
 }
 
 function CheckLatLongDecimal() {
-    debugger;
-    /* var Lat = $("#address1_latitude").val();
-    var Longtitude = $("#address1_longitude").val();
-    var lang =  selected_language = '{{website.selected_language.code}}';
-    var decimalIndexLat ;
-    var decimalIndexLong ;
-  debugger;
-    if (lang == "fr")
-	{
-		 decimalIndexLat = Lat.toString().indexOf(",");
-	     decimalIndexLong = Longtitude.toString().indexOf(",");
-	}
-    else
-    {
-         decimalIndexLat = Lat.toString().indexOf(".");
-         decimalIndexLong = Longtitude.toString().indexOf(".");
-    }
-    var error = "";
-    var checkResult = true;
-    //check latitude
-    //m000143
-    var m000143 = "<p>" + tdg.error_message.message("m000143") + "</p>";
-    var m000144 = "<p>" + tdg.error_message.message("m000144") + "</p>";
-    if (decimalIndexLat < 0) {
-        checkResult = false;
-        error = m000143;
-    }
-    else {
-        var numberofdecimal ;
-        //= Lat.toString().split('.')[1].length;
-         if (lang == "fr")
-	     {
-             numberofdecimal = Lat.toString().split(',')[1].length;
-         }
-         else{
-             numberofdecimal = Lat.toString().split('.')[1].length;
-         }
-
-        if (numberofdecimal != 4) {
-            error = m000143;
-            //"<p>Please enter a Latitude as a decimal, with the full four digit decimal point (e.g. 41.3251)</p>";
-            checkResult = false;
-        }
-    }
-
-    //check longtitude
-    if (decimalIndexLong < 0) {
-        checkResult = false;
-        error = error + m000144;
-    }
-    else {
-        var Longtitudenumberofdecimal ,
-        // = Longtitude.toString().split('.')[1].length;
-         if (lang == "fr")
-	     {
-             Longtitudenumberofdecimal = Longtitude.toString().split(',')[1].length;
-         }
-         else
-         {
-             Longtitudenumberofdecimal = Longtitude.toString().split('.')[1].length;
-
-         }
-
-
-        if (Longtitudenumberofdecimal != 4) {
-            error = error + m000144;
-            //"<p>Please enter a Longitude as a decimal, with the full four digit decimal point (e.g. -74.7992)</p>";
-            checkResult = false;
-        }
-    }
-
-    if (checkResult == false) {
-        $('#ErrorMessageDiv').css('display', 'block');
-        $('#ErrorMessageDiv').html("<h3>Error</h3>" + error);
-    }
-    return checkResult;
-    */
-   
+    
     var Lat = $("#address1_latitude").val();
     var Longtitude = $("#address1_longitude").val();
     var lang = sessionStorage.getItem("selected_language");
     var decimalIndexLat  = -1 ;
     var decimalIndexLong  = -1;
-    var splitChar = "," ;
-    
+    var splitChar = "." ;
+     if (lang == 'fr')
+	{
+        splitChar = "," ;
+    }
 
 		 decimalIndexLat = Lat.toString().indexOf (splitChar);
-         console.log("decimal index:");
-         console.log (decimalIndexLat);
          //(",");
 	     decimalIndexLong = Longtitude.toString().indexOf(splitChar);
-          console.log("Longtitude decimal index:");
-         console.log (decimalIndexLong);
 	
   
     var error = "";
@@ -337,7 +261,6 @@ function CheckLatLongDecimal() {
     //m000143
     var m000143 = "<p>" + tdg.error_message.message("m000143") + "</p>";
     var m000144 = "<p>" + tdg.error_message.message("m000144") + "</p>";
-    console.log ("after message");
 
     if (decimalIndexLat < 0) {
         checkResult = false;
@@ -346,9 +269,7 @@ function CheckLatLongDecimal() {
     else {
         var numberofdecimal = 0 ;
        
-         numberofdecimal = Lat.toString().split(',')[1].length;
-         console.log("number of decimal :");
-         console.log(numberofdecimal);
+         numberofdecimal = Lat.toString().split(splitChar)[1].length;
 
         if (numberofdecimal != 4) {
             error = m000143;
@@ -365,7 +286,7 @@ function CheckLatLongDecimal() {
     else {
         var Longtitudenumberofdecimal  = 0;
         // = Longtitude.toString().split('.')[1].length;
-             Longtitudenumberofdecimal = Longtitude.toString().split(',')[1].length;
+             Longtitudenumberofdecimal = Longtitude.toString().split(splitChar)[1].length;
        
         if (Longtitudenumberofdecimal != 4) {
             error = error + m000144;
@@ -379,6 +300,8 @@ function CheckLatLongDecimal() {
         $('#ErrorMessageDiv').html("<h3>Error</h3>" + error);
     }
     return checkResult;
+ 
+   
 }
 
 
@@ -482,19 +405,4 @@ function DialogWith_DropDown (message, handler) {
 
   
     $('#myModal').modal({ backdrop: 'static', keyboard: false, show: true, focus: true });
-}
-
-function page_setup() {
-	var selected_language = '{{website.selected_language.code}}';
-	sessionStorage.setItem("selected_language", selected_language);
-	const files = ["/tdgcore_common.js", "/tdgcore_message.js"];
-	for (var i = 0; i < files.length; i++) {
-		var file = files[i];
-		var script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = file;
-		$("body").append(script);
-	}
-	// server error?
-	tdg.c.message_panel();
 }
