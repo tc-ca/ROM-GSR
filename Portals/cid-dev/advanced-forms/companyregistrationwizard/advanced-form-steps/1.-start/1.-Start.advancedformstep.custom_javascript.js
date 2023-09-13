@@ -23,6 +23,7 @@ $(document).ready(function () {
     $("#cid_has_cra_bn").val("1");
     tdg.c.control_hide("parentcustomerid", true);
     tdg.c.control_hide("cid_operatingname");
+    tdg.c.control_hide("cid_operatingnamefr");
 
     $("#cid_has_cra_bn").change(function () {
         tdg.cid.crw.start_cid_has_cra_bn_onchange("1");
@@ -54,7 +55,7 @@ $(document).ready(function () {
             if (inv.length > 0) {
                 sessionStorage.setItem("cid_has_invitation", "true");
                 sessionStorage.setItem("adx_invitationid", inv[0].adx_invitationid);
-                filter = "accountid eq " + account_id ;
+                filter = "accountid eq " + account_id;
                 _account = tdg.c.WebApi_List("accounts", filter)[0];
                 switch (_account.cid_cidcompanystatus) {
                     case 100000004:
@@ -88,7 +89,7 @@ $(document).ready(function () {
     var parentcustomerid = '{{user.parentcustomerid.Id}}';
     var showWithdraw = true;
     if (parentcustomerid) {
-        var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq " + parentcustomerid ;
+        var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq " + parentcustomerid;
         var accData = tdg.webapi.list("accounts", filter);
         if (accData != null && accData.length > 0 && accData[0].cid_portalrecordcreationdetails) { // Net New Site
             showWithdraw = true;
@@ -147,8 +148,9 @@ if (window.jQuery) {
             if (has_invitation != "true") {
                 if (cid_has_cra_bn == 0) {
                     let legalname = $("#cid_legalname").val();
+                    let legalnamefr = $("#ovs_legalnamefr").val();
                     debugger;
-                    rom_data = tdg.cid.crw.start_account_by_name(legalname);
+                    rom_data = tdg.cid.crw.start_account_by_name(legalname, legalnamefr);
                     if (rom_data.length > 0) {
                         //check if claimed company is duplicate
                         if (rom_data.length > 1) {

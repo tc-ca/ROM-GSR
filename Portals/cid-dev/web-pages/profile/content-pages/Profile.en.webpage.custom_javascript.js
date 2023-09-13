@@ -16,16 +16,13 @@ $(document).ready(function () {
     }
     if ($('#ContentContainer_MainContent_MainContent_ContentBottom_ConfirmationMessage').find('.xrm-attribute-value').length > 0 &&
         $('#ContentContainer_MainContent_MainContent_ContentBottom_ConfirmationMessage').find('.xrm-attribute-value')[0].innerHTML.contains(sessionStorage.getItem("profile_msg"))) // "Your profile has been updated successfully"
-        //&& ( $("#privacestatement") != null && $('#privacestatement').prop('checked'))) 
     {
         //window.location.href = '~/my-company/';
         window.location.href = '~/';
     }
-    debugger;
-    var recordId = "{{ user.id }}";
-    var IsfirstLogin = tdg.webapi.SelectedColumnlist("contacts", "msdyn_portaltermsagreementdate", "contactid eq " + recordId + "");
+    debugger;    
     //add Privace Statement
-    if(IsfirstLogin == null && IsfirstLogin.lenght <1)
+    if(window.location.href.indexOf("ReturnUrl=%2Fen%2F") >= 0 || ($("#telephone1").val() == "" || $("#firstname").val() == "" || $("#lastname").val() == "" || $("#cid_languageofcorrespondence").val() == ""))
     {       
          var privaceStatementLabel = tdg.error_message.message("PRIV_STMT1");
          var privaceStatement = tdg.error_message.message("PRIV_STMT2");
@@ -44,7 +41,6 @@ $(document).ready(function () {
             var articleURL = results[0]["qm_value"];
          }
 
-         debugger;
          var psUrl =  window.location.origin + "/_portal/modal-form-template-path/" + articleURL; 
 
         $("table.section").after('<div style="padding-left: 20px;" ><input type="checkbox" name="PrivaceStatement" id="privacestatement" name="privacestatement"/><label for="privacestatement" style="font-weight: 200; padding: 0 8px;"><p>' + privaceStatementLabel + '<a href="#" id="theArticle">' + privaceStatement + '</a>.</p></label><br></div>');

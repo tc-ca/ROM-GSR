@@ -9,7 +9,8 @@ $(document).ready(function ()
 	var msg_description = tdg.error_message.message("m000162");
 	var msg_content = tdg.error_message.message("m000163");
 
-	var title = $("input[aria-label='Title']").val(); 
+	//var title = $("input[aria-label='Title']").val(); 
+    var title = $("input[aria-label]").val(); 
     var content = $("table[data-name='Knowledge Information']").find('textarea').text();
 	$("table[data-name='Knowledge Information']").find('textarea').attr("id" ,"content2");
 	var description = $("#description").text();

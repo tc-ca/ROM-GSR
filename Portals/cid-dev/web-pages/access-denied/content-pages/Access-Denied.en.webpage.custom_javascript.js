@@ -3,6 +3,7 @@
 // 
 $(document).ready(function () {
 	debugger;
+	
 	// page_setup();
 });
 
@@ -29,6 +30,13 @@ function page_setup() {
 }
 debugger;
 page_setup();
+
+//Adding Confirm Email text box	
+		var label = $('label[for="Email"]');
+		var formGroup = $(label).parent();
+		$(formGroup).after('<div class="form-group"><label class="col-sm-2 control-label" for="ConfirmEmail"><div class="xrm-editable-text xrm-attribute"><div class="xrm-attribute-value-encoded xrm-attribute-value">Confirm Email</div></div></label><div class="col-sm-10"><input class="form-control" data-val="true" data-val-required="Confirm Email field is required." id="ConfirmEmail" name="ConfirmEmail" type="text" value=""><p class="help-block"><span class="xrm-editable-text xrm-attribute"><span class="xrm-attribute-value-encoded xrm-attribute-value">Re-enter email address.</span></span></p></div></div>');
+
+
 if ($('.validation-summary-errors').length) {
 	var InnerText = $('.validation-summary-errors')[0].innerText;
 	//fix special char issue
@@ -54,6 +62,8 @@ if (document.getElementsByTagName('h1')[0]) {
 		var signin_ttip = tdg.error_message.message("ttip_SIGNIN");
 		$(":button.btn.btn-primary.btn-line")[0].title = signin_ttip;
 	}
+
+	
 	var source = document.getElementsByTagName('h1')[0].innerHTML;
 	var terms_and = tdg.error_message.message("m000199");
 	var terms_and_conditions = tdg.error_message.message("m000189");
@@ -78,15 +88,25 @@ if (document.getElementsByTagName('h1')[0]) {
 $('legend').after("<br><br><br><br>");
 //disabled register key if email is not entered on the change event of the text box
 $("#Email").on("change", function () {
-	if ($("#Email").val().trim() == "") {
+	if ($("#Email").val().trim() == "")  {
 		$(".btn-primary").prop('disabled', true);
 	}
 	else {
 		$(".btn-primary").prop('disabled', false);
 	}
 }); //end change event
+
 //disable register key if  email is not entered
 if ($("#Email").lenght && $("#Email").val().trim() == "") {
+	$(".btn-primary").prop('disabled', true);
+}
+else {
+	$(".btn-primary").prop('disabled', false);
+}
+
+//disable register key if confirm email is blank
+
+if ($("#ConfirmEmail").lenght && $("#ConfirmEmail").val().trim() == "" && $("#ConfirmEmail").val != $("#Email").val()) {
 	$(".btn-primary").prop('disabled', true);
 }
 else {
@@ -112,16 +132,13 @@ catch (e) {
 }
 if (text == Register_external_account) {
 	debugger;
+	
 	if ($('.validation-summary-errors')[0]) {
 		var Innerhtml = $('.validation-summary-errors')[0].innerHTML;
 		var InnerText = $('.validation-summary-errors')[0].innerText;
 		var The_email = tdg.error_message.message("m000192");
 		var invalid_invitation = tdg.error_message.message("m000194");
-	//Adding new text box	
-		var label = $('label[for="Email"]');
-		var formGroup = $(label).parent();
-		$(formGroup).after('<div class="form-group"><label class="col-sm-2 control-label" for="ConfirmEmail"><div class="xrm-editable-text xrm-attribute"><div class="xrm-attribute-value-encoded xrm-attribute-value">Confirm Email</div></div></label><div class="col-sm-10"><input class="form-control" data-val="true" data-val-required="Email Confirmation field is required." id="ConfirmEmail" type="text" value=""><p class="help-block"><span class="xrm-editable-text xrm-attribute"><span class="xrm-attribute-value-encoded xrm-attribute-value">Re-enter email address.</span></span></p></div></div>');
-
+	
 		if (Innerhtml != null && Innerhtml.substring(0, 18) == The_email) {
 			var email_in_use = tdg.error_message.message("m000193");
 			$('.validation-summary-errors')[0].innerHTML = email_in_use;

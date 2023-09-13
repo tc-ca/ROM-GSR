@@ -145,7 +145,12 @@ if (typeof (invitation) == "undefined") {
             debugger;
             sessionStorage.setItem("cid_suppress_error", "true");
 
-            if (account.cid_crabusinessnumber != null) {
+            if (account.cid_companyclaim == false && sessionStorage.getItem("cid_has_cra_bn") == 1) {
+                $("#cid_crabusinessnumber").val(sessionStorage.getItem("cid_crabusinessnumber"));
+            }
+
+
+            else if (account.cid_crabusinessnumber != null) {
                 $("#cid_crabusinessnumber").val(account.cid_crabusinessnumber);
             }
             else {
@@ -183,6 +188,7 @@ if (typeof (invitation) == "undefined") {
             cid_has_cra_bn = (cid_has_cra_bn == null ? 0 : cid_has_cra_bn);
             var bn = _account.cid_crabusinessnumber;
             var legalname = _account.ovs_legalname;
+            var ovs_legalnamefr = _account.ovs_legalnamefr;
             var cid_reasonfornobnnumber = _account.cid_reasonfornobnnumber;
             var list = $("#cid_reasonfornobnnumber")[0].options;
             for (var i = 0; i < list.length; i++) {
@@ -192,7 +198,7 @@ if (typeof (invitation) == "undefined") {
                 }
             }
             var cid_reasonfornobnnumber_other = _account.cid_reasonfornobnnumber_other;
-            const data = await tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn, legalname, list);
+            const data = await tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn, legalname, ovs_legalnamefr, list);
             if (data.length == 0) {
                 data.length = 1;
                 data.cid_has_cra_bn = cid_has_cra_bn;
@@ -213,24 +219,34 @@ if (typeof (invitation) == "undefined") {
                 data.address = address;
             }
             data.invitation_ind = true;
+            data.accountid = _account.accountid;
             tdg.cid.crw.start_confirm(data, (ans) => {
                 if (ans) {
                     debugger;
-
-                    if (_account.cid_has_cra_bn) {
+                   var hasCRAbn = sessionStorage.getItem("cid_has_cra_bn");
+                    if (hasCRAbn == 1)
+                        //(_account.cid_has_cra_bn)
+                    {
                         $("#cid_has_cra_bn").val(1);
                         tdg.cid.crw.start_cid_has_cra_bn_onchange("1");
-                        $("#cid_crabusinessnumber").val(_account.cid_crabusinessnumber);
+                        //$("#cid_crabusinessnumber").val(_account.cid_crabusinessnumber);
+                        $("#cid_crabusinessnumber").val(sessionStorage.getItem("cid_crabusinessnumber"));
                         tdg.cid.crw.start_cid_crabusinessnumber_onchange("1");
                     }
                     else {
                         $("#cid_has_cra_bn").val(0);
                         tdg.cid.crw.start_cid_has_cra_bn_onchange("1");
                         $("#cid_legalname").val(_account.ovs_legalname);
-                        $("#ovs_legalnamefr").val(_account.ovs_legalnamefr);
-                        $("#cid_reasonfornobnnumber").val(_account.cid_reasonfornobnnumber);
+                       
+                        console.log(sessionStorage.getItem("cid_crabusinessnumber"));
+                        console.log(sessionStorage.getItem("ovs_legalnamefr"));
+                        $("#cid_crabusinessnumber").val(sessionStorage.getItem("cid_crabusinessnumber"));
+                        $("#ovs_legalnamefr").val(sessionStorage.getItem("ovs_legalnamefr"));
+                        $("#cid_reasonfornobnnumber").val(sessionStorage.getItem("cid_reasonfornobnnumber"));
+                        //_account.cid_reasonfornobnnumber);
                         tdg.cid.crw.start_cid_reasonfornobnnumber_onchange(false);
-                        $("#cid_reasonfornobnnumber_other").val(_account.cid_reasonfornobnnumber_other);
+                        $("#cid_reasonfornobnnumber_other").val(sessionStorage.getItem("cid_reasonfornobnnumber_other"));
+                            //_account.cid_reasonfornobnnumber_other);
                     }
                     invitation.invitation_go_next(_account, true, contact_id);
                 } else {

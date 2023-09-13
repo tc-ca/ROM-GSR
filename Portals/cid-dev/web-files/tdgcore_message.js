@@ -1341,6 +1341,16 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000209",
                         "message_en": "The Email field is required.",
                         "message_fr": "Le champ de l'adresse de messagerie est obligatoire."
+                    },
+                    {
+                    "code": "m000210",
+                        "message_en": "Confirm Email field is required.",
+                        "message_fr": "Confirm Email field is required._FR"
+                    },
+                    {
+                    "code": "m000211",
+                        "message_en": "The email addresses and the confirmation email address must match. Please confirm both email addresses are entered correctly.",
+                        "message_fr": "The email addresses and the confirmation email address must match. Please confirm both email addresses are entered correctly._FR"
                     }
                 ];
 
