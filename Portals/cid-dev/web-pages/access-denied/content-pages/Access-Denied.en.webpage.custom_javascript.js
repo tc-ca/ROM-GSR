@@ -32,9 +32,9 @@ debugger;
 page_setup();
 
 //Adding Confirm Email text box	
-		var label = $('label[for="Email"]');
-		var formGroup = $(label).parent();
-		$(formGroup).after('<div class="form-group"><label class="col-sm-2 control-label" for="ConfirmEmail"><div class="xrm-editable-text xrm-attribute"><div class="xrm-attribute-value-encoded xrm-attribute-value">Confirm Email</div></div></label><div class="col-sm-10"><input class="form-control" data-val="true" data-val-required="Confirm Email field is required." id="ConfirmEmail" name="ConfirmEmail" type="text" value=""><p class="help-block"><span class="xrm-editable-text xrm-attribute"><span class="xrm-attribute-value-encoded xrm-attribute-value">Re-enter email address.</span></span></p></div></div>');
+//		var label = $('label[for="Email"]');
+//		var formGroup = $(label).parent();
+//		$(formGroup).after('<div class="form-group"><label class="col-sm-2 control-label" for="ConfirmEmail"><div class="xrm-editable-text xrm-attribute"><div class="xrm-attribute-value-encoded xrm-attribute-value">Confirm Email</div></div></label><div class="col-sm-10"><input class="form-control" data-val="true" data-val-required="Confirm Email field is required." id="ConfirmEmail" name="ConfirmEmail" type="text" value=""><p class="help-block"><span class="xrm-editable-text xrm-attribute"><span class="xrm-attribute-value-encoded xrm-attribute-value">Re-enter email address.</span></span></p></div></div>');
 
 
 if ($('.validation-summary-errors').length) {
@@ -106,12 +106,12 @@ else {
 
 //disable register key if confirm email is blank
 
-if ($("#ConfirmEmail").lenght && $("#ConfirmEmail").val().trim() == "" && $("#ConfirmEmail").val != $("#Email").val()) {
-	$(".btn-primary").prop('disabled', true);
-}
-else {
-	$(".btn-primary").prop('disabled', false);
-}
+//if ($("#ConfirmEmail").lenght && $("#ConfirmEmail").val().trim() == "" && $("#ConfirmEmail").val != $("#Email").val()) {
+//	$(".btn-primary").prop('disabled', true);
+//}
+//else {
+//	$(".btn-primary").prop('disabled', false);
+//}
 var urlParams = new URLSearchParams(window.location.search);
 if (urlParams.has('invitationCode')) {
 	debugger;

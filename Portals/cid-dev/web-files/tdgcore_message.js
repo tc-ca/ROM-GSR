@@ -1351,6 +1351,11 @@ if (typeof (tdg.message) == "undefined") {
                     "code": "m000211",
                         "message_en": "The email addresses and the confirmation email address must match. Please confirm both email addresses are entered correctly.",
                         "message_fr": "The email addresses and the confirmation email address must match. Please confirm both email addresses are entered correctly._FR"
+                    },
+                    {
+                        "code": "m000212",
+                        "message_en": "Organization has a Canada Revenue Agency (CRA) Business Number?",
+                        "message_fr":"L’organisation détient-elle un numéro d’organisation de l’Agence du revenu du Canada (ARC)?"
                     }
                 ];
 

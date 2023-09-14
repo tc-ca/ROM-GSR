@@ -2705,6 +2705,59 @@ if (typeof (tdg.cid.crw) == "undefined") {
             }
         },
 
+        Check_If_Confirmation_Dialog_Data_Iscomplete: function () {
+
+            debugger;
+         
+
+          
+            if (
+             $("#cid_legalname2").val() == null ||  $("#cid_legalname2").val() == "" ||
+             $("#cid_legalname_fr2").val() == null ||  $("#cid_legalname_fr2").val() == "" ||
+            $("#cid_operatingname2").val() == null || $("#cid_operatingname2").val()  == "" ||
+            $("#cid_operatingname_fr2").val() == null || $("#cid_operatingname_fr2").val() == ""
+            )
+            {
+                $("#btn_ok").prop('disabled', true);
+
+            }
+
+            //check if no bn number
+            else if ($("#hasCRABN :selected").val() == 0) {
+                if ($("#cid_reasonfornobnnumberpopup :selected").val() > 0) {
+                    if ($("#cid_reasonfornobnnumberpopup :selected").val() == 3) {
+                        if ($("#cid_reasonfornobnnumber_other_popup").val() == null || $("#cid_reasonfornobnnumber_other_popup").val().trim() == "") {
+                            $("#btn_ok").attr("disabled", "disabled");
+                        }
+                        else {
+                            //$("#btn_ok").removeAttr("disabled");
+                            $("#btn_ok").prop('disabled', false);
+                        }
+                    }//end if equal 3
+                    else {
+                        //$("#btn_ok").removeAttr("disabled");
+                        $("#btn_ok").prop('disabled', false);
+                    }//end else
+
+                }
+                else {
+                    $("#btn_ok").prop('disabled', true);
+                }
+
+            }
+                //check if CRA is required
+            else if ($("#hasCRABN :selected").val() == 1) {
+                if ($("#cid_crabusinessnumberpopup").val() == null || $("#cid_crabusinessnumberpopup").val()== "") {
+                    $("#btn_ok").prop('disabled', true);
+                }
+                else {
+                   // $("#btn_ok").removeAttr("disabled");
+                    $("#btn_ok").prop('disabled', false);
+                }
+            }
+
+           // $("#btn_ok").attr("disabled", "disabled");
+        },
 
         Manage_Invitation_Confirmation_Form: function () {
 
@@ -2712,6 +2765,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#DivOther").hide();
             $("#cid_reasonfornobnnumberpopup").hide();
             $("#cid_reasonfornobnnumberpopup_label").hide();
+            $("#btn_ok").attr("disabled", "disabled");
   
 
             $("#cid_reasonfornobnnumber_other_popup").hide();
@@ -2728,7 +2782,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
             }
 
-
+            //disabled and enable ok button based on data
+            tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
 
             //hasCRABN
             $("#hasCRABN").change(function () {
@@ -2746,7 +2801,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
                     $("#cid_crabusinessnumberpopup_label").hide();
                     $("#cid_crabusinessnumberpopup").hide();
-                  
+                    //disabled and enable ok button based on data
+                    tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
 
                 }
                 else if ($("#hasCRABN :selected").val() == 1) {
@@ -2761,15 +2817,16 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
                     $("#cid_crabusinessnumberpopup_label").show();
                     $("#cid_crabusinessnumberpopup").show();
-                   
-                   
+                
 
                 }
+                //disabled and enable ok button based on data
+                tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
 
             });
 
             $("#cid_reasonfornobnnumberpopup").change(function () {
-                console.log("change has fired");
+               
                 if ($("#cid_reasonfornobnnumberpopup :selected").val() == 3) {
                     $("#DivOther").show();
                     $("#cid_reasonfornobnnumber_other_popup").show();
@@ -2784,8 +2841,25 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     
 
                 }
+                //disabled and enable ok button based on data
+                tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
 
             });
+
+            $("#cid_reasonfornobnnumber_other_popup").change(function () {
+                //disabled and enable ok button based on data
+                tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
+            }
+            );
+
+            $("#cid_crabusinessnumberpopup").change(function () {
+                //disabled and enable ok button based on data
+                tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
+            }
+            );
+
+
+
         },
 
         start_account_by_name: function (legalname, legalnamefr) {
@@ -2815,6 +2889,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             var lbl_confirm_is_company = tdg.error_message.message("m000052");
             var yes = tdg.error_message.message("Yes");
             var no = tdg.error_message.message("No");
+            var hasCraMessag = tdg.error_message.message("m000212");
 
             data.cid_legalnameFR = (data.cid_legalnameFR == null ? "" : data.cid_legalnameFR);
             data.cid_operatingnameFr = (data.cid_operatingnameFr == null ? "" : data.cid_operatingnameFr);
@@ -2855,7 +2930,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 invitation_msg = invitation_msg.replaceAll("{0}", data.cid_legalname);
                 text_middle = `
                 <p>
-                <div> <label for="hasCRABN">Organization has Canada Revenue Business Number?</label>
+                <div> <label for="hasCRABN">${hasCraMessag}</label>
                     <span style="color: red">*</span>
                 </div>
                  <select name="hasCRABN" id="hasCRABN" class="form-control" style="width:100%">
@@ -2949,7 +3024,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
 	                <button id="btn_cancel" type="button" class="pull-left btn btn-primary button next submit-btn" data-dismiss="modal">${msg_btn_cancel}</button>
 	                </section>
 	                `;
-            $('head').append('<style type="text/css"> .form-group.required .control-label:after { content: "*";color: red;}</style>');
+            //$('head').append('<style type="text/css"> .form-group.required .control-label:after { content: "*";color: red;}</style>');
             $(text1).appendTo('body');
             //hide div that display error
             $('#ErrorMessageDiv').css('display', 'none');

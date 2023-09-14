@@ -13,6 +13,10 @@ $(document).ready(function () {
     tdg.c.page_instructions("page_crw_start");
     sessionStorage.setItem("cid_has_invitation", "false");
     sessionStorage.setItem("adx_invitationid", "");
+    $("#NextButton").hide();
+    var msg = tdg.error_message.message("BTN_NEXT");
+    tdg.c.button_create("btn_next", "#NextButton", msg);
+    $("#btn_next").bind("click", function () { tdg.cid.crw.start_btn_next_click(); });
     // init var to use in CompanyRegistrationWizard-Site.js
     var k_existing_sites = "already_have_existing_sites";
     sessionStorage.setItem(k_existing_sites, "null");
@@ -50,9 +54,10 @@ $(document).ready(function () {
         if (account_id != "") {
             debugger;
             var contact_id = '{{user.id}}';
-            var filter = "_adx_invitecontact_value eq " + contact_id;
+            var filter = "adx_invitationcode ne '' and _adx_invitecontact_value eq " + contact_id;
             var inv = tdg.c.WebApi_List("adx_invitations", filter);
-            if (inv.length > 0) {
+            console.log ("inviation length " + inv.length);
+            if (inv.length > 0 ) {
                 sessionStorage.setItem("cid_has_invitation", "true");
                 sessionStorage.setItem("adx_invitationid", inv[0].adx_invitationid);
                 filter = "accountid eq " + account_id;
@@ -81,15 +86,13 @@ $(document).ready(function () {
             }
         }
     }
-    $("#NextButton").hide();
-    var msg = tdg.error_message.message("BTN_NEXT");
-    tdg.c.button_create("btn_next", "#NextButton", msg);
-    $("#btn_next").bind("click", function () { tdg.cid.crw.start_btn_next_click(); });
+    
     //Withdraw
     var parentcustomerid = '{{user.parentcustomerid.Id}}';
     var showWithdraw = true;
     if (parentcustomerid) {
         var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq " + parentcustomerid;
+        console.log("after account filter");
         var accData = tdg.webapi.list("accounts", filter);
         if (accData != null && accData.length > 0 && accData[0].cid_portalrecordcreationdetails) { // Net New Site
             showWithdraw = true;
@@ -131,10 +134,11 @@ $(document).ready(function () {
 
 if (window.jQuery) {
     (function ($) {
-        webFormClientValidate = function () {
+        webFormClientValidate =  function () {
             debugger;
             var contact_id = '{{user.id}}';
             let has_invitation = sessionStorage.getItem("cid_has_invitation");
+            console.log ("has_invitation :" + has_invitation);
             if (has_invitation != "true") {
                 tdg.cid.crw.start_clear_contact_address();
             }
@@ -169,21 +173,28 @@ if (window.jQuery) {
                 }
                 else {
                     debugger;
+                    //  _cra_record  = await tdg.cid.crw.data_confirm_dialog(1,  $("#cid_crabusinessnumber").val(), "", "", null);
+                    console.log ("before cra record");
 
                     let data = _cra_record;
-                    if (data == "") {
+                    console.log (data);
+                    if (data == "" || data == null) {
                         tdg.c.error_message_advanced_form("m000001", true);
+                        
                     }
                     else {
                         debugger;
+                       
                         legalname = data.LegalName;
+                        console.log ("after legal name");
                         let cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
                         validation = false;
                         filter = "cid_crabusinessnumber eq '" + cid_crabusinessnumber + "'";
                         rom_data = tdg.c.WebApi_List("accounts", filter);
                         if (rom_data.length > 0) {
                             rom_data = rom_data[0];
-                            validation = tdg.cid.crw.start_registration(rom_data, suppress_error, contact_id);
+                            validation =  tdg.cid.crw.start_registration(rom_data, suppress_error, contact_id);
+                            console.log ("validation " + validation);
                         }
                         else {
                             tdg.cid.contact_update(data);
@@ -193,6 +204,7 @@ if (window.jQuery) {
                 }
             }
             else {
+                console.log ("parent customer id setup");
                 tdg.cid.crw.start_parentcustomerid_setup(_account.accountid, _account.ovs_legalname);
                 validation = true;
             }

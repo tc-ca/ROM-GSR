@@ -223,21 +223,22 @@ if (typeof (invitation) == "undefined") {
             tdg.cid.crw.start_confirm(data, (ans) => {
                 if (ans) {
                     debugger;
-                   var hasCRAbn = sessionStorage.getItem("cid_has_cra_bn");
+                    var hasCRAbn = sessionStorage.getItem("cid_has_cra_bn");
                     if (hasCRAbn == 1)
-                        //(_account.cid_has_cra_bn)
+                    //(_account.cid_has_cra_bn)
                     {
                         $("#cid_has_cra_bn").val(1);
                         tdg.cid.crw.start_cid_has_cra_bn_onchange("1");
                         //$("#cid_crabusinessnumber").val(_account.cid_crabusinessnumber);
                         $("#cid_crabusinessnumber").val(sessionStorage.getItem("cid_crabusinessnumber"));
                         tdg.cid.crw.start_cid_crabusinessnumber_onchange("1");
+                      
                     }
                     else {
                         $("#cid_has_cra_bn").val(0);
                         tdg.cid.crw.start_cid_has_cra_bn_onchange("1");
                         $("#cid_legalname").val(_account.ovs_legalname);
-                       
+
                         console.log(sessionStorage.getItem("cid_crabusinessnumber"));
                         console.log(sessionStorage.getItem("ovs_legalnamefr"));
                         $("#cid_crabusinessnumber").val(sessionStorage.getItem("cid_crabusinessnumber"));
@@ -246,7 +247,7 @@ if (typeof (invitation) == "undefined") {
                         //_account.cid_reasonfornobnnumber);
                         tdg.cid.crw.start_cid_reasonfornobnnumber_onchange(false);
                         $("#cid_reasonfornobnnumber_other").val(sessionStorage.getItem("cid_reasonfornobnnumber_other"));
-                            //_account.cid_reasonfornobnnumber_other);
+                        //_account.cid_reasonfornobnnumber_other);
                     }
                     invitation.invitation_go_next(_account, true, contact_id);
                 } else {
@@ -261,8 +262,10 @@ if (typeof (invitation) == "undefined") {
                             var data = {};
                             data.adx_invitationcode = "";
                             tdg.webapi.update("adx_invitations", record_id, data);
-
+                            tdg.cid.crw.start_cid_reasonfornobnnumber_onchange(false);
+                            sessionStorage.setItem("cid_has_invitation",false)
                             tdg.cid.crw.start_buttons_confirm(true, btn_next_name);
+                              
                             return;
                         } else {
                             debugger;

@@ -27,6 +27,7 @@ $(document).ready(function () {
     tdg.cid.name_init("firstname");
     tdg.cid.name_init("lastname");
 
+
     // autocomplete off
     try {
         $("#firstname").attr("autocomplete", "new-password");
@@ -35,6 +36,8 @@ $(document).ready(function () {
         $("#telephone1").attr("autocomplete", "new-password");
         $("#mobilephone").attr("autocomplete", "new-password");
         $("#fax").attr("autocomplete", "new-password");
+
+       
 
          //add Privace Statement
          var privaceStatementLabel = tdg.error_message.message("PRIV_STMT1");
