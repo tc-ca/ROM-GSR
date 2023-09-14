@@ -18,6 +18,15 @@
         "api": {
           "name": "shared_office365"
         }
+      },
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
       }
     },
     "definition": {
@@ -169,7 +178,7 @@
         },
         "Parse_JSON": {
           "runAfter": {
-            "Get_Updated_Contact": [
+            "Initialize_variable-Parent_Organization_Fr": [
               "Succeeded"
             ]
           },
@@ -250,8 +259,8 @@
                 },
                 "parameters": {
                   "emailMessage/To": "@outputs('Get_Updated_Contact')?['body/emailaddress1']",
-                  "emailMessage/Subject": "TDG Online - CID: Your Profile in CID has been changed",
-                  "emailMessage/Body": "<p>Hi @{outputs('Get_Updated_Contact')?['body/fullname']},<br>\n<br>\nYour information has been modified by @{substring(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'] , add(2, indexOf(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'],',') ) )}.<br>\n<br>\n@{variables('ChangeInfo')}<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                  "emailMessage/Subject": "TDG Online - CID: Contact Information for the @{outputs('Get_Updated_Contact')?['body/fullname']} has been updated.",
+                  "emailMessage/Body": "<p><strong>*** The following is an automated email sent by the TDG Online - CID system. Please do not reply ***</strong><br>\n<br>\nYour contact information in Transport Canada's CID Application has been updated by the primary contact on file @{substring(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'] , add(2, indexOf(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'],',') ) )} for organization @{variables('Parent Organization En')}<br>\n<br>\nRegards,<br>\n<br>\n<strong>TDG Online - CID Support Team<br>\n</strong><br>\nParameters:<br>\n<br>\n@{variables('ChangeInfo')}<br>\n<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
                   "emailMessage/From": "@variables('CID_Email_Sender')",
                   "emailMessage/Importance": "Normal"
                 },
@@ -280,8 +289,8 @@
                   },
                   "parameters": {
                     "emailMessage/To": "@outputs('Get_Updated_Contact')?['body/emailaddress1']",
-                    "emailMessage/Subject": "TDG Online - CID: French -  Your Profile in CID has been changed",
-                    "emailMessage/Body": "<p>Hi @{outputs('Get_Updated_Contact')?['body/fullname']},<br>\nYour information has been modified by @{substring(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'], add(2, indexOf(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'], ',')))}.<br>\n<br>\n@{variables('ChangeInfo')}<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                    "emailMessage/Subject": "TMD en ligne - BDIC : Les coordonnées pour @{outputs('Get_Updated_Contact')?['body/fullname']} ont été mises à jour.",
+                    "emailMessage/Body": "<p><strong>*** Le message suivant est un courriel automatisé envoyé par le TMD en ligne – Système de la BDIC. Veuillez ne pas répondre ***<br>\n</strong><br>\nVos coordonnées dans l'application BDIC de Transports Canada ont été mises à jour par le contact principal figurant dans le dossier<strong><br>\n</strong><strong>@{substring(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'], add(2, indexOf(outputs('Get_Updated_Contact')?['body/cid_portalrecordmodificationdetails'], ',')))}</strong><strong> </strong>de l'organisation<strong> </strong><strong>@{variables('Parent Organization Fr')}</strong><strong>.<br>\n<br>\n</strong>Cordialement<br>\n<br>\n<strong>Équipe de soutien de la BDIC de Transports Canada</strong><br>\n<br>\nParamètres:<strong><br>\n<br>\n</strong><strong>@{variables('ChangeInfo')}</strong><strong><br>\n<br>\n<br>\n</strong><strong>@{outputs('French-EmailFooter')}</strong><strong></strong></p>",
                     "emailMessage/From": "@variables('CID_Email_Sender')",
                     "emailMessage/Importance": "Normal"
                   },
@@ -430,6 +439,81 @@
             "operationMetadataId": "4a4d30e6-367a-4728-93d1-e8fc48567195"
           },
           "type": "Scope"
+        },
+        "Compose_2": {
+          "runAfter": {
+            "Get_Updated_Contact": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8ebd50ba-af85-45c9-b2f2-b9d7d4e4a953"
+          },
+          "type": "Compose",
+          "inputs": "@outputs('Get_Updated_Contact')?['body/_parentcustomerid_value']"
+        },
+        "Get_a_row_by_ID_-_Parent_Organization": {
+          "runAfter": {
+            "Compose_2": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6fe92fe8-dae1-424b-99be-a5bb4c89510f"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "accounts",
+              "recordId": "@outputs('Compose_2')"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_variable-Parent_Organization_En": {
+          "runAfter": {
+            "Get_a_row_by_ID_-_Parent_Organization": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "53c3b505-e080-4d05-a9ca-5286b78cb73c"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Parent Organization En",
+                "type": "string",
+                "value": "@outputs('Get_a_row_by_ID_-_Parent_Organization')?['body/ovs_legalname']"
+              }
+            ]
+          }
+        },
+        "Initialize_variable-Parent_Organization_Fr": {
+          "runAfter": {
+            "Initialize_variable-Parent_Organization_En": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e6f59c5-f2f3-49b4-a891-d6c5adc4250e"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Parent Organization Fr",
+                "type": "string",
+                "value": "@outputs('Get_a_row_by_ID_-_Parent_Organization')?['body/ovs_legalnamefr']"
+              }
+            ]
+          }
         }
       }
     },
