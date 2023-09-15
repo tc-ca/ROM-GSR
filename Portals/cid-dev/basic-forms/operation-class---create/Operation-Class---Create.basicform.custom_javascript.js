@@ -116,6 +116,7 @@ function page_setup() {
 }
 
 function btn_save_new_onclick() {
+    debugger;
     //disable button to prevent adding duplicate classes by double click
     $("#btn_save_new").prop('disabled', true);
     //tdg.c.error_message_clear();
@@ -126,6 +127,8 @@ function btn_save_new_onclick() {
                 value = Page_ClientValidate('');
             }
         }
+
+        $("#btn_save_new").prop('disabled', false);
     };
 
     if (!value) return;
@@ -152,6 +155,7 @@ function btn_save_new_onclick() {
     var ovs_compatibility_group = $("#ovs_compatibility_group").val();
 
     ovs_operationclass_insert(operation_id, ovs_class_division, ovs_compatibility_group, contact_id);
+    $("#btn_save_new").prop('disabled', false);
 }
 
 function ovs_primaryclass_selected(text, id) {

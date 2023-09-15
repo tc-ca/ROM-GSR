@@ -133,49 +133,62 @@ if (text == Register_external_account) {
 	debugger;
 
 	if ($('.validation-summary-errors')[0]) {
-		var Innerhtml = $('.validation-summary-errors')[0].innerHTML;
-		var InnerText = $('.validation-summary-errors')[0].innerText;
-		var The_email = tdg.error_message.message("m000192");
-		var invalid_invitation = tdg.error_message.message("m000194");
-
 		var email = $("#Email")[0].value;
 		var email_taken = InnerText.contains(email);
 
-		if (Innerhtml != null && email_taken) {
-			var email_in_use = tdg.error_message.message("m000193");
-			$('.validation-summary-errors')[0].innerHTML = email_in_use;
-
-			// popup msg
+		if (email_taken && email != "") {
 			var email = $("#Email")[0].value;
 			var filter = "statecode eq 0 and emailaddress1 eq '" + email + "'";
 			var data = tdg.webapi.list("contacts", filter);
-			var parentcustomerid = data[0]._parentcustomerid_value;
-			if (parentcustomerid != null) {
+
+			var data_with_parent = data.filter(a => a._parentcustomerid_value != null);
+			var data_with_no_parent = data.filter(a => a._parentcustomerid_value == null);
+
+			if (data_with_parent.length > 0) {
+				var parentcustomerid = data_with_parent[0]._parentcustomerid_value;
 				var filter = "accountid eq " + parentcustomerid;
 				var data = tdg.webapi.list("accounts", filter);
-				var customertypecode = data[0].customertypecode;
-				switch (customertypecode) {
-					case 948010000:
-						// parent
-						break;
-					case 948010001:
-						// site
+				var contactid = data_with_parent[0].contactid;
 
-						debugger;
+				// create invitation
+				var adx_invitation = '{' +
+					'"contactid": "' + contactid + '",' +
+					'"parentcustomerid": "' + parentcustomerid + '"' +
+					'}';
+				tdg.cid.flow.Call_Flow("Create_Adx_Invitation_for_existing_users_from_Login_page", adx_invitation);
 
-						var request = {};
-						request.ovs_Company = parentcustomerid;
-						//request.ovs_CreatedByExternalUser = data[0].contactid;
-						request.ovs_RequestType = "b4669233-8e4d-ee11-be6f-0022483d0c87";
-						request.ovs_requacestdetails = "Contact record already exists in CORE Data::Les données du contact existent dans le CORE";
-						request.ovs_priority = 2;
-						//tdg.cid.ovs_supportrequest_insert(request);
-
-						var msg = tdg.error_message.message("m000208");
-						tdg.c.dialog_OK(msg);
-						break;
-				}
+				// popup msg
+				var msg = tdg.error_message.message("m000213");
+				tdg.c.dialog_OK(msg);
 			}
+			else if (data_with_no_parent.length > 0) {
+				var contactid = data_with_no_parent[0].contactid;
+
+				// create support request
+				var RequestType = "b4669233-8e4d-ee11-be6f-0022483d0c87";
+				var requestdetails = "Contact record already exists in CORE Data::Les données du contact existent dans le CORE";
+				var priority = 2;
+				var request = '{' +
+					'"CreatedByExternalUser": "' + contactid + '",' +
+					'"RequestType": "' + RequestType + '",' +
+					'"requestdetails": "' + requestdetails + '",' +
+					'"priority": "' + priority + '"' +
+					'}';
+				tdg.cid.flow.Call_Flow("CID_Create_SupportRquest_OnDemand", request);
+
+				// popup msg
+				var msg = tdg.error_message.message("m000208");
+				tdg.c.dialog_OK(msg);
+			}
+			else {
+				var Innerhtml = $('.validation-summary-errors')[0].innerHTML;
+				var InnerText = $('.validation-summary-errors')[0].innerText;
+				var The_email = tdg.error_message.message("m000192");
+				var invalid_invitation = tdg.error_message.message("m000194");
+
+				var email_in_use = tdg.error_message.message("m000193");
+				$('.validation-summary-errors')[0].innerHTML = email_in_use;
+            }
 		}
 		else if (InnerText != null && InnerText == invalid_invitation) {
 			var invitation_expired = tdg.error_message.message("m000195");

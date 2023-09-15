@@ -13,7 +13,9 @@ $(document).ready(function () {
 	sessionStorage.setItem("selected_language", selected_language);
 	tdg.c.page_instructions("page_crw_company_edit");
 	var msg = tdg.error_message.message("BTN_PREVIOUS");
-	
+    if ($("#ovs_legalnamefr").length > 0){
+		$("#ovs_legalnamefr").attr("readonly", true);
+	}
 	$("#PreviousButton").hide();
 	tdg.c.button_create("btn_previous", "#PreviousButton", msg);
 	$("#btn_previous").bind("click", function () {

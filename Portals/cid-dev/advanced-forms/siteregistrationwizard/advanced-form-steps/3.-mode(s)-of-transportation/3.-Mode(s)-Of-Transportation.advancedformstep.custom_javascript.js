@@ -25,9 +25,34 @@ $(document).ready(function () {
 			$("#cid_modeoftransportationair").attr("disabled" , "disabled");
 			$("#cid_modeoftransportationmarine").attr("disabled" , "disabled");
 
+		} else if(
+		$("#cid_modeoftransportationroad").prop("checked") != true &&
+		$("#cid_modeoftransportationrail").prop("checked") !=  true &&
+		$("#cid_modeoftransportationair").prop("checked") != true &&
+		$("#cid_modeoftransportationmarine").prop("checked") != true)
+		{
+			$("#NextButton").prop("disabled" , true);
+		}
+		else
+		{
+			$("#NextButton").prop("disabled" , false);
 		}
 
+            $('#cid_modeoftransportationroad').change(function() {
+				Check_if_All_required_field_is_entered();
+			});
 
+			 $('#cid_modeoftransportationrail').change(function() {
+				Check_if_All_required_field_is_entered();
+			});
+
+			 $('#cid_modeoftransportationair').change(function() {
+				Check_if_All_required_field_is_entered();
+			});
+
+			 $('#cid_modeoftransportationmarine').change(function() {
+				Check_if_All_required_field_is_entered();
+			});
 
 
         if (urlParams.has('operationid')) {
@@ -46,6 +71,8 @@ $(document).ready(function () {
 				}
 
 				sessionStorage.setItem('to_actvt_stp', 'true');
+				//add * after the header
+				$("#EntityFormView > h2").append('<span style="color:red">*</span>');
 
 				//var message = tdg.error_message.message("BTN_PREVIOUS");
         }
@@ -199,10 +226,32 @@ if (window.jQuery) {
 			$("#cid_modeoftransportationrail").removeAttr("disabled");
 			$("#cid_modeoftransportationair").removeAttr("disabled");
 			$("#cid_modeoftransportationmarine").removeAttr("disabled");
+	
 
 
 		return true;
 			
 		}
 	}(window.jQuery));
+}
+
+function Check_if_All_required_field_is_entered ()
+{
+
+	if(
+		$("#cid_modeoftransportationroad").prop("checked") != true &&
+		$("#cid_modeoftransportationrail").prop("checked") !=  true &&
+		$("#cid_modeoftransportationair").prop("checked") != true &&
+		$("#cid_modeoftransportationmarine").prop("checked") != true)
+		{
+			$("#NextButton").prop("disabled" , true);
+
+
+
+		}
+		else
+		{
+			$("#NextButton").prop("disabled" , false);
+		}
+
 }

@@ -761,7 +761,8 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000098",
                         "message_en": "Your entered name and email account are already associated with an invitation tailored to you and your Organization. The invitation is being resent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
                         "message_fr": "Le nom et le compte de courriel saisis sont déjà associés à une invitation formulée pour vous et votre organisation. L’invitation vous sera retournée à cette adresse de courriel sous peu. Veuillez utiliser le lien figurant dans ce courriel pour être ajouté comme utilisateur du BDIC."
-                    }, {
+                    },
+                    {
                         "code": "m000099",
                         "message_en": "The Registration process is currently being processed by your Organization's Primary Contact. Until the Registration is complete, you will not be able to add or change any Organization level data. However, you will be able add Sites to your Organization and view the current state of the Registration.",
                         "message_fr": "Le processus d’inscription est actuellement en cours de traitement par la personne-ressource principale de votre organisation. Tant que l’inscription n’est pas terminée, vous ne pourrez pas ajouter ou modifier de données au niveau de l’organisation. Toutefois, vous pourrez ajouter des sites à votre organisation et voir l’état actuel de l’inscription."
@@ -1323,39 +1324,29 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "Connectez-vous avec votre compte Authenti - Canada EEAC."
                     },
                     {
-                        "code": "PRIV_STMT_ERR",
-                        "message_en": "You must agree to the Privacy Statement before you proceed with entering personal information.",
-                        "message_fr": "Vous devez accepter la déclaration de confidentialité avant de procéder à la saisie de renseignements personnels."
-                    },
-                    {
-                        "code": "PRIV_STMT1",
-                        "message_en": "I acknowledge that I have read and agree to the ",
-                        "message_fr": "Je reconnais avoir lu et accepte la "
-                    },
-                    {
-                        "code": "PRIV_STMT2",
-                        "message_en": "Privacy Statement",
-                        "message_fr": "Déclaration de confidentialité"
-                    },
-                    {
                         "code": "m000209",
                         "message_en": "The Email field is required.",
                         "message_fr": "Le champ de l'adresse de messagerie est obligatoire."
                     },
                     {
-                    "code": "m000210",
+                        "code": "m000210",
                         "message_en": "Confirm Email field is required.",
                         "message_fr": "Confirm Email field is required._FR"
                     },
                     {
-                    "code": "m000211",
+                        "code": "m000211",
                         "message_en": "The email addresses and the confirmation email address must match. Please confirm both email addresses are entered correctly.",
                         "message_fr": "The email addresses and the confirmation email address must match. Please confirm both email addresses are entered correctly._FR"
                     },
                     {
                         "code": "m000212",
                         "message_en": "Organization has a Canada Revenue Agency (CRA) Business Number?",
-                        "message_fr":"L’organisation détient-elle un numéro d’organisation de l’Agence du revenu du Canada (ARC)?"
+                        "message_fr": "L’organisation détient-elle un numéro d’organisation de l’Agence du revenu du Canada (ARC)?"
+                    },
+                    {
+                        "code": "m000213",
+                        "message_en": "The invitation is being sent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
+                        "message_fr": "L’invitation vous sera envoi à cette adresse de courriel sous peu. Veuillez utiliser le lien figurant dans ce courriel pour être ajouté comme utilisateur du BDIC."
                     }
                 ];
 

@@ -1370,13 +1370,23 @@ if (typeof (tdg.cid) == "undefined") {
     tdg.cid = {
         ovs_supportrequest_insert: function (data) {
             debugger;
-            var value = {
-                "ovs_Company@odata.bind": "/accounts(" + data.ovs_Company + ")",
-                "ovs_CreatedByExternalUser@odata.bind": "/contacts(" + data.ovs_CreatedByExternalUser + ")",
-                "ovs_RequestType@odata.bind": "/ovs_supportrequesttypes(" + data.ovs_RequestType + ")",
-                "ovs_requestdetails": data.ovs_requestdetails,
-                "ovs_priority": data.ovs_priority
-            };
+            if (data.ovs_Company != null) {
+                var value = {
+                    "ovs_Company@odata.bind": "/accounts(" + data.ovs_Company + ")",
+                    "ovs_CreatedByExternalUser@odata.bind": "/contacts(" + data.ovs_CreatedByExternalUser + ")",
+                    "ovs_RequestType@odata.bind": "/ovs_supportrequesttypes(" + data.ovs_RequestType + ")",
+                    "ovs_requestdetails": data.ovs_requestdetails,
+                    "ovs_priority": data.ovs_priority
+                };
+            }
+            else {
+                var value = {
+                    "ovs_CreatedByExternalUser@odata.bind": "/contacts(" + data.ovs_CreatedByExternalUser + ")",
+                    "ovs_RequestType@odata.bind": "/ovs_supportrequesttypes(" + data.ovs_RequestType + ")",
+                    "ovs_requestdetails": data.ovs_requestdetails,
+                    "ovs_priority": data.ovs_priority
+                };
+            }
             tdg.webapi.create("ovs_supportrequests", value);
         },
 
@@ -2708,16 +2718,15 @@ if (typeof (tdg.cid.crw) == "undefined") {
         Check_If_Confirmation_Dialog_Data_Iscomplete: function () {
 
             debugger;
-         
 
-          
+
+
             if (
-             $("#cid_legalname2").val() == null ||  $("#cid_legalname2").val() == "" ||
-             $("#cid_legalname_fr2").val() == null ||  $("#cid_legalname_fr2").val() == "" ||
-            $("#cid_operatingname2").val() == null || $("#cid_operatingname2").val()  == "" ||
-            $("#cid_operatingname_fr2").val() == null || $("#cid_operatingname_fr2").val() == ""
-            )
-            {
+                $("#cid_legalname2").val() == null || $("#cid_legalname2").val() == "" ||
+                $("#cid_legalname_fr2").val() == null || $("#cid_legalname_fr2").val() == "" ||
+                $("#cid_operatingname2").val() == null || $("#cid_operatingname2").val() == "" ||
+                $("#cid_operatingname_fr2").val() == null || $("#cid_operatingname_fr2").val() == ""
+            ) {
                 $("#btn_ok").prop('disabled', true);
 
             }
@@ -2745,18 +2754,18 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 }
 
             }
-                //check if CRA is required
+            //check if CRA is required
             else if ($("#hasCRABN :selected").val() == 1) {
-                if ($("#cid_crabusinessnumberpopup").val() == null || $("#cid_crabusinessnumberpopup").val()== "") {
+                if ($("#cid_crabusinessnumberpopup").val() == null || $("#cid_crabusinessnumberpopup").val() == "") {
                     $("#btn_ok").prop('disabled', true);
                 }
                 else {
-                   // $("#btn_ok").removeAttr("disabled");
+                    // $("#btn_ok").removeAttr("disabled");
                     $("#btn_ok").prop('disabled', false);
                 }
             }
 
-           // $("#btn_ok").attr("disabled", "disabled");
+            // $("#btn_ok").attr("disabled", "disabled");
         },
 
         Manage_Invitation_Confirmation_Form: function () {
@@ -2766,7 +2775,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#cid_reasonfornobnnumberpopup").hide();
             $("#cid_reasonfornobnnumberpopup_label").hide();
             $("#btn_ok").attr("disabled", "disabled");
-  
+
 
             $("#cid_reasonfornobnnumber_other_popup").hide();
             $("#cid_reasonfornobnnumber_other_popup_label").hide();
@@ -2797,7 +2806,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     $("#DivBN").hide();
                     $("#cid_reasonfornobnnumberpopup").show();
                     $("#cid_reasonfornobnnumberpopup_label").show();
-                    
+
 
                     $("#cid_crabusinessnumberpopup_label").hide();
                     $("#cid_crabusinessnumberpopup").hide();
@@ -2813,11 +2822,11 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     $("#cid_reasonfornobnnumberpopup_label").hide();
                     $("#cid_reasonfornobnnumber_other_popup").hide();
                     $("#cid_reasonfornobnnumber_other_popup_label").hide();
-                    
+
 
                     $("#cid_crabusinessnumberpopup_label").show();
                     $("#cid_crabusinessnumberpopup").show();
-                
+
 
                 }
                 //disabled and enable ok button based on data
@@ -2826,19 +2835,19 @@ if (typeof (tdg.cid.crw) == "undefined") {
             });
 
             $("#cid_reasonfornobnnumberpopup").change(function () {
-               
+
                 if ($("#cid_reasonfornobnnumberpopup :selected").val() == 3) {
                     $("#DivOther").show();
                     $("#cid_reasonfornobnnumber_other_popup").show();
                     $("#cid_reasonfornobnnumber_other_popup_label").show();
-                    
+
                 }
                 else {
                     $("#DivOther").hide();
                     $("#cid_reasonfornobnnumber_other_popup").hide();
                     $("#cid_reasonfornobnnumber_other_popup_label").hide();
-                    
-                    
+
+
 
                 }
                 //disabled and enable ok button based on data

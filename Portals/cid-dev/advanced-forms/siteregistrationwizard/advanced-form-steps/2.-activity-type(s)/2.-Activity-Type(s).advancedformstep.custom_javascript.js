@@ -22,6 +22,9 @@ $(document).ready(function () {
     var annualCompliance = sessionStorage.getItem('fromannualcompliance');
     var frominyearsitepage = sessionStorage.getItem('frominyearsitepage');
 
+    				//add * after the header
+				$("#EntityFormView > h2").append('<span style="color:red">*</span>');
+
     var urlParams = new URLSearchParams(window.location.search);
      if (urlParams.has('id')) {
 		var siteid = urlParams.get('id');

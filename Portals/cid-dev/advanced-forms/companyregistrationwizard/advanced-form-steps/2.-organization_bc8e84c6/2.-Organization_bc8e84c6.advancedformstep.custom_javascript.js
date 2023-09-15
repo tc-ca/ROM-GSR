@@ -23,6 +23,9 @@ $(document).ready(function () {
 	});
 	$("#btn_previous").hide();
 	$("#cid_registrationasof").parent().parent().hide();
+    if ($("#ovs_legalnamefr").length > 0){
+		$("#ovs_legalnamefr").attr("readonly", true);
+	}
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 	tdg.c.page_instructions("page_crw_company_insert");
