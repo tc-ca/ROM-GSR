@@ -493,6 +493,11 @@ if (typeof (tdg.message) == "undefined") {
                         "message_fr": "Mettre à jour un contact"
                     },
                     {
+                        "code": "Next",
+                        "message_en": "Next",
+                        "message_fr": "Suivant"
+                    },
+                    {
                         "code": "m000001",
                         "message_en": "Invalid CRA Business Number",
                         "message_fr": "Numéro l'organisation de l'ARC invalide"
@@ -1347,6 +1352,26 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000213",
                         "message_en": "The invitation is being sent and will appear at this email address shortly. Please use the link within that email to onboard onto CID.",
                         "message_fr": "L’invitation vous sera envoi à cette adresse de courriel sous peu. Veuillez utiliser le lien figurant dans ce courriel pour être ajouté comme utilisateur du BDIC."
+                    },
+                    {
+                        "code": "m000214",
+                        "message_en": "Register",
+                        "message_fr": "inscrire"
+                    },
+                    {
+                        "code": "PRIV_STMT_ERR",
+                        "message_en": "You must agree to the Privacy Statement before you proceed with entering personal information.",
+                        "message_fr": "Vous devez accepter la déclaration de confidentialité avant de procéder à la saisie de renseignements personnels."
+                    },
+                    {
+                        "code": "PRIV_STMT1",
+                        "message_en": "I acknowledge that I have read and agree to the ",
+                        "message_fr": "Je reconnais avoir lu et accepte la "
+                    },
+                    {
+                        "code": "PRIV_STMT2",
+                        "message_en": "Privacy Statement",
+                        "message_fr": "Déclaration de confidentialité"
                     }
                 ];
 

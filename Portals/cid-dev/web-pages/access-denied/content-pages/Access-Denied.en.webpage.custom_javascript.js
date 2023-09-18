@@ -5,7 +5,7 @@
 $(document).ready(function () {
 	debugger;
 
-	// page_setup();
+	page_setup();
 });
 
 function page_setup() {
@@ -31,6 +31,7 @@ function page_setup() {
 }
 debugger;
 page_setup();
+
 
 //Adding Confirm Email text box	
 //		var label = $('label[for="Email"]');
@@ -141,13 +142,22 @@ if (text == Register_external_account) {
 			var filter = "statecode eq 0 and emailaddress1 eq '" + email + "'";
 			var data = tdg.webapi.list("contacts", filter);
 
-			var data_with_parent = data.filter(a => a._parentcustomerid_value != null);
+			var list = data.filter(a => a._parentcustomerid_value != null);
+			const data_with_parent = [];
+			for (var i = 0; i < list.length; i++) {
+				var parentcustomerid = list[i]._parentcustomerid_value;
+				var filter = "accountid eq " + parentcustomerid + " and customertypecode eq 948010000";
+				var data = tdg.webapi.list("accounts", filter);
+				if (data.length > 0) {
+					data_with_parent.push(list[0]);
+					break;
+				}
+			}
+
 			var data_with_no_parent = data.filter(a => a._parentcustomerid_value == null);
 
 			if (data_with_parent.length > 0) {
 				var parentcustomerid = data_with_parent[0]._parentcustomerid_value;
-				var filter = "accountid eq " + parentcustomerid;
-				var data = tdg.webapi.list("accounts", filter);
 				var contactid = data_with_parent[0].contactid;
 
 				// create invitation
@@ -155,7 +165,7 @@ if (text == Register_external_account) {
 					'"contactid": "' + contactid + '",' +
 					'"parentcustomerid": "' + parentcustomerid + '"' +
 					'}';
-				tdg.cid.flow.Call_Flow("Create_Adx_Invitation_for_existing_users_from_Login_page", adx_invitation);
+				tdg.cid.flow.Call_Flow("CID_Create_Adx_Invitation_for_existing_users_from_Login_page", adx_invitation);
 
 				// popup msg
 				var msg = tdg.error_message.message("m000213");
@@ -188,7 +198,7 @@ if (text == Register_external_account) {
 
 				var email_in_use = tdg.error_message.message("m000193");
 				$('.validation-summary-errors')[0].innerHTML = email_in_use;
-            }
+			}
 		}
 		else if (InnerText != null && InnerText == invalid_invitation) {
 			var invitation_expired = tdg.error_message.message("m000195");
@@ -222,15 +232,17 @@ if (page_header == sign_up_invitation) {
 	}
 }
 try {
-	text = $(".btn.btn-primary:contains('Register')");
+	var registerLabel = tdg.error_message.message("m000214");
+	text = $(".btn.btn-primary:contains(" + registerLabel + ")");
 }
 catch (e) {
 	text = false;
 }
 if (text) {
 	debugger;
+	var registerLabel = tdg.error_message.message("m000214");
 	var cancelLabel = tdg.error_message.message("BTN_CANCEL");
-	$(".btn.btn-primary:contains('Register')").after("&nbsp; <input id='cancelButton' name='cancelButton' type='button' value='" + cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");
+	$(".btn.btn-primary:contains(" + registerLabel + ")").after("&nbsp; <input id='cancelButton' name='cancelButton' type='button' value='" + cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");
 	$('#cancelButton').click(function (e) {
 		window.location.href = '~/en/SignIn?returnUrl=%2Fen%2F';
 	});

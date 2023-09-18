@@ -102,6 +102,7 @@ $(document).ready(function () {
 			}
 		}
 	}
+	if ('{{user.cid_contacttype.Value}}' !=100000000 ) $("#WithdrawButton").remove();
 });
 
 if (window.jQuery) {
@@ -151,7 +152,7 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
 
 	//if not primary contact
-	if (cid_usercontacttype != 100000000) {
+	if (cid_usercontacttype != 100000000) {		
 		$(".create-action").attr("disabled", true);
 		$(".create-action").css("pointer-events", "none");
 		//Wait till subgrid load

@@ -1226,31 +1226,11 @@ if (typeof (tdg.error_message) == "undefined") {
             var value = code;
             var selected_language = sessionStorage.getItem("selected_language");
 
-            for (var index1 = 0; index1 < list.length; index1++) {
-                var item = list[index1];
-                if (item.code == code) {
-                    value = (this.is_english(selected_language) ? item.message_en : item.message_fr);
-                    break;
-                }
+            var item = list.filter(a => a.code == code)
+            if (item.length > 0) {
+                value = (this.is_english(selected_language) ? item[0].message_en : item[0].message_fr);
             }
             return value;
-
-            var list = sessionStorage.getItem(this.k_tdgcore_error_message);
-            if (list == "null") {
-                tdg.error_message.read_file();
-            }
-
-            // wait and retrieve list
-            var found = false;
-            do {
-                this.sleep(5);
-                debugger;
-                var list = sessionStorage.getItem(this.k_tdgcore_error_message);
-                if (list != "null") {
-                    found = true;
-                }
-            }
-            while (!found);
         },
 
         sleep: function (second) {
@@ -2876,7 +2856,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
             var filter = "ovs_legalname eq '" + legalname + "'";
             filter = filter.replaceAll("&", "%26");
-            legalnamefr = legalnamefr.replaceAll("&", "%26");
+            legalnamefr = legalnamefr = ("" + legalnamefr).replaceAll("&", "%26");
+                //legalnamefr.replaceAll("&", "%26");
             var account = tdg.c.WebApi_List("accounts", filter);
             account = account.filter(a => a.customertypecode == 948010000 && a.statecode == 0 && a.ovs_legalnamefr == legalnamefr);
             return account;
@@ -2899,6 +2880,10 @@ if (typeof (tdg.cid.crw) == "undefined") {
             var yes = tdg.error_message.message("Yes");
             var no = tdg.error_message.message("No");
             var hasCraMessag = tdg.error_message.message("m000212");
+            var CRA_BN = "" + data.cid_crabusinessnumber;
+            var Other_reason = "" + data.cid_reasonfornobnnumber_other;
+            if (Other_reason == null || Other_reason == "undefined")
+            {Other_reason = "" ;}
 
             data.cid_legalnameFR = (data.cid_legalnameFR == null ? "" : data.cid_legalnameFR);
             data.cid_operatingnameFr = (data.cid_operatingnameFr == null ? "" : data.cid_operatingnameFr);
@@ -2952,7 +2937,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                         <label for="cid_crabusinessnumberpopup" id="cid_crabusinessnumberpopup_label" class="field-label">${lbl_cra_bn}</label>
                         <span style="color: red">*</span>
                   </div>
-                  <input type="number" class="text form-control" onKeyPress="if(this.value.length==9) return false;"  id="cid_crabusinessnumberpopup" style="width:100%" value="">
+                  <input type="number" class="text form-control" onKeyPress="if(this.value.length==9) return false;"  id="cid_crabusinessnumberpopup" style="width:100%" value=${CRA_BN}>
 
                   <div id="DivReason">
                    <label for="cid_reasonfornobnnumberpopup" id="cid_reasonfornobnnumberpopup_label"  class="field-label">${lbl_reasonfornobnnumber}</label>
@@ -2966,7 +2951,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                       <label id="cid_reasonfornobnnumber_other_popup_label" for="cid_reasonfornobnnumber_other_popup" class="field-label">${lbl_reasonfornobnnumber_other}</label>
                        <span style="color: red">*</span>
                      </div>
-                    <input type="text"  class="text form-control" id="cid_reasonfornobnnumber_other_popup" style="width:100%" value="${data.cid_reasonfornobnnumber_other}">
+                    <input type="text"  class="text form-control" id="cid_reasonfornobnnumber_other_popup" style="width:100%" value="${Other_reason}">
 	                `;
 
 
