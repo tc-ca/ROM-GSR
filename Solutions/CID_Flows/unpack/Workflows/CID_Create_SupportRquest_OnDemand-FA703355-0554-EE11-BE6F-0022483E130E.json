@@ -1,0 +1,84 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "d15d99a7-b680-486c-a8ef-840459be5003"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "CreatedByExternalUser": {
+                  "type": "string"
+                },
+                "RequestType": {
+                  "type": "string"
+                },
+                "requestdetails": {
+                  "type": "string"
+                },
+                "priority": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "create_support_request": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "078c229a-486c-496e-ae0a-e6099db1f6b2"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_supportrequests",
+              "item/ovs_CreatedByExternalUser@odata.bind": "\\contacts\\@{triggerBody()?['CreatedByExternalUser']}",
+              "item/ovs_priority": "@triggerBody()?['priority']",
+              "item/ovs_requestdetails": "@triggerBody()?['requestdetails']",
+              "item/ovs_RequestType@odata.bind": "\\ovs_supportrequesttypes\\@{triggerBody()?['RequestType']}"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

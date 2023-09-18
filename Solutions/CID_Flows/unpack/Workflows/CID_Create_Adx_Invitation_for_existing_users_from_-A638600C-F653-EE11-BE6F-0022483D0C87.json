@@ -1,0 +1,863 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_commondataserviceforapps_3": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_office365": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedoffice365_ee685"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "d8c8dec4-b0e9-43f3-9e6c-dc1311410338"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "parentcustomerid": {
+                  "type": "string"
+                },
+                "contactid": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "contactid": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "fcd3af20-c1ca-45c0-a953-46097cdb8490"
+          },
+          "type": "Compose",
+          "inputs": "@triggerBody()?['contactid']"
+        },
+        "parentcustomerid": {
+          "runAfter": {
+            "contactid": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1bc67311-3f5b-4462-aa65-80cd9cb02990"
+          },
+          "type": "Compose",
+          "inputs": "@triggerBody()?['parentcustomerid']"
+        },
+        "Create_New_Invitation_Record": {
+          "runAfter": {
+            "Scope_-_email_Template_Standard_Text": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2a47fd97-f023-43a0-8e5f-efe1c5e8eeaa"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "adx_invitations",
+              "item/adx_name": "Invitation from portal - @{formatDateTime(utcNow(), 'yyyy-MM-dd')}",
+              "item/adx_type": 756150000,
+              "item/adx_assignToAccount@odata.bind": "accounts(@{triggerBody()?['parentcustomerid']})",
+              "item/adx_expirydate": "@addDays(utcNow(), 730, 'yyyy-MM-dd')",
+              "item/adx_inviteContact@odata.bind": "contacts(@{triggerBody()?['contactid']})",
+              "item/adx_maximumredemptions": 1,
+              "item/statuscode": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_variable_EnviromentSettings": {
+          "runAfter": {
+            "Initialize_Company_Name": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "39c00fef-8e3e-4b60-86f9-cde9473ba69a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "EnviromentSettings",
+                "type": "string",
+                "value": "Test email: "
+              }
+            ]
+          }
+        },
+        "Initialize_variable_Testing_text_for_the_email": {
+          "runAfter": {
+            "Initialize_variable_EnviromentSettings": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "056efd54-c348-4947-b42c-bab120c698de"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "TestingText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_FrenchTestSubjectText": {
+          "runAfter": {
+            "Initialize_variable_FrenchTesting_text_for_the_email": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "42321f2d-372c-4f1a-a435-a67ead702f1d"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FrenchTestSubjectText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_TestSubjectText": {
+          "runAfter": {
+            "Initialize_variable_FrenchTestSubjectText": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "36348f7e-e55f-43ac-b622-3f00ecbc9c53"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "TestSubjectText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_Invited_By": {
+          "runAfter": {
+            "Initialize_variable_TestSubjectText": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b2c50202-f741-4b6d-8ec9-88363f1989d3"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Invited By",
+                "type": "string",
+                "value": "The"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_varHyperLink": {
+          "runAfter": {
+            "Initialize_Invited_By": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5a9e445c-150f-45ce-95af-b66a99c28458"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varHyperLink",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_Portal_URL": {
+          "runAfter": {
+            "Initialize_variable_varHyperLink": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0991d2d7-ec46-48d4-b67d-eecee640a209"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "PortalURL",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "get-environment-settings": {
+          "runAfter": {
+            "Initialize_variable_Portal_URL": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7ed63b1d-9cf8-403e-9d9c-56cdd03f198e"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "qm_environmentsettingses",
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"qm_environmentsettings\">\n<attribute name=\"qm_environmentsettingsid\"/>\n<attribute name=\"qm_name\"/>\n<attribute name=\"qm_value\"/>\n<order attribute=\"qm_name\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"qm_name\" operator=\"like\" value=\"%CID[_]%\"/>\n</filter>\n</entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Filter_environment-CID__Email_Sender": {
+          "runAfter": {
+            "get-environment-settings": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('get-environment-settings')?['body/value']",
+            "where": "@equals(item()?['qm_name'], 'CID_Email_Sender')"
+          }
+        },
+        "Initialize_variable_CID_Email_Sender": {
+          "runAfter": {
+            "Filter_environment-CID__Email_Sender": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c068ea6c-92cb-411f-9c4a-2464a31e0468"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CID_Email_Sender",
+                "type": "string",
+                "value": "@{body('Filter_environment-CID__Email_Sender')[0]['qm_value']}"
+              }
+            ]
+          }
+        },
+        "Filter_environment-CID_PortalURL": {
+          "runAfter": {
+            "Initialize_variable_CID_Email_Sender": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('get-environment-settings')?['body/value']",
+            "where": "@equals(item()?['qm_name'], 'CID_PortalURL')"
+          }
+        },
+        "Set_Filter_environment-CID_PortalURL": {
+          "runAfter": {
+            "Filter_environment-CID_PortalURL": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b02c4818-27f3-4bce-8a54-5c6c12c7eb3c"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "PortalURL",
+            "value": "@{body('Filter_environment-CID_PortalURL')[0]['qm_value']}"
+          }
+        },
+        "Scope_-_email_Template_Standard_Text": {
+          "actions": {
+            "StandardSalutation": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "ffa8d1a6-89ec-434c-82e6-78e0fa2bd649"
+              },
+              "type": "Compose",
+              "inputs": "<em>*** The following is an automated email sent by the TDG Online - CID system. Please do not reply ***</em>"
+            },
+            "FrenchStandardSalutation": {
+              "runAfter": {
+                "StandardSalutation": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "ffa8d1a6-89ec-434c-82e6-78e0fa2bd649"
+              },
+              "type": "Compose",
+              "inputs": "<em>*** Le message suivant est un courriel automatisé envoyé par le TMD en ligne – Système de la BDIC. Veuillez ne pas répondre ***</em>"
+            },
+            "English-EmailFooter": {
+              "runAfter": {
+                "FrenchStandardSalutation": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1535933c-0d10-4db3-9d01-208feac8f786"
+              },
+              "type": "Compose",
+              "inputs": "<div style=\"font-size:x-small;\"><br>Note:<br>\n   - To receive subsequent emails in French, you can update your Language of Preferred Correspondence choice via the [Account Settings] button in the TDG Online - CID data portal. <br><br> \n   - Please do not reply to this email. If necessary, use the Contact Us button, or link, in the CID data portal. </div>"
+            },
+            "French-EmailFooter": {
+              "runAfter": {
+                "English-EmailFooter": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "5ec93fa4-a5e7-451e-9327-290b6c88346b"
+              },
+              "type": "Compose",
+              "inputs": "<div style=\"font-size:x-small;\">Remarque:<br>\n   - Pour recevoir les courriels suivants en français, vous pouvez mettre à jour votre choix de langue de correspondance préférée à l’aide du bouton [Paramètres du compte] du portail de données TMD en ligne – BDIC. <br><br> \n   - Veuillez ne pas répondre à ce courriel. Au besoin, utilisez le bouton ou le lien « Communiquer avec nous » du portail de données de la BDIC.  </div>"
+            },
+            "Filter_environment-CID_Environment": {
+              "runAfter": {
+                "French-EmailFooter": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('get-environment-settings')?['body/value']",
+                "where": "@equals(item()?['qm_name'], 'CID_Environment')"
+              }
+            }
+          },
+          "runAfter": {
+            "Set_Filter_environment-CID_PortalURL": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4a4d30e6-367a-4728-93d1-e8fc48567195"
+          },
+          "type": "Scope"
+        },
+        "Check_environment": {
+          "actions": {
+            "Set_variable_TestingText": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "224fc033-5e58-423f-b235-e84df25189ec"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "TestingText",
+                "value": "Test email: This email is a test email, not an actual email representing what is indicated below. <br><br>                                                                                 "
+              }
+            },
+            "Set_variable_TestSubjectText": {
+              "runAfter": {
+                "Set_variable_TestingText": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7a6742f2-3215-413a-9225-11fd2574acab"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "TestSubjectText",
+                "value": "Test Email: "
+              }
+            },
+            "Set_variable_FrenchTestSubjectText": {
+              "runAfter": {
+                "Set_variable_TestSubjectText": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a71a8d8c-41f7-4d8b-9136-19ddffd73280"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "FrenchTestSubjectText",
+                "value": "Tester le courriel:"
+              }
+            },
+            "Set_variable_FrenchTestingText": {
+              "runAfter": {
+                "Set_variable_FrenchTestSubjectText": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e2edab0d-d0a2-4152-8fae-2b793ec012aa"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "FrenchTestingText",
+                "value": "Tester le courriel: Ce courriel est un courriel de test, et non un courriel réel représentant ce qui est indiqué ci-dessous. <br><br>                                                                     "
+              }
+            }
+          },
+          "runAfter": {
+            "Set_Variable_Assigned_Company": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "not": {
+              "equals": [
+                "@body('Filter_environment-CID_Environment')[0]['qm_value']",
+                "PROD"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "9be99f10-fa00-40ae-8580-da6ba08c2e07"
+          },
+          "type": "If"
+        },
+        "Get_primary_contact_of_the_Organization": {
+          "runAfter": {
+            "Check_environment": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f9291997-adce-47be-8272-80044258d785"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_3",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "contacts",
+              "$select": "fullname",
+              "fetchXml": "<fetch top=\"50\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <filter>\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" value=\"@{outputs('Create_New_Invitation_Record')?['body/_adx_assigntoaccount_value']}\"/>\n      <condition attribute=\"cid_contacttype\" operator=\"eq\" value=\"100000000\" />\n    </filter>\n  </entity>\n</fetch>",
+              "$top": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Set_variable_Invited_By": {
+          "runAfter": {
+            "Get_primary_contact_of_the_Organization": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a69640fd-9cc4-4567-a92c-174bc53bc2a5"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "Invited By",
+            "value": "@{first(outputs('Get_primary_contact_of_the_Organization')?['body/value'])?['fullname']}"
+          }
+        },
+        "Get_a_row_by_ID_Invitation_Receiver": {
+          "runAfter": {
+            "Set_variable_Invited_By": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d6c04832-8bde-40c2-87a0-2180030e9282"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "contacts",
+              "recordId": "@outputs('Create_New_Invitation_Record')?['body/_adx_invitecontact_value']",
+              "$select": "fullname, emailaddress1,cid_languageofcorrespondence"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Parse_JSON": {
+          "runAfter": {
+            "Get_a_row_by_ID_Invitation_Receiver": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "50651aa9-0486-4137-bd86-402688bf5e7e"
+          },
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@body('Get_a_row_by_ID_Invitation_Receiver')",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "@@odata.id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "Set_Environment_variable": {
+          "runAfter": {
+            "Parse_JSON": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a69640fd-9cc4-4567-a92c-174bc53bc2a5"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "Environment",
+            "value": "@{substring(body('Parse_JSON')?['@odata.id'], 0, indexOf(body('Parse_JSON')?['@odata.id'], '.crm3'))}"
+          }
+        },
+        "Set_variable_varHyperLink_": {
+          "runAfter": {
+            "Set_Environment_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4e206445-bca6-41c7-8633-6a07e8487551"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "varHyperLink",
+            "value": "@{variables('Environment')}@{triggerOutputs()?['body/adx_invitationcode']}"
+          }
+        },
+        "Initialize_variable_FrenchTesting_text_for_the_email": {
+          "runAfter": {
+            "Initialize_variable_Testing_text_for_the_email": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6b11f2fb-0032-45f1-83c0-6af6ad4db3b3"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "FrenchTestingText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_Variable_Environment": {
+          "runAfter": {
+            "parentcustomerid": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "002d5ade-2d11-46a5-81d6-6bc06374f13b"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Environment",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Check_Language_and_send_email_": {
+          "actions": {
+            "Set_variable_varHyperLink__2": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "4e206445-bca6-41c7-8633-6a07e8487551"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "varHyperLink",
+                "value": "@{variables('PortalURL')}/fr/Account/Login/Register?returnUrl=%2Fen%2F&invitationCode=@{outputs('Create_New_Invitation_Record')?['body/adx_invitationcode']}"
+              }
+            },
+            "Send_email_notification_(V3)_-French": {
+              "runAfter": {
+                "Set_variable_varHyperLink__2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "cfc8d355-3dc8-4e9e-bb8a-31d1950791f4"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_office365",
+                  "operationId": "SendEmailV2",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                },
+                "parameters": {
+                  "emailMessage/To": "@outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/emailaddress1']",
+                  "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Affectation en tant que contact secondaire pour l’organisation @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalnamefr']}.",
+                  "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n</p>\n<p>Ce courriel est une invitation à vous inscrire @{variables('Company Name')} dans la base de données d'identification des clients (BDIC) de Transports Canada. Pour enregistrer votre organisation, veuillez sélectionner ou copier et coller le lien suivant dans votre navigateur :<br>\n<br>\n<a href=\"@{variables('varHyperLink')}>@{variables('varHyperLink')}</a><br>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de courrier électronique. &nbsp;Si vous n'êtes pas la personne qui doit enregistrer cette organisation, veuillez l'indiquer en répondant à <a href=\"mailto:tc.tdgengagement-engagementtmd.tc@tc.gc.ca\">tc.tdgengagement-engagementtmd.tc@tc.gc.ca</a> . Si vous connaissez le nom et l'adresse électronique de la personne qui devrait enregistrer cette organisation, veuillez également fournir ces informations.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada</p>",
+                  "emailMessage/From": "@variables('CID_Email_Sender')",
+                  "emailMessage/Importance": "Normal"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "Set_variable_varHyperLink_": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Set_variable_varHyperLink__3": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "4e206445-bca6-41c7-8633-6a07e8487551"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "varHyperLink",
+                  "value": "@{variables('PortalURL')}/en/Account/Login/Register?returnUrl=%2Fen%2F&invitationCode=@{outputs('Create_New_Invitation_Record')?['body/adx_invitationcode']}"
+                }
+              },
+              "Send_email_notification_(V3)_-English": {
+                "runAfter": {
+                  "Set_variable_varHyperLink__3": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "85028265-16bf-465d-80ef-3cee5fd0c9f2"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_office365",
+                    "operationId": "SendEmailV2",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                  },
+                  "parameters": {
+                    "emailMessage/To": "@outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/emailaddress1']",
+                    "emailMessage/Subject": "@{variables('TestSubjectText')} TDG Online - CID: Invitation to register @{variables('Company Name')} in the TDG Client Identification Database (CID)",
+                    "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n</p>\n<p>This email is an invitation for you to register @{variables('Company Name')} in Transport Canada’s Client Identification Database (CID). To register your organization, please select or copy and paste the following link into your browser:<br>\n<br>\n<a href=\"@{variables('varHyperLink')}>@{variables('varHyperLink')}</a><br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to <a href=\"mailto:tc.tdgengagement-engagementtmd.tc@tc.gc.ca\">tc.tdgengagement-engagementtmd.tc@tc.gc.ca</a>. If you know the name and email address of the individual who should register this organization, then please provide this information as well.<br>\n<br>\nRegards<br>\n<br>\n<br>\nTransport Canada TDG CID Support Team</p>",
+                    "emailMessage/From": "@variables('CID_Email_Sender')",
+                    "emailMessage/Importance": "Normal"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/cid_languageofcorrespondence']",
+              918640002
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d1f56c7c-3617-4128-acdd-287b00b852b1"
+          },
+          "type": "If"
+        },
+        "Get_a_row_by_ID_Accounts": {
+          "runAfter": {
+            "Create_New_Invitation_Record": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2dd83585-2c35-458b-94ff-9782ce5e36ec"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "accounts",
+              "recordId": "@outputs('Create_New_Invitation_Record')?['body/_adx_assigntoaccount_value']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Set_Variable_Assigned_Company": {
+          "runAfter": {
+            "Get_a_row_by_ID_Accounts": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "19e797ac-e1a0-49d1-bf45-0f580ddf071c"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "Company Name",
+            "value": "@outputs('Get_a_row_by_ID_Accounts')?['body/name']"
+          }
+        },
+        "Initialize_Company_Name": {
+          "runAfter": {
+            "Initialize_Variable_Environment": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "351c7aa7-3319-433b-8cff-7d22f3fffc2e"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Company Name",
+                "type": "string",
+                "value": "associated"
+              }
+            ]
+          }
+        },
+        "check_if_company_is_not_claim": {
+          "actions": {
+            "Update_parent_company_status_and_invitation_flag": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "15614dfa-41d1-4688-9503-2ad7d02a91b2"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "recordId": "@triggerBody()?['parentcustomerid']",
+                  "item/ovs_invitation_only": true,
+                  "item/cid_cidcompanystatus": 100000004
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "Check_Language_and_send_email_": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "or": [
+              {
+                "equals": [
+                  "@outputs('Get_a_row_by_ID_Accounts')?['body/cid_cidcompanystatus']",
+                  "@null"
+                ]
+              },
+              {
+                "equals": [
+                  "@outputs('Get_a_row_by_ID_Accounts')?['body/cid_cidcompanystatus']",
+                  -1
+                ]
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ce7c0b25-1f4e-4715-8611-0e11e8757571"
+          },
+          "type": "If"
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
