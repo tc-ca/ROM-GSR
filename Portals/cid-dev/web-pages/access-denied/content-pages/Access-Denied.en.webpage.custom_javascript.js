@@ -159,9 +159,10 @@ if (text == Register_external_account) {
 			if (data_with_parent.length > 0) {
 				var parentcustomerid = data_with_parent[0]._parentcustomerid_value;
 				var contactid = data_with_parent[0].contactid;
-
+				var langid = '{{website.selected_language.code}}';
 				// create invitation
 				var adx_invitation = '{' +
+					'"langid": "' + langid + '",' +
 					'"contactid": "' + contactid + '",' +
 					'"parentcustomerid": "' + parentcustomerid + '"' +
 					'}';

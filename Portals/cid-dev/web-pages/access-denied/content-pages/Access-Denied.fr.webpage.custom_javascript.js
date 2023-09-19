@@ -159,9 +159,10 @@ if (text == Register_external_account) {
 			if (data_with_parent.length > 0) {
 				var parentcustomerid = data_with_parent[0]._parentcustomerid_value;
 				var contactid = data_with_parent[0].contactid;
-
+				var langid = '{{website.selected_language.code}}';
 				// create invitation
 				var adx_invitation = '{' +
+					'"langid": "' + langid + '",' +
 					'"contactid": "' + contactid + '",' +
 					'"parentcustomerid": "' + parentcustomerid + '"' +
 					'}';
@@ -240,9 +241,9 @@ catch (e) {
 }
 if (text) {
 	debugger;
-	var cancelLabel = tdg.error_message.message("BTN_CANCEL");
 	var registerLabel = tdg.error_message.message("m000214");
-	$(".btn.btn-primary:contains("+ registerLabel +")").after("&nbsp; <input id='cancelButton' name='cancelButton' type='button' value='" + cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");
+	var cancelLabel = tdg.error_message.message("BTN_CANCEL");
+	$(".btn.btn-primary:contains(" + registerLabel + ")").after("&nbsp; <input id='cancelButton' name='cancelButton' type='button' value='" + cancelLabel + "' class='btn btn-default button previous previous-btn' nonactionlinkbutton='true'>");
 	$('#cancelButton').click(function (e) {
 		window.location.href = '~/en/SignIn?returnUrl=%2Fen%2F';
 	});

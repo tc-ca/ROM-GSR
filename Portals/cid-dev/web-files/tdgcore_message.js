@@ -1231,7 +1231,7 @@ if (typeof (tdg.message) == "undefined") {
                     {
                         "code": "m000191",
                         "message_en": "Register your external account",
-                        "message_fr": "Enregistrez votre compte externe"
+                        "message_fr": "Inscrire votre compte externe"
                     },
                     {
                         "code": "m000192",
