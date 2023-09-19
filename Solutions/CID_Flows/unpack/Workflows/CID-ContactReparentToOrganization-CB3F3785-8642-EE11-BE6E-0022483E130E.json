@@ -251,15 +251,23 @@
                 "or": [
                   {
                     "equals": [
-                      "@triggerOutputs()?['body/adx_createdbyusername']",
+                      "@triggerOutputs()?['body/cid_portalrecordcreationdetails']",
                       "@null"
                     ]
                   },
                   {
                     "equals": [
-                      "@empty(triggerOutputs()?['body/adx_createdbyusername'])",
+                      "@empty(triggerOutputs()?['body/cid_portalrecordcreationdetails'])",
                       "@true"
                     ]
+                  },
+                  {
+                    "not": {
+                      "equals": [
+                        "@triggerOutputs()?['body/cid_contacttype']",
+                        100000000
+                      ]
+                    }
                   }
                 ]
               }

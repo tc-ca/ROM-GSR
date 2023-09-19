@@ -67,6 +67,9 @@
                 },
                 "contactid": {
                   "type": "string"
+                },
+                "langid": {
+                  "type": "string"
                 }
               }
             }
@@ -632,7 +635,7 @@
         },
         "Initialize_Variable_Environment": {
           "runAfter": {
-            "parentcustomerid": [
+            "langid": [
               "Succeeded"
             ]
           },
@@ -681,7 +684,7 @@
                 "parameters": {
                   "emailMessage/To": "@outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/emailaddress1']",
                   "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Affectation en tant que contact secondaire pour l’organisation @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalnamefr']}.",
-                  "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n</p>\n<p>Ce courriel est une invitation à vous inscrire @{variables('Company Name')} dans la base de données d'identification des clients (BDIC) de Transports Canada. Pour enregistrer votre organisation, veuillez sélectionner ou copier et coller le lien suivant dans votre navigateur :<br>\n<br>\n<a href=\"@{variables('varHyperLink')}>@{variables('varHyperLink')}</a><br>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de courrier électronique. &nbsp;Si vous n'êtes pas la personne qui doit enregistrer cette organisation, veuillez l'indiquer en répondant à <a href=\"mailto:tc.tdgengagement-engagementtmd.tc@tc.gc.ca\">tc.tdgengagement-engagementtmd.tc@tc.gc.ca</a> . Si vous connaissez le nom et l'adresse électronique de la personne qui devrait enregistrer cette organisation, veuillez également fournir ces informations.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada</p>",
+                  "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/fullname']}</p>\n<p>Pour enregistrer votre compte personnel dans la Base de données d’identification des clients (BDIC) de Transports Canada, veuillez sélectionner ou copier-coller le lien suivant dans votre navigateur :<br>\n<br>\n<a href=\"@{variables('varHyperLink')}\">@{variables('varHyperLink')}</a><br>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous, en tant que propriétaire du compte de l’addresse courriel. &nbsp;Si vous n’êtes pas la personne qui doit enregistrer ce profil d’utilisateur, veuillez l’indiquer par le biais d’une réponse à <a href=\"mailto:TDGCID-BDICTMD@tc.gc.ca\">TDGCID-BDICTMD@tc.gc.ca</a>. <br>\n<br>\nCordialement,<br>\n<br>\nTransports Canada - Équipe de soutien de la BDIC<br>\n</p>",
                   "emailMessage/From": "@variables('CID_Email_Sender')",
                   "emailMessage/Importance": "Normal"
                 },
@@ -726,7 +729,7 @@
                   "parameters": {
                     "emailMessage/To": "@outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/emailaddress1']",
                     "emailMessage/Subject": "@{variables('TestSubjectText')} TDG Online - CID: Invitation to register @{variables('Company Name')} in the TDG Client Identification Database (CID)",
-                    "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n</p>\n<p>This email is an invitation for you to register @{variables('Company Name')} in Transport Canada’s Client Identification Database (CID). To register your organization, please select or copy and paste the following link into your browser:<br>\n<br>\n<a href=\"@{variables('varHyperLink')}>@{variables('varHyperLink')}</a><br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to <a href=\"mailto:tc.tdgengagement-engagementtmd.tc@tc.gc.ca\">tc.tdgengagement-engagementtmd.tc@tc.gc.ca</a>. If you know the name and email address of the individual who should register this organization, then please provide this information as well.<br>\n<br>\nRegards<br>\n<br>\n<br>\nTransport Canada TDG CID Support Team</p>",
+                    "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/fullname']}</p>\n<p>To register your account in Transport Canada’s Client Identification Database (CID), please select or copy and paste the following link into your browser:<br>\n<br>\n<a href=\"@{variables('varHyperLink')}\">@{variables('varHyperLink')}</a><br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this user profile, then please indicate this via a reply to <a href=\"mailto:TDGCID-BDICTMD@tc.gc.ca\">TDGCID-BDICTMD@tc.gc.ca</a> . <br>\n<br>\nRegards<br>\n<br>\n<br>\nTransport Canada TDG CID Support Team</p>",
                     "emailMessage/From": "@variables('CID_Email_Sender')",
                     "emailMessage/Importance": "Normal"
                   },
@@ -737,8 +740,8 @@
           },
           "expression": {
             "equals": [
-              "@outputs('Get_a_row_by_ID_Invitation_Receiver')?['body/cid_languageofcorrespondence']",
-              918640002
+              "@triggerBody()?['langid']",
+              "fr"
             ]
           },
           "metadata": {
@@ -853,6 +856,18 @@
             "operationMetadataId": "ce7c0b25-1f4e-4715-8611-0e11e8757571"
           },
           "type": "If"
+        },
+        "langid": {
+          "runAfter": {
+            "parentcustomerid": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "58e6e491-3439-45a0-aa77-05c3d79edaed"
+          },
+          "type": "Compose",
+          "inputs": "@triggerBody()?['langid']"
         }
       },
       "outputs": {}
