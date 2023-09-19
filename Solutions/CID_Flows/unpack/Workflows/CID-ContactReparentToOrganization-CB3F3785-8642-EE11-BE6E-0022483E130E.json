@@ -27,7 +27,7 @@
       "triggers": {
         "When_a_row_is_added,_modified_or_deleted": {
           "metadata": {
-            "operationMetadataId": "aa54ded2-c219-4512-a74f-d4686e85db33"
+            "operationMetadataId": "f193d6e3-b98e-412d-a422-872bde490efd"
           },
           "type": "OpenApiConnectionWebhook",
           "inputs": {
@@ -63,7 +63,7 @@
                 },
                 "parameters": {
                   "entityName": "accounts",
-                  "recordId": "@triggerOutputs()?['body/_parentcustomerid_value']",
+                  "recordId": "@triggerOutputs()?['body/_accountid_value']",
                   "$select": "customertypecode,_parentaccountid_value,cid_companyclaim",
                   "$expand": "parentaccountid($select=cid_companyclaim,customertypecode)"
                 },
@@ -232,23 +232,27 @@
           },
           "runAfter": {},
           "expression": {
-            "and": [
+            "or": [
               {
-                "not": {
-                  "equals": [
-                    "@triggerOutputs()?['body/_parentcustomerid_value']",
-                    "@null"
-                  ]
-                }
-              },
-              {
-                "equals": [
-                  "@empty(triggerOutputs()?['body/_parentcustomerid_value'])",
-                  "@false"
+                "and": [
+                  {
+                    "not": {
+                      "equals": [
+                        "@triggerOutputs()?['body/_parentcustomerid_value']",
+                        "@null"
+                      ]
+                    }
+                  },
+                  {
+                    "equals": [
+                      "@empty(triggerOutputs()?['body/_parentcustomerid_value'])",
+                      "@false"
+                    ]
+                  }
                 ]
               },
               {
-                "or": [
+                "and": [
                   {
                     "equals": [
                       "@triggerOutputs()?['body/cid_portalrecordcreationdetails']",
@@ -260,14 +264,6 @@
                       "@empty(triggerOutputs()?['body/cid_portalrecordcreationdetails'])",
                       "@true"
                     ]
-                  },
-                  {
-                    "not": {
-                      "equals": [
-                        "@triggerOutputs()?['body/cid_contacttype']",
-                        100000000
-                      ]
-                    }
                   }
                 ]
               }
