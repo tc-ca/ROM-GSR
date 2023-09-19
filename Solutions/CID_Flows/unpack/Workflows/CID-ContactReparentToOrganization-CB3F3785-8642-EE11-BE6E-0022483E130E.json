@@ -2,6 +2,7 @@
   "properties": {
     "connectionReferences": {
       "shared_commondataserviceforapps": {
+        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
@@ -32,15 +33,16 @@
           "type": "OpenApiConnectionWebhook",
           "inputs": {
             "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps",
-              "operationId": "SubscribeWebhookTrigger",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              "operationId": "SubscribeWebhookTrigger"
             },
             "parameters": {
               "subscriptionRequest/message": 1,
               "subscriptionRequest/entityname": "contact",
               "subscriptionRequest/scope": 4,
-              "subscriptionRequest/runas": 3
+              "subscriptionRequest/runas": 3,
+              "subscriptionRequest/name": "cb3f3785-8642-ee11-be6e-0022483e130e"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -57,13 +59,13 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps",
-                  "operationId": "GetItem",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  "operationId": "GetItem"
                 },
                 "parameters": {
                   "entityName": "accounts",
-                  "recordId": "@triggerOutputs()?['body/_accountid_value']",
+                  "recordId": "@triggerOutputs()?['body/_parentcustomerid_value']",
                   "$select": "customertypecode,_parentaccountid_value,cid_companyclaim",
                   "$expand": "parentaccountid($select=cid_companyclaim,customertypecode)"
                 },
@@ -82,9 +84,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                           "connectionName": "shared_commondataserviceforapps",
-                          "operationId": "UpdateRecord",
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                          "operationId": "UpdateRecord"
                         },
                         "parameters": {
                           "entityName": "contacts",
@@ -106,9 +108,9 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                             "connectionName": "shared_commondataserviceforapps",
-                            "operationId": "UpdateRecord",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            "operationId": "UpdateRecord"
                           },
                           "parameters": {
                             "entityName": "contacts",
@@ -149,9 +151,9 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                             "connectionName": "shared_commondataserviceforapps",
-                            "operationId": "UpdateRecord",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            "operationId": "UpdateRecord"
                           },
                           "parameters": {
                             "entityName": "contacts",
@@ -234,37 +236,17 @@
           "expression": {
             "or": [
               {
-                "and": [
-                  {
-                    "not": {
-                      "equals": [
-                        "@triggerOutputs()?['body/_parentcustomerid_value']",
-                        "@null"
-                      ]
-                    }
-                  },
-                  {
-                    "equals": [
-                      "@empty(triggerOutputs()?['body/_parentcustomerid_value'])",
-                      "@false"
-                    ]
-                  }
-                ]
+                "not": {
+                  "equals": [
+                    "@triggerOutputs()?['body/_parentcustomerid_value']",
+                    "@null"
+                  ]
+                }
               },
               {
-                "and": [
-                  {
-                    "equals": [
-                      "@triggerOutputs()?['body/cid_portalrecordcreationdetails']",
-                      "@null"
-                    ]
-                  },
-                  {
-                    "equals": [
-                      "@empty(triggerOutputs()?['body/cid_portalrecordcreationdetails'])",
-                      "@true"
-                    ]
-                  }
+                "equals": [
+                  "@triggerOutputs()?['body/_cid_createdbyregistrant_value']",
+                  "@null"
                 ]
               }
             ]
@@ -276,7 +258,7 @@
         }
       }
     },
-    "templateName": ""
+    "templateName": null
   },
   "schemaVersion": "1.0.0.0"
 }
