@@ -2,7 +2,6 @@
   "properties": {
     "connectionReferences": {
       "shared_commondataserviceforapps": {
-        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
@@ -33,16 +32,15 @@
           "type": "OpenApiConnectionWebhook",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps",
-              "operationId": "SubscribeWebhookTrigger"
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "subscriptionRequest/message": 1,
               "subscriptionRequest/entityname": "contact",
               "subscriptionRequest/scope": 4,
-              "subscriptionRequest/runas": 3,
-              "subscriptionRequest/name": "cb3f3785-8642-ee11-be6e-0022483e130e"
+              "subscriptionRequest/runas": 3
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -59,9 +57,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                   "connectionName": "shared_commondataserviceforapps",
-                  "operationId": "GetItem"
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
                   "entityName": "accounts",
@@ -84,9 +82,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                           "connectionName": "shared_commondataserviceforapps",
-                          "operationId": "UpdateRecord"
+                          "operationId": "UpdateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                         },
                         "parameters": {
                           "entityName": "contacts",
@@ -108,9 +106,9 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                             "connectionName": "shared_commondataserviceforapps",
-                            "operationId": "UpdateRecord"
+                            "operationId": "UpdateRecord",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                           },
                           "parameters": {
                             "entityName": "contacts",
@@ -151,9 +149,9 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                             "connectionName": "shared_commondataserviceforapps",
-                            "operationId": "UpdateRecord"
+                            "operationId": "UpdateRecord",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                           },
                           "parameters": {
                             "entityName": "contacts",
@@ -234,7 +232,7 @@
           },
           "runAfter": {},
           "expression": {
-            "or": [
+            "and": [
               {
                 "not": {
                   "equals": [
@@ -258,7 +256,7 @@
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
