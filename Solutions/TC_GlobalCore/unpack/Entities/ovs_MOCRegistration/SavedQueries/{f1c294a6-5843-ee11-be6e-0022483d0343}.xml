@@ -6,7 +6,7 @@
     <isquickfindquery>0</isquickfindquery>
     <isprivate>0</isprivate>
     <isdefault>0</isdefault>
-    <savedqueryid>{264f8095-3cfd-ec11-82e6-000d3a848097}</savedqueryid>
+    <savedqueryid>{f1c294a6-5843-ee11-be6e-0022483d0343}</savedqueryid>
     <layoutxml>
       <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
         <row name="result" id="ovs_mocregistrationid">
@@ -19,30 +19,25 @@
     </layoutxml>
     <querytype>0</querytype>
     <fetchxml>
-      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
         <entity name="ovs_mocregistration">
-          <attribute name="ovs_mocregistrationid" />
           <attribute name="cid_modeoftransportationair" />
           <attribute name="cid_modeoftransportationmarine" />
           <attribute name="cid_modeoftransportationrail" />
           <attribute name="cid_modeoftransportationroad" />
           <filter type="and">
-            <condition attribute="ovs_operationtype" operator="in">
-              <value>918640038</value>
-              <value>918640042</value>
-            </condition>
             <filter type="or">
-              <condition attribute="cid_createdbyregistrant" operator="not-null" />
-              <condition attribute="cid_modifiedbyregistrant" operator="not-null" />
+              <condition attribute="ovs_operationtype" operator="eq" value="918640038" />
+              <condition attribute="ovs_operationtype" operator="eq" value="918640042" />
             </filter>
           </filter>
+          <attribute name="ovs_mocregistrationid" />
         </entity>
       </fetch>
     </fetchxml>
     <IntroducedVersion>1.0.0.0</IntroducedVersion>
     <LocalizedNames>
-      <LocalizedName description="CID Portal - Modes of Transportation" languagecode="1033" />
-      <LocalizedName description="CID Portal - Modes Of Transportation_FR" languagecode="1036" />
+      <LocalizedName description="CID Site - Modes of Transportation" languagecode="1033" />
     </LocalizedNames>
   </savedquery>
 </savedqueries>

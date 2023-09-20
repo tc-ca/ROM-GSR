@@ -6,7 +6,7 @@
     <isquickfindquery>0</isquickfindquery>
     <isprivate>0</isprivate>
     <isdefault>0</isdefault>
-    <savedqueryid>{96b22408-c97b-ec11-8d20-000d3aff1221}</savedqueryid>
+    <savedqueryid>{afff1903-5943-ee11-be6e-0022483d0343}</savedqueryid>
     <layoutxml>
       <grid name="resultset" jump="ovs_name" select="1" preview="1" icon="1">
         <row name="result" id="ovs_operationclassid">
@@ -27,17 +27,14 @@
           <order attribute="ovs_compatibility_group" descending="false" />
           <filter type="and">
             <condition attribute="statuscode" operator="eq" value="1" />
+            <condition attribute="cid_createdbyregistrant" operator="not-null" />
           </filter>
-          <link-entity name="ovs_mocregistration" from="ovs_mocregistrationid" to="ovs_operationclass" link-type="inner" alias="aa">
+          <link-entity name="ovs_mocregistration" from="ovs_mocregistrationid" to="ovs_operationclass" alias="aa">
             <filter type="and">
               <condition attribute="ovs_operationtype" operator="in">
                 <value>918640038</value>
                 <value>918640042</value>
               </condition>
-              <filter type="or">
-                <condition attribute="cid_modifiedbyregistrant" operator="not-null" />
-                <condition attribute="cid_createdbyregistrant" operator="not-null" />
-              </filter>
             </filter>
           </link-entity>
           <attribute name="ovs_operationclassid" />
@@ -46,8 +43,7 @@
     </fetchxml>
     <IntroducedVersion>1.0.0.0</IntroducedVersion>
     <LocalizedNames>
-      <LocalizedName description="CID Portal - Class" languagecode="1033" />
-      <LocalizedName description="Portail BDIC - Classes" languagecode="1036" />
+      <LocalizedName description="CID Site - Class" languagecode="1033" />
     </LocalizedNames>
   </savedquery>
 </savedqueries>

@@ -6,6 +6,40 @@ function ResendInvitation(ContactId) {
     Call_Flow("CID_Send_Portal_Contact_Invitations", data);
 }
 
+function SendInvitationByContactId(ContactId) {
+    debugger;
+    Xrm.WebApi.online.retrieveMultipleRecords("cid_invitation", "?$select=cid_invitationid&$filter=_cid_invitedcontact_value eq '" + ContactId + "'").then(
+        function success(results) {
+            console.log(results);
+            if (results != null && results.entities.length > 0) {
+                var result = [results.entities[0]["cid_invitationid"]];
+                ResendInvitationByInvitationId(result);
+            }
+			else
+			{
+				var confirmStrings = { text: "Can not find associated valid invitation record", title: "No Invitation Record Found" };
+				Xrm.Navigation.openConfirmDialog(confirmStrings, null).then(
+                function (success) {
+                    if (success.confirmed)
+                        console.log("OK");
+                    else
+                        console.log("Not OK");
+                });
+			}
+        },
+        function (error) {
+            var confirmStrings = { text: "Can not find associated valid invitation record", title: "Error" + error };
+            Xrm.Navigation.openConfirmDialog(confirmStrings, null).then(
+                function (success) {
+                    if (success.confirmed)
+                        console.log("OK");
+                    else
+                        console.log("Not OK");
+                });
+        });
+}
+
+
 function ResendInvitationByInvitationId(InvitationIds) {
     debugger;
     var invitationList;
@@ -13,7 +47,7 @@ function ResendInvitationByInvitationId(InvitationIds) {
 
     //Confirm the process
     var confirmStrings = {
-        text: "Do you want to send invitations to the selected invitees.", title: "Invitation Emails Confirmation ",
+        text: "Do you want to send invitations to the selected invitee(s).", title: "Invitation Emails Confirmation ",
         subtitle: "", "cancelButtonLabel": "Cancel", confirmButtonLabel: "Confirm"
     };
     var confirmOptions = { height: 150, width: 500 };
@@ -49,8 +83,7 @@ function ResendInvitationByInvitationId(InvitationIds) {
                                 else
                                     adx_invitationList += " or adx_invitationid eq {" + result["_cid_invitation_value"] + "}";
                             }
-                            else
-                            {
+                            else {
                                 var alertStrings = {
                                     confirmButtonLabel: "OK"
                                     , text: "The Account '" + cid_companyname_formatted + " 'Currently in '" + cid_companystatus_formatted + "' Status. Therefore system will not send the invitation email for contact '" + cid_invitedcontact_formatted + "'\n\n"

@@ -1,22 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RibbonDiffXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <CustomActions>
-    <CustomAction Id="ovs.Mscrm.SubGrid.contact.AddExistingAssoc.CustomAction" Location="Mscrm.SubGrid.contact.MainTab.Management.Controls._children" Sequence="40">
+    <CustomAction Id="cid.contact.Button2.Button.cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button.CustomAction" Location="Mscrm.Form.contact.MainTab.Save.Controls._children" Sequence="49">
+      <CommandUIDefinition>
+        <Button Command="cid.contact.Button2.Button.cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button" Id="cid.contact.Button2.Button.cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button" Image16by16="" LabelText="$LocLabels:cid.contact.Button2.Button.cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button.LabelText" Sequence="49" TemplateAlias="o1" ToolTipTitle="$LocLabels:cid.contact.Button2.Button.cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button.ToolTipTitle" ToolTipDescription="$LocLabels:cid.contact.Button2.Button.cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button.ToolTipDescription" ModernImage="$webresource:adx_create_invitation.svg" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <CustomAction Id="cid.Mscrm.SubGrid.contact.AddExistingAssoc.CustomAction" Location="Mscrm.SubGrid.contact.MainTab.Management.Controls._children" Sequence="40">
       <CommandUIDefinition>
         <Button Alt="$LocLabels:Mscrm.SubGrid.contact.AddExistingAssoc.Alt" Command="Mscrm.AddExistingRecordFromSubGridAssociated" Id="Mscrm.SubGrid.contact.AddExistingAssoc" Image32by32="/_imgs/ribbon/AddExistingStandard_32.png" Image16by16="/_imgs/ribbon/AddExistingStandard_16.png" LabelText="$LocLabels:Mscrm.SubGrid.contact.AddExistingAssoc.LabelText" Sequence="40" TemplateAlias="o1" ToolTipTitle="$LocLabels:Mscrm.SubGrid.contact.AddExistingAssoc.ToolTipTitle" ToolTipDescription="$Resources(EntityDisplayName):Mscrm_SubGrid_EntityLogicalName_MainTab_Management_AddExistingAssoc_ToolTipDescription" ModernImage="AddExisting" />
       </CommandUIDefinition>
     </CustomAction>
-    <CustomAction Id="ovs.Mscrm.SubGrid.contact.AddExistingStandard.CustomAction" Location="Mscrm.SubGrid.contact.MainTab.Management.Controls._children" Sequence="30">
+    <CustomAction Id="cid.Mscrm.SubGrid.contact.AddExistingStandard.CustomAction" Location="Mscrm.SubGrid.contact.MainTab.Management.Controls._children" Sequence="30">
       <CommandUIDefinition>
         <Button Alt="$LocLabels:Mscrm.SubGrid.contact.AddExistingStandard.Alt" Command="Mscrm.AddExistingRecordFromSubGridStandard" Id="Mscrm.SubGrid.contact.AddExistingStandard" Image32by32="/_imgs/ribbon/AddExistingStandard_32.png" Image16by16="/_imgs/ribbon/AddExistingStandard_16.png" LabelText="$LocLabels:Mscrm.SubGrid.contact.AddExistingStandard.LabelText" Sequence="30" TemplateAlias="o1" ToolTipTitle="$LocLabels:Mscrm.SubGrid.contact.AddExistingStandard.ToolTipTitle" ToolTipDescription="$Resources(EntityDisplayName):Mscrm_SubGrid_EntityLogicalName_MainTab_Management_AddExistingStandard_ToolTipDescription" ModernImage="AddExisting" />
       </CommandUIDefinition>
     </CustomAction>
-    <CustomAction Id="ovs.Mscrm.SubGrid.contact.AddNewStandard.CustomAction" Location="Mscrm.SubGrid.contact.MainTab.Management.Controls._children" Sequence="20">
+    <CustomAction Id="cid.Mscrm.SubGrid.contact.AddNewStandard.CustomAction" Location="Mscrm.SubGrid.contact.MainTab.Management.Controls._children" Sequence="20">
       <CommandUIDefinition>
         <Button Alt="$Resources(EntityDisplayName):Ribbon.SubGrid.AddNew" Command="Mscrm.AddNewRecordFromSubGridStandard" Id="Mscrm.SubGrid.contact.AddNewStandard" Image32by32="/_imgs/ribbon/newrecord32.png" Image16by16="/_imgs/ribbon/New_16.png" LabelText="$Resources(EntityDisplayName):Ribbon.SubGrid.AddNew" Sequence="20" TemplateAlias="o1" ToolTipTitle="$Resources(EntityDisplayName):Mscrm_SubGrid_EntityLogicalName_MainTab_Management_AddNewStandard_ToolTipTitle" ToolTipDescription="$Resources(EntityDisplayName):Mscrm_SubGrid_EntityLogicalName_MainTab_Management_AddNewStandard_ToolTipDescription" ModernImage="New" />
       </CommandUIDefinition>
     </CustomAction>
-    <CustomAction Id="ovs.Mscrm.SubGrid.contact.NewRecord.CustomAction" Location="Mscrm.SubGrid.contact.MainTab.Management.Controls._children" Sequence="10">
+    <CustomAction Id="cid.Mscrm.SubGrid.contact.NewRecord.CustomAction" Location="Mscrm.SubGrid.contact.MainTab.Management.Controls._children" Sequence="10">
       <CommandUIDefinition>
         <Button Command="Mscrm.NewRecordFromGrid" Id="Mscrm.SubGrid.contact.NewRecord" Image32by32="/_imgs/ribbon/newrecord32.png" Image16by16="/_imgs/ribbon/New_16.png" LabelText="$Resources(EntityDisplayName):Ribbon.SubGrid.MainTab.New" Sequence="10" TemplateAlias="o1" ToolTipTitle="$Resources(EntityDisplayName):Ribbon.SubGrid.MainTab.New" ToolTipDescription="$Resources(EntityDisplayName):Ribbon.Tooltip.New" ModernImage="New" />
       </CommandUIDefinition>
@@ -26,6 +31,21 @@
     <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
   </Templates>
   <CommandDefinitions>
+    <CommandDefinition Id="cid.contact.Button2.Button.cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button">
+      <EnableRules>
+        <EnableRule Id="Mscrm.AvailableOnForm" />
+      </EnableRules>
+      <DisplayRules>
+        <DisplayRule Id="Mscrm.PrimaryEntityIsNotBPFEntity" />
+        <DisplayRule Id="Mscrm.HideInLegacyRibbon" />
+        <DisplayRule Id="cid.cid_invitation.CanWriteSelected.DisplayRule" />
+      </DisplayRules>
+      <Actions>
+        <JavaScriptFunction FunctionName="SendInvitationByContactId" Library="$webresource:cid_invitation">
+          <CrmParameter Value="PrimaryItemIds" />
+        </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
     <CommandDefinition Id="Mscrm.AddNewRecordFromSubGridStandard">
       <EnableRules>
         <EnableRule Id="Mscrm.AppendToPrimary" />
@@ -115,6 +135,9 @@
   <RuleDefinitions>
     <TabDisplayRules />
     <DisplayRules>
+      <DisplayRule Id="cid.cid_invitation.CanWriteSelected.DisplayRule">
+        <EntityPrivilegeRule PrivilegeType="Write" PrivilegeDepth="Basic" AppliesTo="SelectedEntity" />
+      </DisplayRule>
       <DisplayRule Id="Mscrm.AppendSelected">
         <EntityPrivilegeRule PrivilegeType="Append" PrivilegeDepth="Basic" AppliesTo="SelectedEntity" />
       </DisplayRule>
@@ -137,11 +160,22 @@
       <DisplayRule Id="Mscrm.HideAddressEntities">
         <EntityRule EntityName="customeraddress" AppliesTo="SelectedEntity" Default="false" InvertResult="true" />
       </DisplayRule>
+      <DisplayRule Id="Mscrm.HideInLegacyRibbon">
+        <CommandClientTypeRule Type="Legacy" InvertResult="true" />
+        <PageRule Address="/userdefined/edit.aspx" InvertResult="true" />
+        <PageRule Address="/advancedfind/advfind.aspx" InvertResult="true" />
+        <PageRule Address="/advancedfind/fetchData.aspx" InvertResult="true" />
+        <PageRule Address="/tools/formeditor/formeditor.aspx" InvertResult="true" />
+        <PageRule Address="/tools/visualizationdesigner/visualizationdesigner.aspx" InvertResult="true" />
+      </DisplayRule>
       <DisplayRule Id="Mscrm.HideNewForChildEntities">
         <EntityPropertyRule AppliesTo="SelectedEntity" PropertyName="IsChildEntity" PropertyValue="false" />
       </DisplayRule>
       <DisplayRule Id="Mscrm.NotOnMarketingList">
         <FormEntityContextRule EntityName="list" Default="false" InvertResult="true" />
+      </DisplayRule>
+      <DisplayRule Id="Mscrm.PrimaryEntityIsNotBPFEntity">
+        <EntityPropertyRule AppliesTo="PrimaryEntity" PropertyName="IsBPFEntity" PropertyValue="false" />
       </DisplayRule>
       <DisplayRule Id="Mscrm.ShowForNonRelationshipBoundGrids">
         <RelationshipTypeRule AppliesTo="SelectedEntity" RelationshipType="NoRelationship" />
@@ -159,6 +193,9 @@
       </EnableRule>
       <EnableRule Id="Mscrm.AppendToPrimary">
         <RecordPrivilegeRule PrivilegeType="AppendTo" AppliesTo="PrimaryEntity" />
+      </EnableRule>
+      <EnableRule Id="Mscrm.AvailableOnForm">
+        <EntityRule AppliesTo="PrimaryEntity" Context="Form" Default="false" />
       </EnableRule>
       <EnableRule Id="Mscrm.DisplayFlowSingleMenu">
         <CustomRule FunctionName="XrmCore.Commands.Flows.displayFlowSingleMenu" Library="$webresource:Main_system_library.js" />
@@ -222,6 +259,24 @@
     </EnableRules>
   </RuleDefinitions>
   <LocLabels>
+    <LocLabel Id="cid.contact.Button2.Button.cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button.LabelText">
+      <Titles>
+        <Title description="Invite Now" languagecode="1033" />
+        <Title description="Envoyer l’invitation" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="cid.contact.Button2.Button.cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button.ToolTipDescription">
+      <Titles>
+        <Title description="Send Invitation to register in the Transport Canada’s Client Identification Database" languagecode="1033" />
+        <Title description="Envoyer l’invitation" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="cid.contact.Button2.Button.cid.cid_invitation.Button2.Button.cid.cid_invitation.SendInvitation.Button.ToolTipTitle">
+      <Titles>
+        <Title description="Invite Now" languagecode="1033" />
+        <Title description="Envoyer l’invitation" languagecode="1036" />
+      </Titles>
+    </LocLabel>
     <LocLabel Id="FieldServiceFieldService.Form.contact.MainTab.LocationGroup.B_buttonGeoCode.LabelText">
       <Titles>
         <Title languagecode="1033" description="Geo Code" />

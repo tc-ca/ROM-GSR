@@ -41,9 +41,12 @@
             <condition attribute="customertypecode" operator="eq" value="948010000" />
           </filter>
           <link-entity name="account" alias="aa" link-type="inner" from="parentaccountid" to="accountid">
-            <link-entity name="ovs_mocregistration" alias="ab" link-type="inner" from="ovs_siteid" to="accountid">
+            <link-entity name="ovs_mocregistration" alias="ad" link-type="inner" from="ovs_siteid" to="accountid">
               <filter type="and">
-                <condition attribute="ovs_operationtype" operator="eq" value="918640038" />
+                <filter type="or">
+                  <condition attribute="ovs_operationtype" operator="eq" value="918640038" />
+                  <condition attribute="ovs_operationtype" operator="eq" value="918640042" />
+                </filter>
               </filter>
             </link-entity>
           </link-entity>
@@ -52,8 +55,8 @@
     </fetchxml>
     <IntroducedVersion>1.0.0.0</IntroducedVersion>
     <LocalizedNames>
-      <LocalizedName description="HOTI Organizations" languagecode="1033" />
-      <LocalizedName description="Organisations MDTI" languagecode="1036" />
+      <LocalizedName description="HOTI / HOTI GOA Organizations" languagecode="1033" />
+      <LocalizedName description="Organisations MDTI / MDTI GDA" languagecode="1036" />
     </LocalizedNames>
   </savedquery>
 </savedqueries>
