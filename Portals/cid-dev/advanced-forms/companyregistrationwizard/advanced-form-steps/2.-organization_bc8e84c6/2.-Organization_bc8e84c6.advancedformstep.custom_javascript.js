@@ -167,7 +167,7 @@ $(document).ready(function () {
 			var contact_id = '{{user.id}}';
 			if (ans) {
 				var DeleteContactFlowData = '{' +
-					'"ContactId": "' + contact_id + '",' +
+					'"ContactId": "' + contact_id + '"' +
 					'}';
 				console.log(DeleteContactFlowData);
 				tdg.cid.flow.Call_Flow("CID_Flow_RunCompanySitesDeleting_Delete_Contact", DeleteContactFlowData);
