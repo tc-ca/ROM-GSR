@@ -47,7 +47,7 @@
       "actions": {
         "Response": {
           "runAfter": {
-            "Delete_a_row": [
+            "Apply_to_each": [
               "Succeeded"
             ]
           },
@@ -60,24 +60,60 @@
             "statusCode": 200
           }
         },
-        "Delete_a_row": {
+        "List_Adx_Sessions": {
           "runAfter": {},
           "metadata": {
-            "operationMetadataId": "730e155f-378a-4180-abaa-b2a5997c7166"
+            "operationMetadataId": "09527ec4-79d0-4a0b-bd30-4ba094bb7c88"
           },
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
               "connectionName": "shared_commondataserviceforapps",
-              "operationId": "DeleteRecord",
+              "operationId": "ListRecords",
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "entityName": "contacts",
-              "recordId": "@triggerBody()?['ContactId']"
+              "entityName": "adx_webformsessions",
+              "$select": "adx_webformsessionid",
+              "fetchXml": "<fetch >\n  <entity name=\"adx_webformsession\">\n    <attribute name=\"adx_webformsessionid\" />\n    <filter>\n      <condition attribute=\"adx_primaryrecordid\" operator=\"eq\" value=\"@{triggerBody()?['ContactId']}\" />\n      <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\" />\n    </filter>\n  </entity>\n</fetch>"
             },
             "authentication": "@parameters('$authentication')"
           }
+        },
+        "Apply_to_each": {
+          "foreach": "@outputs('List_Adx_Sessions')?['body/value']",
+          "actions": {
+            "Update_a_row": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "4b6f63ee-6e09-4997-aa64-30e91c5b7902"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "adx_webformsessions",
+                  "recordId": "@items('Apply_to_each')?['adx_webformsessionid']",
+                  "item/statecode": 1,
+                  "item/statuscode": 2
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "List_Adx_Sessions": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5812cd34-dbd2-4aba-946e-b6932896b546"
+          },
+          "type": "Foreach"
         }
       },
       "outputs": {}
