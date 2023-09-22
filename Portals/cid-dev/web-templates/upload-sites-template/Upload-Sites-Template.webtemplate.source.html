@@ -11,7 +11,7 @@
     .inputfile {
         /* visibility: hidden etc. wont work */
         width: 0.1px;
-        height: 0.1px;
+        height: 0.1px;m000200
         opacity: 0;
         overflow: hidden;
         position: absolute;
@@ -222,19 +222,26 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
-  $(document).ready( function() {
-  //assign number of unclaimed sites
-   var NumberOfUnClaimedSites= '{{UnClaimedSitesResultsize}}';
+
+// Web Template - Upload Sites Template
+$(document).ready( function() {
+    //assign number of unclaimed sites
+    var NumberOfUnClaimedSites= '{{UnClaimedSitesResultsize}}';
+
+	var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
     var title = tdg.error_message.message("m000200");
     var ctl = $('#cdts-signout-btn').tooltip()[0];
     ctl.title = title;
-   //get upload button text message
-   var UploadButtonText = tdg.error_message.message("m000111");
-   console.log(UploadButtonText);
+    ctl.href = (selected_language == "en" ? "/en/Account/Login/LogOff" : "/fr/Account/Login/LogOff");
 
-      var Page_Partial_URL = '{{page.adx_partialurl}}';
+    //get upload button text message
+    var UploadButtonText = tdg.error_message.message("m000111");
+    console.log(UploadButtonText);
 
-      var UploadType = "" ;
+    var Page_Partial_URL = '{{page.adx_partialurl}}';
+
+    var UploadType = "" ;
 
       //read all messages in json array
       ReadBulkMessagesFile();
@@ -260,7 +267,6 @@
       var BTN_PREVIOUS = tdg.error_message.message("BTN_PREVIOUS");
 
       var Ok = tdg.error_message.message("OK");
-     
 
       $("#step1").html(step1);
       $("#step2").html(step2);
@@ -443,9 +449,6 @@ $('#btn_attachfile_and_scan').click(function(e)
                          Enable_Button('linkdownload_French');
                                 
                     }});
-
-
-
 
    }// end check file length
 
@@ -965,13 +968,7 @@ function confirmDialog(message ,YesLabel, NoLabel, handler)
    
   //  dialog.removeAttribute("hidden"); 
   //  $("#myModal").focus();
-
-
 }
-
-
-
-
 
 function decode (str)
 {
@@ -979,7 +976,6 @@ function decode (str)
 				return String.fromCharCode(dec);
 			});
 }
-
 
 function Check_FileType_With_ExcelRead(data , langcode)
 {

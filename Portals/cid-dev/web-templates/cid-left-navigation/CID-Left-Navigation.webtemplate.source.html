@@ -39,16 +39,16 @@
   {%endif%} {% endif %}  <script type="text/javascript" src="~/tdgcore_common.js">
  </script> <script type="text/javascript" src="~/tdgcore_message.js"></script> 
  <script> // Web Template - CID Left Navigation 
- debugger; 
- tdg.c.weblink_hide("/RegistrationWizard/"); 
- //tdg.c.weblink_hide("/Bulk_Site_Upload/"); 
- var selected_language = '{{website.selected_language.code}}'; 
- sessionStorage.setItem("selected_language", selected_language); 
- var title = tdg.error_message.message("m000200");
-var ctl = $('#cdts-signout-btn').tooltip()[0];
-    ctl.title = title;
-  
+    debugger; 
+    tdg.c.weblink_hide("/RegistrationWizard/"); 
+    //tdg.c.weblink_hide("/Bulk_Site_Upload/"); 
 
+	var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+    var title = tdg.error_message.message("m000200");
+    var ctl = $('#cdts-signout-btn').tooltip()[0];
+    ctl.title = title;   
+    ctl.href = (selected_language == "en" ? "/en/Account/Login/LogOff" : "/fr/Account/Login/LogOff");
  </script> 
  {% endblock %}
  {% block content %} <div> {% block main %} {% include 'Page Copy' %} 

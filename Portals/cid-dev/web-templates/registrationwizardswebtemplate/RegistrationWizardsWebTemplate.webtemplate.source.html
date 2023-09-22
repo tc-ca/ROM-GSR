@@ -53,8 +53,7 @@ function SiteHasOperationUNNumbers(operationId, siteId){
         return false;
 }
 
-
- function SiteHasModesOfTransportation(operationId, siteId){
+function SiteHasModesOfTransportation(operationId, siteId){
     var FetchXMLQuery = " <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' > " +
                           "<entity name='ovs_mocregistration_ovs_modes'>" +
                               "<attribute name='ovs_mocregistrationid' />" +
@@ -76,33 +75,22 @@ datatype: "json",
 url: "https://tdgcore-dev-tcd365.crm3.dynamics.com/api/data/v9.0/ovs_mocregistration_ovs_modesset?fetchXml=" + encodeURIComponent(FetchXMLQuery),
 
 beforeSend: function (xhr) {
-
 //Specifying this header ensures that the results will be returned as JSON.
-
 xhr.setRequestHeader("Accept", "application/json");
-
 xhr.setRequestHeader("Content-Type", "application/json; odata.metadata=minimal");
-
 xhr.setRequestHeader("OData-MaxVersion", "4.0");
-
 xhr.setRequestHeader("OData-Version", "4.0");
-
 xhr.setRequestHeader("Prefer", "odata.include-annotations=*");
-
 },
 
 success: function (data, textStatus, xhr) {
-
  alert("Success");
-
 },
 
 error: function (xhr, textStatus, errorThrown) {
-
 alert("Fail");
 alert(textStatus);
 alert(errorThrown);
-
 }
 
     });
@@ -113,16 +101,6 @@ function XOperationDetailsProvided(operationId){
 }
 
 function IsExtendedSite(operationId, siteId){
-    //if(siteId){
-    //    var filter = "accountid eq guid'" + siteId + "'";
-    //    var data = ExecuteQuery("Validation_OperationDetailsList", filter);
-
-    //    if(data.length > 0)
-    //        return data[0]['cid_requirementlevel'];
-    //    else
-    //        return false;
-    //}
-
     if(operationId){
         var filter = "ovs_mocregistrationid eq guid'" + operationId + "'";
         var data = ExecuteQuery("Validation_OperationDetailsList", filter);
@@ -175,39 +153,6 @@ function ExecuteQuery(list, filter){
     return response;
 }
 
-//function GetHOTIOperation(siteId)
-//{
-//    var operationId = "";
-//    var FetchXMLQuery = " <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false' > " +
-//                          "<entity name='ovs_mocregistration' >" +
-//                              "<attribute name='ovs_mocregistrationid' />" +
-//                              "<attribute name='ovs_operationtype' />" +
-//                              "<attribute name='ovs_siteid' />" +
-//                         "<filter type='and' >"+
-//                              "<condition attribute='ovs_operationtype' operator='eq' value='918640038' />" +
-//                              "<condition attribute='ovs_siteid' operator='eq' value='" + siteId + "' />" +
-//                          "</filter>" +
-//                          "</entity>" +
-//                       "</fetch>";
-//                       alert(FetchXMLQuery);
-//                       //'bb8174e4-dacb-ec11-a7b5-0022483cee90'
-//    webapi.safeAjax({
-//        type: "GET",
-//        contentType: "application/json; charset=utf-8",
-//        datatype: "json",
-//        //async: true,
-//        url: "/_api/ovs_mocregistrations?fetchXml=" + encodeURIComponent(FetchXMLQuery),
-//        success: function (data, textStatus, xhr) {
-//            operationId = data.value[0]['ovs_mocregistrationid'];
-//        },
-//        error: function (xhr, textStatus, errorThrown) {
-//            alert("Fail: " + errorThrown);
-//        }
-//    });
-//    return operationId; //'bb8174e4-dacb-ec11-a7b5-0022483cee90';
-//}
-
-
 function UpdateOperationDetailsProvided(operationId, value){
     webapi.safeAjax({
      type: "PATCH",
@@ -241,10 +186,8 @@ function UpdateOperationDetailsProvided(operationId, value){
 
 	var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
-   
     var title = tdg.error_message.message("m000200");
     var ctl = $('#cdts-signout-btn').tooltip()[0];
     ctl.title = title;
-
-
+    ctl.href = (selected_language == "en" ? "/en/Account/Login/LogOff" : "/fr/Account/Login/LogOff");
 </script>

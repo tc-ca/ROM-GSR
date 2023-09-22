@@ -6,7 +6,6 @@ $(document).ready(function () {
 	debugger;
 
 	// format sign-out's tooltip
-	
 	$('#cdts-signout-btn').tooltip({
 					trigger: 'hover',
 					placement: 'right',
@@ -14,7 +13,6 @@ $(document).ready(function () {
 						});
 
 	header_setup();
-
 
     var ovs_legalname = $("#ovs_legalname").val();
 	if(ovs_legalname == "") $('#ovs_legalname').attr("readonly", false);
@@ -43,12 +41,6 @@ $(document).ready(function () {
 });
 
 function header_setup() {
-	//var cid_cidcompanystatus = '{{account.cid_cidcompanystatus.code}}';
-
-	//tdg.c.weblink_hide("/RegistrationWizard/");
-	//tdg.c.weblink_hide("/Bulk_Site_Upload/");
-	//tdg.c.weblink_hide("/company_dashboard/");
-	//tdg.c.weblink_hide("/Bulk_Site_Update/");
 	debugger;
 	var code = "m000009";
 
@@ -66,8 +58,6 @@ function header_setup() {
 			code = "m000008";	// Company Registration
 			break;
 		}
-		//text = tdg.error_message.message(text);
-		//item.innerText = text;
 	}
 
 	try {
