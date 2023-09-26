@@ -2847,6 +2847,32 @@ if (typeof (tdg.cid.crw) == "undefined") {
             }
             );
 
+            $("#cid_legalname_fr2").change(function ()
+
+                {
+                    //disabled and enable ok button based on data
+                    tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
+            });
+
+            
+            
+            
+
+            $("#cid_legalname2").change(function () {
+                //disabled and enable ok button based on data
+                tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
+            });
+
+            $("#cid_operatingname_fr2").change(function () {
+                //disabled and enable ok button based on data
+                tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
+            });
+            $("#cid_operatingname2").change(function () {
+                //disabled and enable ok button based on data
+                tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
+            });
+
+
 
 
         },
