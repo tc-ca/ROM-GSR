@@ -40,7 +40,8 @@
               "subscriptionRequest/message": 4,
               "subscriptionRequest/entityname": "account",
               "subscriptionRequest/scope": 4,
-              "subscriptionRequest/filteringattributes": "ovs_legalname"
+              "subscriptionRequest/filteringattributes": "ovs_legalname,name",
+              "subscriptionRequest/filterexpression": "customertypecode eq 948010000"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -48,7 +49,11 @@
       },
       "actions": {
         "Compose": {
-          "runAfter": {},
+          "runAfter": {
+            "Condition_6": [
+              "Succeeded"
+            ]
+          },
           "metadata": {
             "operationMetadataId": "3cbda12c-3a68-4c5d-914d-37d999a08a3c"
           },
@@ -57,7 +62,7 @@
         },
         "List_rows": {
           "runAfter": {
-            "Compose": [
+            "Initialize_variable_-_OperatingNameF": [
               "Succeeded"
             ]
           },
@@ -73,7 +78,7 @@
             },
             "parameters": {
               "entityName": "accounts",
-              "fetchXml": "<fetch>\n  <entity name=\"account\">\n    <attribute name=\"name\" />\n    <attribute name=\"primarycontactid\" />\n    <attribute name=\"telephone1\" />\n    <attribute name=\"accountid\" />\n   <attribute name=\"_parentaccountid_value\" />\n   <attribute name=\"customertypecode\" />\n    <order attribute=\"name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"parentaccountid\" operator=\"eq\"  value=\"@{triggerOutputs()?['body/accountid']}\" />\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n      <condition attribute=\"customertypecode\" operator=\"eq\" value=\"948010001\" />\n    </filter>\n  </entity>\n</fetch>"
+              "fetchXml": "<fetch>\n  <entity name=\"account\">\n    <attribute name=\"name\" />\n    <attribute name=\"primarycontactid\" />\n    <attribute name=\"telephone1\" />\n    <attribute name=\"accountid\" />\n    <attribute name=\"ovs_address_type\" />\n    <attribute name=\"address1_latitude\" />\n  <attribute name=\"address1_longitude\" />\n  <attribute name=\"ovs_lld_quarter\" />\n  <attribute name=\"ovs_lld_section\" />\n  <attribute name=\"ovs_lld_township\" />\n  <attribute name=\"ovs_lld_range\" />\n  <attribute name=\"ovs_lld_meridian\" />\n  <attribute name=\"ovs_address_display\" />\n   <attribute name=\"customertypecode\" />\n    <order attribute=\"name\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"parentaccountid\" operator=\"eq\"  value=\"@{triggerOutputs()?['body/accountid']}\" />\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n      <condition attribute=\"customertypecode\" operator=\"eq\" value=\"948010001\" />\n    </filter>\n  </entity>\n</fetch>"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -92,7 +97,7 @@
             }
           },
           "runAfter": {
-            "List_rows": [
+            "Compose_2": [
               "Succeeded"
             ]
           },
@@ -115,70 +120,325 @@
               "runAfter": {},
               "else": {
                 "actions": {
-                  "Compose_-_CombinedAddress": {
+                  "Condition_3": {
+                    "actions": {
+                      "Compose_-_CombinedAddress": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "48a975ee-0dcd-4f87-8f53-bc8ddd4f71b4"
+                        },
+                        "type": "Compose",
+                        "inputs": "@items('Apply_to_each')?['ovs_address_display']"
+                      },
+                      "Compose_-_LegalNameE": {
+                        "runAfter": {
+                          "Compose_-_CombinedAddress": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "2776d0ca-20ee-4bcc-a611-26559a561c98"
+                        },
+                        "type": "Compose",
+                        "inputs": "@triggerOutputs()?['body/name']"
+                      },
+                      "Compose_-_LegalNameF": {
+                        "runAfter": {
+                          "Compose_-_LegalNameE": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "6d56bb14-e1e7-43e6-88b5-9b9bf49333e3"
+                        },
+                        "type": "Compose",
+                        "inputs": "@triggerOutputs()?['body/ovs_name_fr']"
+                      },
+                      "Compose_-_OperatingNameE_1": {
+                        "runAfter": {
+                          "Compose_-_LegalNameF": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "cda73d82-d4ac-427a-b16f-1ead54b2add0"
+                        },
+                        "type": "Compose",
+                        "inputs": "@concat(outputs('Compose_-_LegalNameE'), ' - ', outputs('Compose_-_CombinedAddress'))"
+                      },
+                      "Compose_-_OperatingNameF_1": {
+                        "runAfter": {
+                          "Compose_-_OperatingNameE_1": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "3d447757-3e30-4c1b-8231-6f61be50771a"
+                        },
+                        "type": "Compose",
+                        "inputs": "@concat(outputs('Compose_-_LegalNameF'), ' - ', outputs('Compose_-_CombinedAddress'))"
+                      },
+                      "Set_variable": {
+                        "runAfter": {
+                          "Set_variable_2": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "8dd72a82-d0f7-4cf5-9484-2b04455b0d01"
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "OperatingNameF",
+                          "value": "@{outputs('Compose_-_OperatingNameF_1')}"
+                        }
+                      },
+                      "Set_variable_2": {
+                        "runAfter": {
+                          "Compose_-_OperatingNameF_1": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "7b8e1c18-43c2-40eb-98c4-42d17f30c995"
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "OperatingNameE",
+                          "value": "@{outputs('Compose_-_OperatingNameE_1')}"
+                        }
+                      }
+                    },
                     "runAfter": {},
-                    "metadata": {
-                      "operationMetadataId": "48a975ee-0dcd-4f87-8f53-bc8ddd4f71b4"
-                    },
-                    "type": "Compose",
-                    "inputs": "@items('Apply_to_each')?['ovs_address_display']"
-                  },
-                  "Compose_-_LegalNameE": {
-                    "runAfter": {
-                      "Compose_-_CombinedAddress": [
-                        "Succeeded"
+                    "expression": {
+                      "equals": [
+                        "@items('Apply_to_each')?['ovs_address_type']",
+                        0
                       ]
                     },
                     "metadata": {
-                      "operationMetadataId": "2776d0ca-20ee-4bcc-a611-26559a561c98"
+                      "operationMetadataId": "2994fb28-cbf9-489c-8bdf-1636fea7e274"
                     },
-                    "type": "Compose",
-                    "inputs": "@triggerOutputs()?['body/ovs_legalname']"
+                    "type": "If"
                   },
-                  "Compose_-_LegalNameF": {
+                  "Condition_4": {
+                    "actions": {
+                      "Compose_-_LegalNameE_2": {
+                        "runAfter": {
+                          "Compose_-_Combined_Legal_Land": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "2776d0ca-20ee-4bcc-a611-26559a561c98"
+                        },
+                        "type": "Compose",
+                        "inputs": "@triggerOutputs()?['body/name']"
+                      },
+                      "Compose_-_LegalNameF_2": {
+                        "runAfter": {
+                          "Compose_-_LegalNameE_2": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "6d56bb14-e1e7-43e6-88b5-9b9bf49333e3"
+                        },
+                        "type": "Compose",
+                        "inputs": "@items('Apply_to_each')?['ovs_name_fr']"
+                      },
+                      "Compose_-_OperatingNameE_2": {
+                        "runAfter": {
+                          "Compose_-_LegalNameF_2": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "cda73d82-d4ac-427a-b16f-1ead54b2add0"
+                        },
+                        "type": "Compose",
+                        "inputs": "@concat(outputs('Compose_-_LegalNameE_2'), ' - ', outputs('Compose_-_Combined_Legal_Land'))"
+                      },
+                      "Compose_-_OperatingNameF_2": {
+                        "runAfter": {
+                          "Compose_-_OperatingNameE_2": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "3d447757-3e30-4c1b-8231-6f61be50771a"
+                        },
+                        "type": "Compose",
+                        "inputs": "@concat(outputs('Compose_-_LegalNameF_2'), ' - ', outputs('Compose_-_Combined_Legal_Land'))"
+                      },
+                      "Compose_-_Combined_Legal_Land": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "3db5b759-01d4-47eb-a31d-ba799761858f"
+                        },
+                        "type": "Compose",
+                        "inputs": "@{items('Apply_to_each')?['ovs_lld_quarter@OData.Community.Display.V1.FormattedValue']}-@{items('Apply_to_each')?['ovs_lld_section@OData.Community.Display.V1.FormattedValue']}-@{items('Apply_to_each')?['ovs_lld_township@OData.Community.Display.V1.FormattedValue']}-@{\r\nitems('Apply_to_each')?['ovs_lld_range@OData.Community.Display.V1.FormattedValue']}-@{items('Apply_to_each')?['ovs_lld_meridian@OData.Community.Display.V1.FormattedValue']}"
+                      },
+                      "Set_variable_3": {
+                        "runAfter": {
+                          "Compose_-_OperatingNameF_2": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "711a5c61-7a96-41c4-a015-3b5fe7e7c278"
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "OperatingNameE",
+                          "value": "@{outputs('Compose_-_OperatingNameE_2')}"
+                        }
+                      },
+                      "Set_variable_4": {
+                        "runAfter": {
+                          "Set_variable_3": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "3b2ed487-16df-4128-9758-973ac68a0842"
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "OperatingNameF",
+                          "value": "@{outputs('Compose_-_OperatingNameF_2')}"
+                        }
+                      }
+                    },
                     "runAfter": {
-                      "Compose_-_LegalNameE": [
+                      "Condition_3": [
                         "Succeeded"
                       ]
                     },
-                    "metadata": {
-                      "operationMetadataId": "6d56bb14-e1e7-43e6-88b5-9b9bf49333e3"
-                    },
-                    "type": "Compose",
-                    "inputs": "@triggerOutputs()?['body/ovs_legalnamefr']"
-                  },
-                  "Compose_-_OperatingNameE": {
-                    "runAfter": {
-                      "Compose_-_LegalNameF": [
-                        "Succeeded"
+                    "expression": {
+                      "equals": [
+                        "@items('Apply_to_each')?['ovs_address_type']",
+                        1
                       ]
                     },
                     "metadata": {
-                      "operationMetadataId": "cda73d82-d4ac-427a-b16f-1ead54b2add0"
+                      "operationMetadataId": "3a8f93e7-c336-49d9-ab86-076d6572b1ea"
                     },
-                    "type": "Compose",
-                    "inputs": "@concat(outputs('Compose_-_LegalNameE'), ' - ', outputs('Compose_-_CombinedAddress'))"
+                    "type": "If"
                   },
-                  "Compose_-_OperatingNameF": {
+                  "Condition_5": {
+                    "actions": {
+                      "Compose_-_LegalNameE_3": {
+                        "runAfter": {
+                          "Compose_-_Combined_Latitude_Longitude": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "2776d0ca-20ee-4bcc-a611-26559a561c98"
+                        },
+                        "type": "Compose",
+                        "inputs": "@triggerOutputs()?['body/name']"
+                      },
+                      "Compose_-_LegalNameF_3": {
+                        "runAfter": {
+                          "Compose_-_LegalNameE_3": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "6d56bb14-e1e7-43e6-88b5-9b9bf49333e3"
+                        },
+                        "type": "Compose",
+                        "inputs": "@triggerOutputs()?['body/ovs_name_fr']"
+                      },
+                      "Compose_-_OperatingNameE_3": {
+                        "runAfter": {
+                          "Compose_-_LegalNameF_3": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "cda73d82-d4ac-427a-b16f-1ead54b2add0"
+                        },
+                        "type": "Compose",
+                        "inputs": "@concat(outputs('Compose_-_LegalNameE_3'), ' - ', outputs('Compose_-_Combined_Latitude_Longitude'))"
+                      },
+                      "Compose_-_OperatingNameF_3": {
+                        "runAfter": {
+                          "Compose_-_OperatingNameE_3": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "3d447757-3e30-4c1b-8231-6f61be50771a"
+                        },
+                        "type": "Compose",
+                        "inputs": "@concat(outputs('Compose_-_LegalNameF_3'), ' - ', outputs('Compose_-_Combined_Latitude_Longitude'))"
+                      },
+                      "Compose_-_Combined_Latitude_Longitude": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "a3f92fc1-78ff-486b-bae7-78645e162186"
+                        },
+                        "type": "Compose",
+                        "inputs": "Latitude @{items('Apply_to_each')?['address1_latitude']} / Longitude @{items('Apply_to_each')?['address1_longitude']}"
+                      },
+                      "Set_variable_5": {
+                        "runAfter": {
+                          "Compose_-_OperatingNameF_3": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "5836ed36-2b42-4391-8480-4337a15c81ed"
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "OperatingNameE",
+                          "value": "@{outputs('Compose_-_OperatingNameE_3')}"
+                        }
+                      },
+                      "Set_variable_6": {
+                        "runAfter": {
+                          "Set_variable_5": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "f364a4ea-76c4-4384-b105-a1633a456f8d"
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "OperatingNameF",
+                          "value": "@{outputs('Compose_-_OperatingNameF_3')}"
+                        }
+                      }
+                    },
                     "runAfter": {
-                      "Compose_-_OperatingNameE": [
+                      "Condition_4": [
                         "Succeeded"
                       ]
                     },
-                    "metadata": {
-                      "operationMetadataId": "3d447757-3e30-4c1b-8231-6f61be50771a"
+                    "expression": {
+                      "equals": [
+                        "@items('Apply_to_each')?['ovs_address_type']",
+                        2
+                      ]
                     },
-                    "type": "Compose",
-                    "inputs": "@concat(outputs('Compose_-_LegalNameF'), ' - ', outputs('Compose_-_CombinedAddress'))"
+                    "metadata": {
+                      "operationMetadataId": "ff83190d-70e5-48d3-a726-d346c2bd3ed5"
+                    },
+                    "type": "If"
                   },
                   "Update_a_row": {
                     "runAfter": {
-                      "Compose_-_OperatingNameF": [
+                      "Condition_5": [
                         "Succeeded"
                       ]
                     },
                     "metadata": {
-                      "operationMetadataId": "8321792b-f1ea-474b-b68d-846211785234"
+                      "operationMetadataId": "ad4da654-7c02-4fec-8947-b6d38eb10996"
                     },
                     "type": "OpenApiConnection",
                     "inputs": {
@@ -190,8 +450,8 @@
                       "parameters": {
                         "entityName": "accounts",
                         "recordId": "@items('Apply_to_each')?['accountid']",
-                        "item/name": "@outputs('Compose_-_OperatingNameE')",
-                        "item/ovs_name_fr": "@outputs('Compose_-_OperatingNameF')"
+                        "item/name": "@variables('OperatingNameE')",
+                        "item/ovs_name_fr": "@variables('OperatingNameF')"
                       },
                       "authentication": "@parameters('$authentication')"
                     }
@@ -200,12 +460,6 @@
               },
               "expression": {
                 "or": [
-                  {
-                    "equals": [
-                      "@items('Apply_to_each')?['_parentaccountid_value']",
-                      "@null"
-                    ]
-                  },
                   {
                     "equals": [
                       "@items('Apply_to_each')?['customertypecode']",
@@ -235,10 +489,87 @@
             "operationMetadataId": "09ca7d30-a786-4659-a52c-dd128b572f4e"
           },
           "type": "Foreach"
+        },
+        "Initialize_variable_-_OperatingNameE": {
+          "runAfter": {
+            "Compose": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d9d7e1b9-1b42-4740-afbe-cf2451b16f5c"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "OperatingNameE",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_-_OperatingNameF": {
+          "runAfter": {
+            "Initialize_variable_-_OperatingNameE": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2791c0a1-a2e4-4c06-b811-6e36bafddbbb"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "OperatingNameF",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Condition_6": {
+          "actions": {
+            "Terminate_2": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "792f465d-6cc3-4e13-90f9-4f8a7a01b908"
+              },
+              "type": "Terminate",
+              "inputs": {
+                "runStatus": "Succeeded"
+              }
+            }
+          },
+          "runAfter": {},
+          "expression": {
+            "not": {
+              "equals": [
+                "@triggerOutputs()?['body/customertypecode']",
+                948010000
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "2630c74a-a530-422a-a94e-3e8f219f5bb8"
+          },
+          "type": "If"
+        },
+        "Compose_2": {
+          "runAfter": {
+            "List_rows": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1fbefe9d-baed-42da-aa0a-9e181ad1cf94"
+          },
+          "type": "Compose",
+          "inputs": "@outputs('List_rows')?['body/value']"
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
