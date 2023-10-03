@@ -186,11 +186,20 @@ if (window.jQuery) {
                         debugger;
                        
                         legalname = data.LegalName;
-                        console.log ("after legal name");
+                        console.log ("after legal name " + legalname);
                         let cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
                         validation = false;
                         filter = "cid_crabusinessnumber eq '" + cid_crabusinessnumber + "'";
                         rom_data = tdg.c.WebApi_List("accounts", filter);
+                        if (rom_data.length ==0 || rom_data == null)
+                        if (legalname != null && legalname != "")
+                        {
+                             filter = "ovs_legalname eq '" + legalname + "'";
+                              rom_data = tdg.c.WebApi_List("accounts", filter);
+
+                        }
+
+
                         if (rom_data.length > 0) {
                             rom_data = rom_data[0];
                             validation =  tdg.cid.crw.start_registration(rom_data, suppress_error, contact_id);
