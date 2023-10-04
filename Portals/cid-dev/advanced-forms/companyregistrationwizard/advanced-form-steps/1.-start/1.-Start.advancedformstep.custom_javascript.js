@@ -202,6 +202,17 @@ if (window.jQuery) {
 
                         if (rom_data.length > 0) {
                             rom_data = rom_data[0];
+                            if (rom_data["cid_has_cra_bn"] != 1 || rom_data["cid_crabusinessnumber"] != cid_crabusinessnumber )
+                            {
+                               var accid = rom_data["accountid"]
+                                 var BNdata = {
+                                    "cid_has_cra_bn": true,
+                                    "cid_crabusinessnumber": cid_crabusinessnumber
+                                };
+                                  tdg.webapi.update("accounts", accid, BNdata);
+                            }
+
+
                             validation =  tdg.cid.crw.start_registration(rom_data, suppress_error, contact_id);
                             console.log ("validation " + validation);
                         }
