@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ImportExportXml version="9.2.23084.170" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ImportExportXml version="9.2.23094.174" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <UniqueName>FDR_Flows</UniqueName>
     <LocalizedNames>
       <LocalizedName description="FDR.Flows" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.0.0.54</Version>
+    <Version>1.0.0.56</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>FDR</UniqueName>
@@ -96,9 +96,14 @@
       <RootComponent type="29" id="{a339b9ba-5ce7-ec11-bb3c-000d3a848130}" behavior="0" />
       <RootComponent type="29" id="{b04a37e4-8d33-ed11-9db1-0022483d0343}" behavior="0" />
       <RootComponent type="29" id="{c885a127-990f-ed11-b83d-000d3a0c8551}" behavior="0" />
+      <RootComponent type="29" id="{cb01e0bc-8168-ee11-9ae7-0022483d0343}" behavior="0" />
       <RootComponent type="29" id="{d3e1f0e7-960f-ed11-b83d-000d3a0c8551}" behavior="0" />
     </RootComponents>
     <MissingDependencies>
+      <MissingDependency>
+        <Required type="1" schemaName="appnotification" displayName="Notification" solution="AppNotifications (10.0.0.14)" />
+        <Dependent type="29" displayName="FDR - Operation Status Change to Pending DQ - Send notification" id="{cb01e0bc-8168-ee11-9ae7-0022483d0343}" />
+      </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="fdr_costrecoveryattribute" displayName="Cost Recovery Attribute" solution="Active" />
         <Dependent type="29" displayName="FDR - ASRF Hourly Poll" id="{0e3c897d-e9b6-ed11-b597-0022483e130e}" />
@@ -181,25 +186,29 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="msdyn_servicetasktype" displayName="Service Task Type" solution="FieldService (8.8.0.88)">
-          <package>FieldService_Anchor (8.8.98.36)</package>
+          <package>FieldService_Anchor (8.8.102.29)</package>
         </Required>
         <Dependent type="29" displayName="FDR - TMAPI Integration - Time Created" id="{66525c08-300c-ed11-b83d-000d3a84cfdd}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="msdyn_servicetasktype" displayName="Service Task Type" solution="FieldService (8.8.0.88)">
-          <package>FieldService_Anchor (8.8.98.36)</package>
+          <package>FieldService_Anchor (8.8.102.29)</package>
         </Required>
         <Dependent type="29" displayName="FDR - Send Notification When Time Is Rejected" id="{b04a37e4-8d33-ed11-9db1-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="msdyn_workorder" displayName="Work Order" solution="FieldService (8.8.0.88)">
-          <package>FieldService_Anchor (8.8.98.36)</package>
+          <package>FieldService_Anchor (8.8.102.29)</package>
         </Required>
         <Dependent type="29" displayName="FDR - Send Notification When SR WO is Completed or Canceled" id="{4d4d25a0-a45f-ed11-9562-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="ovs_mocregistration" displayName="Operation" solution="Active" />
         <Dependent type="29" displayName="FDR - Operation Expiration Notification" id="{1ff9b03d-6030-ed11-9db0-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="ovs_mocregistration" displayName="Operation" solution="Active" />
+        <Dependent type="29" displayName="FDR - Operation Status Change to Pending DQ - Send notification" id="{cb01e0bc-8168-ee11-9ae7-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="qm_tylegislationsource" displayName="Legislation Source" solution="Active" />
@@ -243,9 +252,13 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_systemstatus" displayName="Record Status" parentSchemaName="msdyn_workorder" parentDisplayName="Work Order" solution="FieldService (8.8.0.88)">
-          <package>FieldService_Anchor (8.8.98.36)</package>
+          <package>FieldService_Anchor (8.8.102.29)</package>
         </Required>
         <Dependent type="29" displayName="FDR - Send Notification When SR WO is Completed or Canceled" id="{4d4d25a0-a45f-ed11-9562-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="statuscode" displayName="Status Reason" parentSchemaName="ovs_mocregistration" parentDisplayName="Operation" solution="Active" />
+        <Dependent type="29" displayName="FDR - Operation Status Change to Pending DQ - Send notification" id="{cb01e0bc-8168-ee11-9ae7-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="372" schemaName="tc_5Fmtapiconnector" displayName="MTAPIConnector" solution="Active" id="{5bdc4d18-803f-480a-82bc-c3e6d00ad974}" />

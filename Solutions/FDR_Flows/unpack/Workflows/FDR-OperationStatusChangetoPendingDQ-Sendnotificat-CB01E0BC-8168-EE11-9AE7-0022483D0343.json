@@ -1,0 +1,149 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_dataverse_fdrsp"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "4c77769d-e006-4aef-9e53-e7d6e102fc25"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "ovs_mocregistration",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "statuscode",
+              "subscriptionRequest/filterexpression": "statuscode eq 918640001",
+              "subscriptionRequest/runas": 3
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "List_rows_-_get_Team": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "b06cee2a-495c-4b5c-a68d-7aa2a251ac2d"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "teams",
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"team\">\n<attribute name=\"name\"/>\n<attribute name=\"businessunitid\"/>\n<attribute name=\"teamid\"/>\n<attribute name=\"teamtype\"/>\n<order attribute=\"name\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"name\" operator=\"eq\" value=\"DQWG\"/>\n</filter>\n</entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "TeamID": {
+          "runAfter": {
+            "List_rows_-_get_Team": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "fe9ba3e4-5c1a-433c-97e7-9db13ac84f31"
+          },
+          "type": "Compose",
+          "inputs": "@outputs('List_rows_-_get_Team')?['body/value'][0]['teamid']"
+        },
+        "List_rows_-_Get_Team_users": {
+          "runAfter": {
+            "TeamID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4f47fbf7-951c-4b2c-b245-38dd94cf715e"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "systemusers",
+              "fetchXml": "<fetch mapping=\"logical\" output-format=\"xml-platform\" version=\"1.0\" distinct=\"true\" > \n  <entity name=\"systemuser\" > \n    <attribute name=\"fullname\" /> \n    <attribute name=\"systemuserid\" /> \n    <attribute name=\"internalemailaddress\" /> \n    <order descending=\"false\" attribute=\"fullname\" /> \n    <link-entity name=\"teammembership\" visible=\"false\" to=\"systemuserid\" from=\"systemuserid\" intersect=\"true\" > \n      <link-entity name=\"team\" to=\"teamid\" from=\"teamid\" alias=\"ac\" > \n        <filter type=\"and\" > \n          <condition value=\"@{outputs('TeamID')}\" attribute=\"teamid\" operator=\"eq\" /> \n        </filter> \n      </link-entity> \n    </link-entity> \n  </entity> \n</fetch> "
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Apply_to_each_team_user": {
+          "foreach": "@outputs('List_rows_-_Get_Team_users')?['body/value']",
+          "actions": {
+            "Add_a_new_row_-_create_notification": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "acbadebb-683b-4726-9f20-d6ccd1a7f6b9"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "appnotifications",
+                  "item/title": "Expiry notice notification. Notification d'avis d'expiration",
+                  "item/body": "An expiry notice has been pending for more than 30 days, please contact the facility to find out if they would like to renew or close their file.  \n \nUn avis d'expiration est en attente depuis plus de 30 jours. Veuillez contacter l'installation pour savoir si elle souhaite renouveler ou fermer leur dossier.  \n\n",
+                  "item/data": "    {\n\n  \"actions\": [\n        {\n        \"title\": \"@{triggerOutputs()?['body/ovs_name']}\",\n        \"data\": {\n            \"url\": \"?pagetype=entityrecord&etn=ovs_mocregistration&id=@{triggerOutputs()?['body/ovs_mocregistrationid']}\",\n            \"navigationTarget\": \"inline\"\n               }        \n        }\n      ]\n     }",
+                  "item/icontype": 100000003,
+                  "item/ownerid@odata.bind": "systemusers(@{items('Apply_to_each_team_user')?['systemuserid']})"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "List_rows_-_Get_Team_users": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "fbc29912-d751-4b78-bf68-617b39c2249e"
+          },
+          "type": "Foreach"
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
