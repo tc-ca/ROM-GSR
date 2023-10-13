@@ -49,7 +49,7 @@ $(document).ready(function () {
         tdg.c.control_hide("cid_reasonfornobnnumber_other");
     }
 
-   // tdg.c.control_hide("ovs_name_fr");
+   // tdg.c.control_hide("ovs_namefr");
     tdg.c.control_hide("address1_stateorprovince");
     //check if province is not empty
     if ($("#address1_stateorprovince").val() != "" && $("#address1_stateorprovince").val() != "") {

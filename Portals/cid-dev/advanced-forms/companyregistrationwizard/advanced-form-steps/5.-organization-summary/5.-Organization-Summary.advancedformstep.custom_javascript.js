@@ -26,7 +26,7 @@ $(document).ready(function () {
 
 	$("#cid_registrationasof").parent().parent().hide();
 
-	//tdg.c.control_hide("ovs_name_fr");
+	//tdg.c.control_hide("ovs_namefr");
 	tdg.c.control_hide("address1_stateorprovince");
 	var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
 	cid_crabusinessnumber = (cid_crabusinessnumber != "null" ? cid_crabusinessnumber : "");

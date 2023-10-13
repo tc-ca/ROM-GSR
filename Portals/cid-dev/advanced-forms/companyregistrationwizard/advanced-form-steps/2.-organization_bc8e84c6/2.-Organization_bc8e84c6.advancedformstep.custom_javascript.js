@@ -75,7 +75,7 @@ $(document).ready(function () {
 	var cid_legalname = tdg.c.replace_special_char(cid_legalname);
 	var ovs_legalnamefr = tdg.c.replace_special_char(ovs_legalnamefr);
 	var cid_operatingname = tdg.c.replace_special_char(cid_operatingname);
-	var ovs_name_fr = tdg.c.replace_special_char(ovs_name_fr);
+	var ovs_name_fr = tdg.c.replace_special_char(ovs_namefr);
 
 	$('#cid_has_cra_bn').val(cid_has_cra_bn);
 	tdg.c.control_hide("cid_has_cra_bn");
@@ -96,7 +96,7 @@ $(document).ready(function () {
 
 		$("#name").on('keyup', function () {
 			var name = $("#name").val();
-			$("#ovs_name_fr").val(name);
+			$("#ovs_namefr").val(name);
 		});
 
 		//ovs_legalname
@@ -120,7 +120,7 @@ $(document).ready(function () {
 	if (step_start != "2") {
 		$("#ovs_legalname").val(cid_legalname);
 		$("#name").val(cid_operatingname);
-		$("#ovs_name_fr").val(ovs_name_fr);
+		$("#ovs_namefr").val(ovs_name_fr);
 		$("#ovs_legalnamefr").val(ovs_legalnamefr);
 
 		debugger;
@@ -216,7 +216,7 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 	if (cid_usercontacttype != 100000000) {
 		//var message = "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen.";
 		$("#name").attr("readonly", true);
-		$("#ovs_name_fr").attr("readonly", true);
+		$("#ovs_namefr").attr("readonly", true);
 		$("#ovs_legalnamefr").attr("readonly", true);
 
 		$("#address1_line2").attr("readonly", true);

@@ -69,12 +69,12 @@ $(document).ready(function () {
 
 	tdg.cid.crw.start_cid_has_cra_bn_onchange("2");
 
-	//tdg.c.control_hide("ovs_name_fr");
+	//tdg.c.control_hide("ovs_namefr");
 	tdg.c.control_hide("cid_companyclaim");
 
 	var cid_legalname = $('#ovs_legalname').val();
 	var cid_operatingname = $('#name').val();
-	var ovs_name_fr = $('#ovs_name_fr').val();
+	var ovs_name_fr = $('#ovs_namefr').val();
 	var ovs_legalnamefr = $('#ovs_legalnamefr').val();
 
 	var step_start = sessionStorage.getItem("step_start");
@@ -120,7 +120,7 @@ $(document).ready(function () {
 	if (step_start != "2") {
 		$("#ovs_legalname").val(cid_legalname);
 		$("#name").val(cid_operatingname);
-		$("#ovs_name_fr").val(ovs_name_fr);
+		$("#ovs_namefr").val(ovs_name_fr);
 		$("#ovs_legalnamefr").val(ovs_legalnamefr);
 
 		debugger;
@@ -239,7 +239,7 @@ function cid_crabusinessnumber_onchange() {
 
 			$("#ovs_legalname").val(LegalName);
 			$("#name").val(OperatingName);
-			$("#ovs_name_fr").val(OperatingName);
+			$("#ovs_namefr").val(OperatingName);
 			$("#ovs_legalnamefr").val(LegalName);
 
 			$("#address1_line1").val(address.AddressLine1Text);
