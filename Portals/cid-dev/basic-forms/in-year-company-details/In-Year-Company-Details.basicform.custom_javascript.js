@@ -69,7 +69,7 @@ $(document).ready(function () {
 
     // autocomplete off
     $("#name").attr("autocomplete", "new-password");
-    $("#ovs_name_fr").attr("autocomplete", "new-password");
+    $("#ovs_namefr").attr("autocomplete", "new-password");
     $("#telephone1").attr("autocomplete", "new-password");
     $("#fax").attr("autocomplete", "new-password");
     $("#cid_reasonfornobnnumber_other").attr("autocomplete", "new-password");
@@ -80,7 +80,7 @@ $(document).ready(function () {
     $('#address1_country').attr("readonly", true);
     
    // tdg.c.addValidator("ovs_legalnamefr");
-   // tdg.c.addValidator("ovs_name_fr");
+   // tdg.c.addValidator("ovs_namefr");
 
     subgrid_language();
 });

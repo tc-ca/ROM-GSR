@@ -24,7 +24,7 @@ $(document).ready(function () {
     }
     tdg.c.page_instructions("page_my_company", true);
 
-   // tdg.c.control_hide("ovs_name_fr");
+   // tdg.c.control_hide("ovs_namefr");
 
     $("#update_company").click(function () {
         debugger;

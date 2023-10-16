@@ -101,7 +101,7 @@ $(document).ready(function () {
 
     tdg.cid.WebResource_address_complete_readonly(false);
 
-    //tdg.c.control_hide("ovs_name_fr");
+    //tdg.c.control_hide("ovs_namefr");
     tdg.c.control_hide("cid_reasonfornobnnumber_other");
 
     //Phone number formatting

@@ -19,12 +19,12 @@ $(document).ready(function () {
     debugger;
    // tdg.c.addValidator("ovs_legalnamefr");
    
-    //tdg.c.control_show("ovs_name_fr");
-   // tdg.c.addValidator("ovs_name_fr");
+    //tdg.c.control_show("ovs_namefr");
+   // tdg.c.addValidator("ovs_namefr");
     
     
    
-    //tdg.c.control_hide("ovs_name_fr");
+    //tdg.c.control_hide("ovs_namefr");
 });
 
 function page_setup() {

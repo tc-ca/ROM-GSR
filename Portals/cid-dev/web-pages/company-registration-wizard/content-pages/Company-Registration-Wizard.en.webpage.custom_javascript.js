@@ -18,7 +18,7 @@ $(document).ready(function () {
 	if(ovs_legalname == "") $('#ovs_legalname').attr("readonly", false);
 
     tdg.c.addValidator("ovs_legalnamefr");
-    tdg.c.addValidator("ovs_name_fr");
+    tdg.c.addValidator("ovs_namefr");
 
 	sessionStorage.setItem('frominyearsites', 'false');
 	sessionStorage.setItem('fromannualcompliance', 'false');
