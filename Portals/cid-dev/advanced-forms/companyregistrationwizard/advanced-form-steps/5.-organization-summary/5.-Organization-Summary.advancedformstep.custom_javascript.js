@@ -132,13 +132,15 @@ if (window.jQuery) {
 			var companyId = $("#EntityFormView_EntityID").val();
 			//Contacts validation
 			var filter = "parentcustomerid/Id eq (guid'" + companyId + "')";
-			var data = ExecuteQuery("Validation_CompanyPrimarySecondaryContacts", filter);
-			if (data != null) {
+			//var data = ExecuteQuery("Validation_CompanyPrimarySecondaryContacts", filter);
+			var data =  tdg.webapi.SelectedColumnlist ("contacts","cid_contacttype" ,"_parentcustomerid_value eq " + companyId + " and (cid_contacttype eq 100000000 or cid_contacttype eq 100000001) and statecode eq 0");
+		
+			if (data != null && data.length >0)  {
 				var primaryFound = false;
 				var secondaryFound = false;
 				for (i = 0; i < data.length; i++) {
-					if (data[i].cid_contacttype.Value == 100000000) primaryFound = true;
-					if (data[i].cid_contacttype.Value == 100000001) secondaryFound = true;
+					if (data[i].cid_contacttype == 100000000) primaryFound = true;
+					if (data[i].cid_contacttype == 100000001) secondaryFound = true;
 				}
 				if (primaryFound && secondaryFound) {
 					validation = true;
