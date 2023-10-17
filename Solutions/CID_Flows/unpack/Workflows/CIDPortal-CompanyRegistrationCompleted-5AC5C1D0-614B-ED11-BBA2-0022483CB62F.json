@@ -167,15 +167,30 @@
             },
             "Condition:_Check_If_Environment_Settings_has_Environment_Value": {
               "actions": {
-                "Set_variable": {
+                "Filter_environment-CID_Environment": {
                   "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@outputs('get-environment-settings')?['body/value']",
+                    "where": "@equals(item()?['qm_name'], 'CID_Environment')"
+                  }
+                },
+                "Set_variable": {
+                  "runAfter": {
+                    "Filter_environment-CID_Environment": [
+                      "Succeeded"
+                    ]
+                  },
                   "metadata": {
                     "operationMetadataId": "6d8e3def-f04a-41dd-a786-97db3d0faa8e"
                   },
                   "type": "SetVariable",
                   "inputs": {
                     "name": "CurrentEnvironment",
-                    "value": "@{first(body('get-environment-settings')?['value'])?['qm_value']}"
+                    "value": "@{body('Filter_environment-CID_Environment')[0]['qm_value']}"
                   }
                 }
               },

@@ -1,20 +1,19 @@
 {
   "properties": {
     "connectionReferences": {
-      "shared_commondataserviceforapps": {
-        "impersonation": {},
+      "shared_commondataserviceforapps_1": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
         },
         "api": {
           "name": "shared_commondataserviceforapps"
         }
       },
-      "shared_webcontents": {
+      "shared_webcontents_1": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "cid_sharedwebcontents_efbe7"
+          "connectionReferenceLogicalName": "cid_sharedwebcontents_ac2b9"
         },
         "api": {
           "name": "shared_webcontents"
@@ -76,7 +75,8 @@
                   "type": "string"
                 }
               }
-            }
+            },
+            "triggerAuthenticationType": "All"
           }
         }
       },
@@ -96,9 +96,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "PerformBoundAction"
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "PerformBoundAction",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "accounts",
@@ -108,10 +108,10 @@
               "item/IntialRegYN": "@variables('Initial_Registeration')",
               "item/ID": "@triggerBody()?['accountid']"
             },
+            "authentication": "@parameters('$authentication')",
             "retryPolicy": {
               "type": "none"
-            },
-            "authentication": "@parameters('$authentication')"
+            }
           }
         },
         "SiteList": {
@@ -215,9 +215,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "CreateRecord"
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "cid_bulkactivitylogsummaries",
@@ -240,9 +240,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "ListRecords"
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "qm_environmentsettingses",
@@ -283,9 +283,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents",
-              "connectionName": "shared_webcontents",
-              "operationId": "InvokeHttp"
+              "connectionName": "shared_webcontents_1",
+              "operationId": "InvokeHttp",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
             },
             "parameters": {
               "request/method": "POST",
@@ -318,9 +318,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents",
-                      "connectionName": "shared_webcontents",
-                      "operationId": "InvokeHttp"
+                      "connectionName": "shared_webcontents_1",
+                      "operationId": "InvokeHttp",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
                     },
                     "parameters": {
                       "request/method": "POST",
@@ -388,9 +388,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                  "connectionName": "shared_commondataserviceforapps",
-                  "operationId": "UpdateRecord"
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
                   "entityName": "cid_bulkactivitylogsummaries",
@@ -418,9 +418,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                       "connectionName": "shared_sharepointonline",
-                      "operationId": "HttpRequest"
+                      "operationId": "HttpRequest",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
                       "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -445,9 +445,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                       "connectionName": "shared_sharepointonline",
-                      "operationId": "DeleteItem"
+                      "operationId": "DeleteItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
                       "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -471,9 +471,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                          "connectionName": "shared_commondataserviceforapps",
-                          "operationId": "CreateRecord"
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "CreateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                         },
                         "parameters": {
                           "entityName": "annotations",
@@ -499,9 +499,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                           "connectionName": "shared_sharepointonline",
-                          "operationId": "GetFileContentByPath"
+                          "operationId": "GetFileContentByPath",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                         },
                         "parameters": {
                           "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -520,9 +520,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
                           "connectionName": "shared_excelonlinebusiness",
-                          "operationId": "RunScriptProd"
+                          "operationId": "RunScriptProd",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness"
                         },
                         "parameters": {
                           "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
@@ -549,9 +549,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                           "connectionName": "shared_sharepointonline",
-                          "operationId": "GetFileContent"
+                          "operationId": "GetFileContent",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                         },
                         "parameters": {
                           "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -576,9 +576,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                          "connectionName": "shared_commondataserviceforapps",
-                          "operationId": "CreateRecord"
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "CreateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                         },
                         "parameters": {
                           "entityName": "annotations",
@@ -631,9 +631,9 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                            "connectionName": "shared_commondataserviceforapps",
-                            "operationId": "CreateRecord"
+                            "connectionName": "shared_commondataserviceforapps_1",
+                            "operationId": "CreateRecord",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                           },
                           "parameters": {
                             "entityName": "annotations",
@@ -656,9 +656,9 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
                             "connectionName": "shared_excelonlinebusiness",
-                            "operationId": "RunScriptProd"
+                            "operationId": "RunScriptProd",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness"
                           },
                           "parameters": {
                             "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
@@ -685,9 +685,9 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                             "connectionName": "shared_sharepointonline",
-                            "operationId": "GetFileContentByPath"
+                            "operationId": "GetFileContentByPath",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                           },
                           "parameters": {
                             "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -712,9 +712,9 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                            "connectionName": "shared_commondataserviceforapps",
-                            "operationId": "CreateRecord"
+                            "connectionName": "shared_commondataserviceforapps_1",
+                            "operationId": "CreateRecord",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                           },
                           "parameters": {
                             "entityName": "annotations",
@@ -742,9 +742,9 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                             "connectionName": "shared_sharepointonline",
-                            "operationId": "GetFileContent"
+                            "operationId": "GetFileContent",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                           },
                           "parameters": {
                             "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -814,9 +814,9 @@
                 "type": "OpenApiConnection",
                 "inputs": {
                   "host": {
-                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                    "connectionName": "shared_commondataserviceforapps",
-                    "operationId": "UpdateRecord"
+                    "connectionName": "shared_commondataserviceforapps_1",
+                    "operationId": "UpdateRecord",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                   },
                   "parameters": {
                     "entityName": "cid_bulkactivitylogsummaries",
@@ -844,9 +844,9 @@
                     "type": "OpenApiConnection",
                     "inputs": {
                       "host": {
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                        "connectionName": "shared_commondataserviceforapps",
-                        "operationId": "CreateRecord"
+                        "connectionName": "shared_commondataserviceforapps_1",
+                        "operationId": "CreateRecord",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                       },
                       "parameters": {
                         "entityName": "annotations",
@@ -872,9 +872,9 @@
                     "type": "OpenApiConnection",
                     "inputs": {
                       "host": {
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                         "connectionName": "shared_sharepointonline",
-                        "operationId": "GetFileContentByPath"
+                        "operationId": "GetFileContentByPath",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                       },
                       "parameters": {
                         "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -893,9 +893,9 @@
                     "type": "OpenApiConnection",
                     "inputs": {
                       "host": {
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
                         "connectionName": "shared_excelonlinebusiness",
-                        "operationId": "RunScriptProd"
+                        "operationId": "RunScriptProd",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness"
                       },
                       "parameters": {
                         "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
@@ -922,9 +922,9 @@
                     "type": "OpenApiConnection",
                     "inputs": {
                       "host": {
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                         "connectionName": "shared_sharepointonline",
-                        "operationId": "GetFileContent"
+                        "operationId": "GetFileContent",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                       },
                       "parameters": {
                         "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -949,9 +949,9 @@
                     "type": "OpenApiConnection",
                     "inputs": {
                       "host": {
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                        "connectionName": "shared_commondataserviceforapps",
-                        "operationId": "CreateRecord"
+                        "connectionName": "shared_commondataserviceforapps_1",
+                        "operationId": "CreateRecord",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                       },
                       "parameters": {
                         "entityName": "annotations",
@@ -1008,9 +1008,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                          "connectionName": "shared_commondataserviceforapps",
-                          "operationId": "CreateRecord"
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "CreateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                         },
                         "parameters": {
                           "entityName": "annotations",
@@ -1033,9 +1033,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
                           "connectionName": "shared_excelonlinebusiness",
-                          "operationId": "RunScriptProd"
+                          "operationId": "RunScriptProd",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness"
                         },
                         "parameters": {
                           "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
@@ -1062,9 +1062,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                           "connectionName": "shared_sharepointonline",
-                          "operationId": "GetFileContentByPath"
+                          "operationId": "GetFileContentByPath",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                         },
                         "parameters": {
                           "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -1089,9 +1089,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                          "connectionName": "shared_commondataserviceforapps",
-                          "operationId": "CreateRecord"
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "CreateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                         },
                         "parameters": {
                           "entityName": "annotations",
@@ -1119,9 +1119,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                           "connectionName": "shared_sharepointonline",
-                          "operationId": "GetFileContent"
+                          "operationId": "GetFileContent",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                         },
                         "parameters": {
                           "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -1176,9 +1176,9 @@
                 "type": "OpenApiConnection",
                 "inputs": {
                   "host": {
-                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                     "connectionName": "shared_sharepointonline",
-                    "operationId": "HttpRequest"
+                    "operationId": "HttpRequest",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                   },
                   "parameters": {
                     "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -1203,9 +1203,9 @@
                 "type": "OpenApiConnection",
                 "inputs": {
                   "host": {
-                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                     "connectionName": "shared_sharepointonline",
-                    "operationId": "DeleteItem"
+                    "operationId": "DeleteItem",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                   },
                   "parameters": {
                     "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -1242,9 +1242,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "GetItem"
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "accounts",
@@ -1319,9 +1319,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents",
-              "connectionName": "shared_webcontents",
-              "operationId": "InvokeHttp"
+              "connectionName": "shared_webcontents_1",
+              "operationId": "InvokeHttp",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
             },
             "parameters": {
               "request/method": "PATCH",
@@ -1364,9 +1364,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                       "connectionName": "shared_sharepointonline",
-                      "operationId": "GetFileContent"
+                      "operationId": "GetFileContent",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                     },
                     "parameters": {
                       "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -1410,9 +1410,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                   "connectionName": "shared_sharepointonline",
-                  "operationId": "CreateFile"
+                  "operationId": "CreateFile",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                 },
                 "parameters": {
                   "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -1477,9 +1477,9 @@
                     "type": "OpenApiConnection",
                     "inputs": {
                       "host": {
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                         "connectionName": "shared_sharepointonline",
-                        "operationId": "GetFileContent"
+                        "operationId": "GetFileContent",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                       },
                       "parameters": {
                         "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -1523,9 +1523,9 @@
                 "type": "OpenApiConnection",
                 "inputs": {
                   "host": {
-                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                     "connectionName": "shared_sharepointonline",
-                    "operationId": "CreateFile"
+                    "operationId": "CreateFile",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
                   },
                   "parameters": {
                     "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -1619,9 +1619,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
               "connectionName": "shared_sharepointonline",
-              "operationId": "CreateNewFolder"
+              "operationId": "CreateNewFolder",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
             },
             "parameters": {
               "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
@@ -2052,9 +2052,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents",
-              "connectionName": "shared_webcontents",
-              "operationId": "InvokeHttp"
+              "connectionName": "shared_webcontents_1",
+              "operationId": "InvokeHttp",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
             },
             "parameters": {
               "request/method": "PATCH",
@@ -2099,9 +2099,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "PerformUnboundAction"
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "PerformUnboundAction",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "actionName": "cid_CID_Remove_SpecialChar",
@@ -2128,7 +2128,7 @@
       },
       "outputs": {}
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }

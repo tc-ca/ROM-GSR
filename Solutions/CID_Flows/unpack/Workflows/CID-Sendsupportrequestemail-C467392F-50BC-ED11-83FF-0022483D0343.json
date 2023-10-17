@@ -1,11 +1,10 @@
 {
   "properties": {
     "connectionReferences": {
-      "shared_commondataserviceforapps": {
-        "impersonation": {},
+      "shared_commondataserviceforapps_1": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
         },
         "api": {
           "name": "shared_commondataserviceforapps"
@@ -42,16 +41,15 @@
           "type": "OpenApiConnectionWebhook",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "SubscribeWebhookTrigger"
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "subscriptionRequest/message": 1,
               "subscriptionRequest/entityname": "ovs_supportrequest",
               "subscriptionRequest/scope": 4,
-              "subscriptionRequest/runas": 3,
-              "subscriptionRequest/name": "c467392f-50bc-ed11-83ff-0022483d0343"
+              "subscriptionRequest/runas": 3
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -66,9 +64,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "ListRecords"
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "qm_environmentsettingses",
@@ -157,9 +155,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "GetItem"
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "contacts",
@@ -334,9 +332,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
                   "connectionName": "shared_office365_1",
-                  "operationId": "SendEmailV2"
+                  "operationId": "SendEmailV2",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                 },
                 "parameters": {
                   "emailMessage/To": "@outputs('Get_a_row_by_ID-_get_contact_email')?['body/emailaddress1']",
@@ -364,9 +362,9 @@
                 "type": "OpenApiConnection",
                 "inputs": {
                   "host": {
-                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
                     "connectionName": "shared_office365_1",
-                    "operationId": "SendEmailV2"
+                    "operationId": "SendEmailV2",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                   },
                   "parameters": {
                     "emailMessage/To": "@outputs('Get_a_row_by_ID-_get_contact_email')?['body/emailaddress1']",
@@ -441,7 +439,7 @@
       },
       "outputs": {}
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }

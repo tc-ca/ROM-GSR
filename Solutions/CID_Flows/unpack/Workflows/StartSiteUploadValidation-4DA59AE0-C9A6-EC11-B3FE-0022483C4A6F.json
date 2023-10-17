@@ -1,48 +1,28 @@
 {
   "properties": {
     "connectionReferences": {
-      "shared_commondataserviceforapps_1": {
-        "impersonation": {},
+      "shared_commondataserviceforapps_2": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
         },
         "api": {
           "name": "shared_commondataserviceforapps"
         }
       },
-      "shared_webcontents": {
+      "shared_webcontents_1": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "cid_sharedwebcontents_efbe7"
+          "connectionReferenceLogicalName": "cid_sharedwebcontents_ac2b9"
         },
         "api": {
           "name": "shared_webcontents"
-        }
-      },
-      "shared_commondataserviceforapps": {
-        "impersonation": {},
-        "runtimeSource": "embedded",
-        "connection": {
-          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
-        },
-        "api": {
-          "name": "shared_commondataserviceforapps"
         }
       },
       "shared_office365_1": {
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "cid_sharedoffice365_ee685"
-        },
-        "api": {
-          "name": "shared_office365"
-        }
-      },
-      "shared_office365": {
-        "runtimeSource": "embedded",
-        "connection": {
-          "connectionReferenceLogicalName": "tdg_ConnectionReferenceOutlookTDGCoreUser"
         },
         "api": {
           "name": "shared_office365"
@@ -70,17 +50,16 @@
           "type": "OpenApiConnectionWebhook",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-              "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "SubscribeWebhookTrigger"
+              "connectionName": "shared_commondataserviceforapps_2",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "subscriptionRequest/message": 3,
               "subscriptionRequest/entityname": "cid_bulkactivitylogsummary",
               "subscriptionRequest/scope": 4,
               "subscriptionRequest/filteringattributes": "cid_detailedvalidationstarttime",
-              "subscriptionRequest/runas": 3,
-              "subscriptionRequest/name": "4da59ae0-c9a6-ec11-b3fe-0022483c4a6f"
+              "subscriptionRequest/runas": 3
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -101,9 +80,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                  "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "ListRecords"
+                  "connectionName": "shared_commondataserviceforapps_2",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
                   "entityName": "accounts",
@@ -126,9 +105,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents",
-                  "connectionName": "shared_webcontents",
-                  "operationId": "InvokeHttp"
+                  "connectionName": "shared_webcontents_1",
+                  "operationId": "InvokeHttp",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
                 },
                 "parameters": {
                   "request/method": "GET",
@@ -207,9 +186,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                  "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "ListRecords"
+                  "connectionName": "shared_commondataserviceforapps_2",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
                   "entityName": "ovs_primaryclasses",
@@ -236,9 +215,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                  "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "PerformUnboundAction"
+                  "connectionName": "shared_commondataserviceforapps_2",
+                  "operationId": "PerformUnboundAction",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
                   "actionName": "cid_BulkSitUploadValidation",
@@ -250,10 +229,10 @@
                   "item/ValidationMessages": "@body('Parse_JSON_Messages_From_Web')",
                   "item/Language": "@variables('Language')"
                 },
+                "authentication": "@parameters('$authentication')",
                 "retryPolicy": {
                   "type": "none"
-                },
-                "authentication": "@parameters('$authentication')"
+                }
               }
             },
             "check_if_error_found_in_validation": {
@@ -359,9 +338,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                          "connectionName": "shared_commondataserviceforapps_1",
-                          "operationId": "CreateRecord"
+                          "connectionName": "shared_commondataserviceforapps_2",
+                          "operationId": "CreateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                         },
                         "parameters": {
                           "entityName": "cid_bulkactivitylogsdetailses",
@@ -507,9 +486,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents",
-                  "connectionName": "shared_webcontents",
-                  "operationId": "InvokeHttp"
+                  "connectionName": "shared_webcontents_1",
+                  "operationId": "InvokeHttp",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_webcontents"
                 },
                 "parameters": {
                   "request/method": "GET",
@@ -666,9 +645,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                  "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "UpdateRecord"
+                  "connectionName": "shared_commondataserviceforapps_2",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
                   "entityName": "cid_bulkactivitylogsummaries",
@@ -702,9 +681,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                      "connectionName": "shared_commondataserviceforapps",
-                      "operationId": "PerformBoundAction"
+                      "connectionName": "shared_commondataserviceforapps_2",
+                      "operationId": "PerformBoundAction",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                     },
                     "parameters": {
                       "entityName": "accounts",
@@ -744,9 +723,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                  "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "UpdateRecord"
+                  "connectionName": "shared_commondataserviceforapps_2",
+                  "operationId": "UpdateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
                   "entityName": "cid_bulkactivitylogsummaries",
@@ -866,9 +845,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
                           "connectionName": "shared_office365_1",
-                          "operationId": "SendEmailV2"
+                          "operationId": "SendEmailV2",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                         },
                         "parameters": {
                           "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
@@ -892,9 +871,9 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
                             "connectionName": "shared_office365_1",
-                            "operationId": "SendEmailV2"
+                            "operationId": "SendEmailV2",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                           },
                           "parameters": {
                             "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
@@ -1047,14 +1026,14 @@
                         "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
                             "connectionName": "shared_office365_1",
-                            "operationId": "SendEmailV2"
+                            "operationId": "SendEmailV2",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                           },
                           "parameters": {
                             "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
                             "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Le téléchargement de données en masse est réussi pendant le traitement de @{variables('UploadType-French')} dans la plateforme de données de la BDIC de Transports Canada. Veuillez consulter les détails pour voir les étapes suivantes.",
-                            "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLe traitement de téléchargement de données en masse de @{variables('UploadType-French')} pour l’organisation @{outputs('Get_a_account_by_ID')?['body/ovs_name_fr']}, au sein de la plateforme de données de la BDIC de Transports Canada, est réussi.<br>\n<br>\n<br>\nLes entrées @{outputs('totalNumberOfSites')} &nbsp;du fichier «@{outputs('Update_Bulk_activity_log_summary_2')?['body/cid_filename']}» ont été mises à jour avec succès dans la plateforme de données de la BDIC de Transports Canada.<br>\n@{variables('French-NextStepText')}<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{variables('SiteRemoveWarnning')}<br>\n<br>\n@{outputs('html_table_with_style_Missing_Site_French')}<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
+                            "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLe traitement de téléchargement de données en masse de @{variables('UploadType-French')} pour l’organisation @{outputs('Get_a_account_by_ID')?['body/ovs_legalnamefr']}, au sein de la plateforme de données de la BDIC de Transports Canada, est réussi.<br>\n<br>\n<br>\nLes entrées @{outputs('totalNumberOfSites')} &nbsp;du fichier «@{outputs('Update_Bulk_activity_log_summary_2')?['body/cid_filename']}» ont été mises à jour avec succès dans la plateforme de données de la BDIC de Transports Canada.<br>\n@{variables('French-NextStepText')}<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{variables('SiteRemoveWarnning')}<br>\n<br>\n@{outputs('html_table_with_style_Missing_Site_French')}<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
                             "emailMessage/From": "@variables('CID_Email_Sender')",
                             "emailMessage/Importance": "Normal"
                           },
@@ -1073,14 +1052,14 @@
                           "type": "OpenApiConnection",
                           "inputs": {
                             "host": {
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
                               "connectionName": "shared_office365_1",
-                              "operationId": "SendEmailV2"
+                              "operationId": "SendEmailV2",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                             },
                             "parameters": {
                               "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
                               "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Le téléchargement de données en masse est réussi pendant le traitement de @{variables('UploadType-French')} dans la plateforme de données de la BDIC de Transports Canada. Veuillez consulter les détails pour voir les étapes suivantes.\n",
-                              "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLe traitement de téléchargement de données en masse de @{variables('UploadType-French')} pour l’organisation @{outputs('Get_a_account_by_ID')?['body/ovs_name_fr']}, au sein de la plateforme de données de la BDIC de Transports Canada, est réussi.<br>\n<br>\nLes entrées @{outputs('totalNumberOfSites')}du fichier « @{outputs('Update_Bulk_activity_log_summary_2')?['body/cid_filename']} » ont été mises à jour avec succès dans la plateforme de données de la BDIC de Transports Canada.<br>\n@{variables('French-NextStepText')}<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
+                              "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLe traitement de téléchargement de données en masse de @{variables('UploadType-French')} pour l’organisation @{outputs('Get_a_account_by_ID')?['body/ovs_legalnamefr']}, au sein de la plateforme de données de la BDIC de Transports Canada, est réussi.<br>\n<br>\nLes entrées @{outputs('totalNumberOfSites')}du fichier « @{outputs('Update_Bulk_activity_log_summary_2')?['body/cid_filename']} » ont été mises à jour avec succès dans la plateforme de données de la BDIC de Transports Canada.<br>\n@{variables('French-NextStepText')}<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
                               "emailMessage/From": "@variables('CID_Email_Sender')",
                               "emailMessage/Importance": "Normal"
                             },
@@ -1137,9 +1116,9 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                  "connectionName": "shared_commondataserviceforapps_1",
-                  "operationId": "PerformBoundAction"
+                  "connectionName": "shared_commondataserviceforapps_2",
+                  "operationId": "PerformBoundAction",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
                   "entityName": "accounts",
@@ -1211,9 +1190,9 @@
                     "type": "OpenApiConnection",
                     "inputs": {
                       "host": {
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
-                        "connectionName": "shared_office365",
-                        "operationId": "SendEmailV2"
+                        "connectionName": "shared_office365_1",
+                        "operationId": "SendEmailV2",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                       },
                       "parameters": {
                         "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
@@ -1337,9 +1316,9 @@
                       "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
-                          "connectionName": "shared_office365",
-                          "operationId": "SendEmailV2"
+                          "connectionName": "shared_office365_1",
+                          "operationId": "SendEmailV2",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                         },
                         "parameters": {
                           "emailMessage/To": "@outputs('get_contact_email')?['body/emailaddress1']",
@@ -1383,9 +1362,9 @@
                 "type": "OpenApiConnection",
                 "inputs": {
                   "host": {
-                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-                    "connectionName": "shared_commondataserviceforapps_1",
-                    "operationId": "UpdateRecord"
+                    "connectionName": "shared_commondataserviceforapps_2",
+                    "operationId": "UpdateRecord",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                   },
                   "parameters": {
                     "entityName": "cid_bulkactivitylogsummaries",
@@ -1423,9 +1402,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-              "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "GetItem"
+              "connectionName": "shared_commondataserviceforapps_2",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "contacts",
@@ -1446,9 +1425,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-              "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "GetItem"
+              "connectionName": "shared_commondataserviceforapps_2",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "cid_bulkactivitylogsummaries",
@@ -2007,9 +1986,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-              "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "GetItem"
+              "connectionName": "shared_commondataserviceforapps_2",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "accounts",
@@ -2160,9 +2139,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-              "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "ListRecords"
+              "connectionName": "shared_commondataserviceforapps_2",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "annotations",
@@ -2736,9 +2715,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "ListRecords"
+              "connectionName": "shared_commondataserviceforapps_2",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "qm_environmentsettingses",
@@ -2799,7 +2778,7 @@
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
