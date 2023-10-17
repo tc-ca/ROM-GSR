@@ -1,4 +1,4 @@
-var k_form_org = "CID - Organization::BDIC - Organisation";
+﻿var k_form_org = "CID - Organization::BDIC - Organisation";
 var k_form_site = "CID - Site::BDIC - Site";
 var k_customertypecode_org = 948010000;
 var k_customertypecode_site = 948010001;
@@ -21,21 +21,20 @@ function Me_OnLoad(context) {
     if (_form.ui.getFormType() == 1) {
         customertypecode = k_customertypecode_org;
         _form.getAttribute("cid_addressrequired").setValue(true);
-		
-                var globalContext = Xrm.Utility.getGlobalContext();
-		globalContext.getCurrentAppName().then(
-				function successCallback(appName) {
-				//alert(appName);
-				if(appName== "CID Admin App")
-				{
-					_form.getAttribute("cid_cidcompanystatus").setValue(100000002);
-				}
-				}, function errorCallback() {
-				// handle error conditions
+
+        var globalContext = Xrm.Utility.getGlobalContext();
+        globalContext.getCurrentAppName().then(
+            function successCallback(appName) {
+                //alert(appName);
+                if (appName == "CID Admin App") {
+                    _form.getAttribute("cid_cidcompanystatus").setValue(100000002);
+                }
+            }, function errorCallback() {
+                // handle error conditions
                 debugger;
-			});
-		}
-		
+            });
+    }
+
     else {
         customertypecode = _form.getAttribute("customertypecode").getValue();
     }
@@ -78,6 +77,8 @@ function Me_OnLoad(context) {
     cid_addressrequired_OnChange(context);
 
     Get_FlowURL_and_Environment();
+
+    _form.getControl("cid_cidcompanystatus").setDisabled(false);
 }
 
 function Me_OnSave(context) {
@@ -192,7 +193,7 @@ async function cid_crabusinessnumber_OnChange() {
 function clear_data() {
     _form.getAttribute("ovs_legalname").setValue("");
     _form.getAttribute("name").setValue("");
-    _form.getAttribute("ovs_name_fr").setValue("");
+    _form.getAttribute("ovs_namefr").setValue("");
     _form.getAttribute("address1_line1").setValue("");
     _form.getAttribute("address1_line2").setValue("");
     _form.getAttribute("address1_line3").setValue("");
@@ -215,7 +216,7 @@ function cid_crabusinessnumber_success() {
 
             _form.getAttribute("ovs_legalname").setValue(data.ovs_legalname);
             _form.getAttribute("name").setValue(data.name);
-            _form.getAttribute("ovs_name_fr").setValue(data.ovs_name_fr);
+            _form.getAttribute("ovs_namefr").setValue(data.ovs_name_fr);
             _form.getAttribute("address1_line1").setValue(data.address1_line1);
             _form.getAttribute("address1_line2").setValue(data.address1_line2);
             _form.getAttribute("address1_line3").setValue(data.address1_line3);
