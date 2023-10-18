@@ -75,7 +75,7 @@ $(document).ready(function () {
 	var cid_legalname = tdg.c.replace_special_char(cid_legalname);
 	var ovs_legalnamefr = tdg.c.replace_special_char(ovs_legalnamefr);
 	var cid_operatingname = tdg.c.replace_special_char(cid_operatingname);
-	var ovs_name_fr = tdg.c.replace_special_char(ovs_namefr);
+	var ovs_name_fr = tdg.c.replace_special_char(ovs_name_fr);
 
 	$('#cid_has_cra_bn').val(cid_has_cra_bn);
 	tdg.c.control_hide("cid_has_cra_bn");
