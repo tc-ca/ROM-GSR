@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ImportExportXml version="9.2.23093.196" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ImportExportXml version="9.2.23101.182" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <UniqueName>TDGPlugins</UniqueName>
     <LocalizedNames>
@@ -8,7 +8,7 @@
     <Descriptions>
       <Description description="Main solution for TDG Inspection Related Plugins&#xA;1.0.0.1 - WO Pre Create and Pre Update were modified." languagecode="1033" />
     </Descriptions>
-    <Version>1.2.0.68</Version>
+    <Version>1.2.0.69</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>transportationofdangerousgoods</UniqueName>
@@ -89,6 +89,7 @@
       <RootComponent type="92" id="{214b0692-e698-ed11-aad0-0022483e130e}" behavior="0" />
       <RootComponent type="92" id="{242668b5-9ea3-eb11-b1ac-000d3ae8b8ae}" behavior="0" />
       <RootComponent type="92" id="{2bbe310e-ca09-ec11-b6e6-000d3ae8f8cc}" behavior="0" />
+      <RootComponent type="92" id="{330f7ce1-6264-ee11-8df0-0022483d0c87}" behavior="0" />
       <RootComponent type="92" id="{3359752f-297a-eb11-a812-000d3af31ad8}" behavior="0" />
       <RootComponent type="92" id="{33ef25c3-4538-ed11-9db0-0022483cb62f}" behavior="0" />
       <RootComponent type="92" id="{3cfc838d-e440-ed11-bba2-0022483d0343}" behavior="0" />
@@ -110,7 +111,6 @@
       <RootComponent type="92" id="{74b4ed13-1494-ec11-b3fe-000d3a0c187c}" behavior="0" />
       <RootComponent type="92" id="{7de007e3-d11b-ec11-b6e7-000d3ae9b59b}" behavior="0" />
       <RootComponent type="92" id="{82133274-eabf-ec11-983e-0022483db7ff}" behavior="0" />
-      <RootComponent type="92" id="{84d2e48a-cbc6-ed11-b597-0022483d0343}" behavior="0" />
       <RootComponent type="92" id="{868db40a-c5c6-ed11-b597-0022483d0343}" behavior="0" />
       <RootComponent type="92" id="{88adf45a-596e-ec11-8f8e-0022483c3c8c}" behavior="0" />
       <RootComponent type="92" id="{8be10cf5-3f38-ed11-9db0-0022483cb62f}" behavior="0" />
@@ -436,24 +436,64 @@
         <Dependent type="93" id="{5025450f-ccc8-ed11-b596-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="2" schemaName="ovs_address_display" displayName="Address Display" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Required type="2" schemaName="ovs_address_type" displayName="Input Address Type" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
         <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.Account.Account_PreUpdateSiteAddress: Update of account" id="{868db40a-c5c6-ed11-b597-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="2" schemaName="ovs_address_display" displayName="Address Display" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Required type="2" schemaName="ovs_address_type" displayName="Input Address Type" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
         <Dependent type="93" id="{e174d4de-c5c6-ed11-b597-0022483d0343}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="2" schemaName="ovs_legalname" displayName="Legal Name (English)" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
-        <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.Account.Account_PreUpdateCompanyLegalName: Update of account" id="{84d2e48a-cbc6-ed11-b597-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="ovs_legalname" displayName="Legal Name (English)" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
         <Dependent type="93" id="{5025450f-ccc8-ed11-b596-0022483d0343}" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="2" schemaName="ovs_legalnamefr" displayName="Legal Name (French)" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
-        <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.Account.Account_PreUpdateCompanyLegalName: Update of account" id="{84d2e48a-cbc6-ed11-b597-0022483d0343}" />
+        <Required type="2" schemaName="ovs_lld_meridian" displayName="Meridian" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.Account.Account_PreUpdateSiteAddress: Update of account" id="{868db40a-c5c6-ed11-b597-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_lld_meridian" displayName="Meridian" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="93" id="{e174d4de-c5c6-ed11-b597-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_lld_province" displayName="Province / Territory" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.Account.Account_PreUpdateSiteAddress: Update of account" id="{868db40a-c5c6-ed11-b597-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_lld_quarter" displayName="Quarter / LSD" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.Account.Account_PreUpdateSiteAddress: Update of account" id="{868db40a-c5c6-ed11-b597-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_lld_quarter" displayName="Quarter / LSD" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="93" id="{e174d4de-c5c6-ed11-b597-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_lld_range" displayName="Range" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.Account.Account_PreUpdateSiteAddress: Update of account" id="{868db40a-c5c6-ed11-b597-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_lld_range" displayName="Range" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="93" id="{e174d4de-c5c6-ed11-b597-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_lld_section" displayName="Section" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.Account.Account_PreUpdateSiteAddress: Update of account" id="{868db40a-c5c6-ed11-b597-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_lld_section" displayName="Section" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="93" id="{e174d4de-c5c6-ed11-b597-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_lld_township" displayName="Township" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.Account.Account_PreUpdateSiteAddress: Update of account" id="{868db40a-c5c6-ed11-b597-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_lld_township" displayName="Township" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="93" id="{e174d4de-c5c6-ed11-b597-0022483d0343}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="ovs_namefr" displayName="Operating Name (French)" parentSchemaName="account" parentDisplayName="Account" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.Account.Account_PostUpdateCompanyLegalName: Update of account" id="{330f7ce1-6264-ee11-8df0-0022483d0c87}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="bookableresourcebookingid" displayName="Bookable Resource Booking" parentSchemaName="bookableresourcebooking" parentDisplayName="Booking" solution="msdynce_Scheduling (9.0.0.0)" />
