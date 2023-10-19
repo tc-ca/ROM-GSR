@@ -113,20 +113,3 @@ function fake_data(bn) {
 function BN_Error() {
     alert('Invalid CRA Business Number.');
 }
-
-// odata
-function OData_List(entity, filter) {
-    //debugger;
-    var url = entity + "?$filter=" + filter;
-    var oDataUrl = "https://cid-dev.powerappsportals.com/_odata/" + url;
-    var response = null;
-    $.ajax({
-        type: "GET",
-        url: oDataUrl,
-        dataType: "json",
-        async: false
-    }).done(function (json) {
-        response = json.value;
-    });
-    return response;
-}

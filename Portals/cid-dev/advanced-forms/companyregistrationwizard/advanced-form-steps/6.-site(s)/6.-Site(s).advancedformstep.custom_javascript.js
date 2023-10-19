@@ -147,7 +147,9 @@ $(document).ready(function () {
 		var errorMessage = "Company Dashboard";	// Bulk Site Upload
 		var companyId = $("#EntityFormView_EntityID").val();
 		var filter = "parentaccountid/Id eq (guid'" + companyId + "')";
+
 		var data = ExecuteQuery("Validation_CompanySites", filter);
+		//var data = tdg.webapi.SelectedColumnlist("accounts", "parentaccountid", "statecode eq 0");
 
 		if (data == null) {
 			errorMessage = "m000011";
