@@ -28,7 +28,7 @@ $(document).ready(function () {
     tdg.c.control_hide("parentcustomerid", true);
     tdg.c.control_hide("cid_operatingname");
     tdg.c.control_hide("cid_operatingnamefr");
-
+     debugger;
     $("#cid_has_cra_bn").change(function () {
         tdg.cid.crw.start_cid_has_cra_bn_onchange("1");
     });
@@ -224,10 +224,12 @@ if (window.jQuery) {
                 }
             }
             else {
-                console.log ("parent customer id setup");
+                console.log ("parent customer id setup 001");
+                debugger;
                 tdg.cid.crw.start_parentcustomerid_setup(_account.accountid, _account.ovs_legalname);
                 validation = true;
             }
+            debugger;
 
             if (validation) {
                 debugger;
