@@ -211,13 +211,19 @@ function btn_previous_click() {
 	tdg.cid.crw.step2_previous_click(email, account_id, contact_id);
 }
 
-function cid_crabusinessnumber_onchange() {
+async function cid_crabusinessnumber_onchange() {
 	var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
-	var data = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, "2");
-	if (data == "") {
+	$("#NextButton").prop("disabled", true);
+	let data = await tdg.cid.crw.start_cid_crabusinessnumber_onchange("2")
+	//tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, "2");
+	console.log ("data : " + data);
+	
+	if (data == null || data.length == 0) {
 		tdg.c.error_message_advanced_form("m000001", true);
+
 	}
 	else {
+		$("#NextButton").prop("disabled", false);
 		debugger;
 		var account_id = '{{user.parentcustomerid.Id}}';
 		filter = "cid_crabusinessnumber eq '" + cid_crabusinessnumber + "'";

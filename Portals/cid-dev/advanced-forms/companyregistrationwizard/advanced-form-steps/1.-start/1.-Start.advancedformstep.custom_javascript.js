@@ -224,7 +224,7 @@ if (window.jQuery) {
                 }
             }
             else {
-                console.log ("parent customer id setup 001");
+                console.log ("parent customer id setup 002");
                 debugger;
                 tdg.cid.crw.start_parentcustomerid_setup(_account.accountid, _account.ovs_legalname);
                 validation = true;

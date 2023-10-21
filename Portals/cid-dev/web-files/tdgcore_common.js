@@ -3063,7 +3063,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#myModal").css('position', 'fixed');
             $("#myModal").css('z-index', '9999');
 
-            $("#btn_ok").click(async function () {
+            $("#btn_ok").click(function () {
                 //hide div that display error
                 $('#ErrorMessageDiv').css('display', 'none');
                 var cid_crabusinessnumber = $("#cid_crabusinessnumberpopup").val();
@@ -3077,76 +3077,202 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 console.log('($("#hasCRABN : selected").val()) : ' + ($("#hasCRABN :selected").val()));
                 if (invitation_ind && ($("#hasCRABN :selected").val()) == 1) {
 
+
                     var data;
                     var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
                     //if pre prod or prod
+                    try {
+                        if (environment.toLowerCase() == "preprod" || environment.toLowerCase() == "prod") {
+                            //use CRA API to get iformation
+                            // console.log("retrieved from production");
+                            // data = await tdg.cid.crw.Production_start_Retrieve_cra(cid_crabusinessnumber, "");
+                            var results = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_Flow_CRA_API'");
+                            //check if flow url is found
+                            var CRA_Flow_URL;
+                            var json = {};
+                            if (results.length > 0) {
+                                CRA_Flow_URL = results[0]["qm_value"];
+                                //define flow paramaters
+                                let body = {
+                                    "cid_crabusinessnumber": cid_crabusinessnumber
+                                };
+                                //const CRAresult = await tdg.cid.crw.Call_CRA_Flow(CRA_Flow_URL, body);                               
+                                var req = new XMLHttpRequest();
+                                req.open("POST", CRA_Flow_URL, true);
+                                req.setRequestHeader('Content-Type', 'application/json');
+                                req.onreadystatechange = function () {
+                                    if (this.readyState === 4) {
+                                        req.onreadystatechange = null;
+                                        if (this.status === 200) {
+                                            var result = this.response;
+                                            if (result.length == 0) {
+                                                var msg = tdg.error_message.message("m000001");
+                                                $('#ErrorMessageDiv').css('display', 'block');
+                                                $('#ErrorMessageDiv').html("<p>" + msg + "</p>");
+                                                $("#myModal").remove();
+                                                handler(true);
+                                            }
+                                            else {
+                                                {
+                                                    var accid = sessionStorage.getItem("accountId");
 
-                    if (environment.toLowerCase() == "preprod" || environment.toLowerCase() == "prod") {
-                        //use CRA API to get iformation
-                        data = await tdg.cid.crw.Production_start_Retrieve_cra(cid_crabusinessnumber, "");
-                    }
-                    else {
-                        // retrieve information from FakeBN entity in dynamics
-                        data = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, "");
-                    }
-
-                    //show notice if the data is empty
-                    if (data.length == 0) {
-                        var msg = tdg.error_message.message("m000001");
-                        $('#ErrorMessageDiv').css('display', 'block');
-                        $('#ErrorMessageDiv').html("<p>" + msg + "</p>");
-                    }
-                    else {
-                        var accid = sessionStorage.getItem("accountId");
-
-                        var data = {
-                            "cid_has_cra_bn": true,
-                            "ovs_legalnamefr": $("#cid_legalname_fr2").val(),
-                            "ovs_namefr": $("#cid_operatingname_fr2").val(),
-                            "cid_crabusinessnumber": cid_crabusinessnumber,
-                            "ovs_legalname": $("#cid_legalname2").val()
-                        };
+                                                    var UpdateData = {
+                                                        "cid_has_cra_bn": true,
+                                                        "ovs_legalnamefr": $("#cid_legalname_fr2").val(),
+                                                        "ovs_namefr": $("#cid_operatingname_fr2").val(),
+                                                        "cid_crabusinessnumber": cid_crabusinessnumber,
+                                                        "ovs_legalname": $("#cid_legalname2").val()
+                                                    };
 
 
-                        webapi.safeAjax({
-                            type: "PATCH",
-                            url: "/_api/accounts(" + accid + ")",
-                            contentType: "application/json",
-                            data: JSON.stringify(data),
 
-                            success: function (res) {
-                                debugger;
-                                console.log(res);
-                            },
+                                                    tdg.webapi.update("accounts", accid, UpdateData);
 
-                            error: function (res, status, errorThrown) {
-                                debugger;
-                                console.log(res);
+                                                    console.log("after update");
+                                                    $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
+                                                    sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
+
+
+
+                                                    $("#cid_has_cra_bn").val($("#hasCRABN :selected").val());
+                                                    $("#cid_reasonfornobnnumber_other").val($("#cid_reasonfornobnnumber_other_popup").val());
+                                                    $("#cid_reasonfornobnnumber").val($("#cid_reasonfornobnnumberpopup :selected").val());
+
+                                                    $("#ovs_legalnamefr").val($("#cid_legalname_fr2").val());
+                                                    $("#cid_operatingname_fr").val($("#cid_operatingname_fr2").val());
+
+
+
+
+                                                    //accountid
+
+
+                                                    $("#myModal").remove();
+                                                    handler(true);
+                                                }
+
+                                            }
+                                           
+
+                                        } 
+                                    }
+                                }
+
+                                req.send(body);
+
+
+
                             }
-                        });
+                            /*
+                            
+                            */
+                            //show notice if the data is empty
+                            /* if (CRAresult.length == 0) {
+                                 var msg = tdg.error_message.message("m000001");
+                                 $('#ErrorMessageDiv').css('display', 'block');
+                                 $('#ErrorMessageDiv').html("<p>" + msg + "</p>");
+                             }*/
+                            //else
 
-                        console.log("after update");
-                        $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
-                        sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
+                        }
+                        else {
+                            console.log("retrieved from fake bn");
+                            // retrieve information from FakeBN entity in dynamics
+                            let FakeBNdata = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, "");
+                            if (FakeBNdata.length == 0) {
+                                var msg = tdg.error_message.message("m000001");
+                                $('#ErrorMessageDiv').css('display', 'block');
+                                $('#ErrorMessageDiv').html("<p>" + msg + "</p>");
+                            }
+                            else {
+                                {
+                                    var accid = sessionStorage.getItem("accountId");
+
+                                    var UpdateData = {
+                                        "cid_has_cra_bn": true,
+                                        "ovs_legalnamefr": $("#cid_legalname_fr2").val(),
+                                        "ovs_namefr": $("#cid_operatingname_fr2").val(),
+                                        "cid_crabusinessnumber": cid_crabusinessnumber,
+                                        "ovs_legalname": $("#cid_legalname2").val()
+                                    };
 
 
 
-                        $("#cid_has_cra_bn").val($("#hasCRABN :selected").val());
-                        $("#cid_reasonfornobnnumber_other").val($("#cid_reasonfornobnnumber_other_popup").val());
-                        $("#cid_reasonfornobnnumber").val($("#cid_reasonfornobnnumberpopup :selected").val());
+                                    tdg.webapi.update("accounts", accid, UpdateData);
 
-                        $("#ovs_legalnamefr").val($("#cid_legalname_fr2").val());
-                        $("#cid_operatingname_fr").val($("#cid_operatingname_fr2").val());
-
+                                    console.log("after update");
+                                    $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
+                                    sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
 
 
 
-                        //accountid
+                                    $("#cid_has_cra_bn").val($("#hasCRABN :selected").val());
+                                    $("#cid_reasonfornobnnumber_other").val($("#cid_reasonfornobnnumber_other_popup").val());
+                                    $("#cid_reasonfornobnnumber").val($("#cid_reasonfornobnnumberpopup :selected").val());
+
+                                    $("#ovs_legalnamefr").val($("#cid_legalname_fr2").val());
+                                    $("#cid_operatingname_fr").val($("#cid_operatingname_fr2").val());
 
 
-                        $("#myModal").remove();
-                        handler(true);
+
+
+                                    //accountid
+
+
+                                    $("#myModal").remove();
+                                    handler(true);
+                                }
+
+                            }
+                        }
+
+                        //update data
+
+                        {
+                            var accid = sessionStorage.getItem("accountId");
+
+                            var UpdateData = {
+                                "cid_has_cra_bn": true,
+                                "ovs_legalnamefr": $("#cid_legalname_fr2").val(),
+                                "ovs_namefr": $("#cid_operatingname_fr2").val(),
+                                "cid_crabusinessnumber": cid_crabusinessnumber,
+                                "ovs_legalname": $("#cid_legalname2").val()
+                            };
+
+
+
+                            tdg.webapi.update("accounts", accid, UpdateData);
+
+                            console.log("after update");
+                            $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
+                            sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
+
+
+
+                            $("#cid_has_cra_bn").val($("#hasCRABN :selected").val());
+                            $("#cid_reasonfornobnnumber_other").val($("#cid_reasonfornobnnumber_other_popup").val());
+                            $("#cid_reasonfornobnnumber").val($("#cid_reasonfornobnnumberpopup :selected").val());
+
+                            $("#ovs_legalnamefr").val($("#cid_legalname_fr2").val());
+                            $("#cid_operatingname_fr").val($("#cid_operatingname_fr2").val());
+
+
+
+
+                            //accountid
+
+
+                            $("#myModal").remove();
+                            handler(true);
+                        }
+
+
+
+                    }//end try
+                    catch (e) {
+                        console.log(e);
                     }
+
                 }
                 else if (invitation_ind && ($("#hasCRABN :selected").val()) == 0) {
                     var accid = sessionStorage.getItem("accountId");

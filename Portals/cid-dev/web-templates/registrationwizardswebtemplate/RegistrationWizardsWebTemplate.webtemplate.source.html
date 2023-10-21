@@ -127,6 +127,8 @@ function GetHOTIOperation(siteId){
 }
 
 function Validate(recordId, fieldName, list){
+    debugger;
+    console.log("call from validate in the web template");
     var filter = fieldName + "/Id eq (guid'" + recordId + "')";
 	var data = ExecuteQuery(list, filter);
 
@@ -186,8 +188,8 @@ function UpdateOperationDetailsProvided(operationId, value){
 
 	var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
-   // var title = tdg.error_message.message("m000200");
-   // var ctl = $('#cdts-signout-btn').tooltip()[0];
-    //ctl.title = title;
-   // ctl.href = (selected_language == "en" ? "/en/Account/Login/LogOff" : "/fr/Account/Login/LogOff");
+    var title = tdg.error_message.message("m000200");
+    var ctl = $('#cdts-signout-btn').tooltip()[0];
+    ctl.title = title;
+    ctl.href = (selected_language == "en" ? "/en/Account/Login/LogOff" : "/fr/Account/Login/LogOff");
 </script>

@@ -231,8 +231,8 @@ if (typeof (invitation) == "undefined") {
                         tdg.cid.crw.start_cid_has_cra_bn_onchange("1");
                         //$("#cid_crabusinessnumber").val(_account.cid_crabusinessnumber);
                         $("#cid_crabusinessnumber").val(sessionStorage.getItem("cid_crabusinessnumber"));
-                        //tdg.cid.crw.start_cid_crabusinessnumber_onchange("1");
-
+                        tdg.cid.crw.start_cid_crabusinessnumber_onchange("1");
+                      
                     }
                     else {
                         $("#cid_has_cra_bn").val(0);
@@ -263,9 +263,9 @@ if (typeof (invitation) == "undefined") {
                             data.adx_invitationcode = "";
                             tdg.webapi.update("adx_invitations", record_id, data);
                             tdg.cid.crw.start_cid_reasonfornobnnumber_onchange(false);
-                            sessionStorage.setItem("cid_has_invitation", false)
+                            sessionStorage.setItem("cid_has_invitation",false)
                             tdg.cid.crw.start_buttons_confirm(true, btn_next_name);
-
+                              
                             return;
                         } else {
                             debugger;
@@ -285,7 +285,7 @@ if (typeof (invitation) == "undefined") {
                     debugger;
                     if (_account.cid_has_cra_bn) {
                         $("#cid_crabusinessnumber").val(_account.cid_crabusinessnumber);
-                        //tdg.cid.crw.start_cid_crabusinessnumber_onchange("1");
+                        tdg.cid.crw.start_cid_crabusinessnumber_onchange("1");
                     }
                     invitation.invitation_go_next(_account, true, contact_id);
                     return;
@@ -305,7 +305,7 @@ if (typeof (invitation) == "undefined") {
                     debugger;
                     if (_account.cid_has_cra_bn) {
                         $("#cid_crabusinessnumber").val(_account.cid_crabusinessnumber);
-                        //tdg.cid.crw.start_cid_crabusinessnumber_onchange("1");
+                        tdg.cid.crw.start_cid_crabusinessnumber_onchange("1");
                     }
                     else {
                         $("#cid_has_cra_bn").val("0");
