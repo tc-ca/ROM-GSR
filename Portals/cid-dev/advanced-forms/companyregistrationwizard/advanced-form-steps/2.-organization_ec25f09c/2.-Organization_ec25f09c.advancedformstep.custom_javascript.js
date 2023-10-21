@@ -144,7 +144,7 @@ $(document).ready(function () {
 		$("#cid_crabusinessnumber").change(cid_crabusinessnumber_onchange);
 		var cid_has_cra_bn = $('#cid_has_cra_bn').val();
 		if (cid_has_cra_bn == "1") {
-			cid_crabusinessnumber_onchange();
+			//cid_crabusinessnumber_onchange();
 		}
 		else {
 			$("#ovs_legalname").change(ovs_legalname_onchange);
@@ -214,15 +214,17 @@ function btn_previous_click() {
 async function cid_crabusinessnumber_onchange() {
 	var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
 	$("#NextButton").prop("disabled", true);
-	let data = await tdg.cid.crw.start_cid_crabusinessnumber_onchange("2")
+	let data = await tdg.cid.crw.start_cid_crabusinessnumber_onchange("")
 	//tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, "2");
-	console.log ("data : " + data);
+
 	
 	if (data == null || data.length == 0) {
 		tdg.c.error_message_advanced_form("m000001", true);
 
 	}
 	else {
+	
+	
 		$("#NextButton").prop("disabled", false);
 		debugger;
 		var account_id = '{{user.parentcustomerid.Id}}';
