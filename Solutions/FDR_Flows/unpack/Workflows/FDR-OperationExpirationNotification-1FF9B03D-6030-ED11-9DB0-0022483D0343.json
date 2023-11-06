@@ -33,7 +33,7 @@
           "type": "SecureObject"
         },
         "ALL Regions  Operation Expiry Email notebox (fdr_alllRegionsOperationsExpiry)": {
-          "defaultValue": "mocregister-registrecontenant@tc.gc.ca",
+          "defaultValue": "tdg-field-service-qa@034gc.onmicrosoft.com",
           "type": "String",
           "metadata": {
             "schemaName": "fdr_alllRegionsOperationsExpiry",
@@ -65,11 +65,8 @@
       "actions": {
         "List_of_operations_expired_30_days_ago": {
           "runAfter": {
-            "Try_-_Get_Connection_Role_ID_by_Name_": [
-              "Succeeded",
-              "Failed",
-              "Skipped",
-              "TimedOut"
+            "Initialize_variable_ActivityPartStringList": [
+              "Succeeded"
             ]
           },
           "metadata": {
@@ -95,27 +92,129 @@
         "Iterate_expired_-_single_thread": {
           "foreach": "@outputs('List_of_operations_expired_30_days_ago')?['body/value']",
           "actions": {
-            "Send_an_email_(V2)_-expired": {
-              "runAfter": {},
+            "Add_a_new_row_-_Email_Message": {
+              "runAfter": {
+                "MessageText": [
+                  "Succeeded"
+                ]
+              },
               "metadata": {
-                "operationMetadataId": "a5de3400-7254-402a-bf51-3286cf6defdd"
+                "operationMetadataId": "9d476d7a-607f-455b-9c69-58c1ccbdc857"
               },
               "type": "OpenApiConnection",
               "inputs": {
                 "host": {
-                  "connectionName": "shared_office365",
-                  "operationId": "SendEmailV2",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                 },
                 "parameters": {
-                  "emailMessage/To": "@parameters('ALL Regions  Operation Expiry Email notebox (fdr_alllRegionsOperationsExpiry)')",
-                  "emailMessage/Subject": "Operation @{items('Iterate_expired_-_single_thread')?['ovs_name']} expired",
-                  "emailMessage/Body": "<p>Hello/Bonjour,<br>\n<br>\nOperation @{items('Iterate_expired_-_single_thread')?['ovs_name']} expired 30 days ago.<br>\n<br>\nPlease use the following link to navigate directly to the operation: <br>\n<a href = 'https://@{parameters('CrmBaseUrl (ovs_CrmBaseUrl)')}/main.aspx?pagetype=entityrecord&etn=ovs_mocregistration&id=@{items('Iterate_expired_-_single_thread')?['ovs_mocregistrationid']}'>Operation @{items('Iterate_expired_-_single_thread')?['ovs_name']}</a><br>\n___________________________________________________________________________________<br>\n<br>\nOpération @{items('Iterate_expired_-_single_thread')?['ovs_name']} a expiré il y a 30 jours.<br>\n<br>\nVeuillez utiliser le lien suivant pour accéder directement à l’opération:<br>\n<a href = 'https://@{parameters('CrmBaseUrl (ovs_CrmBaseUrl)')}/main.aspx?pagetype=entityrecord&etn=ovs_mocregistration&id=@{items('Iterate_expired_-_single_thread')?['ovs_mocregistrationid']}'>Operation @{items('Iterate_expired_-_single_thread')?['ovs_name']}</a><br>\n<br>\n<br>\n</p>",
-                  "emailMessage/From": "@parameters('ALL Regions  Operation Expiry Email notebox (fdr_alllRegionsOperationsExpiry)')",
-                  "emailMessage/Importance": "Normal"
+                  "entityName": "emails",
+                  "item/activitypointer_activity_parties": [
+                    {
+                      "participationtypemask": 1,
+                      "partyid@odata.bind": "\\queues\\e4f28240-09fb-ed11-8f6e-0022483e130e"
+                    },
+                    {
+                      "participationtypemask": 2,
+                      "partyid@odata.bind": "\\queues\\e4f28240-09fb-ed11-8f6e-0022483e130e"
+                    }
+                  ],
+                  "item/description": "@outputs('MessageText')",
+                  "item/regardingobjectid_ovs_mocregistration_email@odata.bind": "@concat('\\ovs_mocregistrations\\',items('Iterate_expired_-_single_thread')?['ovs_mocregistrationid'])",
+                  "item/subject": "Operation @{items('Iterate_expired_-_single_thread')?['ovs_name']} expired"
                 },
                 "authentication": "@parameters('$authentication')"
               }
+            },
+            "MessageText": {
+              "runAfter": {
+                "add_condition_to_prevent_out_look_send": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d71adb36-01ce-495f-9c18-ec3863997adb"
+              },
+              "type": "Compose",
+              "inputs": "Hello/Bonjour,\n\nOperation @{items('Iterate_expired_-_single_thread')?['ovs_name']} expired 30 days ago.\n\nPlease use the following link to navigate directly to the operation:\nOperation @{items('Iterate_expired_-_single_thread')?['ovs_name']}\n___________________________________________________________________________________\n\nOpération @{items('Iterate_expired_-_single_thread')?['ovs_name']} a expiré il y a 30 jours.\n\nVeuillez utiliser le lien suivant pour accéder directement à l’opération:\nOperation @{items('Iterate_expired_-_single_thread')?['ovs_name']}\n\n\n"
+            },
+            "add_condition_to_prevent_out_look_send": {
+              "actions": {
+                "Send_an_email_(V2)_-expired": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "a5de3400-7254-402a-bf51-3286cf6defdd"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_office365",
+                      "operationId": "SendEmailV2",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                    },
+                    "parameters": {
+                      "emailMessage/To": "@parameters('ALL Regions  Operation Expiry Email notebox (fdr_alllRegionsOperationsExpiry)')",
+                      "emailMessage/Subject": "Operation @{items('Iterate_expired_-_single_thread')?['ovs_name']} expired",
+                      "emailMessage/Body": "<p>Hello/Bonjour,<br>\n<br>\nOperation @{items('Iterate_expired_-_single_thread')?['ovs_name']} expired 30 days ago.<br>\n<br>\nPlease use the following link to navigate directly to the operation:<br>\nOperation @{items('Iterate_expired_-_single_thread')?['ovs_name']}<br>\n___________________________________________________________________________________<br>\n<br>\nOpération @{items('Iterate_expired_-_single_thread')?['ovs_name']} a expiré il y a 30 jours.<br>\n<br>\nVeuillez utiliser le lien suivant pour accéder directement à l’opération:<br>\nOperation @{items('Iterate_expired_-_single_thread')?['ovs_name']}<br>\n<br>\n<br>\n</p>",
+                      "emailMessage/From": "@parameters('ALL Regions  Operation Expiry Email notebox (fdr_alllRegionsOperationsExpiry)')",
+                      "emailMessage/Importance": "Normal"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {},
+              "expression": {
+                "equals": [
+                  1,
+                  2
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "715c9f64-3010-4005-89e0-cc81fd0425d4"
+              },
+              "type": "If"
+            },
+            "check_if_production_send_expire_email": {
+              "actions": {
+                "Perform_a_bound_action_-_Send_Email_Message": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "003c56ba-5e0e-4c2a-bba5-1c8c9640f77f"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "PerformBoundAction",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "emails",
+                      "actionName": "Microsoft.Dynamics.CRM.SendEmail",
+                      "recordId": "@outputs('Add_a_new_row_-_Email_Message')?['body/activityid']",
+                      "item/IssueSend": false
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Add_a_new_row_-_Email_Message": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "equals": [
+                  "@variables('isProd')",
+                  "@true"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "8c4a2ae1-1bb7-4a66-845b-01be6e7eeca9"
+              },
+              "type": "If"
             }
           },
           "runAfter": {
@@ -442,7 +541,7 @@
             }
           },
           "runAfter": {
-            "In_Days": [
+            "Get_a_row_by_ID_-_ALL_Regions_Operation_Expiry_Email_notebox": [
               "Succeeded"
             ]
           },
@@ -568,6 +667,21 @@
                                 "name": "contactOperation",
                                 "value": "@items('Iterate_expiring_Operation_Contacts_from_Connections_-_single_thread')?['record1id_contact/emailaddress1']"
                               }
+                            },
+                            "Append_to_string_variable_operation_contact": {
+                              "runAfter": {
+                                "Set_Operation_contact": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "9683c998-ab84-462f-899d-fc8659228a76"
+                              },
+                              "type": "AppendToStringVariable",
+                              "inputs": {
+                                "name": "ActivityPartStringList",
+                                "value": ", {\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{items('Iterate_expiring_Operation_Contacts_from_Connections_-_single_thread')?['record1id_contact/contactid']}\"\n  }"
+                              }
                             }
                           },
                           "runAfter": {},
@@ -630,6 +744,21 @@
                         "name": "primaryContactCompany",
                         "value": "@outputs('Get_Parent')['body/primarycontactid']['emailaddress1']"
                       }
+                    },
+                    "Append_to_string_Activity_part_variable": {
+                      "runAfter": {
+                        "Set_company_contact": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "c2246889-8a59-49c3-bfbd-7c6d09e1add3"
+                      },
+                      "type": "AppendToStringVariable",
+                      "inputs": {
+                        "name": "ActivityPartStringList",
+                        "value": ",{  \"participationtypemask\": 2, \"partyid@odata.bind\": \"\\\\contacts\\\\@{outputs('Get_Parent')['body/primarycontactid']['contactid']}\"} \n"
+                      }
                     }
                   },
                   "runAfter": {
@@ -676,6 +805,21 @@
                                     "inputs": {
                                       "name": "primaryContactCompany",
                                       "value": "@items('Iterate_expiring_Contacts_from_Connections_-_single_thread')?['record1id_contact/emailaddress1']"
+                                    }
+                                  },
+                                  "Append_to_string_variable_primary_contact": {
+                                    "runAfter": {
+                                      "Set_Company_Primary_Contacts": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "metadata": {
+                                      "operationMetadataId": "d2a0213c-0430-4471-94de-8da165e82e63"
+                                    },
+                                    "type": "AppendToStringVariable",
+                                    "inputs": {
+                                      "name": "ActivityPartStringList",
+                                      "value": ",{\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{items('Iterate_expiring_Contacts_from_Connections_-_single_thread')?['record1id_contact/contactid']}\"\n  }"
                                     }
                                   }
                                 },
@@ -813,6 +957,21 @@
                         "name": "primaryContactSite",
                         "value": "@outputs('Get_Primary_Site_Contacts_-_Required')?['body/emailaddress1']"
                       }
+                    },
+                    "Append_to_string_variable_activity_party_list_Site_contact": {
+                      "runAfter": {
+                        "Set_Contact_Site": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "a3f853ef-e4a8-486e-b86d-1f6e0bde2410"
+                      },
+                      "type": "AppendToStringVariable",
+                      "inputs": {
+                        "name": "ActivityPartStringList",
+                        "value": " , {\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{outputs('Get_Primary_Site_Contacts_-_Required')?['body/contactid']}\"\n  } "
+                      }
                     }
                   },
                   "runAfter": {
@@ -870,7 +1029,7 @@
                 },
                 "Switch": {
                   "runAfter": {
-                    "Get_Standard": [
+                    "Parse_JSON_-_Activity_party": [
                       "Succeeded"
                     ]
                   },
@@ -878,54 +1037,160 @@
                     "Case_expiring": {
                       "case": 0,
                       "actions": {
-                        "Send_an_email_(V2)_-_expiring": {
+                        "EmailText": {
                           "runAfter": {},
                           "metadata": {
-                            "operationMetadataId": "a5de3400-7254-402a-bf51-3286cf6defdd"
+                            "operationMetadataId": "8d300540-5d10-44c1-840d-6992dd035040"
+                          },
+                          "type": "Compose",
+                          "inputs": "Your registration under number @{items('Iterate_expiring_-_single_thread')?['ovs_mocregistrationname']} expired on @{formatDateTime(utcnow(), 'yyyy-MM-dd')}. You are no longer registered, and any registered mark associated to this registration, shall no longer be applied.\n\nPlease advise us if you would like to close your file. To renew your registration, you must submit a renewal request .\n\nOperation Type:  @{items('Iterate_expiring_-_single_thread')?['fdr_registrationtype/fdr_englishname']}\nStandard:  @{outputs('Get_Standard')?['body/qm_legislationsourceetxt']}\nCompany Name:  @{outputs('Get_Parent')?['body/ovs_legalname']}\nSite address:  @{items('Iterate_expiring_-_single_thread')?['ovs_siteid/address1_composite']}\n\nIf you have already submitted an application to renew your registration, please disregard this notice.\n________________________________________________________________________\n\nVotre inscription sous le numéro @{items('Iterate_expiring_-_single_thread')?['ovs_mocregistrationname']} a expiré le @{formatDateTime(utcnow(), 'dd-MM-yyyy')}.  Vous n'êtes plus inscrit, et toute marque enregistrée associée à cet inscription, ne doit plus être appliquée.\n\nVeuillez nous aviser si vous désirez fermer votre dossier. Pour renouveler votre inscription, vous devez soumettre une demande de renouvellement .\n\nType d’opération:  @{items('Iterate_expiring_-_single_thread')?['fdr_registrationtype/fdr_frenchname']}\nNorme:  @{outputs('Get_Standard')?['body/qm_legislationsourceftxt']}\nNom d’entreprise:  @{if(empty(outputs('Get_Parent')?['body/ovs_legalnamefr']),outputs('Get_Parent')?['body/ovs_legalname'],outputs('Get_Parent')?['body/ovs_legalnamefr'])}\nLocalisation:  @{items('Iterate_expiring_-_single_thread')?['ovs_siteid/address1_composite']}\n\nSi vous avez déjà soumis une demande de renouvellement, aucune action n’est requise de votre part.\n"
+                        },
+                        "Add_a_new_row_Email_Message": {
+                          "runAfter": {
+                            "EmailText": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "2e465070-eb88-49b1-bf84-3644babca708"
                           },
                           "type": "OpenApiConnection",
                           "inputs": {
                             "host": {
-                              "connectionName": "shared_office365",
-                              "operationId": "SendEmailV2",
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                              "connectionName": "shared_commondataserviceforapps_1",
+                              "operationId": "CreateRecord",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                             },
                             "parameters": {
-                              "emailMessage/To": "@if(variables('isProd'),body('_Join_Email_List'),parameters('ALL Regions  Operation Expiry Email notebox (fdr_alllRegionsOperationsExpiry)'))",
-                              "emailMessage/Subject": "Transport Canada – Expiry Notice / Transports Canada – Avis d’expiration ",
-                              "emailMessage/Body": "<p>Your registration under number @{items('Iterate_expiring_-_single_thread')?['ovs_mocregistrationname']} expired on @{formatDateTime(utcnow(), 'yyyy-MM-dd')}. You are no longer registered, and any registered mark associated to this registration, shall no longer be applied.<br>\n<br>\nPlease advise us if you would like to close your file. To renew your registration, you must submit a <a href=\"https://tc.canada.ca/en/dangerous-goods/containers\">renewal request</a> .<br>\n<br>\nOperation Type: &nbsp;@{items('Iterate_expiring_-_single_thread')?['fdr_registrationtype/fdr_englishname']}<br>\nStandard: &nbsp;@{outputs('Get_Standard')?['body/qm_legislationsourceetxt']}<br>\nCompany Name: &nbsp;@{outputs('Get_Parent')?['body/ovs_legalname']}<br>\nSite address: &nbsp;@{items('Iterate_expiring_-_single_thread')?['ovs_siteid/address1_composite']}<br>\n<br>\nIf you have already submitted an application to renew your registration, please disregard this notice.<br>\n________________________________________________________________________<br>\n<br>\nVotre inscription sous le numéro @{items('Iterate_expiring_-_single_thread')?['ovs_mocregistrationname']} a expiré le @{formatDateTime(utcnow(), 'dd-MM-yyyy')}. &nbsp;Vous n'êtes plus inscrit, et toute marque enregistrée associée à cet inscription, ne doit plus être appliquée.<br>\n<br>\nVeuillez nous aviser si vous désirez fermer votre dossier. Pour renouveler votre inscription, vous devez soumettre une <a href=\"https://tc.canada.ca/fr/marchandises-dangereuses/contenants\">demande de renouvellement</a> .<br>\n<br>\nType d’opération: &nbsp;@{items('Iterate_expiring_-_single_thread')?['fdr_registrationtype/fdr_frenchname']}<br>\nNorme: &nbsp;@{outputs('Get_Standard')?['body/qm_legislationsourceftxt']}<br>\nNom d’entreprise: &nbsp;@{if(empty(outputs('Get_Parent')?['body/ovs_legalnamefr']),outputs('Get_Parent')?['body/ovs_legalname'],outputs('Get_Parent')?['body/ovs_legalnamefr'])}<br>\nLocalisation: &nbsp;@{items('Iterate_expiring_-_single_thread')?['ovs_siteid/address1_composite']}<br>\n<br>\nSi vous avez déjà soumis une demande de renouvellement, aucune action n’est requise de votre part.<br>\n</p>",
-                              "emailMessage/From": "@parameters('ALL Regions  Operation Expiry Email notebox (fdr_alllRegionsOperationsExpiry)')",
-                              "emailMessage/Importance": "Normal"
+                              "entityName": "emails",
+                              "item/activitypointer_activity_parties": "@body('Parse_JSON_-_Activity_party')",
+                              "item/description": "@outputs('EmailText')",
+                              "item/regardingobjectid_ovs_mocregistration_email@odata.bind": "\\ovs_mocregistrations\\@{items('Iterate_expiring_-_single_thread')?['ovs_mocregistrationid']}",
+                              "item/subject": "Transport Canada – Expiry Notice / Transports Canada – Avis d’expiration "
                             },
                             "authentication": "@parameters('$authentication')"
                           }
+                        },
+                        "check_if_production_environment": {
+                          "actions": {
+                            "Perform_a_bound_action_-_send_expiring_email": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "a68b2645-9619-4a4f-8b3a-7d9817757540"
+                              },
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_commondataserviceforapps_1",
+                                  "operationId": "PerformBoundAction",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                },
+                                "parameters": {
+                                  "entityName": "emails",
+                                  "actionName": "Microsoft.Dynamics.CRM.SendEmail",
+                                  "recordId": "@outputs('Add_a_new_row_Email_Message')?['body/activityid']",
+                                  "item/IssueSend": true
+                                },
+                                "authentication": "@parameters('$authentication')"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Add_a_new_row_Email_Message": [
+                              "Succeeded"
+                            ]
+                          },
+                          "expression": {
+                            "equals": [
+                              "@variables('isProd')",
+                              "@true"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "3eb223e6-4533-41f6-965b-f46d799a97f1"
+                          },
+                          "type": "If"
                         }
                       }
                     },
                     "Case_120": {
                       "case": 120,
                       "actions": {
-                        "Send_an_email_(V2)_-_120": {
+                        "Case120EmailText": {
                           "runAfter": {},
                           "metadata": {
-                            "operationMetadataId": "d24a6946-8060-4e8f-8318-c712177b9c6d"
+                            "operationMetadataId": "7b1d2b3e-0803-451e-b5aa-f1fbdfb92af5"
+                          },
+                          "type": "Compose",
+                          "inputs": "Your registration under number @{items('Iterate_expiring_-_single_thread')?['ovs_mocregistrationname']} will expire on @{formatDateTime(addDays(utcnow(),variables('InDays')),'yyyy-MM-dd')}.\n\nPlease advise us if you would like to close your file. To renew your registration, you must submit a renewal request .\n\nOperation Type:  @{items('Iterate_expiring_-_single_thread')?['fdr_registrationtype/fdr_englishname']}\nStandard:  @{outputs('Get_Standard')?['body/qm_legislationsourceetxt']}\nCompany Name:  @{outputs('Get_Parent')?['body/ovs_legalname']}\nSite address:  @{items('Iterate_expiring_-_single_thread')?['ovs_siteid/address1_composite']}\n\nIf you have already submitted an application to renew your registration, please disregard this notice.\n________________________________________________________________________\n\nVotre inscription sous le numéro @{items('Iterate_expiring_-_single_thread')?['ovs_mocregistrationname']} vient a échéance le @{formatDateTime(addDays(utcnow(),variables('InDays')),'yyyy-MM-dd')}.\n\nVeuillez nous aviser si vous désirez fermer votre dossier. Pour renouveler votre inscription, vous devez soumettre une demande de renouvellement .\n\nType d’opération:  @{items('Iterate_expiring_-_single_thread')?['fdr_registrationtype/fdr_frenchname']}\nNorme:  @{outputs('Get_Standard')?['body/qm_legislationsourceftxt']}\nNom d’entreprise:  @{if(empty(outputs('Get_Parent')?['body/ovs_legalnamefr']),outputs('Get_Parent')?['body/ovs_legalname'],outputs('Get_Parent')?['body/ovs_legalnamefr'])}\nLocalisation:  @{items('Iterate_expiring_-_single_thread')?['ovs_siteid/address1_composite']}\n\nSi vous avez déjà soumis une demande de renouvellement, aucune action n’est requise de votre part.\n"
+                        },
+                        "Add_a_new_row_Email_Message2": {
+                          "runAfter": {
+                            "Case120EmailText": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "e57c3ae2-5470-4708-aa3b-5d66078bd0ec"
                           },
                           "type": "OpenApiConnection",
                           "inputs": {
                             "host": {
-                              "connectionName": "shared_office365",
-                              "operationId": "SendEmailV2",
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                              "connectionName": "shared_commondataserviceforapps_1",
+                              "operationId": "CreateRecord",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                             },
                             "parameters": {
-                              "emailMessage/To": "@if(variables('isProd'),body('_Join_Email_List'),parameters('ALL Regions  Operation Expiry Email notebox (fdr_alllRegionsOperationsExpiry)'))",
-                              "emailMessage/Subject": "Transport Canada –Renewal Notice / Transports Canada – Avis de renouvellement ",
-                              "emailMessage/Body": "<p>Your registration under number @{items('Iterate_expiring_-_single_thread')?['ovs_mocregistrationname']} will expire on @{formatDateTime(addDays(utcnow(),variables('InDays')),'yyyy-MM-dd')}.<br>\n<br>\nPlease advise us if you would like to close your file. To renew your registration, you must submit a <a href=\"https://tc.canada.ca/en/dangerous-goods/containers\">renewal request</a> .<br>\n<br>\nOperation Type: &nbsp;@{items('Iterate_expiring_-_single_thread')?['fdr_registrationtype/fdr_englishname']}<br>\nStandard: &nbsp;@{outputs('Get_Standard')?['body/qm_legislationsourceetxt']}<br>\nCompany Name: &nbsp;@{outputs('Get_Parent')?['body/ovs_legalname']}<br>\nSite address: &nbsp;@{items('Iterate_expiring_-_single_thread')?['ovs_siteid/address1_composite']}<br>\n<br>\nIf you have already submitted an application to renew your registration, please disregard this notice.<br>\n________________________________________________________________________<br>\n<br>\nVotre inscription sous le numéro @{items('Iterate_expiring_-_single_thread')?['ovs_mocregistrationname']} vient a échéance le @{formatDateTime(addDays(utcnow(),variables('InDays')),'yyyy-MM-dd')}.<br>\n<br>\nVeuillez nous aviser si vous désirez fermer votre dossier. Pour renouveler votre inscription, vous devez soumettre une <a href=\"https://tc.canada.ca/fr/marchandises-dangereuses/contenants\">demande de renouvellement</a> .<br>\n<br>\nType d’opération: &nbsp;@{items('Iterate_expiring_-_single_thread')?['fdr_registrationtype/fdr_frenchname']}<br>\nNorme: &nbsp;@{outputs('Get_Standard')?['body/qm_legislationsourceftxt']}<br>\nNom d’entreprise: &nbsp;@{if(empty(outputs('Get_Parent')?['body/ovs_legalnamefr']),outputs('Get_Parent')?['body/ovs_legalname'],outputs('Get_Parent')?['body/ovs_legalnamefr'])}<br>\nLocalisation: &nbsp;@{items('Iterate_expiring_-_single_thread')?['ovs_siteid/address1_composite']}<br>\n<br>\nSi vous avez déjà soumis une demande de renouvellement, aucune action n’est requise de votre part.<br>\n</p>",
-                              "emailMessage/From": "@parameters('ALL Regions  Operation Expiry Email notebox (fdr_alllRegionsOperationsExpiry)')",
-                              "emailMessage/Importance": "Normal"
+                              "entityName": "emails",
+                              "item/activitypointer_activity_parties": "@body('Parse_JSON_-_Activity_party')",
+                              "item/description": "@outputs('Case120EmailText')",
+                              "item/msdyn_recipientlist": "@concat('[' ,substring(string(variables('ActivityPartStringList')),2) ,']')",
+                              "item/regardingobjectid_ovs_mocregistration_email@odata.bind": "\\ovs_mocregistrations\\@{items('Iterate_expiring_-_single_thread')?['ovs_mocregistrationid']}",
+                              "item/subject": "Transport Canada –Renewal Notice / Transports Canada – Avis de renouvellement ",
+                              "item/torecipients": "@concat('[' ,substring(string(variables('ActivityPartStringList')),2) ,']')"
                             },
                             "authentication": "@parameters('$authentication')"
                           }
+                        },
+                        "check_if_production_environment_before_sending_email": {
+                          "actions": {
+                            "Perform_a_bound_action_-_send_120_days_email": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "52ee78e0-1450-4db6-bfc2-e25f4b423d1b"
+                              },
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_commondataserviceforapps_1",
+                                  "operationId": "PerformBoundAction",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                },
+                                "parameters": {
+                                  "entityName": "emails",
+                                  "actionName": "Microsoft.Dynamics.CRM.SendEmail",
+                                  "recordId": "@outputs('Add_a_new_row_Email_Message2')?['body/activityid']",
+                                  "item/IssueSend": true
+                                },
+                                "authentication": "@parameters('$authentication')"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Add_a_new_row_Email_Message2": [
+                              "Succeeded"
+                            ]
+                          },
+                          "expression": {
+                            "equals": [
+                              "@variables('isProd')",
+                              "@true"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "6be9c212-0fa2-4b48-8b95-3dd98c429445"
+                          },
+                          "type": "If"
                         }
                       }
                     }
@@ -955,6 +1220,21 @@
                               "inputs": {
                                 "name": "primaryContactSite",
                                 "value": "@items('Iterate_expiring_Site_Contacts_from_Connections_-_single_thread')?['record1id_contact/emailaddress1']"
+                              }
+                            },
+                            "Append_to_string_variable_site_connection": {
+                              "runAfter": {
+                                "Set_Contact_Site_from_Connection": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "22cddb02-ae77-4308-8bb8-99cdfc8d1130"
+                              },
+                              "type": "AppendToStringVariable",
+                              "inputs": {
+                                "name": "ActivityPartStringList",
+                                "value": " ,{\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{items('Iterate_expiring_Site_Contacts_from_Connections_-_single_thread')?['record1id_contact/contactid']}\"\n  } "
                               }
                             }
                           },
@@ -1030,6 +1310,38 @@
                     },
                     "authentication": "@parameters('$authentication')"
                   }
+                },
+                "Parse_JSON_-_Activity_party": {
+                  "runAfter": {
+                    "Get_Standard": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "d73b8502-c870-4240-ad08-58fc6b3e4251"
+                  },
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@concat('[', string(variables('ActivityPartStringList')),']')",
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "participationtypemask": {
+                            "type": "integer"
+                          },
+                          "partyid@odata.bind": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "participationtypemask",
+                          "partyid@odata.bind"
+                        ]
+                      }
+                    }
+                  }
                 }
               },
               "runAfter": {
@@ -1072,11 +1384,8 @@
             }
           },
           "runAfter": {
-            "Try_-_Get_Connection_Role_ID_by_Name_": [
-              "Succeeded",
-              "Failed",
-              "Skipped",
-              "TimedOut"
+            "Initialize_variable_ActivityPartStringList": [
+              "Succeeded"
             ]
           },
           "metadata": {
@@ -1118,6 +1427,72 @@
               {
                 "name": "SiteSecondaryContactRole",
                 "type": "string"
+              }
+            ]
+          }
+        },
+        "Get_a_row_by_ID_-_MOC_register_mailbox": {
+          "runAfter": {
+            "In_Days": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a769134f-eaeb-479b-8601-be89af3d1d4b"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "queues",
+              "recordId": "e4f28240-09fb-ed11-8f6e-0022483e130e"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Get_a_row_by_ID_-_ALL_Regions_Operation_Expiry_Email_notebox": {
+          "runAfter": {
+            "Get_a_row_by_ID_-_MOC_register_mailbox": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c4aef73f-ce0f-4626-96e2-4cf2233540b0"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "contacts",
+              "recordId": "97e0934c-0878-ee11-8179-0022483e130e"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Initialize_variable_ActivityPartStringList": {
+          "runAfter": {
+            "Try_-_Get_Connection_Role_ID_by_Name_": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8da56ffd-7f40-488d-979c-d8d5179a3270"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ActivityPartStringList",
+                "type": "string",
+                "value": "{\"participationtypemask\": 1,\"partyid@odata.bind\": \"\\\\queues\\\\e4f28240-09fb-ed11-8f6e-0022483e130e\"}"
               }
             ]
           }
