@@ -541,7 +541,7 @@
             }
           },
           "runAfter": {
-            "Get_a_row_by_ID_-_ALL_Regions_Operation_Expiry_Email_notebox": [
+            "Get_a_row_by_ID_-_MOC_register_mailbox": [
               "Succeeded"
             ]
           },
@@ -762,7 +762,7 @@
                     }
                   },
                   "runAfter": {
-                    "Get_Parent": [
+                    "check_if_site_email_is_empty__to_add_to_activity_party_if_note_empty": [
                       "Succeeded"
                     ]
                   },
@@ -958,20 +958,84 @@
                         "value": "@outputs('Get_Primary_Site_Contacts_-_Required')?['body/emailaddress1']"
                       }
                     },
-                    "Append_to_string_variable_activity_party_list_Site_contact": {
+                    "check_if_site_email_is_empty": {
+                      "actions": {
+                        "Update_a_row_-_account_email": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "200927d1-3b02-4921-8933-726debdab5ba"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_commondataserviceforapps_1",
+                              "operationId": "UpdateRecord",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            },
+                            "parameters": {
+                              "entityName": "accounts",
+                              "recordId": "@items('Iterate_expiring_-_single_thread')['ovs_siteid']['accountid']",
+                              "item/emailaddress1": "  @{outputs('Get_Primary_Site_Contacts_-_Required')?['body/emailaddress1']}"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          }
+                        },
+                        "Append_to_string_variable_activity_party_list_Site_contact_2": {
+                          "runAfter": {
+                            "Update_a_row_-_account_email": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "a3f853ef-e4a8-486e-b86d-1f6e0bde2410"
+                          },
+                          "type": "AppendToStringVariable",
+                          "inputs": {
+                            "name": "ActivityPartStringList",
+                            "value": " , {\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\accounts\\\\@{items('Iterate_expiring_-_single_thread')['ovs_siteid']['accountid']}\"\n  } "
+                          }
+                        }
+                      },
                       "runAfter": {
                         "Set_Contact_Site": [
                           "Succeeded"
                         ]
                       },
-                      "metadata": {
-                        "operationMetadataId": "a3f853ef-e4a8-486e-b86d-1f6e0bde2410"
+                      "else": {
+                        "actions": {
+                          "Append_to_string_variable_activity_party_list_Site_contact": {
+                            "runAfter": {},
+                            "metadata": {
+                              "operationMetadataId": "a3f853ef-e4a8-486e-b86d-1f6e0bde2410"
+                            },
+                            "type": "AppendToStringVariable",
+                            "inputs": {
+                              "name": "ActivityPartStringList",
+                              "value": " , {\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{outputs('Get_Primary_Site_Contacts_-_Required')?['body/contactid']}\"\n  } "
+                            }
+                          }
+                        }
                       },
-                      "type": "AppendToStringVariable",
-                      "inputs": {
-                        "name": "ActivityPartStringList",
-                        "value": " , {\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{outputs('Get_Primary_Site_Contacts_-_Required')?['body/contactid']}\"\n  } "
-                      }
+                      "expression": {
+                        "or": [
+                          {
+                            "equals": [
+                              "@empty(outputs('Get_a_row_by_ID_-_get_site')?['body/emailaddress1'])",
+                              "@true"
+                            ]
+                          },
+                          {
+                            "equals": [
+                              "@outputs('Get_a_row_by_ID_-_get_site')?['body/emailaddress1']",
+                              "@null"
+                            ]
+                          }
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "1fee7676-a39d-4c14-8755-4529fa7bfbf7"
+                      },
+                      "type": "If"
                     }
                   },
                   "runAfter": {
@@ -1222,20 +1286,84 @@
                                 "value": "@items('Iterate_expiring_Site_Contacts_from_Connections_-_single_thread')?['record1id_contact/emailaddress1']"
                               }
                             },
-                            "Append_to_string_variable_site_connection": {
+                            "check_if_site_email_is_empty_to_update_email_in_site": {
+                              "actions": {
+                                "Update_a_row_-_account_email_2": {
+                                  "runAfter": {},
+                                  "metadata": {
+                                    "operationMetadataId": "ee987a90-2659-44f8-af7a-6655433022fd"
+                                  },
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "host": {
+                                      "connectionName": "shared_commondataserviceforapps_1",
+                                      "operationId": "UpdateRecord",
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                    },
+                                    "parameters": {
+                                      "entityName": "accounts",
+                                      "recordId": "@items('Iterate_expiring_-_single_thread')['ovs_siteid']['accountid']",
+                                      "item/emailaddress1": "  @{items('Iterate_expiring_Site_Contacts_from_Connections_-_single_thread')?['record1id_contact/emailaddress1']}"
+                                    },
+                                    "authentication": "@parameters('$authentication')"
+                                  }
+                                },
+                                "Append_to_string_variable_activity_party_list_Site_contact_4": {
+                                  "runAfter": {
+                                    "Update_a_row_-_account_email_2": [
+                                      "Succeeded"
+                                    ]
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "a3f853ef-e4a8-486e-b86d-1f6e0bde2410"
+                                  },
+                                  "type": "AppendToStringVariable",
+                                  "inputs": {
+                                    "name": "ActivityPartStringList",
+                                    "value": " , {\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\accounts\\\\@{items('Iterate_expiring_-_single_thread')['ovs_siteid']['accountid']}\"\n  } "
+                                  }
+                                }
+                              },
                               "runAfter": {
                                 "Set_Contact_Site_from_Connection": [
                                   "Succeeded"
                                 ]
                               },
-                              "metadata": {
-                                "operationMetadataId": "22cddb02-ae77-4308-8bb8-99cdfc8d1130"
+                              "else": {
+                                "actions": {
+                                  "Append_to_string_variable_site_connection": {
+                                    "runAfter": {},
+                                    "metadata": {
+                                      "operationMetadataId": "22cddb02-ae77-4308-8bb8-99cdfc8d1130"
+                                    },
+                                    "type": "AppendToStringVariable",
+                                    "inputs": {
+                                      "name": "ActivityPartStringList",
+                                      "value": " ,{\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{items('Iterate_expiring_Site_Contacts_from_Connections_-_single_thread')?['record1id_contact/contactid']}\"\n  } "
+                                    }
+                                  }
+                                }
                               },
-                              "type": "AppendToStringVariable",
-                              "inputs": {
-                                "name": "ActivityPartStringList",
-                                "value": " ,{\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{items('Iterate_expiring_Site_Contacts_from_Connections_-_single_thread')?['record1id_contact/contactid']}\"\n  } "
-                              }
+                              "expression": {
+                                "or": [
+                                  {
+                                    "equals": [
+                                      "@empty(outputs('Get_a_row_by_ID_-_get_site')?['body/emailaddress1'])",
+                                      "@true"
+                                    ]
+                                  },
+                                  {
+                                    "equals": [
+                                      "@outputs('Get_a_row_by_ID_-_get_site')?['body/emailaddress1']",
+                                      "@null"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "94898819-5cec-45b0-8a55-24e302ef75c2"
+                              },
+                              "type": "If"
                             }
                           },
                           "runAfter": {},
@@ -1342,6 +1470,85 @@
                       }
                     }
                   }
+                },
+                "SiteEmail": {
+                  "runAfter": {
+                    "Get_a_row_by_ID_-_get_site": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "7716ea2c-9e75-422b-862c-6084b759b1e3"
+                  },
+                  "type": "Compose",
+                  "inputs": "@outputs('Get_a_row_by_ID_-_get_site')?['body/emailaddress1']"
+                },
+                "Get_a_row_by_ID_-_get_site": {
+                  "runAfter": {
+                    "Get_Parent": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "d5969993-d71c-45f4-8bad-fa506fb0ee27"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "GetItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "accounts",
+                      "recordId": "@items('Iterate_expiring_-_single_thread')?['ovs_siteid']['accountid']",
+                      "$select": "emailaddress1,accountid"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "check_if_site_email_is_empty__to_add_to_activity_party_if_note_empty": {
+                  "actions": {},
+                  "runAfter": {
+                    "SiteEmail": [
+                      "Succeeded"
+                    ]
+                  },
+                  "else": {
+                    "actions": {
+                      "Append_to_string_variable_2": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "7fcf9621-c1dd-47e3-8d36-d45be3013da9"
+                        },
+                        "type": "AppendToStringVariable",
+                        "inputs": {
+                          "name": "ActivityPartStringList",
+                          "value": ", {\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\accounts\\\\@{items('Iterate_expiring_-_single_thread')?['ovs_siteid']['accountid']}\"\n  }"
+                        }
+                      }
+                    }
+                  },
+                  "expression": {
+                    "or": [
+                      {
+                        "equals": [
+                          "@empty(outputs('Get_a_row_by_ID_-_get_site')?['body/emailaddress1'])",
+                          "@true"
+                        ]
+                      },
+                      {
+                        "equals": [
+                          "@outputs('Get_a_row_by_ID_-_get_site')?['body/emailaddress1']",
+                          "@null"
+                        ]
+                      }
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "9d0c5c49-60c8-4d24-a45b-7be6730eb73e"
+                  },
+                  "type": "If"
                 }
               },
               "runAfter": {
@@ -1450,29 +1657,6 @@
             "parameters": {
               "entityName": "queues",
               "recordId": "e4f28240-09fb-ed11-8f6e-0022483e130e"
-            },
-            "authentication": "@parameters('$authentication')"
-          }
-        },
-        "Get_a_row_by_ID_-_ALL_Regions_Operation_Expiry_Email_notebox": {
-          "runAfter": {
-            "Get_a_row_by_ID_-_MOC_register_mailbox": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "c4aef73f-ce0f-4626-96e2-4cf2233540b0"
-          },
-          "type": "OpenApiConnection",
-          "inputs": {
-            "host": {
-              "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "GetItem",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-            },
-            "parameters": {
-              "entityName": "contacts",
-              "recordId": "97e0934c-0878-ee11-8179-0022483e130e"
             },
             "authentication": "@parameters('$authentication')"
           }
