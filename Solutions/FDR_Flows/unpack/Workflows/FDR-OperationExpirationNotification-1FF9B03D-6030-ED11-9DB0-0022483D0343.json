@@ -1638,29 +1638,6 @@
             ]
           }
         },
-        "Get_a_row_by_ID_-_MOC_register_mailbox": {
-          "runAfter": {
-            "In_Days": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "a769134f-eaeb-479b-8601-be89af3d1d4b"
-          },
-          "type": "OpenApiConnection",
-          "inputs": {
-            "host": {
-              "connectionName": "shared_commondataserviceforapps_1",
-              "operationId": "GetItem",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-            },
-            "parameters": {
-              "entityName": "queues",
-              "recordId": "e4f28240-09fb-ed11-8f6e-0022483e130e"
-            },
-            "authentication": "@parameters('$authentication')"
-          }
-        },
         "Initialize_variable_ActivityPartStringList": {
           "runAfter": {
             "Try_-_Get_Connection_Role_ID_by_Name_": [
@@ -1683,7 +1660,7 @@
         },
         "List_rows_-_get_queues": {
           "runAfter": {
-            "Get_a_row_by_ID_-_MOC_register_mailbox": [
+            "In_Days": [
               "Succeeded"
             ]
           },
