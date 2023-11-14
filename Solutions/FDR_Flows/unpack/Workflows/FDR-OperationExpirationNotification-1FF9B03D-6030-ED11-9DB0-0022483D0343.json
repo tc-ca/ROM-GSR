@@ -113,11 +113,11 @@
                   "item/activitypointer_activity_parties": [
                     {
                       "participationtypemask": 1,
-                      "partyid@odata.bind": "\\queues\\e4f28240-09fb-ed11-8f6e-0022483e130e"
+                      "partyid@odata.bind": "\\queues\\@{outputs('queueid')}"
                     },
                     {
                       "participationtypemask": 2,
-                      "partyid@odata.bind": "\\queues\\e4f28240-09fb-ed11-8f6e-0022483e130e"
+                      "partyid@odata.bind": "\\queues\\@{outputs('queueid')}"
                     }
                   ],
                   "item/description": "@outputs('MessageText')",
@@ -541,7 +541,7 @@
             }
           },
           "runAfter": {
-            "Get_a_row_by_ID_-_MOC_register_mailbox": [
+            "queueid": [
               "Succeeded"
             ]
           },
@@ -1676,10 +1676,45 @@
               {
                 "name": "ActivityPartStringList",
                 "type": "string",
-                "value": "{\"participationtypemask\": 1,\"partyid@odata.bind\": \"\\\\queues\\\\e4f28240-09fb-ed11-8f6e-0022483e130e\"}"
+                "value": "{\"participationtypemask\": 1,\"partyid@odata.bind\": \"\\\\queues\\\\@{outputs('queueid')}\"}"
               }
             ]
           }
+        },
+        "List_rows_-_get_queues": {
+          "runAfter": {
+            "Get_a_row_by_ID_-_MOC_register_mailbox": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0a2125a5-41ae-4b4d-ac03-84d38375e1b3"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "queues",
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"queue\">\n<attribute name=\"name\"/>\n<attribute name=\"emailaddress\"/>\n<attribute name=\"queueid\"/>\n<order attribute=\"name\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"name\" operator=\"eq\" value=\"MOC Register / Registre Contenant\"/>\n</filter>\n</entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "queueid": {
+          "runAfter": {
+            "List_rows_-_get_queues": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0dca1337-ba8f-445f-8e6a-1bb02dc20732"
+          },
+          "type": "Compose",
+          "inputs": "@outputs('List_rows_-_get_queues')?['body/value'][0]['queueid']"
         }
       }
     },
