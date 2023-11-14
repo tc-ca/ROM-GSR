@@ -1,0 +1,38 @@
+{% extends 'Layout 1 Column' %}
+
+{% block main %}
+
+<script type="text/javascript" src="~/tdgcore_common.js"></script>
+<script type="text/javascript" src="~/tdgcore_message.js"></script>
+<script type="text/javascript" src="~/tdgcore_invitation.js"></script>
+
+<script>
+    // Web Template - Full Page
+    debugger;
+
+    tdg.c.weblink_hide("/company_dashboard/");
+    tdg.c.weblink_hide("/Bulk_Site_Update/");
+
+	var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+    var title = tdg.error_message.message("m000200");
+    var ctl = $('#cdts-signout-btn').tooltip()[0];
+    ctl.title = title;   
+    ctl.href = (selected_language == "en" ? "/en/Account/Login/LogOff" : "/fr/Account/Login/LogOff");   
+</script>
+
+  {% include 'Page Copy' %}
+  {% include 'Child Navigation' showdescriptions: true %}
+  {% if page.adx_entitylist %}
+    {% include 'entity_list' key: page.adx_entitylist.id %}
+  {% endif %}
+
+  {% if page.adx_entityform %}
+    {% entityform id: page.adx_entityform.id %}
+  {% endif %}
+
+  {% if page.adx_webform %}
+    {% webform id: page.adx_webform.id %}
+  {% endif %}
+
+{% endblock %}

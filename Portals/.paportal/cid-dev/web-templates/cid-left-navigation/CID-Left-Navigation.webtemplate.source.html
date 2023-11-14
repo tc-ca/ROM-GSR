@@ -1,0 +1,53 @@
+{% extends 'CID Two Column Layout' %} 
+{% block sidebar %}
+ {% assign weblinkset_id = page.adx_navigation.id %} 
+ {%assign weblinkset_name = page.adx_navigation.name%}
+ {%assign user_type = user.cid_contacttype.Value%}
+ {% if weblinkset_id %} {% assign nav = weblinks[page.adx_navigation.id] %} 
+ {% if nav %} <div class="list-group"> {% for link in nav.weblinks %} 
+ {%if link.url contains "online-help" or link.url contains "OnlineHelp"   %}
+
+    <a class="list-group-item"  href={{ link.url }}> {{ link.name }} </a> 
+ 
+ {%else%}
+  
+    {%if link.url contains "deactivate-company" and user_type != 100000000  %}
+     <a class="list-group-item" style="pointer-events: none;" href={{ link.url }}> {{ link.name }} </a> 
+   
+    {%else%}
+    <a class="list-group-item" href={{ link.url }}> {{ link.name }} </a> 
+    {% endif %} 
+ {% endif %} 
+ 
+  {% if link.url contains 'my-sites' and weblinkset_name contains 'Company Dashboard Navigation' %}
+  <br>
+  {%endif%}
+
+  {% if link.url contains 'deactivate-company' and weblinkset_name contains 'Company Dashboard Navigation' %}
+  <br>
+  {%endif%}
+  {% if link.url contains 'annual-compliance-update' and weblinkset_name contains 'Site Page Navigation' %}
+  <br>
+  {%endif%}
+
+  {% if link.url contains 'site-history-logs' and weblinkset_name contains 'Site Page Navigation' %}
+   <br>
+  {%endif%}
+  {% endfor %}</div>
+  {%endif%} {% endif %}  <script type="text/javascript" src="~/tdgcore_common.js">
+ </script> <script type="text/javascript" src="~/tdgcore_message.js"></script> 
+ <script> // Web Template - CID Left Navigation 
+    debugger; 
+    tdg.c.weblink_hide("/RegistrationWizard/"); 
+    //tdg.c.weblink_hide("/Bulk_Site_Upload/"); 
+
+	var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+    var title = tdg.error_message.message("m000200");
+    var ctl = $('#cdts-signout-btn').tooltip()[0];
+    ctl.title = title;   
+    ctl.href = (selected_language == "en" ? "/en/Account/Login/LogOff" : "/fr/Account/Login/LogOff");
+ </script> 
+ {% endblock %}
+ {% block content %} <div> {% block main %} {% include 'Page Copy' %} 
+ {% endblock %} </div> {% endblock %}

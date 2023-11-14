@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="container">
+    {% block breadcrumbs %}
+      {% include 'Breadcrumbs' %}
+    {% endblock %}
+  {% block title %}
+    {% include 'Page Header' %}
+  {% endblock %}
+ </div>
+ <div id="mainContent" class="row">
+  <div class="col-md-12">
+   {% block main %}
+    {% include 'Page Copy' %}
+   {% endblock %}
+  </div>
+ </div>
+</div>
+
+<script type="text/javascript" src="~/tdgcore_message.js" ></script>
+
+
+
+<script>
+    // Web Template - Layout 1 Column
+    debugger;
+	var selected_language = '{{website.selected_language.code}}';
+    sessionStorage.setItem("selected_language", selected_language);
+    var title = tdg.error_message.message("m000200");
+    var ctl = $('#cdts-signout-btn').tooltip()[0];
+    ctl.title = title;
+    ctl.href = (selected_language == "en" ? "/en/Account/Login/LogOff" : "/fr/Account/Login/LogOff");
+</script>
+	
