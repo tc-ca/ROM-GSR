@@ -18,6 +18,15 @@
         "api": {
           "name": "shared_commondataserviceforapps"
         }
+      },
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
       }
     },
     "definition": {
@@ -34,21 +43,22 @@
         }
       },
       "triggers": {
-        "When_a_row_is_added,_modified_or_deleted": {
+        "When_a_row_of_account_is_modified_-_adx_modifiedbyusername": {
           "metadata": {
-            "operationMetadataId": "2eebacf8-a8f3-4f6a-8461-9ddded77125d"
+            "operationMetadataId": "878c2106-a56c-4142-8486-86beb3abbc3b"
           },
           "type": "OpenApiConnectionWebhook",
           "inputs": {
             "host": {
-              "connectionName": "shared_commondataserviceforapps_1",
+              "connectionName": "shared_commondataserviceforapps",
               "operationId": "SubscribeWebhookTrigger",
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
-              "subscriptionRequest/message": 1,
+              "subscriptionRequest/message": 3,
               "subscriptionRequest/entityname": "account",
               "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "adx_modifiedbyusername",
               "subscriptionRequest/filterexpression": "customertypecode eq 948010001 and ovs_address_type eq 2",
               "subscriptionRequest/runas": 3
             },
@@ -57,6 +67,88 @@
         }
       },
       "actions": {
+        "Initialize_variable_Province_List": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "9d843d01-989c-48bc-8760-256041db9458"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ProvinceList",
+                "type": "array",
+                "value": [
+                  {
+                    "Province": "Alberta::Alberta",
+                    "index": 0,
+                    "ProvinceCode": "AB"
+                  },
+                  {
+                    "Province": "British Columbia::Colombie-Britannique",
+                    "index": 1,
+                    "ProvinceCode": "BC"
+                  },
+                  {
+                    "Province": "Manitoba::Manitoba",
+                    "index": 2,
+                    "ProvinceCode": "MB"
+                  },
+                  {
+                    "Province": "New Brunswick::Nouveau-Brunswick",
+                    "index": 3,
+                    "ProvinceCode": "NB"
+                  },
+                  {
+                    "Province": "Newfoundland and Labrador::Terre‑Neuve‑et‑Labrador",
+                    "index": 4,
+                    "ProvinceCode": "NL"
+                  },
+                  {
+                    "Province": "Northwest Territories::Territoires du Nord‑Ouest",
+                    "index": 5,
+                    "ProvinceCode": "NT"
+                  },
+                  {
+                    "Province": "Nova Scotia::Nouvelle-Écosse",
+                    "index": 6,
+                    "ProvinceCode": "NS"
+                  },
+                  {
+                    "Province": "Nunavut::Nunavut",
+                    "index": 7,
+                    "ProvinceCode": "NU"
+                  },
+                  {
+                    "Province": "Ontario::Ontario",
+                    "index": 8,
+                    "ProvinceCode": "ON"
+                  },
+                  {
+                    "Province": "Prince Edward Island::Île-du-Prince-Édouard",
+                    "index": 9,
+                    "ProvinceCode": "PE"
+                  },
+                  {
+                    "Province": "Quebec::Québec",
+                    "index": 10,
+                    "ProvinceCode": "QC"
+                  },
+                  {
+                    "Province": "Saskatchewan::Saskatchewan",
+                    "index": 11,
+                    "ProvinceCode": "SK"
+                  },
+                  {
+                    "Province": "Yukon::Yukon",
+                    "index": 12,
+                    "ProvinceCode": "YT"
+                  }
+                ]
+              }
+            ]
+          }
+        },
         "Check_if_Lat_and_Long_are_not_empty_and_address_type_is_Lat_and_Long": {
           "actions": {
             "Longtitude": {
@@ -217,6 +309,12 @@
                   "@length(string(triggerOutputs()?['body/address1_longitude']))",
                   0
                 ]
+              },
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/ovs_address1_province']",
+                  "@null"
+                ]
               }
             ]
           },
@@ -224,88 +322,6 @@
             "operationMetadataId": "9ff4e24d-4a8e-4c43-a4a1-a26f2b9b659d"
           },
           "type": "If"
-        },
-        "Initialize_variable_Province_List": {
-          "runAfter": {},
-          "metadata": {
-            "operationMetadataId": "9d843d01-989c-48bc-8760-256041db9458"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "ProvinceList",
-                "type": "array",
-                "value": [
-                  {
-                    "Province": "Alberta::Alberta",
-                    "index": 0,
-                    "ProvinceCode": "AB"
-                  },
-                  {
-                    "Province": "British Columbia::Colombie-Britannique",
-                    "index": 1,
-                    "ProvinceCode": "BC"
-                  },
-                  {
-                    "Province": "Manitoba::Manitoba",
-                    "index": 2,
-                    "ProvinceCode": "MB"
-                  },
-                  {
-                    "Province": "New Brunswick::Nouveau-Brunswick",
-                    "index": 3,
-                    "ProvinceCode": "NB"
-                  },
-                  {
-                    "Province": "Newfoundland and Labrador::Terre‑Neuve‑et‑Labrador",
-                    "index": 4,
-                    "ProvinceCode": "NL"
-                  },
-                  {
-                    "Province": "Northwest Territories::Territoires du Nord‑Ouest",
-                    "index": 5,
-                    "ProvinceCode": "NT"
-                  },
-                  {
-                    "Province": "Nova Scotia::Nouvelle-Écosse",
-                    "index": 6,
-                    "ProvinceCode": "NS"
-                  },
-                  {
-                    "Province": "Nunavut::Nunavut",
-                    "index": 7,
-                    "ProvinceCode": "NU"
-                  },
-                  {
-                    "Province": "Ontario::Ontario",
-                    "index": 8,
-                    "ProvinceCode": "ON"
-                  },
-                  {
-                    "Province": "Prince Edward Island::Île-du-Prince-Édouard",
-                    "index": 9,
-                    "ProvinceCode": "PE"
-                  },
-                  {
-                    "Province": "Quebec::Québec",
-                    "index": 10,
-                    "ProvinceCode": "QC"
-                  },
-                  {
-                    "Province": "Saskatchewan::Saskatchewan",
-                    "index": 11,
-                    "ProvinceCode": "SK"
-                  },
-                  {
-                    "Province": "Yukon::Yukon",
-                    "index": 12,
-                    "ProvinceCode": "YT"
-                  }
-                ]
-              }
-            ]
-          }
         }
       },
       "outputs": {}

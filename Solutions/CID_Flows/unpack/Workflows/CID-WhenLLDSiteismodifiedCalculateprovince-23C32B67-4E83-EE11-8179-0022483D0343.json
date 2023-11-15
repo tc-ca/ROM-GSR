@@ -1,0 +1,379 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "7ae6bd82-8a53-4afa-abbe-d074d99aa811"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "account",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "adx_modifiedbyusername",
+              "subscriptionRequest/filterexpression": "customertypecode eq 948010001 and ovs_address_type eq 1",
+              "subscriptionRequest/runas": 3
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "check_if_province_is_null": {
+          "actions": {
+            "Check_if_address_Type_is_legal_land": {
+              "actions": {
+                "Quarter": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "8dd30044-a3f8-4e8d-90a8-4c191f486d8f"
+                  },
+                  "type": "Compose",
+                  "inputs": "@triggerOutputs()?['body/_ovs_lld_quarter_label']"
+                },
+                "HTTP_-_all_LLD_converter_API": {
+                  "runAfter": {
+                    "Meridian": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3a6c3035-da4f-4e4b-8e21-a5478d2c15c6"
+                  },
+                  "type": "Http",
+                  "inputs": {
+                    "method": "GET",
+                    "uri": "https://developer.townshipcanada.com/search/legal-location",
+                    "headers": {
+                      "X-API-Key": "0514affb0b774176b484d20a0438b458"
+                    },
+                    "queries": {
+                      "location": "@{outputs('Quarter')}-@{outputs('Section')}-@{outputs('Township')}-@{outputs('Range')}-@{outputs('Meridian')}"
+                    }
+                  }
+                },
+                "Section": {
+                  "runAfter": {
+                    "Quarter": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "fc903d38-9064-479e-bf9a-6ad884cb1301"
+                  },
+                  "type": "Compose",
+                  "inputs": "@triggerOutputs()?['body/_ovs_lld_section_label']"
+                },
+                "Township": {
+                  "runAfter": {
+                    "Section": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "06a54ae0-c1e3-498c-86e3-028c39c6d268"
+                  },
+                  "type": "Compose",
+                  "inputs": "@triggerOutputs()?['body/_ovs_lld_township_label']"
+                },
+                "Range": {
+                  "runAfter": {
+                    "Township": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "200ef498-248b-4cb8-b8af-2aa5dd94fbbf"
+                  },
+                  "type": "Compose",
+                  "inputs": "@triggerOutputs()?['body/_ovs_lld_range_label']"
+                },
+                "Meridian": {
+                  "runAfter": {
+                    "Range": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "85c900d0-3c25-472b-971f-14ebe1cb4f3e"
+                  },
+                  "type": "Compose",
+                  "inputs": "@triggerOutputs()?['body/_ovs_lld_meridian_label']"
+                },
+                "Check_if_body_length_greater_than_zero": {
+                  "actions": {
+                    "Province": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "65a5d3ce-57f4-451b-8380-85b65f536a84"
+                      },
+                      "type": "Compose",
+                      "inputs": "@body('HTTP_-_all_LLD_converter_API')?['features'][1]['properties']['province']"
+                    },
+                    "Longtitude": {
+                      "runAfter": {
+                        "Province": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "229b9fbb-e6b1-4a41-bb5d-c358c16dfe16"
+                      },
+                      "type": "Compose",
+                      "inputs": "@body('HTTP_-_all_LLD_converter_API')?['features'][1]['geometry']['coordinates'][0]"
+                    },
+                    "Latitude": {
+                      "runAfter": {
+                        "Longtitude": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "8d0719c5-7e73-4d1b-9a75-e8fdf070f08e"
+                      },
+                      "type": "Compose",
+                      "inputs": "@body('HTTP_-_all_LLD_converter_API')?['features'][1]['geometry']['coordinates'][1]"
+                    },
+                    "Filter_Province_array": {
+                      "runAfter": {
+                        "Latitude": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "1a4de2d3-c2c6-40c6-b918-b0ffe6a40849"
+                      },
+                      "type": "Query",
+                      "inputs": {
+                        "from": "@variables('ProvinceList')",
+                        "where": "@contains(item()['Province'], outputs('Province'))"
+                      }
+                    },
+                    "ProvinceIndex": {
+                      "runAfter": {
+                        "Filter_Province_array": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "17ad5f56-7123-4860-bd1a-a355cb03e3a0"
+                      },
+                      "type": "Compose",
+                      "inputs": "@body('Filter_Province_array')[0]['index']"
+                    },
+                    "ProvinceCode": {
+                      "runAfter": {
+                        "ProvinceIndex": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "b7de7b72-45b0-4788-8ce8-354224c4d44c"
+                      },
+                      "type": "Compose",
+                      "inputs": "@body('Filter_Province_array')[0]['ProvinceCode']"
+                    },
+                    "Update_Site_LLD_Province_and_Lat_Long": {
+                      "runAfter": {
+                        "ProvinceCode": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "bc1fc229-8204-44ca-983d-2effc1d66cfa"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps_1",
+                          "operationId": "UpdateRecord",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "accounts",
+                          "recordId": "@triggerOutputs()?['body/accountid']",
+                          "item/address1_latitude": "@outputs('Latitude')",
+                          "item/address1_longitude": "@outputs('Longtitude')",
+                          "item/ovs_address1_province": "@outputs('ProvinceIndex')",
+                          "item/ovs_lld_province": "@outputs('ProvinceIndex')"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "HTTP_-_all_LLD_converter_API": [
+                      "Succeeded"
+                    ]
+                  },
+                  "expression": {
+                    "not": {
+                      "equals": [
+                        "@string(body('HTTP_-_all_LLD_converter_API'))",
+                        "{}"
+                      ]
+                    }
+                  },
+                  "metadata": {
+                    "operationMetadataId": "cd0f1bb1-24f2-45f8-a38b-52c431ed47be"
+                  },
+                  "type": "If"
+                }
+              },
+              "runAfter": {},
+              "expression": {
+                "equals": [
+                  "@triggerOutputs()?['body/ovs_address_type']",
+                  1
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "56ba58e4-c044-4a67-8525-afd75893a1cd"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "Initialize_variable_Province_List": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "equals": [
+              "@triggerOutputs()?['body/ovs_address1_province']",
+              "@null"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ea4f7f48-ed4e-4f73-9be7-0412b37eb18a"
+          },
+          "type": "If"
+        },
+        "Initialize_variable_Province_List": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "9d843d01-989c-48bc-8760-256041db9458"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ProvinceList",
+                "type": "array",
+                "value": [
+                  {
+                    "Province": "Alberta::Alberta",
+                    "index": 0,
+                    "ProvinceCode": "AB"
+                  },
+                  {
+                    "Province": "British Columbia::Colombie-Britannique",
+                    "index": 1,
+                    "ProvinceCode": "BC"
+                  },
+                  {
+                    "Province": "Manitoba::Manitoba",
+                    "index": 2,
+                    "ProvinceCode": "MB"
+                  },
+                  {
+                    "Province": "New Brunswick::Nouveau-Brunswick",
+                    "index": 3,
+                    "ProvinceCode": "NB"
+                  },
+                  {
+                    "Province": "Newfoundland and Labrador::Terre‑Neuve‑et‑Labrador",
+                    "index": 4,
+                    "ProvinceCode": "NL"
+                  },
+                  {
+                    "Province": "Northwest Territories::Territoires du Nord‑Ouest",
+                    "index": 5,
+                    "ProvinceCode": "NT"
+                  },
+                  {
+                    "Province": "Nova Scotia::Nouvelle-Écosse",
+                    "index": 6,
+                    "ProvinceCode": "NS"
+                  },
+                  {
+                    "Province": "Nunavut::Nunavut",
+                    "index": 7,
+                    "ProvinceCode": "NU"
+                  },
+                  {
+                    "Province": "Ontario::Ontario",
+                    "index": 8,
+                    "ProvinceCode": "ON"
+                  },
+                  {
+                    "Province": "Prince Edward Island::Île-du-Prince-Édouard",
+                    "index": 9,
+                    "ProvinceCode": "PE"
+                  },
+                  {
+                    "Province": "Quebec::Québec",
+                    "index": 10,
+                    "ProvinceCode": "QC"
+                  },
+                  {
+                    "Province": "Saskatchewan::Saskatchewan",
+                    "index": 11,
+                    "ProvinceCode": "SK"
+                  },
+                  {
+                    "Province": "Yukon::Yukon",
+                    "index": 12,
+                    "ProvinceCode": "YT"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
