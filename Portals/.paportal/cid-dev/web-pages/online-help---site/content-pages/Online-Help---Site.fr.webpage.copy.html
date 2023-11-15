@@ -1,0 +1,18 @@
+{% entityform name: 'Online Help' %}
+<br>
+{% assign siteId = request.params.id %}
+{% assign account = entities.account[siteId] %}
+<input id="siteStatus" name="siteStatus" type="hidden" value="{{ account.cid_cidsitestatus.label }}">
+<script language="javascript">
+    $(document).ready(function() {
+      var urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('id')) {
+        var siteId = urlParams.get('id');
+        $(".list-group-item").each(function() {
+          var _href = $(this).attr("href");
+          $(this).attr("href", _href + '?id=' + siteId);
+        });
+      }
+    });
+  </script>
+
