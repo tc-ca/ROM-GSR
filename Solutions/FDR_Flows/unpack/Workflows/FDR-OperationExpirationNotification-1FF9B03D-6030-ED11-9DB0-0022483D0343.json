@@ -1485,7 +1485,7 @@
                 },
                 "Get_a_row_by_ID_-_get_site": {
                   "runAfter": {
-                    "Get_Parent": [
+                    "Set_variable_Activity_party_string_List_initial_value": [
                       "Succeeded"
                     ]
                   },
@@ -1501,7 +1501,7 @@
                     },
                     "parameters": {
                       "entityName": "accounts",
-                      "recordId": "@items('Iterate_expiring_-_single_thread')?['ovs_siteid']['accountid']",
+                      "recordId": "@items('Iterate_expiring_-_single_thread')?['_ovs_siteid_value']",
                       "$select": "emailaddress1,accountid"
                     },
                     "authentication": "@parameters('$authentication')"
@@ -1549,6 +1549,21 @@
                     "operationMetadataId": "9d0c5c49-60c8-4d24-a45b-7be6730eb73e"
                   },
                   "type": "If"
+                },
+                "Set_variable_Activity_party_string_List_initial_value": {
+                  "runAfter": {
+                    "Get_Parent": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "5fbb1b88-2651-44d4-9116-32cbb5d6f0b7"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ActivityPartStringList",
+                    "value": "{\"participationtypemask\": 1,\"partyid@odata.bind\": \"\\\\queues\\\\@{outputs('queueid')}\"}"
+                  }
                 }
               },
               "runAfter": {
