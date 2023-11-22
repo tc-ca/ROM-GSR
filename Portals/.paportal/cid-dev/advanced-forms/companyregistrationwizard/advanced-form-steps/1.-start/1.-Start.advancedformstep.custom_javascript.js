@@ -56,7 +56,6 @@ $(document).ready(function () {
             var contact_id = '{{user.id}}';
             var filter = "adx_invitationcode ne '' and _adx_invitecontact_value eq " + contact_id;
             var inv = tdg.c.WebApi_List("adx_invitations", filter);
-            console.log ("inviation length " + inv.length);
             if (inv.length > 0 ) {
                 sessionStorage.setItem("cid_has_invitation", "true");
                 sessionStorage.setItem("adx_invitationid", inv[0].adx_invitationid);
@@ -92,7 +91,6 @@ $(document).ready(function () {
     var showWithdraw = true;
     if (parentcustomerid) {
         var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq " + parentcustomerid;
-        console.log("after account filter");
         var accData = tdg.webapi.list("accounts", filter);
         if (accData != null && accData.length > 0 && accData[0].cid_portalrecordcreationdetails) { // Net New Site
             showWithdraw = true;
@@ -173,32 +171,27 @@ if (window.jQuery) {
                 }
                 else {
                     debugger;
-                    //  _cra_record  = await tdg.cid.crw.data_confirm_dialog(1,  $("#cid_crabusinessnumber").val(), "", "", null);
-                    console.log ("before cra record");
 
                     let data = _cra_record;
-                    console.log (data);
                     if (data == "" || data == null) {
-                        tdg.c.error_message_advanced_form("m000001", true);
-                        
+                        tdg.c.error_message_advanced_form("m000001", true);                      
                     }
                     else {
                         debugger;
                        
                         legalname = data.LegalName;
-                        console.log ("after legal name " + legalname);
+
                         let cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
                         validation = false;
-                        filter = "cid_crabusinessnumber eq '" + cid_crabusinessnumber + "'";
+                        filter = "cid_crabusinessnumber eq '" + cid_crabusinessnumber + "' and customertypecode eq 948010000 and statecode eq 0";
                         rom_data = tdg.c.WebApi_List("accounts", filter);
-                        if (rom_data.length ==0 || rom_data == null)
-                        if (legalname != null && legalname != "")
-                        {
-                             filter = "ovs_legalname eq '" + legalname + "'";
-                              rom_data = tdg.c.WebApi_List("accounts", filter);
-
+                        if (rom_data.length == 0 || rom_data == null) {
+                            if (legalname != null && legalname != "")
+                            {
+                                filter = "ovs_legalname eq '" + legalname + "' and customertypecode eq 948010000 and statecode eq 0";
+                                rom_data = tdg.c.WebApi_List("accounts", filter);
+                            }
                         }
-
 
                         if (rom_data.length > 0) {
                             rom_data = rom_data[0];
@@ -212,7 +205,6 @@ if (window.jQuery) {
                                   tdg.webapi.update("accounts", accid, BNdata);
                             }
 
-
                             validation =  tdg.cid.crw.start_registration(rom_data, suppress_error, contact_id);
                             console.log ("validation " + validation);
                         }
@@ -224,12 +216,9 @@ if (window.jQuery) {
                 }
             }
             else {
-                console.log ("parent customer id setup 002");
-                debugger;
                 tdg.cid.crw.start_parentcustomerid_setup(_account.accountid, _account.ovs_legalname);
                 validation = true;
             }
-            debugger;
 
             if (validation) {
                 debugger;
