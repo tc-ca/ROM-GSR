@@ -140,28 +140,59 @@ var SRFunctions_FDR_main = (function (window, document) {
                 console.log(result);
                 var limitations = "";
                 var specifications = "";
-
+                var limitationsEn = "";
+                var limitationsFr = "";
                 // Limitations
                 for (var j = 0; j < result.fdr_fdr_servicerequestfunction_fdr_functionlimitation_servicerequestfunction.length; j++) {
                     var fdr_limitation_formatted = result.fdr_fdr_servicerequestfunction_fdr_functionlimitation_servicerequestfunction[j]["_fdr_limitation_value@OData.Community.Display.V1.FormattedValue"];
                     var statecode_formatted = result.fdr_fdr_servicerequestfunction_fdr_functionlimitation_servicerequestfunction[j]["statecode@OData.Community.Display.V1.FormattedValue"];
                     if (statecode_formatted == "Active") {
 
-                        if (limitations.length > 0)
-                            limitations = limitations + ", ";
-                        limitations = limitations + fdr_limitation_formatted;
+                        //if (limitations.length > 0)
+                          //  limitations = limitations + ", ";
+
+                        if (limitationsEn.length > 0)
+                            limitationsEn = limitationsEn + ", ";
+                        if (limitationsFr.length > 0)
+                            limitationsFr = limitationsFr + ", ";
+                        var splitLimitation = fdr_limitation_formatted.split("::");
+
+                        limitationsEn = limitationsEn + splitLimitation[0];
+                        limitationsFr = limitationsFr + splitLimitation[1];
+                       // limitations = limitations + fdr_limitation_formatted;
+                        
                     }
                 }
 
+                if (limitationsEn.length > 0 && limitationsFr.length > 0) {
+                    limitations = limitationsEn + "::" + limitationsFr;
+                }
+
+                var specificationsEn = "";
+                var specificationsFr = "";
                 // Specifications
                 for (var j = 0; j < result.fdr_ServiceRequestFunction_Specification.length; j++) {
                     var fdr_name = result.fdr_ServiceRequestFunction_Specification[j]["fdr_name"];
                     var statecode_formatted = result.fdr_ServiceRequestFunction_Specification[j]["statecode@OData.Community.Display.V1.FormattedValue"];
                     //if (statecode_formatted == "Active") {
-                    if (specifications.length > 0)
-                        specifications = specifications + ", ";
-                    specifications = specifications + fdr_name;
+                   // if (specifications.length > 0)
+                    //    specifications = specifications + ", ";
+
+                    var splitName = fdr_name.split("::");
+                    if (specificationsEn.length > 0)
+                        specificationsEn = specificationsEn + ", ";
+
+                    if (specificationsFr.length > 0)
+                        specificationsFr = specificationsFr + ", ";
+
+                    specificationsEn = specificationsEn + splitName[0];
+                    specificationsFr = specificationsFr + splitName[1];
+
+                   // specifications = specifications + fdr_name;
                     //}
+                }
+                if (specificationsEn.length > 0 && specificationsFr.length > 0) {
+                    specifications = specificationsEn + "::" + specificationsFr;
                 }
 
                 //fdr_limitations
@@ -331,13 +362,18 @@ var SRFunctions_FDR_main = (function (window, document) {
                             if (hasOperation && !pastOnTechReview)
                                 glHelper.DisplayFormNotificationModern(formContext, "Parent Service Request yet reached Technical Review stage. Design cannot be added.", "WARNING", false);
                         }
-
+                        //Update to show Specs table Task: 292763
                         glHelper.SetSectionVisibility(formContext, "General", "section_design", (isDesignRegSupported && displayDesign));
                         glHelper.SetControlVisibility(formContext, "Subgrid_Designs_N_N", (isDesignRegSupported && displayDesign));
-                        glHelper.SetSectionVisibility(formContext, "General", "section_specs", !isDesignRegSupported);
-                        glHelper.SetControlVisibility(formContext, "GRID_SPECS", !isDesignRegSupported);
-                        //199424 : Hide Specs grid in Service Request Function if the selected Container Function record does not support Designs AND has no specifications 
-                        if (!isDesignRegSupported) {
+                        //glHelper.SetSectionVisibility(formContext, "General", "section_design", (isDesignRegSupported));
+                        //glHelper.SetControlVisibility(formContext, "Subgrid_Designs_N_N", (isDesignRegSupported));
+                        glHelper.SetSectionVisibility(formContext, "General", "section_specs", isDesignRegSupported || !isDesignRegSupported );
+                        glHelper.SetControlVisibility(formContext, "GRID_SPECS", isDesignRegSupported || !isDesignRegSupported);
+                        //  199424 : Hide Specs grid in Service Request Function if the selected Container Function record does not support Designs AND has no specifications
+
+                        debugger;
+                        isDesignRegSupported = true;
+                        if (isDesignRegSupported == false) {
                             var originalFetchXML = `<fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
                               <entity name="fdr_specification">
                                 <attribute name="fdr_specificationid" />
