@@ -183,12 +183,14 @@ if (window.jQuery) {
 
                         let cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
                         validation = false;
-                        filter = "cid_crabusinessnumber eq '" + cid_crabusinessnumber + "' and customertypecode eq 948010000 and statecode eq 0";
+                        //filter = "cid_crabusinessnumber eq '" + cid_crabusinessnumber + "' and customertypecode eq 948010000 and statecode eq 0";
+                        filter = "cid_crabusinessnumber eq '" + cid_crabusinessnumber + "' and customertypecode eq 948010000";
                         rom_data = tdg.c.WebApi_List("accounts", filter);
                         if (rom_data.length == 0 || rom_data == null) {
                             if (legalname != null && legalname != "")
                             {
-                                filter = "ovs_legalname eq '" + legalname + "' and customertypecode eq 948010000 and statecode eq 0";
+                                //filter = "ovs_legalname eq '" + legalname + "' and customertypecode eq 948010000 and statecode eq 0";
+                                filter = "ovs_legalname eq '" + legalname + "' and customertypecode eq 948010000";
                                 rom_data = tdg.c.WebApi_List("accounts", filter);
                             }
                         }
@@ -206,7 +208,6 @@ if (window.jQuery) {
                             }
 
                             validation =  tdg.cid.crw.start_registration(rom_data, suppress_error, contact_id);
-                            console.log ("validation " + validation);
                         }
                         else {
                             tdg.cid.contact_update(data);
