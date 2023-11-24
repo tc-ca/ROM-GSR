@@ -2,7 +2,6 @@
   "properties": {
     "connectionReferences": {
       "shared_commondataserviceforapps": {
-        "impersonation": {},
         "runtimeSource": "embedded",
         "connection": {
           "connectionReferenceLogicalName": "fdr_conref_dataverse_fdrsp"
@@ -75,9 +74,9 @@
           "type": "OpenApiConnectionWebhook",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps",
-              "operationId": "SubscribeWebhookTrigger"
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "subscriptionRequest/message": 3,
@@ -85,8 +84,7 @@
               "subscriptionRequest/scope": 4,
               "subscriptionRequest/filteringattributes": "statuscode",
               "subscriptionRequest/filterexpression": "(_fdr_portalcontact_value ne null and fdr_mtoa_sr_id ne null)",
-              "subscriptionRequest/runas": 1,
-              "subscriptionRequest/name": "f91baf68-4b73-ee11-8179-0022483d0343"
+              "subscriptionRequest/runas": 1
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -161,9 +159,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
               "connectionName": "shared_commondataserviceforapps",
-              "operationId": "GetItem"
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
             },
             "parameters": {
               "entityName": "contacts",
@@ -453,9 +451,9 @@
                     "type": "OpenApiConnection",
                     "inputs": {
                       "host": {
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                         "connectionName": "shared_commondataserviceforapps",
-                        "operationId": "UpdateRecord"
+                        "operationId": "UpdateRecord",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                       },
                       "parameters": {
                         "entityName": "contacts",
@@ -518,9 +516,9 @@
                 "type": "OpenApiConnection",
                 "inputs": {
                   "host": {
-                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Fmtapiconnector-5F5cf23ef0bee9f3b2",
                     "connectionName": "shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2",
-                    "operationId": "Users_GetByEmail"
+                    "operationId": "Users_GetByEmail",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Fmtapiconnector-5F5cf23ef0bee9f3b2"
                   },
                   "parameters": {
                     "email": "@outputs('Get_Portal_Contact_owning_SR')?['body/emailaddress1']",
@@ -577,9 +575,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "apiId": "",
               "connectionName": "shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2",
-              "operationId": "ServiceRequests_GetServiceRequestById"
+              "operationId": "ServiceRequests_GetServiceRequestById",
+              "apiId": ""
             },
             "parameters": {
               "id": "@triggerOutputs()?['body/fdr_mtoa_sr_id']",
@@ -612,9 +610,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Fmtapiconnector-5F5cf23ef0bee9f3b2",
                       "connectionName": "shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2",
-                      "operationId": "ServiceRequests_UpdateServiceRequestStatus"
+                      "operationId": "ServiceRequests_UpdateServiceRequestStatus",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Fmtapiconnector-5F5cf23ef0bee9f3b2"
                     },
                     "parameters": {
                       "id": "@triggerOutputs()?['body/fdr_mtoa_sr_id']",
@@ -642,9 +640,9 @@
                     "type": "OpenApiConnection",
                     "inputs": {
                       "host": {
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Fmtapiconnector-5F5cf23ef0bee9f3b2",
                         "connectionName": "shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2",
-                        "operationId": "ServiceRequests_UpdateServiceRequestStatus"
+                        "operationId": "ServiceRequests_UpdateServiceRequestStatus",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Fmtapiconnector-5F5cf23ef0bee9f3b2"
                       },
                       "parameters": {
                         "id": "@triggerOutputs()?['body/fdr_mtoa_sr_id']",
@@ -668,7 +666,7 @@
               },
               "type": "If"
             },
-            "isCompleted": {
+            "isCompleted_or_Cancelled": {
               "actions": {
                 "Update_Service_Request": {
                   "runAfter": {
@@ -682,9 +680,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                       "connectionName": "shared_commondataserviceforapps",
-                      "operationId": "UpdateRecord"
+                      "operationId": "UpdateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                     },
                     "parameters": {
                       "entityName": "fdr_servicerequests",
@@ -738,9 +736,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
                       "connectionName": "shared_commondataserviceforapps",
-                      "operationId": "CreateRecord"
+                      "operationId": "CreateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
                     },
                     "parameters": {
                       "entityName": "fdr_servicerequestperformances",
@@ -774,9 +772,9 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5fspapiconnector-5f5cf23ef0bee9f3b2",
                       "connectionName": "shared_tc-5fspapiconnector-5f5cf23ef0bee9f3b2",
-                      "operationId": "servicerequestcontrollervCalculateServiceRequestPerformance"
+                      "operationId": "servicerequestcontrollervCalculateServiceRequestPerformance",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5fspapiconnector-5f5cf23ef0bee9f3b2"
                     },
                     "parameters": {
                       "serviceRequestId": "@triggerOutputs()?['body/fdr_mtoa_sr_id']",
@@ -803,7 +801,7 @@
                   {
                     "equals": [
                       "@variables('requestStatusValue')",
-                      79460000
+                      794600001
                     ]
                   }
                 ]
@@ -850,7 +848,7 @@
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
