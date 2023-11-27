@@ -1,5 +1,18 @@
 {% assign primary_nav = weblinks["Primary Navigation"] %}
 
+{% assign maintenanceMarker = sitemarkers['Maintenance'] %}
+{% assign isMaintenance = settings['Maintenance/IsMaintenance'] | boolean %}
+
+{% if user %}
+
+{% if maintenanceMarker %}
+  {% if isMaintenance %}
+    <script>window.location.href = "{{maintenanceMarker.url}}";</script>
+  {% endif %}
+{% endif %}
+
+{% endif %}
+
 <html>
 
 <body>
