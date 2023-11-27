@@ -59,6 +59,32 @@ stages:
           echo "Push solution changes to the remote repository"
           git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
     #Publish the portal config to Artifact staging
+    - task: PowerShell@2
+      displayName: Print Pipeline File Directories
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "============================================"
+          Write-Host "System.DefaultWorkingDirectory"
+          Get-ChildItem -Path "$(System.DefaultWorkingDirectory)"
+          Write-Host "============================================"
+          Write-Host "Agent.BuildDirectory"
+          Get-ChildItem -Path "$(Agent.BuildDirectory)"
+          Write-Host "============================================"
+          Write-Host ""
+          Write-Host "============================================"
+          Write-Host "Build.ArtifactStagingDirectory"
+          Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)"
+          Write-Host "============================================"
+          Write-Host "============================================"
+          Write-Host "Build.BinariesDirectory"
+          Get-ChildItem -Path "$(Build.BinariesDirectory)"
+          Write-Host "============================================"
+          Write-Host "============================================"
+          Write-Host "Build.SourcesDirectory"
+          Get-ChildItem -Path "$(Build.SourcesDirectory)"
+          Write-Host "============================================"
+        errorActionPreference: 'continue'
     - task: PublishBuildArtifacts@1
       displayName: Publish Configuration Artifact
       inputs:
