@@ -42,7 +42,7 @@ stages:
             --applicationId ${env:PowerPlatformAadApplicationId} `
             --clientSecret ${env:PowerPlatformAadApplicationSecret}
           pac auth select --name PORTAL_DEV
-          pac paportal download --path $(Build.ArtifactStagingDirectory) --webSiteId ${env:PowerPlatformDevPortalWebSiteId}
+          pac powerpages download --path $(Build.ArtifactStagingDirectory) --webSiteId ${env:PowerPlatformDevPortalWebSiteId}
     - task: PowerShell@2
       displayName: Push code to GitHub
       env:
@@ -62,6 +62,6 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: Publish Configuration Artifact
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/cid-dev'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'cid-dev'
         publishLocation: 'Container'
