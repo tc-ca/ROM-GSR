@@ -42,7 +42,7 @@ stages:
             --applicationId ${env:PowerPlatformAadApplicationId} `
             --clientSecret ${env:PowerPlatformAadApplicationSecret}
           pac auth select --name PORTAL_DEV
-          pac paportal download --path $(Build.ArtifactStagingDirectory) --webSiteId ${env:PowerPlatformDevPortalWebSiteId}
+          pac powerpages download --path $(Build.ArtifactStagingDirectory) --webSiteId ${env:PowerPlatformDevPortalWebSiteId}
     #Commit and push the portal data to GitHub
     - task: PowerShell@2
       displayName: Push code to GitHub
@@ -129,7 +129,7 @@ stages:
                   --applicationId ${env:PowerPlatformAadApplicationId} `
                   --clientSecret ${env:PowerPlatformAadApplicationSecret}
                 pac auth select --name PORTAL_QA
-                pac paportal upload --path $(Pipeline.Workspace)\cid-dev --deploymentProfile qa
+                pac powerpages upload --path $(Pipeline.Workspace)\cid-dev --deploymentProfile qa
 
   #Deploy to ACC
 - stage: DeployToACC
@@ -172,7 +172,7 @@ stages:
                   --applicationId ${env:PowerPlatformAadApplicationId} `
                   --clientSecret ${env:PowerPlatformAadApplicationSecret}
                 pac auth select --name PORTAL_ACC
-                pac paportal upload --path $(Pipeline.Workspace)\cid-dev --deploymentProfile acc
+                pac powerpages upload --path $(Pipeline.Workspace)\cid-dev --deploymentProfile acc
 
   #Deploy to PREPROD
 - stage: DeployToPREPROD
@@ -215,7 +215,7 @@ stages:
                   --applicationId ${env:PowerPlatformAadApplicationId} `
                   --clientSecret ${env:PowerPlatformAadApplicationSecret}
                 pac auth select --name PORTAL_PREPROD
-                pac paportal upload --path $(Pipeline.Workspace)\cid-dev --deploymentProfile preprod
+                pac powerpages upload --path $(Pipeline.Workspace)\cid-dev --deploymentProfile preprod
 
   #Deploy to PROD
 - stage: DeployToPROD
@@ -258,4 +258,4 @@ stages:
                   --applicationId ${env:PowerPlatformAadApplicationId} `
                   --clientSecret ${env:PowerPlatformAadApplicationSecret}
                 pac auth select --name PORTAL_PROD
-                pac paportal upload --path $(Pipeline.Workspace)\cid-dev --deploymentProfile prod
+                pac powerpages upload --path $(Pipeline.Workspace)\cid-dev --deploymentProfile prod
