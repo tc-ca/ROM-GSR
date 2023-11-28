@@ -64,11 +64,11 @@ stages:
       inputs:
         SourceFolder: '$(Build.SourcesDirectory)\Portals\deployment-profiles'
         Contents: '*'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)\cid-dev\deployment-profiles'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)\.paportal\cid-dev\deployment-profiles'
     #Replace variables in deployment files with their secret values
     - task: replacetokens@5
       inputs:
-        rootDirectory: '$(Build.ArtifactStagingDirectory)\cid-dev\deployment-profiles'
+        rootDirectory: '$(Build.ArtifactStagingDirectory)\.paportal\cid-dev\deployment-profiles'
         targetFiles: '*.deployment.yml'
         encoding: 'auto'
         tokenPattern: 'doublebraces'
@@ -84,7 +84,7 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: Publish Configuration Artifact
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)\cid-dev'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\.paportal\cid-dev'
         ArtifactName: 'cid-dev'
         publishLocation: 'Container'
 
