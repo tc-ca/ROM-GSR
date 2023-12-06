@@ -61,6 +61,7 @@ stages:
     - '$(Build.SourcesDirectory)\Pipelines\ROM\connection_references\FDRFlows_SolutionSettings_QA.json'
     - '$(Build.SourcesDirectory)\Pipelines\ROM\connection_references\FDRFlows_SolutionSettings_ACC.json'
     - '$(Build.SourcesDirectory)\Pipelines\ROM\connection_references\FDRFlows_SolutionSettings_PREPROD.json'
+    - '$(Build.SourcesDirectory)\Pipelines\ROM\connection_references\FDRFlows_SolutionSettings_PROD.json'
     
 #QA
 - template: templates/stage/DeployFlowSolution.yml  # Template reference
@@ -102,24 +103,15 @@ stages:
     dependsOn: 
     - 'BuildAndPublishArtifacts'
 
-# #PREPROD
-# - template: templates/stage/DeploySolution.yml  # Template reference
-#   parameters:
-#     SolutionName: $(SolutionName)
-#     PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
-#     Environment: 'PREPROD-TDG'
-#     StageName: 'DeployManagedSolutionToPREPROD'
-#     DeleteSolution: false
-#     dependsOn: 
-#     - 'DeployManagedSolutionToQA'
-# #PROD
-# - template: templates/stage/DeploySolution.yml  # Template reference
-#   parameters:
-#     SolutionName: $(SolutionName)
-#     PowerPlatformSPN: $(PowerPlatformSPN_PROD)
-#     Environment: 'PROD-TDG'
-#     StageName: 'DeployManagedSolutionToPROD'
-#     DeleteSolution: false
-#     dependsOn: 
-#     - 'DeployManagedSolutionToQA'
-
+#PROD
+- template: templates/stage/DeployFlowSolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_PROD)
+    UseDeploymentSettingsFile: true
+    DeploymentSettingsFile: 'FDRFlows_SolutionSettings_PROD.json'
+    Environment: 'PROD-TDG'
+    StageName: 'DeployManagedSolutionToPROD'
+    DeleteSolution: false
+    dependsOn: 
+    - 'BuildAndPublishArtifacts'
