@@ -88,6 +88,19 @@ stages:
     dependsOn: 
     - 'BuildAndPublishArtifacts'
 
+#PREPROD
+- template: templates/stage/DeployFlowSolution.yml  # Template reference
+  parameters:
+    SolutionName: $(SolutionName)
+    PowerPlatformSPN: $(PowerPlatformSPN_PREPROD)
+    UseDeploymentSettingsFile: true
+    DeploymentSettingsFile: 'FDRFlows_SolutionSettings_PREPROD.json'
+    Environment: 'PREPROD-TDG'
+    StageName: 'DeployManagedSolutionToPREPROD'
+    DeleteSolution: false
+    dependsOn: 
+    - 'BuildAndPublishArtifacts'
+
 # #PREPROD
 # - template: templates/stage/DeploySolution.yml  # Template reference
 #   parameters:
