@@ -16,7 +16,7 @@
           "connectionReferenceLogicalName": "fdr_conref_mtapi_v3"
         },
         "api": {
-          "name": "shared_tc-5Fmtapiconnector-5F5cf23ef0bee9f3b2",
+          "name": "shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2",
           "logicalName": "tc_5Fmtapiconnector"
         }
       },
@@ -51,7 +51,7 @@
           }
         },
         "Environment Variable - SPAPI App User ID (fdr_envvar_spapi_appuserid)": {
-          "defaultValue": 1,
+          "defaultValue": -500,
           "type": "Int",
           "metadata": {
             "schemaName": "fdr_envvar_spapi_appuserid",
@@ -518,7 +518,7 @@
                   "host": {
                     "connectionName": "shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2",
                     "operationId": "Users_GetByEmail",
-                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Fmtapiconnector-5F5cf23ef0bee9f3b2"
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2"
                   },
                   "parameters": {
                     "email": "@outputs('Get_Portal_Contact_owning_SR')?['body/emailaddress1']",
@@ -612,14 +612,14 @@
                     "host": {
                       "connectionName": "shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2",
                       "operationId": "ServiceRequests_UpdateServiceRequestStatus",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Fmtapiconnector-5F5cf23ef0bee9f3b2"
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2"
                     },
                     "parameters": {
                       "id": "@triggerOutputs()?['body/fdr_mtoa_sr_id']",
                       "userId": "@variables('FDR App User')",
                       "serviceRequestStatus": "@variables('CRSD_label')",
                       "app-jwt": "@parameters('FDR_MTOA_JWT (fdr_FDR_MTOA_JWT)')",
-                      "revisedUpdateDateUtc": "@triggerOutputs()?['body/fdr_submissiondate']"
+                      "revisedUpdateDateUtc": "@ConvertToUtc(triggerOutputs()?['body/fdr_submissiondate'],'Eastern Standard Time','yyyy-MM-dd')"
                     },
                     "authentication": "@parameters('$authentication')"
                   }
@@ -632,26 +632,68 @@
               },
               "else": {
                 "actions": {
-                  "Update_an_existing_service_request_status._2": {
-                    "runAfter": {},
-                    "metadata": {
-                      "operationMetadataId": "f6355f47-7296-47f2-9ad7-5555f3debc7e"
+                  "IS_info_received_": {
+                    "actions": {
+                      "Update_an_existing_service_request_status_with_info_received_on_Date": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "c99f185b-34e0-44a7-bc89-96acd879afb6"
+                        },
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "host": {
+                            "connectionName": "shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2",
+                            "operationId": "ServiceRequests_UpdateServiceRequestStatus",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2"
+                          },
+                          "parameters": {
+                            "id": "@triggerOutputs()?['body/fdr_mtoa_sr_id']",
+                            "userId": "@variables('FDR App User')",
+                            "serviceRequestStatus": "@variables('CRSD_label')",
+                            "app-jwt": "@parameters('FDR_MTOA_JWT (fdr_FDR_MTOA_JWT)')",
+                            "revisedUpdateDateUtc": "@ConvertToUtc(triggerOutputs()?['body/fdr_inforeceivedon'],'Eastern Standard Time','yyyy-MM-dd hh:mm:ss')"
+                          },
+                          "authentication": "@parameters('$authentication')"
+                        }
+                      }
                     },
-                    "type": "OpenApiConnection",
-                    "inputs": {
-                      "host": {
-                        "connectionName": "shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2",
-                        "operationId": "ServiceRequests_UpdateServiceRequestStatus",
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5Fmtapiconnector-5F5cf23ef0bee9f3b2"
-                      },
-                      "parameters": {
-                        "id": "@triggerOutputs()?['body/fdr_mtoa_sr_id']",
-                        "userId": "@variables('MTOA ID')",
-                        "serviceRequestStatus": "@variables('CRSD_label')",
-                        "app-jwt": "@parameters('FDR_MTOA_JWT (fdr_FDR_MTOA_JWT)')"
-                      },
-                      "authentication": "@parameters('$authentication')"
-                    }
+                    "runAfter": {},
+                    "else": {
+                      "actions": {
+                        "Update_an_existing_service_request_status._2": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "f6355f47-7296-47f2-9ad7-5555f3debc7e"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2",
+                              "operationId": "ServiceRequests_UpdateServiceRequestStatus",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_tc-5fmtapiconnector-5f5cf23ef0bee9f3b2"
+                            },
+                            "parameters": {
+                              "id": "@triggerOutputs()?['body/fdr_mtoa_sr_id']",
+                              "userId": "@variables('MTOA ID')",
+                              "serviceRequestStatus": "@variables('CRSD_label')",
+                              "app-jwt": "@parameters('FDR_MTOA_JWT (fdr_FDR_MTOA_JWT)')",
+                              "revisedUpdateDateUtc": "@utcNow()"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          }
+                        }
+                      }
+                    },
+                    "expression": {
+                      "equals": [
+                        "@variables('isInfoReceived')",
+                        "@true"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "dbb96941-0eb5-415c-8f7c-8472b983c71a"
+                    },
+                    "type": "If"
                   }
                 }
               },
