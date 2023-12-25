@@ -2,9 +2,14 @@
 
 $(document).ready(function () {
     debugger;
+
 });
 
 function AddressComplete_Selected() {
+
+
+
+
     $("#address1_line1").val(sessionStorage.getItem("Line1"));
     $("#address1_line2").val(sessionStorage.getItem("Line2"));
     $("#address1_line3").val(sessionStorage.getItem("Line3"));
