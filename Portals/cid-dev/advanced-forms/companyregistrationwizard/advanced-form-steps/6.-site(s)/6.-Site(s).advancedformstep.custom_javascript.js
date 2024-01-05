@@ -123,6 +123,8 @@ $(document).ready(function () {
 		//make for readonly for secondary users
 		var currentUserId = '{{user.contactid}}';
 		Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
+
+		if ('{{user.cid_contacttype.Value}}' != 100000000) $("#WithdrawButton").remove();
 	});
 
 	$('#BulkUploadButton').click(function (e) {

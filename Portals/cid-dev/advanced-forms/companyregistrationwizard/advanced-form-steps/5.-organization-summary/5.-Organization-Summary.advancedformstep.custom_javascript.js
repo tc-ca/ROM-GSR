@@ -95,6 +95,7 @@ $(document).ready(function () {
 			}
 		}
 	}
+	if ('{{user.cid_contacttype.Value}}' != 100000000) $("#WithdrawButton").remove();
 });
 
 function printSummary() {

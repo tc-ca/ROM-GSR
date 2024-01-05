@@ -372,11 +372,23 @@ if (typeof (tdg.c) == "undefined") {
             $("input").attr("autocomplete", "new-password");
         },
 
-        replace_special_char: function (value) {
-            value = $('<textarea />').html(value).text();
-            // for apostrophe, use two apostrophe to escape it:
-            // value = value.replace("'", "''");
-            return value;
+        replace_special_char: function (attribute) {
+            attribute = $('<textarea />').html(attribute).text();
+            return attribute;
+        },
+
+        replace_filter_special_char: function (attribute) {
+            // replace the single quotes
+            attribute = attribute.replace(/'/g, "''");
+
+            attribute = attribute.replace(/%/g, "%25");
+            attribute = attribute.replace(/\+/g, "%2B");
+            attribute = attribute.replace(/\//g, "%2F");
+            attribute = attribute.replace(/\?/g, "%3F");
+
+            attribute = attribute.replace(/#/g, "%23");
+            attribute = attribute.replace(/&/g, "%26");
+            return attribute;
         },
 
         // sample calling dialog_YN
@@ -2118,8 +2130,6 @@ if (typeof (tdg.cid) == "undefined") {
                             , "statecode eq 0 and contactid ne " + recordid + " and  emailaddress1 eq '"
                             + $("#emailaddress1").val() + "'");
 
-
-
                         //check if not duplicate email before executing flow
                         if (EmailSearchResult.length <= 0) {
 
@@ -2696,10 +2706,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
         },
 
         Check_If_Confirmation_Dialog_Data_Iscomplete: function () {
-
             debugger;
-
-
 
             if (
                 $("#cid_legalname2").val() == null || $("#cid_legalname2").val() == "" ||
@@ -2756,19 +2763,15 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#cid_reasonfornobnnumberpopup_label").hide();
             $("#btn_ok").attr("disabled", "disabled");
 
-
             $("#cid_reasonfornobnnumber_other_popup").hide();
             $("#cid_reasonfornobnnumber_other_popup_label").hide();
             var list = $("#cid_reasonfornobnnumber")[0].options;
 
             for (var i = 0; i < list.length; i++) {
-
-
                 let option = document.createElement("option");
                 option.value = list[i].value;
                 option.innerHTML = list[i].text;
                 $("#cid_reasonfornobnnumberpopup").append(option);
-
             }
 
             //disabled and enable ok button based on data
@@ -2803,10 +2806,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     $("#cid_reasonfornobnnumber_other_popup").hide();
                     $("#cid_reasonfornobnnumber_other_popup_label").hide();
 
-
                     $("#cid_crabusinessnumberpopup_label").show();
                     $("#cid_crabusinessnumberpopup").show();
-
 
                 }
                 //disabled and enable ok button based on data
@@ -2826,9 +2827,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     $("#DivOther").hide();
                     $("#cid_reasonfornobnnumber_other_popup").hide();
                     $("#cid_reasonfornobnnumber_other_popup_label").hide();
-
-
-
                 }
                 //disabled and enable ok button based on data
                 tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
@@ -2847,16 +2845,10 @@ if (typeof (tdg.cid.crw) == "undefined") {
             }
             );
 
-            $("#cid_legalname_fr2").change(function ()
-
-                {
-                    //disabled and enable ok button based on data
-                    tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
+            $("#cid_legalname_fr2").change(function () {
+                //disabled and enable ok button based on data
+                tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
             });
-
-            
-            
-            
 
             $("#cid_legalname2").change(function () {
                 //disabled and enable ok button based on data
@@ -2871,19 +2863,15 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 //disabled and enable ok button based on data
                 tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
             });
-
-
-
-
         },
 
         start_account_by_name: function (legalname, legalnamefr) {
-            legalname = legalname.replaceAll("'", "''");
+            debugger;
+
+            legalname = tdg.c.replace_filter_special_char(legalname);
+            legalnamefr = tdg.c.replace_filter_special_char(legalnamefr);
 
             var filter = "ovs_legalname eq '" + legalname + "'";
-            filter = filter.replaceAll("&", "%26");
-            legalnamefr = legalnamefr = ("" + legalnamefr).replaceAll("&", "%26");
-                //legalnamefr.replaceAll("&", "%26");
             var account = tdg.c.WebApi_List("accounts", filter);
             account = account.filter(a => a.customertypecode == 948010000 && a.statecode == 0 && a.ovs_legalnamefr == legalnamefr);
             return account;
@@ -2908,8 +2896,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             var hasCraMessag = tdg.error_message.message("m000212");
             var CRA_BN = "" + data.cid_crabusinessnumber;
             var Other_reason = "" + data.cid_reasonfornobnnumber_other;
-            if (Other_reason == null || Other_reason == "undefined")
-            {Other_reason = "" ;}
+            if (Other_reason == null || Other_reason == "undefined") { Other_reason = ""; }
 
             data.cid_legalnameFR = (data.cid_legalnameFR == null ? "" : data.cid_legalnameFR);
             data.cid_operatingnameFr = (data.cid_operatingnameFr == null ? "" : data.cid_operatingnameFr);
@@ -3152,9 +3139,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
                                                 }
 
                                             }
-                                           
 
-                                        } 
+
+                                        }
                                     }
                                 }
 

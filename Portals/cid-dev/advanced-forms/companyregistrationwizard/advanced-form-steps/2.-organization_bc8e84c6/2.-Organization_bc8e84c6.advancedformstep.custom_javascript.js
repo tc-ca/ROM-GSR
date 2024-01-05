@@ -105,7 +105,6 @@ $(document).ready(function () {
 			$("#ovs_legalnamefr").val(ovs_legalname);
 		});
 
-
 		$("#cid_reasonfornobnnumber").change(function () {
 			tdg.cid.crw.start_cid_reasonfornobnnumber_onchange(true);
 		});
@@ -143,6 +142,8 @@ $(document).ready(function () {
 		$("#address1_stateorprovince").val(address1_stateorprovince);
 		$("#address1_postalcode").val(address1_postalcode);
 		sessionStorage.setItem("AddressLine1Text", address1_line1);
+
+		address1_line1_set(value);
 	}
 	$("#name").attr("autocomplete", "new-password");
 	$("#address1_longitude").attr("autocomplete", "new-password");
@@ -180,12 +181,14 @@ $(document).ready(function () {
 		});
 	});
 });
+
 function btn_previous_click() {
 	var account_id = '{{user.parentcustomerid.Id}}';
 	var contact_id = '{{user.id}}';
 	var email = "{{user.emailaddress1}}";
 	tdg.cid.crw.step2_previous_click(email, account_id, contact_id);
 }
+
 if (window.jQuery) {
 	(function ($) {
 		webFormClientValidate = function () {

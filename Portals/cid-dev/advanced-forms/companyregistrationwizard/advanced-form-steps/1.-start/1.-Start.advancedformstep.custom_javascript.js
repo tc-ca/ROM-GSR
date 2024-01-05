@@ -28,7 +28,7 @@ $(document).ready(function () {
     tdg.c.control_hide("parentcustomerid", true);
     tdg.c.control_hide("cid_operatingname");
     tdg.c.control_hide("cid_operatingnamefr");
-     debugger;
+    debugger;
     $("#cid_has_cra_bn").change(function () {
         tdg.cid.crw.start_cid_has_cra_bn_onchange("1");
     });
@@ -56,7 +56,7 @@ $(document).ready(function () {
             var contact_id = '{{user.id}}';
             var filter = "adx_invitationcode ne '' and _adx_invitecontact_value eq " + contact_id;
             var inv = tdg.c.WebApi_List("adx_invitations", filter);
-            if (inv.length > 0 ) {
+            if (inv.length > 0) {
                 sessionStorage.setItem("cid_has_invitation", "true");
                 sessionStorage.setItem("adx_invitationid", inv[0].adx_invitationid);
                 filter = "accountid eq " + account_id;
@@ -85,7 +85,7 @@ $(document).ready(function () {
             }
         }
     }
-    
+
     //Withdraw
     var parentcustomerid = '{{user.parentcustomerid.Id}}';
     var showWithdraw = true;
@@ -132,11 +132,11 @@ $(document).ready(function () {
 
 if (window.jQuery) {
     (function ($) {
-        webFormClientValidate =  function () {
+        webFormClientValidate = function () {
             debugger;
             var contact_id = '{{user.id}}';
             let has_invitation = sessionStorage.getItem("cid_has_invitation");
-            console.log ("has_invitation :" + has_invitation);
+            console.log("has_invitation :" + has_invitation);
             if (has_invitation != "true") {
                 tdg.cid.crw.start_clear_contact_address();
             }
@@ -174,11 +174,11 @@ if (window.jQuery) {
 
                     let data = _cra_record;
                     if (data == "" || data == null) {
-                        tdg.c.error_message_advanced_form("m000001", true);                      
+                        tdg.c.error_message_advanced_form("m000001", true);
                     }
                     else {
                         debugger;
-                       
+
                         legalname = data.LegalName;
 
                         let cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
@@ -187,9 +187,8 @@ if (window.jQuery) {
                         filter = "cid_crabusinessnumber eq '" + cid_crabusinessnumber + "' and customertypecode eq 948010000";
                         rom_data = tdg.c.WebApi_List("accounts", filter);
                         if (rom_data.length == 0 || rom_data == null) {
-                            if (legalname != null && legalname != "")
-                            {
-                                //filter = "ovs_legalname eq '" + legalname + "' and customertypecode eq 948010000 and statecode eq 0";
+                            if (legalname != null && legalname != "") {
+                                legalname = tdg.c.replace_filter_special_char(legalname);
                                 filter = "ovs_legalname eq '" + legalname + "' and customertypecode eq 948010000";
                                 rom_data = tdg.c.WebApi_List("accounts", filter);
                             }
@@ -197,17 +196,16 @@ if (window.jQuery) {
 
                         if (rom_data.length > 0) {
                             rom_data = rom_data[0];
-                            if (rom_data["cid_has_cra_bn"] != 1 || rom_data["cid_crabusinessnumber"] != cid_crabusinessnumber )
-                            {
-                               var accid = rom_data["accountid"]
-                                 var BNdata = {
+                            if (rom_data["cid_has_cra_bn"] != 1 || rom_data["cid_crabusinessnumber"] != cid_crabusinessnumber) {
+                                var accid = rom_data["accountid"]
+                                var BNdata = {
                                     "cid_has_cra_bn": true,
                                     "cid_crabusinessnumber": cid_crabusinessnumber
                                 };
-                                  tdg.webapi.update("accounts", accid, BNdata);
+                                tdg.webapi.update("accounts", accid, BNdata);
                             }
 
-                            validation =  tdg.cid.crw.start_registration(rom_data, suppress_error, contact_id);
+                            validation = tdg.cid.crw.start_registration(rom_data, suppress_error, contact_id);
                         }
                         else {
                             tdg.cid.contact_update(data);
