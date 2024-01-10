@@ -897,8 +897,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000124",
-                        "message_en": "TDG Activity Types for",
-                        "message_fr": "Types d'activités TMD pour"
+                        "message_en": "DG Activity Types for",
+                        "message_fr": "Types d'activités MD pour"
                     },
                     {
                         "code": "m000125",
@@ -1072,8 +1072,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "m000159",
-                        "message_en": "TDG Activity Types required",
-                        "message_fr": "Types d'activités de TMD obligatoires"
+                        "message_en": "DG Activity Types required",
+                        "message_fr": "Types d'activités de MD obligatoires"
                     },
                     {
                         "code": "m000160",
@@ -1374,6 +1374,26 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "PRIV_STMT2",
                         "message_en": "Privacy Statement",
                         "message_fr": "Déclaration de confidentialité"
+                    },
+                    {
+                        "code": "m000215",
+                        "message_en": "Import",
+                        "message_fr": "Importation"
+                    },
+                    {
+                        "code": "m000216",
+                        "message_en": "Offer for Transport",
+                        "message_fr": "Présentation au transport"
+                    },
+                    {
+                        "code": "m000217",
+                        "message_en": "Handle",
+                        "message_fr": "Manutention"
+                    },
+                    {
+                        "code": "m000218",
+                        "message_en": "Transport",
+                        "message_fr": "Transport"
                     }
                 ];
 

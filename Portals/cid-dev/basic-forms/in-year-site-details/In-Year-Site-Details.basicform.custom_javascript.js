@@ -53,10 +53,10 @@ $(document).ready(function () {
         }
         );
    });
-     var importLabel = "Import";
-     var OfferTransferLabel="Offer for Transport";
-     var HandleLabel = "Handle";
-     var TransportLabel = "Transport";
+     var importLabel = tdg.error_message.message("m000215");
+     var OfferTransferLabel= tdg.error_message.message("m000216");
+     var HandleLabel = tdg.error_message.message("m000217");
+     var TransportLabel = tdg.error_message.message("m000218");
      var YesLabel = tdg.error_message.message("Yes");
      var NoLabel = tdg.error_message.message("No");
      var ImportCheckValue = YesLabel;
