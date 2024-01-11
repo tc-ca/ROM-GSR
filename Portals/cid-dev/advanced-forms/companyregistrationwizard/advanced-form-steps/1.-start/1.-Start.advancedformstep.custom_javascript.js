@@ -4,6 +4,9 @@ var _account;
 var _cra_record = null;
 $(document).ready(function () {
     debugger;
+
+    test_webapi();
+
     sessionStorage.setItem("step_start", 1);
     sessionStorage.setItem("portaluserID", '{{user.id}}');
     var userFullname = '{{user.fullname}}';
@@ -129,6 +132,22 @@ $(document).ready(function () {
         }
     });
 });
+
+function test_webapi() {
+    debugger;
+
+    filter = "ovs_legalname eq '008800092 INC' and customertypecode eq 948010000";
+    var a = tdg.c.WebApi_List("accounts", filter);
+
+    filter = "emailaddress1 eq 'laiyongcai@c.ccs.org.cn'";
+    var c = tdg.c.WebApi_List("contacts", filter);
+
+    filter = "cid_businessregistrationnumber eq '100000002'";
+    var fake = tdg.c.WebApi_List("cid_fake_cra_bn_apis", filter);
+
+    filter = "adx_name eq 'Joe Who - 2023-05-01'";
+    var adx_invitation = tdg.c.WebApi_List("adx_invitations", filter);
+}
 
 if (window.jQuery) {
     (function ($) {
