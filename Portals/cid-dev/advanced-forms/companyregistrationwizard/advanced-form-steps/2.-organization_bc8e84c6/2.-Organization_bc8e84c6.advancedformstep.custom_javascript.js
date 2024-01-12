@@ -15,23 +15,20 @@ $(document).ready(function () {
 		$("#MessagePanel").show();
 	}
 	var msg = tdg.error_message.message("BTN_PREVIOUS");
-	
+
 	$("#PreviousButton").hide();
 	tdg.c.button_create("btn_previous", "#PreviousButton", msg);
 	$("#btn_previous").bind("click", function () {
-	 	btn_previous_click();
+		btn_previous_click();
 	});
 	$("#btn_previous").hide();
 	$("#cid_registrationasof").parent().parent().hide();
-   // if ($("#ovs_legalnamefr").length > 0){
-	//	$("#ovs_legalnamefr").attr("readonly", true);
-//	}
+
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 	tdg.c.page_instructions("page_crw_company_insert");
-	//tdg.c.control_hide("ovs_name_fr");
-	
- 	tdg.c.control_hide("ovs_invitation_only");
+
+	tdg.c.control_hide("ovs_invitation_only");
 	tdg.c.control_hide("cid_addressoverwritten");
 	//update manually entered field if address fields changed
 	tdg.cid.Update_AdderssOverwritten_Field();
@@ -143,7 +140,7 @@ $(document).ready(function () {
 		$("#address1_postalcode").val(address1_postalcode);
 		sessionStorage.setItem("AddressLine1Text", address1_line1);
 
-		address1_line1_set(value);
+		address1_line1_set(address1_line1);
 	}
 	$("#name").attr("autocomplete", "new-password");
 	$("#address1_longitude").attr("autocomplete", "new-password");

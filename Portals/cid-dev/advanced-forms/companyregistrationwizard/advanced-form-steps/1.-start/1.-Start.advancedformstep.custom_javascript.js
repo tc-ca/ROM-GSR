@@ -5,7 +5,7 @@ var _cra_record = null;
 $(document).ready(function () {
     debugger;
 
-    test_webapi();
+    //test_webapi();
 
     sessionStorage.setItem("step_start", 1);
     sessionStorage.setItem("portaluserID", '{{user.id}}');
@@ -90,40 +90,40 @@ $(document).ready(function () {
     }
 
     //Withdraw
-    var parentcustomerid = '{{user.parentcustomerid.Id}}';
-    var showWithdraw = true;
-    if (parentcustomerid) {
-        var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq " + parentcustomerid;
-        var accData = tdg.webapi.list("accounts", filter);
-        if (accData != null && accData.length > 0 && accData[0].cid_portalrecordcreationdetails) { // Net New Site
-            showWithdraw = true;
-        }
-        else {
-            showWithdraw = false;
-        }
-    }
-    if (showWithdraw) {
-        var userId = '{{user.id}}';
-        var withdrawLabel = tdg.error_message.message("BTN_WITHDRAW");
-        $('#NextButton').parent().parent().after('<div role="group" class="pull-right toolbar-actions"><input type="button" data-dismiss="modal" value="' + withdrawLabel + '" id="WithdrawButton" style="margin-left: 10px;" name="WithdrawButton" class="btn btn-default button previous previous-btn"/></div>');
-        // bind the click event to this custom buttton
-        $("#WithdrawButton").bind("click", function () {
-            debugger;
-            var message = tdg.error_message.message("m000145");
-            tdg.c.dialog_YN(message, (ans) => {
-                var contact_id = '{{user.id}}';
-                if (ans) {
-                    var DeleteContactFlowData = '{' + '"ContactId": "' + contact_id + '",' + '}';
-                    tdg.cid.flow.Call_Flow("CID_Flow_RunCompanySitesDeleting_Delete_Contact", DeleteContactFlowData);
-                    tdg.c.sign_out();
-                    return false;
-                }
-                else {
-                    return false;
-                }
-            });
-        });
-    }
+    //var parentcustomerid = '{{user.parentcustomerid.Id}}';
+    //var showWithdraw = true;
+    //if (parentcustomerid) {
+    //    var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq " + parentcustomerid;
+    //    var accData = tdg.webapi.list("accounts", filter);
+    //    if (accData != null && accData.length > 0 && accData[0].cid_portalrecordcreationdetails) { // Net New Site
+    //        showWithdraw = true;
+    //    }
+    //    else {
+    //        showWithdraw = false;
+    //    }
+    //}
+    //if (showWithdraw) {
+    //    var userId = '{{user.id}}';
+    //    var withdrawLabel = tdg.error_message.message("BTN_WITHDRAW");
+    //    $('#NextButton').parent().parent().after('<div role="group" class="pull-right toolbar-actions"><input type="button" data-dismiss="modal" value="' + withdrawLabel + '" id="WithdrawButton" style="margin-left: 10px;" name="WithdrawButton" class="btn btn-default button previous previous-btn"/></div>');
+    //    // bind the click event to this custom buttton
+    //    $("#WithdrawButton").bind("click", function () {
+    //        debugger;
+    //        var message = tdg.error_message.message("m000145");
+    //        tdg.c.dialog_YN(message, (ans) => {
+    //            var contact_id = '{{user.id}}';
+    //            if (ans) {
+    //                var DeleteContactFlowData = '{' + '"ContactId": "' + contact_id + '",' + '}';
+    //                tdg.cid.flow.Call_Flow("CID_Flow_RunCompanySitesDeleting_Delete_Contact", DeleteContactFlowData);
+    //                tdg.c.sign_out();
+    //                return false;
+    //            }
+    //            else {
+    //                return false;
+    //            }
+    //        });
+    //    });
+    //}
 
     $("#cid_legalname").on("change", function () {
         if ($("#ovs_legalnamefr").val() == "") {
