@@ -1,11 +1,13 @@
+//
 // CompanyRegistrationWizard-Start.js
-
+//
 var _account;
 var _cra_record = null;
 $(document).ready(function () {
     debugger;
 
     //test_webapi();
+    // tony 2
 
     sessionStorage.setItem("step_start", 1);
     sessionStorage.setItem("portaluserID", '{{user.id}}');

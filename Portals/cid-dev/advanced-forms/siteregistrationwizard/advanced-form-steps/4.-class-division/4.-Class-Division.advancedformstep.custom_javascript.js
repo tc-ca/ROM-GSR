@@ -1,8 +1,11 @@
+// 
+// Site Registration Wizard- Class/Division
+//
 $(document).ready(function () {
     debugger;
-
+	
     $('#loader').hide();
-
+	$("#EntityFormView > h2").append('<span style="color:red">*</span>');
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
