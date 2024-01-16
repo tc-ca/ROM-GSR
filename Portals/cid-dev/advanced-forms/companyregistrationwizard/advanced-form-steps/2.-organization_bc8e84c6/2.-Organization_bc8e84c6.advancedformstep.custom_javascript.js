@@ -7,13 +7,13 @@ $(document).ready(function () {
 	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
 	tdg.c.control_hide("adx_modifiedbyusername");
 	//set created by regiserant to current uesr
-	//$("#cid_createdbyregistrant").val('{{user.systemuserid}}');
+
 	$("#cid_createdbyregistrant_name").attr("value",'{{user.fullname}}');
 	$("#cid_createdbyregistrant_id").attr("value",'{{user.contactid}}');
 	$("#cid_createdbyregistrant_entityname").attr("value","contact");
 	var todayDate = new Date().toLocaleDateString('en-CA');
 	todayDate = todayDate.replaceAll("-","/");
-	console.log(todayDate + ", " + '{{user.fullname}}');
+	
 	$("#cid_portalrecordcreationdetails").val(todayDate + ", " + '{{user.fullname}}');
 
 	//hide created by registerant

@@ -11,6 +11,13 @@ $(document).ready(function () {
 	$("#InsertButton").click(function (e) {
 		$("#ovs_address1_province").attr("disabled", false);
 	});
+	//set created on by attribute for site
+	var todayDate = new Date().toLocaleDateString('en-CA');
+	todayDate = todayDate.replaceAll("-","/");
+	//populate attribute
+	$("#cid_portalrecordcreationdetails").val(todayDate + ", " + '{{user.fullname}}');
+	//hide created on by
+	tdg.c.control_hide("cid_portalrecordcreationdetails");
 	//cancel button text   
 	var ButtonCancel = tdg.error_message.message("BTN_CANCEL");
 	//add button next to save button
