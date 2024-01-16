@@ -1,0 +1,230 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "80625a9d-b733-42c9-93e0-d6e4200acf6d"
+          },
+          "type": "Request",
+          "kind": "Button",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "title": "Subject",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Subject",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_1": {
+                  "title": "ActivityParty",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Please enter your input",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_2": {
+                  "title": "Body",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Please enter your input",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_3": {
+                  "title": "RegardingAccountID",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Please enter your input",
+                  "x-ms-content-hint": "TEXT"
+                }
+              },
+              "required": [
+                "text",
+                "text_1",
+                "text_2",
+                "text_3"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Parse_JSON_-_Activity_party": {
+          "runAfter": {
+            "Append_to_ArrayList": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d73b8502-c870-4240-ad08-58fc6b3e4251"
+          },
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@concat('[', string(variables('ActivityPartStringList')),']')",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "participationtypemask": {
+                    "type": "integer"
+                  },
+                  "partyid@odata.bind": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "participationtypemask",
+                  "partyid@odata.bind"
+                ]
+              }
+            }
+          }
+        },
+        "Create_New_Email_Message": {
+          "runAfter": {
+            "Parse_JSON_-_Activity_party": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "415048eb-ec3a-4f2a-97b2-3e62b511d5ef"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "emails",
+              "item/activitypointer_activity_parties": "@body('Parse_JSON_-_Activity_party')",
+              "item/description": "@triggerBody()['text_2']",
+              "item/regardingobjectid_account_email@odata.bind": "@outputs('Regarding')",
+              "item/subject": "@triggerBody()['text']"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "Append_to_ArrayList": {
+          "runAfter": {
+            "Initialize_variable_ActivityPartStringList": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7fcf9621-c1dd-47e3-8d36-d45be3013da9"
+          },
+          "type": "AppendToStringVariable",
+          "inputs": {
+            "name": "ActivityPartStringList",
+            "value": "@triggerBody()['text_1']"
+          }
+        },
+        "Initialize_variable_ActivityPartStringList": {
+          "runAfter": {
+            "Regarding": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8da56ffd-7f40-488d-979c-d8d5179a3270"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ActivityPartStringList",
+                "type": "string",
+                "value": "{\"participationtypemask\": 1,\"partyid@odata.bind\": \"\\\\queues\\\\5E625BA7-C8AF-EE11-A568-0022483CCEB8\"}"
+              }
+            ]
+          }
+        },
+        "Regarding": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "5f82b205-6530-4a52-b0a4-21d7d5e34890"
+          },
+          "type": "Compose",
+          "inputs": "@concat('\\accounts\\',triggerBody()['text_3'])"
+        },
+        "Perform_a_bound_action_-_send_email": {
+          "runAfter": {
+            "Create_New_Email_Message": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "cd5d3e4d-bbdf-4174-8906-b08d39225a3d"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "PerformBoundAction",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "emails",
+              "actionName": "Microsoft.Dynamics.CRM.SendEmail",
+              "recordId": "@outputs('Create_New_Email_Message')?['body/activityid']",
+              "item/IssueSend": true
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "Response": {
+          "runAfter": {
+            "Perform_a_bound_action_-_send_email": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "320a088b-9a49-4715-a06b-c6be2bf8d25c"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -450,53 +450,179 @@
               "actions": {
                 "Check_if_the_contact_has_a_French_language_preference": {
                   "actions": {
-                    "Outlook_-_Send_a_French_email_notification_(V3)": {
+                    "FrenchBoday": {
                       "runAfter": {},
                       "metadata": {
-                        "operationMetadataId": "f214f618-00cd-4cb8-8a83-939fc48f130d"
+                        "operationMetadataId": "dcbdf3c8-4c4f-42da-bbde-b228d0221cab"
                       },
-                      "type": "OpenApiConnection",
+                      "type": "Compose",
+                      "inputs": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLa procédure d’inscription de l’organisation @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalnamefr']} dans la plateforme de données de la BDIC en ligne de Transports Canada est réussie.<br>\n<br>\nConformément à la réglementation, vous êtes tenu de mettre à jour les renseignements relatifs à votre organisation dans la plateforme de données de la BDIC au cours de l’année, si un changement important est intervenu concernant les données gérées ici pour votre organisation et les sites de votre organisation.<br>\n<br>\n<strong>Numéro de confirmation</strong>: @{triggerOutputs()?['body/cid_record_id']}<br>\n<br>\nCette inscription comprend l'ajout des sites suivants:<br>\n<br>\n@{body('Create_HTML_table')}<br>\nEn outre, les données de votre organisation doivent être entièrement mises à jour chaque année, la première mise à jour étant requise un an après la date d’entrée en vigueur de la directive.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>"
+                    },
+                    "FrenchSubject": {
+                      "runAfter": {
+                        "FrenchBoday": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "e074b874-946c-4e50-b2d2-89baa35f1d7d"
+                      },
+                      "type": "Compose",
+                      "inputs": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC :  La procédure d’inscription de l’organisation @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalnamefr']} dans les paramètres de la plateforme de données de la BDIC de Transports Canada est réussie."
+                    },
+                    "Run_a_Child_Flow_to_create_and_Send_dynamic_email_in_timeline_2": {
+                      "runAfter": {
+                        "FrenchSubject": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "4c16ed4e-fad1-437a-b64c-d0257bc9ef6f"
+                      },
+                      "type": "Workflow",
                       "inputs": {
                         "host": {
-                          "connectionName": "shared_office365_1",
-                          "operationId": "SendEmailV2",
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                          "workflowReferenceName": "3c524c38-cbb0-ee11-a568-0022483cceb8"
                         },
-                        "parameters": {
-                          "emailMessage/To": "@items('Send_registration_completion_email_to_each_contact')?['emailaddress1']",
-                          "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC :  La procédure d’inscription de l’organisation @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalnamefr']} dans les paramètres de la plateforme de données de la BDIC de Transports Canada est réussie.",
-                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLa procédure d’inscription de l’organisation @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalnamefr']} dans la plateforme de données de la BDIC en ligne de Transports Canada est réussie.<br>\n<br>\nConformément à la réglementation, vous êtes tenu de mettre à jour les renseignements relatifs à votre organisation dans la plateforme de données de la BDIC au cours de l’année, si un changement important est intervenu concernant les données gérées ici pour votre organisation et les sites de votre organisation.<br>\n<br>\n<strong>Numéro de confirmation</strong>: @{triggerOutputs()?['body/cid_record_id']}<br>\n<br>\nCette inscription comprend l'ajout des sites suivants:<br>\n<br>\n@{body('Create_HTML_table')}<br>\nEn outre, les données de votre organisation doivent être entièrement mises à jour chaque année, la première mise à jour étant requise un an après la date d’entrée en vigueur de la directive.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
-                          "emailMessage/From": "@variables('CID_Email_Sender')",
-                          "emailMessage/Importance": "Normal"
-                        },
-                        "authentication": "@parameters('$authentication')"
+                        "body": {
+                          "text": "@outputs('FrenchSubject')",
+                          "text_1": "@outputs('Activity_Party')",
+                          "text_2": "@outputs('FrenchBoday')",
+                          "text_3": "@triggerOutputs()?['body/_cid_company_value']"
+                        }
                       }
+                    },
+                    "condition_used_to_keep_outlook_action_unused_unitl_confirm_new_solution": {
+                      "actions": {
+                        "Outlook_-_Send_a_French_email_notification_(V3)": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "f214f618-00cd-4cb8-8a83-939fc48f130d"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_office365_1",
+                              "operationId": "SendEmailV2",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                            },
+                            "parameters": {
+                              "emailMessage/To": "@items('Send_registration_completion_email_to_each_contact')?['emailaddress1']",
+                              "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC :  La procédure d’inscription de l’organisation @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalnamefr']} dans les paramètres de la plateforme de données de la BDIC de Transports Canada est réussie.",
+                              "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLa procédure d’inscription de l’organisation @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalnamefr']} dans la plateforme de données de la BDIC en ligne de Transports Canada est réussie.<br>\n<br>\nConformément à la réglementation, vous êtes tenu de mettre à jour les renseignements relatifs à votre organisation dans la plateforme de données de la BDIC au cours de l’année, si un changement important est intervenu concernant les données gérées ici pour votre organisation et les sites de votre organisation.<br>\n<br>\n<strong>Numéro de confirmation</strong>: @{triggerOutputs()?['body/cid_record_id']}<br>\n<br>\nCette inscription comprend l'ajout des sites suivants:<br>\n<br>\n@{body('Create_HTML_table')}<br>\nEn outre, les données de votre organisation doivent être entièrement mises à jour chaque année, la première mise à jour étant requise un an après la date d’entrée en vigueur de la directive.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
+                              "emailMessage/From": "@variables('CID_Email_Sender')",
+                              "emailMessage/Importance": "Normal"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Run_a_Child_Flow_to_create_and_Send_dynamic_email_in_timeline_2": [
+                          "Succeeded"
+                        ]
+                      },
+                      "expression": {
+                        "equals": [
+                          1,
+                          2
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "f8340688-b5ac-4865-95f9-c781a48d023f"
+                      },
+                      "type": "If"
                     }
                   },
-                  "runAfter": {},
+                  "runAfter": {
+                    "Activity_Party": [
+                      "Succeeded"
+                    ]
+                  },
                   "else": {
                     "actions": {
-                      "Outlook_-_Send_an_English_email_notification_(V3)": {
+                      "Body": {
                         "runAfter": {},
                         "metadata": {
-                          "operationMetadataId": "b17387e5-73cc-4c69-b68c-d92f227344b7"
+                          "operationMetadataId": "953584b4-1782-4486-a2b3-ed69778f6ad6"
                         },
-                        "type": "OpenApiConnection",
+                        "type": "Compose",
+                        "inputs": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe registration for @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalname']} in the Transport Canada CID Application has been successfully completed.<br>\n<br>\nPer the regulations, you are required to update your organization’s information in the CID Application during the year if a material change has occurred.<br>\n<br>\n<strong>Confirmation Number:</strong> @{triggerOutputs()?['body/cid_record_id']}<br>\n<br>\nThis registration includes the addition of the following sites:<br>\n<br>\n@{body('Create_HTML_table')}<br>\nFurther, your organization’s data is required to be fully updated on an annual basis.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n<br>\n</p>"
+                      },
+                      "Subject": {
+                        "runAfter": {
+                          "Body": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "1f99136d-2c6c-487b-b43b-99c06d054026"
+                        },
+                        "type": "Compose",
+                        "inputs": "@{variables('TestSubjectText')}TDG Online - CID:  Successful completion of the registration process for the  organization in the Transport Canada CID Data Platform"
+                      },
+                      "Run_a_Child_Flow_to_create_and_Send_dynamic_email_in_timeline": {
+                        "runAfter": {
+                          "Subject": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "4c16ed4e-fad1-437a-b64c-d0257bc9ef6f"
+                        },
+                        "type": "Workflow",
                         "inputs": {
                           "host": {
-                            "connectionName": "shared_office365_1",
-                            "operationId": "SendEmailV2",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                            "workflowReferenceName": "3c524c38-cbb0-ee11-a568-0022483cceb8"
                           },
-                          "parameters": {
-                            "emailMessage/To": "@items('Send_registration_completion_email_to_each_contact')?['emailaddress1']",
-                            "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID:  Successful completion of the registration process for the  organization in the Transport Canada CID Data Platform",
-                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe registration for @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalname']} in the Transport Canada CID Application has been successfully completed.<br>\n<br>\nPer the regulations, you are required to update your organization’s information in the CID Application during the year if a material change has occurred.<br>\n<br>\n<strong>Confirmation Number:</strong> @{triggerOutputs()?['body/cid_record_id']}<br>\n<br>\nThis registration includes the addition of the following sites:<br>\n<br>\n@{body('Create_HTML_table')}<br>\nFurther, your organization’s data is required to be fully updated on an annual basis.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n<br>\n</p>",
-                            "emailMessage/From": "@variables('CID_Email_Sender')",
-                            "emailMessage/Importance": "Normal"
-                          },
-                          "authentication": "@parameters('$authentication')"
+                          "body": {
+                            "text": "@outputs('Subject')",
+                            "text_1": "@outputs('Activity_Party')",
+                            "text_2": "@outputs('Body')",
+                            "text_3": "@triggerOutputs()?['body/_cid_company_value']"
+                          }
                         }
+                      },
+                      "condition_to_keep_outlook_action_unused_until_confirm_new_solution_with_timeline": {
+                        "actions": {
+                          "Outlook_-_Send_an_English_email_notification_(V3)": {
+                            "runAfter": {},
+                            "metadata": {
+                              "operationMetadataId": "b17387e5-73cc-4c69-b68c-d92f227344b7"
+                            },
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "host": {
+                                "connectionName": "shared_office365_1",
+                                "operationId": "SendEmailV2",
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                              },
+                              "parameters": {
+                                "emailMessage/To": "@items('Send_registration_completion_email_to_each_contact')?['emailaddress1']",
+                                "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID:  Successful completion of the registration process for the  organization in the Transport Canada CID Data Platform",
+                                "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe registration for @{outputs('Update_the_company_registration,_anniversary,_and_reminder_dates')?['body/ovs_legalname']} in the Transport Canada CID Application has been successfully completed.<br>\n<br>\nPer the regulations, you are required to update your organization’s information in the CID Application during the year if a material change has occurred.<br>\n<br>\n<strong>Confirmation Number:</strong> @{triggerOutputs()?['body/cid_record_id']}<br>\n<br>\nThis registration includes the addition of the following sites:<br>\n<br>\n@{body('Create_HTML_table')}<br>\nFurther, your organization’s data is required to be fully updated on an annual basis.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTDG Online - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n<br>\n</p>",
+                                "emailMessage/From": "@variables('CID_Email_Sender')",
+                                "emailMessage/Importance": "Normal"
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            }
+                          }
+                        },
+                        "runAfter": {
+                          "Run_a_Child_Flow_to_create_and_Send_dynamic_email_in_timeline": [
+                            "Succeeded"
+                          ]
+                        },
+                        "expression": {
+                          "equals": [
+                            1,
+                            2
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "9b116569-211f-4bd7-8a31-19fb127ab3f0"
+                        },
+                        "type": "If"
                       }
                     }
                   },
@@ -510,6 +636,14 @@
                     "operationMetadataId": "9544a815-93e3-4012-9e83-bca7a1c0e8a5"
                   },
                   "type": "If"
+                },
+                "Activity_Party": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "1578dcf2-f0bd-4263-8530-aeda9e5cfc80"
+                  },
+                  "type": "Compose",
+                  "inputs": ", {\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{items('Send_registration_completion_email_to_each_contact')?['contactid']}\"\n}\n\n"
                 }
               },
               "runAfter": {
