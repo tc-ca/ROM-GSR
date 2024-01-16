@@ -33,7 +33,6 @@ if (typeof (tdg.c) == "undefined") {
     tdg.c = {
         // how to calling function inside an iFrame
         iframe_call_function_inside: function () {
-            debugger;
             var f = document.getElementById("WebResource_address_complete");
             var c = f.contentWindow;
             c.targetFunction();
@@ -90,7 +89,6 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         page_instructions: function (message, scroll) {
-            debugger;
             message = tdg.error_message.message(message);
             if (!scroll) {
                 var value = "<div class='alert alert-info' style='background:#d7faff'><p>" + message + "</p></div>";
@@ -145,7 +143,6 @@ if (typeof (tdg.c) == "undefined") {
 
             // bind the click event to this custom buttton
             $("#btn_save_new").bind("click", function () {
-                debugger;
                 btn_save_new_onclick();
             });
         },
@@ -373,12 +370,15 @@ if (typeof (tdg.c) == "undefined") {
         },
 
         replace_special_char: function (attribute) {
+            attribute = (attribute == null ? "" : attribute);
             attribute = $('<textarea />').html(attribute).text();
             return attribute;
         },
 
         replace_filter_special_char: function (attribute) {
             // replace the single quotes
+            attribute = (attribute == null ? "" : attribute);
+
             attribute = attribute.replace(/'/g, "''");
 
             attribute = attribute.replace(/%/g, "%25");
@@ -761,7 +761,6 @@ if (typeof (tdg.c) == "undefined") {
                 var FlowURL = EnvironmentSettingResult[0]["qm_value"];
                 //await tdg.c.createCustomTimeout(FlowURL, parameters);
                 //Execute flow
-                debugger;
                 webapi.safeAjax({
                     type: "POST",
                     url: FlowURL,
@@ -770,7 +769,6 @@ if (typeof (tdg.c) == "undefined") {
                     data: JSON.stringify(parameters),
 
                     success: function (data, textStatus, xhr) {
-                        debugger;
                         var result = data;
                         console.log(result);
                         // Return Type: mscrm.cid_CID_Create_Update_SiteDuplicateValidationResponse
@@ -794,7 +792,6 @@ if (typeof (tdg.c) == "undefined") {
                             return true;
                     },
                     error: function (xhr, textStatus, errorThrown) {
-                        debugger;
                         console.log(xhr);
                         return false;
                     }
@@ -815,7 +812,6 @@ if (typeof (tdg.c) == "undefined") {
                         data: JSON.stringify(parameters),
 
                         success: function (data, textStatus, xhr) {
-                            debugger;
                             var result = data;
                             console.log(result);
                             // Return Type: mscrm.cid_CID_Create_Update_SiteDuplicateValidationResponse
@@ -839,7 +835,6 @@ if (typeof (tdg.c) == "undefined") {
                                 return true;
                         },
                         error: function (xhr, textStatus, errorThrown) {
-                            debugger;
                             console.log(xhr);
                             return false;
                         }
@@ -998,8 +993,6 @@ if (typeof (tdg.grid) == "undefined") {
 // Wrapper AJAX function
 (function (webapi, $) {
     function safeAjax(ajaxOptions) {
-        //debugger;
-
         var deferredAjax = $.Deferred();
 
         shell.getTokenDeferred().done(function (token) {
@@ -1031,8 +1024,6 @@ if (typeof (tdg.webapi) == "undefined") {
     tdg.webapi = {
         // entity_name must be in plural
         list: function (entity_name, filter) {
-            debugger;
-
             var api_url = entity_name;
             if (filter != "") {
                 api_url += "?$filter=" + filter;
@@ -1052,8 +1043,6 @@ if (typeof (tdg.webapi) == "undefined") {
         },
 
         SelectedColumnlist: function (entity_name, select_colums, filter) {
-            debugger;
-
             var response = null;
             $.ajax({
                 type: "GET",
@@ -1074,8 +1063,6 @@ if (typeof (tdg.webapi) == "undefined") {
         //};
         //tdg.webapi.create("cid_companyeraps", data);
         create: function (entity_name, data, success_cb, error_cb) {
-            debugger;
-
             webapi.safeAjax({
                 type: "POST",
                 url: "/_api/" + entity_name,
@@ -1083,7 +1070,6 @@ if (typeof (tdg.webapi) == "undefined") {
                 data: JSON.stringify(data),
 
                 success: function (res, status, xhr) {
-                    debugger;
                     //print id of newly created table record
                     console.log("webapi.safeAjax.create->record_id: " + xhr.getResponseHeader("entityid"));
                     try {
@@ -1092,8 +1078,6 @@ if (typeof (tdg.webapi) == "undefined") {
                 },
 
                 error: function (res, status, errorThrown) {
-                    debugger;
-
                     sessionStorage.setItem("innererror", false);
                     try {
                         var msg = res.responseJSON.error.innererror.message;
@@ -1111,8 +1095,6 @@ if (typeof (tdg.webapi) == "undefined") {
         },
 
         update: function (entity_name, record_id, data) {
-            debugger;
-
             webapi.safeAjax({
                 type: "PATCH",
                 url: "/_api/" + entity_name + "(" + record_id + ")",
@@ -1120,27 +1102,22 @@ if (typeof (tdg.webapi) == "undefined") {
                 data: JSON.stringify(data),
 
                 success: function (res) {
-                    debugger;
                     console.log(res);
                 },
 
                 error: function (res, status, errorThrown) {
-                    debugger;
                     console.log(res);
                 }
             });
         },
 
         delete: function (entity_name, record_id) {
-            debugger;
-
             webapi.safeAjax({
                 type: "DELETE",
                 url: "/_api/" + entity_name + "(" + record_id + ")",
                 contentType: "application/json",
 
                 success: function (res) {
-                    debugger;
                     console.log(res);
                 }
             });
@@ -1155,7 +1132,6 @@ if (typeof (tdg.webapi) == "undefined") {
         },
 
         executeFlow: function (flow_url, data) {
-            debugger;
             webapi.safeAjax({
                 type: "POST",
                 url: flow_url,
@@ -1164,7 +1140,6 @@ if (typeof (tdg.webapi) == "undefined") {
                 data: JSON.stringify(data),
 
                 success: function (data, textStatus, xhr) {
-                    debugger;
                     var result = data;
                     console.log(result);
                     // Return Type: mscrm.cid_CID_Create_Update_SiteDuplicateValidationResponse
@@ -1172,7 +1147,6 @@ if (typeof (tdg.webapi) == "undefined") {
                     return result["DuplicateFound"]; // Edm.Boolean
                 },
                 error: function (xhr, textStatus, errorThrown) {
-                    debugger;
                     console.log(xhr);
                     return false;
                 }
@@ -1218,7 +1192,6 @@ if (typeof (tdg.error_message) == "undefined") {
         k_tdgcore_error_message: "tdgcore_error_message",
 
         is_english: function (selected_language) {
-            //debugger;
             var value = false;
             switch (selected_language) {
                 case this.k_english:
@@ -1232,8 +1205,6 @@ if (typeof (tdg.error_message) == "undefined") {
         },
 
         message: function (code) {
-            //debugger;
-
             var list = tdg.message.list();
             var value = code;
             var selected_language = sessionStorage.getItem("selected_language");
@@ -1306,7 +1277,6 @@ if (typeof (tdg.root) == "undefined") {
                 var data;
                 var filter = "root_organization_id eq " + root_organization_id;
 
-                //data = tdg.c.OData_List("root_erap", filter);
                 data = tdg.webapi.list("root_eraps", filter);
                 if (data.length == 0) {
                     return data;
@@ -1323,7 +1293,6 @@ if (typeof (tdg.root) == "undefined") {
             var data;
             var filter = "root_name eq '" + root_name + "'";
 
-            //data = tdg.c.OData_List("root_erap", filter);
             data = tdg.webapi.list("root_eraps", filter);
             if (data.length == 0) {
                 return data;
@@ -1346,7 +1315,6 @@ if (typeof (tdg.root) == "undefined") {
         company: function (bn) {
             var data;
             var filter = "root_org_business_cra_num eq " + bn;
-            //data = tdg.c.OData_List("root_company", filter);
             data = tdg.webapi.list("root_companies", filter);
             if (data.length == 0) {
                 return data;
@@ -1397,7 +1365,6 @@ if (typeof (tdg.cid) == "undefined") {
             tdg.c.control_hide("ovs_lld_province");
 
             $("#ovs_address1_province").on("change", function (i, val) {
-                debugger;
                 var ovs_address1_province = $("#ovs_address1_province :selected").text();
                 $("#address1_stateorprovince").val(ovs_address1_province);
             });
@@ -1540,13 +1507,10 @@ if (typeof (tdg.cid) == "undefined") {
                 $("#address1_stateorprovince").prop('readonly', true);
                 $("#address1_postalcode").prop('readonly', true);
 
-                //var filter = "accountid eq guid'" + parent_id + "'";
-                //var data = tdg.c.OData_List("account", filter);
                 var select_col = "address1_city,address1_country,ovs_address1_province,address1_stateorprovince,address1_line1,address1_line2,address1_line3,address1_postalcode";
                 var filter = "accountid eq " + parent_id;
-                //+ "'";
+
                 var data = tdg.webapi.SelectedColumnlist("accounts", select_col, filter);
-                //var data = tdg.webapi.list("accounts", filter);
 
                 var address1_line1 = "N/A";
                 var address1_city = "N/A";
@@ -1897,18 +1861,14 @@ if (typeof (tdg.cid) == "undefined") {
         },
 
         subgrid_companynaicscode: function (grid) {
-            debugger;
             var selected_language = sessionStorage.getItem("selected_language");
 
             tdg.cid.subgrid_header_language(grid, false);
             grid.on("loaded", function () {
-                //debugger;
                 let rows = grid.find("table tbody > tr");
                 rows.each(function (index, tr) {
-                    //debugger;
                     let cols = $(tr).find('td');
                     cols.each(function (index, td) {
-                        //debugger;
                         var tdElement = $(this);
                         var value = tdElement.attr('data-attribute');
                         if (value != null) {
@@ -2512,8 +2472,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
         },
 
         update_address_from_cra: function (bn) {
-            debugger;
-
             var address1_line1 = sessionStorage.getItem("address1_line1") + "";
 
             if (address1_line1 == "null") return;
@@ -2533,8 +2491,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
         },
 
         data_confirm_dialog: async function (cid_has_cra_bn, bn, legalname, legalnamefr, cid_reasonfornobnnumber_list) {
-            debugger;
-
             // save to use in step1
             _cra_record = null;
 
@@ -2879,6 +2835,10 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
         start_confirm: function (data, handler) {
             debugger;
+
+            data.cid_crabusinessnumber = (data.cid_crabusinessnumber == null ? "" : data.cid_crabusinessnumber);
+            data.cid_has_cra_bn = (data.cid_crabusinessnumber == "" ? 0 : 1);
+
             var header = tdg.error_message.message("CID_PORTAL");
             var msg_btn_ok = tdg.error_message.message("BTN_IS_MY_COMPANY");
             var msg_btn_cancel = tdg.error_message.message("BTN_IS_NOT_MY_COMPANY");
@@ -2933,41 +2893,43 @@ if (typeof (tdg.cid.crw) == "undefined") {
             sessionStorage.setItem("invitation_ind", data.invitation_ind);
             sessionStorage.setItem("accountId", data.accountid);
             if (data.invitation_ind) {
+                debugger;
+
                 invitation_msg = tdg.error_message.message("m000033");
                 invitation_msg = invitation_msg.replaceAll("{0}", data.cid_legalname);
+                var option_0 = (data.cid_has_cra_bn == 0? "selected" : "");
+                var option_1 = (data.cid_has_cra_bn == 1? "selected" : "");
+
                 text_middle = `
                 <p>
                 <div> <label for="hasCRABN">${hasCraMessag}</label>
                     <span style="color: red">*</span>
                 </div>
-                 <select name="hasCRABN" id="hasCRABN" class="form-control" style="width:100%">
-                      <option value="1">${yes}</option>
-                      <option value="0">${no}</option>
-                  </select>
+                <select name="hasCRABN" id="hasCRABN" class="form-control" style="width:100%">
+                    <option ${option_0} value="0">${no}</option>
+                    <option ${option_1} value="1">${yes}</option>
+                </select>
 
-
-                  <div id="DivBN">
-                        <label for="cid_crabusinessnumberpopup" id="cid_crabusinessnumberpopup_label" class="field-label">${lbl_cra_bn}</label>
-                        <span style="color: red">*</span>
-                  </div>
-                  <input type="number" class="text form-control" onKeyPress="if(this.value.length==9) return false;"  id="cid_crabusinessnumberpopup" style="width:100%" value=${CRA_BN}>
-
-                  <div id="DivReason">
-                   <label for="cid_reasonfornobnnumberpopup" id="cid_reasonfornobnnumberpopup_label"  class="field-label">${lbl_reasonfornobnnumber}</label>
+                <div id="DivBN">
+                    <label for="cid_crabusinessnumberpopup" id="cid_crabusinessnumberpopup_label" class="field-label">${lbl_cra_bn}</label>
                     <span style="color: red">*</span>
-                  </div>
-                   <select name="cid_reasonfornobnnumberpopup"  id="cid_reasonfornobnnumberpopup" class="form-control" style="width:100%">
-                      <option value="-1"></option>
+                </div>
+                <input type="number" class="text form-control" onKeyPress="if(this.value.length==9) return false;"  id="cid_crabusinessnumberpopup" style="width:100%" value=${CRA_BN}>
+
+                <div id="DivReason">
+                <label for="cid_reasonfornobnnumberpopup" id="cid_reasonfornobnnumberpopup_label"  class="field-label">${lbl_reasonfornobnnumber}</label>
+                <span style="color: red">*</span>
+                </div>
+                <select name="cid_reasonfornobnnumberpopup"  id="cid_reasonfornobnnumberpopup" class="form-control" style="width:100%">
+                    <option value="-1"></option>
                     
-                   </select>
-                    <div id="DivOther">
-                      <label id="cid_reasonfornobnnumber_other_popup_label" for="cid_reasonfornobnnumber_other_popup" class="field-label">${lbl_reasonfornobnnumber_other}</label>
-                       <span style="color: red">*</span>
-                     </div>
-                    <input type="text"  class="text form-control" id="cid_reasonfornobnnumber_other_popup" style="width:100%" value="${Other_reason}">
-	                `;
-
-
+                </select>
+                <div id="DivOther">
+                    <label id="cid_reasonfornobnnumber_other_popup_label" for="cid_reasonfornobnnumber_other_popup" class="field-label">${lbl_reasonfornobnnumber_other}</label>
+                    <span style="color: red">*</span>
+                    </div>
+                <input type="text"  class="text form-control" id="cid_reasonfornobnnumber_other_popup" style="width:100%" value="${Other_reason}">
+	            `;
             }
             else {
                 invitation_msg = (data.cid_has_cra_bn == 1 ? "m000041" : "m000042");
@@ -2979,10 +2941,17 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     invitation_msg = invitation_msg.replaceAll("{0}", data.cid_legalname);
                 }
             }
-            var address = data.address.AddressLine1Text + "<br>" +
-                data.address.AddressLine2Text + "<br>" +
-                (data.address.AddressLine3Text != "" ? data.address.AddressLine3Text + "<br>" : "") +
-                data.address.CityName + ", " + data.address.ProvinceStateCode + " " + data.address.PostalZipCode;
+
+            data.address.AddressLine1Text = (data.address.AddressLine1Text == null ? "" : data.address.AddressLine1Text);
+            if (data.address.AddressLine1Text != "") {
+                var address = data.address.AddressLine1Text + "<br>" +
+                    data.address.AddressLine2Text + "<br>" +
+                    (data.address.AddressLine3Text != "" ? data.address.AddressLine3Text + "<br>" : "") +
+                    data.address.CityName + ", " + data.address.ProvinceStateCode + " " + data.address.PostalZipCode;
+            }
+            else {
+                var address = "";
+            }
 
             var text1 = `
                     <section class="wb-lbx modal-dialog modal-content overlay-def" id="myModal">
@@ -3031,11 +3000,17 @@ if (typeof (tdg.cid.crw) == "undefined") {
 	                <button id="btn_cancel" type="button" class="pull-left btn btn-primary button next submit-btn" data-dismiss="modal">${msg_btn_cancel}</button>
 	                </section>
 	                `;
-            //$('head').append('<style type="text/css"> .form-group.required .control-label:after { content: "*";color: red;}</style>');
             $(text1).appendTo('body');
             //hide div that display error
             $('#ErrorMessageDiv').css('display', 'none');
             if (data.invitation_ind) {
+                debugger;
+
+                if (data.cid_has_cra_bn == 1) {
+                }
+                else {
+                }
+
                 tdg.cid.crw.Manage_Invitation_Confirmation_Form();
                 $("#cid_legalname2").removeAttr("readonly");
                 $("#cid_legalname_fr2").removeAttr("readonly");
@@ -3063,8 +3038,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
                 console.log('($("#hasCRABN : selected").val()) : ' + ($("#hasCRABN :selected").val()));
                 if (invitation_ind && ($("#hasCRABN :selected").val()) == 1) {
-
-
                     var data;
                     var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
                     //if pre prod or prod
@@ -3111,15 +3084,11 @@ if (typeof (tdg.cid.crw) == "undefined") {
                                                         "ovs_legalname": $("#cid_legalname2").val()
                                                     };
 
-
-
                                                     tdg.webapi.update("accounts", accid, UpdateData);
 
                                                     console.log("after update");
                                                     $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
                                                     sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
-
-
 
                                                     $("#cid_has_cra_bn").val($("#hasCRABN :selected").val());
                                                     $("#cid_reasonfornobnnumber_other").val($("#cid_reasonfornobnnumber_other_popup").val());
@@ -3128,39 +3097,17 @@ if (typeof (tdg.cid.crw) == "undefined") {
                                                     $("#ovs_legalnamefr").val($("#cid_legalname_fr2").val());
                                                     $("#cid_operatingname_fr").val($("#cid_operatingname_fr2").val());
 
-
-
-
                                                     //accountid
-
 
                                                     $("#myModal").remove();
                                                     handler(true);
                                                 }
-
                                             }
-
-
                                         }
                                     }
                                 }
-
                                 req.send(body);
-
-
-
                             }
-                            /*
-                            
-                            */
-                            //show notice if the data is empty
-                            /* if (CRAresult.length == 0) {
-                                 var msg = tdg.error_message.message("m000001");
-                                 $('#ErrorMessageDiv').css('display', 'block');
-                                 $('#ErrorMessageDiv').html("<p>" + msg + "</p>");
-                             }*/
-                            //else
-
                         }
                         else {
                             console.log("retrieved from fake bn");
@@ -3182,16 +3129,11 @@ if (typeof (tdg.cid.crw) == "undefined") {
                                         "cid_crabusinessnumber": cid_crabusinessnumber,
                                         "ovs_legalname": $("#cid_legalname2").val()
                                     };
-
-
-
                                     tdg.webapi.update("accounts", accid, UpdateData);
 
                                     console.log("after update");
                                     $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
                                     sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
-
-
 
                                     $("#cid_has_cra_bn").val($("#hasCRABN :selected").val());
                                     $("#cid_reasonfornobnnumber_other").val($("#cid_reasonfornobnnumber_other_popup").val());
@@ -3200,16 +3142,10 @@ if (typeof (tdg.cid.crw) == "undefined") {
                                     $("#ovs_legalnamefr").val($("#cid_legalname_fr2").val());
                                     $("#cid_operatingname_fr").val($("#cid_operatingname_fr2").val());
 
-
-
-
                                     //accountid
-
-
                                     $("#myModal").remove();
                                     handler(true);
                                 }
-
                             }
                         }
 
@@ -3226,15 +3162,11 @@ if (typeof (tdg.cid.crw) == "undefined") {
                                 "ovs_legalname": $("#cid_legalname2").val()
                             };
 
-
-
                             tdg.webapi.update("accounts", accid, UpdateData);
 
                             console.log("after update");
                             $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
                             sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
-
-
 
                             $("#cid_has_cra_bn").val($("#hasCRABN :selected").val());
                             $("#cid_reasonfornobnnumber_other").val($("#cid_reasonfornobnnumber_other_popup").val());
@@ -3243,23 +3175,15 @@ if (typeof (tdg.cid.crw) == "undefined") {
                             $("#ovs_legalnamefr").val($("#cid_legalname_fr2").val());
                             $("#cid_operatingname_fr").val($("#cid_operatingname_fr2").val());
 
-
-
-
                             //accountid
-
 
                             $("#myModal").remove();
                             handler(true);
                         }
-
-
-
-                    }//end try
+                    }
                     catch (e) {
                         console.log(e);
                     }
-
                 }
                 else if (invitation_ind && ($("#hasCRABN :selected").val()) == 0) {
                     var accid = sessionStorage.getItem("accountId");
@@ -3283,7 +3207,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     $("#myModal").remove();
                     handler(true);
                 }
-
             });
 
             //Pass false to callback function
@@ -3596,12 +3519,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
         },
 
         step2_previous_click: function (email, account_id, contact_id) {
-            debugger;
             var message = tdg.error_message.message("m000039");
             tdg.c.dialog_YN(message, (ans) => {
                 if (ans) {
-                    debugger;
-
                     data = {};
                     data.ovs_CreatedByExternalUser = contact_id;
                     data.ovs_Company = account_id;

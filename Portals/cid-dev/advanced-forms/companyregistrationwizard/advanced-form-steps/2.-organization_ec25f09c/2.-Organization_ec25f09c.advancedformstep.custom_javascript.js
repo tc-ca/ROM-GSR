@@ -198,6 +198,8 @@ $(document).ready(function () {
 	}
 	tdg.c.control_hide("adx_modifiedbyusername");
 	$("#address1_country").val("Canada");
+
+	if ('{{user.cid_contacttype.Value}}' !=100000000 ) $("#WithdrawButton").remove();
 });
 
 function ovs_legalname_onchange() {

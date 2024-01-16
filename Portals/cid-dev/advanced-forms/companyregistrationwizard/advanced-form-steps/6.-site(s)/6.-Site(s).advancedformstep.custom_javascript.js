@@ -7,7 +7,7 @@ $(document).ready(function () {
 
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
-
+   
 	//Commited - Need clarification 
 	// From Aaron comments: development team agrees that this header is correct and should say organization registration. Once you start adding a site you are brought to the site registration portion of the registration and the header changes 
 	/*

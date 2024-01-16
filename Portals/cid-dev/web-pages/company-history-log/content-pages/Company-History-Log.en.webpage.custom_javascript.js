@@ -15,6 +15,8 @@ $(document).ready(function () {
 					container: 'body'
 						});
     var companyName = '{{user.parentcustomerid.name }}';
+    companyName = test_replace_special_char(companyName);
+    
     var topNav = $('#navbar');
 
     if (companyName)
@@ -34,4 +36,9 @@ $(document).ready(function () {
     else {
         deactivateCompanyWebLink.removeClass("hidden");
     }
+function test_replace_special_char(attribute) {
+            attribute = (attribute == null ? "" : attribute);
+            attribute = $('<textarea />').html(attribute).text();
+            return attribute;
+        }
 });

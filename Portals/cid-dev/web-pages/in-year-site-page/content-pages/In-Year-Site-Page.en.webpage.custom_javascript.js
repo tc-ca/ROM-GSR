@@ -53,7 +53,9 @@ $(document).ready(function () {
 
     var disabled = "";
 
-    if (cidSiteStatus.indexOf("Inactive") >= 0) {
+   // if (cidSiteStatus.indexOf("Inactive") >= 0) {
+
+       if ((cidSiteStatus.indexOf("Inactive") >= 0) ||(cidSiteStatus.indexOf("Inactif") >= 0)){
         $(".create-action").hide();
         $('.crmEntityFormView').find('input, textarea, select').attr('disabled', 'disabled');
         $('.workflow-link').attr('disabled', 'disabled');
@@ -77,7 +79,8 @@ $(document).ready(function () {
         var operationId = GetHOTIOperation(siteId);
         var disabled = "";
 
-        if (cidSiteStatus.indexOf("Inactive") >= 0)
+        //if (cidSiteStatus.indexOf("Inactive") >= 0)
+          if ((cidSiteStatus.indexOf("Inactive") >= 0) ||(cidSiteStatus.indexOf("Inactif") >= 0))
             disabled = "disabled";
 
         sessionStorage.setItem('siteOperationId', operationId);

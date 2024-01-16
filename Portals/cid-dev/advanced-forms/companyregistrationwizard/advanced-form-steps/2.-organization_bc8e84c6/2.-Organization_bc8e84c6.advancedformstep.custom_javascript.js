@@ -8,12 +8,12 @@ $(document).ready(function () {
 	tdg.c.control_hide("adx_modifiedbyusername");
 	//set created by regiserant to current uesr
 
-	$("#cid_createdbyregistrant_name").attr("value",'{{user.fullname}}');
-	$("#cid_createdbyregistrant_id").attr("value",'{{user.contactid}}');
-	$("#cid_createdbyregistrant_entityname").attr("value","contact");
+	$("#cid_createdbyregistrant_name").attr("value", '{{user.fullname}}');
+	$("#cid_createdbyregistrant_id").attr("value", '{{user.contactid}}');
+	$("#cid_createdbyregistrant_entityname").attr("value", "contact");
 	var todayDate = new Date().toLocaleDateString('en-CA');
-	todayDate = todayDate.replaceAll("-","/");
-	
+	todayDate = todayDate.replaceAll("-", "/");
+
 	$("#cid_portalrecordcreationdetails").val(todayDate + ", " + '{{user.fullname}}');
 
 	//hide created by registerant
@@ -193,6 +193,8 @@ $(document).ready(function () {
 			}
 		});
 	});
+
+	if ('{{user.cid_contacttype.Value}}' != 100000000) $("#WithdrawButton").remove();
 });
 
 function btn_previous_click() {
