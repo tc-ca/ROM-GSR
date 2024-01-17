@@ -2671,7 +2671,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 $("#cid_operatingname_fr2").val() == null || $("#cid_operatingname_fr2").val() == ""
             ) {
                 $("#btn_ok").prop('disabled', true);
-
             }
 
             //check if no bn number
@@ -2712,7 +2711,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
         },
 
         Manage_Invitation_Confirmation_Form: function () {
-
             $("#DivReason").hide();
             $("#DivOther").hide();
             $("#cid_reasonfornobnnumberpopup").hide();
@@ -2735,49 +2733,14 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
             //hasCRABN
             $("#hasCRABN").change(function () {
-
-                //check if no bn number
-                if ($("#hasCRABN :selected").val() == 0) {
-                    $("#DivReason").show();
-                    $("#DivOther").hide();
-                    // $("#cid_reasonfornobnnumberpopup").removeAttr("hidden");
-                    // $("#cid_crabusinessnumber").attr("hidden","true");
-                    $("#DivBN").hide();
-                    $("#cid_reasonfornobnnumberpopup").show();
-                    $("#cid_reasonfornobnnumberpopup_label").show();
-
-
-                    $("#cid_crabusinessnumberpopup_label").hide();
-                    $("#cid_crabusinessnumberpopup").hide();
-                    //disabled and enable ok button based on data
-                    tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
-
-                }
-                else if ($("#hasCRABN :selected").val() == 1) {
-                    $("#DivBN").show();
-                    $("#DivOther").hide();
-                    $("#DivReason").hide();
-                    $("#cid_reasonfornobnnumberpopup").hide();
-                    $("#cid_reasonfornobnnumberpopup_label").hide();
-                    $("#cid_reasonfornobnnumber_other_popup").hide();
-                    $("#cid_reasonfornobnnumber_other_popup_label").hide();
-
-                    $("#cid_crabusinessnumberpopup_label").show();
-                    $("#cid_crabusinessnumberpopup").show();
-
-                }
-                //disabled and enable ok button based on data
-                tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
-
+                tdg.cid.crw.hasCRABN_onchange();
             });
 
             $("#cid_reasonfornobnnumberpopup").change(function () {
-
                 if ($("#cid_reasonfornobnnumberpopup :selected").val() == 3) {
                     $("#DivOther").show();
                     $("#cid_reasonfornobnnumber_other_popup").show();
                     $("#cid_reasonfornobnnumber_other_popup_label").show();
-
                 }
                 else {
                     $("#DivOther").hide();
@@ -2786,20 +2749,17 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 }
                 //disabled and enable ok button based on data
                 tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
-
             });
 
             $("#cid_reasonfornobnnumber_other_popup").change(function () {
                 //disabled and enable ok button based on data
                 tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
-            }
-            );
+            });
 
             $("#cid_crabusinessnumberpopup").change(function () {
                 //disabled and enable ok button based on data
                 tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
-            }
-            );
+            });
 
             $("#cid_legalname_fr2").change(function () {
                 //disabled and enable ok button based on data
@@ -2819,6 +2779,41 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 //disabled and enable ok button based on data
                 tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
             });
+
+            tdg.cid.crw.hasCRABN_onchange();
+        },
+
+        hasCRABN_onchange: function () {
+            debugger;
+
+            //check if no bn number
+            if ($("#hasCRABN :selected").val() == 0) {
+                $("#DivReason").show();
+                $("#DivOther").hide();
+                $("#DivBN").hide();
+                $("#cid_reasonfornobnnumberpopup").show();
+                $("#cid_reasonfornobnnumberpopup_label").show();
+
+                $("#cid_crabusinessnumberpopup_label").hide();
+                $("#cid_crabusinessnumberpopup").hide();
+                //disabled and enable ok button based on data
+                tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
+            }
+            else if ($("#hasCRABN :selected").val() == 1) {
+                $("#DivBN").show();
+                $("#DivOther").hide();
+                $("#DivReason").hide();
+                $("#cid_reasonfornobnnumberpopup").hide();
+                $("#cid_reasonfornobnnumberpopup_label").hide();
+                $("#cid_reasonfornobnnumber_other_popup").hide();
+                $("#cid_reasonfornobnnumber_other_popup_label").hide();
+
+                $("#cid_crabusinessnumberpopup_label").show();
+                $("#cid_crabusinessnumberpopup").show();
+
+            }
+            //disabled and enable ok button based on data
+            tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
         },
 
         start_account_by_name: function (legalname, legalnamefr) {
@@ -3003,13 +2998,18 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $(text1).appendTo('body');
             //hide div that display error
             $('#ErrorMessageDiv').css('display', 'none');
+
+            $("#cid_legalname2").focus();
+
+            $("#myModal").css('top', '1%');
+            $("#myModal").css('left', '40%');
+            $("#myModal").css('position', 'fixed');
+            $("#myModal").css('z-index', '9999');
+
             if (data.invitation_ind) {
                 debugger;
 
-                if (data.cid_has_cra_bn == 1) {
-                }
-                else {
-                }
+                tdg.cid.crw.hasCRABN_onchange();
 
                 tdg.cid.crw.Manage_Invitation_Confirmation_Form();
                 $("#cid_legalname2").removeAttr("readonly");
@@ -3017,13 +3017,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 $("#cid_operatingname2").removeAttr("readonly");
                 $("#cid_operatingname_fr2").removeAttr("readonly");
             }
-
-            $("#cid_legalname").focus();
-
-            $("#myModal").css('top', '1%');
-            $("#myModal").css('left', '40%');
-            $("#myModal").css('position', 'fixed');
-            $("#myModal").css('z-index', '9999');
 
             $("#btn_ok").click(function () {
                 //hide div that display error

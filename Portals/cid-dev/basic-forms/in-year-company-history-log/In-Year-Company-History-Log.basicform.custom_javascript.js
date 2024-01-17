@@ -7,7 +7,7 @@ $(document).ready(function () {
 
     $("#cid_registrationasof").parent().parent().hide();
 
-    var companyName = "{{user.parentcustomerid.name}}";
+    var companyName = tdg.c.replace_special_char("{{user.parentcustomerid.name}}");
     var msg = tdg.error_message.message("m000160");
     $(".tab-title").text(msg + companyName);
 

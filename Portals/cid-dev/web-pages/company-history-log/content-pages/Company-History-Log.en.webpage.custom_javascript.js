@@ -15,13 +15,12 @@ $(document).ready(function () {
 					container: 'body'
 						});
     var companyName = '{{user.parentcustomerid.name }}';
-    companyName = test_replace_special_char(companyName);
     
     var topNav = $('#navbar');
 
     if (companyName)
         if (topNav)
-            $("<h2>TDG Site Registration Database: " + companyName + "</h2>").insertAfter(topNav);
+            $("<h2>TDG Site Registration Database: " + tdg.c.replace_special_char(companyName) + "</h2>").insertAfter(topNav);
 
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
 
@@ -36,9 +35,4 @@ $(document).ready(function () {
     else {
         deactivateCompanyWebLink.removeClass("hidden");
     }
-function test_replace_special_char(attribute) {
-            attribute = (attribute == null ? "" : attribute);
-            attribute = $('<textarea />').html(attribute).text();
-            return attribute;
-        }
 });
