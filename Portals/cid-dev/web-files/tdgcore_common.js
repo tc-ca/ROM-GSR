@@ -2551,6 +2551,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     data.cid_legalnameFR = account.ovs_legalnamefr;
                     data.cid_operatingname = account.name;
                     data.cid_operatingnameFr = account.ovs_namefr;
+                    data.cid_reasonfornobnnumber_index = null;
 
                     var cid_reasonfornobnnumber = account.cid_reasonfornobnnumber;
                     for (var i = 0; i < cid_reasonfornobnnumber_list.length; i++) {
@@ -2797,6 +2798,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
                 $("#cid_crabusinessnumberpopup_label").hide();
                 $("#cid_crabusinessnumberpopup").hide();
+
                 //disabled and enable ok button based on data
                 tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
             }
@@ -3011,12 +3013,17 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 debugger;
 
                 tdg.cid.crw.hasCRABN_onchange();
-
                 tdg.cid.crw.Manage_Invitation_Confirmation_Form();
+
                 $("#cid_legalname2").removeAttr("readonly");
                 $("#cid_legalname_fr2").removeAttr("readonly");
                 $("#cid_operatingname2").removeAttr("readonly");
                 $("#cid_operatingname_fr2").removeAttr("readonly");
+
+                if (data.cid_reasonfornobnnumber_index != null) {
+                    $("#cid_reasonfornobnnumberpopup")[0].options[data.cid_reasonfornobnnumber_index + 1].selected = true;
+                    tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
+                }
             }
 
             $("#btn_ok").click(function () {

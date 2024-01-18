@@ -11,6 +11,11 @@ $(document).ready(function () {
 	tdg.c.control_hide("adx_modifiedbyusername");
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
+    //hide created by registerant
+	tdg.c.control_hide("cid_createdbyregistrant", true);
+	//hide created on by
+	tdg.c.control_hide("cid_portalrecordcreationdetails");
+	
 	tdg.c.page_instructions("page_crw_company_edit");
 	var msg = tdg.error_message.message("BTN_PREVIOUS");
    // if ($("#ovs_legalnamefr").length > 0){
