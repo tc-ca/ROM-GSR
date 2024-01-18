@@ -2561,6 +2561,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     }
                     data.cid_reasonfornobnnumber = cid_reasonfornobnnumber;
                     data.cid_reasonfornobnnumber_other = account.cid_reasonfornobnnumber_other;
+                    data.cid_reasonfornobnnumber_index = account.cid_reasonfornobnnumber;
 
                     var address = {};
                     address.AddressLine1Text = account.address1_line1;

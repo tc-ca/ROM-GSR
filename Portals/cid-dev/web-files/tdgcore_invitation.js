@@ -198,6 +198,8 @@ if (typeof (invitation) == "undefined") {
                 }
             }
             var cid_reasonfornobnnumber_other = _account.cid_reasonfornobnnumber_other;
+            var cid_reasonfornobnnumber_index = _account.cid_reasonfornobnnumber;
+
             const data = await tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn, legalname, ovs_legalnamefr, list);
             if (data.length == 0) {
                 data.length = 1;
@@ -207,6 +209,7 @@ if (typeof (invitation) == "undefined") {
                 data.cid_crabusinessnumber = bn;
                 data.cid_reasonfornobnnumber = cid_reasonfornobnnumber;
                 data.cid_reasonfornobnnumber_other = cid_reasonfornobnnumber_other;
+                data.cid_reasonfornobnnumber_index = cid_reasonfornobnnumber_index;
 
                 var address = {};
                 address.AddressLine1Text = _account.address1_line1;
@@ -225,14 +228,11 @@ if (typeof (invitation) == "undefined") {
                     debugger;
                     var hasCRAbn = sessionStorage.getItem("cid_has_cra_bn");
                     if (hasCRAbn == 1)
-                    //(_account.cid_has_cra_bn)
                     {
                         $("#cid_has_cra_bn").val(1);
                         tdg.cid.crw.start_cid_has_cra_bn_onchange("1");
-                        //$("#cid_crabusinessnumber").val(_account.cid_crabusinessnumber);
                         $("#cid_crabusinessnumber").val(sessionStorage.getItem("cid_crabusinessnumber"));
                         tdg.cid.crw.start_cid_crabusinessnumber_onchange("1");
-                      
                     }
                     else {
                         $("#cid_has_cra_bn").val(0);
@@ -263,9 +263,9 @@ if (typeof (invitation) == "undefined") {
                             data.adx_invitationcode = "";
                             tdg.webapi.update("adx_invitations", record_id, data);
                             tdg.cid.crw.start_cid_reasonfornobnnumber_onchange(false);
-                            sessionStorage.setItem("cid_has_invitation",false)
+                            sessionStorage.setItem("cid_has_invitation", false)
                             tdg.cid.crw.start_buttons_confirm(true, btn_next_name);
-                              
+
                             return;
                         } else {
                             debugger;
@@ -273,25 +273,6 @@ if (typeof (invitation) == "undefined") {
                             return;
                         }
                     });
-                }
-            });
-
-            return;
-
-            message = tdg.error_message.message(message);
-            message = message.replaceAll("{0}", _account.ovs_legalname);
-            tdg.c.dialog_YN(message, (ans) => {
-                if (ans) {
-                    debugger;
-                    if (_account.cid_has_cra_bn) {
-                        $("#cid_crabusinessnumber").val(_account.cid_crabusinessnumber);
-                        tdg.cid.crw.start_cid_crabusinessnumber_onchange("1");
-                    }
-                    invitation.invitation_go_next(_account, true, contact_id);
-                    return;
-                } else {
-                    debugger;
-                    return;
                 }
             });
         },
@@ -343,14 +324,12 @@ if (typeof (invitation) == "undefined") {
                     return;
                 }
             });
-
         },
 
         New_and_Existing_Contact_Submit_Logic: function (ParentAccount) {
             var emailaddressTextBox = $("#emailaddress1").val();
             var firstnameTextBox = $("#firstname").val();
             var lastnameTextBox = $("#lastname").val();
-
 
             if (emailaddressTextBox.length > 0 && firstnameTextBox.length > 0 && lastnameTextBox.length > 0) {
                 var ContactWithNoCompany = false;
@@ -416,15 +395,12 @@ if (typeof (invitation) == "undefined") {
                         //changing the position of the dialog to fit the basic form screen
                         $("#myModal").css({ left: 40 });
 
-
                         $("#btnOK").on('click', function () {
                             $('#modalwindow').modal('hide');
                         });
                     }
                 }//end check if email address is found
                 else {
-
-
                     $("#InsertButton").on('click', function () {
                         var emailaddressTextBox = $("#emailaddress1").val();
                         var firstnameTextBox = $("#firstname").val();
@@ -432,20 +408,16 @@ if (typeof (invitation) == "undefined") {
                         sessionStorage.setItem("NewContactFlag", true);
                         sessionStorage.setItem("FullName", firstnameTextBox + " " + lastnameTextBox);
                         sessionStorage.setItem("Email", emailaddressTextBox);
-
                     });
 
                     //call insert button to create new record
                     $("#InsertButton").click();
-
-
                 }
             }//end check if required information is entered
             else {
                 //call insert button to validate and add new contact if validaton pass
                 $("#InsertButton").click();
             }
-
         },
 
         Execute_Invitation_Deactivation_Logic: function (ContactId, cid_usercontacttype, CurrentUserID, ParentAccount, LanguageCode) {
@@ -490,9 +462,7 @@ if (typeof (invitation) == "undefined") {
                                 //check the user that did not login has invitation
                                 if (adx_invitationResults.length > 0) {
                                     FlowEmailCode = "S4-3";
-
                                 }
-
                             }
 
                             //deactivate contact
@@ -523,11 +493,13 @@ if (typeof (invitation) == "undefined") {
 
             }//end else
         },
+
         refreshGrid: function () {
             $(".entity-grid").trigger("refresh");
             console.log("inside funtion refresh grid **");
 
         },
+
         Execute_Assign_Primary_Admin_Logic: function (contactid, contactFullName, cid_usercontacttype, CurrentUserID, ParentAccount, LanguageCode) {
             //if not primary contact
             if (cid_usercontacttype != 100000000) {
