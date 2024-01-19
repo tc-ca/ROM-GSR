@@ -7,7 +7,9 @@ $(document).ready(function () {
 
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
-   
+	console.log("company status11");
+	console.log('{{entities.account[user.parentcustomerid.id]}}');
+     //{% assign account = entities.account['936DA01F-9ABD-4d9d-80C7-02AF85C822A8'] %}   
 	//Commited - Need clarification 
 	// From Aaron comments: development team agrees that this header is correct and should say organization registration. Once you start adding a site you are brought to the site registration portion of the registration and the header changes 
 	/*

@@ -16,7 +16,7 @@ $(document).ready(function () {
         var disabled = "";
         var siteId = urlParams.get('id');
 
-        if (cidSiteStatus.indexOf("Inactive") >= 0)
+        if ((cidSiteStatus.indexOf("Inactive") >= 0) ||(cidSiteStatus.indexOf("Inactif") >= 0))
             disabled = "disabled";
     }
 });

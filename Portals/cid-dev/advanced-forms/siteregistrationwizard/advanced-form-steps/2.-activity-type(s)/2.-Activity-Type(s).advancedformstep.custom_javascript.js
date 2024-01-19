@@ -12,6 +12,9 @@ $(document).ready(function () {
     $('#loader').hide();
     $("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
 	 tdg.c.control_hide("adx_modifiedbyusername");
+     //function to update company status if it is in year and current status is Initial Registration - Organization Complete
+     CheckParentCompanyStatus_updateIfRequired();
+
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
@@ -111,4 +114,24 @@ if (window.jQuery) {
             return validation;
         }
     }(window.jQuery));
+}
+
+function CheckParentCompanyStatus_updateIfRequired()
+{
+    debugger;
+        customerid = '{{user.parentcustomerid.id}}';
+        var parentAccountdata = tdg.webapi.SelectedColumnlist("accounts", "name,cid_cidcompanystatus,cid_officiallyregistrationcompletationdate"
+            , "accountid eq " + customerid);
+        //company registeration date
+        company_reg_date = parentAccountdata[0]["cid_officiallyregistrationcompletationdate"];
+        company_Status = parentAccountdata[0]["cid_cidcompanystatus"];
+       //check if not in year
+        if ((company_reg_date == null || company_reg_date == "") && company_Status == 100000000 ) {
+              var data = {
+                "cid_cidcompanystatus": 100000009
+            };
+            tdg.webapi.update("accounts", customerid, data);
+        
+        }   
+
 }
