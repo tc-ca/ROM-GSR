@@ -447,8 +447,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "lbl_legal_name",
-                        "message_en": "Legal Name (English)",
-                        "message_fr": "Dénomination sociale (anglais)"
+                        "message_en": "Legal Name",
+                        "message_fr": "Dénomination sociale"
                     },
                     {
                         "code": "lbl_legal_name_fr",

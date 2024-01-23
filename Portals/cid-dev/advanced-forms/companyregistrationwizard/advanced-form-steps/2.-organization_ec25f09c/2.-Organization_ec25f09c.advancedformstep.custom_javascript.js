@@ -5,6 +5,9 @@
 var _cid_crabusinessnumber = "";
 $(document).ready(function () {
 	debugger;
+
+	tdg.c.removeValidator("ovs_namefr");
+
 	$('#WebResource_address_complete').attr("title", "Address Lookup");
 	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
 
@@ -80,7 +83,7 @@ $(document).ready(function () {
 	var cid_legalname = $('#ovs_legalname').val();
 	var cid_operatingname = $('#name').val();
 	var ovs_name_fr = $('#ovs_namefr').val();
-	var ovs_legalnamefr = $('#ovs_legalnamefr').val();
+	//var ovs_legalnamefr = $('#ovs_legalnamefr').val();
 
 	var step_start = sessionStorage.getItem("step_start");
 	step_start = (step_start == "null" ? "" : step_start);
@@ -96,7 +99,7 @@ $(document).ready(function () {
 			var cid_legalname = $('#ovs_legalname').val();
 			var cid_operatingname = $('#name').val();
 			var ovs_name_fr = cid_operatingname;
-			var ovs_legalnamefr = cid_legalname;
+			//var ovs_legalnamefr = cid_legalname;
 
 			var cid_found_account = sessionStorage.getItem("cid_found_account")
 			if (cid_found_account != "1")
@@ -126,7 +129,7 @@ $(document).ready(function () {
 		$("#ovs_legalname").val(cid_legalname);
 		$("#name").val(cid_operatingname);
 		$("#ovs_namefr").val(ovs_name_fr);
-		$("#ovs_legalnamefr").val(ovs_legalnamefr);
+		//$("#ovs_legalnamefr").val(ovs_legalnamefr);
 
 		debugger;
 		var value = $("#address1_line1").val();
@@ -254,8 +257,8 @@ async function cid_crabusinessnumber_onchange() {
 
 			$("#ovs_legalname").val(LegalName);
 			$("#name").val(OperatingName);
-			$("#ovs_namefr").val(OperatingName);
-			$("#ovs_legalnamefr").val(LegalName);
+			//$("#ovs_namefr").val(OperatingName);
+			//$("#ovs_legalnamefr").val(LegalName);
 
 			$("#address1_line1").val(address.AddressLine1Text);
 			$("#address1_line2").val(address.AddressLine2Text);

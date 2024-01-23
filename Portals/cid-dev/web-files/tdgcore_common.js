@@ -2967,23 +2967,23 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     </div>
                     <input type="text" readonly class="text form-control" id="cid_legalname2" style="width:100%" value="${data.cid_legalname}">
                     <p>
-                    <div>
-                      <label for="cid_legalname_fr2" class="field-label">${lbl_legal_name_fr}</label>
-                      <span style="color: red">*</span>
+                    <div> 
+                      <label for="cid_legalname_fr2" class="field-label" style="display:none">${lbl_legal_name_fr}</label>
+                      <span style="display:none;color: red">*</span>
                     </div>
-                    <input type="text" readonly class="text form-control" id="cid_legalname_fr2" style="width:100%" value="${data.cid_legalnameFR}">
+                    <input type="text" readonly class="text form-control" id="cid_legalname_fr2" style="display:none" value="${data.cid_legalnameFR}">
                    <p>
-                    <div>
-                        <label for="cid_operatingname2" class="field-label">${lbl_operating_name}</label>
-                        <span style="color: red">*</span>
+                    <div> 
+                        <label for="cid_operatingname2" class="field-label" style="display:none">${lbl_operating_name}</label>
+                        <span style="display:none;color: red">*</span>
                     </div>
-                    <input type="text" readonly class="text form-control" id="cid_operatingname2" style="width:100%" value="${data.cid_operatingname}">
+                    <input type="text" readonly class="text form-control" id="cid_operatingname2" style="display:none" value="${data.cid_operatingname}">
                    <p>
-                   <div>
-                      <label for="cid_operatingname_fr2" class="field-label">${lbl_operating_name_fr}</label>
-                      <span style="color: red">*</span>
+                   <div> 
+                      <label for="cid_operatingname_fr2" class="field-label" style="display:none">${lbl_operating_name_fr}</label>
+                      <span style="display:none;color: red">*</span>
                     </div>
-                    <input type="text" readonly class="text form-control" id="cid_operatingname_fr2" style="width:100%" value="${data.cid_operatingnameFr}">
+                    <input type="text" readonly class="text form-control" id="cid_operatingname_fr2" style="display:none" value="${data.cid_operatingnameFr}">
                     ` +
                 text_middle +
                 `

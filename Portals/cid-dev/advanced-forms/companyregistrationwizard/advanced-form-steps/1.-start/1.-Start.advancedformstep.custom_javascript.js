@@ -6,9 +6,6 @@ var _cra_record = null;
 $(document).ready(function () {
     debugger;
 
-    //test_webapi();
-    // tony 2
-
     sessionStorage.setItem("step_start", 1);
     sessionStorage.setItem("portaluserID", '{{user.id}}');
     var userFullname = '{{user.fullname}}';
@@ -91,65 +88,13 @@ $(document).ready(function () {
         }
     }
 
-    //Withdraw
-    //var parentcustomerid = '{{user.parentcustomerid.Id}}';
-    //var showWithdraw = true;
-    //if (parentcustomerid) {
-    //    var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq " + parentcustomerid;
-    //    var accData = tdg.webapi.list("accounts", filter);
-    //    if (accData != null && accData.length > 0 && accData[0].cid_portalrecordcreationdetails) { // Net New Site
-    //        showWithdraw = true;
-    //    }
-    //    else {
-    //        showWithdraw = false;
-    //    }
-    //}
-    //if (showWithdraw) {
-    //    var userId = '{{user.id}}';
-    //    var withdrawLabel = tdg.error_message.message("BTN_WITHDRAW");
-    //    $('#NextButton').parent().parent().after('<div role="group" class="pull-right toolbar-actions"><input type="button" data-dismiss="modal" value="' + withdrawLabel + '" id="WithdrawButton" style="margin-left: 10px;" name="WithdrawButton" class="btn btn-default button previous previous-btn"/></div>');
-    //    // bind the click event to this custom buttton
-    //    $("#WithdrawButton").bind("click", function () {
-    //        debugger;
-    //        var message = tdg.error_message.message("m000145");
-    //        tdg.c.dialog_YN(message, (ans) => {
-    //            var contact_id = '{{user.id}}';
-    //            if (ans) {
-    //                var DeleteContactFlowData = '{' + '"ContactId": "' + contact_id + '",' + '}';
-    //                tdg.cid.flow.Call_Flow("CID_Flow_RunCompanySitesDeleting_Delete_Contact", DeleteContactFlowData);
-    //                tdg.c.sign_out();
-    //                return false;
-    //            }
-    //            else {
-    //                return false;
-    //            }
-    //        });
-    //    });
-    //}
-
     $("#cid_legalname").on("change", function () {
-        if ($("#ovs_legalnamefr").val() == "") {
-            var value = $("#cid_legalname").val();
-            $("#ovs_legalnamefr").val(value);
-        }
+        //if ($("#ovs_legalnamefr").val() == "") {
+        //    var value = $("#cid_legalname").val();
+        //    $("#ovs_legalnamefr").val(value);
+        //}
     });
 });
-
-function test_webapi() {
-    debugger;
-
-    filter = "ovs_legalname eq '008800092 INC' and customertypecode eq 948010000";
-    var a = tdg.c.WebApi_List("accounts", filter);
-
-    filter = "emailaddress1 eq 'laiyongcai@c.ccs.org.cn'";
-    var c = tdg.c.WebApi_List("contacts", filter);
-
-    filter = "cid_businessregistrationnumber eq '100000002'";
-    var fake = tdg.c.WebApi_List("cid_fake_cra_bn_apis", filter);
-
-    filter = "adx_name eq 'Joe Who - 2023-05-01'";
-    var adx_invitation = tdg.c.WebApi_List("adx_invitations", filter);
-}
 
 if (window.jQuery) {
     (function ($) {
@@ -171,7 +116,7 @@ if (window.jQuery) {
             if (has_invitation != "true") {
                 if (cid_has_cra_bn == 0) {
                     let legalname = $("#cid_legalname").val();
-                    let legalnamefr = $("#ovs_legalnamefr").val();
+                    let legalnamefr = "";// $("#ovs_legalnamefr").val();
                     debugger;
                     rom_data = tdg.cid.crw.start_account_by_name(legalname, legalnamefr);
                     if (rom_data.length > 0) {
