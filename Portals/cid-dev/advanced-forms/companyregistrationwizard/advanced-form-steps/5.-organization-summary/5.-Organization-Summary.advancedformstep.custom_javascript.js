@@ -4,8 +4,9 @@
 
 $(document).ready(function () {
 	debugger;
-    var isCompanyAttested = "{{entities.account[user.parentcustomerid.id].cid_iscompanyattested}}";
 
+	tdg.c.removeValidator("ovs_namefr");
+    var isCompanyAttested = "{{entities.account[user.parentcustomerid.id].cid_iscompanyattested}}";
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
 

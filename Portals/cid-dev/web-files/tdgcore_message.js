@@ -238,9 +238,9 @@ if (typeof (tdg.message) == "undefined") {
                 "2- S'il est nécessaire de soumettre à nouveau la conformité annuelle précédente, veuillez choisir le bouton <b>[Soumettre à nouveau la mise à jour annuelle de conformité]</b> ci-dessous.</br>" +
                 "3- Notez que la conformité annuelle ne doit être soumise à nouveau que si de nouvelles données ou une mise à jour de la date, liées à l'année précédente couverte par cette conformité annuelle, ont été manquées dans la mise à jour de conformité précédente. </br> Tout ajout ou mise à jour , qui ont eu lieu après la dernière date d'achèvement de la conformité annuelle du {1} doivent plutôt être effectuées sous forme de mises à jour régulières en cours d'année.";
 
-            var page_company_naics_code_EN = "Please enter the first two digits of your NAICS code to access the drop-down menu that will allow you to select the applicable NAICS code.</br>" + 
+            var page_company_naics_code_EN = "Please enter the first two digits of your NAICS code to access the drop-down menu that will allow you to select the applicable NAICS code.</br>" +
                 "<a href='https://www23.statcan.gc.ca/imdb/p3VD.pl?Function=getVD&TVD=1369825' target='_blank' >North American Industry Classification System (NAICS) Canada 2022 Version 1.0 (statcan.gc.ca)</a></br>";
-            var page_company_naics_code_FR = "Veuillez saisir les deux premiers chiffres de votre code SCIAN afin d'accéder au menu déroulant qui vous permettra de sélectionner le code SCIAN applicable.</br>" + 
+            var page_company_naics_code_FR = "Veuillez saisir les deux premiers chiffres de votre code SCIAN afin d'accéder au menu déroulant qui vous permettra de sélectionner le code SCIAN applicable.</br>" +
                 "<a href='https://www23.statcan.gc.ca/imdb/p3VD_f.pl?Function=getVD&TVD=1369825' target='_blank' >Système de classification des industries de l'Amérique du Nord (SCIAN) Canada 2022 version 1.0 (statcan.gc.ca)</a></br>";
 
             var list =
@@ -437,8 +437,8 @@ if (typeof (tdg.message) == "undefined") {
                     },
                     {
                         "code": "lbl_operating_name",
-                        "message_en": "Operating Name (English)",
-                        "message_fr": "Nom commercial (anglais)"
+                        "message_en": "Operating Name",
+                        "message_fr": "Nom commercial"
                     },
                     {
                         "code": "lbl_operating_name_fr",

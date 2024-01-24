@@ -2895,8 +2895,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
                 invitation_msg = tdg.error_message.message("m000033");
                 invitation_msg = invitation_msg.replaceAll("{0}", data.cid_legalname);
-                var option_0 = (data.cid_has_cra_bn == 0? "selected" : "");
-                var option_1 = (data.cid_has_cra_bn == 1? "selected" : "");
+                var option_0 = (data.cid_has_cra_bn == 0 ? "selected" : "");
+                var option_1 = (data.cid_has_cra_bn == 1 ? "selected" : "");
 
                 text_middle = `
                 <p>
@@ -2971,19 +2971,19 @@ if (typeof (tdg.cid.crw) == "undefined") {
                       <label for="cid_legalname_fr2" class="field-label" style="display:none">${lbl_legal_name_fr}</label>
                       <span style="display:none;color: red">*</span>
                     </div>
-                    <input type="text" readonly class="text form-control" id="cid_legalname_fr2" style="display:none" value="${data.cid_legalnameFR}">
+                    <input type="text" readonly class="text form-control" id="cid_legalname_fr2" style="display:none; width:100%" value="${data.cid_legalnameFR}">
                    <p>
                     <div> 
-                        <label for="cid_operatingname2" class="field-label" style="display:none">${lbl_operating_name}</label>
+                        <label for="cid_operatingname2" class="field-label">${lbl_operating_name}</label>
                         <span style="display:none;color: red">*</span>
                     </div>
-                    <input type="text" readonly class="text form-control" id="cid_operatingname2" style="display:none" value="${data.cid_operatingname}">
+                    <input type="text" readonly class="text form-control" id="cid_operatingname2" style="width:100%" value="${data.cid_operatingname}">
                    <p>
                    <div> 
                       <label for="cid_operatingname_fr2" class="field-label" style="display:none">${lbl_operating_name_fr}</label>
                       <span style="display:none;color: red">*</span>
                     </div>
-                    <input type="text" readonly class="text form-control" id="cid_operatingname_fr2" style="display:none" value="${data.cid_operatingnameFr}">
+                    <input type="text" readonly class="text form-control" id="cid_operatingname_fr2" style="display:none; width:100%" value="${data.cid_operatingnameFr}">
                     ` +
                 text_middle +
                 `
@@ -3380,7 +3380,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             if (cid_reasonfornobnnumber == "3")   // other
             {
                 tdg.c.control_show("cid_reasonfornobnnumber_other");
-                tdg.c.addValidator("cid_reasonfornobnnumber_other");
+            //    tdg.c.addValidator("cid_reasonfornobnnumber_other");
             }
             else {
                 tdg.c.control_hide("cid_reasonfornobnnumber_other");

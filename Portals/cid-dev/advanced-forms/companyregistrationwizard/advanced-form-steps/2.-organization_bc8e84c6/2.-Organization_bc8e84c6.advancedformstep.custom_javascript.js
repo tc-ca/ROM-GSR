@@ -6,6 +6,8 @@ $(document).ready(function () {
 	debugger;
 
 	tdg.c.removeValidator("ovs_namefr");
+	tdg.c.removeValidator("name");
+	tdg.c.removeValidator("cid_reasonfornobnnumber_other");
 
 	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
 	tdg.c.control_hide("adx_modifiedbyusername");
@@ -111,14 +113,14 @@ $(document).ready(function () {
 		tdg.c.addValidator("cid_reasonfornobnnumber");
 
 		$("#name").on('keyup', function () {
-		//	var name = $("#name").val();
-		//	$("#ovs_namefr").val(name);
+			//	var name = $("#name").val();
+			//	$("#ovs_namefr").val(name);
 		});
 
 		//ovs_legalname
 		$("#ovs_legalname").on('keyup', function () {
-		//	var ovs_legalname = $("#ovs_legalname").val();
-		//	$("#ovs_legalnamefr").val(ovs_legalname);
+			//	var ovs_legalname = $("#ovs_legalname").val();
+			//	$("#ovs_legalnamefr").val(ovs_legalname);
 		});
 
 		$("#cid_reasonfornobnnumber").change(function () {

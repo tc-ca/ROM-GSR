@@ -7,6 +7,8 @@ $(document).ready(function () {
 	debugger;
 
 	tdg.c.removeValidator("ovs_namefr");
+	tdg.c.removeValidator("name");
+	tdg.c.removeValidator("cid_reasonfornobnnumber_other");
 
 	$('#WebResource_address_complete').attr("title", "Address Lookup");
 	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
