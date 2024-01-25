@@ -5,6 +5,7 @@
 $(document).ready(function () {
     debugger;
 
+    tdg.c.removeValidator("ovs_namefr");
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
      

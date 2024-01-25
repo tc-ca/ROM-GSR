@@ -28,8 +28,8 @@ $(document).ready(function () {
     }
 
     //tdg.c.control_hide("ovs_namefr");
-    tdg.c.addValidator("ovs_legalnamefr");
-    tdg.c.addValidator("ovs_namefr");
+    //tdg.c.addValidator("ovs_legalnamefr");
+    //tdg.c.addValidator("ovs_namefr");
 
     var cid_crabusinessnumber = $('#cid_crabusinessnumber').val();
     if (cid_crabusinessnumber != "") {

@@ -4,6 +4,7 @@
 
 $(document).ready(function () {
     debugger;
+    tdg.c.removeValidator("ovs_namefr");
     page_setup();
 
     if (sessionStorage.getItem("updateOrgCheckList") == "Yes")

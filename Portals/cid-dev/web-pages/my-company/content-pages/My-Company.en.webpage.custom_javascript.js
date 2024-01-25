@@ -4,8 +4,8 @@
 
 $(document).ready(function () {
     debugger;
- 
-      
+    
+    tdg.c.removeValidator("ovs_namefr");  
     document.getElementById("UpdateButton").addEventListener('click', (event) => {
         
         if (sessionStorage.getItem("EditOrg") != "none")
@@ -134,7 +134,7 @@ $(document).ready(function () {
 
     $('#cid_crabusinessnumber').attr("readonly", true);
     $('#ovs_legalname').attr("readonly", true);
-    $('#ovs_legalnamefr').attr("readonly", true);
+ // $('#ovs_legalnamefr').attr("readonly", true);
 
     $('#cid_reasonfornobnnumber').attr("readonly", true);
     $('#cid_reasonfornobnnumber').css("pointer-events", "none");
