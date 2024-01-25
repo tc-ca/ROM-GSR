@@ -37,61 +37,58 @@ $(document).ready(function () {
         $("#mobilephone").attr("autocomplete", "new-password");
         $("#fax").attr("autocomplete", "new-password");
 
-       
+        //add Privace Statement
+        var privaceStatementLabel = tdg.error_message.message("PRIV_STMT1");
+        var privaceStatement = tdg.error_message.message("PRIV_STMT2");
 
-         //add Privace Statement
-         var privaceStatementLabel = tdg.error_message.message("PRIV_STMT1");
-         var privaceStatement = tdg.error_message.message("PRIV_STMT2");
-
-         var results = "";
-         if(selected_language == 'fr')
-         {
+        var results = "";
+        if (selected_language == 'fr') {
             results = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_PrivacyStatementArticle_URL_FR'");
-         }
-         else
-         {
+        }
+        else {
             results = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_PrivacyStatementArticle_URL_EN'");
-         }
-         if(results.length > 0)
-         {
+        }
+        if (results.length > 0) {
             var articleURL = results[0]["qm_value"];
-         }
-         
-         debugger;
-         var psUrl =  window.location.origin + "/_portal/modal-form-template-path/" + articleURL; 
-        
-         $("table.section").after('<div style="padding-left: 20px;" ><input type="checkbox" name="PrivaceStatement" id="privacestatement" name="privacestatement"/><label for="privacestatement" style="font-weight: 200; padding: 0 8px;"><p>' + privaceStatementLabel + '<a href="#" id="theArticle">' + privaceStatement + '</a>.</p></label><br></div>');
-         
-         $("#theArticle").bind('click',function(){
-                var left = (screen.width - 600) / 2;
-                var top = (screen.height - 400) / 4;
-             
-                window.open(psUrl, "Privace Statement", "scrollbars=1,resizable=no,status=0,toolbar=1,location=1,menubar=0,width=600,height=400,left="+left+",top="+top);
-            });
+        }
 
-         $("#privacestatement").css("padding", "0 23px");
+        debugger;
+        var psUrl = window.location.origin + "/_portal/modal-form-template-path/" + articleURL;
 
-    
-        //*************************submit button **********************/      
+        var html = '<div style="padding-left: 20px;" ><input type="checkbox" id="privacestatement" name="privacestatement"/><label for="privacestatement" style="font-weight: 200; padding: 0 8px;"><p>' + privaceStatementLabel + '<a href="#" id="theArticle">' + privaceStatement + '</a>.</p></label><br></div>';
+
+        $("table.section").after(html);
+
+        $("#privacestatement").keypress(function (e) {
+            if (e.which == 13) {
+                var value = !$('#privacestatement').is(':checked');
+                $("#privacestatement")[0].checked = value
+            }
+        });
+
+        $("#theArticle").bind('click', function () {
+            var left = (screen.width - 600) / 2;
+            var top = (screen.height - 400) / 4;
+
+            window.open(psUrl, "Privace Statement", "scrollbars=1,resizable=no,status=0,toolbar=1,location=1,menubar=0,width=600,height=400,left=" + left + ",top=" + top);
+        });
+
+        $("#privacestatement").css("padding", "0 23px");
+  
         $("#InsertButton").css("display", "none");
-        //get submit button value to use it with the new button  
         var SubmitButtonValue = tdg.error_message.message("BTN_SUBMIT");
         $("#InsertButton")[0].valueSubmitButtonValue;
         //add new insert and update button
         $("#InsertButton").after('<input type="button" onclick="" id="InsertUpdateButton" class="submit-btn btn btn-primary form-action-container-left" value=""/>');
         $("#InsertUpdateButton")[0].value = SubmitButtonValue;
         var ParentAccount = '{{user.parentcustomerid.id}}';
-        //define click event
         $('#InsertUpdateButton').on('click', function () {
-
-            if($("#privacestatement").is(":checked"))
-            {         
+            if ($("#privacestatement").is(":checked")) {
                 // function will check of existing contact need to be linke to company
-                //instead of add new else it will call the click event of the origional submit button
+                // instead of add new else it will call the click event of the origional submit button
                 invitation.New_and_Existing_Contact_Submit_Logic(ParentAccount);
-            }   
-            else
-            {
+            }
+            else {
                 var psError = tdg.error_message.message("PRIV_STMT_ERR");
                 tdg.c.dialog_OK(psError);
             }
@@ -106,7 +103,6 @@ $(document).ready(function () {
             sessionStorage.setItem("FullName", "");
             sessionStorage.setItem("Email", "");
         });
-        //********************************************* */
     } catch (e) { }
 });
 
@@ -191,7 +187,6 @@ function ValidateAlphabetInput(event) {
 function ValidateAlphabetPast(event) {
     var textContent = event.originalEvent.clipboardData.getData("text/plain");
     var letters = new RegExp(/^[a-zA-Z àâäèéêëîïôœùûüÿçÀÂÄÈÉÊËÎÏÔŒÙÛÜŸÇ]*$/);
-
     var compareResult = (letters.test(textContent));
 
     return compareResult;

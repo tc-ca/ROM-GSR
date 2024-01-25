@@ -63,6 +63,7 @@ $(document).ready(function () {
 	tdg.c.control_hide("ovs_duplicatesiteflag");
 	tdg.c.control_hide("name");   
 	tdg.c.control_hide("cid_siteclaim");
+	tdg.c.control_hide("cid_cidflag");
 	$("#ovs_legalname").attr("readonly", "true");
 	$("#address1_country").attr("readonly", "true");
 	$("#name").attr("readonly", "true");
