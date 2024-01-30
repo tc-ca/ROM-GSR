@@ -2668,10 +2668,10 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
             if (
                 $("#cid_legalname2").val() == null || $("#cid_legalname2").val() == "" ||
-                $("#cid_legalname_fr2").val() == null || $("#cid_legalname_fr2").val() == "" ||
-                $("#cid_operatingname2").val() == null || $("#cid_operatingname2").val() == "" ||
-                $("#cid_operatingname_fr2").val() == null || $("#cid_operatingname_fr2").val() == ""
-            ) {
+                //$("#cid_legalname_fr2").val() == null || $("#cid_legalname_fr2").val() == "" ||
+                $("#cid_operatingname2").val() == null || $("#cid_operatingname2").val() == ""
+                //||$("#cid_operatingname_fr2").val() == null || $("#cid_operatingname_fr2").val() == ""
+                ) {
                 $("#btn_ok").prop('disabled', true);
             }
 
@@ -3016,7 +3016,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 tdg.cid.crw.Manage_Invitation_Confirmation_Form();
 
                 $("#cid_legalname2").removeAttr("readonly");
-                $("#cid_legalname_fr2").removeAttr("readonly");
+                //$("#cid_legalname_fr2").removeAttr("readonly");
                 $("#cid_operatingname2").removeAttr("readonly");
                 $("#cid_operatingname_fr2").removeAttr("readonly");
 
@@ -3033,7 +3033,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 invitation_ind = sessionStorage.getItem("invitation_ind");
                 sessionStorage.setItem("cid_has_cra_bn", $("#hasCRABN :selected").val());
                 sessionStorage.setItem("cid_reasonfornobnnumber_other", $("#cid_reasonfornobnnumber_other_popup").val());
-                sessionStorage.setItem("ovs_legalnamefr", $("#cid_legalname_fr2").val());
+                //sessionStorage.setItem("ovs_legalnamefr", $("#cid_legalname_fr2").val());
                 sessionStorage.setItem("cid_operatingname_fr", $("#cid_operatingname_fr2").val());
                 sessionStorage.setItem("cid_reasonfornobnnumber", $("#cid_reasonfornobnnumberpopup :selected").val());
                 sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
@@ -3079,7 +3079,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
                                                     var UpdateData = {
                                                         "cid_has_cra_bn": true,
-                                                        "ovs_legalnamefr": $("#cid_legalname_fr2").val(),
+                                                        //"ovs_legalnamefr": $("#cid_legalname_fr2").val(),
                                                         "ovs_namefr": $("#cid_operatingname_fr2").val(),
                                                         "cid_crabusinessnumber": cid_crabusinessnumber,
                                                         "ovs_legalname": $("#cid_legalname2").val()
@@ -3095,7 +3095,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                                                     $("#cid_reasonfornobnnumber_other").val($("#cid_reasonfornobnnumber_other_popup").val());
                                                     $("#cid_reasonfornobnnumber").val($("#cid_reasonfornobnnumberpopup :selected").val());
 
-                                                    $("#ovs_legalnamefr").val($("#cid_legalname_fr2").val());
+                                                    //$("#ovs_legalnamefr").val($("#cid_legalname_fr2").val());
                                                     $("#cid_operatingname_fr").val($("#cid_operatingname_fr2").val());
 
                                                     //accountid
@@ -3125,7 +3125,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
                                     var UpdateData = {
                                         "cid_has_cra_bn": true,
-                                        "ovs_legalnamefr": $("#cid_legalname_fr2").val(),
+                                        //"ovs_legalnamefr": $("#cid_legalname_fr2").val(),
                                         "ovs_namefr": $("#cid_operatingname_fr2").val(),
                                         "cid_crabusinessnumber": cid_crabusinessnumber,
                                         "ovs_legalname": $("#cid_legalname2").val()
@@ -3140,7 +3140,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                                     $("#cid_reasonfornobnnumber_other").val($("#cid_reasonfornobnnumber_other_popup").val());
                                     $("#cid_reasonfornobnnumber").val($("#cid_reasonfornobnnumberpopup :selected").val());
 
-                                    $("#ovs_legalnamefr").val($("#cid_legalname_fr2").val());
+                                    //$("#ovs_legalnamefr").val($("#cid_legalname_fr2").val());
                                     $("#cid_operatingname_fr").val($("#cid_operatingname_fr2").val());
 
                                     //accountid
@@ -3157,7 +3157,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
                             var UpdateData = {
                                 "cid_has_cra_bn": true,
-                                "ovs_legalnamefr": $("#cid_legalname_fr2").val(),
+                                //"ovs_legalnamefr": $("#cid_legalname_fr2").val(),
                                 "ovs_namefr": $("#cid_operatingname_fr2").val(),
                                 "cid_crabusinessnumber": cid_crabusinessnumber,
                                 "ovs_legalname": $("#cid_legalname2").val()
@@ -3173,7 +3173,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                             $("#cid_reasonfornobnnumber_other").val($("#cid_reasonfornobnnumber_other_popup").val());
                             $("#cid_reasonfornobnnumber").val($("#cid_reasonfornobnnumberpopup :selected").val());
 
-                            $("#ovs_legalnamefr").val($("#cid_legalname_fr2").val());
+                            //$("#ovs_legalnamefr").val($("#cid_legalname_fr2").val());
                             $("#cid_operatingname_fr").val($("#cid_operatingname_fr2").val());
 
                             //accountid
@@ -3191,7 +3191,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
                     var data = {
                         "cid_has_cra_bn": false,
-                        "ovs_legalnamefr": $("#cid_legalname_fr2").val(),
+                        //"ovs_legalnamefr": $("#cid_legalname_fr2").val(),
                         "ovs_namefr": $("#cid_operatingname_fr2").val(),
                         "cid_reasonfornobnnumber": $("#cid_reasonfornobnnumberpopup :selected").val(),
                         "cid_reasonfornobnnumber_other": $("#cid_reasonfornobnnumber_other_popup").val(),
@@ -3380,7 +3380,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             if (cid_reasonfornobnnumber == "3")   // other
             {
                 tdg.c.control_show("cid_reasonfornobnnumber_other");
-            //    tdg.c.addValidator("cid_reasonfornobnnumber_other");
+                //    tdg.c.addValidator("cid_reasonfornobnnumber_other");
             }
             else {
                 tdg.c.control_hide("cid_reasonfornobnnumber_other");

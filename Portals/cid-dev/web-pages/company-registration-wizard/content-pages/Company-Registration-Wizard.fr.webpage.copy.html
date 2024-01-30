@@ -1,5 +1,5 @@
-{% assign parentCompanyId = user.parentcustomerid.id %} {% if parentCompanyId %} {% assign company = entities['account'][parentCompanyId] %} {{ company.cid_cidcompanystatus }} {% if company.cid_registrationasof and (request.url contains "tdgcore-qa" or request.url contains "rd-tdgcore-dev")%}
-<script>
+{% assign parentCompanyId = user.parentcustomerid.id %} {% if parentCompanyId %} {% assign company = entities['account'][parentCompanyId] %} {{ company.cid_cidcompanystatus }} {% if company.cid_registrationasof %} <script>
   window.location.replace('/company_dashboard');
-</script>
-{% endif %} {% endif %} {% include 'RegistrationWizardsWebTemplate'%}<br>{% webform name: 'CompanyRegistrationWizard' %}{% include 'entity_list' key: '' %}
+</script> {% endif %} {% endif %} {% include 'RegistrationWizardsWebTemplate'%}<br>
+{% webform name: 'CompanyRegistrationWizard' %}{% include 'entity_list' key: '' %}
+
