@@ -143,6 +143,14 @@
                 "Case": {
                   "case": "S3-1",
                   "actions": {
+                    "Activity_Party": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "d8017a08-6f21-4b12-9f14-72b03f0f4c88"
+                      },
+                      "type": "Compose",
+                      "inputs": ", {\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{outputs('Get_a_row_by_ID_Invited_Contact')?['body/contactid']}\"\n}\n"
+                    },
                     "Condition_2_-_Check_contact_Language": {
                       "actions": {
                         "Set_variable_varHyperLink__2": {
@@ -156,34 +164,99 @@
                             "value": "@{variables('PortalURL')}/fr/Account/Login/Register?returnUrl=%2Fen%2F&invitationCode=@{first(outputs('Filter_Invitations')?['body/value'])?['adx_invitationcode']}"
                           }
                         },
-                        "Send_an_email_French": {
+                        "FrenchSubject": {
                           "runAfter": {
                             "Set_variable_varHyperLink__2": [
                               "Succeeded"
                             ]
                           },
                           "metadata": {
-                            "operationMetadataId": "f3e50706-9143-40ed-b464-f50e8d59d759"
+                            "operationMetadataId": "e074b874-946c-4e50-b2d2-89baa35f1d7d"
                           },
-                          "type": "OpenApiConnection",
+                          "type": "Compose",
+                          "inputs": "@{variables('FrenchTestSubjectText')} TMD en ligne – BDIC : Invitation à enregistrer @{variables('Company Name')} dans la plateforme de base de données d’identification des clients (BDIC) du TMD."
+                        },
+                        "FrenchBody": {
+                          "runAfter": {
+                            "FrenchSubject": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "dcbdf3c8-4c4f-42da-bbde-b228d0221cab"
+                          },
+                          "type": "Compose",
+                          "inputs": "<p>Ce courriel est une invitation à vous inscrire @{variables('Company Name')} dans la base de données d'identification des clients (BDIC) de Transports Canada. Pour enregistrer votre organisation, veuillez sélectionner ou copier et coller le lien suivant dans votre navigateur :<br>\n<br>\n<a href=\"&lt;object custom=\">@{variables('varHyperLink')}\"&gt;</a><br>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de courrier électronique. &nbsp;Si vous n'êtes pas la personne qui doit enregistrer cette organisation, veuillez l'indiquer en répondant à <a href=\"mailto:tc.tdgengagement-engagementtmd.tc@tc.gc.ca\">tc.tdgengagement-engagementtmd.tc@tc.gc.ca</a> . Si vous connaissez le nom et l'adresse électronique de la personne qui devrait enregistrer cette organisation, veuillez également fournir ces informations.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada</p>"
+                        },
+                        "Run_a_Child_Flow_to_create_and_Send_dynamic_French_email_in_timeline": {
+                          "runAfter": {
+                            "FrenchBody": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "4c16ed4e-fad1-437a-b64c-d0257bc9ef6f"
+                          },
+                          "type": "Workflow",
                           "inputs": {
                             "host": {
-                              "connectionName": "shared_office365",
-                              "operationId": "SendEmailV2",
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                              "workflowReferenceName": "3c524c38-cbb0-ee11-a568-0022483cceb8"
                             },
-                            "parameters": {
-                              "emailMessage/To": "@outputs('Get_a_row_by_ID_Invited_Contact')?['body/emailaddress1']",
-                              "emailMessage/Subject": "@{variables('FrenchTestSubjectText')} TMD en ligne – BDIC : Invitation à enregistrer @{variables('Company Name')} dans la plateforme de base de données d’identification des clients (BDIC) du TMD.",
-                              "emailMessage/Body": "<p>Ce courriel est une invitation à vous inscrire @{variables('Company Name')} dans la base de données d'identification des clients (BDIC) de Transports Canada. Pour enregistrer votre organisation, veuillez sélectionner ou copier et coller le lien suivant dans votre navigateur :<br>\n<br>\n<a href=\"@{variables('varHyperLink')}\">@{variables('varHyperLink')}</a><br>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de courrier électronique. &nbsp;Si vous n'êtes pas la personne qui doit enregistrer cette organisation, veuillez l'indiquer en répondant à <a href=\"mailto:tc.tdgengagement-engagementtmd.tc@tc.gc.ca\">tc.tdgengagement-engagementtmd.tc@tc.gc.ca</a> . Si vous connaissez le nom et l'adresse électronique de la personne qui devrait enregistrer cette organisation, veuillez également fournir ces informations.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada</p>",
-                              "emailMessage/From": "@variables('CID_Email_Sender')",
-                              "emailMessage/Importance": "Normal"
-                            },
-                            "authentication": "@parameters('$authentication')"
+                            "body": {
+                              "text": "@outputs('FrenchSubject')",
+                              "text_1": "@outputs('Activity_Party')",
+                              "text_2": "@outputs('FrenchBody')",
+                              "text_3": "@outputs('Get_a_row_by_ID_Invited_Contact')?['body/_parentcustomerid_value']"
+                            }
                           }
+                        },
+                        "prevent_outlook_action_send_french_email": {
+                          "actions": {
+                            "Send_an_email_French": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "f3e50706-9143-40ed-b464-f50e8d59d759"
+                              },
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_office365",
+                                  "operationId": "SendEmailV2",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                                },
+                                "parameters": {
+                                  "emailMessage/To": "@outputs('Get_a_row_by_ID_Invited_Contact')?['body/emailaddress1']",
+                                  "emailMessage/Subject": "@{variables('FrenchTestSubjectText')} TMD en ligne – BDIC : Invitation à enregistrer @{variables('Company Name')} dans la plateforme de base de données d’identification des clients (BDIC) du TMD.",
+                                  "emailMessage/Body": "<p>Ce courriel est une invitation à vous inscrire @{variables('Company Name')} dans la base de données d'identification des clients (BDIC) de Transports Canada. Pour enregistrer votre organisation, veuillez sélectionner ou copier et coller le lien suivant dans votre navigateur :<br>\n<br>\n<a href=\"&lt;object custom=\">@{variables('varHyperLink')}\"&gt;</a>@{variables('varHyperLink')}<a href=\"&lt;object custom=\"></a><br>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de courrier électronique. &nbsp;Si vous n'êtes pas la personne qui doit enregistrer cette organisation, veuillez l'indiquer en répondant à <a href=\"mailto:tc.tdgengagement-engagementtmd.tc@tc.gc.ca\">tc.tdgengagement-engagementtmd.tc@tc.gc.ca</a> . Si vous connaissez le nom et l'adresse électronique de la personne qui devrait enregistrer cette organisation, veuillez également fournir ces informations.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada</p>",
+                                  "emailMessage/From": "@variables('CID_Email_Sender')",
+                                  "emailMessage/Importance": "Normal"
+                                },
+                                "authentication": "@parameters('$authentication')"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Run_a_Child_Flow_to_create_and_Send_dynamic_French_email_in_timeline": [
+                              "Succeeded"
+                            ]
+                          },
+                          "expression": {
+                            "equals": [
+                              1,
+                              2
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "4f539cc9-31e0-4699-a042-94051f826825"
+                          },
+                          "type": "If"
                         }
                       },
-                      "runAfter": {},
+                      "runAfter": {
+                        "Activity_Party": [
+                          "Succeeded"
+                        ]
+                      },
                       "else": {
                         "actions": {
                           "Set_variable_varHyperLink_": {
@@ -197,31 +270,92 @@
                               "value": "@{variables('PortalURL')}/en/Account/Login/Register?returnUrl=%2Fen%2F&invitationCode=@{first(outputs('Filter_Invitations')?['body/value'])?['adx_invitationcode']}"
                             }
                           },
-                          "Send_an_email_English": {
+                          "Subject": {
                             "runAfter": {
                               "Set_variable_varHyperLink_": [
                                 "Succeeded"
                               ]
                             },
                             "metadata": {
-                              "operationMetadataId": "dbf5710e-9b01-4698-83e8-f344ad7edbc5"
+                              "operationMetadataId": "1f99136d-2c6c-487b-b43b-99c06d054026"
                             },
-                            "type": "OpenApiConnection",
+                            "type": "Compose",
+                            "inputs": "@{variables('TestSubjectText')} TDG Online - CID: Invitation to register @{variables('Company Name')} in the TDG Client Identification Database (CID)"
+                          },
+                          "Body": {
+                            "runAfter": {
+                              "Subject": [
+                                "Succeeded"
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "953584b4-1782-4486-a2b3-ed69778f6ad6"
+                            },
+                            "type": "Compose",
+                            "inputs": "<p>This email is an invitation for you to register @{variables('Company Name')} in Transport Canada’s Client Identification Database (CID). To register your organization, please select or copy and paste the following link into your browser:<br>\n<br>\n<a href=\"&lt;object custom=\">@{variables('varHyperLink')}\"&gt;</a><br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to <a href=\"mailto:tc.tdgengagement-engagementtmd.tc@tc.gc.ca\">tc.tdgengagement-engagementtmd.tc@tc.gc.ca</a>. If you know the name and email address of the individual who should register this organization, then please provide this information as well.<br>\n<br>\nRegards<br>\n<br>\n<br>\nTransport Canada TDG CID Support Team</p>"
+                          },
+                          "Run_a_Child_Flow_to_create_and_Send_dynamic_English_email_in_timeline_2": {
+                            "runAfter": {
+                              "Body": [
+                                "Succeeded"
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "4c16ed4e-fad1-437a-b64c-d0257bc9ef6f"
+                            },
+                            "type": "Workflow",
                             "inputs": {
                               "host": {
-                                "connectionName": "shared_office365",
-                                "operationId": "SendEmailV2",
-                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                                "workflowReferenceName": "3c524c38-cbb0-ee11-a568-0022483cceb8"
                               },
-                              "parameters": {
-                                "emailMessage/To": "@outputs('Get_a_row_by_ID_Invited_Contact')?['body/emailaddress1']",
-                                "emailMessage/Subject": "@{variables('TestSubjectText')} TDG Online - CID: Invitation to register @{variables('Company Name')} in the TDG Client Identification Database (CID)",
-                                "emailMessage/Body": "<p>This email is an invitation for you to register @{variables('Company Name')} in Transport Canada’s Client Identification Database (CID). To register your organization, please select or copy and paste the following link into your browser:<br>\n<br>\n<a href=\"@{variables('varHyperLink')}\">@{variables('varHyperLink')}</a><br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to <a href=\"mailto:tc.tdgengagement-engagementtmd.tc@tc.gc.ca\">tc.tdgengagement-engagementtmd.tc@tc.gc.ca</a>. If you know the name and email address of the individual who should register this organization, then please provide this information as well.<br>\n<br>\nRegards<br>\n<br>\n<br>\nTransport Canada TDG CID Support Team</p>",
-                                "emailMessage/From": "@variables('CID_Email_Sender')",
-                                "emailMessage/Importance": "Normal"
-                              },
-                              "authentication": "@parameters('$authentication')"
+                              "body": {
+                                "text": "@outputs('Subject')",
+                                "text_1": "@outputs('Activity_Party')",
+                                "text_2": "@outputs('Body')",
+                                "text_3": "@outputs('Get_a_row_by_ID_Invited_Contact')?['body/_parentcustomerid_value']"
+                              }
                             }
+                          },
+                          "Condition_prevent_send_English_email": {
+                            "actions": {
+                              "Send_an_email_English": {
+                                "runAfter": {},
+                                "metadata": {
+                                  "operationMetadataId": "dbf5710e-9b01-4698-83e8-f344ad7edbc5"
+                                },
+                                "type": "OpenApiConnection",
+                                "inputs": {
+                                  "host": {
+                                    "connectionName": "shared_office365",
+                                    "operationId": "SendEmailV2",
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                                  },
+                                  "parameters": {
+                                    "emailMessage/To": "@outputs('Get_a_row_by_ID_Invited_Contact')?['body/emailaddress1']",
+                                    "emailMessage/Subject": "@{variables('TestSubjectText')} TDG Online - CID: Invitation to register @{variables('Company Name')} in the TDG Client Identification Database (CID)",
+                                    "emailMessage/Body": "<p>This email is an invitation for you to register @{variables('Company Name')} in Transport Canada’s Client Identification Database (CID). To register your organization, please select or copy and paste the following link into your browser:<br>\n<br>\n<a href=\"&lt;object custom=\">@{variables('varHyperLink')}\"&gt;</a>@{variables('varHyperLink')}<a href=\"&lt;object custom=\"></a><br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to <a href=\"mailto:tc.tdgengagement-engagementtmd.tc@tc.gc.ca\">tc.tdgengagement-engagementtmd.tc@tc.gc.ca</a>. If you know the name and email address of the individual who should register this organization, then please provide this information as well.<br>\n<br>\nRegards<br>\n<br>\n<br>\nTransport Canada TDG CID Support Team</p>",
+                                    "emailMessage/From": "@variables('CID_Email_Sender')",
+                                    "emailMessage/Importance": "Normal"
+                                  },
+                                  "authentication": "@parameters('$authentication')"
+                                }
+                              }
+                            },
+                            "runAfter": {
+                              "Run_a_Child_Flow_to_create_and_Send_dynamic_English_email_in_timeline_2": [
+                                "Succeeded"
+                              ]
+                            },
+                            "expression": {
+                              "equals": [
+                                1,
+                                2
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "a9d5e83a-46bf-4af0-98d1-2f3f2350187a"
+                            },
+                            "type": "If"
                           }
                         }
                       },

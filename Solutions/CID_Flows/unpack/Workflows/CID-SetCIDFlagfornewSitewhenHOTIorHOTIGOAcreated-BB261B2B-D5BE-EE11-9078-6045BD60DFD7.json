@@ -1,0 +1,198 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "impersonation": {},
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified": {
+          "metadata": {
+            "operationMetadataId": "b96eb8e5-289d-4f96-855c-cb690dbd674e"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 4,
+              "subscriptionRequest/entityname": "ovs_mocregistration",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "ovs_operationtype",
+              "subscriptionRequest/runas": 1,
+              "subscriptionRequest/name": "bb261b2b-d5be-ee11-9078-6045bd60dfd7"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Condition:_Check_if_Site_is_NOT_Null": {
+          "actions": {
+            "Get_an_Account_row_by_Site_ID": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "85e198ae-8cc4-492f-a236-75c2fcf07b83"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "GetItem"
+                },
+                "parameters": {
+                  "entityName": "accounts",
+                  "recordId": "@triggerOutputs()?['body/_ovs_siteid_value']",
+                  "$select": "cid_portalrecordcreationdetails,cid_cidflag"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Condition:_check_if__Site_Created_ON_By_value_is_null": {
+              "actions": {
+                "Condition:_Check_Operation_Type": {
+                  "actions": {
+                    "Update_a_row:_Site_-__Set_CID_Flag_to_'In_Scope'": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "681f433f-497b-4247-afdd-4a6bc8974cb7"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "UpdateRecord"
+                        },
+                        "parameters": {
+                          "entityName": "accounts",
+                          "recordId": "@triggerOutputs()?['body/_ovs_siteid_value']",
+                          "item/cid_cidflag": 100000001
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
+                  },
+                  "runAfter": {},
+                  "else": {
+                    "actions": {
+                      "Condition:_Check_if_Created_ON_By_is_null": {
+                        "actions": {
+                          "Update_a_row:_Site_-__Reset_CID_Flag_if_Operation_Type_updated_to_MOC": {
+                            "runAfter": {},
+                            "metadata": {
+                              "operationMetadataId": "1bc49975-e2a9-4bd8-811c-8f5958cf0936"
+                            },
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "host": {
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                                "connectionName": "shared_commondataserviceforapps",
+                                "operationId": "UpdateRecord"
+                              },
+                              "parameters": {
+                                "entityName": "accounts",
+                                "recordId": "@triggerOutputs()?['body/_ovs_siteid_value']",
+                                "item/cid_cidflag": "@null"
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            }
+                          }
+                        },
+                        "runAfter": {},
+                        "expression": {
+                          "equals": [
+                            "@outputs('Get_an_Account_row_by_Site_ID')?['body/cid_portalrecordcreationdetails']",
+                            "@null"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "59f78eea-adb5-47e6-a7c8-62e7dd992c09"
+                        },
+                        "type": "If"
+                      }
+                    }
+                  },
+                  "expression": {
+                    "or": [
+                      {
+                        "equals": [
+                          "@triggerOutputs()?['body/ovs_operationtype']",
+                          918640038
+                        ]
+                      },
+                      {
+                        "equals": [
+                          "@triggerOutputs()?['body/ovs_operationtype']",
+                          918640042
+                        ]
+                      }
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "025b6692-09b6-49c1-892e-7c5e7fc64d71"
+                  },
+                  "type": "If"
+                }
+              },
+              "runAfter": {
+                "Get_an_Account_row_by_Site_ID": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "equals": [
+                  "@outputs('Get_an_Account_row_by_Site_ID')?['body/cid_portalrecordcreationdetails']",
+                  "@null"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "61492b7b-8464-4b35-9b51-8a711c6d8515"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {},
+          "expression": {
+            "not": {
+              "equals": [
+                "@triggerOutputs()?['body/_ovs_siteid_value']",
+                "@null"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "74c3814f-6bb3-4662-9197-222897e3a6fe"
+          },
+          "type": "If"
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

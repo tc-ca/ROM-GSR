@@ -107,35 +107,6 @@
             }
           }
         },
-        "Create_New_Email_Message": {
-          "runAfter": {
-            "Parse_JSON_-_Activity_party": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "415048eb-ec3a-4f2a-97b2-3e62b511d5ef"
-          },
-          "type": "OpenApiConnection",
-          "inputs": {
-            "host": {
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "CreateRecord",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-            },
-            "parameters": {
-              "entityName": "emails",
-              "item/activitypointer_activity_parties": "@body('Parse_JSON_-_Activity_party')",
-              "item/description": "@triggerBody()['text_2']",
-              "item/regardingobjectid_account_email@odata.bind": "@outputs('Regarding')",
-              "item/subject": "@triggerBody()['text']"
-            },
-            "authentication": {
-              "type": "Raw",
-              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
-            }
-          }
-        },
         "Append_to_ArrayList": {
           "runAfter": {
             "Initialize_variable_ActivityPartStringList": [
@@ -152,11 +123,7 @@
           }
         },
         "Initialize_variable_ActivityPartStringList": {
-          "runAfter": {
-            "Regarding": [
-              "Succeeded"
-            ]
-          },
+          "runAfter": {},
           "metadata": {
             "operationMetadataId": "8da56ffd-7f40-488d-979c-d8d5179a3270"
           },
@@ -171,45 +138,9 @@
             ]
           }
         },
-        "Regarding": {
-          "runAfter": {},
-          "metadata": {
-            "operationMetadataId": "5f82b205-6530-4a52-b0a4-21d7d5e34890"
-          },
-          "type": "Compose",
-          "inputs": "@concat('\\accounts\\',triggerBody()['text_3'])"
-        },
-        "Perform_a_bound_action_-_send_email": {
-          "runAfter": {
-            "Create_New_Email_Message": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "cd5d3e4d-bbdf-4174-8906-b08d39225a3d"
-          },
-          "type": "OpenApiConnection",
-          "inputs": {
-            "host": {
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "PerformBoundAction",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-            },
-            "parameters": {
-              "entityName": "emails",
-              "actionName": "Microsoft.Dynamics.CRM.SendEmail",
-              "recordId": "@outputs('Create_New_Email_Message')?['body/activityid']",
-              "item/IssueSend": true
-            },
-            "authentication": {
-              "type": "Raw",
-              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
-            }
-          }
-        },
         "Response": {
           "runAfter": {
-            "Perform_a_bound_action_-_send_email": [
+            "check_if_regarding_is_null": [
               "Succeeded"
             ]
           },
@@ -221,6 +152,134 @@
           "inputs": {
             "statusCode": 200
           }
+        },
+        "check_if_regarding_is_null": {
+          "actions": {
+            "Create_New_Email_Message__without_regarding": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "415048eb-ec3a-4f2a-97b2-3e62b511d5ef"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "emails",
+                  "item/activitypointer_activity_parties": "@body('Parse_JSON_-_Activity_party')",
+                  "item/description": "@triggerBody()['text_2']",
+                  "item/subject": "@triggerBody()['text']"
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                }
+              }
+            },
+            "Perform_a_bound_action_-_send_email_2": {
+              "runAfter": {
+                "Create_New_Email_Message__without_regarding": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "cd5d3e4d-bbdf-4174-8906-b08d39225a3d"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "PerformBoundAction",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "emails",
+                  "actionName": "Microsoft.Dynamics.CRM.SendEmail",
+                  "recordId": "@outputs('Create_New_Email_Message__without_regarding')?['body/activityid']",
+                  "item/IssueSend": true
+                },
+                "authentication": {
+                  "type": "Raw",
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Parse_JSON_-_Activity_party": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Create_New_Email_Message": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "415048eb-ec3a-4f2a-97b2-3e62b511d5ef"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps",
+                    "operationId": "CreateRecord",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "emails",
+                    "item/activitypointer_activity_parties": "@body('Parse_JSON_-_Activity_party')",
+                    "item/description": "@triggerBody()['text_2']",
+                    "item/regardingobjectid_account_email@odata.bind": "@concat('\\accounts\\',triggerBody()['text_3'])",
+                    "item/subject": "@triggerBody()['text']"
+                  },
+                  "authentication": {
+                    "type": "Raw",
+                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                  }
+                }
+              },
+              "Perform_a_bound_action_-_send_email": {
+                "runAfter": {
+                  "Create_New_Email_Message": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "cd5d3e4d-bbdf-4174-8906-b08d39225a3d"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "connectionName": "shared_commondataserviceforapps",
+                    "operationId": "PerformBoundAction",
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                  },
+                  "parameters": {
+                    "entityName": "emails",
+                    "actionName": "Microsoft.Dynamics.CRM.SendEmail",
+                    "recordId": "@outputs('Create_New_Email_Message')?['body/activityid']",
+                    "item/IssueSend": true
+                  },
+                  "authentication": {
+                    "type": "Raw",
+                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+                  }
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@triggerBody()['text_3']",
+              "@null"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "84cfce7e-8a1c-4801-bd3d-a0375f3d0697"
+          },
+          "type": "If"
         }
       }
     },

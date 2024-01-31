@@ -64,7 +64,7 @@
             },
             "parameters": {
               "entityName": "accounts",
-              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"account\">\n    <attribute name=\"name\" />\n    <attribute name=\"ovs_legalname\" />\n    <attribute name=\"primarycontactid\" />\n    <attribute name=\"cid_crabusinessnumber\" />\n    <attribute name=\"root_organization_id\" />\n    <attribute name=\"ovs_address_display\" />\n    <attribute name=\"cid_rootcompany\" />\n    <attribute name=\"accountid\" />\n    <attribute name=\"cid_attestationdate\" />\n    <attribute name=\"cid_companyanniversarydate\" />\n    <attribute name=\"cid_annualcomplianceupdatesremindersenddate\" />\n    <order attribute=\"ovs_legalname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n      <condition attribute=\"cid_companyanniversarydate\" operator=\"on\" value=\"@{addDays(utcNow(), -30 ,'yyyy-MM-dd')}\" />\n    </filter>\n  </entity>\n</fetch>"
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"account\">\n    <attribute name=\"name\" />\n    <attribute name=\"ovs_legalname\" />\n    <attribute name=\"primarycontactid\" />\n    <attribute name=\"cid_crabusinessnumber\" />\n    <attribute name=\"root_organization_id\" />\n    <attribute name=\"ovs_address_display\" />\n    <attribute name=\"cid_rootcompany\" />\n    <attribute name=\"accountid\" />\n    <attribute name=\"cid_attestationdate\" />\n    <attribute name=\"cid_companyanniversarydate\" />\n    <attribute name=\"cid_annualcomplianceupdatesremindersenddate\" />\n    <order attribute=\"ovs_legalname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n<condition attribute=\"customertypecode\" operator=\"eq\" value=\"948010000\"/>\n      <condition attribute=\"cid_companyanniversarydate\" operator=\"on\" value=\"@{addDays(utcNow(), -30 ,'yyyy-MM-dd')}\" />\n    </filter>\n  </entity>\n</fetch>"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -124,7 +124,7 @@
         },
         "Initialize_variable_Primary_Contact_First_Name": {
           "runAfter": {
-            "Initialize_variable": [
+            "Initialize_variable_-_Activity_Party": [
               "Succeeded"
             ]
           },
@@ -203,7 +203,7 @@
                 },
                 "Set_variable__CCEmailRecipients_to_Null": {
                   "runAfter": {
-                    "Set_Temp_CC_Variable_to_Null": [
+                    "Reset_Activity_Party_for_each_account_in_the_loop": [
                       "Succeeded"
                     ]
                   },
@@ -249,7 +249,7 @@
                         },
                         "Set_variable_2": {
                           "runAfter": {
-                            "Set_variable_Primary_Contact_First_Name": [
+                            "Append_to_string_variable_-_Add_Primary_Email": [
                               "Succeeded"
                             ]
                           },
@@ -261,11 +261,37 @@
                             "name": "Language",
                             "value": "@items('Apply_to_each_2')?['cid_languageofcorrespondence']"
                           }
+                        },
+                        "Append_to_string_variable_-_Add_Primary_Email": {
+                          "runAfter": {
+                            "Set_variable_Primary_Contact_First_Name": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "d187902b-b249-4412-b16b-48864ee85db6"
+                          },
+                          "type": "AppendToStringVariable",
+                          "inputs": {
+                            "name": "Activity Party",
+                            "value": ", {\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{items('Apply_to_each_2')?['contactid']}\"\n}"
+                          }
                         }
                       },
                       "runAfter": {},
                       "else": {
                         "actions": {
+                          "Append_to_string_variable_-_Add_CC_Email": {
+                            "runAfter": {},
+                            "metadata": {
+                              "operationMetadataId": "a5d26665-6735-43f3-bc35-812f018fa94e"
+                            },
+                            "type": "AppendToStringVariable",
+                            "inputs": {
+                              "name": "Activity Party",
+                              "value": ", {\n    \"participationtypemask\": 3,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{items('Apply_to_each_2')?['contactid']}\"\n}"
+                            }
+                          },
                           "Condition_2": {
                             "actions": {
                               "Set_variable": {
@@ -295,7 +321,11 @@
                                 }
                               }
                             },
-                            "runAfter": {},
+                            "runAfter": {
+                              "Append_to_string_variable_-_Add_CC_Email": [
+                                "Succeeded"
+                              ]
+                            },
                             "else": {
                               "actions": {
                                 "Set_CC_list_if_its_empty": {
@@ -346,75 +376,6 @@
                   },
                   "type": "Foreach"
                 },
-                "Check_Language": {
-                  "actions": {
-                    "Send_an_email_(V2)-_English": {
-                      "runAfter": {},
-                      "metadata": {
-                        "operationMetadataId": "948e764e-fafe-4c29-ac68-428a81677087"
-                      },
-                      "type": "OpenApiConnection",
-                      "inputs": {
-                        "host": {
-                          "connectionName": "shared_office365_1",
-                          "operationId": "SendEmailV2",
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
-                        },
-                        "parameters": {
-                          "emailMessage/To": "@{variables('ToEmailRecipients')};",
-                          "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: The Annual Compliance process for the @{items('Apply_to_each_Account')?['ovs_legalname']} organization was due to be completed on @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'], 'yyyy-MM-dd')}, and is now past due",
-                          "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe Transport Canada CID Data Platform's Annual Compliance process for the @{items('Apply_to_each_Account')?['ovs_legalname']} organization was due on @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'], 'yyyy-MM-dd')} and needs to be completed by @{addDays(variables('DueDate'), 30, 'yyyy-MM-dd')}. Please login to the CID Data Platform to complete that company's Annual Compliance process.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n<br>\n</p>",
-                          "emailMessage/From": "@variables('CID_Email_Sender')",
-                          "emailMessage/Cc": "@variables('CCEmailRecipients')",
-                          "emailMessage/Importance": "Normal"
-                        },
-                        "authentication": "@parameters('$authentication')"
-                      }
-                    }
-                  },
-                  "runAfter": {
-                    "Apply_to_each_2": [
-                      "Succeeded"
-                    ]
-                  },
-                  "else": {
-                    "actions": {
-                      "Send_an_email_(V2)_-French": {
-                        "runAfter": {},
-                        "metadata": {
-                          "operationMetadataId": "60cd9b44-5141-4dcd-ba5f-9baca18cd0e0"
-                        },
-                        "type": "OpenApiConnection",
-                        "inputs": {
-                          "host": {
-                            "connectionName": "shared_office365_1",
-                            "operationId": "SendEmailV2",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
-                          },
-                          "parameters": {
-                            "emailMessage/To": "@{variables('ToEmailRecipients')};",
-                            "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Le processus de conformité annuelle pour l’organisation @{items('Apply_to_each_Account')?['ovs_legalnamefr']}  devait être achevé le  @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'], 'yyyy-MM-dd')}, et est maintenant en retard.",
-                            "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLe processus de conformité annuelle de la plateforme de données de la BDIC de Transports Canada pour l’organisation @{items('Apply_to_each_Account')?['ovs_legalname']} était dû le &nbsp;@{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'], 'yyyy-MM-dd')}, et il doit être complété d’ici le @{addDays(variables('DueDate'), 30, 'yyyy-MM-dd')}. Veuillez vous connecter à la plateforme de données de la BDIC pour compléter le processus de conformité annuelle de cette entreprise.<br>\n<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
-                            "emailMessage/From": "@variables('CID_Email_Sender')",
-                            "emailMessage/Cc": "@variables('CCEmailRecipients')",
-                            "emailMessage/Importance": "Normal"
-                          },
-                          "authentication": "@parameters('$authentication')"
-                        }
-                      }
-                    }
-                  },
-                  "expression": {
-                    "equals": [
-                      "@variables('Language')",
-                      918640001
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "31b2f0eb-c13a-4786-ae9f-f8eb1a3e8670"
-                  },
-                  "type": "If"
-                },
                 "Set_DueDate": {
                   "runAfter": {
                     "Set_variable__CCEmailRecipients_to_Null": [
@@ -429,6 +390,227 @@
                     "name": "DueDate",
                     "value": "@items('Apply_to_each_Account')?['cid_companyanniversarydate']"
                   }
+                },
+                "Reset_Activity_Party_for_each_account_in_the_loop": {
+                  "runAfter": {
+                    "Set_Temp_CC_Variable_to_Null": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "35c3eb4a-40f1-4cb0-8005-be90085b2f33"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Activity Party",
+                    "value": "@{null}"
+                  }
+                },
+                "Condition_-_Activity_Parity_Should_Not_Be_Empty": {
+                  "actions": {
+                    "Check_Language": {
+                      "actions": {
+                        "Subject-En": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "eac5ead4-5552-4f16-a818-6d9f4ddc54a8"
+                          },
+                          "type": "Compose",
+                          "inputs": "@{variables('TestSubjectText')}TDG Online - CID: The Annual Compliance process for the @{items('Apply_to_each_Account')?['ovs_legalname']} organization was due to be completed on @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'], 'yyyy-MM-dd')}, and is now past due"
+                        },
+                        "Body-En": {
+                          "runAfter": {
+                            "Subject-En": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "f066051f-4ec9-442e-b0b5-1ebf0768a32a"
+                          },
+                          "type": "Compose",
+                          "inputs": "@{variables('TestingText')}@{outputs('StandardSalutation')}\n\nThe Transport Canada CID Data Platform's Annual Compliance process for the @{items('Apply_to_each_Account')?['ovs_legalname']} organization was due on @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'], 'yyyy-MM-dd')} and needs to be completed by @{addDays(variables('DueDate'), 30, 'yyyy-MM-dd')}. Please login to the CID Data Platform to complete that company's Annual Compliance process.\n\nRegards,\n\n\nTransport Canada - CID Support Team\n\n@{outputs('English-EmailFooter')}\n\n"
+                        },
+                        "Run_a_Child_Flow": {
+                          "runAfter": {
+                            "Body-En": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "58b4c11b-f5c0-4824-afda-b25395ab9c36"
+                          },
+                          "type": "Workflow",
+                          "inputs": {
+                            "host": {
+                              "workflowReferenceName": "3c524c38-cbb0-ee11-a568-0022483cceb8"
+                            },
+                            "body": {
+                              "text": "@outputs('Subject-En')",
+                              "text_1": "@variables('Activity Party')",
+                              "text_2": "@outputs('Body-En')",
+                              "text_3": "@items('Apply_to_each_Account')?['accountid']"
+                            }
+                          }
+                        },
+                        "Condition_-_Comment_out_old_email_action_En": {
+                          "actions": {
+                            "Send_an_email_(V2)-_English": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "948e764e-fafe-4c29-ac68-428a81677087"
+                              },
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_office365_1",
+                                  "operationId": "SendEmailV2",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                                },
+                                "parameters": {
+                                  "emailMessage/To": "@{variables('ToEmailRecipients')};",
+                                  "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: The Annual Compliance process for the @{items('Apply_to_each_Account')?['ovs_legalname']} organization was due to be completed on @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'], 'yyyy-MM-dd')}, and is now past due",
+                                  "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe Transport Canada CID Data Platform's Annual Compliance process for the @{items('Apply_to_each_Account')?['ovs_legalname']} organization was due on @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'], 'yyyy-MM-dd')} and needs to be completed by @{addDays(variables('DueDate'), 30, 'yyyy-MM-dd')}. Please login to the CID Data Platform to complete that company's Annual Compliance process.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n<br>\n</p>",
+                                  "emailMessage/From": "@variables('CID_Email_Sender')",
+                                  "emailMessage/Cc": "@variables('CCEmailRecipients')",
+                                  "emailMessage/Importance": "Normal"
+                                },
+                                "authentication": "@parameters('$authentication')"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Run_a_Child_Flow": [
+                              "Succeeded"
+                            ]
+                          },
+                          "expression": {
+                            "equals": [
+                              1,
+                              2
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "2f03eb37-c008-4e45-bb8a-0e839f495b70"
+                          },
+                          "type": "If"
+                        }
+                      },
+                      "runAfter": {},
+                      "else": {
+                        "actions": {
+                          "Subject-Fr": {
+                            "runAfter": {},
+                            "metadata": {
+                              "operationMetadataId": "cdadae0e-fa17-47ac-a592-1263b7fb206c"
+                            },
+                            "type": "Compose",
+                            "inputs": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Le processus de conformité annuelle pour l’organisation @{items('Apply_to_each_Account')?['ovs_legalnamefr']}  devait être achevé le  @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'], 'yyyy-MM-dd')}, et est maintenant en retard."
+                          },
+                          "Body-Fr": {
+                            "runAfter": {
+                              "Subject-Fr": [
+                                "Succeeded"
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "1c657254-8bea-498f-9b9b-dc75cee5ea43"
+                            },
+                            "type": "Compose",
+                            "inputs": "@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}\n\nLe processus de conformité annuelle de la plateforme de données de la BDIC de Transports Canada pour l’organisation @{items('Apply_to_each_Account')?['ovs_legalname']} était dû le  @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'], 'yyyy-MM-dd')}, et il doit être complété d’ici le @{addDays(variables('DueDate'), 30, 'yyyy-MM-dd')}. Veuillez vous connecter à la plateforme de données de la BDIC pour compléter le processus de conformité annuelle de cette entreprise.\n\nSalutations,\n\n\nÉquipe de soutien de la BDIC de Transports Canada\n\n@{outputs('French-EmailFooter')}\n\n"
+                          },
+                          "Run_a_Child_Flow_2": {
+                            "runAfter": {
+                              "Body-Fr": [
+                                "Succeeded"
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "0d577d21-a730-4cb0-a766-05cbd33da018"
+                            },
+                            "type": "Workflow",
+                            "inputs": {
+                              "host": {
+                                "workflowReferenceName": "3c524c38-cbb0-ee11-a568-0022483cceb8"
+                              },
+                              "body": {
+                                "text": "@outputs('Subject-Fr')",
+                                "text_1": "@variables('Activity Party')",
+                                "text_2": "@outputs('Body-Fr')",
+                                "text_3": "@items('Apply_to_each_Account')?['accountid']"
+                              }
+                            }
+                          },
+                          "Condition_-_Comment_out_old_email_action_Fr": {
+                            "actions": {
+                              "Send_an_email_(V2)_-French": {
+                                "runAfter": {},
+                                "metadata": {
+                                  "operationMetadataId": "60cd9b44-5141-4dcd-ba5f-9baca18cd0e0"
+                                },
+                                "type": "OpenApiConnection",
+                                "inputs": {
+                                  "host": {
+                                    "connectionName": "shared_office365_1",
+                                    "operationId": "SendEmailV2",
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                                  },
+                                  "parameters": {
+                                    "emailMessage/To": "@{variables('ToEmailRecipients')};",
+                                    "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Le processus de conformité annuelle pour l’organisation @{items('Apply_to_each_Account')?['ovs_legalnamefr']}  devait être achevé le  @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'], 'yyyy-MM-dd')}, et est maintenant en retard.",
+                                    "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLe processus de conformité annuelle de la plateforme de données de la BDIC de Transports Canada pour l’organisation @{items('Apply_to_each_Account')?['ovs_legalname']} était dû le &nbsp;@{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'], 'yyyy-MM-dd')}, et il doit être complété d’ici le @{addDays(variables('DueDate'), 30, 'yyyy-MM-dd')}. Veuillez vous connecter à la plateforme de données de la BDIC pour compléter le processus de conformité annuelle de cette entreprise.<br>\n<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
+                                    "emailMessage/From": "@variables('CID_Email_Sender')",
+                                    "emailMessage/Cc": "@variables('CCEmailRecipients')",
+                                    "emailMessage/Importance": "Normal"
+                                  },
+                                  "authentication": "@parameters('$authentication')"
+                                }
+                              }
+                            },
+                            "runAfter": {
+                              "Run_a_Child_Flow_2": [
+                                "Succeeded"
+                              ]
+                            },
+                            "expression": {
+                              "equals": [
+                                1,
+                                2
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "5648fb63-40ef-47cc-9fc3-8f3d79eba0df"
+                            },
+                            "type": "If"
+                          }
+                        }
+                      },
+                      "expression": {
+                        "equals": [
+                          "@variables('Language')",
+                          918640001
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "31b2f0eb-c13a-4786-ae9f-f8eb1a3e8670"
+                      },
+                      "type": "If"
+                    }
+                  },
+                  "runAfter": {
+                    "Apply_to_each_2": [
+                      "Succeeded"
+                    ]
+                  },
+                  "expression": {
+                    "greater": [
+                      "@length(variables('Activity Party'))",
+                      0
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "28e00061-d9cf-4967-859e-9d931074ff98"
+                  },
+                  "type": "If"
                 }
               },
               "runAfter": {},
@@ -752,6 +934,25 @@
                 "name": "CID_Email_Sender",
                 "type": "string",
                 "value": "@{body('Filter_environment-CID__Email_Sender')[0]['qm_value']}"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_-_Activity_Party": {
+          "runAfter": {
+            "Initialize_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "82d8d071-4853-4255-83f0-9a6bc9d92bd2"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Activity Party",
+                "type": "string"
               }
             ]
           }

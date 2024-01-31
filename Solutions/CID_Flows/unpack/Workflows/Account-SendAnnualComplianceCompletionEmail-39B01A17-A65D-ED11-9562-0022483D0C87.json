@@ -49,7 +49,8 @@
               "subscriptionRequest/message": 3,
               "subscriptionRequest/entityname": "account",
               "subscriptionRequest/scope": 4,
-              "subscriptionRequest/filteringattributes": "cid_annualcompliancecompletiondate"
+              "subscriptionRequest/filteringattributes": "cid_annualcompliancecompletiondate",
+              "subscriptionRequest/filterexpression": "customertypecode eq 948010000"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -110,7 +111,7 @@
                     },
                     "Set_variable_Language": {
                       "runAfter": {
-                        "Set_variable_Primary_Contact_First_Name": [
+                        "Append_to_string_variable_-_Add_Primary_Email": [
                           "Succeeded"
                         ]
                       },
@@ -122,11 +123,37 @@
                         "name": "Language",
                         "value": "@items('Apply_to_each_2')?['cid_languageofcorrespondence']"
                       }
+                    },
+                    "Append_to_string_variable_-_Add_Primary_Email": {
+                      "runAfter": {
+                        "Set_variable_Primary_Contact_First_Name": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "d187902b-b249-4412-b16b-48864ee85db6"
+                      },
+                      "type": "AppendToStringVariable",
+                      "inputs": {
+                        "name": "Activity Party",
+                        "value": ", {\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{items('Apply_to_each_2')?['contactid']}\"\n}"
+                      }
                     }
                   },
                   "runAfter": {},
                   "else": {
                     "actions": {
+                      "Append_to_string_variable_-_Add_CC_Email": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "a5d26665-6735-43f3-bc35-812f018fa94e"
+                        },
+                        "type": "AppendToStringVariable",
+                        "inputs": {
+                          "name": "Activity Party",
+                          "value": ", {\n    \"participationtypemask\": 3,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{items('Apply_to_each_2')?['contactid']}\"\n}"
+                        }
+                      },
                       "Condition_2": {
                         "actions": {
                           "Apply_to_each_3": {
@@ -166,7 +193,11 @@
                             "type": "Foreach"
                           }
                         },
-                        "runAfter": {},
+                        "runAfter": {
+                          "Append_to_string_variable_-_Add_CC_Email": [
+                            "Succeeded"
+                          ]
+                        },
                         "else": {
                           "actions": {
                             "Apply_to_each_4": {
@@ -251,6 +282,67 @@
                     },
                     "authentication": "@parameters('$authentication')"
                   }
+                },
+                "Subject-En": {
+                  "runAfter": {
+                    "Outlook_Send_an_email_notification_(V3)_English": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "0f9a2e72-3db8-41a4-81a3-3f74585db786"
+                  },
+                  "type": "Compose",
+                  "inputs": "@{variables('TestSubjectText')}TDG Online - CID: The Annual Compliance process for the @{triggerOutputs()?['body/ovs_legalname']} organization was sucessfully completed"
+                },
+                "Body-En": {
+                  "runAfter": {
+                    "Subject-En": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "8e7de049-dfc6-4587-a159-b4740d71641f"
+                  },
+                  "type": "Compose",
+                  "inputs": "@{variables('TestingText')}@{outputs('StandardSalutation')}\n\nThe Transport Canada Online CID Data Platform's Annual Compliance process for the @{triggerOutputs()?['body/ovs_legalname']} organization was successfully completed on @{triggerOutputs()?['body/cid_annualcompliancecompletiondate']}. The next Annual Compliance is due on @{triggerOutputs()?['body/cid_nextannualcomplianceupdate']}\n\nRegards,\n\n\nTransport Canada - CID Support Team\n\n@{outputs('English-EmailFooter')}\n"
+                },
+                "Condition_-_Comment_out_old_email_action_En": {
+                  "actions": {
+                    "Run_a_Child_Flow_-_Log_Email_Activities_in_Timeline_En": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "9efbab9d-9275-4084-9b91-81e259251e89"
+                      },
+                      "type": "Workflow",
+                      "inputs": {
+                        "host": {
+                          "workflowReferenceName": "3c524c38-cbb0-ee11-a568-0022483cceb8"
+                        },
+                        "body": {
+                          "text": "@outputs('Subject-En')",
+                          "text_1": "@variables('Activity Party')",
+                          "text_2": "@outputs('Body-En')",
+                          "text_3": "@triggerOutputs()?['body/_cid_company_value']"
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Body-En": [
+                      "Succeeded"
+                    ]
+                  },
+                  "expression": {
+                    "equals": [
+                      1,
+                      2
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "204f727a-6066-4e3f-b72c-4001b509e486"
+                  },
+                  "type": "If"
                 }
               },
               "runAfter": {
@@ -282,6 +374,67 @@
                       },
                       "authentication": "@parameters('$authentication')"
                     }
+                  },
+                  "Subject-Fr": {
+                    "runAfter": {
+                      "Outlook_Send_an_email_notification_(V3)_French": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "745011ec-2208-4b10-ae02-5fcfdfbdb0b3"
+                    },
+                    "type": "Compose",
+                    "inputs": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Le processus de conformité annuelle pour l’organisation @{triggerOutputs()?['body/ovs_legalnamefr']} a été mené à bien."
+                  },
+                  "Body-Fr": {
+                    "runAfter": {
+                      "Subject-Fr": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "5040ff82-4b24-4748-98c0-000539b5cc87"
+                    },
+                    "type": "Compose",
+                    "inputs": "@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}\n\nLe processus de conformité annuelle de la plateforme de données de la BDIC en ligne de Transports Canada pour l’organisation @{triggerOutputs()?['body/ovs_legalnamefr']} a été achevé avec succès le @{triggerOutputs()?['body/cid_annualcompliancecompletiondate']}. Le prochain rapport annuel de conformité doit être remis le @{triggerOutputs()?['body/cid_nextannualcomplianceupdate']}\n\nSalutations,\n\n\nÉquipe de soutien de la BDIC de Transports Canada\n\n@{outputs('French-EmailFooter')}\n"
+                  },
+                  "Condition_-_Comment_out_old_email_action_Fr": {
+                    "actions": {
+                      "Run_a_Child_Flow_-_Log_Email_Activities_in_Timeline_Fr": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "b78fceec-1505-431c-a0ab-05573b45419f"
+                        },
+                        "type": "Workflow",
+                        "inputs": {
+                          "host": {
+                            "workflowReferenceName": "3c524c38-cbb0-ee11-a568-0022483cceb8"
+                          },
+                          "body": {
+                            "text": "@outputs('Subject-Fr')",
+                            "text_1": "@variables('Activity Party')",
+                            "text_2": "@outputs('Body-Fr')",
+                            "text_3": "@triggerOutputs()?['body/_cid_company_value']"
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      "Body-Fr": [
+                        "Succeeded"
+                      ]
+                    },
+                    "expression": {
+                      "equals": [
+                        1,
+                        2
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "7ded8145-d8b1-4c8b-835a-63942e89fd19"
+                    },
+                    "type": "If"
                   }
                 }
               },
@@ -359,7 +512,7 @@
         },
         "Initialize_variable": {
           "runAfter": {
-            "Initialize_CC_Email_Recipients": [
+            "Initialize_variable_-_Activity_Party": [
               "Succeeded"
             ]
           },
@@ -715,6 +868,25 @@
                 "name": "CID_Email_Sender",
                 "type": "string",
                 "value": "@{body('Filter_environment-CID__Email_Sender')[0]['qm_value']}"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_-_Activity_Party": {
+          "runAfter": {
+            "Initialize_CC_Email_Recipients": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "82d8d071-4853-4255-83f0-9a6bc9d92bd2"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Activity Party",
+                "type": "string"
               }
             ]
           }

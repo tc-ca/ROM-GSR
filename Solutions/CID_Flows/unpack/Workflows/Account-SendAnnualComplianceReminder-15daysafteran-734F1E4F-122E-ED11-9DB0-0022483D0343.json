@@ -65,302 +65,10 @@
             },
             "parameters": {
               "entityName": "accounts",
-              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"account\">\n    <attribute name=\"name\" />\n    <attribute name=\"ovs_legalname\" />\n    <attribute name=\"primarycontactid\" />\n    <attribute name=\"cid_crabusinessnumber\" />\n    <attribute name=\"root_organization_id\" />\n    <attribute name=\"ovs_address_display\" />\n    <attribute name=\"cid_rootcompany\" />\n    <attribute name=\"accountid\" />\n    <attribute name=\"cid_attestationdate\" />\n   <attribute name=\"cid_companyanniversarydate\" />\n    <attribute name=\"cid_annualcomplianceupdatesremindersenddate\" />\n    <order attribute=\"ovs_legalname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n      <condition attribute=\"cid_companyanniversarydate\" operator=\"on\" value=\"@{addDays(utcNow(), -15 ,'yyyy-MM-dd')}\" />\n    </filter>\n  </entity>\n</fetch>"
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"account\">\n    <attribute name=\"name\" />\n    <attribute name=\"ovs_legalname\" />\n    <attribute name=\"primarycontactid\" />\n    <attribute name=\"cid_crabusinessnumber\" />\n    <attribute name=\"root_organization_id\" />\n    <attribute name=\"ovs_address_display\" />\n    <attribute name=\"cid_rootcompany\" />\n    <attribute name=\"accountid\" />\n    <attribute name=\"cid_attestationdate\" />\n   <attribute name=\"cid_companyanniversarydate\" />\n    <attribute name=\"cid_annualcomplianceupdatesremindersenddate\" />\n    <order attribute=\"ovs_legalname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n<condition attribute=\"customertypecode\" operator=\"eq\" value=\"948010000\"/>\n      <condition attribute=\"cid_companyanniversarydate\" operator=\"on\" value=\"@{addDays(utcNow(), -15 ,'yyyy-MM-dd')}\" />\n    </filter>\n  </entity>\n</fetch>"
             },
             "authentication": "@parameters('$authentication')"
           }
-        },
-        "Condition": {
-          "actions": {
-            "Apply_to_each_Account": {
-              "foreach": "@outputs('GetAccounts')?['body/value']",
-              "actions": {
-                "GetEmailRecipients": {
-                  "runAfter": {},
-                  "metadata": {
-                    "operationMetadataId": "747bddcb-cdac-4976-8bf9-5eb29d723233"
-                  },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "host": {
-                      "connectionName": "shared_commondataserviceforapps_1",
-                      "operationId": "ListRecords",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                    },
-                    "parameters": {
-                      "entityName": "contacts",
-                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <attribute name=\"firstname\" />\n    <attribute name=\"telephone1\" />\n    <attribute name=\"contactid\" />\n    <attribute name=\"emailaddress1\" />\n    <attribute name=\"cid_languageofcorrespondence\" />\n    <attribute name=\"cid_contacttype\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" uitype=\"account\" value=\"@{items('Apply_to_each_Account')?['accountid']}\" />\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n      <condition attribute=\"emailaddress1\" operator=\"not-null\" />\n    </filter>\n  </entity>\n</fetch>"
-                    },
-                    "authentication": "@parameters('$authentication')"
-                  }
-                },
-                "Apply_to_each_2": {
-                  "foreach": "@outputs('GetEmailRecipients')?['body/value']",
-                  "actions": {
-                    "If_Primary_Contact": {
-                      "actions": {
-                        "Set_To_Email_Recipients": {
-                          "runAfter": {},
-                          "metadata": {
-                            "operationMetadataId": "53a06a09-3428-4240-8e1f-0983659c54a7"
-                          },
-                          "type": "SetVariable",
-                          "inputs": {
-                            "name": "ToEmailRecipients",
-                            "value": "@items('Apply_to_each_2')?['emailaddress1']"
-                          }
-                        },
-                        "Set_Primary_Contact_First_Name": {
-                          "runAfter": {
-                            "Set_To_Email_Recipients": [
-                              "Succeeded"
-                            ]
-                          },
-                          "metadata": {
-                            "operationMetadataId": "3dee6fe7-285e-4082-a4a8-994565757f30"
-                          },
-                          "type": "SetVariable",
-                          "inputs": {
-                            "name": "Primary Contact First Name",
-                            "value": "@items('Apply_to_each_2')?['firstname']"
-                          }
-                        },
-                        "Set_variable": {
-                          "runAfter": {
-                            "Set_Primary_Contact_First_Name": [
-                              "Succeeded"
-                            ]
-                          },
-                          "metadata": {
-                            "operationMetadataId": "8bb38385-cec5-4d16-a940-19ad091fb117"
-                          },
-                          "type": "SetVariable",
-                          "inputs": {
-                            "name": "Language",
-                            "value": "@items('Apply_to_each_2')?['cid_languageofcorrespondence']"
-                          }
-                        }
-                      },
-                      "runAfter": {},
-                      "else": {
-                        "actions": {
-                          "Condition_2": {
-                            "actions": {
-                              "Set_variable_Temp_CC_Recipients": {
-                                "runAfter": {},
-                                "metadata": {
-                                  "operationMetadataId": "4e5ae564-2e7f-45d3-94e3-12f39f652eb5"
-                                },
-                                "type": "SetVariable",
-                                "inputs": {
-                                  "name": "Temp CC Recipients",
-                                  "value": "@variables('CCEmailRecipients')"
-                                }
-                              },
-                              "Concat_CCEmailRecipients_variable_if_not_empty": {
-                                "runAfter": {
-                                  "Set_variable_Temp_CC_Recipients": [
-                                    "Succeeded"
-                                  ]
-                                },
-                                "metadata": {
-                                  "operationMetadataId": "f4a01aa2-2fd2-4b2a-922f-63e1d556a09b"
-                                },
-                                "type": "SetVariable",
-                                "inputs": {
-                                  "name": "CCEmailRecipients",
-                                  "value": "@{concat(variables('Temp CC Recipients'), ';' , items('Apply_to_each_2')?['emailaddress1'])}"
-                                }
-                              }
-                            },
-                            "runAfter": {},
-                            "else": {
-                              "actions": {
-                                "Set_CC_list_if_its_empty": {
-                                  "runAfter": {},
-                                  "metadata": {
-                                    "operationMetadataId": "fefbec20-6ec8-4b33-8ebd-7fc3c762b1f6"
-                                  },
-                                  "type": "SetVariable",
-                                  "inputs": {
-                                    "name": "CCEmailRecipients",
-                                    "value": "@items('Apply_to_each_2')?['emailaddress1']"
-                                  }
-                                }
-                              }
-                            },
-                            "expression": {
-                              "greater": [
-                                "@length(variables('CCEmailRecipients'))",
-                                0
-                              ]
-                            },
-                            "metadata": {
-                              "operationMetadataId": "794dff1f-0703-4bd2-a46f-c8cb08877300"
-                            },
-                            "type": "If"
-                          }
-                        }
-                      },
-                      "expression": {
-                        "equals": [
-                          "@items('Apply_to_each_2')?['cid_contacttype']",
-                          100000000
-                        ]
-                      },
-                      "metadata": {
-                        "operationMetadataId": "4fd5894a-2fdc-4494-ac7a-99d52071e743"
-                      },
-                      "type": "If"
-                    }
-                  },
-                  "runAfter": {
-                    "Rest_CC__Email_Recipients": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "3b7fc09e-16da-4109-971e-ebfd8088a1e0"
-                  },
-                  "type": "Foreach"
-                },
-                "Reset_Temp_CC_Variable": {
-                  "runAfter": {
-                    "Set_variable_DueDate": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "d680682c-de8c-4268-8062-2399fb525670"
-                  },
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "Temp CC Recipients",
-                    "value": "@{null}"
-                  }
-                },
-                "Rest_CC__Email_Recipients": {
-                  "runAfter": {
-                    "Reset_Temp_CC_Variable": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "04ddb50c-2113-4d4e-ac74-dcd68af2bce8"
-                  },
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "CCEmailRecipients",
-                    "value": "@{null}"
-                  }
-                },
-                "Check_Language": {
-                  "actions": {
-                    "Send_an_email_(V2)-_Email": {
-                      "runAfter": {},
-                      "metadata": {
-                        "operationMetadataId": "948e764e-fafe-4c29-ac68-428a81677087"
-                      },
-                      "type": "OpenApiConnection",
-                      "inputs": {
-                        "host": {
-                          "connectionName": "shared_office365_1",
-                          "operationId": "SendEmailV2",
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
-                        },
-                        "parameters": {
-                          "emailMessage/To": "@{variables('ToEmailRecipients')};",
-                          "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: The Annual Compliance process for the @{items('Apply_to_each_Account')?['ovs_legalname']} organization was due to be completed on @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'] , 'yyyy-MM-dd')}, and is now past due",
-                          "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe Transport Canada CID Data Platform's Annual Compliance process for the @{items('Apply_to_each_Account')?['ovs_legalname']} organization was due on @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'] , 'yyyy-MM-dd')} and needs to be completed by @{addDays(variables('DueDate'), 30, 'yyyy-MM-dd')}. Please login to the CID Data Platform to complete that company's Annual Compliance process.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n<br>\n</p>",
-                          "emailMessage/From": "@variables('CID_Email_Sender')",
-                          "emailMessage/Cc": "@variables('CCEmailRecipients')",
-                          "emailMessage/Importance": "Normal"
-                        },
-                        "authentication": "@parameters('$authentication')"
-                      }
-                    }
-                  },
-                  "runAfter": {
-                    "Apply_to_each_2": [
-                      "Succeeded"
-                    ]
-                  },
-                  "else": {
-                    "actions": {
-                      "Send_an_email_(V2)_-French": {
-                        "runAfter": {},
-                        "metadata": {
-                          "operationMetadataId": "60cd9b44-5141-4dcd-ba5f-9baca18cd0e0"
-                        },
-                        "type": "OpenApiConnection",
-                        "inputs": {
-                          "host": {
-                            "connectionName": "shared_office365_1",
-                            "operationId": "SendEmailV2",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
-                          },
-                          "parameters": {
-                            "emailMessage/To": "@{variables('ToEmailRecipients')};",
-                            "emailMessage/Subject": "@{variables('FrenchTestSubjectText')} TMD en ligne – BDIC : Le processus de conformité annuelle pour l’organisation @{items('Apply_to_each_Account')?['ovs_legalnamefr']} devait être achevé le @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'] , 'yyyy-MM-dd')}, et est maintenant en retard.",
-                            "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLe processus de conformité annuelle de la plateforme de données de la BDIC de Transports Canada pour l’organisation @{items('Apply_to_each_Account')?['ovs_legalname']} était dû le @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'] , 'yyyy-MM-dd')}, et il doit être complété d’ici le @{addDays(variables('DueDate'), 30, 'yyyy-MM-dd')}. Veuillez vous connecter à la plateforme de données de la BDIC pour compléter le processus de conformité annuelle de cette entreprise.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
-                            "emailMessage/From": "@variables('CID_Email_Sender')",
-                            "emailMessage/Cc": "@variables('CCEmailRecipients')",
-                            "emailMessage/Importance": "Normal"
-                          },
-                          "authentication": "@parameters('$authentication')"
-                        }
-                      }
-                    }
-                  },
-                  "expression": {
-                    "equals": [
-                      "@variables('Language')",
-                      918640001
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "8ddbc870-fe76-4391-9b6c-e8a56007d8e0"
-                  },
-                  "type": "If"
-                },
-                "Set_variable_DueDate": {
-                  "runAfter": {
-                    "GetEmailRecipients": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "34ab4851-3f91-420d-8a1f-9cf0af553a27"
-                  },
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "DueDate",
-                    "value": "@items('Apply_to_each_Account')?['cid_companyanniversarydate']"
-                  }
-                }
-              },
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "c67dcd6a-d820-4898-807c-20d1863951d6"
-              },
-              "type": "Foreach"
-            }
-          },
-          "runAfter": {
-            "Set_Environment_Value_": [
-              "Succeeded"
-            ]
-          },
-          "expression": {
-            "greater": [
-              "@length(outputs('GetAccounts')?['body/value'])",
-              0
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "9fd4c9b4-c8aa-46bd-8060-133cc8a00a21"
-          },
-          "type": "If"
         },
         "Initialize_To_Email_Recipients": {
           "runAfter": {
@@ -592,7 +300,7 @@
             }
           },
           "runAfter": {
-            "Initialize_variable_CID_Email_Sender": [
+            "Initialize_variable_-_Activity_Party": [
               "Succeeded"
             ]
           },
@@ -811,6 +519,484 @@
             },
             "authentication": "@parameters('$authentication')"
           }
+        },
+        "Initialize_variable_-_Activity_Party": {
+          "runAfter": {
+            "Initialize_variable_CID_Email_Sender": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "82d8d071-4853-4255-83f0-9a6bc9d92bd2"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Activity Party",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Apply_to_each_Account": {
+          "foreach": "@outputs('GetAccounts')?['body/value']",
+          "actions": {
+            "GetEmailRecipients": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "747bddcb-cdac-4976-8bf9-5eb29d723233"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "contacts",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"contact\">\n    <attribute name=\"fullname\" />\n    <attribute name=\"firstname\" />\n    <attribute name=\"telephone1\" />\n    <attribute name=\"contactid\" />\n    <attribute name=\"emailaddress1\" />\n    <attribute name=\"cid_languageofcorrespondence\" />\n    <attribute name=\"cid_contacttype\" />\n    <order attribute=\"fullname\" descending=\"false\" />\n    <filter type=\"and\">\n      <condition attribute=\"parentcustomerid\" operator=\"eq\" uitype=\"account\" value=\"@{items('Apply_to_each_Account')?['accountid']}\" />\n      <condition attribute=\"statecode\" operator=\"eq\" value=\"0\" />\n      <condition attribute=\"emailaddress1\" operator=\"not-null\" />\n    </filter>\n  </entity>\n</fetch>"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Apply_to_each_2": {
+              "foreach": "@outputs('GetEmailRecipients')?['body/value']",
+              "actions": {
+                "If_Primary_Contact": {
+                  "actions": {
+                    "Set_To_Email_Recipients": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "53a06a09-3428-4240-8e1f-0983659c54a7"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "ToEmailRecipients",
+                        "value": "@items('Apply_to_each_2')?['emailaddress1']"
+                      }
+                    },
+                    "Set_Primary_Contact_First_Name": {
+                      "runAfter": {
+                        "Set_To_Email_Recipients": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "3dee6fe7-285e-4082-a4a8-994565757f30"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "Primary Contact First Name",
+                        "value": "@items('Apply_to_each_2')?['firstname']"
+                      }
+                    },
+                    "Set_variable": {
+                      "runAfter": {
+                        "Append_to_string_variable_-_Add_Primary_Email": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "8bb38385-cec5-4d16-a940-19ad091fb117"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "Language",
+                        "value": "@items('Apply_to_each_2')?['cid_languageofcorrespondence']"
+                      }
+                    },
+                    "Append_to_string_variable_-_Add_Primary_Email": {
+                      "runAfter": {
+                        "Set_Primary_Contact_First_Name": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "d187902b-b249-4412-b16b-48864ee85db6"
+                      },
+                      "type": "AppendToStringVariable",
+                      "inputs": {
+                        "name": "Activity Party",
+                        "value": ", {\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{items('Apply_to_each_2')?['contactid']}\"\n}"
+                      }
+                    }
+                  },
+                  "runAfter": {},
+                  "else": {
+                    "actions": {
+                      "Append_to_string_variable_-_Add_CC_Email": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "a5d26665-6735-43f3-bc35-812f018fa94e"
+                        },
+                        "type": "AppendToStringVariable",
+                        "inputs": {
+                          "name": "Activity Party",
+                          "value": ", {\n    \"participationtypemask\": 3,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{items('Apply_to_each_2')?['contactid']}\"\n}"
+                        }
+                      },
+                      "Condition_2": {
+                        "actions": {
+                          "Set_variable_Temp_CC_Recipients": {
+                            "runAfter": {},
+                            "metadata": {
+                              "operationMetadataId": "4e5ae564-2e7f-45d3-94e3-12f39f652eb5"
+                            },
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "Temp CC Recipients",
+                              "value": "@variables('CCEmailRecipients')"
+                            }
+                          },
+                          "Concat_CCEmailRecipients_variable_if_not_empty": {
+                            "runAfter": {
+                              "Set_variable_Temp_CC_Recipients": [
+                                "Succeeded"
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "f4a01aa2-2fd2-4b2a-922f-63e1d556a09b"
+                            },
+                            "type": "SetVariable",
+                            "inputs": {
+                              "name": "CCEmailRecipients",
+                              "value": "@{concat(variables('Temp CC Recipients'), ';' , items('Apply_to_each_2')?['emailaddress1'])}"
+                            }
+                          }
+                        },
+                        "runAfter": {
+                          "Append_to_string_variable_-_Add_CC_Email": [
+                            "Succeeded"
+                          ]
+                        },
+                        "else": {
+                          "actions": {
+                            "Set_CC_list_if_its_empty": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "fefbec20-6ec8-4b33-8ebd-7fc3c762b1f6"
+                              },
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "CCEmailRecipients",
+                                "value": "@items('Apply_to_each_2')?['emailaddress1']"
+                              }
+                            }
+                          }
+                        },
+                        "expression": {
+                          "greater": [
+                            "@length(variables('CCEmailRecipients'))",
+                            0
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "794dff1f-0703-4bd2-a46f-c8cb08877300"
+                        },
+                        "type": "If"
+                      }
+                    }
+                  },
+                  "expression": {
+                    "equals": [
+                      "@items('Apply_to_each_2')?['cid_contacttype']",
+                      100000000
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "4fd5894a-2fdc-4494-ac7a-99d52071e743"
+                  },
+                  "type": "If"
+                }
+              },
+              "runAfter": {
+                "Reset_Activity_Party_for_each_account_in_the_loop": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "3b7fc09e-16da-4109-971e-ebfd8088a1e0"
+              },
+              "type": "Foreach"
+            },
+            "Reset_Temp_CC_Variable": {
+              "runAfter": {
+                "Set_variable_DueDate": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d680682c-de8c-4268-8062-2399fb525670"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Temp CC Recipients",
+                "value": "@{null}"
+              }
+            },
+            "Rest_CC__Email_Recipients": {
+              "runAfter": {
+                "Reset_Temp_CC_Variable": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "04ddb50c-2113-4d4e-ac74-dcd68af2bce8"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "CCEmailRecipients",
+                "value": "@{null}"
+              }
+            },
+            "Set_variable_DueDate": {
+              "runAfter": {
+                "GetEmailRecipients": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "34ab4851-3f91-420d-8a1f-9cf0af553a27"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "DueDate",
+                "value": "@items('Apply_to_each_Account')?['cid_companyanniversarydate']"
+              }
+            },
+            "Reset_Activity_Party_for_each_account_in_the_loop": {
+              "runAfter": {
+                "Rest_CC__Email_Recipients": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "35c3eb4a-40f1-4cb0-8005-be90085b2f33"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Activity Party",
+                "value": "@{null}"
+              }
+            },
+            "Condition_-_Activity_Parity_Should_Not_Be_Empty": {
+              "actions": {
+                "Check_Language": {
+                  "actions": {
+                    "Subject-En": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "9cdac443-bc68-4c36-a79c-45f346bf0270"
+                      },
+                      "type": "Compose",
+                      "inputs": "@{variables('TestSubjectText')}TDG Online - CID: The Annual Compliance process for the @{items('Apply_to_each_Account')?['ovs_legalname']} organization was due to be completed on @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'] , 'yyyy-MM-dd')}, and is now past due"
+                    },
+                    "Body-En": {
+                      "runAfter": {
+                        "Subject-En": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "e8e90eea-1b10-4416-9eb4-0b254178fb70"
+                      },
+                      "type": "Compose",
+                      "inputs": "@{variables('TestingText')}@{outputs('StandardSalutation')}\n\nThe Transport Canada CID Data Platform's Annual Compliance process for the @{items('Apply_to_each_Account')?['ovs_legalname']} organization was due on @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'] , 'yyyy-MM-dd')} and needs to be completed by @{addDays(variables('DueDate'), 30, 'yyyy-MM-dd')}. Please login to the CID Data Platform to complete that company's Annual Compliance process.\n\nRegards,\n\n\nTransport Canada - CID Support Team\n\n@{outputs('English-EmailFooter')}\n\n"
+                    },
+                    "Condition_-_Comment_out_old_email_action_En": {
+                      "actions": {
+                        "Send_an_email_(V2)-_Email": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "948e764e-fafe-4c29-ac68-428a81677087"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_office365_1",
+                              "operationId": "SendEmailV2",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                            },
+                            "parameters": {
+                              "emailMessage/To": "@{variables('ToEmailRecipients')};",
+                              "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: The Annual Compliance process for the @{items('Apply_to_each_Account')?['ovs_legalname']} organization was due to be completed on @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'] , 'yyyy-MM-dd')}, and is now past due",
+                              "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe Transport Canada CID Data Platform's Annual Compliance process for the @{items('Apply_to_each_Account')?['ovs_legalname']} organization was due on @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'] , 'yyyy-MM-dd')} and needs to be completed by @{addDays(variables('DueDate'), 30, 'yyyy-MM-dd')}. Please login to the CID Data Platform to complete that company's Annual Compliance process.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n<br>\n</p>",
+                              "emailMessage/From": "@variables('CID_Email_Sender')",
+                              "emailMessage/Cc": "@variables('CCEmailRecipients')",
+                              "emailMessage/Importance": "Normal"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Run_a_Child_Flow_-_Log_Email_Activities_in_Timeline_En": [
+                          "Succeeded"
+                        ]
+                      },
+                      "expression": {
+                        "equals": [
+                          1,
+                          2
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "1e9b93eb-897b-4df2-a323-e7c1216c415a"
+                      },
+                      "type": "If"
+                    },
+                    "Run_a_Child_Flow_-_Log_Email_Activities_in_Timeline_En": {
+                      "runAfter": {
+                        "Body-En": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "e49855bb-23e3-444b-89e5-0b6a6d18050b"
+                      },
+                      "type": "Workflow",
+                      "inputs": {
+                        "host": {
+                          "workflowReferenceName": "3c524c38-cbb0-ee11-a568-0022483cceb8"
+                        },
+                        "body": {
+                          "text": "@outputs('Subject-En')",
+                          "text_1": "@variables('Activity Party')",
+                          "text_2": "@outputs('Body-En')",
+                          "text_3": "@items('Apply_to_each_Account')?['accountid']"
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {},
+                  "else": {
+                    "actions": {
+                      "Subject-Fr": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "c462c0e2-b6de-4661-867f-ca24ed3d3593"
+                        },
+                        "type": "Compose",
+                        "inputs": "@{variables('FrenchTestSubjectText')} TMD en ligne – BDIC : Le processus de conformité annuelle pour l’organisation @{items('Apply_to_each_Account')?['ovs_legalnamefr']} devait être achevé le @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'] , 'yyyy-MM-dd')}, et est maintenant en retard."
+                      },
+                      "Body-Fr": {
+                        "runAfter": {
+                          "Subject-Fr": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "270731c9-4ef1-4588-87f3-91d56c8ec883"
+                        },
+                        "type": "Compose",
+                        "inputs": "@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}\n\nLe processus de conformité annuelle de la plateforme de données de la BDIC de Transports Canada pour l’organisation @{items('Apply_to_each_Account')?['ovs_legalname']} était dû le @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'] , 'yyyy-MM-dd')}, et il doit être complété d’ici le @{addDays(variables('DueDate'), 30, 'yyyy-MM-dd')}. Veuillez vous connecter à la plateforme de données de la BDIC pour compléter le processus de conformité annuelle de cette entreprise.\n\nSalutations,\n\n\nÉquipe de soutien de la BDIC de Transports Canada\n\n@{outputs('French-EmailFooter')}\n\n"
+                      },
+                      "Condition_-_Comment_out_old_email_action_Fr": {
+                        "actions": {
+                          "Send_an_email_(V2)_-French": {
+                            "runAfter": {},
+                            "metadata": {
+                              "operationMetadataId": "60cd9b44-5141-4dcd-ba5f-9baca18cd0e0"
+                            },
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "host": {
+                                "connectionName": "shared_office365_1",
+                                "operationId": "SendEmailV2",
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                              },
+                              "parameters": {
+                                "emailMessage/To": "@{variables('ToEmailRecipients')};",
+                                "emailMessage/Subject": "@{variables('FrenchTestSubjectText')} TMD en ligne – BDIC : Le processus de conformité annuelle pour l’organisation @{items('Apply_to_each_Account')?['ovs_legalnamefr']} devait être achevé le @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'] , 'yyyy-MM-dd')}, et est maintenant en retard.",
+                                "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLe processus de conformité annuelle de la plateforme de données de la BDIC de Transports Canada pour l’organisation @{items('Apply_to_each_Account')?['ovs_legalname']} était dû le @{formatDateTime(items('Apply_to_each_Account')?['cid_companyanniversarydate'] , 'yyyy-MM-dd')}, et il doit être complété d’ici le @{addDays(variables('DueDate'), 30, 'yyyy-MM-dd')}. Veuillez vous connecter à la plateforme de données de la BDIC pour compléter le processus de conformité annuelle de cette entreprise.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n<br>\n</p>",
+                                "emailMessage/From": "@variables('CID_Email_Sender')",
+                                "emailMessage/Cc": "@variables('CCEmailRecipients')",
+                                "emailMessage/Importance": "Normal"
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            }
+                          }
+                        },
+                        "runAfter": {
+                          "Run_a_Child_Flow_-_Log_Email_Activities_in_Timeline_Fr": [
+                            "Succeeded"
+                          ]
+                        },
+                        "expression": {
+                          "equals": [
+                            1,
+                            2
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "764c4263-2849-4719-a0da-b71f846b181d"
+                        },
+                        "type": "If"
+                      },
+                      "Run_a_Child_Flow_-_Log_Email_Activities_in_Timeline_Fr": {
+                        "runAfter": {
+                          "Body-Fr": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "1d953545-2bbd-4624-81d8-7fb4720d2be8"
+                        },
+                        "type": "Workflow",
+                        "inputs": {
+                          "host": {
+                            "workflowReferenceName": "3c524c38-cbb0-ee11-a568-0022483cceb8"
+                          },
+                          "body": {
+                            "text": "@outputs('Body-Fr')",
+                            "text_1": "@variables('Activity Party')",
+                            "text_2": "@outputs('Body-Fr')",
+                            "text_3": "@items('Apply_to_each_Account')?['accountid']"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "expression": {
+                    "equals": [
+                      "@variables('Language')",
+                      918640001
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "8ddbc870-fe76-4391-9b6c-e8a56007d8e0"
+                  },
+                  "type": "If"
+                }
+              },
+              "runAfter": {
+                "Apply_to_each_2": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "greater": [
+                  "@length(variables('Activity Party'))",
+                  0
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a29e681e-0488-4b2b-a992-97deae8f4ee6"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "Set_Environment_Value_": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c67dcd6a-d820-4898-807c-20d1863951d6"
+          },
+          "type": "Foreach"
         }
       }
     },

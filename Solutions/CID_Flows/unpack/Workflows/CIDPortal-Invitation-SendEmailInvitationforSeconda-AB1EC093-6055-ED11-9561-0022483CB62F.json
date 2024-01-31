@@ -200,35 +200,96 @@
                         "value": "@{variables('PortalURL')}/fr/Account/Login/Register?returnUrl=%2Fen%2F&invitationCode=@{triggerOutputs()?['body/adx_invitationcode']}"
                       }
                     },
-                    "Send_email_notification_(V3)_-French": {
+                    "FrenchSubject": {
                       "runAfter": {
                         "Set_variable_varHyperLink__2": [
                           "Succeeded"
                         ]
                       },
                       "metadata": {
-                        "operationMetadataId": "cfc8d355-3dc8-4e9e-bb8a-31d1950791f4"
+                        "operationMetadataId": "e074b874-946c-4e50-b2d2-89baa35f1d7d"
                       },
-                      "type": "OpenApiConnection",
+                      "type": "Compose",
+                      "inputs": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Affectation en tant que contact secondaire pour l’organisation @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']}."
+                    },
+                    "FrenchBody": {
+                      "runAfter": {
+                        "FrenchSubject": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "dcbdf3c8-4c4f-42da-bbde-b228d0221cab"
+                      },
+                      "type": "Compose",
+                      "inputs": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{variables('Invited By')}, le contact principal de @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} dans la base de données d'identification des clients (BDIC) de Transports Canada, vous a ajouté en tant que contact secondaire pour cette organisation.<br>\n<br>\nPour rejoindre votre organisation, veuillez sélectionner ou copier et coller le lien suivant dans votre navigateur :<br>\n<a href=\"&lt;object custom=\">@{variables('varHyperLink')}\"&gt;</a><br>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de courrier électronique. &nbsp;Si vous n'êtes pas la personne qui doit enregistrer cette organisation, veuillez l'indiquer en répondant à tc.tdgengagement-engagementtmd.tc@tc.gc.ca. Si vous connaissez le nom et l'adresse électronique de la personne qui devrait enregistrer cette organisation, veuillez également fournir ces informations.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}</p>"
+                    },
+                    "Run_a_Child_Flow_to_create_and_Send_dynamic_French_email_in_timeline": {
+                      "runAfter": {
+                        "FrenchBody": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "4c16ed4e-fad1-437a-b64c-d0257bc9ef6f"
+                      },
+                      "type": "Workflow",
                       "inputs": {
                         "host": {
-                          "connectionName": "shared_office365",
-                          "operationId": "SendEmailV2",
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                          "workflowReferenceName": "3c524c38-cbb0-ee11-a568-0022483cceb8"
                         },
-                        "parameters": {
-                          "emailMessage/To": "@outputs('Get_a_row_by_ID_Contact')?['body/emailaddress1']",
-                          "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Affectation en tant que contact secondaire pour l’organisation @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']}.",
-                          "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{variables('Invited By')}, le contact principal de @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} dans la base de données d'identification des clients (BDIC) de Transports Canada, vous a ajouté en tant que contact secondaire pour cette organisation.<br>\n<br>\nPour rejoindre votre organisation, veuillez sélectionner ou copier et coller le lien suivant dans votre navigateur :<br>\n<a href=\"@{variables('varHyperLink')}\">@{variables('varHyperLink')}</a><br>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de courrier électronique. &nbsp;Si vous n'êtes pas la personne qui doit enregistrer cette organisation, veuillez l'indiquer en répondant à tc.tdgengagement-engagementtmd.tc@tc.gc.ca. Si vous connaissez le nom et l'adresse électronique de la personne qui devrait enregistrer cette organisation, veuillez également fournir ces informations.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
-                          "emailMessage/From": "@variables('CID_Email_Sender')",
-                          "emailMessage/Importance": "Normal"
-                        },
-                        "authentication": "@parameters('$authentication')"
+                        "body": {
+                          "text": "@outputs('FrenchSubject')",
+                          "text_1": "@outputs('Activity_Party')",
+                          "text_2": "@outputs('FrenchBody')",
+                          "text_3": "@outputs('Get_a_row_by_ID_Contact')?['body/_parentcustomerid_value']"
+                        }
                       }
+                    },
+                    "comment_send_notification_by_email": {
+                      "actions": {
+                        "Send_email_notification_(V3)_-French": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "cfc8d355-3dc8-4e9e-bb8a-31d1950791f4"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_office365",
+                              "operationId": "SendEmailV2",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                            },
+                            "parameters": {
+                              "emailMessage/To": "@outputs('Get_a_row_by_ID_Contact')?['body/emailaddress1']",
+                              "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Affectation en tant que contact secondaire pour l’organisation @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']}.",
+                              "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\n@{variables('Invited By')}, le contact principal de @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} dans la base de données d'identification des clients (BDIC) de Transports Canada, vous a ajouté en tant que contact secondaire pour cette organisation.<br>\n<br>\nPour rejoindre votre organisation, veuillez sélectionner ou copier et coller le lien suivant dans votre navigateur :<br>\n<a href=\"&lt;object custom=\">@{variables('varHyperLink')}\"&gt;</a>@{variables('varHyperLink')}<a href=\"&lt;object custom=\"></a><br>\n<br>\nNotez que cette invitation ne peut être utilisée que par vous-même, en tant que propriétaire du compte de courrier électronique. &nbsp;Si vous n'êtes pas la personne qui doit enregistrer cette organisation, veuillez l'indiquer en répondant à tc.tdgengagement-engagementtmd.tc@tc.gc.ca. Si vous connaissez le nom et l'adresse électronique de la personne qui devrait enregistrer cette organisation, veuillez également fournir ces informations.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                              "emailMessage/From": "@variables('CID_Email_Sender')",
+                              "emailMessage/Importance": "Normal"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        "Run_a_Child_Flow_to_create_and_Send_dynamic_French_email_in_timeline": [
+                          "Succeeded"
+                        ]
+                      },
+                      "expression": {
+                        "equals": [
+                          1,
+                          2
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "4d4a3219-63f6-46a0-afe3-2825803635ff"
+                      },
+                      "type": "If"
                     }
                   },
                   "runAfter": {
-                    "Set_variable_varHyperLink_": [
+                    "Activity_Party": [
                       "Succeeded"
                     ]
                   },
@@ -245,31 +306,92 @@
                           "value": "@{variables('PortalURL')}/en/Account/Login/Register?returnUrl=%2Fen%2F&invitationCode=@{triggerOutputs()?['body/adx_invitationcode']}"
                         }
                       },
-                      "Send_email_notification_(V3)_-English": {
+                      "Subject": {
                         "runAfter": {
                           "Set_variable_varHyperLink__3": [
                             "Succeeded"
                           ]
                         },
                         "metadata": {
-                          "operationMetadataId": "85028265-16bf-465d-80ef-3cee5fd0c9f2"
+                          "operationMetadataId": "1f99136d-2c6c-487b-b43b-99c06d054026"
                         },
-                        "type": "OpenApiConnection",
+                        "type": "Compose",
+                        "inputs": "@{variables('TestSubjectText')}TDG Online - CID: Assignment as a Secondary Contact for the @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} organization"
+                      },
+                      "Body": {
+                        "runAfter": {
+                          "Subject": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "953584b4-1782-4486-a2b3-ed69778f6ad6"
+                        },
+                        "type": "Compose",
+                        "inputs": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{variables('Invited By')}, the Primary Contact for @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} in Transport Canada’s Client Identification Database (CID), has added you as a Secondary Contact for that organization.<br>\n<br>\nTo join your organization, please select or copy and paste the following link into your browser:<br>\n<br>\n<a href=\"&lt;object custom=\">@{variables('varHyperLink')}\"&gt;</a><br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to tc.tdgengagement-engagementtmd.tc@tc.gc.ca. If you know the name and email address of the individual who should register this organization, then please provide this information as well.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>"
+                      },
+                      "Run_a_Child_Flow_to_create_and_Send_dynamic_email_in_timeline": {
+                        "runAfter": {
+                          "Body": [
+                            "Succeeded"
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "4c16ed4e-fad1-437a-b64c-d0257bc9ef6f"
+                        },
+                        "type": "Workflow",
                         "inputs": {
                           "host": {
-                            "connectionName": "shared_office365",
-                            "operationId": "SendEmailV2",
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                            "workflowReferenceName": "3c524c38-cbb0-ee11-a568-0022483cceb8"
                           },
-                          "parameters": {
-                            "emailMessage/To": "@outputs('Get_a_row_by_ID_Contact')?['body/emailaddress1']",
-                            "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: Assignment as a Secondary Contact for the @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} organization",
-                            "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{variables('Invited By')}, the Primary Contact for @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} in Transport Canada’s Client Identification Database (CID), has added you as a Secondary Contact for that organization.<br>\n<br>\nTo join your organization, please select or copy and paste the following link into your browser:<br>\n<br>\n<a href=\"@{variables('varHyperLink')}\">@{variables('varHyperLink')}</a><br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to tc.tdgengagement-engagementtmd.tc@tc.gc.ca. If you know the name and email address of the individual who should register this organization, then please provide this information as well.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
-                            "emailMessage/From": "@variables('CID_Email_Sender')",
-                            "emailMessage/Importance": "Normal"
-                          },
-                          "authentication": "@parameters('$authentication')"
+                          "body": {
+                            "text": "@outputs('Subject')",
+                            "text_1": "@outputs('Activity_Party')",
+                            "text_2": "@outputs('Body')",
+                            "text_3": "@outputs('Get_a_row_by_ID_Contact')?['body/_parentcustomerid_value']"
+                          }
                         }
+                      },
+                      "Condition_to_prevent_English_send_email_notification": {
+                        "actions": {
+                          "Send_email_notification_(V3)_-English": {
+                            "runAfter": {},
+                            "metadata": {
+                              "operationMetadataId": "85028265-16bf-465d-80ef-3cee5fd0c9f2"
+                            },
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "host": {
+                                "connectionName": "shared_office365",
+                                "operationId": "SendEmailV2",
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                              },
+                              "parameters": {
+                                "emailMessage/To": "@outputs('Get_a_row_by_ID_Contact')?['body/emailaddress1']",
+                                "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: Assignment as a Secondary Contact for the @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} organization",
+                                "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\n@{variables('Invited By')}, the Primary Contact for @{outputs('Get_a_row_by_ID_Accounts')?['body/ovs_legalname']} in Transport Canada’s Client Identification Database (CID), has added you as a Secondary Contact for that organization.<br>\n<br>\nTo join your organization, please select or copy and paste the following link into your browser:<br>\n<br>\n<a href=\"&lt;object custom=\">@{variables('varHyperLink')}\"&gt;</a>@{variables('varHyperLink')}<a href=\"&lt;object custom=\"></a><br>\n<br>\nNote that this invitation can only be used by yourself, as the owner of the email account. &nbsp;If you are not the individual who should register this organization, then please indicate this via a reply to tc.tdgengagement-engagementtmd.tc@tc.gc.ca. If you know the name and email address of the individual who should register this organization, then please provide this information as well.<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                                "emailMessage/From": "@variables('CID_Email_Sender')",
+                                "emailMessage/Importance": "Normal"
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            }
+                          }
+                        },
+                        "runAfter": {
+                          "Run_a_Child_Flow_to_create_and_Send_dynamic_email_in_timeline": [
+                            "Succeeded"
+                          ]
+                        },
+                        "expression": {
+                          "equals": [
+                            1,
+                            2
+                          ]
+                        },
+                        "metadata": {
+                          "operationMetadataId": "1f776635-219d-426b-90bb-7ed126ed8dfc"
+                        },
+                        "type": "If"
                       }
                     }
                   },
@@ -476,6 +598,18 @@
                     "name": "Invited By",
                     "value": "@{first(outputs('Get_primary_contact_of_the_Organization')?['body/value'])?['fullname']}"
                   }
+                },
+                "Activity_Party": {
+                  "runAfter": {
+                    "Set_variable_varHyperLink_": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "1578dcf2-f0bd-4263-8530-aeda9e5cfc80"
+                  },
+                  "type": "Compose",
+                  "inputs": ", {\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{triggerOutputs()?['body/_adx_invitecontact_value']}\"\n}\n\n"
                 }
               },
               "runAfter": {

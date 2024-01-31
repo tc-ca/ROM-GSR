@@ -324,57 +324,179 @@
         },
         "Check_language": {
           "actions": {
-            "Send_an_email_(V2)": {
+            "EnglishSubject": {
               "runAfter": {},
               "metadata": {
-                "operationMetadataId": "c70c9dbe-faa1-4d3f-8eec-841297c24ec8"
+                "operationMetadataId": "36137e2f-a67c-4ee9-ace4-0d7b50e34f32"
               },
-              "type": "OpenApiConnection",
+              "type": "Compose",
+              "inputs": "@{variables('TestSubjectText')}TDG Online - CID: Request for support"
+            },
+            "EnglishBody": {
+              "runAfter": {
+                "EnglishSubject": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b1a411f1-5c8c-41c8-ab49-d3480265c4a5"
+              },
+              "type": "Compose",
+              "inputs": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nA representative will review your request as detailed below, and as required contact you via email.<br>\n<br>\nRegards<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\nDetails of the Request:<br>\n<br>\n@{outputs('RequestDetails')}<br>\n<br>\n@{outputs('English-EmailFooter')}</p>"
+            },
+            "Call_Child_flow_to_Create_and_Send_the_email-_English_support_request": {
+              "runAfter": {
+                "EnglishBody": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "4c16ed4e-fad1-437a-b64c-d0257bc9ef6f"
+              },
+              "type": "Workflow",
               "inputs": {
                 "host": {
-                  "connectionName": "shared_office365_1",
-                  "operationId": "SendEmailV2",
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                  "workflowReferenceName": "3c524c38-cbb0-ee11-a568-0022483cceb8"
                 },
-                "parameters": {
-                  "emailMessage/To": "@outputs('Get_a_row_by_ID-_get_contact_email')?['body/emailaddress1']",
-                  "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: Request for support",
-                  "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nA representative will review your request as detailed below, and as required contact you via email.<br>\n<br>\nRegards<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\nDetails of the Request:<br>\n<br>\n@{outputs('RequestDetails')}<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
-                  "emailMessage/From": "@variables('CID_Email_Sender')",
-                  "emailMessage/Importance": "Normal"
-                },
-                "authentication": "@parameters('$authentication')"
+                "body": {
+                  "text": "@outputs('EnglishSubject')",
+                  "text_1": "@outputs('Activity_Party')",
+                  "text_2": "@outputs('EnglishBody')",
+                  "text_3": "@outputs('Get_a_row_by_ID-_get_contact_email')?['body/_parentcustomerid_value']"
+                }
               }
+            },
+            "prevent_execution_of_outlook_action_english": {
+              "actions": {
+                "Send_an_email_(V2)": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "c70c9dbe-faa1-4d3f-8eec-841297c24ec8"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_office365_1",
+                      "operationId": "SendEmailV2",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                    },
+                    "parameters": {
+                      "emailMessage/To": "@outputs('Get_a_row_by_ID-_get_contact_email')?['body/emailaddress1']",
+                      "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: Request for support",
+                      "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nA representative will review your request as detailed below, and as required contact you via email.<br>\n<br>\nRegards<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\nDetails of the Request:<br>\n<br>\n@{outputs('RequestDetails')}<br>\n<br>\n@{outputs('English-EmailFooter')}</p>",
+                      "emailMessage/From": "@variables('CID_Email_Sender')",
+                      "emailMessage/Importance": "Normal"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Call_Child_flow_to_Create_and_Send_the_email-_English_support_request": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "equals": [
+                  1,
+                  2
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e9fcea70-2fb3-4c0a-a8f4-af0d83b6cfd3"
+              },
+              "type": "If"
             }
           },
           "runAfter": {
-            "RequestDetails": [
+            "Activity_Party": [
               "Succeeded"
             ]
           },
           "else": {
             "actions": {
-              "Send_an_email_(V2)_2": {
+              "FrenchSubject": {
                 "runAfter": {},
                 "metadata": {
-                  "operationMetadataId": "c70c9dbe-faa1-4d3f-8eec-841297c24ec8"
+                  "operationMetadataId": "fb26a79e-9d51-4be6-bef7-7262469488e0"
                 },
-                "type": "OpenApiConnection",
+                "type": "Compose",
+                "inputs": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Demande d’assistance"
+              },
+              "FrenchBody": {
+                "runAfter": {
+                  "FrenchSubject": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "e23e5e2b-d21a-4222-aa08-9c74a2646ff3"
+                },
+                "type": "Compose",
+                "inputs": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nUn représentant examinera votre demande comme indiqué ci-dessous et, le cas échéant, vous contactera par courriel.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\nDétails de la demande :<br>\n<br>\n@{outputs('RequestDetails')}<br>\n<br>\n@{outputs('French-EmailFooter')}</p>"
+              },
+              "Call_Child_flow_to_Create_and_Send_the_email-_French_support_request_2": {
+                "runAfter": {
+                  "FrenchBody": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "4c16ed4e-fad1-437a-b64c-d0257bc9ef6f"
+                },
+                "type": "Workflow",
                 "inputs": {
                   "host": {
-                    "connectionName": "shared_office365_1",
-                    "operationId": "SendEmailV2",
-                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                    "workflowReferenceName": "3c524c38-cbb0-ee11-a568-0022483cceb8"
                   },
-                  "parameters": {
-                    "emailMessage/To": "@outputs('Get_a_row_by_ID-_get_contact_email')?['body/emailaddress1']",
-                    "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Demande d’assistance",
-                    "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nUn représentant examinera votre demande comme indiqué ci-dessous et, le cas échéant, vous contactera par courriel.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\nDétails de la demande :<br>\n<br>\n@{outputs('RequestDetails')}<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
-                    "emailMessage/From": "@variables('CID_Email_Sender')",
-                    "emailMessage/Importance": "Normal"
-                  },
-                  "authentication": "@parameters('$authentication')"
+                  "body": {
+                    "text": "@outputs('FrenchSubject')",
+                    "text_1": "@outputs('Activity_Party')",
+                    "text_2": "@outputs('FrenchBody')",
+                    "text_3": "@outputs('Get_a_row_by_ID-_get_contact_email')?['body/_parentcustomerid_value']"
+                  }
                 }
+              },
+              "prevent_french_email_outlook_action": {
+                "actions": {
+                  "Send_an_email_(V2)_2": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "c70c9dbe-faa1-4d3f-8eec-841297c24ec8"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_office365_1",
+                        "operationId": "SendEmailV2",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                      },
+                      "parameters": {
+                        "emailMessage/To": "@outputs('Get_a_row_by_ID-_get_contact_email')?['body/emailaddress1']",
+                        "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Demande d’assistance",
+                        "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nUn représentant examinera votre demande comme indiqué ci-dessous et, le cas échéant, vous contactera par courriel.<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\nDétails de la demande :<br>\n<br>\n@{outputs('RequestDetails')}<br>\n<br>\n@{outputs('French-EmailFooter')}</p>",
+                        "emailMessage/From": "@variables('CID_Email_Sender')",
+                        "emailMessage/Importance": "Normal"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    }
+                  }
+                },
+                "runAfter": {
+                  "Call_Child_flow_to_Create_and_Send_the_email-_French_support_request_2": [
+                    "Succeeded"
+                  ]
+                },
+                "expression": {
+                  "equals": [
+                    1,
+                    2
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "026eae53-3348-4c35-a863-74aceb4ba5c1"
+                },
+                "type": "If"
               }
             }
           },
@@ -435,6 +557,18 @@
               }
             ]
           }
+        },
+        "Activity_Party": {
+          "runAfter": {
+            "RequestDetails": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1578dcf2-f0bd-4263-8530-aeda9e5cfc80"
+          },
+          "type": "Compose",
+          "inputs": ", {\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{outputs('Get_a_row_by_ID-_get_contact_email')?['body/contactid']}\"\n}\n\n"
         }
       },
       "outputs": {}
