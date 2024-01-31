@@ -6,8 +6,8 @@ $(document).ready(function () {
 	debugger;
 
 	tdg.c.removeValidator("ovs_namefr");
-	tdg.c.removeValidator("name");
 	tdg.c.removeValidator("cid_reasonfornobnnumber_other");
+    tdg.c.removeValidator("name");
 
 	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
 	tdg.c.control_hide("adx_modifiedbyusername");
@@ -173,7 +173,7 @@ $(document).ready(function () {
 	tdg.cid.convert_province_to_code(selected_language);
 	var currentUserId = '{{user.contactid}}';
 	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
-	//tdg.c.addValidator("ovs_name_fr");
+	tdg.c.removeValidator("name");
 	debugger;
 	var userId = '{{user.id}}';
 	var withdrawLabel = tdg.error_message.message("BTN_WITHDRAW");

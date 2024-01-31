@@ -174,7 +174,7 @@ $(document).ready(function () {
 	}
 
 	tdg.cid.crw.step2_Disable_ContactTypeFieldsForSecondaryUser(cid_contacttype);
-
+    tdg.c.removeValidator("name");
 	if (sessionStorage.getItem("frominyearsitepage") == "false") {
 		var parentcustomerid = '{{user.parentcustomerid.Id}}';
 		var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq '" + parentcustomerid + "'";

@@ -7,7 +7,7 @@ $(document).ready(function () {
 
     page_setup();
     //remove heading role and aria-level not allowed role for legend by accessbility check
-     $( 'legend[role="heading"]' ).removeAttr('aria-level').removeAttr("role");
+    $('legend[role="heading"]').removeAttr('aria-level').removeAttr("role");
 
     //redirect to my company after save success
     var msg = tdg.error_message.message("m000147");
@@ -23,7 +23,7 @@ $(document).ready(function () {
 
     //disable submit button by default  
     $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", true);
-    if ($("#telephone1").val() != "" && $("#firstname").val() != "" && $("#lastname").val() != ""  && $("#cid_languageofcorrespondence").val() != "") {
+    if ($("#telephone1").val() != "" && $("#firstname").val() != "" && $("#lastname").val() != "" && $("#cid_languageofcorrespondence").val() != "") {
         $('#ContentContainer_MainContent_MainContent_ContentBottom_SubmitButton').attr("disabled", false);
     }
     //phone number change event
@@ -79,64 +79,67 @@ $(document).ready(function () {
     tdg.cid.name_init("firstname");
     tdg.cid.name_init("lastname");
 
-    
-     //add Privace Statement
-         var privaceStatementLabel = tdg.error_message.message("PRIV_STMT1");
-         var privaceStatement = tdg.error_message.message("PRIV_STMT2");
+    //add Privace Statement
+    var privaceStatementLabel = tdg.error_message.message("PRIV_STMT1");
+    var privaceStatement = tdg.error_message.message("PRIV_STMT2");
 
-         var results = "";
-         if(selected_language == 'fr')
-         {
-            results = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_PrivacyStatementArticle_URL_FR'");
-         }
-         else
-         {
-            results = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_PrivacyStatementArticle_URL_EN'");
-         }
-         if(results.length > 0)
-         {
-            var articleURL = results[0]["qm_value"];
-         }
+    var results = "";
+    if (selected_language == 'fr') {
+        results = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_PrivacyStatementArticle_URL_FR'");
+    }
+    else {
+        results = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_PrivacyStatementArticle_URL_EN'");
+    }
+    if (results.length > 0) {
+        var articleURL = results[0]["qm_value"];
+    }
 
-         debugger;
-         var psUrl =  window.location.origin + "/_portal/modal-form-template-path/" + articleURL; 
+    debugger;
+    var html = '<div style="padding-left: 20px;" ><input type="checkbox" id="privacestatement" name="privacestatement"/><label for="privacestatement" style="font-weight: 200; padding: 0 8px;"><p>' + privaceStatementLabel + '<a href="#" id="theArticle">' + privaceStatement + '</a>.</p></label><br></div>';
 
-        $("table.section").after('<div style="padding-left: 20px;" ><input type="checkbox" name="PrivaceStatement" id="privacestatement" name="privacestatement"/><label for="privacestatement" style="font-weight: 200; padding: 0 8px;"><p>' + privaceStatementLabel + '<a href="#" id="theArticle">' + privaceStatement + '</a>.</p></label><br></div>');
-         
-         $("#theArticle").bind('click',function(){
-                var left = (screen.width - 600) / 2;
-                var top = (screen.height - 400) / 4;
-             
-                window.open(psUrl, "Privace Statement", "scrollbars=1,resizable=no,status=0,toolbar=1,location=1,menubar=0,width=600,height=400,left="+left+",top="+top);
-            });
+    $("table.section").after(html);
 
-         $("#privacestatement").css("padding", "0 23px");
-            debugger;
-            //Make sure privace statement was clicked
-            if (typeof (Page_Validators) == 'undefined') return;
-             
-            $('#privacestatement').parent().addClass("required");
+    $("#privacestatement").keypress(function (e) {
+        if (e.which == 13) {
+            var value = !$('#privacestatement').is(':checked');
+            $("#privacestatement")[0].checked = value
+        }
+    });
 
-            var msg = tdg.error_message.message("PRIV_STMT_ERR");
+    $("#theArticle").bind('click', function () {
+        var left = (screen.width - 600) / 2;
+        var top = (screen.height - 400) / 4;
 
-            var newValidator = document.createElement('span');
-            newValidator.style.display = "none";
-            newValidator.id = "RequiredFieldValidatorPrivaceStatement";
-            newValidator.controltovalidate = "casetypecode";
-            newValidator.errormessage = "<a href='#privacestatement_label'>Énoncé de confidentialité: " + msg + "</a>";
-            newValidator.validationGroup = "Profile";
-            newValidator.initialvalue = "";
-            newValidator.evaluationfunction = function () {
-                var value = $('#privacestatement').prop('checked');
-                if (value) {
-                    return true;
-                } else {
-                    return false;
-                }
-            };
+        window.open(psUrl, "Privace Statement", "scrollbars=1,resizable=no,status=0,toolbar=1,location=1,menubar=0,width=600,height=400,left=" + left + ",top=" + top);
+    });
 
-            // Add the new validator to the page validators array:
-            Page_Validators.push(newValidator);
+    $("#privacestatement").css("padding", "0 23px");
+    debugger;
+    //Make sure privace statement was clicked
+    if (typeof (Page_Validators) == 'undefined') return;
+
+    $('#privacestatement').parent().addClass("required");
+
+    var msg = tdg.error_message.message("PRIV_STMT_ERR");
+
+    var newValidator = document.createElement('span');
+    newValidator.style.display = "none";
+    newValidator.id = "RequiredFieldValidatorPrivaceStatement";
+    newValidator.controltovalidate = "casetypecode";
+    newValidator.errormessage = "<a href='#privacestatement_label'>Énoncé de confidentialité: " + msg + "</a>";
+    newValidator.validationGroup = "Profile";
+    newValidator.initialvalue = "";
+    newValidator.evaluationfunction = function () {
+        var value = $('#privacestatement').prop('checked');
+        if (value) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    // Add the new validator to the page validators array:
+    Page_Validators.push(newValidator);
 
     var data = {};
     data.length = 0;

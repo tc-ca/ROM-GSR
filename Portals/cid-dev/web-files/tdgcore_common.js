@@ -2415,10 +2415,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
             var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
             var data;
             var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
-            //if pre prod or prod
-            console.log("environment.toLowerCase() : " + environment.toLowerCase());
+            debugger;
             if (environment.toLowerCase() == "preprod" || environment.toLowerCase() == "prod") {
-                //use CRA API to get iformation
+                //use CRA API to get information
                 data = await tdg.cid.crw.Production_start_Retrieve_cra(cid_crabusinessnumber, step_start);
             }
             else {
@@ -2431,6 +2430,13 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 var msg = tdg.error_message.message("m000001");
                 tdg.c.dialog_OK(msg);
             }
+
+            if (data.code == "ResponseTimeout") {
+                var msg = tdg.error_message.message("m000219");
+                tdg.c.dialog_OK(msg);
+                data.length = 0;
+            }
+
             return data;
         },
 
@@ -2516,6 +2522,13 @@ if (typeof (tdg.cid.crw) == "undefined") {
                         var msg = tdg.error_message.message("m000001");
                         tdg.c.dialog_OK(msg);
                     }
+
+                    if (cra_data.code == "ResponseTimeout") {
+                        var msg = tdg.error_message.message("m000219");
+                        tdg.c.dialog_OK(msg);
+                        cra_data.length = 0;
+                    }
+
                     // save to use in step1
                     _cra_record = cra_data;
                 }
@@ -2617,7 +2630,11 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     cid_reasonfornobnnumber_list = $("#cid_reasonfornobnnumber")[0].options;
                 }
                 var cid_reasonfornobnnumber_other = $("#cid_reasonfornobnnumber_other").val();
+
+                $("#btn_next").prop("disabled", true);
                 const data = await tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn, legalname, legalnamefr, cid_reasonfornobnnumber_list);
+                $("#btn_next").prop("disabled", false);
+
                 if (data.length == 0) {
                     if (cid_has_cra_bn == "1") {
                         var message = tdg.error_message.message("m000001");
@@ -2671,7 +2688,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 //$("#cid_legalname_fr2").val() == null || $("#cid_legalname_fr2").val() == "" ||
                 $("#cid_operatingname2").val() == null || $("#cid_operatingname2").val() == ""
                 //||$("#cid_operatingname_fr2").val() == null || $("#cid_operatingname_fr2").val() == ""
-                ) {
+            ) {
                 $("#btn_ok").prop('disabled', true);
             }
 
@@ -3046,7 +3063,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
                         if (environment.toLowerCase() == "preprod" || environment.toLowerCase() == "prod") {
                             //use CRA API to get iformation
                             // console.log("retrieved from production");
-                            // data = await tdg.cid.crw.Production_start_Retrieve_cra(cid_crabusinessnumber, "");
                             var results = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_Flow_CRA_API'");
                             //check if flow url is found
                             var CRA_Flow_URL;
@@ -3290,6 +3306,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             //var CRA_Flow_URL;
             //retrieve the url of the flow used to get data from CRA
             var results = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_Flow_CRA_API'");
+
             //check if flow url is found
             if (results.length > 0) {
                 CRA_Flow_URL = results[0]["qm_value"];
@@ -3300,9 +3317,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 //wait for flow function to return  CRM response from flow
                 const CRAresult = await tdg.cid.crw.Call_CRA_Flow(CRA_Flow_URL, body);
                 json = CRAresult;
-                // check if response has invlaid data
-                if (json.IsInvalidData) {
 
+                // check if response has invalid data
+                if (json.IsInvalidData) {
                     CRA_Data.length = 0;
                     return CRA_Data;
                 }
@@ -3318,6 +3335,12 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
                         return CRA_Data;
                     }
+
+                    if (json.error.code == "ResponseTimeout") {
+                        debugger;
+                        return json.error;
+                    }
+
                     //get CRA data
                     CRA_Data.LegalName = json.LegalName;
 
