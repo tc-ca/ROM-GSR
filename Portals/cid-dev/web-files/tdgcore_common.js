@@ -530,6 +530,105 @@ if (typeof (tdg.c) == "undefined") {
             $('#myModal').modal({ backdrop: 'static', keyboard: false, show: true, focus: true });
         },
 
+        DialogWith_DropDown: function (message, handler) {
+            message = message.replaceAll("\n", "<br>");
+            var header = tdg.error_message.message("CID_PORTAL");
+            var yes = tdg.error_message.message("Yes");
+            var no = tdg.error_message.message("No");
+            var optionLabel = tdg.error_message.message("m000206");
+            var option1 = tdg.error_message.message("m000204");
+            var option2 = tdg.error_message.message("m000205");
+
+            $(`<section class="modal overlay-def"  id="myModal" role="dialog"  
+             aria-modal="true"  aria-labelledby ="headerid" aria-describedby="DialogBodyID" tabindex="-1">
+             <div class="modal-dialog modal-content modal-dialog-centered" role="document">
+                        <header class="modal-header">
+                        <h2 id="headerid" class="modal-title">${header}</h2>
+                        </header>
+                        <div class="modal-body" id="DialogBodyID" >
+                        ${message}
+                        <br>
+                        <p> </p>
+                         <div>
+                                <label for="duplicateFlagOptions">${optionLabel}</label>
+                                <select name="duplicateFlagOptions" id="duplicateFlagOptions">
+                                    <option value="1"></option>
+                                    <option value="918640000">${option1}</option>
+                                    <option value="918640001">${option2}</option>
+        
+                                </select>
+                        </div>
+                        </div>
+                       
+                        <div class="modal-footer">
+                        <button id="btnYes" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" disabled>${yes}</button>
+                        <button id="btnNo" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss" data-dismiss="modal">${no}</button>
+                        </div>
+                        </div>
+                        
+                        </section>
+                        `).appendTo('body');
+
+
+
+
+            $("#duplicateFlagOptions").change(function () {
+                var Listselection = $("#duplicateFlagOptions :selected").val();
+                if (Listselection == 918640000 || Listselection == 918640001) {
+                    $("#btnYes").removeAttr("disabled");
+                }
+                else {
+                    $("#btnYes").attr("disabled", "disabled");
+                }
+
+            });
+            $("#btnYes").click(function () {
+                var Listselection = $("#duplicateFlagOptions :selected").val();
+                $("#ovs_duplicatesiteflag").val(Listselection);
+                $('#myModal').modal('hide');
+                $("#myModal").remove();
+                handler(true);
+            });
+
+            $("#btnYes").keydown(function (event) {
+                var Listselection = $("#duplicateFlagOptions :selected").val();
+                $("#ovs_duplicatesiteflag").val(Listselection);
+
+                var keyCode = event.keyCode || event.which;
+                //check if key pressis tab key
+                if (keyCode == "13") {
+                    $("#btnYes").click();
+                }
+            }
+            );
+
+            //Pass false to callback function
+            $("#btnNo").click(function () {
+                //handler(lse);
+
+
+                $('#myModal').modal('hide');
+                $("#myModal").remove();
+                handler(false);
+            });
+            $("#btnNo").keydown(function (event) {
+                var Listselection = $("#duplicateFlagOptions :selected").text();
+
+                var keyCode = event.keyCode || event.which;
+                //check if key pressis tab key
+                if (keyCode == "9") {
+                    $('#myModal').focus();
+                }
+                else if (keyCode == "13") {
+                    $("#btnNo").click();
+                }
+
+            });
+
+
+            $('#myModal').modal({ backdrop: 'static', keyboard: false, show: true, focus: true });
+        },
+
         validate_address: function (language, country, province, postalCode, city) {
             var provinceValid = false;
             var postalcodeFormatValid = false;
@@ -2219,6 +2318,19 @@ if (typeof (tdg.cid) == "undefined") {
             tdg.cid.Check_If_AnnualTasks_Completed(parentAccountid);
         },
 
+        legalname_get: function (account_id) {
+            debugger;
+            var ovs_legalname = sessionStorage.getItem("_ovs_legalname");
+            ovs_legalname = (ovs_legalname == null ? "" : ovs_legalname);
+            if (ovs_legalname == "") {
+                var record = tdg.webapi.SelectedColumnlist("accounts", "ovs_legalname", "accountid eq " + account_id);
+                if (record.length > 0) {
+                    ovs_legalname = record[0].ovs_legalname;
+                }
+                sessionStorage.setItem("_ovs_legalname") = ovs_legalname;
+            }
+            return ovs_legalname;
+        },
 
         Setup_site_Profile_Title: function (CompanyName) {
             var SiteLable = tdg.error_message.message("m000127");

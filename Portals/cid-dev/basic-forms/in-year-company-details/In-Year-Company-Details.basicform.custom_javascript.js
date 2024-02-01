@@ -6,6 +6,7 @@ $(document).ready(function () {
     debugger;
 
     tdg.c.removeValidator("ovs_namefr");
+    tdg.c.removeValidator("name");
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
     var activationButon = $("#EntityFormPanel").find(".workflow-link");
 

@@ -4,7 +4,6 @@
 $(document).ready(function ()
 {
 	debugger;
-	
 	page_setup();
 	tdg.c.control_hide("cid_nextannualcomplianceupdate");
 	tdg.c.control_hide("cid_nextannualcomplianceupdate_datepicker_description");

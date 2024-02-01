@@ -4,6 +4,7 @@
 
 $(document).ready(function () {
     debugger;
+     tdg.c.removeValidator("name");
     // format sign-out's tooltip
 	
 	$('#cdts-signout-btn').tooltip({
@@ -26,10 +27,10 @@ $(document).ready(function () {
         value = value.replace("{0}", companyName);
         $(value).insertAfter(topNav);
     }
-
+      
     //tdg.c.control_hide("ovs_namefr");
-    tdg.c.addValidator("ovs_legalnamefr");
-    tdg.c.addValidator("ovs_namefr");
+    //tdg.c.addValidator("ovs_legalnamefr");
+    //tdg.c.addValidator("ovs_namefr");
 
     var cid_crabusinessnumber = $('#cid_crabusinessnumber').val();
     if (cid_crabusinessnumber != "") {

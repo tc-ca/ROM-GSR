@@ -5,7 +5,8 @@
 $(document).ready(function () {
     debugger;
     
-    tdg.c.removeValidator("ovs_namefr");  
+    tdg.c.removeValidator("name");
+    tdg.c.removeValidator("ovs_namefr");
     document.getElementById("UpdateButton").addEventListener('click', (event) => {
         
         if (sessionStorage.getItem("EditOrg") != "none")
@@ -26,7 +27,6 @@ $(document).ready(function () {
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
     // format sign-out's tooltip
-	
 	$('#cdts-signout-btn').tooltip({
 					trigger: 'hover',
 					placement: 'right',
@@ -69,7 +69,6 @@ $(document).ready(function () {
     legend.after("<h2>" + companyName + " - " + msg + "</h2><hr>");
 
     $('div[data-name="tab_3"]').parent().parent().addClass("hidden");
-
     $("#cid_registrationasof").parent().parent().hide();
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
     var deactivateCompanyWebLink = $('a[href*="deactivate-company"]');
@@ -104,6 +103,7 @@ $(document).ready(function () {
     //tdg.c.control_hide("ovs_namefr");
     tdg.c.control_hide("cid_reasonfornobnnumber_other");
 
+
     //Phone number formatting
     tdg.cid.phone_init("telephone1", selected_language);
     tdg.cid.phone_init("fax", selected_language);
@@ -135,11 +135,11 @@ $(document).ready(function () {
     $('#cid_crabusinessnumber').attr("readonly", true);
     $('#ovs_legalname').attr("readonly", true);
  // $('#ovs_legalnamefr').attr("readonly", true);
-
     $('#cid_reasonfornobnnumber').attr("readonly", true);
     $('#cid_reasonfornobnnumber').css("pointer-events", "none");
     $('#cid_reasonfornobnnumber_other').attr("readonly", true);
-
+     //Remove required attribute
+    tdg.c.removeValidator("name");
     $('#address1_country').attr("readonly", true);
 
     tdg.cid.convert_province_to_code(selected_language);

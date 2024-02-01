@@ -31,6 +31,7 @@ $(document).ready(function () {
 function page_setup() {
 
     tdg.c.removeValidator("ovs_namefr");
+    tdg.c.removeValidator("name");
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 

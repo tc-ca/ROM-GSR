@@ -5,15 +5,34 @@
 var _busy = false;
 $(document).ready(function () {
 	debugger;
-
-
 	page_setup();
 	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
 	 tdg.c.control_hide("adx_modifiedbyusername");
 	 tdg.c.control_hide("ovs_duplicatesiteflag");
+	 tdg.c.control_hide("cid_portalrecordcreationdetails");
+	 tdg.c.control_hide("cid_cidflag");
+
+	 $("#EntityFormView :input").change(function(e) {
+			//$("#EntityFormView").data("changed",true);
+			console.log ("Field changed");
+			console.log (e);
+			console.log (e.target.id);
+			if (e.target.id == "address1_line1" || e.target.id == "address1_line2" 
+			|| e.target.id == "address1_line3" || e.target.id == "address1_postalcode"
+			|| e.target.id == "address1_latitude" || e.target.id == "address1_longitude"
+			|| e.target.id == "ovs_lld_quarter"
+			|| e.target.id == "ovs_lld_section"
+			|| e.target.id == "ovs_lld_township"
+			|| e.target.id == "ovs_lld_range"
+			|| e.target.id == "ovs_lld_meridian"
+			)
+			{
+				sessionStorage.setItem("AddressDataChanged", true);
+				}
+	});
 
 	var selected_language = '{{website.selected_language.code}}';
-	console.log ("language code  "  + selected_language );
+
 	sessionStorage.setItem("selected_language", selected_language);
 
 	$("#ValidationSummaryEntityFormView").after($('.text-danger').parent());
@@ -45,7 +64,7 @@ $(document).ready(function () {
 						}
 						
 						//var operationid = operationDataset[0].ovs_mocregistrationid ;
-						console.log( "operation length :" +  operationDataset.length);
+					
 						if (operationDataset.length == 0)
 						{
 							var data = {
@@ -89,9 +108,7 @@ $(document).ready(function () {
 		
 
 		var created_On = new Date($("#createdon").val()).getTime();
-		console.log( $("#createdon").val());
-		console.log("created date : " + created_On);
-		console.log((Date.now() - created_On) / 1000 / 60 / 60 / 24);
+	
 		if ($("#cid_createdbyregistrant").val() != parent_Id && (Date.now() - created_On) / 1000 / 60 / 60 / 24 < 1) {
 			$("#cid_same_as_company").attr("disabled", false);
 			$("#ovs_address_type").attr("disabled", false);
@@ -105,6 +122,12 @@ $(document).ready(function () {
 		}
 	}
 
+  	var f = document.getElementById("WebResource_address_complete");
+	var c = f.contentWindow;
+	c.document.getElementById("address1_line1").addEventListener('change', (event) => {
+		console.log ("line 1 changed");
+		sessionStorage.setItem("AddressDataChanged",true);
+	});
 	document.getElementById("address1_latitude").addEventListener('change', (event) => {
 		var Lat = $("#address1_latitude").val();
 	});
@@ -203,13 +226,128 @@ if (window.jQuery) {
 		webFormClientValidate = function () {
 			$('#ErrorMessageDiv').css('display', 'none');
 			var addressType = $("#ovs_address_type").val();
+		
+			var account_id = '{{user.parentcustomerid.Id}}';
+
+			
+		//if ($("#ovs_duplicatesiteflag :selected").val() != 918640000 && $("#ovs_duplicatesiteflag :selected").val() != 918640001 )
+		console.log(sessionStorage.getItem("AddressDataChanged"));
+		if (sessionStorage.getItem("AddressDataChanged") == "true")
+		{
+			switch (addressType) {
+			case "1":
+				// legal land description
+				debugger;
+
+				var lldProvince = $("#ovs_lld_province").val();
+				var quarter = $("#ovs_lld_quarter").val();
+				var section = $("#ovs_lld_section").val();
+				var township = $("#ovs_lld_township").val();
+				var range = $("#ovs_lld_range").val();
+				var meridian = $("#ovs_lld_meridian").val();
+
+				if ((lldProvince == '') || (quarter == '') || (section == '') || (township == '') || (range == '') || (meridian == '')) {
+					return true;
+				}
+				var parameters = {};
+				parameters.Parent_Id = account_id; // Edm.String
+				if (lldProvince != (null || "")) { parameters.Lld_Province = parseInt(lldProvince); }   // Edm.Int32                    
+				if (quarter != (null || "")) { parameters.Lld_Quarter = parseInt(quarter); }   // Edm.Int32    
+				if (section != (null || "")) { parameters.Lld_Section = parseInt(section); }   // Edm.Int32                    
+				if (township != (null || "")) { parameters.Lld_Township = parseInt(township); }   // Edm.Int32                    
+				if (range != (null || "")) { parameters.Lld_Range = parseInt(range); }   // Edm.Int32                    
+				if (meridian != (null || "")) { parameters.Lld_Meridian = parseInt(meridian); }   // Edm.Int32 
+				parameters.AddressType = 1; // Edm.Int32
+
+				var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
+				var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
+
+				if (EnvironmentSettingResult.length > 0) {
+					var FlowURL = EnvironmentSettingResult[0]["qm_value"];
+					return CheckDuplicate(FlowURL, parameters);
+				} //end check if flow url found
+				else {
+					return true;
+				}
+
+				break;
+
+			case "2":
+				// lat/long
+				debugger;
+				if (($("#address1_latitude").val() == '') || ($("#address1_longitude").val() == '')) {
+					return true;
+				}
+				var latitude = $("#address1_latitude").val();
+				var longitude = $("#address1_longitude").val();
+				$('#ErrorMessageDiv').css('display', 'none');
+				var checkresult = CheckLatLongDecimal();
+				if (checkresult == false) {
+					return false;
+				}
+				else {
+
+					var parameters = {};
+					parameters.Parent_Id = account_id; // Edm.String
+					parameters.AddressType = 2; // Edm.Int32
+					if (latitude != (null || "")) { parameters.Address1_Latitude = parseFloat(latitude).toFixed(4); }   // Edm.Float                    
+					if (longitude != (null || "")) { parameters.Address1_Longitude = parseFloat(longitude).toFixed(4); }   // Edm.Float    
+
+					var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
+					var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
+
+					if (EnvironmentSettingResult.length > 0) {
+						var FlowURL = EnvironmentSettingResult[0]["qm_value"];
+						return CheckDuplicate(FlowURL, parameters);
+					}
+					else { return true; }
+				}
+
+				break;
+
+			default:
+				//postal
+				debugger;
+
+
+
+				var address1_line1 = $("#address1_line1").val();
+				var address1_line2 = $("#address1_line2").val();
+				var address1_line3 = $("#address1_line3").val();
+				var address1_postalcode = $("#address1_postalcode").val();
+
+				if ((address1_line1 == '') || ($("#address1_city").val() == '') || (address1_postalcode == '') || ($("#ovs_address1_province").val() == '')) {
+					return true;
+				}
+
+				var parameters = {};
+				parameters.Parent_Id = account_id; // Edm.String
+				parameters.AddressType = 0; // Edm.Int32
+				parameters.Address1_Postal = address1_postalcode; // Edm.String
+				parameters.Address1_Line1 = address1_line1; // Edm.String
+				parameters.Address1_Line2 = address1_line2; // Edm.String
+				parameters.Address1_Line3 = address1_line3; // Edm.String
+
+				var FlowName = "CID_Flow_Site_Duplicate_Validation_Test";
+				var EnvironmentSettingResult = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq '" + FlowName + "'");
+
+				if (EnvironmentSettingResult.length > 0) {
+					var FlowURL = EnvironmentSettingResult[0]["qm_value"];
+					return CheckDuplicate(FlowURL, parameters);
+				}
+				else
+					return true;
+
+				break;
+					}//end witch
+		}
+
 			if (addressType == 2) {
 				var checkresult = CheckLatLongDecimal();
 				return checkresult;
 
 			}
 			else { return true; }
-			
 		}
 	}(window.jQuery));
 }
@@ -281,3 +419,68 @@ function CheckLatLongDecimal() {
  	return true;
 }
 
+var CheckDuplicate = function (_flowURl, _parameters) {
+    var req = new XMLHttpRequest();
+    req.open("POST", _flowURl, true);
+    req.setRequestHeader('Content-Type', 'application/json');
+    req.onreadystatechange = function () {
+        if (this.readyState === 4) {
+            req.onreadystatechange = null;
+            if (this.status === 200) {
+                debugger;
+
+                var result = JSON.parse(this.response);
+                var duplicatefound = result["DuplicateFound"]; // Edm.Boolean
+                var currentSiteOwner = result["CurrentSiteOwnerCompany"]; //string
+                var currentSiteId = result["CurrentSiteId"]; //string currentSiteId
+                var currentSiteOwnerId = result["CurrentSiteOwnerCompanyId"]; //string CurrentSiteOwnerCompanyId
+                var InactiveSiteFound = result["InactiveSiteFound"];
+                if (InactiveSiteFound == true) {
+                    var ReActivatedSiteGUID = result["InactiveSiteGUID"];
+                    var currentURL = window.location.href;
+                    console.log("split :");
+                    console.log(currentURL.replace("https://", "").split("/")[0]);
+                    window.location.href = "~/SiteRegistrationWizard?id=" + ReActivatedSiteGUID + "&newsite=true"
+                    //currentURL.replace("https://", "").split("/")[0] +"/SiteRegistrationWizard?" +ReActivatedSiteGUID;
+                    return false;
+
+                }
+
+                else if (duplicatefound) {
+                    var message = tdg.error_message.message("m000203");
+                    //"There is already an active Organization at this address. Is your Organization sharing this Site with another Organization or is this the result of a sale, merger or acquisition? If you entered the wrong address, select cancel and re-enter the correct address.";
+                    //tdg.error_message.message("m000131");
+                    //tdg.c.dialog_YN
+                    tdg.c.DialogWith_DropDown(message, (ans) => {
+                        var accName = "";
+                        var accId = "";
+                        var contact_id = '{{user.id}}';
+                        if (ans) {
+                           
+                           // entityFormClientValidate = true;
+						   webFormClientValidate = true;
+                            //originalValidationFunction = true;
+                            $("#NextButton").click();
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    });
+                }
+                else {
+					sessionStorage.setItem("AddressDataChanged",false);
+                    entityFormClientValidate = true;
+                    originalValidationFunction = true;
+                    $("#NextButton").click();
+                    return true;
+                }
+            }
+            else
+                debugger;
+            return false;
+
+        } //end ready status
+    }; //end on ready function
+    req.send(JSON.stringify(_parameters));
+}

@@ -6,6 +6,7 @@ $(document).ready(function () {
 	debugger;
 
 	tdg.c.removeValidator("ovs_namefr");
+    tdg.c.removeValidator("name");
     var isCompanyAttested = "{{entities.account[user.parentcustomerid.id].cid_iscompanyattested}}";
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);

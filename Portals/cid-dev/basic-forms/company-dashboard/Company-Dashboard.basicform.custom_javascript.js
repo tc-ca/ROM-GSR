@@ -4,7 +4,7 @@
 
 $(document).ready(function () {
     debugger;
-
+    tdg.c.removeValidator("name");
     var urlParams = new URLSearchParams(window.location.search);
 	if (urlParams.has('firsttime')) {
         var firstTime = urlParams.get('firsttime')
