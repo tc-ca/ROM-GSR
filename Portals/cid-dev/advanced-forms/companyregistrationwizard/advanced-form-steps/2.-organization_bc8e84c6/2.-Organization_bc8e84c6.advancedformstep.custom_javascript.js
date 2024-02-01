@@ -5,9 +5,17 @@
 $(document).ready(function () {
 	debugger;
 
+	//$("#name").blur(function () {
+	//	var name = $("#name").val();
+	//	if (name == "") {
+	//		var legalname = $("#ovs_legalname").val();
+	//		$("#name").val(legalname);
+	//		tdg.c.removeValidator("name");
+	//	}
+	//});
+
 	tdg.c.removeValidator("ovs_namefr");
 	tdg.c.removeValidator("cid_reasonfornobnnumber_other");
-    tdg.c.removeValidator("name");
 
 	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
 	tdg.c.control_hide("adx_modifiedbyusername");
@@ -25,7 +33,6 @@ $(document).ready(function () {
 	tdg.c.control_hide("cid_createdbyregistrant", true);
 	//hide created on by
 	tdg.c.control_hide("cid_portalrecordcreationdetails");
-
 
 	$('#WebResource_address_complete').attr("title", "Address Lookup");
 	$("#EntityFormView").before('<div id="MessagePanel" class="alert alert-danger" role="alert" style="display: none;"></div>');
@@ -173,7 +180,7 @@ $(document).ready(function () {
 	tdg.cid.convert_province_to_code(selected_language);
 	var currentUserId = '{{user.contactid}}';
 	Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
-	tdg.c.removeValidator("name");
+
 	debugger;
 	var userId = '{{user.id}}';
 	var withdrawLabel = tdg.error_message.message("BTN_WITHDRAW");
@@ -202,6 +209,15 @@ $(document).ready(function () {
 	if ('{{user.cid_contacttype.Value}}' != 100000000) $("#WithdrawButton").remove();
 });
 
+function ovs_legalname_copy() {
+	var name = $("#name").val();
+	if (name == "") {
+		var legalname = $("#ovs_legalname").val();
+		$("#name").val(legalname);
+		tdg.c.removeValidator("name");
+	}
+}
+
 function btn_previous_click() {
 	var account_id = '{{user.parentcustomerid.Id}}';
 	var contact_id = '{{user.id}}';
@@ -213,6 +229,9 @@ if (window.jQuery) {
 	(function ($) {
 		webFormClientValidate = function () {
 			debugger;
+
+			ovs_legalname_copy();
+
 			var address1_line1 = $("#address1_line1").val();
 			sessionStorage.setItem("AddressLine1Text", address1_line1);
 			sessionStorage.setItem("step_start", "");

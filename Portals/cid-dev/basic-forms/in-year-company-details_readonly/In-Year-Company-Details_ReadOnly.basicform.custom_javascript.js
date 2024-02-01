@@ -35,7 +35,7 @@ $(document).ready(function () {
         $('div[data-name="tab_3"]').parent().parent().removeClass("hidden");
         $('div[data-name="company_details"]').parent().parent().addClass("hidden");
         $('#update_company').addClass("hidden");
-       
+        
         $('div[data-name="tab_3"]').parent().before("<h2>" + companyName + "</h2><hr>");
 
         var legend2 = $('fieldset[aria-label="Head Office"] legend').eq(1);
@@ -45,8 +45,6 @@ $(document).ready(function () {
         tdg.cid.phone_init("telephone1", selected_language);
         tdg.cid.phone_init("fax", selected_language);
          $("#cid_iscompanyattested_label").removeAttr("role" , "") ;
-         $('#name').prop('required',true);
-        
     });
     $("#cancel_company_update").click(function () {
      
