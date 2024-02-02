@@ -4,37 +4,35 @@
 
 $(document).ready(function () {
     debugger;
-    
-    tdg.c.removeValidator("name");
+
     tdg.c.removeValidator("ovs_namefr");
     document.getElementById("UpdateButton").addEventListener('click', (event) => {
-        
-        if (sessionStorage.getItem("EditOrg") != "none")
-        {
+        debugger;
+
+        ovs_legalname_copy();
+
+        if (sessionStorage.getItem("EditOrg") != "none") {
             taskid = sessionStorage.getItem("EditOrg");
             sessionStorage.setItem("updateOrgCheckList", "Yes");
             sessionStorage.setItem("EditOrg", "none");
-             var data = {
-                        "statecode": 1,
-                        "statuscode": 5
-                    };
+            var data = {
+                "statecode": 1,
+                "statuscode": 5
+            };
             tdg.cid.WebApi_Update_With_Spinner("tasks", taskid, data);
-
-
         }
-      });
+    });
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
     // format sign-out's tooltip
-	$('#cdts-signout-btn').tooltip({
-					trigger: 'hover',
-					placement: 'right',
-					container: 'body'
-						});
+    $('#cdts-signout-btn').tooltip({
+        trigger: 'hover',
+        placement: 'right',
+        container: 'body'
+    });
     var lbl_inactive = tdg.error_message.message("lbl_inactive");
 
-  
     sessionStorage.setItem('frominyearsites', 'false');
     sessionStorage.setItem('fromannualcompliance', 'false');
     sessionStorage.setItem('frominyearsitepage', 'false');
@@ -70,6 +68,7 @@ $(document).ready(function () {
 
     $('div[data-name="tab_3"]').parent().parent().addClass("hidden");
     $("#cid_registrationasof").parent().parent().hide();
+
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
     var deactivateCompanyWebLink = $('a[href*="deactivate-company"]');
 
@@ -103,7 +102,6 @@ $(document).ready(function () {
     //tdg.c.control_hide("ovs_namefr");
     tdg.c.control_hide("cid_reasonfornobnnumber_other");
 
-
     //Phone number formatting
     tdg.cid.phone_init("telephone1", selected_language);
     tdg.cid.phone_init("fax", selected_language);
@@ -112,7 +110,7 @@ $(document).ready(function () {
     var cid_reasonfornobnnumber = $('#cid_reasonfornobnnumber').val();
 
     tdg.c.control_hide("cid_has_cra_bn");
-  
+
     // do not have a business number?
     if (cid_has_cra_bn != "1") {
         tdg.c.control_hide("cid_crabusinessnumber");
@@ -134,19 +132,16 @@ $(document).ready(function () {
 
     $('#cid_crabusinessnumber').attr("readonly", true);
     $('#ovs_legalname').attr("readonly", true);
- // $('#ovs_legalnamefr').attr("readonly", true);
+    // $('#ovs_legalnamefr').attr("readonly", true);
     $('#cid_reasonfornobnnumber').attr("readonly", true);
     $('#cid_reasonfornobnnumber').css("pointer-events", "none");
     $('#cid_reasonfornobnnumber_other').attr("readonly", true);
-     //Remove required attribute
-    tdg.c.removeValidator("name");
     $('#address1_country').attr("readonly", true);
 
     tdg.cid.convert_province_to_code(selected_language);
 
     if ($("#cid_addressoverwritten").val() == 0) { $("#ovs_address1_province").prop('disabled', true); }
     else { $("#ovs_address1_province").prop('disabled', false); }
-
 
     change_duplicatefieldID();
 
@@ -169,11 +164,15 @@ $(document).ready(function () {
     if ($("#fax").closest("div").get(0).children[1] != "undefined") {
         $("#fax").closest("div").get(0).children[1].innerHTML = "<p> </p>";
     }
-
-
-
-
 });
+
+function ovs_legalname_copy() {
+    var name = $("#name").val();
+    if (name == "") {
+        var legalname = $("#ovs_legalname").val();
+        $("#name").val(legalname);
+    }
+}
 
 function subgrid_language() {
     debugger;
@@ -187,85 +186,79 @@ function subgrid_language() {
 function setManualAddressEntryFlag() {
     $("#cid_addressoverwritten").val(1);
 }
-function change_duplicatefieldID()
-{
-  //add id to iframe 
-  $("#WebResource_address_complete").attr("title", "Address Complete lookup");
+function change_duplicatefieldID() {
+    //add id to iframe 
+    $("#WebResource_address_complete").attr("title", "Address Complete lookup");
 
     //company_details_section_3
-     $('table[data-name="company_details_section_3"] tbody').find('tr td div.control input').each(function (i) {
+    $('table[data-name="company_details_section_3"] tbody').find('tr td div.control input').each(function (i) {
         var fieldset = $(this);
-         var fieldid = fieldset[0].id;
-       
-        $(this).attr("id", fieldset[0].id + "_1" );
-        
-      });
-       $('table[data-name="company_details_section_3"] tbody').find('tr td div.info label').each(function (i) {
+        var fieldid = fieldset[0].id;
+
+        $(this).attr("id", fieldset[0].id + "_1");
+
+    });
+    $('table[data-name="company_details_section_3"] tbody').find('tr td div.info label').each(function (i) {
         var fieldset = $(this);
         var id = fieldset[0].id;
-        
-       var forattribute = "";
-       //cid_companyanniversarydate_1_datepicker_description
-       if (id.indexOf("date")>0)
-       {   
-            forattribute = id.replace("_label" , "")  + "_1_datepicker_description"; 
-             }
-       else
-       {
-           forattribute = id.replace("_label" , "") + "_1";}
+
+        var forattribute = "";
+        //cid_companyanniversarydate_1_datepicker_description
+        if (id.indexOf("date") > 0) {
+            forattribute = id.replace("_label", "") + "_1_datepicker_description";
+        }
+        else {
+            forattribute = id.replace("_label", "") + "_1";
+        }
         //_label
         //datepicker_description
-        $(this).attr("for", forattribute );
-      });
+        $(this).attr("for", forattribute);
+    });
 
 
 
     //data-name="ACCOUNT_INFORMATION"
-      $('table[data-name="ACCOUNT_INFORMATION"] tbody').find('tr td div.control input').each(function (i) {
+    $('table[data-name="ACCOUNT_INFORMATION"] tbody').find('tr td div.control input').each(function (i) {
         var fieldset = $(this);
-         var fieldid = fieldset[0].id;
-       if ((fieldid.indexOf("date") ==  -1 && fieldid !="cid_reasonfornobnnumber_other") || fieldid =="cid_officiallyregistrationcompletationdate")
-        {$(this).attr("id", fieldset[0].id + "_1" );}
-        
-      });
+        var fieldid = fieldset[0].id;
+        if ((fieldid.indexOf("date") == -1 && fieldid != "cid_reasonfornobnnumber_other") || fieldid == "cid_officiallyregistrationcompletationdate") { $(this).attr("id", fieldset[0].id + "_1"); }
 
-      $('table[data-name="ACCOUNT_INFORMATION"] tbody').find('tr td div.info label').each(function (i) {
+    });
+
+    $('table[data-name="ACCOUNT_INFORMATION"] tbody').find('tr td div.info label').each(function (i) {
         var fieldset = $(this);
         var id = fieldset[0].id;
-        if (id.indexOf("cid_officiallyregistrationcompletationdate") != -1)
-       {$(this).attr("id", id + "_1" );}
-       var forattribute = "";
-       //cid_companyanniversarydate_1_datepicker_description
-       if (id.indexOf("date")>0)
-       {   
-            forattribute = id.replace("_label" , "")  + "_1_datepicker_description"; 
-            $(this).attr("for", forattribute );
-             
-             }
-       else
-       {
-           forattribute = id.replace("_label" , "") + "_1";}
+        if (id.indexOf("cid_officiallyregistrationcompletationdate") != -1) { $(this).attr("id", id + "_1"); }
+        var forattribute = "";
+        //cid_companyanniversarydate_1_datepicker_description
+        if (id.indexOf("date") > 0) {
+            forattribute = id.replace("_label", "") + "_1_datepicker_description";
+            $(this).attr("for", forattribute);
+
+        }
+        else {
+            forattribute = id.replace("_label", "") + "_1";
+        }
         //_label
         //datepicker_description
-        $(this).attr("for", forattribute );
-      });
+        $(this).attr("for", forattribute);
+    });
 
-     $('table[data-name="ACCOUNT_INFORMATION"] tbody').find('tr td div.control select').each(function (i) {
+    $('table[data-name="ACCOUNT_INFORMATION"] tbody').find('tr td div.control select').each(function (i) {
         var fieldset = $(this);
-         var fieldid = fieldset[0].id;
-       
-        if (fieldid.indexOf("date") == -1)
-        {
-           $(this).attr("id", fieldset[0].id + "_1" );
+        var fieldid = fieldset[0].id;
+
+        if (fieldid.indexOf("date") == -1) {
+            $(this).attr("id", fieldset[0].id + "_1");
         }
-      });
-   
-    
+    });
+
+
 }
 function Formate_PhoneNumber_AllControlsWithSameID(TargetFieldId) {
     $('table[data-name="tab_8_section_2"] tbody').find('tr td div.control input').each(function (i) {
         var fieldset = $(this);
-      
+
         var fieldid = fieldset[0].id;
         if (fieldid == TargetFieldId) {
             fieldset.attr("placeholder", "(___) ___-____");

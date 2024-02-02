@@ -117,11 +117,13 @@ if (typeof (tdg.message) == "undefined") {
             var page_crw_company_insert_EN = "As required, update any of the Organization information below, then choose the <b>[Next]</b> button below to continue.<br>" +
                 "If required: <br>" +
                 " - choose the <b>[Withdraw]</b> button above to withdraw the Registration request.<br><br>" +
-                "Note that fields in the application that have a red star at the end of their label are mandatory."
+                "Note that fields in the application that have a red star at the end of their label are mandatory. If the Operating Name field is left blank, the Legal Name will automatically populate this field."
+                
             var page_crw_company_insert_FR = "Si nécessaire, mettez à jour les informations sur l'organisation ci-dessous, puis cliquez sur le bouton <b>[Suivant]</b> ci-dessous pour continuer.<br>" +
                 "Si nécessaire : <br>" +
                 " - choisissez le bouton <b>[Supprimer]</b> ci-dessus pour retirer la demande d'enregistrement.<br><br>" +
-                "Notez que les champs de l'application qui ont une étoile rouge à la fin de leur étiquette sont obligatoires."
+                "Notez que les champs de l'application qui ont une étoile rouge à la fin de leur étiquette sont obligatoires. Si le champ ''Nom commercial'' est laissé vide, la dénomination sociale remplira automatiquement ce champ."
+           
 
             var page_crw_company_edit_EN = page_crw_company_insert_EN;
             var page_crw_company_edit_FR = page_crw_company_insert_FR;
@@ -1394,11 +1396,6 @@ if (typeof (tdg.message) == "undefined") {
                         "code": "m000218",
                         "message_en": "Transport",
                         "message_fr": "Transport"
-                    },
-                    {
-                        "code": "m000219",
-                        "message_en": "We are currently experiencing issues with the Canada Revenue Agency (CRA) Application Program Interface (API). You will not be able to create a new company by using a CRA Business Number. Please try again at a later date.",
-                        "message_fr": "Nous rencontrons actuellement des problèmes avec l'interface du programme d'application (API) de l'Agence du revenu du Canada (ARC). Vous ne pourrez pas créer une nouvelle entreprise en utilisant un numéro d'entreprise de l'ARC. Veuillez réessayer ultérieurement."
                     }
                 ];
 
@@ -1406,3 +1403,4 @@ if (typeof (tdg.message) == "undefined") {
         }
     }
 }
+

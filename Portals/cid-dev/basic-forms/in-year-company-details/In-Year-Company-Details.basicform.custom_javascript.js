@@ -6,7 +6,7 @@ $(document).ready(function () {
     debugger;
 
     tdg.c.removeValidator("ovs_namefr");
-    tdg.c.removeValidator("name");
+
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
     var activationButon = $("#EntityFormPanel").find(".workflow-link");
 
@@ -17,14 +17,13 @@ $(document).ready(function () {
         activationButon.css("color", "#000000");
         activationButon.css("background-color", "#4CAF50");
     }
-    
-   $('.validation-summary').eq(1).remove();
+
+    $('.validation-summary').eq(1).remove();
 
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 
     $("#cid_iscompanyattested").prop("checked", false);
-
 
     // address
     tdg.cid.address_init(false);
@@ -80,12 +79,10 @@ $(document).ready(function () {
     // readonly
     $('#statuscode').attr("readonly", true);
     $('#address1_country').attr("readonly", true);
-    
-   // tdg.c.addValidator("ovs_legalnamefr");
-   // tdg.c.addValidator("ovs_namefr");
 
     subgrid_language();
 });
+
 
 function subgrid_language() {
     debugger;
@@ -97,9 +94,18 @@ function subgrid_language() {
     }
 }
 
+function ovs_legalname_copy() {
+    var name = $("#name").val();
+    if (name == "") {
+        var legalname = $("#ovs_legalname").val();
+        $("#name").val(legalname);
+    }
+}
+
 if (window.jQuery) {
     (function ($) {
         entityFormClientValidate = function () {
+            //ovs_legalname_copy();
             if ($("#cid_iscompanyattested").prop('checked')) {
                 return true;
             }

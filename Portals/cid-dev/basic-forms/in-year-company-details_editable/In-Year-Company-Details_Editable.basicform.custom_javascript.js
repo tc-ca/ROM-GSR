@@ -15,23 +15,11 @@ $(document).ready(function () {
 
     var selected_language = '{{website.selected_language.code}}';
     tdg.cid.phone_init("telephone1", selected_language);
-
-    debugger;
-  
-   // tdg.c.addValidator("ovs_legalnamefr");
-   
-    //tdg.c.control_show("ovs_namefr");
-   // tdg.c.addValidator("ovs_namefr");
-    
-    
-   
-    //tdg.c.control_hide("ovs_namefr");
 });
 
 function page_setup() {
 
     tdg.c.removeValidator("ovs_namefr");
-    tdg.c.removeValidator("name");
     var selected_language = '{{website.selected_language.code}}';
     sessionStorage.setItem("selected_language", selected_language);
 

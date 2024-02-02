@@ -4,8 +4,7 @@
 
 $(document).ready(function () {
     debugger;
-    tdg.c.removeValidator("ovs_namefr");
-    tdg.c.removeValidator("name");
+
     page_setup();
 
     if (sessionStorage.getItem("updateOrgCheckList") == "Yes")
@@ -26,16 +25,14 @@ $(document).ready(function () {
     }
     tdg.c.page_instructions("page_my_company", true);
 
-   // tdg.c.control_hide("ovs_namefr");
-
     $("#update_company").click(function () {
         debugger;
-       
+
         var selected_language = '{{website.selected_language.code}}';
         $('div[data-name="tab_3"]').parent().parent().removeClass("hidden");
         $('div[data-name="company_details"]').parent().parent().addClass("hidden");
         $('#update_company').addClass("hidden");
-        
+     
         $('div[data-name="tab_3"]').parent().before("<h2>" + companyName + "</h2><hr>");
 
         var legend2 = $('fieldset[aria-label="Head Office"] legend').eq(1);
@@ -44,10 +41,16 @@ $(document).ready(function () {
         legend2.after("<h2>" + companyName + " - " + ho + "</h2><hr>");
         tdg.cid.phone_init("telephone1", selected_language);
         tdg.cid.phone_init("fax", selected_language);
-         $("#cid_iscompanyattested_label").removeAttr("role" , "") ;
+        $("#cid_iscompanyattested_label").removeAttr("role" , "");
+
+        $("#name").on("blur", function () {
+            debugger;
+
+            ovs_legalname_copy();
+        });
     });
-    $("#cancel_company_update").click(function () {
-     
+
+    $("#cancel_company_update").click(function () {   
         if (sessionStorage.getItem("EditOrg") != "none")
         {
             sessionStorage.setItem("EditOrg" , "none");
@@ -61,20 +64,27 @@ $(document).ready(function () {
 
     let currentURL = window.location.href;
     
-   sessionStorage.setItem("EditOrg", "none");
-   if(currentURL.indexOf('EditOrg') > 0 && cid_usercontacttype == 100000000)
-         {
-                    let editOrgValue = url.searchParams.get('EditOrg');
-                    sessionStorage.setItem("EditOrg", editOrgValue);
+    sessionStorage.setItem("EditOrg", "none");
+    if(currentURL.indexOf('EditOrg') > 0 && cid_usercontacttype == 100000000)
+    {
+        let editOrgValue = url.searchParams.get('EditOrg');
+        sessionStorage.setItem("EditOrg", editOrgValue);
                    
-                     var urlPath = window.location.href;
-                     urlPath = urlPath.split('?')[0];
-                     window.history.replaceState({}, document.title, urlPath);
-                    $("#update_company").click();
-            }
+        var urlPath = window.location.href;
+        urlPath = urlPath.split('?')[0];
+        window.history.replaceState({}, document.title, urlPath);
 
-
+        $("#update_company").click();
+    }
 });
+
+function ovs_legalname_copy() {
+    var name = $("#name").val();
+    if (name == "") {
+        var legalname = $("#ovs_legalname").val();
+        $("#name").val(legalname);
+    }
+}
 
 function page_setup() {
     var selected_language = '{{website.selected_language.code}}';

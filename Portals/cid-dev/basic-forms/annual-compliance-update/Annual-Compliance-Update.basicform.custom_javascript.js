@@ -7,6 +7,7 @@ $(document).ready(function ()
 	page_setup();
 	tdg.c.control_hide("cid_nextannualcomplianceupdate");
 	tdg.c.control_hide("cid_nextannualcomplianceupdate_datepicker_description");
+    tdg.c.removeValidator("name");
 	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
 	var selected_language = '{{website.selected_language.code}}';
 	//if

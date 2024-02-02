@@ -4,9 +4,8 @@
 
 $(document).ready(function () {
     debugger;
-     tdg.c.removeValidator("name");
-    // format sign-out's tooltip
-	
+    
+    // format sign-out's tooltip	
 	$('#cdts-signout-btn').tooltip({
 					trigger: 'hover',
 					placement: 'right',
