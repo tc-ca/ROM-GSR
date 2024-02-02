@@ -1,0 +1,328 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "605bacc5-82a7-4f50-b6e5-0b30dbced7f9"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 4,
+              "subscriptionRequest/entityname": "account",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "address1_line1,address1_city, address1_stateorprovince, address1_country,address1_postalcode",
+              "subscriptionRequest/filterexpression": "customertypecode eq 948010001 and ovs_address_type eq 0",
+              "subscriptionRequest/runas": 3
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Check_the_Address_Type": {
+          "actions": {
+            "Street1": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "f866a031-97d9-426b-940b-4c93bcd7a608"
+              },
+              "type": "Compose",
+              "inputs": "@triggerOutputs()?['body/address1_line1']"
+            },
+            "City": {
+              "runAfter": {
+                "Street1": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1f426d1a-8139-477d-bfaa-7f7d842c39b9"
+              },
+              "type": "Compose",
+              "inputs": "@triggerOutputs()?['body/address1_city']"
+            },
+            "Province": {
+              "runAfter": {
+                "City": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "5e06c64d-0455-4ab6-96e9-c6fe588a7314"
+              },
+              "type": "Compose",
+              "inputs": "@triggerOutputs()?['body/address1_stateorprovince']"
+            },
+            "Postal_Code": {
+              "runAfter": {
+                "Province": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a75e4df8-4866-4275-b096-8293bb4813fe"
+              },
+              "type": "Compose",
+              "inputs": "@triggerOutputs()?['body/address1_postalcode']"
+            },
+            "Country": {
+              "runAfter": {
+                "Postal_Code": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "42bbeeee-b845-4521-bc21-e99bcb5782ec"
+              },
+              "type": "Compose",
+              "inputs": "@triggerOutputs()?['body/address1_country']"
+            },
+            "HTTP_-_Calculate_All_Postal_Code_Latitude_Longitude": {
+              "runAfter": {
+                "Country": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "55771844-9e48-4401-a942-59af114d9f9c"
+              },
+              "type": "Http",
+              "inputs": {
+                "method": "GET",
+                "uri": "http://dev.virtualearth.net/REST/v1/Locations?countryRegion={countryRegion}&adminDistrict={adminDistrict}&locality={locality}&postalCode={postalCode}&addressLine={addressLine}&key={BingMapsKey}",
+                "queries": {
+                  "countryRegion": "@triggerOutputs()?['body/address1_country']",
+                  "adminDistrict": "@triggerOutputs()?['body/address1_stateorprovince']",
+                  "postalCode": "@triggerOutputs()?['body/address1_postalcode']",
+                  "addressLine": "@triggerOutputs()?['body/address1_line1']",
+                  "key": "Avj_KM6KPYwmVfl-iwBx2psq8-HAopEwoEJyeLqwZghSTH4DiIk7ANBIj-e-JnHm"
+                }
+              }
+            },
+            "IF_The_Body_is_not_Empty": {
+              "actions": {
+                "AddressLine": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "a370c799-2031-490e-955b-940fa95b0a50"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('HTTP_-_Calculate_All_Postal_Code_Latitude_Longitude')?['resourceSets'][0]['resources'][0]['address']['addressLine']"
+                },
+                "Address.adminDistrict-Province": {
+                  "runAfter": {
+                    "AddressLine": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "2adc1c94-84ad-45ac-870d-0845594036ba"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('HTTP_-_Calculate_All_Postal_Code_Latitude_Longitude')?['resourceSets'][0]['resources'][0]['address']['adminDistrict']"
+                },
+                "CountryRegion": {
+                  "runAfter": {
+                    "Address.adminDistrict-Province": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "95bd3514-23a8-4065-be40-26c952bbdd33"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('HTTP_-_Calculate_All_Postal_Code_Latitude_Longitude')?['resourceSets'][0]['resources'][0]['address']['countryRegion']"
+                },
+                "Locality-City": {
+                  "runAfter": {
+                    "CountryRegion": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3b736431-1f33-4ec6-8e4e-7fbb1b573ac5"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('HTTP_-_Calculate_All_Postal_Code_Latitude_Longitude')?['resourceSets'][0]['resources'][0]['address']['locality']"
+                },
+                "PostalCode": {
+                  "runAfter": {
+                    "Locality-City": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "1918b228-c57a-4161-81e7-b1e60d42f692"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('HTTP_-_Calculate_All_Postal_Code_Latitude_Longitude')?['resourceSets'][0]['resources'][0]['address']['postalCode']"
+                },
+                "Latitude": {
+                  "runAfter": {
+                    "PostalCode": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "d63db717-9da7-4267-839f-b8eacf51eab5"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('HTTP_-_Calculate_All_Postal_Code_Latitude_Longitude')?['resourceSets'][0]['resources'][0]['geocodePoints'][0]['coordinates'][0]"
+                },
+                "Longitude": {
+                  "runAfter": {
+                    "Latitude": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "ca2ed724-1fe6-4992-b658-edf706be5fb4"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('HTTP_-_Calculate_All_Postal_Code_Latitude_Longitude')?['resourceSets'][0]['resources'][0]['geocodePoints'][0]['coordinates'][1]"
+                },
+                "Update_a_row_value_for_Latitude_and_Longitude": {
+                  "runAfter": {
+                    "Longitude": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "79501005-9d70-417a-8f54-27691392c133"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "UpdateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "accounts",
+                      "recordId": "@triggerOutputs()?['body/accountid']",
+                      "item/ovs_address_type": 0,
+                      "item/address1_latitude": "@body('HTTP_-_Calculate_All_Postal_Code_Latitude_Longitude')?['resourceSets'][0]['resources'][0]['geocodePoints'][0]['coordinates'][0]",
+                      "item/address1_longitude": "@body('HTTP_-_Calculate_All_Postal_Code_Latitude_Longitude')?['resourceSets'][0]['resources'][0]['geocodePoints'][0]['coordinates'][1]"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Delay": {
+                  "runAfter": {
+                    "Update_a_row_value_for_Latitude_and_Longitude": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "cffbd05b-1ae2-42ef-b9f5-9e32a837cad4"
+                  },
+                  "type": "Wait",
+                  "inputs": {
+                    "interval": {
+                      "count": 2,
+                      "unit": "Second"
+                    }
+                  }
+                },
+                "Update_a_row_2": {
+                  "runAfter": {
+                    "Delay": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "fa32dde4-a7e7-44bf-9c30-ccb018612240"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "UpdateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "accounts",
+                      "recordId": "@triggerOutputs()?['body/accountid']",
+                      "item/name": "@triggerOutputs()?['body/name']"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Compose_2": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "equals": [
+                  "@length(body('HTTP_-_Calculate_All_Postal_Code_Latitude_Longitude')?['resourceSets'])",
+                  1
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b96167e3-0e31-4492-9029-f6703d438cf9"
+              },
+              "type": "If"
+            },
+            "Compose_2": {
+              "runAfter": {
+                "HTTP_-_Calculate_All_Postal_Code_Latitude_Longitude": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1fc3af2b-12e7-4522-b707-9a4a66b463f7"
+              },
+              "type": "Compose",
+              "inputs": "@body('HTTP_-_Calculate_All_Postal_Code_Latitude_Longitude')?['resourceSets']"
+            }
+          },
+          "runAfter": {},
+          "expression": {
+            "equals": [
+              "@triggerOutputs()?['body/ovs_address_type']",
+              0
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ec585ae5-ba2a-4181-9554-96dbfe6df37a"
+          },
+          "type": "If"
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

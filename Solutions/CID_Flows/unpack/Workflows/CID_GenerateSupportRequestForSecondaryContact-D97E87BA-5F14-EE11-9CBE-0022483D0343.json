@@ -9,6 +9,15 @@
         "api": {
           "name": "shared_commondataserviceforapps"
         }
+      },
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "fdr_conref_dataverse_fdrsp"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
       }
     },
     "definition": {
@@ -49,23 +58,6 @@
         }
       },
       "actions": {
-        "Delay_30_days_after_the_invitation_is_sent": {
-          "runAfter": {
-            "Condition_2": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "bdac4b3e-91f8-4114-9d62-9f426aad6643"
-          },
-          "type": "Wait",
-          "inputs": {
-            "interval": {
-              "count": "@variables('Days_User_Invitation_Valid')",
-              "unit": "Day"
-            }
-          }
-        },
         "Condition": {
           "actions": {
             "List_rows:_Get_Support_Request_Type_by_Name": {
@@ -170,6 +162,41 @@
                 "operationMetadataId": "b70aecff-4d0b-479c-8a12-a43d4c13db68"
               },
               "type": "If"
+            },
+            "Scope_-_Add_note_to_timeline": {
+              "actions": {
+                "Add_a_new_row_-_Add_note_to_Account_timeline_": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "02e20920-fa00-4b3c-a879-95b948ac95f4"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "CreateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "annotations",
+                      "item/subject": "Support Request has been Generated ",
+                      "item/notetext": "Support Request No. @{outputs('Add_a_new_row:_Create_Support_Request')?['body/ovs_requestnumber']} regarding invited contact has been generated ",
+                      "item/isdocument": false,
+                      "item/objectid_account@odata.bind": "/accounts/@{triggerOutputs()?['body/_cid_companyname_value']}"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Add_a_new_row:_Create_Support_Request": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "35e45fd3-8a7a-4a91-bbd9-c29fad3bcde1"
+              },
+              "type": "Scope"
             }
           },
           "runAfter": {
@@ -372,6 +399,23 @@
                 "value": true
               }
             ]
+          }
+        },
+        "Delay_30_days_after_the_invitation_is_sent": {
+          "runAfter": {
+            "Condition_2": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "bdac4b3e-91f8-4114-9d62-9f426aad6643"
+          },
+          "type": "Wait",
+          "inputs": {
+            "interval": {
+              "count": "@variables('Days_User_Invitation_Valid')",
+              "unit": "Day"
+            }
           }
         }
       }
