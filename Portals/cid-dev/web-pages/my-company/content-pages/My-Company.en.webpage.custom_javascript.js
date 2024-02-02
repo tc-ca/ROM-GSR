@@ -70,6 +70,7 @@ $(document).ready(function () {
 
     $('div[data-name="tab_3"]').parent().parent().addClass("hidden");
     $("#cid_registrationasof").parent().parent().hide();
+    tdg.c.removeValidator("name");
     var cidCompanyStatus = $('#cid_cidcompanystatus').find(":selected").text();
     var deactivateCompanyWebLink = $('a[href*="deactivate-company"]');
 
@@ -102,7 +103,7 @@ $(document).ready(function () {
 
     //tdg.c.control_hide("ovs_namefr");
     tdg.c.control_hide("cid_reasonfornobnnumber_other");
-
+    
 
     //Phone number formatting
     tdg.cid.phone_init("telephone1", selected_language);
