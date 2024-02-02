@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{e2298c2d-12c1-ee11-9078-0022483cceb8}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="name" select="1" icon="1" preview="1">
+        <row name="result" id="accountid">
+          <cell name="ovs_romid" width="100" />
+          <cell name="name" width="200" />
+          <cell name="cid_sitename" width="100" />
+          <cell name="ovs_legalname" width="109" />
+          <cell name="createdon" width="123" />
+          <cell name="a_a74b2159777c4e9eb168e4b3f760f8af.ovs_legalname" width="195" />
+          <cell name="cid_cidflag" width="100" />
+          <cell name="address1_line1" width="100" />
+          <cell name="address1_stateorprovince" width="122" />
+          <cell name="address1_country" width="100" />
+          <cell name="address1_postalcode" width="133" />
+          <cell name="a_a74b2159777c4e9eb168e4b3f760f8af.createdon" width="190" />
+          <cell name="cid_attestationdate" width="132" />
+          <cell name="a_a74b2159777c4e9eb168e4b3f760f8af.cid_companyclaim" width="237" />
+          <cell name="a_a74b2159777c4e9eb168e4b3f760f8af.primarycontactid" width="218" />
+          <cell name="cid_portalrecordcreationdetails" width="128" />
+          <cell name="createdby" width="104" />
+          <cell name="cid_addressoverwritten" width="147" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
+        <entity name="account">
+          <attribute name="name" />
+          <attribute name="accountid" />
+          <attribute name="ovs_legalname" />
+          <attribute name="ovs_romid" />
+          <filter type="and">
+            <condition attribute="customertypecode" operator="eq" value="948010001" />
+            <condition attribute="statecode" operator="eq" value="0" />
+            <condition attribute="cid_cidflag" operator="eq" value="100000000" />
+          </filter>
+          <link-entity alias="a_a74b2159777c4e9eb168e4b3f760f8af" name="account" to="parentaccountid" from="accountid" link-type="outer" visible="false">
+            <attribute name="cid_companyclaim" />
+            <attribute name="ovs_legalname" />
+            <attribute name="primarycontactid" />
+            <attribute name="createdon" />
+          </link-entity>
+          <attribute name="cid_portalrecordcreationdetails" />
+          <attribute name="createdon" />
+          <attribute name="cid_sitename" />
+          <attribute name="address1_line1" />
+          <attribute name="address1_stateorprovince" />
+          <attribute name="address1_country" />
+          <attribute name="address1_postalcode" />
+          <attribute name="cid_addressoverwritten" />
+          <attribute name="cid_attestationdate" />
+          <order attribute="createdon" descending="true" />
+          <attribute name="createdby" />
+          <attribute name="cid_cidflag" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="CID Sites with Unknown CID Flag" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
