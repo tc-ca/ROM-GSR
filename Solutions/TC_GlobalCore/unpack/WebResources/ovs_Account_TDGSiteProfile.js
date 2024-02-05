@@ -30,12 +30,29 @@
             }
             */
             
-            var isPlanner = (glHelper.hasCurrentUserRole("TDG Planner")) 
-            glHelper.SetSectionVisibility(formContext, TAB_NAME, SECTION_NAME, isPlanner);
-                
+        var isPlanner = (glHelper.hasCurrentUserRole("TDG Planner"))
+        glHelper.SetSectionVisibility(formContext, TAB_NAME, SECTION_NAME, isPlanner);
 
+       // var isTDG_Analyst = (glHelper.hasCurrentUserRole("TDG Analyst"))
+
+        let roles = glHelper.GetCurrentUserRoles();
+       // let roles_RemoveAnalyst = roles.Where(s => (s.name != "TDG Analyst")).ToArray();
+
+        if (roles) {
+
+            if (roles.find(r => r.name.includes("Analyst"))
+                && !roles.find(r => r.name.includes("Administrator"))
+                && !roles.find(r => r.name.includes("Inspector"))
+                && !roles.find(r => r.name.includes("Manager"))
+            && !roles.find(r => r.name.includes("Planner")))
+            {
+                glHelper.SetControlReadOnly(formContext, "cid_cidflag", true);
+            }
+            else glHelper.SetControlReadOnly(formContext, "cid_cidflag", false);
         }
-    //}
+
+    }
+  
     return{
         OnLoad: function (executionContext) {
 

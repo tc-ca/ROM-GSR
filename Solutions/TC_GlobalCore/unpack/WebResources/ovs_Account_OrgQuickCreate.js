@@ -43,7 +43,14 @@ var OrgQuickCreate = (function (window, document) {
             //filter Relationship Type
             filter_customertypecode(formContext);
 
-            
+            // Update related to the CID_PBI# 314125
+            //There is no review for CID Sites that are being added to Core Data. The purpose of CID Regulations was passed to add sites to CORE Data for oversight.
+            ///a new field has been added: cid_cidflag. 
+            // From the ROM form:  Default value when Site created = 'Unknown'.
+            //This value will be updated to 'In Scope' if a HOTI or HOTI GOA operation is created.
+
+            if (formContext.getAttribute("cid_cidflag"))
+                glHelper.SetValue(formContext, "cid_cidflag", 100000000);
 
             //var rTypeCode = formContext.getAttribute("customertypecode");
             //rTypeCode.removeOnChange(OrgQuickCreate.relationShip_OnChange); // avoid binding multiple event handlers
@@ -65,14 +72,21 @@ var OrgQuickCreate = (function (window, document) {
 
 
                 glHelper.SetControlVisibility(formContext, "ovs_legalname", true);
+
+                if (formContext.getAttribute("cid_cidflag"))
+                    glHelper.SetValue(formContext, "cid_cidflag", null);
+
+
             }
             else if (rType == 948010001)//Site
             {
                 //Company specific fields are not required and hidden
                 glHelper.SetRequiredLevel(formContext, "ovs_legalname", false);
-                
 
                 glHelper.SetControlVisibility(formContext, "ovs_legalname", false);
+
+                if (formContext.getAttribute("cid_cidflag"))
+                    glHelper.SetValue(formContext, "cid_cidflag", 100000000);
                 
             }
 

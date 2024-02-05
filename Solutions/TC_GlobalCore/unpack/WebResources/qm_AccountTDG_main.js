@@ -125,8 +125,17 @@ var AccountTDGmain = (function (window, document) {
                 glHelper.SetRequiredLevel(formContext, "customertypecode", false);
                 glHelper.SetControlVisibility(formContext, "customertypecode", false);
 
-                if (formType == 1)
+                // Update related to the CID_PBI# 314125
+                //There is no review for CID Sites that are being added to Core Data. The purpose of CID Regulations was passed to add sites to CORE Data for oversight.
+                if (formType == 1) {
                     glHelper.SetValue(formContext, "customertypecode", 948010001);
+                    ///a new field has been added: cid_cidflag. 
+                    // From the ROM form:  Default value when Site created = 'Unknown'.
+                    //This value will be updated to 'In Scope' if a HOTI or HOTI GOA operation is created.
+
+                    if (formContext.getAttribute("cid_cidflag"))
+                        glHelper.SetValue(formContext, "cid_cidflag", 100000000);
+                }
 
             }
             else if (formName.toUpperCase()  == "COMPANY") {
@@ -171,8 +180,17 @@ var AccountTDGmain = (function (window, document) {
                 glHelper.SetRequiredLevel(formContext, "customertypecode", false);
                 glHelper.SetControlVisibility(formContext, "customertypecode", false);
 
-                if (formType == 1)
+                // Update related to the CID_PBI# 314125
+                //There is no review for CID Sites that are being added to Core Data. The purpose of CID Regulations was passed to add sites to CORE Data for oversight.
+                if (formType == 1) {
                     glHelper.SetValue(formContext, "customertypecode", 948010001);
+                    ///a new field has been added: cid_cidflag. 
+                    // From the ROM form:  Default value when Site created = 'Unknown'.
+                    //This value will be updated to 'In Scope' if a HOTI or HOTI GOA operation is created.
+
+                    if (formContext.getAttribute("cid_cidflag"))
+                        glHelper.SetValue(formContext, "cid_cidflag", 100000000);
+                }
             }
 
             else if (formName.toUpperCase()  == "ENTREPRISE") {

@@ -48,7 +48,7 @@
     <meta>
     <meta>
 <meta><meta></head>
-<body style="overflow-wrap: break-word;" onfocusout="parent.setEmailRange();">
+<body style="overflow-wrap: break-word;">
     <label for="cid_naicscode" class="field-label">NAICS Code</label>
     <span id="cid_naicscode_required" style="color: red;font-weight: bold"> *</span>
     <br>
@@ -60,21 +60,20 @@
     <input type="text" id="cid_naicscode_list_id" hidden="">
 
     <script type="text/javascript">
+        // 
+        // cid_naicscode.htm
+        // 
         $(document).ready(function () {
             debugger;
 
-            // tony-july 27, 2022
-
             document.getElementById("cid_naicscode").setAttribute("autocomplete", "off");
             document.querySelector('input[list="cid_naicscode_list"]').addEventListener('input', onInput);
-
 
             // language
             try {
                 var cid_naicscode_label = sessionStorage.getItem("cid_naicscode_label");
 
                 var selected_language = sessionStorage.getItem("selected_language");
-                //var value = (selected_language == "en-US" ? "NAICS Code" : "Code SCIAN");
                 var value = (selected_language == "en" ? "NAICS Code" : "Code SCIAN");
                 $("#cid_naicscode")[0].labels[0].innerHTML = cid_naicscode_label;
             } catch (e) { }
@@ -125,23 +124,23 @@
             debugger;
 
             var selected_language = sessionStorage.getItem("selected_language");
-            //var filter = "startswith(cid_name, '" + cid_naicscode + "') or substringof('" + cid_naicscode + "', cid_naicsclasstitle)";
-            //var items = tdg.c.OData_List("cid_naicscode", filter);
-
-            var filter = "(startswith(cid_name, '" + cid_naicscode + "') or contains(cid_naicsclasstitle, '" + cid_naicscode + "'))";
+            if (selected_language == "en") {
+                var filter = "(startswith(cid_name, '" + cid_naicscode + "') or contains(cid_naicsclasstitleen, '" + cid_naicscode + "'))";
+            }
+            else {
+                var filter = "(startswith(cid_name, '" + cid_naicscode + "') or contains(cid_naicsclasstitlefr, '" + cid_naicscode + "'))";
+            }
             var items = tdg.c.WebApi_List("cid_naicscodes", filter);
 
             var cid_naicscode_list = document.getElementById('cid_naicscode_list');
-
-
 
             var cid_naicscode_list_id = "";
             for (i = 0; i < items.length; i++) {
                 var item = items[i];
                 var value = item.cid_naicscodeid;
-                var cid_naicsclasstitle = item.cid_naicsclasstitle.replaceAll("\n", " ");
-                var text = item.cid_name + ' - ' +
-                    tdg.c.text_language(cid_naicsclasstitle, selected_language);
+                var cid_naicsclasstitle = (selected_language == "en" ? item.cid_naicsclasstitleen : item.cid_naicsclasstitlefr);
+                cid_naicsclasstitle = cid_naicsclasstitle.replaceAll("\n", " ");
+                var text = item.cid_name + ' - ' + cid_naicsclasstitle;
 
                 cid_naicscode_list_id += value + ";";
 
@@ -182,8 +181,6 @@
                 id = list[index];
 
                 try {
-                    // transfer control back to parent form
-                    //parent.naicscode_selected(text, id);
                     naicscode_selected(text, id);
                 } catch (e) { }
             }
@@ -216,13 +213,9 @@
                 },
 
                 text_language: function (text, language) {
-                    //var selected_language = '{{website.selected_language.code}}';
-                    //sessionStorage.setItem("selected_language", selected_language);
-
                     var value = text;
                     var index1 = text.indexOf("::");
                     if (index1 != -1) {
-                        //if (language == "en-US") {
                         if (language == "en") {
 
                             value = text.substr(0, index1);
@@ -232,27 +225,6 @@
                         }
                     }
                     return value;
-                },
-
-                // odata
-                OData_List: function (entity, filter) {
-                    var url = entity;
-                    if (filter != "") {
-                        url += "?$filter=" + filter;
-                    }
-                    var oDataUrl = "~/_odata/" + url;
-                    //var oDataUrl = "https://rd-tdgcore-dev.powerappsportals.com/_odata/" + url;
-                    var response = null;
-
-                    $.ajax({
-                        type: "GET",
-                        url: oDataUrl,
-                        dataType: "json",
-                        async: false
-                    }).done(function (json) {
-                        response = json.value;
-                    });
-                    return response;
                 },
 
                 //WebApi
@@ -278,10 +250,7 @@
 
                 error_message_clear: function () {
                     debugger;
-                  $('#ValidationSummaryEntityFormControl_EntityFormView').remove();
-
-                    //$('#ValidationSummaryEntityFormView')[0].remove();
-                    //$('#ValidationSummaryEntityFormView').hide();
+                    $('#ValidationSummaryEntityFormControl_EntityFormView').remove();
 
                     $('#ValidationSummaryEntityFormControl_EntityFormView')[0].innerHTML = "";
                     $('#ValidationSummaryEntityFormControl_EntityFormView').hide();
@@ -329,22 +298,6 @@
 
                 control_autocomplete: function () {
                     $("input").attr("autocomplete", "new-password");
-
-                    //$('input, select, textarea').each(
-                    //    function (index) {
-                    //        var input = this;
-                    //        var index1 = input.name.indexOf("ctl00$");
-                    //        var index2 = input.name.lastIndexOf("$");
-                    //        var ctrl = input.name.substr(index2+1);
-                    //        var type = this.getAttribute("type");
-                    //        if ((index1 >= 0) && (type != "hidden")) {
-                    //            debugger;
-                    //            $("#" + ctrl).autocomplete({
-                    //                disabled: true
-                    //            });
-                    //        }
-                    //    }
-                    //);
                 },
 
                 replace_special_char: function (value) {

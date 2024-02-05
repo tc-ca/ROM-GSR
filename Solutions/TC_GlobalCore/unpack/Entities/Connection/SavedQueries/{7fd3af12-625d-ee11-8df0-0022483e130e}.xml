@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{7fd3af12-625d-ee11-8df0-0022483e130e}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="name" select="1" icon="1" preview="1">
+        <row name="result" id="connectionid">
+          <cell name="record2id" width="200" />
+          <cell name="record1id" width="200" />
+          <cell name="a_72c81aaa72c549acbe9e0deee5bd0ad2.fullname" width="200" />
+          <cell name="record2roleid" width="170" />
+          <cell name="a_72c81aaa72c549acbe9e0deee5bd0ad2.emailaddress1" width="200" />
+          <cell name="a_72c81aaa72c549acbe9e0deee5bd0ad2.statecode" width="165" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
+        <entity name="connection">
+          <attribute name="connectionid" />
+          <attribute name="record2roleid" />
+          <filter type="and">
+            <condition attribute="record2objecttypecode" operator="eq" value="2" />
+            <condition attribute="record2roleid" operator="in">
+              <value uiname="TDG  Primary Contact" uitype="connectionrole">{c44fb717-f114-ee11-9cbe-0022483d0343}</value>
+              <value uiname="TDG Secondary Contact" uitype="connectionrole">{d90b2737-f114-ee11-9cbe-0022483d0343}</value>
+            </condition>
+            <condition attribute="record1objecttypecode" operator="eq" value="1" />
+          </filter>
+          <link-entity alias="a_72c81aaa72c549acbe9e0deee5bd0ad2" name="contact" to="record2id" from="contactid" link-type="outer" visible="false">
+            <attribute name="fullname" />
+            <attribute name="emailaddress1" />
+            <attribute name="statecode" />
+          </link-entity>
+          <attribute name="record2id" />
+          <attribute name="record1id" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="TDG Core Connected contacts" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="Contacts connected to sites with secondary/primary TDF role" languagecode="1033" />
+    </Descriptions>
+  </savedquery>
+</savedqueries>

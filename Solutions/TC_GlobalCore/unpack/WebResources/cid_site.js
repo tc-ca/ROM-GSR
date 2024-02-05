@@ -18,6 +18,7 @@ function Me_OnLoad(context) {
     if (_form.ui.getFormType() == 1) {
         customertypecode = sessionStorage.getItem(k_customertypecode);
         if (customertypecode == k_customertypecode_org) customertypecode = k_customertypecode_site;
+		 if (_form.getAttribute("cid_cidflag")) _form.getAttribute("cid_cidflag").setValue(100000000);
     }
     else {
         customertypecode = _form.getAttribute("customertypecode").getValue();

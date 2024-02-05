@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{4cd8a034-b1e4-4225-9637-808f143a1bb7}</savedqueryid>
+    <layoutxml>
+      <grid name="ovs_invitations" jump="ovs_name" select="1" icon="1" preview="1">
+        <row name="ovs_invitation" id="ovs_invitationid">
+          <cell name="ovs_name" width="177" />
+          <cell name="ovs_name_first_nm" width="192" />
+          <cell name="ovs_name_last_nm" width="176" />
+          <cell name="ovs_email_address_txt" width="194" />
+          <cell name="ovs_invite_status_cd" width="133" />
+          <cell name="ovs_account_id" width="150" />
+          <cell name="ovs_invite_type_cd" width="105" />
+          <cell name="createdon" width="125" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>2</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="ovs_invitation">
+          <attribute name="ovs_invitationid" />
+          <attribute name="ovs_name" />
+          <attribute name="createdon" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="ovs_name_first_nm" />
+          <attribute name="ovs_name_last_nm" />
+          <attribute name="ovs_email_address_txt" />
+          <attribute name="ovs_invite_status_cd" />
+          <attribute name="ovs_account_id" />
+          <attribute name="ovs_invite_type_cd" />
+          <order attribute="createdon" descending="true" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Invitation Associated View" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

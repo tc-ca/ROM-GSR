@@ -11,7 +11,7 @@ var _cid_crabusinessnumber;
 
 function Me_OnLoad(context) {
     debugger;
-
+    
     _form = context.getFormContext();
 
     var customertypecode = null;
@@ -43,7 +43,7 @@ function Me_OnLoad(context) {
     if (value) return;
 
     sessionStorage.setItem(k_customertypecode, k_customertypecode_org);
-
+    _form.getAttribute("name").setRequiredLevel("none");
     _form.getAttribute("ovs_address1_province").setRequiredLevel("required");
     _form.getAttribute("address1_country").setValue("Canada");
 
@@ -112,6 +112,7 @@ function Get_FlowURL_and_Environment() {
                     }
                     else if (result.entities[i].qm_name == "CID_Environment") {
                         _environment = result.entities[i].qm_value;
+                        _environment = _environment.toUpperCase();
                     }
                 }
                 // perform additional operations on retrieved records
@@ -129,9 +130,12 @@ function cra_api_get_v2() {
     var cid_crabusinessnumber = _form.getAttribute("cid_crabusinessnumber").getValue();
     _form.ui.clearFormNotification("1");
 
+    if (cid_crabusinessnumber == null) return;
+
     Xrm.Utility.showProgressIndicator("Please wait while retrieving information from CRA");
     if (cid_crabusinessnumber != null) {
-        if (_environment == "PreProd" || _environment == "Prod") {
+        if (_environment.toUpperCase() == "PreProd".toUpperCase() ||
+            _environment.toUpperCase() == "Prod".toUpperCase()) {
             debugger;
             let body = {
                 "cid_crabusinessnumber": cid_crabusinessnumber
@@ -265,7 +269,7 @@ function ovs_address1_province_setup() {
 }
 
 function cid_has_cra_bn_OnChange() {
-    //debugger;
+    debugger;
     var value = _form.getAttribute("cid_has_cra_bn").getValue();
 
     _form.getControl("cid_crabusinessnumber").setVisible(value);
@@ -277,11 +281,12 @@ function cid_has_cra_bn_OnChange() {
     _form.getAttribute("cid_reasonfornobnnumber_other").setRequiredLevel("none");
 
     if (value) {
-        _form.getAttribute("cid_crabusinessnumber").setRequiredLevel("none");
+        _form.getAttribute("cid_crabusinessnumber").setRequiredLevel("required");
     }
     else {
         _form.getAttribute("cid_reasonfornobnnumber").setRequiredLevel("required");
         cid_reasonfornobnnumber_OnChange();
+        _form.getAttribute("cid_crabusinessnumber").setValue("");
     }
 }
 
@@ -599,6 +604,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
             _form.getAttribute("ovs_legalname").setValue(LegalName);
             _form.getAttribute("name").setValue(OperatingName);
+            _form.getAttribute("ovs_namefr").setValue("");
+            _form.getAttribute("ovs_legalnamefr").setValue("");
             _form.getAttribute("address1_line1").setValue(address.AddressLine1Text);
             _form.getAttribute("address1_line2").setValue(address.AddressLine2Text);
             _form.getAttribute("address1_line3").setValue(address.CareOfLine);
