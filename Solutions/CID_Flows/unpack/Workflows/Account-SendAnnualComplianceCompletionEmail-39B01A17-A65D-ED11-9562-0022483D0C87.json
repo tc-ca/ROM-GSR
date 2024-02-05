@@ -260,35 +260,8 @@
             },
             "Check_Language": {
               "actions": {
-                "Outlook_Send_an_email_notification_(V3)_English": {
-                  "runAfter": {},
-                  "metadata": {
-                    "operationMetadataId": "9f2075e6-4e78-4aa6-8056-4472aaa61156"
-                  },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "host": {
-                      "connectionName": "shared_office365",
-                      "operationId": "SendEmailV2",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
-                    },
-                    "parameters": {
-                      "emailMessage/To": "@variables('ToEmailRecipients')",
-                      "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: The Annual Compliance process for the @{triggerOutputs()?['body/ovs_legalname']} organization was sucessfully completed",
-                      "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe Transport Canada Online CID Data Platform's Annual Compliance process for the @{triggerOutputs()?['body/ovs_legalname']} organization was successfully completed on @{triggerOutputs()?['body/cid_annualcompliancecompletiondate']}. The next Annual Compliance is due on @{triggerOutputs()?['body/cid_nextannualcomplianceupdate']}<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n</p>",
-                      "emailMessage/From": "@variables('CID_Email_Sender')",
-                      "emailMessage/Cc": "@variables('CCEmailRecipients')",
-                      "emailMessage/Importance": "Normal"
-                    },
-                    "authentication": "@parameters('$authentication')"
-                  }
-                },
                 "Subject-En": {
-                  "runAfter": {
-                    "Outlook_Send_an_email_notification_(V3)_English": [
-                      "Succeeded"
-                    ]
-                  },
+                  "runAfter": {},
                   "metadata": {
                     "operationMetadataId": "0f9a2e72-3db8-41a4-81a3-3f74585db786"
                   },
@@ -309,27 +282,32 @@
                 },
                 "Condition_-_Comment_out_old_email_action_En": {
                   "actions": {
-                    "Run_a_Child_Flow_-_Log_Email_Activities_in_Timeline_En": {
+                    "Outlook_Send_an_email_notification_(V3)_English": {
                       "runAfter": {},
                       "metadata": {
-                        "operationMetadataId": "9efbab9d-9275-4084-9b91-81e259251e89"
+                        "operationMetadataId": "9f2075e6-4e78-4aa6-8056-4472aaa61156"
                       },
-                      "type": "Workflow",
+                      "type": "OpenApiConnection",
                       "inputs": {
                         "host": {
-                          "workflowReferenceName": "3c524c38-cbb0-ee11-a568-0022483cceb8"
+                          "connectionName": "shared_office365",
+                          "operationId": "SendEmailV2",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                         },
-                        "body": {
-                          "text": "@outputs('Subject-En')",
-                          "text_1": "@variables('Activity Party')",
-                          "text_2": "@outputs('Body-En')",
-                          "text_3": "@triggerOutputs()?['body/_cid_company_value']"
-                        }
+                        "parameters": {
+                          "emailMessage/To": "@variables('ToEmailRecipients')",
+                          "emailMessage/Subject": "@{variables('TestSubjectText')}TDG Online - CID: The Annual Compliance process for the @{triggerOutputs()?['body/ovs_legalname']} organization was sucessfully completed",
+                          "emailMessage/Body": "<p>@{variables('TestingText')}@{outputs('StandardSalutation')}<br>\n<br>\nThe Transport Canada Online CID Data Platform's Annual Compliance process for the @{triggerOutputs()?['body/ovs_legalname']} organization was successfully completed on @{triggerOutputs()?['body/cid_annualcompliancecompletiondate']}. The next Annual Compliance is due on @{triggerOutputs()?['body/cid_nextannualcomplianceupdate']}<br>\n<br>\nRegards,<br>\n<br>\n<br>\nTransport Canada - CID Support Team<br>\n<br>\n@{outputs('English-EmailFooter')}<br>\n</p>",
+                          "emailMessage/From": "@variables('CID_Email_Sender')",
+                          "emailMessage/Cc": "@variables('CCEmailRecipients')",
+                          "emailMessage/Importance": "Normal"
+                        },
+                        "authentication": "@parameters('$authentication')"
                       }
                     }
                   },
                   "runAfter": {
-                    "Body-En": [
+                    "Run_a_Child_Flow_-_Log_Email_Activities_in_Timeline_En": [
                       "Succeeded"
                     ]
                   },
@@ -343,6 +321,28 @@
                     "operationMetadataId": "204f727a-6066-4e3f-b72c-4001b509e486"
                   },
                   "type": "If"
+                },
+                "Run_a_Child_Flow_-_Log_Email_Activities_in_Timeline_En": {
+                  "runAfter": {
+                    "Body-En": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "9efbab9d-9275-4084-9b91-81e259251e89"
+                  },
+                  "type": "Workflow",
+                  "inputs": {
+                    "host": {
+                      "workflowReferenceName": "3c524c38-cbb0-ee11-a568-0022483cceb8"
+                    },
+                    "body": {
+                      "text": "@outputs('Subject-En')",
+                      "text_1": "@variables('Activity Party')",
+                      "text_2": "@outputs('Body-En')",
+                      "text_3": "@triggerOutputs()?['body/_cid_company_value']"
+                    }
+                  }
                 }
               },
               "runAfter": {
@@ -352,35 +352,8 @@
               },
               "else": {
                 "actions": {
-                  "Outlook_Send_an_email_notification_(V3)_French": {
-                    "runAfter": {},
-                    "metadata": {
-                      "operationMetadataId": "9f2075e6-4e78-4aa6-8056-4472aaa61156"
-                    },
-                    "type": "OpenApiConnection",
-                    "inputs": {
-                      "host": {
-                        "connectionName": "shared_office365",
-                        "operationId": "SendEmailV2",
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
-                      },
-                      "parameters": {
-                        "emailMessage/To": "@variables('ToEmailRecipients')",
-                        "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Le processus de conformité annuelle pour l’organisation @{triggerOutputs()?['body/ovs_legalnamefr']} a été mené à bien.",
-                        "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLe processus de conformité annuelle de la plateforme de données de la BDIC en ligne de Transports Canada pour l’organisation @{triggerOutputs()?['body/ovs_legalnamefr']} a été achevé avec succès le @{triggerOutputs()?['body/cid_annualcompliancecompletiondate']}. Le prochain rapport annuel de conformité doit être remis le @{triggerOutputs()?['body/cid_nextannualcomplianceupdate']}<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n</p>",
-                        "emailMessage/From": "@variables('CID_Email_Sender')",
-                        "emailMessage/Cc": "@variables('CCEmailRecipients')",
-                        "emailMessage/Importance": "Normal"
-                      },
-                      "authentication": "@parameters('$authentication')"
-                    }
-                  },
                   "Subject-Fr": {
-                    "runAfter": {
-                      "Outlook_Send_an_email_notification_(V3)_French": [
-                        "Succeeded"
-                      ]
-                    },
+                    "runAfter": {},
                     "metadata": {
                       "operationMetadataId": "745011ec-2208-4b10-ae02-5fcfdfbdb0b3"
                     },
@@ -401,27 +374,32 @@
                   },
                   "Condition_-_Comment_out_old_email_action_Fr": {
                     "actions": {
-                      "Run_a_Child_Flow_-_Log_Email_Activities_in_Timeline_Fr": {
+                      "Outlook_Send_an_email_notification_(V3)_French": {
                         "runAfter": {},
                         "metadata": {
-                          "operationMetadataId": "b78fceec-1505-431c-a0ab-05573b45419f"
+                          "operationMetadataId": "9f2075e6-4e78-4aa6-8056-4472aaa61156"
                         },
-                        "type": "Workflow",
+                        "type": "OpenApiConnection",
                         "inputs": {
                           "host": {
-                            "workflowReferenceName": "3c524c38-cbb0-ee11-a568-0022483cceb8"
+                            "connectionName": "shared_office365",
+                            "operationId": "SendEmailV2",
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
                           },
-                          "body": {
-                            "text": "@outputs('Subject-Fr')",
-                            "text_1": "@variables('Activity Party')",
-                            "text_2": "@outputs('Body-Fr')",
-                            "text_3": "@triggerOutputs()?['body/_cid_company_value']"
-                          }
+                          "parameters": {
+                            "emailMessage/To": "@variables('ToEmailRecipients')",
+                            "emailMessage/Subject": "@{variables('FrenchTestSubjectText')}TMD en ligne – BDIC : Le processus de conformité annuelle pour l’organisation @{triggerOutputs()?['body/ovs_legalnamefr']} a été mené à bien.",
+                            "emailMessage/Body": "<p>@{variables('FrenchTestingText')}@{outputs('FrenchStandardSalutation')}<br>\n<br>\nLe processus de conformité annuelle de la plateforme de données de la BDIC en ligne de Transports Canada pour l’organisation @{triggerOutputs()?['body/ovs_legalnamefr']} a été achevé avec succès le @{triggerOutputs()?['body/cid_annualcompliancecompletiondate']}. Le prochain rapport annuel de conformité doit être remis le @{triggerOutputs()?['body/cid_nextannualcomplianceupdate']}<br>\n<br>\nSalutations,<br>\n<br>\n<br>\nÉquipe de soutien de la BDIC de Transports Canada<br>\n<br>\n@{outputs('French-EmailFooter')}<br>\n</p>",
+                            "emailMessage/From": "@variables('CID_Email_Sender')",
+                            "emailMessage/Cc": "@variables('CCEmailRecipients')",
+                            "emailMessage/Importance": "Normal"
+                          },
+                          "authentication": "@parameters('$authentication')"
                         }
                       }
                     },
                     "runAfter": {
-                      "Body-Fr": [
+                      "Run_a_Child_Flow_-_Log_Email_Activities_in_Timeline_Fr": [
                         "Succeeded"
                       ]
                     },
@@ -435,6 +413,28 @@
                       "operationMetadataId": "7ded8145-d8b1-4c8b-835a-63942e89fd19"
                     },
                     "type": "If"
+                  },
+                  "Run_a_Child_Flow_-_Log_Email_Activities_in_Timeline_Fr": {
+                    "runAfter": {
+                      "Body-Fr": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "b78fceec-1505-431c-a0ab-05573b45419f"
+                    },
+                    "type": "Workflow",
+                    "inputs": {
+                      "host": {
+                        "workflowReferenceName": "3c524c38-cbb0-ee11-a568-0022483cceb8"
+                      },
+                      "body": {
+                        "text": "@outputs('Subject-Fr')",
+                        "text_1": "@variables('Activity Party')",
+                        "text_2": "@outputs('Body-Fr')",
+                        "text_3": "@triggerOutputs()?['body/_cid_company_value']"
+                      }
+                    }
                   }
                 }
               },
