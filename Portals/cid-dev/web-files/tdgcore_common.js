@@ -3448,9 +3448,11 @@ if (typeof (tdg.cid.crw) == "undefined") {
                         return CRA_Data;
                     }
 
-                    if (json.error.code == "ResponseTimeout") {
-                        debugger;
-                        return json.error;
+                    if (json.error != null) {
+                        if (json.error.code == "ResponseTimeout") {
+                            debugger;
+                            return json.error;
+                        }
                     }
 
                     //get CRA data
