@@ -1,0 +1,86 @@
+var k_form_org = "CRS Organization";
+var k_form_site = "CRS Site Profile";
+var k_customertypecode_org = 948010000;
+var k_customertypecode_site = 948010001;
+var k_customertypecode = "cid_customertypecode";
+
+var _form;
+var _CRAFlowURL;
+var _environment;
+var _cid_crabusinessnumber;
+
+function Form_OnLoad(context) {
+	
+	debugger;
+	
+	_form = context.getFormContext();
+	
+	var customertypecode = null;
+    var parentaccountid = _form.getAttribute("parentaccountid");
+	
+	if (_form.ui.getFormType() == 1) 
+	{
+        customertypecode = k_customertypecode_org;
+		
+		var globalContext = Xrm.Utility.getGlobalContext();
+        globalContext.getCurrentAppName().then(
+            function successCallback(appName) {
+                //alert(appName);
+                if (appName == "CRS") {
+                    _form.getAttribute("cid_cidcompanystatus").setValue(100000002);
+                }
+            }, function errorCallback() {
+                // handle error conditions
+                debugger;
+            });
+	}
+	else 
+	{
+        customertypecode = _form.getAttribute("customertypecode").getValue();
+    }
+
+	var value = form_setup(_form, customertypecode);
+    if (value) return;
+	
+	sessionStorage.setItem(k_customertypecode, k_customertypecode_org);
+}
+
+function Form_OnSave(context) {
+    debugger;
+    sessionStorage.setItem(k_customertypecode, "");
+}
+
+function form_setup(context, customertypecode) {
+    debugger;
+
+    var load_form_name = "";
+    switch (customertypecode) {
+        case k_customertypecode_org:
+            load_form_name = k_form_org;
+            break;
+        case k_customertypecode_site:
+            load_form_name = k_form_site;
+            break;
+        default:
+            return false;
+    }
+    load_form_name = load_form_name.toLowerCase();
+
+    var current_form = Xrm.Page.ui.formSelector.getCurrentItem();
+    var label = current_form.getLabel().toLowerCase();
+
+    if (load_form_name.indexOf(label) != -1) return false;
+
+    var forms = context.ui.formSelector.items.get();
+    var form_name = load_form_name.toLowerCase();
+
+    for (var item in forms) {
+        var form = forms[item];
+        var curent_form_name = form.getLabel().toLowerCase();
+        if (form_name.indexOf(curent_form_name) != -1) {
+            form.navigate();
+            return true;
+        }
+    }
+    return false;
+}
