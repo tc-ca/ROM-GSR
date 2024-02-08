@@ -188,7 +188,6 @@ if (typeof (invitation) == "undefined") {
             cid_has_cra_bn = (cid_has_cra_bn == null ? 0 : cid_has_cra_bn);
             var bn = _account.cid_crabusinessnumber;
             var legalname = _account.ovs_legalname;
-            var ovs_legalnamefr = _account.ovs_legalnamefr;
             var cid_reasonfornobnnumber = _account.cid_reasonfornobnnumber;
             var list = $("#cid_reasonfornobnnumber")[0].options;
             for (var i = 0; i < list.length; i++) {
@@ -200,7 +199,7 @@ if (typeof (invitation) == "undefined") {
             var cid_reasonfornobnnumber_other = _account.cid_reasonfornobnnumber_other;
             var cid_reasonfornobnnumber_index = _account.cid_reasonfornobnnumber;
 
-            const data = await tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn, legalname, ovs_legalnamefr, list);
+            const data = await tdg.cid.crw.data_confirm_dialog(cid_has_cra_bn, bn, legalname, "", list);
             if (data.length == 0) {
                 data.length = 1;
                 data.cid_has_cra_bn = cid_has_cra_bn;
@@ -227,8 +226,7 @@ if (typeof (invitation) == "undefined") {
                 if (ans) {
                     debugger;
                     var hasCRAbn = sessionStorage.getItem("cid_has_cra_bn");
-                    if (hasCRAbn == 1)
-                    {
+                    if (hasCRAbn == 1) {
                         $("#cid_has_cra_bn").val(1);
                         tdg.cid.crw.start_cid_has_cra_bn_onchange("1");
                         $("#cid_crabusinessnumber").val(sessionStorage.getItem("cid_crabusinessnumber"));
@@ -240,9 +238,8 @@ if (typeof (invitation) == "undefined") {
                         $("#cid_legalname").val(_account.ovs_legalname);
 
                         console.log(sessionStorage.getItem("cid_crabusinessnumber"));
-                        console.log(sessionStorage.getItem("ovs_legalnamefr"));
+
                         $("#cid_crabusinessnumber").val(sessionStorage.getItem("cid_crabusinessnumber"));
-                        $("#ovs_legalnamefr").val(sessionStorage.getItem("ovs_legalnamefr"));
                         $("#cid_reasonfornobnnumber").val(sessionStorage.getItem("cid_reasonfornobnnumber"));
                         //_account.cid_reasonfornobnnumber);
                         tdg.cid.crw.start_cid_reasonfornobnnumber_onchange(false);
@@ -294,7 +291,6 @@ if (typeof (invitation) == "undefined") {
                         $("#cid_reasonfornobnnumber").val(_account.cid_reasonfornobnnumber);
                         $("#cid_reasonfornobnnumber_other").val(_account.cid_reasonfornobnnumber_other);
                         $("#cid_legalname").val(_account.ovs_legalname);
-                        $("#ovs_legalnamefr").val(_account.ovs_legalnamefr);
                     }
                     invitation.invitation_go_next(_account, false, contact_id);
                     return;

@@ -118,7 +118,8 @@ if (window.jQuery) {
                     let legalname = $("#cid_legalname").val();
                     let legalnamefr = "";// $("#ovs_legalnamefr").val();
                     debugger;
-                    rom_data = tdg.cid.crw.start_account_by_name(legalname, legalnamefr);
+                    //rom_data = tdg.cid.crw.start_account_by_name(legalname, legalnamefr);
+                    rom_data = tdg.cid.crw.start_account_by_name(legalname);
                     if (rom_data.length > 0) {
                         //check if claimed company is duplicate
                         if (rom_data.length > 1) {
