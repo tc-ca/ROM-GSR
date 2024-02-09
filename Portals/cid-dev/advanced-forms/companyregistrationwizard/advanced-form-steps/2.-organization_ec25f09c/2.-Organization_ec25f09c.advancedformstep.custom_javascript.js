@@ -12,6 +12,8 @@ $(document).ready(function () {
 	tdg.c.control_hide("adx_modifiedbyusername");
 	//set created by regiserant to current uesr
 
+	/*
+	//below code should be used only in the insert form not the edit.
 	$("#cid_createdbyregistrant_name").attr("value", '{{user.fullname}}');
 	$("#cid_createdbyregistrant_id").attr("value", '{{user.contactid}}');
 	$("#cid_createdbyregistrant_entityname").attr("value", "contact");
@@ -19,7 +21,7 @@ $(document).ready(function () {
 	todayDate = todayDate.replaceAll("-", "/");
 
 	$("#cid_portalrecordcreationdetails").val(todayDate + ", " + '{{user.fullname}}');
-
+*/
 	//hide created by registerant
 	tdg.c.control_hide("cid_createdbyregistrant", true);
 	//hide created on by
@@ -174,29 +176,38 @@ $(document).ready(function () {
 
 	debugger;
 	var userId = '{{user.id}}';
-	var withdrawLabel = tdg.error_message.message("BTN_WITHDRAW");
-	$('#NextButton').parent().parent().after('<div role="group" class="pull-right toolbar-actions"><input type="button" data-dismiss="modal" value="' + withdrawLabel + '" id="WithdrawButton" style="margin-left: 10px;" name="WithdrawButton" class="btn btn-default button previous previous-btn"/></div>');
-	// bind the click event to this custom buttton
-	$("#WithdrawButton").bind("click", function () {
-		debugger;
-		var message = tdg.error_message.message("m000145");
-		tdg.c.dialog_YN(message, (ans) => {
-			var contact_id = '{{user.id}}';
-			if (ans) {
-				var DeleteContactFlowData = '{' +
-					'"ContactId": "' + contact_id + '"' +
-					'}';
-				console.log(DeleteContactFlowData);
-				tdg.cid.flow.Call_Flow("CID_Flow_RunCompanySitesDeleting_Delete_Contact", DeleteContactFlowData);
-				tdg.c.sign_out();
-				return false;
-			}
-			else {
-				return false;
-			}
-		});
-	});
-
+	var parentcustomerid = '{{user.parentcustomerid.Id}}';
+		var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq '" + parentcustomerid + "'";
+		var accData = tdg.webapi.list("accounts", filter);
+		if (accData != null && accData.length > 0) {
+	    if (accData[0].cid_portalrecordcreationdetails) // Net New Site
+			{
+				var withdrawLabel = tdg.error_message.message("BTN_WITHDRAW");
+				$('#NextButton').parent().parent().after('<div role="group" class="pull-right toolbar-actions"><input type="button" data-dismiss="modal" value="' + withdrawLabel + '" id="WithdrawButton" style="margin-left: 10px;" name="WithdrawButton" class="btn btn-default button previous previous-btn"/></div>');
+				
+				
+				// bind the click event to this custom buttton
+				$("#WithdrawButton").bind("click", function () {
+					debugger;
+					var message = tdg.error_message.message("m000145");
+					tdg.c.dialog_YN(message, (ans) => {
+						var contact_id = '{{user.id}}';
+						if (ans) {
+							var DeleteContactFlowData = '{' +
+								'"ContactId": "' + contact_id + '"' +
+								'}';
+							console.log(DeleteContactFlowData);
+							tdg.cid.flow.Call_Flow("CID_Flow_RunCompanySitesDeleting_Delete_Contact", DeleteContactFlowData);
+							tdg.c.sign_out();
+							return false;
+						}
+						else {
+							return false;
+						}
+					});
+				});
+			}//end check created on by columne
+		}//end check data lenghth
 	if ('{{user.cid_contacttype.Value}}' != 100000000) $("#WithdrawButton").remove();
 });
 

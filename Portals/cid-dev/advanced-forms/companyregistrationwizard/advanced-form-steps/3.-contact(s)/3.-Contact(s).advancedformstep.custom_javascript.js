@@ -68,11 +68,14 @@ $(document).ready(function () {
 	//var currentUserId = '{{user.contactid}}';
 	//Disable_ContactTypeFieldsForSecondaryUser(currentUserId);
 
-	if (sessionStorage.getItem("frominyearsitepage") == "false") {
+	if (sessionStorage.getItem("frominyearsitepage") == "false")
+	 {
 		var parentcustomerid = '{{user.parentcustomerid.Id}}';
 		var filter = "statecode eq 0 and cid_portalrecordcreationdetails ne null and accountid eq " + parentcustomerid ;
 		var accData = tdg.webapi.list("accounts", filter);
+		console.log ("acc data lenght "  +accData.length);
 		if (accData != null && accData.length > 0) {
+			console.log ("portal creation details " + accData[0].cid_portalrecordcreationdetails );
 			if (accData[0].cid_portalrecordcreationdetails) // Net New Site
 			{
 				var withdrawLabel = tdg.error_message.message("BTN_WITHDRAW");
