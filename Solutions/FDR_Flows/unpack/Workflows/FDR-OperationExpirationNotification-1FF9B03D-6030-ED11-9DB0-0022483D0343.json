@@ -82,7 +82,7 @@
             "parameters": {
               "entityName": "ovs_mocregistrations",
               "$select": "ovs_mocregistrationname,ovs_registrationexpiry,ovs_name,ovs_mocregistrationid,_ovs_siteid_value",
-              "$filter": "(ovs_mocregistrationname ne null and ovs_registrationexpiry ne null and (Microsoft.Dynamics.CRM.On(PropertyName='ovs_registrationexpiry',PropertyValue='@{formatDateTime(addDays(utcnow(),-30),'yyyy-MM-dd')}')) and _ovs_siteid_value ne null) and (ovs_SiteId/_parentaccountid_value ne null)",
+              "$filter": "(ovs_mocregistrationname ne null and ovs_registrationexpiry ne null and statecode eq 0 and (Microsoft.Dynamics.CRM.On(PropertyName='ovs_registrationexpiry',PropertyValue='@{formatDateTime(addDays(utcnow(),-30),'yyyy-MM-dd')}')) and _ovs_siteid_value ne null) and (ovs_SiteId/_parentaccountid_value ne null)",
               "$expand": "ovs_SiteId($select=accountid,_parentaccountid_value)",
               "$top": 10000
             },
@@ -595,7 +595,7 @@
                 "parameters": {
                   "entityName": "ovs_mocregistrations",
                   "$select": "ovs_name,ovs_mocregistrationid,ovs_mocregistrationname,ovs_registrationexpiry,_ovs_siteid_value",
-                  "$filter": "(Microsoft.Dynamics.CRM.On(PropertyName='ovs_registrationexpiry',PropertyValue='@{formatDateTime(addDays(utcnow(),variables('InDays')),'yyyy-MM-dd')}') and ovs_SiteId/_parentaccountid_value ne null and ovs_registrationexpiry ne null and ovs_mocregistrationname ne null and fdr_registrationtype/_fdr_standard_value ne null) and (ovs_SiteId/accountid ne null) and (fdr_registrationtype/fdr_containertypeid ne null)",
+                  "$filter": "(Microsoft.Dynamics.CRM.On(PropertyName='ovs_registrationexpiry',PropertyValue='@{formatDateTime(addDays(utcnow(),variables('InDays')),'yyyy-MM-dd')}') and ovs_SiteId/_parentaccountid_value ne null and ovs_registrationexpiry ne null  and statecode eq 0 and ovs_mocregistrationname ne null and fdr_registrationtype/_fdr_standard_value ne null) and (ovs_SiteId/accountid ne null) and (fdr_registrationtype/fdr_containertypeid ne null)",
                   "$expand": "ovs_SiteId($select=address1_composite,_parentaccountid_value,_primarycontactid_value),fdr_registrationtype($select=fdr_frenchname,fdr_englishname,_fdr_standard_value)",
                   "$top": 10000
                 },
