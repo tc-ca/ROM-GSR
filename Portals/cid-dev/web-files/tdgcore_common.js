@@ -217,8 +217,6 @@ if (typeof (tdg.c) == "undefined") {
 
         // odata
         OData_List: function (entity, filter) {
-            debugger;
-
             var url = entity;
             if (filter != "") {
                 url += "?$filter=" + filter;
@@ -1269,12 +1267,10 @@ if (typeof (tdg.webapi) == "undefined") {
                     if (this.status === 200) {
                         var results = JSON.parse(this.response);
                         if (results != null && results.value.length > 0) {
-                            debugger;
                             var value = results.value[0].value;
                         }
 
                     } else {
-                        debugger;
                     }
                 }
             };
@@ -1322,8 +1318,6 @@ if (typeof (tdg.error_message) == "undefined") {
         },
 
         read_file: function () {
-            debugger;
-
             var url = window.document.URL;
             url = url.replace("https://", "");
             var index1 = url.indexOf("/");
@@ -1338,8 +1332,6 @@ if (typeof (tdg.error_message) == "undefined") {
         },
 
         receivedText: function (data) {
-            debugger;
-
             var value = JSON.stringify(data);
             sessionStorage.setItem(this.k_tdgcore_error_message, value)
         }
@@ -1350,7 +1342,6 @@ if (typeof (tdg.error_message) == "undefined") {
 if (typeof (tdg.root) == "undefined") {
     tdg.root = {
         setup: function (cid_has_cra_bn, cid_crabusinessnumber, parentcustomerid, contact_id) {
-            debugger;
             var rows = tdg.webapi.list("cid_companyeraps", "statuscode eq 1");
             var length = rows.length;
 
@@ -1365,8 +1356,6 @@ if (typeof (tdg.root) == "undefined") {
         },
 
         erap_list: function (bn) {
-            debugger;
-
             var root = tdg.root.company(bn);
             if (root != null) {
                 var root_organization_id = root.root_organization_id;
@@ -1387,8 +1376,6 @@ if (typeof (tdg.root) == "undefined") {
         },
 
         erap_get_by_root_name: function (root_name) {
-            debugger;
-
             var data;
             var filter = "root_name eq '" + root_name + "'";
 
@@ -1401,7 +1388,6 @@ if (typeof (tdg.root) == "undefined") {
         },
 
         cid_companyeraps_insert: function (parent_id, cid_erapid, contact_id, cid_root_ind) {
-            debugger;
             var data = {
                 "cid_Company@odata.bind": "/accounts(" + parent_id + ")",
                 "cid_CreatedByRegistrant@odata.bind": "/contacts(" + contact_id + ")",
@@ -1428,7 +1414,6 @@ if (typeof (tdg.root) == "undefined") {
 if (typeof (tdg.cid) == "undefined") {
     tdg.cid = {
         ovs_supportrequest_insert: function (data) {
-            debugger;
             if (data.ovs_Company != null) {
                 var value = {
                     "ovs_Company@odata.bind": "/accounts(" + data.ovs_Company + ")",
@@ -1450,8 +1435,6 @@ if (typeof (tdg.cid) == "undefined") {
         },
 
         address_init: function (site_ind) {
-            debugger;
-
             this.clear_address_type_required_fields();
 
             // default
@@ -1576,7 +1559,6 @@ if (typeof (tdg.cid) == "undefined") {
         },
 
         name_init: function (filedName) {
-            debugger;
             var regName = /[^A-Za-z'-\s]/g;
             if (filedName != null || filedName != "") {
                 var namefield = "#" + filedName;
@@ -1591,8 +1573,6 @@ if (typeof (tdg.cid) == "undefined") {
         },
 
         address_same_as_company: function (parent_id) {
-            debugger;
-
             var value = $("#cid_same_as_company").val();    // $("#cid_same_as_company")[0].checked;
             value = (value == 1 ? true : false);
 
@@ -1662,8 +1642,6 @@ if (typeof (tdg.cid) == "undefined") {
         },
 
         address_type_change: function (reset_data) {
-            debugger;
-
             // hide sections
             tdg.c.section_hide("section_address");
             tdg.c.section_hide("section_legal_land_description");
@@ -1786,8 +1764,6 @@ if (typeof (tdg.cid) == "undefined") {
         },
 
         WebResource_address_complete_readonly: function (value) {
-            debugger;
-
             try {
                 var f = document.getElementById("WebResource_address_complete");
                 var c = f.contentWindow;
@@ -1796,16 +1772,12 @@ if (typeof (tdg.cid) == "undefined") {
         },
 
         Append_Modes_html_checkboxes: function (air, marine, rail, road) {
-            debugger;
-
             //get Air translation from file
             console.log("function called");
             var cid_Air_label = tdg.error_message.message("m000102");
             var cid_Maritime_label = tdg.error_message.message("m000103");
             var cid_Rail_label = tdg.error_message.message("m000104");
             var cid_Road_label = tdg.error_message.message("m000105");
-
-
 
             //check if air is selected
             var airchecked = "";
@@ -1894,15 +1866,12 @@ if (typeof (tdg.cid) == "undefined") {
         },
 
         subgrid_header_language: function (grid, un_number_grid) {
-            debugger;
             var selected_language = sessionStorage.getItem("selected_language");
 
             grid.on("loaded", function () {
-                debugger;
                 // header
                 let header = grid.find("table thead > tr");
                 for (var index1 = 0; index1 < header.length; index1++) {
-                    //debugger;
                     let tr = header[index1];
                     let cols = $(tr).find('th');
                     for (var i = 0; i < cols.length; i++) {
@@ -1919,8 +1888,6 @@ if (typeof (tdg.cid) == "undefined") {
                             var control_a = $(tdElement).find("a");
                             var text = control_a.attr("aria-label");
                             if (text != null) {
-                                debugger;
-
                                 var text1 = tdg.c.text_language(text, selected_language);
                                 var html = control_a[0].innerHTML;
                                 control_a[0].innerHTML = html.replace(text, text1);
@@ -1984,16 +1951,11 @@ if (typeof (tdg.cid) == "undefined") {
         },
 
         subgrid_unnumber: function (grid) {
-            debugger;
             var selected_language = sessionStorage.getItem("selected_language");
             tdg.cid.subgrid_header_language(grid, true);
             grid.on("loaded", function () {
-                debugger;
                 let rows = grid.find("table tbody > tr");
-
                 rows.each(function (index, tr) {
-                    debugger;
-
                     let cols = $(tr).find('td');
                     for (var i = 0; i < cols.length; i++) {
                         tdElement = $(cols[i]).eq(0);
@@ -2027,8 +1989,6 @@ if (typeof (tdg.cid) == "undefined") {
         },
 
         Display_Modes: function (siteid) {
-            debugger;
-
             var operationid;
             console.log("input site id " + siteid);
             //cid_ModeOfTransportationAir,Marine,cid_ModeOfTransportationRoad,cid_modeoftransportationrail
@@ -2040,7 +2000,6 @@ if (typeof (tdg.cid) == "undefined") {
                 contentType: "application/json",
                 type: "GET",
                 success: function (res) {
-                    debugger;
                     operationid = res.value[0]['ovs_mocregistrationid'];
                     var air = false;
                     if (res.value[0]['cid_modeoftransportationair'] == true)
@@ -2212,7 +2171,6 @@ if (typeof (tdg.cid) == "undefined") {
         },
 
         WebApi_Update_With_Spinner: function (entity_name, record_id, data) {
-            debugger;
             $('#loader').show();
             webapi.safeAjax({
                 type: "PATCH",
@@ -2221,7 +2179,6 @@ if (typeof (tdg.cid) == "undefined") {
                 data: JSON.stringify(data),
 
                 success: function (res) {
-                    debugger;
                     $(".entity-grid").trigger("refresh");
                     $('#loader').hide();
 
@@ -2229,7 +2186,6 @@ if (typeof (tdg.cid) == "undefined") {
                 },
 
                 error: function (res, status, errorThrown) {
-                    debugger;
                     $('#loader').hide();
                 }
             });
@@ -2319,7 +2275,6 @@ if (typeof (tdg.cid) == "undefined") {
         },
 
         legalname_get: function (account_id) {
-            debugger;
             var ovs_legalname = sessionStorage.getItem("_ovs_legalname");
             ovs_legalname = (ovs_legalname == null ? "" : ovs_legalname);
             if (ovs_legalname == "") {
@@ -2411,7 +2366,6 @@ if (typeof (tdg.cid) == "undefined") {
         },
 
         contact_update: function (data) {
-            debugger;
             if (data.PhysicalLocationAddress != null) {
                 data.ovs_legalname = data.LegalName;
                 data.name = data.OperatingName;
@@ -2523,7 +2477,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
             var cid_crabusinessnumber = $("#cid_crabusinessnumber").val();
             var data;
             var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
-            debugger;
             if (environment.toLowerCase() == "preprod" || environment.toLowerCase() == "prod") {
                 //use CRA API to get information
                 data = await tdg.cid.crw.Production_start_Retrieve_cra(cid_crabusinessnumber, step_start);
@@ -2628,12 +2581,12 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     //show notice if the data is empty
                     if (cra_data.length == 0) {
                         var msg = tdg.error_message.message("m000001");
-                        tdg.c.dialog_OK(msg);
+                        //tdg.c.dialog_OK(msg);
                     }
 
                     if (cra_data.code == "ResponseTimeout") {
                         var msg = tdg.error_message.message("m000219");
-                        tdg.c.dialog_OK(msg);
+                        //tdg.c.dialog_OK(msg);
                         cra_data.length = 0;
                     }
 
@@ -2646,6 +2599,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     // save to use in step1
                     _cra_record = cra_data;
                 }
+
                 if (cra_data.length == 0) {
                     return data;
                 }
@@ -2765,11 +2719,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     tdg.cid.crw.start_buttons_confirm(false, btn_next_name);
                     tdg.cid.crw.start_confirm(data, (ans) => {
                         if (ans) {
-                            debugger;
                             tdg.cid.crw.start_buttons_confirm(true, btn_next_name);
                             $("#NextButton").click();
                         } else {
-                            debugger;
                             tdg.cid.crw.start_buttons_confirm(true, btn_next_name);
                             var message = tdg.error_message.message("BTN_NEXT");
                             $("#btn_next").prop("value", message);
@@ -2787,13 +2739,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
         },
 
         Check_If_Confirmation_Dialog_Data_Iscomplete: function () {
-            debugger;
-
             if (
                 $("#cid_legalname2").val() == null || $("#cid_legalname2").val() == "" ||
-                //$("#cid_legalname_fr2").val() == null || $("#cid_legalname_fr2").val() == "" ||
                 $("#cid_operatingname2").val() == null || $("#cid_operatingname2").val() == ""
-                //||$("#cid_operatingname_fr2").val() == null || $("#cid_operatingname_fr2").val() == ""
             ) {
                 $("#btn_ok").prop('disabled', true);
             }
@@ -2806,7 +2754,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
                             $("#btn_ok").attr("disabled", "disabled");
                         }
                         else {
-                            //$("#btn_ok").removeAttr("disabled");
                             $("#btn_ok").prop('disabled', false);
                         }
                     }//end if equal 3
@@ -2943,11 +2890,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
         },
 
         start_account_by_name: function (legalname) {
-
-            debugger;
-
             legalname = tdg.c.replace_filter_special_char(legalname);
-            //  legalnamefr = tdg.c.replace_filter_special_char(legalnamefr);
 
             var filter = "ovs_legalname eq '" + legalname + "'";
             var account = tdg.c.WebApi_List("accounts", filter);
@@ -3134,13 +3077,10 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#myModal").css('z-index', '9999');
 
             if (data.invitation_ind) {
-                debugger;
-
                 tdg.cid.crw.hasCRABN_onchange();
                 tdg.cid.crw.Manage_Invitation_Confirmation_Form();
 
                 $("#cid_legalname2").removeAttr("readonly");
-                //$("#cid_legalname_fr2").removeAttr("readonly");
                 $("#cid_operatingname2").removeAttr("readonly");
                 $("#cid_operatingname_fr2").removeAttr("readonly");
 
@@ -3175,63 +3115,74 @@ if (typeof (tdg.cid.crw) == "undefined") {
                             var json = {};
                             if (results.length > 0) {
                                 CRA_Flow_URL = results[0]["qm_value"];
-                                //define flow paramaters
-                                let body = {
-                                    "cid_crabusinessnumber": cid_crabusinessnumber
+
+                                var settings = {
+                                    "url": CRA_Flow_URL,
+                                    "method": "POST",
+                                    "timeout": 0,
+                                    "headers": {
+                                        "Content-Type": "application/json",
+                                        "Cookie": "ARRAffinity=eac69d9633b62a80172d43feba694263b4d9fccb8b9d953b364b8fc058f6e946; ARRAffinitySameSite=eac69d9633b62a80172d43feba694263b4d9fccb8b9d953b364b8fc058f6e946"
+                                    },
+                                    "data": JSON.stringify({
+                                        "cid_crabusinessnumber": cid_crabusinessnumber
+                                    }),
                                 };
-                                //const CRAresult = await tdg.cid.crw.Call_CRA_Flow(CRA_Flow_URL, body);                               
-                                var req = new XMLHttpRequest();
-                                req.open("POST", CRA_Flow_URL, true);
-                                req.setRequestHeader('Content-Type', 'application/json');
-                                req.onreadystatechange = function () {
-                                    if (this.readyState === 4) {
-                                        req.onreadystatechange = null;
-                                        if (this.status === 200) {
-                                            var result = this.response;
-                                            if (result.length == 0) {
+
+                                $.ajax(settings).done(function (response) {
+                                    debugger;
+                                    var result = response;
+                                    if (result.IsInvalidData) {
+                                        var error_code = response.InValidData.ErrorMessageNumber;
+                                        switch (error_code) {
+                                            case '10512':
                                                 var msg = tdg.error_message.message("m000001");
                                                 $('#ErrorMessageDiv').css('display', 'block');
                                                 $('#ErrorMessageDiv').html("<p>" + msg + "</p>");
-                                                $("#myModal").remove();
-                                                handler(true);
-                                            }
-                                            else {
-                                                {
-                                                    var accid = sessionStorage.getItem("accountId");
-
-                                                    var UpdateData = {
-                                                        "cid_has_cra_bn": true,
-                                                        "ovs_namefr": $("#cid_operatingname_fr2").val(),
-                                                        "cid_crabusinessnumber": cid_crabusinessnumber,
-                                                        "ovs_legalname": $("#cid_legalname2").val()
-                                                    };
-
-                                                    tdg.webapi.update("accounts", accid, UpdateData);
-
-                                                    console.log("after update");
-                                                    $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
-                                                    sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
-
-                                                    $("#cid_has_cra_bn").val($("#hasCRABN :selected").val());
-                                                    $("#cid_reasonfornobnnumber_other").val($("#cid_reasonfornobnnumber_other_popup").val());
-                                                    $("#cid_reasonfornobnnumber").val($("#cid_reasonfornobnnumberpopup :selected").val());
-
-                                                    $("#cid_operatingname_fr").val($("#cid_operatingname_fr2").val());
-
-                                                    //accountid
-
-                                                    $("#myModal").remove();
-                                                    handler(true);
-                                                }
-                                            }
+                                                break;
+                                            default:
+                                                var msg = tdg.error_message.message("m000001");
+                                                $('#ErrorMessageDiv').css('display', 'block');
+                                                $('#ErrorMessageDiv').html("<p>" + msg + "</p>");
+                                                break;
                                         }
                                     }
-                                }
-                                req.send(body);
+                                    else {
+                                        var accid = sessionStorage.getItem("accountId");
+
+                                        var UpdateData = {
+                                            "cid_has_cra_bn": true,
+                                            "ovs_namefr": $("#cid_operatingname_fr2").val(),
+                                            "cid_crabusinessnumber": cid_crabusinessnumber,
+                                            "ovs_legalname": $("#cid_legalname2").val()
+                                        };
+
+                                        tdg.webapi.update("accounts", accid, UpdateData);
+
+                                        console.log("after update");
+                                        $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
+                                        sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
+
+                                        $("#cid_has_cra_bn").val($("#hasCRABN :selected").val());
+                                        $("#cid_reasonfornobnnumber_other").val($("#cid_reasonfornobnnumber_other_popup").val());
+                                        $("#cid_reasonfornobnnumber").val($("#cid_reasonfornobnnumberpopup :selected").val());
+
+                                        $("#cid_operatingname_fr").val($("#cid_operatingname_fr2").val());
+
+                                        //accountid
+
+                                        $("#myModal").remove();
+                                        handler(true);
+                                    }
+                                }).fail(function (response) {
+                                    debugger;
+                                    var result = response;
+                                    console.log(result);
+                                });
+
                             }
                         }
                         else {
-                            console.log("retrieved from fake bn");
                             // retrieve information from FakeBN entity in dynamics
                             let FakeBNdata = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, "");
                             if (FakeBNdata.length == 0) {
@@ -3240,62 +3191,31 @@ if (typeof (tdg.cid.crw) == "undefined") {
                                 $('#ErrorMessageDiv').html("<p>" + msg + "</p>");
                             }
                             else {
-                                {
-                                    var accid = sessionStorage.getItem("accountId");
+                                //update data
+                                var accid = sessionStorage.getItem("accountId");
 
-                                    var UpdateData = {
-                                        "cid_has_cra_bn": true,
-                                        "ovs_namefr": $("#cid_operatingname_fr2").val(),
-                                        "cid_crabusinessnumber": cid_crabusinessnumber,
-                                        "ovs_legalname": $("#cid_legalname2").val()
-                                    };
-                                    tdg.webapi.update("accounts", accid, UpdateData);
+                                var UpdateData = {
+                                    "cid_has_cra_bn": true,
+                                    "ovs_namefr": $("#cid_operatingname_fr2").val(),
+                                    "cid_crabusinessnumber": cid_crabusinessnumber,
+                                    "ovs_legalname": $("#cid_legalname2").val()
+                                };
+                                tdg.webapi.update("accounts", accid, UpdateData);
 
-                                    console.log("after update");
-                                    $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
-                                    sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
+                                console.log("after update");
+                                $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
+                                sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
 
-                                    $("#cid_has_cra_bn").val($("#hasCRABN :selected").val());
-                                    $("#cid_reasonfornobnnumber_other").val($("#cid_reasonfornobnnumber_other_popup").val());
-                                    $("#cid_reasonfornobnnumber").val($("#cid_reasonfornobnnumberpopup :selected").val());
+                                $("#cid_has_cra_bn").val($("#hasCRABN :selected").val());
+                                $("#cid_reasonfornobnnumber_other").val($("#cid_reasonfornobnnumber_other_popup").val());
+                                $("#cid_reasonfornobnnumber").val($("#cid_reasonfornobnnumberpopup :selected").val());
 
-                                    $("#cid_operatingname_fr").val($("#cid_operatingname_fr2").val());
+                                $("#cid_operatingname_fr").val($("#cid_operatingname_fr2").val());
 
-                                    //accountid
-                                    $("#myModal").remove();
-                                    handler(true);
-                                }
+                                //accountid
+                                $("#myModal").remove();
+                                handler(true);
                             }
-                        }
-
-                        //update data
-
-                        {
-                            var accid = sessionStorage.getItem("accountId");
-
-                            var UpdateData = {
-                                "cid_has_cra_bn": true,
-                                "ovs_namefr": $("#cid_operatingname_fr2").val(),
-                                "cid_crabusinessnumber": cid_crabusinessnumber,
-                                "ovs_legalname": $("#cid_legalname2").val()
-                            };
-
-                            tdg.webapi.update("accounts", accid, UpdateData);
-
-                            console.log("after update");
-                            $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
-                            sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
-
-                            $("#cid_has_cra_bn").val($("#hasCRABN :selected").val());
-                            $("#cid_reasonfornobnnumber_other").val($("#cid_reasonfornobnnumber_other_popup").val());
-                            $("#cid_reasonfornobnnumber").val($("#cid_reasonfornobnnumberpopup :selected").val());
-
-                            $("#cid_operatingname_fr").val($("#cid_operatingname_fr2").val());
-
-                            //accountid
-
-                            $("#myModal").remove();
-                            handler(true);
                         }
                     }
                     catch (e) {
@@ -3581,15 +3501,12 @@ if (typeof (tdg.cid.crw) == "undefined") {
         },
 
         start_parentcustomerid_setup: function (accountid, legalname) {
-            debugger;
             $("#parentcustomerid").attr("value", accountid);
             $("#parentcustomerid_name").attr("value", legalname);
             $("#parentcustomerid_entityname").attr("value", 'account');
         },
 
         start_BN_Selected: function (data) {
-            debugger;
-
             var LegalName = data.LegalName
             var OperatingName = data.OperatingName
             OperatingName = (OperatingName == "" ? LegalName : OperatingName);
@@ -3660,8 +3577,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
         },
 
         step2_Disable_ContactTypeFieldsForSecondaryUser: function (cid_contacttype) {
-            debugger;
-
             //if not primary contact
             if (cid_contacttype != 100000000) {
                 $("#btn_previous").attr('disabled', true);
@@ -3690,7 +3605,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
         },
 
         step2_address1_line1_set: function (value) {
-            debugger;
             try {
                 var f = document.getElementById("WebResource_address_complete");
                 var c = f.contentWindow;

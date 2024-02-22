@@ -12,11 +12,9 @@ $(document).ready(function () {
 	 tdg.c.control_hide("cid_portalrecordcreationdetails");
 	 tdg.c.control_hide("cid_cidflag");
 
-	 $("#EntityFormView :input").change(function(e) {
+	/* $("#EntityFormView :input").change(function(e) {
 			//$("#EntityFormView").data("changed",true);
-			console.log ("Field changed");
-			console.log (e);
-			console.log (e.target.id);
+		
 			if (e.target.id == "address1_line1" || e.target.id == "address1_line2" 
 			|| e.target.id == "address1_line3" || e.target.id == "address1_postalcode"
 			|| e.target.id == "address1_latitude" || e.target.id == "address1_longitude"
@@ -30,6 +28,48 @@ $(document).ready(function () {
 				sessionStorage.setItem("AddressDataChanged", true);
 				}
 	});
+*/
+    sessionStorage.setItem("Address1Onload", $("#address1_line1").val());
+	console.log( "address 1 on load " + $("#address1_line1").val());
+     $("#address1_line1").change(function(e) {
+		 sessionStorage.setItem("AddressDataChanged", true);
+	 });
+	     $("#address1_line2").change(function(e) {
+		 sessionStorage.setItem("AddressDataChanged", true);
+	 });
+	     $("#address1_line3").change(function(e) {
+		 sessionStorage.setItem("AddressDataChanged", true);
+	 });
+	     $("#address1_postalcode").change(function(e) {
+		 sessionStorage.setItem("AddressDataChanged", true);
+	 });
+	     $("#address1_latitude").change(function(e) {
+		 sessionStorage.setItem("AddressDataChanged", true);
+	 });
+	  $("#address1_longitude").change(function(e) {
+		 sessionStorage.setItem("AddressDataChanged", true);
+	 });
+	     $("#ovs_lld_quarter").change(function(e) {
+		 sessionStorage.setItem("AddressDataChanged", true);
+	 });
+	     $("#ovs_lld_section").change(function(e) {
+		 sessionStorage.setItem("AddressDataChanged", true);
+	 });
+	     $("#ovs_lld_township").change(function(e) {
+		 sessionStorage.setItem("AddressDataChanged", true);
+	 });
+	     $("#ovs_lld_township").change(function(e) {
+		 sessionStorage.setItem("AddressDataChanged", true);
+	 });
+	      $("#ovs_lld_range").change(function(e) {
+		 sessionStorage.setItem("AddressDataChanged", true);
+	 });
+	     $("#ovs_lld_meridian").change(function(e) {
+		 sessionStorage.setItem("AddressDataChanged", true);
+	 });
+
+
+
 
 	var selected_language = '{{website.selected_language.code}}';
 
@@ -113,6 +153,11 @@ $(document).ready(function () {
 			$("#cid_same_as_company").attr("disabled", false);
 			$("#ovs_address_type").attr("disabled", false);
 			$("#EntityFormView :input").prop("disabled",  false);
+			  
+			  
+
+
+			
 		}
 		else {
 
@@ -122,12 +167,6 @@ $(document).ready(function () {
 		}
 	}
 
-  	var f = document.getElementById("WebResource_address_complete");
-	var c = f.contentWindow;
-	c.document.getElementById("address1_line1").addEventListener('change', (event) => {
-		console.log ("line 1 changed");
-		sessionStorage.setItem("AddressDataChanged",true);
-	});
 	document.getElementById("address1_latitude").addEventListener('change', (event) => {
 		var Lat = $("#address1_latitude").val();
 	});
@@ -209,7 +248,6 @@ $(document).ready(function () {
 		cid_same_as_company_change();
 	});
 	cid_same_as_company_change();
-
 });
 
 function cid_same_as_company_change() {
@@ -226,13 +264,19 @@ if (window.jQuery) {
 		webFormClientValidate = function () {
 			$('#ErrorMessageDiv').css('display', 'none');
 			var addressType = $("#ovs_address_type").val();
-		
 			var account_id = '{{user.parentcustomerid.Id}}';
+		
+		
+
+			console.log ("Line 1" + sessionStorage.getItem("Line1"))
+			console.log ( "address afeter change " + $("#address1_line1").val());
+			var address1AfterLoad=sessionStorage.getItem("Line1");
+			var address1Onload = sessionStorage.getItem("Address1Onload");
 
 			
 		//if ($("#ovs_duplicatesiteflag :selected").val() != 918640000 && $("#ovs_duplicatesiteflag :selected").val() != 918640001 )
-		console.log(sessionStorage.getItem("AddressDataChanged"));
-		if (sessionStorage.getItem("AddressDataChanged") == "true")
+	
+		if (sessionStorage.getItem("AddressDataChanged") == "true" || (address1AfterLoad != address1Onload) )
 		{
 			switch (addressType) {
 			case "1":
