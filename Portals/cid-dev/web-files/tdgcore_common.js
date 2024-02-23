@@ -422,12 +422,7 @@ if (typeof (tdg.c) == "undefined") {
                 
 	            </section>
 	            `).appendTo('body');
-            //c.message
-            /* $("#myModal").css('top', '15%');
-             $("#myModal").css('left', '40%');
-             $("#myModal").css('position', 'fixed');
-             $("#myModal").css('z-index', '9999');
-             */
+
             $("#btnYes").click(function () {
                 $('#myModal').modal('hide');
                 $("#myModal").remove();
@@ -461,11 +456,6 @@ if (typeof (tdg.c) == "undefined") {
 
             });
 
-            //var dialog = $("#myModal");
-
-            //   dialog.attr("aria-modal", "true");
-            // dialog.attr("aria-live", "assertive");
-            //dialog.focus();
             $('#myModal').modal({ backdrop: 'static', keyboard: false, show: true, focus: true });
         },
 
@@ -487,27 +477,6 @@ if (typeof (tdg.c) == "undefined") {
 	            <button id="btnOK" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">${OK}</button>
 	            </section>
 	            `).appendTo('body');
-            /*
-              $(`<section class="wb-lbx overlay-def" id="myModal" aria-modal="true" aria-live="assertive" aria-labelledby ="headerid" >
-               <div class="modal-dialog" role="document">
-                <div class="modal-content" >
-                <header class="modal-header">
-                <h2 id="headerid" class="modal-title">${header}</h2>
-                </header>
-                <div class="modal-body">
-                ${message}
-                </div>
-                <div class="modal-footer">
-                <button id="btnOK" type="button" class="btn btn-sm btn-primary pull-left popup-modal-dismiss">${OK}</button>
-                </section>
-                `).appendTo('body');
-             * /
-
-           /* $("#myModal").css('top', '15%');
-            $("#myModal").css('left', '40%');
-            $("#myModal").css('position', 'fixed');
-            $("#myModal").css('z-index', '9999');
-            */
 
             $("#btnOK").click(function () {
                 $('#myModal').modal('hide');
@@ -522,7 +491,6 @@ if (typeof (tdg.c) == "undefined") {
                 else if (keyCode == "13") {
                     $("#btnOK").click();
                 }
-
             });
 
             $('#myModal').modal({ backdrop: 'static', keyboard: false, show: true, focus: true });
@@ -2719,6 +2687,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     tdg.cid.crw.start_buttons_confirm(false, btn_next_name);
                     tdg.cid.crw.start_confirm(data, (ans) => {
                         if (ans) {
+                            debugger;
+
                             tdg.cid.crw.start_buttons_confirm(true, btn_next_name);
                             $("#NextButton").click();
                         } else {
@@ -2740,17 +2710,17 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
         Check_If_Confirmation_Dialog_Data_Iscomplete: function () {
             if (
-                $("#cid_legalname2").val() == null || $("#cid_legalname2").val() == "" ||
-                $("#cid_operatingname2").val() == null || $("#cid_operatingname2").val() == ""
+                $("#pop_legalname").val() == null || $("#pop_legalname").val() == "" ||
+                $("#pop_operatingname").val() == null || $("#pop_operatingname").val() == ""
             ) {
                 $("#btn_ok").prop('disabled', true);
             }
 
             //check if no bn number
-            else if ($("#hasCRABN :selected").val() == 0) {
-                if ($("#cid_reasonfornobnnumberpopup :selected").val() > 0) {
-                    if ($("#cid_reasonfornobnnumberpopup :selected").val() == 3) {
-                        if ($("#cid_reasonfornobnnumber_other_popup").val() == null || $("#cid_reasonfornobnnumber_other_popup").val().trim() == "") {
+            else if ($("#pop_has_cra_bn :selected").val() == 0) {
+                if ($("#pop_reasonfornobnnumber :selected").val() > 0) {
+                    if ($("#pop_reasonfornobnnumber :selected").val() == 3) {
+                        if ($("#pop_reasonfornobnnumber_other").val() == null || $("#pop_reasonfornobnnumber_other").val().trim() == "") {
                             $("#btn_ok").attr("disabled", "disabled");
                         }
                         else {
@@ -2758,7 +2728,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
                         }
                     }//end if equal 3
                     else {
-                        //$("#btn_ok").removeAttr("disabled");
                         $("#btn_ok").prop('disabled', false);
                     }//end else
 
@@ -2769,8 +2738,8 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
             }
             //check if CRA is required
-            else if ($("#hasCRABN :selected").val() == 1) {
-                if ($("#cid_crabusinessnumberpopup").val() == null || $("#cid_crabusinessnumberpopup").val() == "") {
+            else if ($("#pop_has_cra_bn :selected").val() == 1) {
+                if ($("#pop_crabusinessnumber").val() == null || $("#pop_crabusinessnumber").val() == "") {
                     $("#btn_ok").prop('disabled', true);
                 }
                 else {
@@ -2785,104 +2754,95 @@ if (typeof (tdg.cid.crw) == "undefined") {
         Manage_Invitation_Confirmation_Form: function () {
             $("#DivReason").hide();
             $("#DivOther").hide();
-            $("#cid_reasonfornobnnumberpopup").hide();
-            $("#cid_reasonfornobnnumberpopup_label").hide();
+            $("#pop_reasonfornobnnumber").hide();
+            $("#pop_reasonfornobnnumber_label").hide();
             $("#btn_ok").attr("disabled", "disabled");
 
-            $("#cid_reasonfornobnnumber_other_popup").hide();
-            $("#cid_reasonfornobnnumber_other_popup_label").hide();
+            $("#pop_reasonfornobnnumber_other").hide();
+            $("#pop_reasonfornobnnumber_other_label").hide();
             var list = $("#cid_reasonfornobnnumber")[0].options;
 
             for (var i = 0; i < list.length; i++) {
                 let option = document.createElement("option");
                 option.value = list[i].value;
                 option.innerHTML = list[i].text;
-                $("#cid_reasonfornobnnumberpopup").append(option);
+                $("#pop_reasonfornobnnumber").append(option);
             }
 
             //disabled and enable ok button based on data
             tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
 
-            //hasCRABN
-            $("#hasCRABN").change(function () {
-                tdg.cid.crw.hasCRABN_onchange();
+            //pop_has_cra_bn
+            $("#pop_has_cra_bn").change(function () {
+                tdg.cid.crw.pop_has_cra_bn_onchange();
             });
 
-            $("#cid_reasonfornobnnumberpopup").change(function () {
-                if ($("#cid_reasonfornobnnumberpopup :selected").val() == 3) {
+            $("#pop_reasonfornobnnumber").change(function () {
+                if ($("#pop_reasonfornobnnumber :selected").val() == 3) {
                     $("#DivOther").show();
-                    $("#cid_reasonfornobnnumber_other_popup").show();
-                    $("#cid_reasonfornobnnumber_other_popup_label").show();
+                    $("#pop_reasonfornobnnumber_other").show();
+                    $("#pop_reasonfornobnnumber_other_label").show();
                 }
                 else {
                     $("#DivOther").hide();
-                    $("#cid_reasonfornobnnumber_other_popup").hide();
-                    $("#cid_reasonfornobnnumber_other_popup_label").hide();
+                    $("#pop_reasonfornobnnumber_other").hide();
+                    $("#pop_reasonfornobnnumber_other_label").hide();
                 }
                 //disabled and enable ok button based on data
                 tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
             });
 
-            $("#cid_reasonfornobnnumber_other_popup").change(function () {
+            $("#pop_reasonfornobnnumber_other").change(function () {
                 //disabled and enable ok button based on data
                 tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
             });
 
-            $("#cid_crabusinessnumberpopup").change(function () {
+            $("#pop_crabusinessnumber").change(function () {
                 //disabled and enable ok button based on data
                 tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
             });
 
-            $("#cid_legalname_fr2").change(function () {
+            $("#pop_legalname").change(function () {
                 //disabled and enable ok button based on data
                 tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
             });
 
-            $("#cid_legalname2").change(function () {
+            $("#pop_operatingname").change(function () {
                 //disabled and enable ok button based on data
                 tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
             });
 
-            $("#cid_operatingname_fr2").change(function () {
-                //disabled and enable ok button based on data
-                tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
-            });
-            $("#cid_operatingname2").change(function () {
-                //disabled and enable ok button based on data
-                tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
-            });
-
-            tdg.cid.crw.hasCRABN_onchange();
+            tdg.cid.crw.pop_has_cra_bn_onchange();
         },
 
-        hasCRABN_onchange: function () {
+        pop_has_cra_bn_onchange: function () {
             debugger;
 
             //check if no bn number
-            if ($("#hasCRABN :selected").val() == 0) {
+            if ($("#pop_has_cra_bn :selected").val() == 0) {
                 $("#DivReason").show();
                 $("#DivOther").hide();
                 $("#DivBN").hide();
-                $("#cid_reasonfornobnnumberpopup").show();
-                $("#cid_reasonfornobnnumberpopup_label").show();
+                $("#pop_reasonfornobnnumber").show();
+                $("#pop_reasonfornobnnumber_label").show();
 
-                $("#cid_crabusinessnumberpopup_label").hide();
-                $("#cid_crabusinessnumberpopup").hide();
+                $("#pop_crabusinessnumber_label").hide();
+                $("#pop_crabusinessnumber").hide();
 
                 //disabled and enable ok button based on data
                 tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
             }
-            else if ($("#hasCRABN :selected").val() == 1) {
+            else if ($("#pop_has_cra_bn :selected").val() == 1) {
                 $("#DivBN").show();
                 $("#DivOther").hide();
                 $("#DivReason").hide();
-                $("#cid_reasonfornobnnumberpopup").hide();
-                $("#cid_reasonfornobnnumberpopup_label").hide();
-                $("#cid_reasonfornobnnumber_other_popup").hide();
-                $("#cid_reasonfornobnnumber_other_popup_label").hide();
+                $("#pop_reasonfornobnnumber").hide();
+                $("#pop_reasonfornobnnumber_label").hide();
+                $("#pop_reasonfornobnnumber_other").hide();
+                $("#pop_reasonfornobnnumber_other_label").hide();
 
-                $("#cid_crabusinessnumberpopup_label").show();
-                $("#cid_crabusinessnumberpopup").show();
+                $("#pop_crabusinessnumber_label").show();
+                $("#pop_crabusinessnumber").show();
 
             }
             //disabled and enable ok button based on data
@@ -2908,9 +2868,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             var msg_btn_ok = tdg.error_message.message("BTN_IS_MY_COMPANY");
             var msg_btn_cancel = tdg.error_message.message("BTN_IS_NOT_MY_COMPANY");
             var lbl_legal_name = tdg.error_message.message("lbl_legal_name");
-            var lbl_legal_name_fr = tdg.error_message.message("lbl_legal_name_fr");
             var lbl_operating_name = tdg.error_message.message("lbl_operating_name");
-            var lbl_operating_name_fr = tdg.error_message.message("lbl_operating_name_fr");
             var lbl_cra_bn = tdg.error_message.message("lbl_cra_bn");
             var lbl_address = tdg.error_message.message("lbl_address");
             var lbl_reasonfornobnnumber = tdg.error_message.message("lbl_reasonfornobnnumber");
@@ -2933,22 +2891,22 @@ if (typeof (tdg.cid.crw) == "undefined") {
             if (data.cid_has_cra_bn == 1) {
                 text_middle = `
                     <p>
-                    <label for="cid_crabusinessnumber" class="field-label">${lbl_cra_bn}</label>
-                    <input type="text" readonly class="text form-control" id="cid_crabusinessnumber" style="width:100%" value="${data.cid_crabusinessnumber}">
+                    <label for="pop_crabusinessnumber" class="field-label">${lbl_cra_bn}</label>
+                    <input type="text" readonly class="text form-control" id="pop_crabusinessnumber" style="width:100%" value="${data.cid_crabusinessnumber}">
 	                `;
             }
             else {
                 var cid_reasonfornobnnumber = data.cid_reasonfornobnnumber;
                 text_middle = `
                     <p>
-                    <label for="cid_reasonfornobnnumber" class="field-label">${lbl_reasonfornobnnumber}</label>
-                    <input type="text" readonly class="text form-control" id="cid_reasonfornobnnumber" style="width:100%" value="${cid_reasonfornobnnumber}">
+                    <label for="pop_reasonfornobnnumber" class="field-label">${lbl_reasonfornobnnumber}</label>
+                    <input type="text" readonly class="text form-control" id="pop_reasonfornobnnumber" style="width:100%" value="${cid_reasonfornobnnumber}">
 	                `;
                 if (data.cid_reasonfornobnnumber == 3) {
                     text_middle += `
                     <p>
-                    <label for="cid_reasonfornobnnumber_other" class="field-label">${lbl_reasonfornobnnumber_other}</label>
-                    <input type="text" readonly class="text form-control" id="cid_reasonfornobnnumber_other" style="width:100%" value="${data.cid_reasonfornobnnumber_other}">
+                    <label for="pop_reasonfornobnnumber_other" class="field-label">${lbl_reasonfornobnnumber_other}</label>
+                    <input type="text" readonly class="text form-control" id="pop_reasonfornobnnumber_other" style="width:100%" value="${data.cid_reasonfornobnnumber_other}">
 	                `;
                 }
             }
@@ -2967,33 +2925,33 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
                 text_middle = `
                 <p>
-                <div> <label for="hasCRABN">${hasCraMessag}</label>
+                <div> <label for="pop_has_cra_bn">${hasCraMessag}</label>
                     <span style="color: red">*</span>
                 </div>
-                <select name="hasCRABN" id="hasCRABN" class="form-control" style="width:100%">
+                <select id="pop_has_cra_bn" class="form-control" style="width:100%">
                     <option ${option_0} value="0">${no}</option>
                     <option ${option_1} value="1">${yes}</option>
                 </select>
 
                 <div id="DivBN">
-                    <label for="cid_crabusinessnumberpopup" id="cid_crabusinessnumberpopup_label" class="field-label">${lbl_cra_bn}</label>
+                    <label for="pop_crabusinessnumber" id="pop_crabusinessnumber_label" class="field-label">${lbl_cra_bn}</label>
                     <span style="color: red">*</span>
                 </div>
-                <input type="number" class="text form-control" onKeyPress="if(this.value.length==9) return false;"  id="cid_crabusinessnumberpopup" style="width:100%" value=${CRA_BN}>
+                <input type="number" class="text form-control" onKeyPress="if(this.value.length==9) return false;"  id="pop_crabusinessnumber" style="width:100%" value=${CRA_BN}>
 
                 <div id="DivReason">
-                <label for="cid_reasonfornobnnumberpopup" id="cid_reasonfornobnnumberpopup_label"  class="field-label">${lbl_reasonfornobnnumber}</label>
+                <label for="pop_reasonfornobnnumber" id="pop_reasonfornobnnumber_label"  class="field-label">${lbl_reasonfornobnnumber}</label>
                 <span style="color: red">*</span>
                 </div>
-                <select name="cid_reasonfornobnnumberpopup"  id="cid_reasonfornobnnumberpopup" class="form-control" style="width:100%">
+                <select id="pop_reasonfornobnnumber" class="form-control" style="width:100%">
                     <option value="-1"></option>
                     
                 </select>
                 <div id="DivOther">
-                    <label id="cid_reasonfornobnnumber_other_popup_label" for="cid_reasonfornobnnumber_other_popup" class="field-label">${lbl_reasonfornobnnumber_other}</label>
+                    <label id="pop_reasonfornobnnumber_other_label" for="pop_reasonfornobnnumber_other" class="field-label">${lbl_reasonfornobnnumber_other}</label>
                     <span style="color: red">*</span>
                     </div>
-                <input type="text"  class="text form-control" id="cid_reasonfornobnnumber_other_popup" style="width:100%" value="${Other_reason}">
+                <input type="text"  class="text form-control" id="pop_reasonfornobnnumber_other" style="width:100%" value="${Other_reason}">
 	            `;
             }
             else {
@@ -3029,29 +2987,16 @@ if (typeof (tdg.cid.crw) == "undefined") {
                     <p>
                     <div id="ErrorMessageDiv" class="alert alert-danger" role="alert">  </div>
                     <div >
-                       <label for="cid_legalname2" class="field-label">${lbl_legal_name}</label>
+                       <label for="pop_legalname" class="field-label">${lbl_legal_name}</label>
                        <span style="color: red">*</span>
                     </div>
-                    <input type="text" readonly class="text form-control" id="cid_legalname2" style="width:100%" value="${data.cid_legalname}">
-                    <p>
+                    <input type="text" readonly class="text form-control" id="pop_legalname" style="width:100%" value="${data.cid_legalname}">
                     <div> 
-                      <label for="cid_legalname_fr2" class="field-label" style="display:none">${lbl_legal_name_fr}</label>
-                      <span style="display:none;color: red">*</span>
-                    </div>
-                    <input type="text" readonly class="text form-control" id="cid_legalname_fr2" style="display:none; width:100%" value="${data.cid_legalnameFR}">
-                   <p>
-                    <div> 
-                        <label for="cid_operatingname2" class="field-label">${lbl_operating_name}</label>
+                        <label for="pop_operatingname" class="field-label">${lbl_operating_name}</label>
                         <span style="display:none;color: red">*</span>
                     </div>
-                    <input type="text" readonly class="text form-control" id="cid_operatingname2" style="width:100%" value="${data.cid_operatingname}">
-                   <p>
-                   <div> 
-                      <label for="cid_operatingname_fr2" class="field-label" style="display:none">${lbl_operating_name_fr}</label>
-                      <span style="display:none;color: red">*</span>
-                    </div>
-                    <input type="text" readonly class="text form-control" id="cid_operatingname_fr2" style="display:none; width:100%" value="${data.cid_operatingnameFr}">
-                    ` +
+                    <input type="text" readonly class="text form-control" id="pop_operatingname" style="width:100%" value="${data.cid_operatingname}">
+                  ` +
                 text_middle +
                 `
                     <p>
@@ -3069,7 +3014,7 @@ if (typeof (tdg.cid.crw) == "undefined") {
             //hide div that display error
             $('#ErrorMessageDiv').css('display', 'none');
 
-            $("#cid_legalname2").focus();
+            $("#pop_legalname").focus();
 
             $("#myModal").css('top', '1%');
             $("#myModal").css('left', '40%');
@@ -3077,32 +3022,41 @@ if (typeof (tdg.cid.crw) == "undefined") {
             $("#myModal").css('z-index', '9999');
 
             if (data.invitation_ind) {
-                tdg.cid.crw.hasCRABN_onchange();
+                tdg.cid.crw.pop_has_cra_bn_onchange();
                 tdg.cid.crw.Manage_Invitation_Confirmation_Form();
 
-                $("#cid_legalname2").removeAttr("readonly");
-                $("#cid_operatingname2").removeAttr("readonly");
-                $("#cid_operatingname_fr2").removeAttr("readonly");
+                $("#pop_legalname").removeAttr("readonly");
+                $("#pop_operatingname").removeAttr("readonly");
 
                 if (data.cid_reasonfornobnnumber_index != null) {
-                    $("#cid_reasonfornobnnumberpopup")[0].options[data.cid_reasonfornobnnumber_index + 1].selected = true;
+                    $("#pop_reasonfornobnnumber")[0].options[data.cid_reasonfornobnnumber_index + 1].selected = true;
                     tdg.cid.crw.Check_If_Confirmation_Dialog_Data_Iscomplete();
                 }
             }
 
             $("#btn_ok").click(function () {
+                debugger;
+
                 //hide div that display error
                 $('#ErrorMessageDiv').css('display', 'none');
-                var cid_crabusinessnumber = $("#cid_crabusinessnumberpopup").val();
+                var cid_crabusinessnumber = $("#pop_crabusinessnumber").val();
+
+                // must be 9 digits
+                if ((cid_crabusinessnumber.length != 9) || (!jQuery.isNumeric(cid_crabusinessnumber))) {
+                    var msg = tdg.error_message.message("m000220");
+                    $('#ErrorMessageDiv').css('display', 'block');
+                    $('#ErrorMessageDiv').html("<p>" + msg + "</p>");
+
+                    return;
+                }
+
                 invitation_ind = sessionStorage.getItem("invitation_ind");
-                sessionStorage.setItem("cid_has_cra_bn", $("#hasCRABN :selected").val());
-                sessionStorage.setItem("cid_reasonfornobnnumber_other", $("#cid_reasonfornobnnumber_other_popup").val());
-                sessionStorage.setItem("cid_operatingname_fr", $("#cid_operatingname_fr2").val());
-                sessionStorage.setItem("cid_reasonfornobnnumber", $("#cid_reasonfornobnnumberpopup :selected").val());
+                sessionStorage.setItem("cid_has_cra_bn", $("#pop_has_cra_bn :selected").val());
+                sessionStorage.setItem("cid_reasonfornobnnumber_other", $("#pop_reasonfornobnnumber_other").val());
+                sessionStorage.setItem("cid_reasonfornobnnumber", $("#pop_reasonfornobnnumber :selected").val());
                 sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
-                console.log('($("#hasCRABN : selected").val()) : ' + ($("#hasCRABN :selected").val()));
-                if (invitation_ind && ($("#hasCRABN :selected").val()) == 1) {
-                    var data;
+
+                if (invitation_ind && ($("#pop_has_cra_bn :selected").val()) == 1) {
                     var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
                     //if pre prod or prod
                     try {
@@ -3140,36 +3094,33 @@ if (typeof (tdg.cid.crw) == "undefined") {
                                                 $('#ErrorMessageDiv').css('display', 'block');
                                                 $('#ErrorMessageDiv').html("<p>" + msg + "</p>");
                                                 break;
-                                            default:
-                                                var msg = tdg.error_message.message("m000001");
-                                                $('#ErrorMessageDiv').css('display', 'block');
-                                                $('#ErrorMessageDiv').html("<p>" + msg + "</p>");
-                                                break;
                                         }
                                     }
                                     else {
+                                        // data fields
+                                        $("#cid_legalname").val(result.LegalName);
+                                        $("#cid_operatingname").val(result.OperatingNames[0]);
+                                        $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
+
+                                        // popup fields
+                                        $("#pop_legalname").val(result.LegalName);
+                                        $("#pop_operatingname").val(result.OperatingNames[0]);
+                                        $("#pop_crabusinessnumber").val(cid_crabusinessnumber);
+
+                                        sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
+
                                         var accid = sessionStorage.getItem("accountId");
 
                                         var UpdateData = {
                                             "cid_has_cra_bn": true,
-                                            "ovs_namefr": $("#cid_operatingname_fr2").val(),
+                                            "name": $("#pop_operatingname").val(),
                                             "cid_crabusinessnumber": cid_crabusinessnumber,
-                                            "ovs_legalname": $("#cid_legalname2").val()
+                                            "ovs_legalname": $("#pop_legalname").val()
                                         };
 
                                         tdg.webapi.update("accounts", accid, UpdateData);
 
-                                        console.log("after update");
-                                        $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
-                                        sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
-
-                                        $("#cid_has_cra_bn").val($("#hasCRABN :selected").val());
-                                        $("#cid_reasonfornobnnumber_other").val($("#cid_reasonfornobnnumber_other_popup").val());
-                                        $("#cid_reasonfornobnnumber").val($("#cid_reasonfornobnnumberpopup :selected").val());
-
-                                        $("#cid_operatingname_fr").val($("#cid_operatingname_fr2").val());
-
-                                        //accountid
+                                        $("#cid_has_cra_bn").val(true);
 
                                         $("#myModal").remove();
                                         handler(true);
@@ -3177,42 +3128,54 @@ if (typeof (tdg.cid.crw) == "undefined") {
                                 }).fail(function (response) {
                                     debugger;
                                     var result = response;
-                                    console.log(result);
+                                    var msg = "";
+                                    try {
+                                        msg = result.responseJSON.error.message;
+                                        $('#ErrorMessageDiv').css('display', 'block');
+                                        $('#ErrorMessageDiv').html("<p>" + msg + "</p>");
+                                    } catch (e) {
+                                        console.log(result);
+                                    }
                                 });
 
                             }
                         }
                         else {
                             // retrieve information from FakeBN entity in dynamics
-                            let FakeBNdata = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, "");
-                            if (FakeBNdata.length == 0) {
+                            let result = tdg.cid.crw.start_Retrieve_cra(cid_crabusinessnumber, "");
+                            if (result.length == 0) {
                                 var msg = tdg.error_message.message("m000001");
                                 $('#ErrorMessageDiv').css('display', 'block');
                                 $('#ErrorMessageDiv').html("<p>" + msg + "</p>");
                             }
                             else {
-                                //update data
+                                debugger;
+
+                                // data fields
+                                $("#cid_legalname").val(result.LegalName);
+                                $("#cid_operatingname").val(result.OperatingNames[0]);
+                                $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
+
+                                // popup fields
+                                $("#pop_legalname").val(result.LegalName);
+                                $("#pop_operatingname").val(result.OperatingNames[0]);
+                                $("#pop_crabusinessnumber").val(cid_crabusinessnumber);
+
+                                sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
+
                                 var accid = sessionStorage.getItem("accountId");
 
                                 var UpdateData = {
                                     "cid_has_cra_bn": true,
-                                    "ovs_namefr": $("#cid_operatingname_fr2").val(),
+                                    "name": $("#pop_operatingname").val(),
                                     "cid_crabusinessnumber": cid_crabusinessnumber,
-                                    "ovs_legalname": $("#cid_legalname2").val()
+                                    "ovs_legalname": $("#pop_legalname").val()
                                 };
+
                                 tdg.webapi.update("accounts", accid, UpdateData);
 
-                                console.log("after update");
-                                $("#cid_crabusinessnumber").val(cid_crabusinessnumber);
-                                sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
+                                $("#cid_has_cra_bn").val(true);
 
-                                $("#cid_has_cra_bn").val($("#hasCRABN :selected").val());
-                                $("#cid_reasonfornobnnumber_other").val($("#cid_reasonfornobnnumber_other_popup").val());
-                                $("#cid_reasonfornobnnumber").val($("#cid_reasonfornobnnumberpopup :selected").val());
-
-                                $("#cid_operatingname_fr").val($("#cid_operatingname_fr2").val());
-
-                                //accountid
                                 $("#myModal").remove();
                                 handler(true);
                             }
@@ -3222,20 +3185,26 @@ if (typeof (tdg.cid.crw) == "undefined") {
                         console.log(e);
                     }
                 }
-                else if (invitation_ind && ($("#hasCRABN :selected").val()) == 0) {
+                else if (invitation_ind && ($("#pop_has_cra_bn :selected").val()) == 0) {
+                    debugger;
+
+                    $("#cid_legalname").val($("#pop_legalname").val());
+                    $("#cid_operatingname").val($("#pop_operatingname").val());
+                    $("#cid_reasonfornobnnumber_other").val($("#pop_reasonfornobnnumber_other").val());
+                    $("#cid_reasonfornobnnumber").val($("#pop_reasonfornobnnumber :selected").val());
+
                     var accid = sessionStorage.getItem("accountId");
 
                     var data = {
                         "cid_has_cra_bn": false,
-                        "ovs_namefr": $("#cid_operatingname_fr2").val(),
-                        "cid_reasonfornobnnumber": $("#cid_reasonfornobnnumberpopup :selected").val(),
-                        "cid_reasonfornobnnumber_other": $("#cid_reasonfornobnnumber_other_popup").val(),
-                        "ovs_legalname": $("#cid_legalname2").val()
+                        "name": $("#pop_operatingname").val(),
+                        "cid_reasonfornobnnumber": $("#pop_reasonfornobnnumber :selected").val(),
+                        "cid_reasonfornobnnumber_other": $("#pop_reasonfornobnnumber_other").val(),
+                        "ovs_legalname": $("#pop_legalname").val()
                     };
 
                     tdg.webapi.update("accounts", accid, data);
-                    $("#cid_reasonfornobnnumber_other").val($("#cid_reasonfornobnnumber_other_popup").val());
-                    $("#cid_reasonfornobnnumber").val($("#cid_reasonfornobnnumberpopup :selected").val());
+
                     $("#myModal").remove();
                     handler(true);
                 }
@@ -3247,7 +3216,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
             //Pass false to callback function
             $("#btn_cancel").click(function () {
-                //handler(lse);
                 $("#myModal").remove();
                 handler(false);
             });
