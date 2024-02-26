@@ -5,6 +5,11 @@
 $(document).ready(function () {
 	debugger;
 
+	var selected_language = '{{website.selected_language.code}}';
+	sessionStorage.setItem("selected_language", selected_language);
+	tdg.c.page_instructions("page_crw_company_insert");
+	$('#WebResource_address_complete').attr("title", "Address Lookup");
+
 	//$("#name").blur(function () {
 	//	var name = $("#name").val();
 	//	if (name == "") {
@@ -19,22 +24,16 @@ $(document).ready(function () {
 
 	$("#adx_modifiedbyusername").val('{{user.adx_identity_username}}');
 	tdg.c.control_hide("adx_modifiedbyusername");
-	//set created by regiserant to current uesr
+	tdg.c.control_hide("cid_createdbyregistrant", true);
+	tdg.c.control_hide("cid_portalrecordcreationdetails");
 
 	$("#cid_createdbyregistrant_name").attr("value", '{{user.fullname}}');
 	$("#cid_createdbyregistrant_id").attr("value", '{{user.contactid}}');
 	$("#cid_createdbyregistrant_entityname").attr("value", "contact");
 	var todayDate = new Date().toLocaleDateString('en-CA');
 	todayDate = todayDate.replaceAll("-", "/");
-
 	$("#cid_portalrecordcreationdetails").val(todayDate + ", " + '{{user.fullname}}');
 
-	//hide created by registerant
-	tdg.c.control_hide("cid_createdbyregistrant", true);
-	//hide created on by
-	tdg.c.control_hide("cid_portalrecordcreationdetails");
-
-	$('#WebResource_address_complete').attr("title", "Address Lookup");
 	$("#EntityFormView").before('<div id="MessagePanel" class="alert alert-danger" role="alert" style="display: none;"></div>');
 	if ($(".text-danger").length) {
 		$("#MessagePanel").html($(".text-danger").html());
@@ -43,7 +42,6 @@ $(document).ready(function () {
 		$("#MessagePanel").show();
 	}
 	var msg = tdg.error_message.message("BTN_PREVIOUS");
-
 	$("#PreviousButton").hide();
 	tdg.c.button_create("btn_previous", "#PreviousButton", msg);
 	$("#btn_previous").bind("click", function () {
@@ -51,10 +49,6 @@ $(document).ready(function () {
 	});
 	$("#btn_previous").hide();
 	$("#cid_registrationasof").parent().parent().hide();
-
-	var selected_language = '{{website.selected_language.code}}';
-	sessionStorage.setItem("selected_language", selected_language);
-	tdg.c.page_instructions("page_crw_company_insert");
 
 	tdg.c.control_hide("ovs_invitation_only");
 	tdg.c.control_hide("cid_addressoverwritten");
@@ -84,7 +78,6 @@ $(document).ready(function () {
 		var cid_reasonfornobnnumber = "{{user.cid_reasonfornobnnumber.Value}}";
 		var cid_reasonfornobnnumber_other = tdg.c.replace_special_char("{{user.cid_reasonfornobnnumber_other}}");
 		var cid_legalname = "{{user.cid_legalname}}";
-		var ovs_legalnamefr = "{{user.ovs_legalnamefr}}";
 		var cid_operatingname = "{{user.cid_operatingname}}";
 		var ovs_name_fr = cid_operatingname;
 	}
@@ -98,7 +91,6 @@ $(document).ready(function () {
 		var cid_operatingname = $('#name').val();
 	}
 	var cid_legalname = tdg.c.replace_special_char(cid_legalname);
-	var ovs_legalnamefr = tdg.c.replace_special_char(ovs_legalnamefr);
 	var cid_operatingname = tdg.c.replace_special_char(cid_operatingname);
 	var ovs_name_fr = tdg.c.replace_special_char(ovs_name_fr);
 
@@ -120,14 +112,9 @@ $(document).ready(function () {
 		tdg.c.addValidator("cid_reasonfornobnnumber");
 
 		$("#name").on('keyup', function () {
-			//	var name = $("#name").val();
-			//	$("#ovs_namefr").val(name);
 		});
 
-		//ovs_legalname
 		$("#ovs_legalname").on('keyup', function () {
-			//	var ovs_legalname = $("#ovs_legalname").val();
-			//	$("#ovs_legalnamefr").val(ovs_legalname);
 		});
 
 		$("#cid_reasonfornobnnumber").change(function () {
@@ -145,7 +132,6 @@ $(document).ready(function () {
 		$("#ovs_legalname").val(cid_legalname);
 		$("#name").val(cid_operatingname);
 		$("#ovs_namefr").val(ovs_name_fr);
-		//$("#ovs_legalnamefr").val(ovs_legalnamefr);
 
 		debugger;
 		var value = $("#address1_line1").val();
@@ -251,6 +237,7 @@ function address1_line1_set(value) {
 	}
 	catch (e) { }
 }
+
 function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 	//debugger;
 	var cid_usercontacttype = '{{user.cid_contacttype.Value}}';
@@ -259,7 +246,6 @@ function Disable_ContactTypeFieldsForSecondaryUser(currentuserId) {
 		//var message = "The Registration process is currently being processed by your company’s Primary Administrator. Until the Registration is complete, you will not be able add or change any data, nor Attest to the Company or Sites. You will however be able to view the current state of the Registration via the [Next] and [Previous] buttons at the bottom of the screen.";
 		$("#name").attr("readonly", true);
 		$("#ovs_namefr").attr("readonly", true);
-		$("#ovs_legalnamefr").attr("readonly", true);
 
 		$("#address1_line2").attr("readonly", true);
 		$("#address1_line3").attr("readonly", true);
