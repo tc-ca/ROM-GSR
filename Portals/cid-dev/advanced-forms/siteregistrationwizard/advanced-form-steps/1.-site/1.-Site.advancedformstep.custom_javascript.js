@@ -12,23 +12,7 @@ $(document).ready(function () {
 	 tdg.c.control_hide("cid_portalrecordcreationdetails");
 	 tdg.c.control_hide("cid_cidflag");
 
-	/* $("#EntityFormView :input").change(function(e) {
-			//$("#EntityFormView").data("changed",true);
-		
-			if (e.target.id == "address1_line1" || e.target.id == "address1_line2" 
-			|| e.target.id == "address1_line3" || e.target.id == "address1_postalcode"
-			|| e.target.id == "address1_latitude" || e.target.id == "address1_longitude"
-			|| e.target.id == "ovs_lld_quarter"
-			|| e.target.id == "ovs_lld_section"
-			|| e.target.id == "ovs_lld_township"
-			|| e.target.id == "ovs_lld_range"
-			|| e.target.id == "ovs_lld_meridian"
-			)
-			{
-				sessionStorage.setItem("AddressDataChanged", true);
-				}
-	});
-*/
+	
     sessionStorage.setItem("Address1Onload", $("#address1_line1").val());
 	console.log( "address 1 on load " + $("#address1_line1").val());
      $("#address1_line1").change(function(e) {
@@ -276,7 +260,7 @@ if (window.jQuery) {
 			
 		//if ($("#ovs_duplicatesiteflag :selected").val() != 918640000 && $("#ovs_duplicatesiteflag :selected").val() != 918640001 )
 	
-		if (sessionStorage.getItem("AddressDataChanged") == "true" || (address1AfterLoad != address1Onload) )
+		if (sessionStorage.getItem("AddressDataChanged") == "true" || (address1AfterLoad != address1Onload && address1AfterLoad != null ) )
 		{
 			switch (addressType) {
 			case "1":
@@ -377,7 +361,9 @@ if (window.jQuery) {
 
 				if (EnvironmentSettingResult.length > 0) {
 					var FlowURL = EnvironmentSettingResult[0]["qm_value"];
+					
 					return CheckDuplicate(FlowURL, parameters);
+					
 				}
 				else
 					return true;
@@ -516,6 +502,7 @@ var CheckDuplicate = function (_flowURl, _parameters) {
 					sessionStorage.setItem("AddressDataChanged",false);
                     entityFormClientValidate = true;
                     originalValidationFunction = true;
+					webFormClientValidate = true;
                     $("#NextButton").click();
                     return true;
                 }
