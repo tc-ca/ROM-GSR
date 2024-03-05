@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{26abd45c-8fba-44ab-9456-9a1f714a7d30}</savedqueryid>
+    <layoutxml>
+      <grid name="ovs_operationunnumbers" jump="ovs_name" select="1" icon="1" preview="0">
+        <row name="ovs_operationunnumber" id="ovs_operationunnumberid">
+          <cell name="a_df1d9cd7267e4277a712877ffae3fbab.tdg_undisplayname" width="100" />
+          <cell name="ovs_supplychaindirection" width="150" />
+          <cell name="a_df1d9cd7267e4277a712877ffae3fbab.tdg_primaryclasscd" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>64</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="ovs_operationunnumber">
+          <attribute name="ovs_operationunnumberid" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="ovs_supplychaindirection" />
+          <link-entity alias="a_df1d9cd7267e4277a712877ffae3fbab" name="tdg_unnumber" to="ovs_unnumber" from="tdg_unnumberid" link-type="outer" visible="false">
+            <attribute name="tdg_primaryclasscd" />
+            <attribute name="tdg_undisplayname" />
+          </link-entity>
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Operation UN Number Lookup View" languagecode="1033" />
+      <LocalizedName description="Numéro UN  vue d'ensemble" languagecode="1036" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
