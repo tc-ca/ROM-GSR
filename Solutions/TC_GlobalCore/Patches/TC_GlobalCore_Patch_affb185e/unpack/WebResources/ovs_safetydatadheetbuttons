@@ -1,0 +1,64 @@
+
+function PDF_ViewButton_OnClick(primaryControl, variable) 
+{
+	debugger;
+	var recordId;
+	
+	if(variable)
+		recordId = variable[0].Id;
+	else 
+		recordId = primaryControl.data.entity.getId();
+	
+	if(recordId == null)
+		return;
+	else
+		recordId = recordId.replace(/[{}]/g, '');
+							
+	
+	Xrm.WebApi.retrieveRecord("ovs_sds", recordId , "?$select=ovs_file_name_nm,ovs_file_path_txt").then(
+		function success(result) 
+		{
+			console.log(result);
+			// Columns
+			var ovs_sdsid = result["ovs_sdsid"]; // Guid
+			var ovs_file_name_nm = result["ovs_file_name_nm"]; // Text
+			var ovs_file_path_txt = result["ovs_file_path_txt"]; // Text
+			
+			Xrm.WebApi.retrieveMultipleRecords("qm_environmentsettings", "?$select=qm_value&$filter=qm_name eq 'CID_SDS_BlobStorageLocation'").then(
+			function success(results) {
+				console.log(results);
+				var qm_value = null;
+				if(results.entities.length > 0)
+				{
+					var result = results.entities[0];
+					// Columns
+					var qm_environmentsettingsid = result["qm_environmentsettingsid"]; // Guid
+					qm_value = result["qm_value"]; // Multiline Text
+					
+					//Open File
+					var left = (screen.width/2)-(400);
+					var top = (screen.height/2)-(300);
+					
+					//window.open("https://docs.google.com/viewer?url="+ qm_value + ovs_file_path_txt ,"_blank");
+					var popup = window.open("https://docs.google.com/gview?url="+ qm_value + ovs_file_path_txt ,"Document Preview"
+						,"toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=800, height=600, top="+top+", left="+ left +", popup");
+					
+					
+					//window.open("https://view.officeapps.live.com/op/embed.aspx?src=URLEncode("+ qm_value + ovs_file_path_txt +")" ,"_blank");
+					if (window.focus) {popup.focus();}
+					
+		
+				}	
+			},
+			function(error) {
+				console.log(error.message);
+			}
+		);	
+					
+		},
+		function(error) {
+			console.log(error.message);
+		}
+	);
+}
+
