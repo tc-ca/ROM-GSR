@@ -1,0 +1,86 @@
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+
+var globalFormContext;
+
+var statuscodes = {
+    Draft                           : 1,
+    ConfirmationOnSite              : 2,
+    Canceled                        : 3,
+    Active                          : 4,
+    ConfirmationReceivedOnTime      : 918640000,
+    ConfirmationReceivedLate        : 918640001,
+    ClosedUnresolved                : 918640002,
+    ClosedEscalated                 : 918640003,
+    ClosedConfirmationNotRequested  : 918640004,
+}
+
+var statecodes = {
+    Draft   : 0,
+    Closed  : 1,
+    Canceled: 2,
+    Active  : 3
+}
+
+const FIELD_JUSTIFICATION = "ovs_justificationtxt";
+const FIELD_SCHEDULED_START = "ovs_daterequested";
+const FIELD_STATUSCODE = "statuscode";
+const FIELD_STATECODE = "statecode";
+function OnLoad(executionContext) {
+    //get context
+    globalContext = glHelper.getGlobalContext();
+    var formContext = executionContext.getFormContext();
+    var id = glHelper.GetCurrentRecordId(formContext);
+
+    //status and state code controls
+    var statusVisibility = true;
+
+    globalFormContext = formContext;
+
+    // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+    formType = glHelper.GetFormType(formContext);
+    //If form is new, set the Action Date to today.
+    if (formType == 1) {
+        var currentDate = new Date();
+        glHelper.SetValue(formContext, FIELD_SCHEDULED_START, currentDate);
+    }
+    glHelper.SetControlVisibility(formContext, FIELD_STATECODE, statusVisibility);
+    glHelper.SetControlVisibility(formContext, FIELD_STATUSCODE, statusVisibility);
+
+    //add event handler for status change event
+    var statusField = formContext.getAttribute(FIELD_STATUSCODE);
+    statusField.removeOnChange(Status_OnChange);
+    statusField.addOnChange(Status_OnChange);
+
+    //remove cancelled from the list of availible statuses
+    glHelper.filterOptionSet(formContext, FIELD_STATECODE, [statecodes.Canceled], false)
+
+    //remove ClosedConfirmationNotRequested from the list of availible statuscodes
+    glHelper.filterOptionSet(formContext, FIELD_STATUSCODE, [statuscodes.ClosedConfirmationNotRequested], false)
+
+    setJustificationFieldRequirement();
+}
+
+function OnSave() {
+
+}
+
+function Status_OnChange(){
+    setJustificationFieldRequirement();
+}
+
+function setJustificationFieldRequirement() {
+    /*
+    ClosedUnresolved                : 918640002,
+    ClosedEscalated                 : 918640003,
+    ClosedConfirmationNotRequested  : 918640004
+    */
+    var status = glHelper.GetValue(globalFormContext, FIELD_STATUSCODE);
+    var requireJustification = false;
+    if (status === statuscodes.ClosedEscalated ||
+        status === statuscodes.ClosedUnresolved ||
+        status === statuscodes.ClosedConfirmationNotRequested) {
+        requireJustification = true;
+    }
+    glHelper.SetControlVisibility(globalFormContext, FIELD_JUSTIFICATION, requireJustification);
+    glHelper.SetRequiredLevel(globalFormContext, FIELD_JUSTIFICATION, requireJustification);
+}
