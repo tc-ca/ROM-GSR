@@ -90,7 +90,7 @@
       "actions": {
         "Booking_StartTime": {
           "runAfter": {
-            "Remote_boolean_based_on_language": [
+            "Set_Inspection_Setting_value_based_on_Language": [
               "Succeeded"
             ]
           },
@@ -892,7 +892,7 @@
                             "parameters": {
                               "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
                               "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
-                              "file": "01QZYBJ7COMYUKO6LHORG35DGOU6WFLATD",
+                              "file": "01QZYBJ7ADE4ONZSBVVZB2XFOTKIRRYC4P",
                               "dynamicFileSchema/195427893": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
                               "dynamicFileSchema/270129255": "@outputs('Get_a_WO._All_fields')?['body/msdyn_latitude']",
                               "dynamicFileSchema/275383476": "@outputs('Get_a_WO._All_fields')?['body/msdyn_longitude']",
@@ -903,7 +903,7 @@
                               "dynamicFileSchema/1401091317": "@variables('scndInspectorName')",
                               "dynamicFileSchema/1600681763": "@variables('scndInspectorPhone')",
                               "dynamicFileSchema/1705523509": "@variables('violations')",
-                              "dynamicFileSchema/1895699130": "@variables('Remote')",
+                              "dynamicFileSchema/1895699130": "@variables('Inspection Setting')",
                               "dynamicFileSchema/1966544364": "@outputs('Get_Primary_Inspector')?['body/ovs_badgenumber']",
                               "dynamicFileSchema/2014261285": "@outputs('Get_Primary_Inspector')?['body/userid/address1_telephone1']",
                               "dynamicFileSchema/2092892383": "@{outputs('Get_a_WO._All_fields')?['body/msdyn_address1']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_city']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_stateorprovince']}. @{outputs('Get_a_WO._All_fields')?['body/msdyn_postalcode']}",
@@ -917,10 +917,10 @@
                               "dynamicFileSchema/-217049391": "@outputs('Get_Primary_Inspector')?['body/ovs_registeredinspectornumberrin']",
                               "dynamicFileSchema/-722680123": "@variables('scndInspectorRIN')",
                               "dynamicFileSchema/-1231235283": "@variables('prmInspectorEmail')",
-                              "dynamicFileSchema/-1452475705": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
-                              "dynamicFileSchema/-1807610976": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')",
                               "dynamicFileSchema/-138117494": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
-                              "dynamicFileSchema/-820736929": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')"
+                              "dynamicFileSchema/-820736929": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')",
+                              "dynamicFileSchema/-1452475705": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
+                              "dynamicFileSchema/-1807610976": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')"
                             },
                             "authentication": "@parameters('$authentication')"
                           }
@@ -982,7 +982,7 @@
                               "parameters": {
                                 "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
                                 "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
-                                "file": "01QZYBJ7DAFT2VHOPCFJGIE5RXJ7U5PT77",
+                                "file": "01QZYBJ7ABJIWU5MWEK5BYHHG2KTZWHMPI",
                                 "dynamicFileSchema/195427893": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
                                 "dynamicFileSchema/270129255": "@outputs('Get_a_WO._All_fields')?['body/msdyn_latitude']",
                                 "dynamicFileSchema/275383476": "@outputs('Get_a_WO._All_fields')?['body/msdyn_longitude']",
@@ -992,7 +992,7 @@
                                 "dynamicFileSchema/980343006": "@{outputs('Get_Site_and_Primary_Contact')?['body/address1_line1']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_city']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_stateorprovince']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_postalcode']}",
                                 "dynamicFileSchema/1401091317": "@variables('scndInspectorName')",
                                 "dynamicFileSchema/1600681763": "@variables('scndInspectorPhone')",
-                                "dynamicFileSchema/1895699130": "@variables('Remote')",
+                                "dynamicFileSchema/1895699130": "@variables('Inspection Setting')",
                                 "dynamicFileSchema/1966544364": "@outputs('Get_Primary_Inspector')?['body/ovs_badgenumber']",
                                 "dynamicFileSchema/2014261285": "@outputs('Get_Primary_Inspector')?['body/userid/address1_telephone1']",
                                 "dynamicFileSchema/2092892383": "@{outputs('Get_a_WO._All_fields')?['body/msdyn_address1']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_city']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_stateorprovince']}. @{outputs('Get_a_WO._All_fields')?['body/msdyn_postalcode']}",
@@ -1006,10 +1006,10 @@
                                 "dynamicFileSchema/-217049391": "@outputs('Get_Primary_Inspector')?['body/ovs_registeredinspectornumberrin']",
                                 "dynamicFileSchema/-722680123": "@variables('scndInspectorRIN')",
                                 "dynamicFileSchema/-1231235283": "@variables('prmInspectorEmail')",
-                                "dynamicFileSchema/-1452475705": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
-                                "dynamicFileSchema/-1807610976": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')",
                                 "dynamicFileSchema/-236401837": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
-                                "dynamicFileSchema/-1507894255": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')"
+                                "dynamicFileSchema/-1507894255": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')",
+                                "dynamicFileSchema/-1452475705": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
+                                "dynamicFileSchema/-1807610976": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')"
                               },
                               "authentication": "@parameters('$authentication')"
                             }
@@ -1087,7 +1087,7 @@
                               "parameters": {
                                 "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
                                 "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
-                                "file": "01QZYBJ7CKABB7EOJ4NZFIBGDMH5ORD524",
+                                "file": "01QZYBJ7AYNTRDBGNFJNBLWK4PXTRPJRCA",
                                 "dynamicFileSchema/195427893": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
                                 "dynamicFileSchema/383832492": "@variables('scndInspectorEmail')",
                                 "dynamicFileSchema/458229815": "@variables('bookingStartTime')",
@@ -1096,7 +1096,7 @@
                                 "dynamicFileSchema/1401091317": "@variables('scndInspectorName')",
                                 "dynamicFileSchema/1600681763": "@variables('scndInspectorPhone')",
                                 "dynamicFileSchema/1705523509": "@variables('violations')",
-                                "dynamicFileSchema/1895699130": "@variables('Remote')",
+                                "dynamicFileSchema/1895699130": "@variables('Inspection Setting')",
                                 "dynamicFileSchema/1966544364": "@outputs('Get_Primary_Inspector')?['body/ovs_badgenumber']",
                                 "dynamicFileSchema/2014261285": "@outputs('Get_Primary_Inspector')?['body/userid/address1_telephone1']",
                                 "dynamicFileSchema/2117092899": "@outputs('Get_Inspection_Report')?['body/ovs_generalcomments']",
@@ -1109,10 +1109,10 @@
                                 "dynamicFileSchema/-217049391": "@outputs('Get_Primary_Inspector')?['body/ovs_registeredinspectornumberrin']",
                                 "dynamicFileSchema/-722680123": "@variables('scndInspectorRIN')",
                                 "dynamicFileSchema/-1231235283": "@variables('prmInspectorEmail')",
-                                "dynamicFileSchema/-1452475705": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
-                                "dynamicFileSchema/-1807610976": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')",
                                 "dynamicFileSchema/-1864437220": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
-                                "dynamicFileSchema/-2145267778": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')"
+                                "dynamicFileSchema/-2145267778": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')",
+                                "dynamicFileSchema/-1452475705": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
+                                "dynamicFileSchema/-1807610976": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')"
                               },
                               "authentication": "@parameters('$authentication')"
                             }
@@ -1174,7 +1174,7 @@
                                 "parameters": {
                                   "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
                                   "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
-                                  "file": "01QZYBJ7BERKHEG67QIFFLWUEADKIUHQRU",
+                                  "file": "01QZYBJ7AOVLZTMR7XLFG3UI434W227RW4",
                                   "dynamicFileSchema/195427893": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
                                   "dynamicFileSchema/383832492": "@variables('scndInspectorEmail')",
                                   "dynamicFileSchema/458229815": "@variables('bookingStartTime')",
@@ -1183,7 +1183,7 @@
                                   "dynamicFileSchema/1026907303": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
                                   "dynamicFileSchema/1401091317": "@variables('scndInspectorName')",
                                   "dynamicFileSchema/1600681763": "@variables('scndInspectorPhone')",
-                                  "dynamicFileSchema/1895699130": "@variables('Remote')",
+                                  "dynamicFileSchema/1895699130": "@variables('Inspection Setting')",
                                   "dynamicFileSchema/1966544364": "@outputs('Get_Primary_Inspector')?['body/ovs_badgenumber']",
                                   "dynamicFileSchema/2014261285": "@outputs('Get_Primary_Inspector')?['body/userid/address1_telephone1']",
                                   "dynamicFileSchema/2117092899": "@outputs('Get_Inspection_Report')?['body/ovs_generalcomments']",
@@ -1196,9 +1196,9 @@
                                   "dynamicFileSchema/-217049391": "@outputs('Get_Primary_Inspector')?['body/ovs_registeredinspectornumberrin']",
                                   "dynamicFileSchema/-722680123": "@variables('scndInspectorRIN')",
                                   "dynamicFileSchema/-1231235283": "@variables('prmInspectorEmail')",
+                                  "dynamicFileSchema/-899662700": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')",
                                   "dynamicFileSchema/-1452475705": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
-                                  "dynamicFileSchema/-1807610976": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')",
-                                  "dynamicFileSchema/-899662700": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')"
+                                  "dynamicFileSchema/-1807610976": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')"
                                 },
                                 "authentication": "@parameters('$authentication')"
                               }
@@ -1295,7 +1295,7 @@
                               "parameters": {
                                 "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
                                 "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
-                                "file": "01QZYBJ7DNAHRG7X5QVBFLNZ3QZZECVIME",
+                                "file": "01QZYBJ7CYK5UCQ7WXINHZRGMY23I34QKV",
                                 "dynamicFileSchema/195427893": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
                                 "dynamicFileSchema/270129255": "@outputs('Get_a_WO._All_fields')?['body/msdyn_latitude']",
                                 "dynamicFileSchema/275383476": "@outputs('Get_a_WO._All_fields')?['body/msdyn_longitude']",
@@ -1307,7 +1307,7 @@
                                 "dynamicFileSchema/1401091317": "@variables('scndInspectorName')",
                                 "dynamicFileSchema/1600681763": "@variables('scndInspectorPhone')",
                                 "dynamicFileSchema/1705523509": "@variables('violations')",
-                                "dynamicFileSchema/1895699130": "@variables('Remote')",
+                                "dynamicFileSchema/1895699130": "@variables('Inspection Setting')",
                                 "dynamicFileSchema/1966544364": "@outputs('Get_Primary_Inspector')?['body/ovs_badgenumber']",
                                 "dynamicFileSchema/2014261285": "@outputs('Get_Primary_Inspector')?['body/userid/address1_telephone1']",
                                 "dynamicFileSchema/2092892383": "@{outputs('Get_a_WO._All_fields')?['body/msdyn_address1']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_city']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_stateorprovince']}. @{outputs('Get_a_WO._All_fields')?['body/msdyn_postalcode']}",
@@ -1321,9 +1321,9 @@
                                 "dynamicFileSchema/-217049391": "@outputs('Get_Primary_Inspector')?['body/ovs_registeredinspectornumberrin']",
                                 "dynamicFileSchema/-722680123": "@variables('scndInspectorRIN')",
                                 "dynamicFileSchema/-1231235283": "@variables('prmInspectorEmail')",
+                                "dynamicFileSchema/-290821859": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')",
                                 "dynamicFileSchema/-1452475705": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
-                                "dynamicFileSchema/-1807610976": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')",
-                                "dynamicFileSchema/-290821859": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')"
+                                "dynamicFileSchema/-1807610976": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')"
                               },
                               "authentication": "@parameters('$authentication')"
                             }
@@ -1386,7 +1386,7 @@
                                 "parameters": {
                                   "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
                                   "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
-                                  "file": "01QZYBJ7FVDDT2ZR5OQRH3RKY4XAM6VSEF",
+                                  "file": "01QZYBJ7BWT6E45MFMBFAL7RHTYPAR2HEJ",
                                   "dynamicFileSchema/127295357": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
                                   "dynamicFileSchema/195427893": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
                                   "dynamicFileSchema/270129255": "@outputs('Get_a_WO._All_fields')?['body/msdyn_latitude']",
@@ -1397,7 +1397,7 @@
                                   "dynamicFileSchema/980343006": "@{outputs('Get_Site_and_Primary_Contact')?['body/address1_line1']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_city']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_stateorprovince']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_postalcode']}",
                                   "dynamicFileSchema/1401091317": "@variables('scndInspectorName')",
                                   "dynamicFileSchema/1600681763": "@variables('scndInspectorPhone')",
-                                  "dynamicFileSchema/1895699130": "@variables('Remote')",
+                                  "dynamicFileSchema/1895699130": "@variables('Inspection Setting')",
                                   "dynamicFileSchema/1966544364": "@outputs('Get_Primary_Inspector')?['body/ovs_badgenumber']",
                                   "dynamicFileSchema/2014261285": "@outputs('Get_Primary_Inspector')?['body/userid/address1_telephone1']",
                                   "dynamicFileSchema/2092892383": "@{outputs('Get_a_WO._All_fields')?['body/msdyn_address1']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_city']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_stateorprovince']}. @{outputs('Get_a_WO._All_fields')?['body/msdyn_postalcode']}",
@@ -1411,9 +1411,9 @@
                                   "dynamicFileSchema/-217049391": "@outputs('Get_Primary_Inspector')?['body/ovs_registeredinspectornumberrin']",
                                   "dynamicFileSchema/-722680123": "@variables('scndInspectorRIN')",
                                   "dynamicFileSchema/-1231235283": "@variables('prmInspectorEmail')",
+                                  "dynamicFileSchema/-1668390056": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')",
                                   "dynamicFileSchema/-1452475705": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
-                                  "dynamicFileSchema/-1807610976": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')",
-                                  "dynamicFileSchema/-1668390056": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')"
+                                  "dynamicFileSchema/-1807610976": "@convertFromUtc(utcNow(), 'Eastern Standard Time','yyyy-MM-dd')"
                                 },
                                 "authentication": "@parameters('$authentication')"
                               }
@@ -1491,7 +1491,7 @@
                                 "parameters": {
                                   "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
                                   "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
-                                  "file": "01QZYBJ7DYJTGIQEUDIBCZTDCAP3EYC4TP",
+                                  "file": "01QZYBJ7CLRN4UT5P6MVEZGWJOOWGDOKQN",
                                   "dynamicFileSchema/195427893": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
                                   "dynamicFileSchema/383832492": "@variables('scndInspectorEmail')",
                                   "dynamicFileSchema/458229815": "@variables('bookingStartTime')",
@@ -1502,7 +1502,7 @@
                                   "dynamicFileSchema/1600681763": "@variables('scndInspectorPhone')",
                                   "dynamicFileSchema/1648855167": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
                                   "dynamicFileSchema/1705523509": "@variables('violations')",
-                                  "dynamicFileSchema/1895699130": "@variables('Remote')",
+                                  "dynamicFileSchema/1895699130": "@variables('Inspection Setting')",
                                   "dynamicFileSchema/1966544364": "@outputs('Get_Primary_Inspector')?['body/ovs_badgenumber']",
                                   "dynamicFileSchema/2014261285": "@outputs('Get_Primary_Inspector')?['body/userid/address1_telephone1']",
                                   "dynamicFileSchema/2117092899": "@outputs('Get_Inspection_Report')?['body/ovs_generalcomments']",
@@ -1579,7 +1579,7 @@
                                   "parameters": {
                                     "source": "sites/034gc.sharepoint.com,140da73b-4423-4443-a812-e623d6d857c4,f2a2589e-2eec-4642-9280-443640f88211",
                                     "drive": "b!O6cNFCNEQ0SoEuYj1thXxJ5YovLsLkJGkoBENkD4ghHOwr7dpePzS7BlI7DR0NOV",
-                                    "file": "01QZYBJ7B5Q4TNL724XBBJ3CXXGBICA3FN",
+                                    "file": "01QZYBJ7ETZ3CR32UHOZC2EADOJH2F7CEZ",
                                     "dynamicFileSchema/195427893": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
                                     "dynamicFileSchema/383832492": "@variables('scndInspectorEmail')",
                                     "dynamicFileSchema/458229815": "@variables('bookingStartTime')",
@@ -1589,7 +1589,7 @@
                                     "dynamicFileSchema/1102927297": "@outputs('Get_a_WO._All_fields')?['body/msdyn_name']",
                                     "dynamicFileSchema/1401091317": "@variables('scndInspectorName')",
                                     "dynamicFileSchema/1600681763": "@variables('scndInspectorPhone')",
-                                    "dynamicFileSchema/1895699130": "@variables('Remote')",
+                                    "dynamicFileSchema/1895699130": "@variables('Inspection Setting')",
                                     "dynamicFileSchema/1966544364": "@outputs('Get_Primary_Inspector')?['body/ovs_badgenumber']",
                                     "dynamicFileSchema/2014261285": "@outputs('Get_Primary_Inspector')?['body/userid/address1_telephone1']",
                                     "dynamicFileSchema/2117092899": "@outputs('Get_Inspection_Report')?['body/ovs_generalcomments']",
@@ -2338,26 +2338,6 @@
             ]
           }
         },
-        "Remote_boolean_based_on_language": {
-          "runAfter": {
-            "Is_French": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "4303a103-a5a8-4485-bd52-d1f8a59218a6"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "Remote",
-                "type": "string",
-                "value": "@{if(variables('isFrench'),if(outputs('Get_a_WO._All_fields')?['body/qm_remote'],'Oui','Non'),if(outputs('Get_a_WO._All_fields')?['body/qm_remote'],'Yes','No'))}"
-              }
-            ]
-          }
-        },
         "Primary_Inspector_Email": {
           "runAfter": {
             "Get_Primary_Inspector": [
@@ -2500,6 +2480,70 @@
                 "name": "isCOCexist",
                 "type": "integer",
                 "value": 0
+              }
+            ]
+          }
+        },
+        "Set_Inspection_Setting_value_based_on_Language": {
+          "actions": {
+            "Set_Inspection_Setting_FR": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "2f59d0c0-6a35-4946-a416-140db348fa58"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Inspection Setting",
+                "value": "@{if(equals(outputs('Get_a_WO._All_fields')?['body/ovs_inspection_setting'],0),'Sur place',if(equals(outputs('Get_a_WO._All_fields')?['body/ovs_inspection_setting'], 1),'À distance','Hybride'))}"
+              }
+            }
+          },
+          "runAfter": {
+            "Inspection_Setting": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Set_Inspection_Setting_EN": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "d116f9c3-e465-4ade-a7c6-c7445d7f1f60"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "Inspection Setting",
+                  "value": "@{if(equals(outputs('Get_a_WO._All_fields')?['body/ovs_inspection_setting'], 0),'On site',if(equals(outputs('Get_a_WO._All_fields')?['body/ovs_inspection_setting'], 1),'Remote','Hybrid'))}"
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@variables('isFrench')",
+              "@true"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "63eaef60-e4ec-4f4d-bfe3-2e3511b960d5"
+          },
+          "type": "If"
+        },
+        "Inspection_Setting": {
+          "runAfter": {
+            "Is_French": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4303a103-a5a8-4485-bd52-d1f8a59218a6"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Inspection Setting",
+                "type": "string"
               }
             ]
           }
