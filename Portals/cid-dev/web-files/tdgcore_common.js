@@ -3036,16 +3036,9 @@ if (typeof (tdg.cid.crw) == "undefined") {
 
                 //hide div that display error
                 $('#ErrorMessageDiv').css('display', 'none');
-                var cid_crabusinessnumber = $("#pop_crabusinessnumber").val();
+                var cid_crabusinessnumber = $("#pop_crabusinessnumber").val() + "";
 
-                // must be 9 digits
-                if ((cid_crabusinessnumber.length != 9) || (!jQuery.isNumeric(cid_crabusinessnumber))) {
-                    var msg = tdg.error_message.message("m000220");
-                    $('#ErrorMessageDiv').css('display', 'block');
-                    $('#ErrorMessageDiv').html("<p>" + msg + "</p>");
-
-                    return;
-                }
+             
 
                 invitation_ind = sessionStorage.getItem("invitation_ind");
                 sessionStorage.setItem("cid_has_cra_bn", $("#pop_has_cra_bn :selected").val());
@@ -3054,10 +3047,22 @@ if (typeof (tdg.cid.crw) == "undefined") {
                 sessionStorage.setItem("cid_crabusinessnumber", cid_crabusinessnumber);
 
                 if (invitation_ind && ($("#pop_has_cra_bn :selected").val()) == 1) {
+
+                    // must be 9 digits
+                    if ((cid_crabusinessnumber.length != 9) || (!jQuery.isNumeric(cid_crabusinessnumber))) {
+                        var msg = tdg.error_message.message("m000220");
+                        $('#ErrorMessageDiv').css('display', 'block');
+                        $('#ErrorMessageDiv').html("<p>" + msg + "</p>");
+
+                        return;
+                    }
                     var environment = tdg.cid.crw.Get_Enviroment_From_EnvironmentSettings();
+
                     //if pre prod or prod
                     try {
                         if (environment.toLowerCase() == "preprod" || environment.toLowerCase() == "prod") {
+                            
+
                             //use CRA API to get iformation
                             // console.log("retrieved from production");
                             var results = tdg.webapi.SelectedColumnlist("qm_environmentsettingses", "qm_value", "qm_name eq 'CID_Flow_CRA_API'");
