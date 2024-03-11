@@ -27,6 +27,15 @@
         "api": {
           "name": "shared_teams"
         }
+      },
+      "shared_commondataserviceforapps_2": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "new_sharedcommondataserviceforapps_9ede5"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
       }
     },
     "definition": {
@@ -67,7 +76,11 @@
       },
       "actions": {
         "Add_a_new_row:_IPT_Run": {
-          "runAfter": {},
+          "runAfter": {
+            "Scope:_Get_Default_Values_from_Settings": [
+              "Succeeded"
+            ]
+          },
           "metadata": {
             "operationMetadataId": "fe5fef56-af88-45ae-9571-c4d37bb34098"
           },
@@ -81,12 +94,14 @@
             "parameters": {
               "entityName": "ovs_iptruns",
               "item/ovs_fromdate": "@utcNow()",
+              "item/ovs_cidflag": "@variables('CID_Flag_Value_String')",
               "item/ovs_forgettingfactor": 1,
               "item/ovs_populationdensitylb": 100,
               "item/ovs_modebaseconstant": 1.15,
               "item/ovs_startyear": 2,
               "item/ovs_yearscyclemax": 9,
-              "item/ovs_yearscyclemin": 2
+              "item/ovs_yearscyclemin": 2,
+              "item/ovs_neverinspectedaddon": "@variables('IPT_Never_Inspected_Add_on_Value')"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -353,10 +368,439 @@
             "operationMetadataId": "82a02db9-a529-4942-9927-43eae1efb7d8"
           },
           "type": "Foreach"
+        },
+        "Initialize_variable:_CID_Flag_Value_String": {
+          "runAfter": {
+            "Initialize_variable:_IPT_Never_Inspected_Add_on_Name": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7fd2cdae-4aa2-4891-9971-08687390b7ed"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CID_Flag_Value_String",
+                "type": "string",
+                "value": "100000000,100000001\n"
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_IPT_Never_Inspected_Add_on_Value": {
+          "runAfter": {
+            "Initialize_variable:_CID_Flag_Value_Array": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4ffdb340-c193-4d5a-978f-565142902f5e"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "IPT_Never_Inspected_Add_on_Value",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "Scope:_Get_Default_Values_from_Settings": {
+          "actions": {
+            "List_rows:_Environment_Settings_": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "ed5cd63a-90f2-42db-8a7e-0b4ee4b98f3f"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_2",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "qm_environmentsettingses",
+                  "$select": "qm_name,qm_value",
+                  "$filter": "qm_name eq '@{variables('CID_Flag_Name')}' or  qm_name eq '@{variables('IPT_Never_Inspected_Add_on_Name')}'"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Condition:_Check_if_IPT_Settings_Exists": {
+              "actions": {
+                "Apply_to_each": {
+                  "foreach": "@outputs('List_rows:_Environment_Settings_')?['body/value']",
+                  "actions": {
+                    "Condition:_Check_if_Name_is_IPT_Flag": {
+                      "actions": {
+                        "Set_variable:_CID_Flag_String": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "8dffa83b-42b4-4263-935b-ae8b4bbba37e"
+                          },
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "CID_Flag_Value_String",
+                            "value": "@items('Apply_to_each')?['qm_value']"
+                          }
+                        },
+                        "Condition:_UNKNOWN": {
+                          "actions": {
+                            "Append_to_string_variable_UNKNOWN": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "12380209-5a09-475e-a695-6c1ed1e4a27e"
+                              },
+                              "type": "AppendToStringVariable",
+                              "inputs": {
+                                "name": "CID_Flag_Value_Array",
+                                "value": 100000000
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Set_variable:_CID_Flag_String": [
+                              "Succeeded"
+                            ]
+                          },
+                          "expression": {
+                            "contains": [
+                              "@toUpper(variables('CID_Flag_Value_String'))",
+                              "UNKNOWN"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "f2c2cf9b-53fc-49f7-83ca-59d844720c4f"
+                          },
+                          "type": "If"
+                        },
+                        "Condition:_SCOPE": {
+                          "actions": {
+                            "Append_to_string_variable_SCOPE": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "b7f38197-751e-4648-9097-3da1d6c8dcfc"
+                              },
+                              "type": "AppendToStringVariable",
+                              "inputs": {
+                                "name": "CID_Flag_Value_Array",
+                                "value": ",100000001"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Condition:_UNKNOWN": [
+                              "Succeeded"
+                            ]
+                          },
+                          "expression": {
+                            "contains": [
+                              "@toUpper(variables('CID_Flag_Value_String'))",
+                              "SCOPE"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "af48a6f6-2837-40e4-8685-89c352c2dd8c"
+                          },
+                          "type": "If"
+                        },
+                        "Condition:_EXEMPT": {
+                          "actions": {
+                            "Append_to_string_variable_EXEMPT": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "78a4fad1-b8cb-40c5-9c1c-4ea8166f335a"
+                              },
+                              "type": "AppendToStringVariable",
+                              "inputs": {
+                                "name": "CID_Flag_Value_Array",
+                                "value": ",100000002"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Condition:_SCOPE": [
+                              "Succeeded"
+                            ]
+                          },
+                          "expression": {
+                            "contains": [
+                              "@toUpper(variables('CID_Flag_Value_String'))",
+                              "EXEMPT"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "58c15240-3583-418c-b1e8-664ff4584406"
+                          },
+                          "type": "If"
+                        },
+                        "Condition": {
+                          "actions": {
+                            "Condition_2": {
+                              "actions": {
+                                "Compose_2": {
+                                  "runAfter": {},
+                                  "metadata": {
+                                    "operationMetadataId": "6074d6a1-5a35-45e3-b27e-8cfd9c7f43e1"
+                                  },
+                                  "type": "Compose",
+                                  "inputs": "@substring(variables('CID_Flag_Value_Array'),1,sub(length(variables('CID_Flag_Value_Array')),1))"
+                                },
+                                "Set_variable_3": {
+                                  "runAfter": {
+                                    "Compose_2": [
+                                      "Succeeded"
+                                    ]
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "84904c3b-f659-4cf5-bb10-a0bb06149b95"
+                                  },
+                                  "type": "SetVariable",
+                                  "inputs": {
+                                    "name": "CID_Flag_Value_String",
+                                    "value": "@{outputs('Compose_2')}"
+                                  }
+                                }
+                              },
+                              "runAfter": {},
+                              "else": {
+                                "actions": {
+                                  "Set_variable_5": {
+                                    "runAfter": {},
+                                    "metadata": {
+                                      "operationMetadataId": "fa34db45-fcb5-4e8e-8251-9fe56271c44f"
+                                    },
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                      "name": "CID_Flag_Value_String",
+                                      "value": "@variables('CID_Flag_Value_Array')"
+                                    }
+                                  }
+                                }
+                              },
+                              "expression": {
+                                "startsWith": [
+                                  "@variables('CID_Flag_Value_Array')",
+                                  ","
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "3e9f73c5-ba91-4ea7-8e9e-5d0e8279021a"
+                              },
+                              "type": "If"
+                            }
+                          },
+                          "runAfter": {
+                            "Condition:_EXEMPT": [
+                              "Succeeded"
+                            ]
+                          },
+                          "expression": {
+                            "and": [
+                              {
+                                "not": {
+                                  "equals": [
+                                    "@variables('CID_Flag_Value_Array')",
+                                    "@null"
+                                  ]
+                                }
+                              },
+                              {
+                                "equals": [
+                                  "@empty(variables('CID_Flag_Value_Array'))",
+                                  "@false"
+                                ]
+                              }
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "68048742-95fb-47eb-a339-afad2dc5c35e"
+                          },
+                          "type": "If"
+                        }
+                      },
+                      "runAfter": {},
+                      "else": {
+                        "actions": {
+                          "Condition:_Get_IPT_Never_Inspected_Add_on": {
+                            "actions": {
+                              "Set_variable:_Set_IPT_Never_Inspected_Add_on": {
+                                "runAfter": {},
+                                "metadata": {
+                                  "operationMetadataId": "92181b6c-446d-4709-9bbe-bc22f950c762"
+                                },
+                                "type": "SetVariable",
+                                "inputs": {
+                                  "name": "IPT_Never_Inspected_Add_on_Value",
+                                  "value": "@Int(items('Apply_to_each')?['qm_value'])"
+                                }
+                              }
+                            },
+                            "runAfter": {},
+                            "expression": {
+                              "and": [
+                                {
+                                  "equals": [
+                                    "@items('Apply_to_each')?['qm_name']",
+                                    "@variables('IPT_Never_Inspected_Add_on_Name')"
+                                  ]
+                                },
+                                {
+                                  "not": {
+                                    "equals": [
+                                      "@items('Apply_to_each')?['qm_value']",
+                                      "@null"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "equals": [
+                                    "@isInt(items('Apply_to_each')?['qm_value'])",
+                                    "@true"
+                                  ]
+                                }
+                              ]
+                            },
+                            "metadata": {
+                              "operationMetadataId": "19571c23-94f2-4790-b56e-3210c1218a08"
+                            },
+                            "type": "If"
+                          }
+                        }
+                      },
+                      "expression": {
+                        "and": [
+                          {
+                            "equals": [
+                              "@items('Apply_to_each')?['qm_name']",
+                              "@variables('CID_Flag_Name')"
+                            ]
+                          },
+                          {
+                            "not": {
+                              "equals": [
+                                "@items('Apply_to_each')?['qm_value']",
+                                "@null"
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "0e248d62-96d0-43ca-b723-157cbcee02d0"
+                      },
+                      "type": "If"
+                    }
+                  },
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "e59853f7-a682-4aa1-be8f-24dec2bffb37"
+                  },
+                  "type": "Foreach"
+                }
+              },
+              "runAfter": {
+                "List_rows:_Environment_Settings_": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@empty(outputs('List_rows:_Environment_Settings_')?['body'])",
+                      "@false"
+                    ]
+                  },
+                  {
+                    "not": {
+                      "equals": [
+                        "@outputs('List_rows:_Environment_Settings_')?['body/value']",
+                        "@null"
+                      ]
+                    }
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7e374973-57d3-4991-8f80-8d1b7ced7976"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "Initialize_variable:_IPT_Never_Inspected_Add_on_Value": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "fc2e1612-e485-4356-9ed5-45866fc95bdc"
+          },
+          "type": "Scope"
+        },
+        "Initialize_variable:_CID_Flag_Name": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "3b79f236-c88c-4935-a4aa-47b8f901c484"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CID_Flag_Name",
+                "type": "string",
+                "value": "IPT_CID_Flag:UNKNOWN,IN SCOPE,EXEMPT"
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_IPT_Never_Inspected_Add_on_Name": {
+          "runAfter": {
+            "Initialize_variable:_CID_Flag_Name": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "26db93cc-ee63-458c-bca0-3efeda0e00aa"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "IPT_Never_Inspected_Add_on_Name",
+                "type": "string",
+                "value": "IPT_Never_Inspected_Add_on"
+              }
+            ]
+          }
+        },
+        "Initialize_variable:_CID_Flag_Value_Array": {
+          "runAfter": {
+            "Initialize_variable:_CID_Flag_Value_String": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a149df79-9162-4ffc-9f45-aacc459b141f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CID_Flag_Value_Array",
+                "type": "string"
+              }
+            ]
+          }
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
