@@ -10,26 +10,26 @@ $(document).ready(function () {
      var urlParams = new URLSearchParams(window.location.search);
 	if (urlParams.has('id')) {
 		var siteid = urlParams.get('id');
-        var operationid = urlParams.get('operationid');
+       // var operationid = urlParams.get('operationid');
 		
 	
 	  //prevent update mode of transportation
 		if (
-		$("#cid_modeoftransportationroad").prop("checked") ==  true ||
-		$("#cid_modeoftransportationrail").prop("checked") ==  true ||
-		$("#cid_modeoftransportationair").prop("checked") == true ||
-		$("#cid_modeoftransportationmarine").prop("checked") == true)
+		$("#ovs_road").prop("checked") ==  true ||
+		$("#ovs_rail").prop("checked") ==  true ||
+		$("#ovs_air").prop("checked") == true ||
+		$("#ovs_marine").prop("checked") == true)
 		{
-			$("#cid_modeoftransportationroad").attr("disabled" , "disabled");
-			$("#cid_modeoftransportationrail").attr("disabled" , "disabled");
-			$("#cid_modeoftransportationair").attr("disabled" , "disabled");
-			$("#cid_modeoftransportationmarine").attr("disabled" , "disabled");
+			$("#ovs_road").attr("disabled" , "disabled");
+			$("#ovs_rail").attr("disabled" , "disabled");
+			$("#ovs_air").attr("disabled" , "disabled");
+			$("#ovs_marine").attr("disabled" , "disabled");
 
 		} else if(
-		$("#cid_modeoftransportationroad").prop("checked") != true &&
-		$("#cid_modeoftransportationrail").prop("checked") !=  true &&
-		$("#cid_modeoftransportationair").prop("checked") != true &&
-		$("#cid_modeoftransportationmarine").prop("checked") != true)
+		$("#ovs_road").prop("checked") != true &&
+		$("#ovs_rail").prop("checked") !=  true &&
+		$("#ovs_air").prop("checked") != true &&
+		$("#ovs_marine").prop("checked") != true)
 		{
 			$("#NextButton").prop("disabled" , true);
 		}
@@ -38,25 +38,25 @@ $(document).ready(function () {
 			$("#NextButton").prop("disabled" , false);
 		}
 
-            $('#cid_modeoftransportationroad').change(function() {
+            $('#ovs_road').change(function() {
 				Check_if_All_required_field_is_entered();
 			});
 
-			 $('#cid_modeoftransportationrail').change(function() {
+			 $('#ovs_rail').change(function() {
 				Check_if_All_required_field_is_entered();
 			});
 
-			 $('#cid_modeoftransportationair').change(function() {
+			 $('#ovs_air').change(function() {
 				Check_if_All_required_field_is_entered();
 			});
 
-			 $('#cid_modeoftransportationmarine').change(function() {
+			 $('#ovs_marine').change(function() {
 				Check_if_All_required_field_is_entered();
 			});
 
 
-        if (urlParams.has('operationid')) {
-			update_Operation_Type_Based_on(operationid);
+      //  if (urlParams.has('operationid')) {
+		//	update_Operation_Type_Based_on(operationid);
 
 				if (urlParams.has('in_year') || sessionStorage.getItem('frominyearsites')) {
 					sitePageURL = "~/my-sites/in-year-site/?id=" + siteid;
@@ -75,14 +75,15 @@ $(document).ready(function () {
 				$("#EntityFormView > h2").append('<span style="color:red">*</span>');
 
 				//var message = tdg.error_message.message("BTN_PREVIOUS");
-        }
+       // }
 
-        else
+       var operationid ;
+       // else
        { 
            var operationDataset = tdg.webapi.SelectedColumnlist("ovs_mocregistrations", "ovs_mocregistrationid",
 			"statuscode eq 1 and ( ovs_operationtype eq 918640038 or ovs_operationtype eq 918640042 ) and _ovs_siteid_value eq "  + siteid);
             var operationid = operationDataset[0].ovs_mocregistrationid ;
-			  if (operationDataset.length == 2)
+		    if (operationDataset.length == 2)
             {
                 if (operationDataset[1].ovs_operationtype == 918640038 )
                 {
@@ -90,8 +91,8 @@ $(document).ready(function () {
                 }
 
             }
-            insertParam("operationid",operationid ); 
-			update_Operation_Type_Based_on(operationid);
+           // insertParam("operationid",operationid ); 
+			//update_Operation_Type_Based_on(operationid);
 
        }  //$('#liquid_form').attr('action', $('#liquid_form').attr('action')+ '&operationid=' + operationid);
     }
@@ -104,10 +105,10 @@ $(document).ready(function () {
 
 		// remove role attribute from lables due accessiblity issue in PBI #262949
 	     setTimeout( function(){        
-                $("#cid_modeoftransportationroad_label").attr("role", "");            
-                $("#cid_modeoftransportationrail_label").attr("role", "");
-                $("#cid_modeoftransportationair_label").attr("role", "");
-                $("#cid_modeoftransportationmarine_label").attr("role", "");
+                $("#ovs_road_label").attr("role", "");            
+                $("#ovs_rail_label").attr("role", "");
+                $("#ovs_air_label").attr("role", "");
+                $("#ovs_marine_label").attr("role", "");
     			}, 1000); 
 				
 		}		
@@ -147,7 +148,7 @@ $(document).ready(function () {
 					var validation = true;
 					var errorMessage = "";
 
-					var checkedCheckBoxes = $('[id*="cid_"]:checkbox:checked');
+					var checkedCheckBoxes = $('[id*="ovs_"]:checkbox:checked');
 
 					if (checkedCheckBoxes && checkedCheckBoxes.length <= 0) {
 						errorMessage = tdg.error_message.message("m000015"); // You cannot proceed before adding at least one mode of transportation
@@ -167,10 +168,10 @@ $(document).ready(function () {
 function update_Operation_Type_Based_on(operationid)
 {
 	console.log ("inside operation function");
-	var cid_modeoftransportationroad = $("#cid_modeoftransportationroad").prop("checked");
-	var cid_modeoftransportationrail = $("#cid_modeoftransportationrail").prop("checked");
-	var cid_modeoftransportationair = $("#cid_modeoftransportationair").prop("checked");
-	var cid_modeoftransportationmarine = $("#cid_modeoftransportationmarine").prop("checked");
+	var ovs_road = $("#ovs_road").prop("checked");
+	var ovs_rail = $("#ovs_rail").prop("checked");
+	var ovs_air = $("#ovs_air").prop("checked");
+	var ovs_marine = $("#ovs_marine").prop("checked");
 
 	////address1_stateorprovince
 	 var urlParams = new URLSearchParams(window.location.search);
@@ -188,11 +189,11 @@ function update_Operation_Type_Based_on(operationid)
 			 console.log ("type  : " + operationType);
 			 if (province == "AB")
 			 {
-				 if (cid_modeoftransportationroad == false)
+				 if (ovs_road == false)
 				 {
 					 if (operationType  != 918640042 )
-					 if (cid_modeoftransportationrail == true || cid_modeoftransportationair == true
-					 || cid_modeoftransportationmarine == true )
+					 if (ovs_rail == true || ovs_air == true
+					 || ovs_marine == true )
 					 {
 						 // update operation type
 						  var data = {
@@ -203,7 +204,7 @@ function update_Operation_Type_Based_on(operationid)
 
 					 }
 				 }
-				 else if (cid_modeoftransportationroad == true)
+				 else if (ovs_road == true)
 				 {
 					  // update operation type
 						  var data = {
@@ -222,10 +223,10 @@ function update_Operation_Type_Based_on(operationid)
 if (window.jQuery) {
 	(function ($) {
 		webFormClientValidate = function () {
-		$("#cid_modeoftransportationroad").removeAttr("disabled" );
-			$("#cid_modeoftransportationrail").removeAttr("disabled");
-			$("#cid_modeoftransportationair").removeAttr("disabled");
-			$("#cid_modeoftransportationmarine").removeAttr("disabled");
+		$("#ovs_road").removeAttr("disabled" );
+			$("#ovs_rail").removeAttr("disabled");
+			$("#ovs_air").removeAttr("disabled");
+			$("#ovs_marine").removeAttr("disabled");
 	
 
 
@@ -239,10 +240,10 @@ function Check_if_All_required_field_is_entered ()
 {
 
 	if(
-		$("#cid_modeoftransportationroad").prop("checked") != true &&
-		$("#cid_modeoftransportationrail").prop("checked") !=  true &&
-		$("#cid_modeoftransportationair").prop("checked") != true &&
-		$("#cid_modeoftransportationmarine").prop("checked") != true)
+		$("#ovs_road").prop("checked") != true &&
+		$("#ovs_rail").prop("checked") !=  true &&
+		$("#ovs_air").prop("checked") != true &&
+		$("#ovs_marine").prop("checked") != true)
 		{
 			$("#NextButton").prop("disabled" , true);
 

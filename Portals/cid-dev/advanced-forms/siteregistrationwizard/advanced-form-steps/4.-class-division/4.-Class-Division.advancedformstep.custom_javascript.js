@@ -12,7 +12,7 @@ $(document).ready(function () {
      var urlParams = new URLSearchParams(window.location.search);
 	if (urlParams.has('id')) {
 		var siteid = urlParams.get('id');          
-                
+                /*
     if (urlParams.has('operationid')) {
         var operationid = urlParams.get('operationid');
         var operationidparamater = '&operationid=' +  operationid;
@@ -28,7 +28,7 @@ $(document).ready(function () {
         insertParam("operationid", operationid);
       
 
-    }
+    }*/
 
     }
 

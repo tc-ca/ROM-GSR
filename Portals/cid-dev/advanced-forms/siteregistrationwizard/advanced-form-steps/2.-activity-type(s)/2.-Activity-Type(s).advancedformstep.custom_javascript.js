@@ -31,7 +31,7 @@ $(document).ready(function () {
     var urlParams = new URLSearchParams(window.location.search);
      if (urlParams.has('id')) {
 		var siteid = urlParams.get('id');
-       
+       /*
         var operationDataset = tdg.webapi.SelectedColumnlist("ovs_mocregistrations", "ovs_mocregistrationid,ovs_operationtype",
 			"statuscode eq 1 and ( ovs_operationtype eq 918640038 or ovs_operationtype eq 918640042 ) and _ovs_siteid_value eq "  + siteid);
             var operationid = operationDataset[0].ovs_mocregistrationid ;
@@ -47,7 +47,7 @@ $(document).ready(function () {
             var formaction = $('#liquid_form').attr('action') ;
              if ( formaction.indexOf('&operationid=' + operationid) <0)
              { $('#liquid_form').attr('action', $('#liquid_form').attr('action')+ '&operationid=' + operationid);}
-
+*/
     }
      
      

@@ -74,7 +74,7 @@ $(document).ready(function () {
 
     //Display mode of transportation check boxes (custom code)
     var siteid = $("#EntityFormView_EntityID").val();
-    tdg.cid.Display_Modes(siteid);
+    //tdg.cid.Display_Modes(siteid);
 
     if ($("#printSummary").length <= 0) {
     
@@ -98,7 +98,13 @@ $(document).ready(function () {
     
     debugger;
 
-      
+      //change mode table background
+     $("[data-name='site_attestation_section_Modes']").each(function () {
+                var selectedTable = $(this);
+                 selectedTable.find("tr").each(function () {
+                $(this).css("background-color", "#F0F0F0");
+            });});      
+
 
     $('table').each(function () {
         debugger;
@@ -110,6 +116,7 @@ $(document).ready(function () {
         }
     });
     
+
  
   
 });
