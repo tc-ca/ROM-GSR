@@ -42,12 +42,12 @@ $(document).ready(function () {
       // $('td[data-attribute="cid_modeoftransportationair"]').attr ("tabindex" ,"0");
    }) 
    , 1000 } ); 
-   console.log ("add tab index");
+ 
    $('.entity-grid').on("loaded", function ()
 	{
 		
 		$(this).find('td').each(function (i) {
-            console.log ("td foundqqqq");
+        
         var fieldset = $(this);
         fieldset.attr("tabindex" , "0");
         }
@@ -107,7 +107,59 @@ var tdgTable =` <div id="tdgactivityParentDiv" colspan="1" rowspan="4" class="cl
     $('table[data-name="tab_5_section_1"]').after(tdgTable);
     $('table[data-name="tab_5_section_1"]').css("display" ,"none");
         
+     var airLabel = tdg.error_message.message("m000102");
+     var marineLabel= tdg.error_message.message("m000103");
+     var roadLabel = tdg.error_message.message("m000105");
+     var railLabel = tdg.error_message.message("m000104");
+     var YesLabel = tdg.error_message.message("Yes");
+     var NoLabel = tdg.error_message.message("No");
+     var airCheckValue = YesLabel;
+     var marineCheckValue = YesLabel;
+     var roadCheckValue = YesLabel;
+     var railCheckValue =YesLabel;
+     if  ( $("#ovs_air:checked").val() != "on")
+     {
+        airCheckValueCheckValue  = NoLabel;
+     }
+     if  ( $("#ovs_marine:checked").val() != "on")
+     {
+        marineCheckValueCheckValue  = NoLabel;
+     }
+     if  ( $("#ovs_road:checked").val() != "on")
+     {
+        roadCheckValueCheckValue   = NoLabel;
+     }
+     if  ( $("#ovs_rail:checked").val()!= "on")
+     {
+         railCheckValueCheckValue = NoLabel;
+     }
 
+
+ 
+var modesTable =` <div id="modesactivityParentDiv" colspan="1" rowspan="4" class="clearfix cell subgrid-cell">
+<div class="view-grid" id="ModesAtivities_Grid">
+ <table  aria-relevant="additions" id="ModesActivitiesGrid" role="grid" class="table table-striped table-fluid">
+ <thead>
+    <tr>
+        <th tabindex="0" scope="col" aria-readonly="true" style="width:25%;">${airLabel}</th>
+        <th tabindex="0" scope="col" aria-readonly="true" style="width:25%;">${marineLabel}</th>
+        <th tabindex="0" scope="col" aria-readonly="true" style="width:25%;">${railLabel}</th>
+        <th tabindex="0" scope="col" aria-readonly="true" style="width:25%;">${roadLabel}</th>
+    </tr>
+  </thead>
+    <tbody style="">
+    <tr>
+    <td tabindex="0" aria-readonly="true" >${airCheckValue}</td>
+    <td tabindex="0" aria-readonly="true" >${marineCheckValue}</td>
+    <td tabindex="0"  aria-readonly="true">${railCheckValue}</td>
+    <td tabindex="0" aria-readonly="true" >${roadCheckValue}</td></tr>
+    </tbody>
+    </table>
+    </div>
+    </div>
+    `;
+   // $('table[data-name="site_details2_section_6"]').after(modesTable);
+   // $('table[data-name="site_details2_section_6"]').css("display" ,"none");
               
        
 
