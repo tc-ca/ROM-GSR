@@ -199,31 +199,91 @@
           "actions": {
             "Check_if_Approver_Response_is_Approve": {
               "actions": {
-                "Set_Approval_Result_-_Approved": {
-                  "runAfter": {},
-                  "metadata": {
-                    "operationMetadataId": "d18cc785-3e16-427c-800f-9000d757af42"
+                "Check_Language_Condition_2A": {
+                  "actions": {
+                    "Set_variable": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "7888d7c2-1206-4f84-a155-2d56129cadf6"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "Approval Result",
+                        "value": "Approuvée"
+                      }
+                    }
                   },
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "Approval Result",
-                    "value": "Approved"
-                  }
+                  "runAfter": {},
+                  "else": {
+                    "actions": {
+                      "Set_Approval_Result_-_Approved": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "d18cc785-3e16-427c-800f-9000d757af42"
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Approval Result",
+                          "value": "Approved"
+                        }
+                      }
+                    }
+                  },
+                  "expression": {
+                    "equals": [
+                      "@variables('IsLanguageFrench')",
+                      true
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3b5ec195-84c3-41cd-9ba0-a49de510e58b"
+                  },
+                  "type": "If"
                 }
               },
               "runAfter": {},
               "else": {
                 "actions": {
-                  "Set_Approval_Result_-_Rejected": {
-                    "runAfter": {},
-                    "metadata": {
-                      "operationMetadataId": "b7c3e872-0258-4698-9b3a-3a19c617d572"
+                  "Check_Language_Condition_2B": {
+                    "actions": {
+                      "Set_variable_2": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "b8512e3a-4acb-4052-a63f-4e726dfb8d46"
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "Approval Result",
+                          "value": "Rejetée"
+                        }
+                      }
                     },
-                    "type": "SetVariable",
-                    "inputs": {
-                      "name": "Approval Result",
-                      "value": "Rejected"
-                    }
+                    "runAfter": {},
+                    "else": {
+                      "actions": {
+                        "Set_Approval_Result_-_Rejected": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "b7c3e872-0258-4698-9b3a-3a19c617d572"
+                          },
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "Approval Result",
+                            "value": "Rejected"
+                          }
+                        }
+                      }
+                    },
+                    "expression": {
+                      "equals": [
+                        "@variables('IsLanguageFrench')",
+                        true
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "1eb7e07e-0513-44c1-b8e1-176beb517ad5"
+                    },
+                    "type": "If"
                   }
                 }
               },
@@ -341,9 +401,19 @@
             ]
           },
           "expression": {
-            "equals": [
-              "@variables('Approval Result')",
-              "Approved"
+            "or": [
+              {
+                "equals": [
+                  "@variables('Approval Result')",
+                  "Approved"
+                ]
+              },
+              {
+                "equals": [
+                  "@variables('Approval Result')",
+                  "Approuvée"
+                ]
+              }
             ]
           },
           "metadata": {
@@ -597,7 +667,7 @@
       },
       "outputs": {}
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
