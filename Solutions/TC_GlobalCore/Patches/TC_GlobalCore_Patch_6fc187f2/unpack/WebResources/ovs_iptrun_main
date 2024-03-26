@@ -1,0 +1,75 @@
+﻿///<reference path="../../Utilities/GlobalHelper.js"/>
+///<reference path="../../Utilities/questionnaireFunctions.js"/>
+
+var IPTRun_main = (function (window, document) {
+
+    const IPT_Never_Inspected_Add_on = "IPT_Never_Inspected_Add_on";
+    const IPT_CID_Flag = "IPT_CID_Flag:UNKNOWN,IN SCOPE,EXEMPT";
+    var formType;
+    //********************private methods*******************
+
+    //********************public methods***************
+
+
+    return {
+
+        OnLoad: function (executionContext) {
+
+            var formContext = executionContext.getFormContext();
+            // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
+            formType = glHelper.GetFormType(formContext);
+
+            let _cidFlagArray = [];
+            
+            //set defaults:
+            if (glHelper.GetValue(formContext,"ovs_fromdate") == "") glHelper.SetValue(formContext, "ovs_fromdate", new Date());
+            if (glHelper.GetValue(formContext, "ovs_modebaseconstant") == "")glHelper.SetValue(formContext, "ovs_modebaseconstant", 1.15);
+            if (glHelper.GetValue(formContext, "ovs_populationdensitylb") == "") glHelper.SetValue(formContext, "ovs_populationdensitylb", 100);
+            if (glHelper.GetValue(formContext, "ovs_startyear") == "") glHelper.SetValue(formContext, "ovs_startyear", 2);
+            if (glHelper.GetValue(formContext, "ovs_yearscyclemax") == "") glHelper.SetValue(formContext, "ovs_yearscyclemax", 9);
+            if (glHelper.GetValue(formContext, "ovs_yearscyclemin") == "") glHelper.SetValue(formContext, "ovs_yearscyclemin", 2);
+            if (glHelper.GetValue(formContext, "ovs_forgettingfactor") == "") glHelper.SetValue(formContext, "ovs_forgettingfactor", 1);
+
+            // Retrieve IPT Environment Settings for Default Parameters
+            // IPT_Never_Inspected_Add_on
+            // IPT_CID_Flag
+            debugger;
+
+            if (formType == 1) {
+                Xrm.WebApi.online.retrieveMultipleRecords("qm_environmentsettings", "?$select=qm_name,qm_value&$filter=qm_name eq 'IPT_Never_Inspected_Add_on' or  qm_name eq 'IPT_CID_Flag:UNKNOWN,IN SCOPE,EXEMPT'").then(
+                    function success(results) {
+                        if (results.entities != undefined && results.entities != null && results.entities.length > 0) {
+
+                            for (var i = 0; i < results.entities.length; i++) {
+                                if (results.entities[i]["qm_name"] != null && results.entities[i]["qm_value"] != null && results.entities[i]["qm_name"] == IPT_Never_Inspected_Add_on) {
+                                    if (glHelper.GetValue(formContext, "ovs_neverinspectedaddon") == "")
+                                        glHelper.SetValue(formContext, "ovs_neverinspectedaddon", parseInt(results.entities[i]["qm_value"]));
+                                }
+                                else if (results.entities[i]["qm_name"] != null && results.entities[i]["qm_value"] != null && results.entities[i]["qm_name"] == IPT_CID_Flag) {
+                                    // Set Multi Select Option Set 
+                                    var _cID_FlagResult = results.entities[i]["qm_value"];
+                                    ///Unknown,In Scope,Exempt
+                                    if (_cID_FlagResult.trim().toUpperCase().indexOf("UNKNOWN") !== -1) _cidFlagArray.push(100000000);
+                                    if (_cID_FlagResult.trim().toUpperCase().indexOf("SCOPE") !== -1) _cidFlagArray.push(100000001)
+                                    if (_cID_FlagResult.trim().toUpperCase().indexOf("EXEMPT") !== -1) _cidFlagArray.push(100000002)
+                                    if (_cidFlagArray != null && Array.isArray(_cidFlagArray) === true) {
+                                        if (glHelper.GetValue(formContext, "ovs_cidflag") == "") glHelper.SetValue(formContext, "ovs_cidflag", _cidFlagArray);
+                                    }
+                                }
+
+                            }
+
+                        }
+                    },
+                    function (error) {
+                        Xrm.Utility.alertDialog(error.message);
+                    }
+                );
+            }
+            //set readonly if not draft and not closed
+            if (glHelper.GetValue(formContext, "statuscode") > 2) glHelper.SetFormReadOnly(formContext);
+
+        },
+
+    }
+})(window, document);
