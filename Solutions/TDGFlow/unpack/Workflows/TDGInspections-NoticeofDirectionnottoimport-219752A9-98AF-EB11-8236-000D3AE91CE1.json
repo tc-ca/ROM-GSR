@@ -80,7 +80,7 @@
           },
           "conditions": [
             {
-              "expression": "@and(equals(triggerBody()?['ovs_actiontype'],918640002),or(equals(triggerBody()?['statuscode'],4),equals(triggerBody()?['statuscode'],918640000),equals(triggerBody()?['statuscode'],918640001)))"
+              "expression": "@and(equals(triggerBody()?['ovs_actiontype'],918640002),or(equals(triggerBody()?['statuscode'],4),equals(triggerBody()?['statuscode'],918640000),equals(triggerBody()?['statuscode'],918640013),equals(triggerBody()?['statuscode'],918640001)))"
             }
           ],
           "runtimeConfiguration": {
@@ -374,43 +374,13 @@
               },
               "else": {
                 "actions": {
-                  "Create_file_with_second_section": {
-                    "runAfter": {
-                      "Populate_a_Microsoft_Word_template_with_second_section": [
-                        "Succeeded"
-                      ]
-                    },
-                    "metadata": {
-                      "operationMetadataId": "3fe70a0d-587b-4ac4-ac22-e19a9d68da7a"
-                    },
-                    "type": "OpenApiConnection",
-                    "inputs": {
-                      "host": {
-                        "connectionName": "shared_sharepointonline",
-                        "operationId": "CreateFile",
-                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
-                      },
-                      "parameters": {
-                        "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
-                        "folderPath": "@outputs('Create_new_folder_in_SP')?['body/{FullPath}']",
-                        "name": "@variables('fileNameSP')",
-                        "body": "@outputs('Populate_a_Microsoft_Word_template_with_second_section')?['body']"
-                      },
-                      "authentication": "@parameters('$authentication')"
-                    },
-                    "runtimeConfiguration": {
-                      "contentTransfer": {
-                        "transferMode": "Chunked"
-                      }
-                    }
-                  },
                   "Populate_a_Microsoft_Word_template_with_second_section": {
                     "runAfter": {},
                     "metadata": {
                       "01QZYBJ7DF7YVBF6G3VFAZ3ZXSQP4XQ4JV": "/Inspection Report Templates/NOTICE_OF_DIRECTION_NOT_TO_IMPORT_OR_TO_RETURN_TO_PLACE_OF_ORIGIN_v1.docx",
                       "01QZYBJ7FSEOI3CQZN6VBYDD6MWGBIA6ID": "/Inspection Report Templates/NOTICE_OF_DIRECTION_NOT_TO_IMPORT_OR_TO_RETURN_TO_PLACE_OF_ORIGIN_v1.docx",
                       "01QZYBJ7FLPKMNNCCD7BDYYHS4MM43EUAI": "/Inspection Report Templates/NoticeOfDiraction_Not2import_revised.docx",
-                      "operationMetadataId": "a0fd7ac0-3695-49eb-b24d-9eced5bc9006"
+                      "operationMetadataId": "c34ac13f-2b4e-4156-a035-5e57f14ff061"
                     },
                     "type": "OpenApiConnection",
                     "inputs": {
@@ -453,6 +423,36 @@
                         "dynamicFileSchema/-101180507": "@variables('LocalTime')"
                       },
                       "authentication": "@parameters('$authentication')"
+                    }
+                  },
+                  "Create_file_with_second_section": {
+                    "runAfter": {
+                      "Populate_a_Microsoft_Word_template_with_second_section": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "3fe70a0d-587b-4ac4-ac22-e19a9d68da7a"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connectionName": "shared_sharepointonline",
+                        "operationId": "CreateFile",
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                      },
+                      "parameters": {
+                        "dataset": "https://034gc.sharepoint.com/sites/SamuraiTeam",
+                        "folderPath": "@outputs('Create_new_folder_in_SP')?['body/{FullPath}']",
+                        "name": "@variables('fileNameSP')",
+                        "body": "@outputs('Populate_a_Microsoft_Word_template_with_second_section')?['body']"
+                      },
+                      "authentication": "@parameters('$authentication')"
+                    },
+                    "runtimeConfiguration": {
+                      "contentTransfer": {
+                        "transferMode": "Chunked"
+                      }
                     }
                   }
                 }
