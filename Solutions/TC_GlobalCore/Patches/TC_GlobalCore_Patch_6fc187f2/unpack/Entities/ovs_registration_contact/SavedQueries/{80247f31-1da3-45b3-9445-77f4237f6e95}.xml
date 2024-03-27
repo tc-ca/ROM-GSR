@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{80247f31-1da3-45b3-9445-77f4237f6e95}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
+        <row name="result" id="ovs_registration_contactid">
+          <cell name="a_0cff7793d2944f0299697b6e3f4f6362.fullname" width="156" />
+          <cell name="a_0cff7793d2944f0299697b6e3f4f6362.jobtitle" width="171" />
+          <cell name="a_0cff7793d2944f0299697b6e3f4f6362.emailaddress1" width="155" />
+          <cell name="ovs_emergency_ind" width="151" />
+          <cell name="ovs_call_priority_nbr" width="110" />
+          <cell name="ovs_phonenumber_emergency_num" width="192" />
+          <cell name="modifiedon" width="113" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="ovs_registration_contact">
+          <attribute name="ovs_registration_contactid" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="ovs_call_priority_nbr" />
+          <attribute name="modifiedon" />
+          <attribute name="ovs_emergency_ind" />
+          <link-entity alias="a_0cff7793d2944f0299697b6e3f4f6362" name="contact" to="ovs_contact_id" from="contactid" link-type="outer" visible="false">
+            <attribute name="fullname" />
+            <attribute name="emailaddress1" />
+            <attribute name="jobtitle" />
+          </link-entity>
+          <attribute name="ovs_phonenumber_emergency_num" />
+          <order attribute="ovs_call_priority_nbr" descending="false" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="CRS Registration Contacts" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>
