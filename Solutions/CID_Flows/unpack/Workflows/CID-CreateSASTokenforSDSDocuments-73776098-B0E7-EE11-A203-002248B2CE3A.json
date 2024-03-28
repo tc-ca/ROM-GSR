@@ -1,0 +1,92 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_azureblob_2": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedazureblob_6ef53"
+        },
+        "api": {
+          "name": "shared_azureblob"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "4f300bd5-3579-4c6e-a16f-fca1e0d0eb6b"
+          },
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "FilePath": {
+                  "type": "string"
+                }
+              }
+            },
+            "triggerAuthenticationType": "All"
+          }
+        }
+      },
+      "actions": {
+        "Create_SAS_URI_by_path_(V2)": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "6b37a2ae-4372-45d5-bf51-500334e0b2cb"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_azureblob_2",
+              "operationId": "CreateShareLinkByPath_V2",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_azureblob"
+            },
+            "parameters": {
+              "storageAccountName": "AccountNameFromSettings",
+              "path": "@triggerBody()?['FilePath']",
+              "policy/Permissions": "Read",
+              "policy/StartTime": "@formatDateTime(utcNow(),'yyyy-MM-dd')",
+              "policy/ExpiryTime": "@formatDateTime(addDays(utcNow(), 1),'yyyy-MM-dd')",
+              "policy/AccessProtocol": "HttpsOnly"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Response": {
+          "runAfter": {
+            "Create_SAS_URI_by_path_(V2)": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "badbc954-34f1-4eea-9288-4d1c07554c13"
+          },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": "@outputs('Create_SAS_URI_by_path_(V2)')?['body/WebUrl']"
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

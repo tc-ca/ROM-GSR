@@ -1,0 +1,799 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "cid_sharedcommondataserviceforapps_96450"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "1b929707-75e0-4c3b-badd-e5eedb87c98f"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "ovs_submission",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "statuscode",
+              "subscriptionRequest/runas": 3
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Initialize_variable_Primary_Acc_Manager": {
+          "runAfter": {
+            "Initialize_variable_TestSubjectText": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b9b28a3c-3ff2-4872-8fc5-b4621cdb0aaa"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "PrimaryAccManager",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "get-environment-settings": {
+          "runAfter": {
+            "Set_Current_Date": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7ed63b1d-9cf8-403e-9d9c-56cdd03f198e"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "qm_environmentsettingses",
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"qm_environmentsettings\">\n<attribute name=\"qm_environmentsettingsid\"/>\n<attribute name=\"qm_name\"/>\n<attribute name=\"qm_value\"/>\n<order attribute=\"qm_name\" descending=\"false\"/>\n<filter type=\"or\">\n<condition attribute=\"qm_name\" operator=\"like\" value=\"%CID[_]%\"/>\n<condition attribute=\"qm_name\" operator=\"like\" value=\"%CRS[_]%\"/>\n</filter>\n</entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Filter_environment-CID__Email_Sender": {
+          "runAfter": {
+            "Set_Primary_Acc_Manager": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('get-environment-settings')?['body/value']",
+            "where": "@equals(item()?['qm_name'], 'CID_Email_Sender')"
+          }
+        },
+        "Initialize_variable_CID_Email_Sender": {
+          "runAfter": {
+            "Filter_environment-CID__Email_Sender": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c068ea6c-92cb-411f-9c4a-2464a31e0468"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CID_Email_Sender",
+                "type": "string",
+                "value": "@{body('Filter_environment-CID__Email_Sender')[0]['qm_value']}"
+              }
+            ]
+          }
+        },
+        "Filter_environment-CRS_PortalURL": {
+          "runAfter": {
+            "Initialize_variable_CID_Email_Sender": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('get-environment-settings')?['body/value']",
+            "where": "@equals(item()?['qm_name'], 'CRS_PortalURL')"
+          }
+        },
+        "Set_Filter_environment-CRS_PortalURL": {
+          "runAfter": {
+            "Filter_environment-CRS_PortalURL": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b02c4818-27f3-4bce-8a54-5c6c12c7eb3c"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "PortalURL",
+            "value": "@{body('Filter_environment-CRS_PortalURL')[0]['qm_value']}"
+          }
+        },
+        "Initialize_variable_PortalURL": {
+          "runAfter": {
+            "Initialize_variable_Primary_Acc_Manager": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f7a1abde-8b3e-4325-984a-4c6a92afc5e2"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "PortalURL",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Check_environment": {
+          "actions": {
+            "Get_tdg.cid_account": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "368981c9-1fbe-497c-8b23-f8f3f3db6e4c"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "systemusers",
+                  "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"systemuser\">\n<attribute name=\"fullname\"/>\n<attribute name=\"businessunitid\"/>\n<attribute name=\"title\"/>\n<attribute name=\"address1_telephone1\"/>\n<attribute name=\"positionid\"/>\n<attribute name=\"systemuserid\"/>\n<order attribute=\"fullname\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"internalemailaddress\" operator=\"eq\" value=\"tdg.cid@034gc.onmicrosoft.com\"/>\n</filter>\n</entity>\n</fetch>"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Set_variable_ReceiverEmail_to_service_Acc": {
+              "runAfter": {
+                "Get_tdg.cid_account": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "224fc033-5e58-423f-b235-e84df25189ec"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "PrimaryAccManager",
+                "value": " { \"participationtypemask\": 2, \"partyid@odata.bind\": \"\\\\systemusers\\\\@{first(outputs('Get_tdg.cid_account')?['body/value'])?['systemuserid']}\"}"
+              }
+            }
+          },
+          "runAfter": {
+            "Filter_environment-CID_Environment": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Apply_to_each_2": {
+                "foreach": "@outputs('Get_list_of_Account_Managers_')?['body/value']",
+                "actions": {
+                  "Append_to_ReceiverEmails": {
+                    "runAfter": {},
+                    "metadata": {
+                      "operationMetadataId": "f152b5d9-8e74-4a2b-899e-db2d2d0a0171"
+                    },
+                    "type": "AppendToStringVariable",
+                    "inputs": {
+                      "name": "ReceiverEmails",
+                      "value": ", {\"participationtypemask\": 3,\"partyid@odata.bind\": \"\\\\contacts\\\\@{items('Apply_to_each_2')?['_ovs_contact_id_value']}\"}"
+                    }
+                  }
+                },
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "61e49c17-80de-4d91-b4e8-3b220c41778b"
+                },
+                "type": "Foreach"
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@body('Filter_environment-CID_Environment')[0]['qm_value']",
+              "PROD"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9be99f10-fa00-40ae-8580-da6ba08c2e07"
+          },
+          "type": "If"
+        },
+        "Initialize_variable_RecevierEmails": {
+          "runAfter": {
+            "Initialize_variable_PortalURL": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c5d362d4-d61c-4cc5-92cc-0639f5b96475"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ReceiverEmails",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Filter_environment-CID_Environment": {
+          "runAfter": {
+            "Set_Filter_environment-CRS_PortalURL": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0e744065-88c2-4338-956b-7400a9256a6e"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@outputs('get-environment-settings')?['body/value']",
+            "where": "@equals(item()?['qm_name'], 'CID_Environment')"
+          }
+        },
+        "Get_Registration_details": {
+          "runAfter": {
+            "get-environment-settings": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "83bc08ec-943e-4e35-8506-986c30a04b67"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_registrations",
+              "recordId": "@triggerOutputs()?['body/_ovs_registration_id_value']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Get_list_of_Account_Managers_": {
+          "runAfter": {
+            "Get_Organization_Name": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c778119f-556d-4c9f-90dc-e48d0da4085d"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_registration_contacts",
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n  <entity name=\"ovs_registration_contact\">\n    <attribute name=\"ovs_registration_contactid\" />\n    <attribute name=\"ovs_registration_id\" />\n    <attribute name=\"ovs_contact_id\" />\n    <order attribute=\"ovs_call_priority_nbr\" descending=\"false\" />\n    <link-entity name=\"contact\" from=\"contactid\" to=\"ovs_contact_id\" visible=\"false\" link-type=\"inner\" alias=\"con\" >\n      <attribute name=\"emailaddress1\" />\n      <attribute name=\"firstname\" />\n      <attribute name=\"lastname\" />\n    </link-entity>\n    <link-entity name=\"ovs_registration\" from=\"ovs_registrationid\" to=\"ovs_registration_id\" link-type=\"inner\" alias=\"ab\">\n      <filter type=\"and\">\n        <condition attribute=\"ovs_registrationid\" operator=\"eq\" value=\"@{outputs('Get_Registration_details')?['body/ovs_registrationid']}\" />\n      </filter>\n    </link-entity>\n  </entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Switch": {
+          "runAfter": {
+            "Get_Primary_Contact_Details": [
+              "Succeeded"
+            ]
+          },
+          "cases": {
+            "If_status_reason_equals_to_Approved": {
+              "case": 918640002,
+              "actions": {
+                "Set_Email_Subject": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "0104c8bb-a40a-434d-8c83-b45c096d784b"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "TestSubjectText",
+                    "value": "CANUTEC has approved the changes to your registration. Attached is your approval letter. /  CANUTEC a approuvé les changements à votre inscription. Une lettre d’approbation est en pièce jointe."
+                  }
+                },
+                "Email_Body": {
+                  "runAfter": {
+                    "Set_Email_Subject": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "f4da81cd-a148-4675-a26e-559a72bd7055"
+                  },
+                  "type": "Compose",
+                  "inputs": "</br></br>\n<p style='font-family:\"Calibri\",sans-serif;margin-top:0in;margin-bottom:8.0pt;font-size:11.0pt;'>@{variables('Current Date')}</p>\n<p style='font-family:\"Calibri\",sans-serif;margin-top:0in;margin-bottom:8.0pt;font-size:11.0pt;'>@{outputs('Get_Organization_Name')?['body/name']}</p>\n<p style='font-family:\"Calibri\",sans-serif;margin-top:0in;margin-bottom:8.0pt;font-size:11.0pt;'>Dear @{outputs('Get_Primary_Contact_Details')?['body/firstname']} @{outputs('Get_Primary_Contact_Details')?['body/lastname']},</p>\n</br>\n<p style='font-family:\"Calibri\",sans-serif;margin-top:0in;margin-bottom:8.0pt;font-size:11.0pt;'>CANUTEC has approved the changes to your registration. Attached is your approval letter.&nbsp;</p>\n\n<p style='font-family:\"Calibri\",sans-serif;margin-top:0in;margin-bottom:8.0pt;font-size:11.0pt;'>To provide effective emergency assistance, CANUTEC must be informed, as soon as possible, of any changes to the information you have submitted. Please be sure to notify us via <span><a href=@{variables('PortalURL')}>TDG Online</a></span> of changes to the organization name, contact information, list of manufacturers, Safety Data Sheets (SDS), etc. &nbsp;</em></p>\n<p style='margin-right:0in;margin-left:0in;font-size:15px;font-family:\"Calibri\",sans-serif;margin-top:0in;margin-bottom:8.0pt;font-size:11.0pt;'><em>Please direct any questions to CANUTEC Registration Services at 613-947-5048, Toll-Free number 1-888-706-0195 or by email&nbsp;</em>\n<a href=\"mailto:canutec.services@tc.gc.ca\"><em>canutec.services@tc.gc.ca</em></a><em>.</em></p>\n<p>&nbsp;</p>\n\n<p style='font-family:\"Calibri\",sans-serif;margin-top:0in;margin-bottom:8.0pt;font-size:11.0pt;'>Bonjour @{outputs('Get_Primary_Contact_Details')?['body/firstname']} @{outputs('Get_Primary_Contact_Details')?['body/lastname']},</p>\n</br>\n<p style='font-size:15px;font-family:\"Calibri\",sans-serif;margin-top:0in;margin-bottom:8.0pt;font-size:11.0pt;'>CANUTEC a approuv&eacute; les changements &agrave; votre inscription. Une lettre d&rsquo;approbation est en pi&egrave;ce jointe.</p>\n\n<p style='font-family:\"Calibri\",sans-serif;margin-top:0in;margin-bottom:8.0pt;font-size:11.0pt;'>Afin de fournir un service d&rsquo;urgence efficace, CANUTEC doit &ecirc;tre notifi&eacute;, le plus t&ocirc;t possible, de tout changement aux informations que vous avez soumises. Assurez-vous de nous informer, par le biais de <span><a href=@{variables('PortalURL')}>TMD En ligne</a></span>, des changements apport&eacute;s au nom de l&rsquo;organisation, aux coordonn&eacute;es, &agrave; la liste des fabricants et aux fiches de donn&eacute;es de s&eacute;curit&eacute; (FDS), etc.&nbsp;</p>\n\n<p style='font-size:15px;font-family:\"Calibri\",sans-serif;margin-top:0in;margin-bottom:8.0pt;font-size:11.0pt;'><em>Veuillez adresser toute question aux Services d&rsquo;inscription de CANUTEC au 613.947.5048, num&eacute;ro sans-frais 1-888-706-0195 ou par courriel &agrave; l&rsquo;adresse&nbsp;</em>\n  <a href=\"mailto:canutec.services@tc.gc.ca\"><em>canutec.services@tc.gc.ca</em></a><em>.</em></p>\n<p>&nbsp;</p>"
+                },
+                "Create_New_Email_Message": {
+                  "runAfter": {
+                    "Email_Body": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "415048eb-ec3a-4f2a-97b2-3e62b511d5ef"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "CreateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "emails",
+                      "item/activitypointer_activity_parties": "@body('Parse_JSON_recipients')",
+                      "item/description": "@outputs('Email_Body')",
+                      "item/regardingobjectid_account_email@odata.bind": "@concat('\\accounts\\',outputs('Get_Registration_details')?['body/_ovs_organization_id_value'])",
+                      "item/regardingobjectid_ovs_submission_email@odata.bind": "@concat('\\ovs_submissions\\',triggerOutputs()?['body/ovs_submissionid'])",
+                      "item/subject": "@variables('TestSubjectText')"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Perform_a_bound_action": {
+                  "runAfter": {
+                    "Create_New_Email_Message": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "2a56c11f-5cb9-476d-9e54-429ce18832bf"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "PerformBoundAction",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "emails",
+                      "actionName": "Microsoft.Dynamics.CRM.SendEmail",
+                      "recordId": "@outputs('Create_New_Email_Message')?['body/activityid']",
+                      "item/IssueSend": true
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              }
+            },
+            "DEPRICATED_-_If_status_reason_equals_to_Declined_-_DEPRICATED": {
+              "case": 11111111,
+              "actions": {
+                "Set_variable_Subject": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "ddcbc2bd-2ad7-4b18-a7f6-77f53a762ca9"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "TestSubjectText",
+                    "value": "CANUTEC has declined the changes to your registration. / CANUTEC a refusé les modifications apportées à votre inscription."
+                  }
+                },
+                "Email_Boby": {
+                  "runAfter": {
+                    "Set_variable_Subject": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "ee14dbe5-c9ac-4117-ae65-44ed73feaf5b"
+                  },
+                  "type": "Compose",
+                  "inputs": "<blockquote style='font-family:\"Calibri\",sans-serif;margin-top:0in;margin-bottom:8.0pt;font-size:11.0pt;'>\n    <p>@{outputs('Get_Organization_Name')?['body/name']},&nbsp;</p>\n    <p>A decision has been made regarding your registration request.&nbsp;</p>\n    <p>Unfortunately, your registration has been declined for the following reason(s):</p>\n    <ul>\n        <li>@{triggerOutputs()?['body/ovs_additionalinfo']}</li>\n    </ul>\n    <p>You may log in to <span><a href=@{variables('PortalURL')}>TDG Online</a></span> to see your status.</p>\n    <p>CANUTEC Registration Team</p>\n    <p><br></p>\n    <p>@{outputs('Get_Organization_Name')?['body/name']},</p>\n    <p>Une d&eacute;cision a &eacute;t&eacute; prise concernant votre demande d&apos;inscription.&nbsp;</p>\n    <p>Malheureusement, votre inscription a &eacute;t&eacute; refus&eacute;e pour la ou les raisons suivantes:</p>\n    <ul>\n        <li>@{triggerOutputs()?['body/ovs_additionalinfo']}</li>\n    </ul>\n    <p>Vous pouvez vous connecter au portail <span><a href=@{variables('PortalURL')}>TMD En ligne</a></span> pour voir votre statut.</p>\n    <p>L&apos;&eacute;quipe d&apos;inscription CANUTEC</p>\n</blockquote>\n<blockquote style=\"text-align: start;color: rgb(0, 0, 0);font-size: 14px;border: none;\"><br></blockquote>"
+                },
+                "Add_a_new_row": {
+                  "runAfter": {
+                    "Email_Boby": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "e977a049-05f8-4286-b7c4-ef3087d0f93a"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "CreateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "emails",
+                      "item/activitypointer_activity_parties": "@body('Parse_JSON_recipients')",
+                      "item/description": "@outputs('Email_Boby')",
+                      "item/regardingobjectid_account_email@odata.bind": "@concat('\\accounts\\',outputs('Get_Registration_details')?['body/_ovs_organization_id_value'])",
+                      "item/regardingobjectid_ovs_submission_email@odata.bind": "@concat('\\ovs_submissions\\',triggerOutputs()?['body/ovs_submissionid'])",
+                      "item/subject": "@variables('TestSubjectText')"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Perform_a_bound_action_2": {
+                  "runAfter": {
+                    "Add_a_new_row": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "d6175dfc-a83d-4664-9b97-6954f30ecb1d"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "PerformBoundAction",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "emails",
+                      "actionName": "Microsoft.Dynamics.CRM.SendEmail",
+                      "recordId": "@outputs('Add_a_new_row')?['body/activityid']",
+                      "item/IssueSend": true
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              }
+            },
+            "DEPRICATED_-_If_status_reason_equals_to_Additional_Info_Required_-DEPRICATED": {
+              "case": 222222222,
+              "actions": {
+                "Set_variable_-_Subject": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "505cb06f-8fde-4422-870b-2184633aae29"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "TestSubjectText",
+                    "value": "CANUTEC has requested additional infomation to complete your registration. / CANUTEC a demandé des informations supplémentaires pour compléter votre inscription."
+                  }
+                },
+                "Email_Body_-_Additional_Info": {
+                  "runAfter": {
+                    "Set_variable_-_Subject": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "4386c206-ea1e-4d01-b60d-373197564c47"
+                  },
+                  "type": "Compose",
+                  "inputs": "<blockquote style='font-family:\"Calibri\",sans-serif;margin-top:0in;margin-bottom:8.0pt;font-size:11.0pt;'>\n    <p>@{outputs('Get_Organization_Name')?['body/name']},&nbsp;</p>\n    <p><br></p>\n    <p>We have not been able to make a decision regarding your registration request.&nbsp;</p>\n    <p>The following information is needed to allow us to make a decision:&nbsp;</p>\n    <p><br></p>\n    <ul>\n         <li>@{triggerOutputs()?['body/ovs_additionalinfo']}</li>\n    </ul>\n    <p><br></p>\n    <p>Please log in to <span><a href=@{variables('PortalURL')}>TDG Online</a></span> to add the necessary information.</p>\n    <p>CANUTEC Registration Team</p>\n    <p><br></p>\n<p><br></p>\n    <p>@{outputs('Get_Organization_Name')?['body/name']},&nbsp;</p>\n<p><br></p>\n    <p>Nous n&apos;avons pas pu prendre de d&eacute;cision concernant votre demande d&apos;inscription.</p>\n    <p>Les informations suivantes sont n&eacute;cessaires pour nous permettre de prendre une d&eacute;cision :</p>\n<p><br></p>\n    <p></p>\n    <ul>\n         <li>@{triggerOutputs()?['body/ovs_additionalinfo']}</li>\n    </ul>\n    <p><br></p>\n    <p>Veuillez vous connecter au portail <span><a href=@{variables('PortalURL')}>TMD En ligne</a></span> pour ajouter les informations n&eacute;cessaires.</p>\n    <p>L&apos;&eacute;quipe d&apos;inscription CANUTEC</p>\n    <p><br></p>\n<br></blockquote>"
+                },
+                "Add_a_new_row_2": {
+                  "runAfter": {
+                    "Email_Body_-_Additional_Info": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "88b97380-bdca-4d79-9870-de6e9127a451"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "CreateRecord",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "emails",
+                      "item/activitypointer_activity_parties": "@body('Parse_JSON_recipients')",
+                      "item/description": "@outputs('Email_Body_-_Additional_Info')",
+                      "item/regardingobjectid_account_email@odata.bind": "@concat('\\accounts\\',outputs('Get_Registration_details')?['body/_ovs_organization_id_value'])",
+                      "item/regardingobjectid_ovs_submission_email@odata.bind": "@concat('\\ovs_submissions\\',triggerOutputs()?['body/ovs_submissionid'])",
+                      "item/subject": "@variables('TestSubjectText')"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Perform_a_bound_action_3": {
+                  "runAfter": {
+                    "Add_a_new_row_2": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "bdef6f9b-c924-4c9d-9c93-a3acb9373af5"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps_1",
+                      "operationId": "PerformBoundAction",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "emails",
+                      "actionName": "Microsoft.Dynamics.CRM.SendEmail",
+                      "recordId": "@outputs('Add_a_new_row_2')?['body/activityid']",
+                      "item/IssueSend": true
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "actions": {}
+          },
+          "expression": "@triggerOutputs()?['body/statuscode']",
+          "metadata": {
+            "operationMetadataId": "053adfa2-cecd-47b0-a34a-62adf18d4814"
+          },
+          "type": "Switch"
+        },
+        "Initialize_variable_TestSubjectText": {
+          "runAfter": {
+            "Initialize_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "36348f7e-e55f-43ac-b622-3f00ecbc9c53"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "TestSubjectText",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Set_Current_Date": {
+          "runAfter": {
+            "Convert_time_zone": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "49c33468-550b-4edd-8bae-a4efc279cb02"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Current Date",
+                "type": "string",
+                "value": "@body('Convert_time_zone')"
+              }
+            ]
+          }
+        },
+        "Convert_time_zone": {
+          "runAfter": {
+            "Initialize_variable_RecevierEmails": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9ed7d8ba-c4ca-4509-9484-86ec3c3b1950"
+          },
+          "type": "Expression",
+          "kind": "ConvertTimeZone",
+          "inputs": {
+            "baseTime": "@{utcNow()}",
+            "formatString": "d",
+            "sourceTimeZone": "UTC",
+            "destinationTimeZone": "Eastern Standard Time"
+          }
+        },
+        "Get_Organization_Name": {
+          "runAfter": {
+            "Get_Registration_details": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5eb9202d-0058-4127-9186-7ac13753433f"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "accounts",
+              "recordId": "@outputs('Get_Registration_details')?['body/_ovs_organization_id_value']",
+              "$select": "name"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "PrimaryAccManager": {
+          "runAfter": {
+            "Get_list_of_Account_Managers_": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "42f10151-ec61-4df0-ba41-a40976f8b313"
+          },
+          "type": "Compose",
+          "inputs": {
+            "participationtypemask": 2,
+            "partyid@odata.bind": "\\contacts\\@{first(outputs('Get_list_of_Account_Managers_')?['body/value'])?['_ovs_contact_id_value']}"
+          }
+        },
+        "Set_Primary_Acc_Manager": {
+          "runAfter": {
+            "PrimaryAccManager": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3e2cf714-9a5a-4b28-aa88-d78d9f3b8d3c"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "PrimaryAccManager",
+            "value": "@{outputs('PrimaryAccManager')}"
+          }
+        },
+        "Initialize_variable": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "2aa5f552-9046-4563-a722-abd083f153b6"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ActivityPartyList",
+                "type": "array"
+              }
+            ]
+          }
+        },
+        "Parse_JSON_recipients": {
+          "runAfter": {
+            "Compose": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "dc9c1865-09a5-4af7-bdf2-b011f7da06cd"
+          },
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@outputs('Compose')",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "participationtypemask": {
+                    "type": "integer"
+                  },
+                  "partyid@odata.bind": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "participationtypemask",
+                  "partyid@odata.bind"
+                ]
+              }
+            }
+          }
+        },
+        "Compose": {
+          "runAfter": {
+            "Check_environment": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "806fbe76-8c26-4dd0-b610-8cb3380637f6"
+          },
+          "type": "Compose",
+          "inputs": "@if(empty(variables('ReceiverEmails')), concat('[',variables('PrimaryAccManager'),']') , concat('[',variables('PrimaryAccManager'), variables('ReceiverEmails'), ']') )"
+        },
+        "Get_Primary_Contact_Details": {
+          "runAfter": {
+            "Parse_JSON_recipients": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "38c607b1-ba1c-4af2-820e-a24a026bca6e"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "contacts",
+              "recordId": "@first(outputs('Get_list_of_Account_Managers_')?['body/value'])?['_ovs_contact_id_value']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
