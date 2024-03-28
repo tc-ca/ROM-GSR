@@ -42,6 +42,7 @@ stages:
             --applicationId ${env:PowerPlatformAadApplicationId} `
             --clientSecret ${env:PowerPlatformAadApplicationSecret}
           pac auth select --name PORTAL_DEV
+          echo ${env:PowerPlatformAadApplicationSecret}
           pac powerpages download --path $(Build.ArtifactStagingDirectory) --webSiteId ${env:PowerPlatformDevPortalWebSiteId}
     - task: PowerShell@2
       displayName: Push code to GitHub
