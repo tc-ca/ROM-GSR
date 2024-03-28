@@ -1,0 +1,67 @@
+schedules:
+- cron: "0 22 * * Mon-Fri"
+  displayName: Daily Portal Backup
+  branches:
+    include:
+    - development
+
+trigger: none
+pr: none
+
+stages:
+- stage: DownloadAndPublishPortalConfig
+  pool:
+      vmImage: 'windows-latest'
+  jobs:
+  - job: DownloadAndPublishPortalConfig
+    steps:
+    - checkout: self
+      persistCredentials: true
+      clean: true
+  #Install the Power Platform CLI
+    - task: PowerShell@2
+      displayName: Download Power Platform CLI
+      inputs:
+        targetType: 'inline'
+        script: |
+          Invoke-WebRequest https://aka.ms/PowerAppsCLI -OutFile pac.msi
+          msiexec /i pac.msi /quiet /norestart
+    #Create the authentication profile for the dev environment and download the portal config
+    - task: PowerShell@2
+      displayName: Download portal configuration
+      env:
+        PowerPlatformAadApplicationSecret: $(PowerPlatformAadApplicationSecret)
+      inputs:
+        targetType: 'inline'
+        script: |
+          $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+          pac install latest
+          pac auth create --name PORTAL_DEV `
+            --url ${env:PowerPlatformDEVURL} `
+            --tenant ${env:PowerPlatformAadDirectoryId} `
+            --applicationId ${env:PowerPlatformAadApplicationId} `
+            --clientSecret ${env:PowerPlatformAadApplicationSecret}
+          pac auth select --name PORTAL_DEV
+          pac powerpages download --path $(Build.ArtifactStagingDirectory) --webSiteId ${env:PowerPlatformDevPortalWebSiteId}
+    - task: PowerShell@2
+      displayName: Push code to GitHub
+      env:
+        PowerPlatformAadApplicationSecret: $(PowerPlatformAadApplicationSecret)
+      inputs:
+        targetType: 'inline'
+        script: |
+          Copy-item -Force -Recurse -Verbose $(Build.ArtifactStagingDirectory)\* -Destination $(Build.SourcesDirectory)\Portals
+          git config user.email "nepasrepondre-noreply@tc.gc.ca"
+          git config user.name "tc-buildbot"
+          git checkout development
+          git add --all
+          git commit -m "Update portal"
+          echo "Push solution changes to the remote repository"
+          git -c http.extraheader="AUTHORIZATION: basic $(System.AccessToken)" push --force origin development
+    #Publish the portal config to Artifact staging
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Configuration Artifact
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\cid-dev'
+        ArtifactName: 'cid-dev'
+        publishLocation: 'Container'
