@@ -11,7 +11,7 @@ var _cid_crabusinessnumber;
 
 function Me_OnLoad(context) {
     debugger;
-    
+
     _form = context.getFormContext();
 
     var customertypecode = null;
@@ -43,7 +43,7 @@ function Me_OnLoad(context) {
     if (value) return;
 
     sessionStorage.setItem(k_customertypecode, k_customertypecode_org);
-    _form.getAttribute("name").setRequiredLevel("none");
+    //_form.getAttribute("name").setRequiredLevel("none");
     _form.getAttribute("ovs_address1_province").setRequiredLevel("required");
     _form.getAttribute("address1_country").setValue("Canada");
 

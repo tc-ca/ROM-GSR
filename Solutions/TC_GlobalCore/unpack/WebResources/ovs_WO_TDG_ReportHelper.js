@@ -31,7 +31,7 @@ var WO_TDG_ReportHelper = (function (window, document) {
 
 
         OnLoad: function (executionContext) {
-
+            debugger;
             var globalContext = Xrm.Utility.getGlobalContext();
             var formContext = executionContext.getFormContext();
             isOffLine = glHelper.isOffline(executionContext);
@@ -71,6 +71,7 @@ var WO_TDG_ReportHelper = (function (window, document) {
             //Xrm.Utility.showProgressIndicator("Validating ...");
 
             //check: primary contact with email, phone and job title; primary inspector with RIN and Badge; atleast one booking associated with WO having start date
+            debugger;
             var isValid = true;
             errorObject.errorMessage = new Array();
 
@@ -83,6 +84,7 @@ var WO_TDG_ReportHelper = (function (window, document) {
             var messageBadge = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.Badge.ErrorMessage");
             var messageRRIN = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.RRIN.ErrorMessage");
             var messageWorkOrderNoBookings = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.Bookings.ErrorMessage");
+            var messageWorkOrderfutureBookings = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.BookingsEndtime.ErrorMessage");
             var messageWorkOrderFewBookings = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.FewBookings.ErrorMessage");
             var titlePrimaryInspector = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.PrimaryInspector.Title");
             var messageTimeTracking = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.ReportValidation.TimeTracking.ErrorMessage");
@@ -203,8 +205,8 @@ var WO_TDG_ReportHelper = (function (window, document) {
                             setReportValidationError(messageWorkOrderNoBookings);
                         }
                     } else {
-                    isValid = false;
-                    setReportValidationError(genericErrorMsg, this.status);
+                        isValid = false;
+                        setReportValidationError(genericErrorMsg, this.status);
                     }
 
                     //Xrm.Utility.closeProgressIndicator();
@@ -212,78 +214,108 @@ var WO_TDG_ReportHelper = (function (window, document) {
             };
             req.send();
 
-            
-            var enableTimeTrackingValidationCheck = false; //set to false only the environment variable can turn this time tracking validation on
+            //check booking is current or in the past
             var req = new XMLHttpRequest();
-            req.open( "GET", clientUrl  +"/api/data/v9.1/qm_environmentsettingses?$select=ovs_enableforuser&$filter=qm_name eq 'FDR_EnableTimeTrackingPreInspectionReportValidation'",false);
-            req.setRequestHeader("OData-MaxVersion", "4.0");
-            req.setRequestHeader("OData-Version", "4.0");
-            req.setRequestHeader("Accept", "application/json");
-            req.setRequestHeader(
-              "Content-Type",
-              "application/json; charset=utf-8"
-            );
-            req.setRequestHeader("Prefer", 'odata.include-annotations="*"');
-            req.onreadystatechange = function () {
-              if (this.readyState === 4) {
-                req.onreadystatechange = null;
-                if (this.status === 200) {
-                 var results = JSON.parse(this.response);
-                 
-                 if (results.value.length > 0)
-                 {
-                    enableTimeTrackingValidationCheck = results.value[0]["ovs_enableforuser"];
-                 }
-                 else{
-                    console.log(genericErrorMsg, 'environemnt setting not found');
-                 }
-              
-                
-                } else {
-                  enableTimeTrackingValidationCheck = false;
-                  console.log(genericErrorMsg, this.status)
-                }
-              }
-            };
-            req.send();
-
-            if (enableTimeTrackingValidationCheck)
-            {
-            //check time tracking, only validate travel, pre-inspection and execution at this stage
-            var parameters = {};
-            var travel = "CA3A829A-E917-EC11-B6E7-000D3AE8EF7B";
-            var preInspection = "88FD30AD-E917-EC11-B6E7-000D3AE8EF7B";
-            var execution = "794A29B3-E917-EC11-B6E7-000D3AE8EF7B";
-
-            parameters.workOrderId = formContext.data.entity.getId().replace("{", "").replace("}", "");
-            parameters.taskTypesToValidate = `${travel},${preInspection},${execution}`;
-
-            var req = new XMLHttpRequest();
-            req.open("POST", clientUrl + "/api/data/v9.1/ovs_TimeEntryValidation", false);
+            req.open("GET", clientUrl + "/api/data/v9.1/bookableresourcebookings?$select=endtime&$filter=endtime ne null and statecode eq 0 and _msdyn_workorder_value eq " + formContext.data.entity.getId().replace("{", "").replace("}", ""), false);
             req.setRequestHeader("OData-MaxVersion", "4.0");
             req.setRequestHeader("OData-Version", "4.0");
             req.setRequestHeader("Accept", "application/json");
             req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-            req.onreadystatechange = function() {
+            req.setRequestHeader("Prefer", "odata.maxpagesize=1");
+            req.onreadystatechange = function () {
+                debugger;
+                const today = new Date();
+
                 if (this.readyState === 4) {
                     req.onreadystatechange = null;
                     if (this.status === 200) {
                         var results = JSON.parse(this.response);
-                         if (results["isValidToSave"] == false)
-                         {
-                            isValid = false;
-                            setReportValidationError(messageTimeTracking);
-
-                         };
-                    } else {
-                      isValid = false;
-                      setReportValidationError(genericErrorMsg, this.status);
+                        console.log(results);
+                        console.log(today.toISOString());
+                        if (results.value.length > 0) {
+                            if (results.value[0].endtime > today.toISOString()) {
+                                setReportValidationError(messageWorkOrderfutureBookings);
+                                isValid = false;
+                            }
+                        }else {
+                                isValid = false;
+                                setReportValidationError(genericErrorMsg, this.status);
+                            }
+                        //Xrm.Utility.closeProgressIndicator();
                     }
                 }
             };
-            req.send(JSON.stringify(parameters));
+            req.send();
+
+
+            var enableTimeTrackingValidationCheck = false; //set to false only the environment variable can turn this time tracking validation on
+            var req = new XMLHttpRequest();
+            req.open("GET", clientUrl + "/api/data/v9.1/qm_environmentsettingses?$select=ovs_enableforuser&$filter=qm_name eq 'FDR_EnableTimeTrackingPreInspectionReportValidation'", false);
+            req.setRequestHeader("OData-MaxVersion", "4.0");
+            req.setRequestHeader("OData-Version", "4.0");
+            req.setRequestHeader("Accept", "application/json");
+            req.setRequestHeader(
+                "Content-Type",
+                "application/json; charset=utf-8"
+            );
+            req.setRequestHeader("Prefer", 'odata.include-annotations="*"');
+            req.onreadystatechange = function () {
+                if (this.readyState === 4) {
+                    req.onreadystatechange = null;
+                    if (this.status === 200) {
+                        var results = JSON.parse(this.response);
+
+                        if (results.value.length > 0) {
+                            enableTimeTrackingValidationCheck = results.value[0]["ovs_enableforuser"];
+                        }
+                        else {
+                            console.log(genericErrorMsg, 'environemnt setting not found');
+                        }
+
+
+                    } else {
+                        enableTimeTrackingValidationCheck = false;
+                        console.log(genericErrorMsg, this.status)
+                    }
+                }
+            };
+            req.send();
+
+            if (enableTimeTrackingValidationCheck) {
+                //check time tracking, only validate travel, pre-inspection and execution at this stage
+                var parameters = {};
+                var travel = "CA3A829A-E917-EC11-B6E7-000D3AE8EF7B";
+                var preInspection = "88FD30AD-E917-EC11-B6E7-000D3AE8EF7B";
+                var execution = "794A29B3-E917-EC11-B6E7-000D3AE8EF7B";
+
+                parameters.workOrderId = formContext.data.entity.getId().replace("{", "").replace("}", "");
+                parameters.taskTypesToValidate = `${travel},${preInspection},${execution}`;
+
+                var req = new XMLHttpRequest();
+                req.open("POST", clientUrl + "/api/data/v9.1/ovs_TimeEntryValidation", false);
+                req.setRequestHeader("OData-MaxVersion", "4.0");
+                req.setRequestHeader("OData-Version", "4.0");
+                req.setRequestHeader("Accept", "application/json");
+                req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+                req.onreadystatechange = function () {
+                    if (this.readyState === 4) {
+                        req.onreadystatechange = null;
+                        if (this.status === 200) {
+                            var results = JSON.parse(this.response);
+                            if (results["isValidToSave"] == false) {
+                                isValid = false;
+                                setReportValidationError(messageTimeTracking);
+
+                            };
+                        } else {
+                            isValid = false;
+                            setReportValidationError(genericErrorMsg, this.status);
+                        }
+                    }
+                };
+                req.send(JSON.stringify(parameters));
             }
-             
+
 
             errorObject.isValid = isValid;
 
@@ -298,4 +330,4 @@ var WO_TDG_ReportHelper = (function (window, document) {
 
     //********************public methods end***************
 
-}) (window, document)
+})(window, document)

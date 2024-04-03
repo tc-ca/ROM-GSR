@@ -127,10 +127,17 @@
                         _oldValue = (preEntity != undefined && preEntity[i] != undefined && preEntity[i].hasOwnProperty(k)) ? preEntity[i][k].choice.textValue : "N/A";
 
                         break;
+                    case "OptionSetValueCollection":
+
+                        _newValue = entity[i][k].choices.textValue;
+                        _oldValue = (preEntity != undefined && preEntity[i] != undefined && preEntity[i].hasOwnProperty(k)) ? preEntity[i][k].choices.textValue : "N/A";
+
+                        break;
+
                     default:
 
-                        _newValue = entity[i][k].value;
-                        _oldValue = (preEntity != undefined && preEntity[i] != undefined && preEntity[i].hasOwnProperty(k)) ? preEntity[i][k].value : "N/A";
+                        _newValue = entity[i][k].values;
+                        _oldValue = (preEntity != undefined && preEntity[i] != undefined && preEntity[i].hasOwnProperty(k)) ? preEntity[i][k].values : "N/A";
                         break;
                 }
 

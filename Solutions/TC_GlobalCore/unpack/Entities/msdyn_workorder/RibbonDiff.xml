@@ -35,6 +35,11 @@
         <Button Alt="$LocLabels:ovs.msdyn_workorder.Form.TDG.InspectionReport.Alt" Command="" Id="ovs.msdyn_workorder.Form.TDG.InspectionReport" LabelText="$LocLabels:ovs.msdyn_workorder.Form.TDG.InspectionReport.LabelText" Sequence="76" TemplateAlias="o2" ToolTipTitle="$LocLabels:ovs.msdyn_workorder.Form.TDG.InspectionReport.ToolTipTitle" ToolTipDescription="$LocLabels:ovs.msdyn_workorder.Form.TDG.InspectionReport.ToolTipDescription" />
       </CommandUIDefinition>
     </CustomAction>
+    <CustomAction Id="ovs.msdyn_workorder.NewRecord.CustomAction" Location="Mscrm.SubGrid.msdyn_workorder.MainTab.Management.Controls._children" Sequence="6">
+      <CommandUIDefinition>
+        <Button Command="ovs.msdyn_workorder.AddNewRecordFromSubGridStandard" Id="ovs.msdyn_workorder.NewRecord" Image32by32="/_imgs/ribbon/newrecord32.png" Image16by16="/_imgs/ribbon/New_16.png" LabelText="$LocLabels:ovs.msdyn_workorder.NewRecord.LabelText" Sequence="6" TemplateAlias="o1" ToolTipTitle="$LocLabels:ovs.msdyn_workorder.NewRecord.ToolTipTitle" ToolTipDescription="$LocLabels:ovs.msdyn_workorder.NewRecord.ToolTipDescription" ModernImage="New" />
+      </CommandUIDefinition>
+    </CustomAction>
   </CustomActions>
   <Templates>
     <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
@@ -174,8 +179,8 @@
     <CommandDefinition Id="Mscrm.HomepageGrid.Deactivate">
       <EnableRules>
         <EnableRule Id="Mscrm.VisualizationPaneNotMaximized" />
-        <EnableRule Id="Mscrm.SelectionCountAtLeastOne" />
         <EnableRule Id="ovs.msdyn_workorder.EnableRule19.DisplayOnlyForManagerOrPlanner" />
+        <EnableRule Id="Mscrm.SelectionCountAtLeastOne" />
       </EnableRules>
       <DisplayRules>
         <DisplayRule Id="Mscrm.CanWriteSelected" />
@@ -211,6 +216,23 @@
         <DisplayRule Id="ovs.msdyn_workorder.DisplayRule17.HideRunReportWhenPrimaryEntityIsAccount" />
       </DisplayRules>
       <Actions />
+    </CommandDefinition>
+    <CommandDefinition Id="ovs.msdyn_workorder.AddNewRecordFromSubGridStandard">
+      <EnableRules>
+        <EnableRule Id="Mscrm.AppendToPrimary" />
+        <EnableRule Id="Mscrm.EntityFormIsEnabled" />
+        <EnableRule Id="Mscrm.IsEntityAvailableForUserInMocaOffline" />
+      </EnableRules>
+      <DisplayRules />
+      <Actions>
+        <JavaScriptFunction FunctionName="WORibbon.subgridAddNew" Library="$webresource:qm_WorkOrder_Ribbons.js">
+          <CrmParameter Value="SelectedEntityTypeName" />
+          <CrmParameter Value="PrimaryEntityTypeName" />
+          <CrmParameter Value="FirstPrimaryItemId" />
+          <CrmParameter Value="PrimaryControl" />
+          <CrmParameter Value="SelectedControl" />
+        </JavaScriptFunction>
+      </Actions>
     </CommandDefinition>
     <CommandDefinition Id="ovs.msdyn_workorder.CleanResourceRequirements.Command">
       <EnableRules>
@@ -339,21 +361,25 @@
     <LocLabel Id="ovs.msdyn_workorder.ClearResourceRequirements.Alt">
       <Titles>
         <Title description="Clean Resource Requirements" languagecode="1033" />
+        <Title description="Clean Resource Requirements" languagecode="1036" />
       </Titles>
     </LocLabel>
     <LocLabel Id="ovs.msdyn_workorder.ClearResourceRequirements.LabelText">
       <Titles>
         <Title description="Clean Resource Requirements" languagecode="1033" />
+        <Title description="Clean Resource Requirements" languagecode="1036" />
       </Titles>
     </LocLabel>
     <LocLabel Id="ovs.msdyn_workorder.ClearResourceRequirements.ToolTipDescription">
       <Titles>
         <Title description="Clean Resource Requirements" languagecode="1033" />
+        <Title description="Clean Resource Requirements" languagecode="1036" />
       </Titles>
     </LocLabel>
     <LocLabel Id="ovs.msdyn_workorder.ClearResourceRequirements.ToolTipTitle">
       <Titles>
         <Title description="Clean Resource Requirements" languagecode="1033" />
+        <Title description="Clean Resource Requirements" languagecode="1036" />
       </Titles>
     </LocLabel>
     <LocLabel Id="ovs.msdyn_workorder.Form.TDG.InspectionReport.Alt">
@@ -378,6 +404,24 @@
       <Titles>
         <Title description="Generate email to Primary Contact and inspection report" languagecode="1033" />
         <Title description="Générer un courriel au contact principal et un rapport d'inspection" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="ovs.msdyn_workorder.NewRecord.LabelText">
+      <Titles>
+        <Title description="New {0}" languagecode="1033" />
+        <Title description="New {0}" languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="ovs.msdyn_workorder.NewRecord.ToolTipDescription">
+      <Titles>
+        <Title description="Create a new {0} record." languagecode="1033" />
+        <Title description="Create a new {0} record." languagecode="1036" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="ovs.msdyn_workorder.NewRecord.ToolTipTitle">
+      <Titles>
+        <Title description="New {0}" languagecode="1033" />
+        <Title description="New {0}" languagecode="1036" />
       </Titles>
     </LocLabel>
   </LocLabels>

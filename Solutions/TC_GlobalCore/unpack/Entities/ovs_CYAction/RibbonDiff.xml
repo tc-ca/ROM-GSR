@@ -166,6 +166,7 @@
     <CommandDefinition Id="Mscrm.Form.Deactivate">
       <EnableRules>
         <EnableRule Id="Mscrm.CanWritePrimary" />
+        <EnableRule Id="ovs.ovs_cyaction.InspectorRole.EnableRule" />
       </EnableRules>
       <DisplayRules>
         <DisplayRule Id="Mscrm.CanWritePrimary" />
@@ -308,6 +309,11 @@
       </DisplayRule>
     </DisplayRules>
     <EnableRules>
+      <EnableRule Id="ovs.ovs_cyaction.InspectorRole.EnableRule">
+        <CustomRule FunctionName="isInspectorRole" Library="$webresource:ovs_ROMCommonFunctions" InvertResult="true">
+          <CrmParameter Value="PrimaryControl" />
+        </CustomRule>
+      </EnableRule>
       <EnableRule Id="tc.ovs_cyaction.EnableRule0.HideButtonIfFormIsReadOnly">
         <CustomRule FunctionName="HideButtonIfFormIsReadOnly" Library="$webresource:ovs_ROMCommonFunctions">
           <CrmParameter Value="PrimaryControl" />

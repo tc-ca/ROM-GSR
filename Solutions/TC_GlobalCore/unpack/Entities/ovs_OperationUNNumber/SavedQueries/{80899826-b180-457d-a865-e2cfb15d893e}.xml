@@ -10,9 +10,10 @@
     <layoutxml>
       <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
         <row name="result" id="ovs_operationunnumberid">
-          <cell name="ovs_unnumber" width="100" />
-          <cell name="a_90d00a23a43dec118c620022483d7564.tdg_shippingnamedescriptiontxt" width="125" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
-          <cell name="ovs_supplychaindirection" width="100" disableSorting="1" />
+          <cell name="a_90d00a23a43dec118c620022483d7564.tdg_undisplayname" width="136" />
+          <cell name="a_90d00a23a43dec118c620022483d7564.tdg_shippingnamedescriptiontxt" width="104" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="a_90d00a23a43dec118c620022483d7564.ovs_primaryclass" width="111" />
+          <cell name="a_90d00a23a43dec118c620022483d7564.ovs_compatibilitygroup" width="159" />
         </row>
       </grid>
     </layoutxml>
@@ -20,14 +21,14 @@
     <fetchxml>
       <fetch version="1.0" mapping="logical">
         <entity name="ovs_operationunnumber">
-          <order attribute="ovs_unnumber" descending="false" />
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="1" />
           </filter>
-          <attribute name="ovs_unnumber" />
-          <attribute name="ovs_supplychaindirection" />
           <link-entity alias="a_90d00a23a43dec118c620022483d7564" name="tdg_unnumber" from="tdg_unnumberid" to="ovs_unnumber" link-type="outer" visible="false">
             <attribute name="tdg_shippingnamedescriptiontxt" />
+            <attribute name="ovs_compatibilitygroup" />
+            <attribute name="ovs_primaryclass" />
+            <attribute name="tdg_undisplayname" />
           </link-entity>
           <attribute name="ovs_operationunnumberid" />
         </entity>
@@ -35,7 +36,7 @@
     </fetchxml>
     <IntroducedVersion>1.0</IntroducedVersion>
     <LocalizedNames>
-      <LocalizedName description="Operation UN Numbers (Inactive)" languagecode="1033" />
+      <LocalizedName description="Site UN Numbers (Inactive)" languagecode="1033" />
       <LocalizedName description="Numéro UN Inactif" languagecode="1036" />
     </LocalizedNames>
   </savedquery>

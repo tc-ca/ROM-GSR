@@ -56,7 +56,11 @@ const ActionSubStatus =
     RecommendationForProsecutionCompleted:      918640008,
     InvestigationInProgress:                    918640009,
     InvestigationDeclinedNotInPublicInterest:   918640010,
-    CloseDuplicate:                             918640011
+    CloseDuplicate:                             918640011,
+    Revoked:                                    918640013,
+    Cancelled:                                  918640014
+
+
 };
 
 const StateCodes = {
@@ -339,9 +343,12 @@ function manageNoticeOfDirectionNotToImport(formContext, status, subStatus) {
         glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Active], true);
     } else if (status === StateCodes.Closed) {
         glHelper.filterOptionSet(formContext, SUBSTATUS_CODE,
-            [ActionSubStatus.ConfirmationReceivedOnTime,
-                ActionSubStatus.ConfirmationReceivedLate,
-                ActionSubStatus.AlternativeMeasuresTaken,
+            [
+                //ActionSubStatus.ConfirmationReceivedOnTime,
+                //ActionSubStatus.ConfirmationReceivedLate,
+                //ActionSubStatus.AlternativeMeasuresTaken,
+                ActionSubStatus.Cancelled,
+                ActionSubStatus.Revoked,
                 ActionSubStatus.ExpiredOverdue,
                 ActionSubStatus.CloseDuplicate
             ],
@@ -366,22 +373,23 @@ function manageNoticeOfDirectionNotToImport(formContext, status, subStatus) {
 
     glHelper.SetRequiredLevel(formContext, FIELD_ACTION_DATE, !isClosedDuplicated);
 
-    if (subStatus === ActionSubStatus.ConfirmationReceivedLate || subStatus === ActionSubStatus.ConfirmationReceivedOnTime) {
+    //if (subStatus === ActionSubStatus.ConfirmationReceivedLate || subStatus === ActionSubStatus.ConfirmationReceivedOnTime) {
+    if (subStatus === ActionSubStatus.Cancelled || subStatus === ActionSubStatus.Revoked) {
         glHelper.SetControlVisibility(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
         glHelper.SetRequiredLevel(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
 
-        glHelper.SetControlVisibility(formContext, FIELD_RELEASE_DATE, true);
-        glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, true);
+        //glHelper.SetControlVisibility(formContext, FIELD_RELEASE_DATE, true);
+        //glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, true);
 
-    } else if (subStatus === ActionSubStatus.AlternativeMeasuresTaken) {
-        glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
-        glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
+    //} else if (subStatus === ActionSubStatus.AlternativeMeasuresTaken) {
+    //    glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
+    //    glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
 
-        glHelper.SetControlVisibility(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
-        glHelper.SetRequiredLevel(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
+    //    glHelper.SetControlVisibility(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
+    //    glHelper.SetRequiredLevel(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
 
-        glHelper.SetControlVisibility(formContext, FIELD_RELEASE_DATE, true);
-        glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, true);
+    //    glHelper.SetControlVisibility(formContext, FIELD_RELEASE_DATE, true);
+    //    glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, true);
     } else if (subStatus === ActionSubStatus.ExpiredOverdue) {
         glHelper.SetControlVisibility(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
         glHelper.SetRequiredLevel(formContext, FIELD_REVOCATION_JUSTIFICATION, true);
@@ -415,9 +423,12 @@ function manageNoticeToRemedyForm(formContext, status, subStatus)
         glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Active], true);
     } else if (status === StateCodes.Closed) {
         glHelper.filterOptionSet(formContext, SUBSTATUS_CODE,
-            [ActionSubStatus.ConfirmationReceivedOnTime,
-                ActionSubStatus.ConfirmationReceivedLate,
+            [
+                //ActionSubStatus.ConfirmationReceivedOnTime,
+                //ActionSubStatus.ConfirmationReceivedLate,
                 ActionSubStatus.ExpiredOverdue,
+                ActionSubStatus.Cancelled,
+                ActionSubStatus.Revoked,
                 ActionSubStatus.CloseDuplicate
             ],
             true);
@@ -470,7 +481,7 @@ function manageNoticeToRemedyForm(formContext, status, subStatus)
         glHelper.SetRequiredLevel(formContext, FIELD_REVOCATION_JUSTIFICATION, !isClosedDuplicated);
         glHelper.SetRequiredLevel(formContext, FIELD_RELEASE_DATE, !isClosedDuplicated);
 
-        if (subStatus === ActionSubStatus.CloseDuplicate) {
+        if (subStatus === ActionSubStatus.CloseDuplicate || subStatus === ActionSubStatus.Cancelled || subStatus === ActionSubStatus.Revoked ) {
             glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
             glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
             glHelper.SetRequiredLevel(formContext, FIELD_DESIGNATED_PERSON_NAME, false);
@@ -496,10 +507,14 @@ function manageDetentionNoticeForm(formContext, status, subStatus)
         glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Active], true);
     } else if (status === StateCodes.Closed) {
         glHelper.filterOptionSet(formContext, SUBSTATUS_CODE,
-            [ActionSubStatus.ConfirmationReceivedOnTime,
-                ActionSubStatus.ConfirmationReceivedLate,
-                ActionSubStatus.Unresolved,
-                ActionSubStatus.Escalated,
+            [
+                //ActionSubStatus.ConfirmationReceivedOnTime,
+                //ActionSubStatus.ConfirmationReceivedLate,
+                //ActionSubStatus.Unresolved,
+                //ActionSubStatus.Escalated,
+                ActionSubStatus.Cancelled,
+                ActionSubStatus.Revoked,
+                ActionSubStatus.ExpiredOverdue,
                 ActionSubStatus.CloseDuplicate
             ],
             true);
@@ -529,7 +544,8 @@ function manageDetentionNoticeForm(formContext, status, subStatus)
     glHelper.SetControlVisibility(formContext, FIELD_NON_COMPLIANCE_DETAILS, true);
     glHelper.SetRequiredLevel(formContext, FIELD_NON_COMPLIANCE_DETAILS, !isClosedDuplicated);
 
-    if (subStatus === ActionSubStatus.Unresolved || subStatus === ActionSubStatus.Escalated) {
+    //if (subStatus === ActionSubStatus.Unresolved || subStatus === ActionSubStatus.Escalated) {
+    if (subStatus === ActionSubStatus.Cancelled || subStatus === ActionSubStatus.Revoked )  {
         glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
         glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
     } else if (subStatus === ActionSubStatus.CloseDuplicate) {
@@ -594,7 +610,7 @@ function manageDirectionIssuedUnderSubsection19Form(formContext, status, subStat
     if (status === StateCodes.Draft) {
         glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Draft], true);
     } else if (status === StateCodes.Closed) {
-        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Closed, ActionSubStatus.CloseDuplicate], true);
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Closed, ActionSubStatus.Cancelled,ActionSubStatus.CloseDuplicate], true);
     }
 
     let isClosedDuplicated = (subStatus === ActionSubStatus.CloseDuplicate);
@@ -605,7 +621,7 @@ function manageDirectionIssuedUnderSubsection19Form(formContext, status, subStat
     glHelper.SetControlVisibility(formContext, FIELD_INTERVENTION_SUMMARY, true);
     glHelper.SetRequiredLevel(formContext, FIELD_INTERVENTION_SUMMARY, !isClosedDuplicated);
 
-    if (subStatus === ActionSubStatus.CloseDuplicate) {
+    if (subStatus === ActionSubStatus.CloseDuplicate || subStatus === ActionSubStatus.Cancelled) {
         glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
         glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
     }
@@ -619,7 +635,7 @@ function manageTicketForm(formContext, status, subStatus) {
     if (status === StateCodes.Draft) {
         glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Draft], true);
     } else if (status === StateCodes.Closed) {
-        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Closed, ActionSubStatus.CloseDuplicate], true);
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Closed,ActionSubStatus.Cancelled,ActionSubStatus.CloseDuplicate], true);
     }
 
     let isClosedDuplicated = (subStatus === ActionSubStatus.CloseDuplicate);
@@ -633,7 +649,7 @@ function manageTicketForm(formContext, status, subStatus) {
     glHelper.SetControlVisibility(formContext, FIELD_FINE, true);
     glHelper.SetRequiredLevel(formContext, FIELD_FINE, !isClosedDuplicated);
 
-    if (subStatus === ActionSubStatus.CloseDuplicate) {
+    if (subStatus === ActionSubStatus.CloseDuplicate || subStatus === ActionSubStatus.Cancelled) {
         glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
         glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
     }
@@ -642,6 +658,7 @@ function manageTicketForm(formContext, status, subStatus) {
 function manageNoticeOfInfractionForm(formContext, status, subStatus) {
     // Set Status options
     glHelper.filterOptionSet(formContext, STATUS_CODE, [StateCodes.Canceled, StateCodes.Active], false);
+
 
     let isClosedDuplicated = (subStatus === ActionSubStatus.CloseDuplicate);
     glHelper.SetRequiredLevel(formContext, FIELD_ACTION_DATE, !isClosedDuplicated);
@@ -653,10 +670,10 @@ function manageNoticeOfInfractionForm(formContext, status, subStatus) {
     if (status === StateCodes.Draft) {
         glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Draft], true);
     } else if (status === StateCodes.Closed) {
-        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Closed, ActionSubStatus.CloseDuplicate], true);
-    }
+        glHelper.filterOptionSet(formContext, SUBSTATUS_CODE, [ActionSubStatus.Closed, ActionSubStatus.CloseDuplicate, ActionSubStatus.Cancelled], true );
+    } 
 
-    if (subStatus === ActionSubStatus.CloseDuplicate) {
+    if (subStatus === ActionSubStatus.CloseDuplicate || subStatus === ActionSubStatus.Cancelled) {
         glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
         glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
     }
@@ -679,7 +696,8 @@ function manageInvestigation(formContext, status, subStatus) {
             [ActionSubStatus.ConclusionOfCaseReportCompleted,
                 ActionSubStatus.InvestigationDeclinedInsufficientEvidence,
                 ActionSubStatus.InvestigationDeclinedNotInPublicInterest,
-                ActionSubStatus.CloseDuplicate
+                ActionSubStatus.CloseDuplicate,
+                ActionSubStatus.Cancelled
             ],
             true);
     }
@@ -700,7 +718,7 @@ function manageInvestigation(formContext, status, subStatus) {
     } else {
         glHelper.SetRequiredLevel(formContext, FIELD_DATE_RESOLVED, false);
     }
-    if (subStatus === ActionSubStatus.CloseDuplicate) {
+    if (subStatus === ActionSubStatus.CloseDuplicate || subStatus === ActionSubStatus.Cancelled) {
         glHelper.SetControlVisibility(formContext, FIELD_STATUS_JUSTIFICATION, true);
         glHelper.SetRequiredLevel(formContext, FIELD_STATUS_JUSTIFICATION, true);
     }

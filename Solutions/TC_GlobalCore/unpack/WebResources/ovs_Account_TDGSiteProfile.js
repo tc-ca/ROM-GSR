@@ -33,10 +33,10 @@
         var isPlanner = (glHelper.hasCurrentUserRole("TDG Planner"))
         glHelper.SetSectionVisibility(formContext, TAB_NAME, SECTION_NAME, isPlanner);
 
-       // var isTDG_Analyst = (glHelper.hasCurrentUserRole("TDG Analyst"))
+        // var isTDG_Analyst = (glHelper.hasCurrentUserRole("TDG Analyst"))
 
         let roles = glHelper.GetCurrentUserRoles();
-       // let roles_RemoveAnalyst = roles.Where(s => (s.name != "TDG Analyst")).ToArray();
+        // let roles_RemoveAnalyst = roles.Where(s => (s.name != "TDG Analyst")).ToArray();
 
         if (roles) {
 
@@ -55,10 +55,13 @@
   
     return{
         OnLoad: function (executionContext) {
-
+            debugger;
             const formContextGlobalRef = executionContext.getFormContext();
 
             setFieldPermissions(formContextGlobalRef);
+
+            // add filter to company
+            formContextGlobalRef
         }
     }
     

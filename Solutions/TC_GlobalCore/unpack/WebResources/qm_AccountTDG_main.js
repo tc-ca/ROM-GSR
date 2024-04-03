@@ -23,9 +23,6 @@ var AccountTDGmain = (function (window, document) {
     const COUNTRY = "address1_country";
     const PRIMARYCONTACT = "primarycontactid";
 
-
-
-
     //********************private methods*******************
 
     function getViolationHistory(formContext) {
@@ -86,7 +83,66 @@ var AccountTDGmain = (function (window, document) {
                 console.log("getViolationHistory error: " + error.message);
             }
         );
+    }
 
+    function getCompanyViolationHistory(formContext) {
+        debugger;
+        var parameters = {};
+        parameters.accountid = formContext.data.entity.getId().replace("{", "").replace("}", "");
+
+        var ovs_ViolationsHistoryPostRequest = {
+            accountid: parameters.accountid,
+
+            getMetadata: function () {
+                return {
+                    boundParameter: null,
+                    parameterTypes: {
+                        "accountid": {
+                            "typeName": "Edm.String",
+                            "structuralProperty": 1
+                        }
+                    },
+                    operationType: 0,
+                    operationName: "ovs_CompanyViolationsHistoryPost"
+                };
+            }
+        };
+
+        Xrm.WebApi.online.execute(ovs_ViolationsHistoryPostRequest).then(
+            function success(result) {
+                if (result.ok) {
+                    //var results = JSON.parse(result.responseText);
+
+                    result.text().then(function (i) {
+                        var data = JSON.parse(i);
+                        if (data != null || typeof data !== 'undefined') {
+
+                            if (data.violationsHistory != null && typeof data.violationsHistory !== 'undefined' && data.violationsHistory != "") {
+                                window.top.localStorage.setItem('_violationsHistory', data.violationsHistory);
+                            }
+                        }
+                    }, function (error) {
+                        console.log("getViolationHistory error: " + error.message);
+                    });
+
+                    //result.json().then(function (i) {
+                    //    var data = i;
+                    //    if (data != null || typeof data !== 'undefined') {
+
+                    //        if (data.violationsHistory != null && typeof data.violationsHistory !== 'undefined' && data.violationsHistory != "") {
+                    //            window.top.localStorage.setItem('_violationsHistory', data.violationsHistory);
+                    //        }
+                    //    }
+                    //}, function (error) {
+                    //        console.log("getViolationHistory error: " + error.message);
+                    //});
+
+                }
+            },
+            function (error) {
+                console.log("getViolationHistory error: " + error.message);
+            }
+        );
     }
         
     function filter_customertypecode(formContext) {
@@ -233,12 +289,11 @@ var AccountTDGmain = (function (window, document) {
     //********************public methods***************
     return {
 
-
         OnLoad: function (executionContext) {
             
             const formContext = executionContext.getFormContext();
             formContextGlobalRef = formContext;
-
+            debugger;
             //filter Relationship Type
             filter_customertypecode(formContext);
 
@@ -254,11 +309,19 @@ var AccountTDGmain = (function (window, document) {
             
             if (formType > 1)
             {
+                //Add function to Refresh Site Class when UNCode is added
+                var SiteUN = formContext.getControl("Subgrid_OperationUNNumber");
+                if (SiteUN != null) SiteUN.addOnLoad(AccountTDGmain.Refresh_SiteClass)
 
                 rTypeCode.fireOnChange();
 
                 //prepare data for Violations History grid
-                getViolationHistory(formContext);
+                if (_customerType == 948010001)
+                { getViolationHistory(formContext); }
+                else if (_customerType == 948010000) {
+                    getCompanyViolationHistory(formContext);
+                }
+
 
             }
             
@@ -295,6 +358,22 @@ var AccountTDGmain = (function (window, document) {
             
         },
 
+        NewSite: function (gridTypeName, parentEntityTypeName, parentEntityId, primaryControl, gridControl) {
+            debugger;
+
+            sessionStorage.setItem("tdgcore_button", "NewSite");
+            sessionStorage.setItem("gridTypeName", gridTypeName);
+            sessionStorage.setItem("parentEntityTypeName", parentEntityTypeName);
+            sessionStorage.setItem("parentEntityId", parentEntityId);
+
+            XrmCore.Commands.Open.addNewFromSubGridStandard(gridTypeName, parentEntityTypeName, parentEntityId, primaryControl, gridControl);
+        },
+
+        Refresh_SiteClass: function () {
+
+            var SiteClass = formContextGlobalRef.getControl("grd_Class");
+            if (SiteClass != null) SiteClass.refresh();
+        },
 
         //Refresh_AccountClass: function () {
 

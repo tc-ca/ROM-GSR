@@ -15,6 +15,7 @@
         <tab id="{3b0b63a9-d379-689a-0ec3-e71eb4c6a841}" name="SUMMARY_TAB" IsUserDefined="0" showlabel="true" expanded="true" locklevel="0" labelid="{87504fcf-3940-4937-8a24-5393580d58ab}">
           <labels>
             <label description="Summary" languagecode="1033" />
+            <label description="RÉSUMÉ" languagecode="1036" />
           </labels>
           <columns>
             <column width="33%">
@@ -22,6 +23,7 @@
                 <section id="{0eb92e6c-bcb8-0d52-a188-d81543ddb7cd}" name="ACCOUNT_INFORMATION" IsUserDefined="0" showlabel="true" labelid="{be64ca97-4cc0-4d94-9df4-cf63aac93543}" showbar="false" layout="varwidth" columns="1" labelwidth="115" celllabelposition="Left">
                   <labels>
                     <label description="SITE INFORMATION" languagecode="1033" />
+                    <label description="INFORMATIONS SUR LE SITE" languagecode="1036" />
                   </labels>
                   <rows>
                     <row>
@@ -140,11 +142,21 @@
                         <control disabled="false" id="customertypecode" datafieldname="customertypecode" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" />
                       </cell>
                     </row>
+                    <row>
+                      <cell id="{0bc465ff-8662-44cb-9b06-bf58feee3dd1}" locklevel="0" colspan="1" rowspan="1" visible="false">
+                        <labels>
+                          <label description="Source App" languagecode="1033" />
+                          <label description="Source App" languagecode="1036" />
+                        </labels>
+                        <control id="ovs_application" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="ovs_application" disabled="false" />
+                      </cell>
+                    </row>
                   </rows>
                 </section>
                 <section name="SUMMARY_TAB_section_9" id="85819bc9-52da-4d35-91ba-177504dac414" IsUserDefined="0" locklevel="0" showlabel="true" showbar="false" layout="varwidth" celllabelalignment="Left" celllabelposition="Left" columns="1" labelwidth="115" labelid="{4b070389-bdae-4e07-8d79-7dc890b00f20}">
                   <labels>
                     <label description="TDG INFORMATION" languagecode="1033" />
+                    <label description="INFORMATION - TMD" languagecode="1036" />
                   </labels>
                   <rows>
                     <row>
@@ -188,6 +200,7 @@
                 <section name="SUMMARY_TAB_section_10" id="a966fd84-f5b2-4650-8ec0-37e78cd53146" IsUserDefined="0" locklevel="0" showlabel="true" showbar="false" layout="varwidth" celllabelalignment="Left" celllabelposition="Left" columns="1" labelwidth="115" labelid="{704bed65-0e07-4f8e-9cb3-9d9216d23e30}">
                   <labels>
                     <label description="DESIGN ENGINEER INFORMATION" languagecode="1033" />
+                    <label description="INFORMATION DE CONCEPTION TECHNIQUE" languagecode="1036" />
                   </labels>
                   <rows>
                     <row>
@@ -416,6 +429,7 @@
                 <section id="{ea3bb0a6-b9dc-1b0e-5e7d-74a380ee79a3}" name="Summary_section_6" IsUserDefined="0" showlabel="true" locklevel="0" labelid="{6c12d45c-897c-4844-9047-9dcd45511124}" showbar="false" layout="varwidth" columns="1" labelwidth="115">
                   <labels>
                     <label description="OHS INFORMATION" languagecode="1033" />
+                    <label description="INFORMATION SST" languagecode="1036" />
                   </labels>
                   <rows>
                     <row>
@@ -560,6 +574,7 @@
         <tab name="tab_sr" id="4c49fcd8-1bbc-4b2f-9f3c-33c8d1b536b5" IsUserDefined="0" locklevel="0" showlabel="true" contenttype="singleComponent">
           <labels>
             <label description="Support Requests" languagecode="1033" />
+            <label description="Demande de soutiens" languagecode="1036" />
           </labels>
           <columns>
             <column width="100%">
@@ -604,6 +619,7 @@
         <tab name="tab_cr" id="fc65a177-2897-40f8-8af7-340afb1b309d" IsUserDefined="0" locklevel="0" showlabel="true" contenttype="singleComponent">
           <labels>
             <label description="Customer Request" languagecode="1033" />
+            <label description="Demande client" languagecode="1036" />
           </labels>
           <columns>
             <column width="100%">
@@ -770,6 +786,7 @@
         <tab name="tab_7" id="7fac3a4c-53a4-4290-9285-cc12d76052d4" IsUserDefined="0" locklevel="0" showlabel="true" expanded="false" labelid="{32099672-6e85-4cde-9afb-5ec5263f0829}">
           <labels>
             <label description="Record Log" languagecode="1033" />
+            <label description="Journal d'enregistrements" languagecode="1036" />
           </labels>
           <columns>
             <column width="50%">
@@ -2409,6 +2426,7 @@
         <Library name="msdyn_/Utils/FieldServiceTrial.js" libraryUniqueId="{81848ec9-2a66-58a9-8e79-84d836110771}" />
         <Library name="msdyn_/Account/Account.Library.js" libraryUniqueId="{d8db2d05-4b38-9935-cedb-cdacb9e65d75}" />
         <Library name="fdr_AccountFDR_main.js" libraryUniqueId="{40de3979-2f85-4fed-802c-bb089fab4bf7}" />
+        <Library name="ovs_tdg_accountsjs" libraryUniqueId="{8d090515-61f6-4b10-8cef-629277401305}" />
       </formLibraries>
       <events>
         <event name="onload" application="false" active="false">
@@ -2416,6 +2434,7 @@
             <Handler functionName="AppCommon.Account.Instance.ra_onload" libraryName="AppCommon/Account/Account_main_system_library.js" handlerUniqueId="7927DD68-5AC5-4E9A-B39A-44F62467656A" enabled="true" />
           </InternalHandlers>
           <Handlers>
+            <Handler functionName="Form_OnLoad" libraryName="ovs_tdg_accountsjs" handlerUniqueId="{2d071ca0-9e39-49db-b9b5-2706d879ffcc}" enabled="true" parameters="" passExecutionContext="true" />
             <Handler functionName="FS.Account.Library.Load" libraryName="msdyn_/Account/Account.Library.js" handlerUniqueId="{c7515835-a98a-1b24-139a-a0d7055ec3bc}" enabled="true" passExecutionContext="true" parameters="" />
             <Handler functionName="FieldServiceTrial.Library.Load" libraryName="msdyn_/Utils/FieldServiceTrial.js" handlerUniqueId="{58a9e819-d88b-c572-d1d3-601017c57b37}" enabled="true" passExecutionContext="true" parameters="" />
             <Handler functionName="Sales.DocumentsTabController.shouldShowDocumentsTab" libraryName="Sales/ClientCommon/Sales_ClientCommon.js" handlerUniqueId="{CA3D9A4B-7A5C-4238-BAD6-5810FB05E86C}" enabled="true" passExecutionContext="true" parameters="" />
@@ -2435,6 +2454,7 @@
     <CanBeDeleted>1</CanBeDeleted>
     <LocalizedNames>
       <LocalizedName description="CRS Site Profile" languagecode="1033" />
+      <LocalizedName description="Profil du site BDIC" languagecode="1036" />
     </LocalizedNames>
     <Descriptions>
       <Description description="TDG Core 2 site profile form" languagecode="1033" />

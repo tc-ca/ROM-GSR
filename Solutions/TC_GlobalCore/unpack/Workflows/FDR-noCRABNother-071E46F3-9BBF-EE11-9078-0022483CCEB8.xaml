@@ -24,7 +24,7 @@
           <Variable x:TypeArguments="x:Object" Name="ConditionBranchStep3_1" />
         </sco:Collection>
         <sco:Collection x:TypeArguments="Activity" x:Key="Activities">
-          <mxswa:GetEntityProperty Attribute="ovs_no_bn_reason" Entity="[InputEntities(&quot;primaryEntity&quot;)]" EntityName="account" Value="[ConditionBranchStep2_1]">
+          <mxswa:GetEntityProperty Attribute="cid_reasonfornobnnumber" Entity="[InputEntities(&quot;primaryEntity&quot;)]" EntityName="account" Value="[ConditionBranchStep2_1]">
             <mxswa:GetEntityProperty.TargetType>
               <InArgument x:TypeArguments="s:Type">
                 <mxswa:ReferenceLiteral x:TypeArguments="s:Type">
@@ -61,36 +61,38 @@
                   <sco:Collection x:TypeArguments="Variable" x:Key="Variables" />
                   <sco:Collection x:TypeArguments="Activity" x:Key="Activities">
                     <Sequence DisplayName="SetVisibilityStep1: Show Other">
-                      <mcwc:SetVisibility ControlId="ovs_no_bn_reason_othertxt" ControlType="standard" Entity="[InputEntities(&quot;primaryEntity&quot;)]" EntityName="account" IsVisible="True" />
+                      <mcwc:SetVisibility ControlId="cid_reasonfornobnnumber_other" ControlType="standard" Entity="[InputEntities(&quot;primaryEntity&quot;)]" EntityName="account" IsVisible="True" />
                     </Sequence>
-                    <Sequence DisplayName="SetAttributeValueStep_SetVisibilityStep1_6: Set default Other">
+                    <Sequence DisplayName="SetFieldRequiredLevelStep_SetAttributeValueStep6_6: Other">
+                      <Assign x:TypeArguments="mxs:Entity" To="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" Value="[New Entity(&quot;account&quot;)]" />
+                      <Assign x:TypeArguments="s:Guid" To="[CreatedEntities(&quot;primaryEntity#Temp&quot;).Id]" Value="[InputEntities(&quot;primaryEntity&quot;).Id]" />
+                      <mcwc:SetFieldRequiredLevel ControlId="cid_reasonfornobnnumber_other" ControlType="standard" DisplayName="SetFieldRequiredLevelStep_SetAttributeValueStep6_6" Entity="[InputEntities(&quot;primaryEntity&quot;)]" EntityName="account" RequiredLevel="Required" />
+                    </Sequence>
+                    <Sequence DisplayName="SetAttributeValueStep6: Set default Other">
                       <Sequence.Variables>
-                        <Variable x:TypeArguments="x:Object" Name="SetAttributeValueStep_SetVisibilityStep1_6_1" />
+                        <Variable x:TypeArguments="x:Object" Name="SetAttributeValueStep6_1" />
                       </Sequence.Variables>
                       <Assign x:TypeArguments="mxs:Entity" To="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" Value="[New Entity(&quot;account&quot;)]" />
                       <Assign x:TypeArguments="s:Guid" To="[CreatedEntities(&quot;primaryEntity#Temp&quot;).Id]" Value="[InputEntities(&quot;primaryEntity&quot;).Id]" />
                       <mxswa:ActivityReference AssemblyQualifiedName="Microsoft.Crm.Workflow.Activities.EvaluateExpression, Microsoft.Crm.Workflow, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" DisplayName="EvaluateExpression">
                         <mxswa:ActivityReference.Arguments>
                           <InArgument x:TypeArguments="x:String" x:Key="ExpressionOperator">CreateCrmType</InArgument>
-                          <InArgument x:TypeArguments="s:Object[]" x:Key="Parameters">[New Object() { Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.String, "Business Number Unknown", "String" }]</InArgument>
+                          <InArgument x:TypeArguments="s:Object[]" x:Key="Parameters">[New Object() { Microsoft.Xrm.Sdk.Workflow.WorkflowPropertyType.String, "Created by Internal User / Créé par un utilisateur interne", "String" }]</InArgument>
                           <InArgument x:TypeArguments="s:Type" x:Key="TargetType">
                             <mxswa:ReferenceLiteral x:TypeArguments="s:Type" Value="x:String" />
                           </InArgument>
-                          <OutArgument x:TypeArguments="x:Object" x:Key="Result">[SetAttributeValueStep_SetVisibilityStep1_6_1]</OutArgument>
+                          <OutArgument x:TypeArguments="x:Object" x:Key="Result">[SetAttributeValueStep6_1]</OutArgument>
                         </mxswa:ActivityReference.Arguments>
                       </mxswa:ActivityReference>
-                      <mxswa:SetEntityProperty Attribute="ovs_no_bn_reason_othertxt" Entity="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" EntityName="account" Value="[SetAttributeValueStep_SetVisibilityStep1_6_1]">
+                      <mxswa:SetEntityProperty Attribute="cid_reasonfornobnnumber_other" Entity="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" EntityName="account" Value="[SetAttributeValueStep6_1]">
                         <mxswa:SetEntityProperty.TargetType>
                           <InArgument x:TypeArguments="s:Type">
                             <mxswa:ReferenceLiteral x:TypeArguments="s:Type" Value="x:String" />
                           </InArgument>
                         </mxswa:SetEntityProperty.TargetType>
                       </mxswa:SetEntityProperty>
-                      <mcwc:SetAttributeValue DisplayName="SetAttributeValueStep_SetVisibilityStep1_6" Entity="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" EntityName="account" />
+                      <mcwc:SetAttributeValue DisplayName="SetAttributeValueStep6" Entity="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" EntityName="account" />
                       <Assign x:TypeArguments="mxs:Entity" To="[InputEntities(&quot;primaryEntity&quot;)]" Value="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" />
-                    </Sequence>
-                    <Sequence DisplayName="SetDisplayModeStep5: Lock Other">
-                      <mcwc:SetDisplayMode ControlId="ovs_no_bn_reason_othertxt" ControlType="standard" Entity="[InputEntities(&quot;primaryEntity&quot;)]" EntityName="account" IsReadOnly="True" />
                     </Sequence>
                   </sco:Collection>
                 </mxswa:ActivityReference.Properties>
@@ -124,7 +126,7 @@
                       </Sequence.Variables>
                       <Assign x:TypeArguments="mxs:Entity" To="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" Value="[New Entity(&quot;account&quot;)]" />
                       <Assign x:TypeArguments="s:Guid" To="[CreatedEntities(&quot;primaryEntity#Temp&quot;).Id]" Value="[InputEntities(&quot;primaryEntity&quot;).Id]" />
-                      <mxswa:SetEntityProperty Attribute="ovs_no_bn_reason_othertxt" Entity="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" EntityName="account" Value="[SetAttributeValueStep3_1]">
+                      <mxswa:SetEntityProperty Attribute="cid_reasonfornobnnumber_other" Entity="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" EntityName="account" Value="[SetAttributeValueStep3_1]">
                         <mxswa:SetEntityProperty.TargetType>
                           <InArgument x:TypeArguments="s:Type">
                             <mxswa:ReferenceLiteral x:TypeArguments="s:Type" Value="x:String" />
@@ -134,8 +136,13 @@
                       <mcwc:SetAttributeValue DisplayName="SetAttributeValueStep3" Entity="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" EntityName="account" />
                       <Assign x:TypeArguments="mxs:Entity" To="[InputEntities(&quot;primaryEntity&quot;)]" Value="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" />
                     </Sequence>
+                    <Sequence DisplayName="SetFieldRequiredLevelStep_SetAttributeValueStep3_7: Other">
+                      <Assign x:TypeArguments="mxs:Entity" To="[CreatedEntities(&quot;primaryEntity#Temp&quot;)]" Value="[New Entity(&quot;account&quot;)]" />
+                      <Assign x:TypeArguments="s:Guid" To="[CreatedEntities(&quot;primaryEntity#Temp&quot;).Id]" Value="[InputEntities(&quot;primaryEntity&quot;).Id]" />
+                      <mcwc:SetFieldRequiredLevel ControlId="cid_reasonfornobnnumber_other" ControlType="standard" DisplayName="SetFieldRequiredLevelStep_SetAttributeValueStep3_7" Entity="[InputEntities(&quot;primaryEntity&quot;)]" EntityName="account" RequiredLevel="None" />
+                    </Sequence>
                     <Sequence DisplayName="SetVisibilityStep4: Hide Other">
-                      <mcwc:SetVisibility ControlId="ovs_no_bn_reason_othertxt" ControlType="standard" Entity="[InputEntities(&quot;primaryEntity&quot;)]" EntityName="account" IsVisible="False" />
+                      <mcwc:SetVisibility ControlId="cid_reasonfornobnnumber_other" ControlType="standard" Entity="[InputEntities(&quot;primaryEntity&quot;)]" EntityName="account" IsVisible="False" />
                     </Sequence>
                   </sco:Collection>
                 </mxswa:ActivityReference.Properties>

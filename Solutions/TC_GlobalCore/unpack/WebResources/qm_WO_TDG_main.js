@@ -18,7 +18,11 @@ var WO_TDG_main = (function (window, document) {
     var OperationTypeGlobalValue;
     var OperationTypeGlobalText;
     var isOnLoad = false;
-
+    var isSiteOnLoad = false;
+    var k_inspection_setting_onsite = 0;
+    var k_inspection_setting_remote = 1;
+    var k_inspection_setting_hybrid = 2;
+    var msdyn_systemstatus_list = [];
 
     //********************private methods*******************
 
@@ -81,7 +85,6 @@ var WO_TDG_main = (function (window, document) {
         var _territoryid_value_formatted;
         var formattedLang = "";
         var messageRegionFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchRegion.ErrorMessage");
-
 
         currentWebApi.retrieveRecord("systemuser", userid.toLowerCase(), "?$select=fullname,_territoryid_value&$expand=systemuser_bookableresource_UserId($select=bookableresourceid,name),territoryid($select=name,ovs_territorynameenglish,ovs_territorynamefrench,territoryid)").then(
             function success(results) {
@@ -149,7 +152,6 @@ var WO_TDG_main = (function (window, document) {
             }
         });
         //========================================================
-
 
         //Set WO Type based on Activity Type
         if (inspectionType == 0) {
@@ -225,14 +227,15 @@ var WO_TDG_main = (function (window, document) {
     }
 
     function hideOrShowTabs(formContext, isCivilAviationDocument) {
+
         var profileTab = formContext.ui.tabs.get("tab_14");
         var violationTab = formContext.ui.tabs.get("tab_10");
-        //var inspectReportTab = formContext.ui.tabs.get("tab_InspectionReport");
+        var tab_InspectionReport = formContext.ui.tabs.get("tab_InspectionReport");
         var cocTab = formContext.ui.tabs.get("tab_ConfirmationOfCompliances");
         var postinspectTab = formContext.ui.tabs.get("tab_PostInspection");
         var statTab = formContext.ui.tabs.get("tab_cepdata");
         var recommendation = formContext.getControl("ovs_recommendation");
-        var remote = formContext.getControl("qm_remote");
+        //var remote = formContext.getControl("qm_remote");
 
         profileTab.setVisible(isCivilAviationDocument);
         violationTab.setVisible(isCivilAviationDocument);
@@ -241,20 +244,83 @@ var WO_TDG_main = (function (window, document) {
         postinspectTab.setVisible(isCivilAviationDocument);
         statTab.setVisible(isCivilAviationDocument);
         recommendation.setVisible(!isCivilAviationDocument);
-        remote.setVisible(isCivilAviationDocument);
+        //remote.setVisible(isCivilAviationDocument);
+
+        var ovs_oversighttype = formContext.getAttribute("ovs_oversighttype").getValue()[0].id;
+        if (ovs_oversighttype == '{A4965081-5F9C-EB11-B1AC-000D3AE92708}')
+        {
+            tab_InspectionReport.setVisible(false);
+        }
     }
 
+    function manager_approval(formContext) {
+        //debugger;
+
+        var ma = formContext.getAttribute("ovs_manager_approval").getValue();
+        ma = (ma == null ? -1 : ma);
+        glHelper.SetDisabled(formContext, "ovs_inspection_setting", false);
+    }
+
+    function inspection_setting(formContext) {
+        debugger;
+
+        glHelper.SetRequiredLevel(formContext, "ovs_manager_approval", false);
+        var ma = formContext.getControl("ovs_manager_approval");
+        ma.setVisible(false);
+
+        var is = formContext.getAttribute("ovs_inspection_setting").getValue();
+        if (is == k_inspection_setting_remote || is == k_inspection_setting_hybrid) {
+            var pre_approved = formContext.getAttribute("ovs_pre_approved_for_remote_inspection").getValue();
+            if (!pre_approved) {
+                ma.setVisible(true);
+
+                var isManager = (glHelper.hasCurrentUserRole("TDG Manager"))
+                glHelper.SetControlReadOnly(formContext, "ovs_manager_approval", !isManager);
+                glHelper.SetRequiredLevel(formContext, "ovs_manager_approval", isManager);
+            }
+        }
+        //manager_approval(formContext);
+    }
+
+    function suitability_assessment(formContext) {
+        //debugger;
+
+        var sa = formContext.getAttribute("ovs_suitability_assessment").getValue();
+        if (sa) {
+            glHelper.SetDisabled(formContext, "ovs_inspection_setting", false);
+        }
+        else {
+            glHelper.SetDisabled(formContext, "ovs_inspection_setting", true);
+            formContext.getAttribute("ovs_inspection_setting").setValue(k_inspection_setting_onsite);
+        }
+        inspection_setting(formContext);
+    }
+
+    function inspection_setting_setup(formContext) {
+        debugger;
+
+        var pre_approved = formContext.getAttribute("ovs_pre_approved_for_remote_inspection").getValue();
+        if (pre_approved) {
+            formContext.getControl("ovs_manager_approval").setVisible(false);
+            //formContext.getAttribute("ovs_inspection_setting").setValue(k_inspection_setting_remote);
+        }
+        else {
+            glHelper.SetDisabled(formContext, "ovs_inspection_setting", false);
+            suitability_assessment(formContext);
+        }
+    }
 
     //********************private methods end***************
 
     //********************public methods***************
     return {
 
-
         OnLoad: function (executionContext) {
-           
+            debugger;
+            isSiteOnLoad = true;
             var globalContext = Xrm.Utility.getGlobalContext();
             var formContext = executionContext.getFormContext();
+
             isOffLine = glHelper.isOffline(executionContext);
             clientType = glHelper.getClientType(executionContext);
             isOnLoad = true;
@@ -270,7 +336,6 @@ var WO_TDG_main = (function (window, document) {
                 currentWebApi = Xrm.WebApi.online;
                 clientUrl = globalContext.getClientUrl();
             }
-
 
             if (glHelper.isTopAccessible()) {
                 globalObj = window.top.QuickCreateHelper;
@@ -296,7 +361,6 @@ var WO_TDG_main = (function (window, document) {
             else if (LCID == 1036)
                 resexResourceName = "ovs_Labels.1036.resx";
 
-
             //rational
             var rational = formContext.getAttribute("ovs_rational");
             rational.removeOnChange(WO_TDG_main.Rational_OnChange);
@@ -307,7 +371,6 @@ var WO_TDG_main = (function (window, document) {
             var fy = formContext.getAttribute("ovs_fiscalyear");
             fy.removeOnChange(WO_TDG_main.FiscalYearOnchange);
             fy.addOnChange(WO_TDG_main.FiscalYearOnchange);
-
 
             //wo status - validation will work online only!
             if (!isOffLine) {
@@ -352,6 +415,10 @@ var WO_TDG_main = (function (window, document) {
                 WO_TDG_main.SetDefaultFiscalYear(formContext);
                 //Fiscal quarter
                 WO_TDG_main.SetDefaultFiscalQuarter(formContext);
+
+                // hide inspection section
+                var sect_is = formContext.ui.tabs.get("tab_summary").sections.get("sect_inspection_setting");
+                sect_is.setVisible(false);
             }
 
             //on update etc
@@ -378,6 +445,24 @@ var WO_TDG_main = (function (window, document) {
                 gridSEAT.refresh();
                 ///////////
 
+                // hide inspection section
+                var sect_is = formContext.ui.tabs.get("tab_summary").sections.get("sect_inspection_setting");
+                sect_is.setVisible(true);
+
+                var pre_approved = formContext.getAttribute("ovs_pre_approved_for_remote_inspection");
+                pre_approved.addOnChange(function () { inspection_setting_setup(formContext) });
+                inspection_setting_setup(formContext);
+
+                if (!pre_approved.getValue()) {
+                    var sa = formContext.getAttribute("ovs_suitability_assessment");
+                    sa.addOnChange(function () { suitability_assessment(formContext) });
+
+                    var ma = formContext.getAttribute("ovs_manager_approval");
+                    ma.addOnChange(function () { manager_approval(formContext) });
+
+                    var is = formContext.getAttribute("ovs_inspection_setting");
+                    is.addOnChange(function () { inspection_setting(formContext) });
+                }
             }
 
             // Set Oversight Activity field as Mandatory
@@ -390,10 +475,10 @@ var WO_TDG_main = (function (window, document) {
 
             WO_TDG_main.getOverSightType(executionContext);
 
-            WO_TDG_main.setRecommendationRequired(executionContext);
+            //WO_TDG_main.setRecommendationRequired(executionContext);
 
-            //WO_TDG_main.setDefaultInspectionSynopsis(executionContext);
-                        
+            //WO_TDG_main.setDefaultInspectionSynopsis(executionContext);  
+
         },
 
         SubgridSafetyAssessment_OnLoad: function (executionContext) {
@@ -416,7 +501,6 @@ var WO_TDG_main = (function (window, document) {
                     Xrm.Navigation.openErrorDialog({ message: error.message });
                 }
             );
-
         },
 
         OnConfirmationOfCompliance_StateChange: function (executionContext) {
@@ -428,20 +512,27 @@ var WO_TDG_main = (function (window, document) {
                 var gridCOC = formContext.getControl("Subgrid_COC");
                 gridCOC.refresh();
             }
-
         },
 
         Site_OnChange: function (executionContext) {
+            //debugger;
+            if (isSiteOnLoad == true)
+            {
+                isSiteOnLoad = false;
+                return;
+            }
             var formContext = executionContext.getFormContext();
 
-            try {
+            try
+            {
                 var site = formContext.getAttribute("msdyn_serviceaccount").getValue()[0];
 
                 globalObj.site = {};
                 globalObj.site.id = site.id;
                 globalObj.site.et = site.entityType;
                 globalObj.site.name = site.name;
-            } catch (e) {
+            }
+            catch (e) {
                 console.log("Site_OnChange failed - lookup is empty");
             }
         },
@@ -501,7 +592,12 @@ var WO_TDG_main = (function (window, document) {
                 isInspector = appName.indexOf("Inspections") != -1 || appName.indexOf("Inspector") != -1;
                 isAnalytic = appName.indexOf("Analytics") != -1;
 
-                if (isAnalytic || isPlanner) return;
+                if (isAnalytic
+                    //|| isPlanner
+                ) return;
+
+             
+
 
                 if (formType == 1) {
                     //set Rational to default "Unplanned" for Manager or Inspector  and lock readonly!
@@ -543,6 +639,39 @@ var WO_TDG_main = (function (window, document) {
                         );
 
                     }
+                    else if (isPlanner)
+                    {
+                        glHelper.SetRequiredLevel(formContext, "ovs_rational", true);
+                        //offline filter fix
+                        var filter = (isOffLine && clientType > 0)
+                            ? "ovs_name eq '{0}'"
+                            : "startswith(ovs_name,'{0}')";
+
+                        currentWebApi.retrieveMultipleRecords("ovs_tyrational", "?$select=ovs_name,ovs_rationalelbl,ovs_rationalflbl,ovs_tyrationalid&$filter=" + filter.replace("{0}", "Unplanned")).then(
+                            function success(results) {
+
+                                var ovs_name = results.entities[0]["ovs_name"];
+                                var ovs_rationalelbl = results.entities[0]["ovs_rationalelbl"];
+                                var ovs_rationalflbl = results.entities[0]["ovs_rationalflbl"];
+                                var ovs_tyrationalid = results.entities[0]["ovs_tyrationalid"];
+
+                                if (userSettings.languageId == 1036)
+                                    glHelper.SetLookup(formContext, "ovs_rational", "ovs_tyrational", ovs_tyrationalid, ovs_rationalflbl);
+                                if (userSettings.languageId == 1033)
+                                    glHelper.SetLookup(formContext, "ovs_rational", "ovs_tyrational", ovs_tyrationalid, ovs_rationalelbl);
+
+             
+
+
+                            },
+                            function (error) {
+                                console.log("Fetch rational Unplanned failed. error: " + error.message);
+                                Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageRationalFailed + " " + error.message });
+                            }
+                        );
+
+
+                    }
                 }
                 else {
                     switch (appName) {
@@ -552,22 +681,24 @@ var WO_TDG_main = (function (window, document) {
                         case "TDG Management / Gestion TMD":
                             if (isPlanned) {
                                 readOnlyArray = new Array("msdyn_serviceaccount", "ovs_mocoperationid", "ovs_oversighttype", "ovs_fiscalyear", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed", "ovs_source"); //"ovs_fiscalquarter", "msdyn_serviceterritory",
-                                editableArray = new Array("qm_remote");
+                                //editableArray = new Array("qm_remote");
                             }
                             else {
                                 readOnlyArray = new Array("msdyn_workordertype", "ovs_rational", "ovs_source");
-                                editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_serviceterritory");
+                                //editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_serviceterritory");
+                                editableArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_serviceterritory");
                             }
                             break;
                         case "Inspector Offline":
                         case "TDG Inspections / Inspections TMD":
                             if (isPlanned && formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
                                 readOnlyArray = new Array("msdyn_serviceaccount", "ovs_mocoperationid", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed", "ovs_qcreviewcomments", "ovs_qcreviewcompletedind", "ovs_primaryinspector", "ovs_source"); //"msdyn_serviceterritory",
-                                editableArray = new Array("qm_remote");
+                                //editableArray = new Array("qm_remote");
                             }
                             else {
                                 readOnlyArray = new Array("msdyn_workordertype", "ovs_rational", "ovs_source");
-                                editableArray = new Array("msdyn_serviceaccount", "ovs_mocoperationid", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_serviceterritory"); //"ovs_rational" - cannot set editable => will set all fields editable
+                                //editableArray = new Array("msdyn_serviceaccount", "ovs_mocoperationid", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_serviceterritory"); //"ovs_rational" - cannot set editable => will set all fields editable
+                                editableArray = new Array("msdyn_serviceaccount", "ovs_mocoperationid", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_serviceterritory"); //"ovs_rational" - cannot set editable => will set all fields editable
                             }
 
                             ////hiddenArray = new Array("msdyn_serviceterritory", "msdyn_workordertype");
@@ -578,6 +709,12 @@ var WO_TDG_main = (function (window, document) {
                             //    glHelper.filterOptionSet(formContext, "msdyn_systemstatus", options, false);
                             //}
 
+                            break;
+                        case "TDG Planner / Planificateur TMD":
+                            {
+                                glHelper.SetRequiredLevel(formContext, "ovs_rational", true);
+
+                            }
                             break;
                         default:
                             //        readOnlyArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_workordertype", "ovs_rational", "msdyn_serviceterritory");
@@ -714,7 +851,7 @@ var WO_TDG_main = (function (window, document) {
         },
 
         WO_SystemStatus_OnChange: function (executionContext) {
-
+            debugger;
             var formContext = executionContext.getFormContext();
             var systemStatus = formContext.getAttribute("msdyn_systemstatus").getValue();
 
@@ -760,6 +897,8 @@ var WO_TDG_main = (function (window, document) {
                                     else {
                                         //If system status is set to closed
                                         if (systemStatus == 690970004) {
+                                            //Set required Recommendation - 244620
+                                            WO_TDG_main.setRecommendationRequired(executionContext);
                                             //Set state to Inactive
                                             formContext.getAttribute("statecode").setValue(1);
                                             //Set Status Reason to Closed
@@ -783,14 +922,21 @@ var WO_TDG_main = (function (window, document) {
         },
 
         WO_SystemStatus_FilterOptionSet: function (formContext, isPlanned) {
-
+            //debugger;
+            var ovs_oversighttypeOBJ = formContext.getAttribute("ovs_oversighttype").getValue();
+            if (ovs_oversighttypeOBJ == null) return;
+            var ovs_oversighttype = ovs_oversighttypeOBJ[0].id;
             ////msdyn_systemstatus - filter OptionSet (hide "Open - In Progress")
             if (formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
                 var options = new Array();
-                options[0] = 690970002;
+                options.push(690970002);
                 //if it's wo is planned then exclude Closed - Cancelled
-                if (isPlanned) options[1] = 690970005;
+                if (isPlanned) options.push(690970005);
+                // If it's wo oversight activity = Civil Aviation Document Review then exclude " Open - Complete "
+                if (ovs_oversighttype == '{A4965081-5F9C-EB11-B1AC-000D3AE92708}') options.push(690970003);
+                
                 glHelper.filterOptionSet(formContext, "msdyn_systemstatus", options, false);
+
             }
         },
 
@@ -898,6 +1044,7 @@ var WO_TDG_main = (function (window, document) {
         },
 
         getOverSightType: function (executionContext) {
+            
             var formContext = executionContext.getFormContext();
             var osTypeObj = formContext.getAttribute("ovs_oversighttype").getValue();
 
@@ -912,7 +1059,6 @@ var WO_TDG_main = (function (window, document) {
                 }
             }
         },
-
         setRecommendationRequired: function (executionContext) {
             var formContext = executionContext.getFormContext();
 

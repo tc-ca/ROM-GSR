@@ -7,7 +7,7 @@
     <FormActivationState>1</FormActivationState>
     <form headerdensity="HighWithControls" maxWidth="1900" showImage="false" shownavigationbar="true">
       <tabs>
-        <tab id="{b8e326ee-5c21-4a18-ba55-e3b56966c249}" name="{b8e326ee-5c21-4a18-ba55-e3b56966c249}" labelid="{d2f37f68-abb3-49c1-aba6-97092f6fcb53}" expanded="true" showlabel="true" locklevel="0" IsUserDefined="1" verticallayout="true">
+        <tab id="{b8e326ee-5c21-4a18-ba55-e3b56966c249}" name="tab_summary" labelid="{d2f37f68-abb3-49c1-aba6-97092f6fcb53}" expanded="true" showlabel="true" locklevel="0" IsUserDefined="1" verticallayout="true">
           <labels>
             <label description="Summary" languagecode="1033" />
             <label description="Résumé" languagecode="1036" />
@@ -15,7 +15,7 @@
           <columns>
             <column width="50%">
               <sections>
-                <section id="{b14f3e67-e51b-4b3e-bb7f-a9cf0cf8dc17}" name="{b14f3e67-e51b-4b3e-bb7f-a9cf0cf8dc17}" height="auto" labelid="{2df4f812-b599-4999-923a-2a7848b69c25}" showlabel="true" locklevel="0" IsUserDefined="0" celllabelposition="Left" celllabelalignment="Left" labelwidth="150" columns="1" showbar="false">
+                <section id="{b14f3e67-e51b-4b3e-bb7f-a9cf0cf8dc17}" name="sect_general" height="auto" labelid="{2df4f812-b599-4999-923a-2a7848b69c25}" showlabel="true" locklevel="0" IsUserDefined="0" celllabelposition="Left" celllabelalignment="Left" labelwidth="150" columns="1" showbar="false">
                   <labels>
                     <label description="GENERAL" languagecode="1033" />
                     <label description="GÉNÉRAL" languagecode="1036" />
@@ -34,7 +34,7 @@
                       <cell id="{6831449b-337b-0576-2804-e80548badb59}" labelid="{bd2cb366-b132-498e-91c3-1ac4df95b568}" showlabel="true" locklevel="0">
                         <labels>
                           <label description="Site" languagecode="1033" />
-                          <label description="Site de l'activité de surveillance" languagecode="1036" />
+                          <label description="Site" languagecode="1036" />
                         </labels>
                         <control disabled="false" id="msdyn_serviceaccount" datafieldname="msdyn_serviceaccount" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" uniqueid="{407ab191-2a56-d15b-871c-9e71db51537c}">
                           <parameters>
@@ -73,15 +73,6 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{fe3c3f30-de1c-45c8-a3d9-b13e8427800c}" locklevel="0" colspan="1" rowspan="1" showlabel="true">
-                        <labels>
-                          <label description="Email" languagecode="1033" />
-                          <label description="Adresse de messagerie" languagecode="1036" />
-                        </labels>
-                        <control id="emailaddress" classid="{ADA2203E-B4CD-49BE-9DDF-234642B43B52}" datafieldname="emailaddress" disabled="true" uniqueid="{db4e7c77-a077-50b1-8d17-d468841aeae4}" />
-                      </cell>
-                    </row>
-                    <row>
                       <cell id="{7d6c513a-2512-de5e-aa35-ede6d7ea12a2}" showlabel="false" colspan="1" auto="false">
                         <labels>
                           <label description="Operation Type" languagecode="1033" />
@@ -97,18 +88,26 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{507d5b8b-c3c9-702b-dc5e-33170557306d}" showlabel="false" colspan="1" auto="false">
+                      <cell locklevel="0" id="{ebb08eb9-fb57-4be8-bc5a-31682641141a}" colspan="1" rowspan="1" auto="false" showlabel="false">
                         <labels>
                           <label description="Legal Name" languagecode="1033" />
                           <label description="Site" languagecode="1036" />
                         </labels>
-                        <control id="frmLegalName" classid="{5C5600E0-1D6E-4205-A272-BE80DA87FD42}" datafieldname="msdyn_serviceaccount" disabled="false">
+                        <control id="Legal_Name" classid="{5C5600E0-1D6E-4205-A272-BE80DA87FD42}" datafieldname="ovs_regulatedentity">
                           <parameters>
-                            <QuickForms>&lt;QuickFormIds&gt;&lt;QuickFormId entityname="account"&gt;b0dc190e-9603-444b-94b3-07b98a8f1d60&lt;/QuickFormId&gt;&lt;/QuickFormIds&gt;</QuickForms>
-                            <ControlMode>Edit</ControlMode>
                             <DisplayAsCustomer360Tile>false</DisplayAsCustomer360Tile>
+                            <QuickForms>&lt;QuickFormIds&gt;&lt;QuickFormId entityname="account"&gt;b0dc190e-9603-444b-94b3-07b98a8f1d60&lt;/QuickFormId&gt;&lt;/QuickFormIds&gt;</QuickForms>
                           </parameters>
                         </control>
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{fe3c3f30-de1c-45c8-a3d9-b13e8427800c}" locklevel="0" colspan="1" rowspan="1" showlabel="true">
+                        <labels>
+                          <label description="Email" languagecode="1033" />
+                          <label description="Adresse de messagerie" languagecode="1036" />
+                        </labels>
+                        <control id="emailaddress" classid="{ADA2203E-B4CD-49BE-9DDF-234642B43B52}" datafieldname="emailaddress" disabled="true" uniqueid="{db4e7c77-a077-50b1-8d17-d468841aeae4}" />
                       </cell>
                     </row>
                     <row>
@@ -146,15 +145,6 @@
                           <label description="Propriétaire" languagecode="1036" />
                         </labels>
                         <control id="ownerid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ownerid" disabled="false" />
-                      </cell>
-                    </row>
-                    <row>
-                      <cell id="{394a27c4-dbd0-2abc-33d6-793bc1d0bebe}" showlabel="true" locklevel="0" colspan="1" rowspan="1">
-                        <labels>
-                          <label description="Rationale" languagecode="1033" />
-                          <label description="Justification" languagecode="1036" />
-                        </labels>
-                        <control id="ovs_rational" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ovs_rational" disabled="false" uniqueid="{018c2821-992b-79b2-5e8e-5d669ad1d344}" />
                       </cell>
                     </row>
                     <row>
@@ -196,15 +186,6 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{80869cfd-bc13-49a4-8b78-859d5eb397c7}" locklevel="0">
-                        <labels>
-                          <label description="Remote" languagecode="1033" />
-                          <label description="À distance" languagecode="1036" />
-                        </labels>
-                        <control id="qm_remote" classid="{67FAC785-CD58-4F9F-ABB3-4B7DDC6ED5ED}" datafieldname="qm_remote" disabled="false" uniqueid="{5a1e858e-b5a9-d2a6-88b7-d637cbb01ae7}" />
-                      </cell>
-                    </row>
-                    <row>
                       <cell id="{1d890da4-a767-d1d9-44d5-472e75a9be26}" labelid="{a347e7b1-c4c1-45f2-a84e-b26d4ac5fb88}" showlabel="true" locklevel="0">
                         <labels>
                           <label description="Region" languagecode="1033" />
@@ -226,6 +207,15 @@
                       </cell>
                     </row>
                     <row>
+                      <cell id="{b8b6de24-f7dc-4e56-8b06-499c88d35028}" locklevel="0" colspan="1" rowspan="1" visible="false">
+                        <labels>
+                          <label description="Remote" languagecode="1033" />
+                          <label description="À distance" languagecode="1036" />
+                        </labels>
+                        <control id="qm_remote" classid="{67FAC785-CD58-4F9F-ABB3-4B7DDC6ED5ED}" datafieldname="qm_remote" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
                       <cell id="{e3a2bb6c-9754-4d55-a9ff-cdee9cef0f6b}" locklevel="0" colspan="1" rowspan="1" visible="false">
                         <labels>
                           <label description="Recommendation" languagecode="1033" />
@@ -241,15 +231,6 @@
                           <label description="Raison du statut" languagecode="1036" />
                         </labels>
                         <control id="statuscode" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="statuscode" disabled="false" />
-                      </cell>
-                    </row>
-                    <row>
-                      <cell id="{257668a1-4c03-4558-945e-b8faf0524c5f}" locklevel="0" colspan="1" rowspan="1">
-                        <labels>
-                          <label description="Was part of the initial NOP" languagecode="1033" />
-                          <label description="Généré par le PSN initial" languagecode="1036" />
-                        </labels>
-                        <control id="ovs_source" classid="{67FAC785-CD58-4F9F-ABB3-4B7DDC6ED5ED}" datafieldname="ovs_source" disabled="false" />
                       </cell>
                     </row>
                   </rows>
@@ -276,6 +257,15 @@
                             <AllowFilterOff>false</AllowFilterOff>
                           </parameters>
                         </control>
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{394a27c4-dbd0-2abc-33d6-793bc1d0bebe}" showlabel="true" locklevel="0" colspan="1" rowspan="1">
+                        <labels>
+                          <label description="Rationale" languagecode="1033" />
+                          <label description="Justification" languagecode="1036" />
+                        </labels>
+                        <control id="ovs_rational" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ovs_rational" disabled="false" uniqueid="{018c2821-992b-79b2-5e8e-5d669ad1d344}" />
                       </cell>
                     </row>
                     <row>
@@ -318,6 +308,15 @@
                             <DependentAttributeType>tc_tcfiscalyear</DependentAttributeType>
                           </parameters>
                         </control>
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{257668a1-4c03-4558-945e-b8faf0524c5f}" locklevel="0" colspan="1" rowspan="1">
+                        <labels>
+                          <label description="Was part of the initial NOP" languagecode="1033" />
+                          <label description="Généré par le PSN initial" languagecode="1036" />
+                        </labels>
+                        <control id="ovs_source" classid="{67FAC785-CD58-4F9F-ABB3-4B7DDC6ED5ED}" datafieldname="ovs_source" disabled="false" />
                       </cell>
                     </row>
                     <row>
@@ -474,6 +473,66 @@
             </column>
             <column width="50%">
               <sections>
+                <section name="sect_inspection_setting" id="403ff2b3-9477-49f0-9dd3-7db4aac1e6f5" IsUserDefined="0" locklevel="0" showlabel="true" showbar="false" layout="varwidth" celllabelalignment="Left" celllabelposition="Left" columns="1" labelwidth="115">
+                  <labels>
+                    <label description="INSPECTION SETTING" languagecode="1033" />
+                    <label description="OPTION DE L'INSPECTION" languagecode="1036" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{4d7e12d7-d81b-41c4-a8eb-e231ffb9455a}">
+                        <labels>
+                          <label description="" languagecode="1033" />
+                        </labels>
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{f4b115cc-6989-45f6-b465-7b7cf38e0a4f}" locklevel="0" colspan="1" rowspan="1">
+                        <labels>
+                          <label description="Pre-Approved for Remote or Hybrid Inspection" languagecode="1033" />
+                          <label description="Pré-Approuvé pour inspection à distance ou hybride" languagecode="1036" />
+                        </labels>
+                        <control id="ovs_pre_approved_for_remote_inspection" classid="{67FAC785-CD58-4F9F-ABB3-4B7DDC6ED5ED}" datafieldname="ovs_pre_approved_for_remote_inspection" disabled="true" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{46921455-c2e7-49ca-ad6b-f190c1d8119e}" locklevel="0" colspan="1" rowspan="1" visible="false">
+                        <labels>
+                          <label description="Bulk Approval (to be deleted)" languagecode="1033" />
+                          <label description="Pré-Approuvé pour inspection à distance ou hybride" languagecode="1036" />
+                        </labels>
+                        <control id="ovs_bulk_approved" classid="{67FAC785-CD58-4F9F-ABB3-4B7DDC6ED5ED}" datafieldname="ovs_bulk_approved" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{9ba24228-2d3d-49e7-bc15-c8f810698170}" locklevel="0" colspan="1" rowspan="1">
+                        <labels>
+                          <label description="Suitability Assessment" languagecode="1033" />
+                          <label description="Évaluation d'adéquation" languagecode="1036" />
+                        </labels>
+                        <control id="ovs_suitability_assessment" classid="{67FAC785-CD58-4F9F-ABB3-4B7DDC6ED5ED}" datafieldname="ovs_suitability_assessment" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{ca758191-d6a4-431d-8a30-f0f5e2b42b9e}" locklevel="0" colspan="1" rowspan="1">
+                        <labels>
+                          <label description="Inspection Setting" languagecode="1033" />
+                          <label description="Option de l'inspection" languagecode="1036" />
+                        </labels>
+                        <control id="ovs_inspection_setting" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="ovs_inspection_setting" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{54afc8a8-331d-49c1-9143-935480f1fed6}" locklevel="0" colspan="1" rowspan="1">
+                        <labels>
+                          <label description="Manager Approval " languagecode="1033" />
+                          <label description=" Approbation du gestionnaire" languagecode="1036" />
+                        </labels>
+                        <control id="ovs_manager_approval" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="ovs_manager_approval" disabled="false" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
                 <section id="{e7a0ac80-237c-8b8c-1dcc-5317840db618}" name="{b8e326ee-5c21-4a18-ba55-e3b56966c249}_section_2" labelid="{fb15fa8a-709f-4678-9006-fc21ef23121e}" showlabel="false" locklevel="0" IsUserDefined="0" celllabelposition="Top" celllabelalignment="Left" labelwidth="115" columns="1" showbar="false" layout="varwidth">
                   <labels>
                     <label description="Social Pane" languagecode="1033" />

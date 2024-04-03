@@ -38,7 +38,6 @@
           <attribute name="msdyn_postalcode" />
           <attribute name="msdyn_systemstatus" />
           <attribute name="ovs_currentfiscalquarter" />
-          <order attribute="ovs_currentfiscalquarter" descending="false" />
           <filter type="and">
             <condition attribute="statecode" operator="eq" value="0" />
             <condition attribute="msdyn_systemstatus" operator="in">
@@ -53,18 +52,14 @@
               <condition attribute="systemuserid" operator="eq-userid" />
             </filter>
           </link-entity>
-          <link-entity name="tc_tcfiscalyear" alias="ac" link-type="inner" from="tc_tcfiscalyearid" to="ovs_fiscalyear">
-            <filter type="and">
-              <condition attribute="tc_iscurrentfiscalyear" operator="eq" value="1" />
-            </filter>
-          </link-entity>
+          <order attribute="msdyn_name" descending="false" />
         </entity>
       </fetch>
     </fetchxml>
     <IntroducedVersion>1.22.1.1</IntroducedVersion>
     <LocalizedNames>
-      <LocalizedName description="My Active Work Orders Current Fiscal Year" languagecode="1033" />
-      <LocalizedName description="Mes ordres de travail actifs de l'exercice en cours" languagecode="1036" />
+      <LocalizedName description="My Active Work Orders" languagecode="1033" />
+      <LocalizedName description="Mes ordres de travail actifs" languagecode="1036" />
     </LocalizedNames>
     <Descriptions>
       <Description description="Active Work Orders assigned to an Inspector that are not closed-posted or closed-cancelled " languagecode="1033" />

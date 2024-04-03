@@ -134,7 +134,8 @@ var WO_TDG_TTrack = (function (window, document) {
                 resexResourceName = "ovs_Labels.1036.resx";
 
             //time tracking functionality
-            var remote = formContext.getAttribute("qm_remote");
+            //var remote = formContext.getAttribute("qm_remote");
+            var remote = formContext.getAttribute("ovs_inspection_setting");
             remote.removeOnChange(WO_TDG_TTrack.Remote_OnChange);
             remote.addOnChange(WO_TDG_TTrack.Remote_OnChange);
 
@@ -156,13 +157,14 @@ var WO_TDG_TTrack = (function (window, document) {
 
             if (formType > 1) {
                 let formContext = executionContext.getFormContext();
-                let remote = formContext.getAttribute("qm_remote").getValue();
+                //let remote = formContext.getAttribute("qm_remote").getValue();
+                let remote = formContext.getAttribute("ovs_inspection_setting").getValue();
 
                 let workOrderId = formContext.data.entity.getId().replace("{", "").replace("}", "")
                 const serviceTasks = await timeTrackingFunctions.getServiceTasksForWorkOrder(workOrderId);
                 let travelServicetask = serviceTasks.filter(x => x["_msdyn_tasktype_value"] === "ca3a829a-e917-ec11-b6e7-000d3ae8ef7b") //travel task type
 
-                if (remote) {
+                if (remote == 1) {
                     if (travelServicetask.length === 1) {
                         timeTrackingFunctions.updateWorkOrderServiceTaskDuration(
                             travelServicetask[0]["msdyn_workorderservicetaskid"],

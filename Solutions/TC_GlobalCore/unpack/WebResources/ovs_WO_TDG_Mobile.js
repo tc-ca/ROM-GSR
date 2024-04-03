@@ -490,23 +490,22 @@ var WO_TDG_main = (function (window, document) {
                         case "TDG Management / Gestion TMD":
                             if (isPlanned) {
                                 readOnlyArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed"); //"ovs_fiscalquarter", "msdyn_serviceterritory",
-                                editableArray = new Array("qm_remote");
+                                //editableArray = new Array("qm_remote");
                             }
                             else {
                                 readOnlyArray = new Array("msdyn_workordertype", "ovs_rational");
-                                editableArray = new Array("msdyn_serviceaccount", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_serviceterritory");
+                                editableArray = new Array("msdyn_serviceaccount", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "msdyn_serviceterritory");
                             }
                             break;
                         case "Inspector Offline":
                         case "TDG Inspections / Inspections TMD":
                             if (isPlanned && formType != glHelper.FORMTYPE_READONLY && formType != glHelper.FORMTYPE_DISABLED) {
                                 readOnlyArray = new Array("msdyn_serviceaccount", "ovs_mocoperationid", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_workordertype", "ovs_rational", "msdyn_closedby", "msdyn_timeclosed", "ovs_qcreviewcomments", "ovs_qcreviewcompletedind", "ovs_primaryinspector",); //"msdyn_serviceterritory",
-                                editableArray = new Array("qm_remote");
+                                //editableArray = new Array("qm_remote");
                             }
                             else {
                                 readOnlyArray = new Array("msdyn_workordertype", "ovs_rational");
-                                editableArray = new Array("msdyn_serviceaccount", "ovs_mocoperationid", "qm_remote", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_serviceterritory"); //"ovs_rational" - cannot set editable => will set all fields editable
-
+                                editableArray = new Array("msdyn_serviceaccount", "ovs_mocoperationid", "ovs_oversighttype", "ovs_fiscalyear", "ovs_fiscalquarter", "ovs_revisedquarterid", "msdyn_serviceterritory"); //"ovs_rational" - cannot set editable => will set all fields editable
                             }
 
                             ////hiddenArray = new Array("msdyn_serviceterritory", "msdyn_workordertype");

@@ -23,7 +23,7 @@
                 <section id="{0eb92e6c-bcb8-0d52-a188-d81543ddb7cd}" name="ACCOUNT_INFORMATION" IsUserDefined="0" showlabel="true" labelid="{8155a2c4-1b73-4f4c-aacc-6718977b501a}" showbar="false" layout="varwidth" columns="1" labelwidth="140" celllabelposition="Left" locklevel="0" celllabelalignment="Left">
                   <labels>
                     <label description="COMPANY INFORMATION" languagecode="1033" />
-                    <label description="INFORMATION SUR L'ENTREPRISE" languagecode="1036" />
+                    <label description="INFORMATIONS SUR LA SOCIÉTÉ" languagecode="1036" />
                   </labels>
                   <rows>
                     <row>
@@ -72,19 +72,21 @@
                       </cell>
                     </row>
                     <row>
-                      <cell id="{cb8b8430-9d2d-4cea-9df8-3ce404f03b1f}" locklevel="0" colspan="1" rowspan="1">
+                      <cell id="{52221d00-0899-4168-a99f-8b0b0877555c}" locklevel="0" colspan="1" rowspan="1" visible="false">
                         <labels>
-                          <label description="Business Number Not Applicable Reason" languagecode="1033" />
+                          <label description="Reason for no CRA Business Number" languagecode="1033" />
+                          <label description="Raison pour laquelle il n’y a aucun numéro d’organisation de l’ARC" languagecode="1036" />
                         </labels>
-                        <control id="ovs_no_bn_reason" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="ovs_no_bn_reason" disabled="false" />
+                        <control id="cid_reasonfornobnnumber" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="cid_reasonfornobnnumber" disabled="false" />
                       </cell>
                     </row>
                     <row>
-                      <cell id="{9539e3cc-fb14-4957-9233-314ba51c7932}" locklevel="0" colspan="1" rowspan="1" visible="false">
+                      <cell id="{73680467-3592-4c9a-a3aa-93429c423531}" locklevel="0" colspan="1" rowspan="1" visible="false">
                         <labels>
-                          <label description="No Business Number Reason Other" languagecode="1033" />
+                          <label description="Other Reason" languagecode="1033" />
+                          <label description="Autre raison" languagecode="1036" />
                         </labels>
-                        <control id="ovs_no_bn_reason_othertxt" classid="{4273EDBD-AC1D-40D3-9FB2-095C621B552D}" datafieldname="ovs_no_bn_reason_othertxt" disabled="false" />
+                        <control id="cid_reasonfornobnnumber_other" classid="{4273EDBD-AC1D-40D3-9FB2-095C621B552D}" datafieldname="cid_reasonfornobnnumber_other" disabled="false" />
                       </cell>
                     </row>
                     <row>
@@ -157,6 +159,15 @@
                           <label description="Statut de l’organisation BDIC" languagecode="1036" />
                         </labels>
                         <control id="cid_cidcompanystatus" classid="{3EF39988-22BB-4f0b-BBBE-64B5A3748AEE}" datafieldname="cid_cidcompanystatus" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{ee0c0c9d-5a70-48ce-855d-e6d6d31e6ffe}" locklevel="0" colspan="1" rowspan="1" visible="false">
+                        <labels>
+                          <label description="Source App" languagecode="1033" />
+                          <label description="Source App" languagecode="1036" />
+                        </labels>
+                        <control id="ovs_application" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="ovs_application" disabled="false" />
                       </cell>
                     </row>
                   </rows>
@@ -466,6 +477,53 @@
             </column>
           </columns>
         </tab>
+        <tab name="tab_4" id="{e8815310-83c7-d167-7b67-06701217358e}" IsUserDefined="0" locklevel="0" showlabel="true" expanded="true">
+          <labels>
+            <label description="Compliance History" languagecode="1033" />
+            <label description="Historique de conformité" languagecode="1036" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section name="tab_4_section_1" showlabel="false" showbar="false" locklevel="0" id="{dbb2e1cd-8642-6974-2b5e-2dba450244ab}" IsUserDefined="0" layout="varwidth" columns="1" labelwidth="115" celllabelalignment="Left" celllabelposition="Left">
+                  <labels>
+                    <label description="Section" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{7747d6ab-7ee3-0b3a-d14a-4e1e5391c083}" showlabel="false" colspan="1" auto="false" rowspan="6">
+                        <labels>
+                          <label description="ComplianceHistory" languagecode="1033" />
+                        </labels>
+                        <control id="WebResource_ComplianceHistory" classid="{9FDF5F91-88B1-47f4-AD53-C11EFC01A01D}">
+                          <parameters>
+                            <Url>ovs_CompanyComplianceHistoryGrid.html</Url>
+                            <PassParameters>true</PassParameters>
+                            <ShowOnMobileClient>false</ShowOnMobileClient>
+                            <Security>false</Security>
+                            <Scrolling>auto</Scrolling>
+                            <Border>true</Border>
+                            <WebResourceId>{980E0A3C-7FE8-EE11-A203-000D3AE9455D}</WebResourceId>
+                          </parameters>
+                        </control>
+                        <events>
+                          <event name="onload" application="false">
+                            <dependencies />
+                          </event>
+                        </events>
+                      </cell>
+                    </row>
+                    <row />
+                    <row />
+                    <row />
+                    <row />
+                    <row />
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
         <tab name="CHILDS_ACCOUNTS_TAB" id="cd31a324-5842-4bb8-a1af-ce70e3f8b953" IsUserDefined="0" locklevel="0" showlabel="true" expanded="true">
           <labels>
             <label description="Sites" languagecode="1033" />
@@ -488,14 +546,14 @@
                         </labels>
                         <control id="ChildAccounts" classid="{E7A81278-8635-4d9e-8D4D-59480B391C5B}" uniqueid="{358ed5a3-2345-89c8-972a-b01b617ae82e}">
                           <parameters>
-                            <ViewId>{82CC4863-AA98-EB11-B1AC-000D3AE93A4F}</ViewId>
+                            <ViewId>{E7292E30-4FD2-EE11-904D-0022483CC3B7}</ViewId>
                             <IsUserView>false</IsUserView>
                             <RelationshipName>account_parent_account</RelationshipName>
                             <TargetEntityType>account</TargetEntityType>
                             <AutoExpand>Auto</AutoExpand>
                             <EnableQuickFind>false</EnableQuickFind>
                             <EnableViewPicker>false</EnableViewPicker>
-                            <ViewIds>{00000000-0000-0000-00AA-000010001002},{00000000-0000-0000-00AA-000010001001},{82CC4863-AA98-EB11-B1AC-000D3AE93A4F}</ViewIds>
+                            <ViewIds>{00000000-0000-0000-00AA-000010001002},{00000000-0000-0000-00AA-000010001001},{82CC4863-AA98-EB11-B1AC-000D3AE93A4F},{E7292E30-4FD2-EE11-904D-0022483CC3B7}</ViewIds>
                             <EnableJumpBar>false</EnableJumpBar>
                             <ChartGridMode>Grid</ChartGridMode>
                             <VisualizationId>{74A622C0-5193-DE11-97D4-00155DA3B01E}</VisualizationId>
@@ -521,7 +579,7 @@
         <tab name="tab_7" id="325c8bc8-1dea-4fe2-adf1-9498a89b8d73" IsUserDefined="0" locklevel="0" showlabel="true">
           <labels>
             <label description="Record Log" languagecode="1033" />
-            <label description="Registre" languagecode="1036" />
+            <label description="Journal d'enregistrements" languagecode="1036" />
           </labels>
           <columns>
             <column width="50%">

@@ -146,6 +146,7 @@
       <EnableRules>
         <EnableRule Id="Mscrm.VisualizationPaneNotMaximized" />
         <EnableRule Id="Mscrm.SelectionCountAtLeastOne" />
+        <EnableRule Id="ovs.ovs_confirmationofcompliance.EnableRule12.EnableRule" />
       </EnableRules>
       <DisplayRules>
         <DisplayRule Id="Mscrm.CanWriteSelected" />
@@ -247,6 +248,11 @@
       </DisplayRule>
     </DisplayRules>
     <EnableRules>
+      <EnableRule Id="ovs.ovs_confirmationofcompliance.EnableRule12.EnableRule">
+        <CustomRule FunctionName="isInspectorRole" Library="$webresource:ovs_ROMCommonFunctions" InvertResult="true">
+          <CrmParameter Value="PrimaryControl" />
+        </CustomRule>
+      </EnableRule>
       <EnableRule Id="tc.ovs_confirmationofcompliance.EnableRule0.HideButtonIfFormIsReadOnly">
         <CustomRule FunctionName="HideButtonIfFormIsReadOnly" Library="$webresource:ovs_ROMCommonFunctions">
           <CrmParameter Value="PrimaryControl" />

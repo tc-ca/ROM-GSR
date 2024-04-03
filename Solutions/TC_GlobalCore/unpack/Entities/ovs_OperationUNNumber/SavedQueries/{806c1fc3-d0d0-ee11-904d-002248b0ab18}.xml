@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{806c1fc3-d0d0-ee11-904d-002248b0ab18}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="ovs_name" select="1" icon="1" preview="1">
+        <row name="result" id="ovs_operationunnumberid">
+          <cell name="ovs_site" width="100" />
+          <cell name="a_64395b3f6f6246e98ab7eb46392479a3.parentaccountid" width="144" />
+          <cell name="ovs_unnumber" width="75" />
+          <cell name="a_90d00a23a43dec118c620022483d7564.tdg_undisplayname" width="81" />
+          <cell name="a_90d00a23a43dec118c620022483d7564.tdg_shippingnamedescriptiontxt" width="272" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="a_90d00a23a43dec118c620022483d7564.ovs_primaryclass" width="57" />
+          <cell name="a_90d00a23a43dec118c620022483d7564.ovs_compatibilitygroup" width="38" />
+          <cell name="a_90d00a23a43dec118c620022483d7564.tdg_secondaryclasscd" width="47" disableSorting="1" imageproviderfunctionname="" imageproviderwebresource="$webresource:" />
+          <cell name="a_90d00a23a43dec118c620022483d7564.tdg_packinggroupcd" width="207" />
+          <cell name="a_90d00a23a43dec118c620022483d7564.tdg_specialprovisionscd" width="227" />
+          <cell name="a_90d00a23a43dec118c620022483d7564.tdg_limitquantityindextxt" width="55" />
+          <cell name="a_90d00a23a43dec118c620022483d7564.tdg_exceptedquantitiestxt" width="69" />
+          <cell name="a_90d00a23a43dec118c620022483d7564.tdg_erapindextxt" width="198" />
+          <cell name="a_90d00a23a43dec118c620022483d7564.ovs_erapcategory" width="214" />
+          <cell name="a_90d00a23a43dec118c620022483d7564.tdg_carryingvesselindextxt" width="307" />
+          <cell name="a_90d00a23a43dec118c620022483d7564.tdg_carryingroadrailindextxt" width="411" />
+          <cell name="statecode" width="100" />
+          <cell name="createdby" width="104" />
+          <cell name="createdon" width="105" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical" distinct="true">
+        <entity name="ovs_operationunnumber">
+          <filter type="and">
+            <condition attribute="ovs_site" operator="not-null" />
+          </filter>
+          <link-entity alias="a_90d00a23a43dec118c620022483d7564" name="tdg_unnumber" from="tdg_unnumberid" to="ovs_unnumber" link-type="outer" visible="false">
+            <attribute name="tdg_shippingnamedescriptiontxt" />
+            <attribute name="tdg_secondaryclasscd" />
+            <attribute name="tdg_undisplayname" />
+            <attribute name="ovs_primaryclass" />
+            <attribute name="ovs_compatibilitygroup" />
+            <attribute name="tdg_packinggroupcd" />
+            <attribute name="tdg_specialprovisionscd" />
+            <attribute name="tdg_limitquantityindextxt" />
+            <attribute name="tdg_exceptedquantitiestxt" />
+            <attribute name="tdg_erapindextxt" />
+            <attribute name="ovs_erapcategory" />
+            <attribute name="tdg_carryingvesselindextxt" />
+            <attribute name="tdg_carryingroadrailindextxt" />
+          </link-entity>
+          <attribute name="ovs_operationunnumberid" />
+          <attribute name="statecode" />
+          <attribute name="createdon" />
+          <attribute name="createdby" />
+          <attribute name="ovs_unnumber" />
+          <attribute name="ovs_site" />
+          <link-entity alias="a_64395b3f6f6246e98ab7eb46392479a3" name="account" to="ovs_site" from="accountid" link-type="outer" visible="false">
+            <attribute name="parentaccountid" />
+          </link-entity>
+          <order attribute="ovs_site" descending="false" />
+          <order attribute="ovs_unnumber" descending="false" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0.0.7</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="All Site UN Numbers" languagecode="1033" />
+      <LocalizedName description="Tous les numéros UN du site" languagecode="1036" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

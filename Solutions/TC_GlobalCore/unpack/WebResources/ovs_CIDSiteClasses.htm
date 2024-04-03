@@ -1,0 +1,384 @@
+<html><head>
+<meta></head>
+<body style="overflow-wrap: break-word;" onfocusout="parent.setEmailRange();">
+    ﻿
+
+    <title></title>
+    <style>
+        body {
+            background-color: white;
+            display: block;
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+
+        text {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            padding: 6px 12px;
+        }
+
+        label {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            margin: 0px 0px 5px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            display: block;
+            font-size: 14px;
+            line-height: 1.4375;
+            color: #555;
+            border: 1px solid #949494;
+            border-radius: 4px;
+            box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+            font-family: "Noto Sans",sans-serif;
+            padding: 6px 12px;
+            height: auto;
+            max-width: 100%;
+            min-height: 37px;
+            background-image: none;
+            margin-top: 7px;
+            width: 100%;
+        }
+    </style>
+    <!-- Using jquery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <meta>
+
+
+    <label for="ovs_primaryclass" class="field-label">Class/Division</label>
+    <span id="ovs_primaryclass_required" style="color: red;font-weight: bold"> *</span>
+    <br>
+    <select name="ovs_primaryclass" id="ovs_primaryclass" class="form-control picklist " onchange="ovs_primaryclass_onchange();">
+        <option value="0" selected="selected"></option>
+    </select>
+    <br>
+    <textarea readonly="" class="text form-control" id="ovs_primaryclass_description" rows="5" cols="100%" placeholder=" " title="-"> 
+    </textarea>
+    <br>
+    <span id="group" hidden="">
+        <label for="ovs_compatibility_group" class="field-label">Compatibility Group</label>
+        <span id="ovs_compatibility_group_required" style="color: red;font-weight: bold"> *</span>
+        <br>
+        <select name="ovs_compatibility_group" id="ovs_compatibility_group" class="form-control picklist " onchange="ovs_compatibility_group_onchange();">
+            <option value="0" selected="selected"></option>
+        </select>
+        <br>
+        <textarea readonly="" class="text form-control" id="ovs_compatibility_group_description" rows="5" cols="100%" placeholder=" " title="-"> 
+        </textarea>
+        <br>
+    </span>
+
+    <input type="text" id="ovs_primaryclass_list_id" hidden="">
+
+    <script type="text/javascript">
+var _group_list;
+        var _ovs_class_description = null;
+        var _group_description = null;
+        var _k_len = 150;
+
+        //
+        // cid_primaryclass.htm
+        // 
+
+        $(document).ready(function () {
+            debugger;
+
+            group_hide(true);
+
+            var ovs_primaryclass = sessionStorage.getItem("ovs_primaryclass");
+            document.getElementById("ovs_primaryclass").value = ovs_primaryclass;
+
+            document.getElementById("ovs_primaryclass").setAttribute("autocomplete", "off");
+            document.getElementById("ovs_compatibility_group").setAttribute("autocomplete", "off");
+
+            // language
+            try {
+                var ovs_primaryclass_label = sessionStorage.getItem("ovs_primaryclass_label");
+                var selected_language = sessionStorage.getItem("selected_language");
+                var value = (selected_language == "en" ? "Class/Division" : "Classe/Division");
+                $("#ovs_primaryclass")[0].labels[0].innerHTML = value;    // ovs_primaryclass_label;
+
+                var ovs_compatibility_group_label = sessionStorage.getItem("ovs_compatibility_group_label");
+                var value = (selected_language == "en" ? "Compatibility Group" : "Groupes de compatibilité");
+                $("#ovs_compatibility_group")[0].labels[0].innerHTML = value;    // ovs_compatibility_group_label;
+
+            } catch (e) { }
+
+            ovs_primaryclass_list();
+
+            // get group list
+            _group_list = ovs_class_compatibility_group_list();
+        })
+
+        function ovs_primaryclass_list() {
+            debugger;
+            _ovs_class_description = [];
+            var selected_language = sessionStorage.getItem("selected_language");
+            selected_language = (selected_language == null ? "en" : selected_language);
+            var filter = "ovs_class ne 'forbidden'";
+            var items = common.WebApi_List("ovs_primaryclasses", filter);
+            items.sort(function (a, b) {
+                if (a.ovs_class < b.ovs_class) return -1;
+                if (a.ovs_class > b.ovs_class) return 1;
+                return 0;
+            });
+
+            var ovs_primaryclass_list_id = "";
+            var ovs_name = "";
+            var ovs_class = "";
+            var parent_description = "";
+            for (i = 0; i < items.length; i++) {
+                var item = items[i];
+                item.ovs_class_description = (selected_language == "en" ? item.ovs_class_en : item.ovs_class_fr);
+                item.ovs_class_description = item.ovs_class_description.replaceAll("\n", " ");
+                if (item.ovs_parent == null) {
+                    parent_description = item.ovs_class_description;
+                }
+
+                ovs_name = item.ovs_class;
+
+                var value = item.ovs_primaryclassid;
+                var insert_ind = false;
+
+                if (item.ovs_parent == null) {
+                    ovs_class = item.ovs_class + ".";
+
+                    var text = ovs_name + ' - ' + parent_description;
+                    try {
+                        var item2 = items[i + 1];
+                        if (item2.ovs_class.indexOf(ovs_class) == -1) {
+                            insert_ind = true;
+                        }
+                    } catch (e) {
+                        insert_ind = true;
+                    }
+                }
+                else {
+                    insert_ind = true;
+                    var label = (selected_language == "en" ? item.ovs_class_en : item.ovs_class_fr);
+                    var text = ovs_name + ' - ' +
+                        parent_description + ' / ' + label;
+
+                    text = text.replaceAll("\n", " ");
+                }
+
+                if (insert_ind) {
+                    _ovs_class_description.push(text);
+                    text = text.substr(0, _k_len);
+                    ovs_primaryclass_list_id += value + ";";
+                    option_insert("ovs_primaryclass", value, text);
+                }
+            }
+            document.getElementById('ovs_primaryclass_list_id').value = ovs_primaryclass_list_id;
+        }
+
+        function ovs_primaryclass_onchange() {
+            debugger;
+
+            var index1 = document.getElementById('ovs_primaryclass').selectedIndex;
+            var item = document.getElementById('ovs_primaryclass')[index1];
+            if (item.value == "0") {
+                clear_field(true);
+            }
+            else {
+                //var text = item.text;
+                var text = _ovs_class_description[index1 - 1];
+                item_selected(text, item.value);
+            }
+        }
+
+        function ovs_compatibility_group_onchange() {
+            debugger;
+
+            var index1 = document.getElementById('ovs_compatibility_group').selectedIndex;
+            var item = document.getElementById('ovs_compatibility_group')[index1];
+            if (item.value == "0") {
+                form_group_clear(true);
+
+                document.getElementById("ovs_compatibility_group").value = "";
+                form_group_clear();
+            }
+            else {
+                //var text = item.text;
+                var text = _group_description[index1 - 1];
+                var index1 = text.indexOf(" - ");
+                var text1 = text.substr(0, index1);
+
+                parent.$("#ovs_compatibility_group").attr("value", item.value);
+                parent.$("#ovs_compatibility_group_name").attr("value", text1);
+                parent.$("#ovs_compatibility_group_entityname").attr("value", 'ovs_class_compatibility_group');
+
+                var text1 = text.substr(index1 + 3);
+                document.getElementById('ovs_compatibility_group_description').value = text1;
+            }
+        }
+
+        function option_insert(control_name, value, text) {
+            var opt = document.createElement("option");
+            opt.value = value;
+            opt.innerHTML = text;
+
+            var control_name = document.getElementById(control_name);
+            control_name.appendChild(opt);
+        }
+
+        function groups(class_value) {
+            var value = "";
+            switch (class_value) {
+                case "1.1":
+                    value = "ABCDEFGJL";
+                    break;
+                case "1.2":
+                    value = "BCDEFGHJKL";
+                    break;
+                case "1.3":
+                    value = "CFGHJKL";
+                    break;
+                case "1.4":
+                    value = "BCDEFGS";
+                    break;
+                case "1.5":
+                    value = "D";
+                    break;
+                case "1.6":
+                    value = "N";
+                    break;
+            }
+            return value;
+        }
+
+        function ovs_class_compatibility_group_list() {
+            var selected_language = sessionStorage.getItem("selected_language");
+            selected_language = (selected_language == null ? "en" : selected_language);
+            var items = common.WebApi_List("ovs_class_compatibility_groups", "");
+            items.sort(function (a, b) {
+                if (a.ovs_name < b.ovs_name) return -1;
+                if (a.ovs_name > b.ovs_name) return 1;
+                return 0;
+            });
+            return items;
+        }
+
+        function group_hide(value) {
+            if (value) {
+                $("#group").hide();
+            }
+            else {
+                $("#group").show();
+            }
+        }
+
+        function form_clear() {
+            parent.$("#ovs_primaryclass").attr("value", null);
+            parent.$("#ovs_primaryclass_name").attr("value", null);
+        }
+
+        function form_group_clear() {
+            parent.$("#ovs_compatibility_group").attr("value", null);
+            parent.$("#ovs_compatibility_group_name").attr("value", null);
+        }
+
+        function item_selected(text, id) {
+            debugger;
+            clear_field(false);
+
+            var selected_language = sessionStorage.getItem("selected_language");
+            selected_language = (selected_language == null ? "en" : selected_language);
+
+            // transfer control back to parent form
+            parent.ovs_primaryclass_selected(text, id);
+
+            var index1 = text.indexOf(" - ");
+            var text1 = text.substr(index1 + 3);
+            document.getElementById('ovs_primaryclass_description').value = text1;
+            var class_division = text.substr(0, index1);
+
+            index1 = text.indexOf(".");
+            var class_value = text.substr(0, index1);
+
+            // load compatibility group if class 1
+            if (class_value == "1") {
+                group_hide(false);
+                var group_list = groups(class_division);
+
+                $('#ovs_compatibility_group').empty();
+                option_insert("ovs_compatibility_group", "0", "");
+                _group_description = [];
+                for (var i = 0; i < _group_list.length; i++) {
+                    var item = _group_list[i];
+                    ovs_name = item.ovs_name;
+                    if (group_list.indexOf(ovs_name) != -1) {
+                        var description = (selected_language == "en" ? item["ovs_description_en"] : item["ovs_description_fr"]);
+                        var text = ovs_name + ' - ' + description;
+                        text = text.replaceAll("\n", " ");
+
+                        _group_description.push(text);
+                        text = text.substr(0, _k_len);
+                        option_insert("ovs_compatibility_group", item.ovs_class_compatibility_groupid, text);
+                    }
+                }
+                $('#ovs_compatibility_group').selectedIndex = 0;
+
+                // default if only 1 item in sub-list
+                if (_group_description.length == 1) {
+                    document.getElementById('ovs_compatibility_group').selectedIndex = 1;
+                    ovs_compatibility_group_onchange();
+                }
+            }
+            else {
+                group_hide(true);
+            }
+        }
+
+        // How to call this from web portal page
+        // var f = document.getElementById("WebResource_naicscode");
+        // var c = f.contentWindow;
+        // c.clear_field();
+        function clear_field(value) {
+            debugger;
+
+            document.getElementById('ovs_primaryclass_description').value = "";
+            document.getElementById('ovs_compatibility_group_description').value = "";
+
+            if (value) {
+                document.getElementById("ovs_primaryclass").value = "";
+                form_clear();
+            }
+            document.getElementById("ovs_compatibility_group").value = "";
+            form_group_clear();
+        }</script>
+
+
+    <script>// tdgcore_common.js
+
+    if (typeof (common) == "undefined") {
+        common = {
+            //WebApi
+            WebApi_List: function (entity, filter) {
+                debugger;
+
+                var url_filter = entity;
+                if (filter != "") {
+                    url_filter += "?$filter=" + filter;
+                }
+
+                var response = null;
+                $.ajax({
+                    type: "GET",
+                    url: "/_api/" + url_filter,
+                    contentType: "application/json",
+                    async: false
+                }).done(function (json) {
+                    response = json.value;
+                });
+                return response;
+            }
+        }
+    }</script>
+
+
+</body></html>

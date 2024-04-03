@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{f6f6e784-bfcb-49cd-b708-1fc4c38cdd52}</savedqueryid>
+    <layoutxml>
+      <grid name="ovs_organization_naics_codes" jump="ovs_name" select="1" icon="1" preview="1">
+        <row name="ovs_organization_naics_code" id="ovs_organization_naics_codeid">
+          <cell name="ovs_naics_code_id" width="100" />
+          <cell name="a_c9278b2999e14a84922b41c5a7175ccc.ovs_title_etxt" width="300" />
+          <cell name="modifiedon" width="113" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>2</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="ovs_organization_naics_code">
+          <attribute name="ovs_organization_naics_codeid" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="ovs_naics_code_id" />
+          <link-entity alias="a_c9278b2999e14a84922b41c5a7175ccc" name="ovs_naics_code" to="ovs_naics_code_id" from="ovs_naics_codeid" link-type="outer" visible="false">
+            <attribute name="ovs_title_etxt" />
+          </link-entity>
+          <attribute name="modifiedon" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Organization NAICS Code Associated View" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

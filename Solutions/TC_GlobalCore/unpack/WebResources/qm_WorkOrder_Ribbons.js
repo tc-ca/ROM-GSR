@@ -253,12 +253,12 @@ var WORibbon = (function (window, document) {
                 );
 
             },
+
             function error() {
                 console.log(error);
                 Xrm.Navigation.openErrorDialog({ message: "Something went wrong. Error: " + error });
             }
         );
-
     }
 
     ///not in use
@@ -396,13 +396,17 @@ var WORibbon = (function (window, document) {
 
         return result;
     }
-       
+
+    function subgridAddNew(gridTypeName, parentEntityTypeName, parentEntityId, primaryControl, gridControl) {
+        debugger;
+
+        XrmCore.Commands.Open.addNewFromSubGridStandard(gridTypeName, parentEntityTypeName, parentEntityId, primaryControl, gridControl);
+    }
 
     return {
-
         isInspectionApp: isInspectionApp,
+        subgridAddNew: subgridAddNew,
         startInspectionReport: startInspectionReport,
     };
-
 
 })(window, document);
