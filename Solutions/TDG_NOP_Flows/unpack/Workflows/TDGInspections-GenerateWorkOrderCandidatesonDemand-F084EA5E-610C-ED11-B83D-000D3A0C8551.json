@@ -629,7 +629,40 @@
                           }
                         },
                         "If_Operation_Has_WOC_Already": {
-                          "actions": {},
+                          "actions": {
+                            "For_Each_WOC": {
+                              "foreach": "@outputs('Get_Current_WOCs_For_Operation')?['body/value']",
+                              "actions": {
+                                "Update_a_row": {
+                                  "runAfter": {},
+                                  "metadata": {
+                                    "operationMetadataId": "e76b849a-b6f7-4f60-8ebe-5609225113f6"
+                                  },
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "host": {
+                                      "connectionName": "shared_commondataserviceforapps",
+                                      "operationId": "UpdateRecord",
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                    },
+                                    "parameters": {
+                                      "entityName": "ovs_workordercandidates",
+                                      "recordId": "@items('For_Each_WOC')?['ovs_workordercandidateid']",
+                                      "item/ovs_currentlyplanned": "@variables('IsCurrentlyPlanned')",
+                                      "item/ownerid@odata.bind": "/teams/@{triggerOutputs()?['body/_ownerid_value']}",
+                                      "item/ovs_regionalnop@odata.bind": "/ovs_cdregionalnops/@{variables('TargetRegionalNOP')}"
+                                    },
+                                    "authentication": "@parameters('$authentication')"
+                                  }
+                                }
+                              },
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "cd250bfb-fe2a-4daa-a46f-20624729a2fd"
+                              },
+                              "type": "Foreach"
+                            }
+                          },
                           "runAfter": {
                             "Get_Current_WOCs_For_Operation": [
                               "Succeeded"
@@ -796,7 +829,7 @@
         }
       }
     },
-    "templateName": null
+    "templateName": ""
   },
   "schemaVersion": "1.0.0.0"
 }
