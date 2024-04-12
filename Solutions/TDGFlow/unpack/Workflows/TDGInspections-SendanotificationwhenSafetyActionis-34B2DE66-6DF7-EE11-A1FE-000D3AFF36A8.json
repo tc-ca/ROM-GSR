@@ -83,8 +83,7 @@
             },
             "parameters": {
               "entityName": "ovs_cyactions",
-              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"ovs_cyaction\">\n<attribute name=\"activityid\"/>\n<attribute name=\"subject\"/>\n<attribute name=\"createdon\"/>\n<attribute name=\"ovs_actionnumber\"/>\n<attribute name=\"ovs_actiondate\"/>\n<order attribute=\"subject\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"statecode\" operator=\"in\">\n<value>3</value>\n<value>0</value>\n</condition>\n<condition attribute=\"ovs_actiontype\" operator=\"in\">\n<value>918640000</value>\n<value>918640001</value>\n<value>918640002</value>\n</condition>\n<condition attribute=\"ovs_actiondate\" operator=\"on\" value=\"@{variables('InDays357')}\"/>\n</filter>\n<link-entity name=\"msdyn_workorder\" from=\"msdyn_workorderid\" to=\"regardingobjectid\" link-type=\"inner\" alias=\"user\">\n<attribute name=\"ovs_secondaryinspector\"/>\n<attribute name=\"ovs_primaryinspector\"/>\n<attribute name=\"msdyn_workorderid\"/>\n</link-entity>\n</entity>\n</fetch>",
-              "$top": 1
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"ovs_cyaction\">\n<attribute name=\"activityid\"/>\n<attribute name=\"subject\"/>\n<attribute name=\"createdon\"/>\n<attribute name=\"ovs_actionnumber\"/>\n<attribute name=\"ovs_actiondate\"/>\n<order attribute=\"subject\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"statecode\" operator=\"in\">\n<value>3</value>\n<value>0</value>\n</condition>\n<condition attribute=\"ovs_actiontype\" operator=\"in\">\n<value>918640000</value>\n<value>918640001</value>\n<value>918640002</value>\n</condition>\n<condition attribute=\"ovs_actiondate\" operator=\"on\" value=\"@{variables('InDays358')}\"/>\n</filter>\n<link-entity name=\"msdyn_workorder\" from=\"msdyn_workorderid\" to=\"regardingobjectid\" link-type=\"inner\" alias=\"user\">\n<attribute name=\"ovs_secondaryinspector\"/>\n<attribute name=\"ovs_primaryinspector\"/>\n<attribute name=\"msdyn_workorderid\"/>\n</link-entity>\n</entity>\n</fetch>"
             },
             "authentication": "@parameters('$authentication')"
           }
@@ -261,14 +260,6 @@
                 "value": "@{null}"
               }
             },
-            "Compose": {
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "71ab7aaa-44e6-4b4d-b757-87682ddce76f"
-              },
-              "type": "Compose",
-              "inputs": "@outputs('List_rows_-_ESA')?['body/value']"
-            },
             "Condition_-_Is_Primary_Inspector_Exist": {
               "actions": {
                 "Get_a_row_by_ID_-_Primary_Inspector": {
@@ -361,11 +352,7 @@
               }
             },
             "Get_a_row_by_ID_-_WorkOrder": {
-              "runAfter": {
-                "Compose": [
-                  "Succeeded"
-                ]
-              },
+              "runAfter": {},
               "metadata": {
                 "operationMetadataId": "88d5e223-39d2-4344-90a2-2d56eb5f642c"
               },
@@ -422,9 +409,9 @@
           "inputs": {
             "variables": [
               {
-                "name": "InDays357",
+                "name": "InDays358",
                 "type": "string",
-                "value": "@{formatDateTime(addDays(utcNow(),-357),'yyyy/MM/dd')}"
+                "value": "@{formatDateTime(addDays(utcNow(),-358),'yyyy/MM/dd')}"
               }
             ]
           }
