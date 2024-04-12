@@ -318,11 +318,8 @@
         },
         "Is_French": {
           "runAfter": {
-            "Location_Condition": [
-              "Succeeded",
-              "Failed",
-              "Skipped",
-              "TimedOut"
+            "Check_location_with_Oversight_Activity_type": [
+              "Succeeded"
             ]
           },
           "metadata": {
@@ -393,7 +390,7 @@
             }
           },
           "runAfter": {
-            "removeLocation": [
+            "Initialize_variable_ViolationAddress": [
               "Succeeded"
             ]
           },
@@ -906,7 +903,7 @@
                               "dynamicFileSchema/1895699130": "@variables('Inspection Setting')",
                               "dynamicFileSchema/1966544364": "@outputs('Get_Primary_Inspector')?['body/ovs_badgenumber']",
                               "dynamicFileSchema/2014261285": "@outputs('Get_Primary_Inspector')?['body/userid/address1_telephone1']",
-                              "dynamicFileSchema/2092892383": "@{outputs('Get_a_WO._All_fields')?['body/msdyn_address1']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_city']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_stateorprovince']}. @{outputs('Get_a_WO._All_fields')?['body/msdyn_postalcode']}",
+                              "dynamicFileSchema/2092892383": "@variables('ViolationAddress')",
                               "dynamicFileSchema/2117092899": "@outputs('Get_Inspection_Report')?['body/ovs_generalcomments']",
                               "dynamicFileSchema/-2132464357": "@outputs('Get_Site_and_Primary_Contact')?['body/parentaccountid/ovs_legalname']",
                               "dynamicFileSchema/-96106577": "@outputs('Get_Site_and_Primary_Contact')?['body/primarycontactid/fullname']",
@@ -995,7 +992,7 @@
                                 "dynamicFileSchema/1895699130": "@variables('Inspection Setting')",
                                 "dynamicFileSchema/1966544364": "@outputs('Get_Primary_Inspector')?['body/ovs_badgenumber']",
                                 "dynamicFileSchema/2014261285": "@outputs('Get_Primary_Inspector')?['body/userid/address1_telephone1']",
-                                "dynamicFileSchema/2092892383": "@{outputs('Get_Site_and_Primary_Contact')?['body/address1_line1']}@{outputs('Get_Site_and_Primary_Contact')?['body/address1_city']}@{outputs('Get_a_WO._All_fields')?['body/msdyn_stateorprovince']}@{outputs('Get_a_WO._All_fields')?['body/msdyn_postalcode']}",
+                                "dynamicFileSchema/2092892383": "@variables('ViolationAddress')",
                                 "dynamicFileSchema/2117092899": "@outputs('Get_Inspection_Report')?['body/ovs_generalcomments']",
                                 "dynamicFileSchema/-2132464357": "@outputs('Get_Site_and_Primary_Contact')?['body/parentaccountid/ovs_legalname']",
                                 "dynamicFileSchema/-96106577": "@outputs('Get_Site_and_Primary_Contact')?['body/primarycontactid/fullname']",
@@ -1251,7 +1248,7 @@
                   "expression": {
                     "equals": [
                       "@variables('isAddressEqLocation')",
-                      "@true"
+                      "@false"
                     ]
                   },
                   "metadata": {
@@ -1310,7 +1307,7 @@
                                 "dynamicFileSchema/1895699130": "@variables('Inspection Setting')",
                                 "dynamicFileSchema/1966544364": "@outputs('Get_Primary_Inspector')?['body/ovs_badgenumber']",
                                 "dynamicFileSchema/2014261285": "@outputs('Get_Primary_Inspector')?['body/userid/address1_telephone1']",
-                                "dynamicFileSchema/2092892383": "@{outputs('Get_a_WO._All_fields')?['body/msdyn_address1']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_city']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_stateorprovince']}. @{outputs('Get_a_WO._All_fields')?['body/msdyn_postalcode']}",
+                                "dynamicFileSchema/2092892383": "@variables('ViolationAddress')",
                                 "dynamicFileSchema/2117092899": "@outputs('Get_Inspection_Report')?['body/ovs_generalcomments']",
                                 "dynamicFileSchema/-2132464357": "@outputs('Get_Site_and_Primary_Contact')?['body/parentaccountid/ovs_legalname']",
                                 "dynamicFileSchema/-96106577": "@outputs('Get_Site_and_Primary_Contact')?['body/primarycontactid/fullname']",
@@ -1400,7 +1397,7 @@
                                   "dynamicFileSchema/1895699130": "@variables('Inspection Setting')",
                                   "dynamicFileSchema/1966544364": "@outputs('Get_Primary_Inspector')?['body/ovs_badgenumber']",
                                   "dynamicFileSchema/2014261285": "@outputs('Get_Primary_Inspector')?['body/userid/address1_telephone1']",
-                                  "dynamicFileSchema/2092892383": "@{outputs('Get_a_WO._All_fields')?['body/msdyn_address1']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_city']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_stateorprovince']}. @{outputs('Get_a_WO._All_fields')?['body/msdyn_postalcode']}",
+                                  "dynamicFileSchema/2092892383": "@variables('ViolationAddress')",
                                   "dynamicFileSchema/2117092899": "@outputs('Get_Inspection_Report')?['body/ovs_generalcomments']",
                                   "dynamicFileSchema/-2132464357": "@outputs('Get_Site_and_Primary_Contact')?['body/parentaccountid/ovs_legalname']",
                                   "dynamicFileSchema/-96106577": "@outputs('Get_Site_and_Primary_Contact')?['body/primarycontactid/fullname']",
@@ -1656,7 +1653,7 @@
                     "expression": {
                       "equals": [
                         "@variables('isAddressEqLocation')",
-                        "@true"
+                        "@false"
                       ]
                     },
                     "metadata": {
@@ -2544,6 +2541,102 @@
               {
                 "name": "Inspection Setting",
                 "type": "string"
+              }
+            ]
+          }
+        },
+        "Check_location_with_Oversight_Activity_type": {
+          "actions": {
+            "Set_Location_flag_to_false": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "62faeedd-cc53-4970-8566-5f4e93805873"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "isAddressEqLocation",
+                "value": "@false"
+              }
+            },
+            "Set_variable": {
+              "runAfter": {
+                "Set_Location_flag_to_false": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b77adc7e-355e-4e19-a6da-65ae568bf2c1"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ViolationAddress",
+                "value": "@{outputs('Get_a_WO._All_fields')?['body/msdyn_address1']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_city']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_stateorprovince']}, @{outputs('Get_a_WO._All_fields')?['body/msdyn_postalcode']}"
+              }
+            }
+          },
+          "runAfter": {
+            "Location_Condition": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Set_Location_flag_true": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "62faeedd-cc53-4970-8566-5f4e93805873"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "isAddressEqLocation",
+                  "value": "@true"
+                }
+              }
+            }
+          },
+          "expression": {
+            "or": [
+              {
+                "equals": [
+                  "@outputs('Get_a_WO._All_fields')?['body/_ovs_oversighttype_value']",
+                  "460b6c2a-5f9c-eb11-b1ac-000d3ae92708"
+                ]
+              },
+              {
+                "equals": [
+                  "@outputs('Get_a_WO._All_fields')?['body/_ovs_oversighttype_value']",
+                  "1cc06b3f-5f9c-eb11-b1ac-000d3ae92708"
+                ]
+              },
+              {
+                "equals": [
+                  "@outputs('Get_a_WO._All_fields')?['body/_ovs_oversighttype_value']",
+                  "07a0c5d8-7399-ec11-b3fe-0022483c0e69"
+                ]
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "94b312ae-a7e8-4a92-aed3-0b12287c34fd"
+          },
+          "type": "If"
+        },
+        "Initialize_variable_ViolationAddress": {
+          "runAfter": {
+            "removeLocation": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c99f1d78-1adf-4040-a304-c7df7d07f1c9"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ViolationAddress",
+                "type": "string",
+                "value": "@{outputs('Get_Site_and_Primary_Contact')?['body/address1_line1']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_city']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_stateorprovince']}, @{outputs('Get_Site_and_Primary_Contact')?['body/address1_postalcode']}"
               }
             ]
           }
