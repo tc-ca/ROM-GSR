@@ -1,0 +1,456 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      },
+      "shared_office365": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceOutlookTDGCoreUser"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      },
+      "shared_teams_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_sharedteams_cc39d"
+        },
+        "api": {
+          "name": "shared_teams"
+        }
+      },
+      "shared_commondataserviceforapps_3": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "Recurrence": {
+          "recurrence": {
+            "frequency": "Day",
+            "interval": 1,
+            "startTime": "2024-04-10T06:00:00Z"
+          },
+          "metadata": {
+            "operationMetadataId": "69edb3f1-70f0-4e27-9aa7-b2349604e365"
+          },
+          "type": "Recurrence"
+        }
+      },
+      "actions": {
+        "List_rows_-_ESA": {
+          "runAfter": {
+            "Initialize_variable_-_BR_List_-_SendTo_": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "25b578d0-f811-42fd-ace1-780f96ad0a5a"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_cyactions",
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"ovs_cyaction\">\n<attribute name=\"activityid\"/>\n<attribute name=\"subject\"/>\n<attribute name=\"createdon\"/>\n<attribute name=\"ovs_actionnumber\"/>\n<attribute name=\"ovs_actiondate\"/>\n<order attribute=\"subject\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"statecode\" operator=\"in\">\n<value>3</value>\n<value>0</value>\n</condition>\n<condition attribute=\"ovs_actiontype\" operator=\"in\">\n<value>918640000</value>\n<value>918640001</value>\n<value>918640002</value>\n</condition>\n<condition attribute=\"ovs_actiondate\" operator=\"on\" value=\"@{variables('InDays357')}\"/>\n</filter>\n<link-entity name=\"msdyn_workorder\" from=\"msdyn_workorderid\" to=\"regardingobjectid\" link-type=\"inner\" alias=\"user\">\n<attribute name=\"ovs_secondaryinspector\"/>\n<attribute name=\"ovs_primaryinspector\"/>\n<attribute name=\"msdyn_workorderid\"/>\n</link-entity>\n</entity>\n</fetch>",
+              "$top": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Apply_to_each_-_ESA": {
+          "foreach": "@outputs('List_rows_-_ESA')?['body/value']",
+          "actions": {
+            "Condition_-_Is_Secondary_Inspector_Exist": {
+              "actions": {
+                "Get_a_row_by_ID_-_Secondary_Inspector": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "b1ac90b2-e23e-46a3-abfe-8b0fa8bb67cf"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "GetItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "bookableresources",
+                      "recordId": "@items('Apply_to_each_-_ESA')?['user.ovs_secondaryinspector']"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Get_a_row_by_ID_-_Secondary_Inspector_User": {
+                  "runAfter": {
+                    "Get_a_row_by_ID_-_Secondary_Inspector": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "8c5ba09c-2941-461c-80e8-99ca0b9c5e87"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "GetItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "systemusers",
+                      "recordId": "@outputs('Get_a_row_by_ID_-_Secondary_Inspector')?['body/_userid_value']"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Append_to_string_variable": {
+                  "runAfter": {
+                    "Get_a_row_by_ID_-_Secondary_Inspector_User": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "d2e1d4fc-58bf-4b64-8a16-848b7c4667e7"
+                  },
+                  "type": "AppendToStringVariable",
+                  "inputs": {
+                    "name": "BR List - SendTo",
+                    "value": ";@{outputs('Get_a_row_by_ID_-_Secondary_Inspector_User')?['body/internalemailaddress']}"
+                  }
+                }
+              },
+              "runAfter": {
+                "Condition_-_Is_Primary_Inspector_Exist": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "equals": [
+                  "@empty(items('Apply_to_each_-_ESA')?['user.ovs_secondaryinspector'])",
+                  "@false"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "311a5936-d528-4bf6-b928-83d3f9b1cd55"
+              },
+              "type": "If"
+            },
+            "Condition_-_At_least_one_email_is_exist": {
+              "actions": {
+                "Compose_2": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "fdd0b36a-4b42-439b-bd8e-7993e20fcf4e"
+                  },
+                  "type": "Compose",
+                  "inputs": "@variables('BR List - SendTo')"
+                },
+                "Send_an_email_(V2)": {
+                  "runAfter": {
+                    "Compose_2": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "da8c7e5f-eb1a-44ae-9986-c56c02edc490"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_office365",
+                      "operationId": "SendEmailV2",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+                    },
+                    "parameters": {
+                      "emailMessage/To": "@variables('BR List - SendTo')",
+                      "emailMessage/Subject": "ESA Notification",
+                      "emailMessage/Body": "<p><br>\nPlease note that this enforcement action will expire within the next seven (7) days. Please access this <a href=@{variables('Work Order URL')}>record</a> and update it as necessary.<br>\n_________________________________________________________________________________<br>\nVeuillez noter que cette mesure d'application de la loi expirera dans les sept (7) prochains jours. Veuillez accéder à ce <a href=@{variables('Work Order URL')}>dossier</a> et le mettre à jour si nécessaire.</p>",
+                      "emailMessage/Importance": "Normal"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Post_message_in_a_chat_or_channel": {
+                  "runAfter": {
+                    "Send_an_email_(V2)": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "0b55c90c-b3ae-44ff-8ec6-8fa8a9cae738"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_teams_1",
+                      "operationId": "PostMessageToConversation",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams"
+                    },
+                    "parameters": {
+                      "poster": "Flow bot",
+                      "location": "Chat with Flow bot",
+                      "body/recipient": "@{variables('BR List - SendTo')};",
+                      "body/messageBody": "<p><span style=\"font-family: arial\"><u><strong>ESA Notification</strong></u></span><span style=\"font-family: arial\"><u><br>\n</u></span><span style=\"font-family: arial\"><br>\nHello,<br>\nPlease note that this enforcement action will expire within the next seven (7) days. Please access this <a href=@{variables('Work Order URL')}>record</a> and update it as necessary.<br>\n</span>___________________________________________________________________________________<br>\n<br>\n<u><strong>ESA Notification</strong></u><span style=\"font-family: arial\"><u><strong><br>\n</strong></u></span><span style=\"font-family: arial\"><br>\nBonjour,</span><span style=\"font-family: arial\"><em><br>\n</em></span><span style=\"font-family: arial\">Veuillez noter que cette mesure d'application de la loi expirera dans les sept (7) prochains jours. Veuillez accéder à ce <a href=@{variables('Work Order URL')}>dossier </a> et le mettre à jour si nécessaire.</span></p>",
+                      "body/isAlert": true
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Condition_-_Is_Secondary_Inspector_Exist": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "greater": [
+                  "@length(variables('BR List - SendTo'))",
+                  0
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e296304e-ea0b-4ed6-8b29-324316ebf895"
+              },
+              "type": "If"
+            },
+            "Set_variable_-_Clear_list": {
+              "runAfter": {
+                "Condition_-_At_least_one_email_is_exist": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "93836dbb-f402-4e1e-abf3-2c90a756e417"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "BR List - SendTo",
+                "value": "@{null}"
+              }
+            },
+            "Compose": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "71ab7aaa-44e6-4b4d-b757-87682ddce76f"
+              },
+              "type": "Compose",
+              "inputs": "@outputs('List_rows_-_ESA')?['body/value']"
+            },
+            "Condition_-_Is_Primary_Inspector_Exist": {
+              "actions": {
+                "Get_a_row_by_ID_-_Primary_Inspector": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "3f470010-fcac-445d-8523-20b894211096"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "GetItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "bookableresources",
+                      "recordId": "@items('Apply_to_each_-_ESA')?['user.ovs_primaryinspector']"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Get_a_row_by_ID_-_Primary_Inspector_User": {
+                  "runAfter": {
+                    "Get_a_row_by_ID_-_Primary_Inspector": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "4bb37340-85c0-4d20-9613-4a3b39f4f256"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "GetItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "systemusers",
+                      "recordId": "@outputs('Get_a_row_by_ID_-_Primary_Inspector')?['body/_userid_value']"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Append_user_email_to_the_list": {
+                  "runAfter": {
+                    "Get_a_row_by_ID_-_Primary_Inspector_User": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "568db619-974f-42ca-a61c-89f8f14992b1"
+                  },
+                  "type": "AppendToStringVariable",
+                  "inputs": {
+                    "name": "BR List - SendTo",
+                    "value": "@outputs('Get_a_row_by_ID_-_Primary_Inspector_User')?['body/internalemailaddress']"
+                  }
+                }
+              },
+              "runAfter": {
+                "Set_variable_-_Work_Order_URL": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "equals": [
+                  "@empty(items('Apply_to_each_-_ESA')?['user.ovs_primaryinspector'])",
+                  "@false"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "82826c89-9508-4c0c-8a8a-7e0f2235abfd"
+              },
+              "type": "If"
+            },
+            "Set_variable_-_Work_Order_URL": {
+              "runAfter": {
+                "Get_a_row_by_ID_-_WorkOrder": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "112855c2-e81b-4395-89c8-19c5a66b27ab"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Work Order URL",
+                "value": "https://@{uriHost(body('Get_a_row_by_ID_-_WorkOrder')?['@odata.id'])}/main.aspx?forceUCI=1&pagetype=entityrecord&etn=msdyn_workorder&id=@{items('Apply_to_each_-_ESA')?['user.msdyn_workorderid']}"
+              }
+            },
+            "Get_a_row_by_ID_-_WorkOrder": {
+              "runAfter": {
+                "Compose": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "88d5e223-39d2-4344-90a2-2d56eb5f642c"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_3",
+                  "operationId": "GetItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "msdyn_workorders",
+                  "recordId": "@items('Apply_to_each_-_ESA')?['user.msdyn_workorderid']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "List_rows_-_ESA": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ffa86bb7-bc8d-46d6-ae8c-81c4688510e6"
+          },
+          "type": "Foreach"
+        },
+        "Initialize_variable_-_BR_List_-_SendTo_": {
+          "runAfter": {
+            "Initialize_variable_-_Work_Order_URL": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "62cc95f4-3c42-4349-9c37-d86dac0dbe43"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "BR List - SendTo",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_-_1_Week_Before_Expiration": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "90278634-3715-433d-ab19-293d61c43bf9"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "InDays357",
+                "type": "string",
+                "value": "@{formatDateTime(addDays(utcNow(),-357),'yyyy/MM/dd')}"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_-_Work_Order_URL": {
+          "runAfter": {
+            "Initialize_variable_-_1_Week_Before_Expiration": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1bd5bdd4-39ff-4dc4-9ccf-eb5656cc8e84"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Work Order URL",
+                "type": "string"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
