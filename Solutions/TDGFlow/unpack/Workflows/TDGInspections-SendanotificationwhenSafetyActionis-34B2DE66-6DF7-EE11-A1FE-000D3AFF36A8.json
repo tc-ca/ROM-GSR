@@ -169,20 +169,8 @@
             },
             "Condition_-_At_least_one_email_is_exist": {
               "actions": {
-                "Compose_2": {
-                  "runAfter": {},
-                  "metadata": {
-                    "operationMetadataId": "fdd0b36a-4b42-439b-bd8e-7993e20fcf4e"
-                  },
-                  "type": "Compose",
-                  "inputs": "@variables('BR List - SendTo')"
-                },
                 "Send_an_email_(V2)": {
-                  "runAfter": {
-                    "Compose_2": [
-                      "Succeeded"
-                    ]
-                  },
+                  "runAfter": {},
                   "metadata": {
                     "operationMetadataId": "da8c7e5f-eb1a-44ae-9986-c56c02edc490"
                   },
@@ -202,31 +190,53 @@
                     "authentication": "@parameters('$authentication')"
                   }
                 },
-                "Post_message_in_a_chat_or_channel": {
+                "Compose_-_Team_List": {
                   "runAfter": {
                     "Send_an_email_(V2)": [
                       "Succeeded"
                     ]
                   },
                   "metadata": {
-                    "operationMetadataId": "0b55c90c-b3ae-44ff-8ec6-8fa8a9cae738"
+                    "operationMetadataId": "a293a566-65e4-4d08-a8c8-1ee2eb4d0785"
                   },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "host": {
-                      "connectionName": "shared_teams",
-                      "operationId": "PostMessageToConversation",
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams"
-                    },
-                    "parameters": {
-                      "poster": "Flow bot",
-                      "location": "Chat with Flow bot",
-                      "body/recipient": "@{variables('BR List - SendTo')};",
-                      "body/messageBody": "<p><span style=\"font-family: arial\"><u><strong>ESA Notification</strong></u></span><span style=\"font-family: arial\"><u><br>\n</u></span><span style=\"font-family: arial\"><br>\nHello,<br>\nPlease note that this enforcement action will expire within the next seven (7) days. Please access this <a href=@{variables('Work Order URL')}>record</a> and update it as necessary.<br>\n</span>___________________________________________________________________________________<br>\n<br>\n<u><strong>ESA Notification</strong></u><span style=\"font-family: arial\"><u><strong><br>\n</strong></u></span><span style=\"font-family: arial\"><br>\nBonjour,</span><span style=\"font-family: arial\"><em><br>\n</em></span><span style=\"font-family: arial\">Veuillez noter que cette mesure d'application de la loi expirera dans les sept (7) prochains jours. Veuillez accéder à ce <a href=@{variables('Work Order URL')}>dossier </a> et le mettre à jour si nécessaire.</span></p>",
-                      "body/isAlert": true
-                    },
-                    "authentication": "@parameters('$authentication')"
-                  }
+                  "type": "Compose",
+                  "inputs": "@split(variables('BR List - SendTo'),';')"
+                },
+                "Apply_to_each_-_User": {
+                  "foreach": "@outputs('Compose_-_Team_List')",
+                  "actions": {
+                    "Post_message_in_a_chat_or_channel": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "0b55c90c-b3ae-44ff-8ec6-8fa8a9cae738"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_teams",
+                          "operationId": "PostMessageToConversation",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams"
+                        },
+                        "parameters": {
+                          "poster": "Flow bot",
+                          "location": "Chat with Flow bot",
+                          "body/recipient": "@{item()};;",
+                          "body/messageBody": "<p><span style=\"font-family: arial\"><u><strong>ESA Notification</strong></u></span><span style=\"font-family: arial\"><u><br>\n</u></span><span style=\"font-family: arial\"><br>\nHello,<br>\nPlease note that this enforcement action will expire within the next seven (7) days. Please access this <a href=@{variables('Work Order URL')}>record</a> and update it as necessary.<br>\n</span>___________________________________________________________________________________<br>\n<br>\n<u><strong>ESA Notification</strong></u><span style=\"font-family: arial\"><u><strong><br>\n</strong></u></span><span style=\"font-family: arial\"><br>\nBonjour,</span><span style=\"font-family: arial\"><em><br>\n</em></span><span style=\"font-family: arial\">Veuillez noter que cette mesure d'application de la loi expirera dans les sept (7) prochains jours. Veuillez accéder à ce <a href=@{variables('Work Order URL')}>dossier </a> et le mettre à jour si nécessaire.</span></p>",
+                          "body/isAlert": true
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Compose_-_Team_List": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "64dc10fe-e575-4929-a06b-71662bc36bfc"
+                  },
+                  "type": "Foreach"
                 }
               },
               "runAfter": {
