@@ -158,7 +158,6 @@ function cra_api_get_v2() {
                         else {
                             tdg.cid.crw.start_BN_Selected(json);
                             ovs_address1_province_setup();
-                            // cra_api_get_callback(json);
                         }
                         Xrm.Utility.closeProgressIndicator();
                     } else {
@@ -375,64 +374,6 @@ function cra_api_get(bn) {
     });
 }
 
-function _cra_api_get(bn) {
-    debugger;
-    var entity = "cid_fake_cra_bn_api";
-    var fetchXml = `
-            <fetch mapping='logical'>
-    	        <entity name='{0}'>
-    			    <filter type='and'>
-    				    <condition attribute='cid_businessregistrationnumber' operator='eq' value='{1}'/>
-    			    </filter>
-    	        </entity>
-            </fetch>`;
-    fetchXml = fetchXml.replaceAll("{0}", entity);
-    fetchXml = fetchXml.replaceAll("{1}", bn);
-
-    var encodedFetchXML = encodeURI(fetchXml);
-
-    var query = "/api/data/v9.2/" + entity + "?fetchXml=" + encodedFetchXML;
-
-    var globalContext = Xrm.Utility.getGlobalContext();
-
-    var finalpathwithquery = globalContext.getClientUrl() + query;
-
-    var data = null;
-    var isAsync = false;
-
-    var req = null;
-    if (window.XMLHttpRequest) {
-        req = new XMLHttpRequest();
-    }
-    else if (window.ActiveXObject) {
-        req = new ActiveXObject("MSXML2.XMLHTTP.3.0");
-    }
-
-    req.open("GET", finalpathwithquery, isAsync);
-    req.setRequestHeader("OData-MaxVersion", "4.0");
-    req.setRequestHeader("OData-Version", "4.0");
-    req.setRequestHeader("Accept", "application/json");
-    req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-    req.setRequestHeader("Prefer", "odata.include-annotations=\"*\"");
-    req.onreadystatechange = function () {
-        if (this.readyState === 4) {
-            req.onreadystatechange = null;
-            if (this.status === 200) {
-                var result = JSON.parse(this.response);
-                data = result;
-            }
-            else {
-                Xrm.Utility.alertDialog(this.statusText);
-            }
-        }
-    };
-    req.send();
-
-    if (data.value.length > 0) {
-        debugger;
-    }
-}
-
 // common
 
 if (typeof (tdg) == "undefined") {
@@ -497,33 +438,6 @@ if (typeof (tdg.cid.crw) == "undefined") {
             data = data.entities;
 
             tdg.cid.crw.start_Retrieve_cra_callback(data);
-        },
-
-        cra_api_get: function (cid_crabusinessnumber) {
-            debugger;
-
-            var flowURL = "https://prod-11.canadacentral.logic.azure.com:443/workflows/bcba042341b44a2ea2034afb1464af0c/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=PVKSxI8Wk6En9Yok9_XQg50ws19V8wPOnvbc1xa5TYk";
-            let body = {
-                "cid_crabusinessnumber": cid_crabusinessnumber
-            };
-
-            let req = new XMLHttpRequest();
-            req.open("POST", flowURL, true);
-            req.setRequestHeader("Content-Type", "application/json");
-            req.onreadystatechange = function () {
-                if (this.readyState === 4) {
-                    req.onreadystatechange = null;
-                    if (this.status === 200) {
-                        debugger;
-                        var json = JSON.parse(this.response).Result;
-                        cra_api_get_callback(json);
-                    } else {
-                        debugger;
-                        console.log(this.statusText);
-                    }
-                }
-            };
-            req.send(JSON.stringify(body));
         },
 
         start_Retrieve_cra_callback: function (data) {

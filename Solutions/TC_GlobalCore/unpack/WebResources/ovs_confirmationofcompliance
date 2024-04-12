@@ -25,7 +25,10 @@ const FIELD_JUSTIFICATION = "ovs_justificationtxt";
 const FIELD_SCHEDULED_START = "ovs_daterequested";
 const FIELD_STATUSCODE = "statuscode";
 const FIELD_STATECODE = "statecode";
+
 function OnLoad(executionContext) {
+    debugger;
+
     //get context
     globalContext = glHelper.getGlobalContext();
     var formContext = executionContext.getFormContext();
@@ -54,9 +57,6 @@ function OnLoad(executionContext) {
     //remove cancelled from the list of availible statuses
     glHelper.filterOptionSet(formContext, FIELD_STATECODE, [statecodes.Canceled], false)
 
-    //remove ClosedConfirmationNotRequested from the list of availible statuscodes
-    glHelper.filterOptionSet(formContext, FIELD_STATUSCODE, [statuscodes.ClosedConfirmationNotRequested], false)
-
     setJustificationFieldRequirement();
 }
 
@@ -64,7 +64,9 @@ function OnSave() {
 
 }
 
-function Status_OnChange(){
+function Status_OnChange() {
+    debugger;
+
     setJustificationFieldRequirement();
 }
 

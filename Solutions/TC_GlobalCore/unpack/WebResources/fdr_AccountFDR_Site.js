@@ -7,10 +7,7 @@ var AccountFDR_Site = (function (window, document) {
     var formContextGlobalRef;
     var contactsN2N = new Array();
 
-
-
     //********************private methods*******************
-
 
     async function getContactsByAccountN2N(formContext, accountid) {
 
@@ -37,9 +34,8 @@ var AccountFDR_Site = (function (window, document) {
     //********************public methods***************
     return {
 
-
         OnLoad: function (executionContext) {
-
+            debugger;
             const formContext = executionContext.getFormContext();
             formContextGlobalRef = formContext;
 

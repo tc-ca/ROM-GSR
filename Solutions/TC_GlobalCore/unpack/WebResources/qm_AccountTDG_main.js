@@ -152,8 +152,24 @@ var AccountTDGmain = (function (window, document) {
         
     }
 
+    function SwitchForm_COMPANY(formContext, formType) {
+        debugger;
+        var value = false;
+
+        var parentaccountid = formContext.getAttribute("parentaccountid").getValue();
+        if ((formType == 1) && (parentaccountid == null)) {
+            var form_COMPANY = "444fd031-7381-4a73-a520-2b2fd7ebe013";
+            formContext.ui.formSelector.items.get(form_COMPANY).navigate();
+            value = true;
+        }
+
+        return value;
+    }
+
     /// Update by Elena K - fixing a bug when switching forms reset customertypecode
     function setFormUsage(formContext) {
+        debugger;
+
         //ROM - Force the selection of a company when site is created
         // 0 = Undefined, 1 = Create, 2 = Update, 3 = Read Only, 4 = Disabled, 6 = Bulk Edit
         formType = glHelper.GetFormType(formContext);
@@ -162,8 +178,11 @@ var AccountTDGmain = (function (window, document) {
         var langId = Xrm.Utility.getGlobalContext().userSettings.languageId;
 
         if (langId == 1033) {
-
             if (formName.toUpperCase() == "SITE") {
+                if (SwitchForm_COMPANY(formContext, formType)) {
+                    return;
+                }
+
                 //Parent company is required
                 glHelper.SetRequiredLevel(formContext, "parentaccountid", true);
 
@@ -202,23 +221,22 @@ var AccountTDGmain = (function (window, document) {
 
                 if (formType == 1)
                     glHelper.SetValue(formContext, "customertypecode", 948010000);
-
-                if (!glHelper.hasCurrentUserRole("System Administrator") &&
-                    (
-                        (glHelper.hasCurrentUserRole("TDG Inspector")) ||
-                        (glHelper.hasCurrentUserRole("TDG Analyst")) ||
-                        (glHelper.hasCurrentUserRole("TDG Manager"))
-                    )
-                ) {
-                    if (formContext.getAttribute("cid_crabusinessnumber"))
-                        glHelper.SetControlReadOnly(formContext, "cid_crabusinessnumber", true);
+                //Update BN number "read only rules
+                if (formContext.getAttribute("cid_crabusinessnumber")) {
+                    if (glHelper.hasCurrentUserRole("System Administrator") || glHelper.hasCurrentUserRole("TDG Planner"))
+                    //(glHelper.hasCurrentUserRole("TDG Inspector")) ||  (glHelper.hasCurrentUserRole("TDG Analyst")) || (glHelper.hasCurrentUserRole("TDG Manager"))
+                    glHelper.SetControlReadOnly(formContext, "cid_crabusinessnumber", false);
+                    else glHelper.SetControlReadOnly(formContext, "cid_crabusinessnumber", true);
                 }
-
 
             }
         }
         else if (langId == 1036) {
-            if (formName.toUpperCase()  == "SITE") {
+            if (formName.toUpperCase() == "SITE") {
+                if (SwitchForm_COMPANY(formContext, formType)) {
+                    return;
+                }
+
                 //Parent company is required
                 glHelper.SetRequiredLevel(formContext, "parentaccountid", true);
 
@@ -259,6 +277,15 @@ var AccountTDGmain = (function (window, document) {
                 if (formType == 1)
                     glHelper.SetValue(formContext, "customertypecode", 948010000);
 
+                //Update BN number "read only rules
+                if (formContext.getAttribute("cid_crabusinessnumber")) {
+                    if (glHelper.hasCurrentUserRole("System Administrator") || glHelper.hasCurrentUserRole("TDG Planner"))
+                        glHelper.SetControlReadOnly(formContext, "cid_crabusinessnumber", false);
+                    else glHelper.SetControlReadOnly(formContext, "cid_crabusinessnumber", true);
+                }
+
+                
+                /* // Not In Use
                 if (!glHelper.hasCurrentUserRole("System Administrator") &&
                     (
                         (glHelper.hasCurrentUserRole("TDG Inspector")) ||
@@ -269,6 +296,7 @@ var AccountTDGmain = (function (window, document) {
                     if (formContext.getAttribute("cid_crabusinessnumber"))
                         glHelper.SetControlReadOnly(formContext, "cid_crabusinessnumber", true);
                 }
+                */
             }
         }
     }

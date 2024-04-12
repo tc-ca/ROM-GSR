@@ -17,8 +17,6 @@ var AccountFDRmain = (function (window, document) {
     var formContextGlobalRef;
     var regionMapping = {"AB": "0","BC": "1","MB": "2","NB": "3","NL": "4","NT": "5","NS": "6","NU": "7","ON": "8","PE": "9","QC": "10",	"SK": "11","YK": "12"};
 
-
-
     //********************private methods*******************
 
     function getViolationHistory(formContext) {
@@ -107,6 +105,7 @@ var AccountFDRmain = (function (window, document) {
         var isPlanner = (glHelper.hasCurrentUserRole("TDG Planner"))
         glHelper.SetSectionVisibility(formContext, TAB_NAME, SECTION_NAME, isPlanner);
     }
+
     function setFormUsage(formContext)
     {
         //ROM - Force the selection of a company when site is created
@@ -185,9 +184,9 @@ var AccountFDRmain = (function (window, document) {
     //********************public methods***************
     return {
 
-
         OnLoad: function (executionContext) {
-            
+            debugger;
+
             const formContext = executionContext.getFormContext();
             formContextGlobalRef = formContext;
 

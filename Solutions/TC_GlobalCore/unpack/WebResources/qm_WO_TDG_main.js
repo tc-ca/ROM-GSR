@@ -103,7 +103,9 @@ var WO_TDG_main = (function (window, document) {
                         _userid_value_formatted = results.systemuser_bookableresource_UserId[0]["name"];
                     }
 
-                    if (results.hasOwnProperty("territoryid")) {
+                    debugger;
+
+                    if (results.hasOwnProperty("territoryid") && results["territoryid"] != null) {
                         _territoryid_value_formatted = results["territoryid"]["name"];
                         var territoryid_ovs_territorynameenglish = results["territoryid"]["ovs_territorynameenglish"];
                         var territoryid_ovs_territorynamefrench = results["territoryid"]["ovs_territorynamefrench"];
@@ -118,8 +120,10 @@ var WO_TDG_main = (function (window, document) {
                     if (isCurrentUser) {
                         glHelper.SetLookup(formContext, "ovs_primaryinspector", "bookableresource", bookableresourceid, _userid_value_formatted);
                     }
+
                     //inspectors region
-                    glHelper.SetLookup(formContext, "msdyn_serviceterritory", _territoryid_value_lookuplogicalname, _territoryid_value, formattedLang);
+                    if (_territoryid_value)
+                        glHelper.SetLookup(formContext, "msdyn_serviceterritory", _territoryid_value_lookuplogicalname, _territoryid_value, formattedLang);
                 }
             },
             function (error) {
@@ -157,6 +161,8 @@ var WO_TDG_main = (function (window, document) {
         if (inspectionType == 0) {
             currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=" + filter.replace("{0}", "Regulatory Authorization")).then(
                 function success(results) {
+                    debugger;
+
                     var englishName = results.entities[0]["ovs_workordertypenameenglish"];
                     var frenchName = results.entities[0]["ovs_workordertypenamefrench"];
                     var workOrderTypeId = results.entities[0]["msdyn_workordertypeid"];
@@ -192,6 +198,8 @@ var WO_TDG_main = (function (window, document) {
         else {
             currentWebApi.retrieveMultipleRecords("msdyn_workordertype", "?$select=msdyn_workordertypeid,ovs_workordertypenameenglish,ovs_workordertypenamefrench&$filter=" + filter.replace("{0}", "Inspection")).then(
                 function success(results) {
+                    debugger;
+
                     var englishName = results.entities[0]["ovs_workordertypenameenglish"];
                     var frenchName = results.entities[0]["ovs_workordertypenamefrench"];
                     var workOrderTypeId = results.entities[0]["msdyn_workordertypeid"];
@@ -227,7 +235,6 @@ var WO_TDG_main = (function (window, document) {
     }
 
     function hideOrShowTabs(formContext, isCivilAviationDocument) {
-
         var profileTab = formContext.ui.tabs.get("tab_14");
         var violationTab = formContext.ui.tabs.get("tab_10");
         var tab_InspectionReport = formContext.ui.tabs.get("tab_InspectionReport");
@@ -294,6 +301,9 @@ var WO_TDG_main = (function (window, document) {
             formContext.getAttribute("ovs_inspection_setting").setValue(k_inspection_setting_onsite);
         }
         inspection_setting(formContext);
+
+        var isAnalyst = (glHelper.hasCurrentUserRole("TDG Analyst"))
+        glHelper.SetDisabled(formContext, "ovs_suitability_assessment", isAnalyst);
     }
 
     function inspection_setting_setup(formContext) {
@@ -308,6 +318,9 @@ var WO_TDG_main = (function (window, document) {
             glHelper.SetDisabled(formContext, "ovs_inspection_setting", false);
             suitability_assessment(formContext);
         }
+
+        var isAnalyst = (glHelper.hasCurrentUserRole("TDG Analyst"))
+        glHelper.SetDisabled(formContext, "ovs_suitability_assessment", isAnalyst);
     }
 
     //********************private methods end***************
@@ -361,6 +374,12 @@ var WO_TDG_main = (function (window, document) {
             else if (LCID == 1036)
                 resexResourceName = "ovs_Labels.1036.resx";
 
+            //oversight activity
+            
+            var ovs_oversighttype = formContext.getAttribute("ovs_oversighttype");
+            ovs_oversighttype.removeOnChange(WO_TDG_main.ovs_oversighttype_OnChange);
+            ovs_oversighttype.addOnChange(WO_TDG_main.ovs_oversighttype_OnChange);
+            ovs_oversighttype.fireOnChange();
             //rational
             var rational = formContext.getAttribute("ovs_rational");
             rational.removeOnChange(WO_TDG_main.Rational_OnChange);
@@ -449,6 +468,8 @@ var WO_TDG_main = (function (window, document) {
                 var sect_is = formContext.ui.tabs.get("tab_summary").sections.get("sect_inspection_setting");
                 sect_is.setVisible(true);
 
+                if (formContext.getAttribute("msdyn_workordertype").getValue()[0].id.replace(/[{}]/g, '').toUpperCase() == "46706C0A-AD60-EB11-A812-000D3AE9471C") sect_is.setVisible(false);
+
                 var pre_approved = formContext.getAttribute("ovs_pre_approved_for_remote_inspection");
                 pre_approved.addOnChange(function () { inspection_setting_setup(formContext) });
                 inspection_setting_setup(formContext);
@@ -478,7 +499,14 @@ var WO_TDG_main = (function (window, document) {
             //WO_TDG_main.setRecommendationRequired(executionContext);
 
             //WO_TDG_main.setDefaultInspectionSynopsis(executionContext);  
+            var sect_ins = formContext.ui.tabs.get("tab_summary").sections.get("sect_inspection_setting");
 
+            debugger;
+            var msdyn_workordertype = formContext.getAttribute("msdyn_workordertype").getValue();
+            if (msdyn_workordertype != null) {
+                if (msdyn_workordertype[0].id.replace(/[{}]/g, '').toUpperCase() == "46706C0A-AD60-EB11-A812-000D3AE9471C")
+                    sect_ins.setVisible(false);
+            }
         },
 
         SubgridSafetyAssessment_OnLoad: function (executionContext) {
@@ -566,6 +594,40 @@ var WO_TDG_main = (function (window, document) {
 
         },
 
+        ovs_oversighttype_OnChange: function (executionContext) {
+            var globalContext = Xrm.Utility.getGlobalContext();
+            var formContext = executionContext.getFormContext();
+            //get current rational
+            var oversightType = glHelper.GetLookupName(formContext, "ovs_oversighttype");
+          
+
+            if (oversightType == "GC Consignment"
+                || oversightType == "Envoi CG"
+                || oversightType == "GC Undeclared/ Misdeclared"
+                || oversightType == "CG non déclaré / mal déclaré"
+                || oversightType == "MOC Consignment"
+                || oversightType == "Envoi MOC") {
+                //show section of the consignment address
+                glHelper.SetSectionVisibility(formContext, "tab_summary", "tab_summary_section_8", true);
+                glHelper.SetSectionVisibility(formContext, "tab_summary", "tab_8_section_2", true);
+                //set address required
+                glHelper.SetRequiredLevel(formContext, "msdyn_address1", true);
+                glHelper.SetRequiredLevel(formContext, "msdyn_stateorprovince", true);
+                glHelper.SetRequiredLevel(formContext, "msdyn_postalcode", true);
+                glHelper.SetRequiredLevel(formContext, "msdyn_country", true);
+                glHelper.SetRequiredLevel(formContext, "msdyn_city", true);
+            }
+            else {
+                glHelper.SetSectionVisibility(formContext, "tab_summary", "tab_summary_section_8", false);
+                glHelper.SetSectionVisibility(formContext, "tab_summary", "tab_8_section_2", false);
+                //set address not required
+                glHelper.SetRequiredLevel(formContext, "msdyn_address1", false);
+                glHelper.SetRequiredLevel(formContext, "msdyn_stateorprovince", false);
+                glHelper.SetRequiredLevel(formContext, "msdyn_postalcode", false);
+                glHelper.SetRequiredLevel(formContext, "msdyn_country", false);
+                glHelper.SetRequiredLevel(formContext, "msdyn_city", false);
+            }
+        },
         Rational_OnChange: function (executionContext) {
 
             var messageRationalFailed = Xrm.Utility.getResourceString(resexResourceName, "msdyn_workorder.FetchRational.ErrorMessage");
