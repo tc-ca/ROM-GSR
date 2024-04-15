@@ -134,6 +134,7 @@
       <RootComponent type="1" schemaName="knowledgearticle" behavior="1" />
       <RootComponent type="1" schemaName="msdyn_analyticsforcs" behavior="2" />
       <RootComponent type="1" schemaName="msdyn_incidenttype" behavior="1" />
+      <RootComponent type="1" schemaName="msdyn_incidenttypeservicetask" behavior="2" />
       <RootComponent type="1" schemaName="msdyn_servicetasktype" behavior="2" />
       <RootComponent type="1" schemaName="msdyn_workorder" behavior="1" />
       <RootComponent type="1" schemaName="msdyn_workorderservicetask" behavior="1" />
@@ -890,7 +891,7 @@
         <Required type="1" schemaName="msdyn_incidenttypeservicetask" displayName="Incident Type Service Task" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.109.12)</package>
         </Required>
-        <Dependent type="60" displayName="Information" parentDisplayName="Incident Type" id="{4cbf19c2-8998-4fcf-b1a1-19a983797396}" />
+        <Dependent type="1" schemaName="msdyn_incidenttypeservicetask" displayName="Incident Type Service Task" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="msdyn_inspection" displayName="Inspection Template" solution="msdyn_Inspections (1.0.51.0)">
@@ -6163,6 +6164,30 @@
           <package>FieldService_Anchor (8.8.109.12)</package>
         </Required>
         <Dependent type="2" schemaName="msdyn_duration" displayName="Duration" parentSchemaName="msdyn_incidenttypeservice" parentDisplayName="Incident Type Service" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="msdyn_description" displayName="Description" parentSchemaName="msdyn_incidenttypeservicetask" parentDisplayName="Incident Type Service Task" solution="FieldService (8.8.0.88)">
+          <package>FieldService_Anchor (8.8.109.12)</package>
+        </Required>
+        <Dependent type="26" schemaName="Incident Type Time Tracking Service Tasks" displayName="Incident Type Time Tracking Service Tasks" parentSchemaName="msdyn_incidenttypeservicetask" parentDisplayName="Incident Type Service Task" id="{484e2b51-e617-ec11-b6e7-000d3ae8ef7b}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="msdyn_incidenttypeservicetaskid" displayName="Incident Type Service Task" parentSchemaName="msdyn_incidenttypeservicetask" parentDisplayName="Incident Type Service Task" solution="FieldService (8.8.0.88)">
+          <package>FieldService_Anchor (8.8.109.12)</package>
+        </Required>
+        <Dependent type="26" schemaName="Incident Type Time Tracking Service Tasks" displayName="Incident Type Time Tracking Service Tasks" parentSchemaName="msdyn_incidenttypeservicetask" parentDisplayName="Incident Type Service Task" id="{484e2b51-e617-ec11-b6e7-000d3ae8ef7b}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="msdyn_lineorder" displayName="Line Order" parentSchemaName="msdyn_incidenttypeservicetask" parentDisplayName="Incident Type Service Task" solution="FieldService (8.8.0.88)">
+          <package>FieldService_Anchor (8.8.109.12)</package>
+        </Required>
+        <Dependent type="26" schemaName="Incident Type Time Tracking Service Tasks" displayName="Incident Type Time Tracking Service Tasks" parentSchemaName="msdyn_incidenttypeservicetask" parentDisplayName="Incident Type Service Task" id="{484e2b51-e617-ec11-b6e7-000d3ae8ef7b}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="msdyn_tasktype" displayName="Task Type" parentSchemaName="msdyn_incidenttypeservicetask" parentDisplayName="Incident Type Service Task" solution="FieldService (8.8.0.88)">
+          <package>FieldService_Anchor (8.8.109.12)</package>
+        </Required>
+        <Dependent type="26" schemaName="Incident Type Time Tracking Service Tasks" displayName="Incident Type Time Tracking Service Tasks" parentSchemaName="msdyn_incidenttypeservicetask" parentDisplayName="Incident Type Service Task" id="{484e2b51-e617-ec11-b6e7-000d3ae8ef7b}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="2" schemaName="msdyn_amount" displayName="Amount" parentSchemaName="msdyn_orderinvoicingproduct" parentDisplayName="Order Invoicing Product" solution="FieldService (8.8.0.88)">
@@ -12425,10 +12450,6 @@
         <Dependent type="80" schemaName="ovs_OversightPlanning" displayName="TDG Inspections / Inspections TMD" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="26" schemaName="Incident Type Time Tracking Service Tasks" displayName="Incident Type Time Tracking Service Tasks" parentSchemaName="msdyn_incidenttypeservicetask" parentDisplayName="Incident Type Service Task" solution="Active" id="{484e2b51-e617-ec11-b6e7-000d3ae8ef7b}" />
-        <Dependent type="60" displayName="Information" parentDisplayName="Incident Type" id="{4cbf19c2-8998-4fcf-b1a1-19a983797396}" />
-      </MissingDependency>
-      <MissingDependency>
         <Required type="26" schemaName="My Active Accounts by Relationship" displayName="My Active Accounts by Relationship" parentSchemaName="account" parentDisplayName="Account" solution="RelationshipAnalytics (9.0.24034.10002)" id="{4bfea08c-9a4d-e611-80fc-0024e84720c6}">
           <package>msdynce_SalesInsightsAnchor (9.0.24034.10005)</package>
         </Required>
@@ -14394,7 +14415,7 @@
           <package>msdyn_SalesIntegrationsAddOns (9.0.22054.10002)</package>
           <package>msdyn_SalesIntegrationsAddOns (9.0.24034.10003)</package>
         </Required>
-        <Dependent type="60" displayName="Account" parentDisplayName="Account" id="{8448b78f-8f42-454e-8e2a-f8196b0419af}" />
+        <Dependent type="60" displayName="Sales Insights" parentDisplayName="Account" id="{cb430327-bcc1-416d-959d-db7592e685af}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="msdyn_/Account/Account.Library.js" displayName="msdyn_/Account/Account.Library.js" solution="FieldService (8.8.0.88)">
@@ -14909,10 +14930,22 @@
         <Dependent type="1" schemaName="msdyn_incidenttype" displayName="Incident Type" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="61" schemaName="msdyn_/Icons/Entity/Incident_16.png" displayName="msdyn_/Icons/Entity/Incident_16.png" solution="FieldService (8.8.0.88)">
+          <package>FieldService_Anchor (8.8.109.12)</package>
+        </Required>
+        <Dependent type="1" schemaName="msdyn_incidenttypeservicetask" displayName="Incident Type Service Task" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="61" schemaName="msdyn_/Icons/Entity/Incident_32/_imgs/NavBar/Invisible.gif" displayName="msdyn_/Icons/Entity/Incident_32/_imgs/NavBar/Invisible.gif" solution="FieldService (8.8.0.88)">
           <package>FieldService_Anchor (8.8.109.12)</package>
         </Required>
         <Dependent type="1" schemaName="msdyn_incidenttype" displayName="Incident Type" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="61" schemaName="msdyn_/Icons/Entity/Incident_32/_imgs/NavBar/Invisible.gif" displayName="msdyn_/Icons/Entity/Incident_32/_imgs/NavBar/Invisible.gif" solution="FieldService (8.8.0.88)">
+          <package>FieldService_Anchor (8.8.109.12)</package>
+        </Required>
+        <Dependent type="1" schemaName="msdyn_incidenttypeservicetask" displayName="Incident Type Service Task" />
       </MissingDependency>
       <MissingDependency>
         <Required type="61" schemaName="msdyn_/Icons/Entity/ServiceActivity_16.png" displayName="msdyn_/Icons/Entity/ServiceActivity_16.png" solution="FieldService (8.8.0.88)">
