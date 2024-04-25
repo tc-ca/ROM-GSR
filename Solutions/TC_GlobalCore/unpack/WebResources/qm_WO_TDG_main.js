@@ -302,8 +302,8 @@ var WO_TDG_main = (function (window, document) {
         }
         inspection_setting(formContext);
 
-        var isAnalyst = (glHelper.hasCurrentUserRole("TDG Analyst"))
-        glHelper.SetDisabled(formContext, "ovs_suitability_assessment", isAnalyst);
+        //var isAnalyst = (glHelper.hasCurrentUserRole("TDG Analyst"))
+        //glHelper.SetDisabled(formContext, "ovs_suitability_assessment", isAnalyst);
     }
 
     function inspection_setting_setup(formContext) {
@@ -319,8 +319,8 @@ var WO_TDG_main = (function (window, document) {
             suitability_assessment(formContext);
         }
 
-        var isAnalyst = (glHelper.hasCurrentUserRole("TDG Analyst"))
-        glHelper.SetDisabled(formContext, "ovs_suitability_assessment", isAnalyst);
+        //var isAnalyst = (glHelper.hasCurrentUserRole("TDG Analyst"))
+        //glHelper.SetDisabled(formContext, "ovs_suitability_assessment", isAnalyst);
     }
 
     //********************private methods end***************
@@ -484,6 +484,9 @@ var WO_TDG_main = (function (window, document) {
                     var is = formContext.getAttribute("ovs_inspection_setting");
                     is.addOnChange(function () { inspection_setting(formContext) });
                 }
+
+                var isPlanner = (glHelper.hasCurrentUserRole("TDG Planner"))
+                glHelper.SetDisabled(formContext, "ovs_pre_approved_for_remote_inspection", !isPlanner);
             }
 
             // Set Oversight Activity field as Mandatory
@@ -658,9 +661,6 @@ var WO_TDG_main = (function (window, document) {
                     //|| isPlanner
                 ) return;
 
-             
-
-
                 if (formType == 1) {
                     //set Rational to default "Unplanned" for Manager or Inspector  and lock readonly!
 
@@ -691,8 +691,6 @@ var WO_TDG_main = (function (window, document) {
                                     for (var i = 0; i < readOnlyArray.length; i++) {
                                         glHelper.SetDisabled(formContext, readOnlyArray[i], true);
                                     }
-
-
                             },
                             function (error) {
                                 console.log("Fetch rational Unplanned failed. error: " + error.message);
@@ -721,18 +719,12 @@ var WO_TDG_main = (function (window, document) {
                                     glHelper.SetLookup(formContext, "ovs_rational", "ovs_tyrational", ovs_tyrationalid, ovs_rationalflbl);
                                 if (userSettings.languageId == 1033)
                                     glHelper.SetLookup(formContext, "ovs_rational", "ovs_tyrational", ovs_tyrationalid, ovs_rationalelbl);
-
-             
-
-
                             },
                             function (error) {
                                 console.log("Fetch rational Unplanned failed. error: " + error.message);
                                 Xrm.Navigation.openAlertDialog({ confirmButtonLabel: "OK", text: messageRationalFailed + " " + error.message });
                             }
                         );
-
-
                     }
                 }
                 else {
@@ -830,8 +822,6 @@ var WO_TDG_main = (function (window, document) {
         },
 
         SetDefaultFiscalYear: function (formContext) {
-
-
             var fiscalYearName;
             var filter = "";
             if (isOffLine && clientType > 0) {
@@ -917,7 +907,6 @@ var WO_TDG_main = (function (window, document) {
             var formContext = executionContext.getFormContext();
             var systemStatus = formContext.getAttribute("msdyn_systemstatus").getValue();
 
-
             //If system status is set to completed, closed or canceled check business logic called via custom action.
             if (systemStatus == 690970003 || systemStatus == 690970004 || systemStatus == 690970005) {
                 var parameters = {};
@@ -998,7 +987,6 @@ var WO_TDG_main = (function (window, document) {
                 if (ovs_oversighttype == '{A4965081-5F9C-EB11-B1AC-000D3AE92708}') options.push(690970003);
                 
                 glHelper.filterOptionSet(formContext, "msdyn_systemstatus", options, false);
-
             }
         },
 
@@ -1050,7 +1038,6 @@ var WO_TDG_main = (function (window, document) {
                     if (OperationTypeGlobalValue == 918640040) {
 
                         var sActivityName = glHelper.GetLookupName(formContext, "ovs_oversighttype");
-
 
                         //If aviation is already selected
                         if (sActivityName == "Civil Aviation Document Review" || sActivityName == "Examen des documents de l'aviation civile" || sActivityName == "Examen documentation de l'aviation civile") {

@@ -68,11 +68,11 @@
             return null;
         }
 
-        function getBlobFile(filePath, fileName) {
+        function getBlobFile(filePath, containerName) {
 
             var ovs_BlobDownloadFile = {
                 filePath: filePath,
-                fileName: fileName,
+                containerName: containerName,
 
                 getMetadata: function () {
                     return {
@@ -82,7 +82,7 @@
                                 "typeName": "Edm.String",
                                 "structuralProperty": 1
                             },
-                            "fileName": {
+                            "containerName": {
                                 "typeName": "Edm.String",
                                 "structuralProperty": 1
                             }
@@ -144,7 +144,7 @@
 
             //get file name amd path
             var paramsObj = getDataParam();
-            if (paramsObj != null) getBlobFile(paramsObj.filePath, paramsObj.fileName);
+            if (paramsObj != null) getBlobFile(paramsObj.filePath, paramsObj.containerName);
             else Xrm.Navigation.openErrorDialog({ message: "Blob call went south. Please contact support" });
 
         });

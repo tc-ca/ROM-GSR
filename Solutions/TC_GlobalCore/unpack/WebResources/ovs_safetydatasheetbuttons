@@ -54,7 +54,7 @@ var SafetySheetsRibbon = (function (window, document) {
 				console.log(result);
 				// Columns
 				var ovs_sdsid = result["ovs_sdsid"]; // Guid
-				var ovs_file_name_nm = result["ovs_file_name_nm"]; // Text
+				//var ovs_file_name_nm = result["ovs_file_name_nm"]; // Text
 				var ovs_file_path_txt = result["ovs_file_path_txt"]; // Text
 
 				if (ovs_file_path_txt == null) {
@@ -62,33 +62,33 @@ var SafetySheetsRibbon = (function (window, document) {
 					return;
 				}
 
-				////comment/uncomment for blob reader
-				//openBlobReader(ovs_file_path_txt, ovs_file_name_nm);
+				//comment/uncomment for blob reader
+				openBlobReader(ovs_file_path_txt, "document");
 
-				//comment/uncomment for flow execution 
-				Xrm.WebApi.retrieveMultipleRecords("qm_environmentsettings", "?$select=qm_value&$filter=qm_name eq 'CRS_SDS_Flow_BlobStorageLocationSASTokenGenerator'").then(
-					function success(results) {
-						console.log(results);
-						var documentSASURL = null;
-						if (results.entities.length > 0) {
-							var result = results.entities[0];
-							// Columns
-							var qm_environmentsettingsid = result["qm_environmentsettingsid"]; // Guid
-							documentSASURL = result["qm_value"]; // Multiline Text
+			//	//comment/uncomment for flow execution 
+			//	Xrm.WebApi.retrieveMultipleRecords("qm_environmentsettings", "?$select=qm_value&$filter=qm_name eq 'CRS_SDS_Flow_BlobStorageLocationSASTokenGenerator'").then(
+			//		function success(results) {
+			//			console.log(results);
+			//			var documentSASURL = null;
+			//			if (results.entities.length > 0) {
+			//				var result = results.entities[0];
+			//				// Columns
+			//				var qm_environmentsettingsid = result["qm_environmentsettingsid"]; // Guid
+			//				documentSASURL = result["qm_value"]; // Multiline Text
 
-							callFlow(documentSASURL, ovs_file_path_txt);
-						} else {
-							Xrm.Navigation.openErrorDialog({ message: "Environment Settings to call blob cannot be found. Please contact support" });
+			//				callFlow(documentSASURL, ovs_file_path_txt);
+			//			} else {
+			//				Xrm.Navigation.openErrorDialog({ message: "Environment Settings to call blob cannot be found. Please contact support" });
 
-						}
-					},
-					function (error) {
-						console.log(error.message);
-						var alertStrings = { confirmButtonLabel: "Cancel", text: "The document was not found.", title: "Document not found" };
-						var alertOptions = { height: 150, width: 500 };
-						Xrm.Navigation.openAlertDialog(alertStrings, alertOptions);
-					}
-				);
+			//			}
+			//		},
+			//		function (error) {
+			//			console.log(error.message);
+			//			var alertStrings = { confirmButtonLabel: "Cancel", text: "The document was not found.", title: "Document not found" };
+			//			var alertOptions = { height: 150, width: 500 };
+			//			Xrm.Navigation.openAlertDialog(alertStrings, alertOptions);
+			//		}
+			//	);
 			},
 			function (error) {
 				console.log(error.message);
@@ -99,12 +99,12 @@ var SafetySheetsRibbon = (function (window, document) {
 		);
 	}
 
-	function openBlobReader(filePath, fileName) {
+	function openBlobReader(filePath, containerName) {
 
 		//open blob file in web resource
 		var formParameters = {};
 		formParameters["filePath"] = filePath;
-		formParameters["fileName"] = fileName;
+		formParameters["containerName"] = containerName;
 
 
 		var pageInput = {
@@ -118,7 +118,7 @@ var SafetySheetsRibbon = (function (window, document) {
 			height: { value: 90, unit: "%" },
 			width: { value: 80, unit: "%" },
 			position: 1,
-			title: fileName,
+			title: containerName,
 		};
 
 

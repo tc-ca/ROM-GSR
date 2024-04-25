@@ -44,11 +44,23 @@
                 && !roles.find(r => r.name.includes("Administrator"))
                 && !roles.find(r => r.name.includes("Inspector"))
                 && !roles.find(r => r.name.includes("Manager"))
-            && !roles.find(r => r.name.includes("Planner")))
-            {
+                && !roles.find(r => r.name.includes("Planner"))) {
                 glHelper.SetControlReadOnly(formContext, "cid_cidflag", true);
+              
             }
             else glHelper.SetControlReadOnly(formContext, "cid_cidflag", false);
+                
+            
+
+            //check if not planner then disable population density
+            if (!roles.find(r => r.name.includes("Planner"))) {
+                glHelper.SetControlReadOnly(formContext, "ovs_cdpopulationdensity", true);
+            }
+            else {
+                glHelper.SetControlReadOnly(formContext, "ovs_cdpopulationdensity", false);
+            }
+
+
         }
 
     }
