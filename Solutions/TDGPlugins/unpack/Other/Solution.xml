@@ -8,7 +8,7 @@
     <Descriptions>
       <Description description="Main solution for TDG Inspection Related Plugins&#xA;1.0.0.1 - WO Pre Create and Pre Update were modified." languagecode="1033" />
     </Descriptions>
-    <Version>1.2.0.112</Version>
+    <Version>1.2.0.113</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>transportationofdangerousgoods</UniqueName>
@@ -106,12 +106,11 @@
       <RootComponent type="92" id="{480160a0-938b-ed11-81ac-0022483e130e}" behavior="0" />
       <RootComponent type="92" id="{4b70612a-6bdb-ee11-904c-002248adb34a}" behavior="0" />
       <RootComponent type="92" id="{4bb8479a-1939-ed11-9db0-0022483cb62f}" behavior="0" />
-      <RootComponent type="92" id="{4e8ce66d-c80e-ee11-8f6e-0022483e130e}" behavior="0" />
       <RootComponent type="92" id="{52b1695c-3213-ed11-b83e-000d3a84cfdd}" behavior="0" />
       <RootComponent type="92" id="{534d0480-83a4-ec11-b3fe-0022483c4a6f}" behavior="0" />
       <RootComponent type="92" id="{57e48fe6-5946-ec11-8c62-0022483cc809}" behavior="0" />
-      <RootComponent type="92" id="{57f17560-c70e-ee11-8f6e-0022483e130e}" behavior="0" />
       <RootComponent type="92" id="{58f69981-63c6-eb11-bacc-000d3af39889}" behavior="0" />
+      <RootComponent type="92" id="{5ec95753-bf00-ef11-9f89-0022483d0141}" behavior="0" />
       <RootComponent type="92" id="{63b0f230-f83f-ed11-bba2-0022483cb62f}" behavior="0" />
       <RootComponent type="92" id="{66c4339e-76ab-ec11-983e-0022483d853b}" behavior="0" />
       <RootComponent type="92" id="{70ea8872-8fbc-ee11-9078-6045bd60dfd7}" behavior="0" />
@@ -137,7 +136,6 @@
       <RootComponent type="92" id="{ac43cdf5-4e2d-ed11-9db0-0022483cb62f}" behavior="0" />
       <RootComponent type="92" id="{aebee8b6-753e-ec11-8c62-0022483d71b4}" behavior="0" />
       <RootComponent type="92" id="{b17bde4d-3a84-ec11-8d20-000d3a84c476}" behavior="0" />
-      <RootComponent type="92" id="{b2840686-c70e-ee11-8f6e-000d3af35f84}" behavior="0" />
       <RootComponent type="92" id="{b9ee0fd0-cbc8-ed11-b596-0022483d0343}" behavior="0" />
       <RootComponent type="92" id="{bb80f9e9-6179-ec11-8d20-000d3aff1221}" behavior="0" />
       <RootComponent type="92" id="{bc222fed-113c-ec11-8c62-0022483d71b4}" behavior="0" />
@@ -149,9 +147,9 @@
       <RootComponent type="92" id="{d7be9f8c-8fbc-ee11-9078-0022483cceb8}" behavior="0" />
       <RootComponent type="92" id="{d7d0ad8a-84bd-eb11-bacc-0022483bbb9e}" behavior="0" />
       <RootComponent type="92" id="{db84fda4-753e-ec11-8c62-0022483d71b4}" behavior="0" />
+      <RootComponent type="92" id="{ddf346ce-d5e2-ee11-904c-000d3a845779}" behavior="0" />
       <RootComponent type="92" id="{ddfad4b6-8fbc-ee11-9078-0022483cceb8}" behavior="0" />
       <RootComponent type="92" id="{e0201ab1-63c6-eb11-bacc-000d3af39889}" behavior="0" />
-      <RootComponent type="92" id="{e51a2b8f-c80e-ee11-8f6e-0022483d0343}" behavior="0" />
       <RootComponent type="92" id="{e5b5ed4e-08a2-eb11-b1ac-000d3ae8b93a}" behavior="0" />
       <RootComponent type="92" id="{ea8c5033-3d38-ed11-9db0-0022483cb62f}" behavior="0" />
       <RootComponent type="92" id="{eef81e29-90bc-ee11-9078-002248b0ab18}" behavior="0" />
@@ -204,6 +202,12 @@
           <package>FieldService_Anchor (8.8.113.28)</package>
         </Required>
         <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.WorkOrder.WorkOrder_PreCreateFiscal: Create of msdyn_workorder" id="{58f69981-63c6-eb11-bacc-000d3af39889}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="msdyn_workorder" displayName="Work Order" solution="FieldService (8.8.0.88)">
+          <package>FieldService_Anchor (8.8.113.28)</package>
+        </Required>
+        <Dependent type="92" id="{5ec95753-bf00-ef11-9f89-0022483d0141}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="msdyn_workorder" displayName="Work Order" solution="FieldService (8.8.0.88)">
@@ -402,20 +406,12 @@
         <Dependent type="93" id="{6e5b1443-6bdb-ee11-904c-002248adb34a}" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="1" schemaName="ovs_support_request_outcome" displayName="Support Request Outcome" solution="Active" />
-        <Dependent type="92" displayName="TC.PowerApps.Localization.RetrieveMultiple: RetrieveMultiple of ovs_support_request_outcome" id="{4e8ce66d-c80e-ee11-8f6e-0022483e130e}" />
+        <Required type="1" schemaName="ovs_submission" displayName="Submission" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.Submission.Submission_PostUpdate_SetRegistrationStatus: Update of ovs_submission" id="{ddf346ce-d5e2-ee11-904c-000d3a845779}" />
       </MissingDependency>
       <MissingDependency>
-        <Required type="1" schemaName="ovs_support_request_outcome" displayName="Support Request Outcome" solution="Active" />
-        <Dependent type="92" displayName="TC.PowerApps.Localization.Create: Create of ovs_support_request_outcome" id="{57f17560-c70e-ee11-8f6e-0022483e130e}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="1" schemaName="ovs_support_request_outcome" displayName="Support Request Outcome" solution="Active" />
-        <Dependent type="92" displayName="TC.PowerApps.Localization.Update: Update of ovs_support_request_outcome" id="{b2840686-c70e-ee11-8f6e-000d3af35f84}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="1" schemaName="ovs_support_request_outcome" displayName="Support Request Outcome" solution="Active" />
-        <Dependent type="92" displayName="TC.PowerApps.Localization.Retrieve: Retrieve of ovs_support_request_outcome" id="{e51a2b8f-c80e-ee11-8f6e-0022483d0343}" />
+        <Required type="1" schemaName="ovs_submission" displayName="Submission" solution="Active" />
+        <Dependent type="93" id="{daafc711-d6e2-ee11-904c-000d3a845779}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="ovs_unplannedforecast" displayName="Unplanned Forecast" solution="Active" />
@@ -1176,6 +1172,18 @@
         <Dependent type="93" id="{6e5b1443-6bdb-ee11-904c-002248adb34a}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="2" schemaName="ovs_outcome_cd" displayName="Status Outcome" parentSchemaName="ovs_submission" parentDisplayName="Submission" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.Submission.Submission_PostUpdate_SetRegistrationStatus: Update of ovs_submission" id="{ddf346ce-d5e2-ee11-904c-000d3a845779}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="statecode" displayName="Status" parentSchemaName="ovs_submission" parentDisplayName="Submission" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.Submission.Submission_PostUpdate_SetRegistrationStatus: Update of ovs_submission" id="{ddf346ce-d5e2-ee11-904c-000d3a845779}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="2" schemaName="statuscode" displayName="Status Reason" parentSchemaName="ovs_submission" parentDisplayName="Submission" solution="Active" />
+        <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.Submission.Submission_PostUpdate_SetRegistrationStatus: Update of ovs_submission" id="{ddf346ce-d5e2-ee11-904c-000d3a845779}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="2" schemaName="ovs_cdpriorityscore" displayName="Priority Score" parentSchemaName="ovs_workordercandidate" parentDisplayName="Work Order Candidate" solution="Active" />
         <Dependent type="93" id="{81cbf110-77ab-ec11-983e-0022483d853b}" />
       </MissingDependency>
@@ -1362,22 +1370,6 @@
       <MissingDependency>
         <Required type="2" schemaName="statuscode" displayName="Status Reason" parentSchemaName="qm_sytemplate" parentDisplayName="Template" solution="Active" />
         <Dependent type="92" displayName="TC.PowerApps.Plugins.Entities.Template.Template_PostStateChange: Update of qm_sytemplate" id="{3359752f-297a-eb11-a812-000d3af31ad8}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="90" schemaName="TC.PowerApps.Localization.Update, TC.PowerApps.Localization, Version=1.0.0.0, Culture=neutral, PublicKeyToken=46cc66017b727c59" displayName="TC.PowerApps.Localization.Update" solution="Active" id="{3e5ff06c-1fd0-439e-947b-dc69c4e4ba89}" />
-        <Dependent type="92" displayName="TC.PowerApps.Localization.Update: Update of ovs_support_request_outcome" id="{b2840686-c70e-ee11-8f6e-000d3af35f84}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="90" schemaName="TC.PowerApps.Localization.RetrieveMultiple, TC.PowerApps.Localization, Version=1.0.0.0, Culture=neutral, PublicKeyToken=46cc66017b727c59" displayName="TC.PowerApps.Localization.RetrieveMultiple" solution="Active" id="{55aff4fe-abc8-4a82-8e27-ff6dbf970604}" />
-        <Dependent type="92" displayName="TC.PowerApps.Localization.RetrieveMultiple: RetrieveMultiple of ovs_support_request_outcome" id="{4e8ce66d-c80e-ee11-8f6e-0022483e130e}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="90" schemaName="TC.PowerApps.Localization.Retrieve, TC.PowerApps.Localization, Version=1.0.0.0, Culture=neutral, PublicKeyToken=46cc66017b727c59" displayName="TC.PowerApps.Localization.Retrieve" solution="Active" id="{917f33a1-fc11-4fff-ad37-c2676669c797}" />
-        <Dependent type="92" displayName="TC.PowerApps.Localization.Retrieve: Retrieve of ovs_support_request_outcome" id="{e51a2b8f-c80e-ee11-8f6e-0022483d0343}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="90" schemaName="TC.PowerApps.Localization.Create, TC.PowerApps.Localization, Version=1.0.0.0, Culture=neutral, PublicKeyToken=46cc66017b727c59" displayName="TC.PowerApps.Localization.Create" solution="Active" id="{dd0b78a8-6d3c-439e-9d36-ecd295ae1fd0}" />
-        <Dependent type="92" displayName="TC.PowerApps.Localization.Create: Create of ovs_support_request_outcome" id="{57f17560-c70e-ee11-8f6e-0022483e130e}" />
       </MissingDependency>
     </MissingDependencies>
   </SolutionManifest>
