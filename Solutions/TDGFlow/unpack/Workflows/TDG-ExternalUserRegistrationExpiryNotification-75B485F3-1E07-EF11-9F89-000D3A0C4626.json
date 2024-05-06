@@ -1,0 +1,719 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "CRS_Sender_Queue (ovs_CRS_Sender_Queue)": {
+          "defaultValue": "f8a1729c-7601-ef11-9f89-0022483d0141",
+          "type": "String",
+          "metadata": {
+            "schemaName": "ovs_CRS_Sender_Queue"
+          }
+        },
+        "TDGOnlineportal (ovs_TDGOnlineportal)": {
+          "defaultValue": "https://dg-md.dev.tc.canada.ca ",
+          "type": "String",
+          "metadata": {
+            "schemaName": "ovs_TDGOnlineportal"
+          }
+        },
+        "CrmBaseUrl (ovs_CrmBaseUrl)": {
+          "defaultValue": "tdgcore-dev-tcd365.crm3.dynamics.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "ovs_CrmBaseUrl",
+            "description": "Provides current environment base url. No back slash ending."
+          }
+        }
+      },
+      "triggers": {
+        "Recurrence": {
+          "recurrence": {
+            "frequency": "Day",
+            "interval": 1,
+            "startTime": "2024-04-30T06:00:00Z"
+          },
+          "metadata": {
+            "operationMetadataId": "616eb992-5c80-4326-80b2-cd8c656c86ae"
+          },
+          "type": "Recurrence"
+        }
+      },
+      "actions": {
+        "Initialize_variable_NotificationScheduleInDays": {
+          "runAfter": {
+            "Initialize_variable_Portal_URL": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d9d409a0-4b67-4db4-a6d0-f0380395242c"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "NotificationScheduleInDays",
+                "type": "array",
+                "value": [
+                  0,
+                  1,
+                  15
+                ]
+              }
+            ]
+          }
+        },
+        "Apply_to_each_Notification_schedule_duration": {
+          "foreach": "@variables('NotificationScheduleInDays')",
+          "actions": {
+            "NumberOfdays": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "e8e9740a-cb20-4b72-84fb-3612bbc0df58"
+              },
+              "type": "Compose",
+              "inputs": "@items('Apply_to_each_Notification_schedule_duration')"
+            },
+            "ExpiryDate": {
+              "runAfter": {
+                "NumberOfdays": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "0525ecce-33c1-4a03-92fa-da570031383d"
+              },
+              "type": "Compose",
+              "inputs": "@formatDateTime(addDays(utcNow(), int(outputs('NumberOfdays'))), 'yyyy-MM-dd')"
+            },
+            "Scope_CRS": {
+              "actions": {
+                "List_rows_-_Get_List_of_Expiring_registrations": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "bdcf8d55-39f5-44f7-acbe-22de8789f6c2"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "ListRecords",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "ovs_registrations",
+                      "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"ovs_registration\">\n<attribute name=\"ovs_registrationid\"/>\n<attribute name=\"ovs_expirydate\" />\n<attribute name=\"ovs_name\"/>\n<attribute name=\"createdon\"/>\n<attribute name=\"ovs_organization_id\"/>\n<order attribute=\"ovs_name\" descending=\"false\"/>\n<filter type=\"and\">\n<condition attribute=\"ovs_expirydate\" operator=\"on\" value=\"@{outputs('ExpiryDate')}\"/>\n<condition attribute=\"ovs_service_id\" operator=\"in\">\n<value uiname=\"CANUTEC Registration Service / Système d'inscription CANUTEC\" uitype=\"ovs_service\">{AD4E0C7D-23C1-EE11-9078-6045BD60DFD7}</value>\n\n</condition>\n</filter>\n<link-entity name=\"account\" from=\"accountid\" to=\"ovs_organization_id\" visible=\"false\" link-type=\"outer\" alias=\"a_83afaff38bbcee1190796045bd5ccebb\">\n<attribute name=\"ovs_accountnamefrench\"/>\n<attribute name=\"ovs_accountnameenglish\"/>\n</link-entity>\n</entity>\n</fetch>"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Apply_to_each_CRS_Registration": {
+                  "foreach": "@outputs('List_rows_-_Get_List_of_Expiring_registrations')?['body/value']",
+                  "actions": {
+                    "OrganizationGUID": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "8ed2bc00-46ba-4136-828c-1ead239f07b3"
+                      },
+                      "type": "Compose",
+                      "inputs": "@items('Apply_to_each_CRS_Registration')?['_ovs_organization_id_value']"
+                    },
+                    "List_rows_ALL_TGD_connection_contacts": {
+                      "runAfter": {
+                        "Get_Organization_Information": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "cf3edd91-0061-4815-b32b-e1c2e2a7d308"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "ListRecords",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "connections",
+                          "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"connection\">\n<attribute name=\"record2id\"/>\n<attribute name=\"record1id\"/>\n<attribute name=\"connectionid\"/>\n<attribute name=\"effectivestart\"/>\n<filter type=\"and\">\n<condition attribute=\"record2objecttypecode\" operator=\"eq\" value=\"2\"/>\n<condition attribute=\"record1objecttypecode\" operator=\"eq\" value=\"1\"/>\n<condition attribute=\"effectivestart\" operator=\"not-null\"/>\n<condition attribute=\"record2roleid\" operator=\"not-null\"/>\n</filter>\n<link-entity name=\"account\" from=\"accountid\" to=\"record1id\" link-type=\"inner\" alias=\"a_b319a54f03644ed1a2f0dc0bae8c384d\">\n<attribute name=\"name\"/>\n<attribute name=\"primarycontactid\"/>\n<filter type=\"and\">\n<condition attribute=\"accountid\" operator=\"eq\"  value=\"@{outputs('OrganizationGUID')}\"/>\n</filter>\n</link-entity>\n<link-entity name=\"contact\" from=\"contactid\" to=\"record2id\" link-type=\"inner\" alias=\"a_72c81aaa72c549acbe9e0deee5bd0ad2\">\n<attribute name=\"jobtitle\"/>\n<attribute name=\"fullname\"/>\n<attribute name=\"emailaddress1\"/>\n<filter type=\"and\">\n<condition attribute=\"ovs_mbun\" operator=\"not-null\"/>\n</filter>\n</link-entity>\n</entity>\n</fetch>"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Set_variable_Activity_party_string_List_initial_value": {
+                      "runAfter": {
+                        "Org_Registration_Expiry": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "5fbb1b88-2651-44d4-9116-32cbb5d6f0b7"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "ActivityPartStringList",
+                        "value": "{\"participationtypemask\": 1,\n\"partyid@odata.bind\": \"\\\\queues\\\\@{outputs('CRSqueue')}\"}"
+                      }
+                    },
+                    "Apply_to_each_contact": {
+                      "foreach": "@outputs('List_rows_ALL_TGD_connection_contacts')?['body/value']",
+                      "actions": {
+                        "ContactGUID": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "20a79309-dd13-47e0-8242-68a1bb474b2d"
+                          },
+                          "type": "Compose",
+                          "inputs": "@items('Apply_to_each_contact')?['_record2id_value']"
+                        },
+                        "Append_to_ActivityParty_will_be_used_for_15_days_notification": {
+                          "runAfter": {
+                            "ContactFullName": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "7fcf9621-c1dd-47e3-8d36-d45be3013da9"
+                          },
+                          "type": "AppendToStringVariable",
+                          "inputs": {
+                            "name": "ActivityPartStringList",
+                            "value": ", {\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\@{outputs('ContactGUID')}\"\n  }"
+                          }
+                        },
+                        "Switch_-_Notification_days": {
+                          "runAfter": {
+                            "Append_to_ActivityParty_will_be_used_for_15_days_notification": [
+                              "Succeeded"
+                            ]
+                          },
+                          "cases": {
+                            "Case_-_Day_of_expiry_": {
+                              "case": 0,
+                              "actions": {
+                                "Create_Expired_Email": {
+                                  "runAfter": {
+                                    "EmailBody": [
+                                      "Succeeded"
+                                    ]
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "be91d3d9-a132-4355-918b-b49414b48907"
+                                  },
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "host": {
+                                      "connectionName": "shared_commondataserviceforapps",
+                                      "operationId": "CreateRecord",
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                    },
+                                    "parameters": {
+                                      "entityName": "emails",
+                                      "item/activitypointer_activity_parties": [
+                                        {
+                                          "participationtypemask": 1,
+                                          "partyid@odata.bind": "\\queues\\@{outputs('CRSqueue')}"
+                                        },
+                                        {
+                                          "participationtypemask": 2,
+                                          "partyid@odata.bind": "\\contacts\\@{outputs('ContactGUID')}"
+                                        }
+                                      ],
+                                      "item/description": "@outputs('EmailBody')",
+                                      "item/regardingobjectid_ovs_registration_email@odata.bind": "\\ovs_registrations\\@{items('Apply_to_each_CRS_Registration')?['ovs_registrationid']}",
+                                      "item/subject": "Your CRS Registration Has Expired\\Votre inscription SIC a expiré"
+                                    },
+                                    "authentication": "@parameters('$authentication')"
+                                  }
+                                },
+                                "Registration_Last_Modified_on": {
+                                  "runAfter": {},
+                                  "metadata": {
+                                    "operationMetadataId": "35f0a93f-ea28-412e-bed8-d1b906c43806"
+                                  },
+                                  "type": "Compose",
+                                  "inputs": "@ formatDateTime(subtractFromTime(subtractFromTime(outputs('Org_Registration_Expiry'),1,'Year'),1,'Day'), 'yyyy-MM-dd')"
+                                },
+                                "EmailBody": {
+                                  "runAfter": {
+                                    "Registration_Last_Modified_on": [
+                                      "Succeeded"
+                                    ]
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "64b6066e-da80-44ad-9cf3-5ae39daaa23f"
+                                  },
+                                  "type": "Compose",
+                                  "inputs": "**Le texte français suit l’anglais**<br><br>\n\n@{outputs('ContactFullName')}, <br><br>\n\nThe CRS registration for @{outputs('Get_Organization_Information')?['body/name']}  has expired. @{outputs('Get_Organization_Information')?['body/name']} has not updated its information since @{outputs('Registration_Last_Modified_on')}. CANUTEC requires that you update your company information and emergency contacts every year.<br><br>\n\nWhen applicable, you must send us your Safety Data Sheets (SDSs) as soon as a change is made or when you have one or more new sheets for hazardous materials to be shipped.<br><br>\n\n<b>As per Paragraph (1) (f), Section 3.5 of the Transportation of Dangerous Goods (TDG) Regulations (Information on a Shipping Document): The words “24-Hour Number” or “Numéro 24 heures”, or an abbreviation of these words, followed by a telephone number, including the area code, at which the consignor can be reached immediately for technical information about the dangerous goods in transport, without breaking the telephone connection made by the caller. Link: <a href=\"https://www.tc.gc.ca/eng/tdg/clear-part3-317.htm\">https://www.tc.gc.ca/eng/tdg/clear-part3-317.htm</a></b><br><br>\n\nTo continue using CANUTEC’s 24-hour services, you must log into your CANUTEC account and update your company and Safety Data Sheet (SDS) information.@{variables('PortalURL')} <br><br>\n\nIf you have questions or need more information, please contact the Registration team.<br><br>\n\n*****************************************************************************<br><br>\n\n@{outputs('ContactFullName')}, <br><br>\nL'inscription SIC de @{outputs('Get_Organization_Information')?['body/name']}. @{outputs('Get_Organization_Information')?['body/name']} n'a pas fait de mise à jour depuis @{outputs('Registration_Last_Modified_on')}. CANUTEC exige une confirmation annuelle des informations sur votre compagnie ainsi que sur les contacts d’urgence.  <br><br>\n\n\nDans le cas échéant, vos fiches de données de sécurité (FDS) doivent nous être acheminé dès qu’une modification y est apporté ou lorsque vous en avez un ou des nouvelles faisant l’objet de transport.<br><br>\n\n<b>Selon l’article 3.5 Renseignements devant figurer sur le document d'expédition alinéa (1) f) de la réglementation sur le Transport de Matières Dangereuses : La mention « Numéro 24 heures » ou « 24-Hour Number », ou une abréviation de celle-ci, suivie d'un numéro de téléphone, y compris l'indicatif régional, où l'expéditeur peut être joint immédiatement afin d'obtenir des renseignements techniques sur les marchandises dangereuses qui sont en transport, sans qu'il y ait interruption de la communication établie par la personne qui appelle. Lien : <a href=\"https://www.tc.gc.ca/fra/tmd/clair-partie3-317.htm\">https://www.tc.gc.ca/fra/tmd/clair-partie3-317.htm</a></b><br><br>\n\nPour pouvoir continuer l’utilisation des services 24 heures que CANUTEC offre, vous devez accéder à votre compte CANUTEC afin de mettre à jour vos informations ainsi que vos fiches signalétiques. Lien au système d’inscription CANUTEC (SIC) :@{variables('PortalURL')} <br><br>\n\nPour plus d’informations ou questions concernant ce courriel, veuillez contacter l’équipe à l’inscription."
+                                },
+                                "check_if_production_to_send_email": {
+                                  "actions": {
+                                    "Perform_a_bound_action_-_send_email_date_of_expiry": {
+                                      "runAfter": {},
+                                      "metadata": {
+                                        "operationMetadataId": "0e9cf0b9-0937-404c-bce0-895bf9e9dd55"
+                                      },
+                                      "type": "OpenApiConnection",
+                                      "inputs": {
+                                        "host": {
+                                          "connectionName": "shared_commondataserviceforapps",
+                                          "operationId": "PerformBoundAction",
+                                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                        },
+                                        "parameters": {
+                                          "entityName": "emails",
+                                          "actionName": "Microsoft.Dynamics.CRM.SendEmail",
+                                          "recordId": "@outputs('Create_Expired_Email')?['body/activityid']",
+                                          "item/IssueSend": true
+                                        },
+                                        "authentication": "@parameters('$authentication')"
+                                      }
+                                    }
+                                  },
+                                  "runAfter": {
+                                    "Create_Expired_Email": [
+                                      "Succeeded"
+                                    ]
+                                  },
+                                  "expression": {
+                                    "equals": [
+                                      "@variables('IsProduction')",
+                                      "@true"
+                                    ]
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "542644c8-7d36-4698-9fb6-2a8fff54c54e"
+                                  },
+                                  "type": "If"
+                                }
+                              }
+                            },
+                            "Case_-_1_day_before_expiry": {
+                              "case": 1,
+                              "actions": {
+                                "EmailBody1dayBeforeExpiry": {
+                                  "runAfter": {},
+                                  "metadata": {
+                                    "operationMetadataId": "fd76e3cf-6680-4985-869c-30ff09db9857"
+                                  },
+                                  "type": "Compose",
+                                  "inputs": "**Le texte français suit l’anglais** <br> <br>\n\n@{outputs('ContactFullName')}, <br><br>\n\nThe CRS registration for @{outputs('Get_Organization_Information')?['body/name']} will expire tomorrow. Today is the last day you can use the current registration. To avoid interruption and to continue using CANUTEC’s 24-hour emergency number on​ your shipping documents, please renew your CRS registration.<br><br>\n\nSelect the link ​below to renew ​your registration:<br><br>\n\n @{variables('PortalURL')}<br><br>\n\n*****************************************************************************<br><br>\n\n@{outputs('ContactFullName')}, <br><br>\n\nL'inscription SIC de @{outputs('Get_Organization_Information')?['body/name']} expirera demain. ​Aujourd'hui est le dernier jour que vous pouvez utiliser l'inscription actuelle. Pour éviter toute interruption et continuer à utiliser le numéro d'urgence 24 heures sur 24 de CANUTEC sur vos documents d'expédition​, veuillez renouveler votre inscription SIC.<br><br>\n\nVeuillez sélectionner le lien ci-dessous pour renouveler votre inscription : <br><br>\n\n@{variables('PortalURL')}\n"
+                                },
+                                "create_expiry_email_in_one_day": {
+                                  "runAfter": {
+                                    "EmailBody1dayBeforeExpiry": [
+                                      "Succeeded"
+                                    ]
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "a7e45b3f-4f6f-4b23-a3b3-c1dfbb86656d"
+                                  },
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "host": {
+                                      "connectionName": "shared_commondataserviceforapps",
+                                      "operationId": "CreateRecord",
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                    },
+                                    "parameters": {
+                                      "entityName": "emails",
+                                      "item/activitypointer_activity_parties": [
+                                        {
+                                          "participationtypemask": 1,
+                                          "partyid@odata.bind": "\\queues\\@{outputs('CRSqueue')}"
+                                        },
+                                        {
+                                          "participationtypemask": 2,
+                                          "partyid@odata.bind": "\\contacts\\@{outputs('ContactGUID')}"
+                                        }
+                                      ],
+                                      "item/description": "@outputs('EmailBody1dayBeforeExpiry')",
+                                      "item/regardingobjectid_ovs_registration_email@odata.bind": "\\ovs_registrations\\@{items('Apply_to_each_CRS_Registration')?['ovs_registrationid']}",
+                                      "item/subject": "Your CRS Registration Will Expire Tomorrow/Votre inscription SIC expirera demain"
+                                    },
+                                    "authentication": "@parameters('$authentication')"
+                                  }
+                                },
+                                "check_if_prod_to_send_email": {
+                                  "actions": {
+                                    "Perform_a_bound_action_send_email": {
+                                      "runAfter": {},
+                                      "metadata": {
+                                        "operationMetadataId": "085755ec-b111-4826-b12b-ced33ad9870d"
+                                      },
+                                      "type": "OpenApiConnection",
+                                      "inputs": {
+                                        "host": {
+                                          "connectionName": "shared_commondataserviceforapps",
+                                          "operationId": "PerformBoundAction",
+                                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                        },
+                                        "parameters": {
+                                          "entityName": "emails",
+                                          "actionName": "Microsoft.Dynamics.CRM.SendEmail",
+                                          "recordId": "@outputs('create_expiry_email_in_one_day')?['body/activityid']",
+                                          "item/IssueSend": true
+                                        },
+                                        "authentication": "@parameters('$authentication')"
+                                      }
+                                    }
+                                  },
+                                  "runAfter": {
+                                    "create_expiry_email_in_one_day": [
+                                      "Succeeded"
+                                    ]
+                                  },
+                                  "expression": {
+                                    "equals": [
+                                      "@variables('IsProduction')",
+                                      "@true"
+                                    ]
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "5c401102-156e-44a2-a947-4378b61f0f27"
+                                  },
+                                  "type": "If"
+                                }
+                              }
+                            }
+                          },
+                          "default": {
+                            "actions": {}
+                          },
+                          "expression": "@outputs('NumberOfdays')",
+                          "metadata": {
+                            "operationMetadataId": "623bdaa3-e851-4026-8a31-a0d25d212550"
+                          },
+                          "type": "Switch"
+                        },
+                        "ContactFullName": {
+                          "runAfter": {
+                            "ContactGUID": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "63e5cf12-e252-4693-a7e2-d3052e4e54b4"
+                          },
+                          "type": "Compose",
+                          "inputs": "@items('Apply_to_each_contact')?['_record2id_value@OData.Community.Display.V1.FormattedValue']"
+                        }
+                      },
+                      "runAfter": {
+                        "List_rows_ALL_TGD_connection_contacts": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "e18a711c-2982-43c3-8d7f-0243d411fd9a"
+                      },
+                      "type": "Foreach"
+                    },
+                    "Parse_JSON-Activity_party": {
+                      "runAfter": {
+                        "Apply_to_each_contact": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "d73b8502-c870-4240-ad08-58fc6b3e4251"
+                      },
+                      "type": "ParseJson",
+                      "inputs": {
+                        "content": "@concat('[', string(variables('ActivityPartStringList')), ']')",
+                        "schema": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "participationtypemask": {
+                                "type": "integer"
+                              },
+                              "partyid@odata.bind": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "participationtypemask",
+                              "partyid@odata.bind"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "Get_Organization_Information": {
+                      "runAfter": {
+                        "Set_variable_Activity_party_string_List_initial_value": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "41feecd6-d6f3-4786-b6ae-b3691f871424"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connectionName": "shared_commondataserviceforapps",
+                          "operationId": "GetItem",
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                        },
+                        "parameters": {
+                          "entityName": "accounts",
+                          "recordId": "@outputs('OrganizationGUID')"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                      }
+                    },
+                    "Check_if_number_of_days_is_15": {
+                      "actions": {
+                        "15DaysEmailTemplate": {
+                          "runAfter": {},
+                          "metadata": {
+                            "operationMetadataId": "31983757-532a-4a26-ad8a-c0581849dde4"
+                          },
+                          "type": "Compose",
+                          "inputs": "**Le texte français suit l’anglais**<br><br>\n\n@{outputs('Get_Organization_Information')?['body/name']}, <br><br>\n\nYour CRS registration ​will expire in 15 days. Please renew your registration so you can continue using CANUTEC’s 24-hour emergency number on your shipping documents. <br><br>\n\n​Select the link ​below to renew ​your registration:<br><br>\n\n@{variables('PortalURL')}<br><br>\n\n*****************************************************************************<br><br>\n\n@{outputs('Get_Organization_Information')?['body/name']},<br><br>\n\nVotre inscription SIC expirera dans 15 jours. Veuillez renouveler votre inscription afin de pouvoir continuer à utiliser le numéro d'urgence 24 heures sur 24 de CANUTEC sur vos documents d'expédition. <br><br>\n\nVeuillez sélectionner le lien ci-dessous pour renouveler votre inscription : <br><br>\n\n@{variables('PortalURL')}"
+                        },
+                        "Create15DaysMessage": {
+                          "runAfter": {
+                            "15DaysEmailTemplate": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "80880112-e24e-4bc2-be30-45c3c93f3ce0"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "host": {
+                              "connectionName": "shared_commondataserviceforapps",
+                              "operationId": "CreateRecord",
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                            },
+                            "parameters": {
+                              "entityName": "emails",
+                              "item/activitypointer_activity_parties": "@body('Parse_JSON-Activity_party')",
+                              "item/description": "@outputs('15DaysEmailTemplate')",
+                              "item/regardingobjectid_ovs_registration_email@odata.bind": "\\ovs_registrations\\@{items('Apply_to_each_CRS_Registration')?['ovs_registrationid']}",
+                              "item/subject": "Your CRS Registration Will Expire In 15 Days/Votre inscription SIC expirera dans 15 jours"
+                            },
+                            "authentication": "@parameters('$authentication')"
+                          }
+                        },
+                        "check_if_production_to_send_expiry_email": {
+                          "actions": {
+                            "Perform_a_bound_action_send_expiry_email_": {
+                              "runAfter": {},
+                              "metadata": {
+                                "operationMetadataId": "f15d13d6-d91f-4528-b47e-72ebcf6e4644"
+                              },
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "host": {
+                                  "connectionName": "shared_commondataserviceforapps",
+                                  "operationId": "PerformBoundAction",
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                                },
+                                "parameters": {
+                                  "entityName": "emails",
+                                  "actionName": "Microsoft.Dynamics.CRM.SendEmail",
+                                  "recordId": "@outputs('Create15DaysMessage')?['body/activityid']",
+                                  "item/IssueSend": true
+                                },
+                                "authentication": "@parameters('$authentication')"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Create15DaysMessage": [
+                              "Succeeded"
+                            ]
+                          },
+                          "expression": {
+                            "equals": [
+                              "@variables('IsProduction')",
+                              "@true"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "212dc306-4a75-4e72-877f-b600368374e2"
+                          },
+                          "type": "If"
+                        }
+                      },
+                      "runAfter": {
+                        "Parse_JSON-Activity_party": [
+                          "Succeeded"
+                        ]
+                      },
+                      "expression": {
+                        "equals": [
+                          "@outputs('NumberOfdays')",
+                          15
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "212dc306-4a75-4e72-877f-b600368374e2"
+                      },
+                      "type": "If"
+                    },
+                    "Org_Registration_Expiry": {
+                      "runAfter": {
+                        "OrganizationGUID": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "f653c349-ac36-4987-a94b-333af95fba3c"
+                      },
+                      "type": "Compose",
+                      "inputs": "@items('Apply_to_each_CRS_Registration')?['ovs_expirydate']"
+                    }
+                  },
+                  "runAfter": {
+                    "List_rows_-_Get_List_of_Expiring_registrations": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "67d16a5f-d781-4cb0-8766-21305801d3d1"
+                  },
+                  "type": "Foreach"
+                }
+              },
+              "runAfter": {
+                "ExpiryDate": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "23bcb659-2ab6-41e1-9fbf-24be9d52c0e9"
+              },
+              "type": "Scope"
+            }
+          },
+          "runAfter": {
+            "CRSqueue": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b8547e6e-77e3-44e2-821f-7cc6f544c247"
+          },
+          "type": "Foreach"
+        },
+        "Initialize_variable_ActivityPartStringList": {
+          "runAfter": {
+            "Initialize_variable_NotificationScheduleInDays": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8da56ffd-7f40-488d-979c-d8d5179a3270"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ActivityPartStringList",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "CRSqueue": {
+          "runAfter": {
+            "Initialize_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "932e849c-1aea-438b-a046-35edee1f6f75"
+          },
+          "type": "Compose",
+          "inputs": "@parameters('CRS_Sender_Queue (ovs_CRS_Sender_Queue)')"
+        },
+        "Initialize_variable_Portal_URL": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "7289a6f5-7300-457c-b9ae-d0f3186ea017"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "PortalURL",
+                "type": "string",
+                "value": " <a href=\"@{parameters('TDGOnlineportal (ovs_TDGOnlineportal)')}\">@{parameters('TDGOnlineportal (ovs_TDGOnlineportal)')}</a>"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_CRMURL": {
+          "runAfter": {
+            "Initialize_variable_ActivityPartStringList": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "00b7098c-5016-4bb4-b37e-f062add57c3f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CRMURL",
+                "type": "string",
+                "value": "@parameters('CrmBaseUrl (ovs_CrmBaseUrl)')"
+              }
+            ]
+          }
+        },
+        "Initialize_variable": {
+          "runAfter": {
+            "Initialize_variable_CRMURL": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "999e42a1-8e0a-4c8e-939f-532c7bd04913"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "IsProduction",
+                "type": "boolean",
+                "value": "@if (equals( parameters('CrmBaseUrl (ovs_CrmBaseUrl)')  , 'rom-prod-tdg-tcd365.crm3.dynamics.com'),true , false)"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

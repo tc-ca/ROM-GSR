@@ -1,0 +1,500 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "CRS_Sender_Queue (ovs_CRS_Sender_Queue)": {
+          "defaultValue": "f8a1729c-7601-ef11-9f89-0022483d0141",
+          "type": "String",
+          "metadata": {
+            "schemaName": "ovs_CRS_Sender_Queue"
+          }
+        },
+        "CrmBaseUrl (ovs_CrmBaseUrl)": {
+          "defaultValue": "tdgcore-dev-tcd365.crm3.dynamics.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "ovs_CrmBaseUrl",
+            "description": "Provides current environment base url. No back slash ending."
+          }
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "c79ad503-4c6d-4656-968b-b9bcd71dab84"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 3,
+              "subscriptionRequest/entityname": "ovs_submission",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "statuscode",
+              "subscriptionRequest/filterexpression": "statuscode eq 1 or statuscode eq 918640002"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Get_a_row_by_ID": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "985a9f3f-4e7e-4683-b356-e0ff56f9405b"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "ovs_registrations",
+              "recordId": "@triggerOutputs()?['body/_ovs_registration_id_value']"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Compose": {
+          "runAfter": {
+            "Initialize_variable_-_Subject": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d2f052d3-9e7c-4906-8aea-f9fd7f3a78b3"
+          },
+          "type": "Compose",
+          "inputs": "@outputs('Get_a_row_by_ID')?['body/_ovs_organization_id_value']"
+        },
+        "List_rows_-_Related_TGD_Connection_Contacts": {
+          "runAfter": {
+            "Compose": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6bc57772-1215-4434-aa4e-d8dbbcaab973"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "connections",
+              "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"connection\">\n<attribute name=\"record2id\"/>\n<attribute name=\"record1id\"/>\n<attribute name=\"connectionid\"/>\n<attribute name=\"effectivestart\"/>\n<filter type=\"and\">\n<condition attribute=\"record2objecttypecode\" operator=\"eq\" value=\"2\"/>\n<condition attribute=\"record1objecttypecode\" operator=\"eq\" value=\"1\"/>\n<condition attribute=\"effectivestart\" operator=\"not-null\"/>\n<condition attribute=\"record2roleid\" operator=\"not-null\"/>\n</filter>\n<link-entity name=\"account\" from=\"accountid\" to=\"record1id\" link-type=\"inner\" alias=\"a_b319a54f03644ed1a2f0dc0bae8c384d\">\n<attribute name=\"name\"/>\n<attribute name=\"primarycontactid\"/>\n<filter type=\"and\">\n<condition attribute=\"accountid\" operator=\"eq\"  value=\"@{outputs('Get_a_row_by_ID')?['body/_ovs_organization_id_value']}\"/>\n</filter>\n</link-entity>\n<link-entity name=\"contact\" from=\"contactid\" to=\"record2id\" link-type=\"inner\" alias=\"a_72c81aaa72c549acbe9e0deee5bd0ad2\">\n<attribute name=\"jobtitle\"/>\n<attribute name=\"fullname\"/>\n<attribute name=\"emailaddress1\"/>\n<filter type=\"and\">\n<condition attribute=\"ovs_mbun\" operator=\"not-null\"/>\n</filter>\n</link-entity>\n</entity>\n</fetch>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Apply_to_each_-_Contact": {
+          "foreach": "@outputs('List_rows_-_Related_TGD_Connection_Contacts')?['body/value']",
+          "actions": {
+            "Append_to_ActivityParty": {
+              "runAfter": {
+                "Set_variable_-_Contact_Full_Name": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7fcf9621-c1dd-47e3-8d36-d45be3013da9"
+              },
+              "type": "AppendToStringVariable",
+              "inputs": {
+                "name": "ActivityParty",
+                "value": ", {\n    \"participationtypemask\": 2,\n    \"partyid@odata.bind\": \"\\\\contacts\\\\\"\n  }"
+              }
+            },
+            "Set_variable_-_Contact_GUID": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "248905ca-c9f5-4a40-9f83-0d9c1f01bbbf"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Contact GUID",
+                "value": "@{items('Apply_to_each_-_Contact')?['_record2id_value']}"
+              }
+            },
+            "Set_variable_-_Contact_Full_Name": {
+              "runAfter": {
+                "Set_variable_-_Contact_GUID": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "357d8608-6eea-4de4-af72-e4e17f5df763"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Contact Full Name",
+                "value": "@{items('Apply_to_each_-_Contact')?['_record2id_value@OData.Community.Display.V1.FormattedValue']}"
+              }
+            }
+          },
+          "runAfter": {
+            "List_rows_-_Related_TGD_Connection_Contacts": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e18a711c-2982-43c3-8d7f-0243d411fd9a"
+          },
+          "type": "Foreach"
+        },
+        "Initialize_variable_-_ActivityParty": {
+          "runAfter": {
+            "Get_a_row_by_ID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8da56ffd-7f40-488d-979c-d8d5179a3270"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ActivityParty",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_-_Contact_GUID": {
+          "runAfter": {
+            "Initialize_variable_-_ActivityParty": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6c4656b3-4ef8-41ff-96e5-1678069e84e2"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Contact GUID",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_-_Contact_Full_Name": {
+          "runAfter": {
+            "Initialize_variable_-_Contact_GUID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d45882d4-4003-4662-9b39-120e444e0fa1"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Contact Full Name",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_-_CRS_Queue": {
+          "runAfter": {
+            "Initialize_variable_-_Contact_Full_Name": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0bcf0442-5aa1-43b8-99f3-0e034ac899da"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CRS Queue",
+                "type": "string",
+                "value": "@parameters('CRS_Sender_Queue (ovs_CRS_Sender_Queue)')"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_-_IsProduction": {
+          "runAfter": {
+            "Initialize_variable_-_CRS_Queue": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "56278e0f-c220-43f0-b685-b6cf939810c4"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "IsProduction",
+                "type": "boolean",
+                "value": "@if (equals( parameters('CrmBaseUrl (ovs_CrmBaseUrl)')  , 'rom-prod-tdg-tcd365.crm3.dynamics.com'),true , false)"
+              }
+            ]
+          }
+        },
+        "Switch_-_Submission_Status": {
+          "runAfter": {
+            "Apply_to_each_-_Contact": [
+              "Succeeded"
+            ]
+          },
+          "cases": {
+            "Case_-_Approved_": {
+              "case": 1,
+              "actions": {
+                "Set_variable_-_Subject_Approved": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "b2f44713-c68a-4b94-b56a-c7b783fe8342"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Subject",
+                    "value": "Approved"
+                  }
+                },
+                "Set_variable_-_Email_Body_Approved": {
+                  "runAfter": {
+                    "Set_variable_-_Subject_Approved": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "d2837acb-b660-4c6d-962f-d31c967e7254"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Email Body",
+                    "value": "Approved"
+                  }
+                }
+              }
+            },
+            "Case_-_Submitted": {
+              "case": 918640002,
+              "actions": {
+                "Set_variable_-_Subject_Submitted": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "11077f15-093b-41a9-9a5c-1999103ec180"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Subject",
+                    "value": "Submitted"
+                  }
+                },
+                "Set_variable_-_Email_Body_Submitted": {
+                  "runAfter": {
+                    "Set_variable_-_Subject_Submitted": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "8557bdfa-902a-4250-8a2c-e89fe100e9fb"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Email Body",
+                    "value": "Submitted"
+                  }
+                }
+              }
+            },
+            "Case_-_Declined": {
+              "case": 918640003,
+              "actions": {
+                "Set_variable_-_Subject_Declined": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "7b71a99f-389d-4b10-a555-c3fd963fb751"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Subject",
+                    "value": "Declined"
+                  }
+                },
+                "Set_variable_-_Email_Body_Declined": {
+                  "runAfter": {
+                    "Set_variable_-_Subject_Declined": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "198c7231-f917-4466-a915-ffb26acb11ae"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Email Body",
+                    "value": "Declined"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "actions": {}
+          },
+          "expression": "@triggerOutputs()?['body/statuscode']",
+          "metadata": {
+            "operationMetadataId": "623bdaa3-e851-4026-8a31-a0d25d212550"
+          },
+          "type": "Switch"
+        },
+        "Initialize_variable_-_Email_Body": {
+          "runAfter": {
+            "Initialize_variable_-_IsProduction": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "766979fc-f59e-4e1b-954c-3c703026079f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Email Body",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_-_Subject": {
+          "runAfter": {
+            "Initialize_variable_-_Email_Body": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "05aff842-c95c-4a0a-8d76-1597f057a88e"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Subject",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Condition_-_Environment_Check": {
+          "actions": {
+            "Perform_a_bound_action_-_Send_Email": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "0e9cf0b9-0937-404c-bce0-895bf9e9dd55"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "PerformBoundAction",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "emails",
+                  "actionName": "Microsoft.Dynamics.CRM.SendEmail",
+                  "recordId": "@outputs('Add_a_new_row_-_Email')?['body/activityid']",
+                  "item/IssueSend": true
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "Add_a_new_row_-_Email": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "equals": [
+              "@variables('IsProduction')",
+              "@true"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "542644c8-7d36-4698-9fb6-2a8fff54c54e"
+          },
+          "type": "If"
+        },
+        "Add_a_new_row_-_Email": {
+          "runAfter": {
+            "Switch_-_Submission_Status": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "be91d3d9-a132-4355-918b-b49414b48907"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "CreateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "emails",
+              "item/activitypointer_activity_parties": [
+                {
+                  "participationtypemask": 1,
+                  "partyid@odata.bind": "\\queues\\@{variables('CRS Queue')}"
+                },
+                {
+                  "participationtypemask": 2,
+                  "partyid@odata.bind": "\\contacts\\@{variables('Contact GUID')}"
+                }
+              ],
+              "item/description": "@variables('Email Body')",
+              "item/regardingobjectid_ovs_submission_email@odata.bind": "\\ovs_submissions\\@{triggerOutputs()?['body/ovs_submissionid']}",
+              "item/subject": "@variables('Subject')"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
