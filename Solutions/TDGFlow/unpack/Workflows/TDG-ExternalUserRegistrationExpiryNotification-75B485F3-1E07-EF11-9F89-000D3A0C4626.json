@@ -139,7 +139,7 @@
                       "type": "Compose",
                       "inputs": "@items('Apply_to_each_CRS_Registration')?['_ovs_organization_id_value']"
                     },
-                    "List_rows_ALL_TGD_connection_contacts": {
+                    "List_rows_ALL_TGD_connections_contacts": {
                       "runAfter": {
                         "Get_Organization_Information": [
                           "Succeeded"
@@ -157,28 +157,13 @@
                         },
                         "parameters": {
                           "entityName": "connections",
-                          "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"connection\">\n<attribute name=\"record2id\"/>\n<attribute name=\"record1id\"/>\n<attribute name=\"connectionid\"/>\n<attribute name=\"effectivestart\"/>\n<filter type=\"and\">\n<condition attribute=\"record2objecttypecode\" operator=\"eq\" value=\"2\"/>\n<condition attribute=\"record1objecttypecode\" operator=\"eq\" value=\"1\"/>\n<condition attribute=\"effectivestart\" operator=\"not-null\"/>\n<condition attribute=\"record2roleid\" operator=\"not-null\"/>\n</filter>\n<link-entity name=\"account\" from=\"accountid\" to=\"record1id\" link-type=\"inner\" alias=\"a_b319a54f03644ed1a2f0dc0bae8c384d\">\n<attribute name=\"name\"/>\n<attribute name=\"primarycontactid\"/>\n<filter type=\"and\">\n<condition attribute=\"accountid\" operator=\"eq\"  value=\"@{outputs('OrganizationGUID')}\"/>\n</filter>\n</link-entity>\n<link-entity name=\"contact\" from=\"contactid\" to=\"record2id\" link-type=\"inner\" alias=\"a_72c81aaa72c549acbe9e0deee5bd0ad2\">\n<attribute name=\"jobtitle\"/>\n<attribute name=\"fullname\"/>\n<attribute name=\"emailaddress1\"/>\n<filter type=\"and\">\n<condition attribute=\"ovs_mbun\" operator=\"not-null\"/>\n</filter>\n</link-entity>\n</entity>\n</fetch>"
+                          "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n<entity name=\"connection\">\n<attribute name=\"record2id\"/>\n<attribute name=\"record1id\"/>\n<attribute name=\"connectionid\"/>\n<attribute name=\"effectivestart\"/>\n<filter type=\"and\">\n<condition attribute=\"record2objecttypecode\" operator=\"eq\" value=\"2\"/>\n<condition attribute=\"record1objecttypecode\" operator=\"eq\" value=\"1\"/>\n<condition attribute=\"effectivestart\" operator=\"not-null\"/>\n<condition attribute=\"record1roleid\" operator=\"not-null\"/>\n</filter>\n<link-entity name=\"account\" from=\"accountid\" to=\"record1id\" link-type=\"inner\" alias=\"a_b319a54f03644ed1a2f0dc0bae8c384d\">\n<attribute name=\"name\"/>\n<attribute name=\"primarycontactid\"/>\n<filter type=\"and\">\n<condition attribute=\"accountid\" operator=\"eq\"  value=\"@{outputs('OrganizationGUID')}\"/>\n</filter>\n</link-entity>\n<link-entity name=\"contact\" from=\"contactid\" to=\"record2id\" link-type=\"inner\" alias=\"a_72c81aaa72c549acbe9e0deee5bd0ad2\">\n<attribute name=\"jobtitle\"/>\n<attribute name=\"fullname\"/>\n<attribute name=\"emailaddress1\"/>\n<filter type=\"and\">\n<condition attribute=\"ovs_mbun\" operator=\"not-null\"/>\n</filter>\n</link-entity>\n</entity>\n</fetch>"
                         },
                         "authentication": "@parameters('$authentication')"
                       }
                     },
-                    "Set_variable_Activity_party_string_List_initial_value": {
-                      "runAfter": {
-                        "Org_Registration_Expiry": [
-                          "Succeeded"
-                        ]
-                      },
-                      "metadata": {
-                        "operationMetadataId": "5fbb1b88-2651-44d4-9116-32cbb5d6f0b7"
-                      },
-                      "type": "SetVariable",
-                      "inputs": {
-                        "name": "ActivityPartStringList",
-                        "value": "{\"participationtypemask\": 1,\n\"partyid@odata.bind\": \"\\\\queues\\\\@{outputs('CRSqueue')}\"}"
-                      }
-                    },
                     "Apply_to_each_contact": {
-                      "foreach": "@outputs('List_rows_ALL_TGD_connection_contacts')?['body/value']",
+                      "foreach": "@outputs('List_rows_ALL_TGD_connections_contacts')?['body/value']",
                       "actions": {
                         "ContactGUID": {
                           "runAfter": {},
@@ -422,7 +407,7 @@
                         }
                       },
                       "runAfter": {
-                        "List_rows_ALL_TGD_connection_contacts": [
+                        "Set_variable_Activity_party_string_List_initial_value": [
                           "Succeeded"
                         ]
                       },
@@ -465,7 +450,7 @@
                     },
                     "Get_Organization_Information": {
                       "runAfter": {
-                        "Set_variable_Activity_party_string_List_initial_value": [
+                        "Org_Registration_Expiry": [
                           "Succeeded"
                         ]
                       },
@@ -590,6 +575,21 @@
                       },
                       "type": "Compose",
                       "inputs": "@items('Apply_to_each_CRS_Registration')?['ovs_expirydate']"
+                    },
+                    "Set_variable_Activity_party_string_List_initial_value": {
+                      "runAfter": {
+                        "List_rows_ALL_TGD_connections_contacts": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "5fbb1b88-2651-44d4-9116-32cbb5d6f0b7"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "ActivityPartStringList",
+                        "value": "{\"participationtypemask\": 1,\n\"partyid@odata.bind\": \"\\\\queues\\\\@{outputs('CRSqueue')}\"}"
+                      }
                     }
                   },
                   "runAfter": {
