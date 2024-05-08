@@ -66,6 +66,13 @@
             "schemaName": "ovs_CrmBaseUrl",
             "description": "Provides current environment base url. No back slash ending."
           }
+        },
+        "CRS_Sender_Queue (ovs_CRS_Sender_Queue)": {
+          "defaultValue": "f8a1729c-7601-ef11-9f89-0022483d0141",
+          "type": "String",
+          "metadata": {
+            "schemaName": "ovs_CRS_Sender_Queue"
+          }
         }
       },
       "triggers": {
@@ -95,7 +102,7 @@
       "actions": {
         "List_rows_Registration": {
           "runAfter": {
-            "Condition_Has_Send_Email_Queue": [
+            "Append_to_array_variable_Send_Email_Queue": [
               "Succeeded"
             ]
           },
@@ -1000,7 +1007,7 @@
         },
         "List_rows_Envs": {
           "runAfter": {
-            "Initialize_variable_Contact_Name": [
+            "CRSqueue": [
               "Succeeded"
             ]
           },
@@ -1090,120 +1097,6 @@
             "operationMetadataId": "cbaf2ee7-7683-4da3-9f6f-ca2937099946"
           },
           "type": "Foreach"
-        },
-        "Condition_Has_Send_Email_Queue": {
-          "actions": {
-            "Set_variable_Sender_Email": {
-              "runAfter": {},
-              "metadata": {
-                "operationMetadataId": "6a5426cb-035e-41c9-b15e-b91e8129db32"
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "Sender Email",
-                "value": "/systemusers(@{triggerOutputs()?['body/_modifiedby_value']})"
-              }
-            },
-            "Append_to_array_variable": {
-              "runAfter": {
-                "Set_variable_Sender_Email": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "0f52bf1d-294c-4f11-888f-ffbbcc580ddf"
-              },
-              "type": "AppendToArrayVariable",
-              "inputs": {
-                "name": "To Recipients",
-                "value": {
-                  "participationtypemask": 1,
-                  "partyid@odata.bind": "@{variables('Sender Email')}"
-                }
-              }
-            }
-          },
-          "runAfter": {
-            "Apply_to_each_Envs": [
-              "Succeeded"
-            ]
-          },
-          "else": {
-            "actions": {
-              "List_rows_Sender_Queue": {
-                "runAfter": {},
-                "metadata": {
-                  "operationMetadataId": "6e3a68dc-d834-4315-841b-672fd6edf98b"
-                },
-                "type": "OpenApiConnection",
-                "inputs": {
-                  "host": {
-                    "connectionName": "shared_commondataserviceforapps",
-                    "operationId": "ListRecords",
-                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-                  },
-                  "parameters": {
-                    "entityName": "queues",
-                    "fetchXml": "<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\">\n                                              <entity name=\"queue\">\n                                                <attribute name=\"name\" />\n                                                <attribute name=\"emailaddress\" />\n                                                <attribute name=\"queueid\" />\n                                                <attribute name=\"queueviewtype\" />\n                                                <attribute name=\"defaultmailbox\" />\n                                                <attribute name=\"incomingemaildeliverymethod\" />\n                                                <order attribute=\"name\" descending=\"false\" />\n                                                <link-entity name=\"mailbox\" from=\"mailboxid\" to=\"defaultmailbox\" link-type=\"inner\" alias=\"Mailbox\">\n                                                  <attribute name=\"emailaddress\" />\n                                                  <filter type=\"and\">\n                                                    <condition attribute=\"emailaddress\" operator=\"eq\" value=\"@{variables('Sender Email')}\" />\n                                                  </filter>\n                                                </link-entity>\n                                              </entity>\n                                            </fetch>"
-                  },
-                  "authentication": "@parameters('$authentication')"
-                }
-              },
-              "Apply_to_each_Sender_Queue": {
-                "foreach": "@outputs('List_rows_Sender_Queue')?['body/value']",
-                "actions": {
-                  "Set_variable": {
-                    "runAfter": {},
-                    "metadata": {
-                      "operationMetadataId": "0cd37c4e-dbb0-4b8e-962c-a872758cdf1a"
-                    },
-                    "type": "SetVariable",
-                    "inputs": {
-                      "name": "Sender Email",
-                      "value": "/queues(@{items('Apply_to_each_Sender_Queue')?['queueid']})"
-                    }
-                  },
-                  "Append_to_array_variable_2": {
-                    "runAfter": {
-                      "Set_variable": [
-                        "Succeeded"
-                      ]
-                    },
-                    "metadata": {
-                      "operationMetadataId": "316877c7-46cd-4f63-826a-9c56910b820b"
-                    },
-                    "type": "AppendToArrayVariable",
-                    "inputs": {
-                      "name": "To Recipients",
-                      "value": {
-                        "participationtypemask": 1,
-                        "partyid@odata.bind": "@{variables('Sender Email')}"
-                      }
-                    }
-                  }
-                },
-                "runAfter": {
-                  "List_rows_Sender_Queue": [
-                    "Succeeded"
-                  ]
-                },
-                "metadata": {
-                  "operationMetadataId": "fc87e5bd-cd89-4a4f-9a0e-1dd0d6e74105"
-                },
-                "type": "Foreach"
-              }
-            }
-          },
-          "expression": {
-            "equals": [
-              "@variables('Sender Email')",
-              ""
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "3761712d-9c27-48c9-8c8c-64eb3536ebfe"
-          },
-          "type": "If"
         },
         "Initialize_variable_System_Date": {
           "runAfter": {
@@ -1380,6 +1273,51 @@
                 "type": "string"
               }
             ]
+          }
+        },
+        "CRSqueue": {
+          "runAfter": {
+            "Initialize_variable_Contact_Name": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "932e849c-1aea-438b-a046-35edee1f6f75"
+          },
+          "type": "Compose",
+          "inputs": "@parameters('CRS_Sender_Queue (ovs_CRS_Sender_Queue)')"
+        },
+        "Set_variable": {
+          "runAfter": {
+            "Apply_to_each_Envs": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0cd37c4e-dbb0-4b8e-962c-a872758cdf1a"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "Sender Email",
+            "value": "\\queues\\@{outputs('CRSqueue')}"
+          }
+        },
+        "Append_to_array_variable_Send_Email_Queue": {
+          "runAfter": {
+            "Set_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "316877c7-46cd-4f63-826a-9c56910b820b"
+          },
+          "type": "AppendToArrayVariable",
+          "inputs": {
+            "name": "To Recipients",
+            "value": {
+              "participationtypemask": 1,
+              "partyid@odata.bind": "@{variables('Sender Email')}"
+            }
           }
         }
       }
