@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ImportExportXml version="9.2.24043.188" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ImportExportXml version="9.2.24045.174" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <UniqueName>TDGFlow</UniqueName>
     <LocalizedNames>
@@ -8,7 +8,7 @@
     <Descriptions>
       <Description description="Upgrade of TDG.Flow" languagecode="1033" />
     </Descriptions>
-    <Version>1.2.0.30</Version>
+    <Version>1.2.0.31</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>transportationofdangerousgoods</UniqueName>
@@ -95,6 +95,7 @@
       <RootComponent type="29" id="{6b09e81f-aeae-eb11-8236-000d3ae91ce1}" behavior="0" />
       <RootComponent type="29" id="{75b485f3-1e07-ef11-9f89-000d3a0c4626}" behavior="0" />
       <RootComponent type="29" id="{92f2ceb1-6caf-eb11-8236-000d3ae91ce1}" behavior="0" />
+      <RootComponent type="29" id="{a2aefa24-2f0e-ef11-9f89-0022483de3ab}" behavior="0" />
       <RootComponent type="29" id="{b1352b4e-58af-eb11-8236-000d3ae8b65a}" behavior="0" />
       <RootComponent type="29" id="{b81b36bc-63af-eb11-8236-000d3ae91ce1}" behavior="0" />
       <RootComponent type="29" id="{eb3b6040-d898-ec11-b3fe-0022483c0c24}" behavior="0" />
@@ -139,10 +140,6 @@
       <MissingDependency>
         <Required type="1" schemaName="bookableresourcecategoryassn" displayName="Bookable Resource Category Assn" solution="msdynce_Scheduling (9.0.0.0)" />
         <Dependent type="29" displayName="TDG Inspections - Set new Bookable Resource Category to Inspector" id="{b81b36bc-63af-eb11-8236-000d3ae91ce1}" />
-      </MissingDependency>
-      <MissingDependency>
-        <Required type="1" schemaName="environmentvariabledefinition" displayName="Environment Variable Definition" solution="EnvironmentVariables (1.0.2.297)" />
-        <Dependent type="29" displayName="TDG CRS Approval and Declined Addtional Info Letter" id="{5900bd50-83fe-ee11-9f89-002248b0d3d6}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="msdyn_workorder" displayName="Work Order" solution="FieldService (8.8.0.88)">
@@ -235,6 +232,10 @@
       <MissingDependency>
         <Required type="1" schemaName="ovs_followuprequest" displayName="Follow Up Inspection Request" solution="Active" />
         <Dependent type="29" displayName="TDG Inspections - Follow-up Request via Activity" id="{065c7533-adae-eb11-8236-000d3ae8b65a}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="ovs_invitation" displayName="Invitation" solution="Active" />
+        <Dependent type="29" displayName="TDG CRS Invitation Email Notification" id="{a2aefa24-2f0e-ef11-9f89-0022483de3ab}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="1" schemaName="ovs_iptrun" displayName="IPT Run" solution="Active" />
@@ -436,6 +437,10 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="connectionreference" displayName="tdg_ConnectionReferenceDataverseServicePrinciple" solution="Active" id.connectionreferencelogicalname="tdg_ConnectionReferenceDataverseServicePrinciple" />
+        <Dependent type="29" displayName="TDG CRS Invitation Email Notification" id="{a2aefa24-2f0e-ef11-9f89-0022483de3ab}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="connectionreference" displayName="tdg_ConnectionReferenceDataverseServicePrinciple" solution="Active" id.connectionreferencelogicalname="tdg_ConnectionReferenceDataverseServicePrinciple" />
         <Dependent type="29" displayName="TDG Inspections - Updates &quot;Actual&quot; count on &quot;Unplanned Forecast&quot; Entity" id="{b1352b4e-58af-eb11-8236-000d3ae8b65a}" />
       </MissingDependency>
       <MissingDependency>
@@ -551,6 +556,10 @@
         <Dependent type="29" displayName="TDG - External User Registration Expiry Notification" id="{75b485f3-1e07-ef11-9f89-000d3a0c4626}" />
       </MissingDependency>
       <MissingDependency>
+        <Required type="EnvironmentVariableDefinition" displayName="ovs_CrmBaseUrl" solution="Active" id.schemaname="ovs_CrmBaseUrl" />
+        <Dependent type="29" displayName="TDG CRS Invitation Email Notification" id="{a2aefa24-2f0e-ef11-9f89-0022483de3ab}" />
+      </MissingDependency>
+      <MissingDependency>
         <Required type="EnvironmentVariableDefinition" displayName="ovs_CRS_Sender_Queue" solution="Active" id.schemaname="ovs_CRS_Sender_Queue" />
         <Dependent type="29" displayName="Submission: [On Status Change] -&gt; Send Email Notification to Account Managers" id="{15c20143-7709-ef11-9f89-000d3a0c4626}" />
       </MissingDependency>
@@ -561,6 +570,10 @@
       <MissingDependency>
         <Required type="EnvironmentVariableDefinition" displayName="ovs_CRS_Sender_Queue" solution="Active" id.schemaname="ovs_CRS_Sender_Queue" />
         <Dependent type="29" displayName="TDG - External User Registration Expiry Notification" id="{75b485f3-1e07-ef11-9f89-000d3a0c4626}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="EnvironmentVariableDefinition" displayName="ovs_CRS_Sender_Queue" solution="Active" id.schemaname="ovs_CRS_Sender_Queue" />
+        <Dependent type="29" displayName="TDG CRS Invitation Email Notification" id="{a2aefa24-2f0e-ef11-9f89-0022483de3ab}" />
       </MissingDependency>
       <MissingDependency>
         <Required type="EnvironmentVariableDefinition" displayName="ovs_DetentionNoticeEN" solution="Active" id.schemaname="ovs_DetentionNoticeEN" />
@@ -580,7 +593,19 @@
       </MissingDependency>
       <MissingDependency>
         <Required type="EnvironmentVariableDefinition" displayName="ovs_TDGOnlineportal" solution="Active" id.schemaname="ovs_TDGOnlineportal" />
+        <Dependent type="29" displayName="Submission: [On Status Change] -&gt; Send Email Notification to Account Managers" id="{15c20143-7709-ef11-9f89-000d3a0c4626}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="EnvironmentVariableDefinition" displayName="ovs_TDGOnlineportal" solution="Active" id.schemaname="ovs_TDGOnlineportal" />
+        <Dependent type="29" displayName="TDG CRS Approval and Declined Addtional Info Letter" id="{5900bd50-83fe-ee11-9f89-002248b0d3d6}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="EnvironmentVariableDefinition" displayName="ovs_TDGOnlineportal" solution="Active" id.schemaname="ovs_TDGOnlineportal" />
         <Dependent type="29" displayName="TDG - External User Registration Expiry Notification" id="{75b485f3-1e07-ef11-9f89-000d3a0c4626}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="EnvironmentVariableDefinition" displayName="ovs_TDGOnlineportal" solution="Active" id.schemaname="ovs_TDGOnlineportal" />
+        <Dependent type="29" displayName="TDG CRS Invitation Email Notification" id="{a2aefa24-2f0e-ef11-9f89-0022483de3ab}" />
       </MissingDependency>
     </MissingDependencies>
   </SolutionManifest>

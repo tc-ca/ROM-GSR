@@ -1,0 +1,345 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "tdg_ConnectionReferenceDataverseServicePrinciple"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "CRS_Sender_Queue (ovs_CRS_Sender_Queue)": {
+          "defaultValue": "f8a1729c-7601-ef11-9f89-0022483d0141",
+          "type": "String",
+          "metadata": {
+            "schemaName": "ovs_CRS_Sender_Queue"
+          }
+        },
+        "CrmBaseUrl (ovs_CrmBaseUrl)": {
+          "defaultValue": "tdgcore-dev-tcd365.crm3.dynamics.com",
+          "type": "String",
+          "metadata": {
+            "schemaName": "ovs_CrmBaseUrl",
+            "description": "Provides current environment base url. No back slash ending."
+          }
+        },
+        "TDGOnlineportal (ovs_TDGOnlineportal)": {
+          "defaultValue": "https://dg-md.dev.tc.canada.ca ",
+          "type": "String",
+          "metadata": {
+            "schemaName": "ovs_TDGOnlineportal"
+          }
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "3b26ccc1-2512-419c-a7a3-1d0fdd9a190b"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 1,
+              "subscriptionRequest/entityname": "ovs_invitation",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/runas": 3
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Initialize_variable_Portal_URL": {
+          "runAfter": {
+            "Initialize_variable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7289a6f5-7300-457c-b9ae-d0f3186ea017"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "PortalURL",
+                "type": "string",
+                "value": " <a href=\"@{parameters('TDGOnlineportal (ovs_TDGOnlineportal)')}\">@{parameters('TDGOnlineportal (ovs_TDGOnlineportal)')}</a>"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_IsProduction": {
+          "runAfter": {
+            "Initialize_variable_Portal_URL": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "999e42a1-8e0a-4c8e-939f-532c7bd04913"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "IsProduction",
+                "type": "boolean",
+                "value": "@if(equals(parameters('CrmBaseUrl (ovs_CrmBaseUrl)'), 'rom-prod-tdg-tcd365.crm3.dynamics.com'), true, false)"
+              }
+            ]
+          }
+        },
+        "Initialize_variable": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "703bad5d-05e2-4a67-acc1-6e0948df11b1"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CreatedBy",
+                "type": "string",
+                "value": "@triggerOutputs()?['body/_createdby_value']"
+              }
+            ]
+          }
+        },
+        "Get_a_row_by_ID": {
+          "runAfter": {
+            "Initialize_variable_To_Recipients": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "15257c4b-2448-4445-a606-928675bc4fdb"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "systemusers",
+              "recordId": "@variables('CreatedBy')"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Condition": {
+          "actions": {
+            "ContactGUID": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "20a79309-dd13-47e0-8242-68a1bb474b2d"
+              },
+              "type": "Compose",
+              "inputs": "@triggerOutputs()?['body/_ovs_contact_id_value']"
+            },
+            "Create_Invitation_Email": {
+              "runAfter": {
+                "Append_to_array_variable_3": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "be91d3d9-a132-4355-918b-b49414b48907"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "emails",
+                  "item/activitypointer_activity_parties": "@variables('To Recipients')",
+                  "item/description": "@outputs('EmailBody')",
+                  "item/subject": "Invitation to Log In to TDG Portal / Invitation à vous connecter au portail TMD"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "check_if_production_to_send_expiry_email": {
+              "actions": {
+                "Perform_a_bound_action_send_expiry_email_": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "f15d13d6-d91f-4528-b47e-72ebcf6e4644"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_commondataserviceforapps",
+                      "operationId": "PerformBoundAction",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                    },
+                    "parameters": {
+                      "entityName": "emails",
+                      "actionName": "Microsoft.Dynamics.CRM.SendEmail",
+                      "recordId": "@outputs('Create_Invitation_Email')?['body/activityid']",
+                      "item/IssueSend": true
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Create_Invitation_Email": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "equals": [
+                  "@variables('IsProduction')",
+                  "@true"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "212dc306-4a75-4e72-877f-b600368374e2"
+              },
+              "type": "If"
+            },
+            "Append_to_array_variable_Send_Email_Queue": {
+              "runAfter": {
+                "EmailBody": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "316877c7-46cd-4f63-826a-9c56910b820b"
+              },
+              "type": "AppendToArrayVariable",
+              "inputs": {
+                "name": "To Recipients",
+                "value": {
+                  "participationtypemask": 1,
+                  "partyid@odata.bind": "@{outputs('CRSqueue')}"
+                }
+              }
+            },
+            "Append_to_array_variable_3": {
+              "runAfter": {
+                "Append_to_array_variable_Send_Email_Queue": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "c5a971ed-4faa-4d0c-8c37-544344e4c4fd"
+              },
+              "type": "AppendToArrayVariable",
+              "inputs": {
+                "name": "To Recipients",
+                "value": {
+                  "participationtypemask": 2,
+                  "addressused": "@{triggerOutputs()?['body/ovs_email_address_txt']}"
+                }
+              }
+            },
+            "CRSqueue": {
+              "runAfter": {
+                "ContactGUID": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "932e849c-1aea-438b-a046-35edee1f6f75"
+              },
+              "type": "Compose",
+              "inputs": "\\queues\\@{parameters('CRS_Sender_Queue (ovs_CRS_Sender_Queue)')}"
+            },
+            "EmailBody": {
+              "runAfter": {
+                "CRSqueue": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "64b6066e-da80-44ad-9cf3-5ae39daaa23f"
+              },
+              "type": "Compose",
+              "inputs": "**Le texte français suit l’anglais**<br><br> \n<p>Dear @{triggerOutputs()?['body/ovs_name_first_nm']} @{triggerOutputs()?['body/ovs_name_last_nm']},   </p>\n<p>As a primary contact of the TDG Portal, we invite you to log in to the new portal, TDG Online @{variables('PortalURL')}. Once registered and logged in to the portal, you will be able to access TDG Services.   Please note that to gain access to the portal, you will be required to log in with either a sign-in partner and your banking credentials or with GCKey credentials.    </p>\n<p>Sincerely, </p>\n<p>The TDG online team </p>\n<p>*****************************************************************************************************************************************************</p> \n<p>Chèr(e) ​@{triggerOutputs()?['body/ovs_name_first_nm']} @{triggerOutputs()?['body/ovs_name_last_nm']} ,</p>\n<p>En tant que contact primaire du Portail TMD, nous vous invitons à vous connecter au nouveau portail TMD En ligne @{variables('PortalURL')}\">. Une fois inscrit et connecté au portail, vous pourrez accéder aux services TMD.\nVeuillez noter que pour accéder au portail, vous devrez vous connecter soit avec un partenaire de connexion et vos identifiants bancaires, soit avec vos identifiants GCClé.</p>\n<p>Bien à vous,</p>\n<p>L'équipe du TMD en ligne</p>\n"
+            }
+          },
+          "runAfter": {
+            "Set_variable": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "not": {
+              "contains": [
+                "@outputs('Get_a_row_by_ID')?['body/lastname']",
+                "TDG-CORE"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "6fe9e1a6-44a0-4cbf-af01-bc9ee4845db7"
+          },
+          "type": "If"
+        },
+        "Initialize_variable_To_Recipients": {
+          "runAfter": {
+            "Initialize_variable_IsProduction": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "05bebf85-5c6a-42fc-8e33-b91b7b8bcb60"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "To Recipients",
+                "type": "array",
+                "value": []
+              }
+            ]
+          }
+        },
+        "Set_variable": {
+          "runAfter": {
+            "Get_a_row_by_ID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c546fc1b-6592-430e-a707-fe15a5f184cd"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "CreatedBy",
+            "value": "@outputs('Get_a_row_by_ID')?['body/lastname']"
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -37,6 +37,13 @@
             "schemaName": "ovs_CrmBaseUrl",
             "description": "Provides current environment base url. No back slash ending."
           }
+        },
+        "TDGOnlineportal (ovs_TDGOnlineportal)": {
+          "defaultValue": "https://dg-md.dev.tc.canada.ca ",
+          "type": "String",
+          "metadata": {
+            "schemaName": "ovs_TDGOnlineportal"
+          }
         }
       },
       "triggers": {
@@ -145,7 +152,11 @@
           "type": "Foreach"
         },
         "Initialize_variable_-_Contact_GUID": {
-          "runAfter": {},
+          "runAfter": {
+            "Initialize_variable_-_Portal_URL": [
+              "Succeeded"
+            ]
+          },
           "metadata": {
             "operationMetadataId": "6c4656b3-4ef8-41ff-96e5-1678069e84e2"
           },
@@ -233,7 +244,7 @@
               {
                 "name": "Email Body",
                 "type": "string",
-                "value": "\n<p>A&amp;@{variables('Organization Name')}, A decision has been made regarding your registration request.</p>\n<p>Your registration has been approved. Please see the attached print this approval letter for your files.</p>\n<p>You may log in to TDG Online portal (insert link) to see your status.</p>\n<p>&nbsp;</p>\n<p>CANUTEC Registration Team</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>A&amp;@{variables('Organization Name')}, Une décision a été prise concernant votre demande d'inscription.</p>\n<p>Votre inscription a été approuvée. Veuillez imprimer cette lettre d'approbation pour vos dossiers.</p>\n<p>Vous pouvez vous connecter au portail TMD En ligne (insert link) pour voir votre statut.</p>\n<p>&nbsp;</p>\n<p>L'équipe d'inscription CANUTEC<br>&nbsp;</p>\n "
+                "value": "\n<p>A&amp;@{variables('Organization Name')}, A decision has been made regarding your registration request.</p>\n<p>Your registration has been approved. Please see the attached print this approval letter for your files.</p>\n<p>You may log in to TDG Online portal @{variables('Portal URL')} to see your status.</p>\n<p>&nbsp;</p>\n<p>CANUTEC Registration Team</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>A&amp;@{variables('Organization Name')}, Une décision a été prise concernant votre demande d'inscription.</p>\n<p>Votre inscription a été approuvée. Veuillez imprimer cette lettre d'approbation pour vos dossiers.</p>\n<p>Vous pouvez vous connecter au portail TMD En ligne @{variables('Portal URL')} pour voir votre statut.</p>\n<p>&nbsp;</p>\n<p>L'équipe d'inscription CANUTEC<br>&nbsp;</p>\n "
               }
             ]
           }
@@ -423,6 +434,22 @@
                 "name": "Organization GUID",
                 "type": "string",
                 "value": "@{outputs('Get_a_row_by_ID_-_Registrations')?['body/_ovs_organization_id_value']}"
+              }
+            ]
+          }
+        },
+        "Initialize_variable_-_Portal_URL": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "7289a6f5-7300-457c-b9ae-d0f3186ea017"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Portal URL",
+                "type": "string",
+                "value": " <a href=\"@{parameters('TDGOnlineportal (ovs_TDGOnlineportal)')}\">@{parameters('TDGOnlineportal (ovs_TDGOnlineportal)')}</a>"
               }
             ]
           }

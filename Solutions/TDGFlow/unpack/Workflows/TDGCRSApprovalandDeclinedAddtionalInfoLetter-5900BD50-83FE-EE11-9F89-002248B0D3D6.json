@@ -73,6 +73,13 @@
           "metadata": {
             "schemaName": "ovs_CRS_Sender_Queue"
           }
+        },
+        "TDGOnlineportal (ovs_TDGOnlineportal)": {
+          "defaultValue": "https://dg-md.dev.tc.canada.ca ",
+          "type": "String",
+          "metadata": {
+            "schemaName": "ovs_TDGOnlineportal"
+          }
         }
       },
       "triggers": {
@@ -692,9 +699,9 @@
                                 "parameters": {
                                   "entityName": "emails",
                                   "item/activitypointer_activity_parties": "@variables('To Recipients')",
-                                  "item/description": "<p>@{variables('OrganizationName')}, </p>\n<p>We have not been able to make a decision regarding your registration request. </p>\n<p>The following information is needed to allow us to make a decision: </p>\n<p>·       @{triggerOutputs()?['body/ovs_additionalinfo']}</p>\n<p>Please log in to <a href=\"@{variables('Portal URL')}\">TDG Online portal</a> to add the necessary information.</p>\n <p>CANUTEC Registration Team</p>\n\n<p>@{variables('OrganizationName')}, </p>\np>Nous n'avons pas pu prendre de décision concernant votre demande d'inscription.</p>\n<p>Les informations suivantes sont nécessaires pour nous permettre de prendre une décision :</p>\n\n<p>·        @{triggerOutputs()?['body/ovs_additionalinfo']} </p>\n<p>Veuillez vous connecter au portail <a href=\"@{variables('Portal URL')}\">TMD En ligne </a> pour ajouter les informations nécessaires.</p>\n<p>L'équipe d'inscription CANUTEC </p>",
+                                  "item/description": "<p>@{variables('OrganizationName')}, </p>\n<p>We have not been able to make a decision regarding your registration request. </p>\n<p>The following information is needed to allow us to make a decision: </p>\n<p>·       @{triggerOutputs()?['body/ovs_additionalinfo']}</p>\n<p>Please log in to <a href=\"@{variables('Portal URL')}\">TDG Online portal</a> to add the necessary information.</p>\n <p>CANUTEC Registration Team</p>\n\n<p>@{variables('OrganizationName')}, </p>\n<p>Nous n'avons pas pu prendre de décision concernant votre demande d'inscription.</p>\n<p>Les informations suivantes sont nécessaires pour nous permettre de prendre une décision :</p>\n\n<p>·        @{triggerOutputs()?['body/ovs_additionalinfo']} </p>\n<p>Veuillez vous connecter au portail <a href=\"@{variables('Portal URL')}\">TMD En ligne </a> pour ajouter les informations nécessaires.</p>\n<p>L'équipe d'inscription CANUTEC </p>",
                                   "item/regardingobjectid_ovs_submission_email@odata.bind": "/ovs_submissions(@{triggerOutputs()?['body/ovs_submissionid']})",
-                                  "item/subject": "CRS Registration Request: Additional Information Requied /  Demande d'inscription au SIC : Informations supplémentaires requises"
+                                  "item/subject": "CRS Registration Request: Additional Information Required /  Demande d'inscription au SIC : Informations supplémentaires requises"
                                 },
                                 "authentication": "@parameters('$authentication')"
                               }
@@ -981,7 +988,8 @@
             "variables": [
               {
                 "name": "Portal URL",
-                "type": "string"
+                "type": "string",
+                "value": "@parameters('TDGOnlineportal (ovs_TDGOnlineportal)')"
               }
             ]
           }
@@ -1000,103 +1008,11 @@
             "variables": [
               {
                 "name": "Sender Email",
-                "type": "string"
+                "type": "string",
+                "value": "@parameters('CRS_Sender_Queue (ovs_CRS_Sender_Queue)')"
               }
             ]
           }
-        },
-        "List_rows_Envs": {
-          "runAfter": {
-            "CRSqueue": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "beea10d9-fb7a-4491-88ea-415d088ed8a8"
-          },
-          "type": "OpenApiConnection",
-          "inputs": {
-            "host": {
-              "connectionName": "shared_commondataserviceforapps",
-              "operationId": "ListRecords",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
-            },
-            "parameters": {
-              "entityName": "environmentvariabledefinitions",
-              "fetchXml": "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>\n  <entity name='environmentvariabledefinition'>\n    <attribute name='environmentvariabledefinitionid' />\n    <attribute name='schemaname' />\n    <attribute name='createdon' />\n    <attribute name='defaultvalue' />\n    <order attribute='schemaname' descending='false' />\n    <filter type='and'>\n      <filter type='or'>\n        <condition attribute='schemaname' operator='eq' value='ovs_CRSSendAsEmail' />\n        <condition attribute='schemaname' operator='eq' value='ovs_TDGOnlineportal' />\n      </filter>\n    </filter>\n  </entity>\n</fetch>"
-            },
-            "authentication": "@parameters('$authentication')"
-          }
-        },
-        "Apply_to_each_Envs": {
-          "foreach": "@outputs('List_rows_Envs')?['body/value']",
-          "actions": {
-            "Condition": {
-              "actions": {
-                "Set_variable_2": {
-                  "runAfter": {},
-                  "metadata": {
-                    "operationMetadataId": "0d032664-b4f2-4143-a619-50c9c8e68be8"
-                  },
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "Sender Email",
-                    "value": "@items('Apply_to_each_Envs')?['defaultvalue']"
-                  }
-                }
-              },
-              "runAfter": {},
-              "else": {
-                "actions": {
-                  "Condition_2": {
-                    "actions": {
-                      "Set_variable_3": {
-                        "runAfter": {},
-                        "metadata": {
-                          "operationMetadataId": "9a106c63-56c9-4e93-878a-fe2814d680f9"
-                        },
-                        "type": "SetVariable",
-                        "inputs": {
-                          "name": "Portal URL",
-                          "value": "@items('Apply_to_each_Envs')?['defaultvalue']"
-                        }
-                      }
-                    },
-                    "runAfter": {},
-                    "expression": {
-                      "equals": [
-                        "@items('Apply_to_each_Envs')?['schemaname']",
-                        "ovs_TDGOnlineportal"
-                      ]
-                    },
-                    "metadata": {
-                      "operationMetadataId": "a7427808-297a-41ad-b1ed-c37b846c7ef2"
-                    },
-                    "type": "If"
-                  }
-                }
-              },
-              "expression": {
-                "equals": [
-                  "@items('Apply_to_each_Envs')?['schemaname']",
-                  "ovs_CRSSendAsEmail"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "23f6b484-b667-42d7-a04c-40e80d2bf488"
-              },
-              "type": "If"
-            }
-          },
-          "runAfter": {
-            "List_rows_Envs": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "cbaf2ee7-7683-4da3-9f6f-ca2937099946"
-          },
-          "type": "Foreach"
         },
         "Initialize_variable_System_Date": {
           "runAfter": {
@@ -1289,7 +1205,7 @@
         },
         "Set_variable": {
           "runAfter": {
-            "Apply_to_each_Envs": [
+            "CRSqueue": [
               "Succeeded"
             ]
           },
