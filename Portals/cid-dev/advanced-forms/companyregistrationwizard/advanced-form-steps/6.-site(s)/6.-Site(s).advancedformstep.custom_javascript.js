@@ -7,8 +7,6 @@ $(document).ready(function () {
 
 	var selected_language = '{{website.selected_language.code}}';
 	sessionStorage.setItem("selected_language", selected_language);
-	console.log("company status11");
-	console.log('{{entities.account[user.parentcustomerid.id]}}');
      //{% assign account = entities.account['936DA01F-9ABD-4d9d-80C7-02AF85C822A8'] %}   
 	//Commited - Need clarification 
 	// From Aaron comments: development team agrees that this header is correct and should say organization registration. Once you start adding a site you are brought to the site registration portion of the registration and the header changes 
@@ -132,17 +130,17 @@ $(document).ready(function () {
 	$('#BulkUploadButton').click(function (e) {
 		var companyId = $("#EntityFormView_EntityID").val();
 
-		var response = tdg.webapi.SelectedColumnlist("accounts", "name",
+		/*var response = tdg.webapi.SelectedColumnlist("accounts", "name",
 			"_parentaccountid_value eq " + companyId + " and (cid_siteclaim eq 100000003 or cid_siteclaim eq null)");
 		//if one or more sites found pending claim
 		if (response.length > 0) {
 			var m000110 = tdg.error_message.message("m000110");
 			tdg.c.dialog_OK(m000110);
-		}
-		else {
+		}*/
+		//else {
 			//redirect to bulk update
 			window.location.href = '~/Bulk_Site_Upload/'
-		}
+		//}
 	}
 	);
 
